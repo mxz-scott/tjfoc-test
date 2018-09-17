@@ -1,7 +1,4 @@
-package wutongchain.tjfintech.test.untils;
-
-
-import lombok.NonNull;
+package com.tjfintech.common.untils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;

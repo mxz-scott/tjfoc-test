@@ -1,7 +1,7 @@
-package wutongchain.tjfintech.test;
+package com.tjfintech.common;
 
-import wutongchain.tjfintech.test.untils.GetTest;
-import wutongchain.tjfintech.test.untils.PostTest;
+import com.tjfintech.common.untils.GetTest;
+import com.tjfintech.common.untils.PostTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Before;
@@ -55,7 +55,7 @@ public class SoloTest {
         Map<String,Object>map=new HashMap<>();
         map.put("key",priKey);
         map.put("tokentype",tokenType);
-        param=GetTest.ParamtoUrl(map);
+        param= GetTest.ParamtoUrl(map);
         log.info(GetTest.SendGetTojson(MultiTest.SDKADD+"/utxo/balance"+"?"+param));
     }
     /**单签账号向其他地址转账

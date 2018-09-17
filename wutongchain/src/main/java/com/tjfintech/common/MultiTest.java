@@ -1,8 +1,8 @@
-package wutongchain.tjfintech.test;
+package com.tjfintech.common;
 
 
-import wutongchain.tjfintech.test.untils.GetTest;
-import wutongchain.tjfintech.test.untils.PostTest;
+import com.tjfintech.common.untils.GetTest;
+import com.tjfintech.common.untils.PostTest;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;

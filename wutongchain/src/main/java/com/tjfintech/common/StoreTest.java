@@ -1,7 +1,8 @@
-package wutongchain.tjfintech.test;
+package com.tjfintech.common;
 
-import wutongchain.tjfintech.test.untils.GetTest;
-import wutongchain.tjfintech.test.untils.PostTest;
+
+import com.tjfintech.common.untils.GetTest;
+import com.tjfintech.common.untils.PostTest;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.After;
@@ -10,7 +11,8 @@ import org.junit.Test;
 
 import java.net.URLEncoder;
 import java.util.*;
-import static wutongchain.tjfintech.test.MultiTest.SDKADD;
+
+import static com.tjfintech.common.MultiTest.SDKADD;
 
 @Slf4j
 public class StoreTest {
