@@ -1,14 +1,6 @@
 # tjfoc-test
 
-°üº¬ËùÓĞÏîÄ¿µÄ²âÊÔÓÃÀıºÍ²âÊÔ½Å±¾
-
-## ´úÂë½á¹¹
-* tjfoc-test\baowu\src\main\java\com\example\test  <br>
-    ¡ª¡ª¸ÃÄ¿Â¼ÏÂÎª²âÊÔÀà  <br>
-    * untils     <br>
-    ¡ª¡ª¸ÃÄ¿Â¼ÏÂ´æ·ÅGET POSTÇëÇó¹¤¾ßÀà<br>
-* tjfoc-test\baowu\pom.xml    <br>
-    ¡ª¡ª¸ÃÎÄ¼şÉèÖÃÒÀÀµ°ü    <br>
+åŒ…å«æ‰€æœ‰é¡¹ç›®çš„æµ‹è¯•ç”¨ä¾‹å’Œæµ‹è¯•è„šæœ¬
 
 
 
@@ -21,15 +13,16 @@
 
 
 
-## github git ÉÏ´«´úÂë
+
+## github git ä¸Šä¼ ä»£ç 
 git add .  <br>  
 git commit -m "commit"  <br>  
 git remote add origin https://github.com/tjfoc/tjfoc-test.git  <br>  
 git push -u origin master  <br>  
 
-**¡­or push an existing repository from the command line**  <br>  
-git remote -v        `²é¿´²Ö¿â`<br>  
-git remote remote origin   `É¾³ı²Ö¿â`  <br>
-git remote add origin https://github.com/tjfoc/tjfoc-test.git  `Ìí¼Ó²Ö¿â` <br>  
+**â€¦or push an existing repository from the command line**  <br>  
+git remote -v        `æŸ¥çœ‹ä»“åº“`<br>  
+git remote remote origin   `åˆ é™¤ä»“åº“`  <br>
+git remote add origin https://github.com/tjfoc/tjfoc-test.git  `æ·»åŠ ä»“åº“` <br>  
 git push -u origin master   <br>  
 
