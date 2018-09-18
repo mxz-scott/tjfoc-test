@@ -1,7 +1,7 @@
 package com.tjfintech.common;
 
-import com.tjfintech.common.untils.GetTest;
-import com.tjfintech.common.untils.PostTest;
+import com.tjfintech.common.utils.GetTest;
+import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Before;
