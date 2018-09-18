@@ -3,6 +3,10 @@ package com.tjfintech.common;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
+
 @Slf4j
 public class StoreTest {
     Store store=new Store();
@@ -46,7 +50,8 @@ public class StoreTest {
         String Data = "\"test\":\"json store1\"";
         String Pubkeys="LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0NCk1Ga3dFd1lIS29aSXpqMENBUVlJS29FY3oxVUJnaTBEUWdBRWpFZUc0Vm9ETTJkRjAxWnpGQ3NQNkxqTE9zVC8NCkg2YWx5ejBNRXRSU2krazQxbTNzOXFoUVB4UDk1OFFQdGUwS2pZa1VKeUt0MUVBV2NraEI0Wm16eUE9PQ0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t";
         String response=store.CreateStore(Data,Pubkeys);
-        assert !response.equals(null);
+        assertThat(response, containsString("200"));
+        assertThat(response,containsString("Data"));
     }
 
     @Test

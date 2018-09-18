@@ -14,7 +14,7 @@ import java.util.Map;
 @Slf4j
 public class StoreTestInvaild {
     public static String SDK_ADD="http://10.1.3.165:9990";
-    StoreTest storeTest=new StoreTest();
+    Store store=new Store();
     @Before
     /**
      * 每次测试都会事先执行的测试环境准备内容
@@ -32,10 +32,10 @@ public class StoreTestInvaild {
         String hashInvalid2=jsonObjectInvaild.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(1000*5);//休眠5秒
         log.info("查询错误存证内容");
-        storeTest.GetStore(hashInvalid1);
-        storeTest.GetStore(hashInvalid2);
+        store.GetStore(hashInvalid1);
+        store.GetStore(hashInvalid2);
         log.info("查询错误隐私存证内容");
-        storeTest.GetStorePost(hashInvalid2);
+        store.GetStorePost(hashInvalid2,"123");
     }
     /**
      * 创建存证交易空值
