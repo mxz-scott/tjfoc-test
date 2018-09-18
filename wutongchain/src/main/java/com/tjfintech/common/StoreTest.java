@@ -10,7 +10,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.tjfintech.common.MultiTest.SDKADD;
 
@@ -91,8 +94,8 @@ public class StoreTest {
      */
 
     public  String   CreateStore(){
-
-        String Data="测试存证内容-chenxu";
+        String Data = "\"test\":\"json store1\"";
+        // String Data="测试存证内容-chenxu";
         String Pubkeys="LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0NCk1Ga3dFd1lIS29aSXpqMENBUVlJS29FY3oxVUJnaTBEUWdBRWpFZUc0Vm9ETTJkRjAxWnpGQ3NQNkxqTE9zVC8NCkg2YWx5ejBNRXRSU2krazQxbTNzOXFoUVB4UDk1OFFQdGUwS2pZa1VKeUt0MUVBV2NraEI0Wm16eUE9PQ0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t";
         List<String>PubkeysObjects=new ArrayList<String>();
         PubkeysObjects.add(Pubkeys);
