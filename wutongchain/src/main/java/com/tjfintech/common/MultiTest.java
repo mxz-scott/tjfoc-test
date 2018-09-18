@@ -186,7 +186,7 @@ public class MultiTest  {
      * @param tokenType    币种类型
      */
     public void TestQuery(String tokenType) {
-        //Todo
+
         //查询归集地址余额
         String MultiAddr = USER_COLLET;
         String Prikey = PRIKEY0;
