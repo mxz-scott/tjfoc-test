@@ -1,4 +1,4 @@
-package com.tjfintech.common.untils;
+package com.tjfintech.common.utils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;

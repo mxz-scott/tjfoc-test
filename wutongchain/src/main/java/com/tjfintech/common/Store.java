@@ -1,7 +1,7 @@
 package com.tjfintech.common;
 
-import com.tjfintech.common.untils.GetTest;
-import com.tjfintech.common.untils.PostTest;
+import com.tjfintech.common.utils.GetTest;
+import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URLEncoder;
@@ -36,12 +36,14 @@ public class Store {
      * @method  POST
      */
 
-    public  String   CreateStore(String Data,String pubKeys){
+    public  String   CreateStore(String Data,Map keyMap){
        // String Data = "\"test\":\"json store1\"";
         // String Data="测试存证内容-chenxu";
        // String Pubkeys="LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0NCk1Ga3dFd1lIS29aSXpqMENBUVlJS29FY3oxVUJnaTBEUWdBRWpFZUc0Vm9ETTJkRjAxWnpGQ3NQNkxqTE9zVC8NCkg2YWx5ejBNRXRSU2krazQxbTNzOXFoUVB4UDk1OFFQdGUwS2pZa1VKeUt0MUVBV2NraEI0Wm16eUE9PQ0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t";
-        List<String>PubkeysObjects=new ArrayList<String>();
-        PubkeysObjects.add(pubKeys);
+        List<Object>PubkeysObjects=new ArrayList<>();
+        for (Object value : keyMap.values()) {
+            PubkeysObjects.add(value);
+        }
         Map<String,Object> map=new HashMap<>();
         map.put("Data",Data);
         map.put("Pubkeys",PubkeysObjects);
@@ -49,6 +51,7 @@ public class Store {
         log.info(result);
         return result;
     }
+
     /**
      * 创建带密码存证交易
      * @author chenxu

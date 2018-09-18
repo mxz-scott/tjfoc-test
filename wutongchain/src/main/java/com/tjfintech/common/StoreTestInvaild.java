@@ -1,6 +1,6 @@
 package com.tjfintech.common;
 
-import com.tjfintech.common.untils.PostTest;
+import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.After;

@@ -1,8 +1,8 @@
 package com.tjfintech.common;
 
 
-import com.tjfintech.common.untils.GetTest;
-import com.tjfintech.common.untils.PostTest;
+import com.tjfintech.common.utils.GetTest;
+import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -10,6 +10,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.*;
+import com.tjfintech.common.utils.UtilsClass;
+
 
 @Slf4j
 public class MultiTest  {
@@ -56,7 +58,7 @@ public class MultiTest  {
     @Test
     public void runTest() throws Exception {
 
-        TOKENTYPE="cx-"+Random(6);
+        TOKENTYPE="cx-"+UtilsClass.Random(6);
         log.info("\n发行Token\n");
         String response = TestissueToken(TOKENTYPE);
         JSONObject jsonObject = JSONObject.fromObject(response);
@@ -119,9 +121,9 @@ public class MultiTest  {
         String Format = "pem";
         Map<String, Object> map = new HashMap<>();
         List<String> PubkeysObjects = new ArrayList<String>();
-        PubkeysObjects.add(PUBKEY1);
-        PubkeysObjects.add(PUBKEY2);
-        PubkeysObjects.add(PUBKEY3);
+        PubkeysObjects.add(UtilsClass.PUBKEY1);
+        PubkeysObjects.add(UtilsClass.PUBKEY2);
+        PubkeysObjects.add(UtilsClass.PUBKEY4);
         JSONArray jsonArray = JSONArray.fromObject(PubkeysObjects);
         map.put("Args", jsonArray);
         map.put("SubAccountType", SubAccountType);
@@ -139,8 +141,8 @@ public class MultiTest  {
     @Test
     public void Create1_2User(){
         int M =1;
-        String PubKey1=PUBKEY1;
-        String PubKey2=PUBKEY3;
+        String PubKey1=UtilsClass.PUBKEY4;
+        String PubKey2=UtilsClass.PUBKEY5;
         String SubAccountType = "Pubkey";
         String Format = "pem";
         Map<String, Object> map = new HashMap<>();
@@ -346,28 +348,7 @@ public class MultiTest  {
     }
 
 
-    /**
-     * 用于生成随机数
-     * @param length    随机数的长度
-     * @return     返回由数字跟大小写字母组成的随机数
-     */
-    public static String Random(int length) {
-        char[] str= new char[length];
-        int i = 0;
-        int num=3;//数字的个数
-        while (i < length) {
-            int f = (int) (Math.random() * num);
-            if (f == 0)
-                str[i] = (char) ('A' + Math.random() * 26);
-            else if (f == 1)
-                str[i] = (char) ('a' + Math.random() * 26);
-            else
-                str[i] = (char) ('0' + Math.random() * 10);
-            i++;
-        }
-        String random_str = new String(str);
-        return random_str;
-    }
+
 
     /**
      * 核对私钥接口测试
@@ -388,7 +369,7 @@ public class MultiTest  {
      * @throws Exception  由于使用了线程的休眠需要抛出异常
      */
     public  String SoloInit()throws Exception{
-        String tokenType ="cx-"+Random(6);
+        String tokenType ="cx-"+UtilsClass.Random(6);
         log.info("\n发行Token\n");
         String response = TestissueToken(tokenType);
         JSONObject jsonObject = JSONObject.fromObject(response);
