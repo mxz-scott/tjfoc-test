@@ -41,6 +41,201 @@ public class MultiTest  {
     public void TestBefore(){
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * 创建多签地址
+     * @author chenxu
+     * @version 1.0
+     */
+
+    public void genMultiAddress(int M,List<Map> pubKey){
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("Args", pubKey);
+        map.put("M", M);
+        log.info(PostTest.sendPostToJson(SDKADD+"/utxo/genmultiaddress", map));
+
+    }
+
+
+    /**
+     * 查询用户余额
+     * @param addr    用户地址
+     * @param priKey  用户私钥
+     */
+    public void Balance(String addr,String priKey,String tokenType) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", addr);
+        map.put("PriKey", priKey);
+        map.put("tokentype", tokenType);
+        log.info(PostTest.sendPostToJson(SDKADD+"/utxo/balance", map));
+    }
+
+
+    /**
+     * 使用3/3账户发行Token申请
+     * @param MultiAddr   多签地址
+     * @param TokenType   币种类型
+     * @param Amount      货币数量
+     * @param Data        额外数据
+     *
+     * @return
+     */
+    public String issueToken(String MultiAddr,String TokenType,String Amount,String Data) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", MultiAddr);
+        map.put("TokenType", TokenType);
+        map.put("Amount", Amount);
+        map.put("Data", Data);
+        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken", map);
+        log.info(response);
+        return response;
+    }
+
+
+    /**
+     签名多签发行Token交易-带密码
+     * @param Tx     交易ID
+     * @param Prikey  签名所用私钥
+     * @param Pwd  签名所用私钥密码
+     * @return    返回未经过处理内容
+     */
+
+    public String Sign(String Tx, String Prikey, String Pwd) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("Prikey", Prikey);
+        map.put("Pwd", Pwd);
+        map.put("Tx", Tx);
+        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/sign", map);
+        log.info(response);
+        return response;
+
+    }
+
+    /**
+     * 转账
+     * @param PriKey 私钥
+     * @param Pwd  私钥密码
+     * @param Data    额外数据
+     * @param MultiAddr    多签地址
+     * @param TokenObject    被转账人信息
+     *
+     */
+    public void Transfer(String PriKey,String Pwd,String Data ,String MultiAddr, List<Map> TokenObject) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", MultiAddr);
+        map.put("Prikey", PriKey);
+        map.put("Data", Data);
+        map.put("Pwd",Pwd);
+        map.put("Token", TokenObject);
+        log.info(PostTest.sendPostToJson(SDKADD+"/utxo/multi/transfer", map));
+
+    }
+
+
+
+    /**
+     * 核对私钥接口测试
+     * @param PriKey  私钥
+     * @param Pwd    密码
+     */
+    public void CheckPrikey(String PriKey ,String Pwd){
+          Map<String,Object>map=new HashMap<>();
+          map.put("PriKey",PriKey);
+          map.put("Pwd",Pwd);
+          log.info(PostTest.sendPostToJson(SDKADD+"/utxo/validatekey",map));
+    }
+
+
+
+    /**
+     * 回收token测试
+     * @param multiAddr 多签地址
+     * @param priKey 私钥
+     * @param Pwd 私钥密码
+     * @param tokenType 数字货币类型
+     * @param amount 货币数量
+     */
+    public String Recycle(String multiAddr,String priKey,String Pwd,String tokenType,String amount){
+
+        Map<String ,Object>map=new HashMap<>();
+        map.put("MultiAddr",multiAddr);
+        map.put("PriKey",priKey);
+        map.put("TokenType",tokenType);
+        map.put("Amount",amount);
+        String response =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle",map);
+        log.info(response);
+        return response;
+
+    }
+
+    /**
+     * 查询回收账户余额
+     * @param tokenType 数字货币类型
+     */
+    public void QueryZero(String tokenType){
+        Map<String ,Object>map=new HashMap<>();
+        map.put("tokentype",tokenType);
+        String param= GetTest.ParamtoUrl(map);
+        log.info(GetTest.SendGetTojson(SDKADD+"/utxo/balance/zero"+"?"+param));
+
+    }
+    @After
+    /**
+     * 每次测试结束后都会执行的测试环境结束内容
+     * 目前为空
+     */
+    public void TestAfter(){
+
+    }
+
+}
+/**
+ * 单签测试用
+ * 初始化-发行token至归集地址
+ * @return  返回发行token的tokenType币种类型
+ * @throws Exception  由于使用了线程的休眠需要抛出异常
+ */
+/**public  String SoloInit()throws Exception{
+ String tokenType ="cx-"+UtilsClass.Random(6);
+ log.info("\n发行Token\n");
+ String response = TestissueToken(tokenType);
+ JSONObject jsonObject = JSONObject.fromObject(response);
+ String issueHash = jsonObject.getJSONObject("Data").get("Tx").toString();
+ log.info("\n第一次签名\n");
+ Thread.sleep(1000*3);
+ String signResponse1 = TestSign(issueHash, PRIKEY1, PWD1);
+ Thread.sleep(1000*3);
+ JSONObject signJsonObject = JSONObject.fromObject(signResponse1);
+ String signHash1 = signJsonObject.getJSONObject("Data").get("Tx").toString();
+ log.info("\n第二次签名\n");
+ String signResponse2 = TestSign(signHash1, PRIKEY2, PWD2);
+ JSONObject signJsonObject2 = JSONObject.fromObject(signResponse2);
+ String signHash2 = signJsonObject2.getJSONObject("Data").get("Tx").toString();
+ log.info("\n第三次签名\n");
+ TestSign(signHash2, PRIKEY3);
+ Thread.sleep(1000*6);
+ log.info("\n查询归集账号的余额\n");
+ TestQuery(tokenType);
+ return  tokenType;
+ }
+ */
+
 /*@Test
      public void  run()throws Exception{
     StoreTest storeTest=new StoreTest();
@@ -54,9 +249,7 @@ public class MultiTest  {
          }
 
      }*/
-
-    @Test
-    public void runTest() throws Exception {
+ /*   public void runTest() throws Exception {
 
         TOKENTYPE="cx-"+UtilsClass.Random(6);
         log.info("\n发行Token\n");
@@ -93,343 +286,4 @@ public class MultiTest  {
 //        log.info("----------------------------------------------------");
 //        CheckPrikey(PRIKEY3,PWD2);
 //        CheckPrikey("",PWD1);
-    }
-
-    @Test
-    /**
-     * 测试回收操作-需要修改tokenType
-     */
-    public  void RecycleTest()throws Exception{
-        RECYCLETYPE="cx-AZiE2f";
-        log.info("回收1个token");
-        TestRecycle();
-        log.info("执行转账操作，冻结后会报错");
-        TestUserTransfer(RECYCLETYPE,USER1_2,USER3_3);
-        Thread.sleep(1000*10);
-        log.info("查询零地址token余额.冻结前为1，冻结后为2");
-        TestQueryZero();
-    }
-    /**
-     * 创建3/3多签地址
-     * @author chenxu
-     * @version 1.0
-     */
-    @Test
-    public void Create3_3User() {
-        int M = 3;
-        String SubAccountType = "Pubkey";
-        String Format = "pem";
-        Map<String, Object> map = new HashMap<>();
-        List<String> PubkeysObjects = new ArrayList<String>();
-        PubkeysObjects.add(UtilsClass.PUBKEY1);
-        PubkeysObjects.add(UtilsClass.PUBKEY2);
-        PubkeysObjects.add(UtilsClass.PUBKEY4);
-        JSONArray jsonArray = JSONArray.fromObject(PubkeysObjects);
-        map.put("Args", jsonArray);
-        map.put("SubAccountType", SubAccountType);
-        map.put("M", M);
-        map.put("Format", Format);
-        log.info(PostTest.sendPostToJson(SDKADD+"/utxo/genmultiaddress", map));
-
-
-    }
-    /**
-     * 创建1/2多签地址
-     * @author chenxu
-     * @version 1.0
-     */
-    @Test
-    public void Create1_2User(){
-        int M =1;
-        String PubKey1=UtilsClass.PUBKEY4;
-        String PubKey2=UtilsClass.PUBKEY5;
-        String SubAccountType = "Pubkey";
-        String Format = "pem";
-        Map<String, Object> map = new HashMap<>();
-        List<String> PubkeysObjects = new ArrayList<String>();
-        PubkeysObjects.add(PubKey1);
-        PubkeysObjects.add(PubKey2);
-        JSONArray jsonArray = JSONArray.fromObject(PubkeysObjects);
-        map.put("Args", jsonArray);
-        map.put("SubAccountType", SubAccountType);
-        map.put("M", M);
-        map.put("Format", Format);
-        log.info(PostTest.sendPostToJson(SDKADD+"/utxo/genmultiaddress", map));
-
-    }
-    /**
-     * 创建单签无密码地址
-     * @author chenxu
-     * @version 1.0
-     */
-    @Test
-    public void Create1_1User(){
-        Map<String, Object> map = new HashMap<>();
-        map.put("Pubkey", "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb0VjejFVQmdpMERRZ0FFaTA4d0pVQ1RHQWd4Yzg2ZzRQNVBUUncwSTZQMAo4MXdCZzJYWVc0Zkx1TElvZDJxR0NIR0N2dTFBWi9nQUVTRS9OT1Q2eDdMRFhVVjRPTE9Kdk5oUXBRPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==");
-        log.info(PostTest.sendPostToJson(SDKADD+"/utxo/genaddress", map));
-
-    }
-
-    /**
-     * 查询用户余额
-     * @param addr    用户地址
-     * @param priKey  用户私钥
-     */
-    public void TestUserQuery(String addr,String priKey) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("MultiAddr", addr);
-        map.put("PriKey", priKey);
-        map.put("tokentype", TOKENTYPE);
-        log.info(PostTest.sendPostToJson(SDKADD+"/utxo/balance", map));
-    }
-
-    /**
-     * 查询归集地址余额
-     * @param tokenType    币种类型
-     */
-    public void TestQuery(String tokenType) {
-
-        //查询归集地址余额
-        String MultiAddr = USER_COLLET;
-        String Prikey = PRIKEY0;
-        Map<String, Object> map = new HashMap<>();
-        map.put("MultiAddr", MultiAddr);
-        map.put("PriKey", Prikey);
-        map.put("tokentype",tokenType);
-
-        log.info(PostTest.sendPostToJson(SDKADD+"/utxo/balance", map));
-    }
-
-    /**
-     * 使用3/3账户发行Token申请
-     * @param TokenType   币种类型
-     * @return
-     */
-    public String TestissueToken(String TokenType) {
-        //发币
-        String MultiAddr = USER3_3;
-        String Amount = "200.111";
-        String Data = "发币，" + TokenType + ",数量:" + Amount;
-        Map<String, Object> map = new HashMap<>();
-        map.put("MultiAddr", MultiAddr);
-        map.put("TokenType", TokenType);
-        map.put("Amount", Amount);
-        map.put("Data", Data);
-        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken", map);
-        log.info(response);
-        return response;
-    }
-
-    /**
-     * 签名多签发行Token交易-不带密码
-     * @param Tx     交易ID
-     * @param Prikey  签名所用私钥
-     * @return    返回未经过处理内容
-     */
-    public String TestSign(String Tx, String Prikey) {
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("Prikey", Prikey);
-        map.put("Tx", Tx);
-        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/sign", map);
-        log.info(response);
-        return response;
-
-    } /**
-     签名多签发行Token交易-带密码
-     * @param Tx     交易ID
-     * @param Prikey  签名所用私钥
-     * @param Pwd  签名所用私钥密码
-     * @return    返回未经过处理内容
-     */
-
-    public String TestSign(String Tx, String Prikey, String Pwd) {
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("Prikey", Prikey);
-        map.put("Pwd", Pwd);
-        map.put("Tx", Tx);
-        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/sign", map);
-        log.info(response);
-        return response;
-
-    }
-
-    /**
-     * 双方转账
-     * @param TokenType 币种
-     * @param FromAddr  发起方-归集地址
-     * @param ToAddr    接收方
-     */
-    public void TestTransfer(String TokenType,String FromAddr,String ToAddr) {
-        String PriKey = PRIKEY0;
-        String Data = "使用归集账户私钥发起1/2多签转账-无密码";
-        String Amount = "30.0";
-        Map<String, Object> token = new HashMap<>();
-        Map<String, String> AmountList = new HashMap<>();
-        AmountList.put("TokenType", TokenType);
-        AmountList.put("Amount", Amount);
-        List<Map> AmountObjects = new ArrayList<Map>();
-        AmountObjects.add(AmountList);
-        token.put("ToAddr", ToAddr);
-        token.put("AmountList", AmountObjects);
-        List<Map> TokenObjects = new ArrayList<Map>();
-        TokenObjects.add(token);
-        Map<String, Object> map = new HashMap<>();
-        map.put("MultiAddr", FromAddr);
-        map.put("Prikey", PriKey);
-        map.put("Data", Data);
-        map.put("Token", TokenObjects);
-        log.info(PostTest.sendPostToJson(SDKADD+"/utxo/multi/transfer", map));
-
-    }
-    /**
-     * 一方同时向多方转账
-     * @param TokenType 币种
-     * @param FromAddr  发起方-归集地址
-     * @param ToAddr1    接收方
-     * @param ToAddr2  第二个接收方
-     */
-
-    public void TestTransfer(String TokenType,String FromAddr,String ToAddr1,String ToAddr2) {
-        String PriKey =PRIKEY0;
-        String Data = "使用归集账户私钥发起多账户转账-无密码";
-        String Amount = "10.0";
-        Map<String, Object> token1 = new HashMap<>();
-        Map<String,Object> token2 = new HashMap<>();
-        Map<String, String> AmountList = new HashMap<>();
-        AmountList.put("TokenType", TokenType);
-        AmountList.put("Amount", Amount);
-        List<Map> AmountObjects = new ArrayList<Map>();
-        AmountObjects.add(AmountList);
-        token1.put("ToAddr", ToAddr1);
-        token1.put("AmountList", AmountObjects);
-        token2.put("ToAddr", ToAddr2);
-        token2.put("AmountList", AmountObjects);
-        List<Map> TokenObjects = new ArrayList<Map>();
-        TokenObjects.add(token1);
-        TokenObjects.add(token2);
-        Map<String, Object> map = new HashMap<>();
-        map.put("MultiAddr", FromAddr);
-        map.put("Prikey", PriKey);
-        map.put("Data", Data);
-        map.put("Token", TokenObjects);
-        log.info(PostTest.sendPostToJson(SDKADD+"/utxo/multi/transfer", map));
-
-    }
-
-    /**
-     * 普通1/2地址向外转账
-     * @param TokenType
-     * @param FromAddr
-     * @param ToAddr
-     */
-    public void TestUserTransfer(String TokenType,String FromAddr,String ToAddr){
-        String PriKey = PRIKEY3;
-        String Data = "使用1/2账户私钥发起1/2多签转账-无密码";
-        String Amount = "2.0";
-        Map<String, Object> token = new HashMap<>();
-        Map<String, String> AmountList = new HashMap<>();
-        AmountList.put("TokenType", TokenType);
-        AmountList.put("Amount", Amount);
-        List<Map> AmountObjects = new ArrayList<Map>();
-        AmountObjects.add(AmountList);
-        token.put("ToAddr", ToAddr);
-        token.put("AmountList", AmountObjects);
-        List<Map> TokenObjects = new ArrayList<Map>();
-        TokenObjects.add(token);
-        Map<String, Object> map = new HashMap<>();
-        map.put("MultiAddr", FromAddr);
-        map.put("Prikey", PriKey);
-        map.put("Data", Data);
-        map.put("Token", TokenObjects);
-        log.info(PostTest.sendPostToJson(SDKADD+"/utxo/multi/transfer", map));
-
-    }
-
-
-
-
-    /**
-     * 核对私钥接口测试
-     * @param PriKey  私钥
-     * @param Pwd    密码
-     */
-    public void CheckPrikey(String PriKey ,String Pwd){
-          Map<String,Object>map=new HashMap<>();
-          map.put("PriKey",PriKey);
-          map.put("Pwd",Pwd);
-          log.info(PostTest.sendPostToJson(SDKADD+"/utxo/validatekey",map));
-    }
-
-    /**
-     * 单签测试用
-     * 初始化-发行token至归集地址
-     * @return  返回发行token的tokenType币种类型
-     * @throws Exception  由于使用了线程的休眠需要抛出异常
-     */
-    public  String SoloInit()throws Exception{
-        String tokenType ="cx-"+UtilsClass.Random(6);
-        log.info("\n发行Token\n");
-        String response = TestissueToken(tokenType);
-        JSONObject jsonObject = JSONObject.fromObject(response);
-        String issueHash = jsonObject.getJSONObject("Data").get("Tx").toString();
-        log.info("\n第一次签名\n");
-        Thread.sleep(1000*3);
-        String signResponse1 = TestSign(issueHash, PRIKEY1, PWD1);
-        Thread.sleep(1000*3);
-        JSONObject signJsonObject = JSONObject.fromObject(signResponse1);
-        String signHash1 = signJsonObject.getJSONObject("Data").get("Tx").toString();
-        log.info("\n第二次签名\n");
-        String signResponse2 = TestSign(signHash1, PRIKEY2, PWD2);
-        JSONObject signJsonObject2 = JSONObject.fromObject(signResponse2);
-        String signHash2 = signJsonObject2.getJSONObject("Data").get("Tx").toString();
-        log.info("\n第三次签名\n");
-        TestSign(signHash2, PRIKEY3);
-        Thread.sleep(1000*6);
-        log.info("\n查询归集账号的余额\n");
-        TestQuery(tokenType);
-        return  tokenType;
-    }
-
-    @Test
-    /**
-     * 回收token测试
-     */
-    public void TestRecycle(){
-        String multiAddr=USER1_2;
-        String priKey=PRIKEY3;
-        String tokenType=RECYCLETYPE;
-        String amount="1";
-        Map<String ,Object>map=new HashMap<>();
-        map.put("MultiAddr",multiAddr);
-        map.put("PriKey",priKey);
-        map.put("TokenType",tokenType);
-        map.put("Amount",amount);
-        log.info(PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle",map));
-
-
-    }
-    @Test
-    /**
-     * 查询回收账户余额
-     */
-    public void TestQueryZero(){
-        String tokenType=RECYCLETYPE;
-        String param;
-        Map<String ,Object>map=new HashMap<>();
-        map.put("tokentype",tokenType);
-        param= GetTest.ParamtoUrl(map);
-        log.info(GetTest.SendGetTojson(SDKADD+"/utxo/balance/zero"+"?"+param));
-
-    }
-    @After
-    /**
-     * 每次测试结束后都会执行的测试环境结束内容
-     * 目前为空
-     */
-    public void TestAfter(){
-
-    }
-
-}
+    }*/
