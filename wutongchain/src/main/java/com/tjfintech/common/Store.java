@@ -20,33 +20,31 @@ public class Store {
      * @version 1.0
      * @method  GET
      */
-    public void GetTransaction(){
+    public String GetTransaction(String hashData){
         String param;
+        String hashEncode= URLEncoder.encode(hashData);
         Map<String,Object>map=new HashMap<>();
-        map.put("hashData","");
+        map.put("hashData",hashEncode);
         param= GetTest.ParamtoUrl(map);
+        String result=GetTest.SendGetTojson(SDKADD+"/gettransaction"+"?"+param);
+        log.info(result);
+        return result;
 
-        log.info(GetTest.SendGetTojson(SDKADD+"/gettransaction"+"?"+param));
     }
 
     /**
-     * 创建存证交易
+     * 创建存证交易-带公私钥
      * @author chenxu
      * @version 1.0
      * @method  POST
      */
 
-    public  String   CreateStore(String Data,Map keyMap){
+    public  String   CreateStore(String Data){
        // String Data = "\"test\":\"json store1\"";
         // String Data="测试存证内容-chenxu";
        // String Pubkeys="LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0NCk1Ga3dFd1lIS29aSXpqMENBUVlJS29FY3oxVUJnaTBEUWdBRWpFZUc0Vm9ETTJkRjAxWnpGQ3NQNkxqTE9zVC8NCkg2YWx5ejBNRXRSU2krazQxbTNzOXFoUVB4UDk1OFFQdGUwS2pZa1VKeUt0MUVBV2NraEI0Wm16eUE9PQ0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t";
-        List<Object>PubkeysObjects=new ArrayList<>();
-        for (Object value : keyMap.values()) {
-            PubkeysObjects.add(value);
-        }
         Map<String,Object> map=new HashMap<>();
         map.put("Data",Data);
-        map.put("Pubkeys",PubkeysObjects);
         String result= PostTest.sendPostToJson(SDKADD+"/store", map);
         log.info(result);
         return result;
@@ -59,16 +57,18 @@ public class Store {
      * @method  POST
      */
 
-    public  String   CreateStorePwd(String  Data,String pubKeys){
+    public  String   CreateStorePwd(String  Data,Map keyMap){
 
      //   String Data="测试带密码存证内容-chenxu";
       //  String Pubkeys="LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0NCk1Ga3dFd1lIS29aSXpqMENBUVlJS29FY3oxVUJnaTBEUWdBRWtiRmlaOW9VaWFaMmh3dTVsS3FYNkQ1OHdXOVYNCmNEQ1BjUEJQWThyTlVTQitNR1ZxMUlyUk8vVVBMaXRqc0RtcWN2MzdKdmVSTC9Ba0FWM1hDd2JGM3c9PQ0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t";
-        List<String>PubkeysObjects=new ArrayList<String>();
-        PubkeysObjects.add(pubKeys);
+        List<Object>PubkeysObjects=new ArrayList<>();
+        for (Object value : keyMap.values()) {
+            PubkeysObjects.add(value);
+        }
         Map<String,Object> map=new HashMap<>();
         map.put("Data",Data);
         map.put("Pubkeys",PubkeysObjects);
-        String result=PostTest.sendPostToJson(SDKADD+"/store",map);
+        String result= PostTest.sendPostToJson(SDKADD+"/store", map);
         log.info(result);
         return result;
     }
@@ -82,15 +82,16 @@ public class Store {
      * @version 1.0
      * @method  GET
      */
-    public void  GetStore(String hash){
+    public String   GetStore(String hash){
         String param;
         String hashEncode= URLEncoder.encode(hash);
         //hash需要urlEncode编码
         Map<String,Object>map=new HashMap<>();
         map.put("hash",hashEncode);
         param=GetTest.ParamtoUrl(map);
-        log.info(GetTest.SendGetTojson(SDKADD+"/getstore"+"?"+param));
-
+        String result=GetTest.SendGetTojson(SDKADD+"/getstore"+"?"+param);
+        log.info(result);
+        return result;
     }
 
     /***
@@ -99,13 +100,14 @@ public class Store {
      * @version 1.0
      * @method POST
      */
-    public  void GetStorePost(String Hash,String priKey){
+    public  String GetStorePost(String Hash,String priKey){
      //   String Prikey="LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tDQpNSUdUQWdFQU1CTUdCeXFHU000OUFnRUdDQ3FCSE05VkFZSXRCSGt3ZHdJQkFRUWdCcmZhbitITXlUU01weTdODQo2WEszTFRnSWlzN1RqSzJiZC9UT1pneVZqWUtnQ2dZSUtvRWN6MVVCZ2kyaFJBTkNBQVNNUjRiaFdnTXpaMFhUDQpWbk1VS3cvb3VNczZ4UDhmcHFYTFBRd1MxRktMNlRqV2JlejJxRkEvRS8zbnhBKzE3UXFOaVJRbklxM1VRQlp5DQpTRUhobWJQSQ0KLS0tLS1FTkQgUFJJVkFURSBLRVktLS0tLQ==";
         Map<String,Object> map=new HashMap<>();
         map.put("Prikey",priKey);
         map.put("Hash",Hash);
-        log.info(PostTest.sendPostToJson(SDKADD+"/getstore",map));
-
+        String result=PostTest.sendPostToJson(SDKADD+"/getstore",map);
+        log.info(result);
+        return result;
     }
     /**
      * 获取带密码隐私存证
@@ -113,7 +115,7 @@ public class Store {
      * @version 1.0
      * @method POST
      */
-    public  void GetStorePostPwd(String Hash,String priKey,String keyPwd){
+    public  String GetStorePostPwd(String Hash,String priKey,String keyPwd){
 
       //  String Prikey="LS0tLS1CRUdJTiBFTkNSWVBURUQgUFJJVkFURSBLRVktLS0tLQ0KTUlIOE1GY0dDU3FHU0liM0RRRUZEVEJLTUNrR0NTcUdTSWIzRFFFRkREQWNCQWhra283bEx2ZWtmQUlDQ0FBdw0KREFZSUtvWklodmNOQWdjRkFEQWRCZ2xnaGtnQlpRTUVBU29FRUxvc2VwNnI2azhsSXM0Tk1DNndGM2NFZ2FBbg0KeE4wWDRadHJsc2pCVG5TOXhjYnM3Wk9lcjFwY25aby9RZ2JqRWtGeThaYVBjSyt5d0NLcDRaMDVnbWgwU2M4Nw0KTVdNbGZvd1pJbXcvSHRoOHQ5Y0Z3eFRZMktiZkJEaWQ1SFpwVGRpRGU2R2tVa3hsajRnQkZhM29xMjg4UnVpOA0KOTIwY3FvQmwrWlZKKy8rZkFlaTA2b1ZqdEJzdWp0SmRjWnd6eGlxMjdzK0V3VUptV2NxaWliTWVqZGtDUWZvdQ0Kam9tQkphajZwS3pwdEhQNnIrbHkNCi0tLS0tRU5EIEVOQ1JZUFRFRCBQUklWQVRFIEtFWS0tLS0t";
      //   String KeyPwd="123";
@@ -121,8 +123,9 @@ public class Store {
         map.put("Prikey",priKey);
         map.put("Hash",Hash);
         map.put("KeyPwd",keyPwd);
-        //log.info(map);
-        log.info(PostTest.sendPostToJson(SDKADD+"/getstore",map));
+        String result=PostTest.sendPostToJson(SDKADD+"/getstore",map);
+        log.info(result);
+        return result;
 
     }
 
@@ -132,14 +135,16 @@ public class Store {
      * @version 1.0
      * @method POST
      */
-    public  void  GetTransactionIndex(String hashData){
+    public  String  GetTransactionIndex(String hashData){
 
         String param;
         String hashencode=URLEncoder.encode(hashData);
         Map<String,Object>map =new HashMap<>();
         map.put("hashData",hashencode);
         param=GetTest.ParamtoUrl(map);
-        log.info(GetTest.SendGetTojson(SDKADD+"/gettransactionindex"+"?"+param));
+        String result=GetTest.SendGetTojson(SDKADD+"/gettransactionindex"+"?"+param);
+        log.info(result);
+        return result;
 
     }
 
@@ -149,8 +154,10 @@ public class Store {
      * @version 1.0
      * @method GET
      */
-    public  void  GetHeight(){
-        log.info(GetTest.SendGetTojson(SDKADD+"/getheight"));
+    public  String  GetHeight(){
+        String result= GetTest.SendGetTojson(SDKADD+"/getheight");
+        log.info(result);
+        return result;
     }
 
     /**
@@ -159,12 +166,14 @@ public class Store {
      * @version 1.0
      * @method GET
      */
-    public void  GetBlockByHeight(int height){
+    public String   GetBlockByHeight(int height){
         String param;
         Map<String,Object>map=new HashMap<>();
         map.put("number",height);
         param=GetTest.ParamtoUrl(map);
-        log.info(GetTest.SendGetTojson(SDKADD+"/getblockbyheight"+"?"+param));
+        String result= GetTest.SendGetTojson(SDKADD+"/getblockbyheight"+"?"+param);
+        log.info(result);
+        return result;
     }
 
     /**
@@ -173,7 +182,7 @@ public class Store {
      * @version 1.0
      * @method GET
      */
-    public void  GetBlockByHash(){
+    public void   GetBlockByHash(){
         String param;
         String hash="";
         Map<String,Object>map=new HashMap<>();
@@ -189,7 +198,7 @@ public class Store {
      * @version 1.0
      * @method GET
      */
-    public void GetTxSearch(int skip,int size,String regex){
+    public String GetTxSearch(int skip,int size,String regex){
 //        int  skip=0;
 //        int  size=5;
 //        String regex="tor";
@@ -202,7 +211,9 @@ public class Store {
         datamap.put("scargs.data",regexmap);
         map.put("qry",datamap);
         log.info("应该查询出"+size+"条数据");
-        log.info(PostTest.sendPostToJson(SDKADD+"/tx/search",map));
+        String result= PostTest.sendPostToJson(SDKADD+"/tx/search",map);
+        log.info(result);
+        return result;
 
     }
     /**
@@ -211,12 +222,14 @@ public class Store {
      * @version 1.0
      * @method Get
      */
-    public  void  GetInlocal(String hashcode){
+    public  String  GetInlocal(String hashcode){
         String hash=URLEncoder.encode(hashcode);
         Map<String,Object>map=new HashMap<>();
         map.put("hash",hash);
         String param=GetTest.ParamtoUrl(map);
-        log.info(GetTest.SendGetTojson(SDKADD+"/tx/inlocal"+"?"+param));
+        String result= GetTest.SendGetTojson(SDKADD+"/tx/inlocal"+"?"+param);
+        log.info(result);
+        return  result;
     }
     /**
      * 统计某种交易类型的数量
@@ -224,12 +237,14 @@ public class Store {
      * @version  1.0
      * @method GET
      */
-    public void GetStat(String type){
+    public String GetStat(String type){
        // String type="store";
         Map<String,Object>map=new HashMap<>();
         map.put("type",type);
         String param=GetTest.ParamtoUrl(map);
-        log.info(GetTest.SendGetTojson(SDKADD+"/tx/stat"+"?"+param));
+        String result=GetTest.SendGetTojson(SDKADD+"/tx/stat"+"?"+param);
+        log.info(result);
+        return result;
     }
 
 
