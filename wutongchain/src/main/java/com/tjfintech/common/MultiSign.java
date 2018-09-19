@@ -33,15 +33,6 @@ public class MultiSign {
     private static final String USER_COLLET="Soirv9ikykVHArKCdJqVNegxxqZWUj1g4ixFFYbBLMExy4zUTUe";
 
 
-    @Before
-    /**
-     * 每次测试都会事先执行的测试环境准备内容
-     * 目前为空
-     */
-    public void TestBefore(){
-
-    }
-
 
 
 
@@ -61,13 +52,18 @@ public class MultiSign {
      * @version 1.0
      */
 
-    public void genMultiAddress(int M,List<Map> pubKey){
+    public String genMultiAddress(int M,Map keyMap){
 
         Map<String, Object> map = new HashMap<>();
-
-        map.put("Args", pubKey);
+        List<Object>PubkeysObjects=new ArrayList<>();
+        for (Object value : keyMap.values()) {
+            PubkeysObjects.add(value);
+        }
+        map.put("Args", PubkeysObjects);
         map.put("M", M);
-        log.info(PostTest.sendPostToJson(SDKADD+"/utxo/genmultiaddress", map));
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/genmultiaddress", map);
+        log.info(result);
+        return result;
 
     }
 
@@ -77,12 +73,14 @@ public class MultiSign {
      * @param addr    用户地址
      * @param priKey  用户私钥
      */
-    public void Balance(String addr,String priKey,String tokenType) {
+    public String Balance(String addr,String priKey,String tokenType) {
         Map<String, Object> map = new HashMap<>();
         map.put("MultiAddr", addr);
         map.put("PriKey", priKey);
         map.put("tokentype", tokenType);
-        log.info(PostTest.sendPostToJson(SDKADD+"/utxo/balance", map));
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/balance", map);
+        log.info(result);
+        return result;
     }
 
 
@@ -126,6 +124,15 @@ public class MultiSign {
         return response;
 
     }
+    public String Sign(String Tx, String Prikey) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("Prikey", Prikey);
+        map.put("Tx", Tx);
+        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/sign", map);
+        log.info(response);
+        return response;
+    }
 
     /**
      * 转账
@@ -146,6 +153,17 @@ public class MultiSign {
         log.info(PostTest.sendPostToJson(SDKADD+"/utxo/multi/transfer", map));
 
     }
+    public String Transfer(String PriKey,String Data ,String MultiAddr, List<Object> TokenObject) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", MultiAddr);
+        map.put("Prikey", PriKey);
+        map.put("Data", Data);
+        map.put("Token", TokenObject);
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/multi/transfer", map);
+        log.info(result);
+        return result;
+
+    }
 
 
 
@@ -154,11 +172,13 @@ public class MultiSign {
      * @param PriKey  私钥
      * @param Pwd    密码
      */
-    public void CheckPrikey(String PriKey ,String Pwd){
+    public String CheckPriKey(String PriKey ,String Pwd){
           Map<String,Object>map=new HashMap<>();
           map.put("PriKey",PriKey);
           map.put("Pwd",Pwd);
-          log.info(PostTest.sendPostToJson(SDKADD+"/utxo/validatekey",map));
+          String result=PostTest.sendPostToJson(SDKADD+"/utxo/validatekey",map);
+          log.info(result);
+          return result;
     }
 
 
@@ -176,11 +196,24 @@ public class MultiSign {
         Map<String ,Object>map=new HashMap<>();
         map.put("MultiAddr",multiAddr);
         map.put("PriKey",priKey);
+        map.put("Pwd",Pwd);
         map.put("TokenType",tokenType);
         map.put("Amount",amount);
         String response =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle",map);
         log.info(response);
         return response;
+
+    }
+    public String Recycle(String multiAddr,String priKey,String tokenType,String amount){
+
+        Map<String ,Object>map=new HashMap<>();
+        map.put("MultiAddr",multiAddr);
+        map.put("PriKey",priKey);
+        map.put("TokenType",tokenType);
+        map.put("Amount",amount);
+        String result =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle",map);
+        log.info(result);
+        return result;
 
     }
 
