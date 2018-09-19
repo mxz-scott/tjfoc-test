@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 @Slf4j
 public class StoreTest {
 
-    private  final static int   SLEEPTIME=5*1000;
+    public   final static int   SLEEPTIME=5*1000;
     Store store=new Store();
 //    int number =1;
 //        log.info("\n创建存证交易--------------------------------\n");
@@ -84,10 +84,10 @@ public class StoreTest {
     }
 
     /**
-     *TC10-创建隐私存证交易，数据格式为Json
+     *TC09-创建隐私存证交易，数据格式为Json
      * 创建后需要休眠5秒等待数据上链
      * 预期：返回200，Data为交易哈希
-     * 将返回的交易hash存入全局变量storeHashPwd中用于查询测试
+     *
      */
 
     @Test
@@ -111,7 +111,7 @@ public class StoreTest {
      * 预期：返回200，Data为存证内容
      */
     @Test
-    public void getStore() throws  Exception {
+    public void TC06_getStore() throws  Exception {
         String Data = "\"test\":\"json"+UtilsClass.Random(3)+"\"";
         String response=store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -123,13 +123,12 @@ public class StoreTest {
     }
     /**
      *TC09-获取隐私存证交易byhash
-     * 通过TC05全局变量storeHash用于查询测试
      * 预期：返回200，Data为存证内容
      * 错误私钥3，返回存证内容不正确
      */
     @Test
     public void getStorePost() throws Exception {
-        String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
+        String Data = "cxTest-" + UtilsClass.Random(4);
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
         map.put("pubkeys",PUBKEY6);
@@ -141,15 +140,80 @@ public class StoreTest {
         String response3=store.GetStorePostPwd(StoreHashPwd,PRIKEY6,PWD6);
         String response4=store.GetStorePost(StoreHashPwd,PRIKEY3);
         assertThat(response2, containsString("200"));
-        assertThat(response2,containsString("json"));
+
+        assertThat(response2, containsString(Data));
         assertThat(response3, containsString("200"));
-        assertThat(response3,containsString("json"));
+        assertThat(response3, containsString(Data));
         assertThat(response4, containsString("200"));
-        assertEquals(response4.contains("json"), false);
+        assertEquals(response4.contains(Data), false);
     }
 
+    /**
+     * TC07复杂查询存证交易，数据格式为String
+     * 创建2笔存证交易，数据格式为string
+     * 使用复杂查询接口查询交易，size设为1
+     * 使用复杂查询接口查询交易，size设为5
+     * 使用步骤1的交易哈希查询tx/search
+     */
+    @Test
+    public void TC07_GetTxSearch() throws Exception {
+        String Data = "cxtest-" + UtilsClass.Random(1);
+        String Data2 = "cxtest-" + UtilsClass.Random(2);
+        String response = store.CreateStore(Data);
+        String response2 = store.CreateStore(Data2);
+        JSONObject jsonObject = JSONObject.fromObject(response);
+        JSONObject jsonObject2 = JSONObject.fromObject(response2);
+        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String storeHash2 = jsonObject2.getJSONObject("Data").get("Figure").toString();
+        Thread.sleep(SLEEPTIME);
+        String response3 = store.GetTxSearch(0, 1, "cxtest");
+        String response4 = store.GetTxSearch(0, 5, "cxtest");
+        JSONObject jsonObject3 = JSONObject.fromObject(response3);
+        JSONObject jsonObject4 = JSONObject.fromObject(response4);
+        assertEquals(jsonObject3.getJSONArray("Data").size() == 1, true);
+        assertEquals(jsonObject4.getJSONArray("Data").size() == 5, true);
+        String response5 = store.GetStore(storeHash);
+        String response6 = store.GetStore(storeHash2);
+        assertThat(response5, containsString("200"));
+        assertThat(response6, containsString("200"));
 
+    }
 
+    /**
+     * TC11复杂查询隐私存证交易，数据格式为String
+     * 创建2笔隐私存证交易，数据格式为string
+     * 使用复杂查询接口查询交易，size设为1
+     * 使用复杂查询接口查询交易，size设为5
+     * 使用步骤1的交易哈希查询tx/search
+     */
+    @Test
+    public void TC11_GetTxSearchPwd() throws Exception {
+        String data = "Testcx-" + UtilsClass.Random(2);
+        String data2 = "Testcx-" + UtilsClass.Random(4);
+        Map<String,Object>map=new HashMap<>();
+        map.put("pubKeys",PUBKEY1);
+        map.put("pubkeys",PUBKEY6);
+        String response = store.CreateStorePwd(data,map);
+        String response2 = store.CreateStorePwd(data2,map);
+        JSONObject jsonObject = JSONObject.fromObject(response);
+        JSONObject jsonObject2 = JSONObject.fromObject(response2);
+        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String storeHash2 = jsonObject2.getJSONObject("Data").get("Figure").toString();
+        Thread.sleep(SLEEPTIME);
+//        String response3 = store.GetTxSearch(0, 1, "Testcx-");
+//        String response4 = store.GetTxSearch(0, 5, "Testcx-");
+//        JSONObject jsonObject3 = JSONObject.fromObject(response3);
+//        JSONObject jsonObject4 = JSONObject.fromObject(response4);
+//        assertEquals(jsonObject3.getJSONArray("Data").size() == 1, true);
+//        assertEquals(jsonObject4.getJSONArray("Data").size() == 5, true);
+        String response5 = store.GetStorePostPwd(storeHash,PRIKEY6,PWD6);
+        String response6 = store.GetStorePost(storeHash2,PRIKEY1);
+        assertThat(response5, containsString("200"));
+        assertThat(response5,containsString(data));
+        assertThat(response6, containsString("200"));
+        assertThat(response6,containsString(data2));
+
+    }
 
 
 
@@ -189,7 +253,7 @@ public class StoreTest {
         String response2=store.GetBlockByHeight(height-1);
         assertThat(response2,containsString("200"));
     }
-
+//TODO  根据哈希查询区块为空
     @Test
     public void getBlockByHash() {
     }
@@ -211,10 +275,23 @@ public class StoreTest {
         assertThat(response2,containsString("200"));
     }
 
+    /**
+     * TC15 统计交易数量
+     * 查询后发起交易再查询总数是否加一
+     * 预期num2==num+1
+     * @throws Exception
+     */
     @Test
-    public void getStat() {
-        String type="type";
-      String response=store.GetStat(type);
+    public void TC15_getStat() throws Exception {
+        String type = "1";
+        String response=store.GetStat(type);
+        int num = JSONObject.fromObject(response).getJSONObject("Data").getInt("Total");
+        String Data = "\"test\":\"json" + UtilsClass.Random(4) + "\"";
+        String response2 = store.CreateStore(Data);
+        Thread.sleep(SLEEPTIME);
+        String response3 = store.GetStat(type);
+        int num2 = JSONObject.fromObject(response3).getJSONObject("Data").getInt("Total");
+        assertEquals(num2 == (num + 1), true);
         assertThat(response,containsString("200"));
     }
 }

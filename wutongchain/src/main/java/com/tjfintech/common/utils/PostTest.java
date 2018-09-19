@@ -71,9 +71,9 @@ public class PostTest {
                     while(keys.hasNext()){
                         key = (String) keys.next();
                         value = jsonObject3.get(key);
-                        if(key.equals("State") && !value.equals(200)){
-                            throw new Exception("状态码不为200");
-                        }
+//                        if(key.equals("State") && !value.equals(200)){
+//                            throw new Exception("状态码不为200");
+//                        }
                     }
                 } catch (Exception e1) {
                     log.error("发生错误",e1);
