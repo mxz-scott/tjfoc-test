@@ -140,23 +140,10 @@ public class MultiSign {
      * @param Pwd     密码
      * @param Data     详情内容
      * @param fromAddr  发起地址
-     * @param toAddr    接收地址
-     * @param tokenType  币种
-     * @param amount    数量
      * @return
      */
-    public String Transfer(String PriKey,String Pwd,String Data ,String fromAddr,String toAddr,String tokenType,String amount) {
+    public String Transfer(String PriKey,String Pwd,String Data ,String fromAddr,List<Map>tokenList) {
 
-        Map<String, Object> tokenMap = new HashMap<>();
-        List<Object> amountList = new ArrayList<>();
-        Map<String, Object> amountmap = new HashMap<>();
-        amountmap.put("TokenType", tokenType);
-        amountmap.put("Amount", amount);
-        amountList.add(amountmap);
-        tokenMap.put("ToAddr", toAddr);
-        tokenMap.put("AmountList", amountList);
-        List<Object> tokenList = new ArrayList<>();
-        tokenList.add(tokenMap);
         Map<String, Object> map = new HashMap<>();
         map.put("MultiAddr", fromAddr);
         map.put("Prikey", PriKey);
@@ -168,18 +155,8 @@ public class MultiSign {
         return result;
 
     }
-    public String Transfer(String PriKey,String Data ,String fromAddr,String toAddr,String tokenType,String amount) {
+    public String Transfer(String PriKey,String Data,String fromAddr ,List<Map>tokenList) {
 
-        Map<String, Object> tokenMap = new HashMap<>();
-        List<Object> amountList = new ArrayList<>();
-        Map<String, Object> amountmap = new HashMap<>();
-        amountmap.put("TokenType", tokenType);
-        amountmap.put("Amount", amount);
-        amountList.add(amountmap);
-        tokenMap.put("ToAddr", toAddr);
-        tokenMap.put("AmountList", amountList);
-        List<Object> tokenList = new ArrayList<>();
-        tokenList.add(tokenMap);
         Map<String, Object> map = new HashMap<>();
         map.put("MultiAddr", fromAddr);
         map.put("Prikey", PriKey);
