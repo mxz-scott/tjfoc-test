@@ -88,7 +88,6 @@ public class UtilsClass {
         for(int i = 0 ; i < list.size() ; i++) {
             tokenList.add(list.get(i));
         }
-        Map<String,Object>map2=list.get(0);
         Map<String,Object>amountMap=new HashMap<>();
         amountMap.put("TokenType",tokenType);
         amountMap.put("Amount",amount);
@@ -98,7 +97,6 @@ public class UtilsClass {
         map.put("ToAddr",toAddr);
         map.put("AmountList",amountList);
         tokenList.add(map);
-        tokenList.add(map2);
         return tokenList;
     }
     /**

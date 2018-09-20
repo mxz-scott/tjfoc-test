@@ -1,6 +1,7 @@
 package com.tjfintech.common;
 
 
+import ch.qos.logback.classic.boolex.GEventEvaluator;
 import com.tjfintech.common.utils.GetTest;
 import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
@@ -83,7 +84,16 @@ public class MultiSign {
         return result;
     }
 
+    public String Balance(String priKey,String tokenType) {
+        Map<String, Object> map = new HashMap<>();
 
+        map.put("key", priKey);
+        map.put("tokentype", tokenType);
+        String param=GetTest.ParamtoUrl(map);
+        String result= GetTest.SendGetTojson(SDKADD+"/utxo/balance"+"?"+ param);
+        log.info(result);
+        return result;
+    }
     /**
      * 使用3/3账户发行Token申请
      * @param MultiAddr   多签地址
@@ -211,6 +221,16 @@ public class MultiSign {
 
         Map<String ,Object>map=new HashMap<>();
         map.put("MultiAddr",multiAddr);
+        map.put("PriKey",priKey);
+        map.put("TokenType",tokenType);
+        map.put("Amount",amount);
+        String result =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle",map);
+        log.info(result);
+        return result;
+
+    }
+    public String Recycle(String priKey,String tokenType,String amount){
+        Map<String ,Object>map=new HashMap<>();
         map.put("PriKey",priKey);
         map.put("TokenType",tokenType);
         map.put("Amount",amount);

@@ -2,7 +2,6 @@ package com.tjfintech.common;
 
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -72,7 +71,7 @@ public class MultiTest {
         assertThat(queryInfo2, containsString("200"));
         assertThat(queryInfo2, containsString("10"));
 
-        log.info("回归归集地址跟MULITADD4的新发token");
+        log.info("回收归集地址跟MULITADD4的新发token");
         String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "990");
         String recycleInfo2 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "10");
         assertThat(recycleInfo, containsString("200"));
@@ -115,6 +114,7 @@ public class MultiTest {
          List<Map>list3=utilsClass.constructToken(MULITADD5,tokenType,"10",list);
          log.info(transferData);
          String transferInfo=multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list2);//不同币种
+         Thread.sleep(SLEEPTIME); //UTXO关系，两笔交易之间需要休眠
          String transferInfo2=multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list3);//相同币种
          assertThat(transferInfo,containsString("200"));
          assertThat(transferInfo2,containsString("200"));
@@ -126,13 +126,14 @@ public class MultiTest {
          assertThat(queryInfo,containsString("200"));
          assertThat(queryInfo2,containsString("200"));
          assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("20"));
-         assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("20"));
+         assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("10"));
 
-         log.info("回归Token");
+         log.info("回收Token");
          String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "970");
          String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, "990");
          String recycleInfo3 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "20");
          String recycleInfo4 = multiSign.Recycle(MULITADD5, PRIKEY1, tokenType2, "10");
+         Thread.sleep(SLEEPTIME); //UTXO关系，回收同一个账号需要休眠
          String recycleInfo5 = multiSign.Recycle(MULITADD5, PRIKEY1, tokenType, "10");
          Thread.sleep(SLEEPTIME);
          assertThat(recycleInfo,containsString("200"));
@@ -140,6 +141,7 @@ public class MultiTest {
          assertThat(recycleInfo3,containsString("200"));
          assertThat(recycleInfo4,containsString("200"));
          assertThat(recycleInfo5,containsString("200"));
+
          log.info("查询余额判断回收成功与否");
          String queryInfo3=multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
          String queryInfo4=multiSign.Balance(MULITADD5,PRIKEY1,tokenType2);
@@ -180,24 +182,26 @@ public class MultiTest {
         List<Map>list3=utilsClass.constructToken(MULITADD4,tokenType,"10",list);
         log.info(transferData);
         String transferInfo=multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list2);//不相同币种
+        Thread.sleep(SLEEPTIME);//UTXO关系，两笔交易之间需要休眠
         String transferInfo2=multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list3);//相同币种
         assertThat(transferInfo,containsString("200"));
         assertThat(transferInfo2,containsString("200"));
         Thread.sleep(SLEEPTIME);
 
         log.info("查询余额判断转账是否成功");
-        String queryInfo=multiSign.Balance(ADDRESS1,PRIKEY1,tokenType);
+        String queryInfo=multiSign.Balance(PRIKEY1,tokenType);
         String queryInfo2=multiSign.Balance(MULITADD4,PRIKEY1,tokenType2);
         assertThat(queryInfo,containsString("200"));
         assertThat(queryInfo2,containsString("200"));
         assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("20"));
-        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("20"));
+        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("10"));
 
-        log.info("回归Token");
+        log.info("回收Token");
         String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "970");
         String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, "990");
-        String recycleInfo3 = multiSign.Recycle(ADDRESS1, PRIKEY1, tokenType, "20");
+        String recycleInfo3 = multiSign.Recycle(PRIKEY1, tokenType, "20");
         String recycleInfo4 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType2, "10");
+        Thread.sleep(SLEEPTIME); //UTXO关系，回收同一个账号需要休眠
         String recycleInfo5 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "10");
         Thread.sleep(SLEEPTIME);
         assertThat(recycleInfo,containsString("200"));
@@ -205,8 +209,9 @@ public class MultiTest {
         assertThat(recycleInfo3,containsString("200"));
         assertThat(recycleInfo4,containsString("200"));
         assertThat(recycleInfo5,containsString("200"));
+
         log.info("查询余额判断回收成功与否");
-        String queryInfo3=multiSign.Balance(ADDRESS1,PRIKEY1,tokenType);
+        String queryInfo3=multiSign.Balance(PRIKEY1,tokenType);
         String queryInfo4=multiSign.Balance(MULITADD4,PRIKEY1,tokenType2);
         String queryInfo5=multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
         assertThat(queryInfo3,containsString("200"));
@@ -223,7 +228,7 @@ public class MultiTest {
      * @throws Exception
      */
     @Test
-    public void TC31_transferSoloSolo()throws  Exception{
+    public void TC31_transferSolo()throws  Exception{
         log.info("发行两种token1000个");
         String tokenType=IssueToken(4,"1000");
         String tokenType2=IssueToken(5,"1000");
@@ -242,25 +247,26 @@ public class MultiTest {
         List<Map>list3=utilsClass.constructToken(ADDRESS2,tokenType,"10",list);
         log.info(transferData);
         String transferInfo=multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list2);//两个地址不同币种
+        Thread.sleep(SLEEPTIME);//UTXO关系，两笔交易之间需要休眠
         String transferInfo2=multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list3);//两个地址相同币种
         assertThat(transferInfo,containsString("200"));
         assertThat(transferInfo2,containsString("200"));
         Thread.sleep(SLEEPTIME);
 
         log.info("查询余额判断转账是否成功");
-        String queryInfo=multiSign.Balance(ADDRESS1,PRIKEY1,tokenType);
-        String queryInfo2=multiSign.Balance(ADDRESS2,PRIKEY2,tokenType2);
+        String queryInfo=multiSign.Balance(PRIKEY1,tokenType);
+        String queryInfo2=multiSign.Balance(PRIKEY2,tokenType2);
         assertThat(queryInfo,containsString("200"));
         assertThat(queryInfo2,containsString("200"));
         assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("20"));
-        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("20"));
+        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("10"));
 
-        log.info("回归Token");
+        log.info("回收Token");
         String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "970");
         String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, "990");
-        String recycleInfo3 = multiSign.Recycle(ADDRESS1, PRIKEY1, tokenType, "20");
-        String recycleInfo4 = multiSign.Recycle(ADDRESS2, PRIKEY2, tokenType2, "10");
-        String recycleInfo5 = multiSign.Recycle(ADDRESS2, PRIKEY2, tokenType, "10");
+        String recycleInfo3 = multiSign.Recycle(PRIKEY1, tokenType, "20");
+        String recycleInfo4 = multiSign.Recycle( PRIKEY2, tokenType2, "10");
+        String recycleInfo5 = multiSign.Recycle(PRIKEY2, tokenType, "10");
         Thread.sleep(SLEEPTIME);
         assertThat(recycleInfo,containsString("200"));
         assertThat(recycleInfo2,containsString("200"));
@@ -268,9 +274,9 @@ public class MultiTest {
         assertThat(recycleInfo4,containsString("200"));
         assertThat(recycleInfo5,containsString("200"));
         log.info("查询余额判断回收成功与否");
-        String queryInfo3=multiSign.Balance(ADDRESS1,PRIKEY1,tokenType);
-        String queryInfo4=multiSign.Balance(ADDRESS2,PRIKEY2,tokenType2);
-        String queryInfo5=multiSign.Balance(ADDRESS2,PRIKEY2,tokenType);
+        String queryInfo3=multiSign.Balance(PRIKEY1,tokenType);
+        String queryInfo4=multiSign.Balance(PRIKEY2,tokenType2);
+        String queryInfo5=multiSign.Balance(PRIKEY2,tokenType);
         assertThat(queryInfo3,containsString("200"));
         assertThat(queryInfo4,containsString("200"));
         assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"), containsString("0"));
