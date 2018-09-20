@@ -137,28 +137,54 @@ public class MultiSign {
     /**
      * 转账
      * @param PriKey 私钥
-     * @param Pwd  私钥密码
-     * @param Data    额外数据
-     * @param MultiAddr    多签地址
-     * @param TokenObject    被转账人信息
-     *
+     * @param Pwd     密码
+     * @param Data     详情内容
+     * @param fromAddr  发起地址
+     * @param toAddr    接收地址
+     * @param tokenType  币种
+     * @param amount    数量
+     * @return
      */
-    public void Transfer(String PriKey,String Pwd,String Data ,String MultiAddr, List<Map> TokenObject) {
+    public String Transfer(String PriKey,String Pwd,String Data ,String fromAddr,String toAddr,String tokenType,String amount) {
+
+        Map<String, Object> tokenMap = new HashMap<>();
+        List<Object> amountList = new ArrayList<>();
+        Map<String, Object> amountmap = new HashMap<>();
+        amountmap.put("TokenType", tokenType);
+        amountmap.put("Amount", amount);
+        amountList.add(amountmap);
+        tokenMap.put("ToAddr", toAddr);
+        tokenMap.put("AmountList", amountList);
+        List<Object> tokenList = new ArrayList<>();
+        tokenList.add(tokenMap);
         Map<String, Object> map = new HashMap<>();
-        map.put("MultiAddr", MultiAddr);
+        map.put("MultiAddr", fromAddr);
         map.put("Prikey", PriKey);
         map.put("Data", Data);
         map.put("Pwd",Pwd);
-        map.put("Token", TokenObject);
-        log.info(PostTest.sendPostToJson(SDKADD+"/utxo/multi/transfer", map));
+        map.put("Token", tokenList);
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/multi/transfer", map);
+        log.info(result);
+        return result;
 
     }
-    public String Transfer(String PriKey,String Data ,String MultiAddr, List<Object> TokenObject) {
+    public String Transfer(String PriKey,String Data ,String fromAddr,String toAddr,String tokenType,String amount) {
+
+        Map<String, Object> tokenMap = new HashMap<>();
+        List<Object> amountList = new ArrayList<>();
+        Map<String, Object> amountmap = new HashMap<>();
+        amountmap.put("TokenType", tokenType);
+        amountmap.put("Amount", amount);
+        amountList.add(amountmap);
+        tokenMap.put("ToAddr", toAddr);
+        tokenMap.put("AmountList", amountList);
+        List<Object> tokenList = new ArrayList<>();
+        tokenList.add(tokenMap);
         Map<String, Object> map = new HashMap<>();
-        map.put("MultiAddr", MultiAddr);
+        map.put("MultiAddr", fromAddr);
         map.put("Prikey", PriKey);
         map.put("Data", Data);
-        map.put("Token", TokenObject);
+        map.put("Token", tokenList);
         String result=PostTest.sendPostToJson(SDKADD+"/utxo/multi/transfer", map);
         log.info(result);
         return result;
