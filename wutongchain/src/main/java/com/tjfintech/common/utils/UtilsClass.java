@@ -47,6 +47,60 @@ public class UtilsClass {
 
 
 
+
+
+
+
+
+
+    /**
+     * 转账操作的TOKEN数组构建方法
+     * @param toAddr     发送地址
+     * @param tokenType  币种
+     * @param amount      数量
+     * @return     返回TOKEN的LIST
+     */
+    public  List<Map>   constructToken(String toAddr, String tokenType, String amount){
+
+        Map<String,Object>amountMap=new HashMap<>();
+        amountMap.put("TokenType",tokenType);
+        amountMap.put("Amount",amount);
+
+        List<Object>amountList=new ArrayList<>();
+        amountList.add(amountMap);
+        Map<String,Object>map=new HashMap<>();
+        map.put("ToAddr",toAddr);
+        map.put("AmountList",amountList);
+        List<Map>tokenList=new ArrayList<>();
+        tokenList.add(map);
+        return tokenList;
+    }
+    /**
+     * 转账操作的TOKEN多数组构建方法
+     * @param toAddr     发送地址
+     * @param tokenType  币种
+     * @param amount      数量
+     * @param list    之前的数组
+     * @return     将多个数组添加在一起
+     */
+    public  List<Map>   constructToken(String toAddr, String tokenType, String amount, List<Map> list){
+        List<Map>tokenList=new ArrayList<>();
+        for(int i = 0 ; i < list.size() ; i++) {
+            tokenList.add(list.get(i));
+        }
+        Map<String,Object>map2=list.get(0);
+        Map<String,Object>amountMap=new HashMap<>();
+        amountMap.put("TokenType",tokenType);
+        amountMap.put("Amount",amount);
+        List<Map>amountList=new ArrayList<>();
+        amountList.add(amountMap);
+        Map<String,Object>map=new HashMap<>();
+        map.put("ToAddr",toAddr);
+        map.put("AmountList",amountList);
+        tokenList.add(map);
+        tokenList.add(map2);
+        return tokenList;
+    }
     /**
      * 用于生成随机数
      * @param length    随机数的长度
