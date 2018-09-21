@@ -16,6 +16,7 @@ import static com.tjfintech.common.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
 
 @Slf4j
@@ -137,7 +138,7 @@ public class MultiTest {
          String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, "990");
          String recycleInfo3 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "20");
          String recycleInfo4 = multiSign.Recycle(MULITADD5, PRIKEY1, tokenType2, "10");
-         Thread.sleep(SLEEPTIME); //UTXO关系，回收同一个账号需要休眠
+         
          String recycleInfo5 = multiSign.Recycle(MULITADD5, PRIKEY1, tokenType, "10");
          Thread.sleep(SLEEPTIME);
          assertThat(recycleInfo,containsString("200"));
@@ -195,7 +196,6 @@ public class MultiTest {
         String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, "990");
         String recycleInfo3 = multiSign.Recycle(PRIKEY1, tokenType, "20");
         String recycleInfo4 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType2, "10");
-        Thread.sleep(SLEEPTIME); //UTXO关系，回收同一个账号需要休眠
         String recycleInfo5 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "10");
         Thread.sleep(SLEEPTIME);
         assertThat(recycleInfo,containsString("200"));
@@ -305,11 +305,9 @@ public class MultiTest {
 
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "970");
-        Thread.sleep(SLEEPTIME); //UTXO关系，回收同一个账号需要休眠
         String recycleInfo2 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType2, "990");
         String recycleInfo3 = multiSign.Recycle(PRIKEY1, tokenType, "20");
         String recycleInfo4 = multiSign.Recycle(MULITADD5, PRIKEY1, tokenType2, "10");
-        Thread.sleep(SLEEPTIME); //UTXO关系，回收同一个账号需要休眠
         String recycleInfo5 = multiSign.Recycle(MULITADD5, PRIKEY1, tokenType, "10");
         Thread.sleep(SLEEPTIME);
         assertThat(recycleInfo, containsString("200"));
@@ -336,7 +334,7 @@ public class MultiTest {
      * @throws Exception
      */
     @Test
-    public void TC35_MultiToMulti() throws Exception {
+    public void TC33_MultiToMulti() throws Exception {
 
 
         String transferData = "归集地址向" + "MULITADD4" + "转账1000个" + tokenType + "归集地址向" + "MULITADD4" + "转账1000个" + tokenType;
@@ -367,11 +365,9 @@ public class MultiTest {
 
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "970");
-        Thread.sleep(SLEEPTIME); //UTXO关系，回收同一个账号需要休眠
         String recycleInfo2 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType2, "990");
         String recycleInfo3 = multiSign.Recycle(MULITADD6,PRIKEY4, tokenType, "20");
         String recycleInfo4 = multiSign.Recycle(MULITADD5, PRIKEY1, tokenType2, "10");
-        Thread.sleep(SLEEPTIME); //UTXO关系，回收同一个账号需要休眠
         String recycleInfo5 = multiSign.Recycle(MULITADD5, PRIKEY1, tokenType, "10");
         Thread.sleep(SLEEPTIME);
         assertThat(recycleInfo, containsString("200"));
@@ -389,6 +385,13 @@ public class MultiTest {
         assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"), containsString("0"));
         assertThat(JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"), containsString("0"));
         assertThat(JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"), containsString("0"));
+        String zero=  multiSign.QueryZero(tokenType);
+        String zero2= multiSign.QueryZero(tokenType2);
+        Thread.sleep(SLEEPTIME);//回收操作相当于转账
+        assertThat(zero,containsString("200"));
+        assertThat(JSONObject.fromObject(zero).getJSONObject("Data").getJSONObject("Detail").getString(tokenType),containsString("1000"));
+        assertThat(zero2,containsString("200"));
+        assertThat(JSONObject.fromObject(zero2).getJSONObject("Data").getJSONObject("Detail").getString(tokenType2),containsString("1000"));
     }
 
 
@@ -429,11 +432,9 @@ public class MultiTest {
 
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "970");
-        Thread.sleep(SLEEPTIME); //UTXO关系，回收同一个账号需要休眠
         String recycleInfo2 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType2, "990");
         String recycleInfo3 = multiSign.Recycle(PRIKEY1, tokenType, "20");
         String recycleInfo4 = multiSign.Recycle(PRIKEY2, tokenType2, "10");
-        Thread.sleep(SLEEPTIME); //UTXO关系，回收同一个账号需要休眠
         String recycleInfo5 = multiSign.Recycle(PRIKEY2, tokenType, "10");
         Thread.sleep(SLEEPTIME);
         assertThat(recycleInfo, containsString("200"));
@@ -470,7 +471,7 @@ public class MultiTest {
    
 
 
-    String IssueToken(int length,String  amount){
+    public  String IssueToken(int length,String  amount){
         String tokenType = "CX-" + UtilsClass.Random(length);
         //String amount = "1000";
         log.info(MULITADD2 + "发行" + tokenType + " token，数量为：" + amount);

@@ -1,15 +1,10 @@
 package com.tjfintech.common;
 
 
-import ch.qos.logback.classic.boolex.GEventEvaluator;
 import com.tjfintech.common.utils.GetTest;
 import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 import java.util.*;
 import com.tjfintech.common.utils.UtilsClass;
 
@@ -244,21 +239,15 @@ public class MultiSign {
      * 查询回收账户余额
      * @param tokenType 数字货币类型
      */
-    public void QueryZero(String tokenType){
+    public String QueryZero(String tokenType){
         Map<String ,Object>map=new HashMap<>();
         map.put("tokentype",tokenType);
         String param= GetTest.ParamtoUrl(map);
-        log.info(GetTest.SendGetTojson(SDKADD+"/utxo/balance/zero"+"?"+param));
-
+        String result= (GetTest.SendGetTojson(SDKADD+"/utxo/balance/zero"+"?"+param));
+        log.info(result);
+        return result;
     }
-    @After
-    /**
-     * 每次测试结束后都会执行的测试环境结束内容
-     * 目前为空
-     */
-    public void TestAfter(){
 
-    }
 
 }
 /**
