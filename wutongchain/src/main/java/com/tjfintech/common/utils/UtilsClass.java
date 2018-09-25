@@ -14,7 +14,7 @@ public class UtilsClass {
      public final static String  MULITADD3 ="SraoYb8yb8PEJgQkDsgs4F6U5qws1r7WwXY1UEgq6ML6oNLgCep";//124
      public final static String  MULITADD4 ="Snj8kGTdJy4qcj1ABNRK6cq7TEJqbjVw6xTR9VKQk5cKsSfbsss";//12
      public final static String  MULITADD5 ="SnFXgygehAXLHjuhHciGJWnwd99TwC8pmAWhpiY6YXmdRRQDxzD";//13
-     public final static String  MULITADD6 ="SomRNtN7874wz6ku7onc6qhsUfN1Jua6YCCxFxvd712rr7VMd9s";//34
+     public final static String  MULITADD6 ="SogNyzAxSByMtRZygvpkbu8V9PGswhqXGh2Hp5PoyQmdaepQt1i";//34
      public final static String  IMPPUTIONADD="Soirv9ikykVHArKCdJqVNegxxqZWUj1g4ixFFYbBLMExy4zUTUe";//45
 
     public final static String PRIKEY1 = "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR1RBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUJITTlWQVlJdEJIa3dkd0lCQVFRZ3FpSHZCN3ptbXZKSllFNUEKc0hTaHplMzlJT3pheVRYU3Erdjd6enJXaEJtZ0NnWUlLb0VjejFVQmdpMmhSQU5DQUFSL0w1RUJ6VXpxZk1pSQpHb2xyek8yYjJmbUZQUXNYRk5iWWQzVjFXOFNYSndhdkJRSi94OTBYSnR2VGFmcVRMQmRLVnFOWHYyNitFblhQCnVyaHM0Uy9RCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K";
@@ -47,6 +47,58 @@ public class UtilsClass {
 
 
 
+
+
+
+
+
+
+    /**
+     * 转账操作的TOKEN数组构建方法
+     * @param toAddr     发送地址
+     * @param tokenType  币种
+     * @param amount      数量
+     * @return     返回TOKEN的LIST
+     */
+    public  List<Map>   constructToken(String toAddr, String tokenType, String amount){
+
+        Map<String,Object>amountMap=new HashMap<>();
+        amountMap.put("TokenType",tokenType);
+        amountMap.put("Amount",amount);
+
+        List<Object>amountList=new ArrayList<>();
+        amountList.add(amountMap);
+        Map<String,Object>map=new HashMap<>();
+        map.put("ToAddr",toAddr);
+        map.put("AmountList",amountList);
+        List<Map>tokenList=new ArrayList<>();
+        tokenList.add(map);
+        return tokenList;
+    }
+    /**
+     * 转账操作的TOKEN多数组构建方法
+     * @param toAddr     发送地址
+     * @param tokenType  币种
+     * @param amount      数量
+     * @param list    之前的数组
+     * @return     将多个数组添加在一起
+     */
+    public  List<Map>   constructToken(String toAddr, String tokenType, String amount, List<Map> list){
+        List<Map>tokenList=new ArrayList<>();
+        for(int i = 0 ; i < list.size() ; i++) {
+            tokenList.add(list.get(i));
+        }
+        Map<String,Object>amountMap=new HashMap<>();
+        amountMap.put("TokenType",tokenType);
+        amountMap.put("Amount",amount);
+        List<Map>amountList=new ArrayList<>();
+        amountList.add(amountMap);
+        Map<String,Object>map=new HashMap<>();
+        map.put("ToAddr",toAddr);
+        map.put("AmountList",amountList);
+        tokenList.add(map);
+        return tokenList;
+    }
     /**
      * 用于生成随机数
      * @param length    随机数的长度

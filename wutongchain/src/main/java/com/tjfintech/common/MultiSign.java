@@ -4,11 +4,7 @@ package com.tjfintech.common;
 import com.tjfintech.common.utils.GetTest;
 import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 import java.util.*;
 import com.tjfintech.common.utils.UtilsClass;
 
@@ -83,7 +79,16 @@ public class MultiSign {
         return result;
     }
 
+    public String Balance(String priKey,String tokenType) {
+        Map<String, Object> map = new HashMap<>();
 
+        map.put("key", priKey);
+        map.put("tokentype", tokenType);
+        String param=GetTest.ParamtoUrl(map);
+        String result= GetTest.SendGetTojson(SDKADD+"/utxo/balance"+"?"+ param);
+        log.info(result);
+        return result;
+    }
     /**
      * 使用3/3账户发行Token申请
      * @param MultiAddr   多签地址
@@ -140,23 +145,10 @@ public class MultiSign {
      * @param Pwd     密码
      * @param Data     详情内容
      * @param fromAddr  发起地址
-     * @param toAddr    接收地址
-     * @param tokenType  币种
-     * @param amount    数量
      * @return
      */
-    public String Transfer(String PriKey,String Pwd,String Data ,String fromAddr,String toAddr,String tokenType,String amount) {
+    public String Transfer(String PriKey,String Pwd,String Data ,String fromAddr,List<Map>tokenList) {
 
-        Map<String, Object> tokenMap = new HashMap<>();
-        List<Object> amountList = new ArrayList<>();
-        Map<String, Object> amountmap = new HashMap<>();
-        amountmap.put("TokenType", tokenType);
-        amountmap.put("Amount", amount);
-        amountList.add(amountmap);
-        tokenMap.put("ToAddr", toAddr);
-        tokenMap.put("AmountList", amountList);
-        List<Object> tokenList = new ArrayList<>();
-        tokenList.add(tokenMap);
         Map<String, Object> map = new HashMap<>();
         map.put("MultiAddr", fromAddr);
         map.put("Prikey", PriKey);
@@ -168,18 +160,8 @@ public class MultiSign {
         return result;
 
     }
-    public String Transfer(String PriKey,String Data ,String fromAddr,String toAddr,String tokenType,String amount) {
+    public String Transfer(String PriKey,String Data,String fromAddr ,List<Map>tokenList) {
 
-        Map<String, Object> tokenMap = new HashMap<>();
-        List<Object> amountList = new ArrayList<>();
-        Map<String, Object> amountmap = new HashMap<>();
-        amountmap.put("TokenType", tokenType);
-        amountmap.put("Amount", amount);
-        amountList.add(amountmap);
-        tokenMap.put("ToAddr", toAddr);
-        tokenMap.put("AmountList", amountList);
-        List<Object> tokenList = new ArrayList<>();
-        tokenList.add(tokenMap);
         Map<String, Object> map = new HashMap<>();
         map.put("MultiAddr", fromAddr);
         map.put("Prikey", PriKey);
@@ -242,26 +224,30 @@ public class MultiSign {
         return result;
 
     }
+    public String Recycle(String priKey,String tokenType,String amount){
+        Map<String ,Object>map=new HashMap<>();
+        map.put("PriKey",priKey);
+        map.put("TokenType",tokenType);
+        map.put("Amount",amount);
+        String result =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle",map);
+        log.info(result);
+        return result;
+
+    }
 
     /**
      * 查询回收账户余额
      * @param tokenType 数字货币类型
      */
-    public void QueryZero(String tokenType){
+    public String QueryZero(String tokenType){
         Map<String ,Object>map=new HashMap<>();
         map.put("tokentype",tokenType);
         String param= GetTest.ParamtoUrl(map);
-        log.info(GetTest.SendGetTojson(SDKADD+"/utxo/balance/zero"+"?"+param));
-
+        String result= (GetTest.SendGetTojson(SDKADD+"/utxo/balance/zero"+"?"+param));
+        log.info(result);
+        return result;
     }
-    @After
-    /**
-     * 每次测试结束后都会执行的测试环境结束内容
-     * 目前为空
-     */
-    public void TestAfter(){
 
-    }
 
 }
 /**
