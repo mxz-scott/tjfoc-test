@@ -137,7 +137,7 @@ public class StoreTest {
         String StoreHashPwd = jsonObject.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(SLEEPTIME);
         assertThat(response1, containsString("200"));
-        assertThat(response1,containsString("Data"));
+        assertThat(response1,containsString("json"));
 
 
     }
@@ -176,6 +176,26 @@ public class StoreTest {
         assertThat(response6, containsString("200"));
         assertThat(response6,containsString(data2));
 
+    }
+
+    /**
+     * TC15 统计交易数量
+     * 查询后发起交易再查询总数是否加一
+     * 预期num2==num+1
+     * @throws Exception
+     */
+    @Test
+    public void TC15_getStat() throws Exception {
+        String type = "1";
+        String response=store.GetStat(type);
+        int num = JSONObject.fromObject(response).getJSONObject("Data").getInt("Total");
+        String Data = "\"test\":\"json" + UtilsClass.Random(4) + "\"";
+        String response2 = store.CreateStore(Data);
+        Thread.sleep(SLEEPTIME);
+        String response3 = store.GetStat(type);
+        int num2 = JSONObject.fromObject(response3).getJSONObject("Data").getInt("Total");
+        assertEquals(num2 == (num + 1), true);
+        assertThat(response,containsString("200"));
     }
 
 //----------------------------------------------------------------------------------------------------------------
@@ -247,23 +267,5 @@ public class StoreTest {
         assertThat(response2,containsString("200"));
     }
 
-    /**
-     * TC15 统计交易数量
-     * 查询后发起交易再查询总数是否加一
-     * 预期num2==num+1
-     * @throws Exception
-     */
-    @Test
-    public void TC15_getStat() throws Exception {
-        String type = "1";
-        String response=store.GetStat(type);
-        int num = JSONObject.fromObject(response).getJSONObject("Data").getInt("Total");
-        String Data = "\"test\":\"json" + UtilsClass.Random(4) + "\"";
-        String response2 = store.CreateStore(Data);
-        Thread.sleep(SLEEPTIME);
-        String response3 = store.GetStat(type);
-        int num2 = JSONObject.fromObject(response3).getJSONObject("Data").getInt("Total");
-        assertEquals(num2 == (num + 1), true);
-        assertThat(response,containsString("200"));
-    }
+
 }
