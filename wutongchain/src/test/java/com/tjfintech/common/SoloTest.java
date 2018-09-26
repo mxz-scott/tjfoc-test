@@ -96,7 +96,8 @@ public class SoloTest {
         assertThat(recycleInfo3, containsString("200"));
         Thread.sleep(SLEEPTIME);
         List<Map> list5 = new ArrayList<>();
-        list5.add(soloSign.constructToken(ADDRESS4,tokenType2,"80"));
+        list5.add(soloSign.constructToken(ADDRESS4,tokenType2,"30"));
+        list5.add(soloSign.constructToken(ADDRESS4,tokenType2,"50"));
         String recycleInfo4 = soloSign.Transfer(list5, PRIKEY6, "小六向李四转账80");
         log.info(recycleInfo4);
         assertThat(recycleInfo4, containsString("200"));
@@ -104,21 +105,49 @@ public class SoloTest {
         log.info("查询回收后账户余额是否为0");
         String queryInfo3TK1 = soloSign.Balance(PRIKEY3, tokenType);
         assertThat(queryInfo3TK1, containsString("70.25"));
+        log.info("帐号3，token1余额正确");
         String queryInfo4TK1 = soloSign.Balance(PRIKEY4, tokenType);
         assertThat(queryInfo4TK1, containsString("0"));
+        log.info("帐号4，token1余额正确");
         String queryInfo4TK2 = soloSign.Balance(PRIKEY4, tokenType2);
         assertThat(queryInfo4TK2, containsString("90"));
+        log.info("帐号4，token2余额正确");
         String queryInfo5TK2 = soloSign.Balance(PRIKEY5, tokenType2);
         assertThat(queryInfo5TK2, containsString("100.555"));
+
+        log.info("帐号5，token2余额正确");
         String queryInfo6TK1 = soloSign.Balance(PRIKEY6, tokenType);
         assertThat(queryInfo6TK1, containsString("30"));
+
+        log.info("帐号6，token1余额正确");
         String queryInfo6TK2 = soloSign.Balance(PRIKEY6, tokenType2);
         assertThat(queryInfo6TK2, containsString("10"));
 
+        log.info("帐号6，token2余额正确");
 
 
     }
+    @Test
+    public void TC024_SoloProgress() throws Exception {
+        String transferData = "归集地址向" + PUBKEY3 + "转账100.25个" + tokenType+",并向"+PUBKEY4+"转账";
+        log.info(transferData);
+        List<Map> listModel = utilsClass.constructToken(ADDRESS3,tokenType,"100.25");
+        log.info(ADDRESS3);
+        List<Map> list=utilsClass.constructToken(ADDRESS5,tokenType2,"200.555",listModel);
+        String transferInfo=multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list);
+        Thread.sleep(SLEEPTIME);
+        assertThat(transferInfo, containsString("200"));
 
+        log.info("查询帐号3跟帐号5余额，判断转账是否成功");
+        String queryInfo = soloSign.Balance( PRIKEY3, tokenType);
+        String queryInfo2 = soloSign.Balance( PRIKEY5, tokenType2);
+        assertThat(queryInfo, containsString("200"));
+        assertThat(queryInfo, containsString("100.25"));
+        assertThat(queryInfo2, containsString("200"));
+        assertThat(queryInfo2, containsString("200.555"));
+
+    }
+    }
 
 
 
