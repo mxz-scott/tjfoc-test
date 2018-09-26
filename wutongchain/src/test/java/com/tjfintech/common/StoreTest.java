@@ -137,7 +137,7 @@ public class StoreTest {
         String StoreHashPwd = jsonObject.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(SLEEPTIME);
         assertThat(response1, containsString("200"));
-        assertThat(response1,containsString("json"));
+        assertThat(response1,containsString("Data"));
 
 
     }
