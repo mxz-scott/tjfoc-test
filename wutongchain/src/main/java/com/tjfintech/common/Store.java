@@ -31,7 +31,23 @@ public class Store {
         return result;
 
     }
+    /**
+     * 获取交易详情
+     * @author chenxu
+     * @version 1.0
+     * @method  GET
+     */
+    public String inLocal(String hashData){
+        String param;
+        String hashEncode= URLEncoder.encode(hashData);
+        Map<String,Object>map=new HashMap<>();
+        map.put("hash",hashEncode);
+        param= GetTest.ParamtoUrl(map);
+        String result=GetTest.SendGetTojson(SDKADD+"/tx/inlocal"+"?"+param);
+        log.info(result);
+        return result;
 
+    }
     /**
      * 创建存证交易-带公私钥
      * @author chenxu

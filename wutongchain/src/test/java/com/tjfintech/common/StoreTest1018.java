@@ -2,8 +2,12 @@ package com.tjfintech.common;
 
 
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
 import org.junit.Test;
 
+import java.util.Date;
+
+import static com.tjfintech.common.StoreTest.SLEEPTIME;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
@@ -43,12 +47,40 @@ public class StoreTest1018 {
 //    GetStat();
     @Test
     public void TC010_CreatePrivateStoreDataIsJson() {
-    String pubKey1 = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb0VjejFVQmdpMERRZ0FFZnkrUkFjMU02bnpJaUJxSmE4enRtOW41aFQwTApGeFRXMkhkMWRWdkVseWNHcndVQ2Y4ZmRGeWJiMDJuNmt5d1hTbGFqVjc5dXZoSjF6N3E0Yk9FdjBBPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==";
-    String pubKey2 = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb0VjejFVQmdpMERRZ0FFMzk1S2llUmJ5a2lyaFZXVk5vT0JBTlZvYmpDRwpYWFd1TTl1WTRUNmNia2kxdExwbXJrWTM4aUkzNEZiRnFpSTdSUTlqWVNqZjF6MisrUUhUUndaNzZRPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==";
+        long times = new Date().getTime();
+        log.info("开始存证"+times);
+    String data = store.CreateStore("j344342311365633i2j");
+        log.info(data);
 
-    //String a = store.CreateStore();
+
+        JSONObject jsonObject = JSONObject.fromObject(data);
+
+    String hash=jsonObject.getJSONObject("Data").get("Figure").toString();
+    log.info(hash);
+        inLocal(hash,times);
+    }
+    public void inLocal(String hash,long time){
+        try {
+            long nowTimes;
+            Thread.sleep(100);
+            String result = store.inLocal(hash);
+            nowTimes = new Date().getTime();
+            JSONObject jsonObject = JSONObject.fromObject(result);
+
+            String State=jsonObject.get("State").toString();
+
+            if (State.equals("404")){
+                log.info("未同步"+(nowTimes-time)+"ms");
+                inLocal(hash,time);
+            }else{
+                log.info("成功同步"+(nowTimes-time)+"ms");
+                return;
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
 
 
     }
-
 }

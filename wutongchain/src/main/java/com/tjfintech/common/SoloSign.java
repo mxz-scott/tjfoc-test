@@ -42,37 +42,38 @@ public class SoloSign {
     /**查询单签地址余额
      * @param tokenType 币种
      */
-    public void balance(String key,String tokenType){
+    public String Balance(String key,String tokenType){
         String param;
         Map<String,Object>map=new HashMap<>();
         map.put("key",key);
         map.put("tokentype",tokenType);
         param= GetTest.ParamtoUrl(map);
-        log.info(GetTest.SendGetTojson(MultiSign.SDKADD+"/utxo/balance"+"?"+param));
+        return GetTest.SendGetTojson(MultiSign.SDKADD+"/utxo/balance"+"?"+param);
     }
     /**单签账号向其他地址转账
      *
      *
      */
-    public void Transfer(String token,String priKey,String data) {
+    public String Transfer(List<Map> token,String priKey,String data) {
         Map<String, Object> map = new HashMap<>();
         map.put("Prikey", priKey);
         map.put("Data", data);
         map.put("Token", token);
 
-        log.info(PostTest.sendPostToJson(MultiSign.SDKADD+"/utxo/transfer", map));
+        return PostTest.sendPostToJson(MultiSign.SDKADD+"/utxo/transfer", map);
 
     }
 
     /**
      * 发行token
      */
-    public void issueToken(String priKey,String tokenType,String amount,String data){
+    public String issueToken(String priKey,String tokenType,String amount,String data){
         Map<String, Object> map = new HashMap<>();
         map.put("PriKey", priKey);
         map.put("TokenType", tokenType);
         map.put("Amount", amount);
-        log.info(PostTest.sendPostToJson(MultiSign.SDKADD+"/utxo/genaddress", map));
+        map.put("Data",data);
+        return PostTest.sendPostToJson(MultiSign.SDKADD+"/utxo/genaddress", map);
     }
 
 
@@ -86,6 +87,23 @@ public class SoloSign {
         map.put("PubKey", publicKey);
         log.info(PostTest.sendPostToJson(MultiSign.SDKADD+"/utxo/genaddress", map));
     }
+    /**
+     * 转账操作的TOKEN数组构建方法
+     * @param toAddr     发送地址
+     * @param tokenType  币种
+     * @param amount      数量
+     * @return     返回TOKEN的LIST
+     */
+    public  Map<String,Object>  constructToken(String toAddr, String tokenType, String amount){
+        Map<String,Object>amountMap=new HashMap<>();
+        amountMap.put("TokenType",tokenType);
+        amountMap.put("Amount",amount);
+        amountMap.put("ToAddr",toAddr);
+        return amountMap;
+    }
+
+
+
 
     @After
     /**
