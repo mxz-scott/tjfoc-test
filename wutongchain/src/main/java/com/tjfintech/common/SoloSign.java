@@ -48,7 +48,9 @@ public class SoloSign {
         map.put("key",key);
         map.put("tokentype",tokenType);
         param= GetTest.ParamtoUrl(map);
-        return GetTest.SendGetTojson(MultiSign.SDKADD+"/utxo/balance"+"?"+param);
+        String result=GetTest.SendGetTojson(MultiSign.SDKADD+"/utxo/balance"+"?"+param);
+        log.info(result);
+        return result ;
     }
     /**单签账号向其他地址转账
      *
@@ -59,8 +61,9 @@ public class SoloSign {
         map.put("Prikey", priKey);
         map.put("Data", data);
         map.put("Token", token);
-
-        return PostTest.sendPostToJson(MultiSign.SDKADD+"/utxo/transfer", map);
+       String result=PostTest.sendPostToJson(MultiSign.SDKADD+"/utxo/transfer", map);
+       log.info(result);
+        return result ;
 
     }
 
@@ -73,7 +76,9 @@ public class SoloSign {
         map.put("TokenType", tokenType);
         map.put("Amount", amount);
         map.put("Data",data);
-        return PostTest.sendPostToJson(MultiSign.SDKADD+"/utxo/issuetoken", map);
+        String result=PostTest.sendPostToJson(MultiSign.SDKADD+"/utxo/issuetoken", map);
+        log.info(result);
+        return result;
     }
 
 
@@ -82,10 +87,12 @@ public class SoloSign {
     /**
      * 创建1/1单签账号
      */
-    public void genAddress(String publicKey){
+    public String genAddress(String publicKey){
         Map<String, Object> map = new HashMap<>();
         map.put("PubKey", publicKey);
-        log.info(PostTest.sendPostToJson(MultiSign.SDKADD+"/utxo/genaddress", map));
+        String result=PostTest.sendPostToJson(MultiSign.SDKADD+"/utxo/genaddress", map);
+        log.info(result);
+        return result;
     }
     /**
      * 转账操作的TOKEN数组构建方法
