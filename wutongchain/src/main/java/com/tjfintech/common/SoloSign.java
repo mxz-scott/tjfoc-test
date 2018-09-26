@@ -73,7 +73,7 @@ public class SoloSign {
         map.put("TokenType", tokenType);
         map.put("Amount", amount);
         map.put("Data",data);
-        return PostTest.sendPostToJson(MultiSign.SDKADD+"/utxo/genaddress", map);
+        return PostTest.sendPostToJson(MultiSign.SDKADD+"/utxo/issuetoken", map);
     }
 
 
