@@ -47,28 +47,30 @@
     <session id="-1293298823">
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="java" value="10" />
+          <entry key="java" value="26" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="JAVA" value="10" />
+          <entry key="JAVA" value="26" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="3" />
+          <entry key="JAVA" value="325" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.js.language.service.starts" />
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="3" />
+          <entry key="java" value="325" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.lifecycle.project">
         <counts>
           <entry key="project.closed" value="1" />
+          <entry key="project.open.time.28" value="1" />
+          <entry key="project.opened" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages" />
@@ -77,48 +79,12 @@
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="false">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/wutongchain/src/test/java/com/tjfintech/common/MultiTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3450">
-              <caret line="138" column="87" selection-start-line="138" selection-start-column="87" selection-end-line="138" selection-end-column="87" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wutongchain/src/test/java/com/tjfintech/common/StoreTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="18" column="6" selection-start-line="18" selection-start-column="6" selection-end-line="18" selection-end-column="6" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/Demo.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="500">
-              <caret line="20" column="33" lean-forward="true" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="33" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wutongchain/src/test/java/com/tjfintech/common/StoreTest1018.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-253">
-              <caret line="15" column="63" selection-start-line="15" selection-start-column="63" selection-end-line="15" selection-end-column="63" />
+            <state relative-caret-position="294">
+              <caret line="206" column="5" lean-forward="true" selection-start-line="206" selection-start-column="5" selection-end-line="206" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -129,6 +95,7 @@
     <findStrings>
       <find>sign</find>
       <find>alidatekey</find>
+      <find>Balance</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -138,9 +105,10 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/Demo.java" />
-        <option value="$PROJECT_DIR$/wutongchain/src/test/java/com/tjfintech/common/StoreTest.java" />
         <option value="$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/MultiTest.java" />
         <option value="$PROJECT_DIR$/wutongchain/src/test/java/com/tjfintech/common/StoreTest1018.java" />
+        <option value="$PROJECT_DIR$/wutongchain/src/test/java/com/tjfintech/common/StoreTest.java" />
+        <option value="$PROJECT_DIR$/wutongchain/src/test/java/com/tjfintech/common/MultiTest.java" />
       </list>
     </option>
   </component>
@@ -168,9 +136,8 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-38" />
-    <option name="y" value="187" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="1911" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
@@ -248,14 +215,14 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="AndroidView" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1537507698075" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1537926691473" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/wutongchain/pom.xml" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
@@ -282,7 +249,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.StoreTest.createStore">
+  <component name="RunManager" selected="JUnit.MultiTest.TC31_transferSoloMulti">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <method v="2">
@@ -295,39 +262,73 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="StoreTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MultiTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="test" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="wutongchain.tjfintech.test.*" />
+          <option name="PATTERN" value="com.tjfintech.common.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="wutongchain.tjfintech.test" />
-      <option name="MAIN_CLASS_NAME" value="wutongchain.tjfintech.test.StoreTest" />
+      <option name="PACKAGE_NAME" value="com.tjfintech.common" />
+      <option name="MAIN_CLASS_NAME" value="com.tjfintech.common.MultiTest" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="StoreTestInvaild.runSDK3TestInvalid" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MultiTest.TC03_multiProgress" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="test" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="wutongchain.tjfintech.test.*" />
+          <option name="PATTERN" value="com.tjfintech.common.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="wutongchain.tjfintech.test" />
-      <option name="MAIN_CLASS_NAME" value="wutongchain.tjfintech.test.StoreTestInvaild" />
-      <option name="METHOD_NAME" value="runSDK3TestInvalid" />
+      <option name="PACKAGE_NAME" value="com.tjfintech.common" />
+      <option name="MAIN_CLASS_NAME" value="com.tjfintech.common.MultiTest" />
+      <option name="METHOD_NAME" value="TC03_multiProgress" />
       <option name="TEST_OBJECT" value="method" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="StoreTest.createStore" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MultiTest.TC31_transferSoloMulti" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.tjfintech.common.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.tjfintech.common" />
+      <option name="MAIN_CLASS_NAME" value="com.tjfintech.common.MultiTest" />
+      <option name="METHOD_NAME" value="TC31_transferSoloMulti" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MultiTest.TC32_transferSolo" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.tjfintech.common.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.tjfintech.common" />
+      <option name="MAIN_CLASS_NAME" value="com.tjfintech.common.MultiTest" />
+      <option name="METHOD_NAME" value="TC32_transferSolo" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="StoreTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="test" />
       <extension name="coverage">
         <pattern>
@@ -337,25 +338,6 @@
       </extension>
       <option name="PACKAGE_NAME" value="com.tjfintech.common" />
       <option name="MAIN_CLASS_NAME" value="com.tjfintech.common.StoreTest" />
-      <option name="METHOD_NAME" value="createStore" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="StoreTest.runSDK3Test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="test" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="wutongchain.tjfintech.test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="wutongchain.tjfintech.test" />
-      <option name="MAIN_CLASS_NAME" value="wutongchain.tjfintech.test.StoreTest" />
-      <option name="METHOD_NAME" value="runSDK3Test" />
-      <option name="TEST_OBJECT" value="method" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -401,17 +383,19 @@
     <list>
       <item itemvalue="Spring Boot.TestApplication" />
       <item itemvalue="Spring Boot.CommonApplication" />
+      <item itemvalue="JUnit.MultiTest.TC03_multiProgress" />
       <item itemvalue="JUnit.StoreTest" />
-      <item itemvalue="JUnit.StoreTestInvaild.runSDK3TestInvalid" />
-      <item itemvalue="JUnit.StoreTest.runSDK3Test" />
-      <item itemvalue="JUnit.StoreTest.createStore" />
+      <item itemvalue="JUnit.MultiTest" />
+      <item itemvalue="JUnit.MultiTest.TC32_transferSolo" />
+      <item itemvalue="JUnit.MultiTest.TC31_transferSoloMulti" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.StoreTest.createStore" />
-        <item itemvalue="JUnit.StoreTest.runSDK3Test" />
-        <item itemvalue="JUnit.StoreTestInvaild.runSDK3TestInvalid" />
+        <item itemvalue="JUnit.MultiTest.TC31_transferSoloMulti" />
+        <item itemvalue="JUnit.MultiTest.TC32_transferSolo" />
+        <item itemvalue="JUnit.MultiTest" />
         <item itemvalue="JUnit.StoreTest" />
+        <item itemvalue="JUnit.MultiTest.TC03_multiProgress" />
       </list>
     </recent_temporary>
   </component>
@@ -428,25 +412,48 @@
       <workItem from="1537163460659" duration="1158000" />
       <workItem from="1537236419206" duration="12532000" />
       <workItem from="1537258300127" duration="11653000" />
+      <workItem from="1537841853999" duration="17042000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="StoreTest - 2018.09.17 at 14h 37m 40s.xml">
-      <configuration name="StoreTest" configurationId="JUnit" />
+    <history-entry file="MultiTest_TC32_transferSolo - 2018.09.25 at 16h 54m 29s.xml">
+      <configuration name="MultiTest.TC32_transferSolo" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="StoreTest_createStore - 2018.09.18 at 11h 29m 31s.xml">
-      <configuration name="StoreTest.createStore" configurationId="JUnit" />
+    <history-entry file="MultiTest_TC31_transferSoloMulti - 2018.09.25 at 17h 16m 08s.xml">
+      <configuration name="MultiTest.TC31_transferSoloMulti" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="StoreTest_createStore - 2018.09.18 at 11h 29m 44s.xml">
-      <configuration name="StoreTest.createStore" configurationId="JUnit" />
+    <history-entry file="MultiTest_TC31_transferSoloMulti - 2018.09.25 at 17h 18m 45s.xml">
+      <configuration name="MultiTest.TC31_transferSoloMulti" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MultiTest_TC31_transferSoloMulti - 2018.09.25 at 17h 27m 27s.xml">
+      <configuration name="MultiTest.TC31_transferSoloMulti" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MultiTest_TC31_transferSoloMulti - 2018.09.25 at 17h 33m 04s.xml">
+      <configuration name="MultiTest.TC31_transferSoloMulti" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MultiTest_TC31_transferSoloMulti - 2018.09.25 at 17h 35m 42s.xml">
+      <configuration name="MultiTest.TC31_transferSoloMulti" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MultiTest_TC31_transferSoloMulti - 2018.09.25 at 17h 37m 14s.xml">
+      <configuration name="MultiTest.TC31_transferSoloMulti" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MultiTest_TC31_transferSoloMulti - 2018.09.25 at 17h 39m 08s.xml">
+      <configuration name="MultiTest.TC31_transferSoloMulti" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MultiTest_TC31_transferSoloMulti - 2018.09.26 at 09h 08m 44s.xml">
+      <configuration name="MultiTest.TC31_transferSoloMulti" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MultiTest_TC31_transferSoloMulti - 2018.09.26 at 09h 35m 28s.xml">
+      <configuration name="MultiTest.TC31_transferSoloMulti" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="37784000" />
+    <option name="totallyTimeSpent" value="54826000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="1911" y="0" width="1936" height="1056" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23697917" />
       <window_info id="Structure" order="1" weight="0.25" />
@@ -458,7 +465,7 @@
       <window_info id="设计师" order="7" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3297062" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.47507954" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -467,7 +474,7 @@
       <window_info anchor="bottom" id="Terminal" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="10" />
-      <window_info anchor="bottom" id="Messages" order="11" visible="true" weight="0.3297062" />
+      <window_info anchor="bottom" id="Messages" order="11" weight="0.32873806" />
       <window_info anchor="bottom" id="消息" order="12" weight="0.32979852" />
       <window_info anchor="bottom" id="运行" order="13" weight="0.041357372" />
       <window_info anchor="bottom" id="Database Changes" order="14" show_stripe_button="false" />
@@ -502,20 +509,6 @@
     <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/wutongchain/tjfintech/test/StoreTest.java" />
     <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/wutongchain/tjfintech/test/untils/MapTojson.java" />
     <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/StoreTest.java" />
-    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/MulitAccount.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="50">
-          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClass.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/CommonApplication.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="125">
@@ -523,66 +516,35 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/StoreTestInvaild.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/Store.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25">
-          <caret line="31" column="7" selection-start-line="31" selection-start-column="7" selection-end-line="31" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/SoloTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/MultiTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="149" lean-forward="true" selection-start-line="149" selection-end-line="149" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/PostTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="25" column="35" selection-start-line="25" selection-start-column="35" selection-end-line="25" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/StoreTestInvaild.java" />
+    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/SoloTest.java" />
+    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/MultiTest.java" />
+    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/Storetry.java" />
     <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/Account.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
+        <state relative-caret-position="-230">
           <caret line="18" column="31" selection-start-line="18" selection-start-column="31" selection-end-line="18" selection-end-column="31" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/MultiSign.java">
+    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/GetTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="915">
-          <caret line="117" column="50" lean-forward="true" selection-start-line="117" selection-start-column="50" selection-end-line="117" selection-end-column="50" />
+        <state relative-caret-position="-1330">
+          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/Storetry.java">
+    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/MulitAccount.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="18" selection-start-line="18" selection-end-line="18" />
+        <state relative-caret-position="-1994">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wutongchain/src/test/java/com/tjfintech/common/MultiTest.java">
+    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/Demo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3450">
-          <caret line="138" column="87" selection-start-line="138" selection-start-column="87" selection-end-line="138" selection-end-column="87" />
+        <state relative-caret-position="220">
+          <caret line="76" column="15" lean-forward="true" selection-start-line="76" selection-start-column="15" selection-end-line="76" selection-end-column="15" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -591,28 +553,67 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/wutongchain/src/test/java/com/tjfintech/common/StoreTest1018.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-253">
-          <caret line="15" column="63" selection-start-line="15" selection-start-column="63" selection-end-line="15" selection-end-column="63" />
+        <state relative-caret-position="1100">
+          <caret line="48" column="37" lean-forward="true" selection-start-line="48" selection-start-column="37" selection-end-line="48" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wutongchain/src/test/java/com/tjfintech/common/StoreTestlnvalid.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1075">
+          <caret line="55" lean-forward="true" selection-start-line="55" selection-end-line="55" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wutongchain/src/test/java/com/tjfintech/common/StoreTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="18" column="6" selection-start-line="18" selection-start-column="6" selection-end-line="18" selection-end-column="6" />
+        <state relative-caret-position="250">
+          <caret line="37" column="34" selection-start-line="37" selection-start-column="30" selection-end-line="37" selection-end-column="41" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/Demo.java">
+    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/PostTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="500">
-          <caret line="20" column="33" lean-forward="true" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="33" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="175">
+          <caret line="15" column="39" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/Store.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="47" column="51" selection-start-line="47" selection-start-column="47" selection-end-line="47" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClass.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1144">
+          <caret line="69" column="34" lean-forward="true" selection-start-line="69" selection-start-column="34" selection-end-line="69" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/MultiSign.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="214" column="18" selection-start-line="214" selection-start-column="18" selection-end-line="214" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wutongchain/src/test/java/com/tjfintech/common/MultiTestInvalid.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="29" column="49" lean-forward="true" selection-start-line="29" selection-start-column="49" selection-end-line="29" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wutongchain/src/test/java/com/tjfintech/common/MultiTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="206" column="5" lean-forward="true" selection-start-line="206" selection-start-column="5" selection-end-line="206" selection-end-column="5" />
         </state>
       </provider>
     </entry>

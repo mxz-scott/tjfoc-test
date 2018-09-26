@@ -30,8 +30,8 @@ public class MultiTest {
     @Before
     public void beforeConfig() throws Exception {
         log.info("发行两种token1000个");
-        tokenType = IssueToken(2, "1000");
-        tokenType2 = IssueToken(3, "1000");
+        tokenType = IssueToken(5, "1000");
+        tokenType2 = IssueToken(6, "1000");
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中两种token余额");
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
@@ -43,17 +43,7 @@ public class MultiTest {
 
     }
 
-    @Test
-    public void testGenMultiAddress() {
-        int M = 3;
-        Map<String, Object> map = new HashMap<>();
-        map.put("1", PUBKEY1);
-        map.put("2", PUBKEY2);
-        map.put("3", PUBKEY3);
-        String response = multiSign.genMultiAddress(M, map);
-        assertThat(response, containsString("200"));
-        assertThat(JSONObject.fromObject(response).getJSONObject("Data").getString("Address"), equalTo(MULITADD1));
-    }
+
 
 
 
@@ -197,7 +187,8 @@ public class MultiTest {
         String recycleInfo3 = multiSign.Recycle(PRIKEY1, tokenType, "20");
         String recycleInfo4 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType2, "10");
         String recycleInfo5 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "10");
-        Thread.sleep(SLEEPTIME);
+
+
         assertThat(recycleInfo,containsString("200"));
         assertThat(recycleInfo2,containsString("200"));
         assertThat(recycleInfo3,containsString("200"));
@@ -222,7 +213,7 @@ public class MultiTest {
      * @throws Exception
      */
     @Test
-    public void TC31_transferSolo()throws  Exception{
+    public void TC32_transferSolo()throws  Exception{
 
         String transferData = "归集地址向" + "ADDRESS1" + "转账10个" + tokenType+"归集地址向" + "ADDRESS2" + "转账10个" + tokenType;
         List<Map>list=utilsClass.constructToken(ADDRESS1,tokenType,"10");
@@ -454,6 +445,19 @@ public class MultiTest {
         assertThat(JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"), containsString("0"));
     }
 
+    //-----------------------------------------------------------------------------------------------------------
+    @Test
+    public void testGenMultiAddress() {
+        int M = 3;
+        Map<String, Object> map = new HashMap<>();
+        map.put("1", PUBKEY1);
+        map.put("2", PUBKEY2);
+        map.put("3", PUBKEY3);
+        String response = multiSign.genMultiAddress(M, map);
+        assertThat(response, containsString("200"));
+        assertThat(JSONObject.fromObject(response).getJSONObject("Data").getString("Address"), equalTo(MULITADD1));
+    }
+
     /**
      * Method: CheckPrikey(String PriKey, String Pwd)
      */
@@ -464,11 +468,6 @@ public class MultiTest {
         assertThat(response, containsString("This password match for the private key"));
 
     }
-
-
-
-
-   
 
 
     public  String IssueToken(int length,String  amount){
