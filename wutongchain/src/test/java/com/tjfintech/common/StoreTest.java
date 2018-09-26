@@ -21,47 +21,8 @@ public class StoreTest {
 
     public   final static int   SLEEPTIME=5*1000;
     Store store=new Store();
-//    int number =1;
-//        log.info("\n创建存证交易--------------------------------\n");
-//    String response=CreateStore();
-//    JSONObject jsonObject=JSONObject.fromObject(response);
-//    String hash=jsonObject.getJSONObject("Data").get("Figure").toString();
-//        log.info("\n创建带密码存证交易--------------------------------\n");
-//    String responsePwd=CreateStorePwd();
-//    JSONObject jsonObjectPwd=JSONObject.fromObject(responsePwd);
-//    String hashPwd=jsonObjectPwd.getJSONObject("Data").get("Figure").toString();
-//        Thread.sleep(SLEEPTIME);//休眠5秒
-//        log.info("\n查询存证交易--------------------------------\n");
-//    GetStore(hash);
-//        log.info("\n获取隐私存证--------------------------------\n");
-//    GetStorePost(hash);
-//        log.info("\n获取带密码隐私存证--------------------------------\n");
-//    GetStorePostPwd(hashPwd);
-//        log.info("\n获取交易索引--------------------------------\n");
-//    GetTransactionIndex(hash);
-//        log.info("\n获取区块高度--------------------------------\n");
-//    GetHeight();
-//    // GetBlockByHash();
-//        log.info("\n按高度获取区块信息--------------------------------\n");
-//    GetBlockByHeight(number);
-//        log.info("\n交易复杂2查询--------------------------------\n");
-//    GetTxSearch(2);
-//        log.info("\n交易复杂1查询--------------------------------\n");
-//    GetTxSearch(1);
-//        log.info("\n查询交易是否存在于钱包数据库");
-//    GetInlocal(hash);
-//        log.info("\n统计某种交易类型的数量");
-//    GetStat();
-    @Test
-    public void getTransaction() throws  Exception {
-        String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
-        String response=store.CreateStore(Data);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
-        String response2=store.GetTransaction(storeHash);
-        assertThat(response2,containsString("200"));
-    }
+
+
 
 
     /**
@@ -83,28 +44,7 @@ public class StoreTest {
 
     }
 
-    /**
-     *TC09-创建隐私存证交易，数据格式为Json
-     * 创建后需要休眠5秒等待数据上链
-     * 预期：返回200，Data为交易哈希
-     *
-     */
 
-    @Test
-    public void TC09_createStorePwd()throws  Exception {
-        String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
-        Map<String,Object>map=new HashMap<>();
-        map.put("pubKeys",PUBKEY1);
-        map.put("pubkeys",PUBKEY6);
-        String response1=store.CreateStorePwd(Data,map);
-        JSONObject jsonObject=JSONObject.fromObject(response1);
-        String StoreHashPwd = jsonObject.getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
-        assertThat(response1, containsString("200"));
-        assertThat(response1,containsString("Data"));
-
-
-    }
     /**
      *TC06-获取存证交易byhash
      * 通过TC05全局变量storeHash用于查询测试
@@ -180,6 +120,29 @@ public class StoreTest {
     }
 
     /**
+     *TC09-创建隐私存证交易，数据格式为Json
+     * 创建后需要休眠5秒等待数据上链
+     * 预期：返回200，Data为交易哈希
+     *
+     */
+
+    @Test
+    public void TC09_createStorePwd()throws  Exception {
+        String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
+        Map<String,Object>map=new HashMap<>();
+        map.put("pubKeys",PUBKEY1);
+        map.put("pubkeys",PUBKEY6);
+        String response1=store.CreateStorePwd(Data,map);
+        JSONObject jsonObject=JSONObject.fromObject(response1);
+        String StoreHashPwd = jsonObject.getJSONObject("Data").get("Figure").toString();
+        Thread.sleep(SLEEPTIME);
+        assertThat(response1, containsString("200"));
+        assertThat(response1,containsString("Data"));
+
+
+    }
+
+    /**
      * TC11复杂查询隐私存证交易，数据格式为String
      * 创建2笔隐私存证交易，数据格式为string
      * 使用复杂查询接口查询交易，size设为1
@@ -215,10 +178,39 @@ public class StoreTest {
 
     }
 
+    /**
+     * TC15 统计交易数量
+     * 查询后发起交易再查询总数是否加一
+     * 预期num2==num+1
+     * @throws Exception
+     */
+    @Test
+    public void TC15_getStat() throws Exception {
+        String type = "1";
+        String response=store.GetStat(type);
+        int num = JSONObject.fromObject(response).getJSONObject("Data").getInt("Total");
+        String Data = "\"test\":\"json" + UtilsClass.Random(4) + "\"";
+        String response2 = store.CreateStore(Data);
+        Thread.sleep(SLEEPTIME);
+        String response3 = store.GetStat(type);
+        int num2 = JSONObject.fromObject(response3).getJSONObject("Data").getInt("Total");
+        assertEquals(num2 == (num + 1), true);
+        assertThat(response,containsString("200"));
+    }
+
+//----------------------------------------------------------------------------------------------------------------
 
 
-
-
+    @Test
+    public void getTransaction() throws  Exception {
+        String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
+        String response=store.CreateStore(Data);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        Thread.sleep(SLEEPTIME);
+        String response2=store.GetTransaction(storeHash);
+        assertThat(response2,containsString("200"));
+    }
 
 
     @Test
@@ -275,23 +267,5 @@ public class StoreTest {
         assertThat(response2,containsString("200"));
     }
 
-    /**
-     * TC15 统计交易数量
-     * 查询后发起交易再查询总数是否加一
-     * 预期num2==num+1
-     * @throws Exception
-     */
-    @Test
-    public void TC15_getStat() throws Exception {
-        String type = "1";
-        String response=store.GetStat(type);
-        int num = JSONObject.fromObject(response).getJSONObject("Data").getInt("Total");
-        String Data = "\"test\":\"json" + UtilsClass.Random(4) + "\"";
-        String response2 = store.CreateStore(Data);
-        Thread.sleep(SLEEPTIME);
-        String response3 = store.GetStat(type);
-        int num2 = JSONObject.fromObject(response3).getJSONObject("Data").getInt("Total");
-        assertEquals(num2 == (num + 1), true);
-        assertThat(response,containsString("200"));
-    }
+
 }

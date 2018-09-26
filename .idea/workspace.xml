@@ -199,9 +199,9 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="854" />
-    <option name="y" value="58" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="2341" />
+    <option name="y" value="236" />
     <option name="width" value="1033" />
     <option name="height" value="775" />
   </component>
@@ -291,7 +291,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1537943305036" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1537943311962" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/wutongchain/pom.xml" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
   </component>
