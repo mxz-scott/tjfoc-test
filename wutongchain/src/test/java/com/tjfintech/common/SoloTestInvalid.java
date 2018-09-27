@@ -13,6 +13,7 @@ import java.util.Map;
 import static com.tjfintech.common.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 @Slf4j
@@ -70,6 +71,7 @@ public class SoloTestInvalid {
         String response2=store.CreateStore(tokenType);
         assertThat(response, containsString("200"));
         assertThat(response2, containsString("500"));
+        assertThat(response2,containsString("Duplicate transaction"));
 
 
 
@@ -88,11 +90,11 @@ public class SoloTestInvalid {
         String transferData = "单签地址向" + PUBKEY3 + "转账非法测试";
 
 
-        List<Map> list1 = utilsClass.constructToken(PUBKEY3, tokenType, "0");
-        List<Map> list2 = utilsClass.constructToken(PUBKEY3, tokenType, "abc");
-        List<Map> list3 = utilsClass.constructToken(PUBKEY3, tokenType, "-10");
-        List<Map> list4 = utilsClass.constructToken(PUBKEY3, tokenType, "92000000000000000000000000000000000000000000000000");
-        List<Map> list5 = utilsClass.constructToken(PUBKEY3, "nullToken", "100.25");
+        List<Map> list1 = soloSign.constructToken(ADDRESS3, tokenType, "0");
+        List<Map> list2 = soloSign.constructToken(ADDRESS3, tokenType, "abc");
+        List<Map> list3 = soloSign.constructToken(ADDRESS3, tokenType, "-10");
+        List<Map> list4 = soloSign.constructToken(ADDRESS3, tokenType, "92000000000000000000000000000000000000000000000000");
+        List<Map> list5 = soloSign.constructToken(ADDRESS3, "nullToken", "100.25");
         log.info(transferData);
 
 
@@ -109,11 +111,11 @@ public class SoloTestInvalid {
         assertThat(transferInfo3, containsString("400"));
         assertThat(transferInfo4, containsString("400"));
         assertThat(transferInfo5, containsString("400"));
-        assertThat(transferInfo1, containsString("Token amount must be a valid number and less than 900000000"));
+        assertThat(transferInfo1, containsString("Amount must be greater than 0 and less than 900000000"));
         assertThat(transferInfo2, containsString("Token amount must be a valid number and less than 900000000"));
         assertThat(transferInfo3, containsString("Token amount must be a valid number and less than 900000000"));
         assertThat(transferInfo4, containsString("Token amount must be a valid number and less than 900000000"));
-        assertThat(transferInfo5, containsString("Token amount must be a valid number and less than 900000000"));
+        assertThat(transferInfo5, containsString("insufficient balance"));
     }
 
     /**
@@ -141,6 +143,7 @@ public class SoloTestInvalid {
         assertThat(issueInfo2, containsString("Amount must be greater than 0 and less than 900000000"));
         assertThat(issueInfo3, containsString("Amount must be greater than 0 and less than 900000000"));
         assertThat(issueInfo4, containsString("Amount must be greater than 0 and less than 900000000"));
+        assertThat(issueInfo5,containsString("TokenType shouldn't be empty"));
         log.info("查询归集地址中token余额");
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenTypeInvalid);
         assertThat(response1, containsString("200"));
@@ -153,8 +156,9 @@ public class SoloTestInvalid {
      */
     @Test
     public void TC250_createAddressInvalid() {
-      //  String response=soloSign.genAddress("123");
-      //  assertThat(response,containsString("400"));
+        String response=soloSign.genAddress("123");
+        assertThat(response,containsString("400"));
+        assertThat(response,containsString("Public key must be base64 string"));
     }
 
     /**
@@ -168,6 +172,9 @@ public class SoloTestInvalid {
         String issueInfo3 = soloSign.issueToken(PRIKEY1, tokenType, "50", "发行token2");
         assertThat(issueInfo2, containsString("400"));
         assertThat(issueInfo3, containsString("400"));
+        assertThat(issueInfo2,containsString("Token type "+tokenType+" has been issued"));
+        assertThat(issueInfo3,containsString("Token type "+tokenType+" has been issued"));
+
         log.info("查询归集地址中token余额");
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         assertThat(response1, containsString("200"));
@@ -185,6 +192,7 @@ public class SoloTestInvalid {
         String issueInfo1 = soloSign.issueToken(PRIKEY4, tokenTypeInvalid, "100.1123", "发行token");
         Thread.sleep(SLEEPTIME);
         assertThat(issueInfo1, containsString("400"));
+        assertThat(issueInfo1,containsString("tokenaddress verify failed"));
 
 
         log.info("查询归集地址中token余额");
@@ -201,15 +209,17 @@ public class SoloTestInvalid {
 
     @Test
     public void TC253_transferAddInvalid() throws Exception {
-        String transferData = "归集地址向" + "空地址" + "转账非法测试";
-        List<Map> list1 = utilsClass.constructToken("null", tokenType, "100");
-        List<Map> list2 = utilsClass.constructToken(PUBKEY3, tokenType, "10.123");
+        String transferData = "单签地址向" + "空地址" + "转账非法测试";
+        List<Map> list1 = soloSign.constructToken("null", tokenType, "100");
+        List<Map> list2 = soloSign.constructToken(ADDRESS3, tokenType, "10.123");
         log.info(transferData);
         String transferInfo1 = soloSign.Transfer(list1, PRIKEY1, transferData);
         String transferInfo2 = soloSign.Transfer(list2, "null", transferData);
         Thread.sleep(SLEEPTIME);
         assertThat(transferInfo1, containsString("400"));
         assertThat(transferInfo2, containsString("400"));
+        assertThat(transferInfo1,containsString("invalid address"));
+        assertThat(transferInfo2,containsString("Private key is mandatory"));
 
     }
 
