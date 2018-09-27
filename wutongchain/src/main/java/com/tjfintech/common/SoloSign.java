@@ -101,14 +101,29 @@ public class SoloSign {
      * @param amount      数量
      * @return     返回TOKEN的LIST
      */
-    public  Map<String,Object>  constructToken(String toAddr, String tokenType, String amount){
+
+   public List<Map> constructToken(String toAddr,String tokenType,String amount){
+       Map<String,Object>amountMap=new HashMap<>();
+       amountMap.put("TokenType",tokenType);
+       amountMap.put("Amount",amount);
+       amountMap.put("ToAddr",toAddr);
+       List<Map>list=new ArrayList<>();
+       list.add(amountMap);
+       return list;
+   }
+    public List<Map> constructToken(String toAddr,String tokenType,String amount,List<Map>mapList){
+        List<Map>list=new ArrayList<>();
+        for (int i=0;i<mapList.size();i++){
+            list.add(mapList.get(i));
+        }
         Map<String,Object>amountMap=new HashMap<>();
         amountMap.put("TokenType",tokenType);
         amountMap.put("Amount",amount);
         amountMap.put("ToAddr",toAddr);
-        return amountMap;
-    }
 
+        list.add(amountMap);
+        return list;
+    }
 
 
 

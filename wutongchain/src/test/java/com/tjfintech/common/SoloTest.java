@@ -74,31 +74,26 @@ public class SoloTest {
         assertThat(queryInfo2, containsString("200.555"));
 
         log.info("3向4转账token1");
-        List<Map> list1 = new ArrayList<>();
-        list1.add(soloSign.constructToken(ADDRESS4,tokenType,"30"));
+        List<Map> list1 = soloSign.constructToken(ADDRESS4,tokenType,"30");
         String recycleInfo = soloSign.Transfer(list1, PRIKEY3,"3向4转账token1");
         assertThat(recycleInfo, containsString("200"));
         Thread.sleep(SLEEPTIME);
-        List<Map> list2 = new ArrayList<>();
-        list2.add(soloSign.constructToken(ADDRESS4,tokenType2,"80"));
+        List<Map> list2 = soloSign.constructToken(ADDRESS4,tokenType2,"80");
         String recycleInfo1 = soloSign.Transfer(list2, PRIKEY5,"5向4转账token2");
         assertThat(recycleInfo1, containsString("200"));
         Thread.sleep(SLEEPTIME);
-        List<Map> list3 = new ArrayList<>();
-        list3.add(soloSign.constructToken(ADDRESS6,tokenType,"30"));
-        list3.add(soloSign.constructToken(ADDRESS6,tokenType2,"70"));
-        String recycleInfo2 = soloSign.Transfer(list3, PRIKEY4, "李四向小六转账30 TT001, 70 TT002");
+        List<Map> list3 =soloSign.constructToken(ADDRESS6,tokenType,"30");
+        List<Map>list4=soloSign.constructToken(ADDRESS6,tokenType2,"70",list3);
+        String recycleInfo2 = soloSign.Transfer(list4, PRIKEY4, "李四向小六转账30 TT001, 70 TT002");
         assertThat(recycleInfo2, containsString("200"));
         Thread.sleep(SLEEPTIME);
-        List<Map> list4 = new ArrayList<>();
-        list4.add(soloSign.constructToken(ADDRESS6,tokenType2,"20"));
-        String recycleInfo3 = soloSign.Transfer(list4, PRIKEY5, "王五向小六转账20 TT002");
+        List<Map> list5 =soloSign.constructToken(ADDRESS6,tokenType2,"20");
+        String recycleInfo3 = soloSign.Transfer(list5, PRIKEY5, "王五向小六转账20 TT002");
         assertThat(recycleInfo3, containsString("200"));
         Thread.sleep(SLEEPTIME);
-        List<Map> list5 = new ArrayList<>();
-        list5.add(soloSign.constructToken(ADDRESS4,tokenType2,"30"));
-        list5.add(soloSign.constructToken(ADDRESS4,tokenType2,"50"));
-        String recycleInfo4 = soloSign.Transfer(list5, PRIKEY6, "小六向李四转账80");
+        List<Map> list6 = (soloSign.constructToken(ADDRESS4,tokenType2,"30"));
+        List<Map> list7=soloSign.constructToken(ADDRESS4,tokenType2,"50",list6);
+        String recycleInfo4 = soloSign.Transfer(list7, PRIKEY6, "小六向李四转账80");
         log.info(recycleInfo4);
         assertThat(recycleInfo4, containsString("200"));
         Thread.sleep(SLEEPTIME);
@@ -127,7 +122,7 @@ public class SoloTest {
 
 
     }
-    @Test
+   /* @Test
     public void TC024_SoloProgress() throws Exception {
         String transferData = "归集地址向" + PUBKEY3 + "转账100.25个" + tokenType+",并向"+PUBKEY4+"转账";
         log.info(transferData);
@@ -147,7 +142,7 @@ public class SoloTest {
         assertThat(queryInfo2, containsString("200.555"));
 
     }
-    }
+    }*/
 
 
 
