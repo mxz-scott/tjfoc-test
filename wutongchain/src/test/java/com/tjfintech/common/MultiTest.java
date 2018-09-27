@@ -445,28 +445,8 @@ public class MultiTest {
     }
 
     //-----------------------------------------------------------------------------------------------------------
-    @Test
-    public void testGenMultiAddress() {
-        int M = 3;
-        Map<String, Object> map = new HashMap<>();
-        map.put("1", PUBKEY1);
-        map.put("2", PUBKEY2);
-        map.put("3", PUBKEY3);
-        String response = multiSign.genMultiAddress(M, map);
-        assertThat(response, containsString("200"));
-        assertThat(JSONObject.fromObject(response).getJSONObject("Data").getString("Address"), equalTo(MULITADD1));
-    }
 
-    /**
-     * Method: CheckPrikey(String PriKey, String Pwd)
-     */
-    @Test
-    public void testCheckPriKey() throws Exception {
-        String response = multiSign.CheckPriKey(PRIKEY6, PWD6);
-        assertThat(response, containsString("200"));
-        assertThat(response, containsString("This password match for the private key"));
 
-    }
 
 
     public  String IssueToken(int length,String  amount){

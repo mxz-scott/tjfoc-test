@@ -64,12 +64,12 @@ public class StoreTest {
         assertThat(response2,containsString("json"));
     }
     /**
-     *TC09-获取隐私存证交易byhash
+     *tc277获取隐私存证交易byhash
      * 预期：返回200，Data为存证内容
      * 错误私钥3，返回存证内容不正确
      */
     @Test
-    public void getStorePost() throws Exception {
+    public void TC277_getStorePost() throws Exception {
         String Data = "cxTest-" + UtilsClass.Random(4);
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
@@ -226,9 +226,12 @@ public class StoreTest {
   //TODO
 //----------------------------------------------------------------------------------------------------------------
 
-
+    /**
+     * tc278通过哈希获取存证交易内容
+     * @throws Exception
+     */
     @Test
-    public void getTransaction() throws  Exception {
+    public void TC278_getTransaction() throws  Exception {
         String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
         String response=store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -238,9 +241,12 @@ public class StoreTest {
         assertThat(response2,containsString("200"));
     }
 
-
+    /**
+     * tc279获取交易索引
+     * @throws Exception
+     */
     @Test
-    public void getTransactionIndex() throws  Exception {
+    public void TC279_getTransactionIndex() throws  Exception {
         String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
         String response=store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -251,8 +257,11 @@ public class StoreTest {
        assertThat(response2,containsString("success"));
     }
 
+    /**
+     * Tc275获取区块高度
+     */
     @Test
-    public void getHeight() {
+    public void TC275_getHeight() {
         String response=store.GetHeight();
         JSONObject jsonObject=JSONObject.fromObject(response);
        Integer  height=jsonObject.getInt("Data");
@@ -261,8 +270,11 @@ public class StoreTest {
 
     }
 
+    /**
+     * TC274根据高度查询某个区块信息
+     */
     @Test
-    public void getBlockByHeight() {
+    public void TC274_getBlockByHeight() {
         String response=store.GetHeight();
         JSONObject jsonObject=JSONObject.fromObject(response);
         Integer  height=jsonObject.getInt("Data");
@@ -276,14 +288,22 @@ public class StoreTest {
     public void getBlockByHash() {
     }
 
+
+    /**
+     * Tc280交易复杂查询
+     */
     @Test
-    public void getTxSearch() {
+    public void TC280_getTxSearch() {
        String response=store.GetTxSearch(0,5,"tor");
        assertThat(response,containsString("200"));
     }
 
+    /**
+     * TC276根据哈希判断交易是否存在于钱包数据库
+     * @throws Exception
+     */
     @Test
-    public void getInlocal()  throws Exception{
+    public void TC276_getInlocal()  throws Exception{
         String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
         String response=store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
