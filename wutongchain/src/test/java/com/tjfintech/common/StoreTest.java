@@ -8,7 +8,9 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -198,6 +200,30 @@ public class StoreTest {
         assertThat(response,containsString("200"));
     }
 
+    /**
+     * TC18 同时发送10笔存证交易
+     * @throws Exception
+     */
+   @Test
+   public void TC18_CreateStore10()throws  Exception{
+       List<String>list=new ArrayList<>();
+       for(int i=0;i<10;i++){
+           list.add(store.CreateStore("cx"+UtilsClass.Random(4)));
+       }
+       for(int i=0;i<list.size();i++){
+           assertThat(list.get(i), containsString("200"));
+           JSONObject jsonObject=JSONObject.fromObject(list.get(i));
+           String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+          assertEquals(storeHash.isEmpty(),false);
+       }
+
+       Thread.sleep(SLEEPTIME);
+
+
+   }
+
+
+  //TODO
 //----------------------------------------------------------------------------------------------------------------
 
 
