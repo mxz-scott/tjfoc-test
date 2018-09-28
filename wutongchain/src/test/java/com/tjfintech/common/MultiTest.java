@@ -8,14 +8,12 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 @Slf4j
@@ -452,19 +450,19 @@ public class MultiTest {
     public  String IssueToken(int length,String  amount){
         String tokenType = "CX-" + UtilsClass.Random(length);
         //String amount = "1000";
-        log.info(MULITADD2 + "发行" + tokenType + " token，数量为：" + amount);
-        String data = "MULITADD2" + "发行" + tokenType + " token，数量为：" + amount;
-        String response = multiSign.issueToken(MULITADD2, tokenType, amount, data);
+        log.info(MULITADD3+ "发行" + tokenType + " token，数量为：" + amount);
+        String data = "MULITADD3" + "发行" + tokenType + " token，数量为：" + amount;
+        String response = multiSign.issueToken(MULITADD3, tokenType, amount, data);
         assertThat(response, containsString("200"));
         String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
         log.info("第一次签名");
-        String response2 = multiSign.Sign(Tx1, PRIKEY1);
+        String response2 = multiSign.Sign(Tx1, PRIKEY6,PWD6);
         String Tx2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Tx");
         log.info("第二次签名");
-        String response3 = multiSign.Sign(Tx2, PRIKEY2);
+        String response3 = multiSign.Sign(Tx2, PRIKEY7,PWD7);
         String Tx3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Tx");
         log.info("第三次签名");
-        String response4 = multiSign.Sign(Tx3, PRIKEY6, PWD6);
+        String response4 = multiSign.Sign(Tx3, PRIKEY1);
         assertThat(JSONObject.fromObject(response4).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
         assertThat(response4, containsString("200"));
         return tokenType;
