@@ -4,19 +4,22 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Test;
-import org.mockito.internal.matchers.Null;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static com.tjfintech.common.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @Slf4j
 public class MulitTestInvalid2 {
     MultiSign multiSign = new MultiSign();
+    UtilsClass utilsClass = new UtilsClass();
 
     /**
      * TC6 M参数非法时创建多签地址
@@ -68,8 +71,8 @@ public class MulitTestInvalid2 {
         int M = 3;
         Map<String, Object> map = new HashMap<>();
         map.put("1", PUBKEY1);
-        map.put("2", PUBKEY6);
-        map.put("3", PUBKEY7);
+        map.put("2", PUBKEY2);
+        map.put("3", PUBKEY3);
         String response = multiSign.genMultiAddress(M, map);
         assertThat(response, containsString("200"));
         assertThat(JSONObject.fromObject(response).getJSONObject("Data").getString("Address"), equalTo(MULITADD1));
@@ -103,10 +106,9 @@ public class MulitTestInvalid2 {
 
     /**
      * Tc272核对公私钥接口
-     * @throws Exception
      */
     @Test
-    public void TC272_testCheckPriKey() throws Exception {
+    public void TC272_testCheckPriKey() {
         String response = multiSign.CheckPriKey(PRIKEY6, PWD6);
         assertThat(response, containsString("200"));
         assertThat(response, containsString("This password match for the private key"));
@@ -117,7 +119,6 @@ public class MulitTestInvalid2 {
      * TC282 发行Token异常测试
      * token类型长度
      * 入参金额的大小、精度
-     * data未传
      * 未在CA中配置3/3地址/删除配置的3/3地址
      */
     @Test
@@ -251,6 +252,33 @@ public class MulitTestInvalid2 {
         assertThat(queryInfo6,containsString("200"));
         assertThat(JSONObject.fromObject(queryInfo6).getJSONObject("Data").getString("Total"),containsString("0"));
 
+    }
+
+    /**
+     * 1/2多签地址向归集地址转账异常测试
+     * 归集地址先向ADD1转入1个token
+     * ADD1再向归集地址转入0.5个token
+     * @throws Exception
+     */
+    @Test
+    public void TC284_transferToImppution() throws Exception {
+        String tokenType = "cx-8oVNI";
+        String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        assertThat(queryInfo, containsString("200"));
+        assertEquals(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total").equals("0"), false);
+
+        List<Map> list0 = utilsClass.constructToken(ADDRESS1, tokenType, "1");
+
+        String transferInfo0 = multiSign.Transfer(PRIKEY4, "cx-test", IMPPUTIONADD, list0);//1 归集地址向单签地址转账
+        Thread.sleep(SLEEPTIME);
+        assertThat(transferInfo0, containsString("200"));
+        String queryInfo1 = multiSign.Balance(PRIKEY1, tokenType);
+        assertThat(transferInfo0, containsString("200"));
+        assertEquals(JSONObject.fromObject(queryInfo1).getJSONObject("Data").getString("Total").equals("0"), false);
+        List<Map> list1 = utilsClass.constructToken(IMPPUTIONADD, tokenType, "0.5");
+        String transferInfo1 = multiSign.Transfer(PRIKEY1, "cx-test", ADDRESS1, list1);//单签地址向归集地址转账
+        assertThat(transferInfo1, containsString("400"));
+        assertThat(transferInfo1, containsString("not found"));
     }
 
 }
