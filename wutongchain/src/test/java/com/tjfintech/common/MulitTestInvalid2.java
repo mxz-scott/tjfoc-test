@@ -199,7 +199,8 @@ public class MulitTestInvalid2 {
         String recycleInfo5=multiSign.Recycle(IMPPUTIONADD,"123",tokenType,"1");
         String recycleInfo6=multiSign.Recycle(IMPPUTIONADD,PRIKEY3,tokenType,"1");
         String recycleInfo7=multiSign.Recycle(IMPPUTIONADD,"0",tokenType,"1");
-        String recycleInfo8=multiSign.Recycle("0",PRIKEY4,tokenType,"1");
+    //TODO
+        //    String recycleInfo8=multiSign.Recycle("0",PRIKEY4,tokenType,"1");
         String recycleInfo9=multiSign.Recycle(MULITADD3,PRIKEY4,tokenType,"1");
 
         assertThat(recycleInfo,containsString("400"));
@@ -215,9 +216,41 @@ public class MulitTestInvalid2 {
         assertThat(recycleInfo6,containsString("400"));
         assertThat(recycleInfo6,containsString("Multiaddr is not matching for the prikey"));
         assertThat(recycleInfo7,containsString("400"));
-        assertThat(recycleInfo8,containsString("400"));
+     //   assertThat(recycleInfo8,containsString("400"));
         assertThat(recycleInfo9,containsString("400"));
         assertThat(recycleInfo9,containsString("Multiaddr is not matching for the prikey"));
+    }
+
+    /**
+     * TC13 14 20 多签查询异常测试
+     * 私钥 地址 tokenType
+     */
+    @Test
+    public void TC13_20balanceInvalid(){
+        String tokenType="cx-8oVNI";
+        String queryInfo=multiSign.Balance(IMPPUTIONADD,"0",tokenType);
+        String queryInfo1=multiSign.Balance(IMPPUTIONADD,PRIKEY3,tokenType);
+        String queryInfo2=multiSign.Balance(IMPPUTIONADD,"1234abc",tokenType);
+        //TODO
+      //  String queryInfo3=multiSign.Balance("0",PRIKEY4,tokenType);
+
+        String queryInfo4=multiSign.Balance("Soirv9ikykFYbBLMExy4zUTUa",PRIKEY4,tokenType);
+        String queryInfo5=multiSign.Balance(IMPPUTIONADD,PRIKEY4,"0");
+        String queryInfo6=multiSign.Balance(IMPPUTIONADD,PRIKEY4,"abc123e");
+        assertThat(queryInfo,containsString("400"));
+        assertThat(queryInfo,containsString("Private key must be base64 string"));
+        assertThat(queryInfo1,containsString("400"));
+        assertThat(queryInfo1,containsString("Invalid private key"));
+        assertThat(queryInfo2,containsString("400"));
+        assertThat(queryInfo2,containsString("Private key must be base64 string"));
+        //assertThat(queryInfo3,containsString("400"));
+        assertThat(queryInfo4,containsString("400"));
+        assertThat(queryInfo4,containsString("Invalid private key"));
+        assertThat(queryInfo5,containsString("200"));
+        assertThat(JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"),containsString("0"));
+        assertThat(queryInfo6,containsString("200"));
+        assertThat(JSONObject.fromObject(queryInfo6).getJSONObject("Data").getString("Total"),containsString("0"));
+
     }
 
 }
