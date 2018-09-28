@@ -89,7 +89,6 @@ public class MultiTestInvalid {
         assertThat(JSONObject.fromObject(transferInfo6).getString("Message"),equalTo("insufficient balance"));
         assertThat(JSONObject.fromObject(transferInfo7).getString("Message"),equalTo("insufficient balance"));
 
-        Thread.sleep(SLEEPTIME);
 
 
         log.info("查询余额判断转账是否成功");

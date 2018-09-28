@@ -93,6 +93,10 @@ public class MulitTestInvalid2 {
         String response = multiSign.genMultiAddress(M, map);
         assertThat(response, containsString("200"));
         assertThat(JSONObject.fromObject(response).getJSONObject("Data").getString("Address"), equalTo(MULITADD1));
+        map.remove("3");
+        String response2 = multiSign.genMultiAddress(1, map);
+        assertThat(response2, containsString("200"));
+        assertThat(JSONObject.fromObject(response2).getJSONObject("Data").getString("Address"), equalTo(MULITADD4));
     }
 
     /**
