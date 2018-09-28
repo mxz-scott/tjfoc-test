@@ -101,6 +101,7 @@ public class MulitTestInvalid2 {
 
     /**
      * Tc272核对公私钥接口
+     * @throws Exception
      */
     @Test
     public void TC272_testCheckPriKey() throws Exception {
