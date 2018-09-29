@@ -15,7 +15,7 @@ public class UtilsClass {
     public final static String  ADDRESS7 = "4qTRGSuJqmq4HLZFUQvRx2MKKEwULzzEkf3GGXa5d3CYxivGXf";
      public final static String  MULITADD1 ="SrvKGcQvu6ytWMPxTMkDMnpFmJyPaYbmAQEY71zuGaH7bzSAutr";//123
      public final static String  MULITADD2 ="SsdcTnfMArqR6Yfon2UiLnSn1zEDkPdVxNGLkBNHKT2Rte3pM5n";//126
-     public final static String  MULITADD3 ="SsFxYCgp3NkatRcKyUmo9Bpud5SHEUmgUiJo6SZK5DZs5yBKhMY";//167
+     public final static String  MULITADD3 ="SqsV1UFpVQ3PVrxGLfjVTa4u1Xsz5PYT92C5Gav9vSF1xxFJqLS";//167
      public final static String  MULITADD4 ="Snj8kGTdJy4qcj1ABNRK6cq7TEJqbjVw6xTR9VKQk5cKsSfbsss";//12
      public final static String  MULITADD5 ="SnFXgygehAXLHjuhHciGJWnwd99TwC8pmAWhpiY6YXmdRRQDxzD";//13
      public final static String  MULITADD6 ="SogNyzAxSByMtRZygvpkbu8V9PGswhqXGh2Hp5PoyQmdaepQt1i";//34
