@@ -46,12 +46,12 @@ public class StoreTest {
 
 
     /**
-     *TC06-获取存证交易byhash
+     *TC292-获取存证交易byhash
      * 通过TC05全局变量storeHash用于查询测试
      * 预期：返回200，Data为存证内容
      */
     @Test
-    public void TC06_getStore() throws  Exception {
+    public void TC292_getStore() throws  Exception {
         String Data = "\"test\":\"json"+UtilsClass.Random(3)+"\"";
         String response=store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
