@@ -4,6 +4,7 @@ import com.tjfintech.common.MultiSign;
 import com.tjfintech.common.SoloSign;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -162,7 +163,7 @@ public class SoloTest {
 
     }
     /**
-     * Tc040单签转单签异常测试:
+     * Tc042单签转单签+多签异常测试:
      *
      */
     @Test
@@ -182,22 +183,46 @@ public class SoloTest {
         assertThat(recycleInfo2, containsString("200"));
         Thread.sleep(SLEEPTIME);
         List<Map> list4 =soloSign.constructToken(ADDRESS4,tokenType,"400");
-        List<Map>list5=soloSign.constructToken(ADDRESS5,tokenType2,"401",list4);
+        List<Map>list5=soloSign.constructToken(MULITADD5,tokenType2,"401",list4);
         String recycleInfo3 = soloSign.Transfer(list5, PRIKEY3, "李四向小六转账4000 TT001, 4001 TT002");
         assertThat(recycleInfo3, containsString("200"));
         Thread.sleep(SLEEPTIME);
+
         String Info = multiSign.Recycle("", PRIKEY3, tokenType, "2330");
         String Info1 = multiSign.Recycle("", PRIKEY3, tokenType2, "2599");
         String Info2 = multiSign.Recycle("", PRIKEY4, tokenType, "600");
-        String Info3 = multiSign.Recycle("", PRIKEY5, tokenType2, "70");
-
-        String Info4 = multiSign.Recycle("", PRIKEY5, tokenType2, "471");
+        String Info3 = multiSign.Recycle(MULITADD5, PRIKEY5, tokenType, "70");
+        String Info4 = multiSign.Recycle(MULITADD5, PRIKEY5, tokenType2, "401");
+        String Info5 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "7000.123456789");
+        String Info6 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, "17000.87654321");
         assertThat(Info, containsString("200"));
         assertThat(Info1, containsString("200"));
         assertThat(Info2, containsString("200"));
         assertThat(Info3, containsString("200"));
         assertThat(Info4, containsString("200"));
-
+        assertThat(Info5, containsString("200"));
+        assertThat(Info6, containsString("200"));
+        String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        String response3 = multiSign.Balance(ADDRESS5, PRIKEY5, tokenType);
+        String response4 = multiSign.Balance(ADDRESS5, PRIKEY5, tokenType2);
+        String response5 = soloSign.Balance( PRIKEY3, tokenType);
+        String response6 = soloSign.Balance( PRIKEY3, tokenType2);
+        String response7 = soloSign.Balance( PRIKEY4, tokenType);
+        assertThat(tokenType+"查询余额错误",response1, containsString("200"));
+        assertThat(tokenType+"查询余额错误",response2, containsString("200"));
+        assertThat(tokenType+"查询余额错误",response3, containsString("200"));
+        assertThat(tokenType+"查询余额错误",response4, containsString("200"));
+        assertThat(tokenType+"查询余额错误",response5, containsString("200"));
+        assertThat(tokenType+"查询余额错误",response6, containsString("200"));
+        assertThat(tokenType+"查询余额错误",response7, containsString("200"));
+        assertThat(JSONObject.fromObject(response1).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(response2).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(response3).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(response4).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(response5).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(response6).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(response7).getJSONObject("Data").getString("Total"), containsString("0"));
 
     }
 
