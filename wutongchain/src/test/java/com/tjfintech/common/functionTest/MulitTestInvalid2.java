@@ -55,12 +55,12 @@ public class MulitTestInvalid2 {
         String response = multiSign.genMultiAddress(M, map);
         map.put("1", "@#$%");
         String response2 = multiSign.genMultiAddress(M, map);
-        map.put("1",PUBKEY2);
+        map.put("1", PUBKEY2);
         String response3 = multiSign.genMultiAddress(M, map);
         assertThat(response, containsString("400"));
         assertThat(response2, containsString("400"));
         assertThat(response3, containsString("400"));
-        assertThat(response3,containsString("duplicate pubkey"));
+        assertThat(response3, containsString("duplicate pubkey"));
 
     }
 
@@ -68,7 +68,7 @@ public class MulitTestInvalid2 {
      * TC12变更多签公钥顺序，多签地址不变
      */
     @Test
-    public void TC12_createAdd(){
+    public void TC12_createAdd() {
         int M = 3;
         Map<String, Object> map = new HashMap<>();
         map.put("1", PUBKEY1);
@@ -77,8 +77,8 @@ public class MulitTestInvalid2 {
         String response = multiSign.genMultiAddress(M, map);
         assertThat(response, containsString("200"));
         assertThat(JSONObject.fromObject(response).getJSONObject("Data").getString("Address"), equalTo(MULITADD1));
-        map.put("1",PUBKEY2);
-        map.put("2",PUBKEY1);
+        map.put("1", PUBKEY2);
+        map.put("2", PUBKEY1);
         String response2 = multiSign.genMultiAddress(M, map);
         assertThat(response2, containsString("200"));
         assertThat(JSONObject.fromObject(response2).getJSONObject("Data").getString("Address"), equalTo(MULITADD1));
@@ -123,7 +123,7 @@ public class MulitTestInvalid2 {
      * 未在CA中配置3/3地址/删除配置的3/3地址
      */
     @Test
-    public void TC282_issueTokenInvalid(){
+    public void TC282_issueTokenInvalid() {
         String tokenType = "CX-" + UtilsClass.Random(4);
         String amount = "90";
         log.info(MULITADD2 + "发行" + tokenType + " token，数量为：" + amount);
@@ -131,13 +131,13 @@ public class MulitTestInvalid2 {
         //String response = multiSign.issueToken(MULITADD2, tokenType+"123456789000000000000000000", amount, data);
         String response2 = multiSign.issueToken(MULITADD2, tokenType, "900000000000000000000000000000000000", data);
         String response4 = multiSign.issueToken(MULITADD1, tokenType, amount, data);
-       // String response5 = multiSign.issueToken("0123", tokenType, amount, data);
-       // assertThat(response, containsString("400"));
+        // String response5 = multiSign.issueToken("0123", tokenType, amount, data);
+        // assertThat(response, containsString("400"));
         assertThat(response2, containsString("400"));
         assertThat(response2, containsString("Amount must be greater than 0 and less than 900000000"));
         assertThat(response4, containsString("400"));
         assertThat(response4, containsString("tokenaddress verify failed"));
-   //     assertThat(response5, containsString("400"));
+        //     assertThat(response5, containsString("400"));
 
     }
 
@@ -151,7 +151,7 @@ public class MulitTestInvalid2 {
      * 同一私钥重复签名的交易
      */
     @Test
-    public void TC283_signIssueInvalid(){
+    public void TC283_signIssueInvalid() {
         String tokenType = "CX-" + UtilsClass.Random(4);
         String amount = "1000";
         String data = "MULITADD2" + "发行" + tokenType + " token，数量为：" + amount;
@@ -159,7 +159,7 @@ public class MulitTestInvalid2 {
         assertThat(response, containsString("200"));
         String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
         String response2 = multiSign.Sign(Tx1, PRIKEY6);//不带密码
-        String response3 = multiSign.Sign(Tx1, PRIKEY6,PWD7);//密码错误
+        String response3 = multiSign.Sign(Tx1, PRIKEY6, PWD7);//密码错误
         String response4 = multiSign.Sign(Tx1, "112");  //非法密钥
         String response5 = multiSign.Sign(Tx1, PRIKEY3);   //无关密钥
         String response6 = multiSign.Sign("123", PRIKEY1);//Tx非法
@@ -179,9 +179,9 @@ public class MulitTestInvalid2 {
         assertThat(response7, containsString("200"));
         assertThat(response8, containsString("400"));
         assertThat(response8, containsString("Private key signed already"));
-        String queryInfo=multiSign.Balance(IMPPUTIONADD,PRIKEY4,tokenType);
-        assertThat(queryInfo,containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"),containsString("0"));
+        String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        assertThat(queryInfo, containsString("200"));
+        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("0"));
 
     }
 
@@ -189,37 +189,36 @@ public class MulitTestInvalid2 {
      * TC21-23多签地址回收异常测试
      */
     @Test
-    public void TC21_23recycleInvalid(){
-        String tokenType="cx-8oVNI";
-        String queryInfo=multiSign.Balance(IMPPUTIONADD,PRIKEY4,tokenType);
-        assertThat(queryInfo,containsString("200"));
-        String recycleInfo=multiSign.Recycle(IMPPUTIONADD,PRIKEY4,"abc","1");
-        String recycleInfo2=multiSign.Recycle(IMPPUTIONADD,PRIKEY4,tokenType,"0");
-        String recycleInfo3=multiSign.Recycle(IMPPUTIONADD,PRIKEY4,tokenType,"9000000000000000");
-        String recycleInfo4=multiSign.Recycle(IMPPUTIONADD,PRIKEY4,tokenType,"-10");
-        String recycleInfo5=multiSign.Recycle(IMPPUTIONADD,"123",tokenType,"1");
-        String recycleInfo6=multiSign.Recycle(IMPPUTIONADD,PRIKEY3,tokenType,"1");
-        String recycleInfo7=multiSign.Recycle(IMPPUTIONADD,"0",tokenType,"1");
-    //TODO
-        //    String recycleInfo8=multiSign.Recycle("0",PRIKEY4,tokenType,"1");
-        String recycleInfo9=multiSign.Recycle(MULITADD3,PRIKEY4,tokenType,"1");
-
-        assertThat(recycleInfo,containsString("400"));
-        assertThat(recycleInfo,containsString("insufficient balance"));
-        assertThat(recycleInfo2,containsString("400"));
-        assertThat(recycleInfo2,containsString("Amount must be greater than 0 and less than 900000000"));
-        assertThat(recycleInfo3,containsString("400"));
-        assertThat(recycleInfo3,containsString("Amount must be greater than 0 and less than 900000000"));
-        assertThat(recycleInfo4,containsString("400"));
-        assertThat(recycleInfo4,containsString("Token amount must be a valid number and less than 900000000"));
-        assertThat(recycleInfo5,containsString("400"));
-        assertThat(recycleInfo5,containsString("Private key must be base64 string"));
-        assertThat(recycleInfo6,containsString("400"));
-        assertThat(recycleInfo6,containsString("Multiaddr is not matching for the prikey"));
-        assertThat(recycleInfo7,containsString("400"));
-     //   assertThat(recycleInfo8,containsString("400"));
-        assertThat(recycleInfo9,containsString("400"));
-        assertThat(recycleInfo9,containsString("Multiaddr is not matching for the prikey"));
+    public void TC21_23recycleInvalid() {
+        String tokenType = "cx-8oVNI";
+        String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        assertThat(queryInfo, containsString("200"));
+        String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, "abc", "1");
+        String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "0");
+        String recycleInfo3 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "9000000000000000");
+        String recycleInfo4 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "-10");
+        String recycleInfo5 = multiSign.Recycle(IMPPUTIONADD, "123", tokenType, "1");
+        String recycleInfo6 = multiSign.Recycle(IMPPUTIONADD, PRIKEY3, tokenType, "1");
+        String recycleInfo7 = multiSign.Recycle(IMPPUTIONADD, "0", tokenType, "1");
+        String recycleInfo8 = multiSign.Recycle("0", PRIKEY4, tokenType, "1");
+        String recycleInfo9 = multiSign.Recycle(MULITADD3, PRIKEY4, tokenType, "1");
+        assertThat(recycleInfo, containsString("400"));
+        assertThat(recycleInfo, containsString("insufficient balance"));
+        assertThat(recycleInfo2, containsString("400"));
+        assertThat(recycleInfo2, containsString("Amount must be greater than 0 and less than 900000000"));
+        assertThat(recycleInfo3, containsString("400"));
+        assertThat(recycleInfo3, containsString("Amount must be greater than 0 and less than 900000000"));
+        assertThat(recycleInfo4, containsString("400"));
+        assertThat(recycleInfo4, containsString("Token amount must be a valid number and less than 900000000"));
+        assertThat(recycleInfo5, containsString("400"));
+        assertThat(recycleInfo5, containsString("Private key must be base64 string"));
+        assertThat(recycleInfo6, containsString("400"));
+        assertThat(recycleInfo6, containsString("Multiaddr is not matching for the prikey"));
+        assertThat(recycleInfo7, containsString("400"));
+        assertThat(recycleInfo8, containsString("400"));
+        assertThat(recycleInfo8, containsString("Invalid multiple address"));
+        assertThat(recycleInfo9, containsString("400"));
+        assertThat(recycleInfo9, containsString("Multiaddr is not matching for the prikey"));
     }
 
     /**
@@ -227,30 +226,28 @@ public class MulitTestInvalid2 {
      * 私钥 地址 tokenType
      */
     @Test
-    public void TC13_20balanceInvalid(){
-        String tokenType="cx-8oVNI";
-        String queryInfo=multiSign.Balance(IMPPUTIONADD,"0",tokenType);
-        String queryInfo1=multiSign.Balance(IMPPUTIONADD,PRIKEY3,tokenType);
-        String queryInfo2=multiSign.Balance(IMPPUTIONADD,"1234abc",tokenType);
-        //TODO
-     //   String queryInfo3=multiSign.Balance("0",PRIKEY4,tokenType);
-
-        String queryInfo4=multiSign.Balance("Soirv9ikykFYbBLMExy4zUTUa",PRIKEY4,tokenType);
-        String queryInfo5=multiSign.Balance(IMPPUTIONADD,PRIKEY4,"0");
-        String queryInfo6=multiSign.Balance(IMPPUTIONADD,PRIKEY4,"abc123e");
-        assertThat(queryInfo,containsString("400"));
-        assertThat(queryInfo,containsString("Private key must be base64 string"));
-        assertThat(queryInfo1,containsString("400"));
-        assertThat(queryInfo1,containsString("Multiaddr is not matching for the prikey"));
-        assertThat(queryInfo2,containsString("400"));
-        assertThat(queryInfo2,containsString("Private key must be base64 string"));
-       // assertThat(queryInfo3,containsString("400"));
-        assertThat(queryInfo4,containsString("400"));
-        assertThat(queryInfo4,containsString("Incorrect mulAddr"));
-        assertThat(queryInfo5,containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"),containsString("0"));
-        assertThat(queryInfo6,containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo6).getJSONObject("Data").getString("Total"),containsString("0"));
+    public void TC13_20balanceInvalid() {
+        String tokenType = "cx-8oVNI";
+        String queryInfo = multiSign.Balance(IMPPUTIONADD, "0", tokenType);
+        String queryInfo1 = multiSign.Balance(IMPPUTIONADD, PRIKEY3, tokenType);
+        String queryInfo2 = multiSign.Balance(IMPPUTIONADD, "1234abc", tokenType);
+        String queryInfo3 = multiSign.Balance("0", PRIKEY4, tokenType);
+        String queryInfo4 = multiSign.Balance("Soirv9ikykFYbBLMExy4zUTUa", PRIKEY4, tokenType);
+        String queryInfo5 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, "0");
+        String queryInfo6 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, "abc123e");
+        assertThat(queryInfo, containsString("400"));
+        assertThat(queryInfo, containsString("Private key must be base64 string"));
+        assertThat(queryInfo1, containsString("400"));
+        assertThat(queryInfo1, containsString("Multiaddr is not matching for the prikey"));
+        assertThat(queryInfo2, containsString("400"));
+        assertThat(queryInfo2, containsString("Private key must be base64 string"));
+        assertThat(queryInfo3, containsString("400"));
+        assertThat(queryInfo4, containsString("400"));
+        assertThat(queryInfo4, containsString("Invalid multiple address"));
+        assertThat(queryInfo5, containsString("200"));
+        assertThat(JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(queryInfo6, containsString("200"));
+        assertThat(JSONObject.fromObject(queryInfo6).getJSONObject("Data").getString("Total"), containsString("0"));
 
     }
 
@@ -258,6 +255,7 @@ public class MulitTestInvalid2 {
      * 1/2多签地址向归集地址转账异常测试
      * 归集地址先向ADD1转入1个token
      * ADD1再向归集地址转入0.5个token
+     *
      * @throws Exception
      */
     @Test
@@ -272,7 +270,7 @@ public class MulitTestInvalid2 {
         String transferInfo0 = multiSign.Transfer(PRIKEY4, "cx-test", IMPPUTIONADD, list0);//1 归集地址向单签地址转账
         Thread.sleep(SLEEPTIME);
         assertThat(transferInfo0, containsString("200"));
-        String queryInfo1 = multiSign.Balance(MULITADD4,PRIKEY1, tokenType);
+        String queryInfo1 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
         assertThat(transferInfo0, containsString("200"));
         assertEquals(JSONObject.fromObject(queryInfo1).getJSONObject("Data").getString("Total").equals("0"), false);
 

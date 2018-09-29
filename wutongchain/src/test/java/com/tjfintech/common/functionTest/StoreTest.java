@@ -9,10 +9,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
@@ -71,7 +68,7 @@ public class StoreTest {
      */
     @Test
     public void TC277_getStorePost() throws Exception {
-        String Data = "cxTest-" + UtilsClass.Random(4);
+        String Data = "cxTest-" + UtilsClass.Random(7);
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
         map.put("pubkeys",PUBKEY6);
@@ -100,8 +97,8 @@ public class StoreTest {
      */
     @Test
     public void TC07_GetTxSearch() throws Exception {
-        String Data = "cxtest-" + UtilsClass.Random(1);
-        String Data2 = "cxtest-" + UtilsClass.Random(2);
+        String Data = "cxtest-" + UtilsClass.Random(7);
+        String Data2 = "cxtest-" + UtilsClass.Random(6);
         String response = store.CreateStore(Data);
         String response2 = store.CreateStore(Data2);
         JSONObject jsonObject = JSONObject.fromObject(response);
@@ -224,7 +221,6 @@ public class StoreTest {
    }
 
 
-  //TODO
 //----------------------------------------------------------------------------------------------------------------
 
     /**
@@ -240,8 +236,11 @@ public class StoreTest {
         Thread.sleep(SLEEPTIME);
         String response2=store.GetTransaction(storeHash);
         assertThat(response2,containsString("200"));
-        //TODO
-        //{"State":200,"Message":"success","Data":{"header":{"version":3,"timestamp":1538186748,"transactionHash":"HIO8XdxUbX/HshNm2y6E5Y9A/5tNS+dv08ViTgqFz+k="},"smartContract":"eyJOYW1lIjoiIiwiVmVyc2lvbiI6IiIsIlR5cGUiOjQsInByaSI6ZmFsc2V9","smartContractArgs":["InRlc3QiOiJqc29uYjAyMSI="],"code":0,"message":"","writes":null,"contractResult":{"status":0,"payload":""},"txRecords":null}}
+        final Base64.Decoder decoder = Base64.getDecoder();
+       String args=JSONObject.fromObject(response2).getJSONObject("Data").getJSONArray("smartContractArgs").get(0).toString();
+       String DataInfo=new String(decoder.decode(args),"UTF-8");
+       assertEquals(DataInfo.equals(Data),true);
+
     }
 
     /**
@@ -286,9 +285,16 @@ public class StoreTest {
         String response2=store.GetBlockByHeight(height-1);
         assertThat(response2,containsString("200"));
     }
-//TODO  根据哈希查询区块为空
     @Test
     public void getBlockByHash() {
+        String response=store.GetHeight();
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        Integer  height=jsonObject.getInt("Data");
+        assertThat(response,containsString("200"));
+        String response2=store.GetBlockByHeight(height-2);
+        String hash=JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("header").getString("blockHash");
+        String response3=store.GetBlockByHash(hash);
+        assertEquals(response2.equals(response3),true);
     }
 
 
