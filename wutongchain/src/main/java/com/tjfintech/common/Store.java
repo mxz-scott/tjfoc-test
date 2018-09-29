@@ -198,13 +198,14 @@ public class Store {
      * @version 1.0
      * @method GET
      */
-    public void   GetBlockByHash(){
+    public String   GetBlockByHash(String hash){
         String param;
-        String hash="";
         Map<String,Object>map=new HashMap<>();
         map.put("hash",hash);
         param=GetTest.ParamtoUrl(map);
-        log.info(GetTest.SendGetTojson(SDKADD+"/getblockbyhash"+"?"+param));
+        String result=(GetTest.SendGetTojson(SDKADD+"/getblockbyhash"+"?"+param));
+        log.info(result);
+        return result;
     }
 
 
