@@ -1,6 +1,7 @@
-package com.tjfintech.common;
+package com.tjfintech.common.functionTest;
 
 
+import com.tjfintech.common.Store;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -239,6 +240,8 @@ public class StoreTest {
         Thread.sleep(SLEEPTIME);
         String response2=store.GetTransaction(storeHash);
         assertThat(response2,containsString("200"));
+        //TODO
+        //{"State":200,"Message":"success","Data":{"header":{"version":3,"timestamp":1538186748,"transactionHash":"HIO8XdxUbX/HshNm2y6E5Y9A/5tNS+dv08ViTgqFz+k="},"smartContract":"eyJOYW1lIjoiIiwiVmVyc2lvbiI6IiIsIlR5cGUiOjQsInByaSI6ZmFsc2V9","smartContractArgs":["InRlc3QiOiJqc29uYjAyMSI="],"code":0,"message":"","writes":null,"contractResult":{"status":0,"payload":""},"txRecords":null}}
     }
 
     /**

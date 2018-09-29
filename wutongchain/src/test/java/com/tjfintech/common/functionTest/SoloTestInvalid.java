@@ -1,5 +1,8 @@
-package com.tjfintech.common;
+package com.tjfintech.common.functionTest;
 
+import com.tjfintech.common.MultiSign;
+import com.tjfintech.common.SoloSign;
+import com.tjfintech.common.Store;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -10,7 +13,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.StoreTest.SLEEPTIME;
+import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;

@@ -1,14 +1,13 @@
-package com.tjfintech.common;
+package com.tjfintech.common.performanceTest;
 
 
+import com.tjfintech.common.Store;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Test;
 
 import java.util.Date;
 
-import static com.tjfintech.common.StoreTest.SLEEPTIME;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
 @Slf4j
@@ -20,7 +19,7 @@ public class StoreInLocalTest {
     public void TC010_CreatePrivateStoreDataIsJson() {
         long times = new Date().getTime();
         log.info("开始存证"+times);
-    String data = store.CreateStore("j344342311365633i2j");
+    String data = store.CreateStore("j3478984342311365633i2j");
         log.info(data);
 
 

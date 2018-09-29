@@ -1,21 +1,20 @@
-package com.tjfintech.common;
+package com.tjfintech.common.functionTest;
 
+import com.tjfintech.common.MultiSign;
+import com.tjfintech.common.SoloSign;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
-import static com.tjfintech.common.StoreTest.SLEEPTIME;
+
+import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 @Slf4j
@@ -30,10 +29,10 @@ public class SoloTest {
     @Before
     public void beforeConfig() throws Exception {
         log.info("发行两种token1000个");
-        tokenType = "SOLOTC-"+UtilsClass.Random(3);
+        tokenType = "SOLOTC-"+UtilsClass.Random(6);
         String isResult=soloSign.issueToken(PRIKEY1,tokenType,"10000.123456789","发行token");
 
-        tokenType2 = "SOLOTC-"+UtilsClass.Random(3);
+        tokenType2 = "SOLOTC-"+UtilsClass.Random(6);
         String isResult2=soloSign.issueToken(PRIKEY1,tokenType2,"20000.87654321","发行token");
         assertThat(tokenType+"发行token错误",isResult, containsString("200"));
         assertThat(tokenType+"发行token错误",isResult2, containsString("200"));

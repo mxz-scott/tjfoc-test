@@ -1,5 +1,6 @@
-package com.tjfintech.common;
+package com.tjfintech.common.functionTest;
 
+import com.tjfintech.common.MultiSign;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -11,7 +12,7 @@ import org.junit.runners.MethodSorters;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.StoreTest.SLEEPTIME;
+import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
@@ -100,7 +101,7 @@ public class MultiTest {
          assertThat(response1, containsString("1000"));
          assertThat(response2, containsString("200"));
          assertThat(response2, containsString("1000"));
-         String transferData = "归集地址向" + "ADDRESS1" + "转账10个" + tokenType+"归集地址向" + "MULITADD4" + "转账10个" + tokenType;
+         String transferData = "归集地址向" + "MULITADD4" + "转账10个" + tokenType+"归集地址向" + "MULITADD4" + "转账10个" + tokenType;
          List<Map>list=utilsClass.constructToken(MULITADD4,tokenType,"10");
          List<Map>list2=utilsClass.constructToken(MULITADD5,tokenType2,"10",list);
          List<Map>list3=utilsClass.constructToken(MULITADD5,tokenType,"10",list);

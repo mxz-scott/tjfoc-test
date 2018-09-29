@@ -1,5 +1,6 @@
-package com.tjfintech.common;
+package com.tjfintech.common.functionTest;
 
+import com.tjfintech.common.Store;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -7,8 +8,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import static com.tjfintech.common.StoreTest.SLEEPTIME;
-import static org.hamcrest.MatcherAssert.*;
+import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static org.hamcrest.CoreMatchers.*;
 
 import static org.junit.Assert.assertEquals;
