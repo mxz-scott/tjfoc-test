@@ -32,9 +32,9 @@ public class SoloTestInvalid {
     @Before
     public void beforeConfig() throws Exception {
         log.info("发行两种token");
-        tokenType = "SOLOTC-" + UtilsClass.Random(3);
+        tokenType = "SOLOTC-" + UtilsClass.Random(6);
         String issueInfo1=  soloSign.issueToken(PRIKEY1, tokenType, "100.123456789", tokenType);
-        tokenType2 = "SOLOTC-" + UtilsClass.Random(3);
+        tokenType2 = "SOLOTC-" + UtilsClass.Random(6);
         String issueInfo2= soloSign.issueToken(PRIKEY1, tokenType2, "200.87654321", tokenType2);
         Thread.sleep(SLEEPTIME);
         assertThat(issueInfo1,containsString("200"));
