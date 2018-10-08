@@ -200,8 +200,9 @@ public class Store {
      */
     public String   GetBlockByHash(String hash){
         String param;
+        String hashencode=URLEncoder.encode(hash);
         Map<String,Object>map=new HashMap<>();
-        map.put("hash",hash);
+        map.put("hash",hashencode);
         param=GetTest.ParamtoUrl(map);
         String result=(GetTest.SendGetTojson(SDKADD+"/getblockbyhash"+"?"+param));
         log.info(result);
