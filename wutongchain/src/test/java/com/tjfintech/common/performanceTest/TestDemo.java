@@ -29,7 +29,7 @@ public class TestDemo {
                 }
             }
         });
-        log.info("测试所用时间:{}", timeTasks);
+        log.info("测试所用时间:{}毫秒", timeTasks);
     }
 
     public long timeTasks(int nThreads, final Runnable task) throws InterruptedException {

@@ -29,8 +29,8 @@ public class SoloTestInvalid {
     Store store=testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
 
-    public static String tokenType;
-    public static String tokenType2;
+    private static String tokenType;
+    private static String tokenType2;
 
     @Before
     public void beforeConfig() throws Exception {

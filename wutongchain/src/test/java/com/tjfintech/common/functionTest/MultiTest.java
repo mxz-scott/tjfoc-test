@@ -25,8 +25,8 @@ public class MultiTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     MultiSign multiSign =testBuilder.getMultiSign();
     UtilsClass utilsClass=new UtilsClass();
-    public static String tokenType;
-    public static String tokenType2;
+    private static String tokenType;
+    private static String tokenType2;
 
     @Before
     public void beforeConfig() throws Exception {

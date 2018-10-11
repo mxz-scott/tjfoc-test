@@ -1,11 +1,6 @@
 package com.tjfintech.common.performanceTest;
 
-<<<<<<< HEAD
-import com.google.gson.Gson;
 
-import lombok.extern.slf4j.Slf4j;
-import java.util.Scanner;
-=======
 /*import com.tjfoc.smartcontact.SmartContract;
 import peer.PeerOuterClass.BlockchainBool;
 import transaction.TransactionOuterClass.Transaction;

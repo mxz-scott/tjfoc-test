@@ -27,8 +27,8 @@ public class  MultiTestInvalid {
     MultiSign multiSign =testBuilder.getMultiSign();
     UtilsClass utilsClass = new UtilsClass();
     MultiTest multiTest = new MultiTest();
-    public static String tokenType;
-    public static String tokenType2;
+    private static String tokenType;
+    private static String tokenType2;
 
     @Before
     public void beforeConfig() throws Exception {

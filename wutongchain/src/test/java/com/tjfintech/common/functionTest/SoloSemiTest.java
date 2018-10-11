@@ -25,8 +25,8 @@ public class SoloSemiTest {
     SoloSign soloSign =testBuilder.getSoloSign();
     MultiSign multiSign=testBuilder.getMultiSign();
     UtilsClass utilsClass=new UtilsClass();
-    public static String tokenType;
-    public static String tokenType2;
+    private static String tokenType;
+    private static String tokenType2;
 
     @Before
     public void beforeConfig() throws Exception {
@@ -57,7 +57,6 @@ public class SoloSemiTest {
         log.info("发行Token");
         tokenType = "SOLOTC-"+UtilsClass.Random(6);
         String isResult= soloSign.issueToken(PRIKEY1,tokenType,"10000","发行token");
-        log.info(isResult);
         assertThat(isResult, containsString("tokenaddress verify failed"));
     }
 

@@ -1,20 +1,18 @@
 package com.tjfintech.common.performanceTest;
 
-import com.tjfintech.common.MultiSign;
-import com.tjfintech.common.SoloSign;
+import com.tjfintech.common.Interface.MultiSign;
+import com.tjfintech.common.Interface.SoloSign;
+import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
@@ -22,20 +20,19 @@ import static org.junit.Assert.assertThat;
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SoloSemiTest {
-    SoloSign soloSign = new SoloSign();
-    MultiSign multiSign = new MultiSign();
-    UtilsClass utilsClass=new UtilsClass();
-    public static String tokenType;
-    public static String tokenType2;
+    static TestBuilder testBuilder = TestBuilder.getInstance();
+    private static SoloSign soloSign = testBuilder.getSoloSign();
+    private static MultiSign multiSign = testBuilder.getMultiSign();
+    private static UtilsClass utilsClass = new UtilsClass();
+    private static String tokenType;
+    private static String tokenType2;
 
     @Before
     public void beforeConfig() throws Exception {
 
     }
     public static void main(String[] args) throws  Exception {
-        SoloSign soloSign = new SoloSign();
-        MultiSign multiSign = new MultiSign();
-        UtilsClass utilsClass = new UtilsClass();
+
         /**
          * Tc026不配置归集地址发token:
          *

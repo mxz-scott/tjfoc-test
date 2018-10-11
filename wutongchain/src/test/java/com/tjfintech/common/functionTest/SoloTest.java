@@ -26,8 +26,8 @@ public class SoloTest {
     MultiSign multiSign =testBuilder.getMultiSign();
     SoloSign soloSign = testBuilder.getSoloSign();
     UtilsClass utilsClass=new UtilsClass();
-    public static String tokenType;
-    public static String tokenType2;
+    private static String tokenType;
+    private static String tokenType2;
 
     @Before
     public void beforeConfig() throws Exception {
