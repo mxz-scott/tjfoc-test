@@ -7,6 +7,16 @@ import java.util.Map;
 
 public class JavaSoloSign implements SoloSign {
     @Override
+    public List<Map> constructToken(String toAddr, String tokenType, String amount) {
+        return null;
+    }
+
+    @Override
+    public List<Map> constructToken(String toAddr, String tokenType, String amount, List<Map> mapList) {
+        return null;
+    }
+
+    @Override
     public String Balance(String key, String tokenType) {
         return null;
     }
