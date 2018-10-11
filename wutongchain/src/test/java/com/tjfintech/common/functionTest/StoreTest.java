@@ -1,7 +1,7 @@
 package com.tjfintech.common.functionTest;
 
-
-import com.tjfintech.common.Store;
+import com.tjfintech.common.Interface.Store;
+import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -20,7 +20,8 @@ import static org.junit.Assert.assertThat;
 public class StoreTest {
 
     public   final static int   SLEEPTIME=5*1000;
-    Store store=new Store();
+    TestBuilder testBuilder= TestBuilder.getInstance();
+    Store store =testBuilder.getStore();
 
 
 
@@ -35,7 +36,7 @@ public class StoreTest {
     public void TC05_createStore() throws Exception {
 
         String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
-        String response=store.CreateStore(Data);
+        String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(SLEEPTIME);
@@ -53,11 +54,11 @@ public class StoreTest {
     @Test
     public void TC292_getStore() throws  Exception {
         String Data = "\"test\":\"json"+UtilsClass.Random(3)+"\"";
-        String response=store.CreateStore(Data);
+        String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String  storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(SLEEPTIME);
-        String response2=store.GetStore(storeHash);
+        String response2= store.GetStore(storeHash);
         assertThat(response2, containsString("200"));
         assertThat(response2,containsString("json"));
     }
@@ -72,13 +73,13 @@ public class StoreTest {
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
         map.put("pubkeys",PUBKEY6);
-        String response1=store.CreateStorePwd(Data,map);
+        String response1= store.CreateStorePwd(Data,map);
         JSONObject jsonObject=JSONObject.fromObject(response1);
         String StoreHashPwd = jsonObject.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(SLEEPTIME);
-        String response2=store.GetStorePost(StoreHashPwd,PRIKEY1);
-        String response3=store.GetStorePostPwd(StoreHashPwd,PRIKEY6,PWD6);
-        String response4=store.GetStorePost(StoreHashPwd,PRIKEY3);
+        String response2= store.GetStorePost(StoreHashPwd,PRIKEY1);
+        String response3= store.GetStorePostPwd(StoreHashPwd,PRIKEY6,PWD6);
+        String response4= store.GetStorePost(StoreHashPwd,PRIKEY3);
         assertThat(response2, containsString("200"));
 
         assertThat(response2, containsString(Data));
@@ -132,7 +133,7 @@ public class StoreTest {
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
         map.put("pubkeys",PUBKEY6);
-        String response1=store.CreateStorePwd(Data,map);
+        String response1= store.CreateStorePwd(Data,map);
         JSONObject jsonObject=JSONObject.fromObject(response1);
         String StoreHashPwd = jsonObject.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(SLEEPTIME);
@@ -187,7 +188,7 @@ public class StoreTest {
     @Test
     public void TC15_getStat() throws Exception {
         String type = "1";
-        String response=store.GetStat(type);
+        String response= store.GetStat(type);
         int num = JSONObject.fromObject(response).getJSONObject("Data").getInt("Total");
         String Data = "\"test\":\"json" + UtilsClass.Random(4) + "\"";
         String response2 = store.CreateStore(Data);
@@ -230,11 +231,11 @@ public class StoreTest {
     @Test
     public void TC278_getTransaction() throws  Exception {
         String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
-        String response=store.CreateStore(Data);
+        String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(SLEEPTIME);
-        String response2=store.GetTransaction(storeHash);
+        String response2= store.GetTransaction(storeHash);
         assertThat(response2,containsString("200"));
         final Base64.Decoder decoder = Base64.getDecoder();
        String args=JSONObject.fromObject(response2).getJSONObject("Data").getJSONArray("smartContractArgs").get(0).toString();
@@ -250,11 +251,11 @@ public class StoreTest {
     @Test
     public void TC279_getTransactionIndex() throws  Exception {
         String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
-        String response=store.CreateStore(Data);
+        String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(SLEEPTIME);
-       String response2=store.GetTransactionIndex(storeHash);
+       String response2= store.GetTransactionIndex(storeHash);
        assertThat(response2,containsString("200"));
        assertThat(response2,containsString("success"));
     }
@@ -264,7 +265,7 @@ public class StoreTest {
      */
     @Test
     public void TC275_getHeight() {
-        String response=store.GetHeight();
+        String response= store.GetHeight();
         JSONObject jsonObject=JSONObject.fromObject(response);
        Integer  height=jsonObject.getInt("Data");
         assertThat(response,containsString("200"));
@@ -277,23 +278,23 @@ public class StoreTest {
      */
     @Test
     public void TC274_getBlockByHeight() {
-        String response=store.GetHeight();
+        String response= store.GetHeight();
         JSONObject jsonObject=JSONObject.fromObject(response);
         Integer  height=jsonObject.getInt("Data");
         assertThat(response,containsString("200"));
         int Height=4;
-        String response2=store.GetBlockByHeight(height-1);
+        String response2= store.GetBlockByHeight(height-1);
         assertThat(response2,containsString("200"));
     }
     @Test
     public void getBlockByHash() {
-        String response=store.GetHeight();
+        String response= store.GetHeight();
         JSONObject jsonObject=JSONObject.fromObject(response);
         Integer  height=jsonObject.getInt("Data");
         assertThat(response,containsString("200"));
-        String response2=store.GetBlockByHeight(height-2);
+        String response2= store.GetBlockByHeight(height-2);
         String hash=JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("header").getString("blockHash");
-        String response3=store.GetBlockByHash(hash);
+        String response3= store.GetBlockByHash(hash);
         assertEquals(response2.equals(response3),true);
     }
 
@@ -303,7 +304,7 @@ public class StoreTest {
      */
     @Test
     public void TC280_getTxSearch() {
-       String response=store.GetTxSearch(0,5,"tor");
+       String response= store.GetTxSearch(0,5,"tor");
        assertThat(response,containsString("200"));
     }
 
@@ -314,11 +315,11 @@ public class StoreTest {
     @Test
     public void TC276_getInlocal()  throws Exception{
         String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
-        String response=store.CreateStore(Data);
+        String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(SLEEPTIME);
-        String response2=store.GetInlocal(storeHash);
+        String response2= store.GetInlocal(storeHash);
         assertThat(response2,containsString("200"));
     }
 

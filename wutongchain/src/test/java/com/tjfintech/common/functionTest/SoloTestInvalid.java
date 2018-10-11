@@ -1,8 +1,10 @@
 package com.tjfintech.common.functionTest;
 
-import com.tjfintech.common.MultiSign;
-import com.tjfintech.common.SoloSign;
-import com.tjfintech.common.Store;
+
+import com.tjfintech.common.Interface.MultiSign;
+import com.tjfintech.common.Interface.SoloSign;
+import com.tjfintech.common.Interface.Store;
+import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -16,14 +18,15 @@ import java.util.Map;
 import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
+
 import static org.junit.Assert.assertThat;
 
 @Slf4j
 public class SoloTestInvalid {
-    SoloSign soloSign = new SoloSign();
-    Store store = new Store();
-    MultiSign multiSign = new MultiSign();
+    TestBuilder testBuilder= TestBuilder.getInstance();
+    MultiSign multiSign =testBuilder.getMultiSign();
+    SoloSign soloSign=testBuilder.getSoloSign();
+    Store store=testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
 
     public static String tokenType;
@@ -49,13 +52,13 @@ public class SoloTestInvalid {
         String transferData="归集地址向单签地址转账" ;
         List<Map> list0 = utilsClass.constructToken(ADDRESS1, tokenType, "100.123456789");
         List<Map> listInit = utilsClass.constructToken(ADDRESS1, tokenType2, "200.87654321");
-        String transferInfo0=multiSign.Transfer(PRIKEY4,transferData,IMPPUTIONADD,list0);//1 归集地址向单签地址转账
-        String transferInfoInit=multiSign.Transfer(PRIKEY4,transferData,IMPPUTIONADD,listInit);
+        String transferInfo0= multiSign.Transfer(PRIKEY4,transferData,IMPPUTIONADD,list0);//1 归集地址向单签地址转账
+        String transferInfoInit= multiSign.Transfer(PRIKEY4,transferData,IMPPUTIONADD,listInit);
         Thread.sleep(SLEEPTIME);
         assertThat(transferInfo0, containsString("200"));
         assertThat(transferInfoInit,containsString("200"));
-        String queryInfo1=soloSign.Balance(PRIKEY1,tokenType);
-        String queryInfo2=soloSign.Balance(PRIKEY1,tokenType2);
+        String queryInfo1= soloSign.Balance(PRIKEY1,tokenType);
+        String queryInfo2= soloSign.Balance(PRIKEY1,tokenType2);
         assertThat(queryInfo1,containsString("200"));
         assertThat(queryInfo2,containsString("200"));
         assertThat(JSONObject.fromObject(queryInfo1).getJSONObject("Data").getString("Total"), containsString("100.123456789"));
@@ -71,7 +74,7 @@ public class SoloTestInvalid {
     public void TC247_issueThenStore() throws Exception {
         String response = store.CreateStore(tokenType);
         Thread.sleep(SLEEPTIME);
-        String response2=store.CreateStore(tokenType);
+        String response2= store.CreateStore(tokenType);
         assertThat(response, containsString("200"));
         assertThat(response2, containsString("500"));
         assertThat(response2,containsString("Duplicate transaction"));
@@ -159,7 +162,7 @@ public class SoloTestInvalid {
      */
     @Test
     public void TC250_createAddressInvalid() {
-        String response=soloSign.genAddress("123");
+        String response= soloSign.genAddress("123");
         assertThat(response,containsString("400"));
         assertThat(response,containsString("Public key must be base64 string"));
     }
