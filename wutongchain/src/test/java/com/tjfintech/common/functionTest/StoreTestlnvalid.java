@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest;
 
-import com.tjfintech.common.Store;
+import com.tjfintech.common.Interface.Store;
+import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -18,7 +19,8 @@ import static org.junit.Assert.assertThat;
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class StoreTestlnvalid {
-    Store store=new Store();
+    TestBuilder testBuilder= TestBuilder.getInstance();
+    Store store =testBuilder.getStore();
 
     /**
      * Tc16 发送存证交易，data为空字符串
@@ -41,9 +43,9 @@ public class StoreTestlnvalid {
     @Test
     public void TC17_CreateStoreDouble()throws Exception{
          String data="cxTest-"+ UtilsClass.Random(2);
-         String response=store.CreateStore(data);
+         String response= store.CreateStore(data);
          Thread.sleep(SLEEPTIME);
-         String response2=store.CreateStore(data);
+         String response2= store.CreateStore(data);
          Thread.sleep(SLEEPTIME);
          String hash1=JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
          String hash2=JSONObject.fromObject(response2).getString("Message");

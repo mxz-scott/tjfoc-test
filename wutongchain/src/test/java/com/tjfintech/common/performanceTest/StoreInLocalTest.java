@@ -1,7 +1,9 @@
 package com.tjfintech.common.performanceTest;
 
 
-import com.tjfintech.common.Store;
+import com.tjfintech.common.GoStore;
+import com.tjfintech.common.Interface.Store;
+import com.tjfintech.common.TestBuilder;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Test;
@@ -12,7 +14,9 @@ import static org.junit.Assert.assertThat;
 
 @Slf4j
 public class StoreInLocalTest {
-    Store store=new Store();
+    TestBuilder testBuilder= TestBuilder.getInstance();
+    Store store =testBuilder.getStore();
+
 
     @Test
     //测试存证的性能

@@ -1,5 +1,6 @@
 package com.tjfintech.common;
 
+import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.utils.GetTest;
 import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
@@ -10,10 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.MultiSign.SDKADD;
+import static com.tjfintech.common.GoMultiSign.SDKADD;
 
 @Slf4j
-public class Store {
+public  class GoStore implements Store {
+
+
+
     /**
      * 获取交易详情
      * @author chenxu

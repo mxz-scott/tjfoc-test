@@ -1,6 +1,8 @@
 package com.tjfintech.common.performanceTest;
 
-import com.tjfintech.common.Store;
+import com.tjfintech.common.GoStore;
+import com.tjfintech.common.Interface.Store;
+import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -8,7 +10,9 @@ import java.util.concurrent.CountDownLatch;
 
 @Slf4j
 public class TestDemo {
-    static Store store = new Store();
+     static TestBuilder testBuilder= TestBuilder.getInstance();
+    static   Store store =testBuilder.getStore();
+
 
     public static void main(String[] args) throws InterruptedException {
         TestDemo testDemo = new TestDemo();

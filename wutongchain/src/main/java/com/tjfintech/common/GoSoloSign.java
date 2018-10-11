@@ -1,5 +1,6 @@
 package com.tjfintech.common;
 
+import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
@@ -8,7 +9,7 @@ import com.tjfintech.common.utils.GetTest;
 import java.util.*;
 
 @Slf4j
-public class SoloSign {
+public class GoSoloSign implements SoloSign {
 
     @Before
     /**
@@ -48,7 +49,7 @@ public class SoloSign {
         map.put("key",key);
         map.put("tokentype",tokenType);
         param= GetTest.ParamtoUrl(map);
-        String result=GetTest.SendGetTojson(MultiSign.SDKADD+"/utxo/balance"+"?"+param);
+        String result=GetTest.SendGetTojson(GoMultiSign.SDKADD+"/utxo/balance"+"?"+param);
         log.info(result);
         return result ;
     }
@@ -61,7 +62,7 @@ public class SoloSign {
         map.put("Prikey", priKey);
         map.put("Data", data);
         map.put("Token", token);
-       String result=PostTest.sendPostToJson(MultiSign.SDKADD+"/utxo/transfer", map);
+       String result=PostTest.sendPostToJson(GoMultiSign.SDKADD+"/utxo/transfer", map);
        log.info(result);
         return result ;
 
@@ -76,7 +77,7 @@ public class SoloSign {
         map.put("TokenType", tokenType);
         map.put("Amount", amount);
         map.put("Data",data);
-        String result=PostTest.sendPostToJson(MultiSign.SDKADD+"/utxo/issuetoken", map);
+        String result=PostTest.sendPostToJson(GoMultiSign.SDKADD+"/utxo/issuetoken", map);
         log.info(result);
         return result;
     }
@@ -90,7 +91,7 @@ public class SoloSign {
     public String genAddress(String publicKey){
         Map<String, Object> map = new HashMap<>();
         map.put("PubKey", publicKey);
-        String result=PostTest.sendPostToJson(MultiSign.SDKADD+"/utxo/genaddress", map);
+        String result=PostTest.sendPostToJson(GoMultiSign.SDKADD+"/utxo/genaddress", map);
         log.info(result);
         return result;
     }

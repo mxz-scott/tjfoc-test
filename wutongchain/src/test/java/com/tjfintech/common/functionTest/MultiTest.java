@@ -1,6 +1,8 @@
 package com.tjfintech.common.functionTest;
 
-import com.tjfintech.common.MultiSign;
+
+import com.tjfintech.common.Interface.MultiSign;
+import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -20,7 +22,8 @@ import static org.junit.Assert.assertThat;
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MultiTest {
-    MultiSign multiSign = new MultiSign();
+    TestBuilder testBuilder= TestBuilder.getInstance();
+    MultiSign multiSign =testBuilder.getMultiSign();
     UtilsClass utilsClass=new UtilsClass();
     public static String tokenType;
     public static String tokenType2;
@@ -55,7 +58,7 @@ public class MultiTest {
         log.info(transferData);
         List<Map>list=utilsClass.constructToken(MULITADD4,tokenType,"10");
         log.info(transferData);
-        String transferInfo=multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list);
+        String transferInfo= multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list);
         Thread.sleep(SLEEPTIME);
         assertThat(transferInfo, containsString("200"));
 
@@ -106,16 +109,16 @@ public class MultiTest {
          List<Map>list2=utilsClass.constructToken(MULITADD5,tokenType2,"10",list);
          List<Map>list3=utilsClass.constructToken(MULITADD5,tokenType,"10",list);
          log.info(transferData);
-         String transferInfo=multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list2);//不同币种
+         String transferInfo= multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list2);//不同币种
          Thread.sleep(SLEEPTIME); //UTXO关系，两笔交易之间需要休眠
-         String transferInfo2=multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list3);//相同币种
+         String transferInfo2= multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list3);//相同币种
          assertThat(transferInfo,containsString("200"));
          assertThat(transferInfo2,containsString("200"));
          Thread.sleep(SLEEPTIME);
 
          log.info("查询余额判断转账是否成功");
-         String queryInfo=multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
-         String queryInfo2=multiSign.Balance(MULITADD5,PRIKEY1,tokenType2);
+         String queryInfo= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
+         String queryInfo2= multiSign.Balance(MULITADD5,PRIKEY1,tokenType2);
          assertThat(queryInfo,containsString("200"));
          assertThat(queryInfo2,containsString("200"));
          assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("20"));
@@ -136,9 +139,9 @@ public class MultiTest {
          assertThat(recycleInfo5,containsString("200"));
 
          log.info("查询余额判断回收成功与否");
-         String queryInfo3=multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
-         String queryInfo4=multiSign.Balance(MULITADD5,PRIKEY1,tokenType2);
-         String queryInfo5=multiSign.Balance(MULITADD5,PRIKEY1,tokenType);
+         String queryInfo3= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
+         String queryInfo4= multiSign.Balance(MULITADD5,PRIKEY1,tokenType2);
+         String queryInfo5= multiSign.Balance(MULITADD5,PRIKEY1,tokenType);
          assertThat(queryInfo3,containsString("200"));
          assertThat(queryInfo4,containsString("200"));
          assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"), containsString("0"));
@@ -164,16 +167,16 @@ public class MultiTest {
         List<Map>list2=utilsClass.constructToken(MULITADD4,tokenType2,"10",list);
         List<Map>list3=utilsClass.constructToken(MULITADD4,tokenType,"10",list);
         log.info(transferData);
-        String transferInfo=multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list2);//不相同币种
+        String transferInfo= multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list2);//不相同币种
         Thread.sleep(SLEEPTIME);//UTXO关系，两笔交易之间需要休眠
-        String transferInfo2=multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list3);//相同币种
+        String transferInfo2= multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list3);//相同币种
         assertThat(transferInfo,containsString("200"));
         assertThat(transferInfo2,containsString("200"));
         Thread.sleep(SLEEPTIME);
 
         log.info("查询余额判断转账是否成功");
-        String queryInfo=multiSign.Balance(PRIKEY1,tokenType);
-        String queryInfo2=multiSign.Balance(MULITADD4,PRIKEY1,tokenType2);
+        String queryInfo= multiSign.Balance(PRIKEY1,tokenType);
+        String queryInfo2= multiSign.Balance(MULITADD4,PRIKEY1,tokenType2);
         assertThat(queryInfo,containsString("200"));
         assertThat(queryInfo2,containsString("200"));
         assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("20"));
@@ -194,9 +197,9 @@ public class MultiTest {
         assertThat(recycleInfo5,containsString("200"));
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3=multiSign.Balance(PRIKEY1,tokenType);
-        String queryInfo4=multiSign.Balance(MULITADD4,PRIKEY1,tokenType2);
-        String queryInfo5=multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
+        String queryInfo3= multiSign.Balance(PRIKEY1,tokenType);
+        String queryInfo4= multiSign.Balance(MULITADD4,PRIKEY1,tokenType2);
+        String queryInfo5= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
         assertThat(queryInfo3,containsString("200"));
         assertThat(queryInfo4,containsString("200"));
         assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"), containsString("0"));
@@ -218,16 +221,16 @@ public class MultiTest {
         List<Map>list2=utilsClass.constructToken(ADDRESS2,tokenType2,"10",list);
         List<Map>list3=utilsClass.constructToken(ADDRESS2,tokenType,"10",list);
         log.info(transferData);
-        String transferInfo=multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list2);//两个地址不同币种
+        String transferInfo= multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list2);//两个地址不同币种
         Thread.sleep(SLEEPTIME);//UTXO关系，两笔交易之间需要休眠
-        String transferInfo2=multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list3);//两个地址相同币种
+        String transferInfo2= multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list3);//两个地址相同币种
         assertThat(transferInfo,containsString("200"));
         assertThat(transferInfo2,containsString("200"));
         Thread.sleep(SLEEPTIME);
 
         log.info("查询余额判断转账是否成功");
-        String queryInfo=multiSign.Balance(PRIKEY1,tokenType);
-        String queryInfo2=multiSign.Balance(PRIKEY2,tokenType2);
+        String queryInfo= multiSign.Balance(PRIKEY1,tokenType);
+        String queryInfo2= multiSign.Balance(PRIKEY2,tokenType2);
         assertThat(queryInfo,containsString("200"));
         assertThat(queryInfo2,containsString("200"));
         assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("20"));
@@ -247,9 +250,9 @@ public class MultiTest {
         assertThat(recycleInfo5,containsString("200"));
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3=multiSign.Balance(PRIKEY1,tokenType);
-        String queryInfo4=multiSign.Balance(PRIKEY2,tokenType2);
-        String queryInfo5=multiSign.Balance(PRIKEY2,tokenType);
+        String queryInfo3= multiSign.Balance(PRIKEY1,tokenType);
+        String queryInfo4= multiSign.Balance(PRIKEY2,tokenType2);
+        String queryInfo5= multiSign.Balance(PRIKEY2,tokenType);
         assertThat(queryInfo3,containsString("200"));
         assertThat(queryInfo4,containsString("200"));
         assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"), containsString("0"));

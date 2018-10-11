@@ -1,18 +1,32 @@
 package com.tjfintech.common.performanceTest;
 
-import block.BlockOuterClass;
-import com.google.gson.Gson;
-import com.tjfoc.sdk.Client;
-import lombok.extern.slf4j.Slf4j;
-import java.util.Scanner;
+/*import com.tjfoc.smartcontact.SmartContract;
+import peer.PeerOuterClass.BlockchainBool;
+import transaction.TransactionOuterClass.Transaction;
 
-@Slf4j
+import java.util.Base64;
+import java.util.List;
+
+import static transaction.TransactionOuterClass.*;*/
+
 public class SemiAutoTest {
-
-    public static void main(String[] args) throws  Exception{
-        Scanner scanner = new Scanner(System.in);
-        System.out.println(scanner.nextLine());
-        
-    }
+  /*  public static void main(String[] args) throws Exception {
+        SmartContract smartContract = new SmartContract();
+        String string="tjfoc";
+        TXInput[] inputs={};
+        TXOutput[] outputs={};
+        byte[] any = string.getBytes();
+        List<Object> list = smartContract.store(any,0,inputs,outputs);
+        // 获取blockchainBool
+        BlockchainBool blockchainBool = (BlockchainBool) list.get(0);
+        System.out.println("存证是否成功：" + blockchainBool.getOk());
+        // 获取tx
+        Transaction tx = (Transaction) list.get(1);
+        // 获取交易哈希
+        byte[] hash = tx.getHeader().getTransactionHash().toByteArray();
+        Base64.Encoder encoder = Base64.getEncoder();
+        String hashstr = encoder.encodeToString(hash);
+        System.out.println("hash:"+hashstr);
+    }*/
 
 }

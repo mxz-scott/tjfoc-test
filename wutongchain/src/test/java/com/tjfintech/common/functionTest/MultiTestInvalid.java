@@ -1,6 +1,8 @@
 package com.tjfintech.common.functionTest;
 
-import com.tjfintech.common.MultiSign;
+
+import com.tjfintech.common.Interface.MultiSign;
+import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -21,7 +23,8 @@ import static org.junit.Assert.assertThat;
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class  MultiTestInvalid {
-    MultiSign multiSign = new MultiSign();
+    TestBuilder testBuilder= TestBuilder.getInstance();
+    MultiSign multiSign =testBuilder.getMultiSign();
     UtilsClass utilsClass = new UtilsClass();
     MultiTest multiTest = new MultiTest();
     public static String tokenType;
