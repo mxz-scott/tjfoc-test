@@ -33,7 +33,7 @@ public class  MultiTestInvalid {
     @Before
     public void beforeConfig() throws Exception {
         log.info("发行两种token100.123个");
-        tokenType = multiTest.IssueToken(4, "100");
+        tokenType = multiTest.IssueToken(7, "100");
         tokenType2 = multiTest.IssueToken(5, "100.123");
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中两种token余额");
