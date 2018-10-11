@@ -1,6 +1,6 @@
 package com.tjfintech.common.performanceTest;
 
-import com.tjfintech.common.GoStore;
+
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;

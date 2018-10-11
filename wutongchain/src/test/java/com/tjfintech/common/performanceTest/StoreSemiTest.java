@@ -1,14 +1,15 @@
 package com.tjfintech.common.performanceTest;
 
-import com.tjfintech.common.MultiSign;
-import com.tjfintech.common.SoloSign;
-import com.tjfintech.common.Store;
+import com.tjfintech.common.Interface.MultiSign;
+import com.tjfintech.common.Interface.SoloSign;
+import com.tjfintech.common.Interface.Store;
+
+import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.util.*;
@@ -22,10 +23,7 @@ import static org.junit.Assert.assertThat;
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class StoreSemiTest {
-    SoloSign soloSign = new SoloSign();
-    Store store=new Store();
-    MultiSign multiSign = new MultiSign();
-    UtilsClass utilsClass=new UtilsClass();
+
     public static String tokenType;
     public static String tokenType2;
 
@@ -34,12 +32,11 @@ public class StoreSemiTest {
 
     }
     public static void main(String[] args) throws  Exception {
-        SoloSign soloSign = new SoloSign();
-        MultiSign multiSign = new MultiSign();
-        Store store=new Store();
-        UtilsClass utilsClass = new UtilsClass();
-
-
+        TestBuilder testBuilder= TestBuilder.getInstance();
+        Store store =testBuilder.getStore();
+        MultiSign multiSign=testBuilder.getMultiSign();
+        SoloSign soloSign=testBuilder.getSoloSign();
+        UtilsClass utilsClass=new UtilsClass();
 
         Map<String,Object> modelMap=new HashMap<>();
         tokenType = "StoreTc-" + UtilsClass.Random(6);
