@@ -1,8 +1,7 @@
 package com.tjfintech.common.performanceTest;
 
-import block.BlockOuterClass;
 import com.google.gson.Gson;
-import com.tjfoc.sdk.Client;
+
 import lombok.extern.slf4j.Slf4j;
 import java.util.Scanner;
 
