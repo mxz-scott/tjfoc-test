@@ -11,7 +11,7 @@ public class TestBuilder {
 
     TestBuilder() {
         setGoTest();
-        //SetJavaTest();
+      // SetJavaTest();
     }
 
     public static TestBuilder getInstance() {

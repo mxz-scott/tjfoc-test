@@ -34,9 +34,7 @@ public class StoreSemiTest {
     public static void main(String[] args) throws  Exception {
         TestBuilder testBuilder= TestBuilder.getInstance();
         Store store =testBuilder.getStore();
-        MultiSign multiSign=testBuilder.getMultiSign();
-        SoloSign soloSign=testBuilder.getSoloSign();
-        UtilsClass utilsClass=new UtilsClass();
+
 
         Map<String,Object> modelMap=new HashMap<>();
         tokenType = "StoreTc-" + UtilsClass.Random(6);
