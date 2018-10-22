@@ -11,7 +11,7 @@ public class TestBuilder {
     private Contract contract;
     TestBuilder() {
         setGoTest();
-        //SetJavaTest();
+      // SetJavaTest();
     }
 
     public static TestBuilder getInstance() {

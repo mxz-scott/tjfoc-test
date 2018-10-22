@@ -238,9 +238,12 @@ public class StoreTest {
         String response2= store.GetTransaction(storeHash);
         assertThat(response2,containsString("200"));
         final Base64.Decoder decoder = Base64.getDecoder();
-       String args=JSONObject.fromObject(response2).getJSONObject("Data").getJSONArray("smartContractArgs").get(0).toString();
-       String DataInfo=new String(decoder.decode(args),"UTF-8");
-       assertEquals(DataInfo.equals(Data),true);
+       String args=JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("header").get("transactionHash").toString();
+           log.info("123{}",args);
+            //   .getJSONArray("smartContractArgs").get(0).toString();
+      String DataInfo=args;
+        // String DataInfo=new String(decoder.decode(args),"UTF-8");
+       assertEquals(DataInfo.equals(storeHash),true);
 
     }
 
@@ -283,7 +286,7 @@ public class StoreTest {
         Integer  height=jsonObject.getInt("Data");
         assertThat(response,containsString("200"));
         int Height=4;
-        String response2= store.GetBlockByHeight(height-1);
+        String response2= store.GetBlockByHeight(Height-1);
         assertThat(response2,containsString("200"));
     }
     @Test
@@ -320,6 +323,16 @@ public class StoreTest {
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(SLEEPTIME);
         String response2= store.GetInlocal(storeHash);
+        assertThat(response2,containsString("200"));
+    }
+    @Test
+    public void _getTransationBlock()throws  Exception{
+        String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
+        String response= store.CreateStore(Data);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        Thread.sleep(SLEEPTIME);
+        String response2=store.GetTransactionBlock(storeHash);
         assertThat(response2,containsString("200"));
     }
 

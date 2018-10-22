@@ -269,5 +269,14 @@ public  class GoStore implements Store {
         return result;
     }
 
-
+    @Override
+    public String GetTransactionBlock(String hash) {
+        String hashcode=URLEncoder.encode(hash);
+        Map<String,Object>map=new HashMap<>();
+        map.put("hashData",hashcode);
+        String param=GetTest.ParamtoUrl(map);
+        String result=GetTest.SendGetTojson(SDKADD+"/gettransactionblock"+"?"+param);
+        log.info(result);
+        return result;
+    }
 }
