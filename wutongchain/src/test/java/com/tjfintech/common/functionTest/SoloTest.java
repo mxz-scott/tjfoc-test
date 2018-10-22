@@ -10,13 +10,13 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-
 import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @Slf4j
@@ -50,7 +50,6 @@ public class SoloTest {
         assertThat(tokenType+"查询余额不正确",response1, containsString("10000.123456789"));
         assertThat(tokenType+"查询余额不正确",response2, containsString("20000.87654321"));
     }
-
 
 
     /**
@@ -246,6 +245,7 @@ public class SoloTest {
         String Info4 = multiSign.Recycle(MULITADD5, PRIKEY3, tokenType2, "401");
         String Info5 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "7000.123456789");
         String Info6 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, "17000.87654321");
+
         assertThat(Info, containsString("200"));
         assertThat(Info1, containsString("200"));
         assertThat(Info2, containsString("200"));
@@ -253,6 +253,7 @@ public class SoloTest {
         assertThat(Info4, containsString("200"));
         assertThat(Info5, containsString("200"));
         assertThat(Info6, containsString("200"));
+        Thread.sleep(SLEEPTIME);
         log.info("开始查询余额....");
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
@@ -268,14 +269,13 @@ public class SoloTest {
         assertThat(tokenType+"查询余额错误",response5, containsString("200"));
         assertThat(tokenType+"查询余额错误",response6, containsString("200"));
         assertThat(tokenType+"查询余额错误",response7, containsString("200"));
-        assertThat(JSONObject.fromObject(response1).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(response2).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(response3).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(response4).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(response5).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(response6).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(response7).getJSONObject("Data").getString("Total"), containsString("0"));
-
+        assertEquals(JSONObject.fromObject(response1).getJSONObject("Data").getString("Total").equals("0"),true);
+        assertEquals(JSONObject.fromObject(response2).getJSONObject("Data").getString("Total").equals("0"),true);
+        assertEquals(JSONObject.fromObject(response3).getJSONObject("Data").getString("Total").equals("0"),true);
+        assertEquals(JSONObject.fromObject(response4).getJSONObject("Data").getString("Total").equals("0"),true);
+        assertEquals(JSONObject.fromObject(response5).getJSONObject("Data").getString("Total").equals("0"),true);
+        assertEquals(JSONObject.fromObject(response6).getJSONObject("Data").getString("Total").equals("0"),true);
+        assertEquals(JSONObject.fromObject(response7).getJSONObject("Data").getString("Total").equals("0"),true);
     }
 
     /**

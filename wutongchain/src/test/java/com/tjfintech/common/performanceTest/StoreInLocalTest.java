@@ -21,17 +21,16 @@ public class StoreInLocalTest {
     @Test
     //测试存证的性能
     public void TC010_CreatePrivateStoreDataIsJson() {
-        long times = new Date().getTime();
+        for(int i=0;i<150;i++){
+            long times = new Date().getTime();
         log.info("开始存证"+times);
-    String data = store.CreateStore("j3478984342311365633i2j");
+        String data = store.CreateStore("j"+i);
         log.info(data);
-
-
         JSONObject jsonObject = JSONObject.fromObject(data);
-
-    String hash=jsonObject.getJSONObject("Data").get("Figure").toString();
-    log.info(hash);
+        String hash=jsonObject.getJSONObject("Data").get("Figure").toString();
+        log.info(hash);
         inLocal(hash,times);
+        }
     }
     public void inLocal(String hash,long time){
         try {

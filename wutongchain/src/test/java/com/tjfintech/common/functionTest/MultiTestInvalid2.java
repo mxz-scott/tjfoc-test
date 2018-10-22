@@ -262,7 +262,7 @@ public class MultiTestInvalid2 {
      * @throws Exception
      */
     @Test
-    public void TC284_transferToImppution() throws Exception {
+    public void TC284_transferToImppution() throws Exception {//TODO
         String tokenType = "cx-8oVNI";
         String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         assertThat(queryInfo, containsString("200"));
