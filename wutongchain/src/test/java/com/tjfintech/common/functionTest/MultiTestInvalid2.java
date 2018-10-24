@@ -259,6 +259,7 @@ public class MultiTestInvalid2 {
      * 归集地址先向ADD1转入1个token
      * ADD1再向归集地址转入0.5个token
      *
+     *
      * @throws Exception
      */
     @Test
@@ -266,8 +267,11 @@ public class MultiTestInvalid2 {
         String tokenType = "cx-8oVNI";
         String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         assertThat(queryInfo, containsString("200"));
+        log.info(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
         assertEquals(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total").equals("0"), false);
-
+        /**
+         * 如果测试不通过请执行BeforeConditon类中的第二个方法.发行相应的币种
+         */
         List<Map> list0 = utilsClass.constructToken(MULITADD4, tokenType, "1");
 
         String transferInfo0 = multiSign.Transfer(PRIKEY4, "cx-test", IMPPUTIONADD, list0);//1 归集地址向单签地址转账

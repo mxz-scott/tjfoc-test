@@ -45,48 +45,7 @@ public class MultiTest {
 
     }
 
-    /**
-     * 创建多签地址
-     */
-//    @Test
-//    public void TC12_createAdd() {
-//        int M = 3;
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("1", PUBKEY1);
-//        map.put("2", PUBKEY2);
-//        map.put("3", PUBKEY3);
-//        multiSign.genMultiAddress(M, map);
-//        map = new HashMap<>();
-//        map.put("1", PUBKEY1);
-//        map.put("2", PUBKEY2);
-//        map.put("3", PUBKEY6);
-//        multiSign.genMultiAddress(M, map);
-//        map = new HashMap<>();
-//        map.put("1", PUBKEY1);
-//        map.put("2", PUBKEY6);
-//        map.put("3", PUBKEY7);
-//        multiSign.genMultiAddress(M, map);
-//        M =1;
-//        map = new HashMap<>();
-//        map.put("1", PUBKEY1);
-//        map.put("2", PUBKEY2);
-//        multiSign.genMultiAddress(M, map);
-//        map = new HashMap<>();
-//        map.put("1", PUBKEY1);
-//        map.put("2", PUBKEY3);
-//        multiSign.genMultiAddress(M, map);
-//        map = new HashMap<>();
-//        map.put("1", PUBKEY3);
-//        map.put("2", PUBKEY4);
-//        multiSign.genMultiAddress(M, map);
-//        map = new HashMap<>();
-//        map.put("1", PUBKEY4);
-//        map.put("2", PUBKEY5);
-//        multiSign.genMultiAddress(1, map);
-//
-//
-//
-//    }
+
 
 
 
