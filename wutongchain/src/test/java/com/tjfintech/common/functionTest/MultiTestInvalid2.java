@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest;
 
 
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -266,6 +267,14 @@ public class MultiTestInvalid2 {
     public void TC284_transferToImppution() throws Exception {//TODO
         String tokenType = "cx-8oVNI";
         String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        Boolean flag=JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total").equals("0");
+        if(flag){
+            BeforeCondition beforeCondition=new BeforeCondition();
+            beforeCondition.T284_BeforeCondition();
+            Thread.sleep(SLEEPTIME);
+            queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        }
+
         assertThat(queryInfo, containsString("200"));
         log.info(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
         assertEquals(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total").equals("0"), false);

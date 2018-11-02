@@ -61,8 +61,8 @@ public class BeforeCondition {
     /**
      * 测试用例T284的前提条件。发行对应token
      */
-    @Test
-    public void  T284_BeforeCondition(){
+
+    public  void  T284_BeforeCondition(){
         String tokenType = "cx-8oVNI";
         String amount="1000";
         //String amount = "1000";

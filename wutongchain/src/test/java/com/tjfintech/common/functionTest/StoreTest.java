@@ -258,6 +258,7 @@ public class StoreTest {
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(SLEEPTIME);
+        Thread.sleep(SLEEPTIME);//通过JAVASDK实现的上链要慢，需要再加一个休眠
        String response2= store.GetTransactionIndex(storeHash);
        assertThat(response2,containsString("200"));
        assertThat(response2,containsString("success"));
