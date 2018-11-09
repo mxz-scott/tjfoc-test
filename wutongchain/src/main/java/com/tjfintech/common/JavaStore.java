@@ -48,10 +48,7 @@ public class JavaStore implements Store {
         return null;
     }
 
-    @Override
-    public String GetTransactionBlock(String hash) {
-        return null;
-    }
+ 
 
     @Override
     public String GetStorePost(String hash, String priKey) {
