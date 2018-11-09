@@ -5,9 +5,7 @@ import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.utils.GetTest;
 import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.After;
 import java.util.*;
-import com.tjfintech.common.utils.UtilsClass;
 
 
 @Slf4j
