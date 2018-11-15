@@ -96,29 +96,29 @@ public class StoreTest {
      * 使用复杂查询接口查询交易，size设为5
      * 使用步骤1的交易哈希查询tx/search
      */
-    @Test
-    public void TC07_GetTxSearch() throws Exception {
-        String Data = "cxtest-" + UtilsClass.Random(7);
-        String Data2 = "cxtest-" + UtilsClass.Random(6);
-        String response = store.CreateStore(Data);
-        String response2 = store.CreateStore(Data2);
-        JSONObject jsonObject = JSONObject.fromObject(response);
-        JSONObject jsonObject2 = JSONObject.fromObject(response2);
-        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-        String storeHash2 = jsonObject2.getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
-        String response3 = store.GetTxSearch(0, 1, "cxtest");
-        String response4 = store.GetTxSearch(0, 5, "cxtest");
-        JSONObject jsonObject3 = JSONObject.fromObject(response3);
-        JSONObject jsonObject4 = JSONObject.fromObject(response4);
-        assertEquals(jsonObject3.getJSONArray("Data").size() == 1, true);
-        assertEquals(jsonObject4.getJSONArray("Data").size() == 5, true);
-        String response5 = store.GetStore(storeHash);
-        String response6 = store.GetStore(storeHash2);
-        assertThat(response5, containsString("200"));
-        assertThat(response6, containsString("200"));
-
-    }
+//    @Test
+//    public void TC07_GetTxSearch() throws Exception {
+//        String Data = "cxtest-" + UtilsClass.Random(7);
+//        String Data2 = "cxtest-" + UtilsClass.Random(6);
+//        String response = store.CreateStore(Data);
+//        String response2 = store.CreateStore(Data2);
+//        JSONObject jsonObject = JSONObject.fromObject(response);
+//        JSONObject jsonObject2 = JSONObject.fromObject(response2);
+//        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+//        String storeHash2 = jsonObject2.getJSONObject("Data").get("Figure").toString();
+//        Thread.sleep(SLEEPTIME);
+//        String response3 = store.GetTxSearch(0, 1, "cxtest");
+//        String response4 = store.GetTxSearch(0, 5, "cxtest");
+//        JSONObject jsonObject3 = JSONObject.fromObject(response3);
+//        JSONObject jsonObject4 = JSONObject.fromObject(response4);
+//        assertEquals(jsonObject3.getJSONArray("Data").size() == 1, true);
+//        assertEquals(jsonObject4.getJSONArray("Data").size() == 5, true);
+//        String response5 = store.GetStore(storeHash);
+//        String response6 = store.GetStore(storeHash2);
+//        assertThat(response5, containsString("200"));
+//        assertThat(response6, containsString("200"));
+//
+//    }
 
     /**
      *TC09-创建隐私存证交易，数据格式为Json
@@ -144,14 +144,11 @@ public class StoreTest {
     }
 
     /**
-     * TC11复杂查询隐私存证交易，数据格式为String
+     * TC11查询隐私存证交易，数据格式为String
      * 创建2笔隐私存证交易，数据格式为string
-     * 使用复杂查询接口查询交易，size设为1
-     * 使用复杂查询接口查询交易，size设为5
-     * 使用步骤1的交易哈希查询tx/search
      */
     @Test
-    public void TC11_GetTxSearchPwd() throws Exception {
+    public void TC11_GetStorePwd() throws Exception {
         String data = "Testcx-" + UtilsClass.Random(2);
         String data2 = "Testcx-" + UtilsClass.Random(4);
         Map<String,Object>map=new HashMap<>();
@@ -291,7 +288,7 @@ public class StoreTest {
         assertThat(response2,containsString("200"));
     }
     @Test
-    public void getBlockByHash() {
+    public void TC243_getBlockByHash() {
         String response= store.GetHeight();
         JSONObject jsonObject=JSONObject.fromObject(response);
         Integer  height=jsonObject.getInt("Data");
@@ -306,11 +303,11 @@ public class StoreTest {
     /**
      * Tc280交易复杂查询
      */
-    @Test
-    public void TC280_getTxSearch() {
-       String response= store.GetTxSearch(0,5,"tor");
-       assertThat(response,containsString("200"));
-    }
+//    @Test
+//    public void TC280_getTxSearch() {
+//       String response= store.GetTxSearch(0,5,"tor");
+//       assertThat(response,containsString("200"));
+//    }
 
     /**
      * TC276根据哈希判断交易是否存在于钱包数据库
@@ -326,8 +323,10 @@ public class StoreTest {
         String response2= store.GetInlocal(storeHash);
         assertThat(response2,containsString("200"));
     }
+
+
     @Test
-    public void _getTransationBlock()throws  Exception{
+    public void TC254_getTransationBlock()throws  Exception{
         String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);

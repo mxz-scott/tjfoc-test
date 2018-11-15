@@ -30,6 +30,7 @@ public interface Store {
     String GetInlocal(String hash);
 
     String GetStat(String type);
-String GetTransactionBlock(String hash);
+
+    String GetTransactionBlock(String hash);
 
 }
