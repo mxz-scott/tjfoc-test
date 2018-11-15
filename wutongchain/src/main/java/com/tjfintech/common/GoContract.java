@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.tjfintech.common.utils.UtilsClass.SDKADD;
+
 @Slf4j
 public class GoContract implements Contract {
 
@@ -35,7 +37,7 @@ public class GoContract implements Contract {
         map.put("Version",version);
         map.put("File",file);
 
-        String result=PostTest.sendPostToJson(GoMultiSign.SDKADD+"/contract/install",map);
+        String result=PostTest.sendPostToJson(SDKADD+"/contract/install",map);
         log.info(result);
         return result ;
     }
@@ -51,7 +53,7 @@ public class GoContract implements Contract {
         map.put("Name",name);
         map.put("Version",version);
 
-        String result=PostTest.sendPostToJson(GoMultiSign.SDKADD+"/contract/destroy",map);
+        String result=PostTest.sendPostToJson(SDKADD+"/contract/destroy",map);
         log.info(result);
         return result ;
     }
@@ -68,7 +70,7 @@ public class GoContract implements Contract {
         map.put("Version",version);
         map.put("Method",method);
         map.put("Args",args);
-        String result=PostTest.sendPostToJson(GoMultiSign.SDKADD+"/createnewtransaction",map);
+        String result=PostTest.sendPostToJson(SDKADD+"/createnewtransaction",map);
         log.info(result);
         return result ;
     }

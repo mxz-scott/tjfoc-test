@@ -11,7 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.GoMultiSign.SDKADD;
+
+import static com.tjfintech.common.utils.UtilsClass.SDKADD;
 
 @Slf4j
 public  class GoStore implements Store {
