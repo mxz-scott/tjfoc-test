@@ -3,6 +3,13 @@ package com.tjfintech.common.utils;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.*;
 @Slf4j
 public class UtilsClass {
@@ -153,5 +160,41 @@ public class UtilsClass {
         }
         return map;
     }
+    public static StringBuilder readInput(String filePath) {
+        StringBuilder abc = new StringBuilder(" ");
+        File file = new File(filePath);
+        System.out.println(file.getPath());
+        Reader reader = null;
+        try {
+            // 一次读一个字符
+            reader = new InputStreamReader(new FileInputStream(file));
+            int tempchar;
+            while ((tempchar = reader.read()) != -1) {
+                // 对于windows下，\r\n这两个字符在一起时，表示一个换行。
+                // 但如果这两个字符分开显示时，会换两次行。
+                // 因此，屏蔽掉\r，或者屏蔽\n。否则，将会多出很多空行。
+                if (((char) tempchar) != '\r') {
+                    abc.append((char) tempchar);
+                    // System.out.print((char) tempchar);
+                }
+            }
+            reader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return abc;
+        }
+
+    }
+
+    public static String encryptBASE64(byte[] key) throws Exception {
+        return (new BASE64Encoder()).encodeBuffer(key);
+    }
+
+
+    public static byte[] decryptBASE64(String key) throws Exception {
+        return (new BASE64Decoder()).decodeBuffer(key);
+    }
+
 
 }

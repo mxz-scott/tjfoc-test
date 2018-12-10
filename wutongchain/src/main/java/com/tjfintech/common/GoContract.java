@@ -64,7 +64,7 @@ public class GoContract implements Contract {
 
      * @return
      */
-    public String CreateNewTransaction(String name,String version,String method,List<Map> args){
+    public String CreateNewTransaction(String name,String version,String method,List<?> args){
         Map<String,Object>map=new HashMap<>();
         map.put("Name",name);
         map.put("Version",version);
