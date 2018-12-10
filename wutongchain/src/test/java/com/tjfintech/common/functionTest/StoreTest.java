@@ -197,13 +197,13 @@ public class StoreTest {
     }
 
     /**
-     * TC18 同时发送10笔存证交易
+     * TC18 同时发送50笔存证交易
      * @throws Exception
      */
    @Test
-   public void TC18_CreateStore10()throws  Exception{
+   public void TC18_CreateStore50()throws  Exception{
        List<String>list=new ArrayList<>();
-       for(int i=0;i<10;i++){
+       for(int i=0;i<50;i++){
            list.add(store.CreateStore("cx"+UtilsClass.Random(4)));
        }
        for(int i=0;i<list.size();i++){

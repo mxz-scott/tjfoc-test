@@ -27,11 +27,12 @@ public class StableAutoTest {
     UtilsClass utilsClass=new UtilsClass();
 
     /**
-     * 每隔10S执行一次普通存证　隐私存证　单签交易　多签交易
+     * 每隔n秒执行一次普通存证　隐私存证　单签交易　多签交易
      */
     @Test
     public  void stableTest()throws Exception{
         while( true){
+            int n = 60;
             String Data1 = "\"test\":\"json"+ UtilsClass.Random(4)+"\"";
             String response= store.CreateStore(Data1);
             JSONObject jsonObject1=JSONObject.fromObject(response);
@@ -40,7 +41,7 @@ public class StableAutoTest {
             assertThat(response, containsString("200"));
             assertThat(response,containsString("Data"));
 
-            Thread.sleep(10*1000);//普通存证 休眠10秒
+            Thread.sleep(n*1000);//普通存证 休眠n秒
 
             String Data2 = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
             Map<String,Object> map=new HashMap<>();
@@ -53,7 +54,7 @@ public class StableAutoTest {
             assertThat(response1, containsString("200"));
             assertThat(response1,containsString("Data"));
 
-            Thread.sleep(10*1000);//隐私存证 休眠10秒
+            Thread.sleep(n*1000);//隐私存证 休眠n秒
 
             String tokenType = "cx-8oVNI";
             String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
@@ -91,7 +92,7 @@ public class StableAutoTest {
             List<Map> list=utilsClass.constructToken(ADDRESS3,tokenType,"0.5");
             String transferInfo2= multiSign.Transfer(PRIKEY1, transferData, ADDRESS1,list);//单签地址向单签地址转账
             assertThat(transferInfo1, containsString("200"));
-            Thread.sleep(10*1000);//多签转账 单签转账 休眠10秒
+            Thread.sleep(n*1000);//多签转账 单签转账 休眠n秒
 
         }
     }
