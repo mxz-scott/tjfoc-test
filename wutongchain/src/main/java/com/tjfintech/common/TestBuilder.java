@@ -35,6 +35,7 @@ public class TestBuilder {
         store = new GoStore();
         soloSign = new GoSoloSign();
         multiSign = new GoMultiSign();
+        contract=new GoContract();
     }
 
     public void SetJavaTest() {

@@ -31,7 +31,7 @@ public class GoContract implements Contract {
      * @param file  合约内容(base64)
      * @return
      */
-        public String Install(String name,String version,String file){
+    public String Install(String name,String version,String file){
         Map<String,Object>map=new HashMap<>();
         map.put("Name",name);
         map.put("Version",version);
