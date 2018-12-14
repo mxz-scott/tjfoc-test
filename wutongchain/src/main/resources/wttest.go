@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	shim "github.com/tjfoc/tjfoc/core/chaincode/shim"
+	shim "github.com/tjfoc/tjfoc/core.v2/chaincode/shim"
 	// pb "github.com/tjfoc/tjfoc/protos/peer" // old version
 	pb "github.com/tjfoc/tjfoc/protos/chaincode" //new version
 )
