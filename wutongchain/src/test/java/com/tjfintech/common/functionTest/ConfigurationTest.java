@@ -7,6 +7,7 @@ import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
+import sun.print.PeekGraphics;
 
 import java.util.ArrayList;
 
@@ -30,6 +31,49 @@ public class ConfigurationTest {
     TestBuilder testBuilder=TestBuilder.getInstance();
     SoloSign soloSign=testBuilder.getSoloSign();
     MultiSign multiSign=testBuilder.getMultiSign();
+
+    /**
+     * 设置SDK数据库为boltdb。节点与sdk开启TLS
+     */
+    @Test
+    public void setBoltdb_TLS(){
+        Shell shell1=new Shell(PEER1IP,USERNAME,PASSWORD);
+        Shell shell2=new Shell(PEER2IP,USERNAME,PASSWORD);
+        Shell shell3=new Shell(PEER3IP,USERNAME,PASSWORD);
+        shell1.execute("/bin/sh /root/chenxu/script/setTlsTrue_peer.sh");
+        shell2.execute("/bin/sh /root/chenxu/script/setTlsTrue_peer.sh");
+        shell3.execute("/bin/sh /root/chenxu/script/setTlsTrue_peer.sh");
+        shell2.execute("/bin/sh /root/chenxu/script/setBoltdb_sdk.sh");
+        ArrayList<String> stdout = shell1.getStandardOutput();
+        stdout.addAll(shell2.getStandardOutput());
+        stdout.addAll(shell3.getStandardOutput());
+        for (String str : stdout) {
+            log.info(str);
+            assertEquals(str.contains("失败"), false);
+        }
+
+    }
+    /**
+     * Default默认设置TLSEnable=false Raft共识 toml配置类型 SDK数据库默认mongodb
+     */
+    @Test
+    public void setDefault(){
+        Shell shell1=new Shell(PEER1IP,USERNAME,PASSWORD);
+        Shell shell2=new Shell(PEER2IP,USERNAME,PASSWORD);
+        Shell shell3=new Shell(PEER3IP,USERNAME,PASSWORD);
+//        shell1.execute("/bin/sh /root/chenxu/script/default_peer.sh");
+//        shell2.execute("/bin/sh /root/chenxu/script/default_peer.sh");
+//        shell3.execute("/bin/sh /root/chenxu/script/default_peer.sh");
+        shell2.execute("/bin/sh /root/chenxu/script/default_sdk.sh");
+        ArrayList<String> stdout = shell1.getStandardOutput();
+        stdout.addAll(shell2.getStandardOutput());
+        stdout.addAll(shell3.getStandardOutput());
+        for (String str : stdout) {
+            log.info(str);
+            assertEquals(str.contains("失败"), false);
+        }
+
+    }
     @Test
     public void Tc675_Check() {
         Shell shell = new Shell(PEER2IP, USERNAME, PASSWORD);  //连接节点
