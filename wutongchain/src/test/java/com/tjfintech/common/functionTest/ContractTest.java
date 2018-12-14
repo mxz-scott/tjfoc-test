@@ -30,7 +30,7 @@ public class ContractTest {
         String response=contract.Install(name,version,data);
         String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         assertThat(response,containsString("success"));
-        Thread.sleep(SLEEPTIME*5);
+        Thread.sleep(SLEEPTIME*10);
         String response2=store.GetTransaction(hash);
         assertThat(response2,containsString("200"));
         assertThat(response2,containsString("success"));
