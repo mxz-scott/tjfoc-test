@@ -11,7 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
-import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClass.encryptBASE64;
+import static com.tjfintech.common.utils.UtilsClass.readInput;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
@@ -24,7 +25,7 @@ public class ContractTest {
     public  void installTest()throws  Exception{
         String name="chenxu";//+ Random(5);
         String version="1.0";
-        String filePath=System.getProperty("user.dir")+"/src/main/resources/wttest.go";
+        String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";
         String file=readInput(filePath).toString();
         String data = encryptBASE64(file.getBytes());//BASE64编码
         String response=contract.Install(name,version,data);
@@ -67,34 +68,65 @@ public class ContractTest {
     }
     @Test
     public void queryTest()throws  Exception{
-        String name="chenxu";
-        String version="1.0";
-        String method="query";
-        List<String>args=new LinkedList<String>();
-        args.add("a");
-        String response=contract.CreateNewTransaction(name,version,method,args);
-        String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
-        Thread.sleep(SLEEPTIME);
-        String response2=store.GetTransaction(hash);
-        assertThat(response2,containsString("200"));
-        assertThat(response2,containsString("success"));
+        String method = "queryMobile";
+        String arg = "Mobile8";
+        invoke(method,arg);
+
     }
     @Test
-    public void invokeTest()throws Exception{
-        String name="chenxu";
-        String version="1.0";
-        String method="invoke";
-        List<String>args=new LinkedList<>();
-        args.add("a");
-        args.add("b");
-        args.add("10");
-        args.add("none");//合约里需要4个参数。但最后一个参数没用实际用途
-        String response=contract.CreateNewTransaction(name,version,method,args);
-        String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+    public void initMobileTest() throws Exception {
+        String method = "initMobile";
+        invoke(method);
+    }
+    @Test
+    public void eventTest()throws Exception{
+        String method="event";
+        invoke(method);
+    }
+    @Test
+    public void getAllMobileTest()throws Exception{
+        String method="getAllMobile";
+        invoke(method);
+    }
+    @Test
+    public void deleteMobileTest()throws Exception{
+        String method ="deleteMobile";
+        String arg="Mobile5";
+        invoke(method,arg);
+    }
+    @Test
+    public void changeMobileCountTest()throws Exception{
+        String method="changeMobileCount";
+        String arg="55";
+        String arg2="Mobile1";
+        invoke(method,arg,arg2);
+    }
+    @Test
+    public void createMobileTest()throws Exception{
+        String method="createMobile";
+        String brand="xiaomi";
+        String model="Mix2S";
+        String price="4000.00";
+        String count="black";
+        String color="123";
+        String mobileID="Mobile8";
+        invoke(method,brand,model,price,color,count,mobileID);
+    }
+
+    public void invoke(String method, String... arg) throws Exception {
+        String name = "chenxu";
+        String version = "1.0";
+        List<String> args = new LinkedList<>();
+        for (int i = 0; i < arg.length; i++) {
+            args.add(arg[i]);
+        }
+        String response = contract.CreateNewTransaction(name, version, method, args);
+        String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         Thread.sleep(SLEEPTIME);
-        String result=store.GetTransaction(hash);
-        assertThat(result,containsString("200"));
-        assertThat(result,containsString("success"));
+        String result = store.GetTransaction(hash);
+        assertThat(result, containsString("200"));
+        assertThat(result, containsString("success"));
+
     }
 
 
