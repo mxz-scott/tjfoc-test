@@ -18,6 +18,17 @@ public class BeforeCondition {
     MultiSign multiSign = testBuilder.getMultiSign();
 
     /**
+     * 创建归集地址
+     * 第一个参数为私钥。后续...参数为地址
+     */
+    //@Test
+    public  void collAddressTest(){
+        String response= multiSign.collAddress(PRIKEY1,IMPPUTIONADD,MULITADD3,ADDRESS1);
+        String response2= multiSign.collAddress(PRIKEY1,MULITADD3);
+        String response3= multiSign.collAddress(PRIKEY1,ADDRESS1);
+        assertThat(response,containsString("200"));
+    }
+    /**
      * 创建多签地址
      * 当数据库被清，库中没多签地址信息时候调用。
      */

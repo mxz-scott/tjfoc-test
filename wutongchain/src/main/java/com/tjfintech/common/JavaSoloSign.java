@@ -27,7 +27,7 @@ public class JavaSoloSign implements SoloSign {
     }
 
     @Override
-    public String issueToken(String priKey, String tokenType, String amount, String data) {
+    public String issueToken(String priKey, String tokenType, String amount, String data,String address) {
         return null;
     }
 

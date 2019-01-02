@@ -13,7 +13,7 @@ import java.io.Reader;
 import java.util.*;
 @Slf4j
 public class UtilsClass {
-    public static final String SDKADD="http://10.1.3.246:7878";
+    public static final String SDKADD="http://10.1.3.165:8888";
      public final static String  ADDRESS1 = "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo";
      public final static String  ADDRESS2 = "3UycKc8qvVWpVcBr3ipNqDC9oZPd86wj3qSJ6GMbLrVPgeqVwY";
      public final static String  ADDRESS3 = "3r1vxdDjkg9uVke2YdaPTjmWVjV2bsVmySiU99hYuCUjLFYDFb";
@@ -68,7 +68,7 @@ public class UtilsClass {
 
 
     /**
-     * 转账操作的TOKEN数组构建方法
+     * 多签转账操作的TOKEN数组构建方法，单签的在GosoloSign类中
      * @param toAddr     发送地址
      * @param tokenType  币种
      * @param amount      数量
@@ -90,7 +90,7 @@ public class UtilsClass {
         return tokenList;
     }
     /**
-     * 转账操作的TOKEN多数组构建方法
+     * 多签转账操作的TOKEN多数组构建方法。单签的在GosoloSign类中
      * @param toAddr     发送地址
      * @param tokenType  币种
      * @param amount      数量

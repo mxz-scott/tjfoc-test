@@ -36,9 +36,9 @@ public class SoloTestInvalid {
     public void beforeConfig() throws Exception {
         log.info("发行两种token");
         tokenType = "SOLOTC-" + UtilsClass.Random(6);
-        String issueInfo1=  soloSign.issueToken(PRIKEY1, tokenType, "100.123456789", tokenType);
+        String issueInfo1=  soloSign.issueToken(PRIKEY1, tokenType, "100.123456789", tokenType,ADDRESS1);
         tokenType2 = "SOLOTC-" + UtilsClass.Random(6);
-        String issueInfo2= soloSign.issueToken(PRIKEY1, tokenType2, "200.87654321", tokenType2);
+        String issueInfo2= soloSign.issueToken(PRIKEY1, tokenType2, "200.87654321", tokenType2,ADDRESS1);
         Thread.sleep(SLEEPTIME);
         assertThat(issueInfo1,containsString("200"));
         assertThat(issueInfo2,containsString("200"));
@@ -135,11 +135,11 @@ public class SoloTestInvalid {
     @Test
     public void TC249_IssueTokenInvalid() {
         String tokenTypeInvalid = "SOLOTC-" + UtilsClass.Random(2);
-        String issueInfo1 = soloSign.issueToken(PRIKEY1, tokenTypeInvalid, "900000000000000000000000000000", "发行token");
-        String issueInfo2 = soloSign.issueToken(PRIKEY1, tokenTypeInvalid, "0", "发行token");
-        String issueInfo3 = soloSign.issueToken(PRIKEY1, tokenTypeInvalid, "-140", "发行token");
-        String issueInfo4 = soloSign.issueToken(PRIKEY1, tokenTypeInvalid, "abc", "发行token");
-        String issueInfo5 = soloSign.issueToken(PRIKEY1, "", "1000", "发行token");
+        String issueInfo1 = soloSign.issueToken(PRIKEY1, tokenTypeInvalid, "900000000000000000000000000000", "发行token",ADDRESS1);
+        String issueInfo2 = soloSign.issueToken(PRIKEY1, tokenTypeInvalid, "0", "发行token",ADDRESS1);
+        String issueInfo3 = soloSign.issueToken(PRIKEY1, tokenTypeInvalid, "-140", "发行token",ADDRESS1);
+    String issueInfo4 = soloSign.issueToken(PRIKEY1, tokenTypeInvalid, "abc", "发行token",ADDRESS1);
+        String issueInfo5 = soloSign.issueToken(PRIKEY1, "", "1000", "发行token",ADDRESS1);
         assertThat(issueInfo1, containsString("400"));
         assertThat(issueInfo2, containsString("400"));
         assertThat(issueInfo3, containsString("400"));
@@ -173,9 +173,9 @@ public class SoloTestInvalid {
     @Test
     public void TC251_issueDoubleInvalid() throws Exception {
 
-        String issueInfo2 = soloSign.issueToken(PRIKEY1, tokenType, "1000", "发行token1");
+        String issueInfo2 = soloSign.issueToken(PRIKEY1, tokenType, "1000", "发行token1",ADDRESS1);
         Thread.sleep(SLEEPTIME);
-        String issueInfo3 = soloSign.issueToken(PRIKEY1, tokenType, "50", "发行token2");
+    String issueInfo3 = soloSign.issueToken(PRIKEY1, tokenType, "50", "发行token2",ADDRESS1);
         assertThat(issueInfo2, containsString("400"));
         assertThat(issueInfo3, containsString("400"));
         assertThat(issueInfo2,containsString("Token type "+tokenType+" has been issued"));
@@ -195,7 +195,7 @@ public class SoloTestInvalid {
     @Test
     public void TC252_issueDeleteInvalid() throws Exception {
         String tokenTypeInvalid = "SOLOTC-" + UtilsClass.Random(3);
-        String issueInfo1 = soloSign.issueToken(PRIKEY4, tokenTypeInvalid, "100.1123", "发行token");
+        String issueInfo1 = soloSign.issueToken(PRIKEY1, tokenTypeInvalid, "100.1123", "发行token",ADDRESS1);
         Thread.sleep(SLEEPTIME);
         assertThat(issueInfo1, containsString("400"));
         assertThat(issueInfo1,containsString("tokenaddress verify failed"));

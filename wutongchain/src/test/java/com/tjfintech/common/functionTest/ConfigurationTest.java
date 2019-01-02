@@ -14,9 +14,7 @@ import java.util.ArrayList;
 import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.performanceTest.StoreSemiTest.tokenType;
 import static com.tjfintech.common.performanceTest.StoreSemiTest.tokenType2;
-import static com.tjfintech.common.utils.UtilsClass.IMPPUTIONADD;
-import static com.tjfintech.common.utils.UtilsClass.PRIKEY1;
-import static com.tjfintech.common.utils.UtilsClass.PRIKEY4;
+import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -142,10 +140,10 @@ public class ConfigurationTest {
     public void issueToken()throws  Exception{
         log.info("发行两种token1000个");
         tokenType = "SOLOTC-"+ UtilsClass.Random(6);
-        String isResult= soloSign.issueToken(PRIKEY1,tokenType,"1000.123456789","发行token");
+        String isResult= soloSign.issueToken(PRIKEY1,tokenType,"1000.123456789","发行token",ADDRESS1);
 
         tokenType2 = "SOLOTC-"+UtilsClass.Random(6);
-        String isResult2= soloSign.issueToken(PRIKEY1,tokenType2,"2000.87654321","发行token");
+        String isResult2= soloSign.issueToken(PRIKEY1,tokenType2,"2000.87654321","发行token",ADDRESS1);
         assertThat(tokenType+"发行token错误",isResult, containsString("200"));
         assertThat(tokenType+"发行token错误",isResult2, containsString("200"));
         Thread.sleep(SLEEPTIME);

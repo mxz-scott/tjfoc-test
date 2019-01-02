@@ -5,7 +5,12 @@ import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.utils.GetTest;
 import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
-import java.util.*;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.SDKADD;
 
@@ -31,10 +36,25 @@ public class GoMultiSign implements MultiSign {
     private static final String USER_COLLET="Soirv9ikykVHArKCdJqVNegxxqZWUj1g4ixFFYbBLMExy4zUTUe";
 
 
+    /**
+     * 添加归集地址
+     * @param pubKey
+     * @param address
+     * @return
+     */
+    public String collAddress(String pubKey, String ...address) {
+        Map<String, Object> map = new HashMap<>();
+        List<Object> addrs = new ArrayList<>();
+        for (int i=0;i<address.length;i++){
+        addrs.add(address[i]);
+        }
 
-
-
-
+        map.put("PriKey", pubKey);
+        map.put("Addrs", addrs);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/colladdress", map);
+        log.info(result);
+        return result;
+    }
 
 
 

@@ -43,7 +43,7 @@ public class SoloSemiTest {
         System.out.println(scanner.nextLine());
         log.info("发行Token");
         tokenType = "SOLOTC-" + UtilsClass.Random(6);
-        String isResult = soloSign.issueToken(PRIKEY1, tokenType, "10000", "发行token");
+        String isResult = soloSign.issueToken(PRIKEY1, tokenType, "10000", "发行token",ADDRESS1);
         log.info(isResult);
         assertThat(isResult, containsString("400"));
         assertThat(isResult, containsString("invalid address"));
@@ -57,7 +57,7 @@ public class SoloSemiTest {
         System.out.println(scanner.nextLine());
         log.info("发行Token");
         tokenType = "SOLOTC-" + UtilsClass.Random(6);
-        String isResult1 = soloSign.issueToken(PRIKEY1, tokenType, "10000", "发行token");
+        String isResult1 = soloSign.issueToken(PRIKEY1, tokenType, "10000", "发行token",ADDRESS1);
         log.info(isResult1);
         assertThat(isResult1, containsString("tokenaddress verify failed"));
         log.info("恢复地址:4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo");
@@ -72,7 +72,7 @@ public class SoloSemiTest {
 
             log.info("发行Token");
             tokenType = "SOLOTC-" + UtilsClass.Random(6);
-            String isResult2 = soloSign.issueToken(PRIKEY1, tokenType, "10000", "发行token");
+            String isResult2 = soloSign.issueToken(PRIKEY1, tokenType, "10000", "发行token",ADDRESS1);
         log.info(isResult2);
         assertThat(isResult2, containsString("200"));
             log.info("冻结CA管理系统中的token type:"+tokenType);

@@ -17,4 +17,5 @@ public interface MultiSign {
     String Recycle(String multiAddr,String priKey,String tokenType,String amount);
     String Recycle(String priKey,String tokenType,String amount);
     String QueryZero(String tokenType);
+    String collAddress(String pubKey,String ...address);
 }

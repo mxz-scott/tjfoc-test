@@ -70,7 +70,7 @@ func (c *SmartContract) initMobile(stub shim.ChaincodeStubInterface, args []stri
 	for i < len(mobiles) {
 		fmt.Println("i is ", i)
 		mobileAsBytes, _ := json.Marshal(mobiles[i])
-		stub.PutState("Mobile"+strconv.Itoa(i), mobileAsBytes)
+		stub.PutState("Mobile"+init.Itoa(i), mobileAsBytes)
 		fmt.Println("Added", mobiles[i])
 		i = i + 1
 	}

@@ -70,4 +70,9 @@ public class JavaMultiSign implements MultiSign {
     public String QueryZero(String tokenType) {
         return null;
     }
+
+    @Override
+    public String collAddress(String pubKey, String ...address) {
+        return null;
+    }
 }
