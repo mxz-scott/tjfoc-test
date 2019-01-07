@@ -417,10 +417,11 @@ public class MultiTest {
         log.info("查询余额判断转账是否成功");
         String queryInfo = multiSign.Balance(PRIKEY1, tokenType);
         String queryInfo2 = multiSign.Balance(PRIKEY2, tokenType2);
-        assertThat(queryInfo, containsString("200"));
-        assertThat(queryInfo2, containsString("200"));
+        String queryInfo_2=multiSign.Balance(PRIKEY2,tokenType);
         assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("20"));
         assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("10"));
+        assertThat(JSONObject.fromObject(queryInfo_2).getJSONObject("Data").getString("Total"), containsString("10"));
+
 
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "970");

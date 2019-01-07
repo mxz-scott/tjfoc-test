@@ -134,13 +134,13 @@ public class MultiTestInvalid2 {
         String data = "MULITADD2" + "发行" + tokenType + " token，数量为：" + amount;
         //String response = multiSign.issueToken(MULITADD2, tokenType+"123456789000000000000000000", amount, data);
         String response2 = multiSign.issueToken(MULITADD2, tokenType, "900000000000000000000000000000000000", data);
-        String response4 = multiSign.issueToken(MULITADD1, tokenType, amount, data);
+        String response4 = multiSign.issueToken("0123", tokenType, amount, data);
         // String response5 = multiSign.issueToken("0123", tokenType, amount, data);
         // assertThat(response, containsString("400"));
         assertThat(response2, containsString("400"));
         assertThat(response2, containsString("Amount must be greater than 0 and less than 900000000"));
         assertThat(response4, containsString("400"));
-        assertThat(response4, containsString("tokenaddress verify failed"));
+        assertThat(response4, containsString("Invalid multiple address"));
         //     assertThat(response5, containsString("400"));
 
     }
@@ -265,7 +265,7 @@ public class MultiTestInvalid2 {
      */
     @Test
     public void TC284_transferToImppution() throws Exception {//TODO
-        String tokenType = "cx-8oVNI";
+        String tokenType = "cx-chenxu";
         String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         Boolean flag=JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total").equals("0");
         if(flag){
@@ -276,7 +276,6 @@ public class MultiTestInvalid2 {
         }
 
         assertThat(queryInfo, containsString("200"));
-        log.info(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
         assertEquals(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total").equals("0"), false);
         /**
          * 如果测试不通过请执行BeforeConditon类中的第二个方法.发行相应的币种
@@ -290,8 +289,8 @@ public class MultiTestInvalid2 {
         assertThat(transferInfo0, containsString("200"));
         assertEquals(JSONObject.fromObject(queryInfo1).getJSONObject("Data").getString("Total").equals("0"), false);
 
-        List<Map> list1 = utilsClass.constructToken(IMPPUTIONADD, tokenType, "0.5");
-        String transferInfo1 = multiSign.Transfer(PRIKEY1, "cx-test", MULITADD4, list1);//多签地址向归集地址转账
+        List<Map> list1 = utilsClass.constructToken(MULITADD3, tokenType, "0.5");
+        String transferInfo1 = multiSign.Transfer(PRIKEY4, "cx-test", IMPPUTIONADD, list1);//多签地址向归集地址转账
         assertThat(transferInfo1, containsString("200"));
 
     }

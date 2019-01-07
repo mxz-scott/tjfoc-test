@@ -49,7 +49,7 @@ public class ContractTest {
     @Test
     public void destroyTest()throws  Exception{
         String name="chenxu";
-        String version="1.0";
+        String version="2.0";
         String response=contract.Destroy(name,version);
         String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         assertThat(response,containsString("success"));

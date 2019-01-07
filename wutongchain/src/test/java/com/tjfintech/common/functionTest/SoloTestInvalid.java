@@ -18,7 +18,6 @@ import java.util.Map;
 import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
-
 import static org.junit.Assert.assertThat;
 
 @Slf4j
@@ -43,28 +42,12 @@ public class SoloTestInvalid {
         assertThat(issueInfo1,containsString("200"));
         assertThat(issueInfo2,containsString("200"));
         log.info("查询归集地址中两种token余额");
-        String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        String response1 = multiSign.Balance(PRIKEY1, tokenType);
+        String response2 = multiSign.Balance(PRIKEY1, tokenType2);
         assertThat(tokenType + "查询余额错误", response1, containsString("200"));
         assertThat(tokenType + "查询余额错误", response2, containsString("200"));
         assertThat(tokenType + "查询余额不正确", response1, containsString("100.123456789"));
         assertThat(tokenType + "查询余额不正确", response2, containsString("200.87654321"));
-        String transferData="归集地址向单签地址转账" ;
-        List<Map> list0 = utilsClass.constructToken(ADDRESS1, tokenType, "100.123456789");
-        List<Map> listInit = utilsClass.constructToken(ADDRESS1, tokenType2, "200.87654321");
-        String transferInfo0= multiSign.Transfer(PRIKEY4,transferData,IMPPUTIONADD,list0);//1 归集地址向单签地址转账
-        String transferInfoInit= multiSign.Transfer(PRIKEY4,transferData,IMPPUTIONADD,listInit);
-        Thread.sleep(SLEEPTIME);
-        assertThat(transferInfo0, containsString("200"));
-        assertThat(transferInfoInit,containsString("200"));
-        String queryInfo1= soloSign.Balance(PRIKEY1,tokenType);
-        String queryInfo2= soloSign.Balance(PRIKEY1,tokenType2);
-        assertThat(queryInfo1,containsString("200"));
-        assertThat(queryInfo2,containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo1).getJSONObject("Data").getString("Total"), containsString("100.123456789"));
-        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("200.87654321"));
-        log.info("----------------------------------------------------------------------");
-
     }
 
     /**
@@ -151,7 +134,7 @@ public class SoloTestInvalid {
         assertThat(issueInfo4, containsString("Amount must be greater than 0 and less than 900000000"));
         assertThat(issueInfo5,containsString("TokenType shouldn't be empty"));
         log.info("查询归集地址中token余额");
-        String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenTypeInvalid);
+        String response1 = multiSign.Balance(PRIKEY1, tokenTypeInvalid);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("0"));
 
@@ -182,7 +165,7 @@ public class SoloTestInvalid {
         assertThat(issueInfo3,containsString("Token type "+tokenType+" has been issued"));
 
         log.info("查询归集地址中token余额");
-        String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String response1 = multiSign.Balance(PRIKEY1, tokenType);
         assertThat(response1, containsString("200"));
 
 
@@ -202,7 +185,7 @@ public class SoloTestInvalid {
 
 
         log.info("查询归集地址中token余额");
-        String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenTypeInvalid);
+        String response1 = multiSign.Balance(PRIKEY1, tokenTypeInvalid);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("0"));
 

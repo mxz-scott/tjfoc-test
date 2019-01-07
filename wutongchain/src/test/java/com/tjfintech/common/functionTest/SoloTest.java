@@ -16,6 +16,7 @@ import java.util.Map;
 
 import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -32,12 +33,11 @@ public class SoloTest {
 
     @Before
     public void beforeConfig() throws Exception {
-        BeforeCondition beforeCondition=new BeforeCondition();
+       BeforeCondition beforeCondition=new BeforeCondition();
         beforeCondition.collAddressTest();
         log.info("发行两种token1000个");
         tokenType = "SOLOTC-"+UtilsClass.Random(6);
         String isResult= soloSign.issueToken(PRIKEY1,tokenType,"10000.123456789","发行token",ADDRESS1);
-
         tokenType2 = "SOLOTC-"+UtilsClass.Random(6);
         String isResult2= soloSign.issueToken(PRIKEY1,tokenType2,"20000.87654321","发行token",ADDRESS1);
         assertThat(tokenType+"发行token错误",isResult, containsString("200"));
@@ -290,29 +290,39 @@ public class SoloTest {
     public void TC0244_SoloProgress() throws Exception {
         String transferData = "归集地址向" + PUBKEY3 + "转账3000个" + tokenType+",并向"+PUBKEY4+"转账";
         log.info(transferData);
-        List<Map> list=soloSign.constructToken(ADDRESS3,tokenType,"3000");
-        String transferInfo= soloSign.Transfer(list,PRIKEY1, transferData);
+        List<Map> list=soloSign.constructToken(ADDRESS3,tokenType2,"3000");
+        List<Map> list0=soloSign.constructToken(ADDRESS3,tokenType,"4000",list);
+        String transferInfo= soloSign.Transfer(list0,PRIKEY1, transferData);
         Thread.sleep(SLEEPTIME);
         List<Map> list1= soloSign.constructToken(ADDRESS4,tokenType,"300");
         String transferInfo1= soloSign.Transfer(list1, PRIKEY3, "双花验证");
         List<Map> list2= soloSign.constructToken(ADDRESS4,tokenType,"301");
         String transferInfo2= soloSign.Transfer(list2, PRIKEY3, "双花验证");
         assertThat(transferInfo1, containsString("200"));
-        //assertThat(transferInfo2, containsString("insufficient balance"));
         Thread.sleep(SLEEPTIME*2);
         String response=soloSign.Balance(PRIKEY4,tokenType);
-        String response2=soloSign.Balance(PRIKEY3,tokenType);
-        List<Map> list3= soloSign.constructToken(ADDRESS4,tokenType,"300");
+        assertThat(response,anyOf(containsString("300"),containsString("301")));
+        List<Map> list3= soloSign.constructToken(ADDRESS4,tokenType,"400");
+        List<Map> list4= soloSign.constructToken(ADDRESS4,tokenType2,"411",list3);
         String transferInfo3= soloSign.Transfer(list3, PRIKEY3, "双花验证");
-        List<Map> list4= soloSign.constructToken(ADDRESS5,tokenType,"300");
         String transferInfo4= soloSign.Transfer(list4, PRIKEY3, "双花验证");
         assertThat(transferInfo3, containsString("200"));
-        assertThat(transferInfo4, containsString("insufficient balance"));
         Thread.sleep(SLEEPTIME);
-        List<Map> list5= soloSign.constructToken(ADDRESS4,tokenType,"300");
+        String response1=soloSign.Balance(PRIKEY4,tokenType);
+        String response2=soloSign.Balance(PRIKEY4,tokenType2);
+        assertThat(response1,anyOf(containsString("700"),containsString("701")));
+        assertThat(response2,anyOf(containsString("411"),containsString("0")));
+
+        List<Map> list5= soloSign.constructToken(ADDRESS4,tokenType,"320");
+        List<Map> list6= soloSign.constructToken(ADDRESS4,tokenType2,"320");
         String transferInfo5= soloSign.Transfer(list5, PRIKEY3, "双花验证");
-        String transferInfo6= soloSign.Transfer(list5, PRIKEY3, "双花验证");
+        String transferInfo6= soloSign.Transfer(list6, PRIKEY3, "双花验证");
         assertThat(transferInfo5, containsString("200"));
-        assertThat(transferInfo6, containsString("insufficient balance"));
-}
+        Thread.sleep(SLEEPTIME);
+        String response3=soloSign.Balance(PRIKEY4,tokenType);
+        String response4=soloSign.Balance(PRIKEY4,tokenType2);
+        assertThat(response3,anyOf(containsString("1020"),containsString("1021")));
+        assertThat(response4,anyOf(containsString("731"),containsString("320")));
+
+    }
 }

@@ -50,7 +50,7 @@ type Mobile struct {
 }
 
 func (c *SmartContract) event(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	event.New([]string{"10.1.3.247:9080"}, true)
+	event.New([]string{"10.1.3.154:9092"}, true)
 	eventSender := event.GetInstance()
 	eventSender.SendEvent(event.USER, "test", []byte("Hello ChenYao"))
 	return shim.Success(nil)
@@ -70,7 +70,7 @@ func (c *SmartContract) initMobile(stub shim.ChaincodeStubInterface, args []stri
 	for i < len(mobiles) {
 		fmt.Println("i is ", i)
 		mobileAsBytes, _ := json.Marshal(mobiles[i])
-		stub.PutState("Mobile"+init.Itoa(i), mobileAsBytes)
+		stub.PutState("Mobile"+strconv.Itoa(i), mobileAsBytes)
 		fmt.Println("Added", mobiles[i])
 		i = i + 1
 	}
