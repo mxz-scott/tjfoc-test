@@ -26,7 +26,8 @@ public class BeforeCondition {
         String response= multiSign.collAddress(PRIKEY1,IMPPUTIONADD);
         String response2= multiSign.collAddress(PRIKEY1,MULITADD3);
         String response3= multiSign.collAddress(PRIKEY1,ADDRESS1);
-        assertThat(response3,containsString("200"));
+        String response4=multiSign.collAddress(PRIKEY2,ADDRESS2);
+        assertThat(response4,containsString("200"));
     }
     /**
      * 创建多签地址

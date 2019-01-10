@@ -129,7 +129,17 @@ public class GoMultiSign implements MultiSign {
         log.info(response);
         return response;
     }
-
+    public String issueToken(String MultiAddr,String ToAddr,String TokenType,String Amount,String Data) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", MultiAddr);
+        map.put("ToAddr",ToAddr);
+        map.put("TokenType", TokenType);
+        map.put("Amount", Amount);
+        map.put("Data", Data);
+        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken", map);
+        log.info(response);
+        return response;
+    }
 
     /**
      签名多签发行Token交易-带密码

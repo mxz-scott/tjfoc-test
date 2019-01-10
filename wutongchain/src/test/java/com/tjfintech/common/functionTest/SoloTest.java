@@ -325,4 +325,29 @@ public class SoloTest {
         assertThat(response4,anyOf(containsString("731"),containsString("320")));
 
     }
+
+    /**
+     * 单签发行token时指定其他地址，不发行token到本身.指定单签地址与多签地址
+     * @throws Exception
+     */
+    @Test
+    public void TC993_issueToOther()throws Exception{
+        BeforeCondition beforeCondition=new BeforeCondition();
+        beforeCondition.collAddressTest();
+        log.info("发行两种token1000个");
+        tokenType = "SOLOTC-"+UtilsClass.Random(6);
+        String isResult= soloSign.issueToken(PRIKEY1,tokenType,"10000","发行token",ADDRESS2);
+        tokenType2 = "SOLOTC-"+UtilsClass.Random(6);
+        String isResult2= soloSign.issueToken(PRIKEY1,tokenType2,"20000","发行token",MULITADD3);
+        assertThat(tokenType+"发行token错误",isResult, containsString("200"));
+        assertThat(tokenType+"发行token错误",isResult2, containsString("200"));
+        Thread.sleep(SLEEPTIME*3);
+        log.info("查询归集地址中两种token余额");
+        String response1 = soloSign.Balance( PRIKEY2, tokenType);
+        String response2 = multiSign.Balance( MULITADD3,PRIKEY1,tokenType2 );
+        assertThat(tokenType+"查询余额错误",response1, containsString("200"));
+        assertThat(tokenType+"查询余额错误",response2, containsString("200"));
+        assertThat(tokenType+"查询余额不正确",response1, containsString("10000"));
+        assertThat(tokenType+"查询余额不正确",response2, containsString("20000"));
+    }
 }

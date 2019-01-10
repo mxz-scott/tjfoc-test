@@ -27,6 +27,11 @@ public class JavaMultiSign implements MultiSign {
     }
 
     @Override
+    public String issueToken(String MultiAddr, String ToAddr, String TokenType, String Amount, String Data) {
+        return null;
+    }
+
+    @Override
     public String Sign(String Tx, String Prikey, String Pwd) {
         return null;
     }

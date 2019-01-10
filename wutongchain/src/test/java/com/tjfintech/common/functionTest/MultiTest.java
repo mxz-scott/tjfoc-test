@@ -45,6 +45,22 @@ public class MultiTest {
 
     }
 
+    /**
+     * 多签发行token。接收地址不为本身。指定其他多签地址
+     * @throws Exception
+     */
+     @Test
+     public void    TC994_issueToOther()throws Exception {
+         tokenType = IssueToken(5, "1000",MULITADD3);
+         tokenType2 = IssueToken(5, "1000",MULITADD4);
+         Thread.sleep(SLEEPTIME);
+         String response1 = multiSign.Balance(MULITADD3,PRIKEY1, tokenType);
+         String response2 = multiSign.Balance(MULITADD4,PRIKEY1, tokenType);
+         assertThat(response1, containsString("200"));
+         assertThat(response1, containsString("1000"));
+         assertThat(response2, containsString("200"));
+         assertThat(response2, containsString("1000"));
+     }
 
 
 
@@ -449,7 +465,33 @@ public class MultiTest {
 
     //-----------------------------------------------------------------------------------------------------------
 
+    public  String IssueToken(int length,String  amount,String ToAddr){
+        String tokenType = "CX-" + UtilsClass.Random(length);
+        //String amount = "1000";
+        log.info(MULITADD3+ "发行" + tokenType + " token，数量为：" + amount);
+        String data = "MULITADD3" + "发行" + tokenType + " token，数量为：" + amount;
+        String response = multiSign.issueToken(IMPPUTIONADD,ToAddr,tokenType, amount, data);
+        assertThat(response, containsString("200"));
+        String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
+        log.info("第一次签名");
+        String response2 = multiSign.Sign(Tx1, PRIKEY5);
+        assertThat(response2, containsString("200"));
+        /*String response = multiSign.issueToken(MULITADD3, tokenType, amount, data);
+        assertThat(response, containsString("200"));
+        String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
+        log.info("第一次签名");
+        String response2 = multiSign.Sign(Tx1, PRIKEY1);
+        String Tx2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Tx");
+        log.info("第二次签名");
+        String response3 = multiSign.Sign(Tx2, PRIKEY6,PWD6);
+        String Tx3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Tx");
+        log.info("第三次签名");
+        String response4 = multiSign.Sign(Tx3, PRIKEY7,PWD7);
+        assertThat(JSONObject.fromObject(response4).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
+        assertThat(response4, containsString("200"));*/
+        return tokenType;
 
+    }
 
 
     public  String IssueToken(int length,String  amount){

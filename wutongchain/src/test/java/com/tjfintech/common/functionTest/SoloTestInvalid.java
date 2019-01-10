@@ -56,7 +56,7 @@ public class SoloTestInvalid {
     @Test
     public void TC247_issueThenStore() throws Exception {
         String response = store.CreateStore(tokenType);
-        Thread.sleep(SLEEPTIME);
+        Thread.sleep(1*1000);
         String response2= store.CreateStore(tokenType);
         assertThat(response, containsString("200"));
         assertThat(response2, containsString("500"));

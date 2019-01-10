@@ -44,7 +44,7 @@ public class StoreTestlnvalid {
     public void TC17_CreateStoreDouble()throws Exception{
          String data="cxTest-"+ UtilsClass.Random(2);
          String response= store.CreateStore(data);
-         Thread.sleep(SLEEPTIME);
+         Thread.sleep(1*1000);
          String response2= store.CreateStore(data);
          Thread.sleep(SLEEPTIME);
          String hash1=JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");

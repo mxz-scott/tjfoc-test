@@ -45,6 +45,26 @@ public class  MultiTestInvalid {
         assertThat(response2, containsString("100.123"));
 
     }
+    @Test
+    public void TC994_issueToOtherInvalid()throws Exception{
+        int length=5;
+        String amount="10000";
+        String tokenType = "CX-" + UtilsClass.Random(length);
+        //String amount = "1000";
+        log.info(MULITADD3+ "发行" + tokenType + " token，数量为：" + amount);
+        String data = "MULITADD3" + "发行" + tokenType + " token，数量为：" + amount;
+        String response = multiSign.issueToken(IMPPUTIONADD,ADDRESS1,tokenType, amount, data);
+        assertThat(response, containsString("400"));
+        assertThat(response, containsString("Invalid multiple address(to addr)"));
+        tokenType2 = multiTest.IssueToken(5, "1000",MULITADD4);
+        Thread.sleep(SLEEPTIME);
+        String response1 = multiSign.Balance(PRIKEY1, tokenType);
+        String response2 = multiSign.Balance(MULITADD4,PRIKEY1, tokenType);
+        assertThat(response1, containsString("200"));
+        assertThat(response1, containsString("\"Total\":\"0\""));
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("\"Total\":\"0\""));
+    }
 
     /**
      * Tc37 归集地址向两个多签地址转账异常测试
