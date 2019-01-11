@@ -49,7 +49,7 @@ public  class GoStore implements Store {
         map.put("hash",hashEncode);
         param= GetTest.ParamtoUrl(map);
         String result=GetTest.SendGetTojson(SDKADD+"/tx/inlocal"+"?"+param);
-        log.info(result);
+        //log.info(result);
         return result;
 
     }

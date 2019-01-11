@@ -13,7 +13,7 @@ import java.io.Reader;
 import java.util.*;
 @Slf4j
 public class UtilsClass {
-    public static final String SDKADD="http://10.1.3.164:7878";
+    public static final String SDKADD="http://10.1.3.165:9990";
      public final static String  ADDRESS1 = "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo";
      public final static String  ADDRESS2 = "3UycKc8qvVWpVcBr3ipNqDC9oZPd86wj3qSJ6GMbLrVPgeqVwY";
      public final static String  ADDRESS3 = "3r1vxdDjkg9uVke2YdaPTjmWVjV2bsVmySiU99hYuCUjLFYDFb";
