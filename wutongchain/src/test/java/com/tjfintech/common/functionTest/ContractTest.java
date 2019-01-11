@@ -30,7 +30,7 @@ public class ContractTest {
      * @throws Exception
      */
     @Test
-    public void TC1_installTest() throws Exception {
+    public void TC001_installTest() throws Exception {
         String name="chenxu";//+ Random(5);
         String version="1.0";
         String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";
@@ -49,7 +49,7 @@ public class ContractTest {
      * @throws Exception
      */
     @Test
-    public void TC2_initTest() throws Exception {
+    public void TC002_initTest() throws Exception {
         String name="chenxu";
         String version="1.0";
         String method="init";
@@ -72,7 +72,7 @@ public class ContractTest {
      * @throws Exception
      */
     @Test
-    public void TC3_initMobileTest() throws Exception {
+    public void TC003_initMobileTest() throws Exception {
         String method ="initMobile";
         invoke(method);
     }
@@ -84,7 +84,7 @@ public class ContractTest {
      * @throws Exception
      */
     @Test
-    public void TC4_createMobileTest() throws Exception {
+    public void TC004_createMobileTest() throws Exception {
         String method = "createMobile";
         String brand = "xiaomi";
         String model = "Mix2S";
@@ -100,7 +100,7 @@ public class ContractTest {
      * @throws Exception
      */
     @Test
-    public void TC5_deleteMobileTest() throws Exception{
+    public void TC005_deleteMobileTest() throws Exception{
         String method ="deleteMobile";
         String arg="Mobile5";
         invoke(method,arg);
@@ -111,7 +111,7 @@ public class ContractTest {
      * @throws Exception
      */
     @Test
-    public void TC6_changeMobileCountTest() throws Exception{
+    public void TC006_changeMobileCountTest() throws Exception{
         String method="changeMobileCount";
         String arg="55";
         String arg2="Mobile1";
@@ -123,7 +123,7 @@ public class ContractTest {
      * @throws Exception
      */
     @Test
-    public void TC7_getAllMobileTest() throws Exception{
+    public void TC007_getAllMobileTest() throws Exception{
         String method="getAllMobile";
 
         invoke(method);
@@ -135,7 +135,7 @@ public class ContractTest {
      * @throws Exception
      */
     @Test
-    public void TC8_eventTest() throws Exception {
+    public void TC008_eventTest() throws Exception {
         String method = "event";
         invoke(method);
     }
@@ -145,7 +145,7 @@ public class ContractTest {
      * @throws Exception
      */
     @Test
-    public void TC9_queryMobileTest() throws Exception {
+    public void TC009_queryMobileTest() throws Exception {
         String method = "queryMobile";
         String arg = "Mobile8";
         invoke(method, arg);
@@ -159,7 +159,7 @@ public class ContractTest {
      * @throws Exception
      */
     @Test
-    public void TC10_destroyTest() throws Exception {
+    public void TCA_destroyTest() throws Exception {
         String name = "chenxu";
         String version = "1.0";
         String response = contract.Destroy(name, version);
