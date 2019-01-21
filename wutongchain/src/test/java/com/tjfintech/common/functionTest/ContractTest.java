@@ -159,7 +159,7 @@ public class ContractTest {
      * @throws Exception
      */
     @Test
-    public void TCA_destroyTest() throws Exception {
+    public void TC011_destroyTest() throws Exception {
         String name = "chenxu";
         String version = "1.0";
         String response = contract.Destroy(name, version);

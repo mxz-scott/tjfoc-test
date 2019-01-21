@@ -175,22 +175,23 @@ public class SoloTestInvalid {
     /**
      * Tc252删除CA管理系统中的地址，确认不能发token
      */
-    @Test
-    public void TC252_issueDeleteInvalid() throws Exception {
-        String tokenTypeInvalid = "SOLOTC-" + UtilsClass.Random(3);
-        String issueInfo1 = soloSign.issueToken(PRIKEY1, tokenTypeInvalid, "100.1123", "发行token",ADDRESS1);
-        Thread.sleep(SLEEPTIME);
-        assertThat(issueInfo1, containsString("400"));
-        assertThat(issueInfo1,containsString("tokenaddress verify failed"));
-
-
-        log.info("查询归集地址中token余额");
-        String response1 = multiSign.Balance(PRIKEY1, tokenTypeInvalid);
-        assertThat(response1, containsString("200"));
-        assertThat(response1, containsString("0"));
-
-
-    }
+    //暂不支持
+//    @Test
+//    public void TC252_issueDeleteInvalid() throws Exception {
+//        String tokenTypeInvalid = "SOLOTC-" + UtilsClass.Random(3);
+//        String issueInfo1 = soloSign.issueToken(PRIKEY1, tokenTypeInvalid, "100.1123", "发行token",ADDRESS1);
+//        Thread.sleep(SLEEPTIME);
+//        assertThat(issueInfo1, containsString("400"));
+//        assertThat(issueInfo1,containsString("tokenaddress verify failed"));
+//
+//
+//        log.info("查询归集地址中token余额");
+//        String response1 = multiSign.Balance(PRIKEY1, tokenTypeInvalid);
+//        assertThat(response1, containsString("200"));
+//        assertThat(response1, containsString("0"));
+//
+//
+//    }
 
     /**
      * Tc253 向不存在的账号地址转账，从不存在的私钥转出

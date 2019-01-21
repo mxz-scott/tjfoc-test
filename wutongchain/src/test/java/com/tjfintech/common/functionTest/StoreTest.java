@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 @Slf4j
 public class StoreTest {
 
-    public   final static int   SLEEPTIME=5*1000;
+    public   final static int   SLEEPTIME=8*1000;
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
 
@@ -182,19 +182,19 @@ public class StoreTest {
      * 预期num2==num+1
      * @throws Exception
      */
-    @Test
-    public void TC15_getStat() throws Exception {
-        String type = "1";
-        String response= store.GetStat(type);
-        int num = JSONObject.fromObject(response).getJSONObject("Data").getInt("Total");
-        String Data = "\"test\":\"json" + UtilsClass.Random(4) + "\"";
-        String response2 = store.CreateStore(Data);
-        Thread.sleep(SLEEPTIME);
-        String response3 = store.GetStat(type);
-        int num2 = JSONObject.fromObject(response3).getJSONObject("Data").getInt("Total");
-        assertEquals(num2 == (num + 1), true);
-        assertThat(response,containsString("200"));
-    }
+ //   @Test
+//    public void TC15_getStat() throws Exception { //目前不支持，暂时注释掉。
+//        String type = "1";
+//        String response= store.GetStat(type);
+//        int num = JSONObject.fromObject(response).getJSONObject("Data").getInt("Total");
+//        String Data = "\"test\":\"json" + UtilsClass.Random(4) + "\"";
+//        String response2 = store.CreateStore(Data);
+//        Thread.sleep(SLEEPTIME);
+//        String response3 = store.GetStat(type);
+//        int num2 = JSONObject.fromObject(response3).getJSONObject("Data").getInt("Total");
+//        assertEquals(num2 == (num + 1), true);
+//        assertThat(response,containsString("200"));
+//    }
 
     /**
      * TC18 同时发送50笔存证交易
