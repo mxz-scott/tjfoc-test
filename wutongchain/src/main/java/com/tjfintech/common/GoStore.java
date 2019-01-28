@@ -280,4 +280,12 @@ public  class GoStore implements Store {
         log.info(result);
         return result;
     }
+
+
+    @Override
+    public String GetPeerList() {
+        String result= GetTest.SendGetTojson(SDKADD+"/getpeerlist");
+        log.info(result);
+        return result;
+    }
 }

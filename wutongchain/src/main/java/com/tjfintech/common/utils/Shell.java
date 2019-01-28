@@ -43,6 +43,12 @@ public class Shell {
         try {
             //创建session并且打开连接，因为创建session之后要主动打开连接
             Session session = jsch.getSession(username, ip, DEFAULT_SSH_PORT);
+
+            //add 20180121 jj
+            java.util.Properties config = new java.util.Properties();
+            config.put("StrictHostKeyChecking", "no");
+            session.setConfig(config);
+
             session.setPassword(password);
             session.setUserInfo(userInfo);
             session.connect();
@@ -63,6 +69,7 @@ public class Shell {
             String line;
             while ((line = input.readLine()) != null) {
                 stdout.add(line);
+                //System.out.println(line);//20180121
             }
             input.close();
 

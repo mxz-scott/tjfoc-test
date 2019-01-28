@@ -33,4 +33,6 @@ public interface Store {
 
     String GetTransactionBlock(String hash);
 
+    String GetPeerList();
+
 }

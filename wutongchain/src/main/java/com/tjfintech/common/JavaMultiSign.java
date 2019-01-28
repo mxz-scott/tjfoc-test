@@ -80,4 +80,18 @@ public class JavaMultiSign implements MultiSign {
     public String collAddress(String pubKey, String ...address) {
         return null;
     }
+
+    @Override
+    public String freezeToken(String priKey, String tokenType) {
+        return null;
+    }
+    @Override
+    public String recoverFrozenToken(String priKey, String tokenType) {
+        return null;
+    }
+
+    @Override
+    public String delCollAddress(String priKey, String... address) {
+        return null;
+    }
 }

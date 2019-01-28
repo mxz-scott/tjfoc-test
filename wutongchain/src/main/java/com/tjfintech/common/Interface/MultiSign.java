@@ -19,4 +19,7 @@ public interface MultiSign {
     String Recycle(String priKey,String tokenType,String amount);
     String QueryZero(String tokenType);
     String collAddress(String pubKey,String ...address);
+    String delCollAddress(String priKey,String ...address);
+    String freezeToken(String priKey,String tokenType);
+    String recoverFrozenToken(String priKey,String tokenType);
 }

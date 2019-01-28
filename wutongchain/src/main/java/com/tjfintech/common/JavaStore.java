@@ -130,4 +130,9 @@ public class JavaStore implements Store {
         System.out.println(str);
         return str;
     }
+
+    @Override
+    public String GetPeerList() {
+        return null;
+    }
 }

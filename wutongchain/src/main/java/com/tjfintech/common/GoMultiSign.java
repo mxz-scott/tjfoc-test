@@ -57,11 +57,18 @@ public class GoMultiSign implements MultiSign {
     }
 
 
-
-
-
-
-
+    public String delCollAddress(String priKey, String... address) {
+        Map<String,Object> map = new HashMap<>();
+        List<Object> addrs = new ArrayList<>();
+        for (int i= 0;i<address.length;i++){
+            addrs.add(address[i]);
+        }
+        map.put("PriKey", priKey);
+        map.put("Addrs", addrs);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/deladdress", map);
+        log.info(result);
+        return result;
+    }
 
     /**
      * 创建多签地址
@@ -211,12 +218,14 @@ public class GoMultiSign implements MultiSign {
      * @param PriKey  私钥
      * @param Pwd    密码
      */
-    public String CheckPriKey(String PriKey ,String Pwd){
-          Map<String,Object>map=new HashMap<>();
+    public String CheckPriKey(String PriKey,String Pwd){
+          Map<String,Object>map = new HashMap<>();
           map.put("PriKey",PriKey);
           map.put("Pwd",Pwd);
+          System.out.println(map.get("Pwd"));
           String result=PostTest.sendPostToJson(SDKADD+"/utxo/validatekey",map);
           log.info(result);
+
           return result;
     }
 
@@ -266,6 +275,7 @@ public class GoMultiSign implements MultiSign {
 
     }
 
+
     /**
      * 查询回收账户余额
      * @param tokenType 数字货币类型
@@ -279,7 +289,25 @@ public class GoMultiSign implements MultiSign {
         return result;
     }
 
+    @Override
+    public String freezeToken(String priKey, String tokenType) {
+        Map<String ,Object>map=new HashMap<>();
+        map.put("PriKey",priKey);
+        map.put("TokenType",tokenType);
+        String result =PostTest.sendPostToJson(SDKADD+"/utxo/freeze",map);
+        log.info(result);
+        return result;
+    }
 
+    @Override
+    public String recoverFrozenToken(String priKey, String tokenType) {
+        Map<String ,Object>map=new HashMap<>();
+        map.put("PriKey",priKey);
+        map.put("TokenType",tokenType);
+        String result =PostTest.sendPostToJson(SDKADD+"/utxo/recover",map);
+        log.info(result);
+        return result;
+    }
 }
 /**
  * 单签测试用
