@@ -8,7 +8,7 @@ import net.sf.json.JSONObject;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-
+import java.io.*;
 import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -43,6 +43,48 @@ public class StoreTest {
         assertThat(response, containsString("200"));
         assertThat(response,containsString("Data"));
 
+    }
+
+
+
+
+
+
+    @Test
+    public void TC_createBigSizeStore() throws Exception {
+
+        String Data = UtilsClass.Random(10) + readString3("E:\\tjfoc-test\\wutongchain\\src\\main\\resources\\bigsize4.txt");
+        String response= store.CreateStore(Data);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        Thread.sleep(SLEEPTIME);
+        assertThat(response, containsString("200"));
+        assertThat(response,containsString("Data"));
+
+    }
+
+
+    public String readString3(String filepath)
+
+    {
+
+        String str="";
+        File file=new File(filepath);
+        try {
+            FileInputStream in=new FileInputStream(file);
+            // size 为字串的长度 ，这里一次性读完
+            int size=in.available();
+            byte[] buffer=new byte[size];
+            in.read(buffer);
+            in.close();
+            str=new String(buffer,"GB2312");
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+
+            e.printStackTrace();
+            return null;
+        }
+        return str;
     }
 
 

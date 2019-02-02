@@ -46,8 +46,24 @@ public class MultiTest {
     }
 
 
-
-
+//    @Test
+//    public void TC03_validateOnChainTime() throws Exception {
+//
+//        int j = 0;
+//        while (j < 15) {
+//            j++;
+//            tokenType = IssueToken(5, "1000");
+//            for (int i = 1; i < 30; i++) {
+//                String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+//                if (response1.contains("200") && response1.contains("1000")) {
+//                    log.warn("上链用了" + i + "秒");
+//                    break;
+//                } else {
+//                    Thread.sleep(1000);
+//                }
+//            }
+//        }
+//    }
 
     /**
      * Tc03多签正常流程-发币：签名：查询：转账：查询:回收：查询
@@ -455,18 +471,18 @@ public class MultiTest {
     public  String IssueToken(int length,String  amount){
         String tokenType = "CX-" + UtilsClass.Random(length);
         //String amount = "1000";
-        log.info(MULITADD3+ "发行" + tokenType + " token，数量为：" + amount);
+        //log.info(MULITADD3+ "发行" + tokenType + " token，数量为：" + amount);
         String data = "MULITADD3" + "发行" + tokenType + " token，数量为：" + amount;
         String response = multiSign.issueToken(MULITADD3, tokenType, amount, data);
         assertThat(response, containsString("200"));
         String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
-        log.info("第一次签名");
+        //log.info("第一次签名");
         String response2 = multiSign.Sign(Tx1, PRIKEY6,PWD6);
         String Tx2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Tx");
-        log.info("第二次签名");
+        //log.info("第二次签名");
         String response3 = multiSign.Sign(Tx2, PRIKEY7,PWD7);
         String Tx3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Tx");
-        log.info("第三次签名");
+        //log.info("第三次签名");
         String response4 = multiSign.Sign(Tx3, PRIKEY1);
         assertThat(JSONObject.fromObject(response4).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
         assertThat(response4, containsString("200"));

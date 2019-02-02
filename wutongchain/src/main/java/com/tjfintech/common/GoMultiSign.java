@@ -76,7 +76,7 @@ public class GoMultiSign implements MultiSign {
         map.put("PriKey", priKey);
         map.put("tokentype", tokenType);
         String result=PostTest.sendPostToJson(SDKADD+"/utxo/balance", map);
-        log.info(result);
+        //log.info(result);
         return result;
     }
 
@@ -106,7 +106,7 @@ public class GoMultiSign implements MultiSign {
         map.put("Amount", Amount);
         map.put("Data", Data);
         String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken", map);
-        log.info(response);
+        //log.info(response);
         return response;
     }
 
@@ -126,7 +126,7 @@ public class GoMultiSign implements MultiSign {
         map.put("Pwd", Pwd);
         map.put("Tx", Tx);
         String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/sign", map);
-        log.info(response);
+        //log.info(response);
         return response;
 
     }
@@ -136,7 +136,7 @@ public class GoMultiSign implements MultiSign {
         map.put("Prikey", Prikey);
         map.put("Tx", Tx);
         String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/sign", map);
-        log.info(response);
+        //log.info(response);
         return response;
     }
 
