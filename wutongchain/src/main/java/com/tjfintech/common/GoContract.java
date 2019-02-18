@@ -1,11 +1,13 @@
 package com.tjfintech.common;
 
 import com.tjfintech.common.Interface.Contract;
+import com.tjfintech.common.utils.GetTest;
 import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Before;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +78,19 @@ public class GoContract implements Contract {
     }
 
 
+    @Override
+    public String SearchByKey(String key, String contractName) {
+        String result=GetTest.SendGetTojson(SDKADD+"/search/bykey"+"?key="+key+"&cn="+contractName);
+        log.info(result);
+        return result;
+    }
 
+    @Override
+    public String SearchByPrefix(String prefix, String contractName) {
+        String result=GetTest.SendGetTojson(SDKADD+"/search/byprefix"+"?prefix="+prefix+"&cn="+contractName);
+        log.info(result);
+        return result;
+    }
 
     @After
     /**
