@@ -1,11 +1,11 @@
 package com.tjfintech.common.performanceTest;
 
 
-import com.tjfintech.common.functionTest.MultiTest;
+import com.tjfintech.common.functionTest.MultiSignTest;
 import org.junit.Test;
 
 public class IssueTokenTest {
-    MultiTest multiTest=new MultiTest();
+    MultiSignTest multiTest=new MultiSignTest();
     @Test
     public  void Issue50()throws Exception{
         for (int i=0;i<50;i++)

@@ -32,6 +32,11 @@ public class JavaSoloSign implements SoloSign {
     }
 
     @Override
+    public String issueTokenV2(String tokenType, String amount, String data) {
+        return null;
+    }
+
+    @Override
     public String genAddress(String publicKey) {
         return null;
     }

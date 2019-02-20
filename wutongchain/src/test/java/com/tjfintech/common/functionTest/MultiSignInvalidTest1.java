@@ -22,11 +22,11 @@ import static org.junit.Assert.assertThat;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class  MultiTestInvalid {
+public class MultiSignInvalidTest1 {
     TestBuilder testBuilder= TestBuilder.getInstance();
     MultiSign multiSign =testBuilder.getMultiSign();
     UtilsClass utilsClass = new UtilsClass();
-    MultiTest multiTest = new MultiTest();
+    MultiSignTest multiTest = new MultiSignTest();
     private static String tokenType;
     private static String tokenType2;
 

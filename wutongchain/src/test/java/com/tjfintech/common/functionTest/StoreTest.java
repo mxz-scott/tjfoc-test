@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest;
 
+import com.bw.base.PrivacyPolicyStore;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -22,7 +23,7 @@ public class StoreTest {
     public   final static int   SLEEPTIME=5*1000;
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
-
+    PrivacyPolicyStore priStore = new PrivacyPolicyStore();
 
 
 

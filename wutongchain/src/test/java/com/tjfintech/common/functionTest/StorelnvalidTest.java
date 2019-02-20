@@ -18,7 +18,7 @@ import static org.junit.Assert.assertThat;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class StoreTestlnvalid {
+public class StorelnvalidTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
 

@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="bwutils">
+    <CLASSES>
+      <root url="jar://F:/宝武项目/本地签名/bwutils.jar!/" />
+      <root url="jar://F:/宝武项目/本地签名/tjutils.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

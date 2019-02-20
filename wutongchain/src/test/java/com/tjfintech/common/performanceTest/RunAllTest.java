@@ -6,13 +6,13 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        MultiTest.class,
-        MultiTestInvalid.class,
-        MultiTestInvalid2.class,
-        SoloTest.class,
-        SoloTestInvalid.class,
+        MultiSignTest.class,
+        MultiSignInvalidTest1.class,
+        MultiSignInvalidTest2.class,
+        SingleSignTest.class,
+        SingleSignInvalidTest.class,
         StoreTest.class,
-        StoreTestlnvalid.class
+        StorelnvalidTest.class
 })
 public class RunAllTest {
     //执行这个类将执行suiteClass中的测试项

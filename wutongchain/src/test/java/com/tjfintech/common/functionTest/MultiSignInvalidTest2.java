@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @Slf4j
-public class MultiTestInvalid2 {
+public class MultiSignInvalidTest2 {
     TestBuilder testBuilder= TestBuilder.getInstance();
     MultiSign multiSign =testBuilder.getMultiSign();
     UtilsClass utilsClass = new UtilsClass();
@@ -134,7 +134,7 @@ public class MultiTestInvalid2 {
         String data = "MULITADD2" + "发行" + tokenType + " token，数量为：" + amount;
         //String response = multiSign.issueToken(MULITADD2, tokenType+"123456789000000000000000000", amount, data);
         String response2 = multiSign.issueToken(MULITADD2, tokenType, "900000000000000000000000000000000000", data);
-        String response4 = multiSign.issueToken(MULITADD1, tokenType, amount, data);
+        String response4 = multiSign.issueToken(MULITADD6, tokenType, amount, data);
         // String response5 = multiSign.issueToken("0123", tokenType, amount, data);
         // assertThat(response, containsString("400"));
         assertThat(response2, containsString("400"));

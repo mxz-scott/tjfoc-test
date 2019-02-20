@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
 @Slf4j
-public class SoloTestInvalid {
+public class SingleSignInvalidTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     MultiSign multiSign =testBuilder.getMultiSign();
     SoloSign soloSign=testBuilder.getSoloSign();

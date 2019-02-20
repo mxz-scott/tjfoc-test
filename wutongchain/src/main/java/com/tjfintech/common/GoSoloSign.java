@@ -84,6 +84,19 @@ public class GoSoloSign implements SoloSign {
         return result;
     }
 
+    /**
+     * 发行token
+     */
+    public String issueTokenV2(String tokenType,String amount,String data){
+        Map<String, Object> map = new HashMap<>();
+        map.put("TokenType", tokenType);
+        map.put("Amount", amount);
+        map.put("Data",data);
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/issuetoken", map);
+        log.info(result);
+        return result;
+    }
+
 
 
 

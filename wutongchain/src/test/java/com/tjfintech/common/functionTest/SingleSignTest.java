@@ -21,7 +21,7 @@ import static org.junit.Assert.assertThat;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SoloTest {
+public class SingleSignTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     MultiSign multiSign =testBuilder.getMultiSign();
     SoloSign soloSign = testBuilder.getSoloSign();
@@ -32,10 +32,10 @@ public class SoloTest {
     @Before
     public void beforeConfig() throws Exception {
 
-        log.info("发行两种token1000个");
+        log.info("发行两种token");
         tokenType = "SOLOTC-"+UtilsClass.Random(6);
         String isResult= soloSign.issueToken(PRIKEY1,tokenType,"10000.123456789","发行token");
-
+        log.info(isResult);
         tokenType2 = "SOLOTC-"+UtilsClass.Random(6);
         String isResult2= soloSign.issueToken(PRIKEY1,tokenType2,"20000.87654321","发行token");
         assertThat(tokenType+"发行token错误",isResult, containsString("200"));

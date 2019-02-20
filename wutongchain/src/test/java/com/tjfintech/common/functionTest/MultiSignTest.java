@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class MultiTest {
+public class MultiSignTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     MultiSign multiSign =testBuilder.getMultiSign();
     UtilsClass utilsClass=new UtilsClass();
@@ -46,24 +46,7 @@ public class MultiTest {
     }
 
 
-//    @Test
-//    public void TC03_validateOnChainTime() throws Exception {
-//
-//        int j = 0;
-//        while (j < 15) {
-//            j++;
-//            tokenType = IssueToken(5, "1000");
-//            for (int i = 1; i < 30; i++) {
-//                String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-//                if (response1.contains("200") && response1.contains("1000")) {
-//                    log.warn("上链用了" + i + "秒");
-//                    break;
-//                } else {
-//                    Thread.sleep(1000);
-//                }
-//            }
-//        }
-//    }
+
 
     /**
      * Tc03多签正常流程-发币：签名：查询：转账：查询:回收：查询
@@ -489,4 +472,23 @@ public class MultiTest {
         return tokenType;
 
     }
+
+    //    @Test
+//    public void TC03_validateOnChainTime() throws Exception {
+//
+//        int j = 0;
+//        while (j < 15) {
+//            j++;
+//            tokenType = IssueToken(5, "1000");
+//            for (int i = 1; i < 30; i++) {
+//                String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+//                if (response1.contains("200") && response1.contains("1000")) {
+//                    log.warn("上链用了" + i + "秒");
+//                    break;
+//                } else {
+//                    Thread.sleep(1000);
+//                }
+//            }
+//        }
+//    }
 }
