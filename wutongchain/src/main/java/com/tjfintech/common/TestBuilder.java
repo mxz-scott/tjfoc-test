@@ -38,11 +38,11 @@ public class TestBuilder {
         contract=new GoContract();
     }
 
-    public void SetJavaTest() {
-        store = new JavaStore();
-        soloSign = new JavaSoloSign();
-        multiSign = new JavaMultiSign();
-    }
+//    public void SetJavaTest() {
+//        store = new JavaStore();
+//        soloSign = new JavaSoloSign();
+//        multiSign = new JavaMultiSign();
+//    }
 
     public Store getStore() {
         return store;

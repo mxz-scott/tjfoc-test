@@ -5,7 +5,7 @@ import com.bw.base.SingleSignTransferAccounts;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.TestBuilder;
-import com.tjfintech.common.Util;
+//import com.tjfintech.common.Util;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -33,22 +33,28 @@ public class LocalSingleSignTest {
     private static String tokenType;
     private static String tokenType2;
     SingleSignIssue singleSign = new SingleSignIssue();
-    SingleSignTransferAccounts singleSignTrans = new SingleSignTransferAccounts();
+//    SingleSignTransferAccounts singleSignTrans = new SingleSignTransferAccounts();
 
     @Before
     public void beforeConfig() throws Exception {
 
 
         tokenType = "ST-"+UtilsClass.Random(6);
-        String isResult= soloSign.issueTokenV2(tokenType,"10000.123456789","发行token");
+        String isResult= soloSign.issueTokenLocalSign(PUBKEY1,tokenType,"10000.123456789","发行token");
 
-        byte[] response1 = singleSign.singleSignIssueMethod(isResult, "C:\\Users\\Administrator\\Downloads\\163\\key1.pem");
-        System.out.println("-----------------------多签发行--------------------------");
-        System.out.println(Util.byteToHex(response1));
+        String Tx1 = JSONObject.fromObject(isResult).getJSONObject("Data").toString();
+        log.info(Tx1);
 
-        //assertThat(tokenType+"发行token错误",isResult, containsString("200"));
+        byte[] response1 = singleSign.singleSignIssueMethod(Tx1, "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key1.pem");
 
-        Thread.sleep(SLEEPTIME);
+        log.info("aaaaaaaaa:" + response1.toString());
+
+        String data = "signData";
+        soloSign.sendSign(data);
+//
+//        //assertThat(tokenType+"发行token错误",isResult, containsString("200"));
+//
+//        Thread.sleep(SLEEPTIME);
         //log.info("查询归集地址中token余额");
         //String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
 
@@ -58,19 +64,23 @@ public class LocalSingleSignTest {
 
     }
 
+    @Test
+    public void test() throws Exception {
+        log.info("test");
+    }
 
     /**
      * Tc024单签正常流程:
      *
      */
-//    @Test
-//    public void TC024_SoloProgress() throws Exception {
-//        String transferData = "归集地址向" + PUBKEY3 + "转账100.25个" + tokenType+",并向"+PUBKEY4+"转账";
-//        log.info(transferData);
-//        List<Map> listModel = utilsClass.constructToken(ADDRESS3,tokenType,"100.25");
-//        log.info(ADDRESS3);
-//        List<Map> list=utilsClass.constructToken(ADDRESS5,tokenType2,"200.555",listModel);
-//        String transferInfo= multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list);
+    @Test
+    public void TC024_SoloProgress() throws Exception {
+        String transferData = "归集地址向" + PUBKEY3 + "转账100.25个" + tokenType+",并向"+PUBKEY4+"转账";
+        log.info(transferData);
+        List<Map> listModel = utilsClass.constructToken(ADDRESS3,tokenType,"100.25");
+        log.info(ADDRESS3);
+        List<Map> list=utilsClass.constructToken(ADDRESS5,tokenType2,"200.555",listModel);
+        String transferInfo= multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list);
 //        Thread.sleep(SLEEPTIME);
 //        assertThat(transferInfo, containsString("200"));
 //        log.info("查询帐号3跟帐号5余额，判断转账是否成功");
@@ -132,7 +142,7 @@ public class LocalSingleSignTest {
 //        String Info5 = multiSign.Recycle("", PRIKEY2, tokenType2, "10");
 //        assertThat(Info5, containsString("200"));
 //        log.info("帐号6，token2余额正确");
-//    }
+    }
 
 
 }

@@ -71,7 +71,7 @@ public class GoSoloSign implements SoloSign {
     }
 
     /**
-     * 发行token
+     * 单签发行token
      */
     public String issueToken(String priKey,String tokenType,String amount,String data){
         Map<String, Object> map = new HashMap<>();
@@ -85,14 +85,26 @@ public class GoSoloSign implements SoloSign {
     }
 
     /**
-     * 发行token
+     * 单签发行token,本地签名
      */
-    public String issueTokenV2(String tokenType,String amount,String data){
+    public String issueTokenLocalSign(String pubKey, String tokenType,String amount,String data){
         Map<String, Object> map = new HashMap<>();
+        map.put("PubKey", pubKey);
         map.put("TokenType", tokenType);
         map.put("Amount", amount);
         map.put("Data",data);
-        String result=PostTest.sendPostToJson(SDKADD+"/utxo/issuetoken", map);
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/issuetoken2", map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 发送签名数据
+     */
+    public String sendSign(String signData){
+        Map<String, Object> map = new HashMap<>();
+        map.put("Data", signData);
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/send_sign", map);
         log.info(result);
         return result;
     }

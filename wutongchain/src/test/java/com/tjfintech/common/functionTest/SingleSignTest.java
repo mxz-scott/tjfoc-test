@@ -73,6 +73,16 @@ public class SingleSignTest {
         assertThat(queryInfo, containsString("100.25"));
         assertThat(queryInfo2, containsString("200"));
         assertThat(queryInfo2, containsString("200.555"));
+
+        log.info("使用地址查询帐号3跟帐号5余额，判断转账是否成功");
+        String response3 = multiSign.BalanceByAddr(ADDRESS3, tokenType);
+        String response4 = multiSign.BalanceByAddr(ADDRESS5, tokenType2);
+        assertThat(response3, containsString("200"));
+        assertThat(response3, containsString("100.25"));
+        assertThat(response4, containsString("200"));
+        assertThat(response4, containsString("200.555"));
+
+
         log.info("3向4转账token1");
         List<Map> list1 = soloSign.constructToken(ADDRESS4,tokenType,"30");
         String recycleInfo = soloSign.Transfer(list1, PRIKEY3,"3向4转账token1");
@@ -310,3 +320,87 @@ public class SingleSignTest {
         assertThat(transferInfo6, containsString("insufficient balance"));
 }
 }
+
+
+/**
+ * 单签测试用
+ * 初始化-发行token至归集地址
+ * @return  返回发行token的tokenType币种类型
+ * @throws Exception  由于使用了线程的休眠需要抛出异常
+ */
+/**public  String SoloInit()throws Exception{
+ String tokenType ="cx-"+UtilsClass.Random(6);
+ log.info("\n发行Token\n");
+ String response = TestissueToken(tokenType);
+ JSONObject jsonObject = JSONObject.fromObject(response);
+ String issueHash = jsonObject.getJSONObject("Data").get("Tx").toString();
+ log.info("\n第一次签名\n");
+ Thread.sleep(1000*3);
+ String signResponse1 = TestSign(issueHash, PRIKEY1, PWD1);
+ Thread.sleep(1000*3);
+ JSONObject signJsonObject = JSONObject.fromObject(signResponse1);
+ String signHash1 = signJsonObject.getJSONObject("Data").get("Tx").toString();
+ log.info("\n第二次签名\n");
+ String signResponse2 = TestSign(signHash1, PRIKEY2, PWD2);
+ JSONObject signJsonObject2 = JSONObject.fromObject(signResponse2);
+ String signHash2 = signJsonObject2.getJSONObject("Data").get("Tx").toString();
+ log.info("\n第三次签名\n");
+ TestSign(signHash2, PRIKEY3);
+ Thread.sleep(1000*6);
+ log.info("\n查询归集账号的余额\n");
+ TestQuery(tokenType);
+ return  tokenType;
+ }
+ */
+
+/*@Test
+     public void  run()throws Exception{
+    StoreTest storeTest=new StoreTest();
+    int count=0;
+        //while (true)
+         {runTest();
+        storeTest.runSDK3Test();
+        // Thread.sleep(1000*5);
+         count++;
+         log.info("第"+count+"次测试");
+         }
+
+     }*/
+ /*   public void runTest() throws Exception {
+
+        TOKENTYPE="cx-"+UtilsClass.Random(6);
+        log.info("\n发行Token\n");
+        String response = TestissueToken(TOKENTYPE);
+        JSONObject jsonObject = JSONObject.fromObject(response);
+        String issueHash = jsonObject.getJSONObject("Data").get("Tx").toString();
+        log.info("\n第一次签名\n");
+        Thread.sleep(1000*3);
+        String signResponse1 = TestSign(issueHash, PRIKEY1, PWD1);
+        Thread.sleep(1000*3);
+        JSONObject signJsonObject = JSONObject.fromObject(signResponse1);
+        String signHash1 = signJsonObject.getJSONObject("Data").get("Tx").toString();
+        log.info("\n第二次签名\n");
+        String signResponse2 = TestSign(signHash1, PRIKEY2, PWD2);
+        JSONObject signJsonObject2 = JSONObject.fromObject(signResponse2);
+        String signHash2 = signJsonObject2.getJSONObject("Data").get("Tx").toString();
+        log.info("\n第三次签名\n");
+        TestSign(signHash2, PRIKEY3);
+        Thread.sleep(1000*6);
+        log.info("\n查询归集账号的余额\n");
+        TestQuery(TOKENTYPE);
+        log.info("\n转账\n");
+        TestTransfer(TOKENTYPE,USER_COLLET,USER1_2);
+        Thread.sleep(1000*5);
+        TestTransfer(TOKENTYPE,USER_COLLET,USER1_2, USER1_1);
+        Thread.sleep(1000 * 5);
+        log.info("\n查询账号余额,用户 user1_2:40 \n");
+        TestUserQuery(USER1_2,PRIKEY3);
+//        log.info("\n核对私钥正确性\n");
+//        CheckPrikey(PRIKEY1,PWD1);
+//        log.info("\n核对私钥错误性");
+//        CheckPrikey(PRIKEY1,PWD2);
+//        CheckPrikey(PRIKEY1,"");
+//        log.info("----------------------------------------------------");
+//        CheckPrikey(PRIKEY3,PWD2);
+//        CheckPrikey("",PWD1);
+    }*/

@@ -43,6 +43,12 @@ public class MultiSignTest {
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("1000"));
 
+        String response3 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        String response4 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType2);
+        assertThat(response3, containsString("200"));
+        assertThat(response3, containsString("1000"));
+        assertThat(response4, containsString("200"));
+        assertThat(response4, containsString("1000"));
     }
 
 

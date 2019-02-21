@@ -6,7 +6,7 @@ import com.bw.base.MultiSignIssue;
 import com.bw.base.MultiSignTransferAccounts;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.TestBuilder;
-import com.tjfintech.common.Util;
+//import com.tjfintech.common.Util;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -53,18 +53,19 @@ public class LocalMultiSignTest {
         String tokenType = "MT-" + UtilsClass.Random(length);
         String data = "MULITADD1" + "发行" + tokenType + " token，数量为：" + amount;
         log.info(data);
-        String response = multiSign.issueToken(MULITADD1, tokenType, amount, data);
+        String response = multiSign.issueTokenLocalSign(MULITADD1, tokenType, amount, data);
         log.info(response);
-        //assertThat(response, containsString("200"));
-        // String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
-        //log.info(Tx1);
+        assertThat(response, containsString("200"));
+        String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("TxData");
+        log.info(Tx1);
 
         log.info("第一次签名");
-        byte[] response1 = multiIssue.multiSignIssueMethod(response, "C:\\Users\\Administrator\\Downloads\\163\\key1.pem");
+        byte[] response1 = multiIssue.multiSignIssueMethod(Tx1, "C:\\Users\\Administrator\\Downloads\\163\\key1.pem");
         System.out.println("-----------------------多签发行--------------------------");
-        System.out.println(Util.byteToHex(response1));
+       // System.out.println(Util.byteToHex(response1));
 
-
+        String signData = "signData";
+        multiSign.sendSign(signData);
 
 //        //log.info("第二次签名");
 //        String response3 = multiSign.Sign(Tx2, PRIKEY7,PWD7);
@@ -78,11 +79,11 @@ public class LocalMultiSignTest {
     }
 
 
-    /**
-     * Tc03多签正常流程-发币：签名：查询：转账：查询:回收：查询
-     */
- //   @Test
-//    public void TC03_multiProgress() throws Exception {
+//    /**
+//     * Tc03多签正常流程-发币：签名：查询：转账：查询:回收：查询
+//     */
+//    @Test
+//    public void transferAndRecycle() throws Exception {
 //        String transferData = "归集地址向" + MULITADD4 + "转账10个" + tokenType;
 //        log.info(transferData);
 //        List<Map> list = utilsClass.constructToken(MULITADD4, tokenType, "10");

@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 public interface MultiSign {
-    String genMultiAddress(int M, Map keyMap);
+
+    String BalanceByAddr(String addr); //按地址查询余额
+    String BalanceByAddr(String addr,String tokenType); //按地址查询余额
     String Balance(String addr,String priKey,String tokenType);
-    String Balance(String priKey,String tokenType);
+    String Balance(String priKey,String tokenType); //单签接口，也可以用于多签
+    String genMultiAddress(int M, Map keyMap);
     String issueToken(String MultiAddr,String TokenType,String Amount,String Data);
     String Sign(String Tx, String Prikey, String Pwd);
     String Sign(String Tx, String Prikey);
@@ -17,4 +20,13 @@ public interface MultiSign {
     String Recycle(String multiAddr,String priKey,String tokenType,String amount);
     String Recycle(String priKey,String tokenType,String amount);
     String QueryZero(String tokenType);
+
+    //String RecycleMultiAccount();
+
+    //本地签名
+    String issueTokenLocalSign(String MultiAddr,String TokenType,String Amount,String Data);
+    String sendSign(String signData);
+//    String TransferLocalSign(String Data,String fromAddr ,List<Map>tokenList);
+//    String RecycleLocalSign(String multiAddr,String pubKey,String tokenType,String amount);
+
 }
