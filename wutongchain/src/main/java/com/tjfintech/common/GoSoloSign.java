@@ -21,25 +21,6 @@ public class GoSoloSign implements SoloSign {
     public void TestBefore(){
 
     }
-//    @Test
-//    public void runSoloTest()throws  Exception{
-//        TOKENTYPE=multiTest.SoloInit();
-//        Thread.sleep(1000*3);
-//        multiTest.TestTransfer(TOKENTYPE,USER_COLLET,USER1_1);
-//        Thread.sleep(1000*5);
-//        TestSoloQuery(TOKENTYPE);
-//        log.info("单签向1/2账号转账");
-//        TestSoloTransfer(TOKENTYPE,USER1_2);
-//        Thread.sleep(1000*10);
-//        log.info("查询单签地址余额:20");
-//        TestSoloQuery(TOKENTYPE);
-//        log.info("单签向3/3账号转账");
-//        TestSoloTransfer(TOKENTYPE,USER3_3);
-//        Thread.sleep(1000*10);
-//        log.info("查询单签地址余额:10");
-//        TestSoloQuery(TOKENTYPE);
-//
-//    }
 
 
     /**查询单签地址余额
@@ -55,7 +36,7 @@ public class GoSoloSign implements SoloSign {
         log.info(result);
         return result ;
     }
-    /**单签账号向其他地址转账
+    /**单签转账
      *
      *
      */
@@ -70,6 +51,20 @@ public class GoSoloSign implements SoloSign {
 
     }
 
+    /**单签转账，本地签名
+     *
+     *
+     */
+    public String TransferLocalSign(List<Map> token,String pubKey,String data) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("PubKey", pubKey);
+        map.put("Data", data);
+        map.put("Token", token);
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/transfer_localsign", map);
+//        log.info(result);
+        return result ;
+
+    }
     /**
      * 单签发行token
      */
@@ -93,8 +88,8 @@ public class GoSoloSign implements SoloSign {
         map.put("TokenType", tokenType);
         map.put("Amount", amount);
         map.put("Data",data);
-        String result=PostTest.sendPostToJson(SDKADD+"/utxo/issuetoken2", map);
-        log.info(result);
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/issuetoken_localsign", map);
+        //log.info(result);
         return result;
     }
 
@@ -105,7 +100,7 @@ public class GoSoloSign implements SoloSign {
         Map<String, Object> map = new HashMap<>();
         map.put("Data", signData);
         String result=PostTest.sendPostToJson(SDKADD+"/utxo/send_sign", map);
-        log.info(result);
+//        log.info(result);
         return result;
     }
 
@@ -152,6 +147,20 @@ public class GoSoloSign implements SoloSign {
         list.add(amountMap);
         return list;
     }
+
+    /**单签回收，本地签名
+    */
+    public String RecycleLocalSign(String pubKey,String tokenType,String amount){
+        Map<String ,Object>map=new HashMap<>();
+//        map.put("MultiAddr","");
+        map.put("PubKey",pubKey);
+        map.put("TokenType",tokenType);
+        map.put("Amount",amount);
+        String result =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle_localsign",map);
+//        log.info(result);
+        return result;
+    }
+
 
 
 

@@ -19,6 +19,8 @@ import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -32,8 +34,13 @@ public class MultiSignTest {
     @Before
     public void beforeConfig() throws Exception {
         log.info("发行两种token1000个");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+
+        System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
         tokenType = IssueToken(5, "1000");
+        System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
         tokenType2 = IssueToken(6, "1000");
+        System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中两种token余额");
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
@@ -465,13 +472,13 @@ public class MultiSignTest {
         String response = multiSign.issueToken(MULITADD3, tokenType, amount, data);
         assertThat(response, containsString("200"));
         String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
-        //log.info("第一次签名");
+        log.info("第一次签名");
         String response2 = multiSign.Sign(Tx1, PRIKEY6,PWD6);
         String Tx2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Tx");
-        //log.info("第二次签名");
+        log.info("第二次签名");
         String response3 = multiSign.Sign(Tx2, PRIKEY7,PWD7);
         String Tx3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Tx");
-        //log.info("第三次签名");
+        log.info("第三次签名");
         String response4 = multiSign.Sign(Tx3, PRIKEY1);
         assertThat(JSONObject.fromObject(response4).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
         assertThat(response4, containsString("200"));

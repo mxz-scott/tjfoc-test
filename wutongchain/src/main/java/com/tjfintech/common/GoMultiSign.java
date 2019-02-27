@@ -13,36 +13,6 @@ import static com.tjfintech.common.utils.UtilsClass.SDKADD;
 @Slf4j
 public class GoMultiSign implements MultiSign {
 
-//    private static final String PRIKEY1 = "LS0tLS1CRUdJTiBFTkNSWVBURUQgUFJJVkFURSBLRVktLS0tLQ0KTUlIOE1GY0dDU3FHU0liM0RRRUZEVEJLTUNrR0NTcUdTSWIzRFFFRkREQWNCQWhra283bEx2ZWtmQUlDQ0FBdw0KREFZSUtvWklodmNOQWdjRkFEQWRCZ2xnaGtnQlpRTUVBU29FRUxvc2VwNnI2azhsSXM0Tk1DNndGM2NFZ2FBbg0KeE4wWDRadHJsc2pCVG5TOXhjYnM3Wk9lcjFwY25aby9RZ2JqRWtGeThaYVBjSyt5d0NLcDRaMDVnbWgwU2M4Nw0KTVdNbGZvd1pJbXcvSHRoOHQ5Y0Z3eFRZMktiZkJEaWQ1SFpwVGRpRGU2R2tVa3hsajRnQkZhM29xMjg4UnVpOA0KOTIwY3FvQmwrWlZKKy8rZkFlaTA2b1ZqdEJzdWp0SmRjWnd6eGlxMjdzK0V3VUptV2NxaWliTWVqZGtDUWZvdQ0Kam9tQkphajZwS3pwdEhQNnIrbHkNCi0tLS0tRU5EIEVOQ1JZUFRFRCBQUklWQVRFIEtFWS0tLS0t";
-//    private static final String PWD1 = "123";
-//    private static final String PRIKEY2 = "LS0tLS1CRUdJTiBFTkNSWVBURUQgUFJJVkFURSBLRVktLS0tLQ0KTUlIOE1GY0dDU3FHU0liM0RRRUZEVEJLTUNrR0NTcUdTSWIzRFFFRkREQWNCQWcvQTR4em8xYTR2QUlDQ0FBdw0KREFZSUtvWklodmNOQWdjRkFEQWRCZ2xnaGtnQlpRTUVBU29FRUNVSmx2MFNsQ1FIVWM0Z25YVnVsODBFZ2FDNg0KRnhGZDFEUlB5ZURBR1VlY2RnK0owSndQWm9YVk5MVXZqbGUwZU5GRFRManZlTlN4K2lYd0Y5c1o3cTZJWjN5Rg0KZHgzUzBDU3o3SFBzb29EWUJ6cUg0R09qOU1FZkpYU0hMdGU0WjRUclZsRVJkSVNzVGExb0p0WUV0R2Vmcy9hdQ0KZWRMRDJMS0RZOWY1cFA5WHRGUm1iL210TW9BaHVUdVFGU3V2a0huWFhmSFhjQ3pTb2dybjNsNHZPeDFHbm8xeA0KNnQxL1BnVERMSytTUnFhbHpGNmUNCi0tLS0tRU5EIEVOQ1JZUFRFRCBQUklWQVRFIEtFWS0tLS0t";
-//    private static final String PWD2 = "124";
-//    private static final String PRIKEY3 = "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tDQpNSUdUQWdFQU1CTUdCeXFHU000OUFnRUdDQ3FCSE05VkFZSXRCSGt3ZHdJQkFRUWd6cVBtZnpIQWVmdXpXM1pWDQp1K2MzaFZVbVdrMldtUk1qWGJZNVhGS0lIOWlnQ2dZSUtvRWN6MVVCZ2kyaFJBTkNBQVRHZlhVSklyWnVtZVJxDQpSUmRxdTUybkJMK3I3ZTU4K05qUU9GVWV4OGVuVHBidWh2RlpmL0cvcXpQRFF4L1I2aCszWWw2UkRFVitIckVXDQpZR2RKZEpSZg0KLS0tLS1FTkQgUFJJVkFURSBLRVktLS0tLQ==";
-//    private static final String PUBKEY1 = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0NCk1Ga3dFd1lIS29aSXpqMENBUVlJS29FY3oxVUJnaTBEUWdBRXhuMTFDU0syYnBua2FrVVhhcnVkcHdTL3ErM3UNCmZQalkwRGhWSHNmSHAwNlc3b2J4V1gveHY2c3p3ME1mMGVvZnQySmVrUXhGZmg2eEZtQm5TWFNVWHc9PQ0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t";
-//    private static final String PUBKEY2 = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0NCk1Ga3dFd1lIS29aSXpqMENBUVlJS29FY3oxVUJnaTBEUWdBRWtiRmlaOW9VaWFaMmh3dTVsS3FYNkQ1OHdXOVYNCmNEQ1BjUEJQWThyTlVTQitNR1ZxMUlyUk8vVVBMaXRqc0RtcWN2MzdKdmVSTC9Ba0FWM1hDd2JGM3c9PQ0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t";
-//    private static final String PUBKEY3 = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0NCk1Ga3dFd1lIS29aSXpqMENBUVlJS29FY3oxVUJnaTBEUWdBRXZsTDZtVThFNkU1cTBRVk11NlNTbXRMMzhrdjQNCnVadnhVcG9YUlMwcHNsMkV6UHF2YTIxLzJiTzM5eW5RaHRPTTgrd0lWbExKY3ByNXZnOG1PYkVYdXc9PQ0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t";
-//    public static final String PRIKEY0="LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR1RBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUJITTlWQVlJdEJIa3dkd0lCQVFRZ3BRRjEzT01KaERQVVM3bnEKTVVYQUZNK01mUlV3MFc3bFVRQnNvOW12WWZ1Z0NnWUlLb0VjejFVQmdpMmhSQU5DQUFTTFR6QWxRSk1ZQ0RGegp6cURnL2s5TkhEUWpvL1R6WEFHRFpkaGJoOHU0c2loM2FvWUljWUsrN1VCbitBQVJJVDgwNVBySHNzTmRSWGc0CnM0bTgyRkNsCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K";
-//    private static String TOKENTYPE ;
-//    private static String RECYCLETYPE;
-//
-//    private static final String USER1_1="32XBduKk48RJfoA2wJuQ7doaJimMymEmZLYYbYHyH5Eyi5Hs68";
-//    private static final String USER1_2="SogjzbsX6RsWwRKqdhTQeVTWQhy2SyNGfPy9LHEz6p3famV3wCe";
-//    private static final String USER3_3="SsUTN9RmWgrD8E48MuJY1pdLw4QDo7GJgK8fn8k7DFzpvG3pwqw";
-//    private static final String USER_COLLET="Soirv9ikykVHArKCdJqVNegxxqZWUj1g4ixFFYbBLMExy4zUTUe";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * 创建多签地址
      * @author chenxu
@@ -86,7 +56,7 @@ public class GoMultiSign implements MultiSign {
         map.put("tokentype", tokenType);
         String param=GetTest.ParamtoUrl(map);
         String result= GetTest.SendGetTojson(SDKADD+"/utxo/balance"+"?"+ param);
-        log.info(result);
+//        log.info(result);
         return result;
     }
 
@@ -123,7 +93,7 @@ public class GoMultiSign implements MultiSign {
         map.put("Amount", Amount);
         map.put("Data", Data);
         String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken", map);
-        log.info("发行token："+response);
+//        log.info("发行token："+response);
         return response;
     }
 
@@ -143,23 +113,23 @@ public class GoMultiSign implements MultiSign {
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
         map.put("Data", Data);
-        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken2", map);
+        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken_localsign", map);
         //log.info("发行token："+response);
         return response;
     }
 
     /**
      * 发送签名
-     * @param signData   本地签名后的数据
+     * @param signedData   本地签名后的数据
      *
      * @return
      */
-    public String sendSign(String signData) {
+    public String sendSign(String signedData) {
 
         Map<String, Object> map = new HashMap<>();
-        map.put("Data", signData);
+        map.put("Data", signedData);
         String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/send_multisign", map);
-        //log.info(response);
+        log.info(response);
         return response;
     }
 
@@ -226,7 +196,25 @@ public class GoMultiSign implements MultiSign {
 
     }
 
+    /**
+     * 转账，本地签名
+     * @param PubKey 公钥
+     * @param Data     详情内容
+     * @param fromAddr  发起地址
+     * @return
+     */
+    public String TransferLocalSign(String fromAddr , String PubKey,String Data,List<Map>tokenList) {
 
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", fromAddr);
+        map.put("PubKey", PubKey);
+        map.put("Data", Data);
+        map.put("Token", tokenList);
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/multi/transfer_localsign", map);
+//        log.info(result);
+        return result;
+
+    }
 
     /**
      * 核对私钥接口测试
@@ -245,7 +233,7 @@ public class GoMultiSign implements MultiSign {
 
 
     /**
-     * 回收token测试
+     * 回收token
      * @param multiAddr 多签地址
      * @param priKey 私钥
      * @param Pwd 私钥密码
@@ -277,6 +265,7 @@ public class GoMultiSign implements MultiSign {
         return result;
 
     }
+
     public String Recycle(String priKey,String tokenType,String amount){
         Map<String ,Object>map=new HashMap<>();
         map.put("PriKey",priKey);
@@ -287,6 +276,25 @@ public class GoMultiSign implements MultiSign {
         return result;
 
     }
+    /**
+     * 回收token，本地签名
+     * @param multiAddr 多签地址
+     * @param pubKey 公钥
+     * @param tokenType 数字货币类型
+     * @param amount 货币数量
+     */
+    public String RecycleLocalSign(String multiAddr,String pubKey,String tokenType,String amount){
+        Map<String ,Object>map=new HashMap<>();
+        map.put("MultiAddr",multiAddr);
+        map.put("PubKey",pubKey);
+        map.put("TokenType",tokenType);
+        map.put("Amount",amount);
+        String result =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle_localsign",map);
+//        log.info(result);
+        return result;
+    }
+
+
 
     /**
      * 查询回收账户余额

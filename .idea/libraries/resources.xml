@@ -1,7 +1,6 @@
 <component name="libraryTable">
   <library name="resources">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/wutongchain/src/main/resources/localSign1.0.2.jar!/" />
       <root url="file://$PROJECT_DIR$/wutongchain/src/main/resources" />
     </CLASSES>
     <JAVADOC />

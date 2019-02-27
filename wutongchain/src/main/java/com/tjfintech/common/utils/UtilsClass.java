@@ -19,8 +19,8 @@ public class UtilsClass {
      public final static String  ADDRESS3 = "3r1vxdDjkg9uVke2YdaPTjmWVjV2bsVmySiU99hYuCUjLFYDFb";
     public final static String  ADDRESS4 = "32XBduKk48RJfoA2wJuQ7doaJimMymEmZLYYbYHyH5Eyi5Hs68";
     public final static String  ADDRESS5 = "4NbMaH4L4vrCfgExftQEWF2RFfBkwZqPoDdApqScLjTgZNC6gp";
-    public final static String  ADDRESS6 = "4PMCowmBGWWLHed9wanTq4HmH4WZdsJr86i212zZbWRUtLD9gM";
-    public final static String  ADDRESS7 = "4qTRGSuJqmq4HLZFUQvRx2MKKEwULzzEkf3GGXa5d3CYxivGXf";
+//    public final static String  ADDRESS6 = "4PMCowmBGWWLHed9wanTq4HmH4WZdsJr86i212zZbWRUtLD9gM";
+//    public final static String  ADDRESS7 = "4qTRGSuJqmq4HLZFUQvRx2MKKEwULzzEkf3GGXa5d3CYxivGXf";
      public final static String  MULITADD1 ="SrvKGcQvu6ytWMPxTMkDMnpFmJyPaYbmAQEY71zuGaH7bzSAutr";//123
      public final static String  MULITADD2 ="SsdcTnfMArqR6Yfon2UiLnSn1zEDkPdVxNGLkBNHKT2Rte3pM5n";//126
      public final static String  MULITADD3 ="SqsV1UFpVQ3PVrxGLfjVTa4u1Xsz5PYT92C5Gav9vSF1xxFJqLS";//167
@@ -48,19 +48,22 @@ public class UtilsClass {
     public final static String PUBKEY7 ="LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb0VjejFVQmdpMERRZ0FFNFYxMXNmbGJpRE05RlpxK1FzMzk1RXRkZWVCMApHMDJVelM1eU5YMVlZb0pTU05FMDJWMkdTalhidTE4UGxuSmF6aFc0VnlUUzh5WjhuZUpQcXRNQ2hnPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==";//带密码
     public final static String PWD6="111";
     public final static String PWD7="222";
-    public static Account account1 =new Account(ADDRESS1,PRIKEY1,PUBKEY1);
-    public static Account account2 =new Account(ADDRESS2,PRIKEY2,PUBKEY2);
-    public static Account account3 =new Account(ADDRESS3,PRIKEY3,PUBKEY3);
-    public static MulitAccount mulitAccount1=new MulitAccount(MULITADD1,PUBKEY1,PUBKEY2,PUBKEY3,PRIKEY1,PRIKEY2,PRIKEY3);
-    public static MulitAccount mulitAccount2=new MulitAccount(MULITADD2,PUBKEY1,PUBKEY2,PUBKEY6,PRIKEY1,PRIKEY2,PRIKEY6,PWD6);
-    public static MulitAccount mulitAccount3=new MulitAccount(MULITADD3,PUBKEY1,PUBKEY6,PUBKEY7,PRIKEY1,PRIKEY6,PRIKEY7);
-    public static MulitAccount mulitAccount4=new MulitAccount(MULITADD4,PUBKEY1,PUBKEY2,PRIKEY1,PRIKEY2);
-    public static MulitAccount mulitAccount5=new MulitAccount(MULITADD5,PUBKEY1,PUBKEY3,PRIKEY1,PRIKEY3);
-    public static MulitAccount mulitAccount6=new MulitAccount(MULITADD6,PUBKEY3,PUBKEY4,PRIKEY3,PRIKEY4);
-    public static MulitAccount ImputationAccount=new MulitAccount(IMPPUTIONADD,PUBKEY4,PUBKEY5,PRIKEY4,PRIKEY5);
+//    public static Account account1 =new Account(ADDRESS1,PRIKEY1,PUBKEY1);
+//    public static Account account2 =new Account(ADDRESS2,PRIKEY2,PUBKEY2);
+//    public static Account account3 =new Account(ADDRESS3,PRIKEY3,PUBKEY3);
+//    public static MulitAccount mulitAccount1=new MulitAccount(MULITADD1,PUBKEY1,PUBKEY2,PUBKEY3,PRIKEY1,PRIKEY2,PRIKEY3);
+//    public static MulitAccount mulitAccount2=new MulitAccount(MULITADD2,PUBKEY1,PUBKEY2,PUBKEY6,PRIKEY1,PRIKEY2,PRIKEY6,PWD6);
+//    public static MulitAccount mulitAccount3=new MulitAccount(MULITADD3,PUBKEY1,PUBKEY6,PUBKEY7,PRIKEY1,PRIKEY6,PRIKEY7);
+//    public static MulitAccount mulitAccount4=new MulitAccount(MULITADD4,PUBKEY1,PUBKEY2,PRIKEY1,PRIKEY2);
+//    public static MulitAccount mulitAccount5=new MulitAccount(MULITADD5,PUBKEY1,PUBKEY3,PRIKEY1,PRIKEY3);
+//    public static MulitAccount mulitAccount6=new MulitAccount(MULITADD6,PUBKEY3,PUBKEY4,PRIKEY3,PRIKEY4);
+//    public static MulitAccount ImputationAccount=new MulitAccount(IMPPUTIONADD,PUBKEY4,PUBKEY5,PRIKEY4,PRIKEY5);
 
-
-
+    public final static String PRIKEY1PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key1.pem";
+    public final static String PRIKEY2PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key2.pem";
+    public final static String PRIKEY3PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key3.pem";
+    public final static String PRIKEY4PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key4.pem";
+    public final static String PRIKEY5PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key5.pem";
 
 
 

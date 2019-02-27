@@ -16,6 +16,7 @@ public class PostTest {
     public static String sendPostToJson(String linkUrl, Map<String,Object> map) {
         JSONObject jsonObject=JSONObject.fromObject(map);
         String jsonString=jsonObject.toString();
+//        log.info(jsonString);
         String resultStr = "";
         try {
             // 创建url资源
