@@ -7,8 +7,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         MultiSignTest.class,
-        MultiSignInvalidTest1.class,
-        MultiSignInvalidTest2.class,
+        MultiSignInvalidTest.class,
         SingleSignTest.class,
         SingleSignInvalidTest.class,
         StoreTest.class,

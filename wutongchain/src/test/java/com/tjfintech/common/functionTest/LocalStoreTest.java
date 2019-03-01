@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class StoreTest2 {
+public class LocalStoreTest {
 
     public final static int SLEEPTIME = 5 * 1000;
     TestBuilder testBuilder = TestBuilder.getInstance();
@@ -55,10 +55,12 @@ public class StoreTest2 {
         String result1 = priStore.privacyPolicyStoreMethod(data, PRIKEY1PATH);
         String result2 = priStore.privacyPolicyStoreMethod(data, PRIKEY2PATH);
         String result3 = priStore.privacyPolicyStoreMethod(data, PRIKEY3PATH);
+        String result4 = priStore.privacyPolicyStoreMethod(data, PRIKEY4PATH);
 
         log.info("私钥1解密结果：" + result1);
         log.info("私钥2解密结果：" + result2);
         log.info("私钥3解密结果：" + result3);
+        log.info("私钥4解密结果：" + result4);
 
         assertThat(result1, containsString(Data));
         assertThat(result2, containsString(Data));
@@ -67,13 +69,14 @@ public class StoreTest2 {
         assertThat(result1, containsString("test123"));
         assertThat(result2, containsString("test123"));
         assertThat(result3, containsString("test123"));
-
+        assertThat(result4, containsString("The private key is not matching"));
+        assertEquals(result4.contains("test123"), false);
     }
 
 
     @Test
     public void TC09_createPriStore2() throws Exception {
-        String Data = "test" + UtilsClass.Random(4);
+        String Data = "test456" + UtilsClass.Random(4);
         log.info(Data);
         Map<String, Object> map = new HashMap<>();
         map.put("pubKey1", PUBKEY1);
@@ -89,7 +92,7 @@ public class StoreTest2 {
 
         JSONObject jsonObject2 = JSONObject.fromObject(txContent2);
         String data = jsonObject2.getJSONObject("Data").toString();
-//        log.info("tx:" + data);
+//        log.info("Data:" + data);
 
         String result1 = priStore.privacyPolicyStoreMethod(data, PRIKEY1PATH);
         String result2 = priStore.privacyPolicyStoreMethod(data, PRIKEY2PATH);
@@ -99,7 +102,7 @@ public class StoreTest2 {
 
         assertThat(result1, containsString(Data));
         assertThat(result2, containsString("The private key is not matching"));
-        assertEquals(result2.contains("test123"), false);
+        assertEquals(result2.contains("test456"), false);
 
     }
 

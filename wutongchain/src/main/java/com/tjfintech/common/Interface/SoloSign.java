@@ -19,5 +19,6 @@ public interface SoloSign {
     String TransferLocalSign(List<Map> token, String pubKey, String data);
     String RecycleLocalSign(String pubKey,String tokenType,String amount);
     String sendSign(String signData);
+//    String RecyclesLocalSign(List<Map> tokenList);
 
 }

@@ -116,6 +116,56 @@ public class UtilsClass {
         tokenList.add(map);
         return tokenList;
     }
+
+
+    /**
+     * 回收操作的TOKEN数组构建方法
+     * @param fromAddr
+     * @param pubKey
+     * @param tokenType
+     * @param amount
+     * @return
+     */
+    public  List<Map>   constructToken(String fromAddr, String pubKey, String tokenType, String amount){
+
+        Map<String,Object>map=new HashMap<>();
+        map.put("Addr",fromAddr);
+        map.put("PubKey",pubKey);
+        map.put("Amount",amount);
+        map.put("TokenType",tokenType);
+
+        List<Map>tokenList=new ArrayList<>();
+        tokenList.add(map);
+        return tokenList;
+    }
+
+    /**
+     * 回收操作的TOKEN多数组构建方法
+     * @param fromAddr
+     * @param pubKey
+     * @param tokenType
+     * @param amount
+     * @param list
+     * @return
+     */
+    public  List<Map>   constructToken(String fromAddr, String pubKey, String tokenType, String amount, List<Map> list){
+        List<Map>tokenList=new ArrayList<>();
+        for(int i = 0 ; i < list.size() ; i++) {
+            tokenList.add(list.get(i));
+        }
+
+        Map<String,Object>map=new HashMap<>();
+        map.put("Addr",fromAddr);
+        map.put("PubKey",pubKey);
+        map.put("Amount",amount);
+        map.put("TokenType",tokenType);
+
+        tokenList.add(map);
+        return tokenList;
+
+    }
+
+
     /**
      * 用于生成随机数
      * @param length    随机数的长度

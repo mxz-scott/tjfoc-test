@@ -34,13 +34,10 @@ public class MultiSignTest {
     @Before
     public void beforeConfig() throws Exception {
         log.info("发行两种token1000个");
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
 
-        System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
         tokenType = IssueToken(5, "1000");
-        System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
         tokenType2 = IssueToken(6, "1000");
-        System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
+
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中两种token余额");
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);

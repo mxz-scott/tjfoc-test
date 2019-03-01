@@ -217,6 +217,19 @@ public class GoMultiSign implements MultiSign {
     }
 
     /**
+     * 多账号同时回收，本地签名
+     * @param tokenList
+     * @return
+     */
+    public String RecyclesLocalSign(List<Map> tokenList){
+        Map<String, Object> map = new HashMap<>();
+        map.put("Token", tokenList);
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycles_localsign", map);
+//        log.info(result);
+        return result;
+    }
+
+    /**
      * 核对私钥接口测试
      * @param PriKey  私钥
      * @param Pwd    密码
