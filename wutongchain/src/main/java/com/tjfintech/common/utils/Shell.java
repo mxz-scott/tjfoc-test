@@ -3,6 +3,7 @@ package com.tjfintech.common.utils;
 import com.jcraft.jsch.*;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
@@ -61,13 +62,22 @@ public class Shell {
             channelExec.setInputStream(null);
             BufferedReader input = new BufferedReader(new InputStreamReader
                     (channelExec.getInputStream()));
+            //add for error message collection
+            BufferedReader err = new BufferedReader(new InputStreamReader(
+                    channelExec.getErrStream()));
 
             channelExec.connect();
             System.out.println("The remote command is :" + command);
 
+
             //接收远程服务器执行命令的结果
             String line;
             while ((line = input.readLine()) != null) {
+                stdout.add(line);
+                //System.out.println(line);//20180121
+            }
+
+            while ((line = err.readLine()) != null) {
                 stdout.add(line);
                 //System.out.println(line);//20180121
             }
