@@ -21,7 +21,7 @@ public class ContractTest {
     Contract contract=testBuilder.getContract();
     Store store=testBuilder.getStore();
     @Test
-    public  void installTest()throws  Exception{
+    public  void TC001_installTest()throws  Exception{
         String name="chenxu";//+ Random(5);
         String version="1.0";
         String filePath=System.getProperty("user.dir")+"/src/main/resources/wttest.go";
@@ -30,26 +30,14 @@ public class ContractTest {
         String response=contract.Install(name,version,data);
         String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         assertThat(response,containsString("success"));
-        Thread.sleep(SLEEPTIME*10);
+        Thread.sleep(SLEEPTIME*30);
         String response2=store.GetTransaction(hash);
         assertThat(response2,containsString("200"));
         assertThat(response2,containsString("success"));
     }
-    @Test
-    public void destroyTest()throws  Exception{
-        String name="chenxu";
-        String version="1.0";
-        String response=contract.Destroy(name,version);
-        String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
-        assertThat(response,containsString("success"));
-        Thread.sleep(SLEEPTIME);
-        String response2=store.GetTransaction(hash);
-        assertThat(response2,containsString("200"));
-        assertThat(response2,containsString("success"));
 
-    }
     @Test
-    public void initTest()throws Exception{
+    public void TC002_initTest()throws Exception{
         String name="chenxu";
         String version="1.0";
         String method="init";
@@ -66,7 +54,7 @@ public class ContractTest {
         assertThat(response2,containsString("success"));
     }
     @Test
-    public void queryTest()throws  Exception{
+    public void TC003_queryTest()throws  Exception{
         String name="chenxu";
         String version="1.0";
         String method="query";
@@ -80,7 +68,7 @@ public class ContractTest {
         assertThat(response2,containsString("success"));
     }
     @Test
-    public void invokeTest()throws Exception{
+    public void TC004_invokeTest()throws Exception{
         String name="chenxu";
         String version="1.0";
         String method="invoke";
@@ -97,5 +85,18 @@ public class ContractTest {
         assertThat(result,containsString("success"));
     }
 
+    @Test
+    public void TC005_destroyTest()throws  Exception{
+        String name="chenxu";
+        String version="1.0";
+        String response=contract.Destroy(name,version);
+        String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        assertThat(response,containsString("success"));
+        Thread.sleep(SLEEPTIME);
+        String response2=store.GetTransaction(hash);
+        assertThat(response2,containsString("200"));
+        assertThat(response2,containsString("success"));
+
+    }
 
 }

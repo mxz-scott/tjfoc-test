@@ -456,6 +456,241 @@ public class MultiSignTest {
         assertThat(JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"), containsString("0"));
     }
 
+
+    /**
+     * 多账号同时回收，回收多个多签地址，一种token。
+     */
+    @Test
+    public void TC_multiProgress_Recycles() throws Exception {
+
+        String transferData = "归集地址向MULITADD4转账10个: " + tokenType;
+        log.info(transferData);
+        List<Map> transferList = utilsClass.constructToken(MULITADD4, tokenType, "10");
+        String transferInfoInit = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, transferList);//转账给多签地址
+        assertThat(transferInfoInit, containsString("200"));
+
+        Thread.sleep(SLEEPTIME);
+
+        log.info("查询归集地址和MULITADD4余额，判断转账是否成功");
+        String queryInfo = multiSign.BalanceByAddr(MULITADD4, tokenType);
+        assertThat(queryInfo, containsString("200"));
+        assertThat(queryInfo, containsString("\"Total\":\"10\""));
+
+        String queryInfo2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        assertThat(queryInfo2, containsString("200"));
+        assertThat(queryInfo2, containsString("\"Total\":\"990\""));
+
+
+        log.info("多账号同时回收，回收归集地址和MULITADD4余额, 余额都不足");
+        List<Map> recycleList1 = utilsClass.constructTokenPri(IMPPUTIONADD, PRIKEY4, "", tokenType, "1000");
+        List<Map> recycleList2 = utilsClass.constructTokenPri(MULITADD4, PRIKEY1, "", tokenType, "20", recycleList1);
+
+        String response = multiSign.Recycles(recycleList2);
+        Thread.sleep(SLEEPTIME);
+
+        assertThat(response, containsString("[1-result]:insufficient balance"));
+        assertThat(response, containsString("[2-result]:insufficient balance"));
+
+
+        log.info("多账号同时回收，回收归集地址和MULITADD4余额, 1余额不足");
+        List<Map> recycleList3 = utilsClass.constructTokenPri(IMPPUTIONADD, PRIKEY4, "", tokenType, "1000");
+        List<Map> recycleList4 = utilsClass.constructTokenPri(MULITADD4, PRIKEY1, "", tokenType, "10", recycleList3);
+
+        String response2 = multiSign.Recycles(recycleList4);
+        Thread.sleep(SLEEPTIME);
+
+        assertThat(response2, containsString("[1-result]:insufficient balance"));
+        assertThat(response2, containsString("[2-result]:success"));
+
+        log.info("多账号同时回收，回收归集地址和MULITADD4余额, 2余额不足");
+        List<Map> recycleList5 = utilsClass.constructTokenPri(IMPPUTIONADD, PRIKEY4, "", tokenType, "990");
+        List<Map> recycleList6 = utilsClass.constructTokenPri(MULITADD4, PRIKEY1, "", tokenType, "10", recycleList5);
+
+        String response3 = multiSign.Recycles(recycleList6);
+        Thread.sleep(SLEEPTIME);
+
+        assertThat(response3, containsString("[1-result]:success"));
+        assertThat(response3, containsString("[2-result]:insufficient balance"));
+
+
+
+        log.info("查询回收后账户余额是否为0");
+        String queryInfo3 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        String queryInfo4 = multiSign.BalanceByAddr(MULITADD4, tokenType);
+        assertThat(queryInfo3, containsString("200"));
+        assertThat(queryInfo3, containsString("\"Total\":\"0\""));
+        assertThat(queryInfo4, containsString("200"));
+        assertThat(queryInfo4, containsString("\"Total\":\"0\""));
+
+        log.info("查询零地址余额");
+        String queryInfo5 = multiSign.QueryZero(tokenType);
+        assertThat(queryInfo5, containsString("200"));
+        assertThat(queryInfo5, containsString("\"Total\":\"1000\""));
+
+    }
+
+
+
+    /**
+     * 多账号同时回收，回收多个多签地址，一种token。
+     */
+    @Test
+    public void TC_multiProgress_Recycles3() throws Exception {
+
+        String transferData = "归集地址向MULITADD4转账10个: " + tokenType2;
+        log.info(transferData);
+        List<Map> transferList = utilsClass.constructToken(MULITADD4, tokenType2, "10");
+        String transferInfoInit = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, transferList);//转账给多签地址
+        assertThat(transferInfoInit, containsString("200"));
+
+        Thread.sleep(SLEEPTIME);
+
+        log.info("查询归集地址和MULITADD4余额，判断转账是否成功");
+        String queryInfo = multiSign.BalanceByAddr(MULITADD4, tokenType2);
+        assertThat(queryInfo, containsString("200"));
+        assertThat(queryInfo, containsString("\"Total\":\"10\""));
+
+        String queryInfo2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType2);
+        assertThat(queryInfo2, containsString("200"));
+        assertThat(queryInfo2, containsString("\"Total\":\"990\""));
+
+
+        String queryInfo22 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        assertThat(queryInfo22, containsString("200"));
+        assertThat(queryInfo22, containsString("\"Total\":\"1000\""));
+
+
+
+        log.info("多账号同时回收，回收归集地址和MULITADD4余额, 余额都不足");
+        List<Map> recycleList1 = utilsClass.constructTokenPri(IMPPUTIONADD, PRIKEY4, "", tokenType, "1001");
+        List<Map> recycleList2 = utilsClass.constructTokenPri(MULITADD4, PRIKEY1, "", tokenType2, "20", recycleList1);
+
+        String response = multiSign.Recycles(recycleList2);
+        Thread.sleep(SLEEPTIME);
+
+        assertThat(response, containsString("[1-result]:insufficient balance"));
+        assertThat(response, containsString("[2-result]:insufficient balance"));
+
+
+        log.info("多账号同时回收，回收归集地址和MULITADD4余额, 1余额不足");
+        List<Map> recycleList3 = utilsClass.constructTokenPri(IMPPUTIONADD, PRIKEY4, "", tokenType, "1001");
+        List<Map> recycleList4 = utilsClass.constructTokenPri(MULITADD4, PRIKEY1, "", tokenType2, "10", recycleList3);
+
+        String response2 = multiSign.Recycles(recycleList4);
+        Thread.sleep(SLEEPTIME);
+
+        assertThat(response2, containsString("[1-result]:insufficient balance"));
+        assertThat(response2, containsString("[2-result]:success"));
+
+        log.info("多账号同时回收，回收归集地址和MULITADD4余额, 2余额不足");
+        List<Map> recycleList5 = utilsClass.constructTokenPri(IMPPUTIONADD, PRIKEY4, "", tokenType, "1000");
+        List<Map> recycleList6 = utilsClass.constructTokenPri(MULITADD4, PRIKEY1, "", tokenType2, "10", recycleList5);
+
+        String response3 = multiSign.Recycles(recycleList6);
+        Thread.sleep(SLEEPTIME);
+
+        assertThat(response3, containsString("[1-result]:success"));
+        assertThat(response3, containsString("[2-result]:insufficient balance"));
+
+
+
+        log.info("查询回收后账户余额是否为0");
+        String queryInfo3 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        String queryInfo4 = multiSign.BalanceByAddr(MULITADD4, tokenType2);
+        assertThat(queryInfo3, containsString("200"));
+        assertThat(queryInfo3, containsString("\"Total\":\"0\""));
+        assertThat(queryInfo4, containsString("200"));
+        assertThat(queryInfo4, containsString("\"Total\":\"0\""));
+
+        log.info("查询零地址余额");
+        String queryInfo5 = multiSign.QueryZero(tokenType);
+        assertThat(queryInfo5, containsString("200"));
+        assertThat(queryInfo5, containsString("\"Total\":\"1000\""));
+        String queryInfo6 = multiSign.QueryZero(tokenType2);
+        assertThat(queryInfo6, containsString("200"));
+        assertThat(queryInfo6, containsString("\"Total\":\"10\""));
+
+    }
+
+
+
+    /**
+     * 多账号同时回收，回收多个多签地址，两种token。
+     */
+    @Test
+    public void TC_multiProgress_Recycles2() throws Exception {
+
+        String transferData = "归集地址向" + "MULITADD4" + "转账400个" + tokenType + "归集地址向" + "MULITADD4" + "转账400个" + tokenType;
+        List<Map> listInit = utilsClass.constructToken(MULITADD4, tokenType, "400");
+        List<Map> list0 = utilsClass.constructToken(MULITADD5, tokenType2, "400", listInit);
+        log.info(transferData);
+        String transferInfoInit = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, list0);//转账给多签地址
+        assertThat(transferInfoInit, containsString("200"));
+        Thread.sleep(SLEEPTIME);
+
+
+
+
+        Thread.sleep(SLEEPTIME);
+
+        log.info("查询归集地址，MULITADD5和MULITADD4余额，判断转账是否成功");
+        String queryInfo = multiSign.BalanceByAddr(MULITADD4, tokenType);
+        assertThat(queryInfo, containsString("200"));
+        assertThat(queryInfo, containsString("\"Total\":\"400\""));
+
+        String queryInfo2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        assertThat(queryInfo2, containsString("200"));
+        assertThat(queryInfo2, containsString("\"Total\":\"600\""));
+
+
+        String queryInfo22 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType2);
+        assertThat(queryInfo22, containsString("200"));
+        assertThat(queryInfo22, containsString("\"Total\":\"600\""));
+
+        String queryInfo3 = multiSign.BalanceByAddr(MULITADD5, tokenType2);
+        assertThat(queryInfo3, containsString("200"));
+        assertThat(queryInfo3, containsString("\"Total\":\"400\""));
+
+
+
+
+        log.info("多账号同时回收，回收归集地址,MULITADD5和MULITADD4余额, 余额都不足");
+        List<Map> recycleList1 = utilsClass.constructTokenPri(IMPPUTIONADD, PRIKEY4, "", tokenType, "1000");
+        List<Map> recycleList2 = utilsClass.constructTokenPri(MULITADD4, PRIKEY1, "", tokenType, "1000", recycleList1);
+        List<Map> recycleList3 = utilsClass.constructTokenPri(MULITADD5, PRIKEY1, "", tokenType2, "1000", recycleList2);
+
+        String response = multiSign.Recycles(recycleList3);
+
+        log.info("多账号回收："+ response);
+
+        Thread.sleep(SLEEPTIME);
+
+
+
+        log.info("多账号同时回收，回收归集地址,MULITADD5和MULITADD4余额, 1余额都不足");
+
+
+        log.info("多账号同时回收，回收归集地址,MULITADD5和MULITADD4余额, 2余额都不足");
+
+
+
+//        log.info("查询回收后账户余额是否为0");
+//        String queryInfo3 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+//        String queryInfo4 = multiSign.BalanceByAddr(MULITADD4, tokenType);
+//        assertThat(queryInfo3, containsString("200"));
+//        assertThat(queryInfo3, containsString("\"Total\":\"0\""));
+//        assertThat(queryInfo4, containsString("200"));
+//        assertThat(queryInfo4, containsString("\"Total\":\"0\""));
+//
+//        log.info("查询零地址余额");
+//        String queryInfo5 = multiSign.QueryZero(tokenType);
+//        assertThat(queryInfo5, containsString("200"));
+//        assertThat(queryInfo5, containsString("\"Total\":\"1000\""));
+
+    }
+
+
+
     //-----------------------------------------------------------------------------------------------------------
 
 

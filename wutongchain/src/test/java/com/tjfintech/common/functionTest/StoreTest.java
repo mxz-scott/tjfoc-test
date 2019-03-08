@@ -34,11 +34,11 @@ public class StoreTest {
     @Test
     public void TC05_createStore() throws Exception {
 
-        String Data = "\"test\":\"json" + UtilsClass.Random(4) + "\"";
+        String Data = "\"test测试\":\"json" + UtilsClass.Random(4) + "\"";
         String response = store.CreateStore(Data);
         JSONObject jsonObject = JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
+//        Thread.sleep(SLEEPTIME);
         assertThat(response, containsString("200"));
         assertThat(response, containsString("Data"));
 
@@ -48,13 +48,25 @@ public class StoreTest {
     @Test
     public void TC_createBigSizeStore() throws Exception {
 
-        String Data = UtilsClass.Random(10) + readString3("E:\\tjfoc-test\\wutongchain\\src\\main\\resources\\bigsize4.txt");
+        String Data = UtilsClass.Random(10) + readString3("E:\\tjfoc-test\\wutongchain\\src\\main\\resources\\bigsize1.txt");
         String response = store.CreateStore(Data);
-        JSONObject jsonObject = JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
+//        JSONObject jsonObject = JSONObject.fromObject(response);
+//        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        //Thread.sleep(SLEEPTIME);
         assertThat(response, containsString("200"));
         assertThat(response, containsString("Data"));
+
+
+        String Data2 = UtilsClass.Random(10) + readString3("E:\\tjfoc-test\\wutongchain\\src\\main\\resources\\bigsize2.txt");
+        String response2 = store.CreateStore(Data2);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("Data"));
+
+
+        String Data3 = UtilsClass.Random(10) + readString3("E:\\tjfoc-test\\wutongchain\\src\\main\\resources\\bigsize3.txt");
+        String response3 = store.CreateStore(Data3);
+        assertThat(response3, containsString("200"));
+        assertThat(response3, containsString("Data"));
 
     }
 
@@ -72,7 +84,7 @@ public class StoreTest {
         String response = store.CreateStore(Data);
         JSONObject jsonObject = JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
+        Thread.sleep(SLEEPTIME*2);
         String response2 = store.GetStore(storeHash);
         //log.info(response2);
         assertThat(response2, containsString("200"));
@@ -161,6 +173,16 @@ public class StoreTest {
     }
 
 
+    @Test
+    public void TC_Health() throws Exception {
+        String Data = store.Apihealth();
+
+        assertThat(Data, containsString("success"));
+        assertThat(Data, containsString("200"));
+
+    }
+
+
     /**
      * TC11查询隐私存证交易，数据格式为String
      * 创建2笔隐私存证交易，数据格式为string
@@ -246,7 +268,7 @@ public class StoreTest {
         String response = store.CreateStore(Data);
         JSONObject jsonObject = JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
+        Thread.sleep(SLEEPTIME*2);
         String response2 = store.GetTransaction(storeHash);
         assertThat(response2, containsString("200"));
         final Base64.Decoder decoder = Base64.getDecoder();
@@ -347,7 +369,7 @@ public class StoreTest {
         String response = store.CreateStore(Data);
         JSONObject jsonObject = JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
+        Thread.sleep(SLEEPTIME*2);
         String response2 = store.GetTransactionBlock(storeHash);
         assertThat(response2, containsString("200"));
     }

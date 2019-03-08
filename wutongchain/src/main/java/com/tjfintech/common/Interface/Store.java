@@ -35,4 +35,6 @@ public interface Store {
 
     String GetTransactionBlock(String hash);
 
+    String Apihealth();
+
 }

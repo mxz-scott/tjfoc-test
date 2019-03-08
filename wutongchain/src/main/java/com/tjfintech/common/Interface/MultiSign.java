@@ -19,10 +19,8 @@ public interface MultiSign {
 //    String Recycle(String multiAddr,String priKey,String Pwd,String tokenType,String amount);
     String Recycle(String multiAddr,String priKey,String tokenType,String amount);
     String Recycle(String priKey,String tokenType,String amount);
-//    String Recycles(List<Map> tokenList);//多账号同时回收，非本地签名，只支持多签地址。
+    String Recycles(List<Map> tokenList);//多账号同时回收，非本地签名，只支持多签地址。
     String QueryZero(String tokenType);
-
-    //String RecycleMultiAccount();
 
     //本地签名
     String issueTokenLocalSign(String MultiAddr,String TokenType,String Amount,String Data);

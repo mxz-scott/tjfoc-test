@@ -64,7 +64,7 @@ public  class GoStore implements Store {
         Map<String,Object> map=new HashMap<>();
         map.put("Data",Data);
         String result= PostTest.sendPostToJson(SDKADD+"/store", map);
-        log.info(result);
+//        log.info(result);
         return result;
     }
 
@@ -120,6 +120,13 @@ public  class GoStore implements Store {
         param=GetTest.ParamtoUrl(map);
         String result=GetTest.SendGetTojson(SDKADD+"/getstore2"+"?"+param);
 //        log.info(result);
+        return result;
+    }
+
+    public String Apihealth(){
+
+        String result=GetTest.SendGetTojson(SDKADD+"/apihealth");
+        log.info(result);
         return result;
     }
 
