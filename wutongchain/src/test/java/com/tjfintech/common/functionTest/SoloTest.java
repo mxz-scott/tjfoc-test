@@ -344,10 +344,12 @@ public class SoloTest {
         Thread.sleep(SLEEPTIME*3);
         log.info("查询归集地址中两种token余额");
         String response1 = soloSign.Balance( PRIKEY2, tokenType);
+        String response3 = soloSign.Balance( PRIKEY1, tokenType);
         String response2 = multiSign.Balance( MULITADD3,PRIKEY1,tokenType2 );
         assertThat(tokenType+"查询余额错误",response1, containsString("200"));
         assertThat(tokenType+"查询余额错误",response2, containsString("200"));
-        assertThat(tokenType+"查询余额不正确",response1, containsString("10000"));
-        assertThat(tokenType+"查询余额不正确",response2, containsString("20000"));
+        assertThat(tokenType+"查询余额不正确",response1, containsString("Total\":\"0\""));
+        assertThat(tokenType+"查询余额不正确",response2, containsString("Total\":\"0\""));
+        assertThat(tokenType+"查询余额不正确",response3, containsString("1000"));
     }
 }
