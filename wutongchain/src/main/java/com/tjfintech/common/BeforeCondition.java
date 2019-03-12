@@ -1,16 +1,20 @@
 package com.tjfintech.common;
 
 import com.tjfintech.common.Interface.MultiSign;
+import com.tjfintech.common.utils.Shell;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+
 
 @Slf4j
 public class BeforeCondition {
@@ -22,12 +26,39 @@ public class BeforeCondition {
      * 第一个参数为私钥。后续...参数为地址
      */
     @Test
-    public  void collAddressTest(){
+    public  void collAddressTest() throws Exception{
+        Shell shell1=new Shell("10.1.3.240","root","root");
+
+        String toolPath="cd /root/zll/permission/toolkit;";
+        String exeCmd="./main permission ";
+        String peerIP="10.1.3.240:9300";
+        String sdkID="29dd9b8931e7a82b5c4067b0c80a1d53eba100bb3625f580558b509f01132ada60c5fe45fed42a9699c686e3cdabcb22a3441583d230fd9fd0e1db4928f81cd4";
+        String preCmd=toolPath+exeCmd+"-p "+peerIP+" -d "+sdkID+" -m ";
+
+        shell1.execute(preCmd+"999");
+        ArrayList<String> stdout = shell1.getStandardOutput();
+        for (String str : stdout) {
+            log.info(str);
+            assertEquals(str.contains("失败"), false);
+            //assertEquals(str.contains("FuncUpdatePeerPermission success:  true"),true);
+        }
+
+        Thread.sleep(6000);
+
         String response= multiSign.collAddress(PRIKEY1,IMPPUTIONADD);
         String response2= multiSign.collAddress(PRIKEY1,MULITADD3);
         String response3= multiSign.collAddress(PRIKEY1,ADDRESS1);
         String response4=multiSign.collAddress(PRIKEY2,ADDRESS2);
+        String response5= multiSign.collAddress(PRIKEY1,MULITADD4);
+        String response6= multiSign.collAddress(PRIKEY1,MULITADD5);
         assertThat(response4,containsString("200"));
+        assertThat(response,containsString("200"));
+        assertThat(response2,containsString("200"));
+        assertThat(response3,containsString("200"));
+        assertThat(response5,containsString("200"));
+        assertThat(response6,containsString("200"));
+
+
     }
     /**
      * 创建多签地址

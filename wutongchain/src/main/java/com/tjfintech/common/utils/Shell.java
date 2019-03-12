@@ -67,6 +67,7 @@ public class Shell {
                     channelExec.getErrStream()));
 
             channelExec.connect();
+            System.out.println("The remote IP is :" + ip);
             System.out.println("The remote command is :" + command);
 
 

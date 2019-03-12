@@ -33,6 +33,7 @@ public class MultiTest {
     public void beforeConfig() throws Exception {
         log.info("发行两种token1000个");
         tokenType = IssueToken(5, "1000");
+        //Thread.sleep(SLEEPTIME);
         tokenType2 = IssueToken(6, "1000");
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中两种token余额");
@@ -42,6 +43,7 @@ public class MultiTest {
         assertThat(response1, containsString("1000"));
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("1000"));
+        Thread.sleep(4000);
 
     }
 
@@ -51,11 +53,13 @@ public class MultiTest {
      */
      @Test
      public void    TC994_issueToOther()throws Exception {
+         //Thread.sleep(8000);
          tokenType = IssueToken(5, "1000",MULITADD3);
-         tokenType2 = IssueToken(5, "1111",MULITADD4);
+        // Thread.sleep(8000);
+         tokenType2 = IssueToken(5, "1000",MULITADD4);
          Thread.sleep(SLEEPTIME);
          String response1 = multiSign.Balance(MULITADD3,PRIKEY1, tokenType);
-         String response2 = multiSign.Balance(MULITADD4,PRIKEY1, tokenType);
+         String response2 = multiSign.Balance(MULITADD4,PRIKEY1, tokenType2);
          assertThat(response1, containsString("200"));
          assertThat(response1, containsString("1000"));
          assertThat(response2, containsString("200"));

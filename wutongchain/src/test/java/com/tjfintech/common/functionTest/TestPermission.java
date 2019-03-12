@@ -110,7 +110,7 @@ public class TestPermission {
         pFunUTXO.issAmount="200";
 
         pFunUTXO.soloIssueToken(PRIKEY1,glbSoloToken,ADDRESS1); //SDK发送UTXO - Token单签发行请求
-        Thread.sleep(4000);
+        Thread.sleep(6000);
 
         //多签MULITADD3发行给其他多签地址MULITADD4
         pFunUTXO.multiIssueToken(MULITADD3,glbMultiToken4,MULITADD4);//SDK发送UTXO - Token3/3多签发行给自己请求
@@ -118,7 +118,7 @@ public class TestPermission {
         pFunUTXO.multiSign(PRIKEY6,PWD6);//SDK发送UTXO - Token3/3多签第二次签名请求
         pFunUTXO.multiSign(PRIKEY7,PWD7);//SDK发送UTXO - Token3/3多签第三次签名请求
 
-        Thread.sleep(4000);
+        Thread.sleep(6000);
 
         //多签MULITADD3发行给自己MULITADD3
         glbMultiToken3="GlbMu3"+UtilsClass.Random(4);

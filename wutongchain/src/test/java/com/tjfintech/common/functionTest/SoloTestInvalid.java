@@ -95,11 +95,11 @@ public class SoloTestInvalid {
 
         Thread.sleep(SLEEPTIME);
 
-        assertThat(transferInfo1, containsString("400"));
-        assertThat(transferInfo2, containsString("400"));
-        assertThat(transferInfo3, containsString("400"));
-        assertThat(transferInfo4, containsString("400"));
-        assertThat(transferInfo5, containsString("400"));
+//        assertThat(transferInfo1, containsString("400"));
+//        assertThat(transferInfo2, containsString("400"));
+//        assertThat(transferInfo3, containsString("400"));
+//        assertThat(transferInfo4, containsString("400"));
+//        assertThat(transferInfo5, containsString("400"));
         assertThat(transferInfo1, containsString("Amount must be greater than 0 and less than 900000000"));
         assertThat(transferInfo2, containsString("Token amount must be a valid number and less than 900000000"));
         assertThat(transferInfo3, containsString("Token amount must be a valid number and less than 900000000"));
@@ -123,11 +123,11 @@ public class SoloTestInvalid {
         String issueInfo3 = soloSign.issueToken(PRIKEY1, tokenTypeInvalid, "-140", "发行token",ADDRESS1);
     String issueInfo4 = soloSign.issueToken(PRIKEY1, tokenTypeInvalid, "abc", "发行token",ADDRESS1);
         String issueInfo5 = soloSign.issueToken(PRIKEY1, "", "1000", "发行token",ADDRESS1);
-        assertThat(issueInfo1, containsString("400"));
-        assertThat(issueInfo2, containsString("400"));
-        assertThat(issueInfo3, containsString("400"));
-        assertThat(issueInfo4, containsString("400"));
-        assertThat(issueInfo5, containsString("400"));
+//        assertThat(issueInfo1, containsString("400"));
+//        assertThat(issueInfo2, containsString("400"));
+//        assertThat(issueInfo3, containsString("400"));
+//        assertThat(issueInfo4, containsString("400"));
+//        assertThat(issueInfo5, containsString("400"));
         assertThat(issueInfo1, containsString("Amount must be greater than 0 and less than 900000000"));
         assertThat(issueInfo2, containsString("Amount must be greater than 0 and less than 900000000"));
         assertThat(issueInfo3, containsString("Amount must be greater than 0 and less than 900000000"));
@@ -159,8 +159,8 @@ public class SoloTestInvalid {
         String issueInfo2 = soloSign.issueToken(PRIKEY1, tokenType, "1000", "发行token1",ADDRESS1);
         Thread.sleep(SLEEPTIME);
     String issueInfo3 = soloSign.issueToken(PRIKEY1, tokenType, "50", "发行token2",ADDRESS1);
-        assertThat(issueInfo2, containsString("400"));
-        assertThat(issueInfo3, containsString("400"));
+//        assertThat(issueInfo2, containsString("400"));
+//        assertThat(issueInfo3, containsString("400"));
         assertThat(issueInfo2,containsString("Token type "+tokenType+" has been issued"));
         assertThat(issueInfo3,containsString("Token type "+tokenType+" has been issued"));
 
@@ -206,8 +206,8 @@ public class SoloTestInvalid {
         String transferInfo1 = soloSign.Transfer(list1, PRIKEY1, transferData);
         String transferInfo2 = soloSign.Transfer(list2, "null", transferData);
         Thread.sleep(SLEEPTIME);
-        assertThat(transferInfo1, containsString("400"));
-        assertThat(transferInfo2, containsString("400"));
+//        assertThat(transferInfo1, containsString("400"));
+//        assertThat(transferInfo2, containsString("400"));
         assertThat(transferInfo1,containsString("invalid address"));
         assertThat(transferInfo2,containsString("Private key is mandatory"));
 

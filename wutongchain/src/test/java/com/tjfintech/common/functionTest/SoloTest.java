@@ -330,7 +330,7 @@ public class SoloTest {
      * 单签发行token时指定其他地址，不发行token到本身.指定单签地址与多签地址
      * @throws Exception
      */
-    @Test
+    //@Test
     public void TC993_issueToOther()throws Exception{
         BeforeCondition beforeCondition=new BeforeCondition();
         beforeCondition.collAddressTest();

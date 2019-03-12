@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
@@ -31,7 +32,7 @@ public class TestMgTool {
     TestBuilder testBuilder=TestBuilder.getInstance();
     Store store =testBuilder.getStore();
 
-    String version="dev190307.1";
+    String version="dev190312.1";
     String rpcPort="9300";
     String tcpPort="60030";
     String consType="L";
@@ -96,6 +97,7 @@ public class TestMgTool {
         checkParam("./main ntx","management");
         checkParam("./main ntx -p "+ queryPeerIP.split(":")[0],"missing port");
 
+        quitPeer(queryPeerIP,IP_247,tcpPort);
         queryPeerList("10.1.3.240:9300",2);
         checkParam("./main join -p","flag needs an argument: 'p' in -p");
         checkParam("./main join -n","flag needs an argument: 'n' in -n");
@@ -162,6 +164,7 @@ public class TestMgTool {
 
     @Test
     public void testPeerInfo()throws Exception{
+        //resetPeerEnv();
         //先将待加入节点进程停止
         Shell shell1=new Shell("10.1.3.247",USERNAME,PASSWORD);
         shell1.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
@@ -831,14 +834,17 @@ public class TestMgTool {
         //停止节点，修改配置文件使用节点licence名称为peerTest.lic
         Shell shell240=new Shell(IP_240,USERNAME,PASSWORD);
         shell240.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shell240.execute("cp /root/zll/permission/peer/conf/baseOK.toml /root/zll/permission/peer/conf/base.toml");
         shell240.execute("sed -i \"s/peer.lic/peerTest.lic/g\" /root/zll/permission/peer/conf/base.toml");
 
         Shell shell246=new Shell(IP_246,USERNAME,PASSWORD);
         shell246.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shell246.execute("cp /root/zll/permission/peer/conf/baseOK.toml /root/zll/permission/peer/conf/base.toml");
         shell246.execute("sed -i \"s/peer.lic/peerTest.lic/g\" /root/zll/permission/peer/conf/base.toml");
 
         Shell shell247=new Shell(IP_247,USERNAME,PASSWORD);
         shell247.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shell247.execute("cp /root/zll/permission/peer/conf/baseOK.toml /root/zll/permission/peer/conf/base.toml");
         shell247.execute("sed -i \"s/peer.lic/peerTest.lic/g\" /root/zll/permission/peer/conf/base.toml");
 
         //重新生成节点个数为2的240证书并拷贝至节点目录
@@ -928,6 +934,27 @@ public class TestMgTool {
         ArrayList<String> stdout = shell1.getStandardOutput();
         log.info(StringUtils.join(stdout,"\n"));
         return StringUtils.join(stdout,"\n");
+    }
+@Before
+    public void resetPeerEnv()throws Exception{
+        Shell shell240=new Shell(IP_240,USERNAME,PASSWORD);
+        shell240.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shell240.execute("cp /root/zll/permission/peer/conf/baseOK.toml /root/zll/permission/peer/conf/base.toml");
+        startPeer(IP_240);
+
+        Shell shell246=new Shell(IP_246,USERNAME,PASSWORD);
+        shell246.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shell246.execute("cp /root/zll/permission/peer/conf/baseOK.toml /root/zll/permission/peer/conf/base.toml");
+        startPeer(IP_246);
+
+        Thread.sleep(12000);
+        quitPeer(queryPeerIP,IP_247,tcpPort);
+
+        Shell shell247=new Shell(IP_247,USERNAME,PASSWORD);
+        shell247.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shell247.execute("cp /root/zll/permission/peer/conf/baseOK.toml /root/zll/permission/peer/conf/base.toml");
+        //startPeer(IP_247);
+
     }
 
 }
