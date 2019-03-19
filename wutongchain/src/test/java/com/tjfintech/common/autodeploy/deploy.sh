@@ -85,6 +85,8 @@ function creatDir(){
 }
 
 #######################################################################
+starttime=$(date +%Y-%m-%d\ %H:%M:%S)
+echo $starttime
 
 #所有程序文件所在目录
 dir=pt
@@ -97,7 +99,7 @@ shdir=sh
 tempdir=temp
 
 #节点部署目录
-deploydir=/root/mbfttest3
+deploydir=/root/mbfttest
 
 #定义各个不同节点类型的起始tcp port
 mainTcpPort=41000
@@ -329,3 +331,8 @@ for i in ${!serverIPs[*]};
 	echo "complete start @${serverIPs[$i]}:${serverPaths[$i]}peerMB"
 	sleep 1
   done
+
+  
+ttime=`date +"%Y-%m-%d %H:%M:%S"`
+echo start time :$starttime
+echo end time   :$ttime
