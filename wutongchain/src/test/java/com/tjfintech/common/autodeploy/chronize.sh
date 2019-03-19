@@ -55,8 +55,8 @@ getclusterips
 
 copyfile ntp/ntpclient.sh
 
-while read -r line
-do
-  ssh root@$line "./ntpclient.sh" &
-  echo $line
-done < temp/tempcluster.ini
+#while read -r line
+#do
+#  ssh root@$line "./ntpclient.sh" &
+#  echo $line
+#done < temp/tempcluster.ini
