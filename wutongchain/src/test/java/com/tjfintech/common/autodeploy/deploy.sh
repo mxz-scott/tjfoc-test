@@ -24,9 +24,9 @@ function addConf(){
 
 
 function addCliConf(){
-	echo -e "KeyPath: \"./cert\/key.pem" > $tempdir/tempcliconf.yaml
-	echo -e "PukPath: \"./cert\"" >> $tempdir/tempcliconf.yaml
-	echo -e "Address: \"$1\"" >> $tempdir/tempcliconf.yaml
+	echo -e "KeyPath: \"./cert/$1/key.pem\"" > $tempdir/tempcliconf.yaml
+	echo -e "PukPath: \"./cert/$1\"" >> $tempdir/tempcliconf.yaml
+	echo -e "Address: \"$2\"" >> $tempdir/tempcliconf.yaml
 }
 
 function genSelfConf(){
@@ -40,6 +40,8 @@ function genSelfConf(){
 
 function creatDir(){
 	touch $tempdir/cluster.ini
+	#echo create file cluster.ini
+	
 	while read -r line
 	do
 
@@ -51,12 +53,32 @@ function creatDir(){
 		then 
 			continue
 	fi
+	
+	if [[ $line = *:* ]]
+		then 
+		  continue
+	fi
 
 	if [ `grep -c "$line" $tempdir/cluster.ini` -eq '0' ];then
 		echo $line >> $tempdir/cluster.ini
 	fi
   	done < setting.ini
 
+	#先kill进程
+	while read -r line
+	do
+		scp -r $shdir/kill.sh $line:/root 
+	
+	done < $tempdir/cluster.ini
+	
+	
+	while read -r line
+	do
+		ssh root@$line "./kill.sh peerMB" & 
+	    echo "complete kill $line peerMB process"
+	done < $tempdir/cluster.ini
+	
+	
 	while read -r line
 	do
 		scp -r $shdir/deleteDir.sh $line:/root 
@@ -124,13 +146,12 @@ declare -a cliPaths
 
 #######################################################################
 
-creatDir $deploydir
-
-
 rm -rf temp
 if [ ! -d "temp" ];then
     mkdir temp
 fi
+
+creatDir $deploydir
 
 #将目录下所有的节点及客户端执行文件赋可执行权限
 find . -name peerMB |xargs chmod +x
@@ -146,16 +167,19 @@ no1=`cat -n setting.ini |grep main|awk '{print $1}'`
 no2=`cat -n setting.ini |grep mem|awk '{print $1}'`
 no3=`cat -n setting.ini |grep sub|awk '{print $1}'`
 no4=`cat -n setting.ini |grep cli|awk '{print $1}'`
-no5=`cat setting.ini | wc -l`
+no5=`cat -n setting.ini |grep conf|awk '{print $1}'`
+no6=`cat setting.ini | wc -l`
 
 sed -n ''$(($no1+1))','$(($no2-1))'p' setting.ini > $tempdir/main.ini
 sed -n ''$(($no2+1))','$(($no3-1))'p' setting.ini > $tempdir/mem.ini
 sed -n ''$(($no3+1))','$(($no4-1))'p' setting.ini > $tempdir/sub.ini
 sed -n ''$(($no4+1))','$(($no5-1))'p' setting.ini > $tempdir/cli.ini
 
-
 #初始化tempconf.yaml
-initConf
+#initConf
+sed -n ''$(($no5+1))','$(($no6))'p' setting.ini > $tempdir/tempconf.yaml
+echo -e "" >> $tempdir/tempconf.yaml
+
 
 #为检查进程启动将所有的ip+tcp ip+rpc保存
 if [ -f $tempdir/iptcpports.ini ]; then
@@ -242,13 +266,14 @@ do
    then continue
  fi
 
-  echo $dir/client
+  #echo $dir/client
   echo $line:$deploydir/cli$offset
   scp -r $dir/client $line:$deploydir/cli$offset
   #echo "fffffff"
-  addCliConf ${memIPRpcPort[index]}  
+  #cli证书目录匹配cert/cli1/key.pem
+  addCliConf cli$offset ${memIPRpcPort[index]}  
   scp -r $tempdir/tempcliconf.yaml $line:$deploydir/cli$offset/cliconf.yaml
-  echo  ${memIPRpcPort[index]}
+  #echo  ${memIPRpcPort[index]}
 
   scpCliPathArr[index]=$line:$deploydir/cli$offset/
   cliIPs[index]=$line
