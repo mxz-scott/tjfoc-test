@@ -29,11 +29,12 @@ public class MultiTest {
     private static String tokenType;
     private static String tokenType2;
 
+    //@Test
     @Before
     public void beforeConfig() throws Exception {
         log.info("发行两种token1000个");
         tokenType = IssueToken(5, "1000");
-        //Thread.sleep(SLEEPTIME);
+        Thread.sleep(SLEEPTIME);
         tokenType2 = IssueToken(6, "1000");
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中两种token余额");
@@ -46,6 +47,29 @@ public class MultiTest {
         Thread.sleep(4000);
 
     }
+
+    /**
+     * 多签发行检查发行地址注册、未注册时的发行结果
+     * @throws Exception
+     */
+    @Test
+    public void    TC1280_checkMultiIssueAddr()throws Exception {
+        //Thread.sleep(8000);
+        //先前已经注册发行地址IMPPUTIONADD
+        tokenType = IssueToken(5, "1000",MULITADD3);
+        Thread.sleep(SLEEPTIME);
+        String response1 = multiSign.Balance(MULITADD3,PRIKEY1, tokenType);
+        assertThat(response1, containsString("200"));
+        assertThat(response1, containsString("1000"));
+
+        String response2=multiSign.delissueaddress(PRIKEY1,IMPPUTIONADD);
+        tokenType = IssueToken(6, "1000",MULITADD3);
+        Thread.sleep(SLEEPTIME);
+        String response3 = multiSign.Balance(MULITADD3,PRIKEY1, tokenType);
+        assertThat(response3, containsString("200"));
+        assertThat(response3, containsString("0"));
+    }
+
 
     /**
      * 多签发行token。接收地址不为本身。指定其他多签地址.多签地址4未加入归集地址中
@@ -145,12 +169,15 @@ public class MultiTest {
          assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("20"));
          assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("10"));
 
+         multiSign.Balance(IMPPUTIONADD,PRIKEY4, tokenType);
+         multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+
          log.info("回收Token");
          String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "970");
          String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, "990");
          String recycleInfo3 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "20");
          String recycleInfo4 = multiSign.Recycle(MULITADD5, PRIKEY1, tokenType2, "10");
-         
+
          String recycleInfo5 = multiSign.Recycle(MULITADD5, PRIKEY1, tokenType, "10");
          Thread.sleep(SLEEPTIME);
          assertThat(recycleInfo,containsString("200"));

@@ -55,6 +55,33 @@ public class SoloTest {
         assertThat(tokenType+"查询余额不正确",response2, containsString("20000.87654321"));
     }
 
+    /**
+     * 单签发行检查发行地址注册、未注册时的发行结果
+     * @throws Exception
+     */
+    @Test
+    public void    TC1279_checkSoloIssueAddr()throws Exception {
+        //Thread.sleep(8000);
+        //先前已经注册发行地址ADDRESS1
+        tokenType = "SOLOTC-"+UtilsClass.Random(6);
+        String isResult= soloSign.issueToken(PRIKEY1,tokenType,"1009","发行token",ADDRESS1);
+        assertThat(isResult, containsString("200"));
+        Thread.sleep(SLEEPTIME);
+        String response1 = soloSign.Balance( PRIKEY1, tokenType);
+        assertThat(response1, containsString("200"));
+        assertThat(response1, containsString("1009"));
+
+        String response3=multiSign.delissueaddress(PRIKEY1,ADDRESS1);
+        assertThat(response3, containsString("200"));
+
+        tokenType = "SOLOTC-"+UtilsClass.Random(7);
+        isResult= soloSign.issueToken(PRIKEY1,tokenType,"1009","发行token",ADDRESS1);
+        assertThat(isResult, containsString("200"));
+        Thread.sleep(SLEEPTIME);
+        String response2 = soloSign.Balance( PRIKEY1, tokenType);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("0"));
+    }
 
     /**
      * Tc024单签正常流程:

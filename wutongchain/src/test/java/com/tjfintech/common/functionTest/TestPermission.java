@@ -52,7 +52,7 @@ public class TestPermission {
 
 
     String toolPath="cd /root/zll/permission/toolkit;";
-    String exeCmd="./main permission ";
+    String exeCmd="./toolkit permission ";
     String peerIP="10.1.3.240:9300";
     String sdkID="29dd9b8931e7a82b5c4067b0c80a1d53eba100bb3625f580558b509f01132ada60c5fe45fed42a9699c686e3cdabcb22a3441583d230fd9fd0e1db4928f81cd4";
     //String sdkID="144166a82d85a96d79388e987a456ba70db683d7105505c38d768829c702eba6717a447c5e858165faefdaa847b3558a4b72db87fd379ac5154ad8fc4f3e13d2";
@@ -148,7 +148,7 @@ public class TestPermission {
 
     @Test
     public void chkSys1by1()throws Exception{
-        //shellCmd("cd /root/zll/permission/toolkit;./main permission -p 10.1.3.246:9300 -d 144166a82d85a96d79388e987a456ba70db683d7105505c38d768829c702eba6717a447c5e858165faefdaa847b3558a4b72db87fd379ac5154ad8fc4f3e13d2  -m 1");//添加所有权限
+        //shellCmd("cd /root/zll/permission/toolkit;./toolkit permission -p 10.1.3.246:9300 -d 144166a82d85a96d79388e987a456ba70db683d7105505c38d768829c702eba6717a447c5e858165faefdaa847b3558a4b72db87fd379ac5154ad8fc4f3e13d2  -m 1");//添加所有权限
         String[] mArray={"5","6","7","9","10","11","300"};
 
         checkAllInterface("1","Def:1111Sys:100000000Store:00Docker:00000Mg:00UTXO:00000000000");
@@ -386,7 +386,7 @@ public class TestPermission {
     public void checkAllInterface(String right,String chkStr)throws Exception{
         shellCmd(preCmd + right);
         Thread.sleep(3000);
-        //shellCmd("cd /root/zll/permission/toolkit;./main getpermission -p 10.1.3.246:9300");//添加所有权限
+        //shellCmd("cd /root/zll/permission/toolkit;./toolkit getpermission -p 10.1.3.246:9300");//添加所有权限
         String permList="";
         permList=permList+"Def:";
         //默认开启接口检查
@@ -414,7 +414,7 @@ public class TestPermission {
         permList=permList+utxoPermCheck();//Eg. "UTXO:11111111111" a length of 11
         //return permList; //Eg. "Def:1111Sys:111111111Store:11Docker:11111Mg:11UTXO:11111111111" a length of 33
         log.info("Right:"+ right +" with Check Str:"+permList);
-        //shellCmd("cd /root/zll/permission/toolkit;./main getpermission -p 10.1.3.246:9300");//添加所有权限
+        //shellCmd("cd /root/zll/permission/toolkit;./toolkit getpermission -p 10.1.3.246:9300");//添加所有权限
         assertThat(permList, containsString(chkStr));
 
 

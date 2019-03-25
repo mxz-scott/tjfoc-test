@@ -35,7 +35,39 @@ public class GoMultiSign implements MultiSign {
     private static final String USER3_3="SsUTN9RmWgrD8E48MuJY1pdLw4QDo7GJgK8fn8k7DFzpvG3pwqw";
     private static final String USER_COLLET="Soirv9ikykVHArKCdJqVNegxxqZWUj1g4ixFFYbBLMExy4zUTUe";
 
+    /**
+     * 添加发行地址
+     * @param pubKey
+     * @param address
+     * @return
+     */
+    public String addissueaddress(String pubKey, String ...address) {
+        Map<String, Object> map = new HashMap<>();
+        List<Object> addrs = new ArrayList<>();
+        for (int i=0;i<address.length;i++){
+            addrs.add(address[i]);
+        }
 
+        map.put("PriKey", pubKey);
+        map.put("Addrs", addrs);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/addissueaddress", map);
+        log.info(result);
+        return result;
+    }
+
+
+    public String delissueaddress(String priKey, String... address) {
+        Map<String,Object> map = new HashMap<>();
+        List<Object> addrs = new ArrayList<>();
+        for (int i= 0;i<address.length;i++){
+            addrs.add(address[i]);
+        }
+        map.put("PriKey", priKey);
+        map.put("Addrs", addrs);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/delissueaddress", map);
+        log.info(result);
+        return result;
+    }
     /**
      * 添加归集地址
      * @param pubKey

@@ -30,7 +30,7 @@ public class BeforeCondition {
         Shell shell1=new Shell("10.1.3.240","root","root");
 
         String toolPath="cd /root/zll/permission/toolkit;";
-        String exeCmd="./main permission ";
+        String exeCmd="./toolkit permission ";
         String peerIP="10.1.3.240:9300";
         String sdkID="29dd9b8931e7a82b5c4067b0c80a1d53eba100bb3625f580558b509f01132ada60c5fe45fed42a9699c686e3cdabcb22a3441583d230fd9fd0e1db4928f81cd4";
         String preCmd=toolPath+exeCmd+"-p "+peerIP+" -d "+sdkID+" -m ";
@@ -58,6 +58,19 @@ public class BeforeCondition {
         assertThat(response5,containsString("200"));
         assertThat(response6,containsString("200"));
 
+        //2.0.1版本需要添加发行地址后才可以发行
+        String response11= multiSign.addissueaddress(PRIKEY1,IMPPUTIONADD);
+        String response12= multiSign.addissueaddress(PRIKEY1,MULITADD3);
+        String response13= multiSign.addissueaddress(PRIKEY1,ADDRESS1);
+        String response14=multiSign.addissueaddress(PRIKEY2,ADDRESS2);
+        String response15= multiSign.addissueaddress(PRIKEY1,MULITADD4);
+        String response16= multiSign.addissueaddress(PRIKEY1,MULITADD5);
+        assertThat(response14,containsString("200"));
+        assertThat(response11,containsString("200"));
+        assertThat(response12,containsString("200"));
+        assertThat(response13,containsString("200"));
+        assertThat(response15,containsString("200"));
+        assertThat(response16,containsString("200"));
 
     }
     /**
