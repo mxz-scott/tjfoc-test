@@ -57,7 +57,6 @@ public class BeforeCondition {
         assertThat(response3,containsString("200"));
         assertThat(response5,containsString("200"));
         assertThat(response6,containsString("200"));
-
         //2.0.1版本需要添加发行地址后才可以发行
         String response11= multiSign.addissueaddress(PRIKEY1,IMPPUTIONADD);
         String response12= multiSign.addissueaddress(PRIKEY1,MULITADD3);

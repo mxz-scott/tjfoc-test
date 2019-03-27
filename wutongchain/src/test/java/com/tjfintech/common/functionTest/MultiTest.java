@@ -68,6 +68,14 @@ public class MultiTest {
         String response3 = multiSign.Balance(MULITADD3,PRIKEY1, tokenType);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("0"));
+
+        String response4=multiSign.addissueaddress(PRIKEY1,IMPPUTIONADD);
+        Thread.sleep(4000);
+        tokenType = IssueToken(7, "1000",MULITADD3);
+        Thread.sleep(SLEEPTIME);
+        String response5 = multiSign.Balance(MULITADD3,PRIKEY1, tokenType);
+        assertThat(response5, containsString("200"));
+        assertThat(response5, containsString("1000"));
     }
 
 

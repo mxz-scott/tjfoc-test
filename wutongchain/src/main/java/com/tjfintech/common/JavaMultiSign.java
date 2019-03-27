@@ -94,4 +94,14 @@ public class JavaMultiSign implements MultiSign {
     public String delCollAddress(String priKey, String... address) {
         return null;
     }
+
+    @Override
+    public String addissueaddress(String priKey, String... address) {
+        return null;
+    }
+
+    @Override
+    public String delissueaddress(String priKey, String... address) {
+        return null;
+    }
 }

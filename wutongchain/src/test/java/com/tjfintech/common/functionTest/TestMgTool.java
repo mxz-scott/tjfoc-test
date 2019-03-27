@@ -33,7 +33,7 @@ public class TestMgTool {
     TestBuilder testBuilder=TestBuilder.getInstance();
     Store store =testBuilder.getStore();
 
-    String version="dev190325.1";
+    String version="201_190326.3";
     String rpcPort="9300";
     String tcpPort="60030";
     String consType="L";
@@ -166,12 +166,12 @@ public class TestMgTool {
         checkParam("./toolkit getid","management");
 
 
-        checkParam("./licence create -p","flag needs an argument: 'p' in -p");
-        checkParam("./licence create -m","flag needs an argument: 'm' in -m");
-        checkParam("./licence create","management");
+        checkParam("./license create -p","flag needs an argument: 'p' in -p");
+        checkParam("./license create -m","flag needs an argument: 'm' in -m");
+        checkParam("./license create","management");
 
-        checkParam("./licence decode -p","flag needs an argument: 'p' in -p");
-        checkParam("./licence decode","management");
+        checkParam("./license decode -p","flag needs an argument: 'p' in -p");
+        checkParam("./license decode","management");
     }
 
     public void checkParam(String cmd,String chkStr)throws Exception{
@@ -189,10 +189,10 @@ public class TestMgTool {
     public void testPeerInfo()throws Exception{
         //resetPeerEnv();
         //先将待加入节点进程停止
-        Shell shell1=new Shell("10.1.3.247",USERNAME,PASSWORD);
-        shell1.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-
-        quitPeer(queryPeerIP,"10.1.3.247",tcpPort);
+        Shell shell247=new Shell(IP_247,USERNAME,PASSWORD);
+        shell247.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shell247.execute("cp /root/zll/permission/peer/configjoin.toml /root/zll/permission/peer/config.toml");
+        quitPeer(queryPeerIP,IP_247,tcpPort);
 
         Thread.sleep(2000);
         queryPeerList(queryPeerIP,2);
@@ -201,46 +201,52 @@ public class TestMgTool {
         chkPeerSimInfoOK("10.1.3.240:9300",tcpPort,version,consType);
 
         //检查动态加入的共识节点，即使用管理工具加入的共识节点信息
-        addConsensusPeer(queryPeerIP,"10.1.3.247",tcpPort,"update success");
+        addConsensusPeer(queryPeerIP,IP_247,tcpPort,"update success");
         queryPeerList(queryPeerIP,3);
 
         Thread.sleep(3000);
 
-        startPeer("10.1.3.247");
+        startPeer(IP_247);
         Thread.sleep(STARTSLEEPTIME);
         chkPeerSimInfoOK("10.1.3.247:9300",tcpPort,version,consType);
         queryPeerList(queryPeerIP,3);
-        queryPeerList("10.1.3.247"+":"+rpcPort,3);
+        queryPeerList(IP_247+":"+rpcPort,3);
         String height=queryBlockHeight("10.1.3.240:9300");
         assertEquals(queryBlockHeight("10.1.3.246:9300"),height);
         //assertEquals(queryBlockHeight("10.1.3.247:9300"),height);//因数据较多时同步数据需要时间，此部分查询检查移除
 
-        shell1.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shell247.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
         Thread.sleep(3000);
 
 
         sendNewTx("10.1.3.240:9300","1","1");
 
         //检查动态加入的数据节点，即使用管理工具加入的数据节点信息
-        quitPeer(queryPeerIP,"10.1.3.247",tcpPort);
+        quitPeer(queryPeerIP,IP_247,tcpPort);
         queryPeerList(queryPeerIP,2);
         Thread.sleep(4000);
 
-        addDataPeer(queryPeerIP,"10.1.3.247",tcpPort,"update success");
+        addDataPeer(queryPeerIP,IP_247,tcpPort,"update success");
         queryPeerList(queryPeerIP,3);//通过共识节点查询集群列表
-
-        startPeer("10.1.3.247");
+        shell247.execute("cp /root/zll/permission/peer/configobs.toml /root/zll/permission/peer/config.toml");
+        startPeer(IP_247);
         Thread.sleep(STARTSLEEPTIME);
         chkPeerSimInfoOK("10.1.3.247:9300",tcpPort,version,dataType);
-        queryPeerList("10.1.3.247"+":"+rpcPort,3);//通过非共识节点查询集群列表
+        queryPeerList(IP_247+":"+rpcPort,3);//通过非共识节点查询集群列表
 
         height=queryBlockHeight("10.1.3.240:9300");
         assertEquals(queryBlockHeight("10.1.3.246:9300"),height);
         //assertEquals(queryBlockHeight("10.1.3.247:9300"),height);
 
-        quitPeer(queryPeerIP,"10.1.3.247",tcpPort);
+        quitPeer(queryPeerIP,IP_247,tcpPort);
         queryPeerList(queryPeerIP,2);
-        shell1.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shell247.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        addConsensusPeer(queryPeerIP,IP_247,tcpPort,"update success");
+        startPeer(IP_247);//此步骤应该启动不成功，因节点当前配置文件中Type=1，但是使用addConsensusPeer 即join加入，两者不一致时无法启动成功
+        Thread.sleep(STARTSLEEPTIME);
+//        queryPeerList(queryPeerIP,2);
+        //shell247.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+
 
         //检查配置文件中预设的数据节点，即搭建环境时配置的数据节点
         chkPeerSimInfoOK("10.1.3.164:9100","60002","dev190307.1",dataType);
@@ -290,7 +296,7 @@ public class TestMgTool {
         assertEquals(response.contains(tcpIP), true);
         assertEquals(response.contains(peerID), true);
         assertEquals(response.contains(peerName), true);
-        //assertEquals(response.contains(Type), true);
+        assertEquals(response.contains(Type), true);
         assertEquals(response.contains(rpcPort), true);
     }
 
@@ -310,7 +316,7 @@ public class TestMgTool {
 
     public void startPeer(String peerIP)throws Exception{
     //public void startPeer()throws Exception{
-        //Shell shell1=new Shell("10.1.3.247",USERNAME,PASSWORD);
+        //Shell shell1=new Shell(IP_247,USERNAME,PASSWORD);
         Shell shell1=new Shell(peerIP,USERNAME,PASSWORD);
         //shell1.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
         Thread.sleep(2000);
@@ -700,7 +706,7 @@ public class TestMgTool {
         assertEquals(rsp.contains(sdkID2), true);
         assertEquals(rsp.contains("peermission:[0]"), true);
         assertEquals(rsp.contains(sdkID3), true);
-        assertEquals(rsp.contains("peermission:[1 2 3 4 5 6 7 8 9 10 21 22 23 24 25 211 212 221 222 223 231 232 233 234 235 251 252]"), true);
+        assertEquals(rsp.contains("peermission:[1 2 3 4 5 6 7 8 9 10 21 22 23 24 25 211 212 221 222 223 224 231 232 233 234 235 236 251 252 253 254]"), true);
         assertEquals(rsp.contains(sdkID4), false);
 
         rsp=getPeerPerm(queryPeerIP,sdkID1);
@@ -750,7 +756,7 @@ public class TestMgTool {
         rsp = genLicence(MAC1_240,IP_240,dayTime,PeerNo);
         assertEquals(rsp.contains(MAC1_240),true);
         assertEquals(rsp.contains(IP_240),true);
-        assertEquals(rsp.contains("dayTime:"+dayTime),true);
+        assertEquals(rsp.contains("DayTime:"+dayTime),true);
         assertEquals(rsp.contains("PeerNum:"+PeerNo),true);
 
         //解析证书 确认参数一致
@@ -768,26 +774,26 @@ public class TestMgTool {
 
 
         //生成使用无效的参数验证:无效的mac地址、无效IP地址、无效时间、无效节点数
-        checkParam("./licence create -m 12:11 -p 10.1.3.240 -d 100 -n 6","invalid MAC address");
+        checkParam("./license create -m 12:11 -p 10.1.3.240 -d 100 -n 6","invalid MAC address");
         assertEquals(deLicence("peer.lic").contains("open peer.lic: no such file or directory"),true);
 
-        checkParam("./licence create -m 02:42:fc:a2:5b:1b -p 10.1 -d 100 -n 6","invalid IP address");
+        checkParam("./license create -m 02:42:fc:a2:5b:1b -p 10.1 -d 100 -n 6","invalid IP address");
         assertEquals(deLicence("peer.lic").contains("open peer.lic: no such file or directory"),true);
 
-        checkParam("./licence create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 0.5 -n 6","invalid argument");
+        checkParam("./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 0.5 -n 6","invalid argument");
         assertEquals(deLicence("peer.lic").contains("open peer.lic: no such file or directory"),true);
 
-        checkParam("./licence create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 5 -n 0.5","invalid argument");
+        checkParam("./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 5 -n 0.5","invalid argument");
         assertEquals(deLicence("peer.lic").contains("open peer.lic: no such file or directory"),true);
 
-        checkParam("./licence create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 5 -n 0","success");
+        checkParam("./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 5 -n 0","success");
 
         rsp = deLicence("peer.lic");
         assertEquals(rsp.contains("PeerNum:0"),true);
 
         //解析证书使用无效参数
-        checkParam("./licence decode -p ./crypt/key.pem","data Illegal");
-        checkParam("./licence decode -p ./crypt/key.pem","data Illegal");
+        checkParam("./license decode -p ./crypt/key.pem","data Illegal");
+        checkParam("./license decode -p ./crypt/key.pem","data Illegal");
 
     }
 
@@ -891,16 +897,16 @@ public class TestMgTool {
         shell240.execute("cp /root/zll/permission/toolkit/peer.lic /root/zll/permission/peer/peerTest.lic");
 
         //重新生成节点个数为2的246证书并拷贝至节点目录
-        ToolIP="10.1.3.246";
+        ToolIP=IP_246;
         genLicence(MAC1_246,IP_246,"20","2");
         shell246.execute("cp /root/zll/permission/toolkit/peer.lic /root/zll/permission/peer/peerTest.lic");
 
         //重新生成节点个数为2的247证书并拷贝至节点目录
-        ToolIP="10.1.3.247";
+        ToolIP=IP_247;
         genLicence(MAC1_247,IP_247,"20","3");
         shell247.execute("cp /root/zll/permission/toolkit/peer.lic /root/zll/permission/peer/peerTest.lic");
 
-        ToolIP="10.1.3.240";
+        ToolIP=IP_240;
         //启动节点240/246
         startPeer(IP_240);
         startPeer(IP_246);
@@ -920,7 +926,7 @@ public class TestMgTool {
         shell247.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
 
         //重新生成节点个数为2的247证书并拷贝至节点目录
-        ToolIP="10.1.3.247";
+        ToolIP=IP_247;
         genLicence(MAC1_247,IP_247,"20","2");
         shell247.execute("cp /root/zll/permission/toolkit/peer.lic /root/zll/permission/peer/peerTest.lic");
 
@@ -942,7 +948,7 @@ public class TestMgTool {
         startPeer(IP_246);
         Thread.sleep(STARTSLEEPTIME);
         queryPeerList(queryPeerIP,2);
-        ToolIP="10.1.3.240";
+        ToolIP=IP_240;
     }
 
     public String genLicence(String macAddr,String ipAddr,String validPeriod,String maxPeerNo)throws Exception{
@@ -955,8 +961,8 @@ public class TestMgTool {
         String ipSetting=ipAddr.isEmpty()?"":" -p "+ipAddr;
         String validSetting=validPeriod.isEmpty()?"":" -d "+validPeriod;
         String NoSetting=maxPeerNo.isEmpty()?"":" -n "+maxPeerNo;
-        //String cmd1=toolPath+"./licence create"+macSetting + ipSetting + validSetting + NoSetting;
-        String cmd1=toolPath+"./licence create"+macSetting + ipSetting + validSetting + NoSetting;
+        //String cmd1=toolPath+"./license create"+macSetting + ipSetting + validSetting + NoSetting;
+        String cmd1=toolPath+"./license create"+macSetting + ipSetting + validSetting + NoSetting;
         shell1.execute(cmd1);
         Date date = new Date();
         timeStamp = date.getTime();
@@ -969,7 +975,7 @@ public class TestMgTool {
         Shell shell1=new Shell(ToolIP,USERNAME,PASSWORD);
 //        String licPath="peer.lic";
         String licPayjSetting=licPath.isEmpty()?"":" -p "+licPath;
-        String cmd1=toolPath+"./licence decode" + licPayjSetting;
+        String cmd1=toolPath+"./license decode" + licPayjSetting;
         shell1.execute(cmd1);
         ArrayList<String> stdout = shell1.getStandardOutput();
         log.info(StringUtils.join(stdout,"\n"));

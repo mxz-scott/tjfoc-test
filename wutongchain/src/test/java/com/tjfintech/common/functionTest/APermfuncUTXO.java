@@ -178,6 +178,19 @@ public class APermfuncUTXO {
         return retAllow(response);
     }
 
+
+    public String addIssAddr(String priKey,String...collAddr)throws Exception  {
+        log.info("向链上注册归集地址");
+        String response = multiSign.addissueaddress(priKey,collAddr);
+        return retAllow(response);
+    }
+
+    public String delIssAddr(String priKey,String...collAddr)throws Exception  {
+        log.info("注销链上的归集地址");
+        String response = multiSign.delissueaddress(priKey,collAddr);
+        return retAllow(response);
+    }
+
     public String validateKey(String priKey,String pwd)throws Exception  {
         log.info("检查私钥与密码的匹配性");
         String response = multiSign.CheckPriKey(priKey,pwd);

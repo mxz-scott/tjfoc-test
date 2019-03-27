@@ -139,9 +139,9 @@ public class TestPermission {
         //String mValue="1,2,3,4,5,6,7,8,9,10,21,211,212,22,221,222,223,224,23,231,232,233,234,235,236,24,25,251,252";
         String mValue="999";
 
-        checkAllInterface(mValue,"Def:1111Sys:111111111Store:11Docker:11111Mg:11UTXO:11111111111");
+        checkAllInterface(mValue,"Def:1111Sys:111111111Store:11Docker:11111Mg:1111UTXO:11111111111");
         Thread.sleep(3000);
-        checkAllInterface("0","Def:1111Sys:000000000Store:00Docker:00000Mg:00UTXO:00000000000");
+        checkAllInterface("0","Def:1111Sys:000000000Store:00Docker:00000Mg:0000UTXO:00000000000");
 
         Thread.sleep(3000);
     }
@@ -151,34 +151,29 @@ public class TestPermission {
         //shellCmd("cd /root/zll/permission/toolkit;./toolkit permission -p 10.1.3.246:9300 -d 144166a82d85a96d79388e987a456ba70db683d7105505c38d768829c702eba6717a447c5e858165faefdaa847b3558a4b72db87fd379ac5154ad8fc4f3e13d2  -m 1");//添加所有权限
         String[] mArray={"5","6","7","9","10","11","300"};
 
-        checkAllInterface("1","Def:1111Sys:100000000Store:00Docker:00000Mg:00UTXO:00000000000");
+        checkAllInterface("1","Def:1111Sys:100000000Store:00Docker:00000Mg:0000UTXO:00000000000");
 
-        checkAllInterface("2","Def:1111Sys:010000000Store:00Docker:00000Mg:00UTXO:00000000000");
+        checkAllInterface("2","Def:1111Sys:010000000Store:00Docker:00000Mg:0000UTXO:00000000000");
 
-        checkAllInterface("3","Def:1111Sys:001100000Store:00Docker:00000Mg:00UTXO:00000000000");
+        checkAllInterface("3","Def:1111Sys:001100000Store:00Docker:00000Mg:0000UTXO:00000000000");
 
-        checkAllInterface("4","Def:1111Sys:000011110Store:00Docker:00000Mg:00UTXO:00000000000");
+        checkAllInterface("4","Def:1111Sys:000011110Store:00Docker:00000Mg:0000UTXO:00000000000");
 
-        checkAllInterface("8","Def:1111Sys:000000001Store:00Docker:00000Mg:00UTXO:00000000000");
+        checkAllInterface("8","Def:1111Sys:000000001Store:00Docker:00000Mg:0000UTXO:00000000000");
 
         for(int i=0;i<mArray.length;i++)
         {
-            checkAllInterface(mArray[i],"Def:1111Sys:000000000Store:00Docker:00000Mg:00UTXO:00000000000");
+            checkAllInterface(mArray[i],"Def:1111Sys:000000000Store:00Docker:00000Mg:0000UTXO:00000000000");
         }
 
     }
 
 @Test
     public void ChkStore1by1() throws Exception{
-//        String[] mArr={"21","211","212","211,212"};
-//        for(int i=0;i<mArr.length;i++)
-//        {
-//            checkAllInterface(mArr[i],"Def:1111Sys:000000000Store:00Docker:00000Mg:00UTXO:00000000000");
-//        }
-        checkAllInterface("21","Def:1111Sys:000000000Store:00Docker:00000Mg:00UTXO:00000000000");
-        checkAllInterface("211","Def:1111Sys:000000000Store:10Docker:00000Mg:00UTXO:00000000000");
-        checkAllInterface("212","Def:1111Sys:000000000Store:01Docker:00000Mg:00UTXO:00000000000");
-        checkAllInterface("211,212","Def:1111Sys:000000000Store:11Docker:00000Mg:00UTXO:00000000000");
+        checkAllInterface("21","Def:1111Sys:000000000Store:00Docker:00000Mg:0000UTXO:00000000000");
+        checkAllInterface("211","Def:1111Sys:000000000Store:10Docker:00000Mg:0000UTXO:00000000000");
+        checkAllInterface("212","Def:1111Sys:000000000Store:01Docker:00000Mg:0000UTXO:00000000000");
+        checkAllInterface("211,212","Def:1111Sys:000000000Store:11Docker:00000Mg:0000UTXO:00000000000");
     }
 
     @Test
@@ -200,22 +195,22 @@ public class TestPermission {
 //        String[] mArr={"22","221","222","223","224","221,222,223,224"};
 //        for(int i=0;i<mArr.length;i++)
 //        {
-        checkAllInterface("22","Def:1111Sys:000000000Store:00Docker:00000Mg:00UTXO:00000000000");
+        checkAllInterface("22","Def:1111Sys:000000000Store:00Docker:00000Mg:0000UTXO:00000000000");
 //        }
         //合约安装权限
-        checkAllInterface("221","Def:1111Sys:000000000Store:00Docker:10000Mg:00UTXO:00000000000");
+        checkAllInterface("221","Def:1111Sys:000000000Store:00Docker:10000Mg:0000UTXO:00000000000");
 
         //合约交易权限
-        checkAllInterface("223","Def:1111Sys:000000000Store:00Docker:01000Mg:00UTXO:00000000000");
+        checkAllInterface("223","Def:1111Sys:000000000Store:00Docker:01000Mg:0000UTXO:00000000000");
 
         //合约销毁权限
-        checkAllInterface("222","Def:1111Sys:000000000Store:00Docker:00100Mg:00UTXO:00000000000");
+        checkAllInterface("222","Def:1111Sys:000000000Store:00Docker:00100Mg:0000UTXO:00000000000");
 
         //合约搜索
-        checkAllInterface("224","Def:1111Sys:000000000Store:00Docker:00011Mg:00UTXO:00000000000");
+        checkAllInterface("224","Def:1111Sys:000000000Store:00Docker:00011Mg:0000UTXO:00000000000");
 
         //合约安装及销毁权限
-        checkAllInterface("221,223","Def:1111Sys:000000000Store:00Docker:11000Mg:00UTXO:00000000000");
+        checkAllInterface("221,223","Def:1111Sys:000000000Store:00Docker:11000Mg:0000UTXO:00000000000");
         Thread.sleep(10000);
     }
 
@@ -225,48 +220,48 @@ public class TestPermission {
 //        String[] mArr={"23","231","232","233","234","235","236","231,232,233,234,235,236"};
 //        for(int i=0;i<mArr.length;i++)
 //        {
-        checkAllInterface("23","Def:1111Sys:000000000Store:00Docker:00000Mg:00UTXO:00000000000");
+        checkAllInterface("23","Def:1111Sys:000000000Store:00Docker:00000Mg:0000UTXO:00000000000");
 //        }
 
         //发行权限
-        checkAllInterface("231","Def:1111Sys:000000000Store:00Docker:00000Mg:00UTXO:00000111000");
+        checkAllInterface("231","Def:1111Sys:000000000Store:00Docker:00000Mg:0000UTXO:00000111000");
 
         //转账权限 需要根据SDK修改适配
-        checkAllInterface("232","Def:1111Sys:000000000Store:00Docker:00000Mg:00UTXO:11000000000");
+        checkAllInterface("232","Def:1111Sys:000000000Store:00Docker:00000Mg:0000UTXO:11000000000");
 
         //冻结权限
-        checkAllInterface("233","Def:1111Sys:000000000Store:00Docker:00000Mg:00UTXO:00010000000");
+        checkAllInterface("233","Def:1111Sys:000000000Store:00Docker:00000Mg:0000UTXO:00010000000");
 
         //解除冻结权限
-        checkAllInterface("234","Def:1111Sys:000000000Store:00Docker:00000Mg:00UTXO:00001000000");
+        checkAllInterface("234","Def:1111Sys:000000000Store:00Docker:00000Mg:0000UTXO:00001000000");
 
         //回收权限 当前无效 需要根据SDK修改适配
 
-        checkAllInterface("235","Def:1111Sys:000000000Store:00Docker:00000Mg:00UTXO:00100000000");
+        checkAllInterface("235","Def:1111Sys:000000000Store:00Docker:00000Mg:0000UTXO:00100000000");
 
         //余额查询权限
-        checkAllInterface("236","Def:1111Sys:000000000Store:00Docker:00000Mg:00UTXO:00000000111");
+        checkAllInterface("236","Def:1111Sys:000000000Store:00Docker:00000Mg:0000UTXO:00000000111");
 
         //所有UTXO权限
-        checkAllInterface("231,232,233,234,235,236","Def:1111Sys:000000000Store:00Docker:00000Mg:00UTXO:11111111111");
+        checkAllInterface("231,232,233,234,235,236","Def:1111Sys:000000000Store:00Docker:00000Mg:0000UTXO:11111111111");
 
     }
 
     @Test
     public void chkMg1by1()throws Exception{
-//        String[] mArr={"25","251","252","251,252"};
-//        for(int i=0;i<mArr.length;i++)
-//        {
-//            checkAllInterface(mArr[i],"Def:1111Sys:000000000Store:00Docker:00000Mg:00UTXO:00000000000");
-//        }
-        checkAllInterface("25","Def:1111Sys:000000000Store:00Docker:00000Mg:00UTXO:00000000000");
+        checkAllInterface("25","Def:1111Sys:000000000Store:00Docker:00000Mg:0000UTXO:00000000000");
         //添加归集地址权限
-        checkAllInterface("251","Def:1111Sys:000000000Store:00Docker:00000Mg:10UTXO:00000000000");
+        checkAllInterface("251","Def:1111Sys:000000000Store:00Docker:00000Mg:1000UTXO:00000000000");
         //注销归集地址权限
-        checkAllInterface("252","Def:1111Sys:000000000Store:00Docker:00000Mg:01UTXO:00000000000");
+        checkAllInterface("252","Def:1111Sys:000000000Store:00Docker:00000Mg:0100UTXO:00000000000");
+
+        //添加发行地址权限
+        checkAllInterface("253","Def:1111Sys:000000000Store:00Docker:00000Mg:0010UTXO:00000000000");
+        //注销发行地址权限
+        checkAllInterface("254","Def:1111Sys:000000000Store:00Docker:00000Mg:0001UTXO:00000000000");
 
         //添加及注销归集地址权限
-        checkAllInterface("251,252","Def:1111Sys:000000000Store:00Docker:00000Mg:11UTXO:00000000000");
+        checkAllInterface("251,252,253,254","Def:1111Sys:000000000Store:00Docker:00000Mg:1111UTXO:00000000000");
 
     }
 //@Test
@@ -357,6 +352,11 @@ public class TestPermission {
         Thread.sleep(3000);
 
         permStr=permStr+pFunUTXO.delCollAddr(PRIKEY2,ADDRESS2); //SDK发送UTXO注销归集地址请求
+
+        permStr=permStr+pFunUTXO.addIssAddr(PRIKEY2,ADDRESS2); //SDK发送UTXO添加归集地址-单签地址请求
+        Thread.sleep(3000);
+
+        permStr=permStr+pFunUTXO.delIssAddr(PRIKEY2,ADDRESS2); //SDK发送UTXO注销归集地址请求
         return permStr;//should be a string with a length of 2
     }
 
@@ -407,14 +407,13 @@ public class TestPermission {
 
         permList=permList+"Mg:";
         //管理类接口
-        permList=permList+collManageCheck();//Eg. "Mg:11" a length of 2
+        permList=permList+collManageCheck();//Eg. "Mg:1111" a length of 4
 
         permList=permList+"UTXO:";
         //UTXO类交易权限检查
         permList=permList+utxoPermCheck();//Eg. "UTXO:11111111111" a length of 11
-        //return permList; //Eg. "Def:1111Sys:111111111Store:11Docker:11111Mg:11UTXO:11111111111" a length of 33
+        //return permList; //Eg. "Def:1111Sys:111111111Store:11Docker:11111Mg:1111UTXO:11111111111" a length of 33
         log.info("Right:"+ right +" with Check Str:"+permList);
-        //shellCmd("cd /root/zll/permission/toolkit;./toolkit getpermission -p 10.1.3.246:9300");//添加所有权限
         assertThat(permList, containsString(chkStr));
 
 
