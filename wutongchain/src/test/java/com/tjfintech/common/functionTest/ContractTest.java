@@ -33,6 +33,7 @@ public class ContractTest {
 
     String name=sdf.format(dt)+ RandomUtils.nextInt(100000);
     String version="2.0";
+    String category="docker";
 
     public void testContract() throws Exception{
         installTest();
@@ -61,7 +62,7 @@ public class ContractTest {
         String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";
         String file=readInput(filePath).toString();
         String data = encryptBASE64(file.getBytes());//BASE64编码
-        String response=contract.Install(name,version,data);
+        String response=contract.Install(name,version,category,data);
         String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         assertThat(response,containsString("success"));
         Thread.sleep(SLEEPTIME*15);
@@ -117,7 +118,7 @@ public class ContractTest {
     }
 
     public void destroyTest() throws Exception {
-        String response = contract.Destroy(name, version);
+        String response = contract.Destroy(name, version,category);
         String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         assertThat(response, containsString("success"));
         Thread.sleep(SLEEPTIME);
@@ -132,7 +133,7 @@ public class ContractTest {
         for (int i = 0; i < arg.length; i++) {
             args.add(arg[i]);
         }
-        String response = contract.CreateNewTransaction(name, version, method, args);
+        String response = contract.Invoke(name, version, category,method, args);
         String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         Thread.sleep(SLEEPTIME);
         String result = store.GetTransaction(hash);

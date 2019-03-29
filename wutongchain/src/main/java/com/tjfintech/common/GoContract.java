@@ -33,10 +33,11 @@ public class GoContract implements Contract {
      * @param file  合约内容(base64)
      * @return
      */
-    public String Install(String name,String version,String file){
+    public String Install(String name,String version,String category,String file){
         Map<String,Object>map=new HashMap<>();
         map.put("Name",name);
         map.put("Version",version);
+        map.put("Category",category);
         map.put("File",file);
 
         String result=PostTest.sendPostToJson(SDKADD+"/contract/install",map);
@@ -50,10 +51,11 @@ public class GoContract implements Contract {
 
      * @return
      */
-    public String Destroy(String name,String version){
+    public String Destroy(String name,String version,String category){
         Map<String,Object>map=new HashMap<>();
         map.put("Name",name);
         map.put("Version",version);
+        map.put("Category",category);
 
         String result=PostTest.sendPostToJson(SDKADD+"/contract/destroy",map);
         log.info(result);
@@ -70,6 +72,25 @@ public class GoContract implements Contract {
         Map<String,Object>map=new HashMap<>();
         map.put("Name",name);
         map.put("Version",version);
+        map.put("Method",method);
+        map.put("Args",args);
+        String result=PostTest.sendPostToJson(SDKADD+"/createnewtransaction",map);
+        log.info(result);
+        return result ;
+    }
+
+    /**安装智能合约
+     *
+     * @param name  合约名
+     * @param version  合约版本
+
+     * @return
+     */
+    public String Invoke(String name,String version,String category,String method,List<?> args){
+        Map<String,Object>map=new HashMap<>();
+        map.put("Name",name);
+        map.put("Version",version);
+        map.put("Category",category);
         map.put("Method",method);
         map.put("Args",args);
         String result=PostTest.sendPostToJson(SDKADD+"/createnewtransaction",map);
