@@ -38,12 +38,13 @@ public class SoloTest {
         log.info("发行两种token1000个");
         tokenType = "SOLOTC-"+UtilsClass.Random(6);
         String isResult= soloSign.issueToken(PRIKEY1,tokenType,"10000.123456789","发行token",ADDRESS1);
+        //Thread.sleep(SLEEPTIME);
         tokenType2 = "SOLOTC-"+UtilsClass.Random(6);
         String isResult2= soloSign.issueToken(PRIKEY1,tokenType2,"20000.87654321","发行token",ADDRESS1);
         assertThat(tokenType+"发行token错误",isResult, containsString("200"));
         assertThat(tokenType+"发行token错误",isResult2, containsString("200"));
 
-        Thread.sleep(SLEEPTIME*3);
+        Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中两种token余额");
         String response1 = soloSign.Balance( PRIKEY1, tokenType);
         String response2 = soloSign.Balance( PRIKEY1, tokenType2);
@@ -81,6 +82,10 @@ public class SoloTest {
         String response2 = soloSign.Balance( PRIKEY1, tokenType);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("0"));
+
+        String response4=multiSign.addissueaddress(PRIKEY1,ADDRESS1);
+        assertThat(response4, containsString("200"));
+        Thread.sleep(6000);
     }
 
     /**

@@ -33,7 +33,7 @@ public class TestMgTool {
     TestBuilder testBuilder=TestBuilder.getInstance();
     Store store =testBuilder.getStore();
 
-    String version="201_190326.3";
+    String version="201_190329.2";
     String rpcPort="9300";
     String tcpPort="60030";
     String consType="L";
@@ -249,7 +249,7 @@ public class TestMgTool {
 
 
         //检查配置文件中预设的数据节点，即搭建环境时配置的数据节点
-        chkPeerSimInfoOK("10.1.3.164:9100","60002","dev190307.1",dataType);
+        chkPeerSimInfoOK("10.1.3.247:9400","60012",version,dataType);
 
         //检查未启动或者不存在的节点
         chkPeerSimInfoErr("10.1.3.164:9300","connection refused");
@@ -267,8 +267,8 @@ public class TestMgTool {
         * @param dockerImage 合约版本 //checkinfo[9]
         * @param blockPackTime 打包时间 //checkinfo[10]
         * @param blockSize 区块大小 //checkinfo[11]* */
-        chkPeerDetailsOK("10.1.3.240:9300","60030",version,consType,"LaunchTime:",
-                        "Info","DbPath:","sm2","sm3","Consensus:","2.0","1000","102400");
+        chkPeerDetailsOK("10.1.3.240:9300","60030",version,consType,"2019-",
+                        "Info","peer.db","sm2","sm3","Raft","tjfoc/tjfoc-ccenv 2.0","1000","1");
     }
 
     public void chkPeerSimInfoOK(String queryIPPort,String tcpPort,String version,String Type)throws Exception{
