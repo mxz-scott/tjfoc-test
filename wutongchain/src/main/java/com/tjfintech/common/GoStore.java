@@ -17,7 +17,16 @@ import static com.tjfintech.common.utils.UtilsClass.SDKADD;
 @Slf4j
 public  class GoStore implements Store {
 
+    /**
+     * 获取系统健康状态
+     * @method  GET
+     */
+    public String GetApiHealth(){
+        String result= GetTest.SendGetTojson(SDKADD+"/apihealth");
+        log.info(result);
+        return result;
 
+    }
 
     /**
      * 获取交易详情

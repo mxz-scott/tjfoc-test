@@ -135,4 +135,9 @@ public class JavaStore implements Store {
     public String GetPeerList() {
         return null;
     }
+
+    @Override
+    public String GetApiHealth() {
+        return null;
+    }
 }

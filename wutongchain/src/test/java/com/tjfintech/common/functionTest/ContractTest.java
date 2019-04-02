@@ -35,6 +35,7 @@ public class ContractTest {
     String version="2.0";
     String category="docker";
 
+    @Test
     public void testContract() throws Exception{
         installTest();
         initMobileTest();
@@ -48,7 +49,7 @@ public class ContractTest {
         deleteMobileTest("Mobile8");
         changeMobileCountTest("50","Mobile1");
         String response4 = contract.SearchByKey("Mobile1",name);//SDK发送按key查询请求
-        assertThat(response4,containsString("Count:50"));
+        assertThat(response4,containsString("\\\"count\\\":50"));
 
         getAllMobileTest();
         queryMobileTest("Mobile1");
@@ -153,7 +154,7 @@ public class ContractTest {
         String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";
         String file=readInput(filePath).toString();
         String data = encryptBASE64(file.getBytes());//BASE64编码
-        String response=contract.Install(name,version,data);
+        String response=contract.Install(name,version,category,data);
         String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         assertThat(response,containsString("success"));
         Thread.sleep(SLEEPTIME*10);
@@ -279,7 +280,7 @@ public class ContractTest {
     public void TC011_destroyTest() throws Exception {
         String name = "chenxu";
         String version = "1.0";
-        String response = contract.Destroy(name, version);
+        String response = contract.Destroy(name, version,category);
         String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         assertThat(response, containsString("success"));
         Thread.sleep(SLEEPTIME);

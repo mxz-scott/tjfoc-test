@@ -29,6 +29,7 @@ public class APermfuncDocker {
 
     String errCode="404";
     String errMsg="does not found Permission";
+    String category="docker";
 
     public String retAllow(String checkStr)throws Exception{
         String allow="*";
@@ -50,7 +51,7 @@ public class APermfuncDocker {
         String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";
         String file=readInput(filePath).toString();
         String data = encryptBASE64(file.getBytes());//BASE64编码
-        String response=contract.Install(name,version,data);
+        String response=contract.Install(name,version,category,data);
         return retAllow(response);
     }
 
@@ -59,7 +60,7 @@ public class APermfuncDocker {
      * @throws Exception
      */
     public String destroyContract()throws  Exception{
-        String response=contract.Destroy(name,version);
+        String response=contract.Destroy(name,version,category);
         return retAllow(response);
     }
 

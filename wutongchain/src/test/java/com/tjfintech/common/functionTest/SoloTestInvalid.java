@@ -32,13 +32,17 @@ public class SoloTestInvalid {
     private static String tokenType2;
 
     @Before
+    //@Test
     public void beforeConfig() throws Exception {
         log.info("发行两种token");
+        log.info(ADDRESS1);
+        log.info(PRIKEY1);
         tokenType = "SOLOTC-" + UtilsClass.Random(6);
         String issueInfo1=  soloSign.issueToken(PRIKEY1, tokenType, "100.123456789", tokenType,ADDRESS1);
+        //Thread.sleep(SLEEPTIME);
         tokenType2 = "SOLOTC-" + UtilsClass.Random(6);
         String issueInfo2= soloSign.issueToken(PRIKEY1, tokenType2, "200.87654321", tokenType2,ADDRESS1);
-        Thread.sleep(SLEEPTIME);
+        Thread.sleep(SLEEPTIME*3);
         assertThat(issueInfo1,containsString("200"));
         assertThat(issueInfo2,containsString("200"));
         log.info("查询归集地址中两种token余额");
@@ -61,8 +65,6 @@ public class SoloTestInvalid {
         assertThat(response, containsString("200"));
         assertThat(response2, containsString("500"));
         assertThat(response2,containsString("Duplicate transaction"));
-
-
 
     }
 

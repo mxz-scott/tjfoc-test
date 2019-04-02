@@ -35,4 +35,5 @@ public interface Store {
 
     String GetPeerList();
 
+    String GetApiHealth();
 }

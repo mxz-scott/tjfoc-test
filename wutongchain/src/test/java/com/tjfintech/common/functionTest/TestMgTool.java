@@ -33,7 +33,7 @@ public class TestMgTool {
     TestBuilder testBuilder=TestBuilder.getInstance();
     Store store =testBuilder.getStore();
 
-    String version="201_190329.2";
+    String version="201_190401.2";
     String rpcPort="9300";
     String tcpPort="60030";
     String consType="L";
@@ -699,7 +699,7 @@ public class TestMgTool {
         rsp = setPeerPerm(queryPeerIP,sdkID4,"1,2,3");
         assertEquals(rsp.contains(errRsp), true);
 
-
+        Thread.sleep(3000);
         rsp=getPeerPerm(queryPeerIP,"");
         assertEquals(rsp.contains(sdkID1), true);
         assertEquals(rsp.contains("peermission:[1 2 3]"), true);
@@ -916,10 +916,10 @@ public class TestMgTool {
         queryPeerList(queryPeerIP,2);
 
         //动态加入节点247
-        addConsensusPeer(queryPeerIP,IP_247,tcpPort,"update success");
+        addConsensusPeer(queryPeerIP,IP_247,tcpPort,"peers exceed the limit(2)");
         startPeer(IP_247);
         Thread.sleep(STARTSLEEPTIME);
-        queryPeerList("10.1.3.247:9300",3); //检查节点247已经启动成功
+        queryPeerList("10.1.3.240:9300",2); //检查节点247已经启动成功
 
         quitPeer(queryPeerIP,IP_247,tcpPort);
         Thread.sleep(2000);
@@ -931,7 +931,7 @@ public class TestMgTool {
         shell247.execute("cp /root/zll/permission/toolkit/peer.lic /root/zll/permission/peer/peerTest.lic");
 
         //动态加入节点247
-        addConsensusPeer(queryPeerIP,IP_247,tcpPort,"update success");
+        addConsensusPeer(queryPeerIP,IP_247,tcpPort,"peers exceed the limit(2)");
         startPeer(IP_247);
         Thread.sleep(STARTSLEEPTIME);
         checkParam("./toolkit health -p "+IP_247+":"+rpcPort,"connection error");
