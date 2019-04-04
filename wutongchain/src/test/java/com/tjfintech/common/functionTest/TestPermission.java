@@ -62,15 +62,6 @@ public class TestPermission {
     @Before
     public void beforeTest() throws Exception {
 
-        shellCmd("10.1.3.240","docker rm -f `docker ps -aq`");
-        shellCmd("10.1.3.246","docker rm -f `docker ps -aq`");
-        shellCmd("10.1.3.247","docker rm -f `docker ps -aq`");
-        Thread.sleep(3000);
-        shellCmd("10.1.3.240","docker images|grep latest|awk '{print $3}'|xargs docker rmi");
-        shellCmd("10.1.3.246","docker images|grep latest|awk '{print $3}'|xargs docker rmi");
-        shellCmd("10.1.3.247","docker images|grep latest|awk '{print $3}'|xargs docker rmi");
-        Thread.sleep(3000);
-
         String mValue="999";
         String cmd=preCmd+mValue;
 
