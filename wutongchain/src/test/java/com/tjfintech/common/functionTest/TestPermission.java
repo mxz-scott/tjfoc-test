@@ -129,12 +129,10 @@ public class TestPermission {
     @Test
     public void CheckAll()throws Exception{
         //String mValue="1,2,3,4,5,6,7,8,9,10,21,211,212,22,221,222,223,224,23,231,232,233,234,235,236,24,25,251,252";
-        String mValue="999";
-
-        checkAllInterface(mValue,"Def:1111Sys:111111111Store:11Docker:11111Mg:1111UTXO:11111111111");
-        Thread.sleep(3000);
         checkAllInterface("0","Def:1111Sys:000000000Store:00Docker:00000Mg:0000UTXO:00000000000");
 
+        Thread.sleep(3000);
+        checkAllInterface("999","Def:1111Sys:111111111Store:11Docker:11111Mg:1111UTXO:11111111111");
         Thread.sleep(3000);
     }
 
@@ -373,9 +371,14 @@ public class TestPermission {
 
 
     public void checkAllInterface(String right,String chkStr)throws Exception{
+
         shellCmd(ToolIP,preCmd + right);
         Thread.sleep(3000);
 
+        if(right.equals("0"))
+        {
+            Thread.sleep(3000);
+        }
         String permList="";
         permList=permList+"Def:";
         //默认开启接口检查
