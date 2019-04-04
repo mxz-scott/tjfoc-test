@@ -93,7 +93,7 @@ public class GoContract implements Contract {
         map.put("Category",category);
         map.put("Method",method);
         map.put("Args",args);
-        String result=PostTest.sendPostToJson(SDKADD+"/createnewtransaction",map);
+        String result=PostTest.sendPostToJson(SDKADD+"/contract/invoke",map);
         log.info(result);
         return result ;
     }

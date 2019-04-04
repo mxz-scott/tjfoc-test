@@ -16,9 +16,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
-import static com.tjfintech.common.utils.UtilsClass.encryptBASE64;
-import static com.tjfintech.common.utils.UtilsClass.readInput;
+import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -37,47 +37,172 @@ public class ContractTest {
 
     @Test
     public void testContract() throws Exception{
-        installTest();
-        initMobileTest();
-        String response1 = contract.SearchByKey("Mobile0",name);//SDK发送按key查询请求
-        String response2 = contract.SearchByPrefix("Mo",name);//SDK发送按prefix查询请求
+        String response=null;
+        log.info(name);
+        //检查合约创建
+        response=installTest();
+        assertThat(response,containsString("200"));
+        assertThat(response,containsString("success"));
+        String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
-        createMobileTest();
+        Thread.sleep(SLEEPTIME*5);
+        String response1=store.GetTransaction(hash);
+        assertThat(response1,containsString("200"));
+        assertThat(response1,containsString("success"));
+
+
+        //检查合约交易接口
+        response=initMobileTest();
+        assertThat(response,containsString("200"));
+        Thread.sleep(5000);
+        String response2 = contract.SearchByKey("Mobile0",name);//SDK发送按key查询请求
+        assertThat(response2,containsString("200"));
+        assertThat(response2,containsString("HUAWEI"));
+
+        String response3 = contract.SearchByPrefix("Mo",name);//SDK发送按prefix查询请求
+        assertThat(response3,containsString("200"));
+        assertThat(response3,containsString("Mobile1"));
+
+        response=createMobileTest();
+        assertThat(response,containsString("200"));
+        Thread.sleep(5000);
+        String response4 = contract.SearchByKey("Mobile8",name);//SDK发送按key查询请求
+        assertThat(response4,containsString("200"));
+        assertThat(response4,containsString("xiaomi"));
+
+
+        response=deleteMobileTest("Mobile8");
+        assertThat(response,containsString("200"));
+        Thread.sleep(5000);
+        String response5 = contract.SearchByPrefix("Mo",name);//SDK发送按prefix查询请求
+        assertThat(response5,containsString("200"));
+        assertThat(response5,containsString("Mobile1"));
+        assertEquals(response5.contains("Mobile8"),false);
+
+        response=changeMobileCountTest("50","Mobile1");
+        assertThat(response,containsString("200"));
+        Thread.sleep(5000);
+        String response6 = contract.SearchByKey("Mobile1",name);//SDK发送按key查询请求
+        assertThat(response6,containsString("\\\"count\\\":50"));
+
+        response=getAllMobileTest();
+        assertThat(response,containsString("200"));
         Thread.sleep(4000);
-        String response3 = contract.SearchByKey("Mobile8",name);//SDK发送按key查询请求
+        String hash1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        response=store.GetTransaction(hash1);
+        assertThat(response,containsString("Mobile1"));
+        assertThat(response,containsString("Mobile2"));
+        assertThat(response,containsString("Mobile3"));
 
-        deleteMobileTest("Mobile8");
-        changeMobileCountTest("50","Mobile1");
-        String response4 = contract.SearchByKey("Mobile1",name);//SDK发送按key查询请求
-        assertThat(response4,containsString("\\\"count\\\":50"));
 
-        getAllMobileTest();
-        queryMobileTest("Mobile1");
+        response=queryMobileTest("Mobile1");
+        assertThat(response,containsString("200"));
+        Thread.sleep(3000);
+        String hash2 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        response=store.GetTransaction(hash2);
+        assertThat(response,containsString("iphoneXS"));
 
-        eventTest();
-        destroyTest();
+        response=eventTest();
+        assertThat(response,containsString("200"));
+
+        //测试2.0.1兼容CreateNewTransaction接口 默认category为docker
+        invokeUpdate("Mobile1");
+
+        //销毁合约
+        response=destroyTest();
+        assertThat(response,containsString("200"));
+        Thread.sleep(3000);
+        response=queryMobileTest("Mobile1");
+        assertThat(response,containsString("200"));
+        Thread.sleep(3000);
+        String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        response=store.GetTransaction(hash3);
+        assertThat(response,containsString("doesn't exist"));
+
+
     }
 
+    @Test
+    public void InvalidTestCtr()throws Exception{
 
-    public void installTest() throws Exception {
-        String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";
+        String response=null;
+        category="";
+        response=installTest();
+        assertThat(response,containsString("error Category or empty Category!!"));
+
+        response=queryMobileTest("Mobile1");
+        assertThat(response,containsString("error Category or empty Category!!"));
+
+        response=destroyTest();
+        assertThat(response,containsString("error Category or empty Category!!"));
+
+        category="222";
+        response=installTest();
+        assertThat(response,containsString("error Category or empty Category!!"));
+
+        response=queryMobileTest("Mobile1");
+        assertThat(response,containsString("error Category or empty Category!!"));
+
+        response=destroyTest();
+        assertThat(response,containsString("error Category or empty Category!!"));
+    }
+
+    //@Test
+    public void CrossContractTx()throws Exception{
+
+        String response=null;
+        category="docker";
+        String name1=sdf.format(dt)+ RandomUtils.nextInt(100000);
+        String name2=sdf.format(dt)+ RandomUtils.nextInt(100000);
+        assertEquals(name1.equals(name2),false);
+
+        //创建第一个合约
+        name=name1;
+        response=installTest();
+        assertThat(response,containsString("200"));
+        Thread.sleep(SLEEPTIME*5);
+        response=initMobileTest();
+        assertThat(response,containsString("200"));
+        Thread.sleep(5000);
+        String response2 = contract.SearchByKey("Mobile0",name);//SDK发送按key查询请求
+        assertThat(response2,containsString("200"));
+        assertThat(response2,containsString("HUAWEI"));
+
+
+        //创建第二个合约
+        name=name2;
+        dockerFileName="simple.go";
+        response=installTest();
+        assertThat(response,containsString("200"));
+        Thread.sleep(SLEEPTIME*5);
+        response=initMobileTest();
+        assertThat(response,containsString("200"));
+        Thread.sleep(5000);
+        String response3 = contract.SearchByKey("Mobile0",name);//SDK发送按key查询请求
+        assertThat(response3,containsString("200"));
+        assertThat(response3,containsString("HUAWEI"));
+
+        //跨合约调用
+
+
+
+    }
+
+    public String installTest() throws Exception {
+        //String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";
+        String filePath = System.getProperty("user.dir") + "/src/main/resources/"+dockerFileName;
         String file=readInput(filePath).toString();
         String data = encryptBASE64(file.getBytes());//BASE64编码
         String response=contract.Install(name,version,category,data);
-        String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
-        assertThat(response,containsString("success"));
-        Thread.sleep(SLEEPTIME*15);
-        String response2=store.GetTransaction(hash);
-        assertThat(response2,containsString("200"));
-        assertThat(response2,containsString("success"));
+        return response;
     }
 
-    public void initMobileTest() throws Exception {
+    public String initMobileTest() throws Exception {
         String method ="initMobile";
-        invoke1(method);
+        return invokeNew(method);
     }
 
-    public void createMobileTest() throws Exception {
+    public String createMobileTest() throws Exception {
         String method = "createMobile";
         String brand = "xiaomi";
         String model = "Mix2S";
@@ -85,56 +210,65 @@ public class ContractTest {
         String count = "black";
         String color = "123";
         String mobileID = "Mobile8";
-        invoke1(method, brand, model, price, color, count, mobileID);
+        return invokeNew(method, brand, model, price, color, count, mobileID);
     }
 
-    public void deleteMobileTest(String arg) throws Exception{
+    public String deleteMobileTest(String arg) throws Exception{
         String method ="deleteMobile";
         //String arg="Mobile5";
-        invoke1(method,arg);
+        return invokeNew(method,arg);
     }
 
-    public void changeMobileCountTest(String count,String mobile) throws Exception{
+    public String changeMobileCountTest(String count,String mobile) throws Exception{
         String method="changeMobileCount";
 //        String arg="55";
 //        String arg2="Mobile1";
-        invoke1(method,count,mobile);
+        return invokeNew(method,count,mobile);
     }
 
-    public void getAllMobileTest() throws Exception{
+    public String getAllMobileTest() throws Exception{
         String method="getAllMobile";
-        invoke1(method);
+        return invokeNew(method);
     }
 
-    public void eventTest() throws Exception {
+    public String eventTest() throws Exception {
         String method = "event";
-        invoke1(method);
+        return invokeNew(method);
     }
 
-    public void queryMobileTest(String mobile) throws Exception {
+    public String queryMobileTest(String mobile) throws Exception {
         String method = "queryMobile";
         //String arg = "Mobile8";
-        invoke1(method, mobile);
+        return invokeNew(method, mobile);
 
     }
 
-    public void destroyTest() throws Exception {
+    public String destroyTest() throws Exception {
         String response = contract.Destroy(name, version,category);
-        String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
-        assertThat(response, containsString("success"));
-        Thread.sleep(SLEEPTIME);
-        String response2 = store.GetTransaction(hash);
-        assertThat(response2, containsString("200"));
-        assertThat(response2, containsString("success"));
+        return response;
 
     }
 
-    public void invoke1(String method, String... arg) throws Exception {
+    public String invokeNew(String method, String... arg) throws Exception {
         List<String> args = new LinkedList<>();
         for (int i = 0; i < arg.length; i++) {
             args.add(arg[i]);
         }
         String response = contract.Invoke(name, version, category,method, args);
+//        String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+//        Thread.sleep(SLEEPTIME);
+//        String result = store.GetTransaction(hash);
+//        assertThat(result, containsString("200"));
+//        assertThat(result, containsString("success"));
+        return response;
+    }
+
+    public void invokeUpdate(String method, String... arg) throws Exception {
+        List<String> args = new LinkedList<>();
+        for (int i = 0; i < arg.length; i++) {
+            args.add(arg[i]);
+        }
+        String response = contract.CreateNewTransaction(name, version, method, args);
         String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         Thread.sleep(SLEEPTIME);
         String result = store.GetTransaction(hash);
@@ -147,7 +281,7 @@ public class ContractTest {
      * 安装合约
      * @throws Exception
      */
-    @Test
+   // @Test
     public void TC001_installTest() throws Exception {
         String name="chenxu";//+ Random(5);
         String version="1.0";
@@ -166,7 +300,7 @@ public class ContractTest {
      * 调用前需初始化
      * @throws Exception
      */
-    @Test
+    //@Test
     public void TC002_initTest() throws Exception {
         String name="chenxu";
         String version="1.0";
@@ -189,7 +323,7 @@ public class ContractTest {
      * 合约自定义初始化
      * @throws Exception
      */
-    @Test
+    //@Test
     public void TC003_initMobileTest() throws Exception {
         String method ="initMobile";
         invoke(method);
@@ -201,7 +335,7 @@ public class ContractTest {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     public void TC004_createMobileTest() throws Exception {
         String method = "createMobile";
         String brand = "xiaomi";
@@ -217,7 +351,7 @@ public class ContractTest {
      * 删除指定手机信息。只删除世界状况中信息。链上信息仍存在
      * @throws Exception
      */
-    @Test
+    //@Test
     public void TC005_deleteMobileTest() throws Exception{
         String method ="deleteMobile";
         String arg="Mobile5";
@@ -228,7 +362,7 @@ public class ContractTest {
      * 修改指定ID的手机数量信息
      * @throws Exception
      */
-    @Test
+    //@Test
     public void TC006_changeMobileCountTest() throws Exception{
         String method="changeMobileCount";
         String arg="55";
@@ -240,7 +374,7 @@ public class ContractTest {
      * 遍历所有手机信息
      * @throws Exception
      */
-    @Test
+   // @Test
     public void TC007_getAllMobileTest() throws Exception{
         String method="getAllMobile";
 
@@ -252,7 +386,7 @@ public class ContractTest {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     public void TC008_eventTest() throws Exception {
         String method = "event";
         invoke(method);
@@ -262,7 +396,7 @@ public class ContractTest {
      * 查询指定ID的手机信息
      * @throws Exception
      */
-    @Test
+    //@Test
     public void TC009_queryMobileTest() throws Exception {
         String method = "queryMobile";
         String arg = "Mobile8";
@@ -276,7 +410,7 @@ public class ContractTest {
      *
      * @throws Exception
      */
-    @Test
+    //@Test
     public void TC011_destroyTest() throws Exception {
         String name = "chenxu";
         String version = "1.0";

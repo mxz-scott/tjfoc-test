@@ -37,6 +37,7 @@ public class Shell {
      * @return
      */
     public int execute(final String command) {
+        stdout.clear();
         int returnCode = 0;
         JSch jsch = new JSch();
         MyUserInfo userInfo = new MyUserInfo();

@@ -14,8 +14,11 @@ import java.util.*;
 @Slf4j
 public class UtilsClass {
     //public static final String SDKADD="http://10.1.3.246:7878";
-    public static final String SDKADD="http://10.1.3.240:7777";
-    // public static final String SDKADD="http://180.101.204.86:7878";
+    public static final String SDKADD="http://10.1.3.247:7777";
+     //public static final String SDKADD="http://180.101.204.86:7878";
+     //public static final String SDKADD="http://10.1.3.165:8888";
+     //public static final String SDKADD="http://10.1.3.166:8888";
+
      public final static String  ADDRESS1 = "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo";
      public final static String  ADDRESS2 = "3UycKc8qvVWpVcBr3ipNqDC9oZPd86wj3qSJ6GMbLrVPgeqVwY";
      public final static String  ADDRESS3 = "3r1vxdDjkg9uVke2YdaPTjmWVjV2bsVmySiU99hYuCUjLFYDFb";
@@ -62,9 +65,24 @@ public class UtilsClass {
     public static MulitAccount ImputationAccount=new MulitAccount(IMPPUTIONADD,PUBKEY4,PUBKEY5,PRIKEY4,PRIKEY5);
 
 
+   //add parameters for manage tool
+    public static final String PEER1IP="10.1.3.240";
+    public static final String PEER2IP="10.1.3.246";
+    public static final String PEER3IP="10.1.3.247";
+    public static final String PEER1RPCPort="9300";
+    public static final String PEER2RPCPort="9300";
+    public static final String PEER3RPCPort="9300";
+    public static String PEER1MAC="02:42:fc:a2:5b:1b";
+    public static String PEER2MAC="02:42:c0:31:6b:5c";
+    public static String PEER3MAC="02:42:dd:6c:4a:92";
+    public static final String version="201_190403.1";
+    public static final String USERNAME="root";
+    public static final String PASSWD="root";
+    //节点、SDK、Toolkit对等目录放置于PTPATH目录下
+    public static final String PTPATH="/root/zll/permission/";
+    public  static String SDKID=null;
 
-
-
+    public static String dockerFileName="simple.go";
 
 
 
@@ -197,6 +215,37 @@ public class UtilsClass {
     public static byte[] decryptBASE64(String key) throws Exception {
         return (new BASE64Decoder()).decodeBuffer(key);
     }
+    public static String getSDKID() {
+        String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
+        Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
 
+        shellSDK.execute("cd "+PTPATH+"toolkit;"+"./toolkit getid -p "+PTPATH+"sdk1/auth/key.pem");
 
+        ArrayList<String> stdout3 = shellSDK.getStandardOutput();
+        for (String str1 : stdout3){
+            if(str1.contains("id:"))
+            {
+                SDKID=str1.split(":")[1];
+                break;
+            }
+        }
+        log.info("SDK "+sdkIP+" ID:\n"+SDKID);
+        return SDKID;
+    }
+
+    public static String getMACAddr(String IP,String userName,String passWd) {
+        Shell shellSDK=new Shell(IP,userName,passWd);
+        String MACAddr=null;
+        shellSDK.execute("ifconfig");
+        ArrayList<String> stdout3 = shellSDK.getStandardOutput();
+        for (String str1 : stdout3){
+            if(str1.contains("HWaddr"))
+            {
+                MACAddr=str1.substring(str1.indexOf("HWaddr")+7);
+                break;
+            }
+        }
+        log.info("IP "+IP+" with MAC "+MACAddr);
+        return MACAddr;
+    }
 }

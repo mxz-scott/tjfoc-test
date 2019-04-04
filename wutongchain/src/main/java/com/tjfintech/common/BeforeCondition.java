@@ -22,6 +22,54 @@ public class BeforeCondition {
     TestBuilder testBuilder = TestBuilder.getInstance();
     MultiSign multiSign = testBuilder.getMultiSign();
 
+
+    public void initTest()throws Exception{
+
+        String toolPath="cd "+PTPATH+"toolkit;";
+        String exeCmd="./toolkit permission ";
+
+        SDKID=getSDKID();
+        PEER1MAC=getMACAddr(PEER1IP,USERNAME,PASSWD).trim();
+        PEER2MAC=getMACAddr(PEER2IP,USERNAME,PASSWD).trim();
+        PEER3MAC=getMACAddr(PEER3IP,USERNAME,PASSWD).trim();
+
+        String preCmd=toolPath+exeCmd+"-p "+PEER1RPCPort+" -d "+SDKID+" -m ";
+        String getPerm=toolPath+"./toolkit getpermission -p "+PEER1RPCPort;
+
+        Shell shellPeer1=new Shell(PEER1IP,USERNAME,PASSWD);
+        int iFlag=0;
+        shellPeer1.execute(getPerm);
+        ArrayList<String> stdout1 = shellPeer1.getStandardOutput();
+        String resp = StringUtils.join(stdout1,"\n");
+        log.info(resp);
+        assertEquals(resp.contains("失败"), false);
+
+        if(resp.contains(SDKID)) {
+            for (String str1 : stdout1){
+                if(str1.contains(SDKID))
+                    break;
+                iFlag++;
+                //assertEquals(str.contains("FuncUpdatePeerPermission success:  true"),true);
+            }
+            log.info(stdout1.get(iFlag+1));
+            if(stdout1.get(iFlag+1).contains("[1 2 3 4 5 6 7 8 9 10 21 22 23 24 25 211 212 221 222 223 224 231 232 233 234 235 236 251 252 253 254]")==false) {
+                shellPeer1.execute(preCmd + "999");
+                ArrayList<String> stdout = shellPeer1.getStandardOutput();
+                resp = StringUtils.join(stdout1,"\n");
+                log.info(resp);
+                assertEquals(resp.contains(" [1 2 3 4 5 6 7 8 9 10 21 211 212 22 221 222 223 224 23 231 232 233 234 235 236 24 25 251 252 253 254]"),true);
+                Thread.sleep(6000);
+            }
+        }
+        else {
+            shellPeer1.execute(preCmd + "999");
+            ArrayList<String> stdout2 = shellPeer1.getStandardOutput();
+            resp = StringUtils.join(stdout2,"\n");
+            log.info(resp);
+            assertEquals(resp.contains(" [1 2 3 4 5 6 7 8 9 10 21 211 212 22 221 222 223 224 23 231 232 233 234 235 236 24 25 251 252 253 254]"),true);
+            Thread.sleep(6000);
+        }
+    }
     /**
      * 创建归集地址
      * 第一个参数为私钥。后续...参数为地址
@@ -29,7 +77,7 @@ public class BeforeCondition {
     @Test
     public  void collAddressTest() throws Exception{
 
-        addPermission();
+        initTest();
 
         String response= multiSign.collAddress(PRIKEY1,IMPPUTIONADD);
         String response2= multiSign.collAddress(PRIKEY1,MULITADD3);
@@ -59,56 +107,13 @@ public class BeforeCondition {
 
     }
 
-    public void addPermission()throws Exception{
-        Shell shell1=new Shell("10.1.3.240","root","root");
 
-        String toolPath="cd /root/zll/permission/toolkit;";
-        String exeCmd="./toolkit permission ";
-        String peerIP="10.1.3.240:9300";
-        String sdkID="29dd9b8931e7a82b5c4067b0c80a1d53eba100bb3625f580558b509f01132ada60c5fe45fed42a9699c686e3cdabcb22a3441583d230fd9fd0e1db4928f81cd4";
-        String preCmd=toolPath+exeCmd+"-p "+peerIP+" -d "+sdkID+" -m ";
-
-        String getPerm=toolPath+"./toolkit getpermission -p "+peerIP;
-
-        int iFlag=0;
-        shell1.execute(getPerm);
-        ArrayList<String> stdout1 = shell1.getStandardOutput();
-        String resp = StringUtils.join(stdout1,"\n");
-        log.info(resp);
-        assertEquals(resp.contains("失败"), false);
-
-        if(resp.contains(sdkID)) {
-            for (String str1 : stdout1){
-                if(str1.contains(sdkID))
-                    break;
-                iFlag++;
-                //assertEquals(str.contains("FuncUpdatePeerPermission success:  true"),true);
-            }
-            log.info(stdout1.get(iFlag+1));
-            if(stdout1.get(iFlag+1).contains("[1 2 3 4 5 6 7 8 9 10 21 22 23 24 25 211 212 221 222 223 224 231 232 233 234 235 236 251 252 253 254]")==false) {
-                shell1.execute(preCmd + "999");
-                ArrayList<String> stdout = shell1.getStandardOutput();
-                resp = StringUtils.join(stdout1,"\n");
-                log.info(resp);
-                assertEquals(resp.contains(" [1 2 3 4 5 6 7 8 9 10 21 211 212 22 221 222 223 224 23 231 232 233 234 235 236 24 25 251 252 253 254]"),true);
-                Thread.sleep(6000);
-            }
-        }
-        else {
-            shell1.execute(preCmd + "999");
-            ArrayList<String> stdout2 = shell1.getStandardOutput();
-            resp = StringUtils.join(stdout2,"\n");
-            log.info(resp);
-            assertEquals(resp.contains(" [1 2 3 4 5 6 7 8 9 10 21 211 212 22 221 222 223 224 23 231 232 233 234 235 236 24 25 251 252 253 254]"),true);
-            Thread.sleep(6000);
-        }
-    }
     /**
      * 创建多签地址
      * 当数据库被清，库中没多签地址信息时候调用。
      */
     @Test
-    public void TC12_createAdd() {
+    public void createAdd() {
         int M = 3;
         Map<String, Object> map = new HashMap<>();
         map.put("1", PUBKEY1);

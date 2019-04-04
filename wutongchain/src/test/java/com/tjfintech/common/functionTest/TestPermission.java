@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest;
 
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
@@ -28,9 +29,8 @@ public class TestPermission {
     public static final String USERNAME = "root";
     public static final String PASSWORD = "root";
     TestBuilder testBuilder=TestBuilder.getInstance();
-    //SoloSign soloSign=testBuilder.getSoloSign();
-    MultiSign multiSign=testBuilder.getMultiSign();
     Store store =testBuilder.getStore();
+    BeforeCondition bf=new BeforeCondition();
 
     APermfuncSys pFun1 =new APermfuncSys();
     APermfuncDocker pFunCt =new APermfuncDocker();
@@ -51,29 +51,30 @@ public class TestPermission {
     String glbSoloToken="";//ADDRESS1的全局预设发行token
 
 
-    String toolPath="cd /root/zll/permission/toolkit;";
+    String toolPath="cd "+PTPATH+"toolkit;";
     String exeCmd="./toolkit permission ";
-    String peerIP="10.1.3.240:9300";
-    String sdkID="29dd9b8931e7a82b5c4067b0c80a1d53eba100bb3625f580558b509f01132ada60c5fe45fed42a9699c686e3cdabcb22a3441583d230fd9fd0e1db4928f81cd4";
+    String peerIP="9300";
+    String sdkID= UtilsClass.getSDKID();
     //String sdkID="144166a82d85a96d79388e987a456ba70db683d7105505c38d768829c702eba6717a447c5e858165faefdaa847b3558a4b72db87fd379ac5154ad8fc4f3e13d2";
     //String sdkID="7d8c8eb266a6a445cde55e086c2ee63e577e3ff8ba5724ff2090a2a691384cbf87a881bc690695836c3e99424756bf3a3726bc0ae6c66795e51d351e6de7c0db";
     String preCmd=toolPath+exeCmd+"-p "+peerIP+" -d "+sdkID+" -m ";
 
-
     @Before
     public void beforeTest() throws Exception {
-        //String mValue="1,2,3,4,5,6,7,8,9,10,21,211,212,22,221,222,223,224,23,231,232,233,234,235,236,24,25,251,252";
+
+        shellCmd("10.1.3.240","docker rm -f `docker ps -aq`");
+        shellCmd("10.1.3.246","docker rm -f `docker ps -aq`");
+        shellCmd("10.1.3.247","docker rm -f `docker ps -aq`");
+        Thread.sleep(3000);
+        shellCmd("10.1.3.240","docker images|grep latest|awk '{print $3}'|xargs docker rmi");
+        shellCmd("10.1.3.246","docker images|grep latest|awk '{print $3}'|xargs docker rmi");
+        shellCmd("10.1.3.247","docker images|grep latest|awk '{print $3}'|xargs docker rmi");
+        Thread.sleep(3000);
+
         String mValue="999";
         String cmd=preCmd+mValue;
 
-        shellCmd(cmd);//添加所有权限
-//
-//        pFunCt.name="0215"+ RandomUtils.nextInt(100000);
-//        glbCtName=pFunCt.name;
-//        pFunCt.version="2.0";
-//        pFunCt.installContract();
-//        Thread.sleep(40000);
-//        pFunCt.initMobileTest();
+        shellCmd(ToolIP,cmd);//添加所有权限
 
         pFun1.Data="GlobalStore:"+UtilsClass.Random(4);
         pFun1.createStore();  //SDK发送基础存证交易请求
@@ -107,7 +108,7 @@ public class TestPermission {
         glbSoloToken="Glb1So"+UtilsClass.Random(4);
         glbMultiToken4="Glb1Mu4"+UtilsClass.Random(4);
 
-        pFunUTXO.issAmount="200";
+        pFunUTXO.issAmount="300";
 
         pFunUTXO.soloIssueToken(PRIKEY1,glbSoloToken,ADDRESS1); //SDK发送UTXO - Token单签发行请求
         Thread.sleep(6000);
@@ -148,7 +149,6 @@ public class TestPermission {
 
     @Test
     public void chkSys1by1()throws Exception{
-        //shellCmd("cd /root/zll/permission/toolkit;./toolkit permission -p 10.1.3.246:9300 -d 144166a82d85a96d79388e987a456ba70db683d7105505c38d768829c702eba6717a447c5e858165faefdaa847b3558a4b72db87fd379ac5154ad8fc4f3e13d2  -m 1");//添加所有权限
         String[] mArray={"5","6","7","9","10","11","300"};
 
         checkAllInterface("1","Def:1111Sys:100000000Store:00Docker:00000Mg:0000UTXO:00000000000");
@@ -178,12 +178,10 @@ public class TestPermission {
 
     @Test
     public void ChkDocker1by1() throws Exception{
-
-        //String mValue="1,2,3,4,5,6,7,8,9,10,21,211,212,22,221,222,223,224,23,231,232,233,234,235,236,24,25,251,252";
         String mValue="999";
         String cmd=preCmd+mValue;
 
-        shellCmd(cmd);//添加所有权限
+        shellCmd(ToolIP,cmd);//添加所有权限
 
         pFunCt.name="0220"+ RandomUtils.nextInt(100000);
         glbCtName=pFunCt.name;
@@ -226,8 +224,8 @@ public class TestPermission {
         //发行权限
         checkAllInterface("231","Def:1111Sys:000000000Store:00Docker:00000Mg:0000UTXO:00000111000");
 
-        //转账权限 需要根据SDK修改适配
-        checkAllInterface("232","Def:1111Sys:000000000Store:00Docker:00000Mg:0000UTXO:11000000000");
+        //转账权限
+        checkAllInterface("232","Def:1111Sys:000000000Store:00Docker:00000Mg:0000UTXO:00000000000");
 
         //冻结权限
         checkAllInterface("233","Def:1111Sys:000000000Store:00Docker:00000Mg:0000UTXO:00010000000");
@@ -368,9 +366,9 @@ public class TestPermission {
         return permStr;//should be a string with a length of 2
     }
 
-    public void shellCmd(String tempCmd) throws  Exception{
+    public void shellCmd(String shellIP,String tempCmd) throws  Exception{
         //开启shell远程下指令开启
-        Shell shell1=new Shell(ToolIP,USERNAME,PASSWORD);
+        Shell shell1=new Shell(shellIP,USERNAME,PASSWORD);
         //String cmd1="cd zll;ls";//替换为权限命令
         shell1.execute(tempCmd);
         ArrayList<String> stdout = shell1.getStandardOutput();
@@ -384,9 +382,9 @@ public class TestPermission {
 
 
     public void checkAllInterface(String right,String chkStr)throws Exception{
-        shellCmd(preCmd + right);
+        shellCmd(ToolIP,preCmd + right);
         Thread.sleep(3000);
-        //shellCmd("cd /root/zll/permission/toolkit;./toolkit getpermission -p 10.1.3.246:9300");//添加所有权限
+
         String permList="";
         permList=permList+"Def:";
         //默认开启接口检查
@@ -421,34 +419,35 @@ public class TestPermission {
 
     @Test
     public void pConfTest()throws Exception{
-        String peerIp1="10.1.3.240:9300";
-        String peerIP2="10.1.3.246:9300";
-        String nonIp="10.1.3.247:9300";
+        String peerIP240="10.1.3.240:9300";
+        String peerIP246="10.1.3.246:9300";
+        String nonIP247="10.1.3.247:9300";
 
-        String cmd1=toolPath+exeCmd+"-p "+peerIp1+" -d "+sdkID+" -m ";
-        String cmd2=toolPath+exeCmd+"-p "+peerIP2+" -d "+sdkID+" -m ";
-        String cmd3=toolPath+exeCmd+"-p "+nonIp+" -d "+sdkID+" -m ";
+        String cmd1=toolPath+exeCmd+"-p "+peerIP240.split(":")[1]+" -d "+sdkID+" -m ";
+        String cmd2=toolPath+exeCmd+"-p "+peerIP246.split(":")[1]+" -d "+sdkID+" -m ";
+        String cmd3=toolPath+exeCmd+"-p "+nonIP247.split(":")[1]+" -d "+sdkID+" -m ";
 
         //依次向系统中不同的节点发送权限更新命令，以后一个权限更新为主
-        shellCmd(cmd1+"1");
-        shellCmd(cmd2+"211");
+        shellCmd(peerIP240.split(":")[0],cmd1+"1");
+        shellCmd(peerIP246.split(":")[0],cmd2+"211");
         assertThat(pFun1.getHeight(), containsString("0"));
         assertThat(pFun1.createStore(), containsString("1"));
 
         //权限设置-p依次为两个区块系统中的两个节点，sdk最终权限以同系统设置为准
-        shellCmd(cmd1+"1");
-        shellCmd(cmd3+"211");
+        shellCmd(peerIP240.split(":")[0],cmd1+"1");
+        shellCmd(nonIP247.split(":")[0],cmd3+"211");
         assertThat(pFun1.getHeight(), containsString("1"));
         assertThat(pFun1.createStore(), containsString("0"));
 
         //权限设置通知的节点与SDK配置的节点不一致，权限设置有效
-        shellCmd("cd /root/zll/permission/sdk1/conf;cp config1.toml config.toml");//配置文件中仅配置246作为发送节点
-        shellCmd("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellCmd("sh /root/zll/permission/sdk1/start.sh");
+        String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
+        shellCmd(sdkIP,"cd /root/zll/permission/sdk1/conf;cp config1.toml config.toml");//配置文件中仅配置246作为发送节点
+        shellCmd(sdkIP,"ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellCmd(sdkIP,"sh /root/zll/permission/sdk1/start.sh");
         //shellCmd("cd /root/zll/permission/sdk1;nohub httpservice &");
         Thread.sleep(5000);
-        shellCmd(cmd2+"211");//向节点246发送权限变更通知
-        shellCmd("cd /root/zll/permission/sdk1/conf;cp config2.toml config.toml");//恢复配置文件中的节点配置
+        shellCmd(peerIP246.split(":")[0],cmd2+"211");//向节点246发送权限变更通知
+        shellCmd(sdkIP,"cd /root/zll/permission/sdk1/conf;cp config2.toml config.toml");//恢复配置文件中的节点配置
         assertThat(pFun1.createStore(), containsString("1"));
 
 

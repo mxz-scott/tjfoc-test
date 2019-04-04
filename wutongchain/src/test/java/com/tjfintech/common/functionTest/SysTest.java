@@ -6,6 +6,7 @@ import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -27,26 +28,52 @@ public class SysTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
     String mongoIP="10.1.3.246";
-    String mongoID="5adda58c4778";
+    String mongoID="e5b4023db787";
     String mysqlIP="10.1.3.164";
 
+    public void startMongo()throws Exception{
+        Shell shellMongo=new Shell(mongoIP,USERNAME,PASSWD);
+        shellMongo.execute("docker ps -a");
+        ArrayList<String> stdout = shellMongo.getStandardOutput();
+        String response = StringUtils.join(stdout,"\n");
+        log.info("\n"+response);
+        if(response.contains(mongoID)==false)
+        {
+            if(response.contains("mongo"))
+            {
+                shellMongo.execute("docker ps -a |grep mongo|awk '{print $3");
+                ArrayList<String> stdout1 = shellMongo.getStandardOutput();
+                mongoID=stdout1.get(0).trim();
+            }
+            else
+            {
+                shellMongo.execute("docker run --name mongo -p 27017:27017 -v /data/database/mongotest:/data -d mongo:3.6");
+                shellMongo.execute("docker ps -a |grep mongo|awk '{print $3");
+                ArrayList<String> stdout1 = shellMongo.getStandardOutput();
+                mongoID=stdout1.get(0).trim();
+            }
+        }
+
+    }
 
     @Test
     public void asetConfigMongoAndStop() throws Exception {
+        startMongo();
+
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         log.info(sdkIP);
 
-        Shell shellSDK=new Shell(sdkIP,"root","root");
-        Shell shellMongo=new Shell(mongoIP,"root","root");
+        Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
+        Shell shellMongo=new Shell(mongoIP,USERNAME,PASSWD);
 
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellSDK.execute("cp /root/zll/chain2.0.1/sdk/conf/configMongo.toml /root/zll/chain2.0.1/sdk/conf/config.toml");
+        shellSDK.execute("cp /root/zll/permission/sdk1/conf/configMongo.toml /root/zll/permission/sdk1/conf/config.toml");
 
         shellMongo.execute("docker restart "+mongoID);
         Thread.sleep(6000);
-        shellSDK.execute("sh /root/zll/chain2.0.1/sdk/start.sh");
+        shellSDK.execute("sh /root/zll/permission/sdk1/start.sh");
         Thread.sleep(6000);
 
         String response= store.GetApiHealth();
@@ -84,11 +111,11 @@ public class SysTest {
 
         //系统配置数据库为mysql时，且数据库正常进行检查
         shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellSDK.execute("cp /root/zll/chain2.0.1/sdk/conf/configMysql.toml /root/zll/chain2.0.1/sdk/conf/config.toml");
+        shellSDK.execute("cp /root/zll/permission/sdk1/conf/configMysql.toml /root/zll/permission/sdk1/conf/config.toml");
 
         shellMysql.execute("service mysql restart");
         Thread.sleep(4000);
-        shellSDK.execute("sh /root/zll/chain2.0.1/sdk/start.sh");
+        shellSDK.execute("sh /root/zll/permission/sdk1/start.sh");
         Thread.sleep(6000);
 
         String response4= store.GetApiHealth();
@@ -113,6 +140,8 @@ public class SysTest {
 
     @Test
     public void esetConfigMongoMysqlAndStop() throws Exception {
+        startMongo();
+
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         log.info(sdkIP);
 
@@ -122,11 +151,11 @@ public class SysTest {
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellSDK.execute("cp /root/zll/chain2.0.1/sdk/conf/configMongoMysql.toml /root/zll/chain2.0.1/sdk/conf/config.toml");
+        shellSDK.execute("cp /root/zll/permission/sdk1/conf/configMongoMysql.toml /root/zll/permission/sdk1/conf/config.toml");
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");
         Thread.sleep(6000);
-        shellSDK.execute("sh /root/zll/chain2.0.1/sdk/start.sh");
+        shellSDK.execute("sh /root/zll/permission/sdk1/start.sh");
         Thread.sleep(6000);
 
 
@@ -165,6 +194,8 @@ public class SysTest {
 
     @Test
     public void fsetConfigMysqlMongoAndStop() throws Exception {
+        startMongo();
+
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         log.info(sdkIP);
 
@@ -174,12 +205,12 @@ public class SysTest {
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellSDK.execute("cp /root/zll/chain2.0.1/sdk/conf/configMysqlMongo.toml /root/zll/chain2.0.1/sdk/conf/config.toml");
+        shellSDK.execute("cp /root/zll/permission/sdk1/conf/configMysqlMongo.toml /root/zll/permission/sdk1/conf/config.toml");
 
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");
         Thread.sleep(6000);
-        shellSDK.execute("sh /root/zll/chain2.0.1/sdk/start.sh");
+        shellSDK.execute("sh /root/zll/permission/sdk1/start.sh");
         Thread.sleep(6000);
 
         String response4= store.GetApiHealth();
@@ -222,12 +253,12 @@ public class SysTest {
         Shell shellMysql=new Shell(mysqlIP,"root","root");
 
         shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellSDK.execute("cp /root/zll/chain2.0.1/sdk/conf/configOK.toml /root/zll/chain2.0.1/sdk/conf/config.toml");
+        shellSDK.execute("cp /root/zll/permission/sdk1/conf/configOK.toml /root/zll/permission/sdk1/conf/config.toml");
 
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");
         Thread.sleep(1000);
-        shellSDK.execute("sh /root/zll/chain2.0.1/sdk/start.sh");
+        shellSDK.execute("sh /root/zll/permission/sdk1/start.sh");
         Thread.sleep(6000);
 
         String response= store.GetApiHealth();
@@ -236,31 +267,5 @@ public class SysTest {
 
 
     }
-
-  // @After
-   //@Test
-    public void recoverConfigEn()throws Exception{
-        String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
-        log.info(sdkIP);
-        Shell shellSDK=new Shell(sdkIP,"root","root");
-        Shell shellMongo=new Shell(mongoIP,"root","root");
-        Shell shellMysql=new Shell(mysqlIP,"root","root");
-
-        shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellSDK.execute("cp /root/zll/chain2.0.1/sdk/conf/configOK.toml /root/zll/chain2.0.1/sdk/conf/config.toml");
-
-        shellMongo.execute("docker restart "+mongoID);
-        shellMysql.execute("service mysql restart");
-        Thread.sleep(1000);
-        shellSDK.execute("sh /root/zll/chain2.0.1/sdk/start.sh");
-        Thread.sleep(6000);
-
-        String response= store.GetApiHealth();
-        assertThat(response, containsString("success"));
-        assertThat(response,containsString("200"));
-
-
-    }
-
 
 }
