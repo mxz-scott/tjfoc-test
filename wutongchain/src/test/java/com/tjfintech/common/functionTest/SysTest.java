@@ -31,6 +31,9 @@ public class SysTest {
     String mongoID="e5b4023db787";
     String mysqlIP="10.1.3.164";
 
+    boolean bResult=false;
+    int iCount=0;
+
     public void startMongo()throws Exception{
         Shell shellMongo=new Shell(mongoIP,USERNAME,PASSWD);
         shellMongo.execute("docker ps -a");
@@ -58,13 +61,14 @@ public class SysTest {
 
     //@Test
     public void TestErrMsg() throws Exception {
-
-        String response3= store.GetApiHealth();
+        assertThat(store.GetApiHealth(),containsString("503"));
     }
 
 
     @Test
     public void asetConfigMongoAndStop() throws Exception {
+        bResult=false;
+
         startMongo();
 
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
@@ -89,26 +93,29 @@ public class SysTest {
 
         //停止mongo数据库进程
         shellMongo.execute("docker stop "+mongoID);
-//        Thread.sleep(3000);
-//        store.GetApiHealth();
-        //assertThat(response2,containsString("503"));
+        Thread.sleep(5000);
+        assertThat(store.GetApiHealth(),containsString("503"));
 
-        log.info("******************please getapihealth manual with configMongo stop momgo************");
-        Thread.sleep(15000);
+//        log.info("******************please getapihealth manual with configMongo stop momgo************");
+//        Thread.sleep(15000);
 
 
         shellMongo.execute("docker restart "+mongoID);
         Thread.sleep(6000);
 
-        String response3= store.GetApiHealth();
-        //assertThat(response3, containsString("success"));
-        //assertThat(response3,containsString("200"));
+        assertThat(store.GetApiHealth(),containsString("success"));
 
+        shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
+        Thread.sleep(6000);
+        assertThat(store.GetApiHealth(),containsString("success"));
     }
 
 
     @Test
     public void csetConfigMysqlAndStop() throws Exception {
+        bResult=false;
+
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         log.info(sdkIP);
 
@@ -131,8 +138,8 @@ public class SysTest {
 
         //停止mysql进程
         shellMysql.execute("service mysql stop");
-        Thread.sleep(3000);
-//        store.GetApiHealth();
+        Thread.sleep(5000);
+        assertThat(store.GetApiHealth(),containsString("503"));
 //        log.info("******************please getapihealth manual with configMysql stop mysql************");
 //        Thread.sleep(15000);
 
@@ -147,6 +154,8 @@ public class SysTest {
 
     @Test
     public void esetConfigMongoMysqlAndStop() throws Exception {
+        bResult=false;
+
         startMongo();
 
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
@@ -172,22 +181,22 @@ public class SysTest {
 
         //停止mongo数据库进程
         shellMongo.execute("docker stop "+mongoID);
-//        Thread.sleep(3000);
-//        store.GetApiHealth();
-        log.info("******************please getapihealth manual with configMongoMysql stop mongo************");
-        Thread.sleep(15000);
+        Thread.sleep(5000);
+        assertThat(store.GetApiHealth(),containsString("503"));
+//        log.info("******************please getapihealth manual with configMongoMysql stop mongo************");
+//        Thread.sleep(15000);
         //停止mysql进程
         shellMysql.execute("service mysql stop");
-//        Thread.sleep(3000);
-//        store.GetApiHealth();
-        log.info("******************please getapihealth manual with configMongoMysql stop mysql************");
-        Thread.sleep(15000);
+        Thread.sleep(5000);
+        assertThat(store.GetApiHealth(),containsString("503"));
+//        log.info("******************please getapihealth manual with configMongoMysql stop mysql************");
+//        Thread.sleep(15000);
 
         shellMysql.execute("service mysql restart");
-//        Thread.sleep(4000);
-//        store.GetApiHealth();
-        log.info("******************please getapihealth manual with configMongoMysql restart mysql stop mongo************");
-        Thread.sleep(15000);
+        Thread.sleep(5000);
+        assertThat(store.GetApiHealth(),containsString("503"));
+//        log.info("******************please getapihealth manual with configMongoMysql restart mysql stop mongo************");
+//        Thread.sleep(15000);
 
 
         shellMongo.execute("docker restart "+mongoID);
@@ -196,11 +205,14 @@ public class SysTest {
         String response= store.GetApiHealth();
         assertThat(response, containsString("success"));
         assertThat(response,containsString("200"));
+
     }
 
 
     @Test
     public void fsetConfigMysqlMongoAndStop() throws Exception {
+        bResult=false;
+
         startMongo();
 
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
@@ -226,45 +238,47 @@ public class SysTest {
 
         //停止mongo数据库进程
         shellMongo.execute("docker stop "+mongoID);
-//        Thread.sleep(3000);
-//        store.GetApiHealth();
-        log.info("******************please getapihealth manual with configMysqlMongo stop mongo************");
-        Thread.sleep(15000);
+        Thread.sleep(5000);
+        assertThat(store.GetApiHealth(),containsString("503"));
+//        log.info("******************please getapihealth manual with configMysqlMongo stop mongo************");
+//        Thread.sleep(15000);
         //停止mysql进程
         shellMysql.execute("service mysql stop");
-//        Thread.sleep(3000);
-//        store.GetApiHealth();
-        Thread.sleep(15000);
-        log.info("******************please getapihealth manual with configMysqlMongo stop mysql************");
+        Thread.sleep(5000);
+        assertThat(store.GetApiHealth(),containsString("503"));
+//        Thread.sleep(15000);
+//        log.info("******************please getapihealth manual with configMysqlMongo stop mysql************");
 
         shellMysql.execute("service mysql restart");
-//        Thread.sleep(3000);
-//        store.GetApiHealth();
-        log.info("******************please getapihealth manual with configMysqlMongo restart mysql************");
-        Thread.sleep(15000);
+        Thread.sleep(5000);
+        assertThat(store.GetApiHealth(),containsString("503"));
+//        log.info("******************please getapihealth manual with configMysqlMongo restart mysql************");
+//        Thread.sleep(15000);
 
         shellMongo.execute("docker restart "+mongoID);
         Thread.sleep(6000);
 
-        String response= store.GetApiHealth();
+
+        assertThat(store.GetApiHealth(),containsString("success"));
+
+        shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
+        Thread.sleep(6000);
+        assertThat(store.GetApiHealth(),containsString("success"));
         //assertThat(response, containsString("success"));
         //assertThat(response,containsString("200"));
     }
 
-    //@Before
+    @After
     public void recoverConfigSt()throws Exception{
+
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         log.info(sdkIP);
         Shell shellSDK=new Shell(sdkIP,"root","root");
-        Shell shellMongo=new Shell(mongoIP,"root","root");
-        Shell shellMysql=new Shell(mysqlIP,"root","root");
 
         shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
         shellSDK.execute("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/config.toml");
 
-        shellMongo.execute("docker restart "+mongoID);
-        shellMysql.execute("service mysql restart");
-        Thread.sleep(1000);
         shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
         Thread.sleep(6000);
 
