@@ -1,0 +1,31 @@
+[Event]
+Enabled = false
+Addr = "10.1.3.154:9092"
+
+[Self]
+Id = "247"
+Addr = "10.1.3.247:60030"
+RpcPort = 9300
+
+
+[Members]
+[[Members.Peers]]
+Id = "240"
+ShownName = "peer240"
+InAddr = "10.1.3.240:60030"
+RpcPort = 9300
+
+[[Members.Peers]]
+Id = "246"
+ShownName = "peer246"
+InAddr = "10.1.3.246:60030"
+RpcPort = 9300
+
+
+[[Members.Peers]]
+Id = "247"
+ShownName = "peer247"
+InAddr = "10.1.3.247:60030"
+RpcPort = 9300
+Type = 0
+
