@@ -435,13 +435,13 @@ public class TestPermission {
 
         //权限设置通知的节点与SDK配置的节点不一致，权限设置有效
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
-        shellCmd(sdkIP,"cd /root/zll/permission/sdk1/conf;cp config1.toml config.toml");//配置文件中仅配置246作为发送节点
+        shellCmd(sdkIP,"cd "+PTPATH+"sdk/conf;cp config1.toml config.toml");//配置文件中仅配置246作为发送节点
         shellCmd(sdkIP,"ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellCmd(sdkIP,"sh /root/zll/permission/sdk1/start.sh");
-        //shellCmd("cd /root/zll/permission/sdk1;nohub httpservice &");
+        shellCmd(sdkIP,"sh "+PTPATH+"sdk/start.sh");
+        //shellCmd("cd "+PTPATH+"sdk1;nohub httpservice &");
         Thread.sleep(5000);
         shellCmd(peerIP246.split(":")[0],cmd2+"211");//向节点246发送权限变更通知
-        shellCmd(sdkIP,"cd /root/zll/permission/sdk1/conf;cp config2.toml config.toml");//恢复配置文件中的节点配置
+        shellCmd(sdkIP,"cd "+PTPATH+"sdk/conf;cp config2.toml config.toml");//恢复配置文件中的节点配置
         assertThat(pFun1.createStore(), containsString("1"));
 
 

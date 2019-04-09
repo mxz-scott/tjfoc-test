@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest;
 
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -37,6 +38,10 @@ public class ContractTest {
 
     @Test
     public void testContract() throws Exception{
+        BeforeCondition bf=new BeforeCondition();
+        bf.collAddressTest();
+
+
         String response=null;
         log.info(name);
         //检查合约创建
@@ -65,7 +70,7 @@ public class ContractTest {
 
         response=createMobileTest();
         assertThat(response,containsString("200"));
-        Thread.sleep(5000);
+        Thread.sleep(7000);
         String response4 = contract.SearchByKey("Mobile8",name);//SDK发送按key查询请求
         assertThat(response4,containsString("200"));
         assertThat(response4,containsString("xiaomi"));
@@ -87,7 +92,7 @@ public class ContractTest {
 
         response=getAllMobileTest();
         assertThat(response,containsString("200"));
-        Thread.sleep(4000);
+        Thread.sleep(6000);
         String hash1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         response=store.GetTransaction(hash1);
         assertThat(response,containsString("Mobile1"));
@@ -97,7 +102,7 @@ public class ContractTest {
 
         response=queryMobileTest("Mobile1");
         assertThat(response,containsString("200"));
-        Thread.sleep(3000);
+        Thread.sleep(5000);
         String hash2 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         response=store.GetTransaction(hash2);
         assertThat(response,containsString("iphoneXS"));
@@ -111,13 +116,15 @@ public class ContractTest {
         //销毁合约
         response=destroyTest();
         assertThat(response,containsString("200"));
-        Thread.sleep(3000);
+        Thread.sleep(6000);
+        log.info(name);
         response=queryMobileTest("Mobile1");
         assertThat(response,containsString("200"));
-        Thread.sleep(3000);
+        Thread.sleep(6000);
         String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        log.info(name);
         response=store.GetTransaction(hash3);
-        assertThat(response,containsString("doesn't exist"));
+        assertThat(response,containsString("failed to find transaction"));
 
 
     }

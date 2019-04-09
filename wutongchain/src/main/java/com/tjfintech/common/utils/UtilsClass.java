@@ -219,7 +219,7 @@ public class UtilsClass {
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
 
-        shellSDK.execute("cd "+PTPATH+"toolkit;"+"./toolkit getid -p "+PTPATH+"sdk1/auth/key.pem");
+        shellSDK.execute("cd "+PTPATH+"toolkit;"+"./toolkit getid -p "+PTPATH+"sdk/auth/key.pem");
 
         ArrayList<String> stdout3 = shellSDK.getStandardOutput();
         for (String str1 : stdout3){

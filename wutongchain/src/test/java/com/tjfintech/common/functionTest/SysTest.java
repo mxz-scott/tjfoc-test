@@ -41,20 +41,27 @@ public class SysTest {
         {
             if(response.contains("mongo"))
             {
-                shellMongo.execute("docker ps -a |grep mongo|awk '{print $3");
+                shellMongo.execute("docker ps -a |grep mongo|awk '{print $1}'");
                 ArrayList<String> stdout1 = shellMongo.getStandardOutput();
                 mongoID=stdout1.get(0).trim();
             }
             else
             {
                 shellMongo.execute("docker run --name mongo -p 27017:27017 -v /data/database/mongotest:/data -d mongo:3.6");
-                shellMongo.execute("docker ps -a |grep mongo|awk '{print $3");
+                shellMongo.execute("docker ps -a |grep mongo|awk '{print $1}");
                 ArrayList<String> stdout1 = shellMongo.getStandardOutput();
                 mongoID=stdout1.get(0).trim();
             }
         }
 
     }
+
+    //@Test
+    public void TestErrMsg() throws Exception {
+
+        String response3= store.GetApiHealth();
+    }
+
 
     @Test
     public void asetConfigMongoAndStop() throws Exception {
@@ -69,11 +76,11 @@ public class SysTest {
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellSDK.execute("cp /root/zll/permission/sdk1/conf/configMongo.toml /root/zll/permission/sdk1/conf/config.toml");
-
+        shellSDK.execute("cp "+PTPATH+"sdk/conf/configMongo.toml "+PTPATH+"sdk/conf/config.toml");
+        log.info(mongoID);
         shellMongo.execute("docker restart "+mongoID);
         Thread.sleep(6000);
-        shellSDK.execute("sh /root/zll/permission/sdk1/start.sh");
+        shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
         Thread.sleep(6000);
 
         String response= store.GetApiHealth();
@@ -105,17 +112,17 @@ public class SysTest {
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         log.info(sdkIP);
 
-        Shell shellSDK=new Shell(sdkIP,"root","root");
-        Shell shellMysql=new Shell(mysqlIP,"root","root");
+        Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
+        Shell shellMysql=new Shell(mysqlIP,USERNAME,PASSWD);
 
 
         //系统配置数据库为mysql时，且数据库正常进行检查
         shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellSDK.execute("cp /root/zll/permission/sdk1/conf/configMysql.toml /root/zll/permission/sdk1/conf/config.toml");
+        shellSDK.execute("cp "+PTPATH+"sdk/conf/configMysql.toml "+PTPATH+"sdk/conf/config.toml");
 
         shellMysql.execute("service mysql restart");
         Thread.sleep(4000);
-        shellSDK.execute("sh /root/zll/permission/sdk1/start.sh");
+        shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
         Thread.sleep(6000);
 
         String response4= store.GetApiHealth();
@@ -124,10 +131,10 @@ public class SysTest {
 
         //停止mysql进程
         shellMysql.execute("service mysql stop");
-//        Thread.sleep(3000);
+        Thread.sleep(3000);
 //        store.GetApiHealth();
-        log.info("******************please getapihealth manual with configMysql stop mysql************");
-        Thread.sleep(15000);
+//        log.info("******************please getapihealth manual with configMysql stop mysql************");
+//        Thread.sleep(15000);
 
 
         shellMysql.execute("service mysql restart");
@@ -151,11 +158,11 @@ public class SysTest {
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellSDK.execute("cp /root/zll/permission/sdk1/conf/configMongoMysql.toml /root/zll/permission/sdk1/conf/config.toml");
+        shellSDK.execute("cp "+ PTPATH +"sdk/conf/configMongoMysql.toml "+ PTPATH +"sdk/conf/config.toml");
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");
         Thread.sleep(6000);
-        shellSDK.execute("sh /root/zll/permission/sdk1/start.sh");
+        shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
         Thread.sleep(6000);
 
 
@@ -205,12 +212,12 @@ public class SysTest {
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellSDK.execute("cp /root/zll/permission/sdk1/conf/configMysqlMongo.toml /root/zll/permission/sdk1/conf/config.toml");
+        shellSDK.execute("cp "+PTPATH+"sdk/conf/configMysqlMongo.toml "+PTPATH+"sdk/conf/config.toml");
 
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");
         Thread.sleep(6000);
-        shellSDK.execute("sh /root/zll/permission/sdk1/start.sh");
+        shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
         Thread.sleep(6000);
 
         String response4= store.GetApiHealth();
@@ -253,12 +260,12 @@ public class SysTest {
         Shell shellMysql=new Shell(mysqlIP,"root","root");
 
         shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellSDK.execute("cp /root/zll/permission/sdk1/conf/configOK.toml /root/zll/permission/sdk1/conf/config.toml");
+        shellSDK.execute("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/config.toml");
 
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");
         Thread.sleep(1000);
-        shellSDK.execute("sh /root/zll/permission/sdk1/start.sh");
+        shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
         Thread.sleep(6000);
 
         String response= store.GetApiHealth();
