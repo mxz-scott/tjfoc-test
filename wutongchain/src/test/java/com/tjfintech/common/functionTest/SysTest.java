@@ -94,7 +94,7 @@ public class SysTest {
         //停止mongo数据库进程
         shellMongo.execute("docker stop "+mongoID);
         Thread.sleep(5000);
-        assertThat(store.GetApiHealth(),containsString("503"));
+        assertThat(store.GetApiHealth(),containsString("[walletDB]:ping mgodb err;[addressDB]:ping mgodb err;"));
 
 //        log.info("******************please getapihealth manual with configMongo stop momgo************");
 //        Thread.sleep(15000);
@@ -139,7 +139,7 @@ public class SysTest {
         //停止mysql进程
         shellMysql.execute("service mysql stop");
         Thread.sleep(5000);
-        assertThat(store.GetApiHealth(),containsString("503"));
+        assertThat(store.GetApiHealth(),containsString("[walletDB]:ping mysql err;[addressDB]:ping mysql err;"));
 //        log.info("******************please getapihealth manual with configMysql stop mysql************");
 //        Thread.sleep(15000);
 
@@ -182,24 +182,24 @@ public class SysTest {
         //停止mongo数据库进程
         shellMongo.execute("docker stop "+mongoID);
         Thread.sleep(5000);
-        assertThat(store.GetApiHealth(),containsString("503"));
+        assertThat(store.GetApiHealth(),containsString("[walletDB]:ping mgodb err;"));
 //        log.info("******************please getapihealth manual with configMongoMysql stop mongo************");
 //        Thread.sleep(15000);
         //停止mysql进程
         shellMysql.execute("service mysql stop");
         Thread.sleep(5000);
-        assertThat(store.GetApiHealth(),containsString("503"));
+        assertThat(store.GetApiHealth(),containsString("[walletDB]:ping mgodb err;[addressDB]:ping mysql err;"));
 //        log.info("******************please getapihealth manual with configMongoMysql stop mysql************");
 //        Thread.sleep(15000);
 
-        shellMysql.execute("service mysql restart");
+        shellMongo.execute("docker start "+mongoID);
         Thread.sleep(5000);
-        assertThat(store.GetApiHealth(),containsString("503"));
-//        log.info("******************please getapihealth manual with configMongoMysql restart mysql stop mongo************");
+        assertThat(store.GetApiHealth(),containsString("[addressDB]:ping mysql err;"));
+//        log.info("******************please getapihealth manual with configMongoMysql restart mongo stop mysql************");
 //        Thread.sleep(15000);
 
 
-        shellMongo.execute("docker restart "+mongoID);
+        shellMysql.execute("service mysql start");
         Thread.sleep(6000);
 
         String response= store.GetApiHealth();
@@ -239,23 +239,23 @@ public class SysTest {
         //停止mongo数据库进程
         shellMongo.execute("docker stop "+mongoID);
         Thread.sleep(5000);
-        assertThat(store.GetApiHealth(),containsString("503"));
+        assertThat(store.GetApiHealth(),containsString("[addressDB]:ping mgodb err;"));
 //        log.info("******************please getapihealth manual with configMysqlMongo stop mongo************");
 //        Thread.sleep(15000);
         //停止mysql进程
         shellMysql.execute("service mysql stop");
         Thread.sleep(5000);
-        assertThat(store.GetApiHealth(),containsString("503"));
+        assertThat(store.GetApiHealth(),containsString("[walletDB]:ping mysql err;[addressDB]:ping mgodb err;"));
 //        Thread.sleep(15000);
 //        log.info("******************please getapihealth manual with configMysqlMongo stop mysql************");
 
-        shellMysql.execute("service mysql restart");
+        shellMongo.execute("docker start "+mongoID);
         Thread.sleep(5000);
-        assertThat(store.GetApiHealth(),containsString("503"));
-//        log.info("******************please getapihealth manual with configMysqlMongo restart mysql************");
+        assertThat(store.GetApiHealth(),containsString("[walletDB]:ping mysql err;"));
+//        log.info("******************please getapihealth manual with configMysqlMongo restart docker************");
 //        Thread.sleep(15000);
 
-        shellMongo.execute("docker restart "+mongoID);
+        shellMysql.execute("service mysql start");
         Thread.sleep(6000);
 
 

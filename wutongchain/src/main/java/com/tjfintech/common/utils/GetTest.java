@@ -123,7 +123,7 @@ public class GetTest {
                 sb.append(line);
             }
             response = sb.toString();
-            log.info(response);
+            //log.info(response);
 
         } catch (HttpException e) {
             // 发生致命的异常，可能是协议不对或者返回的内容有问题

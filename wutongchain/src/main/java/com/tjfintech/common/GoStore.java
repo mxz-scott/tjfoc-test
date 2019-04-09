@@ -22,7 +22,8 @@ public  class GoStore implements Store {
      * @method  GET
      */
     public String GetApiHealth(){
-        String result= GetTest.SendGetTojson(SDKADD+"/apihealth");
+        //String result= GetTest.SendGetTojson(SDKADD+"/apihealth");
+        String result= GetTest.doGet2(SDKADD+"/apihealth");
         log.info(result);
         return result;
 
