@@ -154,45 +154,64 @@ public class ContractTest {
         assertThat(response,containsString("error Category or empty Category!!"));
     }
 
-    //@Test
+    @Test
     public void CrossContractTx()throws Exception{
-
+        //sales.go 调用whitelist.go中的接口
         String response=null;
         category="docker";
         String name1=sdf.format(dt)+ RandomUtils.nextInt(100000);
         String name2=sdf.format(dt)+ RandomUtils.nextInt(100000);
         assertEquals(name1.equals(name2),false);
 
-        //创建第一个合约
+        //安装第一个合约 销售
         name=name1;
+        dockerFileName="\\file1\\sales.go";
+        log.info("docker file 1: "+name1);
         response=installTest();
         assertThat(response,containsString("200"));
-        Thread.sleep(SLEEPTIME*5);
-        response=initMobileTest();
-        assertThat(response,containsString("200"));
-        Thread.sleep(5000);
-        String response2 = contract.SearchByKey("Mobile0",name);//SDK发送按key查询请求
-        assertThat(response2,containsString("200"));
-        assertThat(response2,containsString("HUAWEI"));
 
-
-        //创建第二个合约
+        //安装第二个合约 白名单
         name=name2;
-        dockerFileName="simple.go";
+        dockerFileName="\\file2\\whitelist.go";
+        log.info("docker file 2: "+name2);
         response=installTest();
         assertThat(response,containsString("200"));
-        Thread.sleep(SLEEPTIME*5);
-        response=initMobileTest();
-        assertThat(response,containsString("200"));
-        Thread.sleep(5000);
-        String response3 = contract.SearchByKey("Mobile0",name);//SDK发送按key查询请求
-        assertThat(response3,containsString("200"));
-        assertThat(response3,containsString("HUAWEI"));
+
+        Thread.sleep(SLEEPTIME*7);
 
         //跨合约调用
+        log.info("正常跨合约调用");
+        name=name1;
+        response=addSalesInfo("Company01",123456,name2);
+        assertThat(response,containsString("200"));
+        Thread.sleep(6000);
+        String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
+        response=store.GetTransaction(hash3);
+        String contractResult = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("contractResult").getString("payload");
+        assertThat(contractResult,containsString("success"));
 
+        //重复添加 则显示已存在信息
+        log.info("跨合约调用接口重复添加信息");
+        response=addSalesInfo("Company01",123456,name2);
+        assertThat(response,containsString("200"));
+        Thread.sleep(6000);
+        String hash4 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
+        response=store.GetTransaction(hash4);
+        String contractResult1 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("contractResult").getString("message");
+        assertThat(contractResult1,containsString("this data is exist"));
+
+        //调用不存在的合约
+        log.info("跨不存在的合约调用接口");
+        response=addSalesInfo("Company02",2356,"tt");
+        assertThat(response,containsString("200"));
+        Thread.sleep(6000);
+        String hash5 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+
+        response=store.GetTransaction(hash5);
+        String contractResult2 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("contractResult").getString("payload");
+        assertThat(contractResult2,containsString("does not exist"));
     }
 
     public String installTest() throws Exception {
@@ -254,6 +273,18 @@ public class ContractTest {
         String response = contract.Destroy(name, version,category);
         return response;
 
+    }
+
+
+    public String addSalesInfo(String compID,int sales,String anoDockerName) throws Exception {
+        String method = "addSalesInfo";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("CompanyID", compID);
+        map.put("Sales", sales);
+        JSONObject json = JSONObject.fromObject(map);
+        String a ="\""+json.toString()+"\"";
+        return invokeNew(method,a,"",version,anoDockerName);
     }
 
     public String invokeNew(String method, String... arg) throws Exception {
