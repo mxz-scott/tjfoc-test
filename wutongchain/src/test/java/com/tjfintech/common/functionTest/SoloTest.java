@@ -162,6 +162,56 @@ public class SoloTest {
         assertThat(Info5, containsString("200"));
         log.info("帐号6，token2余额正确");
     }
+
+    /**
+     * Tc024锁定后转账:
+     *
+     */
+    @Test
+    public void TC024_TransferAfterFrozen() throws Exception {
+
+        //20190411增加锁定步骤后进行转账
+        log.info("锁定待转账Token: "+tokenType);
+        String resp=multiSign.freezeToken(PRIKEY1,tokenType);
+        Thread.sleep(SLEEPTIME);
+
+        String transferData = "归集地址向" + PUBKEY3 + "转账100.25个" + tokenType+",并向"+PUBKEY4+"转账";
+        log.info(transferData);
+        List<Map> listModel1 = soloSign.constructToken(ADDRESS3,tokenType,"100.25");
+        log.info(ADDRESS3);
+        List<Map> list1=soloSign.constructToken(ADDRESS5,tokenType2,"200.555",listModel1);
+        String transferInfo= soloSign.Transfer(list1,PRIKEY1, transferData);
+        Thread.sleep(SLEEPTIME);
+        assertThat(transferInfo, containsString("200"));
+        log.info("查询帐号3跟帐号5余额，判断转账是否成功");
+        String queryInfo = soloSign.Balance( PRIKEY3, tokenType);
+        String queryInfo2 = soloSign.Balance( PRIKEY5, tokenType2);
+        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("0"));
+
+
+        log.info("解除锁定待转账Token: "+tokenType);
+        String resp1=multiSign.recoverFrozenToken(PRIKEY1,tokenType);
+        Thread.sleep(SLEEPTIME);
+
+        transferData = "归集地址向" + PUBKEY3 + "转账100.25个" + tokenType+",并向"+PUBKEY4+"转账";
+        log.info(transferData);
+        List<Map> listModel = soloSign.constructToken(ADDRESS3,tokenType,"100.25");
+        log.info(ADDRESS3);
+        List<Map> list=soloSign.constructToken(ADDRESS5,tokenType2,"200.555",listModel);
+        transferInfo= soloSign.Transfer(list,PRIKEY1, transferData);
+        Thread.sleep(SLEEPTIME);
+        assertThat(transferInfo, containsString("200"));
+        log.info("查询帐号3跟帐号5余额，判断转账是否成功");
+        queryInfo = soloSign.Balance( PRIKEY3, tokenType);
+        queryInfo2 = soloSign.Balance( PRIKEY5, tokenType2);
+        assertThat(queryInfo, containsString("200"));
+        assertThat(queryInfo, containsString("100.25"));
+        assertThat(queryInfo2, containsString("200"));
+        assertThat(queryInfo2, containsString("200.555"));
+
+    }
+
     /**
      * Tc040单签转单签异常测试:
      *
@@ -190,6 +240,7 @@ public class SoloTest {
         String recycleInfo4 = soloSign.Transfer(list7, PRIKEY3, "李四向小六转账30 TT001, 60 TT002");
         assertThat(recycleInfo4, containsString("insufficient balance"));
         Thread.sleep(SLEEPTIME);
+
         String Info = multiSign.Recycle("", PRIKEY3, tokenType, "3000");
         String Info3 = multiSign.Recycle("", PRIKEY3, tokenType2, "3000");
         assertThat(Info, containsString("200"));
@@ -223,6 +274,15 @@ public class SoloTest {
         String recycleInfo4 = soloSign.Transfer(list7, PRIKEY3, "李四向小六转账4000 TT001, 4001 TT002");
         assertThat(recycleInfo3, containsString("insufficient balance"));
         Thread.sleep(SLEEPTIME);
+
+        //20190411增加锁定解锁操作步骤后进行回收
+        log.info("锁定待回收Token: "+tokenType);
+        String resp=multiSign.freezeToken(PRIKEY1,tokenType);
+        Thread.sleep(SLEEPTIME);
+        log.info("解除锁定待回收Token: "+tokenType);
+        String resp1=multiSign.recoverFrozenToken(PRIKEY1,tokenType);
+        Thread.sleep(SLEEPTIME);
+
         log.info("开始回收....");
         String Info = multiSign.Recycle("", PRIKEY3, tokenType, "3000");
         String Info1 = multiSign.Recycle("", PRIKEY3, tokenType2, "3000");
@@ -273,6 +333,12 @@ public class SoloTest {
         String recycleInfo3 = soloSign.Transfer(list5, PRIKEY3, "李四向小六转账4000 TT001, 4001 TT002");
         assertThat(recycleInfo3, containsString("200"));
         Thread.sleep(SLEEPTIME);
+
+        //20190411增加锁定操作步骤后进行回收
+        log.info("锁定待回收Token: "+tokenType);
+        String resp=multiSign.freezeToken(PRIKEY1,tokenType);
+        Thread.sleep(SLEEPTIME);
+
         log.info("开始回收....");
         String Info = multiSign.Recycle( PRIKEY3, tokenType, "2330");
         String Info1 = multiSign.Recycle( PRIKEY3, tokenType2, "2599");

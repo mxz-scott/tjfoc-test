@@ -12,9 +12,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -155,7 +153,7 @@ public class ContractTest {
     }
 
     @Test
-    public void CrossContractTx()throws Exception{
+    public void testCrossContractTx()throws Exception{
         //sales.go 调用whitelist.go中的接口
         String response=null;
         category="docker";
@@ -278,7 +276,6 @@ public class ContractTest {
 
     public String addSalesInfo(String compID,int sales,String anoDockerName) throws Exception {
         String method = "addSalesInfo";
-
         Map<String, Object> map = new HashMap<>();
         map.put("CompanyID", compID);
         map.put("Sales", sales);
@@ -293,11 +290,6 @@ public class ContractTest {
             args.add(arg[i]);
         }
         String response = contract.Invoke(name, version, category,method, args);
-//        String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
-//        Thread.sleep(SLEEPTIME);
-//        String result = store.GetTransaction(hash);
-//        assertThat(result, containsString("200"));
-//        assertThat(result, containsString("success"));
         return response;
     }
 

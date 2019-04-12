@@ -18,6 +18,7 @@ import java.util.Map;
 import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @Slf4j
@@ -138,6 +139,96 @@ public class MultiTest {
         assertThat(queryInfo4, containsString("200"));
         assertThat(JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"), containsString("0"));
 
+
+    }
+
+    /**
+     * Tc024锁定后转账:
+     *
+     */
+    @Test
+    public void TC024_TransferAfterFrozen() throws Exception {
+
+        //20190411增加锁定步骤后进行转账
+        log.info("锁定待转账Token: "+tokenType);
+        String resp=multiSign.freezeToken(PRIKEY1,tokenType);
+        Thread.sleep(SLEEPTIME);
+
+
+        log.info("查询归集地址中两种token余额");
+        String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        assertThat(response1, containsString("200"));
+        assertThat(response1, containsString("1000"));
+        String transferData = "归集地址向MULITADD4转账10个" + tokenType;
+        List<Map>list=utilsClass.constructToken(MULITADD4,tokenType,"10");
+        log.info(transferData);
+
+        String transferInfo= multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list);//相同币种
+        assertThat(transferInfo,containsString("200"));
+        Thread.sleep(SLEEPTIME);
+
+        log.info("查询余额判断转账是否成功");
+        String queryInfo= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
+        assertThat(queryInfo,containsString("200"));
+        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("0"));
+
+        log.info("解除锁定待转账Token: "+tokenType);
+        String resp1=multiSign.recoverFrozenToken(PRIKEY1,tokenType);
+        Thread.sleep(SLEEPTIME);
+
+        log.info("查询归集地址中两种token余额");
+        response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        assertThat(response1, containsString("200"));
+        assertThat(response1, containsString("1000"));
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("1000"));
+        transferData = "归集地址向" + "MULITADD4" + "转账10个" + tokenType+"归集地址向" + "MULITADD4" + "转账10个" + tokenType;
+        list=utilsClass.constructToken(MULITADD4,tokenType,"10");
+        List<Map>list2=utilsClass.constructToken(MULITADD5,tokenType2,"10",list);
+        List<Map>list3=utilsClass.constructToken(MULITADD5,tokenType,"10",list);
+        log.info(transferData);
+        transferInfo= multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list2);//不同币种
+        Thread.sleep(SLEEPTIME); //UTXO关系，两笔交易之间需要休眠
+        String transferInfo2= multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list3);//相同币种
+        assertThat(transferInfo,containsString("200"));
+        assertThat(transferInfo2,containsString("200"));
+        Thread.sleep(SLEEPTIME);
+
+        log.info("查询余额判断转账是否成功");
+        queryInfo= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
+        String queryInfo2= multiSign.Balance(MULITADD5,PRIKEY1,tokenType2);
+        assertThat(queryInfo,containsString("200"));
+        assertThat(queryInfo2,containsString("200"));
+        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("20"));
+        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("10"));
+
+        multiSign.Balance(IMPPUTIONADD,PRIKEY4, tokenType);
+        multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+
+        log.info("回收Token");
+        String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "970");
+        String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, "990");
+        String recycleInfo3 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "20");
+        String recycleInfo4 = multiSign.Recycle(MULITADD5, PRIKEY1, tokenType2, "10");
+
+        String recycleInfo5 = multiSign.Recycle(MULITADD5, PRIKEY1, tokenType, "10");
+        Thread.sleep(SLEEPTIME);
+        assertThat(recycleInfo,containsString("200"));
+        assertThat(recycleInfo2,containsString("200"));
+        assertThat(recycleInfo3,containsString("200"));
+        assertThat(recycleInfo4,containsString("200"));
+        assertThat(recycleInfo5,containsString("200"));
+
+        log.info("查询余额判断回收成功与否");
+        String queryInfo3= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
+        String queryInfo4= multiSign.Balance(MULITADD5,PRIKEY1,tokenType2);
+        String queryInfo5= multiSign.Balance(MULITADD5,PRIKEY1,tokenType);
+        assertThat(queryInfo3,containsString("200"));
+        assertThat(queryInfo4,containsString("200"));
+        assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"), containsString("0"));
 
     }
 
@@ -350,6 +441,10 @@ public class MultiTest {
         assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("20"));
         assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("10"));
 
+        log.info("锁定待回收Token: "+tokenType);
+        String resp2=multiSign.freezeToken(PRIKEY1,tokenType);
+        Thread.sleep(SLEEPTIME);
+
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "970");
         String recycleInfo2 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType2, "990");
@@ -369,9 +464,13 @@ public class MultiTest {
         String queryInfo5 = multiSign.Balance(MULITADD5, PRIKEY1, tokenType);
         assertThat(queryInfo3, containsString("200"));
         assertThat(queryInfo4, containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"), containsString("0"));
+
+        assertEquals("0",JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"));
+        assertEquals("0",JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"));
+        assertEquals("0",JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"));
+//        assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"), containsString("0"));
+//        assertThat(JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"), containsString("0"));
+//        assertThat(JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"), containsString("0"));
     }
 
 
@@ -414,6 +513,14 @@ public class MultiTest {
         assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("10"));
         assertThat(JSONObject.fromObject(queryInfo1).getJSONObject("Data").getString("Total"), containsString("10"));
 
+        //20190411增加锁定解锁操作步骤后进行回收
+        log.info("锁定待回收Token: "+tokenType);
+        String resp=multiSign.freezeToken(PRIKEY1,tokenType);
+        Thread.sleep(SLEEPTIME);
+        log.info("解除锁定待回收Token: "+tokenType);
+        String resp1=multiSign.recoverFrozenToken(PRIKEY1,tokenType);
+        Thread.sleep(SLEEPTIME);
+
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "970");
         String recycleInfo2 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType2, "990");
@@ -448,7 +555,7 @@ public class MultiTest {
 
     /**
      *TC34多签地址向两个单签地址转账
-     * 发两种币-查询归集地址-转账两个地址不同token-查询-回收-查询
+     * 发两种币-查询归集地址-转账两个地址不同token-查询-锁定token-回收-查询
      * @throws Exception
      */
     @Test
@@ -481,7 +588,9 @@ public class MultiTest {
         assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("10"));
         assertThat(JSONObject.fromObject(queryInfo_2).getJSONObject("Data").getString("Total"), containsString("10"));
 
-
+        log.info("锁定待回收Token: "+tokenType);
+        String resp=multiSign.freezeToken(PRIKEY1,tokenType);
+        Thread.sleep(SLEEPTIME);
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "970");
         String recycleInfo2 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType2, "990");
