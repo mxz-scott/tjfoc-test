@@ -38,42 +38,6 @@ public class MixTxTest {
     MultiSign multiSign =testBuilder.getMultiSign();
     SoloSign soloSign = testBuilder.getSoloSign();
 
-    @Test
-    public void test()throws Exception{
-        Shell shellPeer1 = new Shell(PEER1IP, USERNAME, PASSWD);
-        Shell shellPeer2 = new Shell(PEER2IP, USERNAME, PASSWD);
-        Shell shellSDK=new Shell("10.1.3.247","root","root");
-        int i=0;
-
-        for(;;) {
-            shellPeer1.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-            shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-
-            startPeer(PEER1IP);
-            startPeer(PEER2IP);
-            Thread.sleep(SLEEPTIME*2);
-
-            store.GetHeight();
-            Thread.sleep(2000);
-            store.GetHeight();
-            Thread.sleep(2000);
-            store.GetHeight();
-            Thread.sleep(2000);
-            store.GetHeight();
-            Thread.sleep(2000);
-
-            if(store.GetHeight().contains("Inconsistent data")){
-                break;
-//                i++;
-//                shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-//                shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
-//                Thread.sleep(6000);
-//                assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
-//                continue;
-            }
-
-        }
-    }
 
 
 
@@ -184,44 +148,4 @@ public class MixTxTest {
         shell1.execute("sh "+PTPATH+"peer/start.sh");
     }
 
-
-    public void TestTxTypeVersion() throws Exception{
-        //此部分测试参考2.0交易类型文档进行测试，不测试0.9基本存证
-        //存证类交易 Type 0 SubType 0 1
-        //普通存证
-        Date dt=new Date();
-        SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
-        String Data="Mix tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
-        String response1=store.CreateStore(Data);
-        String txHash = JSONObject.fromObject(response1).getString("Data");
-
-
-        //隐私存证
-        String data = "Testcx-" + UtilsClass.Random(2);
-        Map<String,Object> map=new HashMap<>();
-        map.put("pubKeys",PUBKEY1);
-        map.put("pubkeys",PUBKEY6);
-        String response = store.CreateStorePwd(data,map);
-        JSONObject jsonObject = JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-
-
-        //UTXO类交易 Type 1 SubType 10 11 13 14 15
-        //单签发行
-        String tokenTypeS = "TxTypeSOLOTC-"+ UtilsClass.Random(6);
-        String response6= soloSign.issueToken(PRIKEY1,tokenTypeS,"10000","单签ADDRESS1发行token "+tokenTypeS,ADDRESS1);
-
-        //Docker类交易 Type 2 SubType 30 31 32
-
-        //Admin类交易 Type 20 SubType 200 201 202 203
-        String response2= multiSign.collAddress(PRIKEY1,ADDRESS6);
-        String response4= multiSign.addissueaddress(PRIKEY1,ADDRESS6);
-
-
-
-    }
-
-    public void checkTransactionDetails(String...str)throws Exception{
-
-    }
 }
