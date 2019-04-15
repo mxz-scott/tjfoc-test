@@ -26,7 +26,7 @@ import static org.junit.Assert.assertThat;
 
 @Slf4j
 public class TestMgTool {
-    public static final int STARTSLEEPTIME=20000;
+    public static final int STARTSLEEPTIME=40000;
     TestBuilder testBuilder=TestBuilder.getInstance();
     Store store =testBuilder.getStore();
 
@@ -252,7 +252,7 @@ public class TestMgTool {
 
 
         //检查配置文件中预设的数据节点，即搭建环境时配置的数据节点 此节点为另外一个系统的数据节点
-        chkPeerSimInfoOK(PEER3IP+":9400","60012",version,dataType);
+        chkPeerSimInfoOK(PEER3IP+":9400","60012","1904",dataType);
 
 
         //检查未启动或者不存在的节点
@@ -789,20 +789,22 @@ public class TestMgTool {
     //@Test
     public void testLicGenAndDec() throws Exception{
         String rsp="";
-        String dayTime="365";
+        String dayTime="36500";
         String PeerNo="6";
         //生成证书
-        rsp = genLicence(PEER1IP,PEER1MAC,PEER1IP,dayTime,PeerNo);
+        rsp = genLicence(PEER1IP,PEER1MAC,PEER1IP,dayTime,PeerNo,version.substring(0,3));
         log.info(PEER1MAC);
         log.info(rsp);
         assertEquals(rsp.contains(PEER1MAC),true);
         assertEquals(rsp.contains(PEER1IP),true);
         assertEquals(rsp.contains("DayTime:"+dayTime),true);
         assertEquals(rsp.contains("PeerNum:"+PeerNo),true);
+        assertEquals(rsp.contains("version:"+version.substring(0,3)),true);
 
         //解析证书 确认参数一致
         rsp = deLicence(PEER1IP,"peer.lic");
         assertEquals(rsp.contains("PeerNum:"+PeerNo),true);
+        assertEquals(rsp.contains("PeerVersion:"+version.substring(0,3)),true);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String outTime =df.format(new Date(timeStamp+Long.parseLong(dayTime)*24*60*60*1000));
@@ -815,25 +817,24 @@ public class TestMgTool {
 
 
         //生成使用无效的参数验证:无效的mac地址、无效IP地址、无效时间、无效节点数
-        checkParam(PEER1IP,"./license create -m 12:11 -p 10.1.3.240 -d 100 -n 6","invalid MAC address");
+        checkParam(PEER1IP,"./license create -m 12:11 -p 10.1.3.240 -d 100 -n 6 -v 2.0","invalid MAC address");
         assertEquals(deLicence(PEER1IP,"peer.lic").contains("open peer.lic: no such file or directory"),true);
 
-        checkParam(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1 -d 100 -n 6","invalid IP address");
+        checkParam(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1 -d 100 -n 6 -v 2.0","invalid IP address");
         assertEquals(deLicence(PEER1IP,"peer.lic").contains("open peer.lic: no such file or directory"),true);
 
-        checkParam(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 0.5 -n 6","invalid argument");
+        checkParam(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 0.5 -n 6 -v 2.0","invalid argument");
         assertEquals(deLicence(PEER1IP,"peer.lic").contains("open peer.lic: no such file or directory"),true);
 
-        checkParam(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 5 -n 0.5","invalid argument");
+        checkParam(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 5 -n 0.5 -v 2.0","invalid argument");
         assertEquals(deLicence(PEER1IP,"peer.lic").contains("open peer.lic: no such file or directory"),true);
 
-        checkParam(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 5 -n 0","success");
+        checkParam(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 5 -n 0 -v 2.0","success");
 
         rsp = deLicence(PEER1IP,"peer.lic");
         assertEquals(rsp.contains("PeerNum:0"),true);
 
         //解析证书使用无效参数
-        checkParam(PEER1IP,"./license decode -p ./crypt/key.pem","data Illegal");
         checkParam(PEER1IP,"./license decode -p ./crypt/key.pem","data Illegal");
 
     }
@@ -846,58 +847,75 @@ public class TestMgTool {
         //ToolIP= PEER2IP;
         Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
         shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellPeer2.execute("sed -i \"s/peer.lic/peer246d1n2.lic/g\" "+PTPATH+"peer/conf/base.toml");
+        //替换配置licence文件为过期文件
+        shellPeer2.execute("cp "+PTPATH+"peer/conf/based1.toml "+PTPATH+"peer/conf/base.toml");
         startPeer(PEER2IP);
         Thread.sleep(STARTSLEEPTIME);
         checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
-        shellPeer2.execute("sed -i \"s/peer246d1n2.lic/peer.lic/g\" "+PTPATH+"peer/conf/base.toml");
+
+        log.info("********************Test for dismatch license********************");
+        //ToolIP= PEER2IP;
+        shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        genLicence(PEER2IP,PEER2MAC,PEER2IP,"200","3","test");
+        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerDisMatch.lic");
+        //替换配置licence文件为过期文件
+        shellPeer2.execute("cp "+PTPATH+"peer/conf/baseDisMatch.toml "+PTPATH+"peer/conf/base.toml");
+        startPeer(PEER2IP);
+        Thread.sleep(STARTSLEEPTIME);
+        checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
 
         log.info("********************Test for invalid peer count********************");
         //验证节点数据小于配置文件中节点数场景
         shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        genLicence(PEER2IP,PEER2MAC,PEER2IP,"200","1");
-        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
-        shellPeer2.execute("sed -i \"s/peer.lic/peerTest.lic/g\" "+PTPATH+"peer/conf/base.toml");
+        genLicence(PEER2IP,PEER2MAC,PEER2IP,"200","1",version.substring(0,3));
+        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peer246n1.lic");
+        //替换配置licence文件为n=1文件
+        shellPeer2.execute("cp "+PTPATH+"peer/conf/basen1.toml "+PTPATH+"peer/conf/base.toml");
         startPeer(PEER2IP);
         Thread.sleep(STARTSLEEPTIME);
         checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
 
         log.info("********************Test for invalid MAC addr ********************");
-        //证书IP正确，MAC不正确
-        shellPeer2.execute("sed -i \"s/peerTest.lic/peer.lic/g\" "+PTPATH+"peer/conf/base.toml");
+        //证书IP正确，MAC不正确 替换配置licence文件为Mac1文件
+        shellPeer2.execute("cp "+PTPATH+"peer/conf/baseMac1.toml "+PTPATH+"peer/conf/base.toml");
         shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        genLicence(PEER1IP,PEER1MAC,PEER2IP,"200","3");
-        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
-        shellPeer2.execute("sed -i \"s/peer.lic/peerTest.lic/g\" "+PTPATH+"peer/conf/base.toml");
+        genLicence(PEER2IP,PEER1MAC,PEER2IP,"200","3",version.substring(0,3));
+        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerMac1.lic");
         startPeer(PEER2IP);
         Thread.sleep(STARTSLEEPTIME);
         checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
 
         log.info("********************Test for invalid IP addr ********************");
-        //证书MAC正确，IP不正确
-        shellPeer2.execute("sed -i \"s/peerTest.lic/peer.lic/g\" "+PTPATH+"peer/conf/base.toml");
+        //证书MAC正确，IP不正确 替换配置licence文件为IP1文件
+        shellPeer2.execute("cp "+PTPATH+"peer/conf/baseIP1.toml "+PTPATH+"peer/conf/base.toml");
         shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        genLicence(PEER2IP,PEER2MAC,PEER1IP,"200","3");
-        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
-        shellPeer2.execute("sed -i \"s/peer.lic/peerTest.lic/g\" "+PTPATH+"peer/conf/base.toml");
+        genLicence(PEER2IP,PEER2MAC,PEER1IP,"200","3",version.substring(0,3));
+        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerIP1.lic");
         startPeer(PEER2IP);
         Thread.sleep(STARTSLEEPTIME);
         checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
 
         log.info("********************Test for invalid IP&MAC addr ********************");
         //使用其他节点licence
-        shellPeer2.execute("sed -i \"s/peerTest.lic/peer.lic/g\" "+PTPATH+"peer/conf/base.toml");
+        shellPeer2.execute("cp "+PTPATH+"peer/conf/baseIPMac1.toml "+PTPATH+"peer/conf/base.toml");
         shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        genLicence(PEER1IP,PEER1MAC,PEER1IP,"200","3");
-        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
-        shellPeer2.execute("sed -i \"s/peer.lic/peerTest.lic/g\" "+PTPATH+"peer/conf/base.toml");
+        genLicence(PEER1IP,PEER1MAC,PEER1IP,"200","3",version.substring(0,3));
+        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerIPMac1.lic");
         startPeer(PEER2IP);
          Thread.sleep(STARTSLEEPTIME);
         checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
 
+        log.info("********************Test for old license(no version check) ********************");
+        //使用旧版本工具生成的不带version检查的licence 需要提前准备好旧版本的license
+        shellPeer2.execute("cp "+PTPATH+"peer/conf/baseNoVer.toml "+PTPATH+"peer/conf/base.toml");
+        shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        startPeer(PEER2IP);
+        Thread.sleep(STARTSLEEPTIME);
+        checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
+
         log.info("********************Test for valid licence********************");
         //恢复配置并重启，使用有效证书验证
-        shellPeer2.execute("sed -i \"s/peerTest.lic/peer.lic/g\" "+PTPATH+"peer/conf/base.toml");
+        shellPeer2.execute("cp "+PTPATH+"peer/conf/baseok.toml "+PTPATH+"peer/conf/base.toml");
         shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
         startPeer(PEER2IP);
         Thread.sleep(STARTSLEEPTIME);
@@ -934,15 +952,15 @@ public class TestMgTool {
         shellPeer3.execute("sed -i \"s/peer.lic/peerTest.lic/g\" "+PTPATH+"peer/conf/base.toml");
 
         //重新生成节点个数为2的240证书并拷贝至节点目录
-        genLicence(PEER1IP,PEER1MAC,PEER1IP,"20","2");
+        genLicence(PEER1IP,PEER1MAC,PEER1IP,"20","2",version.substring(0,3));
         shellPeer1.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
 
         //重新生成节点个数为2的246证书并拷贝至节点目录
-        genLicence(PEER2IP,PEER2MAC,PEER2IP,"20","2");
+        genLicence(PEER2IP,PEER2MAC,PEER2IP,"20","2",version.substring(0,3));
         shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
 
         //重新生成节点个数为2的247证书并拷贝至节点目录
-        genLicence(PEER3IP,PEER3MAC,PEER3IP,"20","3");
+        genLicence(PEER3IP,PEER3MAC,PEER3IP,"20","3",version.substring(0,3));
         shellPeer3.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
 
         //启动节点240/246
@@ -965,7 +983,7 @@ public class TestMgTool {
 
         //重新生成节点个数为2的247证书并拷贝至节点目录
         //ToolIP=PEER3IP;
-        genLicence(PEER3IP,PEER3MAC,PEER3IP,"20","2");
+        genLicence(PEER3IP,PEER3MAC,PEER3IP,"20","2",version.substring(0,3));
         shellPeer3.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
 
         //动态加入节点247
@@ -988,7 +1006,7 @@ public class TestMgTool {
         queryPeerList(peer1IPPort,2);
     }
 
-    public String genLicence(String shellIP,String macAddr,String ipAddr,String validPeriod,String maxPeerNo)throws Exception{
+    public String genLicence(String shellIP,String macAddr,String ipAddr,String validPeriod,String maxPeerNo,String version)throws Exception{
         Shell shell1=new Shell(shellIP,USERNAME,PASSWD);
 //        String macAddr="02:42:70:46:5f:71";
 //        String ipAddr="10.1.3.165";
@@ -998,8 +1016,9 @@ public class TestMgTool {
         String ipSetting=ipAddr.isEmpty()?"":" -p "+ipAddr;
         String validSetting=validPeriod.isEmpty()?"":" -d "+validPeriod;
         String NoSetting=maxPeerNo.isEmpty()?"":" -n "+maxPeerNo;
+        String Version=version.isEmpty()?"":" -v "+version;
         //String cmd1=toolPath+"./license create"+macSetting + ipSetting + validSetting + NoSetting;
-        String cmd1=toolPath+"./license create"+macSetting + ipSetting + validSetting + NoSetting;
+        String cmd1=toolPath+"./license create"+macSetting + ipSetting + validSetting + NoSetting + Version;
         shell1.execute(cmd1);
         Date date = new Date();
         timeStamp = date.getTime();

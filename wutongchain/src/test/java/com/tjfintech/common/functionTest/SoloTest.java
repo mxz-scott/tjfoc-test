@@ -247,7 +247,7 @@ public class SoloTest {
         assertThat(Info3, containsString("200"));
     }
     /**
-     * Tc041单签转单签+多签异常测试:
+     * Tc041单签转单签+多签异常测试:锁定解锁后执行回收
      *
      */
     @Test
@@ -258,7 +258,7 @@ public class SoloTest {
         List<Map> list1=soloSign.constructToken(ADDRESS3,tokenType2,"3000",list);
         String transferInfo= soloSign.Transfer(list1,PRIKEY1, transferData);
         Thread.sleep(SLEEPTIME);
-        assertThat(transferInfo, containsString("200"));
+        assertEquals("200",JSONObject.fromObject(transferInfo).getString("State"));
         List<Map> list2 = soloSign.constructToken(ADDRESS4,tokenType,"200");
         List<Map>list3= soloSign.constructToken(MULITADD5,tokenType,"7000",list2);
         String recycleInfo2 = soloSign.Transfer(list3, PRIKEY3, "李四向小六转账4000 TT001, 70 TT001");
@@ -288,10 +288,12 @@ public class SoloTest {
         String Info1 = multiSign.Recycle("", PRIKEY3, tokenType2, "3000");
         String Info2 = multiSign.Recycle(PRIKEY1, tokenType, "7000.123456789");
         String Info3 = multiSign.Recycle(PRIKEY1, tokenType2, "17000.87654321");
-        assertThat(Info, containsString("200"));
-        assertThat(Info1, containsString("200"));
-        assertThat(Info2, containsString("200"));
-        assertThat(Info3, containsString("200"));
+
+        assertEquals("200",JSONObject.fromObject(Info).getString("State"));
+        assertEquals("200",JSONObject.fromObject(Info1).getString("State"));
+        assertEquals("200",JSONObject.fromObject(Info2).getString("State"));
+        assertEquals("200",JSONObject.fromObject(Info3).getString("State"));
+
         log.info("开始查询余额....");
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
@@ -301,6 +303,10 @@ public class SoloTest {
         assertThat(tokenType+"查询余额错误",response2, containsString("200"));
         assertThat(tokenType+"查询余额错误",response3, containsString("200"));
         assertThat(tokenType+"查询余额错误",response4, containsString("200"));
+        assertEquals("200",JSONObject.fromObject(response1).getString("State"));
+        assertEquals("200",JSONObject.fromObject(response2).getString("State"));
+        assertEquals("200",JSONObject.fromObject(response3).getString("State"));
+        assertEquals("200",JSONObject.fromObject(response4).getString("State"));
         assertThat(JSONObject.fromObject(response1).getJSONObject("Data").getString("Total"), containsString("0"));
         assertThat(JSONObject.fromObject(response2).getJSONObject("Data").getString("Total"), containsString("0"));
         assertThat(JSONObject.fromObject(response3).getJSONObject("Data").getString("Total"), containsString("0"));
@@ -309,7 +315,7 @@ public class SoloTest {
     }
 
     /**
-     * Tc042单签转单签+多签测试:
+     * Tc042单签转单签+多签测试:回收前锁定token
      *
      */
     @Test
@@ -321,17 +327,17 @@ public class SoloTest {
         List<Map> list1=soloSign.constructToken(ADDRESS3,tokenType2,"3000",list);
         String transferInfo= soloSign.Transfer(list1,PRIKEY1,transferData);
         Thread.sleep(SLEEPTIME);
-        assertThat(transferInfo, containsString("200"));
+        assertEquals("200",JSONObject.fromObject(transferInfo).getString("State"));
 
         List<Map> list2 = soloSign.constructToken(ADDRESS4,tokenType,"200");
         List<Map>list3= soloSign.constructToken(MULITADD5,tokenType,"70",list2);
         String recycleInfo2 = soloSign.Transfer(list3, PRIKEY3, "李四向小六转账4000 TT001, 70 TT001");
-        assertThat(recycleInfo2, containsString("200"));
+        assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("State"));
         Thread.sleep(SLEEPTIME);
         List<Map> list4 = soloSign.constructToken(ADDRESS4,tokenType,"400");
         List<Map>list5= soloSign.constructToken(MULITADD5,tokenType2,"401",list4);
         String recycleInfo3 = soloSign.Transfer(list5, PRIKEY3, "李四向小六转账4000 TT001, 4001 TT002");
-        assertThat(recycleInfo3, containsString("200"));
+        assertEquals("200",JSONObject.fromObject(recycleInfo3).getString("State"));
         Thread.sleep(SLEEPTIME);
 
         //20190411增加锁定操作步骤后进行回收
@@ -348,13 +354,15 @@ public class SoloTest {
         String Info5 = multiSign.Recycle(PRIKEY1, tokenType, "7000.123456789");
         String Info6 = multiSign.Recycle(PRIKEY1, tokenType2, "17000.87654321");
 
-        assertThat(Info, containsString("200"));
-        assertThat(Info1, containsString("200"));
-        assertThat(Info2, containsString("200"));
-        assertThat(Info3, containsString("200"));
-        assertThat(Info4, containsString("200"));
-        assertThat(Info5, containsString("200"));
-        assertThat(Info6, containsString("200"));
+        assertEquals("200",JSONObject.fromObject(Info).getString("State"));
+        assertEquals("200",JSONObject.fromObject(Info1).getString("State"));
+        assertEquals("200",JSONObject.fromObject(Info2).getString("State"));
+        assertEquals("200",JSONObject.fromObject(Info3).getString("State"));
+        assertEquals("200",JSONObject.fromObject(Info4).getString("State"));
+        assertEquals("200",JSONObject.fromObject(Info5).getString("State"));
+        assertEquals("200",JSONObject.fromObject(Info6).getString("State"));
+
+
         Thread.sleep(SLEEPTIME*2);
         log.info("开始查询余额....");
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
@@ -364,13 +372,15 @@ public class SoloTest {
         String response5 = soloSign.Balance( PRIKEY3, tokenType);
         String response6 = soloSign.Balance( PRIKEY3, tokenType2);
         String response7 = soloSign.Balance( PRIKEY4, tokenType);
-        assertThat(tokenType+"查询余额错误",response1, containsString("200"));
-        assertThat(tokenType+"查询余额错误",response2, containsString("200"));
-        assertThat(tokenType+"查询余额错误",response3, containsString("200"));
-        assertThat(tokenType+"查询余额错误",response4, containsString("200"));
-        assertThat(tokenType+"查询余额错误",response5, containsString("200"));
-        assertThat(tokenType+"查询余额错误",response6, containsString("200"));
-        assertThat(tokenType+"查询余额错误",response7, containsString("200"));
+
+        assertEquals("200",JSONObject.fromObject(response1).getString("State"));
+        assertEquals("200",JSONObject.fromObject(response2).getString("State"));
+        assertEquals("200",JSONObject.fromObject(response3).getString("State"));
+        assertEquals("200",JSONObject.fromObject(response4).getString("State"));
+        assertEquals("200",JSONObject.fromObject(response5).getString("State"));
+        assertEquals("200",JSONObject.fromObject(response6).getString("State"));
+        assertEquals("200",JSONObject.fromObject(response7).getString("State"));
+
         assertEquals(JSONObject.fromObject(response1).getJSONObject("Data").getString("Total").equals("0"),true);
         assertEquals(JSONObject.fromObject(response2).getJSONObject("Data").getString("Total").equals("0"),true);
         assertEquals(JSONObject.fromObject(response3).getJSONObject("Data").getString("Total").equals("0"),true);

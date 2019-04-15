@@ -2,6 +2,7 @@ package com.tjfintech.common.functionTest;
 
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -22,8 +23,6 @@ public class StoreTest {
     public   final static int   SLEEPTIME=8*1000;
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
-
-
 
 
     /**
