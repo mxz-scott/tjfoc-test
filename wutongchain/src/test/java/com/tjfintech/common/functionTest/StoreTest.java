@@ -234,7 +234,7 @@ public class StoreTest {
         String response2= store.GetTransaction(storeHash);
         assertThat(response2,containsString("200"));
         final Base64.Decoder decoder = Base64.getDecoder();
-       String args=JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("header").get("transactionHash").toString();
+       String args=JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("Header").get("transactionHash").toString();
            log.info("123{}",args);
             //   .getJSONArray("smartContractArgs").get(0).toString();
       String DataInfo=args;

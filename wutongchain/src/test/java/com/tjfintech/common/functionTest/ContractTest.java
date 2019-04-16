@@ -182,11 +182,11 @@ public class ContractTest {
         name=name1;
         response=addSalesInfo("Company01",123456,name2);
         assertThat(response,containsString("200"));
-        Thread.sleep(6000);
+        Thread.sleep(8000);
         String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
         response=store.GetTransaction(hash3);
-        String contractResult = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("contractResult").getString("payload");
+        String contractResult = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("contractResult").getString("payload");
         assertThat(contractResult,containsString("success"));
 
         //重复添加 则显示已存在信息
@@ -197,7 +197,7 @@ public class ContractTest {
         String hash4 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
         response=store.GetTransaction(hash4);
-        String contractResult1 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("contractResult").getString("message");
+        String contractResult1 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("contractResult").getString("message");
         assertThat(contractResult1,containsString("this data is exist"));
 
         //调用不存在的合约
@@ -208,8 +208,15 @@ public class ContractTest {
         String hash5 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
         response=store.GetTransaction(hash5);
-        String contractResult2 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("contractResult").getString("payload");
+        String contractResult2 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("contractResult").getString("payload");
         assertThat(contractResult2,containsString("does not exist"));
+
+        name=name1;
+        destroyTest();
+        Thread.sleep(6000);
+        name=name2;
+        destroyTest();
+        Thread.sleep(6000);
     }
 
     public String installTest() throws Exception {
