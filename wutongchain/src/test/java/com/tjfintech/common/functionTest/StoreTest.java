@@ -234,12 +234,30 @@ public class StoreTest {
         String response2= store.GetTransaction(storeHash);
         assertThat(response2,containsString("200"));
         final Base64.Decoder decoder = Base64.getDecoder();
-       String args=JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("Header").get("transactionHash").toString();
+       String args=JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("header").get("transactionHash").toString();
            log.info("123{}",args);
             //   .getJSONArray("smartContractArgs").get(0).toString();
       String DataInfo=args;
         // String DataInfo=new String(decoder.decode(args),"UTF-8");
        assertEquals(DataInfo.equals(storeHash),true);
+
+    }
+    @Test
+    public void TC279_getTxDetail() throws  Exception {
+        String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
+        String response= store.CreateStore(Data);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        Thread.sleep(SLEEPTIME);
+        String response2= store.GetTxDetail(storeHash);
+        assertThat(response2,containsString("200"));
+        final Base64.Decoder decoder = Base64.getDecoder();
+        String args=JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("Header").get("transactionHash").toString();
+        log.info("123{}",args);
+        //   .getJSONArray("smartContractArgs").get(0).toString();
+        String DataInfo=args;
+        // String DataInfo=new String(decoder.decode(args),"UTF-8");
+        assertEquals(DataInfo.equals(storeHash),true);
 
     }
 

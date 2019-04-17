@@ -5,6 +5,8 @@ import java.util.Map;
 public interface Store {
     String GetTransaction(String hash);
 
+    String GetTxDetail(String hash);
+
     String inLocal(String hash);
 
     String CreateStore(String Data);

@@ -21,6 +21,8 @@ public class JavaStore implements Store {
         return str;
 
     }
+    @Override
+    public String GetTxDetail(String hash) {return null;}
 
 
     @Override
@@ -140,4 +142,5 @@ public class JavaStore implements Store {
     public String GetApiHealth() {
         return null;
     }
+
 }

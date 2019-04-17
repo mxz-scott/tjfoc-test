@@ -51,9 +51,11 @@ public class SysTest {
             else
             {
                 shellMongo.execute("docker run --name mongo -p 27017:27017 -v /data/database/mongotest:/data -d mongo:3.6");
+                Thread.sleep(6000);
                 shellMongo.execute("docker ps -a |grep mongo|awk '{print $1}");
                 ArrayList<String> stdout1 = shellMongo.getStandardOutput();
                 mongoID=stdout1.get(0).trim();
+                log.info("get mongo id "+mongoID);
             }
         }
 
