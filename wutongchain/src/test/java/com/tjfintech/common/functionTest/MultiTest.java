@@ -55,13 +55,14 @@ public class MultiTest {
      */
     @Test
     public void    TC1280_checkMultiIssueAddr()throws Exception {
-        //先前已经注册发行地址IMPPUTIONADD
+        //先前已经注册发行及归集地址IMPPUTIONADD,确认发行无异常
         tokenType = IssueToken(5, "1000",MULITADD3);
         Thread.sleep(SLEEPTIME);
         String response1 = multiSign.Balance(MULITADD3,PRIKEY1, tokenType);
         assertEquals("200",JSONObject.fromObject(response1).getString("State"));
         assertEquals("1000",JSONObject.fromObject(response1).getJSONObject("Data").getString("Total"));
 
+        //删除发行地址，保留归集地址
         String response2=multiSign.delissueaddress(PRIKEY1,IMPPUTIONADD);
         Thread.sleep(SLEEPTIME);
         tokenType = IssueToken(6, "1000",MULITADD3);
@@ -70,14 +71,35 @@ public class MultiTest {
         assertEquals("200",JSONObject.fromObject(response3).getString("State"));
         assertEquals("0",JSONObject.fromObject(response3).getJSONObject("Data").getString("Total"));
 
-        String response4=multiSign.addissueaddress(PRIKEY1,IMPPUTIONADD);
-        assertEquals("200",JSONObject.fromObject(response4).getString("State"));
+        //删除发行地址和归集地址
+        String response41=multiSign.delCollAddress(PRIKEY1,IMPPUTIONADD);
+        assertEquals("200",JSONObject.fromObject(response41).getString("State"));
         Thread.sleep(SLEEPTIME);
         tokenType = IssueToken(7, "1000",MULITADD3);
         Thread.sleep(SLEEPTIME);
-        String response5 = multiSign.Balance(MULITADD3,PRIKEY1, tokenType);
+        String response42 = multiSign.Balance(MULITADD3,PRIKEY1, tokenType);
+        assertEquals("200",JSONObject.fromObject(response42).getString("State"));
+        assertEquals("0",JSONObject.fromObject(response42).getJSONObject("Data").getString("Total"));
+
+        //重新添加发行地址，归集地址已删除
+        String response5=multiSign.addissueaddress(PRIKEY1,IMPPUTIONADD);
         assertEquals("200",JSONObject.fromObject(response5).getString("State"));
-        assertEquals("1000",JSONObject.fromObject(response5).getJSONObject("Data").getString("Total"));
+        Thread.sleep(SLEEPTIME);
+        tokenType = IssueToken(7, "1000",MULITADD3);
+        Thread.sleep(SLEEPTIME);
+        String response53 = multiSign.Balance(MULITADD3,PRIKEY1, tokenType);
+        assertEquals("200",JSONObject.fromObject(response53).getString("State"));
+        assertEquals("1000",JSONObject.fromObject(response53).getJSONObject("Data").getString("Total"));
+
+        //重新添加发行地址和归集地址
+        String response6=multiSign.collAddress(PRIKEY1,IMPPUTIONADD);
+        assertEquals("200",JSONObject.fromObject(response6).getString("State"));
+        Thread.sleep(SLEEPTIME);
+        tokenType = IssueToken(7, "1000",MULITADD3);
+        Thread.sleep(SLEEPTIME);
+        String response62 = multiSign.Balance(MULITADD3,PRIKEY1, tokenType);
+        assertEquals("200",JSONObject.fromObject(response62).getString("State"));
+        assertEquals("1000",JSONObject.fromObject(response62).getJSONObject("Data").getString("Total"));
     }
 
 

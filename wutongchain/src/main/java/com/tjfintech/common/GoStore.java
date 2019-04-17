@@ -41,7 +41,7 @@ public  class GoStore implements Store {
         Map<String,Object>map=new HashMap<>();
         map.put("hashData",hashEncode);
         param= GetTest.ParamtoUrl(map);
-        String result=GetTest.SendGetTojson(SDKADD+"/gettransaction"+"?"+param);
+        String result=GetTest.SendGetTojson(SDKADD+"/gettxdetail"+"?"+param);
         log.info(result);
         return result;
 

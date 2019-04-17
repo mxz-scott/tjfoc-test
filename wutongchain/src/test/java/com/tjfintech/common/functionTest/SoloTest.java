@@ -63,15 +63,16 @@ public class SoloTest {
     @Test
     public void    TC1279_checkSoloIssueAddr()throws Exception {
         //Thread.sleep(8000);
-        //先前已经注册发行地址ADDRESS1
+        //先前已经注册发行和归集地址ADDRESS1，确认发行无问题
         tokenType = "SOLOTC-"+UtilsClass.Random(6);
         String isResult= soloSign.issueToken(PRIKEY1,tokenType,"1009","发行token",ADDRESS1);
         assertThat(isResult, containsString("200"));
         Thread.sleep(SLEEPTIME);
         String response1 = soloSign.Balance( PRIKEY1, tokenType);
-        assertThat(response1, containsString("200"));
-        assertThat(response1, containsString("1009"));
+        assertEquals("200",JSONObject.fromObject(response1).getString("State"));
+        assertEquals("1009",JSONObject.fromObject(response1).getJSONObject("Data").getString("Total"));
 
+        //删除发行地址，保留归集地址
         String response3=multiSign.delissueaddress(PRIKEY1,ADDRESS1);
         assertThat(response3, containsString("200"));
 
@@ -80,12 +81,37 @@ public class SoloTest {
         assertThat(isResult, containsString("200"));
         Thread.sleep(SLEEPTIME);
         String response2 = soloSign.Balance( PRIKEY1, tokenType);
-        assertThat(response2, containsString("200"));
-        assertThat(response2, containsString("0"));
+        assertEquals("200",JSONObject.fromObject(response2).getString("State"));
+        assertEquals("0",JSONObject.fromObject(response2).getJSONObject("Data").getString("Total"));
 
-        String response4=multiSign.addissueaddress(PRIKEY1,ADDRESS1);
+        //删除发行地址和归集地址
+        String response4=multiSign.delCollAddress(PRIKEY1,ADDRESS1);
         assertThat(response4, containsString("200"));
-        Thread.sleep(6000);
+
+        tokenType = "SOLOTC-"+UtilsClass.Random(7);
+        isResult= soloSign.issueToken(PRIKEY1,tokenType,"1009","发行token",ADDRESS1);
+        assertThat(isResult, containsString("200"));
+        Thread.sleep(SLEEPTIME);
+        String response41 = soloSign.Balance( PRIKEY1, tokenType);
+        assertEquals("200",JSONObject.fromObject(response41).getString("State"));
+        assertEquals("0",JSONObject.fromObject(response41).getJSONObject("Data").getString("Total"));
+
+        //重新添加发行地址，保留删除归集地址
+        String response51=multiSign.addissueaddress(PRIKEY1,ADDRESS1);
+        assertThat(response51, containsString("200"));
+        Thread.sleep(SLEEPTIME);
+        tokenType = "SOLOTC-"+UtilsClass.Random(7);
+        isResult= soloSign.issueToken(PRIKEY1,tokenType,"1009","发行token",ADDRESS1);
+        assertThat(isResult, containsString("200"));
+        Thread.sleep(SLEEPTIME);
+        String response52 = soloSign.Balance( PRIKEY1, tokenType);
+        assertEquals("200",JSONObject.fromObject(response52).getString("State"));
+        assertEquals("0",JSONObject.fromObject(response52).getJSONObject("Data").getString("Total"));
+
+        //重新添加归集地址
+        String response6=multiSign.collAddress(PRIKEY1,ADDRESS1);
+        assertThat(response6, containsString("200"));
+        Thread.sleep(SLEEPTIME);
     }
 
     /**
