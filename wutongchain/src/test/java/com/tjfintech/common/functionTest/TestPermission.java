@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClass.USERNAME;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -30,7 +31,6 @@ public class TestPermission {
     public static final String PASSWORD = "root";
     TestBuilder testBuilder=TestBuilder.getInstance();
     Store store =testBuilder.getStore();
-    BeforeCondition bf=new BeforeCondition();
 
     APermfuncSys pFun1 =new APermfuncSys();
     APermfuncDocker pFunCt =new APermfuncDocker();
@@ -58,9 +58,23 @@ public class TestPermission {
     //String sdkID="144166a82d85a96d79388e987a456ba70db683d7105505c38d768829c702eba6717a447c5e858165faefdaa847b3558a4b72db87fd379ac5154ad8fc4f3e13d2";
     //String sdkID="7d8c8eb266a6a445cde55e086c2ee63e577e3ff8ba5724ff2090a2a691384cbf87a881bc690695836c3e99424756bf3a3726bc0ae6c66795e51d351e6de7c0db";
     String preCmd=toolPath+exeCmd+"-p "+peerIP+" -d "+sdkID+" -m ";
+    ArrayList<String> dockerList =new ArrayList();
+
+    boolean bExe=false;
+
 
     @Before
     public void beforeTest() throws Exception {
+
+        if(bExe==false) {
+
+            String sdkIP = SDKADD.substring(SDKADD.lastIndexOf("/") + 1, SDKADD.lastIndexOf(":"));
+            Shell shellSDK = new Shell(sdkIP, USERNAME, PASSWD);
+            shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
+            Thread.sleep(2000);
+            shellSDK.execute("sh " + PTPATH + "sdk/start.sh");
+            Thread.sleep(3000);
+        }
 
         String mValue="999";
         String cmd=preCmd+mValue;
@@ -124,6 +138,8 @@ public class TestPermission {
         pFunUTXO.soloBalance(PRIKEY1,glbSoloToken);
         pFunUTXO.multiPostBalance(MULITADD4,PRIKEY1,glbMultiToken4);
         pFunUTXO.multiPostBalance(MULITADD3,PRIKEY1,glbMultiToken3);
+
+        bExe=true;
     }
 
     @Test
@@ -177,6 +193,9 @@ public class TestPermission {
         pFunCt.version="2.0";
         pFunCt.installContract();
         Thread.sleep(40000);
+        dockerList.add(pFunCt.name);
+        log.info("docker list size: "+dockerList.size());
+
         pFunCt.initMobileTest();
 
 //        String[] mArr={"22","221","222","223","224","221,222,223,224"};
@@ -198,6 +217,13 @@ public class TestPermission {
 
         //合约安装及销毁权限
         checkAllInterface("221,223","Def:1111Sys:000000000Store:00Docker:11000Mg:0000UTXO:00000000000");
+
+
+        for (String str : dockerList) {
+            log.info("Destroy Docker:" + str);
+            pFunCt.name=str;
+            pFunCt.destroyContract();
+        }
         Thread.sleep(10000);
     }
 
@@ -289,6 +315,7 @@ public class TestPermission {
         //perStr 若为"1"则表示存在合约安装权限，则等待合约安装
         if(permStr=="1") {
             Thread.sleep(40000);
+            dockerList.add(pFunCt.name);
         }
         permStr=permStr+pFunCt.initMobileTest();//SDK发送合约交易请求
         permStr=permStr+pFunCt.destroyContract();//SDK发送合约删除交易请求
@@ -445,15 +472,10 @@ public class TestPermission {
         assertThat(pFun1.createStore(), containsString("1"));
 
 
-//        //权限设置通知的节点与SDK配置的节点不一致，权限设置有效
-//        shellCmd("cd /zll/chain2.0/sdk/conf;cp config1.toml config.toml");//配置文件中仅配置240作为发送节点
-//        shellCmd("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-//        shellCmd("sh /zll/chain2.0/sdk/start.sh");
-//
-//        Thread.sleep(5000);
-//        shellCmd(cmd2+"211");//向节点246发送权限变更通知
-//        shellCmd("cd /zll/chain2.0/sdk/conf;cp config3.toml config.toml");//恢复配置文件中的节点配置
-//        assertThat(pFun1.createStore(), containsString("1"));
-
+    }
+    @After
+    public void resetPermission() throws Exception{
+        BeforeCondition bf=new BeforeCondition();
+        bf.initTest();
     }
 }
