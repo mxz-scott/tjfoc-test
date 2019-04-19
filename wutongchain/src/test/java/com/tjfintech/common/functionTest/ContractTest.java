@@ -48,8 +48,9 @@ public class ContractTest {
         assertThat(response,containsString("success"));
         String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
-        Thread.sleep(SLEEPTIME*5);
+        Thread.sleep(SLEEPTIME*6);
         String response1=store.GetTransaction(hash);
+        Thread.sleep(5000);
         assertThat(response1,containsString("200"));
         assertThat(response1,containsString("success"));
 
@@ -150,6 +151,21 @@ public class ContractTest {
 
         response=destroyTest();
         assertThat(response,containsString("error Category or empty Category!!"));
+
+        category="docker";
+        name="A12"+RandomUtils.nextInt(100000);
+        response=installTest();
+        assertThat(response,containsString("Invalid contract name"));
+
+        name=sdf.format(dt)+ RandomUtils.nextInt(100000);
+        version=".0";
+        response=installTest();
+        assertThat(response,containsString("Invalid contract version [.0]"));
+
+        version="";
+        response=installTest();
+        assertThat(response,containsString("Invalid contract version []"));
+        version="2.0";
     }
 
     @Test
@@ -185,7 +201,7 @@ public class ContractTest {
         Thread.sleep(8000);
         String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
-        response=store.GetTransaction(hash3);
+        response=store.GetTxDetail(hash3);
         String contractResult = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("contractResult").getString("payload");
         assertThat(contractResult,containsString("success"));
 
@@ -196,7 +212,7 @@ public class ContractTest {
         Thread.sleep(6000);
         String hash4 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
-        response=store.GetTransaction(hash4);
+        response=store.GetTxDetail(hash4);
         String contractResult1 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("contractResult").getString("message");
         assertThat(contractResult1,containsString("this data is exist"));
 
@@ -207,7 +223,7 @@ public class ContractTest {
         Thread.sleep(6000);
         String hash5 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
-        response=store.GetTransaction(hash5);
+        response=store.GetTxDetail(hash5);
         String contractResult2 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("contractResult").getString("payload");
         assertThat(contractResult2,containsString("does not exist"));
 
