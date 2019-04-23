@@ -3,22 +3,20 @@ package com.tjfintech.common.utils;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.junit.Test;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.util.*;
+
+import static org.junit.Assert.assertEquals;
+
 @Slf4j
 public class UtilsClass {
-    //public static final String SDKADD="http://10.1.3.240:7778";
     public static final String SDKADD="http://10.1.3.247:7777";
-     //public static final String SDKADD="http://180.101.204.86:7878";
-     //public static final String SDKADD="http://10.1.3.165:8888";
-     //public static final String SDKADD="http://10.1.3.166:8888";
 
+    //SM2公私钥对
      public final static String  ADDRESS1 = "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo";
      public final static String  ADDRESS2 = "3UycKc8qvVWpVcBr3ipNqDC9oZPd86wj3qSJ6GMbLrVPgeqVwY";
      public final static String  ADDRESS3 = "3r1vxdDjkg9uVke2YdaPTjmWVjV2bsVmySiU99hYuCUjLFYDFb";
@@ -289,5 +287,23 @@ public class UtilsClass {
         shellSDK.execute("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/config.toml");
 
         shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
+    }
+
+    public static void getKeyPairsFromFile(String pemFileName)throws Exception{
+        String filePath = System.getProperty("user.dir") + "/src/main/resources/"+pemFileName;
+        InputStream inStream =new FileInputStream(filePath);
+        ByteArrayOutputStream out =new ByteArrayOutputStream();
+
+        //String manEncode="LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR1RBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUJITTlWQVlJdEJIa3dkd0lCQVFRZ3Y2R0NWb0NMcVp2SkpjYW4KRDQvMDRYUTF1WEJSZk80aHRNT3p6L2Q5VXFPZ0NnWUlLb0VjejFVQmdpMmhSQU5DQUFUQkdibGhmQVJIZDk0OApDYlYxUDkxT3ZyVmxKNHBtS21KcFZFLzFsQmcxS2kyZEtVOUMxK2xlTnVyM1hiZTliK3U1VDd0RUkrYWxDU0V5CkI2QXZSL1ZpCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K";
+        int ch;
+        String res="";
+        while ((ch = inStream.read())!= -1){
+            out.write(ch);
+        }
+        byte[] result=out.toByteArray();
+
+        res=(new BASE64Encoder()).encodeBuffer(result);
+        log.info(res.replaceAll("\r\n", ""));
+        //assertEquals(res.replaceAll("\r\n", ""),manEncode);
     }
 }
