@@ -68,8 +68,8 @@ public class TestTxType {
         for(int i=0;i<30;i++) {
 
             log.info("**************--------------test times: "+i+"--------------**************");
-            shellPeer1.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-            shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+            shellPeer1.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+            shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
 
             startPeer(PEER1IP);
             startPeer(PEER2IP);

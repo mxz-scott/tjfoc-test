@@ -13,7 +13,7 @@ import java.io.Reader;
 import java.util.*;
 @Slf4j
 public class UtilsClass {
-    //public static final String SDKADD="http://10.1.3.246:7878";
+    //public static final String SDKADD="http://10.1.3.240:7778";
     public static final String SDKADD="http://10.1.3.247:7777";
      //public static final String SDKADD="http://180.101.204.86:7878";
      //public static final String SDKADD="http://10.1.3.165:8888";
@@ -68,19 +68,25 @@ public class UtilsClass {
    //add parameters for manage tool
     public static final String PEER1IP="10.1.3.240";
     public static final String PEER2IP="10.1.3.246";
-    public static final String PEER3IP="10.1.3.247";
+    public static final String PEER3IP="10.1.3.168";
+    public static final String PEER4IP="10.1.3.247";
     public static final String PEER1RPCPort="9300";
     public static final String PEER2RPCPort="9300";
     public static final String PEER3RPCPort="9300";
+    public static final String PEER4RPCPort="9300";
     public static String PEER1MAC="02:42:fc:a2:5b:1b";
     public static String PEER2MAC="02:42:c0:31:6b:5c";
-    public static String PEER3MAC="02:42:dd:6c:4a:92";
-    public static final String version="201_190403.1";
+    public static String PEER3MAC="02:42:c4:b9:82:6e";
+    public static String PEER4MAC="02:42:dd:6c:4a:92";
+    public static final String version="2.0dev190419";
     public static final String USERNAME="root";
     public static final String PASSWD="root";
     //节点、SDK、Toolkit对等目录放置于PTPATH目录下
     public static final String PTPATH="/root/zll/permission/";
     public  static String SDKID=null;
+    public static String PeerTPName="auto";
+    public static ArrayList<String > peerList=new ArrayList<>();
+    public static int RESTARTTIME=20000;
 
     public static String dockerFileName="simple.go";
 
@@ -247,5 +253,27 @@ public class UtilsClass {
         }
         log.info("IP "+IP+" with MAC "+MACAddr);
         return MACAddr;
+    }
+
+    public static void setAndRestartPeerList(String...cmdList)throws Exception{
+
+        peerList.clear();
+        peerList.add(PEER1IP);
+        peerList.add(PEER2IP);
+        peerList.add(PEER4IP);
+
+        for (String IP:peerList
+        ) {
+            Shell shellPeer=new Shell(IP,USERNAME,PASSWD);
+            shellPeer.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+            for (String cmd:cmdList
+            ) {
+                shellPeer.execute(cmd);
+                Thread.sleep(300);
+            }
+            Thread.sleep(500);
+            shellPeer.execute("sh "+PTPATH+"peer/start.sh");
+        }
+        Thread.sleep(RESTARTTIME);
     }
 }

@@ -1,30 +1,23 @@
 package com.tjfintech.common.functionTest;
 
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
-import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.hamcrest.CoreMatchers;
-import org.junit.After;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.experimental.theories.Theories;
 import org.junit.runners.MethodSorters;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -32,32 +25,23 @@ import static org.junit.Assert.assertThat;
 @Slf4j
 public class MixTxTest {
 
-    public   final static int   SLEEPTIME=20*1000;
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
     MultiSign multiSign =testBuilder.getMultiSign();
     SoloSign soloSign = testBuilder.getSoloSign();
 
 
-
-
 @Test
     public void TestMultiTypeTx()throws Exception{
+        assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS6), CoreMatchers.containsString("200"));
+        assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS1), CoreMatchers.containsString("200"));
+        assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS6), CoreMatchers.containsString("200"));
+        assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS1), CoreMatchers.containsString("200"));
+
+        Thread.sleep(6000);
+        //设置打包时间为20s 使得各种类型的交易同时打包
+        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/basePkTm20s.toml "+ PTPATH +"peer/conf/base.toml");
         String resp = store.GetHeight();
-
-        Shell shellPeer1=new Shell(PEER1IP,USERNAME,PASSWD);
-        shellPeer1.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellPeer1.execute("cp "+ PTPATH + "peer/conf/basePkTm20s.toml "+ PTPATH +"peer/conf/base.toml");
-
-        Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
-        shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellPeer2.execute("cp "+ PTPATH + "peer/conf/basePkTm20s.toml "+ PTPATH +"peer/conf/base.toml");
-
-        startPeer(PEER1IP);
-        startPeer(PEER2IP);
-
-        Thread.sleep(SLEEPTIME);
-
         //发送存证交易
         Date dt=new Date();
         SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
@@ -67,6 +51,7 @@ public class MixTxTest {
         String response3= multiSign.collAddress(PRIKEY1,ADDRESS1);
         String response4= multiSign.addissueaddress(PRIKEY1,ADDRESS6);
         String response5= multiSign.addissueaddress(PRIKEY1,ADDRESS1);
+        String response51= multiSign.addissueaddress(PRIKEY1,ADDRESS1);
 
         String tokenTypeS = "MixSOLOTC-"+ UtilsClass.Random(6);
         String response6= soloSign.issueToken(PRIKEY1,tokenTypeS,"10000","发行token "+tokenTypeS,ADDRESS1);
@@ -128,24 +113,27 @@ public class MixTxTest {
 
 
         //恢复原始配置
-        shellPeer1.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellPeer1.execute("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
-        shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellPeer2.execute("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
+        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
 
-        startPeer(PEER1IP);
-        startPeer(PEER2IP);
-
-        Thread.sleep(SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
 
 
     }
 
-    public void startPeer(String peerIP)throws Exception{
-        Shell shell1=new Shell(peerIP,USERNAME,PASSWD);
-        Thread.sleep(2000);
-        shell1.execute("sh "+PTPATH+"peer/start.sh");
-    }
+//    public void setAndRestartPeerList(String...cmdList)throws Exception{
+//
+//        for (String IP:peerList
+//             ) {
+//            Shell shellPeer=new Shell(IP,USERNAME,PASSWD);
+//            shellPeer.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+//            for (String cmd:cmdList
+//            ) {
+//                shellPeer.execute(cmd);
+//            }
+//            Thread.sleep(500);
+//            shellPeer.execute("sh "+PTPATH+"peer/start.sh");
+//        }
+//        Thread.sleep(SLEEPTIME);
+//    }
 
 }

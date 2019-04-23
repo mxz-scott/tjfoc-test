@@ -2,6 +2,7 @@ package com.tjfintech.common;
 
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.utils.Shell;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -32,6 +33,7 @@ public class BeforeCondition {
         PEER1MAC=getMACAddr(PEER1IP,USERNAME,PASSWD).trim();
         PEER2MAC=getMACAddr(PEER2IP,USERNAME,PASSWD).trim();
         PEER3MAC=getMACAddr(PEER3IP,USERNAME,PASSWD).trim();
+        PEER4MAC=getMACAddr(PEER4IP,USERNAME,PASSWD).trim();
 
         String preCmd=toolPath+exeCmd+"-p "+PEER1RPCPort+" -d "+SDKID+" -m ";
         String getPerm=toolPath+"./toolkit getpermission -p "+PEER1RPCPort;

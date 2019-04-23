@@ -75,6 +75,7 @@ public class SoloTest {
         //删除发行地址，保留归集地址
         String response3=multiSign.delissueaddress(PRIKEY1,ADDRESS1);
         assertThat(response3, containsString("200"));
+        Thread.sleep(SLEEPTIME);
 
         tokenType = "SOLOTC-"+UtilsClass.Random(7);
         isResult= soloSign.issueToken(PRIKEY1,tokenType,"1009","发行token",ADDRESS1);
@@ -87,8 +88,9 @@ public class SoloTest {
         //删除发行地址和归集地址
         String response4=multiSign.delCollAddress(PRIKEY1,ADDRESS1);
         assertThat(response4, containsString("200"));
+        Thread.sleep(SLEEPTIME);
 
-        tokenType = "SOLOTC-"+UtilsClass.Random(7);
+        tokenType = "SOLOTC-"+UtilsClass.Random(8);
         isResult= soloSign.issueToken(PRIKEY1,tokenType,"1009","发行token",ADDRESS1);
         assertThat(isResult, containsString("200"));
         Thread.sleep(SLEEPTIME);
@@ -100,7 +102,7 @@ public class SoloTest {
         String response51=multiSign.addissueaddress(PRIKEY1,ADDRESS1);
         assertThat(response51, containsString("200"));
         Thread.sleep(SLEEPTIME);
-        tokenType = "SOLOTC-"+UtilsClass.Random(7);
+        tokenType = "SOLOTC-"+UtilsClass.Random(9);
         isResult= soloSign.issueToken(PRIKEY1,tokenType,"1009","发行token",ADDRESS1);
         assertThat(isResult, containsString("200"));
         Thread.sleep(SLEEPTIME);
