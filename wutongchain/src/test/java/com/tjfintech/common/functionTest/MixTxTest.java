@@ -119,7 +119,10 @@ public class MixTxTest {
 
 
     }
-
+    //@Test
+    public void  reset()throws Exception{
+        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
+    }
 //    public void setAndRestartPeerList(String...cmdList)throws Exception{
 //
 //        for (String IP:peerList

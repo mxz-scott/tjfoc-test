@@ -261,7 +261,7 @@ public class UtilsClass {
         peerList.add(PEER1IP);
         peerList.add(PEER2IP);
         peerList.add(PEER4IP);
-
+        //重启节点集群
         for (String IP:peerList
         ) {
             Shell shellPeer=new Shell(IP,USERNAME,PASSWD);
@@ -274,6 +274,20 @@ public class UtilsClass {
             Thread.sleep(500);
             shellPeer.execute("sh "+PTPATH+"peer/start.sh");
         }
+        //重启sdk
+
         Thread.sleep(RESTARTTIME);
+        resetAndRestartSDK();
+        Thread.sleep(5000);
+    }
+
+    public static void resetAndRestartSDK()throws Exception{
+        String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
+        Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
+
+        shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellSDK.execute("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/config.toml");
+
+        shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
     }
 }

@@ -191,7 +191,7 @@ public class ContractTest {
         response=installTest();
         assertThat(response,containsString("200"));
 
-        Thread.sleep(SLEEPTIME*7);
+        Thread.sleep(SLEEPTIME*9);
 
         //跨合约调用
         log.info("正常跨合约调用");
