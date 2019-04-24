@@ -54,6 +54,67 @@ public class GoMultiSign implements MultiSign {
         log.info(result);
         return result;
     }
+    /**
+     * 带私钥的多签Token发行
+     * @param MultiAddr
+     * @param TokenType
+     * @param Amount
+     * @param Prikey
+     * @param Data
+     * @return
+     */
+    @Override
+    public String issueTokenCarryPri(String MultiAddr, String TokenType, String Amount, String Prikey, String Data) {
+        Map<String, Object > map = new HashMap<>();
+        map.put("MultiAddr", MultiAddr);
+        map.put("Prikey",Prikey);
+        map.put("TokenType", TokenType);
+        map.put("Amount", Amount);
+        map.put("Data", Data);
+        String response = PostTest.sendPostToJson(SDKADD + "/utxo/multi/issuetoken", map);
+        log.info(response);
+        return response;
+    }
+    /**
+     * 带私钥带密码的多签Token发行
+     * @param MultiAddr
+     * @param TokenType
+     * @param Amount
+     * @param Prikey
+     * @param Pwd
+     * @param Data
+     * @return
+     */
+    @Override
+    public String issueTokenCarryPri(String MultiAddr, String TokenType, String Amount, String Prikey, String Pwd, String Data) {
+        Map<String, Object > map = new HashMap<>();
+        map.put("MultiAddr", MultiAddr);
+        map.put("PriKey",Prikey);
+        map.put("Pwd",Pwd);
+        map.put("TokenType", TokenType);
+        map.put("Amount", Amount);
+        map.put("Data", Data);
+        String response = PostTest.sendPostToJson(SDKADD + "/utxo/multi/issuetoken", map);
+        log.info(response);
+        return response;
+    }
+    /**
+     * 添加发行地址不携带私钥
+     * @param address
+     * @return
+     */
+    @Override
+    public String addissueaddressRemovePri(String... address) {
+        Map<String, Object> map = new HashMap<>();
+        List<Object> addrs = new ArrayList<>();
+        for (int i=0;i<address.length;i++){
+            addrs.add(address[i]);
+        }
+        map.put("Addrs", addrs);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/addissueaddress", map);
+        log.info(result);
+        return result;
+    }
 
 
     public String delissueaddress(String priKey, String... address) {
@@ -68,6 +129,70 @@ public class GoMultiSign implements MultiSign {
         log.info(result);
         return result;
     }
+    /**
+     * 删除发行地址不携带私钥
+     * @param address
+     * @return
+     */
+    @Override
+    public String delissueaddressRemovePri(String... address) {
+        Map<String,Object> map = new HashMap<>();
+        List<Object> addrs = new ArrayList<>();
+        for (int i= 0;i<address.length;i++){
+            addrs.add(address[i]);
+        }
+        map.put("Addrs", addrs);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/delissueaddress", map);
+        log.info(result);
+        return result;
+    }
+    /**
+     * 获取总发行量,总回收量,总冻结量
+     * @param StartTime
+     * @param EndTime
+     * @param TokenType
+     * @return
+     */
+    @Override
+    public String gettotal(int StartTime, int EndTime, String TokenType) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("StartTime",StartTime);
+        map.put("EndTime",EndTime);
+        map.put("TokenType",TokenType);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/gettotal", map);
+        log.info(result);
+        return result;
+    }
+    /**
+     * 获取tokentype发行量
+     * @param TokenType
+     * @return
+     */
+    @Override
+    public String tokenstate(String TokenType) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("TokenType",TokenType);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/tokenstate", map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 根据tokentype获取账户余额
+     * @param TokenType
+     * @param Address
+     * @return
+     */
+    @Override
+    public String getbalancebytt(String TokenType, String Address) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("TokenType",TokenType);
+        map.put("Address",Address);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/getbalancebytt", map);
+        log.info(result);
+        return result;
+    }
+
     /**
      * 添加归集地址
      * @param pubKey
@@ -101,6 +226,28 @@ public class GoMultiSign implements MultiSign {
         log.info(result);
         return result;
     }
+
+
+
+
+    /**
+     * 添加归集地址不携带私钥
+     * @param address
+     * @return
+     */
+    @Override
+    public String collAddressRemovePri(String... address) {
+        Map<String, Object> map = new HashMap<>();
+        List<Object> addrs = new ArrayList<>();
+        for (int i=0;i<address.length;i++){
+            addrs.add(address[i]);
+        }
+        map.put("Addrs", addrs);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/colladdress", map);
+        log.info(result);
+        return result;
+    }
+
 
     /**
      * 创建多签地址

@@ -32,6 +32,16 @@ public class JavaMultiSign implements MultiSign {
     }
 
     @Override
+    public String issueTokenCarryPri(String MultiAddr, String TokenType, String Amount, String PriKey, String Data) {
+        return null;
+    }
+
+    @Override
+    public String issueTokenCarryPri(String MultiAddr, String TokenType, String Amount, String PriKey, String Pwd, String Data) {
+        return null;
+    }
+
+    @Override
     public String Sign(String Tx, String Prikey, String Pwd) {
         return null;
     }
@@ -96,12 +106,42 @@ public class JavaMultiSign implements MultiSign {
     }
 
     @Override
+    public String collAddressRemovePri(String... address) {
+        return null;
+    }
+
+    @Override
     public String addissueaddress(String priKey, String... address) {
         return null;
     }
 
     @Override
     public String delissueaddress(String priKey, String... address) {
+        return null;
+    }
+
+    @Override
+    public String addissueaddressRemovePri(String... address) {
+        return null;
+    }
+
+    @Override
+    public String delissueaddressRemovePri(String... address) {
+        return null;
+    }
+
+    @Override
+    public String gettotal(int StartTime, int EndTime, String TokenType) {
+        return null;
+    }
+
+    @Override
+    public String tokenstate(String TokenType) {
+        return null;
+    }
+
+    @Override
+    public String getbalancebytt(String TokenType, String Address) {
         return null;
     }
 }
