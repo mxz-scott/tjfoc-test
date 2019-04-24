@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest;
 
 
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -11,6 +12,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import java.security.cert.CertPath;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +20,7 @@ import java.util.Map;
 import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -33,6 +34,14 @@ public class MultiTest {
     //@Test
     @Before
     public void beforeConfig() throws Exception {
+        if(certPath!=""&& bReg==false) {
+            BeforeCondition bf = new BeforeCondition();
+            bf.updatePubPriKey();
+            bf.collAddressTest();
+
+            bReg=true;
+        }
+
         log.info("发行两种token1000个");
         //两次发行之前不可以有sleep时间
         tokenType = IssueToken(5, "1000");
