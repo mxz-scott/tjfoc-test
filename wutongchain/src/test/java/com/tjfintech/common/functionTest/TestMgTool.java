@@ -26,7 +26,7 @@ import static org.junit.Assert.assertThat;
 
 @Slf4j
 public class TestMgTool {
-    public static final int STARTSLEEPTIME=20000;
+    public static final int STARTSLEEPTIME=40000;
     TestBuilder testBuilder=TestBuilder.getInstance();
     Store store =testBuilder.getStore();
 
@@ -34,6 +34,8 @@ public class TestMgTool {
     String tcpPort="60030";
     String consType="L";
     String dataType="D";
+    int basePeerNo = 3;
+    int DynamicPeerNo = 4;
 
 
     String toolPath="cd "+PTPATH+"toolkit;";
@@ -52,24 +54,15 @@ public class TestMgTool {
         BeforeCondition bf =new BeforeCondition();
         bf.initTest();
 
-        Shell shellPeer1=new Shell(PEER1IP,USERNAME,PASSWD);
-        shellPeer1.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellPeer1.execute("cp "+PTPATH+"peer/conf/baseOK.toml "+PTPATH+"peer/conf/base.toml");
+        setAndRestartPeerList("cp "+PTPATH+"peer/conf/baseOK.toml "+PTPATH+"peer/conf/base.toml");
 
-        Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
-        shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellPeer2.execute("cp "+PTPATH+"peer/conf/baseOK.toml "+PTPATH+"peer/conf/base.toml");
-        startPeer(PEER1IP);
-        startPeer(PEER2IP);
-
-        Thread.sleep(STARTSLEEPTIME);
         quitPeer(peer1IPPort,PEER3IP,tcpPort);
 
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
-        shellPeer3.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer3.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
         shellPeer3.execute("cp "+PTPATH+"peer/conf/baseOK.toml "+PTPATH+"peer/conf/base.toml");
         //startPeer(PEER3IP);
-        queryPeerList(peer1IPPort,2);
+        queryPeerList(peer1IPPort,basePeerNo);
 
     }
 
@@ -119,17 +112,17 @@ public class TestMgTool {
         checkParam(PEER1IP,"./toolkit ntx -p "+ peer1IPPort,"too many colons in address");
 
         quitPeer(peer1IPPort,PEER3IP,tcpPort);
-        queryPeerList(peer1IPPort,2);
+        queryPeerList(peer1IPPort,basePeerNo);
         checkParam(PEER1IP,"./toolkit join -p","flag needs an argument: 'p' in -p");
         checkParam(PEER1IP,"./toolkit join -n","flag needs an argument: 'n' in -n");
         checkParam(PEER1IP,"./toolkit join -l","flag needs an argument: 'l' in -l");
         checkParam(PEER1IP,"./toolkit join -w","flag needs an argument: 'w' in -w");
         checkParam(PEER1IP,"./toolkit join -s","flag needs an argument: 's' in -s");
         checkParam(PEER1IP,"./toolkit join","management");
-        checkParam(PEER1IP,"./toolkit join -p "+ PEER1IP+" -n 111 -l 10.1.3.247:60030 -w 10.1.3.247:60030 -s peer247","unknown port");
-        checkParam(PEER1IP,"./toolkit join -p "+ peer1IPPort+" -n 111 -l 10.1.3.247:60030 -w 10.1.3.247:60030 -s peer247","too many colons in address");
+        checkParam(PEER1IP,"./toolkit join -p "+ PEER1IP+" -n 111 -l 10.1.3.168:60030 -w 10.1.3.168:60030 -s peer168","unknown port");
+        checkParam(PEER1IP,"./toolkit join -p "+ peer1IPPort+" -n 111 -l 10.1.3.168:60030 -w 10.1.3.168:60030 -s peer168","too many colons in address");
 
-        queryPeerList(peer1IPPort,2);
+        queryPeerList(peer1IPPort,basePeerNo);
 
         checkParam(PEER1IP,"./toolkit observer -p","flag needs an argument: 'p' in -p");
         checkParam(PEER1IP,"./toolkit observer -n","flag needs an argument: 'n' in -n");
@@ -137,19 +130,19 @@ public class TestMgTool {
         checkParam(PEER1IP,"./toolkit observer -w","flag needs an argument: 'w' in -w");
         checkParam(PEER1IP,"./toolkit observer -s","flag needs an argument: 's' in -s");
         checkParam(PEER1IP,"./toolkit observer","management");
-        checkParam(PEER1IP,"./toolkit observer -p "+ PEER1IP+" -n 111 -l 10.1.3.247:60030 -w 10.1.3.247:60030 -s peer247","unknown port");
-        checkParam(PEER1IP,"./toolkit observer -p "+ peer1IPPort+" -n 111 -l 10.1.3.247:60030 -w 10.1.3.247:60030 -s peer247","too many colons in address");
+        checkParam(PEER1IP,"./toolkit observer -p "+ PEER1IP+" -n 111 -l 10.1.3.168:60030 -w 10.1.3.168:60030 -s peer168","unknown port");
+        checkParam(PEER1IP,"./toolkit observer -p "+ peer1IPPort+" -n 111 -l 10.1.3.168:60030 -w 10.1.3.168:60030 -s peer168","too many colons in address");
 
-        queryPeerList(peer1IPPort,2);
+        queryPeerList(peer1IPPort,basePeerNo);
 
         checkParam(PEER1IP,"./toolkit quit -p","flag needs an argument: 'p' in -p");
         checkParam(PEER1IP,"./toolkit quit -n","flag needs an argument: 'n' in -n");
         checkParam(PEER1IP,"./toolkit quit -l","flag needs an argument: 'l' in -l");
         checkParam(PEER1IP,"./toolkit quit -w","flag needs an argument: 'w' in -w");
         checkParam(PEER1IP,"./toolkit quit","management");
-        checkParam(PEER1IP,"./toolkit quit -p "+ PEER1IP+" -n 111 -l 10.1.3.247:60030 -w 10.1.3.247:60030","unknown port");
-        checkParam(PEER1IP,"./toolkit quit -p "+ peer1IPPort+" -n 111 -l 10.1.3.247:60030 -w 10.1.3.247:60030","too many colons in address");
-        queryPeerList(peer1IPPort,2);
+        checkParam(PEER1IP,"./toolkit quit -p "+ PEER1IP+" -n 111 -l 10.1.3.168:60030 -w 10.1.3.168:60030","unknown port");
+        checkParam(PEER1IP,"./toolkit quit -p "+ peer1IPPort+" -n 111 -l 10.1.3.168:60030 -w 10.1.3.168:60030","too many colons in address");
+        queryPeerList(peer1IPPort,basePeerNo);
 
 
         checkParam(PEER1IP,"./toolkit permission -p","flag needs an argument: 'p' in -p");
@@ -193,32 +186,32 @@ public class TestMgTool {
         //resetPeerEnv();
         //先将待加入节点进程停止
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
-        shellPeer3.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer3.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
         shellPeer3.execute("cp "+PTPATH+"peer/configjoin.toml "+PTPATH+"peer/config.toml");
         quitPeer(peer1IPPort,PEER3IP,tcpPort);
 
         Thread.sleep(2000);
-        queryPeerList(peer1IPPort,2);
+        queryPeerList(peer1IPPort,basePeerNo);
 
         //检查配置文件中预设的共识节点，即搭建环境时配置的共识节点
         chkPeerSimInfoOK(peer1IPPort,tcpPort,version,consType);
 
         //检查动态加入的共识节点，即使用管理工具加入的共识节点信息
         addConsensusPeer(peer1IPPort,PEER3IP,tcpPort,"update success");
-        queryPeerList(peer1IPPort,3);
+        queryPeerList(peer1IPPort,DynamicPeerNo);
 
         Thread.sleep(3000);
 
         startPeer(PEER3IP);
         Thread.sleep(STARTSLEEPTIME);
         chkPeerSimInfoOK(peer3IPPort,tcpPort,version,consType);
-        queryPeerList(peer1IPPort,3);
-        queryPeerList(PEER3IP+":"+rpcPort,3);
+        queryPeerList(peer1IPPort,DynamicPeerNo);
+        queryPeerList(PEER3IP+":"+rpcPort,DynamicPeerNo);
         String height=queryBlockHeight(peer1IPPort);
         assertEquals(queryBlockHeight(peer2IPPort),height);
         //assertEquals(queryBlockHeight(peer3IPPort),height);//因数据较多时同步数据需要时间，此部分查询检查移除
 
-        shellPeer3.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer3.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
         Thread.sleep(3000);
 
 
@@ -226,33 +219,33 @@ public class TestMgTool {
 
         //检查动态加入的数据节点，即使用管理工具加入的数据节点信息
         quitPeer(peer1IPPort,PEER3IP,tcpPort);
-        queryPeerList(peer1IPPort,2);
+        queryPeerList(peer1IPPort,basePeerNo);
         Thread.sleep(4000);
 
         addDataPeer(peer1IPPort,PEER3IP,tcpPort,"update success");
-        queryPeerList(peer1IPPort,3);//通过共识节点查询集群列表
+        queryPeerList(peer1IPPort,DynamicPeerNo);//通过共识节点查询集群列表
         shellPeer3.execute("cp "+PTPATH+"peer/configobs.toml "+PTPATH+"peer/config.toml");
         startPeer(PEER3IP);
         Thread.sleep(STARTSLEEPTIME);
         chkPeerSimInfoOK(peer3IPPort,tcpPort,version,dataType);
-        queryPeerList(PEER3IP+":"+rpcPort,3);//通过非共识节点查询集群列表
+        queryPeerList(PEER3IP+":"+rpcPort,DynamicPeerNo);//通过非共识节点查询集群列表
 
         height=queryBlockHeight(peer1IPPort);
         assertEquals(queryBlockHeight(peer2IPPort),height);
         //assertEquals(queryBlockHeight(peer3IPPort),height);
 
         quitPeer(peer1IPPort,PEER3IP,tcpPort);
-        queryPeerList(peer1IPPort,2);
-        shellPeer3.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        queryPeerList(peer1IPPort,basePeerNo);
+        shellPeer3.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
         addConsensusPeer(peer1IPPort,PEER3IP,tcpPort,"update success");
         startPeer(PEER3IP);//此步骤应该启动不成功，因节点当前配置文件中Type=1，但是使用addConsensusPeer 即join加入，两者不一致时无法启动成功
         Thread.sleep(STARTSLEEPTIME);
 //        queryPeerList(peer1IPPort,2);
-        //shellPeer3.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        //shellPeer3.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
 
 
         //检查配置文件中预设的数据节点，即搭建环境时配置的数据节点 此节点为另外一个系统的数据节点
-        chkPeerSimInfoOK(PEER3IP+":9400","60012",version,dataType);
+        //chkPeerSimInfoOK(PEER3IP+":9400","60012","1904",dataType);
 
 
         //检查未启动或者不存在的节点
@@ -323,7 +316,7 @@ public class TestMgTool {
     //public void startPeer()throws Exception{
         //Shell shell1=new Shell(PEER3IP,USERNAME,PASSWD);
         Shell shell1=new Shell(peerIP,USERNAME,PASSWD);
-        //shell1.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        //shell1.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
         Thread.sleep(2000);
         shell1.execute("sh "+PTPATH+"peer/start.sh");
         //Thread.sleep(20000);
@@ -564,18 +557,20 @@ public class TestMgTool {
         assertEquals(rsp.contains("Count:\t0"),true);
         //log.info("Current Unconfirmed Tx Count:"+rsp.substring(rsp.lastIndexOf("Count:")+1).trim());
 
-        Shell shellPeer1=new Shell(PEER1IP,USERNAME,PASSWD);
-        shellPeer1.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellPeer1.execute("sed -i \"s/PackTime = 1000/PackTime = 10000/g\" "+PTPATH+"peer/conf/base.toml");
+        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/basePkTm20s.toml "+ PTPATH +"peer/conf/base.toml");
 
-        Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
-        shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellPeer2.execute("sed -i \"s/PackTime = 1000/PackTime = 10000/g\" "+PTPATH+"peer/conf/base.toml");
-
-        startPeer(PEER1IP);
-        startPeer(PEER2IP);
-
-        Thread.sleep(STARTSLEEPTIME);
+//        Shell shellPeer1=new Shell(PEER1IP,USERNAME,PASSWD);
+//        shellPeer1.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+//        shellPeer1.execute("sed -i \"s/PackTime = 1000/PackTime = 10000/g\" "+PTPATH+"peer/conf/base.toml");
+//
+//        Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
+//        shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+//        shellPeer2.execute("sed -i \"s/PackTime = 1000/PackTime = 10000/g\" "+PTPATH+"peer/conf/base.toml");
+//
+//        startPeer(PEER1IP);
+//        startPeer(PEER2IP);
+//
+//        Thread.sleep(STARTSLEEPTIME);
 
         rsp = sendNewTx(peer1IPPort,"3","1");
         assertEquals(rsp.contains("HashData"),true);
@@ -584,15 +579,8 @@ public class TestMgTool {
 
         assertEquals(rsp.contains("Count:\t3"),true);
 
-        shellPeer1.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellPeer1.execute("sed -i \"s/PackTime = 10000/PackTime = 1000/g\" "+PTPATH+"peer/conf/base.toml");
-        shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellPeer2.execute("sed -i \"s/PackTime = 10000/PackTime = 1000/g\" "+PTPATH+"peer/conf/base.toml");
-
-        startPeer(PEER1IP);
-        startPeer(PEER2IP);
-
-        Thread.sleep(STARTSLEEPTIME);
+        //恢复原始配置
+        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
 
     }
 
@@ -789,20 +777,22 @@ public class TestMgTool {
     //@Test
     public void testLicGenAndDec() throws Exception{
         String rsp="";
-        String dayTime="365";
+        String dayTime="36500";
         String PeerNo="6";
         //生成证书
-        rsp = genLicence(PEER1IP,PEER1MAC,PEER1IP,dayTime,PeerNo);
+        rsp = genLicence(PEER1IP,PEER1MAC,PEER1IP,dayTime,PeerNo,version.substring(0,3));
         log.info(PEER1MAC);
         log.info(rsp);
         assertEquals(rsp.contains(PEER1MAC),true);
         assertEquals(rsp.contains(PEER1IP),true);
         assertEquals(rsp.contains("DayTime:"+dayTime),true);
         assertEquals(rsp.contains("PeerNum:"+PeerNo),true);
+        assertEquals(rsp.contains("version:"+version.substring(0,3)),true);
 
         //解析证书 确认参数一致
         rsp = deLicence(PEER1IP,"peer.lic");
         assertEquals(rsp.contains("PeerNum:"+PeerNo),true);
+        assertEquals(rsp.contains("PeerVersion:"+version.substring(0,3)),true);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String outTime =df.format(new Date(timeStamp+Long.parseLong(dayTime)*24*60*60*1000));
@@ -815,25 +805,24 @@ public class TestMgTool {
 
 
         //生成使用无效的参数验证:无效的mac地址、无效IP地址、无效时间、无效节点数
-        checkParam(PEER1IP,"./license create -m 12:11 -p 10.1.3.240 -d 100 -n 6","invalid MAC address");
+        checkParam(PEER1IP,"./license create -m 12:11 -p 10.1.3.240 -d 100 -n 6 -v 2.0","invalid MAC address");
         assertEquals(deLicence(PEER1IP,"peer.lic").contains("open peer.lic: no such file or directory"),true);
 
-        checkParam(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1 -d 100 -n 6","invalid IP address");
+        checkParam(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1 -d 100 -n 6 -v 2.0","invalid IP address");
         assertEquals(deLicence(PEER1IP,"peer.lic").contains("open peer.lic: no such file or directory"),true);
 
-        checkParam(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 0.5 -n 6","invalid argument");
+        checkParam(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 0.5 -n 6 -v 2.0","invalid argument");
         assertEquals(deLicence(PEER1IP,"peer.lic").contains("open peer.lic: no such file or directory"),true);
 
-        checkParam(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 5 -n 0.5","invalid argument");
+        checkParam(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 5 -n 0.5 -v 2.0","invalid argument");
         assertEquals(deLicence(PEER1IP,"peer.lic").contains("open peer.lic: no such file or directory"),true);
 
-        checkParam(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 5 -n 0","success");
+        checkParam(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 5 -n 0 -v 2.0","success");
 
         rsp = deLicence(PEER1IP,"peer.lic");
         assertEquals(rsp.contains("PeerNum:0"),true);
 
         //解析证书使用无效参数
-        checkParam(PEER1IP,"./license decode -p ./crypt/key.pem","data Illegal");
         checkParam(PEER1IP,"./license decode -p ./crypt/key.pem","data Illegal");
 
     }
@@ -845,64 +834,81 @@ public class TestMgTool {
         log.info("********************Test for licence timeout********************");
         //ToolIP= PEER2IP;
         Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
-        shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellPeer2.execute("sed -i \"s/peer.lic/peer246d1n2.lic/g\" "+PTPATH+"peer/conf/base.toml");
+        shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        //替换配置licence文件为过期文件
+        shellPeer2.execute("cp "+PTPATH+"peer/conf/based1.toml "+PTPATH+"peer/conf/base.toml");
         startPeer(PEER2IP);
         Thread.sleep(STARTSLEEPTIME);
         checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
-        shellPeer2.execute("sed -i \"s/peer246d1n2.lic/peer.lic/g\" "+PTPATH+"peer/conf/base.toml");
+
+        log.info("********************Test for dismatch license********************");
+        //ToolIP= PEER2IP;
+        shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        genLicence(PEER2IP,PEER2MAC,PEER2IP,"200","3","test");
+        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerDisMatch.lic");
+        //替换配置licence文件为过期文件
+        shellPeer2.execute("cp "+PTPATH+"peer/conf/baseDisMatch.toml "+PTPATH+"peer/conf/base.toml");
+        startPeer(PEER2IP);
+        Thread.sleep(STARTSLEEPTIME);
+        checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
 
         log.info("********************Test for invalid peer count********************");
         //验证节点数据小于配置文件中节点数场景
-        shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        genLicence(PEER2IP,PEER2MAC,PEER2IP,"200","1");
-        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
-        shellPeer2.execute("sed -i \"s/peer.lic/peerTest.lic/g\" "+PTPATH+"peer/conf/base.toml");
+        shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        genLicence(PEER2IP,PEER2MAC,PEER2IP,"200","1",version.substring(0,3));
+        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peer246n1.lic");
+        //替换配置licence文件为n=1文件
+        shellPeer2.execute("cp "+PTPATH+"peer/conf/basen1.toml "+PTPATH+"peer/conf/base.toml");
         startPeer(PEER2IP);
         Thread.sleep(STARTSLEEPTIME);
         checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
 
         log.info("********************Test for invalid MAC addr ********************");
-        //证书IP正确，MAC不正确
-        shellPeer2.execute("sed -i \"s/peerTest.lic/peer.lic/g\" "+PTPATH+"peer/conf/base.toml");
-        shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        genLicence(PEER1IP,PEER1MAC,PEER2IP,"200","3");
-        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
-        shellPeer2.execute("sed -i \"s/peer.lic/peerTest.lic/g\" "+PTPATH+"peer/conf/base.toml");
+        //证书IP正确，MAC不正确 替换配置licence文件为Mac1文件
+        shellPeer2.execute("cp "+PTPATH+"peer/conf/baseMac1.toml "+PTPATH+"peer/conf/base.toml");
+        shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        genLicence(PEER2IP,PEER1MAC,PEER2IP,"200","3",version.substring(0,3));
+        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerMac1.lic");
         startPeer(PEER2IP);
         Thread.sleep(STARTSLEEPTIME);
         checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
 
         log.info("********************Test for invalid IP addr ********************");
-        //证书MAC正确，IP不正确
-        shellPeer2.execute("sed -i \"s/peerTest.lic/peer.lic/g\" "+PTPATH+"peer/conf/base.toml");
-        shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        genLicence(PEER2IP,PEER2MAC,PEER1IP,"200","3");
-        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
-        shellPeer2.execute("sed -i \"s/peer.lic/peerTest.lic/g\" "+PTPATH+"peer/conf/base.toml");
+        //证书MAC正确，IP不正确 替换配置licence文件为IP1文件
+        shellPeer2.execute("cp "+PTPATH+"peer/conf/baseIP1.toml "+PTPATH+"peer/conf/base.toml");
+        shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        genLicence(PEER2IP,PEER2MAC,PEER1IP,"200","3",version.substring(0,3));
+        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerIP1.lic");
         startPeer(PEER2IP);
         Thread.sleep(STARTSLEEPTIME);
         checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
 
         log.info("********************Test for invalid IP&MAC addr ********************");
         //使用其他节点licence
-        shellPeer2.execute("sed -i \"s/peerTest.lic/peer.lic/g\" "+PTPATH+"peer/conf/base.toml");
-        shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        genLicence(PEER1IP,PEER1MAC,PEER1IP,"200","3");
-        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
-        shellPeer2.execute("sed -i \"s/peer.lic/peerTest.lic/g\" "+PTPATH+"peer/conf/base.toml");
+        shellPeer2.execute("cp "+PTPATH+"peer/conf/baseIPMac1.toml "+PTPATH+"peer/conf/base.toml");
+        shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        genLicence(PEER1IP,PEER1MAC,PEER1IP,"200","3",version.substring(0,3));
+        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerIPMac1.lic");
         startPeer(PEER2IP);
          Thread.sleep(STARTSLEEPTIME);
         checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
 
+        log.info("********************Test for old license(no version check) ********************");
+        //使用旧版本工具生成的不带version检查的licence 需要提前准备好旧版本的license
+        shellPeer2.execute("cp "+PTPATH+"peer/conf/baseNoVer.toml "+PTPATH+"peer/conf/base.toml");
+        shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        startPeer(PEER2IP);
+        Thread.sleep(STARTSLEEPTIME);
+        checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
+
         log.info("********************Test for valid licence********************");
         //恢复配置并重启，使用有效证书验证
-        shellPeer2.execute("sed -i \"s/peerTest.lic/peer.lic/g\" "+PTPATH+"peer/conf/base.toml");
-        shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer2.execute("cp "+PTPATH+"peer/conf/baseOK.toml "+PTPATH+"peer/conf/base.toml");
+        shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
         startPeer(PEER2IP);
         Thread.sleep(STARTSLEEPTIME);
         //ToolIP= PEER1IP;
-        queryPeerList(peer1IPPort,2);
+        queryPeerList(peer1IPPort,basePeerNo);
     }
 
     @Test
@@ -915,61 +921,77 @@ public class TestMgTool {
     //目前规划目录：10.1.3.240/246/247  "+PTPATH+"toolkit
 
     public void testLicForAddPeer()throws Exception{
+
+        //重新生成节点个数为3的240证书并拷贝至节点目录
+        genLicence(PEER1IP,PEER1MAC,PEER1IP,"20",String.valueOf(basePeerNo),version.substring(0,3));
+
+        //重新生成节点个数为3的246证书并拷贝至节点目录
+        genLicence(PEER2IP,PEER2MAC,PEER2IP,"20",String.valueOf(basePeerNo),version.substring(0,3));
+
+        //重新生成节点个数为3的168证书并拷贝至节点目录
+        genLicence(PEER4IP,PEER4MAC,PEER4IP,"20",String.valueOf(basePeerNo),version.substring(0,3));
+
         //确认系统中无247节点
         quitPeer(peer1IPPort,PEER3IP,tcpPort);
         //停止节点，修改配置文件使用节点licence名称为peerTest.lic
-        Shell shellPeer1=new Shell(PEER1IP,USERNAME,PASSWD);
-        shellPeer1.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellPeer1.execute("cp "+PTPATH+"peer/conf/baseOK.toml "+PTPATH+"peer/conf/base.toml");
-        shellPeer1.execute("sed -i \"s/peer.lic/peerTest.lic/g\" "+PTPATH+"peer/conf/base.toml");
+        String okConfig="cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml";
+        String peerTestlicConf="sed -i \"s/peer.lic/peerTest.lic/g\" "+PTPATH+"peer/conf/base.toml";
+        String cpLic="cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic";
 
-        Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
-        shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellPeer2.execute("cp "+PTPATH+"peer/conf/baseOK.toml "+PTPATH+"peer/conf/base.toml");
-        shellPeer2.execute("sed -i \"s/peer.lic/peerTest.lic/g\" "+PTPATH+"peer/conf/base.toml");
+        setAndRestartPeerList(okConfig,peerTestlicConf,cpLic);
+
+//        Shell shellPeer1=new Shell(PEER1IP,USERNAME,PASSWD);
+//        shellPeer1.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+//        shellPeer1.execute("cp "+PTPATH+"peer/conf/baseOK.toml "+PTPATH+"peer/conf/base.toml");
+//        shellPeer1.execute("sed -i \"s/peer.lic/peerTest.lic/g\" "+PTPATH+"peer/conf/base.toml");
+//
+//        Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
+//        shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+//        shellPeer2.execute("cp "+PTPATH+"peer/conf/baseOK.toml "+PTPATH+"peer/conf/base.toml");
+//        shellPeer2.execute("sed -i \"s/peer.lic/peerTest.lic/g\" "+PTPATH+"peer/conf/base.toml");
 
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
-        shellPeer3.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer3.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
         shellPeer3.execute("cp "+PTPATH+"peer/conf/baseOK.toml "+PTPATH+"peer/conf/base.toml");
         shellPeer3.execute("sed -i \"s/peer.lic/peerTest.lic/g\" "+PTPATH+"peer/conf/base.toml");
 
-        //重新生成节点个数为2的240证书并拷贝至节点目录
-        genLicence(PEER1IP,PEER1MAC,PEER1IP,"20","2");
-        shellPeer1.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
+//        //重新生成节点个数为2的240证书并拷贝至节点目录
+//        genLicence(PEER1IP,PEER1MAC,PEER1IP,"20",String.valueOf(basePeerNo),version.substring(0,3));
+//        shellPeer1.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
+//
+//        //重新生成节点个数为2的246证书并拷贝至节点目录
+//        genLicence(PEER2IP,PEER2MAC,PEER2IP,"20",String.valueOf(basePeerNo),version.substring(0,3));
+//        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
 
-        //重新生成节点个数为2的246证书并拷贝至节点目录
-        genLicence(PEER2IP,PEER2MAC,PEER2IP,"20","2");
-        shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
-
-        //重新生成节点个数为2的247证书并拷贝至节点目录
-        genLicence(PEER3IP,PEER3MAC,PEER3IP,"20","3");
+        //重新生成节点个数为4的247证书并拷贝至节点目录
+        genLicence(PEER3IP,PEER3MAC,PEER3IP,"20","4",version.substring(0,3));
         shellPeer3.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
 
         //启动节点240/246
-        startPeer(PEER1IP);
-        startPeer(PEER2IP);
+//        startPeer(PEER1IP);
+//        startPeer(PEER2IP);
 
-        Thread.sleep(STARTSLEEPTIME);
-        //检查当前节点列表个数为2,成功则证明节点启动无异常
-        queryPeerList(peer1IPPort,2);
+//        Thread.sleep(STARTSLEEPTIME);
+        //检查当前节点列表个数basePeerNo,成功则证明节点启动无异常
+        queryPeerList(peer1IPPort,basePeerNo);
 
         //动态加入节点247
-        addConsensusPeer(peer1IPPort,PEER3IP,tcpPort,"peers exceed the limit(2)");
+        addConsensusPeer(peer1IPPort,PEER3IP,tcpPort,"peers exceed the limit(3)");
         startPeer(PEER3IP);
         Thread.sleep(STARTSLEEPTIME);
-        queryPeerList(peer1IPPort,2); //检查节点247已经启动成功
+        queryPeerList(peer1IPPort,basePeerNo); //检查节点247已经启动成功
 
         quitPeer(peer1IPPort,PEER3IP,tcpPort);
         Thread.sleep(2000);
-        shellPeer3.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer3.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
 
-        //重新生成节点个数为2的247证书并拷贝至节点目录
+        //重新生成节点个数为3的247证书并拷贝至节点目录
         //ToolIP=PEER3IP;
-        genLicence(PEER3IP,PEER3MAC,PEER3IP,"20","2");
+        genLicence(PEER3IP,PEER3MAC,PEER3IP,"20","3",version.substring(0,3));
         shellPeer3.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
 
         //动态加入节点247
-        addConsensusPeer(peer1IPPort,PEER3IP,tcpPort,"peers exceed the limit(2)");
+        addConsensusPeer(peer1IPPort,PEER3IP,tcpPort,"peers exceed the limit(3)");
         startPeer(PEER3IP);
         Thread.sleep(STARTSLEEPTIME);
         checkParam(PEER1IP,"./toolkit health -p "+PEER3IP+":"+rpcPort,"connection error");
@@ -978,17 +1000,11 @@ public class TestMgTool {
         Thread.sleep(2000);
 
         //恢复原始配置重新启动节点
-        shellPeer1.execute("sed -i \"s/peerTest.lic/peer.lic/g\" "+PTPATH+"peer/conf/base.toml");
-        shellPeer2.execute("sed -i \"s/peerTest.lic/peer.lic/g\" "+PTPATH+"peer/conf/base.toml");
-        shellPeer1.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellPeer2.execute("ps -ef |grep peer |grep -v grep |awk '{print $2}'|xargs kill -9");
-        startPeer(PEER1IP);
-        startPeer(PEER2IP);
-        Thread.sleep(STARTSLEEPTIME);
-        queryPeerList(peer1IPPort,2);
+        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
+        queryPeerList(peer1IPPort,basePeerNo);
     }
 
-    public String genLicence(String shellIP,String macAddr,String ipAddr,String validPeriod,String maxPeerNo)throws Exception{
+    public String genLicence(String shellIP,String macAddr,String ipAddr,String validPeriod,String maxPeerNo,String version)throws Exception{
         Shell shell1=new Shell(shellIP,USERNAME,PASSWD);
 //        String macAddr="02:42:70:46:5f:71";
 //        String ipAddr="10.1.3.165";
@@ -998,8 +1014,9 @@ public class TestMgTool {
         String ipSetting=ipAddr.isEmpty()?"":" -p "+ipAddr;
         String validSetting=validPeriod.isEmpty()?"":" -d "+validPeriod;
         String NoSetting=maxPeerNo.isEmpty()?"":" -n "+maxPeerNo;
+        String Version=version.isEmpty()?"":" -v "+version;
         //String cmd1=toolPath+"./license create"+macSetting + ipSetting + validSetting + NoSetting;
-        String cmd1=toolPath+"./license create"+macSetting + ipSetting + validSetting + NoSetting;
+        String cmd1=toolPath+"./license create"+macSetting + ipSetting + validSetting + NoSetting + Version;
         shell1.execute(cmd1);
         Date date = new Date();
         timeStamp = date.getTime();

@@ -47,6 +47,7 @@ public class APermfuncDocker {
      * 安装合约
      * @throws Exception
      */
+    @Test
     public  String installContract()throws  Exception{
         String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";
         String file=readInput(filePath).toString();

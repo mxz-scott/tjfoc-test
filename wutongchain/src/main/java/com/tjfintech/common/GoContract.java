@@ -33,14 +33,15 @@ public class GoContract implements Contract {
      * @param file  合约内容(base64)
      * @return
      */
-    public String Install(String name,String version,String category,String file){
+    public String Install(String name,String version,String category,String file) throws Exception{
         Map<String,Object>map=new HashMap<>();
         map.put("Name",name);
         map.put("Version",version);
         map.put("Category",category);
         map.put("File",file);
 
-        String result=PostTest.sendPostToJson(SDKADD+"/contract/install",map);
+        //String result=PostTest.sendPostToJson(SDKADD+"/contract/install",map);
+        String result=PostTest.postMethod(SDKADD+"/contract/install",map);
         log.info(result);
         return result ;
     }

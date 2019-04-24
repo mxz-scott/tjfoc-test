@@ -1,7 +1,9 @@
 package com.tjfintech.common;
 
 import com.tjfintech.common.Interface.MultiSign;
+import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.utils.Shell;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -21,6 +23,7 @@ import static org.junit.Assert.assertThat;
 public class BeforeCondition {
     TestBuilder testBuilder = TestBuilder.getInstance();
     MultiSign multiSign = testBuilder.getMultiSign();
+    SoloSign soloSign = testBuilder.getSoloSign();
 
 
     public void initTest()throws Exception{
@@ -32,6 +35,7 @@ public class BeforeCondition {
         PEER1MAC=getMACAddr(PEER1IP,USERNAME,PASSWD).trim();
         PEER2MAC=getMACAddr(PEER2IP,USERNAME,PASSWD).trim();
         PEER3MAC=getMACAddr(PEER3IP,USERNAME,PASSWD).trim();
+        PEER4MAC=getMACAddr(PEER4IP,USERNAME,PASSWD).trim();
 
         String preCmd=toolPath+exeCmd+"-p "+PEER1RPCPort+" -d "+SDKID+" -m ";
         String getPerm=toolPath+"./toolkit getpermission -p "+PEER1RPCPort;
@@ -164,5 +168,94 @@ public class BeforeCondition {
         String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
         log.info("第一次签名");
         String response2 = multiSign.Sign(Tx1, PRIKEY4);
+    }
+
+    public void updatePubPriKey()throws Exception{
+        PRIKEY1 = getKeyPairsFromFile(certPath+"/keys1/key.pem");
+        PRIKEY2 = getKeyPairsFromFile(certPath+"/keys2/key.pem");
+        PRIKEY3 = getKeyPairsFromFile(certPath+"/keys3/key.pem");
+        PRIKEY4 = getKeyPairsFromFile(certPath+"/keys4/key.pem");
+        PRIKEY5 = getKeyPairsFromFile(certPath+"/keys5/key.pem");
+        PRIKEY6 = getKeyPairsFromFile(certPath+"/keys6/key.pem");
+        PRIKEY7 = getKeyPairsFromFile(certPath+"/keys7/key.pem");
+
+        PUBKEY1 = getKeyPairsFromFile(certPath+"/keys1/pubkey.pem");
+        PUBKEY2 = getKeyPairsFromFile(certPath+"/keys2/pubkey.pem");
+        PUBKEY3 = getKeyPairsFromFile(certPath+"/keys3/pubkey.pem");
+        PUBKEY4 = getKeyPairsFromFile(certPath+"/keys4/pubkey.pem");
+        PUBKEY5 = getKeyPairsFromFile(certPath+"/keys5/pubkey.pem");
+        PUBKEY6 = getKeyPairsFromFile(certPath+"/keys6/pubkey.pem");
+        PUBKEY7 = getKeyPairsFromFile(certPath+"/keys7/pubkey.pem");
+
+        ADDRESS1 =JSONObject.fromObject(soloSign.genAddress(PUBKEY1)).getJSONObject("Data").getString("Address");
+        ADDRESS2 =JSONObject.fromObject(soloSign.genAddress(PUBKEY2)).getJSONObject("Data").getString("Address");
+        ADDRESS3 =JSONObject.fromObject(soloSign.genAddress(PUBKEY3)).getJSONObject("Data").getString("Address");
+        ADDRESS4 =JSONObject.fromObject(soloSign.genAddress(PUBKEY4)).getJSONObject("Data").getString("Address");
+        ADDRESS5 =JSONObject.fromObject(soloSign.genAddress(PUBKEY5)).getJSONObject("Data").getString("Address");
+        ADDRESS6 =JSONObject.fromObject(soloSign.genAddress(PUBKEY6)).getJSONObject("Data").getString("Address");
+        ADDRESS7 =JSONObject.fromObject(soloSign.genAddress(PUBKEY7)).getJSONObject("Data").getString("Address");
+
+
+        int M = 3;
+        Map<String, Object> map = new HashMap<>();
+        map.put("1", PUBKEY1);
+        map.put("2", PUBKEY2);
+        map.put("3", PUBKEY3);
+        MULITADD1=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//123
+        map = new HashMap<>();
+        map.put("1", PUBKEY1);
+        map.put("2", PUBKEY2);
+        map.put("3", PUBKEY6);
+        MULITADD2=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//126
+        map = new HashMap<>();
+        map.put("1", PUBKEY1);
+        map.put("2", PUBKEY6);
+        map.put("3", PUBKEY7);
+        MULITADD3=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//167
+        M = 1;
+        map = new HashMap<>();
+        map.put("1", PUBKEY1);
+        map.put("2", PUBKEY2);
+        MULITADD4=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//12
+        map = new HashMap<>();
+        map.put("1", PUBKEY1);
+        map.put("2", PUBKEY3);
+        MULITADD5=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//13
+        map = new HashMap<>();
+        map.put("1", PUBKEY3);
+        map.put("2", PUBKEY4);
+        MULITADD6=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//34
+        map = new HashMap<>();
+        map.put("1", PUBKEY4);
+        map.put("2", PUBKEY5);
+        IMPPUTIONADD=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//45
+
+//        log.info(PRIKEY1);
+//        log.info("***************************************************************");
+//        log.info(PRIKEY2);
+//        log.info("***************************************************************");
+//        log.info(PRIKEY3);
+//        log.info("***************************************************************");
+//        log.info(PRIKEY4);
+//        log.info("***************************************************************");
+//        log.info(PRIKEY5);
+//        log.info("***************************************************************");
+//        log.info(PRIKEY6);
+//        log.info("***************************************************************");
+//        log.info(PUBKEY1);
+//        log.info("***************************************************************");
+//        log.info(PUBKEY2);
+//        log.info("***************************************************************");
+//        log.info(PUBKEY3);
+//        log.info("***************************************************************");
+//        log.info(PUBKEY4);
+//        log.info("***************************************************************");
+//        log.info(PUBKEY5);
+//        log.info("***************************************************************");
+//        log.info(PUBKEY6);
+//        log.info("***************************************************************");
+//        log.info(PUBKEY7);
+//        log.info("******:wq*********************************************************");
+
     }
 }

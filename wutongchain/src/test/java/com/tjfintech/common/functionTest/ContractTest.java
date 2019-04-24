@@ -12,9 +12,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -50,8 +48,9 @@ public class ContractTest {
         assertThat(response,containsString("success"));
         String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
-        Thread.sleep(SLEEPTIME*5);
+        Thread.sleep(SLEEPTIME*6);
         String response1=store.GetTransaction(hash);
+        Thread.sleep(5000);
         assertThat(response1,containsString("200"));
         assertThat(response1,containsString("success"));
 
@@ -152,10 +151,25 @@ public class ContractTest {
 
         response=destroyTest();
         assertThat(response,containsString("error Category or empty Category!!"));
+
+        category="docker";
+        name="A12"+RandomUtils.nextInt(100000);
+        response=installTest();
+        assertThat(response,containsString("Invalid contract name"));
+
+        name=sdf.format(dt)+ RandomUtils.nextInt(100000);
+        version=".0";
+        response=installTest();
+        assertThat(response,containsString("Invalid contract version [.0]"));
+
+        version="";
+        response=installTest();
+        assertThat(response,containsString("Invalid contract version []"));
+        version="2.0";
     }
 
     @Test
-    public void CrossContractTx()throws Exception{
+    public void testCrossContractTx()throws Exception{
         //sales.go 调用whitelist.go中的接口
         String response=null;
         category="docker";
@@ -177,18 +191,18 @@ public class ContractTest {
         response=installTest();
         assertThat(response,containsString("200"));
 
-        Thread.sleep(SLEEPTIME*7);
+        Thread.sleep(SLEEPTIME*9);
 
         //跨合约调用
         log.info("正常跨合约调用");
         name=name1;
         response=addSalesInfo("Company01",123456,name2);
         assertThat(response,containsString("200"));
-        Thread.sleep(6000);
+        Thread.sleep(8000);
         String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
-        response=store.GetTransaction(hash3);
-        String contractResult = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("contractResult").getString("payload");
+        response=store.GetTxDetail(hash3);
+        String contractResult = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("contractResult").getString("payload");
         assertThat(contractResult,containsString("success"));
 
         //重复添加 则显示已存在信息
@@ -198,8 +212,8 @@ public class ContractTest {
         Thread.sleep(6000);
         String hash4 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
-        response=store.GetTransaction(hash4);
-        String contractResult1 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("contractResult").getString("message");
+        response=store.GetTxDetail(hash4);
+        String contractResult1 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("contractResult").getString("message");
         assertThat(contractResult1,containsString("this data is exist"));
 
         //调用不存在的合约
@@ -209,9 +223,16 @@ public class ContractTest {
         Thread.sleep(6000);
         String hash5 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
-        response=store.GetTransaction(hash5);
-        String contractResult2 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("contractResult").getString("payload");
+        response=store.GetTxDetail(hash5);
+        String contractResult2 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("contractResult").getString("payload");
         assertThat(contractResult2,containsString("does not exist"));
+
+        name=name1;
+        destroyTest();
+        Thread.sleep(6000);
+        name=name2;
+        destroyTest();
+        Thread.sleep(6000);
     }
 
     public String installTest() throws Exception {
@@ -278,7 +299,6 @@ public class ContractTest {
 
     public String addSalesInfo(String compID,int sales,String anoDockerName) throws Exception {
         String method = "addSalesInfo";
-
         Map<String, Object> map = new HashMap<>();
         map.put("CompanyID", compID);
         map.put("Sales", sales);
@@ -293,11 +313,6 @@ public class ContractTest {
             args.add(arg[i]);
         }
         String response = contract.Invoke(name, version, category,method, args);
-//        String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
-//        Thread.sleep(SLEEPTIME);
-//        String result = store.GetTransaction(hash);
-//        assertThat(result, containsString("200"));
-//        assertThat(result, containsString("success"));
         return response;
     }
 

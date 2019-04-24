@@ -62,6 +62,19 @@ public  class GoStore implements Store {
         return result;
 
     }
+
+    public String GetTxDetail(String hashData){
+        String param;
+        String hashEncode= URLEncoder.encode(hashData);
+        Map<String,Object>map=new HashMap<>();
+        map.put("hashData",hashEncode);
+        param= GetTest.ParamtoUrl(map);
+        String result=GetTest.SendGetTojson(SDKADD+"/gettxdetail"+"?"+param);
+        log.info(result);
+        return result;
+
+    }
+
     /**
      * 获取交易详情
      * @author chenxu
