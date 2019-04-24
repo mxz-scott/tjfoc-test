@@ -8,7 +8,7 @@ public interface Store {
     String inLocal(String hash);
 
     String CreateStore(String Data);
-
+    String CreateStore(String Data,String... PubKeys);
     String CreateStorePwd(String hash, Map keymap);
 
     String GetStore(String hash);
@@ -36,4 +36,7 @@ public interface Store {
     String GetPeerList();
 
     String GetApiHealth();
+    String Gettxdetail(String hashData);
+
+
 }

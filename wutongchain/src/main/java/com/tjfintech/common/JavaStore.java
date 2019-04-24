@@ -38,6 +38,11 @@ public class JavaStore implements Store {
     }
 
     @Override
+    public String CreateStore(String Data, String... PubKeys) {
+        return null;
+    }
+
+    @Override
     public String CreateStorePwd(String hash, Map keymap) {
         return null;
     }
@@ -48,7 +53,6 @@ public class JavaStore implements Store {
         return null;
     }
 
- 
 
     @Override
     public String GetStorePost(String hash, String priKey) {
@@ -138,6 +142,11 @@ public class JavaStore implements Store {
 
     @Override
     public String GetApiHealth() {
+        return null;
+    }
+
+    @Override
+    public String Gettxdetail(String hashData) {
         return null;
     }
 }
