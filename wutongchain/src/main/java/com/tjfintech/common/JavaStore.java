@@ -22,6 +22,10 @@ public class JavaStore implements Store {
 
     }
 
+    @Override
+    public String GetTxDetail(String hash) {
+        return null;
+    }
 
     @Override
     public String CreateStore(String Data) {
@@ -35,6 +39,11 @@ public class JavaStore implements Store {
         log.info(r);
         return r;
 
+    }
+
+    @Override
+    public String CreateStore(String Data, String... PubKeys) {
+        return null;
     }
 
     @Override
@@ -138,6 +147,11 @@ public class JavaStore implements Store {
 
     @Override
     public String GetApiHealth() {
+        return null;
+    }
+
+    @Override
+    public String Gettxdetail(String hashData) {
         return null;
     }
 }
