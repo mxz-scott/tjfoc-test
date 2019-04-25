@@ -1,6 +1,7 @@
 package com.tjfintech.common;
 
 import com.tjfintech.common.Interface.MultiSign;
+import com.tjfintech.common.Interface.SoloSign;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Test;
@@ -16,13 +17,25 @@ import static org.junit.Assert.assertThat;
 public class BeforeCondition {
     TestBuilder testBuilder = TestBuilder.getInstance();
     MultiSign multiSign = testBuilder.getMultiSign();
+    SoloSign soloSign = testBuilder.getSoloSign();
+
+
+//    /**
+//     * 创建单签地址
+//     *
+//     */
+//    @Test
+//    public void TC12_createAdd() {
+//        soloSign.genAddress(PUBKEY6);
+//        soloSign.genAddress(PUBKEY7);
+//    }
 
     /**
      * 创建多签地址
      * 当数据库被清，库中没多签地址信息时候调用。
      */
     @Test
-    public void TC12_createAdd() {
+    public void TC12_createMultiAdd() {
         int M = 3;
         Map<String, Object> map = new HashMap<>();
         map.put("1", PUBKEY1);
@@ -56,7 +69,19 @@ public class BeforeCondition {
         map.put("1", PUBKEY4);
         map.put("2", PUBKEY5);
         multiSign.genMultiAddress(1, map);
+
+        map = new HashMap<>();
+        map.put("1", PUBKEY1);
+        map.put("2", PUBKEY6);
+        multiSign.genMultiAddress(1, map);
+
+
+        map = new HashMap<>();
+        map.put("1", PUBKEY6);
+        map.put("2", PUBKEY7);
+        multiSign.genMultiAddress(1, map);
     }
+
 
     /**
      * 测试用例T284的前提条件。发行对应token

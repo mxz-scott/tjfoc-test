@@ -19,8 +19,8 @@ public class UtilsClass {
      public final static String  ADDRESS3 = "3r1vxdDjkg9uVke2YdaPTjmWVjV2bsVmySiU99hYuCUjLFYDFb";
     public final static String  ADDRESS4 = "32XBduKk48RJfoA2wJuQ7doaJimMymEmZLYYbYHyH5Eyi5Hs68";
     public final static String  ADDRESS5 = "4NbMaH4L4vrCfgExftQEWF2RFfBkwZqPoDdApqScLjTgZNC6gp";
-//    public final static String  ADDRESS6 = "4PMCowmBGWWLHed9wanTq4HmH4WZdsJr86i212zZbWRUtLD9gM";
-//    public final static String  ADDRESS7 = "4qTRGSuJqmq4HLZFUQvRx2MKKEwULzzEkf3GGXa5d3CYxivGXf";
+//    public final static String  ADDRESS6 = "3tjENxmVEuAEaMDqgu6NnAnJpMkvMH6spb156NCydwfTBi2JZP";
+    public final static String  ADDRESS7 = "3zXrXd1UCZgsf9919j33T5Lh9t8YEWHYrTMsc7PzLckdBpB7SX";
      public final static String  MULITADD1 ="SrvKGcQvu6ytWMPxTMkDMnpFmJyPaYbmAQEY71zuGaH7bzSAutr";//123
      public final static String  MULITADD2 ="SsdcTnfMArqR6Yfon2UiLnSn1zEDkPdVxNGLkBNHKT2Rte3pM5n";//126
      public final static String  MULITADD3 ="SqsV1UFpVQ3PVrxGLfjVTa4u1Xsz5PYT92C5Gav9vSF1xxFJqLS";//167
@@ -28,6 +28,8 @@ public class UtilsClass {
      public final static String  MULITADD5 ="SnFXgygehAXLHjuhHciGJWnwd99TwC8pmAWhpiY6YXmdRRQDxzD";//13
      public final static String  MULITADD6 ="SogNyzAxSByMtRZygvpkbu8V9PGswhqXGh2Hp5PoyQmdaepQt1i";//34
      public final static String  IMPPUTIONADD="Soirv9ikykVHArKCdJqVNegxxqZWUj1g4ixFFYbBLMExy4zUTUe";//45
+    public final static String  MULITADD7 ="SoeNv1VcYqJBFST4Q7eNYzqh6WMmQkKGW37rfRYodYWZNFVSaav";//16
+//    public final static String  IMPPUTIONADD2 ="Soc1vMHWZCuZYCZaXsjh7EU2CA2AKn83qqAWKTZFsv8DCaGyitk";//67
 
     public final static String PRIKEY1 = "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR1RBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUJITTlWQVlJdEJIa3dkd0lCQVFRZ3FpSHZCN3ptbXZKSllFNUEKc0hTaHplMzlJT3pheVRYU3Erdjd6enJXaEJtZ0NnWUlLb0VjejFVQmdpMmhSQU5DQUFSL0w1RUJ6VXpxZk1pSQpHb2xyek8yYjJmbUZQUXNYRk5iWWQzVjFXOFNYSndhdkJRSi94OTBYSnR2VGFmcVRMQmRLVnFOWHYyNitFblhQCnVyaHM0Uy9RCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K";
     public final static String PRIKEY2 = "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR1RBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUJITTlWQVlJdEJIa3dkd0lCQVFRZzBZYlhhUUd4bExyOGl1dm8KOEVsY1NnRFUvd3lRWTJQaDRxVVdxbG5JL1FhZ0NnWUlLb0VjejFVQmdpMmhSQU5DQUFUZjNrcUo1RnZLU0t1RgpWWlUyZzRFQTFXaHVNSVpkZGE0ejI1amhQcHh1U0xXMHVtYXVSamZ5SWpmZ1ZzV3FJanRGRDJOaEtOL1hQYjc1CkFkTkhCbnZwCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K";
@@ -64,6 +66,8 @@ public class UtilsClass {
     public final static String PRIKEY3PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key3.pem";
     public final static String PRIKEY4PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key4.pem";
     public final static String PRIKEY5PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key5.pem";
+    public final static String PRIKEY6PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key6.pem";
+    public final static String PRIKEY7PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key7.pem";
 
 
 
