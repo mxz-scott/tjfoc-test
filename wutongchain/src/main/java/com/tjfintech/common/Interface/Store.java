@@ -15,6 +15,8 @@ public interface Store {
 
     String GetStore(String hash);
 
+    String GetStore2(String hash);
+
     String GetStorePost(String hash,String priKey);
 
     String GetStorePostPwd(String hash,String priKey,String keyPwd);

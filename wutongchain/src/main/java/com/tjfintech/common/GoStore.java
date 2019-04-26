@@ -175,6 +175,19 @@ public  class GoStore implements Store {
     }
 
 
+    public String GetStore2(String hash){
+        String param;
+        String hashEncode= URLEncoder.encode(hash);
+        //hash需要urlEncode编码
+        Map<String,Object>map=new HashMap<>();
+        map.put("hash",hashEncode);
+        param=GetTest.ParamtoUrl(map);
+        String result=GetTest.SendGetTojson(SDKADD+"/getstore2"+"?"+param);
+//        log.info(result);
+        return result;
+    }
+
+
     /***
      * 获取隐私存证
      * @author chenxu

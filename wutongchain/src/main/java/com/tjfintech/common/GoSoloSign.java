@@ -129,6 +129,32 @@ public class GoSoloSign implements SoloSign {
         return list;
     }
 
+    /**
+     * 单签发行token,本地签名
+     */
+    public String issueTokenLocalSign(String pubKey, String tokenType,String amount,String data){
+        Map<String, Object> map = new HashMap<>();
+        map.put("PubKey", pubKey);
+        map.put("TokenType", tokenType);
+        map.put("Amount", amount);
+        map.put("Data",data);
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/issuetoken_localsign", map);
+        //log.info(result);
+        return result;
+    }
+
+
+    /**
+     * 发送签名数据
+     */
+    public String sendSign(String signData){
+        Map<String, Object> map = new HashMap<>();
+        map.put("Data", signData);
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/send_sign", map);
+//        log.info(result);
+        return result;
+    }
+
 
 
     @After

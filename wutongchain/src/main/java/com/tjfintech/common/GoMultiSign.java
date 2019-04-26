@@ -344,6 +344,43 @@ public class GoMultiSign implements MultiSign {
         return response;
     }
 
+
+    /**
+     * 使用3/3账户发行Token申请，使用本地签名
+     * @param MultiAddr   多签地址
+     * @param TokenType   币种类型
+     * @param Amount      货币数量
+     * @param Data        额外数据
+     *
+     * @return
+     */
+    public String issueTokenLocalSign(String MultiAddr, String TokenType,String Amount,String Data) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", MultiAddr);
+        map.put("TokenType", TokenType);
+        map.put("Amount", Amount);
+        map.put("Data", Data);
+        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken_localsign", map);
+        //log.info("发行token："+response);
+        return response;
+    }
+
+    /**
+     * 发送签名
+     * @param signedData   本地签名后的数据
+     *
+     * @return
+     */
+    public String sendSign(String signedData) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("Data", signedData);
+        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/send_multisign", map);
+        log.info(response);
+        return response;
+    }
+
+
     /**
      签名多签发行Token交易-带密码
      * @param Tx     交易ID

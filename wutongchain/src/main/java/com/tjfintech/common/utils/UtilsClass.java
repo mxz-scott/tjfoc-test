@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 
 @Slf4j
 public class UtilsClass {
-    public static final String SDKADD="http://10.1.3.247:7777";
+    public static final String SDKADD="http://10.1.3.165:3333";
 
     //SM2公私钥对
      public static String  ADDRESS1 = "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo";
@@ -62,6 +62,15 @@ public class UtilsClass {
     public static MulitAccount mulitAccount5=new MulitAccount(MULITADD5,PUBKEY1,PUBKEY3,PRIKEY1,PRIKEY3);
     public static MulitAccount mulitAccount6=new MulitAccount(MULITADD6,PUBKEY3,PUBKEY4,PRIKEY3,PRIKEY4);
     public static MulitAccount ImputationAccount=new MulitAccount(IMPPUTIONADD,PUBKEY4,PUBKEY5,PRIKEY4,PRIKEY5);
+
+    public final static String PRIKEY1PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key1.pem";
+    public final static String PRIKEY2PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key2.pem";
+    public final static String PRIKEY3PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key3.pem";
+    public final static String PRIKEY4PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key4.pem";
+    public final static String PRIKEY5PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key5.pem";
+    public final static String PRIKEY6PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key6.pem";
+    public final static String PRIKEY7PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key7.pem";
+
 
 //    public final static String  ADDRESS1 = "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo";
 //    public final static String  ADDRESS2 = "3UycKc8qvVWpVcBr3ipNqDC9oZPd86wj3qSJ6GMbLrVPgeqVwY";
