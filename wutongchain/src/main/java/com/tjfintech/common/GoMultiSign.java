@@ -270,7 +270,24 @@ public class GoMultiSign implements MultiSign {
 
     }
 
-
+    /**
+     *
+     * @param addr 查询的多签地址
+     * @param priKey 多签地址绑定其中一个账户的私钥
+     * @param Pwd  多签地址绑定其中一个账户的私钥的密码
+     * @param tokenType
+     * @return
+     */
+    public String Balance(String addr,String priKey,String Pwd,String tokenType) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", addr);
+        map.put("PriKey", priKey);
+        map.put("Pwd", Pwd);
+        map.put("TokenType", tokenType);
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/balance", map);
+        log.info(result);
+        return result;
+    }
     /**
      * 查询用户余额
      * @param addr    用户地址

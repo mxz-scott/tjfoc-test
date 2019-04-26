@@ -89,12 +89,14 @@ public class BeforeCondition {
         String response4=multiSign.collAddress(PRIKEY2,ADDRESS2);
         String response5= multiSign.collAddress(PRIKEY1,MULITADD4);
         String response6= multiSign.collAddress(PRIKEY1,MULITADD5);
+        String response7= multiSign.collAddress(PRIKEY1,MULITADD7);
         assertThat(response4,containsString("200"));
         assertThat(response,containsString("200"));
         assertThat(response2,containsString("200"));
         assertThat(response3,containsString("200"));
         assertThat(response5,containsString("200"));
         assertThat(response6,containsString("200"));
+        assertThat(response7,containsString("200"));
         //2.0.1版本需要添加发行地址后才可以发行
         String response11= multiSign.addissueaddress(PRIKEY1,IMPPUTIONADD);
         String response12= multiSign.addissueaddress(PRIKEY1,MULITADD3);
@@ -102,12 +104,14 @@ public class BeforeCondition {
         String response14=multiSign.addissueaddress(PRIKEY2,ADDRESS2);
         String response15= multiSign.addissueaddress(PRIKEY1,MULITADD4);
         String response16= multiSign.addissueaddress(PRIKEY1,MULITADD5);
+        String response17= multiSign.addissueaddress(PRIKEY1,MULITADD7);
         assertThat(response14,containsString("200"));
         assertThat(response11,containsString("200"));
         assertThat(response12,containsString("200"));
         assertThat(response13,containsString("200"));
         assertThat(response15,containsString("200"));
         assertThat(response16,containsString("200"));
+        assertThat(response17,containsString("200"));
 
     }
 
@@ -225,6 +229,10 @@ public class BeforeCondition {
         map.put("1", PUBKEY3);
         map.put("2", PUBKEY4);
         MULITADD6=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//34
+        map = new HashMap<>();
+        map.put("1", PUBKEY1);
+        map.put("2", PUBKEY6);
+        MULITADD7=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//34
         map = new HashMap<>();
         map.put("1", PUBKEY4);
         map.put("2", PUBKEY5);

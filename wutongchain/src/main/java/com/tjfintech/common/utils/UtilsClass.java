@@ -30,6 +30,7 @@ public class UtilsClass {
      public static String  MULITADD4 ="Snj8kGTdJy4qcj1ABNRK6cq7TEJqbjVw6xTR9VKQk5cKsSfbsss";//12
      public static String  MULITADD5 ="SnFXgygehAXLHjuhHciGJWnwd99TwC8pmAWhpiY6YXmdRRQDxzD";//13
      public static String  MULITADD6 ="SogNyzAxSByMtRZygvpkbu8V9PGswhqXGh2Hp5PoyQmdaepQt1i";//34
+     public static String  MULITADD7 ="SoeNv1VcYqJBFST4Q7eNYzqh6WMmQkKGW37rfRYodYWZNFVSaav";//16
      public static String  IMPPUTIONADD="Soirv9ikykVHArKCdJqVNegxxqZWUj1g4ixFFYbBLMExy4zUTUe";//45
 
     public static String PRIKEY1 = "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR1RBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUJITTlWQVlJdEJIa3dkd0lCQVFRZ3FpSHZCN3ptbXZKSllFNUEKc0hTaHplMzlJT3pheVRYU3Erdjd6enJXaEJtZ0NnWUlLb0VjejFVQmdpMmhSQU5DQUFSL0w1RUJ6VXpxZk1pSQpHb2xyek8yYjJmbUZQUXNYRk5iWWQzVjFXOFNYSndhdkJRSi94OTBYSnR2VGFmcVRMQmRLVnFOWHYyNitFblhQCnVyaHM0Uy9RCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K";
@@ -108,7 +109,8 @@ public class UtilsClass {
 //    public static MulitAccount ImputationAccount=new MulitAccount(IMPPUTIONADD,PUBKEY4,PUBKEY5,PRIKEY4,PRIKEY5);
 
     //add for diff type prikey & pubkey:SM2 ECDSA or RSA
-    public static final String certPath="SM2";
+    public static final String certPath="";
+    //public static final String certPath="SM2";
     public static boolean bReg=false;
    //add parameters for manage tool
     public static final String PEER1IP="10.1.3.240";
@@ -123,7 +125,7 @@ public class UtilsClass {
     public static String PEER2MAC="02:42:c0:31:6b:5c";
     public static String PEER3MAC="02:42:c4:b9:82:6e";
     public static String PEER4MAC="02:42:dd:6c:4a:92";
-    public static final String version="2.0.2_1904";
+    public static final String version="2.0.2_426";
     public static final String USERNAME="root";
     public static final String PASSWD="root";
     //节点、SDK、Toolkit对等目录放置于PTPATH目录下

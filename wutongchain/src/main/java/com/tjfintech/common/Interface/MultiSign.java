@@ -6,6 +6,7 @@ import java.util.Map;
 public interface MultiSign {
     String genMultiAddress(int M, Map keyMap);
     String Balance(String addr,String priKey,String tokenType);
+    String Balance(String addr,String priKey,String Pwd,String tokenType);
     String Balance(String priKey,String tokenType);
     String issueToken(String MultiAddr,String TokenType,String Amount,String Data);
     String issueToken(String MultiAddr,String ToAddr,String TokenType,String Amount,String Data);

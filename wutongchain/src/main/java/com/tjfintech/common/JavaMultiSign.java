@@ -17,6 +17,11 @@ public class JavaMultiSign implements MultiSign {
     }
 
     @Override
+    public String Balance(String addr,String priKey,String Pwd,String tokenType) {
+        return null;
+    }
+
+    @Override
     public String Balance(String priKey, String tokenType) {
         return null;
     }
