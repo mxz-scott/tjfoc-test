@@ -41,6 +41,19 @@ public class GoSoloSign implements SoloSign {
 //
 //    }
 
+    /**单签转账，本地签名
+     *
+     *
+     */
+    public String TransferLocalSign(List<Map> token,String pubKey,String data) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("PubKey", pubKey);
+        map.put("Data", data);
+        map.put("Token", token);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/transfer_localsign", map);
+//        log.info(result);
+        return result;
+    }
 
     /**查询单签地址余额
      * @param tokenType 币种
@@ -140,6 +153,19 @@ public class GoSoloSign implements SoloSign {
         map.put("Data",data);
         String result=PostTest.sendPostToJson(SDKADD+"/utxo/issuetoken_localsign", map);
         //log.info(result);
+        return result;
+    }
+
+    /**单签回收，本地签名
+     */
+    public String RecycleLocalSign(String pubKey,String tokenType,String amount){
+        Map<String ,Object>map=new HashMap<>();
+//        map.put("MultiAddr","");
+        map.put("PubKey",pubKey);
+        map.put("TokenType",tokenType);
+        map.put("Amount",amount);
+        String result =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle_localsign",map);
+//        log.info(result);
         return result;
     }
 

@@ -114,7 +114,7 @@ public class BeforeCondition {
         assertThat(response15,containsString("200"));
         assertThat(response16,containsString("200"));
         assertThat(response17,containsString("200"));
-        
+
 
     }
 

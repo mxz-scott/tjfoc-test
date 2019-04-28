@@ -273,40 +273,40 @@ public class LocalMultiSignTest {
 
     }
 
-//    /**
-//     * 多签转账，本地签名
-//     *
-//     * @param fromAddr
-//     * @param fromPubKey
-//     * @param data
-//     * @param fromPriKeyPath
-//     * @return
-//     * @throws Exception
-//     */
-//    public String multiSignTransfer_LocalSign(String fromAddr, String fromPubKey, String data,
-//                                              List<Map> tokenList, String fromPriKeyPath) throws Exception {
-//
-////        List<Map> listModel = utilsClass.constructToken(toAddr,tokenType,amount);
-//
-//        String transferInfo = multiSign.TransferLocalSign(fromAddr, fromPubKey, data, tokenList);
-//
-//        if (transferInfo.contains("insufficient balance")) {
-//            return transferInfo;
-//        }
-//
-//        String preSignData = JSONObject.fromObject(transferInfo).getJSONObject("Data").toString();
-////        log.info("多签转账签名前数据: "+preSignData);
-//
-//        String signedData = multiTrans.multiSignTransferAccountsMethod(preSignData, fromPriKeyPath);
-//
-////        log.info("多签转账签名后的数据：" + signedData);
-//
-//        String response = multiSign.sendSign(signedData);
-//
-//        return response;
-//    }
-//
-//
+    /**
+     * 多签转账，本地签名
+     *
+     * @param fromAddr
+     * @param fromPubKey
+     * @param data
+     * @param fromPriKeyPath
+     * @return
+     * @throws Exception
+     */
+    public String multiSignTransfer_LocalSign(String fromAddr, String fromPubKey, String data,
+                                              List<Map> tokenList, String fromPriKeyPath) throws Exception {
+
+//        List<Map> listModel = utilsClass.constructToken(toAddr,tokenType,amount);
+
+        String transferInfo = multiSign.TransferLocalSign(fromAddr, fromPubKey, data, tokenList);
+
+        if (transferInfo.contains("insufficient balance")) {
+            return transferInfo;
+        }
+
+        String preSignData = JSONObject.fromObject(transferInfo).getJSONObject("Data").toString();
+//        log.info("多签转账签名前数据: "+preSignData);
+
+        String signedData = multiTrans.multiSignTransferAccountsMethod(preSignData, fromPriKeyPath);
+
+//        log.info("多签转账签名后的数据：" + signedData);
+
+        String response = multiSign.sendSign(signedData);
+
+        return response;
+    }
+
+
 //    /**
 //     * 回收多签账号余额 - 单笔回收
 //     *
