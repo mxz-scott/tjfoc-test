@@ -36,6 +36,24 @@ public class GoMultiSign implements MultiSign {
     private static final String USER_COLLET="Soirv9ikykVHArKCdJqVNegxxqZWUj1g4ixFFYbBLMExy4zUTUe";
 
     /**
+     * 回收token，本地签名
+     * @param multiAddr 多签地址
+     * @param pubKey 公钥
+     * @param tokenType 数字货币类型
+     * @param amount 货币数量
+     */
+    public String RecycleLocalSign(String multiAddr,String pubKey,String tokenType,String amount){
+        Map<String ,Object>map=new HashMap<>();
+        map.put("MultiAddr",multiAddr);
+        map.put("PubKey",pubKey);
+        map.put("TokenType",tokenType);
+        map.put("Amount",amount);
+        String result =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle_localsign",map);
+//        log.info(result);
+        return result;
+    }
+
+    /**
      * 添加发行地址
      * @param pubKey
      * @param address
