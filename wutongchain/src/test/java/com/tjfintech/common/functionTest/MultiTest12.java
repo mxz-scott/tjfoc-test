@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
-import com.tjfintech.common.JavaStore;
+//import com.tjfintech.common.JavaStore;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;

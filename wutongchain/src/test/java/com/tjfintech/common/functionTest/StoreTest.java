@@ -21,6 +21,7 @@ import static org.junit.Assert.assertThat;
 public class StoreTest {
 
     public   final static int   SLEEPTIME=8*1000;
+    public   final static int   SHORTSLEEPTIME=3*1000;
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
 

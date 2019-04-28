@@ -105,6 +105,8 @@ public class BeforeCondition {
         String response15= multiSign.addissueaddress(PRIKEY1,MULITADD4);
         String response16= multiSign.addissueaddress(PRIKEY1,MULITADD5);
         String response17= multiSign.addissueaddress(PRIKEY1,MULITADD7);
+
+        String response18= multiSign.addissueaddress(PRIKEY1,MULITADD1);
         assertThat(response14,containsString("200"));
         assertThat(response11,containsString("200"));
         assertThat(response12,containsString("200"));
@@ -112,6 +114,7 @@ public class BeforeCondition {
         assertThat(response15,containsString("200"));
         assertThat(response16,containsString("200"));
         assertThat(response17,containsString("200"));
+
 
     }
 

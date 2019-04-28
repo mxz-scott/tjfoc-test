@@ -10,4 +10,11 @@ public interface SoloSign {
     String genAddress(String publicKey);
     List<Map> constructToken(String toAddr,String tokenType,String amount);
     List<Map> constructToken(String toAddr,String tokenType,String amount,List<Map>mapList);
+
+    //本地签名
+    String issueTokenLocalSign(String pubKey,String tokenType,String amount,String data);
+    String TransferLocalSign(List<Map> token, String pubKey, String data);
+    String RecycleLocalSign(String pubKey,String tokenType,String amount);
+    String sendSign(String signData);
+//    String RecyclesLocalSign(List<Map> tokenList);
 }
