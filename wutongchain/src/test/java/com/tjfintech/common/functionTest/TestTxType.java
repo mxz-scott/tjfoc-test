@@ -64,15 +64,18 @@ public class TestTxType {
     public void testSDKConnections()throws Exception{
         Shell shellPeer1 = new Shell(PEER1IP, USERNAME, PASSWD);
         Shell shellPeer2 = new Shell(PEER2IP, USERNAME, PASSWD);
+        Shell shellPeer4 = new Shell(PEER4IP, USERNAME, PASSWD);
         boolean bError=false;
         for(int i=0;i<30;i++) {
 
             log.info("**************--------------test times: "+i+"--------------**************");
             shellPeer1.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
             shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+            shellPeer4.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
 
             startPeer(PEER1IP);
             startPeer(PEER2IP);
+            startPeer(PEER4IP);
             Thread.sleep(SLEEPTIME*2);
 
             store.GetHeight();
@@ -305,7 +308,7 @@ public class TestTxType {
         //添加发行地址交易信息检查
         String txHash11 = JSONObject.fromObject(response11).getString("Data");
         checkTriMsg(txHash11,versionStore,typeAdmin,subTypeAddIssue);
-        checkAdmin(txHash11,"issueAddress","Issueaddress",ADDRESS6,"admin");
+        checkAdmin(txHash11,"issueAddress","issueaddress",ADDRESS6,"admin");
 
         //删除归集地址
         String response12= multiSign.delCollAddress(PRIKEY1,ADDRESS6);

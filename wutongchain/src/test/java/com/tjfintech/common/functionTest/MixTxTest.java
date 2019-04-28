@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
 import org.hamcrest.CoreMatchers;
+import org.junit.After;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -112,16 +113,17 @@ public class MixTxTest {
         assertEquals(height,height1-1);
 
 
-        //恢复原始配置
-        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
-
-        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
+//        //恢复原始配置
+//        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
+//
+//        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
 
 
     }
-    //@Test
+    @After
     public void  reset()throws Exception{
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
+        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
     }
 //    public void setAndRestartPeerList(String...cmdList)throws Exception{
 //

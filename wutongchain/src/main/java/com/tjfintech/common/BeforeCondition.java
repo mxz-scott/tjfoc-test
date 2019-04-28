@@ -155,6 +155,10 @@ public class BeforeCondition {
         map.put("1", PUBKEY4);
         map.put("2", PUBKEY5);
         multiSign.genMultiAddress(1, map);
+        map = new HashMap<>();
+        map.put("1", PUBKEY1);
+        map.put("2", PUBKEY6);
+        multiSign.genMultiAddress(M, map);//34
     }
 
     /**

@@ -65,6 +65,7 @@ public class MultiTest12 {
 
         log.info(issData);
         //发行时不带私钥,签名使用带密码私钥
+        log.info(MULITADD7);
         String response11 = multiSign.issueToken(MULITADD7, tokenType, String.valueOf(amount), issData);
         assertThat(response11, containsString("200"));
         String Tx1 = JSONObject.fromObject(response11).getJSONObject("Data").getString("Tx");
@@ -201,13 +202,13 @@ public class MultiTest12 {
         //发行时带无密码私钥,一步完成
         String response1 = multiSign.issueTokenCarryPri(MULITADD7, tokenType, String.valueOf(amount), PRIKEY1,issData);
         assertThat(response1, containsString("200"));
-        assertEquals(MULITADD7,JSONObject.fromObject(response1).getJSONObject("Data").getString("CollectAddr:"));
+        assertEquals(MULITADD7,JSONObject.fromObject(response1).getJSONObject("Data").getString("CollectAddr"));
 
         //发行时带密码私钥,一步完成
         log.info(issData2);
         String response2 = multiSign.issueTokenCarryPri(MULITADD7, tokenType2, String.valueOf(amount2), PRIKEY6,PWD6,issData);
         assertThat(response2, containsString("200"));
-        assertEquals(MULITADD7,JSONObject.fromObject(response2).getJSONObject("Data").getString("CollectAddr:"));
+        assertEquals(MULITADD7,JSONObject.fromObject(response2).getJSONObject("Data").getString("CollectAddr"));
 
 
         Thread.sleep(SLEEPTIME);

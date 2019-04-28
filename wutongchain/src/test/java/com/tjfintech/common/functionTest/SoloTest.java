@@ -72,6 +72,7 @@ public class SoloTest {
         assertEquals("200",JSONObject.fromObject(response1).getString("State"));
         assertEquals("1009",JSONObject.fromObject(response1).getJSONObject("Data").getString("Total"));
 
+        log.info("删除发行地址，保留归集地址");
         //删除发行地址，保留归集地址
         String response3=multiSign.delissueaddress(PRIKEY1,ADDRESS1);
         assertThat(response3, containsString("200"));
@@ -86,6 +87,7 @@ public class SoloTest {
         assertEquals("0",JSONObject.fromObject(response2).getJSONObject("Data").getString("Total"));
 
         //删除发行地址和归集地址
+        log.info("删除发行地址和归集地址");
         String response4=multiSign.delCollAddress(PRIKEY1,ADDRESS1);
         assertThat(response4, containsString("200"));
         Thread.sleep(SLEEPTIME);

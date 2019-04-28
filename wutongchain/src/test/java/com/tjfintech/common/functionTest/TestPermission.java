@@ -449,8 +449,11 @@ public class TestPermission {
         String cmd3=toolPath+exeCmd+"-p "+nonIP247.split(":")[1]+" -d "+sdkID+" -m ";
 
         //依次向系统中不同的节点发送权限更新命令，以后一个权限更新为主
+        log.info("向节点240更新权限列表 1");
         shellCmd(peerIP240.split(":")[0],cmd1+"1");
+        log.info("向节点246更新权限列表 211");
         shellCmd(peerIP246.split(":")[0],cmd2+"211");
+        Thread.sleep(6000);
         assertThat(pFun1.getHeight(), containsString("0"));
         assertThat(pFun1.createStore(), containsString("1"));
 
