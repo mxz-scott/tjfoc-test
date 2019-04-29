@@ -38,7 +38,7 @@ public class MultiTest {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();
-
+            Thread.sleep(SLEEPTIME);
             bReg=true;
         }
 

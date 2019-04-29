@@ -417,6 +417,20 @@ public class GoMultiSign implements MultiSign {
         return response;
     }
 
+    public String issueToken(String MultiAddr,String ToAddr,String TokenType,String Amount,String priKey,String Pwd,String Data) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", MultiAddr);
+        if(!ToAddr.isEmpty()) map.put("ToAddr",ToAddr);
+        map.put("TokenType", TokenType);
+        map.put("Amount", Amount);
+        if(!priKey.isEmpty()) map.put("PriKey",priKey);
+        if(!Pwd.isEmpty()) map.put("Pwd",Pwd);
+        map.put("Data", Data);
+        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken", map);
+        log.info(response);
+        return response;
+    }
+
 
     /**
      * 使用3/3账户发行Token申请，使用本地签名
@@ -437,6 +451,21 @@ public class GoMultiSign implements MultiSign {
         //log.info("发行token："+response);
         return response;
     }
+
+
+
+    public String issueTokenLocalSign(String MultiAddr, String toAddr, String TokenType,String Amount,String Data) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", MultiAddr);
+        map.put("ToAddr", toAddr);
+        map.put("TokenType", TokenType);
+        map.put("Amount", Amount);
+        map.put("Data", Data);
+        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken_localsign", map);
+        //log.info("发行token："+response);
+        return response;
+    }
+
 
     /**
      * 发送签名
@@ -468,7 +497,9 @@ public class GoMultiSign implements MultiSign {
         map.put("Prikey", Prikey);
         map.put("Pwd", Pwd);
         map.put("Tx", Tx);
-        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/sign", map);
+        //String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/sign", map);
+        String response = PostTest.postMethod(SDKADD+"/utxo/multi/sign", map);
+        log.info("test");
         log.info(response);
         return response;
 

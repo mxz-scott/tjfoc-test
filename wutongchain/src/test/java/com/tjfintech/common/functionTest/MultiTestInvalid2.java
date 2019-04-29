@@ -7,6 +7,7 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -26,6 +27,17 @@ public class MultiTestInvalid2 {
     MultiSign multiSign =testBuilder.getMultiSign();
     UtilsClass utilsClass = new UtilsClass();
 
+
+    @Before
+    public void beforeConfig() throws Exception {
+        if(certPath!=""&& bReg==false) {
+            BeforeCondition bf = new BeforeCondition();
+            bf.updatePubPriKey();
+            bf.collAddressTest();
+            Thread.sleep(SLEEPTIME);
+            bReg=true;
+        }
+    }
     /**
      * TC6 M参数非法时创建多签地址
      */
@@ -111,8 +123,9 @@ public class MultiTestInvalid2 {
 
     /**
      * Tc272核对公私钥接口
+     * 20190429 开发确认要删除此接口，故不再对此接口进行测试
      */
-    @Test
+   // @Test
     public void TC272_testCheckPriKey() {
         String response = multiSign.CheckPriKey(PRIKEY6, PWD6);
         assertThat(response, containsString("200"));
