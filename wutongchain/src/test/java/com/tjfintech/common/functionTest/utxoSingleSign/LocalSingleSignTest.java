@@ -72,8 +72,8 @@ public class LocalSingleSignTest {
         String transferData = "归集地址向ADDRESS3转账100.25个" + tokenType + "，并向ADDRESS5转账200.555个" + tokenType2;
 
         log.info(transferData);
-        List<Map> transferList = utilsClass.constructToken(ADDRESS3, tokenType, "100.25");
-        List<Map> transferList2 = utilsClass.constructToken(ADDRESS5, tokenType2, "200.555", transferList);
+        List<Map> transferList = soloSign.constructToken(ADDRESS3, tokenType, "100.25");
+        List<Map> transferList2 = soloSign.constructToken(ADDRESS5, tokenType2, "200.555", transferList);
         singleSignTransfer_LocalSign(PUBKEY1, transferData, transferList2, PRIKEY1PATH); //多账号转账
 
         Thread.sleep(SLEEPTIME);
@@ -81,20 +81,20 @@ public class LocalSingleSignTest {
         log.info("查询ADDRESS3和ADDRESS5余额");
         String queryInfo = multiSign.BalanceByAddr(ADDRESS3, tokenType);
         assertThat(queryInfo, containsString("200"));
-        assertThat(queryInfo, containsString("\"Total\":\"100.25\""));
+        assertThat(queryInfo, containsString(tokenType + "\":\"100.25\""));
 
         String queryInfo3 = multiSign.BalanceByAddr(ADDRESS5, tokenType2);
         assertThat(queryInfo3, containsString("200"));
-        assertThat(queryInfo3, containsString("\"Total\":\"200.555\""));
+        assertThat(queryInfo3, containsString(tokenType2 + "\":\"200.555\""));
 
         //查询归集地址
         String queryInfo2 = multiSign.BalanceByAddr(ADDRESS1, tokenType);
         assertThat(queryInfo2, containsString("200"));
-        assertThat(queryInfo2, containsString("\"Total\":\"9899.873456789\""));
+        assertThat(queryInfo2, containsString(tokenType + "\":\"9899.873456789\""));
 
         String queryInfo4 = multiSign.BalanceByAddr(ADDRESS1, tokenType2);
         assertThat(queryInfo4, containsString("200"));
-        assertThat(queryInfo4, containsString("\"Total\":\"19800.32154321\""));
+        assertThat(queryInfo4, containsString(tokenType2 + "\":\"19800.32154321\""));
 
 
         String data1 = "ADDRESS3向ADDRESS4转账30个" + tokenType;
@@ -116,11 +116,11 @@ public class LocalSingleSignTest {
         log.info("查询地址4余额");
         String queryInfo21 = multiSign.BalanceByAddr(ADDRESS4, tokenType);
         assertThat(queryInfo21, containsString("200"));
-        assertThat(queryInfo21, containsString("\"Total\":\"30\""));
+        assertThat(queryInfo21, containsString(tokenType + "\":\"30\""));
 
         String queryInfo22 = multiSign.BalanceByAddr(ADDRESS4, tokenType2);
         assertThat(queryInfo22, containsString("200"));
-        assertThat(queryInfo22, containsString("\"Total\":\"80\""));
+        assertThat(queryInfo22, containsString(tokenType2 + "\":\"80\""));
 
         String data3 = "ADDRESS4向ADDRESS2转账30个" + tokenType + "，转账70个" + tokenType2;
         log.info(data3);
@@ -155,7 +155,7 @@ public class LocalSingleSignTest {
         Thread.sleep(SLEEPTIME);
 
         String balanceInfo3TK1 = multiSign.BalanceByAddr(ADDRESS3, tokenType);
-        assertThat(balanceInfo3TK1, containsString("\"Total\":\"0\""));
+        assertThat(balanceInfo3TK1, containsString("\"Data\":{}"));
 
         log.info("查询ADDRESS4余额");
         Thread.sleep(SHORTSLEEPTIME);
@@ -521,13 +521,13 @@ public class LocalSingleSignTest {
         String tokenType = "ST-" + UtilsClass.Random(length);
         String data = "" + "发行token: " + tokenType + " ，数量为：" + amount;
         String issueResult = soloSign.issueTokenLocalSign(PUBKEY1, tokenType, amount, data);
-        log.info("单签发行返回" + issueResult);
+//        log.info("单签发行返回" + issueResult);
         String preSignData = JSONObject.fromObject(issueResult).getJSONObject("Data").toString();
-        log.info("单签发行签名前的数据：" + preSignData);
+//        log.info("单签发行签名前的数据：" + preSignData);
         String signedData = singleSign.singleSignIssueMethod(preSignData, PRIKEY1PATH);
-        log.info("单签发行签名后的数据：" + signedData);
+//        log.info("单签发行签名后的数据：" + signedData);
         String response = soloSign.sendSign(signedData);
-        log.info("发送交易：" + response);
+//        log.info("发送交易：" + response);
         assertThat(tokenType + "发行token错误", response, containsString("200"));
         return tokenType;
     }
