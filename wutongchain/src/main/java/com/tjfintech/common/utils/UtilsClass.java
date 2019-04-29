@@ -63,13 +63,13 @@ public class UtilsClass {
     public static MulitAccount mulitAccount6=new MulitAccount(MULITADD6,PUBKEY3,PUBKEY4,PRIKEY3,PRIKEY4);
     public static MulitAccount ImputationAccount=new MulitAccount(IMPPUTIONADD,PUBKEY4,PUBKEY5,PRIKEY4,PRIKEY5);
 
-    public final static String PRIKEY1PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key1.pem";
-    public final static String PRIKEY2PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key2.pem";
-    public final static String PRIKEY3PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key3.pem";
-    public final static String PRIKEY4PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key4.pem";
-    public final static String PRIKEY5PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key5.pem";
-    public final static String PRIKEY6PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key6.pem";
-    public final static String PRIKEY7PATH = "C:\\Users\\Administrator\\Downloads\\163\\crypt\\key7.pem";
+    public final static String PRIKEY1PATH = ".\\src\\main\\resources\\key\\key1.pem";
+    public final static String PRIKEY2PATH = ".\\src\\main\\resources\\key\\key2.pem";
+    public final static String PRIKEY3PATH = ".\\src\\main\\resources\\key\\key3.pem";
+    public final static String PRIKEY4PATH = ".\\src\\main\\resources\\key\\key4.pem";
+    public final static String PRIKEY5PATH = ".\\src\\main\\resources\\key\\key5.pem";
+    public final static String PRIKEY6PATH = ".\\src\\main\\resources\\key\\key6.pem";
+    public final static String PRIKEY7PATH = ".\\src\\main\\resources\\key\\key7.pem";
 
 
 //    public final static String  ADDRESS1 = "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo";

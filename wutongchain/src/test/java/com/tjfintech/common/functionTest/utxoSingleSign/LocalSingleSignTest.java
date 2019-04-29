@@ -46,13 +46,17 @@ public class LocalSingleSignTest {
         //单签发行
         log.info("发行两种token");
         tokenType = issueTokenLocalSign(7, "10000.123456789");
+        System.out.println("tokenType"+tokenType);
         tokenType2 = issueTokenLocalSign(8, "20000.87654321");
+        System.out.println("tokenType"+tokenType2);
 
         //查询余额
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中token余额");
         String balance = soloSign.Balance(PRIKEY1, tokenType);
+
         String balance2 = soloSign.Balance(PRIKEY1, tokenType2);
+
         assertThat(tokenType + "查询余额错误", balance, containsString("200"));
         assertThat(tokenType + "查询余额不正确", balance, containsString("10000.123456789"));
         assertThat(tokenType2 + "查询余额错误", balance2, containsString("200"));
@@ -72,8 +76,8 @@ public class LocalSingleSignTest {
         String transferData = "归集地址向ADDRESS3转账100.25个" + tokenType + "，并向ADDRESS5转账200.555个" + tokenType2;
 
         log.info(transferData);
-        List<Map> transferList = soloSign.constructToken(ADDRESS3, tokenType, "100.25");
-        List<Map> transferList2 = soloSign.constructToken(ADDRESS5, tokenType2, "200.555", transferList);
+        List<Map> transferList = soloSign.constructToken(ADDRESS3, tokenType, "100.25");  // 转账操作：向address3账户转入100.25
+        List<Map> transferList2 = soloSign.constructToken(ADDRESS5, tokenType2, "200.555", transferList);// 转账操作：向address5账户转入200.555同时向address3账户转入100.25
         singleSignTransfer_LocalSign(PUBKEY1, transferData, transferList2, PRIKEY1PATH); //多账号转账
 
         Thread.sleep(SLEEPTIME);
@@ -148,7 +152,7 @@ public class LocalSingleSignTest {
 
         log.info("查询ADDRESS3余额");
         String queryInfo3TK1 = multiSign.BalanceByAddr(ADDRESS3, tokenType);
-        assertThat(queryInfo3TK1, containsString("70.25"));
+        assertThat(queryInfo3TK1, containsString(tokenType + "\":\"70.25\""));
 
         String Info1 = singleSignRecycle_LocalSign(PUBKEY3, tokenType, "70.25", PRIKEY3PATH); //单账号回收
         assertThat(Info1, containsString("200"));
@@ -160,10 +164,10 @@ public class LocalSingleSignTest {
         log.info("查询ADDRESS4余额");
         Thread.sleep(SHORTSLEEPTIME);
         String queryInfo4TK1 = multiSign.BalanceByAddr(ADDRESS4, tokenType);
-        assertThat(queryInfo4TK1, containsString("\"Total\":\"0\""));
+        assertThat(queryInfo4TK1, containsString("\"Data\":{}")); //总数为0
 
         String queryInfo4TK2 = multiSign.BalanceByAddr(ADDRESS4, tokenType2);
-        assertThat(queryInfo4TK2, containsString("90"));
+        assertThat(queryInfo4TK2, containsString(tokenType2 + "\":\"90\""));
 
 
         String Info2 = singleSignRecycle_LocalSign(PUBKEY4, tokenType2, "90", PRIKEY4PATH);
@@ -171,12 +175,12 @@ public class LocalSingleSignTest {
         Thread.sleep(SLEEPTIME);
 
         String balanceInfo4TK2 = multiSign.BalanceByAddr(ADDRESS4, tokenType2);
-        assertThat(balanceInfo4TK2, containsString("\"Total\":\"0\""));
+        assertThat(balanceInfo4TK2, containsString("\"Data\":{}"));
 
 
         log.info("查询ADDRESS5余额");
         String queryInfo5TK2 = multiSign.BalanceByAddr(ADDRESS5, tokenType2);
-        assertThat(queryInfo5TK2, containsString("100.555"));
+        assertThat(queryInfo5TK2, containsString(tokenType2 + "\":\"100.555\""));
 
 
         String Info3 = singleSignRecycle_LocalSign(PUBKEY5, tokenType2, "100.555", PRIKEY5PATH);
@@ -184,29 +188,29 @@ public class LocalSingleSignTest {
         Thread.sleep(SLEEPTIME);
 
         String balanceInfo5TK2 = multiSign.BalanceByAddr(ADDRESS5, tokenType2);
-        assertThat(balanceInfo5TK2, containsString("\"Total\":\"0\""));
+        assertThat(balanceInfo5TK2, containsString("\"Data\":{}"));
 
         log.info("查询ADDRESS2余额");
         String queryInfo6TK1 = multiSign.BalanceByAddr(ADDRESS2, tokenType);
-        assertThat(queryInfo6TK1, containsString("30"));
+        assertThat(queryInfo6TK1, containsString(tokenType + "\":\"30\""));
 
         String Info4 = singleSignRecycle_LocalSign(PUBKEY2, tokenType, "30", PRIKEY2PATH);
         assertThat(Info4, containsString("200"));
         Thread.sleep(SLEEPTIME);
 
         String balanceInfo6TK1 = multiSign.BalanceByAddr(ADDRESS2, tokenType);
-        assertThat(balanceInfo6TK1, containsString("\"Total\":\"0\""));
+        assertThat(balanceInfo6TK1, containsString("\"Data\":{}"));
 
 
         String queryInfo6TK2 = multiSign.BalanceByAddr(ADDRESS2, tokenType2);
-        assertThat(queryInfo6TK2, containsString("10"));
+        assertThat(queryInfo6TK2, containsString(tokenType2 + "\":\"10\""));
 
         String Info5 = singleSignRecycle_LocalSign(PUBKEY2, tokenType2, "10", PRIKEY2PATH);
         assertThat(Info5, containsString("200"));
         Thread.sleep(SLEEPTIME);
 
         String balanceInfo6TK2 = multiSign.BalanceByAddr(ADDRESS2, tokenType2);
-        assertThat(balanceInfo6TK2, containsString("\"Total\":\"0\""));
+        assertThat(balanceInfo6TK2, containsString("\"Data\":{}"));
 
     }
 
@@ -221,8 +225,8 @@ public class LocalSingleSignTest {
         String transferData = "归集地址向ADDRESS3转账100.25个" + tokenType + "，并向ADDRESS5转账200.555个" + tokenType2;
 
         log.info(transferData);
-        List<Map> transferList = utilsClass.constructToken(ADDRESS3, tokenType, "100.25");
-        List<Map> transferList2 = utilsClass.constructToken(ADDRESS5, tokenType2, "200.555", transferList);
+        List<Map> transferList = soloSign.constructToken(ADDRESS3, tokenType, "100.25");
+        List<Map> transferList2 = soloSign.constructToken(ADDRESS5, tokenType2, "200.555", transferList);
         singleSignTransfer_LocalSign(PUBKEY1, transferData, transferList2, PRIKEY1PATH); //多账号转账
 
         Thread.sleep(SLEEPTIME);
@@ -230,20 +234,20 @@ public class LocalSingleSignTest {
         log.info("查询ADDRESS3和ADDRESS5余额");
         String queryInfo = multiSign.BalanceByAddr(ADDRESS3, tokenType);
         assertThat(queryInfo, containsString("200"));
-        assertThat(queryInfo, containsString("\"Total\":\"100.25\""));
+        assertThat(queryInfo, containsString(tokenType + "\":\"100.25\""));
 
         String queryInfo3 = multiSign.BalanceByAddr(ADDRESS5, tokenType2);
         assertThat(queryInfo3, containsString("200"));
-        assertThat(queryInfo3, containsString("\"Total\":\"200.555\""));
+        assertThat(queryInfo3, containsString(tokenType2 + "\":\"200.555\""));
 
         //查询归集地址
         String queryInfo2 = multiSign.BalanceByAddr(ADDRESS1, tokenType);
         assertThat(queryInfo2, containsString("200"));
-        assertThat(queryInfo2, containsString("\"Total\":\"9899.873456789\""));
+        assertThat(queryInfo2, containsString(tokenType + "\":\"9899.873456789\""));
 
         String queryInfo4 = multiSign.BalanceByAddr(ADDRESS1, tokenType2);
         assertThat(queryInfo4, containsString("200"));
-        assertThat(queryInfo4, containsString("\"Total\":\"19800.32154321\""));
+        assertThat(queryInfo4, containsString(tokenType2 + "\":\"19800.32154321\""));
 
 
         String data1 = "ADDRESS3向ADDRESS4转账30个" + tokenType;
@@ -265,11 +269,11 @@ public class LocalSingleSignTest {
         log.info("查询地址4余额");
         String queryInfo21 = multiSign.BalanceByAddr(ADDRESS4, tokenType);
         assertThat(queryInfo21, containsString("200"));
-        assertThat(queryInfo21, containsString("\"Total\":\"30\""));
+        assertThat(queryInfo21, containsString(tokenType + "\":\"30\""));
 
         String queryInfo22 = multiSign.BalanceByAddr(ADDRESS4, tokenType2);
         assertThat(queryInfo22, containsString("200"));
-        assertThat(queryInfo22, containsString("\"Total\":\"80\""));
+        assertThat(queryInfo22, containsString(tokenType2 + "\":\"80\""));
 
         String data3 = "ADDRESS4向ADDRESS2转账30个" + tokenType + "，转账70个" + tokenType2;
         log.info(data3);
@@ -296,61 +300,60 @@ public class LocalSingleSignTest {
 
 
         //多账号同时回收
-
-        log.info("多账号同时回收，回收归集地址和其他地址余额");
-        List<Map> recycleList1 = utilsClass.constructToken("", PUBKEY3, tokenType, "70.25");
-        List<Map> recycleList2 = utilsClass.constructToken("", PUBKEY4, tokenType2, "90", recycleList1);
-        List<Map> recycleList3 = utilsClass.constructToken("", PUBKEY5, tokenType2, "100.555", recycleList2);
-        List<Map> recycleList4 = utilsClass.constructToken("", PUBKEY2, tokenType, "30", recycleList3);
-        List<Map> recycleList5 = utilsClass.constructToken("", PUBKEY2, tokenType2, "10", recycleList4);
-
-        String response = multiSign.RecyclesLocalSign(recycleList5);
-
-        log.info(response);
-
-        singleSignRecycles(response, "0", PRIKEY3PATH);
-        singleSignRecycles(response, "1", PRIKEY4PATH);
-        singleSignRecycles(response, "2", PRIKEY5PATH);
-        singleSignRecycles(response, "3", PRIKEY2PATH);
-        singleSignRecycles(response, "4", PRIKEY2PATH);
-
-
-        Thread.sleep(SLEEPTIME);
-
-
-        log.info("查询ADDRESS3余额");
-
-
-        String balanceInfo3TK1 = multiSign.BalanceByAddr(ADDRESS3, tokenType);
-        assertThat(balanceInfo3TK1, containsString("\"Total\":\"0\""));
-
-        log.info("查询ADDRESS4余额");
-
-
-        String balanceInfo4TK2 = multiSign.BalanceByAddr(ADDRESS4, tokenType2);
-        assertThat(balanceInfo4TK2, containsString("\"Total\":\"0\""));
-
-
-        log.info("查询ADDRESS5余额");
-
-
-        String balanceInfo5TK2 = multiSign.BalanceByAddr(ADDRESS5, tokenType2);
-        assertThat(balanceInfo5TK2, containsString("\"Total\":\"0\""));
-
-        log.info("查询ADDRESS2余额");
-
-        String balanceInfo6TK1 = multiSign.BalanceByAddr(ADDRESS2, tokenType);
-        assertThat(balanceInfo6TK1, containsString("\"Total\":\"0\""));
-
-        String balanceInfo6TK2 = multiSign.BalanceByAddr(ADDRESS2, tokenType2);
-        assertThat(balanceInfo6TK2, containsString("\"Total\":\"0\""));
+//
+//        log.info("多账号同时回收，回收归集地址和其他地址余额");
+//        List<Map> recycleList1 = utilsClass.constructToken("", PUBKEY3, tokenType, "70.25");
+//        List<Map> recycleList2 = utilsClass.constructToken("", PUBKEY4, tokenType2, "90", recycleList1);
+//        List<Map> recycleList3 = utilsClass.constructToken("", PUBKEY5, tokenType2, "100.555", recycleList2);
+//        List<Map> recycleList4 = utilsClass.constructToken("", PUBKEY2, tokenType, "30", recycleList3);
+//        List<Map> recycleList5 = utilsClass.constructToken("", PUBKEY2, tokenType2, "10", recycleList4);
+//
+//        String response = multiSign.RecyclesLocalSign(recycleList5);
+//        log.info(response);
+//
+//        singleSignRecycles(response, "0", PRIKEY3PATH);
+//        singleSignRecycles(response, "1", PRIKEY4PATH);
+//        singleSignRecycles(response, "2", PRIKEY5PATH);
+//        singleSignRecycles(response, "3", PRIKEY2PATH);
+//        singleSignRecycles(response, "4", PRIKEY2PATH);
+//
+//
+//        Thread.sleep(SLEEPTIME);
+//
+//
+//        log.info("查询ADDRESS3余额");
+//
+//
+//        String balanceInfo3TK1 = multiSign.BalanceByAddr(ADDRESS3, tokenType);
+//        assertThat(balanceInfo3TK1, containsString("\"Data\":{}"));
+//
+//        log.info("查询ADDRESS4余额");
+//
+//
+//        String balanceInfo4TK2 = multiSign.BalanceByAddr(ADDRESS4, tokenType2);
+//        assertThat(balanceInfo4TK2, containsString("\"Data\":{}"));
+//
+//
+//        log.info("查询ADDRESS5余额");
+//
+//
+//        String balanceInfo5TK2 = multiSign.BalanceByAddr(ADDRESS5, tokenType2);
+//        assertThat(balanceInfo5TK2, containsString("\"Data\":{}"));
+//
+//        log.info("查询ADDRESS2余额");
+//
+//        String balanceInfo6TK1 = multiSign.BalanceByAddr(ADDRESS2, tokenType);
+//        assertThat(balanceInfo6TK1, containsString("\"Data\":{}"));
+//
+//        String balanceInfo6TK2 = multiSign.BalanceByAddr(ADDRESS2, tokenType2);
+//        assertThat(balanceInfo6TK2, containsString("\"Data\":{}"));
 
     }
 
 
-//    /**
-//     * 多账号同时回收多签地址和单签地址，本地签名
-//     */
+    /**
+     * 多账号同时回收多签地址和单签地址，本地签名
+     */
 //    @Test
 //    public void TC_SoloProgress_Recycles2() throws Exception {
 //
@@ -367,20 +370,20 @@ public class LocalSingleSignTest {
 //        log.info("查询ADDRESS3和ADDRESS5余额");
 //        String queryInfo = multiSign.BalanceByAddr(ADDRESS3, tokenType);
 //        assertThat(queryInfo, containsString("200"));
-//        assertThat(queryInfo, containsString("\"Total\":\"100.25\""));
+//        assertThat(queryInfo, containsString(tokenType + "\":\"100.25\""));
 //
 //        String queryInfo3 = multiSign.BalanceByAddr(ADDRESS5, tokenType2);
 //        assertThat(queryInfo3, containsString("200"));
-//        assertThat(queryInfo3, containsString("\"Total\":\"200.555\""));
+//        assertThat(queryInfo3, containsString(tokenType + "\":\"200.555\""));
 //
 //        //查询归集地址
 //        String queryInfo2 = multiSign.BalanceByAddr(ADDRESS1, tokenType);
 //        assertThat(queryInfo2, containsString("200"));
-//        assertThat(queryInfo2, containsString("\"Total\":\"9899.873456789\""));
+//        assertThat(queryInfo2, containsString(tokenType + "\":\"9899.873456789\""));
 //
 //        String queryInfo4 = multiSign.BalanceByAddr(ADDRESS1, tokenType2);
 //        assertThat(queryInfo4, containsString("200"));
-//        assertThat(queryInfo4, containsString("\"Total\":\"19800.32154321\""));
+//        assertThat(queryInfo4, containsString(tokenType + "\":\"19800.32154321\""));
 //
 //        //多账号同时回收
 //
@@ -402,18 +405,18 @@ public class LocalSingleSignTest {
 //        log.info("查询ADDRESS3余额");
 //
 //        String balanceInfo3TK1 = multiSign.BalanceByAddr(ADDRESS3, tokenType);
-//        assertThat(balanceInfo3TK1, containsString("\"Total\":\"0\""));
+//        assertThat(balanceInfo3TK1, containsString("\"Data\":{}"));
 //
 //        log.info("查询ADDRESS5余额");
 //
 //
 //        String balanceInfo5TK2 = multiSign.BalanceByAddr(ADDRESS5, tokenType2);
-//        assertThat(balanceInfo5TK2, containsString("\"Total\":\"0\""));
+//        assertThat(balanceInfo5TK2, containsString("\"Data\":{}"));
 //
 //        log.info("查询归集地址余额");
 //
 //        String balanceInfo6TK1 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
-//        assertThat(balanceInfo6TK1, containsString("\"Total\":\"0\""));
+//        assertThat(balanceInfo6TK1, containsString("\"Data\":{}"));
 //
 //    }
 
@@ -425,8 +428,8 @@ public class LocalSingleSignTest {
     public void TC040_SoloProgress_LocalSign() throws Exception {
         String transferData = "归集地址向" + ADDRESS3 + "转账3000个" + tokenType + ",和3000个" + tokenType2;
         log.info(transferData);
-        List<Map> list = utilsClass.constructToken(ADDRESS3, tokenType, "3000");
-        List<Map> list1 = utilsClass.constructToken(ADDRESS3, tokenType2, "3000", list);
+        List<Map> list = soloSign.constructToken(ADDRESS3, tokenType, "3000");
+        List<Map> list1 = soloSign.constructToken(ADDRESS3, tokenType2, "3000", list);
 
         singleSignTransfer_LocalSign(PUBKEY1, transferData, list1, PRIKEY1PATH); //多账号转账
         Thread.sleep(SLEEPTIME);
@@ -555,7 +558,7 @@ public class LocalSingleSignTest {
 //        log.info("单签转账签名前数据: " + preSignData2);
 
 
-        String signedData2 = singleTrans.singleSignTransferAccountsMethod(preSignData2, fromPriKeyPath);
+        String signedData2 = singleTrans.singleSignTransferAccountsMethod(preSignData2, fromPriKeyPath);  //单签发行的方法
 
 //        log.info("单签转账签名后的数据：" + signedData2);
 
@@ -607,9 +610,8 @@ public class LocalSingleSignTest {
      * @throws Exception
      */
     public String singleSignRecycles(String response, String index, String fromPriKeyPath) throws Exception {
-
+        System.out.println("打印的"+response);
         String key = "single-tx-" + index;
-
         String preSignData1 = JSONObject.fromObject(response).getJSONObject("Data").getString(key);
 
 
