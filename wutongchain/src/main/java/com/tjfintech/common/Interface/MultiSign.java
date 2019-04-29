@@ -39,6 +39,7 @@ public interface MultiSign {
     //本地签名
 
     String issueTokenLocalSign(String MultiAddr,String TokenType,String Amount,String Data);
+    String issueTokenLocalSign(String MultiAddr,String ToAddr, String TokenType,String Amount,String Data);
     String sendSign(String signData);
     String TransferLocalSign(String PubKey, String Data,String fromAddr ,List<Map>tokenList);
     String RecycleLocalSign(String multiAddr,String pubKey,String tokenType,String amount);
