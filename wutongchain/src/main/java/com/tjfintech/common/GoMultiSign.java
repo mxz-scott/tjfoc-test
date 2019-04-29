@@ -438,6 +438,21 @@ public class GoMultiSign implements MultiSign {
         return response;
     }
 
+
+
+    public String issueTokenLocalSign(String MultiAddr, String toAddr, String TokenType,String Amount,String Data) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", MultiAddr);
+        map.put("ToAddr", toAddr);
+        map.put("TokenType", TokenType);
+        map.put("Amount", Amount);
+        map.put("Data", Data);
+        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken_localsign", map);
+        //log.info("发行token："+response);
+        return response;
+    }
+
+
     /**
      * 发送签名
      * @param signedData   本地签名后的数据

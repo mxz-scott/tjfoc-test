@@ -118,6 +118,21 @@ public class BeforeCondition {
 
     }
 
+//        /**
+//     * 创建单签地址
+//     *
+//     */
+//    @Test
+//    public void TC12_createAdd() {
+//        soloSign.genAddress(PUBKEY1);
+//        soloSign.genAddress(PUBKEY2);
+//        soloSign.genAddress(PUBKEY3);
+//        soloSign.genAddress(PUBKEY4);
+//        soloSign.genAddress(PUBKEY5);
+//        soloSign.genAddress(PUBKEY6);
+//        soloSign.genAddress(PUBKEY7);
+//    }
+
 
     /**
      * 创建多签地址

@@ -22,8 +22,11 @@ public class UtilsClass {
      public static String  ADDRESS3 = "3r1vxdDjkg9uVke2YdaPTjmWVjV2bsVmySiU99hYuCUjLFYDFb";
     public static String  ADDRESS4 = "32XBduKk48RJfoA2wJuQ7doaJimMymEmZLYYbYHyH5Eyi5Hs68";
     public static String  ADDRESS5 = "4NbMaH4L4vrCfgExftQEWF2RFfBkwZqPoDdApqScLjTgZNC6gp";
-    public static String  ADDRESS6 = "4PMCowmBGWWLHed9wanTq4HmH4WZdsJr86i212zZbWRUtLD9gM";
-    public static String  ADDRESS7 = "4qTRGSuJqmq4HLZFUQvRx2MKKEwULzzEkf3GGXa5d3CYxivGXf";
+//    public static String  ADDRESS6 = "4PMCowmBGWWLHed9wanTq4HmH4WZdsJr86i212zZbWRUtLD9gM";
+//    public static String  ADDRESS7 = "4qTRGSuJqmq4HLZFUQvRx2MKKEwULzzEkf3GGXa5d3CYxivGXf";
+    public static String  ADDRESS6 = "3tjENxmVEuAEaMDqgu6NnAnJpMkvMH6spb156NCydwfTBi2JZP";
+    public static String  ADDRESS7 = "3zXrXd1UCZgsf9919j33T5Lh9t8YEWHYrTMsc7PzLckdBpB7SX";
+
      public static String  MULITADD1 ="SrvKGcQvu6ytWMPxTMkDMnpFmJyPaYbmAQEY71zuGaH7bzSAutr";//123
      public static String  MULITADD2 ="SsdcTnfMArqR6Yfon2UiLnSn1zEDkPdVxNGLkBNHKT2Rte3pM5n";//126
      public static String  MULITADD3 ="SqsV1UFpVQ3PVrxGLfjVTa4u1Xsz5PYT92C5Gav9vSF1xxFJqLS";//167
