@@ -225,5 +225,11 @@ public class APermfuncUTXO {
         return retAllow(response);
     }
 
+    public String getTotal(int starttime,int endtime,String tokenType)throws Exception  {
+        log.info("单签余额查询");
+        String response= multiSign.gettotal(starttime,endtime,tokenType);
+        return retAllow(response);
+    }
+
 
 }
