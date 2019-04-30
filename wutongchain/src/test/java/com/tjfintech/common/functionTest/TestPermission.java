@@ -66,6 +66,14 @@ public class TestPermission {
     @Before
     public void beforeTest() throws Exception {
 
+        if(certPath!=""&& bReg==false) {
+            BeforeCondition bf = new BeforeCondition();
+            bf.updatePubPriKey();
+            bf.collAddressTest();
+
+            bReg=true;
+        }
+
         if(bExe==false) {
 
             String sdkIP = SDKADD.substring(SDKADD.lastIndexOf("/") + 1, SDKADD.lastIndexOf(":"));

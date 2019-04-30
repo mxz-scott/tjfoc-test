@@ -11,6 +11,7 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -31,6 +32,16 @@ public class MixTxTest {
     MultiSign multiSign =testBuilder.getMultiSign();
     SoloSign soloSign = testBuilder.getSoloSign();
 
+    @Before
+    public void beforeConfig() throws Exception {
+        if(certPath!=""&& bReg==false) {
+            BeforeCondition bf = new BeforeCondition();
+            bf.updatePubPriKey();
+            bf.collAddressTest();
+            Thread.sleep(8000);
+            bReg=true;
+        }
+    }
 
 @Test
     public void TestMultiTypeTx()throws Exception{
@@ -112,33 +123,11 @@ public class MixTxTest {
         int height1=Integer.parseInt(JSONObject.fromObject(resp1).getString("Data"));
         assertEquals(height,height1-1);
 
-
-//        //恢复原始配置
-//        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
-//
-//        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
-
-
     }
     @After
     public void  reset()throws Exception{
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
     }
-//    public void setAndRestartPeerList(String...cmdList)throws Exception{
-//
-//        for (String IP:peerList
-//             ) {
-//            Shell shellPeer=new Shell(IP,USERNAME,PASSWD);
-//            shellPeer.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
-//            for (String cmd:cmdList
-//            ) {
-//                shellPeer.execute(cmd);
-//            }
-//            Thread.sleep(500);
-//            shellPeer.execute("sh "+PTPATH+"peer/start.sh");
-//        }
-//        Thread.sleep(SLEEPTIME);
-//    }
 
 }

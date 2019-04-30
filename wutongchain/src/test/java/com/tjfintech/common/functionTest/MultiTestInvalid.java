@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest;
 
 
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -30,8 +31,18 @@ public class  MultiTestInvalid {
     private static String tokenType;
     private static String tokenType2;
 
+
     @Before
     public void beforeConfig() throws Exception {
+
+        if(certPath!=""&& bReg==false) {
+            BeforeCondition bf = new BeforeCondition();
+            bf.updatePubPriKey();
+            bf.collAddressTest();
+            Thread.sleep(8000);
+            bReg=true;
+        }
+
         log.info("发行两种token100.123个");
         tokenType = multiTest.IssueToken(7, "100");
         //Thread.sleep(SLEEPTIME);

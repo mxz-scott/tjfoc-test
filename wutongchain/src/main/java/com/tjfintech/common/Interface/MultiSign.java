@@ -10,6 +10,7 @@ public interface MultiSign {
     String Balance(String priKey,String tokenType);
     String issueToken(String MultiAddr,String TokenType,String Amount,String Data);
     String issueToken(String MultiAddr,String ToAddr,String TokenType,String Amount,String Data);
+    String issueToken(String MultiAddr,String ToAddr,String TokenType,String Amount,String PriKey,String Pwd,String Data);
     String issueTokenCarryPri(String MultiAddr,String TokenType, String Amount,String PriKey,String  Data);
     String issueTokenCarryPri(String MultiAddr,String TokenType, String Amount,String PriKey,String Pwd,String  Data);
     String Sign(String Tx, String Prikey, String Pwd);
