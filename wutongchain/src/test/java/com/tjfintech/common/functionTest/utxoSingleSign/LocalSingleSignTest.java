@@ -21,6 +21,7 @@ import java.util.Map;
 import static com.tjfintech.common.functionTest.StoreTest.SHORTSLEEPTIME;
 import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfoc.utils.ReadFiletoByte.log;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -42,24 +43,24 @@ public class LocalSingleSignTest {
     @Before
     public void beforeConfig() throws Exception {
 
-//        //单签发行
-//        log.info("发行两种token");
-//        tokenType = issueTokenLocalSign(7, "10000.123456789");
-//        System.out.println("tokenType"+tokenType);
-//        tokenType2 = issueTokenLocalSign(8, "20000.87654321");
-//        System.out.println("tokenType"+tokenType2);
-//
-//        //查询余额
-//        Thread.sleep(SLEEPTIME);
-//        log.info("查询归集地址中token余额");
-//        String balance = soloSign.Balance(PRIKEY1, tokenType);
-//
-//        String balance2 = soloSign.Balance(PRIKEY1, tokenType2);
-//
-//        assertThat(tokenType + "查询余额错误", balance, containsString("200"));
-//        assertThat(tokenType + "查询余额不正确", balance, containsString("10000.123456789"));
-//        assertThat(tokenType2 + "查询余额错误", balance2, containsString("200"));
-//        assertThat(tokenType2 + "查询余额不正确", balance2, containsString("20000.87654321"));
+        //单签发行
+        log.info("发行两种token");
+        tokenType = issueTokenLocalSign(7, "10000.123456789");
+        System.out.println("tokenType"+tokenType);
+        tokenType2 = issueTokenLocalSign(8, "20000.87654321");
+        System.out.println("tokenType"+tokenType2);
+
+        //查询余额
+        Thread.sleep(SLEEPTIME);
+        log.info("查询归集地址中token余额");
+        String balance = soloSign.Balance(PRIKEY1, tokenType);
+
+        String balance2 = soloSign.Balance(PRIKEY1, tokenType2);
+
+        assertThat(tokenType + "查询余额错误", balance, containsString("200"));
+        assertThat(tokenType + "查询余额不正确", balance, containsString("10000.123456789"));
+        assertThat(tokenType2 + "查询余额错误", balance2, containsString("200"));
+        assertThat(tokenType2 + "查询余额不正确", balance2, containsString("20000.87654321"));
 
     }
 

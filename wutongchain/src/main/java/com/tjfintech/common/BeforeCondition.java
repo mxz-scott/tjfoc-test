@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfoc.utils.ReadFiletoByte.log;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -81,7 +82,7 @@ public class BeforeCondition {
     @Test
     public  void collAddressTest() throws Exception{
 
-        initTest();
+//        initTest();
 
         String response= multiSign.collAddress(PRIKEY1,IMPPUTIONADD);
         String response2= multiSign.collAddress(PRIKEY1,MULITADD3);
@@ -90,6 +91,7 @@ public class BeforeCondition {
         String response5= multiSign.collAddress(PRIKEY1,MULITADD4);
         String response6= multiSign.collAddress(PRIKEY1,MULITADD5);
         String response7= multiSign.collAddress(PRIKEY1,MULITADD7);
+        String response8= multiSign.collAddress(PRIKEY1,MULITADD1);
         assertThat(response4,containsString("200"));
         assertThat(response,containsString("200"));
         assertThat(response2,containsString("200"));
