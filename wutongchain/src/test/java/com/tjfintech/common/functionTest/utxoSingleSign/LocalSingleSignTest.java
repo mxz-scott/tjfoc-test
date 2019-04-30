@@ -3,9 +3,7 @@ package com.tjfintech.common.functionTest.utxoSingleSign;
 import com.bw.base.SingleSignIssue;
 import com.bw.base.SingleSignTransferAccounts;
 import com.bw.base.MultiSignTransferAccounts;
-import com.google.protobuf.ByteString;
-import com.squareup.okhttp.Address;
-import com.sun.corba.se.impl.oa.toa.TOA;
+
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.TestBuilder;
@@ -44,24 +42,24 @@ public class LocalSingleSignTest {
     @Before
     public void beforeConfig() throws Exception {
 
-        //单签发行
-        log.info("发行两种token");
-        tokenType = issueTokenLocalSign(7, "10000.123456789");
-        System.out.println("tokenType"+tokenType);
-        tokenType2 = issueTokenLocalSign(8, "20000.87654321");
-        System.out.println("tokenType"+tokenType2);
-
-        //查询余额
-        Thread.sleep(SLEEPTIME);
-        log.info("查询归集地址中token余额");
-        String balance = soloSign.Balance(PRIKEY1, tokenType);
-
-        String balance2 = soloSign.Balance(PRIKEY1, tokenType2);
-
-        assertThat(tokenType + "查询余额错误", balance, containsString("200"));
-        assertThat(tokenType + "查询余额不正确", balance, containsString("10000.123456789"));
-        assertThat(tokenType2 + "查询余额错误", balance2, containsString("200"));
-        assertThat(tokenType2 + "查询余额不正确", balance2, containsString("20000.87654321"));
+//        //单签发行
+//        log.info("发行两种token");
+//        tokenType = issueTokenLocalSign(7, "10000.123456789");
+//        System.out.println("tokenType"+tokenType);
+//        tokenType2 = issueTokenLocalSign(8, "20000.87654321");
+//        System.out.println("tokenType"+tokenType2);
+//
+//        //查询余额
+//        Thread.sleep(SLEEPTIME);
+//        log.info("查询归集地址中token余额");
+//        String balance = soloSign.Balance(PRIKEY1, tokenType);
+//
+//        String balance2 = soloSign.Balance(PRIKEY1, tokenType2);
+//
+//        assertThat(tokenType + "查询余额错误", balance, containsString("200"));
+//        assertThat(tokenType + "查询余额不正确", balance, containsString("10000.123456789"));
+//        assertThat(tokenType2 + "查询余额错误", balance2, containsString("200"));
+//        assertThat(tokenType2 + "查询余额不正确", balance2, containsString("20000.87654321"));
 
     }
 
@@ -522,12 +520,12 @@ public class LocalSingleSignTest {
 
         //单签发行
         log.info("发行两种token");
-        tokenType = issueTokenLocalSignPwd(7, "10000.123456789");
+        tokenType = issueTokenLocalSign(7, "10000.123456789");
 
         //查询余额
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中token余额");
-        String balance = multiSign.BalanceByAddr(ADDRESS6, tokenType);
+        String balance = multiSign.BalanceByAddr(ADDRESS1, tokenType);
         assertThat(tokenType + "查询余额错误", balance, containsString("200"));
         assertThat(tokenType + "查询余额不正确", balance, containsString("10000.123456789"));
 
@@ -535,24 +533,24 @@ public class LocalSingleSignTest {
         String transferData = "归集地址向ADDRESS7转账100.25个" + tokenType ;
 
         log.info(transferData);
-        List<Map> transferList = utilsClass.constructToken(ADDRESS7, tokenType, "100.25");
-        singleSignTransfer_LocalSign(PUBKEY6, transferData, transferList, PRIKEY6PATH); //多账号转账
+        List<Map> transferList = soloSign.constructToken(ADDRESS7, tokenType, "100.25");
+        singleSignTransfer_LocalSign(PUBKEY1, transferData, transferList, PRIKEY1PATH); //多账号转账
 
         Thread.sleep(SLEEPTIME);
 
         log.info("查询ADDRESS7和归集地址余额");
-        String queryInfo = multiSign.BalanceByAddr(ADDRESS7, tokenType);
+        String queryInfo = multiSign.BalanceByAddr(ADDRESS1, tokenType);
         assertThat(queryInfo, containsString("200"));
-        assertThat(queryInfo, containsString("\"Total\":\"100.25\""));
+        assertThat(queryInfo, containsString(tokenType + "\":\"9899.873456789\""));
 
-        String queryInfo2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        String queryInfo2 = multiSign.BalanceByAddr(MULITADD1, tokenType);
         assertThat(queryInfo2, containsString("200"));
-        assertThat(queryInfo2, containsString("\"Total\":\"9899.873456789\""));
+
 
         String data1 = "ADDRESS7向ADDRESS4转账5个" + tokenType;
         log.info(data1);
         List<Map> list1 = soloSign.constructToken(ADDRESS4, tokenType, "5");
-        String res1 = singleSignTransfer_LocalSign(PUBKEY7, data1, list1, PRIKEY7PATH, PWD7); //单账号转账
+        String res1 = singleSignTransfer_LocalSign(PUBKEY1, data1, list1, PRIKEY1PATH); //单账号转账
         log.info(res1);
         assertThat(res1, containsString("200"));
         Thread.sleep(SLEEPTIME);
@@ -560,19 +558,19 @@ public class LocalSingleSignTest {
         log.info("查询地址7和地址4余额");
         String queryInfo21 = multiSign.BalanceByAddr(ADDRESS7, tokenType);
         assertThat(queryInfo21, containsString("200"));
-        assertThat(queryInfo21, containsString("\"Total\":\"95.25\""));
+        assertThat(queryInfo21, containsString(tokenType + "\":\"100.25\""));
 
         String queryInfo22 = multiSign.BalanceByAddr(ADDRESS4, tokenType);
         assertThat(queryInfo22, containsString("200"));
-        assertThat(queryInfo22, containsString("\"Total\":\"5\""));
+        assertThat(queryInfo22, containsString(tokenType + "\":\"5\""));
 
-        log.info("回收地址7余额");
-        String Info1 = singleSignRecycle_LocalSign(PUBKEY7, tokenType, "95.25", PRIKEY7PATH, PWD7); //单账号回收
+        log.info("回收地址1余额");
+        String Info1 = singleSignRecycle_LocalSign(PUBKEY1, tokenType, "95.25", PRIKEY1PATH); //单账号回收
         assertThat(Info1, containsString("200"));
         Thread.sleep(SLEEPTIME);
 
         String balanceInfo3TK1 = multiSign.BalanceByAddr(ADDRESS7, tokenType);
-        assertThat(balanceInfo3TK1, containsString("\"Total\":\"0\""));
+        assertThat(balanceInfo3TK1, containsString(tokenType + "\":\"100.25\""));
 
     }
 
@@ -590,27 +588,26 @@ public class LocalSingleSignTest {
         String tokenType = "ST-" + UtilsClass.Random(length);
         String data = "" + "发行token: " + tokenType + " ，数量为：" + amount;
         String issueResult = soloSign.issueTokenLocalSign(PUBKEY6, tokenType, amount, data);
-//        log.info("单签发行返回" + issueResult);
+        log.info("单签发行返回" + issueResult);
         String preSignData = JSONObject.fromObject(issueResult).getJSONObject("Data").toString();
-//        log.info("单签发行签名前的数据：" + preSignData);
+        log.info("单签发行签名前的数据：" + preSignData);
         String signedData = singleSign.singleSignIssueMethod(preSignData, PRIKEY6PATH, PWD6);
-//        log.info("单签发行签名后的数据：" + signedData);
+        log.info("单签发行签名后的数据：" + signedData);
         String response = soloSign.sendSign(signedData);
-        //        //log.info("发送交易：" + response);
+                log.info("发送交易：" + response);
         assertThat(tokenType + "发行token错误", response, containsString("200"));
         return tokenType;
     }
 
 
     /**
-     * 单签转账，本地签名
+     *  单签转账，本地签名
      * 私钥带密码
      * @param fromPubKey
-     * @param toAddr
      * @param data
-     * @param tokenType
-     * @param amount
+     * @param tokenList
      * @param fromPriKeyPath
+     * @param pwd
      * @return
      * @throws Exception
      */

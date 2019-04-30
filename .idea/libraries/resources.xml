@@ -4,10 +4,7 @@
       <root url="file://$PROJECT_DIR$/wutongchain/src/main/resources" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="file://$PROJECT_DIR$/wutongchain/src/main/resources" />
-    </SOURCES>
+    <SOURCES />
     <jarDirectory url="file://$PROJECT_DIR$/wutongchain/src/main/resources" recursive="false" />
-    <jarDirectory url="file://$PROJECT_DIR$/wutongchain/src/main/resources" recursive="false" type="SOURCES" />
   </library>
 </component>
