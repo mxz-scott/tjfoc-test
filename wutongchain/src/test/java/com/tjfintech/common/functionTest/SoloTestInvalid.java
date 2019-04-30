@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest;
 
 
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
@@ -34,6 +35,15 @@ public class SoloTestInvalid {
     @Before
     //@Test
     public void beforeConfig() throws Exception {
+        if(certPath!=""&& bReg==false) {
+            BeforeCondition bf = new BeforeCondition();
+            bf.updatePubPriKey();
+            bf.collAddressTest();
+
+            bReg=true;
+        }
+
+
         log.info("发行两种token");
         log.info(ADDRESS1);
         log.info(PRIKEY1);

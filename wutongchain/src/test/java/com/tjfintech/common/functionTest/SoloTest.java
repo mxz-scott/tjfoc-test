@@ -33,6 +33,14 @@ public class SoloTest {
 
     @Before
     public void beforeConfig() throws Exception {
+        if(certPath!=""&& bReg==false) {
+            BeforeCondition bf = new BeforeCondition();
+            bf.updatePubPriKey();
+            bf.collAddressTest();
+
+            bReg=true;
+        }
+
        BeforeCondition beforeCondition=new BeforeCondition();
         beforeCondition.collAddressTest();
         log.info("发行两种token1000个");
