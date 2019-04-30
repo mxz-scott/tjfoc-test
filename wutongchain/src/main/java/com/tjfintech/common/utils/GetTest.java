@@ -1,13 +1,10 @@
 package com.tjfintech.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.apache.http.HttpStatus;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;

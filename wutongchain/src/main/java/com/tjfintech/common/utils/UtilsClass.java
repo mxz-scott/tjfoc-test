@@ -53,6 +53,7 @@ public class UtilsClass {
     public static String PUBKEY5 = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb0VjejFVQmdpMERRZ0FFNjZZWE1ES0dHTFoyY3A4Vk1LdnlVVklYNHYwbQp6RDJ1bDZ2Q2lEaXB5VnJOdS8yN0FKUzVRbm15MmhEY1RSUy9QdWZwaDVUZ0JhUkM4ekZJTUVPM0xBPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==";
     public static String PUBKEY6 ="LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb0VjejFVQmdpMERRZ0FFY0diN3R3UVREVHorTWQ3RmlkbitwaC8vcVFvTQpxSnpBcDJqU1RmZURVSkxLVUlKYXNzR0pVNEtJdUVleEszRFZ3K3RnMmpGT00vNnFVZnlnTmlZYmJnPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==";//带密码
     public static String PUBKEY7 ="LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb0VjejFVQmdpMERRZ0FFNFYxMXNmbGJpRE05RlpxK1FzMzk1RXRkZWVCMApHMDJVelM1eU5YMVlZb0pTU05FMDJWMkdTalhidTE4UGxuSmF6aFc0VnlUUzh5WjhuZUpQcXRNQ2hnPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==";//带密码
+
     public static String PWD6="111";
     public static String PWD7="222";
     public static Account account1 =new Account(ADDRESS1,PRIKEY1,PUBKEY1);
@@ -73,7 +74,8 @@ public class UtilsClass {
     public final static String PRIKEY5PATH = ".\\src\\main\\resources\\key\\key5.pem";
     public final static String PRIKEY6PATH = ".\\src\\main\\resources\\key\\key6.pem";
     public final static String PRIKEY7PATH = ".\\src\\main\\resources\\key\\key7.pem";
-
+    public final static String PRIKEY8PATH = ".\\src\\main\\resources\\key\\key.pem";
+    public final static String PUBKEY8 = ".\\src\\main\\resources\\key\\pubkey.pem";
 
 //    public final static String  ADDRESS1 = "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo";
 //    public final static String  ADDRESS2 = "3UycKc8qvVWpVcBr3ipNqDC9oZPd86wj3qSJ6GMbLrVPgeqVwY";
