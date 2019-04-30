@@ -241,6 +241,15 @@ public class TestPermission {
         }
         Thread.sleep(10000);
     }
+    //@Test
+    public void check233Interface() throws Exception{
+        //233为对账接口为此处检查接口  冻结权限--》变更为255
+
+        shellCmd(ToolIP,preCmd + "233");
+        Thread.sleep(3000);
+
+
+    }
 
     @Test
     public void chkUTXO1by1()throws Exception{

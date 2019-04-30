@@ -176,6 +176,39 @@ public class GoMultiSign implements MultiSign {
         return result;
     }
 
+    public String getUTXODetail(int StartTime,int EndTime,String tokenType,String UTXOtype,String FromAddr,String ToAddr) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("StartTime",StartTime);
+        map.put("EndTime",EndTime);
+        map.put("TokenType",tokenType);
+        map.put("UTXOType",UTXOtype);
+        map.put("FromAddr",FromAddr);
+        map.put("ToAddr",ToAddr);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/getutxodetail", map);
+//        log.info(result);
+        return result;
+    }
+
+    public String getChainBalance(String tokenType,String Addr) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("TokenType",tokenType);
+        map.put("Addr",Addr);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/getchainbalance", map);
+//        log.info(result);
+        return result;
+    }
+
+    public String getTotalbyDay(int year,int month,int day) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("Year",year);
+        map.put("Month",month);
+        map.put("Day",day);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/totalbyday", map);
+//        log.info(result);
+        return result;
+    }
+
+
     /**
      * 多账号同时回收，本地签名
      * @param tokenList
