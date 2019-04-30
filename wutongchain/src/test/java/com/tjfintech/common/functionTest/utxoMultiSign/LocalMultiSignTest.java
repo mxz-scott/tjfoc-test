@@ -101,10 +101,10 @@ public class LocalMultiSignTest {
     @Test
     public void TC03_multiProgress_LocalSign_Pwd() throws Exception {
         log.info("发行token1000个");
-        tokenType = IssueTokenLocalSignPwd(7, "1000");
+        tokenType = IssueTokenLocalSignPwd(7, "1000", IMPPUTIONADD);
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中token余额");
-        String balance = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        String balance = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         assertThat(tokenType + "查询余额错误", balance, containsString("200"));
         assertThat(tokenType + "查询余额不正确", balance, containsString("\"Total\":\"1000\""));
 
@@ -117,11 +117,11 @@ public class LocalMultiSignTest {
         Thread.sleep(SLEEPTIME);
 
         log.info("查询归集地址和MULITADD7余额，判断转账是否成功");
-        String queryInfo = multiSign.BalanceByAddr(MULITADD7, tokenType);
+        String queryInfo = multiSign.Balance(MULITADD7, PRIKEY1, tokenType);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo, containsString("\"Total\":\"10\""));
 
-        String queryInfo2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        String queryInfo2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         assertThat(queryInfo2, containsString("200"));
         assertThat(queryInfo2, containsString("\"Total\":\"990\""));
 
@@ -135,11 +135,11 @@ public class LocalMultiSignTest {
         Thread.sleep(SLEEPTIME);
 
         log.info("查询地址MULITADD7和MULITADD4余额，判断转账是否成功");
-        queryInfo = multiSign.BalanceByAddr(MULITADD7, tokenType);
+        queryInfo = multiSign.Balance(MULITADD7, PRIKEY1, tokenType);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo, containsString("\"Total\":\"7\""));
 
-        queryInfo2 = multiSign.BalanceByAddr(MULITADD4, tokenType);
+        queryInfo2 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
         assertThat(queryInfo2, containsString("200"));
         assertThat(queryInfo2, containsString("\"Total\":\"3\""));
 
@@ -156,9 +156,9 @@ public class LocalMultiSignTest {
         Thread.sleep(SLEEPTIME);
 
         log.info("查询回收后账户余额是否为0");
-        String queryInfo3 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
-        String queryInfo4 = multiSign.BalanceByAddr(MULITADD7, tokenType);
-        String queryInfo6 = multiSign.BalanceByAddr(MULITADD4, tokenType);
+        String queryInfo3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String queryInfo4 = multiSign.Balance(MULITADD7, PRIKEY1, tokenType);
+        String queryInfo6 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
         assertThat(queryInfo3, containsString("200"));
         assertThat(queryInfo3, containsString("\"Total\":\"0\""));
         assertThat(queryInfo4, containsString("200"));
@@ -497,6 +497,42 @@ public class LocalMultiSignTest {
 //        log.info(data);
 
         String response = multiSign.issueTokenLocalSign(MULITADD3, tokenType, amount, data);
+
+//        log.info("发行返回："+response);
+
+        String preSignData = JSONObject.fromObject(response).getJSONObject("Data").getString("TxData");
+//        log.info("发行签名前数据："+preSignData);
+
+        log.info("第一次签名");
+        String signedData1 = multiIssue.multiSignIssueMethod(preSignData, PRIKEY6PATH, PWD6);
+
+        log.info("第二次签名");
+        String signedData2 = multiIssue.multiSignIssueMethod(signedData1, PRIKEY1PATH);
+
+        log.info("第三次签名");
+        String signedData3 = multiIssue.multiSignIssueMethod(signedData2, PRIKEY7PATH, PWD7);
+//        log.info("发行最后签名结果：" + signedData3);
+
+        multiSign.sendSign(signedData3);
+
+        return tokenType;
+
+    }
+
+    /**
+     * 多签发行，本地签名
+     * 私钥带密码
+     * @param length
+     * @param amount
+     * @return
+     * @throws Exception
+     */
+    public String IssueTokenLocalSignPwd(int length, String amount, String toAddr) throws Exception {
+        String tokenType = "MT-" + UtilsClass.Random(length);
+        String data = "MULITADD3" + "发行" + tokenType + "，数量为：" + amount;
+//        log.info(data);
+
+        String response = multiSign.issueTokenLocalSign(MULITADD3, toAddr, tokenType, amount, data);
 
 //        log.info("发行返回："+response);
 
