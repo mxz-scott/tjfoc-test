@@ -69,6 +69,26 @@ public class GoSoloSign implements SoloSign {
         log.info(result);
         return result ;
     }
+
+
+    /** 查询单签地址余额, 私钥带密码
+     *
+     * @param priKey
+     * @param pwd
+     * @param tokenType
+     * @return
+     */
+    public String Balance(String priKey,String pwd, String tokenType) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("pwd", pwd);
+        map.put("key", priKey);
+        map.put("tokentype", tokenType);
+        String param=GetTest.ParamtoUrl(map);
+        String result= GetTest.SendGetTojson(SDKADD+"/utxo/balance"+"?"+ param);
+        log.info(result);
+        return result;
+    }
+
     /**单签账号向其他地址转账
      *
      *

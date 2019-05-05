@@ -88,7 +88,7 @@ public  class GoStore implements Store {
         map.put("hash",hashEncode);
         param= GetTest.ParamtoUrl(map);
         String result=GetTest.SendGetTojson(SDKADD+"/tx/inlocal"+"?"+param);
-        log.info(result);
+//        log.info(result);
         return result;
 
     }
@@ -100,13 +100,10 @@ public  class GoStore implements Store {
      */
 
     public  String   CreateStore(String Data){
-       // String Data = "\"test\":\"json store1\"";
-        // String Data="测试存证内容-chenxu";
-       // String Pubkeys="LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0NCk1Ga3dFd1lIS29aSXpqMENBUVlJS29FY3oxVUJnaTBEUWdBRWpFZUc0Vm9ETTJkRjAxWnpGQ3NQNkxqTE9zVC8NCkg2YWx5ejBNRXRSU2krazQxbTNzOXFoUVB4UDk1OFFQdGUwS2pZa1VKeUt0MUVBV2NraEI0Wm16eUE9PQ0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t";
         Map<String,Object> map=new HashMap<>();
         map.put("Data",Data);
         String result= PostTest.sendPostToJson(SDKADD+"/store", map);
-        log.info(result);
+//        log.info(result);
         return result;
     }
 

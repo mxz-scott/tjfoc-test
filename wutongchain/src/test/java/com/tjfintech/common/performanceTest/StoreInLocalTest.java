@@ -21,11 +21,11 @@ public class StoreInLocalTest {
     @Test
     //测试存证的性能
     public void TC010_CreatePrivateStoreDataIsJson() {
-        for(int i=0;i<150;i++){
+        for(int i=0;i<10;i++){
             long times = new Date().getTime();
-        log.info("开始存证"+times);
+//        log.info("开始存证"+times);
         String data = store.CreateStore("j"+i);
-        log.info(data);
+//        log.info(data);
         JSONObject jsonObject = JSONObject.fromObject(data);
         String hash=jsonObject.getJSONObject("Data").get("Figure").toString();
         log.info(hash);
@@ -43,7 +43,7 @@ public class StoreInLocalTest {
             String State=jsonObject.get("State").toString();
 
             if (State.equals("404")){
-                log.info("未同步"+(nowTimes-time)+"ms");
+//                log.info("未同步"+(nowTimes-time)+"ms");
                 inLocal(hash,time);
             }else{
                 log.info("成功同步"+(nowTimes-time)+"ms");
