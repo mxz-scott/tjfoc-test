@@ -435,16 +435,16 @@ public class MultiTest12 {
         String recycleInfo = multiSign.Recycle(MULITADD3, PRIKEY1, tokenType, String.valueOf(amount));
         assertThat(recycleInfo, containsString("200"));
         String Tx11 = JSONObject.fromObject(recycleInfo).getJSONObject("Data").getString("Tx");
-        //签名流程3
-        String response14 = multiTest33.SignPro3(Tx11);
+        //签名流程4
+        String response14 = multiTest33.SignPro4(Tx11);
         assertThat(JSONObject.fromObject(response14).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
         assertEquals("200",JSONObject.fromObject(response14).getString("State"));
 
         String recycleInfo2 = multiSign.Recycle(MULITADD3, PRIKEY6,PWD6,tokenType2, String.valueOf(amount2));
         assertThat(recycleInfo2, containsString("200"));
         String Tx12 = JSONObject.fromObject(recycleInfo2).getJSONObject("Data").getString("Tx");
-        //签名流程4
-        String response15 = multiTest33.SignPro4(Tx12);
+        //签名流程3
+        String response15 = multiTest33.SignPro3(Tx12);
         assertThat(JSONObject.fromObject(response15).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
         assertEquals("200",JSONObject.fromObject(response15).getString("State"));
 

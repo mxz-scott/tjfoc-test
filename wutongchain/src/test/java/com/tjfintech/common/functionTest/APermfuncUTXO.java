@@ -226,19 +226,39 @@ public class APermfuncUTXO {
     }
 
     public String getTotal(int starttime,int endtime,String tokenType)throws Exception  {
-        log.info("总量信息查询");
+
         String response= multiSign.gettotal(starttime,endtime,tokenType);
+        log.info("获取总发行量、总回收量、总冻结量:"+retAllow(response));
         return retAllow(response);
     }
     public String getTokenState(String tokenType)throws Exception  {
-        log.info("token发行量查询");
         String response= multiSign.tokenstate(tokenType);
+        log.info("获取token发行总量:"+retAllow(response));
         return retAllow(response);
     }
 
     public String getSDKBalance(String addr,String tokenType)throws Exception  {
-        log.info("token发行量查询");
+
         String response= multiSign.BalanceByAddr(addr,tokenType);
+        log.info("从SDK数据库获取账户token余额:"+retAllow(response));
+        return retAllow(response);
+    }
+
+    public String getUTXODetail(String addr,String tokenType)throws Exception  {
+        String response= multiSign.getUTXODetail(0,0,tokenType,10,"","");
+        log.info(response);
+        log.info("获取UTXO交易详情："+retAllow(response));
+        return retAllow(response);
+    }
+
+    public String getChainBalance(String addr,String tokenType)throws Exception  {
+        String response= multiSign.getChainBalance(tokenType,addr);
+        log.info("从链上获取账户token余额:"+retAllow(response));
+        return retAllow(response);
+    }
+    public String getTotalByDay(int year,int month,int day)throws Exception  {
+        String response= multiSign.getTotalbyDay(year,month,day);
+        log.info("按日志从链上获取发行回收总量:"+retAllow(response));
         return retAllow(response);
     }
 }

@@ -62,6 +62,8 @@ public class TestTxType {
     String subTypeDelColl="201";
     String subTypeAddIssue="202";
     String subTypeDelIssue="203";
+    String subTypeFreezeToken="204";
+    String subTypeRecoverToken="205";
 
     @Before
     public void beforeConfig() throws Exception {
@@ -328,14 +330,17 @@ public class TestTxType {
 
     @Test
     public void checkAdminTx()throws Exception{
-        //预先做删除归集地址操作，以便后续操作正常进行
+        String tokenTest="test"+UtilsClass.Random(6);
+        //预先做删除归集地址、删除发行地址操作、解除token锁定，以便后续操作正常进行
         assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS6),containsString("200"));
         assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS6),containsString("200"));
+        assertThat(multiSign.recoverFrozenToken(PRIKEY1,tokenTest),containsString("200"));
         Thread.sleep(6000);
 
         //Admin类交易 Type 20 SubType 200 201 202 203
         String response10= multiSign.collAddress(PRIKEY1,ADDRESS6);
         String response11= multiSign.addissueaddress(PRIKEY1,ADDRESS6);
+        String response3=multiSign.freezeToken(PRIKEY1,tokenTest);
         Thread.sleep(6000);
 
         //添加归集地址交易信息检查
@@ -348,10 +353,17 @@ public class TestTxType {
         checkTriMsg(txHash11,versionStore,typeAdmin,subTypeAddIssue);
         checkAdmin(txHash11,"issueAddress","issueaddress",ADDRESS6,"admin");
 
+        //冻结token
+        String txHash31 = JSONObject.fromObject(response3).getString("Data");
+        checkTriMsg(txHash31,versionStore,typeAdmin,subTypeFreezeToken);
+
+
         //删除归集地址
         String response12= multiSign.delCollAddress(PRIKEY1,ADDRESS6);
         //删除发行地址
         String response13= multiSign.delissueaddress(PRIKEY1,ADDRESS6);
+        //解除冻结token
+        String response4=multiSign.recoverFrozenToken(PRIKEY1,tokenTest);
         Thread.sleep(6000);
 
         //检查删除归集地址交易信息
@@ -363,6 +375,11 @@ public class TestTxType {
         String txHash13 = JSONObject.fromObject(response13).getString("Data");
         checkTriMsg(txHash13,versionStore,typeAdmin,subTypeDelIssue);
         checkAdmin(txHash13,"issueAddress","issueaddress",ADDRESS6,"admin");
+
+        //解除冻结token
+        String txHash41 = JSONObject.fromObject(response4).getString("Data");
+        checkTriMsg(txHash41,versionStore,typeAdmin,subTypeRecoverToken);
+
     }
 
 
