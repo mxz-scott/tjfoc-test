@@ -9,6 +9,7 @@ import com.tjfintech.common.utils.GetTest;
 import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.SDKADD;
+import static com.tjfoc.utils.ReadFiletoByte.log;
 
 @Slf4j
 public class GoSoloSign implements SoloSign {
