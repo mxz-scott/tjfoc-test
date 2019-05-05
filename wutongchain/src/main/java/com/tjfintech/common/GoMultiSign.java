@@ -394,6 +394,7 @@ public class GoMultiSign implements MultiSign {
         log.info(result);
         return result;
     }
+
     /**
      * 查询用户余额
      * @param addr    用户地址
@@ -409,16 +410,23 @@ public class GoMultiSign implements MultiSign {
         return result;
     }
 
-    public String Balance(String priKey,String tokenType) {
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("key", priKey);
-        map.put("tokentype", tokenType);
-        String param=GetTest.ParamtoUrl(map);
-        String result= GetTest.SendGetTojson(SDKADD+"/utxo/balance"+"?"+ param);
+    /**查询单签余额
+     *
+     * @param key
+     * @param tokenType
+     * @return
+     */
+    public String Balance(String key,String tokenType){
+        String param;
+        Map<String,Object>map=new HashMap<>();
+        map.put("key",key);
+        map.put("tokentype",tokenType);
+        param= GetTest.ParamtoUrl(map);
+        String result=GetTest.SendGetTojson(SDKADD+"/utxo/balance"+"?"+param);
         log.info(result);
-        return result;
+        return result ;
     }
+
     /**
      * 使用3/3账户发行Token申请
      * @param MultiAddr   多签地址

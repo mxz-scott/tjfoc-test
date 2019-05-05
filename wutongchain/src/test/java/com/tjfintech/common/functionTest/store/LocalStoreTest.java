@@ -161,4 +161,40 @@ public class LocalStoreTest {
     }
 
 
+
+    @Test
+    public void TC09_createPriStore_PWD2() throws Exception {
+        String Data = "test789" + UtilsClass.Random(10);
+        log.info(Data);
+        Map<String, Object> map = new HashMap<>();
+        map.put("pubKey1", PUBKEY6);
+
+        String response1 = store.CreateStorePwd(Data, map);
+        JSONObject jsonObject = JSONObject.fromObject(response1);
+        String StoreHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        Thread.sleep(SLEEPTIME);
+        assertThat(response1, containsString("200"));
+        assertThat(response1, containsString("Data"));
+
+        String txContent2 = store.GetStore2(StoreHash);
+
+        JSONObject jsonObject2 = JSONObject.fromObject(txContent2);
+        String data = jsonObject2.getJSONObject("Data").toString();
+//        log.info("Data:" + data);
+
+        String result1 = priStore.privacyPolicyStoreMethod(data, PRIKEY6PATH, PWD6);
+        String result2 = priStore.privacyPolicyStoreMethod(data, PRIKEY2PATH);
+
+        log.info("私钥1解密结果：" + result1);
+        log.info("私钥2解密结果：" + result2);
+
+        assertThat(result1, containsString(Data));
+        assertEquals(result1.equals(Data), true);
+        assertThat(result2, containsString("The private key is not matching"));
+        assertEquals(result2.contains("test789"), false);
+
+    }
+
+
+
 }

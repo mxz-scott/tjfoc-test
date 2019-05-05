@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 
 @Slf4j
 public class UtilsClass {
-    public static final String SDKADD="http://10.1.3.247:7777";
+    public static final String SDKADD="http://10.1.3.165:3333";
 
     //SM2公私钥对
      public static String  ADDRESS1 = "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo";
@@ -27,14 +27,14 @@ public class UtilsClass {
     public static String  ADDRESS6 = "3tjENxmVEuAEaMDqgu6NnAnJpMkvMH6spb156NCydwfTBi2JZP";
     public static String  ADDRESS7 = "3zXrXd1UCZgsf9919j33T5Lh9t8YEWHYrTMsc7PzLckdBpB7SX";
 
-     public static String  MULITADD1 ="SrvKGcQvu6ytWMPxTMkDMnpFmJyPaYbmAQEY71zuGaH7bzSAutr";//123
-     public static String  MULITADD2 ="SsdcTnfMArqR6Yfon2UiLnSn1zEDkPdVxNGLkBNHKT2Rte3pM5n";//126
-     public static String  MULITADD3 ="SqsV1UFpVQ3PVrxGLfjVTa4u1Xsz5PYT92C5Gav9vSF1xxFJqLS";//167
-     public static String  MULITADD4 ="Snj8kGTdJy4qcj1ABNRK6cq7TEJqbjVw6xTR9VKQk5cKsSfbsss";//12
-     public static String  MULITADD5 ="SnFXgygehAXLHjuhHciGJWnwd99TwC8pmAWhpiY6YXmdRRQDxzD";//13
-     public static String  MULITADD6 ="SogNyzAxSByMtRZygvpkbu8V9PGswhqXGh2Hp5PoyQmdaepQt1i";//34
-     public static String  MULITADD7 ="SoeNv1VcYqJBFST4Q7eNYzqh6WMmQkKGW37rfRYodYWZNFVSaav";//16
-     public static String  IMPPUTIONADD="Soirv9ikykVHArKCdJqVNegxxqZWUj1g4ixFFYbBLMExy4zUTUe";//45
+     public static String  MULITADD1 ="SrvKGcQvu6ytWMPxTMkDMnpFmJyPaYbmAQEY71zuGaH7bzSAutr";//123 (3/3签名)
+     public static String  MULITADD2 ="SsdcTnfMArqR6Yfon2UiLnSn1zEDkPdVxNGLkBNHKT2Rte3pM5n";//126 (3/3签名)
+     public static String  MULITADD3 ="SqsV1UFpVQ3PVrxGLfjVTa4u1Xsz5PYT92C5Gav9vSF1xxFJqLS";//167 (3/3签名)
+     public static String  MULITADD4 ="Snj8kGTdJy4qcj1ABNRK6cq7TEJqbjVw6xTR9VKQk5cKsSfbsss";//12  (1/2签名)
+     public static String  MULITADD5 ="SnFXgygehAXLHjuhHciGJWnwd99TwC8pmAWhpiY6YXmdRRQDxzD";//13  (1/2签名)
+     public static String  MULITADD6 ="SogNyzAxSByMtRZygvpkbu8V9PGswhqXGh2Hp5PoyQmdaepQt1i";//34  (1/2签名)
+     public static String  MULITADD7 ="SoeNv1VcYqJBFST4Q7eNYzqh6WMmQkKGW37rfRYodYWZNFVSaav";//16  (1/2签名)
+     public static String  IMPPUTIONADD="Soirv9ikykVHArKCdJqVNegxxqZWUj1g4ixFFYbBLMExy4zUTUe";//45  (1/2签名)
 
     public static String PRIKEY1 = "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR1RBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUJITTlWQVlJdEJIa3dkd0lCQVFRZ3FpSHZCN3ptbXZKSllFNUEKc0hTaHplMzlJT3pheVRYU3Erdjd6enJXaEJtZ0NnWUlLb0VjejFVQmdpMmhSQU5DQUFSL0w1RUJ6VXpxZk1pSQpHb2xyek8yYjJmbUZQUXNYRk5iWWQzVjFXOFNYSndhdkJRSi94OTBYSnR2VGFmcVRMQmRLVnFOWHYyNitFblhQCnVyaHM0Uy9RCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K";
     public static String PRIKEY2 = "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR1RBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUJITTlWQVlJdEJIa3dkd0lCQVFRZzBZYlhhUUd4bExyOGl1dm8KOEVsY1NnRFUvd3lRWTJQaDRxVVdxbG5JL1FhZ0NnWUlLb0VjejFVQmdpMmhSQU5DQUFUZjNrcUo1RnZLU0t1RgpWWlUyZzRFQTFXaHVNSVpkZGE0ejI1amhQcHh1U0xXMHVtYXVSamZ5SWpmZ1ZzV3FJanRGRDJOaEtOL1hQYjc1CkFkTkhCbnZwCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K";
