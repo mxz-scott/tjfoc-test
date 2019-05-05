@@ -163,7 +163,7 @@ public class TestPermission {
         checkAllInterface("0",def+Sys0+Store0+Docker0+Mg0+UTXO0);
 
         Thread.sleep(3000);
-        checkAllInterface("999",def+"Sys:111111111Store:11Docker:11111Mg:111111UTXO:11111111111");
+        checkAllInterface("999",def+"Sys:111111111Store:11Docker:11111Mg:111111UTXO:1111111111");
         Thread.sleep(3000);
     }
 
@@ -241,14 +241,17 @@ public class TestPermission {
         }
         Thread.sleep(10000);
     }
-    //@Test
-    public void check233Interface() throws Exception{
-        //233为对账接口为此处检查接口  冻结权限--》变更为255
 
-        shellCmd(ToolIP,preCmd + "233");
-        Thread.sleep(3000);
+    public void check233Interface(String chk) throws Exception{
+        //233为对账接口为此处检查接口
 
-
+        //shellCmd(ToolIP,preCmd + "233");
+        assertEquals(pFunUTXO.getTotal(0,0,glbMultiToken3),chk);
+        assertEquals(pFunUTXO.getSDKBalance(MULITADD3,glbMultiToken3),chk);
+        assertEquals(pFunUTXO.getChainBalance(MULITADD3,glbMultiToken3),chk);
+        assertEquals(pFunUTXO.getUTXODetail(MULITADD3,glbMultiToken3),chk);
+        assertEquals(pFunUTXO.getTokenState(glbMultiToken3),chk);
+        assertEquals(pFunUTXO.getTotalByDay(2019,3,1),chk);
     }
 
     @Test
@@ -265,10 +268,13 @@ public class TestPermission {
 
         //转账权限
         checkAllInterface("232",def+Sys0+Store0+Docker0+Mg0+"UTXO:1100000000");
+        //233同时管控多个接口，此为补充测试所有接口开放关闭一致
+        check233Interface("0");
 
         //233为对账接口为此处检查接口  冻结权限--》变更为255
         checkAllInterface("233",def+Sys0+Store0+Docker0+Mg0+"UTXO:0001000000");
-
+        //233同时管控多个接口，此为补充测试所有接口开放关闭一致
+        check233Interface("1");
         //解除冻结权限--》变更为256
         //checkAllInterface("234",def+Sys0+Store0+Docker0+Mg0+"UTXO:00001000000");
 

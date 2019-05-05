@@ -5,10 +5,9 @@ import java.util.Map;
 
 public interface MultiSign {
     String genMultiAddress(int M, Map keyMap);
-    String Balance(String priKey,String tokenType);
     String Balance(String addr,String priKey,String tokenType);
     String Balance(String addr,String priKey,String Pwd,String tokenType);
-
+    String Balance(String priKey,String tokenType);
     String issueToken(String MultiAddr,String TokenType,String Amount,String Data);
     String issueToken(String MultiAddr,String ToAddr,String TokenType,String Amount,String Data);
     String issueToken(String MultiAddr,String ToAddr,String TokenType,String Amount,String PriKey,String Pwd,String Data);
@@ -38,7 +37,7 @@ public interface MultiSign {
     String getbalancebytt(String TokenType,String Address);
     String getTotalbyDay(int year,int month,int day);
     String getChainBalance(String tokenType,String Addr);
-    String getUTXODetail(int StartTime,int EndTime,String tokenType,String UTXOtype,String FromAddr,String ToAddr);
+    String getUTXODetail(int StartTime,int EndTime,String tokenType,int UTXOtype,String FromAddr,String ToAddr);
 
     String BalanceByAddr(String addr,String tokenType); //按地址查询余额
     //本地签名
