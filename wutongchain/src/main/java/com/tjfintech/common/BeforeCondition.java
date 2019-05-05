@@ -57,12 +57,12 @@ public class BeforeCondition {
                 //assertEquals(str.contains("FuncUpdatePeerPermission success:  true"),true);
             }
             log.info(stdout1.get(iFlag+1));
-            if(stdout1.get(iFlag+1).contains("[1 2 3 4 5 6 7 8 9 10 21 22 23 24 25 211 212 221 222 223 224 231 232 233 234 235 236 251 252 253 254]")==false) {
+            if(stdout1.get(iFlag+1).contains(fullPerm)==false) {
                 shellPeer1.execute(preCmd + "999");
                 ArrayList<String> stdout = shellPeer1.getStandardOutput();
                 resp = StringUtils.join(stdout1,"\n");
                 log.info(resp);
-                assertEquals(resp.contains(" [1 2 3 4 5 6 7 8 9 10 21 211 212 22 221 222 223 224 23 231 232 233 234 235 236 24 25 251 252 253 254]"),true);
+                assertEquals(resp.contains(fullPerm),true);
                 Thread.sleep(6000);
             }
         }
@@ -71,7 +71,7 @@ public class BeforeCondition {
             ArrayList<String> stdout2 = shellPeer1.getStandardOutput();
             resp = StringUtils.join(stdout2,"\n");
             log.info(resp);
-            assertEquals(resp.contains(" [1 2 3 4 5 6 7 8 9 10 21 211 212 22 221 222 223 224 23 231 232 233 234 235 236 24 25 251 252 253 254]"),true);
+            assertEquals(resp.contains(fullPerm),true);
             Thread.sleep(6000);
         }
     }

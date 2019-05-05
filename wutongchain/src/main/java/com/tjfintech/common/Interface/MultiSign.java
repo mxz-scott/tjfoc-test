@@ -35,6 +35,9 @@ public interface MultiSign {
     String gettotal(int StartTime,int EndTime,String TokenType);
     String tokenstate(String TokenType);
     String getbalancebytt(String TokenType,String Address);
+    String getTotalbyDay(int year,int month,int day);
+    String getChainBalance(String tokenType,String Addr);
+    String getUTXODetail(int StartTime,int EndTime,String tokenType,String UTXOtype,String FromAddr,String ToAddr);
 
     String BalanceByAddr(String addr,String tokenType); //按地址查询余额
     //本地签名

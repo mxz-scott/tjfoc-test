@@ -79,7 +79,7 @@ public class UtilsClass {
     public final static String PUBKEY8 = ".\\src\\main\\resources\\key\\pubkey.pem";
 
     //add for diff type prikey & pubkey:SM2 ECDSA or RSA
-    public static final String certPath="MIX1";
+    public static final String certPath="SM2";
     //public static final String certPath="SM2";
     public static boolean bReg=false;
    //add parameters for manage tool
@@ -106,7 +106,7 @@ public class UtilsClass {
     public static int RESTARTTIME=20000;
 
     public static String dockerFileName="simple.go";
-
+    public static String fullPerm="[1 2 3 4 5 6 7 8 9 10 21 211 212 22 221 222 223 224 23 231 232 233 235 236 24 25 251 252 253 254 255 256]";
 
 
 
