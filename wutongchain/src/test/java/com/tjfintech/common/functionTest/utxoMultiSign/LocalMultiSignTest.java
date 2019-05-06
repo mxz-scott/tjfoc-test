@@ -1,11 +1,11 @@
 package com.tjfintech.common.functionTest.utxoMultiSign;
 
 
-import com.bw.base.MultiSignIssue;
-import com.bw.base.MultiSignTransferAccounts;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
+import com.tjfoc.base.MultiSignIssue;
+import com.tjfoc.base.MultiSignTransferAccounts;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Before;
@@ -58,7 +58,7 @@ public class LocalMultiSignTest {
         String transferData = "归集地址向MULITADD4转账10个: " + tokenType;
         log.info(transferData);
         List<Map> transferList = utilsClass.constructToken(MULITADD4, tokenType, "10");
-        multiSignTransfer_LocalSign(IMPPUTIONADD, PUBKEY4, transferData, transferList, PRIKEY4PATH); //向单个账号转账
+        multiSignTransfer_LocalSign(IMPPUTIONADD, PUBKEY4, transferData, transferList, PRIKEY4); //向单个账号转账
 
         Thread.sleep(SLEEPTIME);
 
@@ -73,8 +73,8 @@ public class LocalMultiSignTest {
 
 
         log.info("回收归集地址和MULITADD4的token");
-        String recycleInfo = multiSignRecycle_LocalSign(IMPPUTIONADD, PUBKEY4, tokenType, "990", PRIKEY4PATH); //单账号回收
-        String recycleInfo2 = multiSignRecycle_LocalSign(MULITADD4, PUBKEY1, tokenType, "10", PRIKEY1PATH); //单账号回收
+        String recycleInfo = multiSignRecycle_LocalSign(IMPPUTIONADD, PUBKEY4, tokenType, "990", PRIKEY4); //单账号回收
+        String recycleInfo2 = multiSignRecycle_LocalSign(MULITADD4, PUBKEY1, tokenType, "10", PRIKEY1); //单账号回收
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
         Thread.sleep(SLEEPTIME);
@@ -114,7 +114,7 @@ public class LocalMultiSignTest {
         String transferData = "归集地址向MULITADD7转账10个: " + tokenType;
         log.info(transferData);
         List<Map> transferList = utilsClass.constructToken(MULITADD7, tokenType, "10");
-        multiSignTransfer_LocalSign(IMPPUTIONADD, PUBKEY4, transferData, transferList, PRIKEY4PATH); //向单个账号转账
+        multiSignTransfer_LocalSign(IMPPUTIONADD, PUBKEY4, transferData, transferList, PRIKEY4); //向单个账号转账
 
         Thread.sleep(SLEEPTIME);
 
@@ -132,7 +132,7 @@ public class LocalMultiSignTest {
         String transferData2 = "MULITADD7向MULITADD4转账3个: " + tokenType;
         log.info(transferData2);
         List<Map> transferList2 = utilsClass.constructToken(MULITADD4, tokenType, "3");
-        multiSignTransfer_LocalSign(MULITADD7, PUBKEY6, transferData2, transferList2, PRIKEY6PATH, PWD6); //向单个账号转账
+        multiSignTransfer_LocalSign(MULITADD7, PUBKEY6, transferData2, transferList2, PRIKEY6, PWD6); //向单个账号转账
 
         Thread.sleep(SLEEPTIME);
 
@@ -149,9 +149,9 @@ public class LocalMultiSignTest {
 
 
         log.info("回收归集地址和MULITADD4的token");
-        String recycleInfo = multiSignRecycle_LocalSign(IMPPUTIONADD, PUBKEY4, tokenType, "990", PRIKEY4PATH); //单账号回收
-        String recycleInfo2 = multiSignRecycle_LocalSign(MULITADD7, PUBKEY6, tokenType, "7", PRIKEY6PATH, PWD6); //单账号回收
-        String recycleInfo3 = multiSignRecycle_LocalSign(MULITADD4, PUBKEY1, tokenType, "3", PRIKEY1PATH); //单账号回收
+        String recycleInfo = multiSignRecycle_LocalSign(IMPPUTIONADD, PUBKEY4, tokenType, "990", PRIKEY4); //单账号回收
+        String recycleInfo2 = multiSignRecycle_LocalSign(MULITADD7, PUBKEY6, tokenType, "7", PRIKEY6, PWD6); //单账号回收
+        String recycleInfo3 = multiSignRecycle_LocalSign(MULITADD4, PUBKEY1, tokenType, "3", PRIKEY1); //单账号回收
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
         assertThat(recycleInfo3, containsString("200"));
@@ -195,7 +195,7 @@ public class LocalMultiSignTest {
         String transferData = "归集地址向MULITADD7转账10个: " + tokenType;
         log.info(transferData);
         List<Map> transferList = utilsClass.constructToken(MULITADD7, tokenType, "10");
-        multiSignTransfer_LocalSign(MULITADD3, PUBKEY1, transferData, transferList, PRIKEY1PATH); //向单个账号转账
+        multiSignTransfer_LocalSign(MULITADD3, PUBKEY1, transferData, transferList, PRIKEY1); //向单个账号转账
 
 //        Thread.sleep(SLEEPTIME);
 //
@@ -273,9 +273,9 @@ public class LocalMultiSignTest {
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中token余额");
         String balance = multiSign.BalanceByAddr(MULITADD1, tokenType);
-        log.info("????"+balance);
+        log.info(balance);
         String balance2 = multiSign.BalanceByAddr(MULITADD1, tokenType2);
-        log.info("????"+balance2);
+        log.info(balance2);
         assertThat(tokenType + "查询余额错误", balance, containsString("200"));
         assertThat(tokenType + "查询余额不正确", balance, containsString(tokenType + "\":\"1000\""));
         assertThat(tokenType2 + "查询余额错误", balance2, containsString("200"));
@@ -287,14 +287,14 @@ public class LocalMultiSignTest {
 
         String transferData = "归集地址向MULITADD4转账10个" + tokenType + ", 归集地址向MULITADD5转账10个" + tokenType2;
         log.info(transferData);
-        String transferInfo = multiSignTransfer_LocalSign(MULITADD1, PUBKEY1, transferData, transferList2, PRIKEY1PATH);//向两个账号转账，不同币种
+        String transferInfo = multiSignTransfer_LocalSign(MULITADD1, PUBKEY1, transferData, transferList2, PRIKEY1, PRIKEY2, PRIKEY3);//向两个账号转账，不同币种
 
         Thread.sleep(SLEEPTIME); //UTXO关系，两笔交易之间需要休眠
 
 
         String transferData2 = "归集地址向MULITADD4转账10个" + tokenType + ", 归集地址向MULITADD5转账10个" + tokenType;
         log.info(transferData2);
-        String transferInfo2 = multiSignTransfer_LocalSign(MULITADD1, PUBKEY2, transferData2, transferList3, PRIKEY2PATH);//向两个账号转账，相同币种
+        String transferInfo2 = multiSignTransfer_LocalSign(MULITADD1, PUBKEY2, transferData2, transferList3, PRIKEY1, PRIKEY2, PRIKEY3);//向两个账号转账，相同币种
 
         assertThat(transferInfo, containsString("200"));
         assertThat(transferInfo2, containsString("200"));
@@ -314,13 +314,11 @@ public class LocalMultiSignTest {
 //        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString(tokenType), containsString("10"));
 
         log.info("回收Token");
-        String recycleInfo = multiSignRecycle_LocalSign(MULITADD1, PUBKEY3, tokenType, "970", PRIKEY3PATH);
-        Thread.sleep(SLEEPTIME);
-        String recycleInfo2 = multiSignRecycle_LocalSign(MULITADD1, PUBKEY1, tokenType2, "990", PRIKEY1PATH);
-        String recycleInfo3 = multiSignRecycle_LocalSign(MULITADD4, PUBKEY2, tokenType, "20", PRIKEY2PATH);
-
-        String recycleInfo4 = multiSignRecycle_LocalSign(MULITADD5, PUBKEY1, tokenType2, "10", PRIKEY1PATH);
-        String recycleInfo5 = multiSignRecycle_LocalSign(MULITADD5, PUBKEY3, tokenType, "10", PRIKEY3PATH);
+        String recycleInfo = multiSignRecycle_LocalSign(MULITADD1, PUBKEY3, tokenType, "970", PRIKEY1, PRIKEY2, PRIKEY3);
+        String recycleInfo2 = multiSignRecycle_LocalSign(MULITADD1, PUBKEY1, tokenType2, "990", PRIKEY1, PRIKEY2, PRIKEY3);
+        String recycleInfo3 = multiSignRecycle_LocalSign(MULITADD4, PUBKEY2, tokenType, "20", PRIKEY2);
+        String recycleInfo4 = multiSignRecycle_LocalSign(MULITADD5, PUBKEY1, tokenType2, "10", PRIKEY1);
+        String recycleInfo5 = multiSignRecycle_LocalSign(MULITADD5, PUBKEY3, tokenType, "10", PRIKEY3);
         Thread.sleep(SLEEPTIME);
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
@@ -337,16 +335,16 @@ public class LocalMultiSignTest {
         assertThat(queryInfo3, containsString("\"Data\":{}"));
         assertThat(queryInfo4, containsString("\"Data\":{}"));
         assertThat(queryInfo5, containsString("\"Data\":{}"));
-//        assertThat(queryInfo6, containsString("\"Data\":{}"));
-//        assertThat(queryInfo7, containsString("\"Data\":{}"));
+        assertThat(queryInfo6, containsString("\"Data\":{}"));
+        assertThat(queryInfo7, containsString("\"Data\":{}"));
 
         log.info("查询零地址余额");
         String queryInfo8 = multiSign.QueryZero(tokenType);
         String queryInfo9 = multiSign.QueryZero(tokenType2);
         assertThat(queryInfo8, containsString("200"));
-        assertThat(queryInfo8, containsString(tokenType + "\":\"30\""));
+        assertThat(queryInfo8, containsString(tokenType + "\":\"1000\""));
         assertThat(queryInfo9, containsString("200"));
-        assertThat(queryInfo9, containsString(tokenType2 + "\":\"10\""));
+        assertThat(queryInfo9, containsString(tokenType2 + "\":\"1000\""));
 
     }
 
@@ -369,7 +367,7 @@ public class LocalMultiSignTest {
         String transferData = "归集地址向MULITADD4转账10个: " + tokenType;
         log.info(transferData);
         List<Map> transferList = utilsClass.constructToken(MULITADD4, tokenType, "10");
-        multiSignTransfer_LocalSign(IMPPUTIONADD, PUBKEY4, transferData, transferList, PRIKEY4PATH);
+        multiSignTransfer_LocalSign(IMPPUTIONADD, PUBKEY4, transferData, transferList, PRIKEY4);
 
         Thread.sleep(SLEEPTIME);
 
@@ -434,13 +432,13 @@ public class LocalMultiSignTest {
 //        log.info("发行签名前数据："+preSignData);
 
         log.info("第一次签名");
-        String signedData1 = multiIssue.multiSignIssueMethod(preSignData, PRIKEY1PATH);
+        String signedData1 = multiIssue.multiSignIssueMethod(preSignData, PRIKEY1);
 
         log.info("第二次签名");
-        String signedData2 = multiIssue.multiSignIssueMethod(signedData1, PRIKEY2PATH);
+        String signedData2 = multiIssue.multiSignIssueMethod(signedData1, PRIKEY2);
 
         log.info("第三次签名");
-        String signedData3 = multiIssue.multiSignIssueMethod(signedData2, PRIKEY3PATH);
+        String signedData3 = multiIssue.multiSignIssueMethod(signedData2, PRIKEY3);
 //        log.info("发行最后签名结果：" + signedData3);
 
         multiSign.sendSign(signedData3);
@@ -465,19 +463,19 @@ public class LocalMultiSignTest {
 
         String response = multiSign.issueTokenLocalSign(MULITADD1, toAddr, tokenType, amount, data);
 
-       log.info("发行返回："+response);
+//       log.info("发行返回："+response);
 
         String preSignData = JSONObject.fromObject(response).getJSONObject("Data").getString("TxData");
 //        log.info("发行签名前数据："+preSignData);
 
         log.info("第一次签名");
-        String signedData1 = multiIssue.multiSignIssueMethod(preSignData,PRIKEY1PATH); //PRIKEY1PATH
-        log.info(signedData1);
+        String signedData1 = multiIssue.multiSignIssueMethod(preSignData,PRIKEY1);
+//        log.info(signedData1);
         log.info("第二次签名");
-        String signedData2 = multiIssue.multiSignIssueMethod(signedData1, PRIKEY2PATH);
+        String signedData2 = multiIssue.multiSignIssueMethod(signedData1, PRIKEY2);
 //
 //        log.info("第三次签名");
-        String signedData3 = multiIssue.multiSignIssueMethod(signedData2, PRIKEY3PATH);
+        String signedData3 = multiIssue.multiSignIssueMethod(signedData2, PRIKEY3);
 //        log.info("发行最后签名结果：" + signedData3);
 
         multiSign.sendSign(signedData3);
@@ -496,8 +494,8 @@ public class LocalMultiSignTest {
      * @return
      * @throws Exception
      */
-    public String multiSignTransfer_LocalSign(String fromAddr, String fromPubKey, String data,
-                                              List<Map> tokenList, String ...fromPriKeyPath) throws Exception {
+    public String multiSignTransfer_LocalSign(String fromAddr, String fromPubKey, String data,List<Map> tokenList,
+                                               String fromPriKey1, String fromPriKey2, String fromPriKey3) throws Exception {
 
 //        List<Map> listModel = utilsClass.constructToken(toAddr,tokenType,amount);
 
@@ -507,9 +505,9 @@ public class LocalMultiSignTest {
             return transferInfo;
         }
         String preSignData = JSONObject.fromObject(transferInfo).getJSONObject("Data").toString();
-        String signedData1 = multiTrans.multiSignTransferAccountsMethod(preSignData, PRIKEY1PATH);
-        String signedData2 = multiTrans.multiSignTransferAccountsMethod(signedData1, PRIKEY2PATH);
-        String signedData3 = multiTrans.multiSignTransferAccountsMethod(signedData2, PRIKEY3PATH);
+        String signedData1 = multiTrans.multiSignTransferAccountsMethod(preSignData, fromPriKey1);
+        String signedData2 = multiTrans.multiSignTransferAccountsMethod(signedData1, fromPriKey2);
+        String signedData3 = multiTrans.multiSignTransferAccountsMethod(signedData2, fromPriKey3);
         log.info("多签转账签名后的数据：" + signedData3);
         String response = multiSign.sendSign(signedData3);
         return response;
@@ -536,10 +534,14 @@ public class LocalMultiSignTest {
 
         String recycleResponse = multiSign.RecycleLocalSign(fromAddr, fromPubKey, tokenType, amount);
 
-//        log.info("回收：" + recycleResponse);
+        if (recycleResponse.contains("insufficient balance")) {
+            return recycleResponse;
+        }
+
+        log.info("回收：" + recycleResponse);
 
         String preSignData = JSONObject.fromObject(recycleResponse).getJSONObject("Data").toString();
-        log.info("签名前数据: " + preSignData);
+//        log.info("签名前数据: " + preSignData);
 
         String signedData1 = multiTrans.multiSignTransferAccountsMethod(preSignData, fromPriKeyPath);
 
@@ -599,13 +601,13 @@ public class LocalMultiSignTest {
 //        log.info("发行签名前数据："+preSignData);
 
         log.info("第一次签名");
-        String signedData1 = multiIssue.multiSignIssueMethod(preSignData, PRIKEY6PATH, PWD6);
+        String signedData1 = multiIssue.multiSignIssueMethod(preSignData, PRIKEY6, PWD6);
 
         log.info("第二次签名");
-        String signedData2 = multiIssue.multiSignIssueMethod(signedData1, PRIKEY1PATH);
+        String signedData2 = multiIssue.multiSignIssueMethod(signedData1, PRIKEY1);
 
         log.info("第三次签名");
-        String signedData3 = multiIssue.multiSignIssueMethod(signedData2, PRIKEY7PATH, PWD7);
+        String signedData3 = multiIssue.multiSignIssueMethod(signedData2, PRIKEY7, PWD7);
 //        log.info("发行最后签名结果：" + signedData3);
 
         multiSign.sendSign(signedData3);
@@ -635,13 +637,13 @@ public class LocalMultiSignTest {
 //        log.info("发行签名前数据："+preSignData);
 
 //        log.info("第一次签名");
-        String signedData1 = multiIssue.multiSignIssueMethod(preSignData, PRIKEY6PATH,PWD6);
+        String signedData1 = multiIssue.multiSignIssueMethod(preSignData, PRIKEY6,PWD6);
 
 //        log.info("第二次签名");
-        String signedData2 = multiIssue.multiSignIssueMethod(signedData1, PRIKEY1PATH);
+        String signedData2 = multiIssue.multiSignIssueMethod(signedData1, PRIKEY1);
 
 //        log.info("第三次签名");
-        String signedData3 = multiIssue.multiSignIssueMethod(signedData2, PRIKEY7PATH, PWD7);
+        String signedData3 = multiIssue.multiSignIssueMethod(signedData2, PRIKEY7, PWD7);
 //        log.info("发行最后签名结果：" + signedData3);
 
         multiSign.sendSign(signedData3);
@@ -685,6 +687,39 @@ public class LocalMultiSignTest {
     }
 
     /**
+     * 多签转账，本地签名
+     * 私钥带密码
+     * @param fromAddr
+     * @param fromPubKey
+     * @param data
+     * @param fromPriKeyPath
+     * @return
+     * @throws Exception
+     */
+    public String multiSignTransfer_LocalSign(String fromAddr, String fromPubKey, String data,
+                                              List<Map> tokenList, String fromPriKey) throws Exception {
+
+//        List<Map> listModel = utilsClass.constructToken(toAddr,tokenType,amount);
+
+        String transferInfo = multiSign.TransferLocalSign(fromAddr, fromPubKey, data, tokenList);
+
+        if (transferInfo.contains("insufficient balance")) {
+            return transferInfo;
+        }
+
+        String preSignData = JSONObject.fromObject(transferInfo).getJSONObject("Data").toString();
+//        log.info("多签转账签名前数据: "+preSignData);
+
+        String signedData = multiTrans.multiSignTransferAccountsMethod(preSignData, fromPriKey);
+
+//        log.info("多签转账签名后的数据：" + signedData);
+
+        String response = multiSign.sendSign(signedData);
+
+        return response;
+    }
+
+    /**
      * 回收多签账号余额 - 单笔回收
      *私钥带密码
      * @param fromAddr
@@ -710,6 +745,43 @@ public class LocalMultiSignTest {
 //        log.info("签名后的数据：" + signedData);
 
         String txInfo = multiSign.sendSign(signedData);
+
+//        assertThat("发送交易",txInfo, containsString("200"));
+
+        return txInfo;
+    }
+
+
+    /**
+     * 回收多签账号余额 - 单笔回收
+     *私钥带密码
+     * @param fromAddr
+     * @param fromPubKey
+     * @param tokenType
+     * @param amount
+     * @param fromPriKeyPath
+     * @return
+     * @throws Exception
+     */
+    public String multiSignRecycle_LocalSign(String fromAddr, String fromPubKey, String tokenType,String amount,
+                                             String fromPriKey1, String fromPriKey2, String fromPriKey3) throws Exception {
+
+        String recycleResponse = multiSign.RecycleLocalSign(fromAddr, fromPubKey, tokenType, amount);
+
+//        log.info("回收：" + recycleResponse);
+
+        String preSignData = JSONObject.fromObject(recycleResponse).getJSONObject("Data").toString();
+//        log.info("签名前数据: " + preSignData);
+
+        String signedData = multiTrans.multiSignTransferAccountsMethod(preSignData, fromPriKey1);
+
+        String signedData2 = multiTrans.multiSignTransferAccountsMethod(signedData, fromPriKey2);
+
+        String signedData3 = multiTrans.multiSignTransferAccountsMethod(signedData2, fromPriKey3);
+
+//        log.info("签名后的数据：" + signedData);
+
+        String txInfo = multiSign.sendSign(signedData3);
 
 //        assertThat("发送交易",txInfo, containsString("200"));
 

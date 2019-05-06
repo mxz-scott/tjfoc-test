@@ -1,9 +1,9 @@
 package com.tjfintech.common.functionTest.store;
 
-import com.bw.base.PrivacyPolicyStore;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
+import com.tjfoc.base.PrivacyPolicyStore;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.FixMethodOrder;
@@ -52,10 +52,10 @@ public class LocalStoreTest {
         log.info("tx:" + data);
 
 
-        String result1 = priStore.privacyPolicyStoreMethod(data, PRIKEY1PATH);
-        String result2 = priStore.privacyPolicyStoreMethod(data, PRIKEY2PATH);
-        String result3 = priStore.privacyPolicyStoreMethod(data, PRIKEY3PATH);
-        String result4 = priStore.privacyPolicyStoreMethod(data, PRIKEY4PATH);
+        String result1 = priStore.privacyPolicyStoreMethod(data, PRIKEY1);
+        String result2 = priStore.privacyPolicyStoreMethod(data, PRIKEY2);
+        String result3 = priStore.privacyPolicyStoreMethod(data, PRIKEY3);
+        String result4 = priStore.privacyPolicyStoreMethod(data, PRIKEY4);
 
         log.info("私钥1解密结果：" + result1);
         log.info("私钥2解密结果：" + result2);
@@ -98,11 +98,11 @@ public class LocalStoreTest {
 //        log.info("tx:" + data);
 
 
-        String result1 = priStore.privacyPolicyStoreMethod(data, PRIKEY1PATH);
-        String result2 = priStore.privacyPolicyStoreMethod(data, PRIKEY6PATH, PWD6);
-        String result3 = priStore.privacyPolicyStoreMethod(data, PRIKEY7PATH, PWD7);
-//        String result4 = priStore.privacyPolicyStoreMethod(data, PRIKEY6PATH, PWD7); //私钥和密码不匹配
-        String result5 = priStore.privacyPolicyStoreMethod(data, PRIKEY4PATH); //私钥不匹配
+        String result1 = priStore.privacyPolicyStoreMethod(data, PRIKEY1);
+        String result2 = priStore.privacyPolicyStoreMethod(data, PRIKEY6, PWD6);
+        String result3 = priStore.privacyPolicyStoreMethod(data, PRIKEY7, PWD7);
+//        String result4 = priStore.privacyPolicyStoreMethod(data, PRIKEY6, PWD7); //私钥和密码不匹配
+        String result5 = priStore.privacyPolicyStoreMethod(data, PRIKEY4); //私钥不匹配
 
         log.info("私钥1解密结果：" + result1);
         log.info("私钥2解密结果：" + result2);
@@ -147,8 +147,8 @@ public class LocalStoreTest {
         String data = jsonObject2.getJSONObject("Data").toString();
 //        log.info("Data:" + data);
 
-        String result1 = priStore.privacyPolicyStoreMethod(data, PRIKEY1PATH);
-        String result2 = priStore.privacyPolicyStoreMethod(data, PRIKEY2PATH);
+        String result1 = priStore.privacyPolicyStoreMethod(data, PRIKEY1);
+        String result2 = priStore.privacyPolicyStoreMethod(data, PRIKEY2);
 
         log.info("私钥1解密结果：" + result1);
         log.info("私钥2解密结果：" + result2);
@@ -182,8 +182,8 @@ public class LocalStoreTest {
         String data = jsonObject2.getJSONObject("Data").toString();
 //        log.info("Data:" + data);
 
-        String result1 = priStore.privacyPolicyStoreMethod(data, PRIKEY6PATH, PWD6);
-        String result2 = priStore.privacyPolicyStoreMethod(data, PRIKEY2PATH);
+        String result1 = priStore.privacyPolicyStoreMethod(data, PRIKEY6, PWD6);
+        String result2 = priStore.privacyPolicyStoreMethod(data, PRIKEY2);
 
         log.info("私钥1解密结果：" + result1);
         log.info("私钥2解密结果：" + result2);
@@ -194,7 +194,6 @@ public class LocalStoreTest {
         assertEquals(result2.contains("test789"), false);
 
     }
-
 
 
 }

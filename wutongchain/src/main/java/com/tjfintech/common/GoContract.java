@@ -41,7 +41,7 @@ public class GoContract implements Contract {
         map.put("File",file);
 
         //String result=PostTest.sendPostToJson(SDKADD+"/contract/install",map);
-        String result=PostTest.postMethod(SDKADD+"/contract/install",map);
+        String result=PostTest.sendPostToJson(SDKADD+"/contract/install",map);
         log.info(result);
         return result ;
     }

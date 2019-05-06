@@ -1,10 +1,7 @@
 <component name="libraryTable">
   <library name="resources">
-    <CLASSES>
-      <root url="file://$PROJECT_DIR$/wutongchain/src/main/resources" />
-    </CLASSES>
+    <CLASSES />
     <JAVADOC />
     <SOURCES />
-    <jarDirectory url="file://$PROJECT_DIR$/wutongchain/src/main/resources" recursive="false" />
   </library>
 </component>

@@ -1,13 +1,12 @@
 package com.tjfintech.common.functionTest.utxoSingleSign;
 
-import com.bw.base.SingleSignIssue;
-import com.bw.base.SingleSignTransferAccounts;
-import com.bw.base.MultiSignTransferAccounts;
-
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
+import com.tjfoc.base.MultiSignTransferAccounts;
+import com.tjfoc.base.SingleSignIssue;
+import com.tjfoc.base.SingleSignTransferAccounts;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Before;
@@ -76,7 +75,7 @@ public class LocalSingleSignTest {
         log.info(transferData);
         List<Map> transferList = soloSign.constructToken(ADDRESS3, tokenType, "100.25");  // 转账操作：向address3账户转入100.25
         List<Map> transferList2 = soloSign.constructToken(ADDRESS5, tokenType2, "200.555", transferList);// 转账操作：向address5账户转入200.555同时向address3账户转入100.25
-        singleSignTransfer_LocalSign(PUBKEY1, transferData, transferList2, PRIKEY1PATH); //多账号转账
+        singleSignTransfer_LocalSign(PUBKEY1, transferData, transferList2, PRIKEY1); //多账号转账
 
         Thread.sleep(SLEEPTIME);
 
@@ -102,7 +101,7 @@ public class LocalSingleSignTest {
         String data1 = "ADDRESS3向ADDRESS4转账30个" + tokenType;
         log.info(data1);
         List<Map> list1 = soloSign.constructToken(ADDRESS4, tokenType, "30");
-        String res1 = singleSignTransfer_LocalSign(PUBKEY3, data1, list1, PRIKEY3PATH); //单账号转账
+        String res1 = singleSignTransfer_LocalSign(PUBKEY3, data1, list1, PRIKEY3); //单账号转账
         log.info(res1);
         assertThat(res1, containsString("200"));
         Thread.sleep(SLEEPTIME);
@@ -110,7 +109,7 @@ public class LocalSingleSignTest {
         String data2 = "ADDRESS5向ADDRESS4转账80个" + tokenType2;
         log.info(data2);
         List<Map> list2 = soloSign.constructToken(ADDRESS4, tokenType2, "80");
-        String res2 = singleSignTransfer_LocalSign(PUBKEY5, data2, list2, PRIKEY5PATH);
+        String res2 = singleSignTransfer_LocalSign(PUBKEY5, data2, list2, PRIKEY5);
         log.info(res2);
         assertThat(res2, containsString("200"));
         Thread.sleep(SLEEPTIME);
@@ -128,14 +127,14 @@ public class LocalSingleSignTest {
         log.info(data3);
         List<Map> list3 = soloSign.constructToken(ADDRESS2, tokenType, "30");
         List<Map> list4 = soloSign.constructToken(ADDRESS2, tokenType2, "70", list3);
-        String res3 = singleSignTransfer_LocalSign(PUBKEY4, data3, list4, PRIKEY4PATH); //多账号转账
+        String res3 = singleSignTransfer_LocalSign(PUBKEY4, data3, list4, PRIKEY4); //多账号转账
         assertThat(res3, containsString("200"));
         Thread.sleep(SLEEPTIME);
 
         String data4 = "ADDRESS5向ADDRESS2转账20个" + tokenType2;
         log.info(data4);
         List<Map> list5 = soloSign.constructToken(ADDRESS2, tokenType2, "20");
-        String res4 = singleSignTransfer_LocalSign(PUBKEY5, data4, list5, PRIKEY5PATH);
+        String res4 = singleSignTransfer_LocalSign(PUBKEY5, data4, list5, PRIKEY5);
         assertThat(res4, containsString("200"));
         Thread.sleep(SLEEPTIME);
 
@@ -143,7 +142,7 @@ public class LocalSingleSignTest {
         log.info(data5);
         List<Map> list6 = soloSign.constructToken(ADDRESS4, tokenType2, "30");
         List<Map> list7 = soloSign.constructToken(ADDRESS4, tokenType2, "50", list6);
-        String res5 = singleSignTransfer_LocalSign(PUBKEY2, data5, list7, PRIKEY2PATH);
+        String res5 = singleSignTransfer_LocalSign(PUBKEY2, data5, list7, PRIKEY2);
         assertThat(res5, containsString("200"));
         Thread.sleep(SLEEPTIME);
 
@@ -152,7 +151,7 @@ public class LocalSingleSignTest {
         String queryInfo3TK1 = multiSign.BalanceByAddr(ADDRESS3, tokenType);
         assertThat(queryInfo3TK1, containsString(tokenType + "\":\"70.25\""));
 
-        String Info1 = singleSignRecycle_LocalSign(PUBKEY3, tokenType, "70.25", PRIKEY3PATH); //单账号回收
+        String Info1 = singleSignRecycle_LocalSign(PUBKEY3, tokenType, "70.25", PRIKEY3); //单账号回收
         assertThat(Info1, containsString("200"));
         Thread.sleep(SLEEPTIME);
 
@@ -168,7 +167,7 @@ public class LocalSingleSignTest {
         assertThat(queryInfo4TK2, containsString(tokenType2 + "\":\"90\""));
 
 
-        String Info2 = singleSignRecycle_LocalSign(PUBKEY4, tokenType2, "90", PRIKEY4PATH);
+        String Info2 = singleSignRecycle_LocalSign(PUBKEY4, tokenType2, "90", PRIKEY4);
         assertThat(Info2, containsString("200"));
         Thread.sleep(SLEEPTIME);
 
@@ -181,7 +180,7 @@ public class LocalSingleSignTest {
         assertThat(queryInfo5TK2, containsString(tokenType2 + "\":\"100.555\""));
 
 
-        String Info3 = singleSignRecycle_LocalSign(PUBKEY5, tokenType2, "100.555", PRIKEY5PATH);
+        String Info3 = singleSignRecycle_LocalSign(PUBKEY5, tokenType2, "100.555", PRIKEY5);
         assertThat(Info3, containsString("200"));
         Thread.sleep(SLEEPTIME);
 
@@ -192,7 +191,7 @@ public class LocalSingleSignTest {
         String queryInfo6TK1 = multiSign.BalanceByAddr(ADDRESS2, tokenType);
         assertThat(queryInfo6TK1, containsString(tokenType + "\":\"30\""));
 
-        String Info4 = singleSignRecycle_LocalSign(PUBKEY2, tokenType, "30", PRIKEY2PATH);
+        String Info4 = singleSignRecycle_LocalSign(PUBKEY2, tokenType, "30", PRIKEY2);
         assertThat(Info4, containsString("200"));
         Thread.sleep(SLEEPTIME);
 
@@ -203,7 +202,7 @@ public class LocalSingleSignTest {
         String queryInfo6TK2 = multiSign.BalanceByAddr(ADDRESS2, tokenType2);
         assertThat(queryInfo6TK2, containsString(tokenType2 + "\":\"10\""));
 
-        String Info5 = singleSignRecycle_LocalSign(PUBKEY2, tokenType2, "10", PRIKEY2PATH);
+        String Info5 = singleSignRecycle_LocalSign(PUBKEY2, tokenType2, "10", PRIKEY2);
         assertThat(Info5, containsString("200"));
         Thread.sleep(SLEEPTIME);
 
@@ -225,7 +224,7 @@ public class LocalSingleSignTest {
         log.info(transferData);
         List<Map> transferList = soloSign.constructToken(ADDRESS3, tokenType, "100.25");
         List<Map> transferList2 = soloSign.constructToken(ADDRESS5, tokenType2, "200.555", transferList);
-        singleSignTransfer_LocalSign(PUBKEY1, transferData, transferList2, PRIKEY1PATH); //多账号转账
+        singleSignTransfer_LocalSign(PUBKEY1, transferData, transferList2, PRIKEY1); //多账号转账
 
         Thread.sleep(SLEEPTIME);
 
@@ -251,7 +250,7 @@ public class LocalSingleSignTest {
         String data1 = "ADDRESS3向ADDRESS4转账30个" + tokenType;
         log.info(data1);
         List<Map> list1 = soloSign.constructToken(ADDRESS4, tokenType, "30");
-        String res1 = singleSignTransfer_LocalSign(PUBKEY3, data1, list1, PRIKEY3PATH);
+        String res1 = singleSignTransfer_LocalSign(PUBKEY3, data1, list1, PRIKEY3);
         log.info(res1);
         assertThat(res1, containsString("200"));
         Thread.sleep(SLEEPTIME);
@@ -259,7 +258,7 @@ public class LocalSingleSignTest {
         String data2 = "ADDRESS5向ADDRESS4转账80个" + tokenType2;
         log.info(data2);
         List<Map> list2 = soloSign.constructToken(ADDRESS4, tokenType2, "80");
-        String res2 = singleSignTransfer_LocalSign(PUBKEY5, data2, list2, PRIKEY5PATH);
+        String res2 = singleSignTransfer_LocalSign(PUBKEY5, data2, list2, PRIKEY5);
         log.info(res2);
         assertThat(res2, containsString("200"));
         Thread.sleep(SLEEPTIME);
@@ -277,14 +276,14 @@ public class LocalSingleSignTest {
         log.info(data3);
         List<Map> list3 = soloSign.constructToken(ADDRESS2, tokenType, "30");
         List<Map> list4 = soloSign.constructToken(ADDRESS2, tokenType2, "70", list3);
-        String res3 = singleSignTransfer_LocalSign(PUBKEY4, data3, list4, PRIKEY4PATH);
+        String res3 = singleSignTransfer_LocalSign(PUBKEY4, data3, list4, PRIKEY4);
         assertThat(res3, containsString("200"));
         Thread.sleep(SLEEPTIME);
 
         String data4 = "ADDRESS5向ADDRESS2转账20个" + tokenType2;
         log.info(data4);
         List<Map> list5 = soloSign.constructToken(ADDRESS2, tokenType2, "20");
-        String res4 = singleSignTransfer_LocalSign(PUBKEY5, data4, list5, PRIKEY5PATH);
+        String res4 = singleSignTransfer_LocalSign(PUBKEY5, data4, list5, PRIKEY5);
         assertThat(res4, containsString("200"));
         Thread.sleep(SLEEPTIME);
 
@@ -292,7 +291,7 @@ public class LocalSingleSignTest {
         log.info(data5);
         List<Map> list6 = soloSign.constructToken(ADDRESS4, tokenType2, "30");
         List<Map> list7 = soloSign.constructToken(ADDRESS4, tokenType2, "50", list6);
-        String res5 = singleSignTransfer_LocalSign(PUBKEY2, data5, list7, PRIKEY2PATH);
+        String res5 = singleSignTransfer_LocalSign(PUBKEY2, data5, list7, PRIKEY2);
         assertThat(res5, containsString("200"));
         Thread.sleep(SLEEPTIME);
 
@@ -309,11 +308,11 @@ public class LocalSingleSignTest {
 //        String response = multiSign.RecyclesLocalSign(recycleList5);
 //        log.info(response);
 //
-//        singleSignRecycles(response, "0", PRIKEY3PATH);
-//        singleSignRecycles(response, "1", PRIKEY4PATH);
-//        singleSignRecycles(response, "2", PRIKEY5PATH);
-//        singleSignRecycles(response, "3", PRIKEY2PATH);
-//        singleSignRecycles(response, "4", PRIKEY2PATH);
+//        singleSignRecycles(response, "0", PRIKEY3);
+//        singleSignRecycles(response, "1", PRIKEY4);
+//        singleSignRecycles(response, "2", PRIKEY5);
+//        singleSignRecycles(response, "3", PRIKEY2);
+//        singleSignRecycles(response, "4", PRIKEY2);
 //
 //
 //        Thread.sleep(SLEEPTIME);
@@ -361,7 +360,7 @@ public class LocalSingleSignTest {
 //        log.info(transferData);
 //        List<Map> transferList = utilsClass.constructToken(ADDRESS3, tokenType, "100.25");
 //        List<Map> transferList2 = utilsClass.constructToken(ADDRESS5, tokenType2, "200.555", transferList);
-//        singleSignTransfer_LocalSign(PUBKEY1, transferData, transferList2, PRIKEY1PATH); //多账号转账
+//        singleSignTransfer_LocalSign(PUBKEY1, transferData, transferList2, PRIKEY1); //多账号转账
 //
 //        Thread.sleep(SLEEPTIME);
 //
@@ -394,9 +393,9 @@ public class LocalSingleSignTest {
 //
 //        log.info(response);
 //
-//        multiSignTest.multiSignRecycles(response, "0", PRIKEY4PATH);
-//        singleSignRecycles(response, "1", PRIKEY3PATH);
-//        singleSignRecycles(response, "2", PRIKEY5PATH);
+//        multiSignTest.multiSignRecycles(response, "0", PRIKEY4);
+//        singleSignRecycles(response, "1", PRIKEY3);
+//        singleSignRecycles(response, "2", PRIKEY5);
 //
 //        Thread.sleep(SLEEPTIME);
 //
@@ -429,7 +428,7 @@ public class LocalSingleSignTest {
         List<Map> list = soloSign.constructToken(ADDRESS3, tokenType, "3000");
         List<Map> list1 = soloSign.constructToken(ADDRESS3, tokenType2, "3000", list);
 
-        singleSignTransfer_LocalSign(PUBKEY1, transferData, list1, PRIKEY1PATH); //多账号转账
+        singleSignTransfer_LocalSign(PUBKEY1, transferData, list1, PRIKEY1); //多账号转账
         Thread.sleep(SLEEPTIME);
 
 
@@ -438,7 +437,7 @@ public class LocalSingleSignTest {
         List<Map> list2 = soloSign.constructToken(ADDRESS4, tokenType, "4000");
         List<Map> list3 = soloSign.constructToken(ADDRESS5, tokenType, "70", list2);
 
-        String res3 = singleSignTransfer_LocalSign(PUBKEY3, transferData2, list3, PRIKEY3PATH);
+        String res3 = singleSignTransfer_LocalSign(PUBKEY3, transferData2, list3, PRIKEY3);
         log.info(res3);
         assertThat(res3, containsString("insufficient balance"));
         Thread.sleep(SLEEPTIME);
@@ -448,7 +447,7 @@ public class LocalSingleSignTest {
         List<Map> list21 = soloSign.constructToken(ADDRESS4, tokenType, "70");
         List<Map> list31 = soloSign.constructToken(ADDRESS5, tokenType, "4000", list21);
 
-        String res31 = singleSignTransfer_LocalSign(PUBKEY3, transferData21, list31, PRIKEY3PATH);
+        String res31 = singleSignTransfer_LocalSign(PUBKEY3, transferData21, list31, PRIKEY3);
         log.info(res31);
         assertThat(res31, containsString("insufficient balance"));
         Thread.sleep(SLEEPTIME);
@@ -458,7 +457,7 @@ public class LocalSingleSignTest {
         List<Map> list22 = soloSign.constructToken(ADDRESS4, tokenType, "4000.25");
         List<Map> list32 = soloSign.constructToken(ADDRESS5, tokenType, "4000", list22);
 
-        String res32 = singleSignTransfer_LocalSign(PUBKEY3, transferData22, list32, PRIKEY3PATH);
+        String res32 = singleSignTransfer_LocalSign(PUBKEY3, transferData22, list32, PRIKEY3);
         log.info(res32);
         assertThat(res32, containsString("insufficient balance"));
         Thread.sleep(SLEEPTIME);
@@ -469,7 +468,7 @@ public class LocalSingleSignTest {
         List<Map> list4 = soloSign.constructToken(ADDRESS4, tokenType, "4000");//不同币种，金额都不足
         List<Map> list5 = soloSign.constructToken(ADDRESS5, tokenType2, "4001", list4);
 
-        String res4 = singleSignTransfer_LocalSign(PUBKEY3, transferData3, list5, PRIKEY3PATH);
+        String res4 = singleSignTransfer_LocalSign(PUBKEY3, transferData3, list5, PRIKEY3);
         log.info(res4);
         assertThat(res4, containsString("insufficient balance"));
         Thread.sleep(SLEEPTIME);
@@ -479,7 +478,7 @@ public class LocalSingleSignTest {
         List<Map> list42 = soloSign.constructToken(ADDRESS4, tokenType, "4000");//不同币种，金额都不足
         List<Map> list52 = soloSign.constructToken(ADDRESS5, tokenType2, "4001", list42);
 
-        String res42 = singleSignTransfer_LocalSign(PUBKEY3, transferData32, list52, PRIKEY3PATH);
+        String res42 = singleSignTransfer_LocalSign(PUBKEY3, transferData32, list52, PRIKEY3);
         log.info(res42);
         assertThat(res42, containsString("insufficient balance"));
         Thread.sleep(SLEEPTIME);
@@ -489,7 +488,7 @@ public class LocalSingleSignTest {
         log.info(transferData4);
         List<Map> list6 = soloSign.constructToken(ADDRESS4, tokenType, "4000");//不同币种，A金额都不足
         List<Map> list7 = soloSign.constructToken(ADDRESS5, tokenType2, "60", list6);
-        String res5 = singleSignTransfer_LocalSign(PUBKEY3, transferData4, list7, PRIKEY3PATH);
+        String res5 = singleSignTransfer_LocalSign(PUBKEY3, transferData4, list7, PRIKEY3);
         log.info(res5);
         assertThat(res5, containsString("insufficient balance"));
         Thread.sleep(SLEEPTIME);
@@ -498,14 +497,14 @@ public class LocalSingleSignTest {
         log.info(transferData5);
         List<Map> list8 = soloSign.constructToken(ADDRESS4, tokenType, "60");//不同币种，B金额都不足
         List<Map> list9 = soloSign.constructToken(ADDRESS5, tokenType2, "4000", list8);
-        String res6 = singleSignTransfer_LocalSign(PUBKEY3, transferData5, list9, PRIKEY3PATH);
+        String res6 = singleSignTransfer_LocalSign(PUBKEY3, transferData5, list9, PRIKEY3);
         log.info(res6);
         assertThat(res6, containsString("insufficient balance"));
         Thread.sleep(SLEEPTIME);
 
 
-        String Info = singleSignRecycle_LocalSign(PUBKEY3, tokenType, "3000", PRIKEY3PATH);
-        String Info3 = singleSignRecycle_LocalSign(PUBKEY3, tokenType2, "3000", PRIKEY3PATH);
+        String Info = singleSignRecycle_LocalSign(PUBKEY3, tokenType, "3000", PRIKEY3);
+        String Info3 = singleSignRecycle_LocalSign(PUBKEY3, tokenType2, "3000", PRIKEY3);
         assertThat(Info, containsString("200"));
         assertThat(Info3, containsString("200"));
     }
@@ -533,7 +532,7 @@ public class LocalSingleSignTest {
 
         log.info(transferData);
         List<Map> transferList = soloSign.constructToken(ADDRESS7, tokenType, "100.25");
-        singleSignTransfer_LocalSign(PUBKEY1, transferData, transferList, PRIKEY1PATH);
+        singleSignTransfer_LocalSign(PUBKEY1, transferData, transferList, PRIKEY1);
 
         Thread.sleep(SLEEPTIME);
 
@@ -551,7 +550,7 @@ public class LocalSingleSignTest {
         String data1 = "ADDRESS7向ADDRESS4转账5个" + tokenType;
         log.info(data1);
         List<Map> list1 = soloSign.constructToken(ADDRESS4, tokenType, "5");
-        String res1 = singleSignTransfer_LocalSign(PUBKEY7, data1, list1, PRIKEY7PATH, PWD7); //单账号转账
+        String res1 = singleSignTransfer_LocalSign(PUBKEY7, data1, list1, PRIKEY7, PWD7); //单账号转账
         log.info(res1);
         assertThat(res1, containsString("200"));
         Thread.sleep(SLEEPTIME);
@@ -561,13 +560,13 @@ public class LocalSingleSignTest {
         assertThat(queryInfo21, containsString("200"));
         assertThat(queryInfo21, containsString(tokenType + "\":\"95.25\""));
 
-        String queryInfo22 = multiSign.Balance(PRIKEY4, tokenType);
+        String queryInfo22 = soloSign.Balance(PRIKEY4, tokenType);
         assertThat(queryInfo22, containsString("200"));
         assertThat(queryInfo22, containsString(tokenType + "\":\"5\""));
 
         log.info("回收地址7和地址4余额");
-        singleSignRecycle_LocalSign(PUBKEY7, tokenType, "95.25", PRIKEY7PATH, PWD7); //单账号回收
-        singleSignRecycle_LocalSign(PUBKEY4, tokenType, "5", PRIKEY4PATH); //单账号回收
+        singleSignRecycle_LocalSign(PUBKEY7, tokenType, "95.25", PRIKEY7, PWD7); //单账号回收
+        singleSignRecycle_LocalSign(PUBKEY4, tokenType, "5", PRIKEY4); //单账号回收
         Thread.sleep(SLEEPTIME);
 
         log.info("查询地址7和地址4余额");
@@ -575,7 +574,7 @@ public class LocalSingleSignTest {
         assertThat(queryInfo21, containsString("200"));
         assertThat(queryInfo21, containsString("\"Total\":\"0\""));
 
-        queryInfo22 = multiSign.Balance(PRIKEY4, tokenType);
+        queryInfo22 = soloSign.Balance(PRIKEY4, tokenType);
         assertThat(queryInfo22, containsString("200"));
         assertThat(queryInfo21, containsString("\"Total\":\"0\""));
 
@@ -603,7 +602,7 @@ public class LocalSingleSignTest {
 //        log.info("单签发行返回" + issueResult);
 //        String preSignData = JSONObject.fromObject(issueResult).getJSONObject("Data").toString();
 //        log.info("单签发行签名前的数据：" + preSignData);
-//        String signedData = singleSign.singleSignIssueMethod(preSignData, PRIKEY6PATH, PWD6);
+//        String signedData = singleSign.singleSignIssueMethod(preSignData, PRIKEY6, PWD6);
 //        log.info("单签发行签名后的数据：" + signedData);
 //        String response = soloSign.sendSign(signedData);
 //                log.info("发送交易：" + response);
@@ -692,7 +691,7 @@ public class LocalSingleSignTest {
 //        log.info("单签发行返回" + issueResult);
         String preSignData = JSONObject.fromObject(issueResult).getJSONObject("Data").toString();
 //        log.info("单签发行签名前的数据：" + preSignData);
-        String signedData = singleSign.singleSignIssueMethod(preSignData, PRIKEY1PATH);
+        String signedData = singleSign.singleSignIssueMethod(preSignData, PRIKEY1);
 //        log.info("单签发行签名后的数据：" + signedData);
         String response = soloSign.sendSign(signedData);
 //        log.info("发送交易：" + response);

@@ -69,15 +69,15 @@ public class UtilsClass {
     public static MulitAccount mulitAccount6=new MulitAccount(MULITADD6,PUBKEY3,PUBKEY4,PRIKEY3,PRIKEY4);
     public static MulitAccount ImputationAccount=new MulitAccount(IMPPUTIONADD,PUBKEY4,PUBKEY5,PRIKEY4,PRIKEY5);
 
-    public final static String PRIKEY1PATH = ".\\src\\main\\resources\\key\\key1.pem";
-    public final static String PRIKEY2PATH = ".\\src\\main\\resources\\key\\key2.pem";
-    public final static String PRIKEY3PATH = ".\\src\\main\\resources\\key\\key3.pem";
-    public final static String PRIKEY4PATH = ".\\src\\main\\resources\\key\\key4.pem";
-    public final static String PRIKEY5PATH = ".\\src\\main\\resources\\key\\key5.pem";
-    public final static String PRIKEY6PATH = ".\\src\\main\\resources\\key\\key6.pem";
-    public final static String PRIKEY7PATH = ".\\src\\main\\resources\\key\\key7.pem";
-    public final static String PRIKEY8PATH = ".\\src\\main\\resources\\key\\key.pem";
-    public final static String PUBKEY8 = ".\\src\\main\\resources\\key\\pubkey.pem";
+//    public final static String PRIKEY1PATH = ".\\src\\main\\resources\\key\\key1.pem";
+//    public final static String PRIKEY2PATH = ".\\src\\main\\resources\\key\\key2.pem";
+//    public final static String PRIKEY3PATH = ".\\src\\main\\resources\\key\\key3.pem";
+//    public final static String PRIKEY4PATH = ".\\src\\main\\resources\\key\\key4.pem";
+//    public final static String PRIKEY5PATH = ".\\src\\main\\resources\\key\\key5.pem";
+//    public final static String PRIKEY6PATH = ".\\src\\main\\resources\\key\\key6.pem";
+//    public final static String PRIKEY7PATH = ".\\src\\main\\resources\\key\\key7.pem";
+//    public final static String PRIKEY8PATH = ".\\src\\main\\resources\\key\\key.pem";
+//    public final static String PUBKEY8 = ".\\src\\main\\resources\\key\\pubkey.pem";
 
     //add for diff type prikey & pubkey:SM2 ECDSA or RSA
     public static final String certPath="SM2";
