@@ -42,10 +42,11 @@ public class LocalMultiSignTest {
 
 
     /**
-     * Tc03多签正常流程-发行：签名：查询：转账：查询:回收：查询
+     * 3/3多签发行（私钥不带密码），发行给1/2签。
+     * 1/2签转账和回收（私钥不带密码），转给1/2签
      */
     @Test
-    public void TC03_multiProgress_LocalSign() throws Exception {
+    public void TC1419_1424_multiProgress_LocalSign() throws Exception {
         log.info("发行token1000个");
         tokenType = IssueTokenLocalSign(7, "1000", IMPPUTIONADD);
         Thread.sleep(SLEEPTIME);
@@ -179,10 +180,10 @@ public class LocalMultiSignTest {
 
     /**
      * 3/3多签发行（私钥带密码），发行给自己。
-     *
+     * 3/3签转账和回收（私钥带密码），转给1/2签。
      */
     @Test
-    public void TC1421_multiProgress_LocalSign_Pwd() throws Exception {
+    public void TC1421_1423_multiProgress_LocalSign_Pwd() throws Exception {
         log.info("发行token1000个");
         tokenType = IssueTokenLocalSignPwd(7, "1000");
         Thread.sleep(SLEEPTIME);
@@ -259,13 +260,13 @@ public class LocalMultiSignTest {
 
 
     /**
-     * TC19归集地址向两个多签地址转账
-     * 发两种币-查询归集地址-转账两个地址不同token-查询-回收-查询
      *
+     * 3/3多签发行(私钥不带密码)，发行给自己。
+     * 3/3签转账和回收(私钥不带密码)，转给1/2签
      * @throws Exception
      */
     @Test
-    public void TC19_transferMulti_LocalSign() throws Exception {
+    public void TC1418_1422_transferMulti_LocalSign() throws Exception {
         log.info("发行两种token1000个");
 
         tokenType = IssueTokenLocalSign(7, "1000");
