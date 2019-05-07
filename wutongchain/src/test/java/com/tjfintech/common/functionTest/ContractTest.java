@@ -129,6 +129,41 @@ public class ContractTest {
     }
 
     @Test
+    public void testContractErrInvoke() throws Exception{
+        BeforeCondition bf=new BeforeCondition();
+        bf.collAddressTest();
+
+
+        String response=null;
+        log.info(name);
+        dockerFileName="simple_err1.go";
+        //检查合约创建
+        response=installTest();
+        assertThat(response,containsString("200"));
+        assertThat(response,containsString("success"));
+        String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+
+        //安装后恢复dockerFileName为默认好的simple.go
+        dockerFileName="simple.go";
+        Thread.sleep(SLEEPTIME*6);
+        String response1=store.GetTransaction(hash);
+        Thread.sleep(5000);
+        assertThat(response1,containsString("200"));
+        assertThat(response1,containsString("success"));
+
+
+        //检查合约交易接口
+        response=eventTest();
+        Thread.sleep(30000); //合约timeout时间
+        assertThat(response,containsString("200"));
+        String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        log.info(name);
+        response=store.GetTransaction(hash3);
+        assertThat(response,containsString("failed to find transaction"));
+
+    }
+
+    @Test
     public void InvalidTestCtr()throws Exception{
 
         String response=null;
@@ -234,6 +269,8 @@ public class ContractTest {
         destroyTest();
         Thread.sleep(6000);
     }
+
+
 
     public String installTest() throws Exception {
         //String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";
