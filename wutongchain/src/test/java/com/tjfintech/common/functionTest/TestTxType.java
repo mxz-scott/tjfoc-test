@@ -49,8 +49,6 @@ public class TestTxType {
     String typeUTXO="1";
     String subTypeIssue="10";
     String subTypeTransfer="11";
-    String subTypeFrozen="13";
-    String subTypeUnfrozen="14";
     String subTypeRecycle="12";
 
     String typeDocker="2";
@@ -66,8 +64,7 @@ public class TestTxType {
     String subTypeFreezeToken="204";
     String subTypeRecoverToken="205";
 
-    //String zeroAddr="\\u0000\\u0000\\u0000\\u0000\\u0000\\u0000\\u0000\\u0000\\u0000\\u0000\\u0000\\u0000\\u0000\\u0000\\u0000\\u0000";
-    String zeroAddr=" ";
+    String zeroAddr="osEoy933LkHyyBcgjE7vCivfsX";
 
     @Before
     public void beforeConfig() throws Exception {
@@ -80,55 +77,7 @@ public class TestTxType {
         }
     }
 
-    @Test
-    public void testSDKConnections()throws Exception{
-        Shell shellPeer1 = new Shell(PEER1IP, USERNAME, PASSWD);
-        Shell shellPeer2 = new Shell(PEER2IP, USERNAME, PASSWD);
-        Shell shellPeer4 = new Shell(PEER4IP, USERNAME, PASSWD);
-        boolean bError=false;
-        for(int i=0;i<10;i++) {
 
-            log.info("**************--------------test times: "+i+"--------------**************");
-            shellPeer1.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
-            shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
-            shellPeer4.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
-
-            startPeer(PEER1IP);
-            startPeer(PEER2IP);
-            startPeer(PEER4IP);
-            Thread.sleep(SLEEPTIME*2);
-
-            store.GetHeight();
-            Thread.sleep(2000);
-            store.GetHeight();
-            Thread.sleep(2000);
-            store.GetHeight();
-            Thread.sleep(2000);
-            store.GetHeight();
-            Thread.sleep(2000);
-
-
-
-            if(store.GetHeight().contains("Inconsistent data") ||store.GetHeight().contains("rpc error: code = Unavailable desc = all SubConns are in TransientFailure") ){
-
-                bError=true;
-                break;
-
-//                shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-//                shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
-//                Thread.sleep(6000);
-//                assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
-//                continue;
-            }
-        }
-        assertEquals(bError,false);
-    }
-
-    public void startPeer(String peerIP)throws Exception{
-        Shell shell1=new Shell(peerIP,USERNAME,PASSWD);
-        Thread.sleep(2000);
-        shell1.execute("sh "+PTPATH+"peer/start.sh");
-    }
 
     @Test
     public void checkStoreTx()throws Exception{
@@ -184,7 +133,7 @@ public class TestTxType {
 
     @Test
     public void checkUTXOTx()throws Exception{
-        //UTXO类交易 Type 1 SubType 10 11 13 14 15
+        //UTXO类交易 Type 1 SubType 10 11 12
         //单签发行
         String tokenTypeS = "TxTypeSOLOTC-"+ UtilsClass.Random(6);
         String siData="单签"+ADDRESS1+"发行token "+tokenTypeS;
@@ -306,10 +255,10 @@ public class TestTxType {
         uxtoJson.clear();
         log.info("****************");
         uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash7)).getJSONObject("Data").getJSONObject("UTXO"));
-        //checkFromTo(uxtoJson,ADDRESS1,zeroAddr,tokenTypeS,recySoloAmount,0);
+        checkFromTo(uxtoJson,ADDRESS1,zeroAddr,tokenTypeS,recySoloAmount,0);
         checkFromTo(uxtoJson,ADDRESS1,ADDRESS1,tokenTypeS,String.valueOf(Integer.parseInt(amount)-Integer.parseInt(amountTransfer)-Integer.parseInt(recySoloAmount)),1);
         uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTransaction(txHash7)).getJSONObject("Data"));
-        //checkFromTo(uxtoJson,ADDRESS1,zeroAddr,tokenTypeS,recySoloAmount,0);
+        checkFromTo(uxtoJson,ADDRESS1,zeroAddr,tokenTypeS,recySoloAmount,0);
         checkFromTo(uxtoJson,ADDRESS1,ADDRESS1,tokenTypeS,String.valueOf(Integer.parseInt(amount)-Integer.parseInt(amountTransfer)-Integer.parseInt(recySoloAmount)),1);
 
 
@@ -317,10 +266,10 @@ public class TestTxType {
         String txHash8 = JSONObject.fromObject(RecycleMultiInfo).getJSONObject("Data").get("TxId").toString();
         checkTriMsg(txHash8,versionMUTXO,typeUTXO,subTypeRecycle);
         uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash8)).getJSONObject("Data").getJSONObject("UTXO"));
-        //checkFromTo(uxtoJson,ADDRESS1,zeroAddr,tokenTypeM,recySoloAmount,0);
+        checkFromTo(uxtoJson,ADDRESS1,zeroAddr,tokenTypeM,recySoloAmount,0);
         checkFromTo(uxtoJson,IMPPUTIONADD,IMPPUTIONADD,tokenTypeM,String.valueOf(Integer.parseInt(amount1)-Integer.parseInt(tranferAmount)-Integer.parseInt(recyMultiAmount)),1);
         uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTransaction(txHash8)).getJSONObject("Data"));
-        //checkFromTo(uxtoJson,IMPPUTIONADD,zeroAddr,tokenTypeM,recySoloAmount,0);
+        checkFromTo(uxtoJson,IMPPUTIONADD,zeroAddr,tokenTypeM,recySoloAmount,0);
         checkFromTo(uxtoJson,IMPPUTIONADD,IMPPUTIONADD,tokenTypeM,String.valueOf(Integer.parseInt(amount1)-Integer.parseInt(tranferAmount)-Integer.parseInt(recyMultiAmount)),1);
 
     }

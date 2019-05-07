@@ -731,7 +731,7 @@ public class TestMgTool {
     public String getPeerID(String peerIP)throws Exception{
 
         Shell shell1=new Shell(peerIP,USERNAME,PASSWD);
-        shell1.execute("cd "+PTPATH+";./"+PeerTPName+" init");
+        shell1.execute("cd "+PTPATH+"peer;./"+PeerTPName+" init");
         ArrayList<String> stdout = shell1.getStandardOutput();
         String response = StringUtils.join(stdout,"\n");
         log.info("\n"+response);
