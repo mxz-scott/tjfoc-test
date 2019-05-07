@@ -110,7 +110,7 @@ public class ContractTest {
         assertThat(response,containsString("200"));
 
         //测试2.0.1兼容CreateNewTransaction接口 默认category为docker
-        invokeUpdate("Mobile1");
+        invokeUpdate("initMobile");
 
         //销毁合约
         response=destroyTest();

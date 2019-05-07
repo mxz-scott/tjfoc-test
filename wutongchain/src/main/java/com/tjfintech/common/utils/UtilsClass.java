@@ -10,12 +10,11 @@ import sun.misc.BASE64Encoder;
 import java.io.*;
 import java.util.*;
 
-import static com.tjfoc.utils.ReadFiletoByte.log;
 import static org.junit.Assert.assertEquals;
 
 @Slf4j
 public class UtilsClass {
-    public static final String SDKADD="http://10.1.3.165:3333";
+    public static final String SDKADD="http://10.1.3.247:7777";
 
     //SM2公私钥对
      public static String  ADDRESS1 = "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo";
@@ -96,7 +95,7 @@ public class UtilsClass {
     public static String PEER2MAC="02:42:c0:31:6b:5c";
     public static String PEER3MAC="02:42:c4:b9:82:6e";
     public static String PEER4MAC="02:42:dd:6c:4a:92";
-    public static final String version="2.0_2.1_1904";
+    public static final String version="2.0_2.1_1905";
     public static final String USERNAME="root";
     public static final String PASSWD="root";
     //节点、SDK、Toolkit对等目录放置于PTPATH目录下
