@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 
 @Slf4j
 public class UtilsClass {
-    public static final String SDKADD="http://10.1.3.247:7777";
+    public static final String SDKADD="http://10.1.3.165:3333";
 
     //SM2公私钥对
      public static String  ADDRESS1 = "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo";
