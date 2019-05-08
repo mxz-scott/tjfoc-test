@@ -66,7 +66,7 @@ public interface MultiSign {
     String SyncCollAddress(String timeout,String ...address);
     String SyncDelCollAddress(String timeout,String ...address);
     String SyncFreezeToken(String priKey,String timeout,String tokenType);
-    String SyncrRecoverFrozenToken(String priKey,String timeout,String tokenType);
+    String SyncRecoverFrozenToken(String priKey,String timeout,String tokenType);
     String SyncAddissueaddress(String timeout,String ...address);
     String SyncDelissueaddress(String timeout,String ...address);
 }
