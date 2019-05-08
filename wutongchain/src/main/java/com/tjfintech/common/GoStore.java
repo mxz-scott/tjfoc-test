@@ -110,6 +110,7 @@ public  class GoStore implements Store {
         return result;
     }
 
+
     /**
      * 创建存证交易-带公钥
      * @param Data
@@ -129,6 +130,42 @@ public  class GoStore implements Store {
         log.info(result);
         return result;
     }
+    /***
+     * 同步创建存证交易
+     * @param timeout
+     * @param Data
+     * @return
+     */
+    @Override
+    public String SynCreateStore(Integer timeout, String Data) {
+        Map<String,Object> map=new HashMap<>();
+        map.put("Data",Data);
+        String result= PostTest.sendPostToJson(SDKADD+"/sync/store?timeout="+timeout, map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 同步创建存证交易-带公钥
+     * @param timeout
+     * @param Data
+     * @param PubKeys
+     * @return
+     */
+    @Override
+    public String SynCreateStore(Integer timeout, String Data, String... PubKeys) {
+        Map<String,Object> map = new HashMap<>();
+        List<Object> addrs = new ArrayList<>();
+        for (int i= 0;i<PubKeys.length;i++){
+            addrs.add(PubKeys[i]);
+        }
+        map.put("Addrs", addrs);
+        map.put("Data", Data);
+        map.put("timeout",timeout);
+        String result= PostTest.sendPostToJson(SDKADD+"/sync/store", map);
+        return result;
+    }
+
 
     /**
      * 创建带密码存证交易

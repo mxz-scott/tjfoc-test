@@ -158,54 +158,54 @@ public class GoMultiSign implements MultiSign {
      * @param addr    用户地址
      *
      */
-    public String BalanceByAddr(String addr) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("Addr",addr);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/getsdkbalance", map);
-//        log.info(result);
-        return result;
-    }
-
-    public String BalanceByAddr(String addr,String tokenType) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("Addr",addr);
-        map.put("TokenType",tokenType);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/getsdkbalance", map);
-//        log.info(result);
-        return result;
-    }
-
-    public String getUTXODetail(int StartTime,int EndTime,String tokenType,int UTXOtype,String FromAddr,String ToAddr) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("StartTime",StartTime);
-        map.put("EndTime",EndTime);
-        map.put("TokenType",tokenType);
-        map.put("UTXOType",UTXOtype);
-        map.put("FromAddr",FromAddr);
-        map.put("ToAddr",ToAddr);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/getutxodetail", map);
-//        log.info(result);
-        return result;
-    }
-
-    public String getChainBalance(String tokenType,String Addr) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("TokenType",tokenType);
-        map.put("Addr",Addr);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/getchainbalance", map);
-//        log.info(result);
-        return result;
-    }
-
-    public String getTotalbyDay(int year,int month,int day) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("Year",year);
-        map.put("Month",month);
-        map.put("Day",day);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/totalbyday", map);
-//        log.info(result);
-        return result;
-    }
+//    public String BalanceByAddr(String addr) {
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("Addr",addr);
+//        String result = PostTest.postMethod(SDKADD + "/utxo/getsdkbalance", map);
+////        log.info(result);
+//        return result;
+//    }
+//
+//    public String BalanceByAddr(String addr,String tokenType) {
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("Addr",addr);
+//        map.put("TokenType",tokenType);
+//        String result = PostTest.postMethod(SDKADD + "/utxo/getsdkbalance", map);
+////        log.info(result);
+//        return result;
+//    }
+//
+//    public String getUTXODetail(int StartTime,int EndTime,String tokenType,int UTXOtype,String FromAddr,String ToAddr) {
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("StartTime",StartTime);
+//        map.put("EndTime",EndTime);
+//        map.put("TokenType",tokenType);
+//        map.put("UTXOType",UTXOtype);
+//        map.put("FromAddr",FromAddr);
+//        map.put("ToAddr",ToAddr);
+//        String result = PostTest.postMethod(SDKADD + "/utxo/getutxodetail", map);
+////        log.info(result);
+//        return result;
+//    }
+//
+//    public String getChainBalance(String tokenType,String Addr) {
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("TokenType",tokenType);
+//        map.put("Addr",Addr);
+//        String result = PostTest.postMethod(SDKADD + "/utxo/getchainbalance", map);
+////        log.info(result);
+//        return result;
+//    }
+//
+//    public String getTotalbyDay(int year,int month,int day) {
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("Year",year);
+//        map.put("Month",month);
+//        map.put("Day",day);
+//        String result = PostTest.postMethod(SDKADD + "/utxo/totalbyday", map);
+////        log.info(result);
+//        return result;
+//    }
 
 
     /**
@@ -219,6 +219,66 @@ public class GoMultiSign implements MultiSign {
         String result=PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycles_localsign", map);
 //        log.info(result);
         return result;
+    }
+
+    @Override
+    public String SyncIssueToken(String MultiAddr, String TokenType, String Amount, String Data) {
+        return null;
+    }
+
+    @Override
+    public String SyncIssueToken(String MultiAddr, String ToAddr, String TokenType, String Amount, String Data) {
+        return null;
+    }
+
+    @Override
+    public String SyncIssueToken(String MultiAddr, String ToAddr, String TokenType, String Amount, String PriKey, String Pwd, String Data) {
+        return null;
+    }
+
+    @Override
+    public String SyncIssueTokenCarryPri(String MultiAddr, String TokenType, String Amount, String PriKey, String Data) {
+        return null;
+    }
+
+    @Override
+    public String SyncIssueTokenCarryPri(String MultiAddr, String TokenType, String Amount, String PriKey, String Pwd, String Data) {
+        return null;
+    }
+
+    @Override
+    public String SyncSign(String Tx, String Prikey, String Pwd) {
+        return null;
+    }
+
+    @Override
+    public String SyncSign(String Tx, String Prikey) {
+        return null;
+    }
+
+    @Override
+    public String SyncTransfer(String PriKey, String Pwd, String Data, String fromAddr, List<Map> tokenList) {
+        return null;
+    }
+
+    @Override
+    public String SyncTransfer(String PriKey, String Data, String fromAddr, List<Map> tokenList) {
+        return null;
+    }
+
+    @Override
+    public String SyncRecycle(String multiAddr, String priKey, String Pwd, String tokenType, String amount) {
+        return null;
+    }
+
+    @Override
+    public String SyncRecycle(String multiAddr, String priKey, String tokenType, String amount) {
+        return null;
+    }
+
+    @Override
+    public String SyncRecycle(String priKey, String tokenType, String amount) {
+        return null;
     }
 
 
@@ -296,6 +356,26 @@ public class GoMultiSign implements MultiSign {
         String result = PostTest.sendPostToJson(SDKADD + "/utxo/getbalancebytt", map);
         log.info(result);
         return result;
+    }
+
+    @Override
+    public String getTotalbyDay(int year, int month, int day) {
+        return null;
+    }
+
+    @Override
+    public String getChainBalance(String tokenType, String Addr) {
+        return null;
+    }
+
+    @Override
+    public String getUTXODetail(int StartTime, int EndTime, String tokenType, int UTXOtype, String FromAddr, String ToAddr) {
+        return null;
+    }
+
+    @Override
+    public String BalanceByAddr(String addr, String tokenType) {
+        return null;
     }
 
     /**
@@ -529,8 +609,8 @@ public class GoMultiSign implements MultiSign {
         map.put("Prikey", Prikey);
         map.put("Pwd", Pwd);
         map.put("Tx", Tx);
-        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/sign", map);
-//        String response = PostTest.postMethod(SDKADD+"/utxo/multi/sign", map);
+        //String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/sign", map);
+        String response = PostTest.postMethod(SDKADD+"/utxo/multi/sign", map);
         log.info("test");
         log.info(response);
         return response;
@@ -678,6 +758,80 @@ public class GoMultiSign implements MultiSign {
         return result;
 
     }
+
+
+    //同步接口实现
+    @Override
+    public String SyncFreezeToken(String priKey,String timeout, String tokenType) {
+        Map<String ,Object>map=new HashMap<>();
+        map.put("PriKey",priKey);
+        map.put("TokenType",tokenType);
+        String result =PostTest.sendPostToJson(SDKADD+"/sync/utxo/freeze?timeout="+timeout,map);
+        log.info(result);
+        return result;
+    }
+
+    @Override
+    public String SyncrRecoverFrozenToken(String priKey,String timeout, String tokenType) {
+        Map<String ,Object>map=new HashMap<>();
+        map.put("PriKey",priKey);
+        map.put("TokenType",tokenType);
+        String result =PostTest.sendPostToJson(SDKADD+"/sync/utxo/recover?timeout="+timeout,map);
+        log.info(result);
+        return result;
+    }
+
+    @Override
+    public String SyncCollAddress(String timeout,String... address) {
+        Map<String, Object> map = new HashMap<>();
+        List<Object> addrs = new ArrayList<>();
+        for (int i=0;i<address.length;i++){
+            addrs.add(address[i]);
+        }
+        map.put("Addrs", addrs);
+        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/colladdress?timeout="+timeout, map);
+        log.info(result);
+        return result;
+    }
+
+    @Override
+    public String SyncDelCollAddress(String timeout,String... address) {
+        Map<String,Object> map = new HashMap<>();
+        List<Object> addrs = new ArrayList<>();
+        for (int i= 0;i<address.length;i++){
+            addrs.add(address[i]);
+        }
+        map.put("Addrs", addrs);
+        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/deladdress?timeout="+timeout, map);
+        log.info(result);
+        return result;
+    }
+    @Override
+    public String SyncAddissueaddress(String timeout,String ...address) {
+        Map<String, Object> map = new HashMap<>();
+        List<Object> addrs = new ArrayList<>();
+        for (int i=0;i<address.length;i++){
+            addrs.add(address[i]);
+        }
+
+        map.put("Addrs", addrs);
+        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/addissueaddress?timeout="+timeout, map);
+        log.info(result);
+        return result;
+    }
+    @Override
+    public String SyncDelissueaddress(String timeout,String... address) {
+        Map<String,Object> map = new HashMap<>();
+        List<Object> addrs = new ArrayList<>();
+        for (int i= 0;i<address.length;i++){
+            addrs.add(address[i]);
+        }
+        map.put("Addrs", addrs);
+        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/delissueaddress?timeout="+timeout, map);
+        log.info(result);
+        return result;
+    }
+
 }
 /**
  * 单签测试用

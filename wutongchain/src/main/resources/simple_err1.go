@@ -50,7 +50,7 @@ type Mobile struct {
 }
 
 func (c *SmartContract) event(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	event.New([]string{"10.1.3.247:9080"}, true)
+	event.New([]string{"10.1.3.247:9070"}, true)
 	eventSender := event.GetInstance()
 	eventSender.SendEvent(event.USER, "test", []byte("Hello zll"))
 	return shim.Success(nil)

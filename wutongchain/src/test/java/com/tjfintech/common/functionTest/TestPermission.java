@@ -45,7 +45,7 @@ public class TestPermission {
 
     String errCode="404";
     String errMsg="does not found Permission";
-    String def="Def:1111";
+    String def="Def:111";
     //"+def+Sys0+Store0+Docker0+Mg0+UTXO0+"
     String Sys0="Sys:000000000";
     String Store0="Store:00";
@@ -313,15 +313,16 @@ public class TestPermission {
     }
 //@Test
     public String defaultSup()throws Exception{
+        //201904确认不再测试validatekey接口，且
         String permStr="";
         //log.info("*************************************************************");
 
         permStr=permStr+pFunUTXO.soloGenAddr(PUBKEY1); //默认开启，无权限控制
         permStr=permStr+pFunUTXO.multiGenAddr(1,PUBKEY1,PUBKEY2); //默认开启，无权限控制
-        permStr=permStr+pFunUTXO.validateKey(PRIKEY6,PWD6); //默认开启，无权限控制
+        //permStr=permStr+pFunUTXO.validateKey(PRIKEY6,PWD6); //默认开启，无权限控制
         permStr=permStr+pFun1.getPeerList();  //默认开启，无权限控制
         //log.info(permStr);
-        return permStr; //should be a string with a length of 4
+        return permStr; //should be a string with a length of 3
     }
 
     public String sysPermCheck()throws Exception{

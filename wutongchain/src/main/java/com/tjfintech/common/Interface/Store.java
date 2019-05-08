@@ -10,6 +10,9 @@ public interface Store {
     String inLocal(String hash);
 
     String CreateStore(String Data);
+    String SynCreateStore(Integer timeout ,String Data);  //同步创建存证接口
+    String SynCreateStore(Integer timeout ,String Data,String... PubKeys);  //同步创建存证接口
+
     String CreateStore(String Data,String... PubKeys);
     String CreateStorePwd(String hash, Map keymap);
 

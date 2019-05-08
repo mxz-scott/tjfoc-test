@@ -110,7 +110,7 @@ public class ContractTest {
         assertThat(response,containsString("200"));
 
         //测试2.0.1兼容CreateNewTransaction接口 默认category为docker
-        invokeUpdate("Mobile1");
+        invokeUpdate("initMobile");
 
         //销毁合约
         response=destroyTest();
@@ -126,6 +126,46 @@ public class ContractTest {
         assertThat(response,containsString("failed to find transaction"));
 
 
+    }
+
+    @Test
+    public void testContractErrInvoke() throws Exception{
+        BeforeCondition bf=new BeforeCondition();
+        bf.collAddressTest();
+
+
+        String response=null;
+        log.info(name);
+        dockerFileName="simple_err1.go";
+        //检查合约创建
+        response=installTest();
+        assertThat(response,containsString("200"));
+        assertThat(response,containsString("success"));
+        String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+
+        //安装后恢复dockerFileName为默认好的simple.go
+        dockerFileName="simple.go";
+        Thread.sleep(SLEEPTIME*6);
+        String response1=store.GetTransaction(hash);
+        Thread.sleep(5000);
+        assertThat(response1,containsString("200"));
+        assertThat(response1,containsString("success"));
+
+
+        //检查合约交易接口
+        response=eventTest();
+        assertThat(response,containsString("200"));
+
+        Thread.sleep(36000); //合约timeout时间
+        String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        log.info(name);
+        response=store.GetTransaction(hash3);
+        assertThat(response,containsString("failed to find transaction"));
+
+        //销毁合约
+        response=destroyTest();
+        assertThat(response,containsString("200"));
+        Thread.sleep(3000);
     }
 
     @Test
@@ -234,6 +274,8 @@ public class ContractTest {
         destroyTest();
         Thread.sleep(6000);
     }
+
+
 
     public String installTest() throws Exception {
         //String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";

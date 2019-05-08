@@ -16,8 +16,8 @@ public interface MultiSign {
     String Sign(String Tx, String Prikey, String Pwd);
     String Sign(String Tx, String Prikey);
     String Transfer(String PriKey, String Pwd, String Data , String fromAddr, List<Map> tokenList);
-
     String Transfer(String PriKey,String Data,String fromAddr ,List<Map>tokenList);
+
     String CheckPriKey(String PriKey ,String Pwd);
     String Recycle(String multiAddr,String priKey,String Pwd,String tokenType,String amount);
     String Recycle(String multiAddr,String priKey,String tokenType,String amount);
@@ -40,8 +40,8 @@ public interface MultiSign {
     String getUTXODetail(int StartTime,int EndTime,String tokenType,int UTXOtype,String FromAddr,String ToAddr);
 
     String BalanceByAddr(String addr,String tokenType); //按地址查询余额
-    //本地签名
 
+    //本地签名
     String issueTokenLocalSign(String MultiAddr,String TokenType,String Amount,String Data);
     String issueTokenLocalSign(String MultiAddr,String ToAddr, String TokenType,String Amount,String Data);
     String sendSign(String signData);
@@ -49,5 +49,24 @@ public interface MultiSign {
     String RecycleLocalSign(String multiAddr,String pubKey,String tokenType,String amount);
     String RecyclesLocalSign(List<Map> tokenList);
 
+    //同步接口
+    String SyncIssueToken(String MultiAddr,String TokenType,String Amount,String Data);
+    String SyncIssueToken(String MultiAddr,String ToAddr,String TokenType,String Amount,String Data);
+    String SyncIssueToken(String MultiAddr,String ToAddr,String TokenType,String Amount,String PriKey,String Pwd,String Data);
+    String SyncIssueTokenCarryPri(String MultiAddr,String TokenType, String Amount,String PriKey,String  Data);
+    String SyncIssueTokenCarryPri(String MultiAddr,String TokenType, String Amount,String PriKey,String Pwd,String  Data);
+    String SyncSign(String Tx, String Prikey, String Pwd);
+    String SyncSign(String Tx, String Prikey);
+    String SyncTransfer(String PriKey, String Pwd, String Data , String fromAddr, List<Map> tokenList);
+    String SyncTransfer(String PriKey,String Data,String fromAddr ,List<Map>tokenList);
+    String SyncRecycle(String multiAddr,String priKey,String Pwd,String tokenType,String amount);
+    String SyncRecycle(String multiAddr,String priKey,String tokenType,String amount);
+    String SyncRecycle(String priKey,String tokenType,String amount);
 
+    String SyncCollAddress(String timeout,String ...address);
+    String SyncDelCollAddress(String timeout,String ...address);
+    String SyncFreezeToken(String priKey,String timeout,String tokenType);
+    String SyncrRecoverFrozenToken(String priKey,String timeout,String tokenType);
+    String SyncAddissueaddress(String timeout,String ...address);
+    String SyncDelissueaddress(String timeout,String ...address);
 }

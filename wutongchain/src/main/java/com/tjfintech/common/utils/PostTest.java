@@ -3,6 +3,12 @@ package com.tjfintech.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -91,31 +97,36 @@ public class PostTest {
         return resultStr;
     }
 
-//    public static String postMethod(String linkUrl, Map<String,Object> map) throws Exception {
-//        JSONObject jsonObject = JSONObject.fromObject(map);
-//        String jsonString = jsonObject.toString();
-//        RequestEntity se = new StringRequestEntity(jsonString, "application/json", "utf-8");
-//
-//        HttpClient httpClient = new HttpClient();
-//        PostMethod postMethod = new PostMethod(linkUrl);
-//
-//        httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-//        postMethod.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, 5000);
-//
-//        postMethod.setRequestEntity(se);
-//        postMethod.setRequestHeader("Content-Type","application/json");
-//
-//        postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler());
-//        String responseMsg = "";
-//        try {
-//            httpClient.executeMethod(postMethod);
-//            responseMsg = postMethod.getResponseBodyAsString().trim();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            postMethod.releaseConnection();
-//        }
-//        return responseMsg;
-//    }
+    public static String postMethod(String linkUrl, Map<String,Object> map) {
+        JSONObject jsonObject = JSONObject.fromObject(map);
+        String jsonString = jsonObject.toString();
+        RequestEntity se=null;
+        try {
+            se = new StringRequestEntity(jsonString, "application/json", "utf-8");
+        }
+        catch (Exception e1){
+            e1.printStackTrace();
+        }
+        HttpClient httpClient = new HttpClient();
+        PostMethod postMethod = new PostMethod(linkUrl);
+
+        httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+        postMethod.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, 5000);
+
+        postMethod.setRequestEntity(se);
+        postMethod.setRequestHeader("Content-Type","application/json");
+
+        postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler());
+        String responseMsg = "";
+        try {
+            httpClient.executeMethod(postMethod);
+            responseMsg = postMethod.getResponseBodyAsString().trim();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            postMethod.releaseConnection();
+        }
+        return responseMsg;
+    }
 }
