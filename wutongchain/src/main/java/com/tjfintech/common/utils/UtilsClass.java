@@ -16,6 +16,10 @@ import static org.junit.Assert.assertEquals;
 public class UtilsClass {
     public static final String SDKADD="http://10.1.3.165:3333";
 
+
+    public   final static int   SHORTTIMEOUT = 1*1500;
+    public   final static int   LONGTIMEOUT = 3*1000;
+
     //SM2公私钥对
      public static String  ADDRESS1 = "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo";
      public static String  ADDRESS2 = "3UycKc8qvVWpVcBr3ipNqDC9oZPd86wj3qSJ6GMbLrVPgeqVwY";
