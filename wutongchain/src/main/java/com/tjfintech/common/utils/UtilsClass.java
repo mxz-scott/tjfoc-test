@@ -3,15 +3,12 @@ package com.tjfintech.common.utils;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.junit.Test;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 import java.io.*;
 import java.util.*;
 
-import static com.tjfoc.utils.ReadFiletoByte.log;
-import static org.junit.Assert.assertEquals;
 
 @Slf4j
 public class UtilsClass {

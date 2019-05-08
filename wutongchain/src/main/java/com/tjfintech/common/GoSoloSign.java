@@ -1,15 +1,18 @@
 package com.tjfintech.common;
 
 import com.tjfintech.common.Interface.SoloSign;
+import com.tjfintech.common.utils.GetTest;
 import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Before;
-import com.tjfintech.common.utils.GetTest;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.SDKADD;
-import static com.tjfoc.utils.ReadFiletoByte.log;
 
 @Slf4j
 public class GoSoloSign implements SoloSign {
@@ -72,7 +75,7 @@ public class GoSoloSign implements SoloSign {
 
     /**
      * 查询用户余额
-     * @param addr    用户地址
+
      * @param priKey  用户私钥
      */
     public String Balance(String priKey,String pwd,String tokenType) {

@@ -5,7 +5,6 @@ import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -122,11 +121,13 @@ public class GetTest {
             response = sb.toString();
             //log.info(response);
 
-        } catch (HttpException e) {
+        } catch (
+    HttpException e) {
             // 发生致命的异常，可能是协议不对或者返回的内容有问题
             System.out.println("Please check your provided http address!");
             e.printStackTrace();
-        } catch (IOException e) {
+        } catch (
+    IOException e) {
             // 发生网络异常
             e.printStackTrace();
         } finally {

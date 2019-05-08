@@ -18,7 +18,6 @@ import java.util.Map;
 
 import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static com.tjfoc.utils.ReadFiletoByte.log;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
@@ -485,13 +484,16 @@ public class LocalMultiSignTest {
 
     }
 
+
     /**
      * 多签转账，本地签名
-     *
      * @param fromAddr
      * @param fromPubKey
      * @param data
-     * @param fromPriKeyPath
+     * @param tokenList
+     * @param fromPriKey1
+     * @param fromPriKey2
+     * @param fromPriKey3
      * @return
      * @throws Exception
      */
@@ -506,6 +508,7 @@ public class LocalMultiSignTest {
             return transferInfo;
         }
         String preSignData = JSONObject.fromObject(transferInfo).getJSONObject("Data").toString();
+
         String signedData1 = multiTrans.multiSignTransferAccountsMethod(preSignData, fromPriKey1);
         String signedData2 = multiTrans.multiSignTransferAccountsMethod(signedData1, fromPriKey2);
         String signedData3 = multiTrans.multiSignTransferAccountsMethod(signedData2, fromPriKey3);
@@ -689,11 +692,12 @@ public class LocalMultiSignTest {
 
     /**
      * 多签转账，本地签名
-     * 私钥带密码
+     *      * 私钥带密码
      * @param fromAddr
      * @param fromPubKey
      * @param data
-     * @param fromPriKeyPath
+     * @param tokenList
+     * @param fromPriKey
      * @return
      * @throws Exception
      */
@@ -760,7 +764,7 @@ public class LocalMultiSignTest {
      * @param fromPubKey
      * @param tokenType
      * @param amount
-     * @param fromPriKeyPath
+     * @param
      * @return
      * @throws Exception
      */

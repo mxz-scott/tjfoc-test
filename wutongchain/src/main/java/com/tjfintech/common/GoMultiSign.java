@@ -5,7 +5,6 @@ import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.utils.GetTest;
 import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -677,6 +676,7 @@ public class GoMultiSign implements MultiSign {
         String result =PostTest.sendPostToJson(SDKADD+"/utxo/recover",map);
         log.info(result);
         return result;
+
     }
 }
 /**

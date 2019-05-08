@@ -20,9 +20,7 @@ import java.util.Map;
 import static com.tjfintech.common.functionTest.StoreTest.SHORTSLEEPTIME;
 import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static com.tjfoc.utils.ReadFiletoByte.log;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @Slf4j
@@ -735,7 +733,6 @@ public class LocalSingleSignTest {
 
     /**
      * 单签回收，本地签名
-     *
      * @param fromPubKey
      * @param tokenType
      * @param amount
@@ -766,7 +763,6 @@ public class LocalSingleSignTest {
 
     /**
      * 回收单签账号余额-多账号同时回收
-     *
      * @param response
      * @param index
      * @param fromPriKeyPath
