@@ -62,4 +62,11 @@ public interface MultiSign {
     String SyncRecycle(String multiAddr,String priKey,String Pwd,String tokenType,String amount);
     String SyncRecycle(String multiAddr,String priKey,String tokenType,String amount);
     String SyncRecycle(String priKey,String tokenType,String amount);
+
+    String SyncCollAddress(String ...address);
+    String SyncDelCollAddress(String ...address);
+    String SyncFreezeToken(String priKey,String tokenType);
+    String SyncrRecoverFrozenToken(String priKey,String tokenType);
+    String SyncAddissueaddress(String ...address);
+    String SyncDelissueaddress(String ...address);
 }
