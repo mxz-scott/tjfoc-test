@@ -154,13 +154,18 @@ public class ContractTest {
 
         //检查合约交易接口
         response=eventTest();
-        Thread.sleep(30000); //合约timeout时间
         assertThat(response,containsString("200"));
+
+        Thread.sleep(36000); //合约timeout时间
         String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         log.info(name);
         response=store.GetTransaction(hash3);
         assertThat(response,containsString("failed to find transaction"));
 
+        //销毁合约
+        response=destroyTest();
+        assertThat(response,containsString("200"));
+        Thread.sleep(3000);
     }
 
     @Test

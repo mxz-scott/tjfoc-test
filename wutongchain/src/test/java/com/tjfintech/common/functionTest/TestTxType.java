@@ -266,7 +266,7 @@ public class TestTxType {
         String txHash8 = JSONObject.fromObject(RecycleMultiInfo).getJSONObject("Data").get("TxId").toString();
         checkTriMsg(txHash8,versionMUTXO,typeUTXO,subTypeRecycle);
         uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash8)).getJSONObject("Data").getJSONObject("UTXO"));
-        checkFromTo(uxtoJson,ADDRESS1,zeroAddr,tokenTypeM,recySoloAmount,0);
+        checkFromTo(uxtoJson,IMPPUTIONADD,zeroAddr,tokenTypeM,recySoloAmount,0);
         checkFromTo(uxtoJson,IMPPUTIONADD,IMPPUTIONADD,tokenTypeM,String.valueOf(Integer.parseInt(amount1)-Integer.parseInt(tranferAmount)-Integer.parseInt(recyMultiAmount)),1);
         uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTransaction(txHash8)).getJSONObject("Data"));
         checkFromTo(uxtoJson,IMPPUTIONADD,zeroAddr,tokenTypeM,recySoloAmount,0);

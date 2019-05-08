@@ -114,7 +114,7 @@ public class TestMgTool {
                         //第一次取leader时
                         log.info(leaderPeer);
                         if (leaderPeer.isEmpty()) {
-                            leaderPeer = str.substring(str.indexOf("id:") + 3, str.indexOf("addr:") - 1).trim().replaceAll("\"", "");
+                            leaderPeer = str.substring(str.indexOf("id:") + 3, str.indexOf("version:") - 1).trim().replaceAll("\"", "");
                         } else {
                             //否则认为以及取到过leader，则进行leader信息比对
                             assertEquals(str.contains(leaderPeer), true);
@@ -882,7 +882,7 @@ public class TestMgTool {
         assertEquals(rsp.contains(sdkID2), true);
         assertEquals(rsp.contains("peermission:[0]"), true);
         assertEquals(rsp.contains(sdkID3), true);
-        assertEquals(rsp.contains(fullPerm), true);
+        assertEquals(rsp.contains("peermission:[1 2 3 4 5 6 7 8 9 10 21 22 23 24 25 211 212 221 222 223 224 231 232 233 235 236 251 252 253 254 255 256]"), true);
         assertEquals(rsp.contains(sdkID4), false);
 
         rsp=getPeerPerm(peer1IPPort,sdkID1);
