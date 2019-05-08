@@ -692,7 +692,7 @@ public class GoMultiSign implements MultiSign {
     }
 
     @Override
-    public String SyncrRecoverFrozenToken(String priKey,String timeout, String tokenType) {
+    public String SyncRecoverFrozenToken(String priKey,String timeout, String tokenType) {
         Map<String ,Object>map=new HashMap<>();
         map.put("PriKey",priKey);
         map.put("TokenType",tokenType);
