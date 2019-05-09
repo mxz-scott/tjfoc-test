@@ -201,6 +201,15 @@ public class GoSoloSign implements SoloSign {
         return result;
     }
 
+    @Override
+    public String SyncTransfer(List<Map> token, String priKey, String data) {
+        return null;
+    }
+
+    @Override
+    public String SyncIssueToken(String priKey, String tokenType, String amount, String data, String address) {
+        return null;
+    }
 
 
     @After

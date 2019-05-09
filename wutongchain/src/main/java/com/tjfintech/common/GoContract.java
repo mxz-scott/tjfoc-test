@@ -40,11 +40,33 @@ public class GoContract implements Contract {
         map.put("Category",category);
         map.put("File",file);
 
-        //String result=PostTest.sendPostToJson(SDKADD+"/contract/install",map);
+//        String result=PostTest.sendPostToJson(SDKADD+"/contract/install",map);
         String result=PostTest.postMethod(SDKADD+"/contract/install",map);
         log.info(result);
         return result ;
     }
+
+    /**
+     * 同步安装智能合约
+     * @param timeout 设置时间
+     * @param name
+     * @param version
+     * @param category
+     * @param file
+     * @return
+     */
+    @Override
+    public String SynInstall(Integer timeout, String name, String version, String category, String file) {
+        Map<String,Object>map=new HashMap<>();
+        map.put("Name",name);
+        map.put("Version",version);
+        map.put("Category",category);
+        map.put("File",file);
+        String result=PostTest.sendPostToJson(SDKADD+"/sync/contract/install?timeout="+timeout,map);
+        log.info(result);
+        return result ;
+    }
+
     /**安装智能合约
      *
      * @param name  合约名
@@ -62,6 +84,26 @@ public class GoContract implements Contract {
         log.info(result);
         return result ;
     }
+
+    /**
+     * 同步销毁合约
+     * @param name
+     * @param version
+     * @param category
+     * @return
+     */
+    @Override
+    public String SynDestroy(Integer timeout,String name, String version, String category) {
+
+        Map<String,Object>map=new HashMap<>();
+        map.put("Name",name);
+        map.put("Version",version);
+        map.put("Category",category);
+        String result=PostTest.sendPostToJson(SDKADD+"/sync/contract/destroy?timeout="+timeout,map);
+        log.info(result);
+        return result ;
+    }
+
     /**安装智能合约
      *
      * @param name  合约名
@@ -95,6 +137,29 @@ public class GoContract implements Contract {
         map.put("Method",method);
         map.put("Args",args);
         String result=PostTest.sendPostToJson(SDKADD+"/contract/invoke",map);
+        log.info(result);
+        return result ;
+    }
+
+    /**
+     * 同步销毁合约
+     * @param timeout
+     * @param name
+     * @param version
+     * @param category
+     * @param method
+     * @param args
+     * @return
+     */
+    @Override
+    public String SynInvoke(Integer timeout, String name, String version, String category, String method, Integer args) {
+        Map<String,Object>map=new HashMap<>();
+        map.put("Name",name);
+        map.put("Version",version);
+        map.put("Category",category);
+        map.put("Method",method);
+        map.put("Args",args);
+        String result=PostTest.sendPostToJson(SDKADD+"/sync/contract/invoke?timeout="+timeout,map);
         log.info(result);
         return result ;
     }

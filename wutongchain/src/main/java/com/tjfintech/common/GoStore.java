@@ -161,10 +161,50 @@ public  class GoStore implements Store {
         }
         map.put("Addrs", addrs);
         map.put("Data", Data);
-        map.put("timeout",timeout);
-        String result= PostTest.sendPostToJson(SDKADD+"/sync/store", map);
+        String result= PostTest.sendPostToJson(SDKADD+"/sync/store?timeout="+timeout, map);
+        log.info(result);
         return result;
     }
+
+    /**
+     * 同步获取隐私存证
+     * @param timeout
+     * @param Hash
+     * @param priKey
+     * @param keyPwd
+     * @return
+     */
+    @Override
+    public String SynGetStorePost(Integer timeout, String Hash, String priKey, String keyPwd) {
+        Map<String,Object> map=new HashMap<>();
+        map.put("Prikey",priKey);
+        map.put("Hash",Hash);
+        map.put("KeyPwd",keyPwd);
+        String result=PostTest.sendPostToJson(SDKADD+"/sync/getstore?timeout="+timeout,map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 同步创建隐私存证
+     * @param Data
+     * @param keyMap
+     * @return
+     */
+    @Override
+    public String SynCreateStorePwd(Integer timeout ,String Data, Map keyMap) {
+        List<Object>PubkeysObjects=new ArrayList<>();
+        for (Object value : keyMap.values()) {
+            PubkeysObjects.add(value);
+        }
+        Map<String,Object> map=new HashMap<>();
+        map.put("Data",Data);
+        map.put("Pubkeys",PubkeysObjects);
+        String result= PostTest.sendPostToJson(SDKADD+"/sync/store?timeout="+timeout, map);
+        log.info(result);
+        return result;
+    }
+
 
 
     /**

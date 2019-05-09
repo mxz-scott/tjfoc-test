@@ -82,7 +82,7 @@ public class BeforeCondition {
     @Test
     public  void collAddressTest() throws Exception{
 
-        initTest();
+//        initTest();
 
         String response= multiSign.collAddress(PRIKEY1,IMPPUTIONADD);
         String response2= multiSign.collAddress(PRIKEY1,MULITADD3);
