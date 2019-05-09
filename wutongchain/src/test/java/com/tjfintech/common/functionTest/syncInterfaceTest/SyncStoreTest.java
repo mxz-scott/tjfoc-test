@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.syncInterfaceTest;
 
+import com.google.gson.JsonObject;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -26,7 +27,6 @@ public class SyncStoreTest {
     UtilsClass utilsClass = new UtilsClass();
     Store store =testBuilder.getStore();
     public   final static int   SLEEPTIME=8*1000;
-    public   final static int   SHORTSLEEPTIME=3*1000;
     /**
      * TC05-同步创建存证交易，数据格式为Json
      * 创建后需要休眠5秒等待数据上链
@@ -35,14 +35,17 @@ public class SyncStoreTest {
      */
     @Test
     public void TC05_SynCreateStore() throws Exception {
-
+        //正常情况下（1500毫秒）
         String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
-        String response= store.SynCreateStore(utilsClass.LONGTIMEOUT,Data);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        jsonObject.getJSONObject("Data").get("Figure").toString();
+        String response= store.SynCreateStore(utilsClass.SHORTMEOUT,Data);
         Thread.sleep(SLEEPTIME);
-        assertThat(response, containsString("200"));
-        assertThat(response,containsString("Data"));
+        assertThat("200",containsString(JSONObject.fromObject(response).getString("State")));
+        assertThat("success",containsString(JSONObject.fromObject(response).getString("Message")));
+        //超时情况下
+        String response1= store.SynCreateStore(utilsClass.SHORTMEOUT/10,Data);
+        Thread.sleep(SLEEPTIME);
+        assertThat("504",containsString(JSONObject.fromObject(response1).getString("State")));
+        assertThat("timeout",containsString(JSONObject.fromObject(response1).getString("Message")));
     }
 
     /**
@@ -53,14 +56,17 @@ public class SyncStoreTest {
      */
     @Test
     public void TC05_SynCreateStoreCarryPub() throws Exception {
-
+        //正常情况下（1500毫秒）
         String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
-        String response= store.SynCreateStore(utilsClass.LONGTIMEOUT,Data,PUBKEY1,PUBKEY2);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        jsonObject.getJSONObject("Data").get("Figure").toString();
+        String response= store.SynCreateStore(utilsClass.SHORTMEOUT,Data,PUBKEY1,PUBKEY2);
         Thread.sleep(SLEEPTIME);
-        assertThat(response, containsString("200"));
-        assertThat(response,containsString("Data"));
+        assertThat("200", containsString(JSONObject.fromObject(response).getString("State")));
+        assertThat("success",containsString(JSONObject.fromObject(response).getString("Message")));
+        //超时情况下
+        String response1= store.SynCreateStore(utilsClass.SHORTMEOUT/10,Data,PUBKEY1,PUBKEY2);
+        Thread.sleep(SLEEPTIME);
+        assertThat("504", containsString(JSONObject.fromObject(response1).getString("State")));
+        assertThat("timeout",containsString(JSONObject.fromObject(response1).getString("Message")));
     }
 
 
@@ -71,16 +77,20 @@ public class SyncStoreTest {
      */
     @Test
     public void TC277_SynCreateStorePwd() throws Exception {
+        //正常情况下（1500毫秒）
         String Data = "cxTest-" + UtilsClass.Random(7);
         Map<String,Object> map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
         map.put("pubkeys",PUBKEY6);
-        String response1= store.SynCreateStorePwd(utilsClass.LONGTIMEOUT,Data,map);
-        JSONObject jsonObject=JSONObject.fromObject(response1);
-        String StoreHashPwd = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String response= store.SynCreateStorePwd(utilsClass.SHORTMEOUT,Data,map);
         Thread.sleep(SLEEPTIME);
-        String response2 = store.SynGetStorePost(utilsClass.LONGTIMEOUT, StoreHashPwd, PRIKEY6, PWD6); //获取隐私存证
-        System.out.println(response2);
+        assertThat("200", containsString(JSONObject.fromObject(response).getString("State")));
+        assertThat("success",containsString(JSONObject.fromObject(response).getString("Message")));
+        //超时的情况下
+        String response1= store.SynCreateStorePwd(utilsClass.SHORTMEOUT/10,Data,map);
+        Thread.sleep(SLEEPTIME);
+        assertThat("504", containsString(JSONObject.fromObject(response1).getString("State")));
+        assertThat("timeout",containsString(JSONObject.fromObject(response1).getString("Message")));
     }
 
 

@@ -50,18 +50,18 @@ public interface MultiSign {
     String RecyclesLocalSign(List<Map> tokenList);
 
     //同步接口
-    String SyncIssueToken(String MultiAddr,String TokenType,String Amount,String Data);
-    String SyncIssueToken(String MultiAddr,String ToAddr,String TokenType,String Amount,String Data);
-    String SyncIssueToken(String MultiAddr,String ToAddr,String TokenType,String Amount,String PriKey,String Pwd,String Data);
-    String SyncIssueTokenCarryPri(String MultiAddr,String TokenType, String Amount,String PriKey,String  Data);
-    String SyncIssueTokenCarryPri(String MultiAddr,String TokenType, String Amount,String PriKey,String Pwd,String  Data);
-    String SyncSign(String Tx, String Prikey, String Pwd);
-    String SyncSign(String Tx, String Prikey);
-    String SyncTransfer(String PriKey, String Pwd, String Data , String fromAddr, List<Map> tokenList);
-    String SyncTransfer(String PriKey,String Data,String fromAddr ,List<Map>tokenList);
-    String SyncRecycle(String multiAddr,String priKey,String Pwd,String tokenType,String amount);
-    String SyncRecycle(String multiAddr,String priKey,String tokenType,String amount);
-    String SyncRecycle(String priKey,String tokenType,String amount);
+    String SyncIssueToken(Integer timeout,String MultiAddr,String TokenType,String Amount,String Data);
+    String SyncIssueToken(Integer timeout,String MultiAddr,String ToAddr,String TokenType,String Amount,String Data);
+    String SyncIssueToken(Integer timeout,String MultiAddr,String ToAddr,String TokenType,String Amount,String PriKey,String Pwd,String Data);
+    String SyncIssueTokenCarryPri(Integer timeout,String MultiAddr,String TokenType, String Amount,String PriKey,String  Data);
+    String SyncIssueTokenCarryPri(Integer timeout,String MultiAddr,String TokenType, String Amount,String PriKey,String Pwd,String  Data);
+    String SyncSign(Integer timeout,String Tx, String Prikey, String Pwd);
+    String SyncSign(Integer timeout,String Tx, String Prikey);
+    String SyncTransfer(Integer timeout,String PriKey, String Pwd, String Data , String fromAddr, List<Map> tokenList);
+    String SyncTransfer(Integer timeout,String PriKey,String Data,String fromAddr ,List<Map>tokenList);
+    String SyncRecycle(Integer timeout,String multiAddr,String priKey,String Pwd,String tokenType,String amount);
+    String SyncRecycle(Integer timeout,String multiAddr,String priKey,String tokenType,String amount);
+    String SyncRecycle(Integer timeout,String priKey,String tokenType,String amount);
 
     String SyncCollAddress(String timeout,String ...address);
     String SyncDelCollAddress(String timeout,String ...address);

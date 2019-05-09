@@ -222,62 +222,77 @@ public class GoMultiSign implements MultiSign {
     }
 
     @Override
-    public String SyncIssueToken(String MultiAddr, String TokenType, String Amount, String Data) {
+    public String SyncIssueToken(Integer timeout, String MultiAddr, String TokenType, String Amount, String Data) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", MultiAddr);
+        map.put("TokenType", TokenType);
+        map.put("Amount", Amount);
+        map.put("Data", Data);
+        String response = PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/issuetoken?timeout="+timeout, map);
+        log.info(response);
+        return response;
+    }
+
+    @Override
+    public String SyncIssueToken(Integer timeout, String MultiAddr, String ToAddr, String TokenType, String Amount, String Data) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", MultiAddr);
+        map.put("ToAddr", ToAddr);
+        map.put("TokenType", TokenType);
+        map.put("Amount", Amount);
+        map.put("Data", Data);
+        String response = PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/issuetoken?timeout="+timeout, map);
+        log.info(response);
+        return response;
+    }
+
+    @Override
+    public String SyncIssueToken(Integer timeout, String MultiAddr, String ToAddr, String TokenType, String Amount, String PriKey, String Pwd, String Data) {
         return null;
     }
 
     @Override
-    public String SyncIssueToken(String MultiAddr, String ToAddr, String TokenType, String Amount, String Data) {
+    public String SyncIssueTokenCarryPri(Integer timeout, String MultiAddr, String TokenType, String Amount, String PriKey, String Data) {
         return null;
     }
 
     @Override
-    public String SyncIssueToken(String MultiAddr, String ToAddr, String TokenType, String Amount, String PriKey, String Pwd, String Data) {
+    public String SyncIssueTokenCarryPri(Integer timeout, String MultiAddr, String TokenType, String Amount, String PriKey, String Pwd, String Data) {
         return null;
     }
 
     @Override
-    public String SyncIssueTokenCarryPri(String MultiAddr, String TokenType, String Amount, String PriKey, String Data) {
+    public String SyncSign(Integer timeout, String Tx, String Prikey, String Pwd) {
         return null;
     }
 
     @Override
-    public String SyncIssueTokenCarryPri(String MultiAddr, String TokenType, String Amount, String PriKey, String Pwd, String Data) {
+    public String SyncSign(Integer timeout, String Tx, String Prikey) {
         return null;
     }
 
     @Override
-    public String SyncSign(String Tx, String Prikey, String Pwd) {
+    public String SyncTransfer(Integer timeout, String PriKey, String Pwd, String Data, String fromAddr, List<Map> tokenList) {
         return null;
     }
 
     @Override
-    public String SyncSign(String Tx, String Prikey) {
+    public String SyncTransfer(Integer timeout, String PriKey, String Data, String fromAddr, List<Map> tokenList) {
         return null;
     }
 
     @Override
-    public String SyncTransfer(String PriKey, String Pwd, String Data, String fromAddr, List<Map> tokenList) {
+    public String SyncRecycle(Integer timeout, String multiAddr, String priKey, String Pwd, String tokenType, String amount) {
         return null;
     }
 
     @Override
-    public String SyncTransfer(String PriKey, String Data, String fromAddr, List<Map> tokenList) {
+    public String SyncRecycle(Integer timeout, String multiAddr, String priKey, String tokenType, String amount) {
         return null;
     }
 
     @Override
-    public String SyncRecycle(String multiAddr, String priKey, String Pwd, String tokenType, String amount) {
-        return null;
-    }
-
-    @Override
-    public String SyncRecycle(String multiAddr, String priKey, String tokenType, String amount) {
-        return null;
-    }
-
-    @Override
-    public String SyncRecycle(String priKey, String tokenType, String amount) {
+    public String SyncRecycle(Integer timeout, String priKey, String tokenType, String amount) {
         return null;
     }
 

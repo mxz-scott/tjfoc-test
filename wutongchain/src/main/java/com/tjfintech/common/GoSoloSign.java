@@ -172,7 +172,7 @@ public class GoSoloSign implements SoloSign {
         map.put("Amount", amount);
         map.put("Data",data);
         String result=PostTest.sendPostToJson(SDKADD+"/utxo/issuetoken_localsign", map);
-        //log.info(result);
+        log.info(result);
         return result;
     }
 
@@ -201,14 +201,46 @@ public class GoSoloSign implements SoloSign {
         return result;
     }
 
+    /**
+     * 同步转账交易
+     * @param timeout
+     * @param token
+     * @param priKey
+     * @param data
+     * @return
+     */
     @Override
-    public String SyncTransfer(List<Map> token, String priKey, String data) {
-        return null;
+    public String SyncTransfer(Integer timeout, List<Map> token, String priKey, String data) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("Prikey", priKey);
+        map.put("Data", data);
+        map.put("Token", token);
+        String result=PostTest.sendPostToJson(SDKADD+"/sync/utxo/transfer?timeout="+timeout, map);
+        log.info(result);
+        return result ;
     }
 
+    /**
+     * 同步单签发行token
+     * @param timeout
+     * @param priKey
+     * @param tokenType
+     * @param amount
+     * @param data
+     * @param address
+     * @return
+     */
     @Override
-    public String SyncIssueToken(String priKey, String tokenType, String amount, String data, String address) {
-        return null;
+    public String SyncIssueToken(Integer timeout, String priKey, String tokenType, String amount, String data, String address) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("PriKey", priKey);
+        map.put("TokenType", tokenType);
+        map.put("Amount", amount);
+        map.put("Data",data);
+        map.put("Addr",address);
+        String result=PostTest.sendPostToJson(SDKADD+"/sync/utxo/issuetoken?timeout="+timeout, map);
+        log.info(result);
+        return result;
     }
 
 

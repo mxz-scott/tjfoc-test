@@ -178,13 +178,12 @@ public class MultiTest33 {
         assertEquals(String.valueOf(amount-tf1-tf1),JSONObject.fromObject(queryInfoCM1).getJSONObject("Data").getString("Total"));
         assertEquals(String.valueOf(amount2-tf1),JSONObject.fromObject(queryInfoCM2).getJSONObject("Data").getString("Total"));
 
-<<<<<<< .merge_file_a14900
-=======
+
         //锁定后回收3/3账户
         log.info("锁定token后回收3/3账户MULITADD3");
         multiSign.freezeToken(PRIKEY1,tokenType);
         Thread.sleep(SLEEPTIME/2);
->>>>>>> .merge_file_a11964
+
 
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD3, PRIKEY1, tokenType, String.valueOf(amount-tf1-tf1));
@@ -267,11 +266,6 @@ public class MultiTest33 {
         assertThat(response14, containsString("200"));
 
 
-<<<<<<< .merge_file_a14900
-
-
-=======
->>>>>>> .merge_file_a11964
         log.info(issData2);
         //发行申请带有密码私钥，签名为：带密码->不带密码->带密码
         String response2 = multiSign.issueTokenCarryPri(MULITADD3,tokenType2,String.valueOf(amount2),PRIKEY6,PWD6,issData2);
@@ -328,13 +322,12 @@ public class MultiTest33 {
         assertEquals(String.valueOf(amount-tf1-tf1),JSONObject.fromObject(queryInfoCM1).getJSONObject("Data").getString("Total"));
         assertEquals(String.valueOf(amount2-tf1),JSONObject.fromObject(queryInfoCM2).getJSONObject("Data").getString("Total"));
 
-<<<<<<< .merge_file_a14900
-=======
+
         log.info("回收3/3账户MULITADD3前锁定token");
         multiSign.freezeToken(PRIKEY1,tokenType);
         multiSign.freezeToken(PRIKEY1,tokenType2);
         Thread.sleep(SLEEPTIME/2);
->>>>>>> .merge_file_a11964
+
 
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD3, PRIKEY1, tokenType, String.valueOf(amount-tf1-tf1));

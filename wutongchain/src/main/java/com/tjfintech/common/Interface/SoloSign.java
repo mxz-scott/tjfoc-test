@@ -20,6 +20,6 @@ public interface SoloSign {
 //    String RecyclesLocalSign(List<Map> tokenList);
 
     //同步接口
-    String SyncTransfer(List<Map> token, String priKey, String data);
-    String SyncIssueToken(String priKey,String tokenType,String amount,String data,String address);
+    String SyncTransfer(Integer timeout ,List<Map> token, String priKey, String data);
+    String SyncIssueToken(Integer timeout ,String priKey,String tokenType,String amount,String data,String address);
 }

@@ -142,7 +142,7 @@ public class GoContract implements Contract {
     }
 
     /**
-     * 同步销毁合约
+     * 同步调用智能合约
      * @param timeout
      * @param name
      * @param version
@@ -152,7 +152,7 @@ public class GoContract implements Contract {
      * @return
      */
     @Override
-    public String SynInvoke(Integer timeout, String name, String version, String category, String method, Integer args) {
+    public String SynInvoke(Integer timeout, String name, String version, String category, String method, List<?> args) {
         Map<String,Object>map=new HashMap<>();
         map.put("Name",name);
         map.put("Version",version);
