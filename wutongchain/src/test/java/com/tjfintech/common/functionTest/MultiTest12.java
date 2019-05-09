@@ -126,6 +126,10 @@ public class MultiTest12 {
         assertEquals(String.valueOf(amount-tf1-tf1),JSONObject.fromObject(queryInfoCM1).getJSONObject("Data").getString("Total"));
         assertEquals(String.valueOf(amount2-tf1),JSONObject.fromObject(queryInfoCM2).getJSONObject("Data").getString("Total"));
 
+        log.info("回收1/2账户MULITADD7前锁定token");
+        multiSign.freezeToken(PRIKEY1,tokenType);
+        multiSign.freezeToken(PRIKEY1,tokenType2);
+        Thread.sleep(SLEEPTIME/2);
 
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD7, PRIKEY1, tokenType, String.valueOf(amount-tf1-tf1));
@@ -235,6 +239,11 @@ public class MultiTest12 {
         assertEquals(String.valueOf(amount2-tf1),JSONObject.fromObject(queryInfoCM2).getJSONObject("Data").getString("Total"));
 
 
+        log.info("回收1/2账户MULITADD7前锁定Token");
+        multiSign.freezeToken(PRIKEY1,tokenType);
+        multiSign.freezeToken(PRIKEY1,tokenType2);
+        Thread.sleep(SLEEPTIME/2);
+
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD7, PRIKEY1, tokenType, String.valueOf(amount-tf1-tf1));
         String recycleInfo2 = multiSign.Recycle(MULITADD7, PRIKEY6, PWD6,tokenType2, String.valueOf(amount2-tf1));
@@ -277,7 +286,7 @@ public class MultiTest12 {
     }
 
     /***
-     * 多签发行给其他账户
+     * 多签发行给其他3/3账户MULITADD3
      * 1/2多签(MULITADD7,带密码和不带密码组成的账户)发行给MULTIADD3,发行时不带私钥，使用无密码私钥和有密码私钥签名，
      * 使用带密码私钥转账，
      * 使用带密码和不带密码私钥查询余额
@@ -377,7 +386,7 @@ public class MultiTest12 {
     }
 
     /***
-     * 多签发行给其他账户
+     * 多签发行给其他3/3账户MULITADD3
      * 1/2多签(MULITADD7,带密码和不带密码组成的账户)发行给MULTIADD3,发行时带无和有密码私钥，无需后续签名
      * 使用带密码私钥转账，
      * 使用带密码和不带密码私钥查询余额
@@ -466,6 +475,89 @@ public class MultiTest12 {
         assertEquals(String.valueOf(amount),JSONObject.fromObject(queryZero1).getJSONObject("Data").getString("Total"));
         assertEquals(String.valueOf(amount2),JSONObject.fromObject(queryZero2).getJSONObject("Data").getString("Total"));
     }
+    /***
+     * 多签发行给其他1/2账户IMPPUTIONADD
+     * 1/2多签(MULITADD7,带密码和不带密码组成的账户)发行给MULTIADD3,发行时带无和有密码私钥，无需后续签名
+     * 使用带密码私钥转账，
+     * 使用带密码和不带密码私钥查询余额
+     * 使用带密码私钥及不带密码私钥回收
+     */
+    @Test
+    public  void Issue12AddrTest05()throws Exception{
+        String tokenType = "CX-" + UtilsClass.Random(8);
+        int amount = 686;
+        String issData = MULITADD7 + "不带私钥发行给IMPPUTIONADD" + tokenType + " token，数量为：" + amount;
 
+        String tokenType2 = "CX-" + UtilsClass.Random(8);
+        int amount2 = 757;
+        String issData2 = MULITADD7 + "不带私钥发行给IMPPUTIONADD" + tokenType2 + " token，数量为：" + amount2;
+
+        log.info(issData);
+        //发行时带无密码私钥PRIKEY1,不需后续签名
+        String response11 = multiSign.issueToken(MULITADD7,IMPPUTIONADD, tokenType, String.valueOf(amount),PRIKEY1,"", issData);
+        //检查发行SDK返回结果中的正常响应及归集地址信息
+        assertThat(response11, containsString("200"));
+        assertEquals(IMPPUTIONADD,JSONObject.fromObject(response11).getJSONObject("Data").getString("CollectAddr"));
+
+
+        log.info(issData2);
+        //发行时带有密码私钥PRIKEY6,不需后续签名
+        String response21 = multiSign.issueToken(MULITADD7, IMPPUTIONADD,tokenType2, String.valueOf(amount2),PRIKEY6,PWD6, issData2);
+        assertThat(response21, containsString("200"));
+        assertEquals(IMPPUTIONADD,JSONObject.fromObject(response21).getJSONObject("Data").getString("CollectAddr"));
+
+        Thread.sleep(SLEEPTIME/2);
+
+        //发行后查询余额
+        log.info("发行后查询余额: "+tokenType+","+tokenType2);
+        String queryInfo= multiSign.Balance(IMPPUTIONADD,PRIKEY4,tokenType);
+        assertEquals("200",JSONObject.fromObject(queryInfo).getString("State"));
+        assertEquals(String.valueOf(amount),JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
+
+        log.info("发行"+tokenType2+"后查询余额");
+        String queryInfo2= multiSign.Balance(IMPPUTIONADD,PRIKEY5,tokenType2);
+        assertEquals("200",JSONObject.fromObject(queryInfo2).getString("State"));
+        assertEquals(String.valueOf(amount2),JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"));
+
+
+        log.info("发行后查询MULITADD7余额(不会有tokenType/tokenType2余额)");
+        String queryInfo3= multiSign.Balance(MULITADD7,PRIKEY1,tokenType);
+        assertEquals("200",JSONObject.fromObject(queryInfo3).getString("State"));
+        assertEquals("0",JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"));
+
+        String queryInfo4= multiSign.Balance(MULITADD7,PRIKEY6,PWD6,tokenType2);
+        assertEquals("200",JSONObject.fromObject(queryInfo4).getString("State"));
+        assertEquals("0",JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"));
+
+        log.info("回收1/2账户IMPPUTIONADD前锁定Token");
+        multiSign.freezeToken(PRIKEY1,tokenType);
+        multiSign.freezeToken(PRIKEY1,tokenType2);
+        Thread.sleep(SLEEPTIME/2);
+
+        log.info("回收Token");
+        String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, String.valueOf(amount));
+        assertEquals("200",JSONObject.fromObject(recycleInfo).getString("State"));
+
+        String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY5,tokenType2, String.valueOf(amount2));
+        assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("State"));
+
+        Thread.sleep(SLEEPTIME/2);
+        log.info("查询余额判断回收成功与否");
+
+        String queryInfo6= multiSign.Balance(IMPPUTIONADD,PRIKEY4,tokenType);
+        String queryInfo7= multiSign.Balance(IMPPUTIONADD,PRIKEY5,tokenType2);
+
+
+        assertEquals("200",JSONObject.fromObject(queryInfo6).getString("State"));
+        assertEquals("200",JSONObject.fromObject(queryInfo7).getString("State"));
+        assertEquals("0",JSONObject.fromObject(queryInfo6).getJSONObject("Data").getString("Total"));
+        assertEquals("0",JSONObject.fromObject(queryInfo7).getJSONObject("Data").getString("Total"));
+
+
+        String queryZero1 =multiSign.QueryZero(tokenType);
+        String queryZero2 =multiSign.QueryZero(tokenType2);
+        assertEquals(String.valueOf(amount),JSONObject.fromObject(queryZero1).getJSONObject("Data").getString("Total"));
+        assertEquals(String.valueOf(amount2),JSONObject.fromObject(queryZero2).getJSONObject("Data").getString("Total"));
+    }
 
 }
