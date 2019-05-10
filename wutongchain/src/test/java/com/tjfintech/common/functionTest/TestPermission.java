@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest;
 
+import com.sun.deploy.util.StringUtils;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
@@ -53,6 +54,7 @@ public class TestPermission {
     String Mg0="Mg:000000";
     String UTXO0="UTXO:0000000000";
 
+
     String glbMultiToken3="";//MULITADD3的全局预设发行token
     String glbMultiToken4="";//MULITADD4的全局预设发行token
     String glbSoloToken="";//ADDRESS1的全局预设发行token
@@ -105,6 +107,7 @@ public class TestPermission {
         map.put("pubKeys",PUBKEY1);
         map.put("pubkeys",PUBKEY6);
         String response1= store.CreateStorePwd(Data,map);
+        log.info(response1);
         JSONObject jsonObject=JSONObject.fromObject(response1);
         glbPriTxHash = jsonObject.getJSONObject("Data").get("Figure").toString();
 
@@ -207,7 +210,8 @@ public class TestPermission {
         glbCtName=pFunCt.name;
         pFunCt.version="2.0";
         pFunCt.installContract();
-        Thread.sleep(40000);
+        Thread.sleep(ContractInstallSleep);
+        log.info("Contract install sleep time(ms): "+ContractInstallSleep);
         dockerList.add(pFunCt.name);
         log.info("docker list size: "+dockerList.size());
 
@@ -347,9 +351,11 @@ public class TestPermission {
         pFunCt.name="0215"+ RandomUtils.nextInt(100000);
         pFunCt.version="2.0";
         permStr=permStr+pFunCt.installContract();//SDK发送合约安装交易请求
+        log.info("docker permission:"+permStr);
         //perStr 若为"1"则表示存在合约安装权限，则等待合约安装
-        if(permStr=="1") {
-            Thread.sleep(40000);
+        if(permStr.contains("1")) {
+            Thread.sleep(ContractInstallSleep);
+            log.info("Contract install sleep time(ms): "+ContractInstallSleep);
             dockerList.add(pFunCt.name);
         }
         permStr=permStr+pFunCt.initMobileTest();//SDK发送合约交易请求
@@ -434,19 +440,36 @@ public class TestPermission {
             assertEquals(str.contains("失败"), false);
             //assertEquals(str.contains("FuncUpdatePeerPermission success:  true"),true);
         }
-        Thread.sleep(8000);
+        Thread.sleep(6000);
+        log.info("sleep time(ms): "+6000);
     }
 
 
     public void checkAllInterface(String right,String chkStr)throws Exception{
 
         shellCmd(ToolIP,preCmd + right);
-        Thread.sleep(3000);
+//        Thread.sleep(10000);
+//        log.info("sleep time(ms): "+10000);
+
+        //权限更新后查询检查生效与否
+        Shell shell1=new Shell(ToolIP,USERNAME,PASSWORD);
+        //String cmd1="cd zll;ls";//替换为权限命令
+        shell1.execute(toolPath+"./toolkit getpermission -p 9300");
+        ArrayList<String> stdout = shell1.getStandardOutput();
+        String resp = StringUtils.join(stdout,"\n");
+        log.info(resp);
+        if(right=="999")
+        {
+            assertEquals(resp.contains("[1 2 3 4 5 6 7 8 9 10 21 22 23 24 25 211 212 221 222 223 224 231 232 233 235 236 251 252 253 254 255 256]"),true);
+        }else
+            assertEquals(resp.contains("["+right.replace(","," ")+"]"),true);
 
         if(right.equals("0"))
         {
             Thread.sleep(3000);
         }
+
+
         String permList="";
         permList=permList+"Def:";
         //默认开启接口检查
@@ -517,7 +540,7 @@ public class TestPermission {
 
 
     }
-    @After
+    //@After
     public void resetPermission() throws Exception{
         BeforeCondition bf=new BeforeCondition();
         bf.initTest();

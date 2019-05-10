@@ -72,6 +72,7 @@ public class TestTxType {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();
+            bf.initTest();
             Thread.sleep(SLEEPTIME);
             bReg=true;
         }
@@ -250,7 +251,7 @@ public class TestTxType {
         Thread.sleep(6000);
 
         //检查单签回收交易信息
-        String txHash7 = JSONObject.fromObject(RecycleSoloInfo).getString("Data");
+        String txHash7 = JSONObject.fromObject(RecycleSoloInfo).getJSONObject("Data").getString("Figure");
         checkTriMsg(txHash7,versionMUTXO,typeUTXO,subTypeRecycle);
         uxtoJson.clear();
         log.info("****************");
@@ -266,10 +267,10 @@ public class TestTxType {
         String txHash8 = JSONObject.fromObject(RecycleMultiInfo).getJSONObject("Data").get("TxId").toString();
         checkTriMsg(txHash8,versionMUTXO,typeUTXO,subTypeRecycle);
         uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash8)).getJSONObject("Data").getJSONObject("UTXO"));
-        checkFromTo(uxtoJson,IMPPUTIONADD,zeroAddr,tokenTypeM,recySoloAmount,0);
+        checkFromTo(uxtoJson,IMPPUTIONADD,zeroAddr,tokenTypeM,recyMultiAmount,0);
         checkFromTo(uxtoJson,IMPPUTIONADD,IMPPUTIONADD,tokenTypeM,String.valueOf(Integer.parseInt(amount1)-Integer.parseInt(tranferAmount)-Integer.parseInt(recyMultiAmount)),1);
         uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTransaction(txHash8)).getJSONObject("Data"));
-        checkFromTo(uxtoJson,IMPPUTIONADD,zeroAddr,tokenTypeM,recySoloAmount,0);
+        checkFromTo(uxtoJson,IMPPUTIONADD,zeroAddr,tokenTypeM,recyMultiAmount,0);
         checkFromTo(uxtoJson,IMPPUTIONADD,IMPPUTIONADD,tokenTypeM,String.valueOf(Integer.parseInt(amount1)-Integer.parseInt(tranferAmount)-Integer.parseInt(recyMultiAmount)),1);
 
     }
@@ -284,6 +285,7 @@ public class TestTxType {
     public void checkDockerTx()throws Exception{
         //Docker类交易 Type 2 SubType 30 31 32
         //创建合约
+        dockerFileName="simple.go";
         log.info("创建合约"+ct.name);
         String response7 = ct.installTest();
         String txHash7 = JSONObject.fromObject(response7).getJSONObject("Data").get("Figure").toString();

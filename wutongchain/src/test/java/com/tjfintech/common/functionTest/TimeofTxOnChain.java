@@ -1,11 +1,13 @@
 package com.tjfintech.common.functionTest;
 
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -26,7 +28,7 @@ public class TimeofTxOnChain {
     Store store =testBuilder.getStore();
     MultiSign multiSign =testBuilder.getMultiSign();
 
-    @Test
+    //@Test
     public void TC277_searchStoreInlocal()  throws Exception{
         String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
         String response= store.CreateStore(Data);
@@ -39,7 +41,7 @@ public class TimeofTxOnChain {
         }
 
 
-    @Test
+    //@Test
     public void TC277_searchUTXOInlocal()  throws Exception{
         String tokenType1 = "zz1X-" + UtilsClass.Random(10);
         String tokenType2 = "q1qX-" + UtilsClass.Random(10);
@@ -83,11 +85,28 @@ public class TimeofTxOnChain {
 
 
     }
-@Test
+//@Test
     public  void recTest()throws Exception{
         for(;;){
             TC277_searchUTXOInlocal();
         }
     }
+
+    @Test
+    public void checkBlockHash()throws Exception{
+        BeforeCondition bf =new BeforeCondition();
+        bf.initTest();
+        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
+        String preBlockHash=JSONObject.fromObject(store.GetBlockByHeight(blockHeight)).getJSONObject("Data").getJSONObject("header").getString("previousHash");
+        String currentBlockHash="";
+        for(int i= blockHeight-1;i>0;i--){
+            currentBlockHash  = JSONObject.fromObject(store.GetBlockByHeight(blockHeight)).getJSONObject("Data").getJSONObject("header").getString("blockHash");
+            assertEquals(currentBlockHash,preBlockHash);
+            preBlockHash=currentBlockHash;
+
+        }
+    }
+
+
 
 }

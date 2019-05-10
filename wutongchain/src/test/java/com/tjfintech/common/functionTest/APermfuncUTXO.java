@@ -40,7 +40,7 @@ public class APermfuncUTXO {
 
     public String retAllow(String checkStr)throws Exception{
         String allow="*";
-        if(checkStr.contains(okCode)) {
+        if(JSONObject.fromObject(checkStr).getString("State").contains(okCode)) {
             allow = "1";
         }
         else if(checkStr.contains(errCode)&&checkStr.contains(errMsg))
