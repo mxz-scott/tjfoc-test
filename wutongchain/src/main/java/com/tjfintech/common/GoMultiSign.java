@@ -248,52 +248,137 @@ public class GoMultiSign implements MultiSign {
 
     @Override
     public String SyncIssueToken(Integer timeout, String MultiAddr, String ToAddr, String TokenType, String Amount, String PriKey, String Pwd, String Data) {
-        return null;
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", MultiAddr);
+        map.put("ToAddr", ToAddr);
+        map.put("TokenType", TokenType);
+        map.put("Amount", Amount);
+        map.put("Data", Data);
+        map.put("PriKey", PriKey);
+        map.put("Pwd", Pwd);
+        String response = PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/issuetoken?timeout="+timeout, map);
+        log.info(response);
+        return response;
     }
 
     @Override
     public String SyncIssueTokenCarryPri(Integer timeout, String MultiAddr, String TokenType, String Amount, String PriKey, String Data) {
-        return null;
+        Map<String, Object > map = new HashMap<>();
+        map.put("MultiAddr", MultiAddr);
+        map.put("PriKey",PriKey);
+        map.put("TokenType", TokenType);
+        map.put("Amount", Amount);
+        map.put("Data", Data);
+        String response = PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/issuetoken?timeout="+timeout, map);
+        log.info(response);
+        return response;
     }
 
     @Override
     public String SyncIssueTokenCarryPri(Integer timeout, String MultiAddr, String TokenType, String Amount, String PriKey, String Pwd, String Data) {
-        return null;
+        Map<String, Object > map = new HashMap<>();
+        map.put("MultiAddr", MultiAddr);
+        map.put("PriKey",PriKey);
+        map.put("Pwd",Pwd);
+        map.put("TokenType", TokenType);
+        map.put("Amount", Amount);
+        map.put("Data", Data);
+        String response = PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/issuetoken?timeout="+timeout, map);
+        log.info(response);
+        return response;
     }
 
     @Override
     public String SyncSign(Integer timeout, String Tx, String Prikey, String Pwd) {
-        return null;
+        Map<String, Object> map = new HashMap<>();
+        map.put("Tx", Tx);
+        map.put("Prikey", Prikey);
+        map.put("Pwd", Pwd);
+        String response = PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/sign?timeout="+timeout, map);
+        log.info(response);
+        return response;
     }
 
     @Override
     public String SyncSign(Integer timeout, String Tx, String Prikey) {
-        return null;
+        Map<String, Object> map = new HashMap<>();
+        map.put("Tx", Tx);
+        map.put("Prikey", Prikey);
+        String response = PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/sign?timeout="+timeout, map);
+        log.info(response);
+        return response;
     }
 
+    /**
+     * 同步多签转账测试
+     * @param timeout
+     * @param PriKey
+     * @param Pwd
+     * @param Data
+     * @param fromAddr
+     * @param tokenList
+     * @return
+     */
     @Override
     public String SyncTransfer(Integer timeout, String PriKey, String Pwd, String Data, String fromAddr, List<Map> tokenList) {
-        return null;
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", fromAddr);
+        map.put("Prikey", PriKey);
+        map.put("Data", Data);
+        map.put("Pwd",Pwd);
+        map.put("Token", tokenList);
+        String result=PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/transfer?timeout="+timeout, map);
+        log.info(result);
+        return result;
     }
 
     @Override
     public String SyncTransfer(Integer timeout, String PriKey, String Data, String fromAddr, List<Map> tokenList) {
-        return null;
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", fromAddr);
+        map.put("Prikey", PriKey);
+        map.put("Data", Data);
+        map.put("Token", tokenList);
+        String result=PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/transfer?timeout="+timeout, map);
+        log.info(result);
+        return result;
     }
 
     @Override
-    public String SyncRecycle(Integer timeout, String multiAddr, String priKey, String Pwd, String tokenType, String amount) {
-        return null;
+    public String SyncRecycle(Integer timeout, String MultiAddr, String PriKey, String Pwd, String TokenType, String Amount) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", MultiAddr);
+        map.put("Prikey", PriKey);
+        map.put("Pwd",Pwd);
+        map.put("TokenType", TokenType);
+        map.put("Amount", Amount);
+        String result=PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/recycle?timeout="+timeout, map);
+        log.info(result);
+        return result;
     }
 
     @Override
-    public String SyncRecycle(Integer timeout, String multiAddr, String priKey, String tokenType, String amount) {
-        return null;
+    public String SyncRecycle(Integer timeout, String MultiAddr, String PriKey, String TokenType, String Amount) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", MultiAddr);
+        map.put("Prikey", PriKey);
+        map.put("TokenType", TokenType);
+        map.put("Amount", Amount);
+        String result=PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/recycle?timeout="+timeout, map);
+        log.info(result);
+        return result;
     }
 
     @Override
-    public String SyncRecycle(Integer timeout, String priKey, String tokenType, String amount) {
-        return null;
+    public String SyncRecycle(Integer timeout, String PriKey, String TokenType, String Amount) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("Prikey", PriKey);
+        map.put("TokenType", TokenType);
+        map.put("Amount", Amount);
+        String result=PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/recycle?timeout="+timeout, map);
+        log.info(result);
+        return result;
     }
 
 

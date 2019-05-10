@@ -1,7 +1,6 @@
 package com.tjfintech.common.functionTest.syncInterfaceTest;
 
 import com.tjfintech.common.Interface.MultiSign;
-import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
@@ -23,75 +22,68 @@ import static org.junit.Assert.assertThat;
 public class SyncMultiSignTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     MultiSign multiSign =testBuilder.getMultiSign();
-    SoloSign soloSign = testBuilder.getSoloSign();
     UtilsClass utilsClass=new UtilsClass();
-    private static String tokenType;
-    private static String tokenType2;
-    private static String tokenType3;
 
     /**
-     * 同步测试单签发行token
+     * 同步多签token发行申请(1/2签名)
+     * 同步签名多签交易
      */
     @Test
-    public void SyncIssueToken() throws Exception {
-        //正常情况下（1500毫秒）
-        tokenType = "SOLOTC-"+UtilsClass.Random(6);//随机生成tokentype
-        String isResult = soloSign.SyncIssueToken(utilsClass.SHORTMEOUT, utilsClass.PRIKEY1, tokenType, "10000", "单签发行token", ADDRESS2);
-        Thread.sleep(SLEEPTIME);
-        tokenType2 = "SOLOTC-"+UtilsClass.Random(6);
-        String isResult2 = soloSign.SyncIssueToken(utilsClass.SHORTMEOUT, utilsClass.PRIKEY2, tokenType2, "20000", "单签发行token", MULITADD3);
-        Thread.sleep(SLEEPTIME);
-        assertThat("200",containsString(JSONObject.fromObject(isResult).getString("State")));
-        assertThat("success",containsString(JSONObject.fromObject(isResult).getString("Message")));
-        assertThat("200",containsString(JSONObject.fromObject(isResult2).getString("State")));
-        assertThat("success",containsString(JSONObject.fromObject(isResult2).getString("Message")));
-
-        //超时情况
-        tokenType3 = "SOLOTC-"+UtilsClass.Random(6);
-        String isResult3 = soloSign.SyncIssueToken(utilsClass.SHORTMEOUT/10, utilsClass.PRIKEY3, tokenType3, "10000", "单签发行token", ADDRESS2);
-        assertThat("504", containsString(JSONObject.fromObject(isResult3).getString("State")));
-        assertThat("timeout",containsString(JSONObject.fromObject(isResult3).getString("Message")));
-
-
-    }
-    /**
-     * 同步测试单签转账交易
-     */
-    @Test
-    public void SyncTransfer() throws Exception {
-        tokenType = "SOLOTC-"+UtilsClass.Random(6);//随机生成tokentype
-        String isResult = soloSign.SyncIssueToken(utilsClass.SHORTMEOUT, utilsClass.PRIKEY1, tokenType, "10000", "单签发行token", ADDRESS2);
-        Thread.sleep(SLEEPTIME);
-        String transferData = "归集地址向" + "PUBKEY3" + "转账3000个" + "tokenType"+",并向"+"PUBKEY4"+"转账tokenType2";
-        log.info(transferData);
-        //构建token
-        List<Map> list=soloSign.constructToken(ADDRESS3,tokenType,"3000");
-        String transfer = soloSign.SyncTransfer(utilsClass.SHORTMEOUT, list, PRIKEY1, transferData);
-        Thread.sleep(SLEEPTIME);
-        String response1 = soloSign.Balance( PRIKEY1, tokenType);
-        assertThat(response1, containsString(tokenType + "\":\"7000\""));  //查询余额
-        assertThat("200",containsString(JSONObject.fromObject(transfer).getString("State")));
-        assertThat("success",containsString(JSONObject.fromObject(transfer).getString("Message")));
-
-    }
-
-    /**
-     * 同步多签token发行申请
-     */
-    @Test
-    public void SyncMutiIssueToken(){
+    public void SyncMutiIssueToken() throws InterruptedException {
+        //正常情况下
         String tokenType = "CX-" + UtilsClass.Random(7);
         log.info(MULITADD3+ "发行" + tokenType + " token，数量为：" + 10000);
         String data = "MULITADD3" + "发行" + tokenType + " token，数量为：" + 10000;
-        String response = multiSign.SyncIssueToken(utilsClass.SHORTMEOUT, MULITADD4, IMPPUTIONADD, tokenType, "10000", data);
-        assertThat(response, containsString("200"));
+        String response = multiSign.SyncIssueToken(utilsClass.SHORTMEOUT, MULITADD4, IMPPUTIONADD, tokenType, "100000", data);//向IMPPUTIONADD地址发行10000
         String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
-        //第一次签名
-        String response2 = multiSign.Sign(Tx1, PRIKEY1);
-//        String Tx2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Tx");
-//        String response3 = multiSign.Sign(Tx2, PRIKEY2);
+        log.info("第一次签名");
+        String response2 = multiSign.SyncSign(utilsClass.SHORTMEOUT, Tx1, PRIKEY1);
+        Thread.sleep(SLEEPTIME);
+        String queryInfo = multiSign.Balance(IMPPUTIONADD,PRIKEY4,tokenType);
+        assertThat("100000",containsString(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total")));
+        assertThat("200",containsString(JSONObject.fromObject(response).getString("State")));
+        assertThat("200",containsString(JSONObject.fromObject(response2).getString("State")));
+        assertThat("success",containsString(JSONObject.fromObject(response2).getString("Message")));
+        //超时情况下
+        String tokenType1 = "CX-" + UtilsClass.Random(7);
+        String response3 = multiSign.SyncIssueToken(utilsClass.SHORTMEOUT/10, MULITADD4, IMPPUTIONADD, tokenType1, "100000", data);//向IMPPUTIONADD地址发行10000
+        String Tx2 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Tx");
+        String response4 = multiSign.SyncSign(utilsClass.SHORTMEOUT,Tx2, PRIKEY1);
+        assertThat("504",containsString(JSONObject.fromObject(response4).getString("State")));
+        assertThat("timeout",containsString(JSONObject.fromObject(response4).getString("Message")));
 
     }
 
+    /**
+     * 同步多签转账(1/2签名)
+     */
+    @Test
+    public void SyncMutiTransfer() throws InterruptedException {
+        String tokenType = "CX-" + UtilsClass.Random(7);//随机一个tokentype
+        String data = "MULITADD3" + "发行" + tokenType + " token，数量为：" + 10000;
+        String response = multiSign.SyncIssueToken(utilsClass.SHORTMEOUT, MULITADD4, IMPPUTIONADD, tokenType, "10000", data);////向IMPPUTIONADD地址发行10000
+        String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
+        log.info("第一次签名");
+        String response2 = multiSign.Sign(Tx1, PRIKEY1);
+        Thread.sleep(SLEEPTIME);
+        String transferData = "归集地址向" + MULITADD1 + "转账999个" + tokenType;
+        log.info(transferData);
+        List<Map>list=utilsClass.constructToken(MULITADD1,tokenType,"999");//封装token:接收地址，token类型，转账数量
+        String syncTransfer = multiSign.SyncTransfer(utilsClass.SHORTMEOUT*2, PRIKEY4, transferData, IMPPUTIONADD, list);//转账操作
+        Thread.sleep(SLEEPTIME);
+        log.info("查询归集地址跟MULITADD4余额，判断转账是否成功");
+        String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String queryInfo2 = multiSign.Balance(MULITADD1, PRIKEY1, tokenType);
+        assertThat("9001",containsString(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total")));
+        assertThat("999",containsString(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total")));
+        assertThat("200",containsString(JSONObject.fromObject(syncTransfer).getString("State")));
+        assertThat("success",containsString(JSONObject.fromObject(syncTransfer).getString("Message")));
+        log.info("回收token");
+        String recycle = multiSign.SyncRecycle(utilsClass.SHORTMEOUT, IMPPUTIONADD, PRIKEY4, tokenType, "100");
+        assertThat("200",containsString(JSONObject.fromObject(recycle).getString("State")));
+        assertThat("success",containsString(JSONObject.fromObject(recycle).getString("Message")));
+        String queryInfo3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+
+    }
 
 }

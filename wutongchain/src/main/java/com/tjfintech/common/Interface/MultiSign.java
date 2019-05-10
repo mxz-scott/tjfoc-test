@@ -59,9 +59,9 @@ public interface MultiSign {
     String SyncSign(Integer timeout,String Tx, String Prikey);
     String SyncTransfer(Integer timeout,String PriKey, String Pwd, String Data , String fromAddr, List<Map> tokenList);
     String SyncTransfer(Integer timeout,String PriKey,String Data,String fromAddr ,List<Map>tokenList);
-    String SyncRecycle(Integer timeout,String multiAddr,String priKey,String Pwd,String tokenType,String amount);
-    String SyncRecycle(Integer timeout,String multiAddr,String priKey,String tokenType,String amount);
-    String SyncRecycle(Integer timeout,String priKey,String tokenType,String amount);
+    String SyncRecycle(Integer timeout,String MultiAddr,String PriKey,String Pwd,String TokenType,String Amount);
+    String SyncRecycle(Integer timeout,String MultiAddr,String PriKey,String TokenType,String Amount);
+    String SyncRecycle(Integer timeout,String PriKey,String TokenType,String Amount);
 
     String SyncCollAddress(String timeout,String ...address);
     String SyncDelCollAddress(String timeout,String ...address);

@@ -39,7 +39,8 @@ public class SyncDockerContractTest {
 
 
     /**
-     * 同步安装智能合约 120秒
+     * 同步安装合约 120秒
+     * 同步销毁合约
      * @throws Exception
      */
     @Test
@@ -52,13 +53,18 @@ public class SyncDockerContractTest {
         String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         assertThat("200",containsString(JSONObject.fromObject(response).getString("State")));
         assertThat("success",containsString(JSONObject.fromObject(response).getString("Message")));
-        Thread.sleep(SLEEPTIME*10);
+        Thread.sleep(SLEEPTIME);
         String response2=store.GetTransaction(hash);
         assertThat(response2,containsString("200"));
         //超时情况下
         String response1=contract.SynInstall(utilsClass.SHORTMEOUT,name,version,category,data);
         assertThat("504",containsString(JSONObject.fromObject(response1).getString("State")));
         assertThat("timeout",containsString(JSONObject.fromObject(response1).getString("Message")));
+        log.info("销毁智能合约");
+        String response3 = contract.SynDestroy(utilsClass.LONGTIMEOUT,name, version,category);
+        assertThat("200",containsString(JSONObject.fromObject(response3).getString("State")));
+        assertThat("success",containsString(JSONObject.fromObject(response3).getString("Message")));
+
     }
     /**
      * 同步调用智能合约
@@ -81,16 +87,6 @@ public class SyncDockerContractTest {
         String response2=store.GetTransaction(hash);
         assertThat(response2,containsString("200"));
 
-    }
-
-    /**
-     * 同步销毁智能合约
-     */
-    @Test
-    public void SynDestroy() throws Exception {
-        String response = contract.SynDestroy(utilsClass.LONGTIMEOUT,name, version,category);
-        assertThat("504",containsString(JSONObject.fromObject(response).getString("State")));
-        assertThat("timeout",containsString(JSONObject.fromObject(response).getString("Message")));
     }
 
 

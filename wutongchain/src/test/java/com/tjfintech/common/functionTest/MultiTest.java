@@ -679,7 +679,6 @@ public class MultiTest {
         assertThat(JSONObject.fromObject(response4).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
         assertThat(response4, containsString("200"));*/
         return tokenType;
-
     }
 
 
