@@ -239,14 +239,13 @@ public class APermfuncUTXO {
 
     public String getSDKBalance(String addr,String tokenType)throws Exception  {
 
-        String response= multiSign.BalanceByAddr(addr,tokenType);
+        String response= multiSign.getbalancebytt(addr,tokenType);
         log.info("从SDK数据库获取账户token余额:"+retAllow(response));
         return retAllow(response);
     }
 
     public String getUTXODetail(String addr,String tokenType)throws Exception  {
         String response= multiSign.getUTXODetail(0,0,tokenType,10,"","");
-        log.info(response);
         log.info("获取UTXO交易详情："+retAllow(response));
         return retAllow(response);
     }
@@ -256,8 +255,8 @@ public class APermfuncUTXO {
         log.info("从链上获取账户token余额:"+retAllow(response));
         return retAllow(response);
     }
-    public String getTotalByDay(int year,int month,int day)throws Exception  {
-        String response= multiSign.getTotalbyDay(year,month,day);
+    public String getTotalByDay(int starttime,int endtime)throws Exception  {
+        String response= multiSign.getTotalbyDay(starttime,endtime);
         log.info("按日志从链上获取发行回收总量:"+retAllow(response));
         return retAllow(response);
     }

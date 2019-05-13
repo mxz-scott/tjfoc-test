@@ -48,7 +48,7 @@ public class BeforeCondition {
         String resp = StringUtils.join(stdout1,"\n");
         log.info(resp);
         assertEquals(resp.contains("失败"), false);
-
+        log.info("SDK ID:"+SDKID);
         if(resp.contains(SDKID)) {
             for (String str1 : stdout1){
                 if(str1.contains(SDKID))

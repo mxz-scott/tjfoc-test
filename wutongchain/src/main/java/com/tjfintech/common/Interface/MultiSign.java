@@ -35,7 +35,7 @@ public interface MultiSign {
     String gettotal(int StartTime,int EndTime,String TokenType);
     String tokenstate(String TokenType);
     String getbalancebytt(String TokenType,String Address);
-    String getTotalbyDay(int year,int month,int day);
+    String getTotalbyDay(int starttime,int endtime);
     String getChainBalance(String tokenType,String Addr);
     String getUTXODetail(int StartTime,int EndTime,String tokenType,int UTXOtype,String FromAddr,String ToAddr);
 
