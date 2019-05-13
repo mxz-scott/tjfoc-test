@@ -36,6 +36,8 @@ public class TestMgTool {
     String dataType="D";
     int basePeerNo = 3;
     int DynamicPeerNo = 4;
+    String ipType="/ip4/";
+    String tcpType="/tcp/";
 
 
     String toolPath="cd "+PTPATH+"toolkit;";
@@ -44,6 +46,7 @@ public class TestMgTool {
     String peer3IPPort=PEER3IP+":"+PEER3RPCPort;
 
     long timeStamp=0;
+    ArrayList<String > txHashList =new ArrayList<>();
 
     //@Before
 //    public void beforeTest() throws Exception {
@@ -56,7 +59,7 @@ public class TestMgTool {
 
         setAndRestartPeerList("cp "+PTPATH+"peer/conf/baseOK.toml "+PTPATH+"peer/conf/base.toml");
 
-        quitPeer(peer1IPPort,PEER3IP,tcpPort);
+        quitPeer(peer1IPPort,PEER3IP);
 
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
         shellPeer3.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
@@ -241,7 +244,7 @@ public class TestMgTool {
         checkParam(PEER1IP,"./toolkit ntx -p "+ PEER1IP,"unknown port");
         checkParam(PEER1IP,"./toolkit ntx -p "+ peer1IPPort,"too many colons in address");
 
-        quitPeer(peer1IPPort,PEER3IP,tcpPort);
+        quitPeer(peer1IPPort,PEER3IP);
         queryPeerListNo(peer1IPPort,basePeerNo);
         checkParam(PEER1IP,"./toolkit join -p","flag needs an argument: 'p' in -p");
         checkParam(PEER1IP,"./toolkit join -n","flag needs an argument: 'n' in -n");
@@ -267,11 +270,9 @@ public class TestMgTool {
 
         checkParam(PEER1IP,"./toolkit quit -p","flag needs an argument: 'p' in -p");
         checkParam(PEER1IP,"./toolkit quit -n","flag needs an argument: 'n' in -n");
-        checkParam(PEER1IP,"./toolkit quit -l","flag needs an argument: 'l' in -l");
-        checkParam(PEER1IP,"./toolkit quit -w","flag needs an argument: 'w' in -w");
         checkParam(PEER1IP,"./toolkit quit","management");
-        checkParam(PEER1IP,"./toolkit quit -p "+ PEER1IP+" -n 111 -l 10.1.3.168:60030 -w 10.1.3.168:60030","unknown port");
-        checkParam(PEER1IP,"./toolkit quit -p "+ peer1IPPort+" -n 111 -l 10.1.3.168:60030 -w 10.1.3.168:60030","too many colons in address");
+        checkParam(PEER1IP,"./toolkit quit -p "+ PEER1IP+" -n 111","unknown port");
+        checkParam(PEER1IP,"./toolkit quit -p "+ peer1IPPort+" -n 111","too many colons in address");
         queryPeerListNo(peer1IPPort,basePeerNo);
 
 
@@ -318,7 +319,7 @@ public class TestMgTool {
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
         shellPeer3.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
         shellPeer3.execute("cp "+PTPATH+"peer/configjoin.toml "+PTPATH+"peer/config.toml");
-        quitPeer(peer1IPPort,PEER3IP,tcpPort);
+        quitPeer(peer1IPPort,PEER3IP);
 
         Thread.sleep(2000);
         queryPeerListNo(peer1IPPort,basePeerNo);
@@ -327,7 +328,7 @@ public class TestMgTool {
         chkPeerSimInfoOK(peer1IPPort,tcpPort,version,consType);
 
         //检查动态加入的共识节点，即使用管理工具加入的共识节点信息
-        addConsensusPeer(peer1IPPort,PEER3IP,tcpPort,"update success");
+        addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"update success");
         queryPeerListNo(peer1IPPort,DynamicPeerNo);
 
         Thread.sleep(3000);
@@ -348,11 +349,11 @@ public class TestMgTool {
         sendNewTx(peer1IPPort,"1","1");
 
         //检查动态加入的数据节点，即使用管理工具加入的数据节点信息
-        quitPeer(peer1IPPort,PEER3IP,tcpPort);
+        quitPeer(peer1IPPort,PEER3IP);
         queryPeerListNo(peer1IPPort,basePeerNo);
         Thread.sleep(4000);
 
-        addDataPeer(peer1IPPort,PEER3IP,tcpPort,"update success");
+        addPeer("observer",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"update success");
         queryPeerListNo(peer1IPPort,DynamicPeerNo);//通过共识节点查询集群列表
         shellPeer3.execute("cp "+PTPATH+"peer/configobs.toml "+PTPATH+"peer/config.toml");
         startPeer(PEER3IP);
@@ -364,10 +365,10 @@ public class TestMgTool {
         assertEquals(queryBlockHeight(peer2IPPort),height);
         //assertEquals(queryBlockHeight(peer3IPPort),height);
 
-        quitPeer(peer1IPPort,PEER3IP,tcpPort);
+        quitPeer(peer1IPPort,PEER3IP);
         queryPeerListNo(peer1IPPort,basePeerNo);
         shellPeer3.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
-        addConsensusPeer(peer1IPPort,PEER3IP,tcpPort,"update success");
+        addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"update success");
         startPeer(PEER3IP);//此步骤应该启动不成功，因节点当前配置文件中Type=1，但是使用addConsensusPeer 即join加入，两者不一致时无法启动成功
         Thread.sleep(STARTSLEEPTIME);
 //        queryPeerListNo(peer1IPPort,2);
@@ -617,6 +618,7 @@ public class TestMgTool {
 
     }
     public String sendNewTx(String queryIPPort,String txNo,String txType)throws Exception{
+        txHashList.clear();
 
         String rpcPort=queryIPPort.split(":")[1];//9300
         String queryIP=queryIPPort.split(":")[0];//10.1.3.240
@@ -635,6 +637,10 @@ public class TestMgTool {
         shell1.execute(tempCmd);
         if(txNo !="-1"){
             ArrayList<String> stdout = shell1.getStandardOutput();
+            for(String line : stdout){
+                if(line.contains("HashData")) txHashList.add(line.substring(line.indexOf("HashData:")+10));
+            }
+
             response = StringUtils.join(stdout,"\n");
             log.info("\n"+response);
         }
@@ -706,11 +712,28 @@ public class TestMgTool {
         assertEquals(rsp.contains("HashData"),true);
 
         rsp=queryPeerUnconfirmedTx(peer1IPPort);
-
         assertEquals(rsp.contains("Count:\t3"),true);
+
+        //double check
+//        rsp=queryPeerUnconfirmedTx(peer1IPPort);
+//        assertEquals(rsp.contains("Count:\t3"),true);
+        for(int i=0;i<txHashList.size();i++){
+            log.info(txHashList.get(i));
+            assertEquals(rsp.contains(txHashList.get(i)),true);
+        }
+
+
 
         //恢复原始配置
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
+
+
+        //需要补充以上交易上链后的交易查询
+        for(int i=0;i<txHashList.size();i++){
+            log.info(txHashList.get(i));
+            String rsp1= store.GetTxDetail(txHashList.get(i));
+            assertEquals(JSONObject.fromObject(rsp1).getString("State"),"200");
+        }
 
     }
 
@@ -748,18 +771,19 @@ public class TestMgTool {
         return peerID;
     }
 
-    public void addConsensusPeer(String netPeerIP,String peerIP,String tcpPort,String chkMsg)throws Exception{
+    public void addPeer(String addPeerType,String netPeerIP,String joinPeerIP,String joinTcpPort,String joinRpcPort,String chkMsg)throws Exception{
         String tempCmd="";
-        String rpcPort=netPeerIP.split(":")[1];//9300
+        String queryRpcPort=netPeerIP.split(":")[1];//9300
         String queryIP=netPeerIP.split(":")[0];//10.1.3.240
 
-        String[] temp = peerIP.split("\\.");
-        String peerID=getPeerID(peerIP);
+        String[] temp = joinPeerIP.substring(joinPeerIP.lastIndexOf("/")+1).split("\\.");
+        log.info("peer ip ***************  "+joinPeerIP.substring(joinPeerIP.lastIndexOf("/")));
+        String peerID=getPeerID(joinPeerIP.substring(joinPeerIP.lastIndexOf("/")+1));
         String peerName="peer"+temp[3];
-        String peerIPlan=peerIP+":"+tcpPort;
-        String peerIPwan=peerIP+":"+tcpPort;
-        tempCmd=toolPath+"./toolkit join -p "+rpcPort+" -n "+peerID+" -s "+peerName
-                +" -l "+peerIPlan+" -w "+peerIPwan;
+        String peerIPlan=joinPeerIP+joinTcpPort;
+        String peerIPwan=joinPeerIP+joinTcpPort;
+        tempCmd=toolPath+"./toolkit "+addPeerType+" -p "+queryRpcPort+" -n "+peerID+" -s "+peerName
+                +" -l "+peerIPlan+" -w "+peerIPwan+" -r "+joinRpcPort;
 
         Shell shell1=new Shell(queryIP,USERNAME,PASSWD);
         shell1.execute(tempCmd);
@@ -770,39 +794,14 @@ public class TestMgTool {
         assertEquals(response.contains(chkMsg), true);
     }
 
-    public void addDataPeer(String netPeerIP,String peerIP,String tcpPort,String chkMsg)throws Exception{
+
+    public void quitPeer(String netPeerIP,String peerIP)throws Exception{
         String tempCmd="";
         String rpcPort=netPeerIP.split(":")[1];//9300
         String queryIP=netPeerIP.split(":")[0];//10.1.3.240
 
-        String[] temp = peerIP.split("\\.");
         String peerID=getPeerID(peerIP);
-        String peerName="peer"+temp[3];
-        String peerIPlan=peerIP+":"+tcpPort;
-        String peerIPwan=peerIP+":"+tcpPort;
-        tempCmd=toolPath+"./toolkit observer -p "+rpcPort+" -n "+peerID+" -s "+peerName
-                +" -l "+peerIPlan+" -w "+peerIPwan;
-
-        Shell shell1=new Shell(queryIP,USERNAME,PASSWD);
-        shell1.execute(tempCmd);
-        ArrayList<String> stdout = shell1.getStandardOutput();
-        String response = StringUtils.join(stdout,"\n");
-        log.info("\n"+response);
-        //assertEquals(response.contains("失败"), false);
-        assertEquals(response.contains(chkMsg), true);
-
-    }
-
-    public void quitPeer(String netPeerIP,String peerIP,String tcpPort)throws Exception{
-        String tempCmd="";
-        String rpcPort=netPeerIP.split(":")[1];//9300
-        String queryIP=netPeerIP.split(":")[0];//10.1.3.240
-
-        String[] temp = peerIP.split("\\.");
-        String peerID=getPeerID(peerIP);
-        String peerIPlan=peerIP+":"+tcpPort;
-        String peerIPwan=peerIP+":"+tcpPort;
-        tempCmd=toolPath+"./toolkit quit -p "+rpcPort+" -n "+peerID+" -l "+peerIPlan+ " -w "+peerIPwan;
+        tempCmd=toolPath+"./toolkit quit -p "+rpcPort+" -n "+peerID;
 
         Shell shell1=new Shell(queryIP,USERNAME,PASSWD);
         shell1.execute(tempCmd);
@@ -1081,7 +1080,7 @@ public class TestMgTool {
         genLicence(PEER4IP,PEER4MAC,PEER4IP,"20",String.valueOf(basePeerNo),version.substring(0,3));
 
         //确认系统中无247节点
-        quitPeer(peer1IPPort,PEER3IP,tcpPort);
+        quitPeer(peer1IPPort,PEER3IP);
         //停止节点，修改配置文件使用节点licence名称为peerTest.lic
         String okConfig="cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml";
         String peerTestlicConf="sed -i \"s/peer.lic/peerTest.lic/g\" "+PTPATH+"peer/conf/base.toml";
@@ -1125,12 +1124,12 @@ public class TestMgTool {
         queryPeerListNo(peer1IPPort,basePeerNo);
 
         //动态加入节点247
-        addConsensusPeer(peer1IPPort,PEER3IP,tcpPort,"peers exceed the limit(3)");
+        addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"peers exceed the limit(3)");
         startPeer(PEER3IP);
         Thread.sleep(STARTSLEEPTIME);
         queryPeerListNo(peer1IPPort,basePeerNo); //检查节点247已经启动成功
 
-        quitPeer(peer1IPPort,PEER3IP,tcpPort);
+        quitPeer(peer1IPPort,PEER3IP);
         Thread.sleep(2000);
         shellPeer3.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
 
@@ -1140,12 +1139,12 @@ public class TestMgTool {
         shellPeer3.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
 
         //动态加入节点247
-        addConsensusPeer(peer1IPPort,PEER3IP,tcpPort,"peers exceed the limit(3)");
+        addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"peers exceed the limit(3)");
         startPeer(PEER3IP);
         Thread.sleep(STARTSLEEPTIME);
         checkParam(PEER1IP,"./toolkit health -p "+PEER3IP+":"+rpcPort,"connection error");
 
-        quitPeer(peer1IPPort,PEER3IP,tcpPort);
+        quitPeer(peer1IPPort,PEER3IP);
         Thread.sleep(2000);
 
         //恢复原始配置重新启动节点

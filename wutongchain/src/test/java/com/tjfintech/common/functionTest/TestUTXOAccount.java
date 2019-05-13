@@ -70,6 +70,7 @@ public class TestUTXOAccount {
     @Before
     public void beforeConfig() throws Exception {
         if(certPath!=""&& bReg==false) {
+            setAndRestartPeerList("cd "+ PTPATH + "peer/conf/basePkTm500ms.toml "+ PTPATH +"peer/conf/base.toml");
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();

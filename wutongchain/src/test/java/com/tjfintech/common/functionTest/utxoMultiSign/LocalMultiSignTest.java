@@ -310,9 +310,6 @@ public class LocalMultiSignTest {
         assertThat(tokenType + "查询余额不正确", queryInfo, containsString(tokenType + "\":\"20\""));
         assertThat(tokenType2 + "查询余额不正确", queryInfo2, containsString(tokenType2 + "\":\"10\""));
 
-//        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString(tokenType), containsString("20"));
-//        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString(tokenType), containsString("10"));
-
         log.info("回收Token");
         String recycleInfo = multiSignRecycle_LocalSign(MULITADD1, PUBKEY3, tokenType, "970", PRIKEY1, PRIKEY2, PRIKEY3);
         String recycleInfo2 = multiSignRecycle_LocalSign(MULITADD1, PUBKEY1, tokenType2, "990", PRIKEY1, PRIKEY2, PRIKEY3);
@@ -362,7 +359,7 @@ public class LocalMultiSignTest {
         String balance = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
         log.info("???"+balance);
         assertThat(tokenType + "查询余额错误", balance, containsString("200"));
-//        assertThat(tokenType + "查询余额不正确", balance, containsString("\"Total\":\"1000\""));
+        assertThat(tokenType + "查询余额不正确", balance, containsString("\"Total\":\"1000\""));
 
         String transferData = "归集地址向MULITADD4转账10个: " + tokenType;
         log.info(transferData);
@@ -374,11 +371,11 @@ public class LocalMultiSignTest {
         log.info("查询归集地址和MULITADD4余额，判断转账是否成功");
         String queryInfo = multiSign.BalanceByAddr(MULITADD4, tokenType);
         assertThat(queryInfo, containsString("200"));
-//        assertThat(queryInfo, containsString("\"Total\":\"10\""));
+        assertThat(queryInfo, containsString("\"Total\":\"10\""));
 
         String queryInfo2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
         assertThat(queryInfo2, containsString("200"));
-//        assertThat(queryInfo2, containsString("\"Total\":\"990\""));
+        assertThat(queryInfo2, containsString("\"Total\":\"990\""));
 
 
 //        log.info("多账号同时回收，回收归集地址和MULITADD4余额");

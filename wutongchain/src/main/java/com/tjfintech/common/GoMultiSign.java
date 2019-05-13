@@ -481,6 +481,7 @@ public class GoMultiSign implements MultiSign {
 
     }
 
+
     public String getUTXODetail(int StartTime,int EndTime,String tokenType,int UTXOtype,String FromAddr,String ToAddr) {
         Map<String, Object> map = new HashMap<>();
         map.put("StartTime", StartTime);
@@ -490,6 +491,14 @@ public class GoMultiSign implements MultiSign {
         map.put("FromAddr", FromAddr);
         map.put("ToAddr", ToAddr);
         String result = PostTest.sendPostToJson(SDKADD + "/utxo/getutxodetail", map);
+
+    @Override
+    public String BalanceByAddr(String addr, String tokenType) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("Addr",addr);
+        map.put("TokenType",tokenType);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/getsdkbalance", map);
+
 //        log.info(result);
         return result;
     }

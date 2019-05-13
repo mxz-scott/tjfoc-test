@@ -56,11 +56,11 @@ public class BeforeCondition {
                 iFlag++;
                 //assertEquals(str.contains("FuncUpdatePeerPermission success:  true"),true);
             }
-            log.info(stdout1.get(iFlag+1));
+            log.info("当前SDK 权限："+stdout1.get(iFlag+1));
             if(stdout1.get(iFlag+1).contains(fullPerm)==false) {
                 shellPeer1.execute(preCmd + "999");
                 ArrayList<String> stdout = shellPeer1.getStandardOutput();
-                resp = StringUtils.join(stdout1,"\n");
+                resp = StringUtils.join(stdout,"\n");
                 log.info(resp);
                 assertEquals(resp.contains(fullPerm),true);
                 Thread.sleep(6000);
@@ -82,7 +82,7 @@ public class BeforeCondition {
     @Test
     public  void collAddressTest() throws Exception{
 
-//        initTest();
+        initTest();
 
         String response= multiSign.collAddress(PRIKEY1,IMPPUTIONADD);
         String response2= multiSign.collAddress(PRIKEY1,MULITADD3);

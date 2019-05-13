@@ -79,13 +79,15 @@ public class GoSoloSign implements SoloSign {
      * @param priKey  用户私钥
      */
     public String Balance(String priKey,String pwd,String tokenType) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("Pwd", pwd);
-        map.put("PriKey", priKey);
-        map.put("tokentype", tokenType);
-        String result=PostTest.sendPostToJson(SDKADD+"/utxo/balance", map);
+        String param;
+        Map<String,Object>map=new HashMap<>();
+        map.put("key",priKey);
+        map.put("pwd",pwd);
+        map.put("tokentype",tokenType);
+        param= GetTest.ParamtoUrl(map);
+        String result=GetTest.SendGetTojson(SDKADD+"/utxo/balance"+"?"+param);
         log.info(result);
-        return result;
+        return result ;
     }
 
     /**单签账号向其他地址转账

@@ -48,7 +48,7 @@ public class ContractTest {
         assertThat(response,containsString("success"));
         String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
-        Thread.sleep(SLEEPTIME*6);
+        Thread.sleep(ContractInstallSleep);
         String response1=store.GetTransaction(hash);
         Thread.sleep(5000);
         assertThat(response1,containsString("200"));
@@ -58,7 +58,7 @@ public class ContractTest {
         //检查合约交易接口
         response=initMobileTest();
         assertThat(response,containsString("200"));
-        Thread.sleep(5000);
+        Thread.sleep(SLEEPTIME);
         String response2 = contract.SearchByKey("Mobile0",name);//SDK发送按key查询请求
         assertThat(response2,containsString("200"));
         assertThat(response2,containsString("HUAWEI"));
@@ -145,9 +145,8 @@ public class ContractTest {
 
         //安装后恢复dockerFileName为默认好的simple.go
         dockerFileName="simple.go";
-        Thread.sleep(SLEEPTIME*6);
+        Thread.sleep(ContractInstallSleep);
         String response1=store.GetTransaction(hash);
-        Thread.sleep(5000);
         assertThat(response1,containsString("200"));
         assertThat(response1,containsString("success"));
 
@@ -231,7 +230,7 @@ public class ContractTest {
         response=installTest();
         assertThat(response,containsString("200"));
 
-        Thread.sleep(SLEEPTIME*9);
+        Thread.sleep(ContractInstallSleep);
 
         //跨合约调用
         log.info("正常跨合约调用");
@@ -376,7 +375,7 @@ public class ContractTest {
      * 安装合约
      * @throws Exception
      */
-    @Test
+   // @Test
     public void TC001_installTest() throws Exception {
         String name="chenxu";//+ Random(5);
         String version="1.0";
@@ -386,10 +385,10 @@ public class ContractTest {
         String response=contract.Install(name,version,category,data);
         String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         assertThat(response,containsString("success"));
-        Thread.sleep(SLEEPTIME);
+        Thread.sleep(SLEEPTIME*10);
         String response2=store.GetTransaction(hash);
-//        assertThat(response2,containsString("200"));
-//        assertThat(response2,containsString("success"));
+        assertThat(response2,containsString("200"));
+        assertThat(response2,containsString("success"));
     }
     /**
      * 调用前需初始化

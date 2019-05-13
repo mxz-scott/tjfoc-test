@@ -96,7 +96,7 @@ public class UtilsClass {
     public static String PEER2MAC="02:42:c0:31:6b:5c";
     public static String PEER3MAC="02:42:c4:b9:82:6e";
     public static String PEER4MAC="02:42:dd:6c:4a:92";
-    public static final String version="2.0_2.1_1904";
+    public static final String version="2.0_2.1_1905";
     public static final String USERNAME="root";
     public static final String PASSWD="root";
     //节点、SDK、Toolkit对等目录放置于PTPATH目录下
@@ -105,10 +105,10 @@ public class UtilsClass {
     public static String PeerTPName="auto";
     public static ArrayList<String > peerList=new ArrayList<>();
     public static int RESTARTTIME=20000;
+    public static long ContractInstallSleep=180000;
 
     public static String dockerFileName="simple.go";
     public static String fullPerm="[1 2 3 4 5 6 7 8 9 10 21 211 212 22 221 222 223 224 23 231 232 233 235 236 24 25 251 252 253 254 255 256]";
-
 
 
     /**
