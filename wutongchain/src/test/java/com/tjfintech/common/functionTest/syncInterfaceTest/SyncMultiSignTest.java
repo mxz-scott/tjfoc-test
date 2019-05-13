@@ -44,13 +44,7 @@ public class SyncMultiSignTest {
         assertThat("200",containsString(JSONObject.fromObject(response).getString("State")));
         assertThat("200",containsString(JSONObject.fromObject(response2).getString("State")));
         assertThat("success",containsString(JSONObject.fromObject(response2).getString("Message")));
-        //超时情况下
-        String tokenType1 = "CX-" + UtilsClass.Random(7);
-        String response3 = multiSign.SyncIssueToken(utilsClass.SHORTMEOUT/10, MULITADD4, IMPPUTIONADD, tokenType1, "100000", data);//向IMPPUTIONADD地址发行10000
-        String Tx2 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Tx");
-        String response4 = multiSign.SyncSign(utilsClass.SHORTMEOUT,Tx2, PRIKEY1);
-        assertThat("504",containsString(JSONObject.fromObject(response4).getString("State")));
-        assertThat("timeout",containsString(JSONObject.fromObject(response4).getString("Message")));
+
 
     }
 

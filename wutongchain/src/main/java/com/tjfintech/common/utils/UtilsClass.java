@@ -15,7 +15,7 @@ public class UtilsClass {
     public static final String SDKADD="http://10.1.3.165:3333";
 
     public static Integer  LONGTIMEOUT = 100000;//毫秒
-    public static Integer  SHORTMEOUT = 1600;//毫秒
+    public static Integer  SHORTMEOUT = 2000;//毫秒
 
     //SM2公私钥对
      public static String  ADDRESS1 = "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo";

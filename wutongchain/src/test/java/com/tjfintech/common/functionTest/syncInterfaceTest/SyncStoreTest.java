@@ -23,6 +23,9 @@ import static org.junit.Assert.assertThat;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
 public class SyncStoreTest {
+
+
+
     TestBuilder testBuilder= TestBuilder.getInstance();
     UtilsClass utilsClass = new UtilsClass();
     Store store =testBuilder.getStore();
