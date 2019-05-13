@@ -30,7 +30,6 @@ public class LocalSingleSignTest {
     MultiSign multiSign = testBuilder.getMultiSign();
     SoloSign soloSign = testBuilder.getSoloSign();
     UtilsClass utilsClass = new UtilsClass();
-//    LocalMultiSignTest multiSignTest = new LocalMultiSignTest();
     private static String tokenType;
     private static String tokenType2;
     SingleSignIssue singleSign = new SingleSignIssue();
@@ -64,7 +63,7 @@ public class LocalSingleSignTest {
      * Tc024单签正常流程:发行，转账，回收。
      */
     @Test
-    public void TC024_SoloProgress_LocalSign() throws Exception {
+    public void TC1414_SoloProgress_LocalSign() throws Exception {
 
 
         //归集地址转出
@@ -512,7 +511,7 @@ public class LocalSingleSignTest {
      *  私钥带密码
      */
     @Test
-    public void TC024_SoloProgress_LocalSign_PWD() throws Exception {
+    public void TC1415_SoloProgress_LocalSign_PWD() throws Exception {
 
         //单签发行
         log.info("发行两种token");

@@ -475,7 +475,12 @@ public class GoMultiSign implements MultiSign {
 
     @Override
     public String BalanceByAddr(String addr, String tokenType) {
-        return null;
+        Map<String, Object> map = new HashMap<>();
+        map.put("Addr",addr);
+        map.put("TokenType",tokenType);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/getsdkbalance", map);
+//        log.info(result);
+        return result;
     }
 
     /**
