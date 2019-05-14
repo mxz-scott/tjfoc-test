@@ -516,7 +516,6 @@ public class LocalSingleSignTest {
         //单签发行
         log.info("发行两种token");
         tokenType = issueTokenLocalSign(7, "10000.123456789");
-
         //查询余额
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中token余额");
@@ -529,7 +528,7 @@ public class LocalSingleSignTest {
 
         log.info(transferData);
         List<Map> transferList = soloSign.constructToken(ADDRESS7, tokenType, "100.25");
-        singleSignTransfer_LocalSign(PUBKEY1, transferData, transferList, PRIKEY1);
+        singleSignTransfer_LocalSign(PUBKEY1, transferData, transferList, PRIKEY1);//转账的本地签名
 
         Thread.sleep(SLEEPTIME);
 
@@ -573,12 +572,12 @@ public class LocalSingleSignTest {
 
         queryInfo22 = soloSign.Balance(PRIKEY4, tokenType);
         assertThat(queryInfo22, containsString("200"));
-        assertThat(queryInfo21, containsString("\"Total\":\"0\""));
+        assertThat(queryInfo22, containsString("\"Total\":\"0\""));
 
         log.info("查询零地址余额");
         String queryInfo5 = multiSign.QueryZero(tokenType);
         assertThat(queryInfo5, containsString("200"));
-        assertThat(queryInfo5, containsString("\"Total\":\"100.25\""));
+        assertThat(queryInfo5, containsString(tokenType + "\":\"100.25\""));
 
     }
 
@@ -657,14 +656,14 @@ public class LocalSingleSignTest {
 
         String recycleResponse = soloSign.RecycleLocalSign(fromPubKey, tokenType, amount);
 
-//        log.info("单签回收返回：" + recycleResponse);
+        log.info("单签回收返回：" + recycleResponse);
 
         String preSignData = JSONObject.fromObject(recycleResponse).getJSONObject("Data").toString();
-//        log.info("单签回收签名前数据: " + preSignData);
+        log.info("单签回收签名前数据: " + preSignData);
 
         String signedData = singleTrans.singleSignTransferAccountsMethod(preSignData, fromPriKeyPath, pwd);
 
-//        log.info("单签回收签名后的数据：" + signedData);
+        log.info("单签回收签名后的数据：" + signedData);
 
         String txInfo = soloSign.sendSign(signedData);
 

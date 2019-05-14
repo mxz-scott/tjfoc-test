@@ -25,43 +25,45 @@ public class GoMultiSign implements MultiSign {
     private static final String PUBKEY1 = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0NCk1Ga3dFd1lIS29aSXpqMENBUVlJS29FY3oxVUJnaTBEUWdBRXhuMTFDU0syYnBua2FrVVhhcnVkcHdTL3ErM3UNCmZQalkwRGhWSHNmSHAwNlc3b2J4V1gveHY2c3p3ME1mMGVvZnQySmVrUXhGZmg2eEZtQm5TWFNVWHc9PQ0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t";
     private static final String PUBKEY2 = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0NCk1Ga3dFd1lIS29aSXpqMENBUVlJS29FY3oxVUJnaTBEUWdBRWtiRmlaOW9VaWFaMmh3dTVsS3FYNkQ1OHdXOVYNCmNEQ1BjUEJQWThyTlVTQitNR1ZxMUlyUk8vVVBMaXRqc0RtcWN2MzdKdmVSTC9Ba0FWM1hDd2JGM3c9PQ0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t";
     private static final String PUBKEY3 = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0NCk1Ga3dFd1lIS29aSXpqMENBUVlJS29FY3oxVUJnaTBEUWdBRXZsTDZtVThFNkU1cTBRVk11NlNTbXRMMzhrdjQNCnVadnhVcG9YUlMwcHNsMkV6UHF2YTIxLzJiTzM5eW5RaHRPTTgrd0lWbExKY3ByNXZnOG1PYkVYdXc9PQ0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t";
-    public static final String PRIKEY0="LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR1RBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUJITTlWQVlJdEJIa3dkd0lCQVFRZ3BRRjEzT01KaERQVVM3bnEKTVVYQUZNK01mUlV3MFc3bFVRQnNvOW12WWZ1Z0NnWUlLb0VjejFVQmdpMmhSQU5DQUFTTFR6QWxRSk1ZQ0RGegp6cURnL2s5TkhEUWpvL1R6WEFHRFpkaGJoOHU0c2loM2FvWUljWUsrN1VCbitBQVJJVDgwNVBySHNzTmRSWGc0CnM0bTgyRkNsCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K";
-    private static String TOKENTYPE ;
+    public static final String PRIKEY0 = "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR1RBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUJITTlWQVlJdEJIa3dkd0lCQVFRZ3BRRjEzT01KaERQVVM3bnEKTVVYQUZNK01mUlV3MFc3bFVRQnNvOW12WWZ1Z0NnWUlLb0VjejFVQmdpMmhSQU5DQUFTTFR6QWxRSk1ZQ0RGegp6cURnL2s5TkhEUWpvL1R6WEFHRFpkaGJoOHU0c2loM2FvWUljWUsrN1VCbitBQVJJVDgwNVBySHNzTmRSWGc0CnM0bTgyRkNsCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K";
+    private static String TOKENTYPE;
     private static String RECYCLETYPE;
 
-    private static final String USER1_1="32XBduKk48RJfoA2wJuQ7doaJimMymEmZLYYbYHyH5Eyi5Hs68";
-    private static final String USER1_2="SogjzbsX6RsWwRKqdhTQeVTWQhy2SyNGfPy9LHEz6p3famV3wCe";
-    private static final String USER3_3="SsUTN9RmWgrD8E48MuJY1pdLw4QDo7GJgK8fn8k7DFzpvG3pwqw";
-    private static final String USER_COLLET="Soirv9ikykVHArKCdJqVNegxxqZWUj1g4ixFFYbBLMExy4zUTUe";
+    private static final String USER1_1 = "32XBduKk48RJfoA2wJuQ7doaJimMymEmZLYYbYHyH5Eyi5Hs68";
+    private static final String USER1_2 = "SogjzbsX6RsWwRKqdhTQeVTWQhy2SyNGfPy9LHEz6p3famV3wCe";
+    private static final String USER3_3 = "SsUTN9RmWgrD8E48MuJY1pdLw4QDo7GJgK8fn8k7DFzpvG3pwqw";
+    private static final String USER_COLLET = "Soirv9ikykVHArKCdJqVNegxxqZWUj1g4ixFFYbBLMExy4zUTUe";
 
     /**
      * 回收token，本地签名
+     *
      * @param multiAddr 多签地址
-     * @param pubKey 公钥
+     * @param pubKey    公钥
      * @param tokenType 数字货币类型
-     * @param amount 货币数量
+     * @param amount    货币数量
      */
-    public String RecycleLocalSign(String multiAddr,String pubKey,String tokenType,String amount){
-        Map<String ,Object>map=new HashMap<>();
-        map.put("MultiAddr",multiAddr);
-        map.put("PubKey",pubKey);
-        map.put("TokenType",tokenType);
-        map.put("Amount",amount);
-        String result =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle_localsign",map);
+    public String RecycleLocalSign(String multiAddr, String pubKey, String tokenType, String amount) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("MultiAddr", multiAddr);
+        map.put("PubKey", pubKey);
+        map.put("TokenType", tokenType);
+        map.put("Amount", amount);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/multi/recycle_localsign", map);
 //        log.info(result);
         return result;
     }
 
     /**
      * 添加发行地址
+     *
      * @param pubKey
      * @param address
      * @return
      */
-    public String addissueaddress(String pubKey, String ...address) {
+    public String addissueaddress(String pubKey, String... address) {
         Map<String, Object> map = new HashMap<>();
         List<Object> addrs = new ArrayList<>();
-        for (int i=0;i<address.length;i++){
+        for (int i = 0; i < address.length; i++) {
             addrs.add(address[i]);
         }
 
@@ -71,8 +73,10 @@ public class GoMultiSign implements MultiSign {
         log.info(result);
         return result;
     }
+
     /**
      * 带私钥的多签Token发行
+     *
      * @param MultiAddr
      * @param TokenType
      * @param Amount
@@ -82,9 +86,9 @@ public class GoMultiSign implements MultiSign {
      */
     @Override
     public String issueTokenCarryPri(String MultiAddr, String TokenType, String Amount, String Prikey, String Data) {
-        Map<String, Object > map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("MultiAddr", MultiAddr);
-        map.put("Prikey",Prikey);
+        map.put("Prikey", Prikey);
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
         map.put("Data", Data);
@@ -92,8 +96,10 @@ public class GoMultiSign implements MultiSign {
         log.info(response);
         return response;
     }
+
     /**
      * 带私钥带密码的多签Token发行
+     *
      * @param MultiAddr
      * @param TokenType
      * @param Amount
@@ -104,10 +110,10 @@ public class GoMultiSign implements MultiSign {
      */
     @Override
     public String issueTokenCarryPri(String MultiAddr, String TokenType, String Amount, String Prikey, String Pwd, String Data) {
-        Map<String, Object > map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("MultiAddr", MultiAddr);
-        map.put("PriKey",Prikey);
-        map.put("Pwd",Pwd);
+        map.put("PriKey", Prikey);
+        map.put("Pwd", Pwd);
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
         map.put("Data", Data);
@@ -115,8 +121,10 @@ public class GoMultiSign implements MultiSign {
         log.info(response);
         return response;
     }
+
     /**
      * 添加发行地址不携带私钥
+     *
      * @param address
      * @return
      */
@@ -124,7 +132,7 @@ public class GoMultiSign implements MultiSign {
     public String addissueaddressRemovePri(String... address) {
         Map<String, Object> map = new HashMap<>();
         List<Object> addrs = new ArrayList<>();
-        for (int i=0;i<address.length;i++){
+        for (int i = 0; i < address.length; i++) {
             addrs.add(address[i]);
         }
         map.put("Addrs", addrs);
@@ -135,19 +143,20 @@ public class GoMultiSign implements MultiSign {
 
     /**
      * 转账，本地签名
-     * @param PubKey 公钥
+     *
+     * @param PubKey   公钥
      * @param Data     详情内容
-     * @param fromAddr  发起地址
+     * @param fromAddr 发起地址
      * @return
      */
-    public String TransferLocalSign(String fromAddr , String PubKey,String Data,List<Map>tokenList) {
+    public String TransferLocalSign(String fromAddr, String PubKey, String Data, List<Map> tokenList) {
 
         Map<String, Object> map = new HashMap<>();
         map.put("MultiAddr", fromAddr);
         map.put("PubKey", PubKey);
         map.put("Data", Data);
         map.put("Token", tokenList);
-        String result=PostTest.sendPostToJson(SDKADD+"/utxo/multi/transfer_localsign", map);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/multi/transfer_localsign", map);
 //        log.info(result);
         return result;
 
@@ -210,13 +219,14 @@ public class GoMultiSign implements MultiSign {
 
     /**
      * 多账号同时回收，本地签名
+     *
      * @param tokenList
      * @return
      */
-    public String RecyclesLocalSign(List<Map> tokenList){
+    public String RecyclesLocalSign(List<Map> tokenList) {
         Map<String, Object> map = new HashMap<>();
         map.put("Token", tokenList);
-        String result=PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycles_localsign", map);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/multi/recycles_localsign", map);
         log.info(result);
         return result;
     }
@@ -228,7 +238,7 @@ public class GoMultiSign implements MultiSign {
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
         map.put("Data", Data);
-        String response = PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/issuetoken?timeout="+timeout, map);
+        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout, map);
         log.info(response);
         return response;
     }
@@ -241,7 +251,7 @@ public class GoMultiSign implements MultiSign {
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
         map.put("Data", Data);
-        String response = PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/issuetoken?timeout="+timeout, map);
+        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout, map);
         log.info(response);
         return response;
     }
@@ -256,34 +266,34 @@ public class GoMultiSign implements MultiSign {
         map.put("Data", Data);
         map.put("PriKey", PriKey);
         map.put("Pwd", Pwd);
-        String response = PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/issuetoken?timeout="+timeout, map);
+        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout, map);
         log.info(response);
         return response;
     }
 
     @Override
     public String SyncIssueTokenCarryPri(Integer timeout, String MultiAddr, String TokenType, String Amount, String PriKey, String Data) {
-        Map<String, Object > map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("MultiAddr", MultiAddr);
-        map.put("PriKey",PriKey);
+        map.put("PriKey", PriKey);
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
         map.put("Data", Data);
-        String response = PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/issuetoken?timeout="+timeout, map);
+        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout, map);
         log.info(response);
         return response;
     }
 
     @Override
     public String SyncIssueTokenCarryPri(Integer timeout, String MultiAddr, String TokenType, String Amount, String PriKey, String Pwd, String Data) {
-        Map<String, Object > map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("MultiAddr", MultiAddr);
-        map.put("PriKey",PriKey);
-        map.put("Pwd",Pwd);
+        map.put("PriKey", PriKey);
+        map.put("Pwd", Pwd);
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
         map.put("Data", Data);
-        String response = PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/issuetoken?timeout="+timeout, map);
+        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout, map);
         log.info(response);
         return response;
     }
@@ -294,7 +304,7 @@ public class GoMultiSign implements MultiSign {
         map.put("Tx", Tx);
         map.put("Prikey", Prikey);
         map.put("Pwd", Pwd);
-        String response = PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/sign?timeout="+timeout, map);
+        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/sign?timeout=" + timeout, map);
         log.info(response);
         return response;
     }
@@ -304,13 +314,14 @@ public class GoMultiSign implements MultiSign {
         Map<String, Object> map = new HashMap<>();
         map.put("Tx", Tx);
         map.put("Prikey", Prikey);
-        String response = PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/sign?timeout="+timeout, map);
+        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/sign?timeout=" + timeout, map);
         log.info(response);
         return response;
     }
 
     /**
      * 同步多签转账测试
+     *
      * @param timeout
      * @param PriKey
      * @param Pwd
@@ -326,9 +337,9 @@ public class GoMultiSign implements MultiSign {
         map.put("MultiAddr", fromAddr);
         map.put("Prikey", PriKey);
         map.put("Data", Data);
-        map.put("Pwd",Pwd);
+        map.put("Pwd", Pwd);
         map.put("Token", tokenList);
-        String result=PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/transfer?timeout="+timeout, map);
+        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/transfer?timeout=" + timeout, map);
         log.info(result);
         return result;
     }
@@ -340,7 +351,7 @@ public class GoMultiSign implements MultiSign {
         map.put("Prikey", PriKey);
         map.put("Data", Data);
         map.put("Token", tokenList);
-        String result=PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/transfer?timeout="+timeout, map);
+        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/transfer?timeout=" + timeout, map);
         log.info(result);
         return result;
     }
@@ -350,10 +361,10 @@ public class GoMultiSign implements MultiSign {
         Map<String, Object> map = new HashMap<>();
         map.put("MultiAddr", MultiAddr);
         map.put("Prikey", PriKey);
-        map.put("Pwd",Pwd);
+        map.put("Pwd", Pwd);
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
-        String result=PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/recycle?timeout="+timeout, map);
+        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/recycle?timeout=" + timeout, map);
         log.info(result);
         return result;
     }
@@ -365,7 +376,7 @@ public class GoMultiSign implements MultiSign {
         map.put("Prikey", PriKey);
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
-        String result=PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/recycle?timeout="+timeout, map);
+        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/recycle?timeout=" + timeout, map);
         log.info(result);
         return result;
     }
@@ -376,16 +387,16 @@ public class GoMultiSign implements MultiSign {
         map.put("Prikey", PriKey);
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
-        String result=PostTest.sendPostToJson(SDKADD+"/sync/utxo/multi/recycle?timeout="+timeout, map);
+        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/recycle?timeout=" + timeout, map);
         log.info(result);
         return result;
     }
 
 
     public String delissueaddress(String priKey, String... address) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         List<Object> addrs = new ArrayList<>();
-        for (int i= 0;i<address.length;i++){
+        for (int i = 0; i < address.length; i++) {
             addrs.add(address[i]);
         }
         map.put("PriKey", priKey);
@@ -394,16 +405,18 @@ public class GoMultiSign implements MultiSign {
         log.info(result);
         return result;
     }
+
     /**
      * 删除发行地址不携带私钥
+     *
      * @param address
      * @return
      */
     @Override
     public String delissueaddressRemovePri(String... address) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         List<Object> addrs = new ArrayList<>();
-        for (int i= 0;i<address.length;i++){
+        for (int i = 0; i < address.length; i++) {
             addrs.add(address[i]);
         }
         map.put("Addrs", addrs);
@@ -411,8 +424,10 @@ public class GoMultiSign implements MultiSign {
         log.info(result);
         return result;
     }
+
     /**
      * 获取总发行量,总回收量,总冻结量
+     *
      * @param StartTime
      * @param EndTime
      * @param TokenType
@@ -421,22 +436,24 @@ public class GoMultiSign implements MultiSign {
     @Override
     public String gettotal(int StartTime, int EndTime, String TokenType) {
         Map<String, Object> map = new HashMap<>();
-        map.put("StartTime",StartTime);
-        map.put("EndTime",EndTime);
-        map.put("TokenType",TokenType);
+        map.put("StartTime", StartTime);
+        map.put("EndTime", EndTime);
+        map.put("TokenType", TokenType);
         String result = PostTest.sendPostToJson(SDKADD + "/utxo/gettotal", map);
         log.info(result);
         return result;
     }
+
     /**
      * 获取tokentype发行量
+     *
      * @param TokenType
      * @return
      */
     @Override
     public String tokenstate(String TokenType) {
         Map<String, Object> map = new HashMap<>();
-        map.put("TokenType",TokenType);
+        map.put("TokenType", TokenType);
         String result = PostTest.sendPostToJson(SDKADD + "/utxo/tokenstate", map);
         log.info(result);
         return result;
@@ -444,26 +461,27 @@ public class GoMultiSign implements MultiSign {
 
     /**
      * 根据tokentype获取账户余额
+     *
      * @param TokenType
      * @param Address
      * @return
      */
     @Override
     public String getbalancebytt(String TokenType, String Address) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("TokenType",TokenType);
-        map.put("Address",Address);
+        Map<String, Object> map = new HashMap<>();
+        map.put("TokenType", TokenType);
+        map.put("Address", Address);
         String result = PostTest.sendPostToJson(SDKADD + "/utxo/getbalancebytt", map);
         log.info(result);
         return result;
     }
 
     @Override
-    public String getTotalbyDay(int year,int month,int day) {
+    public String getTotalbyDay(int year, int month, int day) {
         Map<String, Object> map = new HashMap<>();
-        map.put("Year",year);
-        map.put("Month",month);
-        map.put("Day",day);
+        map.put("Year", year);
+        map.put("Month", month);
+        map.put("Day", day);
         String result = PostTest.sendPostToJson(SDKADD + "/utxo/totalbyday", map);
 //        log.info(result);
         return result;
@@ -471,18 +489,18 @@ public class GoMultiSign implements MultiSign {
     }
 
     @Override
-    public String getChainBalance(String tokenType,String Addr) {
+    public String getChainBalance(String tokenType, String Addr) {
         Map<String, Object> map = new HashMap<>();
-        map.put("TokenType",tokenType);
-        map.put("Addr",Addr);
+        map.put("TokenType", tokenType);
+        map.put("Addr", Addr);
         String result = PostTest.sendPostToJson(SDKADD + "/utxo/getchainbalance", map);
 //        log.info(result);
         return result;
 
     }
 
-
-    public String getUTXODetail(int StartTime,int EndTime,String tokenType,int UTXOtype,String FromAddr,String ToAddr) {
+    @Override
+    public String getUTXODetail(int StartTime, int EndTime, String tokenType, int UTXOtype, String FromAddr, String ToAddr) {
         Map<String, Object> map = new HashMap<>();
         map.put("StartTime", StartTime);
         map.put("EndTime", EndTime);
@@ -491,6 +509,11 @@ public class GoMultiSign implements MultiSign {
         map.put("FromAddr", FromAddr);
         map.put("ToAddr", ToAddr);
         String result = PostTest.sendPostToJson(SDKADD + "/utxo/getutxodetail", map);
+
+        log.info(result);
+        return result;
+    }
+
 
     @Override
     public String BalanceByAddr(String addr, String tokenType) {
@@ -503,15 +526,7 @@ public class GoMultiSign implements MultiSign {
         return result;
     }
 
-        @Override
-        public String BalanceByAddr(String addr,String tokenType) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("Addr", addr);
-            map.put("TokenType", tokenType);
-            String result = PostTest.sendPostToJson(SDKADD + "/utxo/getsdkbalance", map);
-//        log.info(result);
-            return result;
-        }
+
 
             /**
              * 添加归集地址

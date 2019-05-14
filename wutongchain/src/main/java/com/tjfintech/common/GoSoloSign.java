@@ -187,7 +187,7 @@ public class GoSoloSign implements SoloSign {
         map.put("TokenType",tokenType);
         map.put("Amount",amount);
         String result =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle_localsign",map);
-//        log.info(result);
+        log.info(result);
         return result;
     }
 
