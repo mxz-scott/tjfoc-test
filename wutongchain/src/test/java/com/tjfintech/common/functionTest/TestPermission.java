@@ -32,6 +32,7 @@ public class TestPermission {
     public static final String PASSWORD = "root";
     TestBuilder testBuilder=TestBuilder.getInstance();
     Store store =testBuilder.getStore();
+    MultiSign multiSign = testBuilder.getMultiSign();
 
     APermfuncSys pFun1 =new APermfuncSys();
     APermfuncDocker pFunCt =new APermfuncDocker();
@@ -80,7 +81,7 @@ public class TestPermission {
             bf.updatePubPriKey();
             bf.collAddressTest();
 
-            bReg=true;
+            bExe=true;
         }
 
         if(bExe==false) {
@@ -153,9 +154,9 @@ public class TestPermission {
 
         Thread.sleep(5000);
 
-        pFunUTXO.soloBalance(PRIKEY1,glbSoloToken);
-        pFunUTXO.multiPostBalance(MULITADD4,PRIKEY1,glbMultiToken4);
-        pFunUTXO.multiPostBalance(MULITADD3,PRIKEY1,glbMultiToken3);
+        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.Balance(PRIKEY1,glbSoloToken)).getJSONObject("Data").getString("Total"));
+        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.Balance(MULITADD4,PRIKEY1,glbMultiToken4)).getJSONObject("Data").getString("Total"));
+        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.Balance(MULITADD3,PRIKEY1,glbMultiToken3)).getJSONObject("Data").getString("Total"));
 
         bExe=true;
     }
@@ -248,15 +249,29 @@ public class TestPermission {
 
     public void check233Interface(String chk) throws Exception{
         //233为对账接口为此处检查接口
-
         //shellCmd(ToolIP,preCmd + "233");
         assertEquals(pFunUTXO.getTotal(0,0,glbMultiToken3),chk);
         assertEquals(pFunUTXO.getSDKBalance(MULITADD3,glbMultiToken3),chk);
         assertEquals(pFunUTXO.getChainBalance(MULITADD3,glbMultiToken3),chk);
         assertEquals(pFunUTXO.getUTXODetail(MULITADD3,glbMultiToken3),chk);
         assertEquals(pFunUTXO.getTokenState(glbMultiToken3),chk);
-        assertEquals(pFunUTXO.getTotalByDay(2019,3,1),chk);
+        assertEquals(pFunUTXO.getTotalByDay(0,0),chk);
     }
+
+//    @Test
+//    //public void check233Interface(String chk) throws Exception{
+//    public void check233Interface() throws Exception{
+//        //233为对账接口为此处检查接口
+//        String chk="0";
+//        shellCmd(ToolIP,preCmd + "232");
+//        Thread.sleep(5000);
+//        assertEquals(pFunUTXO.getTotal(0,0,glbMultiToken3),chk);
+//        assertEquals(pFunUTXO.getSDKBalance(MULITADD3,glbMultiToken3),chk);
+//        assertEquals(pFunUTXO.getChainBalance(MULITADD3,glbMultiToken3),chk);
+//        assertEquals(pFunUTXO.getUTXODetail(MULITADD3,glbMultiToken3),chk);
+//        assertEquals(pFunUTXO.getTokenState(glbMultiToken3),chk);
+//        assertEquals(pFunUTXO.getTotalByDay(0,0),chk);
+//    }
 
     @Test
     public void chkUTXO1by1()throws Exception{
@@ -540,7 +555,7 @@ public class TestPermission {
 
 
     }
-    //@After
+    @After
     public void resetPermission() throws Exception{
         BeforeCondition bf=new BeforeCondition();
         bf.initTest();

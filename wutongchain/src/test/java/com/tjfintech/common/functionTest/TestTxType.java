@@ -65,16 +65,16 @@ public class TestTxType {
     String subTypeRecoverToken="205";
 
     String zeroAddr="osEoy933LkHyyBcgjE7vCivfsX";
-
+    boolean bExe=false;
     @Before
     public void beforeConfig() throws Exception {
-        if(certPath!=""&& bReg==false) {
+        if(certPath!=""&& bExe==false) {
             BeforeCondition bf = new BeforeCondition();
+            bf.initTest();
             bf.updatePubPriKey();
             bf.collAddressTest();
-            bf.initTest();
             Thread.sleep(SLEEPTIME);
-            bReg=true;
+            bExe=true;
         }
     }
 
@@ -289,7 +289,7 @@ public class TestTxType {
         log.info("创建合约"+ct.name);
         String response7 = ct.installTest();
         String txHash7 = JSONObject.fromObject(response7).getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(30000);
+        Thread.sleep(ContractInstallSleep);
         //发送合约交易initMobile
         log.info("发送合约交易initMobile");
         String response81 = ct.initMobileTest();
@@ -503,7 +503,7 @@ public class TestTxType {
         assertEquals(txType,jsonObjectOrg1.getString("transactionType"));
         assertEquals(true,jsonObjectOrg1.getJSONObject("extra").isNullObject());//检查extra
 
-        assertThat(new String(decryptBASE64(jsonObjectOrg2.getJSONObject("Admin").getString(keyword))),containsString(checkstr));
+        assertThat(jsonObjectOrg2.getJSONObject("Admin").getString(keyword),containsString(checkstr));
         assertEquals(txType,jsonObjectOrg2.getJSONObject("Admin").getString("transactionType"));
         assertEquals(true,jsonObjectOrg2.getJSONObject("Admin").getJSONObject("extra").isNullObject());//检查extra
 

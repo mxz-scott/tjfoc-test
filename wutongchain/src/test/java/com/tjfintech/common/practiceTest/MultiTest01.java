@@ -291,17 +291,17 @@ public class MultiTest01 {
      * 根据tokentype获取账户余额
      */
     @Test
-    public void TC1405_getbalancebytt(){
+    public void TC1405_getSDKBalance(){
         String getbalancebytt;
-        getbalancebytt = multiSign.getbalancebytt("Mutitoken4", "SnEkrssxMUTcLWTcWvvYhk3FazE9W2jobrUZEHndumkCRHuLk4d");
+        getbalancebytt = multiSign.getSDKBalance("Mutitoken4", "SnEkrssxMUTcLWTcWvvYhk3FazE9W2jobrUZEHndumkCRHuLk4d");
         assertThat(getbalancebytt, containsString("200"));
-        getbalancebytt = multiSign.getbalancebytt("", "SnEkrssxMUTcLWTcWvvYhk3FazE9W2jobrUZEHndumkCRHuLk4d");
+        getbalancebytt = multiSign.getSDKBalance("", "SnEkrssxMUTcLWTcWvvYhk3FazE9W2jobrUZEHndumkCRHuLk4d");
         assertThat(getbalancebytt, containsString("Token type cannot be empty"));
-        getbalancebytt = multiSign.getbalancebytt("**", "SnEkrssxMUTcLWTcWvvYhk3FazE9W2jobrUZEHndumkCRHuLk4d");
+        getbalancebytt = multiSign.getSDKBalance("**", "SnEkrssxMUTcLWTcWvvYhk3FazE9W2jobrUZEHndumkCRHuLk4d");
         assertThat(getbalancebytt, containsString("200"));
-        getbalancebytt = multiSign.getbalancebytt("Mutitoken4", "");
+        getbalancebytt = multiSign.getSDKBalance("Mutitoken4", "");
         assertThat(getbalancebytt, containsString("200"));
-        getbalancebytt = multiSign.getbalancebytt("Mutitoken4", "111");
+        getbalancebytt = multiSign.getSDKBalance("Mutitoken4", "111");
         assertThat(getbalancebytt, containsString("200"));
     }
 
