@@ -251,7 +251,7 @@ public class TestPermission {
         //233为对账接口为此处检查接口
         //shellCmd(ToolIP,preCmd + "233");
         assertEquals(pFunUTXO.getTotal(0,0,glbMultiToken3),chk);
-        assertEquals(pFunUTXO.getSDKBalance(MULITADD3,glbMultiToken3),chk);
+        assertEquals(pFunUTXO.getSDKBalance(glbMultiToken3,MULITADD3),chk);
         assertEquals(pFunUTXO.getChainBalance(MULITADD3,glbMultiToken3),chk);
         assertEquals(pFunUTXO.getUTXODetail(MULITADD3,glbMultiToken3),chk);
         assertEquals(pFunUTXO.getTokenState(glbMultiToken3),chk);

@@ -33,10 +33,10 @@ public class BeforeCondition {
         String exeCmd="./toolkit permission ";
 
         SDKID=getSDKID();
-        PEER1MAC=getMACAddr(PEER1IP,USERNAME,PASSWD).trim();
-        PEER2MAC=getMACAddr(PEER2IP,USERNAME,PASSWD).trim();
-        PEER3MAC=getMACAddr(PEER3IP,USERNAME,PASSWD).trim();
-        PEER4MAC=getMACAddr(PEER4IP,USERNAME,PASSWD).trim();
+//        PEER1MAC=getMACAddr(PEER1IP,USERNAME,PASSWD).trim();
+//        PEER2MAC=getMACAddr(PEER2IP,USERNAME,PASSWD).trim();
+//        PEER3MAC=getMACAddr(PEER3IP,USERNAME,PASSWD).trim();
+//        PEER4MAC=getMACAddr(PEER4IP,USERNAME,PASSWD).trim();
 
         String preCmd=toolPath+exeCmd+"-p "+PEER1RPCPort+" -d "+SDKID+" -m ";
         String getPerm=toolPath+"./toolkit getpermission -p "+PEER1RPCPort;

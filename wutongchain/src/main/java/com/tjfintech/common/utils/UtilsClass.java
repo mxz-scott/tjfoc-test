@@ -12,7 +12,7 @@ import java.util.*;
 
 @Slf4j
 public class UtilsClass {
-    public static final String SDKADD="http://10.1.3.165:3333";
+    public static final String SDKADD="http://10.1.3.247:7777";
 
     public static Integer  LONGTIMEOUT = 100000;//毫秒
     public static Integer  SHORTMEOUT = 2000;//毫秒
@@ -349,11 +349,20 @@ public class UtilsClass {
     }
 
     public static void resetAndRestartSDK()throws Exception{
+        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/config.toml");
+    }
+
+    public static void setAndRestartSDK(String... cmdList)throws Exception{
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
 
         shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellSDK.execute("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/config.toml");
+
+        for (String cmd:cmdList
+        ) {
+            shellSDK.execute(cmd);
+            Thread.sleep(300);
+        }
 
         shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
     }
