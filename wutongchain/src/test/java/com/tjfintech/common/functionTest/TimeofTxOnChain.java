@@ -100,9 +100,10 @@ public class TimeofTxOnChain {
         String preBlockHash=JSONObject.fromObject(store.GetBlockByHeight(blockHeight)).getJSONObject("Data").getJSONObject("header").getString("previousHash");
         String currentBlockHash="";
         for(int i= blockHeight-1;i>0;i--){
-            currentBlockHash  = JSONObject.fromObject(store.GetBlockByHeight(blockHeight)).getJSONObject("Data").getJSONObject("header").getString("blockHash");
+
+            currentBlockHash  = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONObject("header").getString("blockHash");
             assertEquals(currentBlockHash,preBlockHash);
-            preBlockHash=currentBlockHash;
+            preBlockHash=JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONObject("header").getString("previousHash");
 
         }
     }

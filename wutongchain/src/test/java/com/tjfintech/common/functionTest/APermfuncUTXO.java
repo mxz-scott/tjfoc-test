@@ -239,7 +239,7 @@ public class APermfuncUTXO {
 
     public String getSDKBalance(String addr,String tokenType)throws Exception  {
 
-        String response= multiSign.getbalancebytt(addr,tokenType);
+        String response= multiSign.getSDKBalance(addr,tokenType);
         log.info("从SDK数据库获取账户token余额:"+retAllow(response));
         return retAllow(response);
     }

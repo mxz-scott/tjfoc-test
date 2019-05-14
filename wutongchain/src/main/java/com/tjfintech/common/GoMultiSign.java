@@ -449,10 +449,10 @@ public class GoMultiSign implements MultiSign {
      * @return
      */
     @Override
-    public String getbalancebytt(String TokenType, String Address) {
+    public String getSDKBalance(String TokenType, String Address) {
         Map<String,Object> map = new HashMap<>();
         map.put("TokenType",TokenType);
-        map.put("Address",Address);
+        map.put("Addr",Address);
         String result = PostTest.postMethod(SDKADD + "/utxo/getsdkbalance", map);
         log.info(result);
         return result;
