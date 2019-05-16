@@ -36,14 +36,16 @@ public class TestTLSCert {
     MultiSign multiSign =testBuilder.getMultiSign();
 
 
-
+    @Test
     public void setConfigECDSACert()throws Exception{
+        BeforeCondition bf =new BeforeCondition();
+        bf.initTest();
+        bf.collAddressTest();
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseECDSA.toml "+ PTPATH +"peer/conf/base.toml");
         setAndRestartSDK("cp "+PTPATH+"sdk/conf/configECDSAMongo.toml "+PTPATH+"sdk/conf/config.toml");
         Thread.sleep(6000);
 
-        BeforeCondition bf =new BeforeCondition();
-        bf.initTest();
+
 
         //发送存证交易
         Date dt=new Date();
@@ -58,16 +60,6 @@ public class TestTLSCert {
         String txHash2 = JSONObject.fromObject(response2).getString("Data");
 
 
-        String tokenTypeM = "ECDSAMultiTC-"+ UtilsClass.Random(6);
-        log.info(MULITADD3+ "发行" + tokenTypeM + " token，数量为：" + amount);
-        String data = "MULITADD3" + "发行" + tokenTypeM + " token，数量为：" + amount;
-        String response7 = multiSign.issueToken(IMPPUTIONADD, tokenTypeM, amount, data);
-        assertEquals("200", JSONObject.fromObject(response7).getString("State"));
-        String Tx1 = JSONObject.fromObject(response7).getJSONObject("Data").getString("Tx");
-        log.info("第一次签名");
-        String response3 = multiSign.Sign(Tx1, PRIKEY5);
-        String txHash3 = JSONObject.fromObject(response3).getString("Data");
-
         Thread.sleep(SLEEPTIME);
         String response= store.GetApiHealth();
         assertThat(response, containsString("success"));
@@ -75,7 +67,6 @@ public class TestTLSCert {
 
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));//确认交易上链
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));//确认交易上链
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));//确认交易上链
 
     }
 
@@ -84,7 +75,7 @@ public class TestTLSCert {
     @After
     public void recoverConfigSt()throws Exception{
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
-        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/config.toml");
+        //setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/config.toml");
         Thread.sleep(6000);
 
         String response= store.GetApiHealth();

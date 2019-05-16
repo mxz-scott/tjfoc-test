@@ -27,6 +27,7 @@ public class BeforeCondition {
     SoloSign soloSign = testBuilder.getSoloSign();
 
 
+    //赋值权限999
     public void initTest()throws Exception{
 
         String toolPath="cd "+PTPATH+"toolkit;";
@@ -256,7 +257,7 @@ public class BeforeCondition {
         map = new HashMap<>();
         map.put("1", PUBKEY1);
         map.put("2", PUBKEY6);
-        MULITADD7=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//34
+        MULITADD7=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//16
         map = new HashMap<>();
         map.put("1", PUBKEY4);
         map.put("2", PUBKEY5);

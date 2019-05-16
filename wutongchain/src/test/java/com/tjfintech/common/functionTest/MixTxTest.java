@@ -63,7 +63,6 @@ public class MixTxTest {
         String response3= multiSign.collAddress(PRIKEY1,ADDRESS1);
         String response4= multiSign.addissueaddress(PRIKEY1,ADDRESS6);
         String response5= multiSign.addissueaddress(PRIKEY1,ADDRESS1);
-        String response51= multiSign.addissueaddress(PRIKEY1,ADDRESS1);
 
         String tokenTypeS = "MixSOLOTC-"+ UtilsClass.Random(6);
         String response6= soloSign.issueToken(PRIKEY1,tokenTypeS,"10000","发行token "+tokenTypeS,ADDRESS1);

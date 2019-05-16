@@ -1128,7 +1128,7 @@ public class TestMgTool {
         queryPeerListNo(peer1IPPort,basePeerNo);
 
         //动态加入节点247
-        addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"peers exceed the limit(3)");
+        addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"update failed");
         startPeer(PEER3IP);
         Thread.sleep(STARTSLEEPTIME);
         queryPeerListNo(peer1IPPort,basePeerNo); //检查节点247已经启动成功
@@ -1143,7 +1143,7 @@ public class TestMgTool {
         shellPeer3.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
 
         //动态加入节点247
-        addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"peers exceed the limit(3)");
+        addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"update failed");
         startPeer(PEER3IP);
         Thread.sleep(STARTSLEEPTIME);
         checkParam(PEER1IP,"./toolkit health -p "+PEER3IP+":"+rpcPort,"connection error");
