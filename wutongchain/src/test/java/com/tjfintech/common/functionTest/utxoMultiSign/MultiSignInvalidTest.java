@@ -1,4 +1,4 @@
-package com.tjfintech.common.practiceTest;
+package com.tjfintech.common.functionTest.utxoMultiSign;
 
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.MultiSign;
@@ -24,7 +24,7 @@ import static org.junit.Assert.assertThat;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class MultiTest01 {
+public class MultiSignInvalidTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     MultiSign multiSign =testBuilder.getMultiSign();
     Contract contract = testBuilder.getContract();
@@ -50,7 +50,7 @@ public class MultiTest01 {
         assertThat(multiAddress, containsString("pubkey can'not be empty"));//公钥字段存在空值
         map.put("PUBKEY1","YWJjeHg=");
         multiAddress = multiSign.genMultiAddress(1, map);
-        assertThat(multiAddress, containsString("failed to decode public key"));//公钥字段存在一些没有意义的base64编码格式的字符
+        assertThat(multiAddress, containsString("unsupport pem file"));//公钥字段存在一些没有意义的base64编码格式的字符
         map.put("PUBKEY1","abc");
         multiAddress = multiSign.genMultiAddress(1, map);
         assertThat(multiAddress, containsString("PublicKey must be base64 encoding"));//公钥字存在非base64编码的值

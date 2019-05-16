@@ -27,7 +27,9 @@ public interface MultiSign {
     String delCollAddress(String priKey,String ...address);
     String collAddressRemovePri(String ...address);
     String freezeToken(String priKey,String tokenType);
+    String freezeToken(String tokenType);
     String recoverFrozenToken(String priKey,String tokenType);
+    String recoverFrozenToken(String tokenType);
     String addissueaddress(String pubKey,String ...address);
     String delissueaddress(String priKey,String ...address);
     String addissueaddressRemovePri(String ...address);
@@ -37,7 +39,7 @@ public interface MultiSign {
     String getSDKBalance(String TokenType,String Address);
     String getTotalbyDay(int starttime,int endtime);
     String getChainBalance(String tokenType,String Addr);
-    String getUTXODetail(int StartTime,int EndTime,String tokenType,int UTXOtype,String FromAddr,String ToAddr);
+    String getUTXODetail(long StartTime,long EndTime,String tokenType,int UTXOtype,String FromAddr,String ToAddr);
 
     String BalanceByAddr(String addr,String tokenType); //按地址查询余额
 

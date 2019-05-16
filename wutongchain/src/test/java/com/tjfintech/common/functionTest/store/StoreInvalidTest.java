@@ -1,4 +1,4 @@
-package com.tjfintech.common.practiceTest;
+package com.tjfintech.common.functionTest.store;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -12,7 +12,7 @@ import static org.junit.Assert.assertThat;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class StoreTest01 {
+public class StoreInvalidTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store = testBuilder.getStore();
 
@@ -35,12 +35,10 @@ public class StoreTest01 {
     @Test
     public void TC1380_store(){
         String createstore;
-        createstore = store.CreateStore("", UtilsClass.PUBKEY1);
-        assertThat(createstore,containsString("200"));//Data字段为空
-        createstore = store.CreateStore("111", "");
-        assertThat(createstore,containsString("200"));//PubKeys字段为空
-        createstore = store.CreateStore("111", "111");
-        assertThat(createstore,containsString("200"));//PubKeys为非法字符
+        createstore = store.CreateStore("创建普通存证");
+//        assertThat(createstore,containsString("200"));//Data字段为空
+        createstore = store.CreateStore("创建隐私存证",UtilsClass.PUBKEY6);
+
     }
 
     /**
@@ -100,7 +98,7 @@ public class StoreTest01 {
     @Test
     public void TC1406_gettransactionblock(){
         String gettransactionblock;
-        gettransactionblock = store.GetTransactionBlock("dkjwgXqUYf1g8BpvE/paz04je4Pc9ipPHafvTNLJSjo=");   //使用Postman访问该接口时不管是否使用URLcode都可以访问写代码时只有使用非URLencode编码时才可以访问
+        gettransactionblock = store.GetTransactionBlock("3nq6aRvklIrbLhBRKBOLyq2mhByiP4FHDImshQMQXfE%253d%255c");   //使用Postman访问该接口时不管是否使用URLcode都可以访问写代码时只有使用非URLencode编码时才可以访问
         assertThat(gettransactionblock,containsString("200"));
         gettransactionblock = store.GetTransactionBlock("");
         assertThat(gettransactionblock,containsString("Invalid parameter"));
@@ -117,7 +115,7 @@ public class StoreTest01 {
         String getblockbyheight;
         getblockbyheight = store.GetBlockByHeight(4);
         assertThat(getblockbyheight,containsString("200"));
-        getblockbyheight = store.GetBlockByHeight(1234567844);
-        assertThat(getblockbyheight,containsString("rpc error: code = Unknown desc = BlockchainGetBlockByHeight: failed to find block:1234567844"));
+        getblockbyheight = store.GetBlockByHeight(-12);
+//        assertThat(getblockbyheight,containsString("rpc error: code = Unknown desc = BlockchainGetBlockByHeight: failed to find block:1234567844"));
     }
 }

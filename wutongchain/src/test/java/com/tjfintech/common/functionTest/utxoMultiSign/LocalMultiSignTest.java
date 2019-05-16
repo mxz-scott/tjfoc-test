@@ -357,9 +357,9 @@ public class LocalMultiSignTest {
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中token余额");
         String balance = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
-        log.info("???"+balance);
+
         assertThat(tokenType + "查询余额错误", balance, containsString("200"));
-        assertThat(tokenType + "查询余额不正确", balance, containsString("\"Total\":\"1000\""));
+        assertThat(tokenType + "查询余额不正确", balance, containsString(tokenType + "\":\"1000\""));
 
         String transferData = "归集地址向MULITADD4转账10个: " + tokenType;
         log.info(transferData);
@@ -371,11 +371,11 @@ public class LocalMultiSignTest {
         log.info("查询归集地址和MULITADD4余额，判断转账是否成功");
         String queryInfo = multiSign.BalanceByAddr(MULITADD4, tokenType);
         assertThat(queryInfo, containsString("200"));
-        assertThat(queryInfo, containsString("\"Total\":\"10\""));
+        assertThat(queryInfo, containsString(tokenType + "\":\"10\""));
 
         String queryInfo2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
         assertThat(queryInfo2, containsString("200"));
-        assertThat(queryInfo2, containsString("\"Total\":\"990\""));
+        assertThat(queryInfo2, containsString(tokenType + "\":\"990\""));
 
 
 //        log.info("多账号同时回收，回收归集地址和MULITADD4余额");
@@ -407,6 +407,143 @@ public class LocalMultiSignTest {
     }
 
     //------------------------------------------------------------------------------------------------------------------
+
+
+    /**
+     * (本地签)多签发行
+     */
+//    @Test
+    public void setTokenType() throws Exception {
+        String tokenType = "MT-" + UtilsClass.Random(7); //随机生成7位数的tokentype
+        String data = "MULITADD1" + "发行" + tokenType + "，数量为：1000" ;  //data备注
+        String response = multiSign.issueTokenLocalSign(MULITADD1, tokenType, "1000", data);//调用token发行的接口
+        String preSignData = JSONObject.fromObject(response).getJSONObject("Data").getString("TxData");
+        String signedData1 = multiIssue.multiSignIssueMethod(preSignData,PRIKEY1);
+        System.out.println("第一次签名"+signedData1);
+        String signedData2 = multiIssue.multiSignIssueMethod(signedData1, PRIKEY2);
+        String signedData3 = multiIssue.multiSignIssueMethod(signedData2, PRIKEY3);
+        System.out.println("第三次签名"+signedData3);
+        multiSign.sendSign(signedData3); //调用接口把签名后的交易结构发送到链上
+        Thread.sleep(SLEEPTIME);  //设置等待时间等待交易上链
+        String queryInfo = multiSign.Balance(MULITADD1,PRIKEY1, tokenType);
+        System.out.println("查询余额"+queryInfo);
+    }
+    /**
+     * 	(本地签)3/3多签发行（私钥带密码），发行给自己。
+     */
+//    @Test
+    public void TC1421_multiProgress_LocalSign_Pwd() throws Exception {
+        String tokenType = "MT-" + UtilsClass.Random(7);
+        String data = "MULITADD3" + "发行" + tokenType + "，数量为：" + "1000";
+        String response = multiSign.issueTokenLocalSign(MULITADD3, tokenType, "1000", data);
+        String preSignData = JSONObject.fromObject(response).getJSONObject("Data").getString("TxData");
+        String signedData1 = multiIssue.multiSignIssueMethod(preSignData, PRIKEY7, "456");
+        String signedData2 = multiIssue.multiSignIssueMethod(signedData1, PRIKEY1);
+        String signedData3 = multiIssue.multiSignIssueMethod(signedData2, PRIKEY6, PWD6);
+        multiSign.sendSign(signedData3);
+        Thread.sleep(SLEEPTIME);  //设置等待时间等待交易上链
+        String queryInfo = multiSign.Balance(MULITADD1,PRIKEY1, tokenType);
+        System.out.println("查询余额"+queryInfo);
+    }
+
+
+    /**
+     * (本地签)多签发行，当签名次数不够时返回的提示信息
+     */
+//    @Test
+    public void TC1428_issuetoken_localsign() throws Exception{
+        String tokenType = "MT-" + UtilsClass.Random(7); //随机生成7位数的tokentype
+        String data = "MULITADD1" + "发行" + tokenType + "，数量为：1000" ;  //data备注
+        String response = multiSign.issueTokenLocalSign(MULITADD1, IMPPUTIONADD, tokenType, "1000", data);//调用token发行的接口
+        String preSignData = JSONObject.fromObject(response).getJSONObject("Data").getString("TxData");
+        String signedData1 = multiIssue.multiSignIssueMethod(preSignData,PRIKEY1);  //进行本地签名
+        String sendSign = multiSign.sendSign(signedData1); //调用接口把签名后的交易结构发送到链上
+        assertThat(sendSign, containsString("need more sign!"));
+
+    }
+
+    /**
+     * (本地签)多签转账时，使用错误的私钥签名
+     */
+//    @Test
+    public void TC1428_transfer_localsign()throws Exception{
+        String tokenType = "MT-" + UtilsClass.Random(7); //随机生成7位数的tokentype
+        String data = "MULITADD1" + "发行" + tokenType + "，数量为：1000" ;  //data备注
+        String response = multiSign.issueTokenLocalSign(MULITADD1, tokenType, "1000", data);//调用token发行的接口
+        String preSignData = JSONObject.fromObject(response).getJSONObject("Data").getString("TxData");
+        String signedData1 = multiIssue.multiSignIssueMethod(preSignData,PRIKEY1);
+        System.out.println("第一次签名"+signedData1);
+        String signedData2 = multiIssue.multiSignIssueMethod(signedData1, PRIKEY2);
+        String signedData3 = multiIssue.multiSignIssueMethod(signedData2, PRIKEY3);
+        System.out.println("第三次签名"+signedData3);
+        String sendSign = multiSign.sendSign(signedData3); //调用接口把签名后的交易结构发送到链上
+        Thread.sleep(SLEEPTIME);  //设置等待时间等待交易上链
+
+        String transferData =  "归集地址向MULITADD4转账10个: " + tokenType;
+        System.out.println(tokenType);
+        List<Map> transferList = utilsClass.constructToken(MULITADD4, tokenType, "10");//调用转账的接口，向地址四中传入10
+        String transferInfo = multiSign.TransferLocalSign(MULITADD1, PUBKEY1, transferData, transferList);
+        String preSignData1 = JSONObject.fromObject(transferInfo).getJSONObject("Data").toString();
+        String signedData4 = multiTrans.multiSignTransferAccountsMethod(preSignData1, PRIKEY6); //使用错误的私钥签名
+        String signedData5 = multiTrans.multiSignTransferAccountsMethod(signedData4, PRIKEY2);
+        String signedData = multiTrans.multiSignTransferAccountsMethod(signedData5, PRIKEY3);
+        String sendSign1 = multiSign.sendSign(signedData);
+
+        Thread.sleep(SLEEPTIME);  //设置等待时间等待交易上链
+        String queryInfo = multiSign.Balance(MULITADD1,PRIKEY1, tokenType);
+        System.out.println("查询余额"+queryInfo);
+
+    }
+
+    /**
+     *(本地签) 多签转账时（携带密码） 当签名次数不足时返回的信息
+     */
+//    @Test
+    public void TC1427_constructToken() throws Exception {
+        String tokenType = "MT-" + UtilsClass.Random(7); //随机生成7位数的tokentype
+        String data = "MULITADD1" + "发行" + tokenType + "，数量为：1000" ;  //data备注
+        String response = multiSign.issueTokenLocalSign(MULITADD3, tokenType, "1000", data);//调用token发行的接口
+
+        String preSignData = JSONObject.fromObject(response).getJSONObject("Data").getString("TxData");
+        String signedData1 = multiIssue.multiSignIssueMethod(preSignData, PRIKEY6, PWD6);
+        String signedData2 = multiIssue.multiSignIssueMethod(signedData1, PRIKEY1);
+        String signedData3 = multiIssue.multiSignIssueMethod(signedData2, PRIKEY7, PWD7);
+        multiSign.sendSign(signedData3); //调用接口把签名后的交易结构发送到链上
+        Thread.sleep(SLEEPTIME);  //设置等待时间等待交易上链
+
+
+        String transferData = "归集地址向MULITADD7转账10个: " + tokenType;
+        List<Map> transferList = utilsClass.constructToken(MULITADD7, tokenType, "10");
+        String transferInfo = multiSign.TransferLocalSign(MULITADD3, PUBKEY7, transferData, transferList);
+        String preSignData1 = JSONObject.fromObject(transferInfo).getJSONObject("Data").toString();
+        String signedData = multiTrans.multiSignTransferAccountsMethod(preSignData1, PRIKEY7, PWD7);
+        multiSign.sendSign(signedData);
+
+    }
+
+
+    /**
+     * (本地签)多签回收时，当签名次数不够时返回合理的提示信息
+     */
+//    @Test
+    public void TC1428_recycle_localsign() throws Exception {
+        String tokenType = "MT-" + UtilsClass.Random(7); //随机生成7位数的tokentype
+        String data = "MULITADD1" + "发行" + tokenType + "，数量为：1000" ;  //data备注
+        String response = multiSign.issueTokenLocalSign(MULITADD1, tokenType, "1000", data);//调用token发行的接口
+        String preSignData = JSONObject.fromObject(response).getJSONObject("Data").getString("TxData");
+        String signedData1 = multiIssue.multiSignIssueMethod(preSignData,PRIKEY1);
+        System.out.println("第一次签名"+signedData1);
+        String signedData2 = multiIssue.multiSignIssueMethod(signedData1, PRIKEY2);
+        String signedData3 = multiIssue.multiSignIssueMethod(signedData2, PRIKEY3);
+        System.out.println("第三次签名"+signedData3);
+        multiSign.sendSign(signedData3); //调用接口把签名后的交易结构发送到链上
+        Thread.sleep(SLEEPTIME);  //设置等待时间等待交易上链
+
+        String recycleResponse = multiSign.RecycleLocalSign(MULITADD1, PUBKEY1, tokenType, "10");
+        String preSignData2 = JSONObject.fromObject(recycleResponse).getJSONObject("Data").toString();
+        String signedData4 = multiTrans.multiSignTransferAccountsMethod(preSignData2, PRIKEY1);
+        multiSign.sendSign(signedData4);
+    }
 
     /**
      * 多签发行，本地签名

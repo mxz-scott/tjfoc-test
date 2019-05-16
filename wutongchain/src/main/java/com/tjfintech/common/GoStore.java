@@ -126,7 +126,7 @@ public  class GoStore implements Store {
         }
         map.put("Addrs", addrs);
         map.put("Data", Data);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/deladdress", map);
+        String result = PostTest.sendPostToJson(SDKADD + "/store", map);
         log.info(result);
         return result;
     }
