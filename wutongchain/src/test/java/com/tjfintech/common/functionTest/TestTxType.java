@@ -64,7 +64,7 @@ public class TestTxType {
     String subTypeFreezeToken="204";
     String subTypeRecoverToken="205";
 
-    String zeroAddr="osEoy933LkHyyBcgjE7vCivfsX";
+    String zeroAddr="0000000000000000";
     boolean bExe=false;
     @Before
     public void beforeConfig() throws Exception {
@@ -115,11 +115,11 @@ public class TestTxType {
 
         //隐私存证storeData中为加密后数据，目前仅判断不包含明文原始data数据
         assertEquals(jsonObjecttran.getString("storeData").contains(priData), false);
-        assertEquals("store",jsonObjecttran.getString("transactionType"));
+        //assertEquals("store",jsonObjecttran.getString("transactionType"));//20190514 开发移除该字段
         assertEquals(true,jsonObjecttran.getJSONObject("extra").isNullObject());//检查合约extra
 
         assertEquals(jsonObjecttx.getJSONObject("Store").getString("storeData").contains(priData), false);
-        assertEquals("store",jsonObjecttx.getJSONObject("Store").getString("transactionType"));
+        //assertEquals("store",jsonObjecttx.getJSONObject("Store").getString("transactionType"));
         assertEquals(true,jsonObjecttx.getJSONObject("Store").getJSONObject("extra").isNullObject());//检查合约extra
     }
 
@@ -418,7 +418,7 @@ public class TestTxType {
         String scArgs= new String(decryptBASE64(jsonObject.getJSONArray("smartContractArgs").getString(0)));
         log.info(jsonObject.getJSONArray("smartContractArgs").getString(0));
         assertThat(scArgs, containsString(method));
-        assertEquals(cttype,jsonObject.getString("transactionType"));//检查合约类型scDocker
+        //assertEquals(cttype,jsonObject.getString("transactionType"));//检查合约类型scDocker
         assertEquals(ctResultStatus,jsonObject.getJSONObject("contractResult").getString("status"));//检查合约调用结果code status 200
         assertEquals(code,jsonObject.getString("code"));//检查合约交易结果code
         assertEquals(Msg,jsonObject.getString("message"));//检查合约交易结果message
@@ -442,7 +442,7 @@ public class TestTxType {
 
         scArgs= new String(decryptBASE64(jsonObject2.getJSONArray("smartContractArgs").getString(0)));
         assertThat(scArgs, containsString(method));
-        assertEquals(cttype,jsonObject2.getString("transactionType"));//检查交易类型
+        //assertEquals(cttype,jsonObject2.getString("transactionType"));//检查交易类型
         assertEquals(ctResultStatus,jsonObject2.getJSONObject("contractResult").getString("status"));//检查合约调用结果code status 200
         assertEquals(code,jsonObject2.getString("code"));//检查合约交易结果code
         assertEquals(Msg,jsonObject2.getString("message"));//检查合约交易结果message
@@ -454,7 +454,7 @@ public class TestTxType {
         JSONObject jsonObjectOrg =JSONObject.fromObject(store.GetTxDetail(hash)).getJSONObject("Data");
         JSONObject jsonObject =jsonObjectOrg.getJSONObject("Store");
         assertEquals(storeData,jsonObject.getString("storeData"));//检查存证数据
-        assertEquals(transactionType,jsonObject.getString("transactionType"));//检查交易类型
+        //assertEquals(transactionType,jsonObject.getString("transactionType"));//检查交易类型
         assertEquals(true,jsonObject.getJSONObject("extra").isNullObject());//检查extra
 
         //检查其他字段为空
@@ -468,7 +468,7 @@ public class TestTxType {
 
         JSONObject jsonObject2 =JSONObject.fromObject(store.GetTransaction(hash)).getJSONObject("Data");
         assertEquals(storeData,jsonObject2.getString("storeData"));//检查存证数据
-        assertEquals(transactionType,jsonObject2.getString("transactionType"));//检查交易类型
+        //assertEquals(transactionType,jsonObject2.getString("transactionType"));//检查交易类型
         assertEquals(true,jsonObject2.getJSONObject("extra").isNullObject());//检查extra
 
     }
@@ -479,11 +479,11 @@ public class TestTxType {
         JSONObject jsonObjectOrg2 =JSONObject.fromObject(store.GetTxDetail(hash)).getJSONObject("Data");
 
         assertThat(jsonObjectOrg1.getJSONArray(keywordTran).getString(0),containsString(checkstr));
-        assertEquals(txType,jsonObjectOrg1.getString("transactionType"));
+        //assertEquals(txType,jsonObjectOrg1.getString("transactionType"));
         assertEquals(true,jsonObjectOrg1.getJSONObject("extra").isNullObject());//检查extra
 
         assertThat(jsonObjectOrg2.getJSONObject("Admin").getJSONArray(keywordTxdetail).getString(0),containsString(checkstr));
-        assertEquals(txType,jsonObjectOrg2.getJSONObject("Admin").getString("transactionType"));
+        //assertEquals(txType,jsonObjectOrg2.getJSONObject("Admin").getString("transactionType"));
         assertEquals(true,jsonObjectOrg2.getJSONObject("Admin").getJSONObject("extra").isNullObject());//检查extra
 
         //检查其他字段为空
@@ -500,11 +500,11 @@ public class TestTxType {
         JSONObject jsonObjectOrg2 =JSONObject.fromObject(store.GetTxDetail(hash)).getJSONObject("Data");
 
         assertThat(new String(decryptBASE64(jsonObjectOrg1.getString(keyword))),containsString(checkstr));
-        assertEquals(txType,jsonObjectOrg1.getString("transactionType"));
+        //assertEquals(txType,jsonObjectOrg1.getString("transactionType"));
         assertEquals(true,jsonObjectOrg1.getJSONObject("extra").isNullObject());//检查extra
 
         assertThat(jsonObjectOrg2.getJSONObject("Admin").getString(keyword),containsString(checkstr));
-        assertEquals(txType,jsonObjectOrg2.getJSONObject("Admin").getString("transactionType"));
+        //assertEquals(txType,jsonObjectOrg2.getJSONObject("Admin").getString("transactionType"));
         assertEquals(true,jsonObjectOrg2.getJSONObject("Admin").getJSONObject("extra").isNullObject());//检查extra
 
         //检查其他字段为空

@@ -27,16 +27,17 @@ public class BeforeCondition {
     SoloSign soloSign = testBuilder.getSoloSign();
 
 
+    //赋值权限999
     public void initTest()throws Exception{
 
         String toolPath="cd "+PTPATH+"toolkit;";
         String exeCmd="./toolkit permission ";
 
         SDKID=getSDKID();
-        PEER1MAC=getMACAddr(PEER1IP,USERNAME,PASSWD).trim();
-        PEER2MAC=getMACAddr(PEER2IP,USERNAME,PASSWD).trim();
-        PEER3MAC=getMACAddr(PEER3IP,USERNAME,PASSWD).trim();
-        PEER4MAC=getMACAddr(PEER4IP,USERNAME,PASSWD).trim();
+//        PEER1MAC=getMACAddr(PEER1IP,USERNAME,PASSWD).trim();
+//        PEER2MAC=getMACAddr(PEER2IP,USERNAME,PASSWD).trim();
+//        PEER3MAC=getMACAddr(PEER3IP,USERNAME,PASSWD).trim();
+//        PEER4MAC=getMACAddr(PEER4IP,USERNAME,PASSWD).trim();
 
         String preCmd=toolPath+exeCmd+"-p "+PEER1RPCPort+" -d "+SDKID+" -m ";
         String getPerm=toolPath+"./toolkit getpermission -p "+PEER1RPCPort;
@@ -256,7 +257,7 @@ public class BeforeCondition {
         map = new HashMap<>();
         map.put("1", PUBKEY1);
         map.put("2", PUBKEY6);
-        MULITADD7=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//34
+        MULITADD7=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//16
         map = new HashMap<>();
         map.put("1", PUBKEY4);
         map.put("2", PUBKEY5);

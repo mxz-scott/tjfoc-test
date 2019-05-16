@@ -685,8 +685,8 @@ public class MultiTest {
     public  String IssueToken(int length,String  amount){
         String tokenType = "CX-" + UtilsClass.Random(length);
         //String amount = "1000";
-        log.info(MULITADD3+ "发行" + tokenType + " token，数量为：" + amount);
-        String data = "MULITADD3" + "发行" + tokenType + " token，数量为：" + amount;
+        log.info(IMPPUTIONADD+ "发行" + tokenType + " token，数量为：" + amount);
+        String data = "IMPPUTIONADD" + "发行" + tokenType + " token，数量为：" + amount;
         String response = multiSign.issueToken(IMPPUTIONADD, tokenType, amount, data);
         assertThat(response, containsString("200"));
         String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");

@@ -251,7 +251,7 @@ public class APermfuncUTXO {
     }
 
     public String getChainBalance(String addr,String tokenType)throws Exception  {
-        String response= multiSign.getChainBalance(tokenType,addr);
+        String response= multiSign.getChainBalance(addr,tokenType);
         log.info("从链上获取账户token余额:"+retAllow(response));
         return retAllow(response);
     }

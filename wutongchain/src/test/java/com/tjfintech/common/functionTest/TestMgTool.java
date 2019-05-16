@@ -56,6 +56,10 @@ public class TestMgTool {
     public void resetPeerEnv()throws Exception{
         BeforeCondition bf =new BeforeCondition();
         bf.initTest();
+        PEER1MAC=getMACAddr(PEER1IP,USERNAME,PASSWD).trim();
+        PEER2MAC=getMACAddr(PEER2IP,USERNAME,PASSWD).trim();
+        PEER3MAC=getMACAddr(PEER3IP,USERNAME,PASSWD).trim();
+        PEER4MAC=getMACAddr(PEER4IP,USERNAME,PASSWD).trim();
 
         setAndRestartPeerList("cp "+PTPATH+"peer/conf/baseOK.toml "+PTPATH+"peer/conf/base.toml");
 
@@ -558,9 +562,9 @@ public class TestMgTool {
         assertEquals(response.contains("MemTotal"), true);
         assertEquals(response.contains("SingleCPUUsedPercent"), true);
         assertEquals(response.contains("TotalCPUUsedPercent"), true);
-        assertEquals(response.contains("WsRateTotal"), true);
-        assertEquals(response.contains("WsRateFromLast"), true);
-        assertEquals(response.contains("WsRateEverySec10"), true);
+//        assertEquals(response.contains("WsRateTotal"), true);
+//        assertEquals(response.contains("WsRateFromLast"), true);
+//        assertEquals(response.contains("WsRateEverySec10"), true);
         assertEquals(response.contains("Uploadspeed"), true);
         assertEquals(response.contains("Downloadspeed"), true);
 
@@ -1124,7 +1128,7 @@ public class TestMgTool {
         queryPeerListNo(peer1IPPort,basePeerNo);
 
         //动态加入节点247
-        addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"peers exceed the limit(3)");
+        addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"update failed");
         startPeer(PEER3IP);
         Thread.sleep(STARTSLEEPTIME);
         queryPeerListNo(peer1IPPort,basePeerNo); //检查节点247已经启动成功
@@ -1139,7 +1143,7 @@ public class TestMgTool {
         shellPeer3.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic");
 
         //动态加入节点247
-        addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"peers exceed the limit(3)");
+        addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"update failed");
         startPeer(PEER3IP);
         Thread.sleep(STARTSLEEPTIME);
         checkParam(PEER1IP,"./toolkit health -p "+PEER3IP+":"+rpcPort,"connection error");

@@ -41,8 +41,8 @@ public class SoloTest {
             bReg=true;
         }
 
-       BeforeCondition beforeCondition=new BeforeCondition();
-        beforeCondition.collAddressTest();
+//       BeforeCondition beforeCondition=new BeforeCondition();
+//        beforeCondition.collAddressTest();
         log.info("发行两种token1000个");
         tokenType = "SOLOTC-"+UtilsClass.Random(6);
         String isResult= soloSign.issueToken(PRIKEY1,tokenType,"10000.123456789","发行token",ADDRESS1);

@@ -69,7 +69,7 @@ public class SyncDockerContractTest {
     /**
      * 同步调用智能合约
      */
-    @Test
+//    @Test
     public void SynInvoke() throws InterruptedException {
         //正常情况下（120000毫秒）
         String method="initMobile";

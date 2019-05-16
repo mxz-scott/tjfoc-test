@@ -162,59 +162,6 @@ public class GoMultiSign implements MultiSign {
 
     }
 
-    /**
-     * 按地址查询用户余额
-     * @param addr    用户地址
-     *
-     */
-//    public String BalanceByAddr(String addr) {
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("Addr",addr);
-//        String result = PostTest.postMethod(SDKADD + "/utxo/getsdkbalance", map);
-////        log.info(result);
-//        return result;
-//    }
-//
-//    public String BalanceByAddr(String addr,String tokenType) {
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("Addr",addr);
-//        map.put("TokenType",tokenType);
-//        String result = PostTest.postMethod(SDKADD + "/utxo/getsdkbalance", map);
-////        log.info(result);
-//        return result;
-//    }
-//
-//    public String getUTXODetail(int StartTime,int EndTime,String tokenType,int UTXOtype,String FromAddr,String ToAddr) {
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("StartTime",StartTime);
-//        map.put("EndTime",EndTime);
-//        map.put("TokenType",tokenType);
-//        map.put("UTXOType",UTXOtype);
-//        map.put("FromAddr",FromAddr);
-//        map.put("ToAddr",ToAddr);
-//        String result = PostTest.postMethod(SDKADD + "/utxo/getutxodetail", map);
-////        log.info(result);
-//        return result;
-//    }
-//
-//    public String getChainBalance(String tokenType,String Addr) {
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("TokenType",tokenType);
-//        map.put("Addr",Addr);
-//        String result = PostTest.postMethod(SDKADD + "/utxo/getchainbalance", map);
-////        log.info(result);
-//        return result;
-//    }
-//
-//    public String getTotalbyDay(int year,int month,int day) {
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("Year",year);
-//        map.put("Month",month);
-//        map.put("Day",day);
-//        String result = PostTest.postMethod(SDKADD + "/utxo/totalbyday", map);
-////        log.info(result);
-//        return result;
-//    }
 
 
     /**
@@ -461,79 +408,71 @@ public class GoMultiSign implements MultiSign {
 
     /**
      * 根据tokentype获取账户余额
-     *
      * @param TokenType
      * @param Address
      * @return
      */
     @Override
     public String getSDKBalance(String TokenType, String Address) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("TokenType", TokenType);
-        map.put("Address", Address);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/getbalancebytt", map);
+        Map<String,Object> map = new HashMap<>();
+        map.put("TokenType",TokenType);
+        map.put("Addr",Address);
+        String result = PostTest.postMethod(SDKADD + "/utxo/getsdkbalance", map);
         log.info(result);
         return result;
     }
-
-
 
     @Override
     public String getTotalbyDay(int starttime, int endtime) {
+
         Map<String, Object> map = new HashMap<>();
-        map.put("starttime", starttime);
-        map.put("endtime", endtime);
+        map.put("StartTime",starttime);
+        map.put("EndTime",endtime);
         String result = PostTest.sendPostToJson(SDKADD + "/utxo/totalbyday", map);
-//        log.info(result);
-        return result;
-
-    }
-
-    @Override
-    public String getChainBalance(String tokenType, String Addr) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("TokenType", tokenType);
-        map.put("Addr", Addr);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/getchainbalance", map);
-//        log.info(result);
-        return result;
-
-    }
-
-    @Override
-    public String getUTXODetail(long StartTime, long EndTime, String tokenType, int UTXOtype, String FromAddr, String ToAddr) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("StartTime", StartTime);
-        map.put("EndTime", EndTime);
-        map.put("TokenType", tokenType);
-        map.put("UTXOType", UTXOtype);
-        map.put("FromAddr", FromAddr);
-        map.put("ToAddr", ToAddr);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/getutxodetail", map);
-
         log.info(result);
         return result;
+
     }
 
-
     @Override
-    public String BalanceByAddr(String addr, String tokenType) {
+    public String getChainBalance(String addr, String tokenType) {
         Map<String, Object> map = new HashMap<>();
         map.put("Addr",addr);
         map.put("TokenType",tokenType);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/getsdkbalance", map);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/getchainbalance", map);
         log.info(result);
         return result;
     }
 
+    @Override
+    public String getUTXODetail(int StartTime, int EndTime, String tokenType, int UTXOtype, String FromAddr, String ToAddr) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("StartTime",StartTime);
+        map.put("EndTime",EndTime);
+        map.put("TokenType",tokenType);
+        map.put("UTXOType",UTXOtype);
+        map.put("FromAddr",FromAddr);
+        map.put("ToAddr",ToAddr);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/getutxodetail", map);
+        log.info(result);
+        return result;
+    }
 
+    @Override
+    public String BalanceByAddr(String addr, String tokenType) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("TokenType",tokenType);
+        map.put("Addr",addr);
+        String result = PostTest.postMethod(SDKADD + "/utxo/getsdkbalance", map);
+        return result;
+    }
 
-            /**
-             * 添加归集地址
-             * @param pubKey
-             * @param address
-             * @return
-             */
+    /**
+     * 添加归集地址
+     * @param pubKey
+     * @param address
+     * @return
+     */
     public String collAddress(String pubKey, String ...address) {
         Map<String, Object> map = new HashMap<>();
         List<Object> addrs = new ArrayList<>();
@@ -898,20 +837,6 @@ public class GoMultiSign implements MultiSign {
         return result;
     }
 
-    /**
-     * 冻结token（不携带私钥）
-     * @param tokenType
-     * @return
-     */
-    @Override
-    public String freezeToken(String tokenType) {
-        Map<String ,Object>map=new HashMap<>();
-        map.put("TokenType",tokenType);
-        String result =PostTest.sendPostToJson(SDKADD+"/utxo/freeze",map);
-        log.info(result);
-        return result;
-    }
-
     @Override
     public String recoverFrozenToken(String priKey, String tokenType) {
         Map<String ,Object>map=new HashMap<>();
@@ -921,20 +846,6 @@ public class GoMultiSign implements MultiSign {
         log.info(result);
         return result;
 
-    }
-
-    /**
-     * 恢复token
-     * @param tokenType
-     * @return
-     */
-    @Override
-    public String recoverFrozenToken(String tokenType) {
-        Map<String ,Object>map=new HashMap<>();
-        map.put("TokenType",tokenType);
-        String result =PostTest.sendPostToJson(SDKADD+"/utxo/recover",map);
-        log.info(result);
-        return result;
     }
 
 
