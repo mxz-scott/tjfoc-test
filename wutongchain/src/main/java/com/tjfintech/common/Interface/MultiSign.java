@@ -34,13 +34,17 @@ public interface MultiSign {
     String delissueaddress(String priKey,String ...address);
     String addissueaddressRemovePri(String ...address);
     String delissueaddressRemovePri(String ...address);
-    String gettotal(int StartTime,int EndTime,String TokenType);
+    String gettotal(long StartTime,long EndTime,String TokenType);
+    String gettotal(long StartTime,long EndTime,double TokenType);
+    String gettotal();
     String tokenstate(String TokenType);
     String getSDKBalance(String TokenType,String Address);
     String getTotalbyDay(int starttime,int endtime);
     String getChainBalance(String tokenType,String Addr);
     String getUTXODetail(long StartTime,long EndTime,String tokenType,int UTXOtype,String FromAddr,String ToAddr);
     String getUTXODetail(long StartTime,long EndTime,String tokenType,int UTXOtype,String FromAddr,double ToAddr);
+    String getUTXODetail(long StartTime,long EndTime,String tokenType,String UTXOtype,String FromAddr,String ToAddr);
+    String getUTXODetail();
     String BalanceByAddr(String addr,String tokenType); //按地址查询余额
 
     //本地签名

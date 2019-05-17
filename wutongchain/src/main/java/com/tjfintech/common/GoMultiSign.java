@@ -381,12 +381,42 @@ public class GoMultiSign implements MultiSign {
      * @return
      */
     @Override
-    public String gettotal(int StartTime, int EndTime, String TokenType) {
+    public String gettotal(long StartTime, long EndTime, String TokenType) {
         Map<String, Object> map = new HashMap<>();
         map.put("StartTime", StartTime);
         map.put("EndTime", EndTime);
         map.put("TokenType", TokenType);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/gettotal", map);
+        String result = PostTest.postMethod(SDKADD + "/utxo/gettotal", map);
+        log.info(result);
+        return result;
+    }
+    /**
+     * 获取总发行量,总回收量,总冻结量(将tokentype类型设置为double类型)
+     *
+     * @param StartTime
+     * @param EndTime
+     * @param TokenType
+     * @return
+     */
+    @Override
+    public String gettotal(long StartTime, long EndTime, double TokenType) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("StartTime", StartTime);
+        map.put("EndTime", EndTime);
+        map.put("TokenType", TokenType);
+        String result = PostTest.postMethod(SDKADD + "/utxo/gettotal", map);
+        log.info(result);
+        return result;
+    }
+
+    /** 获取总发行量,总回收量,总冻结量（将参数体设置为空）
+     *
+     * @return
+     */
+    @Override
+    public String gettotal() {
+        Map<String, Object> map = new HashMap<>();
+        String result = PostTest.postMethod(SDKADD + "/utxo/gettotal", map);
         log.info(result);
         return result;
     }
@@ -463,7 +493,7 @@ public class GoMultiSign implements MultiSign {
         map.put("UTXOType",UTXOtype);
         map.put("FromAddr",FromAddr);
         map.put("ToAddr",ToAddr);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/getutxodetail", map);
+        String result = PostTest.postMethod(SDKADD + "/utxo/getutxodetail", map);
         log.info(result);
         return result;
     }
@@ -487,10 +517,47 @@ public class GoMultiSign implements MultiSign {
         map.put("UTXOType",UTXOtype);
         map.put("FromAddr",FromAddr);
         map.put("ToAddr",ToAddr);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/getutxodetail", map);
+        String result = PostTest.postMethod(SDKADD + "/utxo/getutxodetail", map);
         log.info(result);
         return result;
     }
+
+    /**
+     * 获取utxo交易详情（验证UTXOtype）将类型转换为String类型
+     * @param StartTime
+     * @param EndTime
+     * @param tokenType
+     * @param UTXOtype
+     * @param FromAddr
+     * @param ToAddr
+     * @return
+     */
+    @Override
+    public String getUTXODetail(long StartTime, long EndTime, String tokenType, String UTXOtype, String FromAddr, String ToAddr) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("StartTime",StartTime);
+        map.put("EndTime",EndTime);
+        map.put("TokenType",tokenType);
+        map.put("UTXOType",UTXOtype);
+        map.put("FromAddr",FromAddr);
+        map.put("ToAddr",ToAddr);
+        String result = PostTest.postMethod(SDKADD + "/utxo/getutxodetail", map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 获取utxo交易详情(body体为空的情况下)
+     * @return
+     */
+    @Override
+    public String getUTXODetail() {
+        Map<String, Object> map = new HashMap<>();
+        String result = PostTest.postMethod(SDKADD + "/utxo/getutxodetail", map);
+        log.info(result);
+        return result;
+    }
+
 
     @Override
     public String BalanceByAddr(String addr, String tokenType) {

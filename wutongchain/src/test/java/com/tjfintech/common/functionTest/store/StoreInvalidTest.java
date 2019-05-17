@@ -3,6 +3,8 @@ import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -13,8 +15,30 @@ import static org.junit.Assert.assertThat;
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class StoreInvalidTest {
+    public String createstore1;
+    public String createstore2;
+    public String figure1; //获取创建普通存证时获取的交易hash
+    public String figure2; //获取创建普通存证时获取的交易hash
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store = testBuilder.getStore();
+
+    /**
+     * 创建存证交易
+     */
+    @Before
+    public void TC1380_store(){
+        log.info("创建存证交易");
+        createstore1 = store.CreateStore("创建普通存证");
+        assertThat(createstore1,containsString("200"));//Data字段为空
+        log.info("创建隐私存证");
+        createstore2 = store.CreateStore("创建隐私存证",UtilsClass.PUBKEY6);
+        assertThat(createstore2,containsString("200"));//Data字段为空
+        log.info("获取创建存证的交易hash");
+        figure1 =JSONObject.fromObject(createstore1).getJSONObject("Data").getString("Figure");
+        log.info("普通存证的交易hash"+figure1);
+        figure2 =JSONObject.fromObject(createstore2).getJSONObject("Data").getString("Figure");
+        log.info("隐私存证的交易hash"+figure2);
+    }
 
     /**
      * 获取交易详情
@@ -22,24 +46,17 @@ public class StoreInvalidTest {
     @Test
     public void TC1370_gettxdetail(){
         String gettxdetail;
-        gettxdetail = store.Gettxdetail("");
-        assertThat(gettxdetail,containsString("Invalid parameter"));//hashData字段为空值
-        gettxdetail = store.Gettxdetail("111");
-        assertThat(gettxdetail,containsString("hashData must be url encode string"));//hashData为非法字符
-        gettxdetail = store.Gettxdetail("R7T88g8w/X4XpBihWRXXLlbwG2JOVTicG6n9ZpTbjGA=");
-        assertThat(gettxdetail,containsString("200"));//hashData字段不为URL encode编码
-    }
-    /**
-     * 创建存证交易
-     */
-    @Test
-    public void TC1380_store(){
-        String createstore;
-        createstore = store.CreateStore("创建普通存证");
-//        assertThat(createstore,containsString("200"));//Data字段为空
-        createstore = store.CreateStore("创建隐私存证",UtilsClass.PUBKEY6);
+//        log.info("获取交易详情_hashData字段为空值");
+//        gettxdetail = store.Gettxdetail("");
+//        assertThat(gettxdetail,containsString("Invalid parameter"));
+//        log.info("获取交易详情_hashData为非法字符");
+//        gettxdetail = store.Gettxdetail("111");
+//        assertThat(gettxdetail,containsString("hashData must be url encode string"));
+//        log.info(figure1);
+        gettxdetail = store.GetTxDetail(figure1);
 
     }
+
 
     /**
      *查询存证交易
@@ -51,8 +68,8 @@ public class StoreInvalidTest {
         assertThat(getStore,containsString("Invalid parameter"));//hash字段为空值
         getStore = store.GetStore("Invalid parameter");
         assertThat(getStore,containsString("Invalid parameter"));//hash字段为非法字符
-        getStore = store.GetStore("a5ZMznj9qcVdum7XRDn69lr9p5qwVkXJ4oivW5eV6JY=");
-        assertThat(getStore,containsString("200"));//hash字段不为urlEncode编码
+        getStore = store.GetStore(figure1);
+//        assertThat(getStore,containsString("200"));//hash字段不为urlEncode编码
     }
     /**
      * 获取隐私存证
