@@ -59,6 +59,7 @@ public class BlockSyncTest {
 
     @Test
     public void SyncNoContractTxEnableCtFlag()throws Exception{
+        //setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
         StoreUTXO();
         //停止其中一个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
         setAndRestartPeer(PEER2IP,"rm -rf "+ PTPATH + "peer/*.db ");
@@ -74,6 +75,7 @@ public class BlockSyncTest {
 
     @Test
     public void SyncNoContractTxDisableCtFlag()throws Exception{
+        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseContractfalse.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
         StoreUTXO();
         //停止其中一个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
         setAndRestartPeer(PEER2IP,"rm -rf "+ PTPATH + "peer/*.db ");
@@ -89,10 +91,6 @@ public class BlockSyncTest {
 
         public void StoreUTXO()throws Exception{
         //setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
-        assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS6), containsString("200"));
-        assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS1), containsString("200"));
-        assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS6), containsString("200"));
-        assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS1), containsString("200"));
 
         Thread.sleep(OnChainSleep);
 
@@ -105,7 +103,14 @@ public class BlockSyncTest {
         //构造错误交易
         BeforeCondition bf = new BeforeCondition();
         bf.collAddressTest();//添加归集地址和发行地址的注册
+        Thread.sleep(3000);
 
+        assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS6), containsString("200"));
+        assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS1), containsString("200"));
+        assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS6), containsString("200"));
+        assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS1), containsString("200"));
+
+        Thread.sleep(OnChainSleep);
         String response2= multiSign.collAddress(PRIKEY1,ADDRESS6);
         String response3= multiSign.collAddress(PRIKEY1,ADDRESS1);
         String response4= multiSign.addissueaddress(PRIKEY1,ADDRESS6);
