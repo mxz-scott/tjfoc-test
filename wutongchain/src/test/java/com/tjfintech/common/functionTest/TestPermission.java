@@ -89,9 +89,9 @@ public class TestPermission {
             String sdkIP = SDKADD.substring(SDKADD.lastIndexOf("/") + 1, SDKADD.lastIndexOf(":"));
             Shell shellSDK = new Shell(sdkIP, USERNAME, PASSWD);
             shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-            Thread.sleep(2000);
+            Thread.sleep(2000);   log.info("sleep time/ms:"+2000);
             shellSDK.execute("sh " + PTPATH + "sdk/start.sh");
-            Thread.sleep(3000);
+            Thread.sleep(3000);   log.info("sleep time/ms:"+3000);
         }
 
         String mValue="999";
@@ -123,11 +123,9 @@ public class TestPermission {
         pFunUTXO.multiGenAddr(3,PUBKEY1,PUBKEY6,PUBKEY7); //SDK发送UTXO生成3/3多签地址交易请求
         pFunUTXO.multiGenAddr(1,PUBKEY1,PUBKEY2);     //SDK发送UTXO生成1/2多签地址交易请求
 
-        pFunUTXO.addCollAddr(PRIKEY1,ADDRESS1); //SDK发送UTXO添加归集地址-单签地址请求
-        Thread.sleep(2000);
-        pFunUTXO.addCollAddr(PRIKEY1,MULITADD3); //SDK发送UTXO添加归集地址-3/3带密码多签地址请求
-        Thread.sleep(2000);
-        pFunUTXO.addCollAddr(PRIKEY1,MULITADD4); //SDK发送UTXO添加归集地址-1/2不带密码多签地址请求
+//        pFunUTXO.addCollAddr(PRIKEY1,ADDRESS1); //SDK发送UTXO添加归集地址-单签地址请求
+//        pFunUTXO.addCollAddr(PRIKEY1,MULITADD3); //SDK发送UTXO添加归集地址-3/3带密码多签地址请求
+//        pFunUTXO.addCollAddr(PRIKEY1,MULITADD4); //SDK发送UTXO添加归集地址-1/2不带密码多签地址请求
 
         glbSoloToken="Glb1So"+UtilsClass.Random(4);
         glbMultiToken4="Glb1Mu4"+UtilsClass.Random(4);
@@ -135,7 +133,7 @@ public class TestPermission {
         pFunUTXO.issAmount="300";
 
         pFunUTXO.soloIssueToken(PRIKEY1,glbSoloToken,ADDRESS1); //SDK发送UTXO - Token单签发行请求
-        Thread.sleep(6000);
+        Thread.sleep(6000); log.info("sleep time/ms:"+6000);
 
         //多签MULITADD3发行给其他多签地址MULITADD4
         pFunUTXO.multiIssueToken(MULITADD3,glbMultiToken4,MULITADD4);//SDK发送UTXO - Token3/3多签发行给自己请求
@@ -469,8 +467,8 @@ public class TestPermission {
         {
             Thread.sleep(3000);
         }
-
-
+        //确认获取权限无异常后 增加sleep时间 此时间最好大于sdk从链上拉取权限列表时间
+        Thread.sleep(2000);
         String permList="";
         permList=permList+"Def:";
         //默认开启接口检查

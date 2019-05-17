@@ -109,6 +109,9 @@ public class UtilsClass {
 
     public static String dockerFileName="simple.go";
     public static String fullPerm="[1 2 3 4 5 6 7 8 9 10 21 211 212 22 221 222 223 224 23 231 232 233 235 236 24 25 251 252 253 254 255 256]";
+    public static String PeerMemConfig="config";//全文件名为config.toml 节点集群信息
+    public static String PeerInfoConfig="base";//全文件名为base.toml 节点运行相关配置
+    public static String SDKConfig="config";//全文件名为config.toml SDK配置信息
 
 
     /**
@@ -349,7 +352,7 @@ public class UtilsClass {
     }
 
     public static void resetAndRestartSDK()throws Exception{
-        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/config.toml");
+        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
     }
 
     public static void setAndRestartSDK(String... cmdList)throws Exception{
