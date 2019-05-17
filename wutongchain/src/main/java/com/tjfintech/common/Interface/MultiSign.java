@@ -40,7 +40,7 @@ public interface MultiSign {
     String getTotalbyDay(int starttime,int endtime);
     String getChainBalance(String tokenType,String Addr);
     String getUTXODetail(long StartTime,long EndTime,String tokenType,int UTXOtype,String FromAddr,String ToAddr);
-
+    String getUTXODetail(long StartTime,long EndTime,String tokenType,int UTXOtype,String FromAddr,double ToAddr);
     String BalanceByAddr(String addr,String tokenType); //按地址查询余额
 
     //本地签名

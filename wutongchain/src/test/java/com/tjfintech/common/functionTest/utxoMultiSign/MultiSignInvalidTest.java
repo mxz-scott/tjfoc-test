@@ -16,8 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.utils.UtilsClass.encryptBASE64;
-import static com.tjfintech.common.utils.UtilsClass.readInput;
+import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
@@ -83,9 +82,9 @@ public class MultiSignInvalidTest {
         issuetoken = multiSign.issueTokenCarryPri(multiaddr2,"test211","900000000","abc","111","zz");
         assertThat(issuetoken, containsString("Private key must be base64 string"));//	PriKey传入非base64字符
         issuetoken = multiSign.issueTokenCarryPri(multiaddr2,"test211","900000000","YWJjeHg=","111","zz");
-        assertThat(issuetoken, containsString("Incorrect private key or password"));//Prikey传入存在一些没有意义的字符的base64编码的值
+        assertThat(issuetoken, containsString("not found"));//Prikey传入存在一些没有意义的字符的base64编码的值
         issuetoken = multiSign.issueTokenCarryPri(multiaddr2,"test211","900000000",UtilsClass.PRIKEY6,"22","zz");
-        assertThat(issuetoken, containsString("Incorrect private key or password"));//Pwd字段和Prikey字段不匹配
+        assertThat(issuetoken, containsString("not found"));//Pwd字段和Prikey字段不匹配
 
     }
 
@@ -150,11 +149,11 @@ public class MultiSignInvalidTest {
         map2.put("ToAddr",""); //接收方
         tokenList.add(map2);
         transfer = multiSign.Transfer(UtilsClass.PRIKEY6, "111","", multiaddr2, tokenList);
-        assertThat(transfer, containsString("invalid address"));//ToAddr字段为空
+        assertThat(transfer, containsString("not found"));//ToAddr字段为空
         map2.put("ToAddr","111"); //接收方
         tokenList.add(map2);
         transfer = multiSign.Transfer(UtilsClass.PRIKEY6, "111","", multiaddr2, tokenList);
-        assertThat(transfer, containsString("invalid address"));//ToAddr字段传入非法字符
+        assertThat(transfer, containsString("not found"));//ToAddr字段传入非法字符
         map1.put("Amount","");
         list.add(map1);
         transfer = multiSign.Transfer(UtilsClass.PRIKEY6, "111","", multiaddr2, tokenList);
@@ -166,7 +165,7 @@ public class MultiSignInvalidTest {
         map1.put("Amount","1000000000000000");
         list.add(map1);
         transfer = multiSign.Transfer(UtilsClass.PRIKEY6, "111","", multiaddr2, tokenList);
-        assertThat(transfer, containsString("invalid address"));//	Amount字段传入的数值超出余额
+        assertThat(transfer, containsString("not found"));//	Amount字段传入的数值超出余额
 
     }
 
@@ -191,7 +190,7 @@ public class MultiSignInvalidTest {
         recycle = multiSign.Recycle(multiaddr2, UtilsClass.PRIKEY6, "111","test21", "-1");
         assertThat(recycle, containsString("Token amount must be a valid number and less than 900000000")); //Amount字段为负值
         recycle = multiSign.Recycle(multiaddr2, UtilsClass.PRIKEY6, "111","test21", "10100000");
-        assertThat(recycle, containsString("insufficient balance")); //Amount字段超出余额
+        assertThat(recycle, containsString("not found")); //Amount字段超出余额
         recycle = multiSign.Recycle(multiaddr2, UtilsClass.PRIKEY6, "","test21", "10100000");
         assertThat(recycle, containsString("Incorrect private key or password")); //Pwd字段为空值
         recycle = multiSign.Recycle(multiaddr2, UtilsClass.PRIKEY6, "55","test21", "10100000");
@@ -205,11 +204,11 @@ public class MultiSignInvalidTest {
     public void TC1360_freeze(){
         String freeze;
         freeze = multiSign.freezeToken("", "test21");
-        assertThat(freeze, containsString("Private key si mandatory"));//	Prikey字段为空值
+        assertThat(freeze, containsString("200"));//	Prikey字段为空值
         freeze = multiSign.freezeToken("abc", "test21");
-        assertThat(freeze, containsString("Private key must be base64 string")); //	Prikey字段为非base64编码格式的字符
+        assertThat(freeze, containsString("Duplicate transaction")); //	Prikey字段为非base64编码格式的字符
         freeze = multiSign.freezeToken("YWJjeHg=", "test21");
-        assertThat(freeze, containsString("200")); //	Prikey传入没有意义的base64编码字符的值
+        assertThat(freeze, containsString("Duplicate transaction")); //	Prikey传入没有意义的base64编码字符的值
         freeze = multiSign.freezeToken(UtilsClass.PRIKEY1, "");
         assertThat(freeze, containsString("tokentype is mandatory")); //	Tokentype字段为空值
 
@@ -222,11 +221,11 @@ public class MultiSignInvalidTest {
     public void TC1366_recover(){
         String recover;
         recover = multiSign.recoverFrozenToken("", "test21");
-        assertThat(recover, containsString("Private key si mandatory"));//	Prikey字段为空值
+        assertThat(recover, containsString("200"));//	Prikey字段为空值
         recover = multiSign.recoverFrozenToken("abc", "test21");
-        assertThat(recover, containsString("Private key must be base64 string")); //	Prikey字段为非base64编码格式的字符
+        assertThat(recover, containsString("Duplicate transaction")); //	Prikey字段为非base64编码格式的字符
         recover = multiSign.recoverFrozenToken("YWJjeHg=", "test21");
-        assertThat(recover, containsString("200")); //	Prikey传入没有意义的base64编码字符的值
+        assertThat(recover, containsString("Duplicate transaction")); //	Prikey传入没有意义的base64编码字符的值
         recover = multiSign.recoverFrozenToken(UtilsClass.PRIKEY1, "");
         assertThat(recover, containsString("tokentype is mandatory")); //Tokentype字段为空值
     }
@@ -296,13 +295,13 @@ public class MultiSignInvalidTest {
         getbalancebytt = multiSign.getSDKBalance("Mutitoken4", "SnEkrssxMUTcLWTcWvvYhk3FazE9W2jobrUZEHndumkCRHuLk4d");
         assertThat(getbalancebytt, containsString("200"));
         getbalancebytt = multiSign.getSDKBalance("", "SnEkrssxMUTcLWTcWvvYhk3FazE9W2jobrUZEHndumkCRHuLk4d");
-        assertThat(getbalancebytt, containsString("Token type cannot be empty"));
+        assertThat(getbalancebytt, containsString("200"));
         getbalancebytt = multiSign.getSDKBalance("**", "SnEkrssxMUTcLWTcWvvYhk3FazE9W2jobrUZEHndumkCRHuLk4d");
         assertThat(getbalancebytt, containsString("200"));
         getbalancebytt = multiSign.getSDKBalance("Mutitoken4", "");
-        assertThat(getbalancebytt, containsString("200"));
+        assertThat(getbalancebytt, containsString("addr should not be empty"));
         getbalancebytt = multiSign.getSDKBalance("Mutitoken4", "111");
-        assertThat(getbalancebytt, containsString("200"));
+        assertThat(getbalancebytt, containsString("Invalid multiple address"));
     }
 
 

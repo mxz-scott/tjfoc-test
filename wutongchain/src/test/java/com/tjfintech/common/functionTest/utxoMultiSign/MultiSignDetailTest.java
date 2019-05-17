@@ -108,14 +108,18 @@ public class MultiSignDetailTest {
 
     @Test
     public void TC1276_getutxodetail() throws Exception {
-        log.info("获取utxo交易详情");
-        String utxoDetail1 = multiSign.getUTXODetail(0, timeMillislong, tokenType, 10, IMPPUTIONADD, IMPPUTIONADD);
-        String utxoDetail2 = multiSign.getUTXODetail(0, timeMillislong, tokenType2, 10, IMPPUTIONADD, IMPPUTIONADD);
-        assertEquals("200",JSONObject.fromObject(utxoDetail1).getString("State"));
-        assertEquals("200",JSONObject.fromObject(utxoDetail2).getString("State"));
+//        log.info("获取utxo交易详情");
+//        String utxoDetail1 = multiSign.getUTXODetail(0, timeMillislong, tokenType, 10, IMPPUTIONADD, IMPPUTIONADD);
+//        String utxoDetail2 = multiSign.getUTXODetail(0, timeMillislong, tokenType2, 10, IMPPUTIONADD, IMPPUTIONADD);
+//        assertEquals("200",JSONObject.fromObject(utxoDetail1).getString("State"));
+//        assertEquals("200",JSONObject.fromObject(utxoDetail2).getString("State"));
 
-        log.info("设定ToAddr为不存在交易的转出地址（地址存在）");
-        multiSign.getUTXODetail(0, timeMillislong, tokenType, 10, IMPPUTIONADD, "SnpepdFA5kKZMjy2XRh7aX4g2ygwcJ7V8AMRhqSqcmWbeC5684k");
+//        log.info("设定ToAddr为不存在交易的转出地址（地址存在）");
+//        multiSign.getUTXODetail(0, timeMillislong, tokenType, 10, IMPPUTIONADD, "SnpepdFA5kKZMjy2XRh7aX4g2ygwcJ7V8AMRhqSqcmWbeC5684k");
+
+        log.info("设定ToAddr为数值型数据（负数、正数、浮点数）");
+//        multiSign.getUTXODetail(0, timeMillislong, tokenType, 10, IMPPUTIONADD, );
+
     }
 
 
