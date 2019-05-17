@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest;
+package com.tjfintech.common.functionTest.utxoMultiSign;
 
 
 import com.google.gson.JsonObject;
@@ -18,7 +18,7 @@ import org.junit.runners.MethodSorters;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
+import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;

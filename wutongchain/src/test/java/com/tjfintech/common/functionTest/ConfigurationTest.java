@@ -11,7 +11,7 @@ import sun.print.PeekGraphics;
 
 import java.util.ArrayList;
 
-import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
+import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.performanceTest.StoreSemiTest.tokenType;
 import static com.tjfintech.common.performanceTest.StoreSemiTest.tokenType2;
 import static com.tjfintech.common.utils.UtilsClass.*;

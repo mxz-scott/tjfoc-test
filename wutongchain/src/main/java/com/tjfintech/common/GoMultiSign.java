@@ -463,7 +463,7 @@ public class GoMultiSign implements MultiSign {
         map.put("UTXOType",UTXOtype);
         map.put("FromAddr",FromAddr);
         map.put("ToAddr",ToAddr);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/getutxodetail", map);
+        String result = PostTest.postMethod(SDKADD + "/utxo/getutxodetail", map);
         log.info(result);
         return result;
     }
@@ -777,7 +777,7 @@ public class GoMultiSign implements MultiSign {
         map.put("Prikey", PriKey);
         map.put("Data", Data);
         map.put("Token", tokenList);
-        String result=PostTest.sendPostToJson(SDKADD+"/utxo/multi/transfer", map);
+        String result=PostTest.postMethod(SDKADD+"/utxo/multi/transfer", map);
         log.info(result);
         return result;
 

@@ -14,7 +14,7 @@ import org.junit.runners.MethodSorters;
 
 import java.util.*;
 
-import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
+import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
