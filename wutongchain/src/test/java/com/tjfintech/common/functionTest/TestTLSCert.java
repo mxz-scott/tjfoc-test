@@ -75,7 +75,7 @@ public class TestTLSCert {
     @After
     public void recoverConfigSt()throws Exception{
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
-        //setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/config.toml");
+        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
         Thread.sleep(6000);
 
         String response= store.GetApiHealth();

@@ -43,7 +43,7 @@ public class MixTxTest {
         }
     }
 
-@Test
+    @Test
     public void TestMultiTypeTx()throws Exception{
         assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS6), CoreMatchers.containsString("200"));
         assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS1), CoreMatchers.containsString("200"));
@@ -52,7 +52,8 @@ public class MixTxTest {
 
         Thread.sleep(6000);
         //设置打包时间为20s 使得各种类型的交易同时打包
-        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/basePkTm20s.toml "+ PTPATH +"peer/conf/base.toml");
+        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/basePkTm20s.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
         String resp = store.GetHeight();
         //发送存证交易
         Date dt=new Date();
@@ -125,7 +126,8 @@ public class MixTxTest {
     }
     @After
     public void  reset()throws Exception{
-        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
+        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
     }
 

@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest;
+package com.tjfintech.common.functionTest.ContractTest;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.Contract;
@@ -14,7 +14,7 @@ import org.junit.runners.MethodSorters;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
+import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -30,9 +30,9 @@ public class ContractTest {
     Date dt=new Date();
     SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
 
-    String name=sdf.format(dt)+ RandomUtils.nextInt(100000);
-    String version="2.0";
-    String category="docker";
+    public String name=sdf.format(dt)+ RandomUtils.nextInt(100000);
+    public String version="2.0";
+    public String category="docker";
 
     @Test
     public void testContract() throws Exception{

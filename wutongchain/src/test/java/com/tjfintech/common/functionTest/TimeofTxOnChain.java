@@ -16,20 +16,28 @@ import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
 public class TimeofTxOnChain {
 
-    public   final static int   SLEEPTIME=8*1000;
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
     MultiSign multiSign =testBuilder.getMultiSign();
 
+    @Before
+    public void beforeConfig() throws Exception {
+        if(certPath!=""&& bReg==false) {
+            BeforeCondition bf = new BeforeCondition();
+            bf.updatePubPriKey();
+            bf.collAddressTest();
+
+            bReg=true;
+        }
+    }
     //@Test
-    public void TC277_searchStoreInlocal()  throws Exception{
+    public void searchStoreInlocal()  throws Exception{
         String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
         String response= store.CreateStore(Data);
         long nowTime = new Date().getTime();
@@ -42,7 +50,7 @@ public class TimeofTxOnChain {
 
 
     //@Test
-    public void TC277_searchUTXOInlocal()  throws Exception{
+    public void searchUTXOInlocal()  throws Exception{
         String tokenType1 = "zz1X-" + UtilsClass.Random(10);
         String tokenType2 = "q1qX-" + UtilsClass.Random(10);
         log.info("*****************************"+tokenType1);
@@ -85,29 +93,18 @@ public class TimeofTxOnChain {
 
 
     }
-//@Test
-    public  void recTest()throws Exception{
-        for(;;){
-            TC277_searchUTXOInlocal();
+    @Test
+    public  void UTXOOnChainTimeTest()throws Exception{
+        for(int i=0;i<50;i++){
+            searchUTXOInlocal();
         }
     }
 
     @Test
-    public void checkBlockHash()throws Exception{
-        BeforeCondition bf =new BeforeCondition();
-        bf.initTest();
-        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
-        String preBlockHash=JSONObject.fromObject(store.GetBlockByHeight(blockHeight)).getJSONObject("Data").getJSONObject("header").getString("previousHash");
-        String currentBlockHash="";
-        for(int i= blockHeight-1;i>0;i--){
-
-            currentBlockHash  = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONObject("header").getString("blockHash");
-            assertEquals(currentBlockHash,preBlockHash);
-            preBlockHash=JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONObject("header").getString("previousHash");
-
+    public  void StoreOnChainTimeTest()throws Exception{
+        for(int i=0;i<50;i++){
+            searchStoreInlocal();
         }
     }
-
-
 
 }

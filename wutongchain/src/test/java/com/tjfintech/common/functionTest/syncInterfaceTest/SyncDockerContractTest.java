@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
-import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
+import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.encryptBASE64;
 import static com.tjfintech.common.utils.UtilsClass.readInput;
 import static org.hamcrest.Matchers.containsString;

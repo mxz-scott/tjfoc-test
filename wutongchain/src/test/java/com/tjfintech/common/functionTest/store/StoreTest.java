@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest;
+package com.tjfintech.common.functionTest.store;
 
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
