@@ -62,6 +62,7 @@ public class TestMgTool {
         PEER4MAC=getMACAddr(PEER4IP,USERNAME,PASSWD).trim();
 
         setAndRestartPeerList("cp "+PTPATH+"peer/conf/baseOK.toml "+PTPATH+"peer/conf/"+PeerInfoConfig+".toml");
+        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
 
         quitPeer(peer1IPPort,PEER3IP);
 
@@ -698,6 +699,7 @@ public class TestMgTool {
         //log.info("Current Unconfirmed Tx Count:"+rsp.substring(rsp.lastIndexOf("Count:")+1).trim());
 
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/basePkTm20s.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
 
 //        Shell shellPeer1=new Shell(PEER1IP,USERNAME,PASSWD);
 //        shellPeer1.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
@@ -730,6 +732,7 @@ public class TestMgTool {
 
         //恢复原始配置
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
 
 
         //需要补充以上交易上链后的交易查询
@@ -1091,6 +1094,7 @@ public class TestMgTool {
         String cpLic="cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerTest.lic";
 
         setAndRestartPeerList(okConfig,peerTestlicConf,cpLic);
+        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
 
 //        Shell shellPeer1=new Shell(PEER1IP,USERNAME,PASSWD);
 //        shellPeer1.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
@@ -1153,6 +1157,7 @@ public class TestMgTool {
 
         //恢复原始配置重新启动节点
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
         queryPeerListNo(peer1IPPort,basePeerNo);
     }
 

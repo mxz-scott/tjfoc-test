@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest;
+package com.tjfintech.common.functionTest.PermissionTest;
 
 import com.sun.deploy.util.StringUtils;
 import com.tjfintech.common.BeforeCondition;

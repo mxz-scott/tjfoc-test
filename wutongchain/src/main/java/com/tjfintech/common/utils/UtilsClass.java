@@ -80,7 +80,7 @@ public class UtilsClass {
 //    public final static String PUBKEY8 = ".\\src\\main\\resources\\key\\pubkey.pem";
 
     //add for diff type prikey & pubkey:SM2 ECDSA or RSA
-    public static final String certPath="SM2";
+    public static final String certPath="RSA";
     //public static final String certPath="SM2";
     public static boolean bReg=false;
    //add parameters for manage tool
@@ -347,13 +347,13 @@ public class UtilsClass {
         //重启sdk
 
         Thread.sleep(RESTARTTIME);
-        resetAndRestartSDK();
+        //resetAndRestartSDK();
         Thread.sleep(5000);
     }
 
-    public static void resetAndRestartSDK()throws Exception{
-        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
-    }
+//    public static void resetAndRestartSDK()throws Exception{
+//        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
+//    }
 
     public static void setAndRestartSDK(String... cmdList)throws Exception{
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
