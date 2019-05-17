@@ -47,7 +47,7 @@ public class APermfuncDocker {
      * 安装合约
      * @throws Exception
      */
-    @Test
+    //@Test
     public  String installContract()throws  Exception{
         String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";
         String file=readInput(filePath).toString();
@@ -138,7 +138,7 @@ public class APermfuncDocker {
      * 遍历所有手机信息
      * @throws Exception
      */
-    @Test
+    //@Test
     public String getAllMobileTest()throws Exception{
         String method="getAllMobile";
         return invoke(method);

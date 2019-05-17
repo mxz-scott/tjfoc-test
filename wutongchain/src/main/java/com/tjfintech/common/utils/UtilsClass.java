@@ -339,7 +339,7 @@ public class UtilsClass {
             for (String cmd:cmdList
             ) {
                 shellPeer.execute(cmd);
-                Thread.sleep(300);
+                Thread.sleep(200);
             }
             Thread.sleep(500);
             shellPeer.execute("sh "+PTPATH+"peer/start.sh");
@@ -348,7 +348,22 @@ public class UtilsClass {
 
         Thread.sleep(RESTARTTIME);
         //resetAndRestartSDK();
-        Thread.sleep(5000);
+        //Thread.sleep(5000);
+    }
+    public static void setAndRestartPeer(String PeerIP,String...cmdList)throws Exception{
+
+        Shell shellPeer=new Shell(PeerIP,USERNAME,PASSWD);
+        shellPeer.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        for (String cmd:cmdList
+        ) {
+            shellPeer.execute(cmd);
+            Thread.sleep(100);
+        }
+        Thread.sleep(500);
+        shellPeer.execute("sh "+PTPATH+"peer/start.sh");
+
+
+        Thread.sleep(RESTARTTIME);
     }
 
 //    public static void resetAndRestartSDK()throws Exception{
@@ -364,7 +379,7 @@ public class UtilsClass {
         for (String cmd:cmdList
         ) {
             shellSDK.execute(cmd);
-            Thread.sleep(300);
+            Thread.sleep(200);
         }
 
         shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
