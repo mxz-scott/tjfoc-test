@@ -129,7 +129,7 @@ public class GoSoloSign implements SoloSign {
     public String genAddress(String publicKey){
         Map<String, Object> map = new HashMap<>();
         map.put("PubKey", publicKey);
-        String result=PostTest.sendPostToJson(SDKADD+"/utxo/genaddress", map);
+        String result=PostTest.postMethod(SDKADD+"/utxo/genaddress", map);
         log.info(result);
         return result;
     }

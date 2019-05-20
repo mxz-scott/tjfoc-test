@@ -6,6 +6,7 @@ import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.functionTest.ContractTest.ContractTest;
+import com.tjfintech.common.functionTest.TestMgTool;
 import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
@@ -41,12 +42,14 @@ public class BlockSyncTest {
     public long OnChainSleep = 6000;
 
     boolean bRe=false;
-    //@Before
+    @Before
     public void beforeConfig() throws Exception {
         if(certPath!=""&& bReg==false) {
             //String newDB="newDB"+System.currentTimeMillis();
             //初始清空节点数据库及使用新的sdk数据库
-            setAndRestartPeerList("rm -rf "+ PTPATH + "peer/*.db ","cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+            setAndRestartPeerList("rm -rf "+ PTPATH + "peer/*.db "
+                    ,"cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml"
+                    ,"cp "+ PTPATH + "peer/conf/configOK.toml "+ PTPATH +"peer/conf/"+PeerMemConfig+".toml");
             setAndRestartSDK("sed -i \"s/newDB/newDB1/g\" "+ PTPATH+"sdk/conf/configNewDB.toml ","cp "+PTPATH+"sdk/conf/configNewDB.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
             BeforeCondition bf = new BeforeCondition();
             bf.initTest();//赋值权限999
@@ -54,40 +57,229 @@ public class BlockSyncTest {
             bf.collAddressTest();//添加归集地址和发行地址的注册
             Thread.sleep(OnChainSleep);
             bRe=true;
+            log.info("*********************before config end*********************");
         }
     }
 
     @Test
-    public void SyncNoContractTxEnableCtFlag()throws Exception{
+    public void TC992_SyncNoContractTxEnableCtFlag()throws Exception{
+        String syncPeer=PEER2IP;
         //setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+        //停止节点PEER2
+        Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
+        shellPeer.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+
         StoreUTXO();
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
         //停止其中一个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(PEER2IP,"rm -rf "+ PTPATH + "peer/*.db ");
+        setAndRestartPeer(syncPeer,"rm -rf "+ PTPATH + "peer/*.db ");
 
         //等待同步时间
-        Thread.sleep(10000);
+        Thread.sleep(OnChainSleep*2);
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
         assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        //等待交易上链
+        Thread.sleep(OnChainSleep);
+        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
     }
 
     @Test
-    public void SyncNoContractTxDisableCtFlag()throws Exception{
+    public void TC969_SyncNoContractTxDisableCtFlag()throws Exception{
+        String syncPeer=PEER2IP;
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseContractfalse.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+        //停止节点PEER2
+        Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
+        shellPeer.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+
         StoreUTXO();
-        //停止其中一个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(PEER2IP,"rm -rf "+ PTPATH + "peer/*.db ");
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
+
+        //个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
+        setAndRestartPeer(syncPeer,"rm -rf "+ PTPATH + "peer/*.db ");
 
         //等待同步时间
-        Thread.sleep(10000);
+        Thread.sleep(OnChainSleep*2);
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
         assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        //等待交易上链
+        Thread.sleep(OnChainSleep);
+        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
     }
+
+    //test case 923
+    @Test
+    public void TC923_SyncNoContractTxCtFlagChange1()throws Exception{
+        String syncPeer=PEER2IP;
+        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseContractfalse.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+        StoreUTXO();
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
+
+        //节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
+        setAndRestartPeer(syncPeer,"rm -rf "+ PTPATH + "peer/*.db ","cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+
+        //等待同步时间
+        Thread.sleep(OnChainSleep*2);
+
+        //检查Peer2数据高度是否与其他节点一致
+        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        //等待交易上链
+        Thread.sleep(OnChainSleep);
+        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+    }
+
+
+    @Test
+    public void TC832_SyncWithContractTxEnableCtFlag()throws Exception{
+        String syncPeer=PEER2IP;
+        //setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+        //停止节点PEER2
+        Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
+        shellPeer.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+
+        StoreUTXO();
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        Contract();
+        //停止其中一个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
+        setAndRestartPeer(syncPeer,"rm -rf "+ PTPATH + "peer/*.db ");
+
+        //等待同步时间
+        Thread.sleep(OnChainSleep*2+ContractInstallSleep);
+
+        //检查Peer2数据高度是否与其他节点一致
+        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        //等待交易上链
+        Thread.sleep(OnChainSleep);
+        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+    }
+
+    @Test
+    public void TC986_SyncDataPeerWithTxEnableCtFlag()throws Exception{
+        setAndRestartPeerList("rm -rf "+ PTPATH + "peer/*.db "
+                ,"cp "+ PTPATH + "peer/conf/configData.toml "+ PTPATH +"peer/conf/"+PeerMemConfig+".toml");
+        setAndRestartSDK("sed -i \"s/newDB/newDB1/g\" "+ PTPATH+"sdk/conf/configNewDB.toml "
+                ,"cp "+PTPATH+"sdk/conf/configNewDB.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
+        BeforeCondition bf = new BeforeCondition();
+        bf.initTest();//赋值权限999
+        bf.updatePubPriKey();//更新全局pub、prikey
+        bf.collAddressTest();//添加归集地址和发行地址的注册
+        Thread.sleep(OnChainSleep);
+
+        String syncPeer=PEER4IP; //247为非共识节点
+
+        //停止节点PEER2
+        Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
+        shellPeer.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+
+        StoreUTXO();
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        Contract();
+        //停止其中一个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
+        setAndRestartPeer(syncPeer,"rm -rf "+ PTPATH + "peer/*.db ");
+
+        //等待同步时间
+        Thread.sleep(OnChainSleep*2+ContractInstallSleep);
+
+        //检查Peer2数据高度是否与其他节点一致
+        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        //等待交易上链
+        Thread.sleep(OnChainSleep);
+        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+    }
+
+
+    //831
+    @Test
+    public void TC831_SyncWithContractTxDisableCtFlag()throws Exception{
+        String syncPeer=PEER2IP;
+        //停止节点PEER2
+        Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
+        shellPeer.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+
+        StoreUTXO();
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        Contract();
+
+        //节点清除db数据，并将Contract Enabled设置为false 例如Peer2 --》10.1.3.246，重启节点 开始同步数据
+        setAndRestartPeer(syncPeer,"rm -rf "+ PTPATH + "peer/*.db ","cp "+ PTPATH + "peer/conf/baseContractfalse.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+
+        //等待同步时间
+        Thread.sleep(OnChainSleep*2);
+
+        //检查Peer2同步异常节点会停止
+        TestMgTool mgTool = new TestMgTool();
+        mgTool.checkParam(syncPeer,"./toolkit height -p 9300","rpc error");
+
+
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        //等待交易上链
+        //恢复PEER2配置 检查可以正常同步
+        setAndRestartPeer(syncPeer,"cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+        Thread.sleep(OnChainSleep*2 +ContractInstallSleep);
+        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+    }
+
+    //989  操作节点PEER4
+    @Test
+    public void TC989_SyncNoBaseImage()throws Exception{
+        //停止节点PEER2,删除节点2上的基础镜像
+        String syncPeer=PEER4IP;
+        Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
+        shellPeer.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer.execute("docker rm -f `docker ps -aq`");
+        Thread.sleep(1500);
+        shellPeer.execute("docker rmi `docker images`");
+        Thread.sleep(1500);
+        StoreUTXO();
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        Contract();
+        //无基础镜像时同步包含合约交易的区块交易
+        setAndRestartPeer(syncPeer,"rm -rf "+ PTPATH + "peer/*.db ","cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+        //同步失败节点异常 停止运行
+
+        //检查Peer2同步异常节点会停止
+        TestMgTool mgTool = new TestMgTool();
+        mgTool.checkParam(syncPeer,"./toolkit height -p 9300","rpc error");
+
+        //安装合约镜像
+        setAndRestartPeer(syncPeer,"rm -rf "+ PTPATH + "peer/*.db ","docker load < /root/ccenv.docker");
+
+        //等待同步时间+合约安装
+        Thread.sleep(OnChainSleep*2+ContractInstallSleep);
+        log.info("Check peer height after reloading base images");
+        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        //等待交易上链
+        //同步成功后检查新交易后是否同步
+        Thread.sleep(OnChainSleep);
+        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+    }
+
 
         public void StoreUTXO()throws Exception{
         //setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
@@ -103,7 +295,7 @@ public class BlockSyncTest {
         //构造错误交易
         BeforeCondition bf = new BeforeCondition();
         bf.collAddressTest();//添加归集地址和发行地址的注册
-        Thread.sleep(3000);
+        Thread.sleep(OnChainSleep);
 
         assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS6), containsString("200"));
         assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS1), containsString("200"));
@@ -152,8 +344,8 @@ public class BlockSyncTest {
         String StoreHash5 = jsonObject.getString("Data").toString();
         jsonObject=JSONObject.fromObject(response6);
         String StoreHash6 = jsonObject.getString("Data").toString();
-        jsonObject=JSONObject.fromObject(response7);
-        String StoreHash7 = jsonObject.getString("Data").toString();
+//        jsonObject=JSONObject.fromObject(response7);
+//        String StoreHash7 = jsonObject.getString("Data").toString();
         jsonObject=JSONObject.fromObject(response8);
         String StoreHash8 = jsonObject.getJSONObject("Data").get("TxId").toString();
 
@@ -167,11 +359,15 @@ public class BlockSyncTest {
         assertEquals("200",JSONObject.fromObject(store.GetTransaction(StoreHash4)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetTransaction(StoreHash5)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetTransaction(StoreHash6)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetTransaction(StoreHash7)).getString("State"));
+//        assertEquals("200",JSONObject.fromObject(store.GetTransaction(StoreHash7)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetTransaction(StoreHash8)).getString("State"));
 
     }
 
+    public void MgToolStore()throws Exception{
+        TestMgTool mgTool = new TestMgTool();
+        mgTool.checkParam(PEER1IP,"./toolkit newtx -p 9300 -n 50 -t 1","HashData");
+    }
     public void Contract()throws Exception{
         //创建合约
         dockerFileName="simple.go";
@@ -202,7 +398,7 @@ public class BlockSyncTest {
 
         Shell shell1=new Shell(shellIP,USERNAME,PASSWD);
 
-        String cmd1="cd "+PTPATH+"./toolkit height -p "+ rpcPort;
+        String cmd1="cd "+PTPATH+"toolkit/;./toolkit height -p "+ rpcPort;
         shell1.execute(cmd1);
         ArrayList<String> stdout = shell1.getStandardOutput();
         log.info(StringUtils.join(stdout,"\n"));
