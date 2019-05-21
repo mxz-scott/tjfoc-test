@@ -25,6 +25,7 @@ public interface MultiSign {
     String QueryZero(String tokenType);
     String collAddress(String pubKey,String ...address);
     String delCollAddress(String priKey,String ...address);
+    String delCollAddressRemovePri(String... address);
     String collAddressRemovePri(String ...address);
     String freezeToken(String priKey,String tokenType);
     String freezeToken(String tokenType);

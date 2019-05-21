@@ -40,7 +40,7 @@ public  class GoStore implements Store {
         Map<String, Object> map = new HashMap<>();
         map.put("hashData",hashData);
         param  = GetTest.ParamtoUrl(map);
-        String result = GetTest.SendGetTojson(SDKADD + "/gettxdetail" + "?" + param);//发送get请求    SDKADD:http://10.1.3.165:9333
+        String result = GetTest.doGet2(SDKADD + "/gettxdetail" + "?" + param);//发送get请求    SDKADD:http://10.1.3.165:9333
         log.info(result);
         return result;
     }

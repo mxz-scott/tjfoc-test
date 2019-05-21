@@ -281,6 +281,102 @@ public class BlockSyncTest {
     }
 
 
+    @Test
+    public void TC983_OnePeerStoreUTXO()throws Exception{
+        //SDK配置文件中仅配置PEER1节点
+
+        //停止节点PEER2 和PEER4
+        Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
+        shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+
+        Shell shellPeer4=new Shell(PEER4IP,USERNAME,PASSWD);
+        shellPeer4.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+
+
+        StoreUTXO();
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
+
+        //清空剩下两个节点db数据 并重启
+        setAndRestartPeer(PEER2IP,"rm -rf "+ PTPATH + "peer/*.db ");
+        setAndRestartPeer(PEER4IP,"rm -rf "+ PTPATH + "peer/*.db ");
+
+        //等待同步时间
+        Thread.sleep(OnChainSleep*2+ContractInstallSleep);
+
+        //检查Peer2数据高度是否与其他节点一致
+        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        //等待交易上链
+        Thread.sleep(OnChainSleep);
+        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+    }
+
+    @Test
+    public void TC982_OnePeerContract()throws Exception{
+        //SDK配置文件中仅配置PEER1节点
+
+        //停止节点PEER2 和PEER4
+        Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
+        shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+
+        Shell shellPeer4=new Shell(PEER4IP,USERNAME,PASSWD);
+        shellPeer4.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+
+        Contract();
+        //清空剩下两个节点db数据 并重启
+        setAndRestartPeer(PEER2IP,"rm -rf "+ PTPATH + "peer/*.db ");
+        setAndRestartPeer(PEER4IP,"rm -rf "+ PTPATH + "peer/*.db ");
+
+        //等待同步时间
+        Thread.sleep(OnChainSleep*2+ContractInstallSleep);
+
+        //检查Peer2数据高度是否与其他节点一致
+        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        //等待交易上链
+        Thread.sleep(OnChainSleep);
+        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+    }
+
+    @Test
+    public void TC981_OnePeerStoreUTXO()throws Exception{
+        //SDK配置文件中仅配置PEER1节点
+
+        //停止节点PEER2 和PEER4
+        Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
+        shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+
+        Shell shellPeer4=new Shell(PEER4IP,USERNAME,PASSWD);
+        shellPeer4.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+
+
+        StoreUTXO();
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        Contract();
+        //清空剩下两个节点db数据 并重启
+        setAndRestartPeer(PEER2IP,"rm -rf "+ PTPATH + "peer/*.db ");
+        setAndRestartPeer(PEER4IP,"rm -rf "+ PTPATH + "peer/*.db ");
+
+        //等待同步时间
+        Thread.sleep(OnChainSleep*2+ContractInstallSleep);
+
+        //检查Peer2数据高度是否与其他节点一致
+        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+
+        MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        //等待交易上链
+        Thread.sleep(OnChainSleep);
+        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+    }
+
         public void StoreUTXO()throws Exception{
         //setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
 

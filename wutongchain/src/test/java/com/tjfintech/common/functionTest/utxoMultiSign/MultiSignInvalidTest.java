@@ -242,7 +242,7 @@ public class MultiSignInvalidTest {
      */
     @Test
     public void delCollAddressRemovePri(){
-        String deletecoll = multiSign.delissueaddressRemovePri(multiaddr2,multiaddr1);
+        String deletecoll = multiSign.delCollAddressRemovePri(multiaddr2,multiaddr1);
         assertThat(deletecoll, containsString("200"));
     }
 

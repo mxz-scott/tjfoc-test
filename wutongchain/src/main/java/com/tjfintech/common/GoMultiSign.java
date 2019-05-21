@@ -574,14 +574,14 @@ public class GoMultiSign implements MultiSign {
      * @param address
      * @return
      */
-    public String collAddress(String pubKey, String ...address) {
+    public String collAddress(String priKey, String ...address) {
         Map<String, Object> map = new HashMap<>();
         List<Object> addrs = new ArrayList<>();
         for (int i=0;i<address.length;i++){
         addrs.add(address[i]);
         }
 
-        map.put("PriKey", pubKey);
+        map.put("PriKey", priKey);
         map.put("Addrs", addrs);
         String result = PostTest.sendPostToJson(SDKADD + "/utxo/colladdress", map);
         log.info(result);
@@ -603,7 +603,17 @@ public class GoMultiSign implements MultiSign {
     }
 
 
-
+    public String delCollAddressRemovePri(String... address) {
+        Map<String,Object> map = new HashMap<>();
+        List<Object> addrs = new ArrayList<>();
+        for (int i= 0;i<address.length;i++){
+            addrs.add(address[i]);
+        }
+        map.put("Addrs", addrs);
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/deladdress", map);
+        log.info(result);
+        return result;
+    }
 
     /**
      * 添加归集地址不携带私钥
