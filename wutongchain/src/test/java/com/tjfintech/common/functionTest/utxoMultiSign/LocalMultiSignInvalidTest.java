@@ -16,7 +16,7 @@ import org.junit.runners.MethodSorters;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
+//import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfoc.utils.ReadFiletoByte.log;
 import static org.hamcrest.Matchers.containsString;

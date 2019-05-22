@@ -10,11 +10,12 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
+//import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static com.tjfintech.common.utils.UtilsClass.*;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
