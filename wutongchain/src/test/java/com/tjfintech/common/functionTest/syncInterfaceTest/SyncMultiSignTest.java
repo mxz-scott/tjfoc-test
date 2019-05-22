@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.syncInterfaceTest;
+package com.tjfintech.common.functionTest.SyncInterfaceTest;
 
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.TestBuilder;
@@ -12,7 +12,6 @@ import org.junit.runners.MethodSorters;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
@@ -63,7 +62,7 @@ public class SyncMultiSignTest {
         String transferData = "归集地址向" + MULITADD1 + "转账999个" + tokenType;
         log.info(transferData);
         List<Map>list=utilsClass.constructToken(MULITADD1,tokenType,"999");//封装token:接收地址，token类型，转账数量
-        String syncTransfer = multiSign.SyncTransfer(utilsClass.SHORTMEOUT*2, PRIKEY4, transferData, IMPPUTIONADD, list);//转账操作
+        String syncTransfer = multiSign.SyncTransfer(utilsClass.SHORTMEOUT, PRIKEY4, transferData, IMPPUTIONADD, list);//转账操作
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址跟MULITADD4余额，判断转账是否成功");
         String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);

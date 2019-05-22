@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.syncInterfaceTest;
+package com.tjfintech.common.functionTest.SyncInterfaceTest;
 
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.TestBuilder;
@@ -12,7 +12,6 @@ import org.junit.runners.MethodSorters;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClass.PRIKEY1;
 import static org.hamcrest.Matchers.containsString;
@@ -46,7 +45,7 @@ public class SyncSingleSignTest {
 
         //超时情况
         tokenType3 = "SOLOTC-"+ UtilsClass.Random(6);
-        String isResult3 = soloSign.SyncIssueToken(utilsClass.SHORTMEOUT/10, utilsClass.PRIKEY3, tokenType3, "10000", "单签发行token", ADDRESS2);
+        String isResult3 = soloSign.SyncIssueToken(utilsClass.SHORTMEOUT, utilsClass.PRIKEY3, tokenType3, "10000", "单签发行token", ADDRESS2);
         assertThat("504", containsString(JSONObject.fromObject(isResult3).getString("State")));
         assertThat("timeout",containsString(JSONObject.fromObject(isResult3).getString("Message")));
 

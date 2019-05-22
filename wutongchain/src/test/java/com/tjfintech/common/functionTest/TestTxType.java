@@ -31,7 +31,6 @@ import static org.junit.Assert.assertThat;
 @Slf4j
 public class TestTxType {
 
-    public   final static int   SLEEPTIME=20*1000;
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
     MultiSign multiSign =testBuilder.getMultiSign();
@@ -99,7 +98,7 @@ public class TestTxType {
         log.info("隐私存证数据："+priData);
         String response2 = store.CreateStorePwd(priData,map);
 
-        Thread.sleep(6000);
+        Thread.sleep(SLEEPTIME);
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
         checkTriMsg(txHash1,versionStore,typeStore,subTypeStore);
         checkStore(txHash1,Data,"store");
@@ -162,7 +161,7 @@ public class TestTxType {
         String Tx13 = JSONObject.fromObject(response53).getJSONObject("Data").getString("Tx");
         log.info("第一次签名");
         String response54 = multiSign.Sign(Tx13, PRIKEY5);
-        Thread.sleep(8000);
+        Thread.sleep(SLEEPTIME);
 
         //单签转账
         assertEquals(JSONObject.fromObject(soloSign.Balance(PRIKEY1,tokenTypeS)).getJSONObject("Data").getString("Total"),amount);
@@ -180,7 +179,7 @@ public class TestTxType {
         String response6 = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, listInit);
 
 
-        Thread.sleep(5000);
+        Thread.sleep(SLEEPTIME);
 
         //检查单签发行交易信息
         String txHash3 = JSONObject.fromObject(response3).getString("Data");
@@ -248,7 +247,7 @@ public class TestTxType {
         String recyMultiAmount="70";
         String RecycleMultiInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenTypeM, recyMultiAmount);
 
-        Thread.sleep(6000);
+        Thread.sleep(SLEEPTIME);
 
         //检查单签回收交易信息
         String txHash7 = JSONObject.fromObject(RecycleSoloInfo).getJSONObject("Data").getString("Figure");
@@ -293,18 +292,18 @@ public class TestTxType {
         //发送合约交易initMobile
         log.info("发送合约交易initMobile");
         String response81 = ct.initMobileTest();
-        Thread.sleep(6000);
+        Thread.sleep(SLEEPTIME);
         String txHash81 = JSONObject.fromObject(response81).getJSONObject("Data").get("Figure").toString();
         //发送合约交易querymobile
         log.info("发送合约交易querymobile");
         String response8 = ct.queryMobileTest("Mobile1");
-        Thread.sleep(6000);
+        Thread.sleep(SLEEPTIME);
         String txHash8 = JSONObject.fromObject(response8).getJSONObject("Data").get("Figure").toString();
 
         //销毁合约
         log.info("销毁合约"+ct.name);
         String response9 = ct.destroyTest();
-        Thread.sleep(6000);
+        Thread.sleep(SLEEPTIME);
         String txHash9 = JSONObject.fromObject(response9).getJSONObject("Data").get("Figure").toString();
 
         //检查合约创建交易信息
@@ -345,13 +344,13 @@ public class TestTxType {
         assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS6),containsString("200"));
         assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS6),containsString("200"));
         assertThat(multiSign.recoverFrozenToken(PRIKEY1,tokenType),containsString("200"));
-        Thread.sleep(6000);
+        Thread.sleep(SLEEPTIME);
 
         //Admin类交易 Type 20 SubType 200 201 202 203
         String response10= multiSign.collAddress(PRIKEY1,ADDRESS6);
         String response11= multiSign.addissueaddress(PRIKEY1,ADDRESS6);
         String response3=multiSign.freezeToken(PRIKEY1,tokenType);
-        Thread.sleep(6000);
+        Thread.sleep(SLEEPTIME);
 
         //添加归集地址交易信息检查
         String txHash10 = JSONObject.fromObject(response10).getString("Data");
@@ -374,7 +373,7 @@ public class TestTxType {
         String response13= multiSign.delissueaddress(PRIKEY1,ADDRESS6);
         //解除冻结token
         String response4=multiSign.recoverFrozenToken(PRIKEY1,tokenType);
-        Thread.sleep(6000);
+        Thread.sleep(SLEEPTIME);
 
         //检查删除归集地址交易信息
         String txHash12 = JSONObject.fromObject(response12).getString("Data");

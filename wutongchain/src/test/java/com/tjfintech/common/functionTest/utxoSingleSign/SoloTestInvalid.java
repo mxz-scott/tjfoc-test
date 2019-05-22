@@ -52,7 +52,7 @@ public class SoloTestInvalid {
         //Thread.sleep(SLEEPTIME);
         tokenType2 = "SOLOTC-" + UtilsClass.Random(6);
         String issueInfo2= soloSign.issueToken(PRIKEY1, tokenType2, "200.87654321", tokenType2,ADDRESS1);
-        Thread.sleep(SLEEPTIME*3);
+        Thread.sleep(SLEEPTIME);
         assertThat(issueInfo1,containsString("200"));
         assertThat(issueInfo2,containsString("200"));
         log.info("查询归集地址中两种token余额");

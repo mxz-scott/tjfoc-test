@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.syncInterfaceTest;
+package com.tjfintech.common.functionTest.SyncInterfaceTest;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
@@ -32,22 +32,14 @@ public class SyncManageTest {
     String okMessage="success";
     String errMessage="timeout";
 
-    //@Test
-    public void testShortTimeoutForAdmin() throws Exception{
-        //设置打包时间为500ms 使得各种类型的交易同时打包
-//        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/basePkTm500ms.toml "+ PTPATH +"peer/conf/base.toml");
-//        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
-        //testSyncAdmin(String.valueOf(SHORTTIMEOUT),errCode,errMessage);
-        testSyncAdmin("1000",errCode,errMessage);
-    }
+
 
     @Test
-    public void testLongTimeoutForAdmin() throws Exception{
+    public void testTimeoutForAdmin() throws Exception{
         //设置打包时间为500ms 使得各种类型的交易同时打包
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/basePkTm500ms.toml "+ PTPATH +"peer/conf/base.toml");
         setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
-        //testSyncAdmin(String.valueOf(LONGTIMEOUT),okCode,okMessage);
-        testSyncAdmin("2000",okCode,okMessage);
+        testSyncAdmin(String.valueOf(SHORTMEOUT),okCode,okMessage);
     }
 
     //@After
@@ -65,13 +57,13 @@ public class SyncManageTest {
         assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS6),containsString("200"));
         assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS6),containsString("200"));
         assertThat(multiSign.recoverFrozenToken(PRIKEY1,tokenType),containsString("200"));
-        Thread.sleep(6000);
+        Thread.sleep(SLEEPTIME);
         log.info("timeout test for mg interfaces");
 
         String response1= multiSign.SyncCollAddress(timeout,ADDRESS6);
         String response2= multiSign.SyncAddissueaddress(timeout,ADDRESS6);
         String response3=multiSign.SyncFreezeToken(PRIKEY1,timeout,tokenType);
-        Thread.sleep(2000);
+        Thread.sleep(SLEEPTIME);
 
         //删除归集地址
         String response4= multiSign.SyncDelCollAddress(timeout,ADDRESS6);
@@ -79,7 +71,7 @@ public class SyncManageTest {
         String response5= multiSign.SyncDelissueaddress(timeout,ADDRESS6);
         //解除冻结token
         String response6=multiSign.SyncRecoverFrozenToken(PRIKEY1,timeout,tokenType);
-        Thread.sleep(3000);
+        Thread.sleep(SLEEPTIME);
 
         assertEquals(code,JSONObject.fromObject(response1).getString("State"));
         assertEquals(code,JSONObject.fromObject(response2).getString("State"));

@@ -43,13 +43,12 @@ public class  MultiTestInvalid {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();
-            Thread.sleep(8000);
+            Thread.sleep(SLEEPTIME);
             bReg=true;
         }
 
         log.info("发行两种token100.123个");
         tokenType = multiTest.IssueToken(7, "100");
-        //Thread.sleep(SLEEPTIME);
         tokenType2 = multiTest.IssueToken(5, "100.123");
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中两种token余额");

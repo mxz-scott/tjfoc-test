@@ -16,6 +16,7 @@ public class UtilsClass {
 
     public static Integer  LONGTIMEOUT = 100000;//毫秒
     public static Integer  SHORTMEOUT = 2000;//毫秒
+    public   final static int   SLEEPTIME=5*1000;
 
     //SM2公私钥对
      public static String  ADDRESS1 = "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo";
@@ -80,8 +81,7 @@ public class UtilsClass {
 //    public final static String PUBKEY8 = ".\\src\\main\\resources\\key\\pubkey.pem";
 
     //add for diff type prikey & pubkey:SM2 ECDSA or RSA
-    public static final String certPath="RSA";
-    //public static final String certPath="SM2";
+    public static final String certPath="SM2";
     public static boolean bReg=false;
    //add parameters for manage tool
     public static final String PEER1IP="10.1.3.240";

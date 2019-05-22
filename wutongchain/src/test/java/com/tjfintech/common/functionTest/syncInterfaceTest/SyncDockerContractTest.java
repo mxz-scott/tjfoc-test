@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.syncInterfaceTest;
+package com.tjfintech.common.functionTest.SyncInterfaceTest;
 
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.Store;
@@ -15,9 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
-import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
-import static com.tjfintech.common.utils.UtilsClass.encryptBASE64;
-import static com.tjfintech.common.utils.UtilsClass.readInput;
+import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
@@ -35,7 +33,7 @@ public class SyncDockerContractTest {
     String name=sdf.format(dt)+ RandomUtils.nextInt(100000);
     String version="1.0";
     String category="docker";
-    public   final static int   SLEEPTIME=8*1000;
+    //public   final static int   SLEEPTIME=8*1000;
 
 
     /**
@@ -88,8 +86,5 @@ public class SyncDockerContractTest {
         assertThat(response2,containsString("200"));
 
     }
-
-
-
-
+    
 }
