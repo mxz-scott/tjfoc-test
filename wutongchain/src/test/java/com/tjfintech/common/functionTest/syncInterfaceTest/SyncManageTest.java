@@ -44,8 +44,8 @@ public class SyncManageTest {
     @Test
     public void testLongTimeoutForAdmin() throws Exception{
         //设置打包时间为500ms 使得各种类型的交易同时打包
-//        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/basePkTm500ms.toml "+ PTPATH +"peer/conf/base.toml");
-//        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
+        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/basePkTm500ms.toml "+ PTPATH +"peer/conf/base.toml");
+        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
         //testSyncAdmin(String.valueOf(LONGTIMEOUT),okCode,okMessage);
         testSyncAdmin("2000",okCode,okMessage);
     }

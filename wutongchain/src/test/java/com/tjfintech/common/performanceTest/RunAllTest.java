@@ -4,7 +4,6 @@ import com.tjfintech.common.functionTest.store.StoreTest;
 import com.tjfintech.common.functionTest.store.StoreInvalidTest;
 import com.tjfintech.common.functionTest.utxoMultiSign.MultiTest;
 import com.tjfintech.common.functionTest.utxoMultiSign.MultiTestInvalid;
-import com.tjfintech.common.functionTest.utxoMultiSign.MultiTestInvalid2;
 import com.tjfintech.common.functionTest.utxoSingleSign.SoloTest;
 import com.tjfintech.common.functionTest.utxoSingleSign.SoloTestInvalid;
 import org.junit.runner.RunWith;
@@ -14,7 +13,6 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         MultiTest.class,
         MultiTestInvalid.class,
-        MultiTestInvalid2.class,
         SoloTest.class,
         SoloTestInvalid.class,
         StoreTest.class,

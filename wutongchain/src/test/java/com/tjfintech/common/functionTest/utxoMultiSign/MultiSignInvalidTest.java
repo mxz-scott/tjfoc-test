@@ -307,18 +307,18 @@ public class MultiSignInvalidTest {
 
 
 
-
-    /**
-     * 安装智能合约
-     */
-    @Test
-    public void TC_contract() throws Exception{
-        String docker;
-        String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";  //读取合约代码的内容
-        String file=readInput(filePath).toString();//将合约代码
-        String data = encryptBASE64(file.getBytes());//BASE64编码
-        docker = contract.Install("testcontract11", "2.0", "docker",data);
-    }
+//此部分非多签相关内容
+//    /**
+//     * 安装智能合约
+//     */
+//    @Test
+//    public void TC_contract() throws Exception{
+//        String docker;
+//        String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";  //读取合约代码的内容
+//        String file=readInput(filePath).toString();//将合约代码
+//        String data = encryptBASE64(file.getBytes());//BASE64编码
+//        docker = contract.Install("testcontract11", "2.0", "docker",data);
+//    }
 
 }
 

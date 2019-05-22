@@ -227,8 +227,8 @@ public class MultiTest33 {
         assertEquals("0",JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"));
         assertEquals("0",JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"));
         assertEquals("0",JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"));
-        assertEquals("0",JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"));
-        assertEquals("0",JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"));
+        assertEquals("0",JSONObject.fromObject(queryInfo6).getJSONObject("Data").getString("Total"));
+        assertEquals("0",JSONObject.fromObject(queryInfo7).getJSONObject("Data").getString("Total"));
 
 
         String queryZero1 =multiSign.QueryZero(tokenType);
@@ -371,8 +371,8 @@ public class MultiTest33 {
         assertEquals("0",JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"));
         assertEquals("0",JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"));
         assertEquals("0",JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"));
-        assertEquals("0",JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"));
-        assertEquals("0",JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"));
+        assertEquals("0",JSONObject.fromObject(queryInfo6).getJSONObject("Data").getString("Total"));
+        assertEquals("0",JSONObject.fromObject(queryInfo7).getJSONObject("Data").getString("Total"));
 
 
         String queryZero1 =multiSign.QueryZero(tokenType);
@@ -493,8 +493,8 @@ public class MultiTest33 {
         assertEquals("0",JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"));
         assertEquals("0",JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"));
         assertEquals("0",JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"));
-        assertEquals("0",JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"));
-        assertEquals("0",JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"));
+        assertEquals("0",JSONObject.fromObject(queryInfo6).getJSONObject("Data").getString("Total"));
+        assertEquals("0",JSONObject.fromObject(queryInfo7).getJSONObject("Data").getString("Total"));
 
 
         String queryZero1 =multiSign.QueryZero(tokenType);
@@ -613,8 +613,8 @@ public class MultiTest33 {
         assertEquals("0",JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"));
         assertEquals("0",JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"));
         assertEquals("0",JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"));
-        assertEquals("0",JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"));
-        assertEquals("0",JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"));
+        assertEquals("0",JSONObject.fromObject(queryInfo6).getJSONObject("Data").getString("Total"));
+        assertEquals("0",JSONObject.fromObject(queryInfo7).getJSONObject("Data").getString("Total"));
 
         String queryZero1 =multiSign.QueryZero(tokenType);
         String queryZero2 =multiSign.QueryZero(tokenType2);
@@ -622,4 +622,65 @@ public class MultiTest33 {
         assertEquals(String.valueOf(amount2),JSONObject.fromObject(queryZero2).getJSONObject("Data").getString("Total"));
     }
 
+    public void TC992_TranferFromOneInput() throws Exception{
+        String tokenType = "CX-" + UtilsClass.Random(9);
+        int amount = 222;
+        String issData = MULITADD3 + "带无密码私钥发行" + tokenType + " token，数量为：" + amount;
+
+        log.info(issData);
+        //发行申请带无密码私钥，签名为：不带密码->带密码->带密码
+        String response1 = multiSign.issueTokenCarryPri(MULITADD3, tokenType, String.valueOf(amount),PRIKEY1, issData);
+        assertThat(response1, containsString("200"));
+        String Tx11 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Tx");
+        //签名流程1
+        String response14 = SignPro4(Tx11);
+        assertThat(JSONObject.fromObject(response14).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
+        assertEquals(MULITADD3,JSONObject.fromObject(response14).getJSONObject("Data").getString("CollectAddr"));
+        assertThat(response14, containsString("200"));
+
+
+        Thread.sleep(SLEEPTIME);
+
+        //发行后查询余额不带密码
+        log.info("发行后不带密码私钥查询余额: "+tokenType);
+        String queryInfo= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        assertEquals("200",JSONObject.fromObject(queryInfo).getString("State"));
+        assertEquals(String.valueOf(amount),JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
+
+
+        //转账时使用带密码私钥,签名顺序4：带密码--带密码
+        int tf1=150;
+        int tf2=150;
+
+        //第一笔向Address1转tf1
+        String transferData1 = "MULITADD3向ADDRESS1转账"+tf1+"*"+tokenType;
+        List<Map>list=utilsClass.constructToken(ADDRESS1,tokenType,String.valueOf(tf1));
+        log.info(transferData1);
+
+        String transferInfo= multiSign.Transfer(PRIKEY1,transferData1, MULITADD3,list);
+        String tfTx21 = JSONObject.fromObject(transferInfo).getJSONObject("Data").getString("Tx");
+
+
+        //第二笔向Address2转tf2 tf2+tf1 > amount
+        String transferData2 = "MULITADD3向ADDRESS1转账"+tf2+"*"+tokenType;
+        List<Map>list2=utilsClass.constructToken(ADDRESS2,tokenType,String.valueOf(tf2));
+        log.info(transferData2);
+
+
+        String transferInfo2= multiSign.Transfer(PRIKEY1,transferData2, MULITADD3,list2);
+        String tfTx22 = JSONObject.fromObject(transferInfo2).getJSONObject("Data").getString("Tx");
+
+
+        //第一笔签名流程4：带密码+带密码
+        String tfResponse24 = SignPro4(tfTx21);
+        assertEquals("200",JSONObject.fromObject(tfResponse24).getString("State"));
+        assertThat(JSONObject.fromObject(tfResponse24).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
+
+        //第二笔签名流程4：带密码+带密码 应该会提示fail
+        String tfResponse25 = SignPro4(tfTx22);
+        assertEquals("200",JSONObject.fromObject(tfResponse25).getString("State"));
+        assertThat(JSONObject.fromObject(tfResponse25).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
+
+
+    }
 }

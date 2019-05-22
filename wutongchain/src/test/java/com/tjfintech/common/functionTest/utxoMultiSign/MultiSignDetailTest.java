@@ -38,7 +38,7 @@ public class MultiSignDetailTest {
      * 多签的token发行
      * @throws Exception
      */
-    @Test
+    @Before
     public void getutxotoken() throws Exception {
         tokenType  = IssueToken("10000"); //tokentype发行数量为10000
         tokenType2  = IssueToken("10000"); //tokentype2发行数量为10000

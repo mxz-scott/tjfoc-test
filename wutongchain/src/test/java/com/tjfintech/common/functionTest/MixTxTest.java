@@ -55,6 +55,7 @@ public class MixTxTest {
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/basePkTm20s.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
         setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
         String resp = store.GetHeight();
+
         //发送存证交易
         Date dt=new Date();
         SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
@@ -66,12 +67,14 @@ public class MixTxTest {
         String response5= multiSign.addissueaddress(PRIKEY1,ADDRESS1);
 
         String tokenTypeS = "MixSOLOTC-"+ UtilsClass.Random(6);
-        String response6= soloSign.issueToken(PRIKEY1,tokenTypeS,"10000","发行token "+tokenTypeS,ADDRESS1);
+        log.info(ADDRESS1+"发行token "+tokenTypeS);
+        String response6= soloSign.issueToken(PRIKEY1,tokenTypeS,"10000",ADDRESS1+"发行token "+tokenTypeS,ADDRESS1);
 
         String amount="3000";
         String tokenTypeM = "MixMultiTC-"+ UtilsClass.Random(6);
-        log.info(MULITADD3+ "发行" + tokenTypeM + " token，数量为：" + amount);
-        String data = "MULITADD3" + "发行" + tokenTypeM + " token，数量为：" + amount;
+
+        String data = IMPPUTIONADD + "发行" + tokenTypeM + " token，数量为：" + amount;
+        log.info(data);
         String response7 = multiSign.issueToken(IMPPUTIONADD, tokenTypeM, amount, data);
         assertEquals("200",JSONObject.fromObject(response7).getString("State"));
         String Tx1 = JSONObject.fromObject(response7).getJSONObject("Data").getString("Tx");
@@ -87,6 +90,7 @@ public class MixTxTest {
         assertThat(response7, CoreMatchers.containsString("200"));
         assertThat(response8, CoreMatchers.containsString("200"));
 
+
         JSONObject jsonObject=JSONObject.fromObject(response1);
         String StoreHash1 = jsonObject.getJSONObject("Data").get("Figure").toString();
         jsonObject=JSONObject.fromObject(response2);
@@ -99,8 +103,6 @@ public class MixTxTest {
         String StoreHash5 = jsonObject.getString("Data").toString();
         jsonObject=JSONObject.fromObject(response6);
         String StoreHash6 = jsonObject.getString("Data").toString();
-        jsonObject=JSONObject.fromObject(response7);
-        String StoreHash7 = jsonObject.getString("Data").toString();
         jsonObject=JSONObject.fromObject(response8);
         String StoreHash8 = jsonObject.getJSONObject("Data").get("TxId").toString();
 
@@ -114,7 +116,6 @@ public class MixTxTest {
         response4=store.GetTransaction(StoreHash4);
         response5=store.GetTransaction(StoreHash5);
         response6=store.GetTransaction(StoreHash6);
-        response7=store.GetTransaction(StoreHash7);
         response8=store.GetTransaction(StoreHash8);
 
         String resp1 = store.GetHeight();
