@@ -25,25 +25,7 @@ public class GoSoloSign implements SoloSign {
     public void TestBefore(){
 
     }
-//    @Test
-//    public void runSoloTest()throws  Exception{
-//        TOKENTYPE=multiTest.SoloInit();
-//        Thread.sleep(1000*3);
-//        multiTest.TestTransfer(TOKENTYPE,USER_COLLET,USER1_1);
-//        Thread.sleep(1000*5);
-//        TestSoloQuery(TOKENTYPE);
-//        log.info("单签向1/2账号转账");
-//        TestSoloTransfer(TOKENTYPE,USER1_2);
-//        Thread.sleep(1000*10);
-//        log.info("查询单签地址余额:20");
-//        TestSoloQuery(TOKENTYPE);
-//        log.info("单签向3/3账号转账");
-//        TestSoloTransfer(TOKENTYPE,USER3_3);
-//        Thread.sleep(1000*10);
-//        log.info("查询单签地址余额:10");
-//        TestSoloQuery(TOKENTYPE);
-//
-//    }
+
 
     /**单签转账，本地签名
      *

@@ -3,6 +3,7 @@ package com.tjfintech.common.functionTest.utxoMultiSign;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
+import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -31,6 +32,7 @@ public class  MultiTestInvalid {
     MultiSign multiSign =testBuilder.getMultiSign();
     UtilsClass utilsClass = new UtilsClass();
     MultiTest multiTest = new MultiTest();
+    SoloSign soloSign=testBuilder.getSoloSign();
     Store store = testBuilder.getStore();
     private static String tokenType;
     private static String tokenType2;
@@ -73,7 +75,7 @@ public class  MultiTestInvalid {
         assertThat(response, containsString("Invalid multiple address(to addr)"));
         tokenType2 = multiTest.IssueToken(5, "1000",MULITADD4);
         Thread.sleep(SLEEPTIME);
-        String response1 = multiSign.Balance(PRIKEY1, tokenType);
+        String response1 = soloSign.Balance(PRIKEY1, tokenType);
         String response2 = multiSign.Balance(MULITADD4,PRIKEY1, tokenType);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("\"Total\":\"0\""));
@@ -206,7 +208,7 @@ public class  MultiTestInvalid {
 
 
         log.info("查询余额判断转账是否成功");
-        String queryInfo = multiSign.Balance( PRIKEY1, tokenType);
+        String queryInfo = soloSign.Balance( PRIKEY1, tokenType);
         String queryInfo2 = multiSign.Balance(MULITADD5, PRIKEY1, tokenType2);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo2, containsString("200"));
@@ -280,8 +282,8 @@ public class  MultiTestInvalid {
 
 
         log.info("查询余额判断转账是否成功");
-        String queryInfo = multiSign.Balance( PRIKEY1, tokenType);
-        String queryInfo2 = multiSign.Balance( PRIKEY2, tokenType2);
+        String queryInfo = soloSign.Balance( PRIKEY1, tokenType);
+        String queryInfo2 = soloSign.Balance( PRIKEY2, tokenType2);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo2, containsString("200"));
         assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("0"));
@@ -360,8 +362,8 @@ public class  MultiTestInvalid {
 
 
         log.info("查询余额判断转账是否成功");
-        String queryInfo = multiSign.Balance( PRIKEY1, tokenType);
-        String queryInfo2 = multiSign.Balance( PRIKEY2, tokenType2);
+        String queryInfo = soloSign.Balance( PRIKEY1, tokenType);
+        String queryInfo2 = soloSign.Balance( PRIKEY2, tokenType2);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo2, containsString("200"));
         assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("0"));
@@ -520,7 +522,7 @@ public class  MultiTestInvalid {
 
 
         log.info("查询余额判断转账是否成功");
-        String queryInfo = multiSign.Balance( PRIKEY1, tokenType);
+        String queryInfo = soloSign.Balance( PRIKEY1, tokenType);
         String queryInfo2 = multiSign.Balance( MULITADD5,PRIKEY1, tokenType2);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo2, containsString("200"));

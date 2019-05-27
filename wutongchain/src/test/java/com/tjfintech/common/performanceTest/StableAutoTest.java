@@ -2,6 +2,7 @@ package com.tjfintech.common.performanceTest;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
+import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -24,6 +25,7 @@ public class StableAutoTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
     MultiSign multiSign=testBuilder.getMultiSign();
+    SoloSign soloSign=testBuilder.getSoloSign();
     UtilsClass utilsClass=new UtilsClass();
 
     /**
@@ -82,7 +84,7 @@ public class StableAutoTest {
             }
             String queryInfo1 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
             assertEquals(JSONObject.fromObject(queryInfo1).getJSONObject("Data").getString("Total").equals("0"), false);
-            String queryInfo2= multiSign.Balance(PRIKEY1, tokenType);
+            String queryInfo2= soloSign.Balance(PRIKEY1, tokenType);
             assertEquals(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total").equals("0"), false);
 
             List<Map> list1 = utilsClass.constructToken(MULITADD5, tokenType, "0.5");

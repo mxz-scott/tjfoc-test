@@ -33,7 +33,7 @@ public class TestPermission {
     TestBuilder testBuilder=TestBuilder.getInstance();
     Store store =testBuilder.getStore();
     MultiSign multiSign = testBuilder.getMultiSign();
-
+    SoloSign soloSign=testBuilder.getSoloSign();
     APermfuncSys pFun1 =new APermfuncSys();
     APermfuncDocker pFunCt =new APermfuncDocker();
     APermfuncUTXO pFunUTXO =new APermfuncUTXO();
@@ -152,7 +152,7 @@ public class TestPermission {
 
         Thread.sleep(5000);
 
-        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.Balance(PRIKEY1,glbSoloToken)).getJSONObject("Data").getString("Total"));
+        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(soloSign.Balance(PRIKEY1,glbSoloToken)).getJSONObject("Data").getString("Total"));
         assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.Balance(MULITADD4,PRIKEY1,glbMultiToken4)).getJSONObject("Data").getString("Total"));
         assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.Balance(MULITADD3,PRIKEY1,glbMultiToken3)).getJSONObject("Data").getString("Total"));
 

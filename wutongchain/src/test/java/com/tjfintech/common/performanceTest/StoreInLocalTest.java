@@ -36,7 +36,7 @@ public class StoreInLocalTest {
         try {
             long nowTimes;
             Thread.sleep(100);
-            String result = store.inLocal(hash);
+            String result = store.GetInlocal(hash);
             nowTimes = new Date().getTime();
             JSONObject jsonObject = JSONObject.fromObject(result);
 

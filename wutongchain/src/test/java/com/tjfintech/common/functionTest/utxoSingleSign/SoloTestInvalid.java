@@ -56,8 +56,8 @@ public class SoloTestInvalid {
         assertThat(issueInfo1,containsString("200"));
         assertThat(issueInfo2,containsString("200"));
         log.info("查询归集地址中两种token余额");
-        String response1 = multiSign.Balance(PRIKEY1, tokenType);
-        String response2 = multiSign.Balance(PRIKEY1, tokenType2);
+        String response1 = soloSign.Balance(PRIKEY1, tokenType);
+        String response2 = soloSign.Balance(PRIKEY1, tokenType2);
         assertThat(tokenType + "查询余额错误", response1, containsString("200"));
         assertThat(tokenType + "查询余额错误", response2, containsString("200"));
         assertThat(tokenType + "查询余额不正确", response1, containsString("100.123456789"));
@@ -146,7 +146,7 @@ public class SoloTestInvalid {
         assertThat(issueInfo4, containsString("Amount must be greater than 0 and less than 900000000"));
         assertThat(issueInfo5,containsString("TokenType shouldn't be empty"));
         log.info("查询归集地址中token余额");
-        String response1 = multiSign.Balance(PRIKEY1, tokenTypeInvalid);
+        String response1 = soloSign.Balance(PRIKEY1, tokenTypeInvalid);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("0"));
 
@@ -177,7 +177,7 @@ public class SoloTestInvalid {
         assertThat(issueInfo3,containsString("Token type "+tokenType+" has been issued"));
 
         log.info("查询归集地址中token余额");
-        String response1 = multiSign.Balance(PRIKEY1, tokenType);
+        String response1 = soloSign.Balance(PRIKEY1, tokenType);
         assertThat(response1, containsString("200"));
 
 
