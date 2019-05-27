@@ -30,22 +30,6 @@ public  class GoStore implements Store {
     }
 
     /**
-     * 获取交易详情Gettxdetail
-     * @return
-     */
-    @Override
-    public String Gettxdetail(String hashData) {
-        String param;
-        String hashEncode = URLEncoder.encode(hashData);//将数据转换为URLEncode编码
-        Map<String, Object> map = new HashMap<>();
-        map.put("hashData",hashData);
-        param  = GetTest.ParamtoUrl(map);
-        String result = GetTest.doGet2(SDKADD + "/gettxdetail" + "?" + param);//发送get请求    SDKADD:http://10.1.3.165:9333
-        log.info(result);
-        return result;
-    }
-
-    /**
      * 获取交易详情
      * @author chenxu
      * @version 1.0

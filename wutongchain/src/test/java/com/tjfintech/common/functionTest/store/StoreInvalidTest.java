@@ -48,12 +48,12 @@ public class StoreInvalidTest {
     @Test
     public void TC1370_gettxdetail(){
         String gettxdetail;
-        gettxdetail = store.Gettxdetail("");
+        gettxdetail = store.GetTxDetail("");
         assertThat(gettxdetail,containsString("Invalid parameter"));//hashData字段为空值
-        gettxdetail = store.Gettxdetail("111");
+        gettxdetail = store.GetTxDetail("111");
         assertThat(gettxdetail,containsString("hashData must be url encode string"));//hashData为非法字符
         log.info("通过hash获取交易详情"+hash);
-        gettxdetail = store.Gettxdetail(hash);
+        gettxdetail = store.GetTxDetail(hash);
         assertThat(gettxdetail,containsString("200"));//hashData字段不为URL encode编码
     }
 

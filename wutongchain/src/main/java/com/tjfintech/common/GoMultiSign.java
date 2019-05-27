@@ -811,7 +811,6 @@ public class GoMultiSign implements MultiSign {
         map.put("Tx", Tx);
         //String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/sign", map);
         String response = PostTest.postMethod(SDKADD+"/utxo/multi/sign", map);
-        log.info("test");
         log.info(response);
         return response;
 

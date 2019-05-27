@@ -46,7 +46,5 @@ public interface Store {
     String GetPeerList();
 
     String GetApiHealth();
-    String Gettxdetail(String hashData);
-
 
 }

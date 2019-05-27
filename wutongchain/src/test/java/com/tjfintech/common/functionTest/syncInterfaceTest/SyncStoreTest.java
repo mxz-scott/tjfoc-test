@@ -45,10 +45,10 @@ public class SyncStoreTest {
         assertThat("200",containsString(JSONObject.fromObject(response).getString("State")));
         assertThat("success",containsString(JSONObject.fromObject(response).getString("Message")));
         //超时情况下
-        String response1= store.SynCreateStore(utilsClass.SHORTMEOUT,Data);
-        Thread.sleep(SLEEPTIME);
-        assertThat("504",containsString(JSONObject.fromObject(response1).getString("State")));
-        assertThat("timeout",containsString(JSONObject.fromObject(response1).getString("Message")));
+//        String response1= store.SynCreateStore(utilsClass.SHORTMEOUT,Data);
+//        Thread.sleep(SLEEPTIME);
+//        assertThat("504",containsString(JSONObject.fromObject(response1).getString("State")));
+//        assertThat("timeout",containsString(JSONObject.fromObject(response1).getString("Message")));
     }
 
     /**
@@ -66,10 +66,10 @@ public class SyncStoreTest {
         assertThat("200", containsString(JSONObject.fromObject(response).getString("State")));
         assertThat("success",containsString(JSONObject.fromObject(response).getString("Message")));
         //超时情况下
-        String response1= store.SynCreateStore(utilsClass.SHORTMEOUT,Data,PUBKEY1,PUBKEY2);
-        Thread.sleep(SLEEPTIME);
-        assertThat("504", containsString(JSONObject.fromObject(response1).getString("State")));
-        assertThat("timeout",containsString(JSONObject.fromObject(response1).getString("Message")));
+//        String response1= store.SynCreateStore(utilsClass.SHORTMEOUT,Data,PUBKEY1,PUBKEY2);
+//        Thread.sleep(SLEEPTIME);
+//        assertThat("504", containsString(JSONObject.fromObject(response1).getString("State")));
+//        assertThat("timeout",containsString(JSONObject.fromObject(response1).getString("Message")));
     }
 
 
@@ -90,10 +90,10 @@ public class SyncStoreTest {
         assertThat("200", containsString(JSONObject.fromObject(response).getString("State")));
         assertThat("success",containsString(JSONObject.fromObject(response).getString("Message")));
         //超时的情况下
-        String response1= store.SynCreateStorePwd(utilsClass.SHORTMEOUT,Data,map);
-        Thread.sleep(SLEEPTIME);
-        assertThat("504", containsString(JSONObject.fromObject(response1).getString("State")));
-        assertThat("timeout",containsString(JSONObject.fromObject(response1).getString("Message")));
+//        String response1= store.SynCreateStorePwd(utilsClass.SHORTMEOUT,Data,map);
+//        Thread.sleep(SLEEPTIME);
+//        assertThat("504", containsString(JSONObject.fromObject(response1).getString("State")));
+//        assertThat("timeout",containsString(JSONObject.fromObject(response1).getString("Message")));
     }
 
 

@@ -55,9 +55,9 @@ public class SyncDockerContractTest {
         String response2=store.GetTransaction(hash);
         assertThat(response2,containsString("200"));
         //超时情况下
-        String response1=contract.SynInstall(utilsClass.SHORTMEOUT,name,version,category,data);
-        assertThat("504",containsString(JSONObject.fromObject(response1).getString("State")));
-        assertThat("timeout",containsString(JSONObject.fromObject(response1).getString("Message")));
+//        String response1=contract.SynInstall(utilsClass.SHORTMEOUT,name,version,category,data);
+//        assertThat("504",containsString(JSONObject.fromObject(response1).getString("State")));
+//        assertThat("timeout",containsString(JSONObject.fromObject(response1).getString("Message")));
         log.info("销毁智能合约");
         String response3 = contract.SynDestroy(utilsClass.LONGTIMEOUT,name, version,category);
         assertThat("200",containsString(JSONObject.fromObject(response3).getString("State")));
