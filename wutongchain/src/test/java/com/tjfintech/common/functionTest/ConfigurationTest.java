@@ -11,9 +11,6 @@ import sun.print.PeekGraphics;
 
 import java.util.ArrayList;
 
-//import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
-import static com.tjfintech.common.performanceTest.StoreSemiTest.tokenType;
-import static com.tjfintech.common.performanceTest.StoreSemiTest.tokenType2;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -26,6 +23,8 @@ public class ConfigurationTest {
     public static final String PEER3IP="10.1.3.247";
     public static final String USERNAME = "root";
     public static final String PASSWORD = "root";
+    public static String tokenType;
+    public static String tokenType2;
     TestBuilder testBuilder=TestBuilder.getInstance();
     SoloSign soloSign=testBuilder.getSoloSign();
     MultiSign multiSign=testBuilder.getMultiSign();

@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.ContractTest;
+package com.tjfintech.common.functionTest.dockerContract;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.Contract;

@@ -6,7 +6,7 @@ import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 
-import com.tjfintech.common.functionTest.ContractTest.*;
+import com.tjfintech.common.functionTest.dockerContract.ContractTest;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;

@@ -5,7 +5,7 @@ import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
-import com.tjfintech.common.functionTest.ContractTest.ContractTest;
+import com.tjfintech.common.functionTest.dockerContract.ContractTest;
 import com.tjfintech.common.functionTest.TestMgTool;
 import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
@@ -13,8 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
-import org.hamcrest.CoreMatchers;
-import org.junit.AfterClass;
 import org.junit.Before;
 import static org.hamcrest.Matchers.containsString;
 import org.junit.FixMethodOrder;
@@ -28,7 +26,6 @@ import java.util.Date;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import java.util.*;
 
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
