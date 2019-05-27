@@ -4,6 +4,7 @@ package com.tjfintech.common.functionTest.utxoMultiSign;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
+import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ public class MultiTest_33_12 {
     TestBuilder testBuilder= TestBuilder.getInstance();
     MultiSign multiSign =testBuilder.getMultiSign();
     SoloSign soloSign = testBuilder.getSoloSign();
+    Store store = testBuilder.getStore();
     UtilsClass utilsClass=new UtilsClass();
     private static String tokenType;
     private static String tokenType2;
@@ -182,7 +184,7 @@ public class MultiTest_33_12 {
         //锁定后回收3/3账户
         log.info("锁定token后回收3/3账户MULITADD3");
         multiSign.freezeToken(PRIKEY1,tokenType);
-        Thread.sleep(SLEEPTIME/2);
+        Thread.sleep(SLEEPTIME);
 
 
         log.info("回收Token");
@@ -326,7 +328,7 @@ public class MultiTest_33_12 {
         log.info("回收3/3账户MULITADD3前锁定token");
         multiSign.freezeToken(PRIKEY1,tokenType);
         multiSign.freezeToken(PRIKEY1,tokenType2);
-        Thread.sleep(SLEEPTIME/2);
+        Thread.sleep(SLEEPTIME);
 
 
         log.info("回收Token");
@@ -623,10 +625,8 @@ public class MultiTest_33_12 {
     }
 
 
-
-
-
-    public void TC992_TranferFromOneInput() throws Exception{
+    @Test
+    public void TC992_TranferFromOneInput1() throws Exception{
         String tokenType = "CX-" + UtilsClass.Random(9);
         int amount = 222;
         String issData = MULITADD3 + "带无密码私钥发行" + tokenType + " token，数量为：" + amount;
@@ -653,8 +653,9 @@ public class MultiTest_33_12 {
 
 
         //转账时使用带密码私钥,签名顺序4：带密码--带密码
+        //tf2+tf1 > amount-222
         int tf1=150;
-        int tf2=150;
+        int tf2=160;
 
         //第一笔向Address1转tf1
         String transferData1 = "MULITADD3向ADDRESS1转账"+tf1+"*"+tokenType;
@@ -666,27 +667,392 @@ public class MultiTest_33_12 {
 
 
         //第二笔向Address2转tf2 tf2+tf1 > amount
-        String transferData2 = "MULITADD3向ADDRESS1转账"+tf2+"*"+tokenType;
+        String transferData2 = "MULITADD3向ADDRESS2转账"+tf2+"*"+tokenType;
         List<Map>list2=utilsClass.constructToken(ADDRESS2,tokenType,String.valueOf(tf2));
         log.info(transferData2);
 
-
         String transferInfo2= multiSign.Transfer(PRIKEY1,transferData2, MULITADD3,list2);
         String tfTx22 = JSONObject.fromObject(transferInfo2).getJSONObject("Data").getString("Tx");
+        assertEquals("200",JSONObject.fromObject(transferInfo2).getString("State"));
+
 
 
         //第一笔签名流程4：带密码+带密码
         String tfResponse24 = SignPro4(tfTx21);
+        //Thread.sleep(SLEEPTIME);
+        //第二笔签名流程4：带密码+带密码
+        String tfResponse25 = SignPro4(tfTx22);
+
+        String tfHash1=JSONObject.fromObject(tfResponse24).getJSONObject("Data").getString("TxId");
         assertEquals("200",JSONObject.fromObject(tfResponse24).getString("State"));
         assertThat(JSONObject.fromObject(tfResponse24).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
 
-        //第二笔签名流程4：带密码+带密码 应该会提示fail
+
+        String tfHash2=JSONObject.fromObject(tfResponse25).getJSONObject("Data").getString("TxId");
+        assertEquals("success",JSONObject.fromObject(tfResponse25).getString("Message"));
+
+        Thread.sleep(SLEEPTIME);
+
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash1)).getString("State"));
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("State"));//因为花费同一笔input
+
+        log.info("查询余额判断回收成功与否");
+        String query1= multiSign.Balance(PRIKEY1,tokenType);
+        String query2= multiSign.Balance(PRIKEY2,tokenType);
+        String query3= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+
+        assertEquals("200",JSONObject.fromObject(query1).getString("State"));
+        assertEquals("200",JSONObject.fromObject(query2).getString("State"));
+        assertEquals("200",JSONObject.fromObject(query3).getString("State"));
+        assertEquals(String.valueOf(tf1),JSONObject.fromObject(query1).getJSONObject("Data").getString("Total"));
+        assertEquals("0",JSONObject.fromObject(query2).getJSONObject("Data").getString("Total"));
+        assertEquals(String.valueOf(amount-tf1),JSONObject.fromObject(query3).getJSONObject("Data").getString("Total"));
+
+    }
+
+    //第一笔转账交易签名后有上链等待时间
+    @Test
+    public void TC992_TranferFromOneInput2() throws Exception{
+        String tokenType = "CX-" + UtilsClass.Random(9);
+        int amount = 222;
+        String issData = MULITADD3 + "带无密码私钥发行" + tokenType + " token，数量为：" + amount;
+
+        log.info(issData);
+        //发行申请带无密码私钥，签名为：不带密码->带密码->带密码
+        String response1 = multiSign.issueTokenCarryPri(MULITADD3, tokenType, String.valueOf(amount),PRIKEY1, issData);
+        assertThat(response1, containsString("200"));
+        String Tx11 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Tx");
+        //签名流程1
+        String response14 = SignPro4(Tx11);
+        assertThat(JSONObject.fromObject(response14).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
+        assertEquals(MULITADD3,JSONObject.fromObject(response14).getJSONObject("Data").getString("CollectAddr"));
+        assertThat(response14, containsString("200"));
+
+
+        Thread.sleep(SLEEPTIME);
+
+        //发行后查询余额不带密码
+        log.info("发行后不带密码私钥查询余额: "+tokenType);
+        String queryInfo= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        assertEquals("200",JSONObject.fromObject(queryInfo).getString("State"));
+        assertEquals(String.valueOf(amount),JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
+
+
+        //转账时使用带密码私钥,签名顺序4：带密码--带密码
+        //tf2+tf1 > amount-222
+        int tf1=150;
+        int tf2=160;
+
+        //第一笔向Address1转tf1
+        String transferData1 = "MULITADD3向ADDRESS1转账"+tf1+"*"+tokenType;
+        List<Map>list=utilsClass.constructToken(ADDRESS1,tokenType,String.valueOf(tf1));
+        log.info(transferData1);
+
+        String transferInfo= multiSign.Transfer(PRIKEY1,transferData1, MULITADD3,list);
+        String tfTx21 = JSONObject.fromObject(transferInfo).getJSONObject("Data").getString("Tx");
+
+
+        //第二笔向Address2转tf2 tf2+tf1 > amount
+        String transferData2 = "MULITADD3向ADDRESS2转账"+tf2+"*"+tokenType;
+        List<Map>list2=utilsClass.constructToken(ADDRESS2,tokenType,String.valueOf(tf2));
+        log.info(transferData2);
+
+        String transferInfo2= multiSign.Transfer(PRIKEY1,transferData2, MULITADD3,list2);
+        String tfTx22 = JSONObject.fromObject(transferInfo2).getJSONObject("Data").getString("Tx");
+        assertEquals("200",JSONObject.fromObject(transferInfo2).getString("State"));
+
+
+
+        //第一笔签名流程4：带密码+带密码
+        String tfResponse24 = SignPro4(tfTx21);
+        Thread.sleep(SLEEPTIME);
         String tfResponse25 = SignPro4(tfTx22);
-        assertEquals("200",JSONObject.fromObject(tfResponse25).getString("State"));
-        assertThat(JSONObject.fromObject(tfResponse25).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
+
+        String tfHash1=JSONObject.fromObject(tfResponse24).getJSONObject("Data").getString("TxId");
+        assertEquals("200",JSONObject.fromObject(tfResponse24).getString("State"));
+        assertThat(JSONObject.fromObject(tfResponse24).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
+
+
+        //第二笔签名流程4：带密码+带密码 应该会提示fail
+        //String tfHash2=JSONObject.fromObject(tfResponse25).getJSONObject("Data").getString("TxId");
+        assertEquals("mutli transfer failed!",JSONObject.fromObject(tfResponse25).getString("Message"));
+
+        Thread.sleep(SLEEPTIME);
+
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash1)).getString("State"));
+        //assertEquals("404",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("State"));//因为花费同一笔input，第二笔交易不会上链
+
+        log.info("查询余额判断回收成功与否");
+        String query1= multiSign.Balance(PRIKEY1,tokenType);
+        String query2= multiSign.Balance(PRIKEY2,tokenType);
+        String query3= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+
+        assertEquals("200",JSONObject.fromObject(query1).getString("State"));
+        assertEquals("200",JSONObject.fromObject(query2).getString("State"));
+        assertEquals("200",JSONObject.fromObject(query3).getString("State"));
+        assertEquals(String.valueOf(tf1),JSONObject.fromObject(query1).getJSONObject("Data").getString("Total"));
+        assertEquals("0",JSONObject.fromObject(query2).getJSONObject("Data").getString("Total"));
+        assertEquals(String.valueOf(amount-tf1),JSONObject.fromObject(query3).getJSONObject("Data").getString("Total"));
 
 
     }
+
+
+    //3/3多签转账两个并发-总转账超出余额范围
+    //@Test
+    public void TC991_TwoTranferFromDiffInput1() throws Exception{
+        String tokenType = "CX-" + UtilsClass.Random(9);
+        int amount = 222;
+        String issData = MULITADD3 + "带无密码私钥发行" + tokenType + " token，数量为：" + amount;
+
+        log.info(issData);
+        //发行申请带无密码私钥，签名为：不带密码->带密码->带密码
+        String response1 = multiSign.issueTokenCarryPri(MULITADD3, tokenType, String.valueOf(amount),PRIKEY1, issData);
+        assertThat(response1, containsString("200"));
+        String Tx11 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Tx");
+        //签名流程1
+        String response14 = SignPro4(Tx11);
+        assertThat(JSONObject.fromObject(response14).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
+        assertEquals(MULITADD3,JSONObject.fromObject(response14).getJSONObject("Data").getString("CollectAddr"));
+        assertThat(response14, containsString("200"));
+
+
+        Thread.sleep(SLEEPTIME);
+
+        //发行后查询余额不带密码
+        log.info("发行后不带密码私钥查询余额: "+tokenType);
+        String queryInfo= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        assertEquals("200",JSONObject.fromObject(queryInfo).getString("State"));
+        assertEquals(String.valueOf(amount),JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
+
+        //先向MULITADD4转一半的发行数量
+        int tf = 111;
+        String transferData = "MULITADD3向MULITADD4转账"+tf+"*"+tokenType;
+        List<Map>list0=utilsClass.constructToken(MULITADD4,tokenType,String.valueOf(tf));
+        log.info(transferData);
+        String transfer= multiSign.Transfer(PRIKEY1,transferData, MULITADD3,list0);
+        String tfTx = JSONObject.fromObject(transfer).getJSONObject("Data").getString("Tx");
+        String tfResp = SignPro4(tfTx);
+        Thread.sleep(SLEEPTIME);
+
+
+        //转账发行后查询余额不带密码
+        log.info("发行后不带密码私钥查询余额: "+tokenType);
+        String query1= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        assertEquals("200",JSONObject.fromObject(query1).getString("State"));
+        assertEquals(String.valueOf(amount-tf),JSONObject.fromObject(query1).getJSONObject("Data").getString("Total"));
+
+        String query2= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
+        assertEquals("200",JSONObject.fromObject(query2).getString("State"));
+        assertEquals(String.valueOf(tf),JSONObject.fromObject(query2).getJSONObject("Data").getString("Total"));
+
+
+        //MULITADD4转回80给MULITADD3
+
+        int tfA = 80;
+        String tfData2 = "MULITADD4向MULITADD3转账"+tfA+"*"+tokenType;
+        List<Map>list02=utilsClass.constructToken(MULITADD3,tokenType,String.valueOf(tf));
+        log.info(tfData2);
+        String transfer2= multiSign.Transfer(PRIKEY1,transferData, MULITADD4,list02);
+        Thread.sleep(SLEEPTIME);
+
+
+        //转账发行后查询余额不带密码
+        log.info("发行后不带密码私钥查询余额: "+tokenType);
+        String query3= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        assertEquals("200",JSONObject.fromObject(query3).getString("State"));
+        assertEquals(String.valueOf(amount-tf+tfA),JSONObject.fromObject(query3).getJSONObject("Data").getString("Total"));
+
+        String query4= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
+        assertEquals("200",JSONObject.fromObject(query4).getString("State"));
+        assertEquals(String.valueOf(tf-tfA),JSONObject.fromObject(query4).getJSONObject("Data").getString("Total"));
+
+
+        //转账时使用带密码私钥,签名顺序4：带密码--带密码
+        //tf2+tf1 > amount-222
+        int tf1=90;
+        int tf2=100;
+
+        //第一笔向Address1转tf1
+        String transferData1 = "MULITADD3向ADDRESS1转账"+tf1+"*"+tokenType;
+        List<Map>list=utilsClass.constructToken(ADDRESS1,tokenType,String.valueOf(tf1));
+        log.info(transferData1);
+
+        String transferInfo= multiSign.Transfer(PRIKEY1,transferData1, MULITADD3,list);
+        String tfTx21 = JSONObject.fromObject(transferInfo).getJSONObject("Data").getString("Tx");
+
+
+        //第二笔向Address2转tf2 tf2+tf1 > amount
+        String transferData2 = "MULITADD3向ADDRESS2转账"+tf2+"*"+tokenType;
+        List<Map>list2=utilsClass.constructToken(ADDRESS2,tokenType,String.valueOf(tf2));
+        log.info(transferData2);
+
+        String transferInfo2= multiSign.Transfer(PRIKEY1,transferData2, MULITADD3,list2);
+        String tfTx22 = JSONObject.fromObject(transferInfo2).getJSONObject("Data").getString("Tx");
+        assertEquals("200",JSONObject.fromObject(transferInfo2).getString("State"));
+
+
+
+        //第一笔签名流程4：带密码+带密码
+        String tfResponse24 = SignPro4(tfTx21);
+        //Thread.sleep(SLEEPTIME);
+        String tfResponse25 = SignPro4(tfTx22);
+
+        String tfHash1=JSONObject.fromObject(tfResponse24).getJSONObject("Data").getString("TxId");
+        assertEquals("200",JSONObject.fromObject(tfResponse24).getString("State"));
+        assertThat(JSONObject.fromObject(tfResponse24).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
+
+
+        assertEquals("success",JSONObject.fromObject(tfResponse25).getString("Message"));
+
+        Thread.sleep(SLEEPTIME);
+
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash1)).getString("State"));
+        //assertEquals("404",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("State"));//因为花费同一笔input，第二笔交易不会上链
+
+        log.info("查询余额判断回收成功与否");
+        String query6= multiSign.Balance(PRIKEY1,tokenType);
+        String query7= multiSign.Balance(PRIKEY2,tokenType);
+        String query8= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+
+        assertEquals("200",JSONObject.fromObject(query6).getString("State"));
+        assertEquals("200",JSONObject.fromObject(query7).getString("State"));
+        assertEquals("200",JSONObject.fromObject(query8).getString("State"));
+        assertEquals(String.valueOf(tf1),JSONObject.fromObject(query6).getJSONObject("Data").getString("Total"));
+        assertEquals(String.valueOf(tf2),JSONObject.fromObject(query7).getJSONObject("Data").getString("Total"));
+        assertEquals(String.valueOf(amount-tf+tfA-tf1-tf2),JSONObject.fromObject(query8).getJSONObject("Data").getString("Total"));
+
+
+    }
+
+
+    //3/3多签转账两个并发（转出账户至少有两个input）-总转账在余额范围内
+    //@Test
+    public void TC991_TwoTranferFromDiffInput2() throws Exception{
+        String tokenType = "CX-" + UtilsClass.Random(9);
+        int amount = 222;
+        String issData = MULITADD3 + "带无密码私钥发行" + tokenType + " token，数量为：" + amount;
+
+        log.info(issData);
+        //发行申请带无密码私钥，签名为：不带密码->带密码->带密码
+        String response1 = multiSign.issueTokenCarryPri(MULITADD3, tokenType, String.valueOf(amount),PRIKEY1, issData);
+        assertThat(response1, containsString("200"));
+        String Tx11 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Tx");
+        //签名流程1
+        String response14 = SignPro4(Tx11);
+        assertThat(JSONObject.fromObject(response14).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
+        assertEquals(MULITADD3,JSONObject.fromObject(response14).getJSONObject("Data").getString("CollectAddr"));
+        assertThat(response14, containsString("200"));
+
+
+        Thread.sleep(SLEEPTIME);
+
+        //发行后查询余额不带密码
+        log.info("发行后不带密码私钥查询余额: "+tokenType);
+        String queryInfo= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        assertEquals("200",JSONObject.fromObject(queryInfo).getString("State"));
+        assertEquals(String.valueOf(amount),JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
+
+        //先向MULITADD4转一半的发行数量
+        int tf = 111;
+        String transferData = "MULITADD3向MULITADD4转账"+tf+"*"+tokenType;
+        List<Map>list0=utilsClass.constructToken(MULITADD4,tokenType,String.valueOf(tf));
+        log.info(transferData);
+        String transfer= multiSign.Transfer(PRIKEY1,transferData, MULITADD3,list0);
+        String tfTx = JSONObject.fromObject(transfer).getJSONObject("Data").getString("Tx");
+        String tfResp = SignPro4(tfTx);
+        Thread.sleep(SLEEPTIME);
+
+
+        //转账发行后查询余额不带密码
+        log.info("发行后不带密码私钥查询余额: "+tokenType);
+        String query1= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        assertEquals("200",JSONObject.fromObject(query1).getString("State"));
+        assertEquals(String.valueOf(amount-tf),JSONObject.fromObject(query1).getJSONObject("Data").getString("Total"));
+
+        String query2= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
+        assertEquals("200",JSONObject.fromObject(query2).getString("State"));
+        assertEquals(String.valueOf(tf),JSONObject.fromObject(query2).getJSONObject("Data").getString("Total"));
+
+
+        //MULITADD4转回80给MULITADD3
+
+        int tfA = 80;
+        String tfData2 = "MULITADD4向MULITADD3转账"+tfA+"*"+tokenType;
+        List<Map>list02=utilsClass.constructToken(MULITADD3,tokenType,String.valueOf(tfA));
+        log.info(tfData2);
+        String transfer2= multiSign.Transfer(PRIKEY1,transferData, MULITADD4,list02);
+        Thread.sleep(SLEEPTIME);
+
+
+        //转账后查询余额不带密码
+        log.info("发行后不带密码私钥查询余额: "+tokenType);
+        String query3= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        assertEquals("200",JSONObject.fromObject(query3).getString("State"));
+        assertEquals(String.valueOf(amount-tf+tfA),JSONObject.fromObject(query3).getJSONObject("Data").getString("Total"));
+
+        String query4= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
+        assertEquals("200",JSONObject.fromObject(query4).getString("State"));
+        assertEquals(String.valueOf(tf-tfA),JSONObject.fromObject(query4).getJSONObject("Data").getString("Total"));
+
+
+        //转账时使用带密码私钥,签名顺序4：带密码--带密码
+        //tf2+tf1 > amount-222
+        int tf1=70;
+        int tf2=80;
+
+        //第一笔向Address1转tf1
+        String transferData1 = "MULITADD3向ADDRESS1转账"+tf1+"*"+tokenType;
+        List<Map>list=utilsClass.constructToken(ADDRESS1,tokenType,String.valueOf(tf1));
+        log.info(transferData1);
+
+        String transferInfo= multiSign.Transfer(PRIKEY1,transferData1, MULITADD3,list);
+        String tfTx21 = JSONObject.fromObject(transferInfo).getJSONObject("Data").getString("Tx");
+
+
+        //第二笔向Address2转tf2 tf2+tf1 > amount
+        String transferData2 = "MULITADD3向ADDRESS2转账"+tf2+"*"+tokenType;
+        List<Map>list2=utilsClass.constructToken(ADDRESS2,tokenType,String.valueOf(tf2));
+        log.info(transferData2);
+
+        String transferInfo2= multiSign.Transfer(PRIKEY1,transferData2, MULITADD3,list2);
+        String tfTx22 = JSONObject.fromObject(transferInfo2).getJSONObject("Data").getString("Tx");
+        assertEquals("200",JSONObject.fromObject(transferInfo2).getString("State"));
+
+
+
+        //第一笔签名流程4：带密码+带密码
+        String tfResponse24 = SignPro4(tfTx21);
+        //Thread.sleep(SLEEPTIME);
+        String tfResponse25 = SignPro4(tfTx22);
+
+        String tfHash1=JSONObject.fromObject(tfResponse24).getJSONObject("Data").getString("TxId");
+        assertEquals("200",JSONObject.fromObject(tfResponse24).getString("State"));
+        assertThat(JSONObject.fromObject(tfResponse24).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
+
+        String tfHash2=JSONObject.fromObject(tfResponse25).getJSONObject("Data").getString("TxId");
+        assertEquals("success",JSONObject.fromObject(tfResponse25).getString("Message"));
+
+        Thread.sleep(SLEEPTIME);
+
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash1)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("State"));
+
+        log.info("查询余额判断回收成功与否");
+        String query6= multiSign.Balance(PRIKEY1,tokenType);
+        String query7= multiSign.Balance(PRIKEY2,tokenType);
+        String query8= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+
+        assertEquals("200",JSONObject.fromObject(query6).getString("State"));
+        assertEquals("200",JSONObject.fromObject(query7).getString("State"));
+        assertEquals("200",JSONObject.fromObject(query8).getString("State"));
+        assertEquals(String.valueOf(tf1),JSONObject.fromObject(query6).getJSONObject("Data").getString("Total"));
+        assertEquals(String.valueOf(tf2),JSONObject.fromObject(query7).getJSONObject("Data").getString("Total"));
+        assertEquals(String.valueOf(amount-tf+tfA-tf1-tf2),JSONObject.fromObject(query8).getJSONObject("Data").getString("Total"));
+
+
+    }
+
 
 
     //----------------以下为1/2多签账户发起token发行测试用例----------------//
@@ -730,7 +1096,7 @@ public class MultiTest_33_12 {
         assertThat(response22, containsString("200"));
         assertEquals(MULITADD7,JSONObject.fromObject(response22).getJSONObject("Data").getString("CollectAddr"));
 
-        Thread.sleep(SLEEPTIME/2);
+        Thread.sleep(SLEEPTIME);
 
         //发行后查询余额
         log.info("发行后查询余额: "+tokenType+","+tokenType2);
@@ -754,7 +1120,7 @@ public class MultiTest_33_12 {
         String transferInfo= multiSign.Transfer(PRIKEY6,PWD6, transferData, MULITADD7,list3);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("State"));
 
-        Thread.sleep(SLEEPTIME/2);
+        Thread.sleep(SLEEPTIME);
         //查询余额时使用带密码私钥
         log.info("查询余额判断转账是否成功");
         String queryInfoA1= soloSign.Balance(PRIKEY1,tokenType);
@@ -772,7 +1138,7 @@ public class MultiTest_33_12 {
         log.info("回收1/2账户MULITADD7前锁定token");
         multiSign.freezeToken(PRIKEY1,tokenType);
         multiSign.freezeToken(PRIKEY1,tokenType2);
-        Thread.sleep(SLEEPTIME/2);
+        Thread.sleep(SLEEPTIME);
 
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD7, PRIKEY1, tokenType, String.valueOf(amount-tf1-tf1));
@@ -787,7 +1153,7 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(recycleInfo4).getString("State"));
         assertEquals("200",JSONObject.fromObject(recycleInfo5).getString("State"));
 
-        Thread.sleep(SLEEPTIME/2);
+        Thread.sleep(SLEEPTIME);
         log.info("查询余额判断回收成功与否");
         String queryInfo3= multiSign.Balance(PRIKEY1,tokenType);
         String queryInfo4= multiSign.Balance(MULITADD4,PRIKEY1,tokenType2);
@@ -885,7 +1251,7 @@ public class MultiTest_33_12 {
         log.info("回收1/2账户MULITADD7前锁定Token");
         multiSign.freezeToken(PRIKEY1,tokenType);
         multiSign.freezeToken(PRIKEY1,tokenType2);
-        Thread.sleep(SLEEPTIME/2);
+        Thread.sleep(SLEEPTIME);
 
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD7, PRIKEY1, tokenType, String.valueOf(amount-tf1-tf1));
@@ -968,7 +1334,7 @@ public class MultiTest_33_12 {
         assertThat(response22, containsString("200"));
         assertEquals(MULITADD3,JSONObject.fromObject(response22).getJSONObject("Data").getString("CollectAddr"));
 
-        Thread.sleep(SLEEPTIME/2);
+        Thread.sleep(SLEEPTIME);
 
         //发行后查询余额
         log.info("发行后查询余额: "+tokenType+","+tokenType2);
@@ -1009,7 +1375,7 @@ public class MultiTest_33_12 {
         assertThat(JSONObject.fromObject(response15).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
         assertEquals("200",JSONObject.fromObject(response15).getString("State"));
 
-        Thread.sleep(SLEEPTIME/2);
+        Thread.sleep(SLEEPTIME);
         log.info("查询余额判断回收成功与否");
 
         String queryInfo6= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
@@ -1059,7 +1425,7 @@ public class MultiTest_33_12 {
         assertThat(response21, containsString("200"));
         assertEquals(MULITADD3,JSONObject.fromObject(response21).getJSONObject("Data").getString("CollectAddr"));
 
-        Thread.sleep(SLEEPTIME/2);
+        Thread.sleep(SLEEPTIME);
 
         //发行后查询余额
         log.info("发行后查询余额: "+tokenType+","+tokenType2);
@@ -1100,7 +1466,7 @@ public class MultiTest_33_12 {
         assertThat(JSONObject.fromObject(response15).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
         assertEquals("200",JSONObject.fromObject(response15).getString("State"));
 
-        Thread.sleep(SLEEPTIME/2);
+        Thread.sleep(SLEEPTIME);
         log.info("查询余额判断回收成功与否");
 
         String queryInfo6= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
@@ -1149,7 +1515,7 @@ public class MultiTest_33_12 {
         assertThat(response21, containsString("200"));
         assertEquals(IMPPUTIONADD,JSONObject.fromObject(response21).getJSONObject("Data").getString("CollectAddr"));
 
-        Thread.sleep(SLEEPTIME/2);
+        Thread.sleep(SLEEPTIME);
 
         //发行后查询余额
         log.info("发行后查询余额: "+tokenType+","+tokenType2);
@@ -1175,7 +1541,7 @@ public class MultiTest_33_12 {
         log.info("回收1/2账户IMPPUTIONADD前锁定Token");
         multiSign.freezeToken(PRIKEY1,tokenType);
         multiSign.freezeToken(PRIKEY1,tokenType2);
-        Thread.sleep(SLEEPTIME/2);
+        Thread.sleep(SLEEPTIME);
 
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, String.valueOf(amount));
@@ -1184,7 +1550,7 @@ public class MultiTest_33_12 {
         String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY5,tokenType2, String.valueOf(amount2));
         assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("State"));
 
-        Thread.sleep(SLEEPTIME/2);
+        Thread.sleep(SLEEPTIME);
         log.info("查询余额判断回收成功与否");
 
         String queryInfo6= multiSign.Balance(IMPPUTIONADD,PRIKEY4,tokenType);
