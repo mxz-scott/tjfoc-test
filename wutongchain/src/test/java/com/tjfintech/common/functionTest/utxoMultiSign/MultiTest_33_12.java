@@ -910,8 +910,8 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash1)).getString("State"));
 
         log.info("查询余额判断回收成功与否");
-        String query6= multiSign.Balance(PRIKEY1,tokenType);
-        String query7= multiSign.Balance(PRIKEY2,tokenType);
+        String query6= soloSign.Balance(PRIKEY1,tokenType);
+        String query7= soloSign.Balance(PRIKEY2,tokenType);
         String query8= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("State"));

@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.SyncInterfaceTest;
+package com.tjfintech.common.functionTest.syncInterfaceTest;
 
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.TestBuilder;
