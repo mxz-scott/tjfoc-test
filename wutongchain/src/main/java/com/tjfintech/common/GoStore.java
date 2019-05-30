@@ -188,7 +188,7 @@ public  class GoStore implements Store {
         Map<String,Object> map=new HashMap<>();
         map.put("Data",Data);
         map.put("Pubkeys",PubkeysObjects);
-        String result= PostTest.sendPostToJson(SDKADD+"/store", map);
+        String result= PostTest.postMethod(SDKADD+"/store", map);
         log.info(result);
         return result;
     }

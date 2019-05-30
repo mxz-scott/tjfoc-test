@@ -244,10 +244,10 @@ public class TestMgTool {
         checkParam(PEER1IP,"./toolkit query -p "+ PEER1IP,"unknown port");
         checkParam(PEER1IP,"./toolkit query -p "+ peer1IPPort,"too many colons in address");
 
-        checkParam(PEER1IP,"./toolkit ntx -p","flag needs an argument: 'p' in -p");
-        checkParam(PEER1IP,"./toolkit ntx","management");
-        checkParam(PEER1IP,"./toolkit ntx -p "+ PEER1IP,"unknown port");
-        checkParam(PEER1IP,"./toolkit ntx -p "+ peer1IPPort,"too many colons in address");
+//        checkParam(PEER1IP,"./toolkit ntx -p","flag needs an argument: 'p' in -p");
+//        checkParam(PEER1IP,"./toolkit ntx","management");
+//        checkParam(PEER1IP,"./toolkit ntx -p "+ PEER1IP,"unknown port");
+//        checkParam(PEER1IP,"./toolkit ntx -p "+ peer1IPPort,"too many colons in address");
 
         quitPeer(peer1IPPort,PEER3IP);
         queryPeerListNo(peer1IPPort,basePeerNo);
