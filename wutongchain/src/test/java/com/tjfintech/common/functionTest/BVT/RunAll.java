@@ -38,8 +38,8 @@ import org.junit.runners.Suite;
         LocalMultiSignInvalidTest.class,
         LocalSingleSignInvalidTest.class,
 
-        SyncDockerContractTest.class,
         SyncManageTest.class,
+        SyncDockerContractTest.class,
         SyncMultiSignTest.class,
         SyncSingleSignTest.class,
         SyncStoreTest.class,

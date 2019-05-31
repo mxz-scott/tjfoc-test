@@ -7,6 +7,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
+import org.junit.AfterClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -33,7 +34,6 @@ public class SyncDockerContractTest {
     String name=sdf.format(dt)+ RandomUtils.nextInt(100000);
     String version="1.0";
     String category="docker";
-    //public   final static int   SLEEPTIME=8*1000;
 
 
     /**
@@ -51,40 +51,33 @@ public class SyncDockerContractTest {
         String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         assertThat("200",containsString(JSONObject.fromObject(response).getString("State")));
         assertThat("success",containsString(JSONObject.fromObject(response).getString("Message")));
-        Thread.sleep(SLEEPTIME);
+        Thread.sleep(SLEEPTIME*3);
         String response2=store.GetTransaction(hash);
         assertThat(response2,containsString("200"));
-        //超时情况下
-//        String response1=contract.SynInstall(utilsClass.SHORTMEOUT,name,version,category,data);
-//        assertThat("504",containsString(JSONObject.fromObject(response1).getString("State")));
-//        assertThat("timeout",containsString(JSONObject.fromObject(response1).getString("Message")));
+
+        SynInvoke("InitMobile");
+
         log.info("销毁智能合约");
         String response3 = contract.SynDestroy(utilsClass.LONGTIMEOUT,name, version,category);
         assertThat("200",containsString(JSONObject.fromObject(response3).getString("State")));
+        String hash2 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
+        Thread.sleep(1000);
+        assertThat("200",containsString(JSONObject.fromObject(store.GetTxDetail(hash2)).getString("State")));
         assertThat("success",containsString(JSONObject.fromObject(response3).getString("Message")));
-
     }
     /**
      * 同步调用智能合约
      */
-//    @Test
-    public void SynInvoke() throws InterruptedException {
-        //正常情况下（120000毫秒）
-        String method="initMobile";
-        String[] arr  = {"xiaomi","Mix2S","4000.00", "black","123","Mobile8"};
+    //@Test
+    public void SynInvoke(String method,String... arg) throws InterruptedException {
         List<String> args = new LinkedList<>();
-        for (int i = 0; i < arr.length; i++) {
-            args.add(arr[i]);
+        for (int i = 0; i < arg.length; i++) {
+            args.add(arg[i]);
         }
-        String synInvoke = contract.SynInvoke(utilsClass.LONGTIMEOUT, name, version, category, method, args);
-        Thread.sleep(SLEEPTIME);
+        String synInvoke = contract.SynInvoke(utilsClass.SHORTMEOUT, name, version, category, method, args);
         String hash= JSONObject.fromObject(synInvoke).getJSONObject("Data").getString("Figure");//获取hash值
-        assertThat("504",containsString(JSONObject.fromObject(synInvoke).getString("State")));
-        assertThat("timeout",containsString(JSONObject.fromObject(synInvoke).getString("Message")));
-        Thread.sleep(SLEEPTIME);
-        String response2=store.GetTransaction(hash);
-        assertThat(response2,containsString("200"));
+        assertThat("200",containsString(JSONObject.fromObject(synInvoke).getString("State")));
+        assertThat("200",containsString(JSONObject.fromObject(store.GetTransaction(hash)).getString("State")));
 
     }
-    
 }

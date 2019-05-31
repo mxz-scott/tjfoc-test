@@ -965,9 +965,9 @@ public class GoMultiSign implements MultiSign {
 
     //同步接口实现
     @Override
-    public String SyncFreezeToken(String priKey,String timeout, String tokenType) {
+    public String SyncFreezeToken(String timeout, String tokenType) {
         Map<String ,Object>map=new HashMap<>();
-        map.put("PriKey",priKey);
+        //map.put("PriKey",priKey);
         map.put("TokenType",tokenType);
         String result =PostTest.sendPostToJson(SDKADD+"/sync/utxo/freeze?timeout="+timeout,map);
         log.info(result);
@@ -975,9 +975,9 @@ public class GoMultiSign implements MultiSign {
     }
 
     @Override
-    public String SyncRecoverFrozenToken(String priKey,String timeout, String tokenType) {
+    public String SyncRecoverFrozenToken(String timeout, String tokenType) {
         Map<String ,Object>map=new HashMap<>();
-        map.put("PriKey",priKey);
+        //map.put("PriKey",priKey);
         map.put("TokenType",tokenType);
         String result =PostTest.sendPostToJson(SDKADD+"/sync/utxo/recover?timeout="+timeout,map);
         log.info(result);

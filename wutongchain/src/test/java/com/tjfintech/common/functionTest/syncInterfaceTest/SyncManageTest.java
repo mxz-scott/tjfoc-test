@@ -39,7 +39,7 @@ public class SyncManageTest {
         //设置打包时间为500ms 使得各种类型的交易同时打包
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/basePkTm500ms.toml "+ PTPATH +"peer/conf/base.toml");
         setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
-        testSyncAdmin(String.valueOf(SHORTMEOUT),okCode,okMessage);
+        testSyncAdmin(String.valueOf(SHORTMEOUT),okCode);
     }
 
     //@After
@@ -48,7 +48,7 @@ public class SyncManageTest {
         setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
     }
 
-    public void testSyncAdmin(String timeout,String code,String message)throws Exception{
+    public void testSyncAdmin(String timeout,String code)throws Exception{
         String tokenType = "FreezeToken-"+ UtilsClass.Random(6);
         log.info("issue token");
         String respon= soloSign.issueToken(PRIKEY1,tokenType,"100","单签"+ADDRESS1+"发行token "+tokenType,ADDRESS1);
@@ -60,34 +60,31 @@ public class SyncManageTest {
         Thread.sleep(SLEEPTIME);
         log.info("timeout test for mg interfaces");
 
+        //添加归集地址
         String response1= multiSign.SyncCollAddress(timeout,ADDRESS6);
+        assertEquals(code,JSONObject.fromObject(response1).getString("State"));
+        assertEquals(code,JSONObject.fromObject(store.GetTxDetail(JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure"))).getString("State"));
+        //添加发行地址
         String response2= multiSign.SyncAddissueaddress(timeout,ADDRESS6);
-        String response3=multiSign.SyncFreezeToken(PRIKEY1,timeout,tokenType);
-        Thread.sleep(SLEEPTIME);
+        assertEquals(code,JSONObject.fromObject(response2).getString("State"));
+        assertEquals(code,JSONObject.fromObject(store.GetTxDetail(JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure"))).getString("State"));
+        //冻结token
+        String response3=multiSign.SyncFreezeToken(timeout,tokenType);
+        assertEquals(code,JSONObject.fromObject(response3).getString("State"));
+        assertEquals(code,JSONObject.fromObject(store.GetTxDetail(JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure"))).getString("State"));
 
         //删除归集地址
         String response4= multiSign.SyncDelCollAddress(timeout,ADDRESS6);
+        assertEquals(code,JSONObject.fromObject(response4).getString("State"));
+        assertEquals(code,JSONObject.fromObject(store.GetTxDetail(JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure"))).getString("State"));
         //删除发行地址
         String response5= multiSign.SyncDelissueaddress(timeout,ADDRESS6);
-        //解除冻结token
-        String response6=multiSign.SyncRecoverFrozenToken(PRIKEY1,timeout,tokenType);
-        Thread.sleep(SLEEPTIME);
-
-        assertEquals(code,JSONObject.fromObject(response1).getString("State"));
-        assertEquals(code,JSONObject.fromObject(response2).getString("State"));
-        assertEquals(code,JSONObject.fromObject(response3).getString("State"));
-        assertEquals(message,JSONObject.fromObject(response1).getString("Message"));
-        assertEquals(message,JSONObject.fromObject(response2).getString("Message"));
-        assertEquals(message,JSONObject.fromObject(response3).getString("Message"));
-
-        assertEquals(code,JSONObject.fromObject(response4).getString("State"));
         assertEquals(code,JSONObject.fromObject(response5).getString("State"));
+        assertEquals(code,JSONObject.fromObject(store.GetTxDetail(JSONObject.fromObject(response5).getJSONObject("Data").getString("Figure"))).getString("State"));
+        //解除冻结token
+        String response6=multiSign.SyncRecoverFrozenToken(timeout,tokenType);
         assertEquals(code,JSONObject.fromObject(response6).getString("State"));
-        assertEquals(message,JSONObject.fromObject(response4).getString("Message"));
-        assertEquals(message,JSONObject.fromObject(response5).getString("Message"));
-        assertEquals(message,JSONObject.fromObject(response6).getString("Message"));
-
-
+        assertEquals(code,JSONObject.fromObject(store.GetTxDetail(JSONObject.fromObject(response6).getJSONObject("Data").getString("Figure"))).getString("State"));
 
     }
 

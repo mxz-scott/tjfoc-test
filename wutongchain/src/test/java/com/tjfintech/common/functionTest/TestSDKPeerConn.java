@@ -40,7 +40,7 @@ public class TestSDKPeerConn {
         Shell shellPeer2 = new Shell(PEER2IP, USERNAME, PASSWD);
         Shell shellPeer4 = new Shell(PEER4IP, USERNAME, PASSWD);
         boolean bError=false;
-        for(int i=0;i<50;i++) {
+        for(int i=0;i<20;i++) {
 
             log.info("**************--------------test times: "+i+"--------------**************");
             shellPeer1.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
