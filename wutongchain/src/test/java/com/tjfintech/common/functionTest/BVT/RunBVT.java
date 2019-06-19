@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.BVT;
 
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.functionTest.TestTxType;
 import com.tjfintech.common.functionTest.dockerContract.ContractTest;
@@ -15,6 +16,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+        BeforeCondition.class,
         StoreTest.class,
         MultiTest.class,
         MultiTest_33_12.class,

@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.BVT;
 
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.PermissionTest.TestPermission;
 import com.tjfintech.common.functionTest.TestMgTool;
 import com.tjfintech.common.functionTest.TestTxType;
@@ -15,6 +16,7 @@ import java.security.acl.Permission;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+        BeforeCondition.class,
         TestMgTool.class,
         TestPermission.class
 })

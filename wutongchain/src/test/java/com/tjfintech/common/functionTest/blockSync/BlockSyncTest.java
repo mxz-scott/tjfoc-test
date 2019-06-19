@@ -159,7 +159,7 @@ public class BlockSyncTest {
         setAndRestartPeer(syncPeer,"rm -rf "+ PTPATH + "peer/*.db ");
 
         //等待同步时间
-        Thread.sleep(OnChainSleep*3+ContractInstallSleep);
+        Thread.sleep(OnChainSleep*5+ContractInstallSleep);
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
@@ -239,7 +239,7 @@ public class BlockSyncTest {
         //等待交易上链
         //恢复PEER2配置 检查可以正常同步
         setAndRestartPeer(syncPeer,"cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
-        Thread.sleep(OnChainSleep*3 +ContractInstallSleep);
+        Thread.sleep(OnChainSleep*5 +ContractInstallSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
         assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
     }
@@ -305,7 +305,7 @@ public class BlockSyncTest {
         setAndRestartPeer(PEER4IP,"rm -rf "+ PTPATH + "peer/*.db ");
 
         //等待同步时间
-        Thread.sleep(OnChainSleep*3);
+        Thread.sleep(OnChainSleep*5);
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
@@ -340,7 +340,7 @@ public class BlockSyncTest {
         setAndRestartPeer(PEER4IP,"rm -rf "+ PTPATH + "peer/*.db ");
 
         //等待同步时间
-        Thread.sleep(OnChainSleep+ContractInstallSleep);
+        Thread.sleep(OnChainSleep*3+ContractInstallSleep);
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
@@ -353,7 +353,7 @@ public class BlockSyncTest {
         assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
         for(String hash : hashList){
-            assertEquals("200",JSONObject.fromObject(store.GetTransaction(hash)).getString("State"));
+            assertEquals("200",JSONObject.fromObject(store.GetTxDetail(hash)).getString("State"));
         }
     }
 
@@ -377,7 +377,7 @@ public class BlockSyncTest {
         setAndRestartPeer(PEER4IP,"rm -rf "+ PTPATH + "peer/*.db ");
 
         //等待同步时间
-        Thread.sleep(OnChainSleep*3+ContractInstallSleep);
+        Thread.sleep(OnChainSleep*5+ContractInstallSleep);
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
@@ -575,9 +575,10 @@ public class BlockSyncTest {
         //等待一个打包周期
         Thread.sleep(OnChainSleep);
 
-        assertEquals("200",JSONObject.fromObject(store.GetTransaction(txHash7)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetTransaction(txHash81)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetTransaction(txHash9)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash7)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash81)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash8)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash9)).getString("State"));
     }
 
     public void ContractNoCheck()throws Exception{

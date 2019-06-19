@@ -83,7 +83,7 @@ public class UtilsClass {
     public static String PeerTPName="auto";
     public static ArrayList<String > peerList=new ArrayList<>();
     public static int RESTARTTIME=20000;
-    public static long ContractInstallSleep=60000;
+    public static long ContractInstallSleep=75000;
 
     public static String dockerFileName="simple.go";
     public static String fullPerm="[1 2 3 4 5 6 7 8 9 10 21 22 23 24 25 211 212 221 222 223 224 231 232 233 235 236 251 252 253 254 255 256]";
