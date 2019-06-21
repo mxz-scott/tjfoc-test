@@ -1,9 +1,11 @@
 package com.tjfintech.common.functionTest.BVT;
 
 import com.tjfintech.common.BeforeCondition;
-import com.tjfintech.common.functionTest.*;
 import com.tjfintech.common.functionTest.PermissionTest.TestPermission;
+import com.tjfintech.common.functionTest.mixTestWithConfigChange.*;
 import com.tjfintech.common.functionTest.dockerContract.ContractTest;
+import com.tjfintech.common.functionTest.mixTest.TestTxType;
+import com.tjfintech.common.functionTest.mixTest.TimeofTxOnChain;
 import com.tjfintech.common.functionTest.store.LocalStoreTest;
 import com.tjfintech.common.functionTest.store.StoreInvalidTest;
 import com.tjfintech.common.functionTest.store.StoreTest;
@@ -49,7 +51,6 @@ import org.junit.runners.Suite;
         MixTxTest.class,
         SysTest.class,
         TestTLSCert.class,
-        TestZBlockHash.class,
         TimeofTxOnChain.class,
         TestSDKPeerConn.class,
 })

@@ -1,16 +1,12 @@
 package com.tjfintech.common.functionTest.BVT;
 
 import com.tjfintech.common.BeforeCondition;
-import com.tjfintech.common.Interface.Contract;
-import com.tjfintech.common.functionTest.TestTxType;
+import com.tjfintech.common.functionTest.mixTest.TestTxType;
 import com.tjfintech.common.functionTest.dockerContract.ContractTest;
 import com.tjfintech.common.functionTest.store.StoreTest;
-import com.tjfintech.common.functionTest.store.StoreInvalidTest;
 import com.tjfintech.common.functionTest.utxoMultiSign.MultiTest;
-import com.tjfintech.common.functionTest.utxoMultiSign.MultiTestInvalid;
 import com.tjfintech.common.functionTest.utxoMultiSign.MultiTest_33_12;
 import com.tjfintech.common.functionTest.utxoSingleSign.SoloTest;
-import com.tjfintech.common.functionTest.utxoSingleSign.SoloTestInvalid;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

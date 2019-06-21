@@ -1,26 +1,20 @@
-package com.tjfintech.common.functionTest;
+package com.tjfintech.common.functionTest.mixTestWithConfigChange;
 
 import com.tjfintech.common.BeforeCondition;
-import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.Shell;
-import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 

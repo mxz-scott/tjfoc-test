@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.blockSync;
+package com.tjfintech.common.functionTest.mixTestWithConfigChange;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
@@ -6,7 +6,6 @@ import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.functionTest.dockerContract.ContractTest;
-import com.tjfintech.common.functionTest.TestMgTool;
 import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;

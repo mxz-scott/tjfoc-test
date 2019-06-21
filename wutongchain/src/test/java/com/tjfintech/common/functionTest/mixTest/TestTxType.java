@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest;
+package com.tjfintech.common.functionTest.mixTest;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;

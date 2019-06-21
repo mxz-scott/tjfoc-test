@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest;
+package com.tjfintech.common.functionTest.mixTest;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
@@ -16,6 +16,7 @@ import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -104,6 +105,23 @@ public class TimeofTxOnChain {
     public  void StoreOnChainTimeTest()throws Exception{
         for(int i=0;i<50;i++){
             searchStoreInlocal();
+        }
+    }
+
+    @Test
+    public void checkBlockHash()throws Exception{
+        BeforeCondition bf =new BeforeCondition();
+        bf.initTest();
+        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
+        String preBlockHash=JSONObject.fromObject(store.GetBlockByHeight(blockHeight)).getJSONObject("Data").getJSONObject("header").getString("previousHash");
+        String currentBlockHash="";
+        for(int i= blockHeight-1;i>0;i--){
+
+            log.info("Block height: " + i);
+            currentBlockHash  = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONObject("header").getString("blockHash");
+            assertEquals(currentBlockHash,preBlockHash);
+            preBlockHash=JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONObject("header").getString("previousHash");
+
         }
     }
 
