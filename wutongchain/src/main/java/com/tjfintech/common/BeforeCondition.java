@@ -92,7 +92,7 @@ public class BeforeCondition {
         String response5= multiSign.collAddress(PRIKEY1,MULITADD4);
         String response6= multiSign.collAddress(PRIKEY1,MULITADD5);
         String response7= multiSign.collAddress(PRIKEY1,MULITADD7);
-        String response8= multiSign.collAddress(PRIKEY1,MULITADD1);
+//        String response8= multiSign.collAddress(PRIKEY1,MULITADD1);
         assertThat(response4,containsString("200"));
         assertThat(response,containsString("200"));
         assertThat(response2,containsString("200"));
