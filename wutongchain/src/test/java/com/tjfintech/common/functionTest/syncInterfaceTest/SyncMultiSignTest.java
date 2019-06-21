@@ -62,6 +62,7 @@ public class SyncMultiSignTest {
         String transferData = "归集地址向" + MULITADD1 + "转账999个" + tokenType;
         log.info(transferData);
         List<Map>list=utilsClass.constructToken(MULITADD1,tokenType,"999");//封装token:接收地址，token类型，转账数量
+        Thread.sleep(SLEEPTIME);
         String syncTransfer = multiSign.SyncTransfer(utilsClass.SHORTMEOUT, PRIKEY4, transferData, IMPPUTIONADD, list);//转账操作
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址跟MULITADD4余额，判断转账是否成功");
@@ -72,6 +73,7 @@ public class SyncMultiSignTest {
         assertThat("200",containsString(JSONObject.fromObject(syncTransfer).getString("State")));
         assertThat("success",containsString(JSONObject.fromObject(syncTransfer).getString("Message")));
         log.info("回收token");
+        Thread.sleep(SLEEPTIME);
         String recycle = multiSign.SyncRecycle(utilsClass.SHORTMEOUT, IMPPUTIONADD, PRIKEY4, tokenType, "100");
         assertThat("200",containsString(JSONObject.fromObject(recycle).getString("State")));
         assertThat("success",containsString(JSONObject.fromObject(recycle).getString("Message")));
