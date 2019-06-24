@@ -66,10 +66,10 @@ public class UtilsClass {
     public static final String PEER2IP="10.1.3.246";
     public static final String PEER3IP="10.1.3.168";
     public static final String PEER4IP="10.1.3.247";
-    public static final String PEER1RPCPort="9300";
-    public static final String PEER2RPCPort="9300";
+    public static final String PEER1RPCPort="9400";
+    public static final String PEER2RPCPort="9500";
     public static final String PEER3RPCPort="9300";
-    public static final String PEER4RPCPort="9300";
+    public static final String PEER4RPCPort="9400";
     public static String PEER1MAC="02:42:fc:a2:5b:1b";
     public static String PEER2MAC="02:42:c0:31:6b:5c";
     public static String PEER3MAC="02:42:c4:b9:82:6e";
@@ -78,18 +78,25 @@ public class UtilsClass {
     public static final String USERNAME="root";
     public static final String PASSWD="root";
     //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-    public static final String PTPATH="/root/zll/permission/";
+    //public static final String PTPATH="/root/zll/permission/";
+    public static final String PTPATH="/root/zll/chain2.0.1/";
     public  static String SDKID=null;
-    public static String PeerTPName="auto";
+    public static String PeerTPName="Mp";
+    public static String SDKTPName="sdk";
     public static ArrayList<String > peerList=new ArrayList<>();
     public static int RESTARTTIME=20000;
-    public static long ContractInstallSleep=75000;
+    public static long ContractInstallSleep=60000;
 
     public static String dockerFileName="simple.go";
     public static String fullPerm="[1 2 3 4 5 6 7 8 9 10 21 22 23 24 25 211 212 221 222 223 224 231 232 233 235 236 251 252 253 254 255 256]";
     public static String PeerMemConfig="config";//全文件名为config.toml 节点集群信息
     public static String PeerInfoConfig="base";//全文件名为base.toml 节点运行相关配置
     public static String SDKConfig="config";//全文件名为config.toml SDK配置信息
+
+
+
+    //20190614 修改接口兼容主子链
+    public static String subLedger="";
 
 
     /**
@@ -303,6 +310,22 @@ public class UtilsClass {
         return MACAddr;
     }
 
+    public static String getPeerId(String IP,String userName,String passWd) {
+        Shell shellPeer=new Shell(IP,userName,passWd);
+        String peerId=null;
+        shellPeer.execute("cd "+PTPATH+"peer;"+"./"+PeerTPName+" init");
+        ArrayList<String> stdout3 = shellPeer.getStandardOutput();
+        for (String str1 : stdout3){
+            if(str1.contains("Local peer"))
+            {
+                peerId=str1.substring(str1.indexOf("peer:")+5).trim();
+                break;
+            }
+        }
+        log.info("IP "+IP+" with Id "+peerId);
+        return peerId;
+    }
+
     public static void setAndRestartPeerList(String...cmdList)throws Exception{
 
         peerList.clear();
@@ -352,7 +375,7 @@ public class UtilsClass {
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
 
-        shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellSDK.execute("ps -ef |grep "+SDKTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
 
         for (String cmd:cmdList
         ) {
