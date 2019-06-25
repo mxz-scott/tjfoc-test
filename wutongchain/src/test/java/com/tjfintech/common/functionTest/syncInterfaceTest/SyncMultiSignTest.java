@@ -33,17 +33,17 @@ public class SyncMultiSignTest {
         String tokenType = "CX-" + UtilsClass.Random(7);
         log.info(MULITADD3+ "发行" + tokenType + " token，数量为：" + 10000);
         String data = "MULITADD3" + "发行" + tokenType + " token，数量为：" + 10000;
-        String response = multiSign.SyncIssueToken(utilsClass.SHORTMEOUT, MULITADD4, IMPPUTIONADD, tokenType, "100000", data);//向IMPPUTIONADD地址发行10000
+        String response = multiSign.SyncIssueToken(utilsClass.UTXOSHORTMEOUT, MULITADD4, IMPPUTIONADD, tokenType, "100000", data);
+        log.info("++++++++"+response);
         String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
         log.info("第一次签名");
-        String response2 = multiSign.SyncSign(utilsClass.SHORTMEOUT, Tx1, PRIKEY1);
+        String response2 = multiSign.SyncSign(utilsClass.UTXOSHORTMEOUT, Tx1, PRIKEY1);
         Thread.sleep(SLEEPTIME);
         String queryInfo = multiSign.Balance(IMPPUTIONADD,PRIKEY4,tokenType);
         assertThat("100000",containsString(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total")));
         assertThat("200",containsString(JSONObject.fromObject(response).getString("State")));
         assertThat("200",containsString(JSONObject.fromObject(response2).getString("State")));
         assertThat("success",containsString(JSONObject.fromObject(response2).getString("Message")));
-
 
     }
 
@@ -54,7 +54,7 @@ public class SyncMultiSignTest {
     public void SyncMutiTransfer() throws InterruptedException {
         String tokenType = "CX-" + UtilsClass.Random(7);//随机一个tokentype
         String data = "MULITADD3" + "发行" + tokenType + " token，数量为：" + 10000;
-        String response = multiSign.SyncIssueToken(utilsClass.SHORTMEOUT, MULITADD4, IMPPUTIONADD, tokenType, "10000", data);////向IMPPUTIONADD地址发行10000
+        String response = multiSign.SyncIssueToken(utilsClass.UTXOSHORTMEOUT, MULITADD4, IMPPUTIONADD, tokenType, "10000", data);////向IMPPUTIONADD地址发行10000
         String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
         log.info("第一次签名");
         String response2 = multiSign.Sign(Tx1, PRIKEY1);
@@ -63,7 +63,7 @@ public class SyncMultiSignTest {
         log.info(transferData);
         List<Map>list=utilsClass.constructToken(MULITADD1,tokenType,"999");//封装token:接收地址，token类型，转账数量
         Thread.sleep(SLEEPTIME);
-        String syncTransfer = multiSign.SyncTransfer(utilsClass.SHORTMEOUT, PRIKEY4, transferData, IMPPUTIONADD, list);//转账操作
+        String syncTransfer = multiSign.SyncTransfer(utilsClass.UTXOSHORTMEOUT, PRIKEY4, transferData, IMPPUTIONADD, list);//转账操作
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址跟MULITADD4余额，判断转账是否成功");
         String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
@@ -74,7 +74,7 @@ public class SyncMultiSignTest {
         assertThat("success",containsString(JSONObject.fromObject(syncTransfer).getString("Message")));
         log.info("回收token");
         Thread.sleep(SLEEPTIME);
-        String recycle = multiSign.SyncRecycle(utilsClass.SHORTMEOUT, IMPPUTIONADD, PRIKEY4, tokenType, "100");
+        String recycle = multiSign.SyncRecycle(utilsClass.UTXOSHORTMEOUT, IMPPUTIONADD, PRIKEY4, tokenType, "100");
         assertThat("200",containsString(JSONObject.fromObject(recycle).getString("State")));
         assertThat("success",containsString(JSONObject.fromObject(recycle).getString("Message")));
         String queryInfo3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);

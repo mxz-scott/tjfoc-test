@@ -89,12 +89,12 @@ public class GetTest {
         BufferedReader in = null;
         HttpClient httpClient = new HttpClient();
         // 设置 Http 连接超时为5秒
-        httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+        httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(10000);
 
         /* 2 生成 GetMethod 对象并设置参数 */
         GetMethod getMethod = new GetMethod(url);
         // 设置 get 请求超时为 5 秒
-        getMethod.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, 5000);
+        getMethod.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, 10000);
         // 设置请求重试处理，用的是默认的重试处理：请求三次
         getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler());
         String response = "";

@@ -129,7 +129,7 @@ public class SysTest {
         shellMysql.execute("service mysql restart");
         Thread.sleep(4000);
         shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
-        Thread.sleep(6000);
+        Thread.sleep(10 * 1000);
 
         String response4= store.GetApiHealth();
         assertThat(response4, containsString("success"));
@@ -169,9 +169,9 @@ public class SysTest {
         shellSDK.execute("cp "+ PTPATH +"sdk/conf/configMongoMysql.toml "+ PTPATH +"sdk/conf/config.toml");
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");
-        Thread.sleep(6000);
+        Thread.sleep(5 * 1000);
         shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
-        Thread.sleep(6000);
+        Thread.sleep(10 * 1000);
 
 
         String response4= store.GetApiHealth();
@@ -255,14 +255,14 @@ public class SysTest {
 //        Thread.sleep(15000);
 
         shellMysql.execute("service mysql start");
-        Thread.sleep(6000);
+        Thread.sleep(10 * 1000);
 
 
         assertThat(store.GetApiHealth(),containsString("success"));
 
         shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
         shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
-        Thread.sleep(6000);
+        Thread.sleep(10 * 1000);
         assertThat(store.GetApiHealth(),containsString("success"));
         //assertThat(response, containsString("success"));
         //assertThat(response,containsString("200"));

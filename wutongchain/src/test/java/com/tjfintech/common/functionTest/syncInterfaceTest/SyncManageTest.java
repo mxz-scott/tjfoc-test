@@ -39,7 +39,7 @@ public class SyncManageTest {
         //设置打包时间为500ms 使得各种类型的交易同时打包
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/basePkTm500ms.toml "+ PTPATH +"peer/conf/base.toml");
         setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
-        testSyncAdmin(String.valueOf(SHORTMEOUT),okCode);
+        testSyncAdmin(String.valueOf(UTXOSHORTMEOUT),okCode);
     }
 
     //@After
@@ -52,6 +52,8 @@ public class SyncManageTest {
         String tokenType = "FreezeToken-"+ UtilsClass.Random(6);
         log.info("issue token");
         String respon= soloSign.issueToken(PRIKEY1,tokenType,"100","单签"+ADDRESS1+"发行token "+tokenType,ADDRESS1);
+
+        Thread.sleep(SLEEPTIME);
 
         //预先做删除归集地址、删除发行地址操作、解除token锁定，以便后续操作正常进行
         assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS6),containsString("200"));

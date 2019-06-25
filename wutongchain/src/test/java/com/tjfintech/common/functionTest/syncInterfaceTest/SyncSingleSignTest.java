@@ -57,7 +57,7 @@ public class SyncSingleSignTest {
     @Test
     public void SyncTransfer() throws Exception {
         tokenType = "SOLOTC-"+UtilsClass.Random(6);//随机生成tokentype
-        String isResult = soloSign.SyncIssueToken(utilsClass.SHORTMEOUT, utilsClass.PRIKEY1, tokenType, "10000", "单签发行token", ADDRESS2);
+        String isResult = soloSign.SyncIssueToken(utilsClass.SHORTMEOUT, PRIKEY1, tokenType, "10000", "单签发行token", ADDRESS2);
         Thread.sleep(SLEEPTIME);
         String transferData = "归集地址向" + "PUBKEY3" + "转账3000个" + "tokenType"+",并向"+"PUBKEY4"+"转账tokenType2";
         log.info(transferData);

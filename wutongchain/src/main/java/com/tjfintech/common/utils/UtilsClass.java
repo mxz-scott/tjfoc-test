@@ -15,8 +15,9 @@ public class UtilsClass {
     public static final String SDKADD="http://10.1.3.247:7777";
 
     public static Integer  LONGTIMEOUT = 100000;//毫秒
-    public static Integer  SHORTMEOUT = 2000;//毫秒
-    public   final static int   SLEEPTIME=5*1000;
+    public static Integer  SHORTMEOUT = 3000;//毫秒
+    public static Integer  UTXOSHORTMEOUT = 4 * 1000;//毫秒
+    public   final static int  SLEEPTIME=5*1000;
 
     //SM2公私钥对
      public static String  ADDRESS1 = "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo";
@@ -66,26 +67,26 @@ public class UtilsClass {
     public static final String PEER2IP="10.1.3.246";
     public static final String PEER3IP="10.1.3.168";
     public static final String PEER4IP="10.1.3.247";
-    public static final String PEER1RPCPort="9400";
-    public static final String PEER2RPCPort="9500";
+    public static final String PEER1RPCPort="9300";
+    public static final String PEER2RPCPort="9300";
     public static final String PEER3RPCPort="9300";
-    public static final String PEER4RPCPort="9400";
+    public static final String PEER4RPCPort="9300";
     public static String PEER1MAC="02:42:fc:a2:5b:1b";
     public static String PEER2MAC="02:42:c0:31:6b:5c";
     public static String PEER3MAC="02:42:c4:b9:82:6e";
     public static String PEER4MAC="02:42:dd:6c:4a:92";
-    public static final String version="2.0_2.1_1905";
+    public static final String version="2.0";
     public static final String USERNAME="root";
     public static final String PASSWD="root";
     //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-    //public static final String PTPATH="/root/zll/permission/";
-    public static final String PTPATH="/root/zll/chain2.0.1/";
+    public static final String PTPATH="/root/zll/permission/";
+//    public static final String PTPATH="/root/zll/chain2.0.1/";
     public  static String SDKID=null;
-    public static String PeerTPName="Mp";
-    public static String SDKTPName="sdk";
+    public static String PeerTPName="auto";
+    public static String SDKTPName="httpservice";
     public static ArrayList<String > peerList=new ArrayList<>();
     public static int RESTARTTIME=20000;
-    public static long ContractInstallSleep=60000;
+    public static long ContractInstallSleep=75000;
 
     public static String dockerFileName="simple.go";
     public static String fullPerm="[1 2 3 4 5 6 7 8 9 10 21 22 23 24 25 211 212 221 222 223 224 231 232 233 235 236 251 252 253 254 255 256]";
