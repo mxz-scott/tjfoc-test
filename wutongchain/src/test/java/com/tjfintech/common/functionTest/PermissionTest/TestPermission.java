@@ -62,7 +62,9 @@ public class TestPermission {
 
 
     String toolPath="cd "+PTPATH+"toolkit;";
-    String exeCmd="./toolkit permission ";
+    String ledger = (subLedger!="")?" -n "+subLedger:"";
+    String exeCmd="./toolkit permission "+ledger;
+
     String peerIP="9300";
     String sdkID= UtilsClass.getSDKID();
     //String sdkID="144166a82d85a96d79388e987a456ba70db683d7105505c38d768829c702eba6717a447c5e858165faefdaa847b3558a4b72db87fd379ac5154ad8fc4f3e13d2";
