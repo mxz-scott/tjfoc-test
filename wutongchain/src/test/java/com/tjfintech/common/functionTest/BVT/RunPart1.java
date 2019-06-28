@@ -18,44 +18,37 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         BeforeCondition.class,
+
         StoreTest.class,
-        MultiTest.class,
-        SoloTest.class,
-        MultiTest_33_12.class,
-        ContractTest.class,
-
         LocalStoreTest.class,
-        LocalMultiSignTest.class,
-        LocalSingleSignTest.class,
-
-        TestTxType.class,
-        TestMgTool.class,
-        TestPermission.class,
-
-        MultiSignDetailTest.class,
-
         StoreInvalidTest.class,
-        SoloTestInvalid.class,
+
+        LocalSingleSignInvalidTest.class,
+        LocalSingleSignTest.class,
         SingleSignInvalidTest.class,
+        SoloTest.class,
+        SoloTestInvalid.class,
+
+        MultiTest.class,
         MultiTestInvalid.class,
         MultiSignInvalidTest.class,
         LocalMultiSignInvalidTest.class,
-        LocalSingleSignInvalidTest.class,
+        MultiTest_33_12.class,
+        LocalMultiSignTest.class,
+        MultiSignDetailTest.class,
 
-        SyncManageTest.class,
+        ContractTest.class,
+
+        TestTxType.class,
+        TimeofTxOnChain.class,
+
         SyncDockerContractTest.class,
         SyncMultiSignTest.class,
         SyncSingleSignTest.class,
         SyncStoreTest.class,
-
-        MixTxTest.class,
-        SysTest.class,
-        TestTLSCert.class,
-        TimeofTxOnChain.class,
-        TestSDKPeerConn.class,
 })
 
 //Build Validation Test
-public class RunAll {
+public class RunPart1 {
     //执行这个类将执行suiteClass中的测试项
 }

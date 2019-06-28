@@ -394,8 +394,8 @@ public class TestPermission {
 //        permStr=permStr+pFunUTXO.multiSign(PRIKEY1,"");
 
         permStr=permStr+pFunUTXO.getZeroAddrBalance(""); //查询零地址地址
-        permStr=permStr+pFunUTXO.soloBalance(PRIKEY1,""); //默认开启，无权限控制
-        permStr=permStr+pFunUTXO.multiPostBalance(MULITADD4,PRIKEY1,""); //默认开启，无权限控制
+        permStr=permStr+pFunUTXO.soloBalance(PRIKEY1,"");
+        permStr=permStr+pFunUTXO.multiPostBalance(MULITADD4,PRIKEY1,"");
 
         return permStr; //should be a string with a length of 10
     }
@@ -456,7 +456,7 @@ public class TestPermission {
         shell1.execute(toolPath+"./toolkit getpermission -p 9300");
         ArrayList<String> stdout = shell1.getStandardOutput();
         String resp = StringUtils.join(stdout,"\n");
-        log.info(resp);
+        log.info("+++++++:" + resp);
         if(right=="999")
         {
             assertEquals(resp.contains("[1 2 3 4 5 6 7 8 9 10 21 22 23 24 25 211 212 221 222 223 224 231 232 233 235 236 251 252 253 254 255 256]"),true);

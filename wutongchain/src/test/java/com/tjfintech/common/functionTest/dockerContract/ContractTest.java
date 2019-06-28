@@ -49,8 +49,8 @@ public class ContractTest {
         String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
         Thread.sleep(ContractInstallSleep);
+        Thread.sleep(15000);
         String response1=store.GetTransaction(hash);
-        Thread.sleep(5000);
         assertThat(response1,containsString("200"));
         assertThat(response1,containsString("success"));
 
@@ -231,7 +231,7 @@ public class ContractTest {
         assertThat(response,containsString("200"));
 
         Thread.sleep(ContractInstallSleep);
-        Thread.sleep(15 * 1000);
+        Thread.sleep(30 * 1000);
 
         //跨合约调用
         log.info("正常跨合约调用");

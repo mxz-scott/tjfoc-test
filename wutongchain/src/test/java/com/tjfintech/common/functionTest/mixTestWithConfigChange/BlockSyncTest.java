@@ -552,8 +552,9 @@ public class BlockSyncTest {
         dockerFileName="simple.go";
         log.info("创建合约"+ct.name);
         String response7 = ct.installTest();
-        String txHash7 = JSONObject.fromObject(response7).getJSONObject("Data").get("Figure").toString();
         Thread.sleep(ContractInstallSleep);
+        String txHash7 = JSONObject.fromObject(response7).getJSONObject("Data").get("Figure").toString();
+
         //发送合约交易initMobile
         log.info("发送合约交易initMobile");
         String response81 = ct.initMobileTest();
