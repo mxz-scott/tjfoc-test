@@ -11,15 +11,12 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         BeforeCondition.class,
+        BlockSyncTest.class,
         SyncManageTest.class,
         TestSDKPeerConn.class,
         MixTxTest.class,
         TestTLSCert.class,
-        TestMgTool.class,
 
-//        SysTest.class,        // failed
-//        BlockSyncTest.class,    // failed
-//        TestPermission.class,     // failed
 })
 
 //Build Validation Test

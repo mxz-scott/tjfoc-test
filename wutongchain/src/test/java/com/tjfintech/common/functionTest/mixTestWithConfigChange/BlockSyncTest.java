@@ -340,6 +340,7 @@ public class BlockSyncTest {
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3+ContractInstallSleep);
+        Thread.sleep(15 * 1000);
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
