@@ -823,6 +823,7 @@ public class TestMgTool {
         String queryIP=netPeerIP.split(":")[0];//10.1.3.240
 
         Shell shell1=new Shell(queryIP,USERNAME,PASSWD);
+        if(subLedger!="")  rpcPort = rpcPort + " -z "+subLedger;
 
         String cmd1=toolPath+"./toolkit permission -p "+rpcPort+" -d "+ sdkID+" -m "+permStr;
         shell1.execute(cmd1);
@@ -835,6 +836,8 @@ public class TestMgTool {
         String cmd1="";
         String rpcPort=netPeerIP.split(":")[1];//9300
         String queryIP=netPeerIP.split(":")[0];//10.1.3.240
+
+        if(subLedger!="")  rpcPort = rpcPort + " -z "+subLedger;
 
         String response="wrong";
         Shell shell1=new Shell(queryIP,USERNAME,PASSWD);

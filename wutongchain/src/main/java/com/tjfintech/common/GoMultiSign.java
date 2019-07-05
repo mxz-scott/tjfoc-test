@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.SDKADD;
+import static com.tjfintech.common.utils.UtilsClass.subLedger;
 
 
 @Slf4j
@@ -33,7 +34,9 @@ public class GoMultiSign implements MultiSign {
         map.put("PubKey", pubKey);
         map.put("TokenType", tokenType);
         map.put("Amount", amount);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/multi/recycle_localsign", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/multi/recycle_localsign"+param, map);
 //        log.info(result);
         return result;
     }
@@ -54,7 +57,9 @@ public class GoMultiSign implements MultiSign {
 
         map.put("PriKey", pubKey);
         map.put("Addrs", addrs);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/addissueaddress", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/addissueaddress"+param, map);
         log.info(result);
         return result;
     }
@@ -77,7 +82,9 @@ public class GoMultiSign implements MultiSign {
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
         map.put("Data", Data);
-        String response = PostTest.sendPostToJson(SDKADD + "/utxo/multi/issuetoken", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String response = PostTest.sendPostToJson(SDKADD + "/utxo/multi/issuetoken"+param, map);
         log.info(response);
         return response;
     }
@@ -102,7 +109,9 @@ public class GoMultiSign implements MultiSign {
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
         map.put("Data", Data);
-        String response = PostTest.sendPostToJson(SDKADD + "/utxo/multi/issuetoken", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String response = PostTest.sendPostToJson(SDKADD + "/utxo/multi/issuetoken"+param, map);
         log.info(response);
         return response;
     }
@@ -121,7 +130,9 @@ public class GoMultiSign implements MultiSign {
             addrs.add(address[i]);
         }
         map.put("Addrs", addrs);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/addissueaddress", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/addissueaddress"+param, map);
         log.info(result);
         return result;
     }
@@ -141,7 +152,9 @@ public class GoMultiSign implements MultiSign {
         map.put("PubKey", PubKey);
         map.put("Data", Data);
         map.put("Token", tokenList);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/multi/transfer_localsign", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/multi/transfer_localsign"+param, map);
 //        log.info(result);
         return result;
 
@@ -158,7 +171,9 @@ public class GoMultiSign implements MultiSign {
     public String RecyclesLocalSign(List<Map> tokenList) {
         Map<String, Object> map = new HashMap<>();
         map.put("Token", tokenList);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/multi/recycles_localsign", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/multi/recycles_localsign"+param, map);
         log.info(result);
         return result;
     }
@@ -170,7 +185,9 @@ public class GoMultiSign implements MultiSign {
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
         map.put("Data", Data);
-        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout, map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout+param, map);
         log.info(response);
         return response;
     }
@@ -183,7 +200,9 @@ public class GoMultiSign implements MultiSign {
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
         map.put("Data", Data);
-        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout, map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout+param, map);
         log.info(response);
         return response;
     }
@@ -198,7 +217,9 @@ public class GoMultiSign implements MultiSign {
         map.put("Data", Data);
         map.put("PriKey", PriKey);
         map.put("Pwd", Pwd);
-        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout, map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout+param, map);
         log.info(response);
         return response;
     }
@@ -211,7 +232,9 @@ public class GoMultiSign implements MultiSign {
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
         map.put("Data", Data);
-        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout, map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout+param, map);
         log.info(response);
         return response;
     }
@@ -225,7 +248,9 @@ public class GoMultiSign implements MultiSign {
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
         map.put("Data", Data);
-        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout, map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout+param, map);
         log.info(response);
         return response;
     }
@@ -236,7 +261,9 @@ public class GoMultiSign implements MultiSign {
         map.put("Tx", Tx);
         map.put("Prikey", Prikey);
         map.put("Pwd", Pwd);
-        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/sign?timeout=" + timeout, map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/sign?timeout=" + timeout+param, map);
         log.info(response);
         return response;
     }
@@ -246,7 +273,9 @@ public class GoMultiSign implements MultiSign {
         Map<String, Object> map = new HashMap<>();
         map.put("Tx", Tx);
         map.put("Prikey", Prikey);
-        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/sign?timeout=" + timeout, map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/sign?timeout=" + timeout+param, map);
         log.info(response);
         return response;
     }
@@ -271,7 +300,9 @@ public class GoMultiSign implements MultiSign {
         map.put("Data", Data);
         map.put("Pwd", Pwd);
         map.put("Token", tokenList);
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/transfer?timeout=" + timeout, map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/transfer?timeout=" + timeout+param, map);
         log.info(result);
         return result;
     }
@@ -283,7 +314,9 @@ public class GoMultiSign implements MultiSign {
         map.put("Prikey", PriKey);
         map.put("Data", Data);
         map.put("Token", tokenList);
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/transfer?timeout=" + timeout, map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/transfer?timeout=" + timeout+param, map);
         log.info(result);
         return result;
     }
@@ -296,7 +329,9 @@ public class GoMultiSign implements MultiSign {
         map.put("Pwd", Pwd);
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/recycle?timeout=" + timeout, map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/recycle?timeout=" + timeout+param, map);
         log.info(result);
         return result;
     }
@@ -308,7 +343,9 @@ public class GoMultiSign implements MultiSign {
         map.put("Prikey", PriKey);
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/recycle?timeout=" + timeout, map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/recycle?timeout=" + timeout+param, map);
         log.info(result);
         return result;
     }
@@ -319,7 +356,9 @@ public class GoMultiSign implements MultiSign {
         map.put("Prikey", PriKey);
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/recycle?timeout=" + timeout, map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/recycle?timeout=" + timeout+param, map);
         log.info(result);
         return result;
     }
@@ -333,7 +372,9 @@ public class GoMultiSign implements MultiSign {
         }
         map.put("PriKey", priKey);
         map.put("Addrs", addrs);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/delissueaddress", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/delissueaddress"+param, map);
         log.info(result);
         return result;
     }
@@ -352,7 +393,9 @@ public class GoMultiSign implements MultiSign {
             addrs.add(address[i]);
         }
         map.put("Addrs", addrs);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/delissueaddress", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/delissueaddress"+param, map);
         log.info(result);
         return result;
     }
@@ -371,7 +414,9 @@ public class GoMultiSign implements MultiSign {
         map.put("StartTime", StartTime);
         map.put("EndTime", EndTime);
         map.put("TokenType", TokenType);
-        String result = PostTest.postMethod(SDKADD + "/utxo/gettotal", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.postMethod(SDKADD + "/utxo/gettotal"+param, map);
         log.info(result);
         return result;
     }
@@ -389,7 +434,9 @@ public class GoMultiSign implements MultiSign {
         map.put("StartTime", StartTime);
         map.put("EndTime", EndTime);
         map.put("TokenType", TokenType);
-        String result = PostTest.postMethod(SDKADD + "/utxo/gettotal", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.postMethod(SDKADD + "/utxo/gettotal"+param, map);
         log.info(result);
         return result;
     }
@@ -401,7 +448,9 @@ public class GoMultiSign implements MultiSign {
     @Override
     public String gettotal() {
         Map<String, Object> map = new HashMap<>();
-        String result = PostTest.postMethod(SDKADD + "/utxo/gettotal", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.postMethod(SDKADD + "/utxo/gettotal"+param, map);
         log.info(result);
         return result;
     }
@@ -416,7 +465,9 @@ public class GoMultiSign implements MultiSign {
     public String tokenstate(String TokenType) {
         Map<String, Object> map = new HashMap<>();
         map.put("TokenType", TokenType);
-        String result = PostTest.postMethod(SDKADD + "/utxo/tokenstate", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.postMethod(SDKADD + "/utxo/tokenstate"+param, map);
         log.info(result);
         return result;
     }
@@ -432,7 +483,9 @@ public class GoMultiSign implements MultiSign {
         Map<String,Object> map = new HashMap<>();
         map.put("TokenType",TokenType);
         map.put("Addr",Address);
-        String result = PostTest.postMethod(SDKADD + "/utxo/getsdkbalance", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.postMethod(SDKADD + "/utxo/getsdkbalance"+param, map);
         log.info(result);
         return result;
     }
@@ -443,7 +496,9 @@ public class GoMultiSign implements MultiSign {
         Map<String, Object> map = new HashMap<>();
         map.put("StartTime",starttime);
         map.put("EndTime",endtime);
-        String result = PostTest.postMethod(SDKADD + "/utxo/totalbyday", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.postMethod(SDKADD + "/utxo/totalbyday"+param, map);
         log.info(result);
         return result;
 
@@ -454,7 +509,9 @@ public class GoMultiSign implements MultiSign {
         Map<String, Object> map = new HashMap<>();
         map.put("Addr",addr);
         map.put("TokenType",tokenType);
-        String result = PostTest.postMethod(SDKADD + "/utxo/getchainbalance", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.postMethod(SDKADD + "/utxo/getchainbalance"+param, map);
         log.info(result);
         return result;
     }
@@ -478,7 +535,9 @@ public class GoMultiSign implements MultiSign {
         map.put("UTXOType",UTXOtype);
         map.put("FromAddr",FromAddr);
         map.put("ToAddr",ToAddr);
-        String result = PostTest.postMethod(SDKADD + "/utxo/getutxodetail", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.postMethod(SDKADD + "/utxo/getutxodetail"+param, map);
         log.info(result);
         return result;
     }
@@ -502,7 +561,9 @@ public class GoMultiSign implements MultiSign {
         map.put("UTXOType",UTXOtype);
         map.put("FromAddr",FromAddr);
         map.put("ToAddr",ToAddr);
-        String result = PostTest.postMethod(SDKADD + "/utxo/getutxodetail", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.postMethod(SDKADD + "/utxo/getutxodetail"+param, map);
         log.info(result);
         return result;
     }
@@ -526,7 +587,9 @@ public class GoMultiSign implements MultiSign {
         map.put("UTXOType",UTXOtype);
         map.put("FromAddr",FromAddr);
         map.put("ToAddr",ToAddr);
-        String result = PostTest.postMethod(SDKADD + "/utxo/getutxodetail", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.postMethod(SDKADD + "/utxo/getutxodetail"+param, map);
         log.info(result);
         return result;
     }
@@ -538,7 +601,9 @@ public class GoMultiSign implements MultiSign {
     @Override
     public String getUTXODetail() {
         Map<String, Object> map = new HashMap<>();
-        String result = PostTest.postMethod(SDKADD + "/utxo/getutxodetail", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.postMethod(SDKADD + "/utxo/getutxodetail"+param, map);
         log.info(result);
         return result;
     }
@@ -549,7 +614,9 @@ public class GoMultiSign implements MultiSign {
         Map<String,Object> map = new HashMap<>();
         map.put("TokenType",tokenType);
         map.put("Addr",addr);
-        String result = PostTest.postMethod(SDKADD + "/utxo/getsdkbalance", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.postMethod(SDKADD + "/utxo/getsdkbalance"+param, map);
         return result;
     }
 
@@ -568,7 +635,9 @@ public class GoMultiSign implements MultiSign {
 
         map.put("PriKey", priKey);
         map.put("Addrs", addrs);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/colladdress", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/colladdress"+param, map);
         log.info(result);
         return result;
     }
@@ -582,7 +651,9 @@ public class GoMultiSign implements MultiSign {
         }
         map.put("PriKey", priKey);
         map.put("Addrs", addrs);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/deladdress", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/deladdress"+param, map);
         log.info(result);
         return result;
     }
@@ -595,7 +666,9 @@ public class GoMultiSign implements MultiSign {
             addrs.add(address[i]);
         }
         map.put("Addrs", addrs);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/deladdress", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/deladdress"+param, map);
         log.info(result);
         return result;
     }
@@ -613,7 +686,9 @@ public class GoMultiSign implements MultiSign {
             addrs.add(address[i]);
         }
         map.put("Addrs", addrs);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/colladdress", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/colladdress"+param, map);
         log.info(result);
         return result;
     }
@@ -634,7 +709,9 @@ public class GoMultiSign implements MultiSign {
         }
         map.put("Args", PubkeysObjects);
         map.put("M", M);
-        String result=PostTest.sendPostToJson(SDKADD+"/utxo/genmultiaddress", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/genmultiaddress"+param, map);
         log.info(result);
         return result;
 
@@ -654,7 +731,9 @@ public class GoMultiSign implements MultiSign {
         map.put("PriKey", priKey);
         map.put("Pwd", Pwd);
         map.put("TokenType", tokenType);
-        String result=PostTest.sendPostToJson(SDKADD+"/utxo/balance", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/balance"+param, map);
         log.info(result);
         return result;
     }
@@ -668,7 +747,9 @@ public class GoMultiSign implements MultiSign {
         map.put("MultiAddr", addr);
         map.put("PriKey", priKey);
         map.put("tokentype", tokenType);
-        String result=PostTest.sendPostToJson(SDKADD+"/utxo/balance", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/balance"+param, map);
         log.info(result);
         return result;
     }
@@ -689,7 +770,9 @@ public class GoMultiSign implements MultiSign {
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
         map.put("Data", Data);
-        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken"+param, map);
         log.info(response);
         return response;
     }
@@ -700,7 +783,9 @@ public class GoMultiSign implements MultiSign {
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
         map.put("Data", Data);
-        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken"+param, map);
         log.info(response);
         return response;
     }
@@ -714,7 +799,9 @@ public class GoMultiSign implements MultiSign {
         if(!priKey.isEmpty()) map.put("PriKey",priKey);
         if(!Pwd.isEmpty()) map.put("Pwd",Pwd);
         map.put("Data", Data);
-        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken"+param, map);
         log.info(response);
         return response;
     }
@@ -735,7 +822,9 @@ public class GoMultiSign implements MultiSign {
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
         map.put("Data", Data);
-        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken_localsign", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken_localsign"+param, map);
         //log.info("发行token："+response);
         return response;
     }
@@ -749,7 +838,9 @@ public class GoMultiSign implements MultiSign {
         map.put("TokenType", TokenType);
         map.put("Amount", Amount);
         map.put("Data", Data);
-        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken_localsign", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/issuetoken_localsign"+param, map);
         //log.info("发行token："+response);
         return response;
     }
@@ -765,7 +856,9 @@ public class GoMultiSign implements MultiSign {
 
         Map<String, Object> map = new HashMap<>();
         map.put("Data", signedData);
-        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/send_multisign", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/send_multisign"+param, map);
         log.info(response);
         return response;
     }
@@ -786,7 +879,9 @@ public class GoMultiSign implements MultiSign {
         map.put("Pwd", Pwd);
         map.put("Tx", Tx);
         //String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/sign", map);
-        String response = PostTest.postMethod(SDKADD+"/utxo/multi/sign", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String response = PostTest.postMethod(SDKADD+"/utxo/multi/sign"+param, map);
         log.info(response);
         return response;
 
@@ -796,7 +891,9 @@ public class GoMultiSign implements MultiSign {
         Map<String, Object> map = new HashMap<>();
         map.put("Prikey", Prikey);
         map.put("Tx", Tx);
-        String response = PostTest.postMethod(SDKADD+"/utxo/multi/sign", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String response = PostTest.postMethod(SDKADD+"/utxo/multi/sign"+param, map);
         log.info(response);
         return response;
     }
@@ -817,7 +914,9 @@ public class GoMultiSign implements MultiSign {
         map.put("Data", Data);
         map.put("Pwd",Pwd);
         map.put("Token", tokenList);
-        String result=PostTest.postMethod(SDKADD+"/utxo/multi/transfer", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result=PostTest.postMethod(SDKADD+"/utxo/multi/transfer"+param, map);
         log.info(result);
         return result;
 
@@ -829,7 +928,9 @@ public class GoMultiSign implements MultiSign {
         map.put("Prikey", PriKey);
         map.put("Data", Data);
         map.put("Token", tokenList);
-        String result=PostTest.postMethod(SDKADD+"/utxo/multi/transfer", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result=PostTest.postMethod(SDKADD+"/utxo/multi/transfer"+param, map);
         log.info(result);
         return result;
 
@@ -847,7 +948,9 @@ public class GoMultiSign implements MultiSign {
           map.put("PriKey",PriKey);
           map.put("Pwd",Pwd);
           System.out.println(map.get("Pwd"));
-          String result=PostTest.sendPostToJson(SDKADD+"/utxo/validatekey",map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+          String result=PostTest.sendPostToJson(SDKADD+"/utxo/validatekey"+param,map);
           log.info(result);
 
           return result;
@@ -871,7 +974,9 @@ public class GoMultiSign implements MultiSign {
         map.put("Pwd",Pwd);
         map.put("TokenType",tokenType);
         map.put("Amount",amount);
-        String response =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle",map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String response =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle"+param,map);
         log.info(response);
         return response;
 
@@ -883,7 +988,9 @@ public class GoMultiSign implements MultiSign {
         map.put("PriKey",priKey);
         map.put("TokenType",tokenType);
         map.put("Amount",amount);
-        String result =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle",map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle"+param,map);
         log.info(result);
         return result;
 
@@ -893,7 +1000,9 @@ public class GoMultiSign implements MultiSign {
         map.put("PriKey",priKey);
         map.put("TokenType",tokenType);
         map.put("Amount",amount);
-        String result =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle",map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle"+param,map);
         log.info(result);
         return result;
 
@@ -908,6 +1017,7 @@ public class GoMultiSign implements MultiSign {
         Map<String ,Object>map=new HashMap<>();
         map.put("tokentype",tokenType);
         String param= GetTest.ParamtoUrl(map);
+        if(subLedger!="") param = param + "&ledger="+subLedger;
         String result= (GetTest.SendGetTojson(SDKADD+"/utxo/balance/zero"+"?"+param));
         log.info(result);
         return result;
@@ -918,7 +1028,9 @@ public class GoMultiSign implements MultiSign {
         Map<String ,Object>map=new HashMap<>();
         map.put("PriKey",priKey);
         map.put("TokenType",tokenType);
-        String result =PostTest.sendPostToJson(SDKADD+"/utxo/freeze",map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result =PostTest.sendPostToJson(SDKADD+"/utxo/freeze"+param,map);
         log.info(result);
         return result;
     }
@@ -932,7 +1044,9 @@ public class GoMultiSign implements MultiSign {
     public String freezeToken(String tokenType) {
         Map<String ,Object>map=new HashMap<>();
         map.put("TokenType",tokenType);
-        String result =PostTest.sendPostToJson(SDKADD+"/utxo/freeze",map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result =PostTest.sendPostToJson(SDKADD+"/utxo/freeze"+param,map);
         log.info(result);
         return result;
     }
@@ -942,7 +1056,9 @@ public class GoMultiSign implements MultiSign {
         Map<String ,Object>map=new HashMap<>();
         map.put("PriKey",priKey);
         map.put("TokenType",tokenType);
-        String result =PostTest.sendPostToJson(SDKADD+"/utxo/recover",map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result =PostTest.sendPostToJson(SDKADD+"/utxo/recover"+param,map);
         log.info(result);
         return result;
 
@@ -957,7 +1073,9 @@ public class GoMultiSign implements MultiSign {
     public String recoverFrozenToken(String tokenType) {
         Map<String ,Object>map=new HashMap<>();
         map.put("TokenType",tokenType);
-        String result =PostTest.sendPostToJson(SDKADD+"/utxo/recover",map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result =PostTest.sendPostToJson(SDKADD+"/utxo/recover"+param,map);
         log.info(result);
         return result;
     }
@@ -969,7 +1087,9 @@ public class GoMultiSign implements MultiSign {
         Map<String ,Object>map=new HashMap<>();
         //map.put("PriKey",priKey);
         map.put("TokenType",tokenType);
-        String result =PostTest.sendPostToJson(SDKADD+"/sync/utxo/freeze?timeout="+timeout,map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String result =PostTest.sendPostToJson(SDKADD+"/sync/utxo/freeze?timeout="+timeout+param,map);
         log.info(result);
         return result;
     }
@@ -979,7 +1099,9 @@ public class GoMultiSign implements MultiSign {
         Map<String ,Object>map=new HashMap<>();
         //map.put("PriKey",priKey);
         map.put("TokenType",tokenType);
-        String result =PostTest.sendPostToJson(SDKADD+"/sync/utxo/recover?timeout="+timeout,map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String result =PostTest.sendPostToJson(SDKADD+"/sync/utxo/recover?timeout="+timeout+param,map);
         log.info(result);
         return result;
     }
@@ -992,7 +1114,9 @@ public class GoMultiSign implements MultiSign {
             addrs.add(address[i]);
         }
         map.put("Addrs", addrs);
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/colladdress?timeout="+timeout, map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/colladdress?timeout="+timeout+param, map);
         log.info(result);
         return result;
     }
@@ -1005,7 +1129,9 @@ public class GoMultiSign implements MultiSign {
             addrs.add(address[i]);
         }
         map.put("Addrs", addrs);
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/deladdress?timeout="+timeout, map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/deladdress?timeout="+timeout+param, map);
         log.info(result);
         return result;
     }
@@ -1018,7 +1144,9 @@ public class GoMultiSign implements MultiSign {
         }
 
         map.put("Addrs", addrs);
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/addissueaddress?timeout="+timeout, map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/addissueaddress?timeout="+timeout+param, map);
         log.info(result);
         return result;
     }
@@ -1030,7 +1158,9 @@ public class GoMultiSign implements MultiSign {
             addrs.add(address[i]);
         }
         map.put("Addrs", addrs);
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/delissueaddress?timeout="+timeout, map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/delissueaddress?timeout="+timeout+param, map);
         log.info(result);
         return result;
     }

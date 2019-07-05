@@ -411,20 +411,22 @@ public class UtilsClass {
         //权限更新后查询检查生效与否
         Shell shell1=new Shell(netPeerIP,USERNAME,PASSWD);
         //String cmd1="cd zll;ls";//替换为权限命令
-        String ledger = (subLedger!="")?" -n "+subLedger:"";
+        String ledger = (subLedger!="")?" -z "+subLedger:"";
         shell1.execute("cd "+ PTPATH +"toolkit;"+"./toolkit getpermission "+ledger+" -p "+ netRpcPort);
         ArrayList<String> stdout = shell1.getStandardOutput();
         String resp = StringUtils.join(stdout,"\n");
         log.info(resp);
         int index=0;
+        boolean bflag = false;
         for(String line:stdout){
             if(line.contains(id)) {
                 log.info("permission contain id ok");
+                bflag=true;
                 break;
             }
             index++;
         }
-        if( index == 0 ) return "0";
-        return stdout.get(index+2).substring(stdout.get(index+2).lastIndexOf(":"+1)).trim();
+        if( !bflag ) return "[0]";
+        return stdout.get(index+2).substring(stdout.get(index+2).lastIndexOf(":")+1).trim();
     }
 }

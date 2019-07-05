@@ -63,14 +63,14 @@ public class TestWithConfigChange {
 
         String resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
         if(! resp.contains("\"name\": \""+glbChain01+"\"")) {
-            testMainSubChain.createSubChain(PEER1IP, PEER1RPCPort, " -n " + glbChain01,
+            testMainSubChain.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01,
                     " -t sm3", " -w first", " -c raft", ids);
             Thread.sleep(SLEEPTIME*2);
             assertEquals(testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01+"\""), true);
         }
 
         if(! resp.contains("\"name\": \""+glbChain02+"\"")) {
-            testMainSubChain.createSubChain(PEER1IP, PEER1RPCPort, " -n " + glbChain02,
+            testMainSubChain.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain02,
                     " -t sm3", " -w first", " -c raft", ids);
             Thread.sleep(SLEEPTIME*2);
             assertEquals(testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02+"\""), true);
@@ -82,20 +82,20 @@ public class TestWithConfigChange {
         setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOnePeer240.toml "+PTPATH+"sdk/conf/config.toml");
         //创建子链01 包含节点A、B、C
         String chainName1="tc1538_01";
-        String res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -n "+chainName1,
+        String res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1,
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
         //创建子链02 包含节点A、C
         String chainName2="tc1538_02";
-        String res2 = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -n "+chainName2,
+        String res2 = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName2,
                 " -t sm3"," -w first"," -c raft"," -m "+id1+","+id3);
         assertEquals(res2.contains("send transaction success"), true);
 
 
         //创建子链03 包含节点A、B
         String chainName3="tc1538_03";
-        String res3 = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -n "+chainName3,
+        String res3 = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName3,
                 " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2);
         assertEquals(res3.contains("send transaction success"), true);
 
@@ -122,9 +122,9 @@ public class TestWithConfigChange {
         assertEquals(resp.contains(chainName3), true);
 
 
-        resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort," -n "+chainName1);
+        resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
         assertEquals(resp.contains(PEER2IP), true);
-        resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort," -n "+chainName3);
+        resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName3);
         assertEquals(resp.contains(PEER2IP), true);
 
         subLedger=chainName1;
@@ -184,7 +184,7 @@ public class TestWithConfigChange {
 
         //创建子链01 包含节点A、B、C
         String chainName1="tc1537_01";
-        String res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -n "+chainName1,
+        String res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1,
                 " -t sm3"," -w first",
                 " -c raft",ids+","+getPeerId(PEER3IP,USERNAME,PASSWD));
         assertEquals(res.contains("send transaction success"), true);
@@ -241,7 +241,7 @@ public class TestWithConfigChange {
                 "/ip4/"+PEER3IP,"/tcp/60011",PEER3RPCPort,"update success");
         //创建子链01 包含节点A、B、C
         String chainName1="tc1659_01";
-        String res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -n "+chainName1,
+        String res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1,
                 " -t sm3"," -w first",
                 " -c raft",ids+","+getPeerId(PEER3IP,USERNAME,PASSWD));
         assertEquals(res.contains("is not Consensus Node"), true);
@@ -264,7 +264,7 @@ public class TestWithConfigChange {
         setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOnePeer240.toml "+PTPATH+"sdk/conf/config.toml");
         //创建子链，包含两个节点
         String chainName="tc1523_01";
-        String res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -n "+chainName,
+        String res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,
                 " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2);
         assertEquals(res.contains("send transaction success"), true);
 
@@ -310,7 +310,7 @@ public class TestWithConfigChange {
     public void TC1649_1650_restartPeer()throws Exception{
         //创建子链，包含三个节点 hashtype 使用sha256 主链使用sm3
         String chainName="tc1649_01";
-        String res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -n "+chainName,
+        String res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,
                 " -t sha256"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
@@ -330,6 +330,7 @@ public class TestWithConfigChange {
         String response2 = store.CreateStore("tc1649 data");
         assertThat(response2,containsString("hash error want"));
 
+        Thread.sleep(SLEEPTIME*2);
         subLedger=chainName;
         String response1 = store.CreateStore("tc1649 data");
         assertEquals("200",JSONObject.fromObject(response1).getString("State"));  //确认可以发送成功
@@ -352,9 +353,10 @@ public class TestWithConfigChange {
         String txHash2 =JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));  //确认可以c查询成功
 
+        //SDK兼容子链所有类型hashtype
         subLedger=chainName;
         String response4 = store.CreateStore("tc1649 data");
-        assertThat(response4,containsString("hash error want"));
+        assertEquals("200",JSONObject.fromObject(response4).getString("State"));  //确认可以发送成功
 
 
         testMainSubChain.sendTxToMainActiveChain("tc1649 data");
@@ -365,7 +367,7 @@ public class TestWithConfigChange {
     public void TC1651_1652_restartPeer()throws Exception{
         //创建子链，包含三个节点 hashtype 子链sm3 主链使用sha256
         String chainName="tc1651_01";
-        String res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -n "+chainName," -t sm3"," -w first"," -c raft",ids);
+        String res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
         Thread.sleep(SLEEPTIME*2);
@@ -379,10 +381,11 @@ public class TestWithConfigChange {
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseSHA256.toml "+ PTPATH +"peer/conf/base.toml");
         setAndRestartSDK("cp " + PTPATH + "sdk/conf/configSHA256.toml "+PTPATH+"sdk/conf/config.toml");
 
+        Thread.sleep(SLEEPTIME*2);
         //检查主链可以成功发送，子链无法成功发送
         subLedger=chainName;
         String response2 = store.CreateStore("tc1649 data");
-        assertThat(response2,containsString("hash error want"));
+        assertEquals("200",JSONObject.fromObject(response2).getString("State"));  //确认可以发送成功
 
         subLedger="";
         String response1 = store.CreateStore("tc1649 data");

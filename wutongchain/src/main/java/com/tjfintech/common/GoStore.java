@@ -113,7 +113,9 @@ public  class GoStore implements Store {
     public String SynCreateStore(Integer timeout, String Data) {
         Map<String,Object> map=new HashMap<>();
         map.put("Data",Data);
-        String result= PostTest.sendPostToJson(SDKADD+"/sync/store?timeout="+timeout, map);
+        String param="";
+        if (!subLedger.isEmpty()) param=param+"&ledger="+subLedger;
+        String result= PostTest.sendPostToJson(SDKADD+"/sync/store?timeout="+ timeout + param, map);
         log.info(result);
         return result;
     }
@@ -134,7 +136,11 @@ public  class GoStore implements Store {
         }
         map.put("Addrs", addrs);
         map.put("Data", Data);
-        String result= PostTest.sendPostToJson(SDKADD+"/sync/store?timeout="+timeout, map);
+
+        String param="";
+        if (!subLedger.isEmpty()) param=param+"&ledger="+subLedger;
+
+        String result= PostTest.sendPostToJson(SDKADD+"/sync/store?timeout="+timeout+ param, map);
         log.info(result);
         return result;
     }

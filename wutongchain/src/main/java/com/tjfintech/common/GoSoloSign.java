@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.SDKADD;
+import static com.tjfintech.common.utils.UtilsClass.subLedger;
 
 @Slf4j
 public class GoSoloSign implements SoloSign {
@@ -36,7 +37,9 @@ public class GoSoloSign implements SoloSign {
         map.put("PubKey", pubKey);
         map.put("Data", data);
         map.put("Token", token);
-        String result = PostTest.sendPostToJson(SDKADD + "/utxo/transfer_localsign", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/transfer_localsign"+param, map);
 //        log.info(result);
         return result;
     }
@@ -50,6 +53,7 @@ public class GoSoloSign implements SoloSign {
         map.put("key",key);
         map.put("tokentype",tokenType);
         param= GetTest.ParamtoUrl(map);
+        if(subLedger!="") param = param +"&ledger="+subLedger;
         String result=GetTest.SendGetTojson(SDKADD+"/utxo/balance"+"?"+param);
         log.info(result);
         return result ;
@@ -67,6 +71,7 @@ public class GoSoloSign implements SoloSign {
         map.put("pwd",pwd);
         map.put("tokentype",tokenType);
         param= GetTest.ParamtoUrl(map);
+        if(subLedger!="") param = param +"&ledger="+subLedger;
         String result=GetTest.SendGetTojson(SDKADD+"/utxo/balance"+"?"+param);
         log.info(result);
         return result ;
@@ -81,7 +86,9 @@ public class GoSoloSign implements SoloSign {
         map.put("Prikey", priKey);
         map.put("Data", data);
         map.put("Token", token);
-       String result=PostTest.sendPostToJson(SDKADD+"/utxo/transfer", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+       String result=PostTest.sendPostToJson(SDKADD+"/utxo/transfer"+param, map);
        log.info(result);
         return result ;
 
@@ -97,7 +104,9 @@ public class GoSoloSign implements SoloSign {
         map.put("Amount", amount);
         map.put("Data",data);
         map.put("Addr",address);
-        String result=PostTest.sendPostToJson(SDKADD+"/utxo/issuetoken", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/issuetoken"+param, map);
         log.info(result);
         return result;
     }
@@ -111,7 +120,9 @@ public class GoSoloSign implements SoloSign {
     public String genAddress(String publicKey){
         Map<String, Object> map = new HashMap<>();
         map.put("PubKey", publicKey);
-        String result=PostTest.postMethod(SDKADD+"/utxo/genaddress", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result=PostTest.postMethod(SDKADD+"/utxo/genaddress"+param, map);
         log.info(result);
         return result;
     }
@@ -155,7 +166,9 @@ public class GoSoloSign implements SoloSign {
         map.put("TokenType", tokenType);
         map.put("Amount", amount);
         map.put("Data",data);
-        String result=PostTest.sendPostToJson(SDKADD+"/utxo/issuetoken_localsign", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/issuetoken_localsign"+param, map);
         log.info(result);
         return result;
     }
@@ -168,7 +181,9 @@ public class GoSoloSign implements SoloSign {
         map.put("PubKey",pubKey);
         map.put("TokenType",tokenType);
         map.put("Amount",amount);
-        String result =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle_localsign",map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result =PostTest.sendPostToJson(SDKADD+"/utxo/multi/recycle_localsign"+param,map);
         log.info(result);
         return result;
     }
@@ -180,7 +195,9 @@ public class GoSoloSign implements SoloSign {
     public String sendSign(String signData){
         Map<String, Object> map = new HashMap<>();
         map.put("Data", signData);
-        String result=PostTest.sendPostToJson(SDKADD+"/utxo/send_sign", map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/send_sign"+param, map);
 //        log.info(result);
         return result;
     }
@@ -199,7 +216,9 @@ public class GoSoloSign implements SoloSign {
         map.put("Prikey", priKey);
         map.put("Data", data);
         map.put("Token", token);
-        String result=PostTest.sendPostToJson(SDKADD+"/sync/utxo/transfer?timeout="+timeout, map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String result=PostTest.sendPostToJson(SDKADD+"/sync/utxo/transfer?timeout="+timeout+param, map);
         log.info(result);
         return result ;
     }
@@ -222,7 +241,9 @@ public class GoSoloSign implements SoloSign {
         map.put("Amount", amount);
         map.put("Data",data);
         map.put("Addr",address);
-        String result=PostTest.sendPostToJson(SDKADD+"/sync/utxo/issuetoken?timeout="+timeout, map);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String result=PostTest.sendPostToJson(SDKADD+"/sync/utxo/issuetoken?timeout="+timeout+param, map);
         log.info(result);
         return result;
     }

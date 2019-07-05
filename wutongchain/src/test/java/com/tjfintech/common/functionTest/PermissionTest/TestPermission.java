@@ -62,7 +62,7 @@ public class TestPermission {
 
 
     String toolPath="cd "+PTPATH+"toolkit;";
-    String ledger = (subLedger!="")?" -n "+subLedger:"";
+    String ledger = (subLedger!="")?" -z "+subLedger:"";
     String exeCmd="./toolkit permission "+ledger;
 
     String peerIP="9300";
@@ -455,7 +455,7 @@ public class TestPermission {
         //权限更新后查询检查生效与否
         Shell shell1=new Shell(ToolIP,USERNAME,PASSWORD);
         //String cmd1="cd zll;ls";//替换为权限命令
-        shell1.execute(toolPath+"./toolkit getpermission -p 9300");
+        shell1.execute(toolPath+"./toolkit getpermission -p 9300"+ledger);
         ArrayList<String> stdout = shell1.getStandardOutput();
         String resp = StringUtils.join(stdout,"\n");
         log.info("+++++++:" + resp);
