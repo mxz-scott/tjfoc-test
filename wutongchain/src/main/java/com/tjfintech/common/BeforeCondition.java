@@ -17,6 +17,7 @@ import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static com.tjfintech.common.utils.UtilsClass.subLedger;
 
 
 
@@ -25,6 +26,7 @@ public class BeforeCondition {
     TestBuilder testBuilder = TestBuilder.getInstance();
     MultiSign multiSign = testBuilder.getMultiSign();
     SoloSign soloSign = testBuilder.getSoloSign();
+
 
 
     //赋值权限999
@@ -38,9 +40,10 @@ public class BeforeCondition {
 //        PEER2MAC=getMACAddr(PEER2IP,USERNAME,PASSWD).trim();
 //        PEER3MAC=getMACAddr(PEER3IP,USERNAME,PASSWD).trim();
 //        PEER4MAC=getMACAddr(PEER4IP,USERNAME,PASSWD).trim();
-
-        String preCmd=toolPath+exeCmd+"-p "+PEER1RPCPort+" -d "+SDKID+" -m ";
-        String getPerm=toolPath+"./toolkit getpermission -p "+PEER1RPCPort;
+        String ledger ="";
+        ledger=(subLedger!="")?" -z "+subLedger:"";
+        String preCmd=toolPath+exeCmd+"-p "+PEER1RPCPort+ledger+" -d "+SDKID+" -m ";
+        String getPerm=toolPath+"./toolkit getpermission -p "+PEER1RPCPort+ledger;
 
         Shell shellPeer1=new Shell(PEER1IP,USERNAME,PASSWD);
         int iFlag=0;

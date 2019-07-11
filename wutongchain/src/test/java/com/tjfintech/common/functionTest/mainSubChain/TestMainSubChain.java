@@ -40,7 +40,7 @@ public class TestMainSubChain {
     String noPerm="not found";
     String notSupport="not support service";
     String stateDestoryed ="has been destroyed";
-    String stateFreezed ="has been freezed";
+    String stateFreezed ="not support service";
 
     String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
     String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
@@ -910,7 +910,7 @@ public class TestMainSubChain {
 
         //向子链chainName发送交易
         subLedger=chainName;
-        Thread.sleep(SLEEPTIME);
+//        Thread.sleep(SLEEPTIME);
         String response1 = store.CreateStore(Data);
         assertThat(response1, containsString(stateFreezed));
         //向子链glbChain01/glbChain02和主链发送交易
@@ -1034,10 +1034,9 @@ public class TestMainSubChain {
 
         //向子链chainName2发送交易
         subLedger=chainName;
-
+//        Thread.sleep(SLEEPTIME);
         String response1 = store.CreateStore(Data);
 
-        Thread.sleep(SLEEPTIME);
 
         //检查可以获取子链列表
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -1095,7 +1094,7 @@ public class TestMainSubChain {
         subLedger=chainName3;
         String response2 = store.CreateStore(Data);
 
-       Thread.sleep(SLEEPTIME);
+       Thread.sleep(SLEEPTIME*2);
 
         //检查可以获取子链列表
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -1104,6 +1103,7 @@ public class TestMainSubChain {
         assertEquals(resp.contains(chainName3), true);
 
         subLedger=chainName2;
+//        Thread.sleep(SLEEPTIME);
         assertThat(response1, containsString(stateFreezed));
 
         subLedger=chainName3;
@@ -1142,6 +1142,7 @@ public class TestMainSubChain {
 
         subLedger=chainName;
         //3.冻结后发送一笔存证交易 应该无法上链
+//        Thread.sleep(SLEEPTIME);
         String response10 = store.CreateStore(Data);
         assertThat(response10, containsString(stateFreezed));
 

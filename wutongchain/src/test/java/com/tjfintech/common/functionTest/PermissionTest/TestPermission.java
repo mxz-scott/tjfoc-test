@@ -27,7 +27,7 @@ import static org.junit.Assert.assertThat;
 
 @Slf4j
 public class TestPermission {
-    public static final String ToolIP="10.1.3.240";
+    public static final String ToolIP=PEER1IP;
     public static final String USERNAME = "root";
     public static final String PASSWORD = "root";
     TestBuilder testBuilder=TestBuilder.getInstance();
@@ -49,7 +49,7 @@ public class TestPermission {
     String errMsg="does not found Permission";
     String def="Def:111";
     //"+def+Sys0+Store0+Docker0+Mg0+UTXO0+"
-    String Sys0="Sys:000000000";
+    String Sys0="Sys:000000001";
     String Store0="Store:00";
     String Docker0="Docker:00000";
     String Mg0="Mg:000000";
@@ -65,17 +65,19 @@ public class TestPermission {
     String ledger = (subLedger!="")?" -z "+subLedger:"";
     String exeCmd="./toolkit permission "+ledger;
 
-    String peerIP="9300";
+    String peerIP=PEER1RPCPort;
+//    String peerIP="9300";
     String sdkID= UtilsClass.getSDKID();
     //String sdkID="144166a82d85a96d79388e987a456ba70db683d7105505c38d768829c702eba6717a447c5e858165faefdaa847b3558a4b72db87fd379ac5154ad8fc4f3e13d2";
     //String sdkID="7d8c8eb266a6a445cde55e086c2ee63e577e3ff8ba5724ff2090a2a691384cbf87a881bc690695836c3e99424756bf3a3726bc0ae6c66795e51d351e6de7c0db";
-    String preCmd=toolPath+exeCmd+"-p "+peerIP+" -d "+sdkID+" -m ";
+    String preCmd=toolPath+exeCmd+" -p "+peerIP+" -d "+sdkID+" -m ";
     ArrayList<String> dockerList =new ArrayList();
 
     boolean bExe=false;
 
 
     @Before
+    //@Test
     public void beforeTest() throws Exception {
 
         if(certPath!=""&& bReg==false) {
@@ -152,7 +154,7 @@ public class TestPermission {
         pFunUTXO.multiSign(PRIKEY6,PWD6);//SDK发送UTXO - Token3/3多签第二次签名请求
         pFunUTXO.multiSign(PRIKEY7,PWD7);//SDK发送UTXO - Token3/3多签第三次签名请求
 
-        Thread.sleep(5000);
+        Thread.sleep(SLEEPTIME);
 
         assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(soloSign.Balance(PRIKEY1,glbSoloToken)).getJSONObject("Data").getString("Total"));
         assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.Balance(MULITADD4,PRIKEY1,glbMultiToken4)).getJSONObject("Data").getString("Total"));
@@ -174,15 +176,16 @@ public class TestPermission {
     @Test
     public void chkSys1by1()throws Exception{
         String[] mArray={"5","6","7","9","10","11","300"};
+//        checkAllInterface("1",def+"Sys:100000000"+Store0+Docker0+Mg0+UTXO0);//
+//        checkAllInterface("2",def+"Sys:010000000"+Store0+Docker0+Mg0+UTXO0);//
+//        checkAllInterface("3",def+"Sys:001100000"+Store0+Docker0+Mg0+UTXO0);//
+//        checkAllInterface("4",def+"Sys:000011110"+Store0+Docker0+Mg0+UTXO0);
 
-        checkAllInterface("1",def+"Sys:100000000"+Store0+Docker0+Mg0+UTXO0);
-
-        checkAllInterface("2",def+"Sys:010000000"+Store0+Docker0+Mg0+UTXO0);
-
-        checkAllInterface("3",def+"Sys:001100000"+Store0+Docker0+Mg0+UTXO0);
-
-        checkAllInterface("4",def+"Sys:000011110"+Store0+Docker0+Mg0+UTXO0);
-
+        checkAllInterface("1",def+"Sys:100000001"+Store0+Docker0+Mg0+UTXO0);
+        checkAllInterface("2",def+"Sys:010000001"+Store0+Docker0+Mg0+UTXO0);
+        checkAllInterface("3",def+"Sys:001100001"+Store0+Docker0+Mg0+UTXO0);
+        checkAllInterface("4",def+"Sys:000011111"+Store0+Docker0+Mg0+UTXO0);
+        //mysql数据库不支持/tx/search接口
         checkAllInterface("8",def+"Sys:000000001"+Store0+Docker0+Mg0+UTXO0);
 
         for(int i=0;i<mArray.length;i++)
@@ -279,6 +282,7 @@ public class TestPermission {
         //233为对账接口为此处检查接口  冻结权限--》变更为255
         checkAllInterface("233",def+Sys0+Store0+Docker0+Mg0+"UTXO:0001000000");
         //233同时管控多个接口，此为补充测试所有接口开放关闭一致
+        Thread.sleep(SLEEPTIME);
         check233Interface("1");
         //解除冻结权限--》变更为256
         //checkAllInterface("234",def+Sys0+Store0+Docker0+Mg0+"UTXO:00001000000");
@@ -336,9 +340,11 @@ public class TestPermission {
         permStr=permStr+pFun1.getTransationBlock(glbTxHash); //SDK发送获取交易所在区块高度请求
 
         permStr=permStr+pFun1.getBlockByHeight(1); //SDK发送通过区块高度获取区块信息请求
+
         permStr=permStr+pFun1.getBlockByBlockHash(glbBlockHash); //SDK发送通过区块哈希获取区块信息请求
 
         permStr=permStr+pFun1.getStore(glbTxHash); //SDK发送查看基础存证交易请求
+        log.info("pri:----------"+glbPriTxHash);
         permStr=permStr+pFun1.getStorePost(glbPriTxHash); //SDK发送查看隐私存证交易请求
         permStr=permStr+pFun1.getTransaction(glbTxHash); //SDK发送查看交易请求
         permStr=permStr+pFun1.getTransactionIndex(glbTxHash); //SDK发送查看交易索引请求
@@ -455,7 +461,7 @@ public class TestPermission {
         //权限更新后查询检查生效与否
         Shell shell1=new Shell(ToolIP,USERNAME,PASSWORD);
         //String cmd1="cd zll;ls";//替换为权限命令
-        shell1.execute(toolPath+"./toolkit getpermission -p 9300"+ledger);
+        shell1.execute(toolPath+"./toolkit getpermission -p "+PEER1RPCPort+ledger);
         ArrayList<String> stdout = shell1.getStandardOutput();
         String resp = StringUtils.join(stdout,"\n");
         log.info("+++++++:" + resp);
@@ -470,7 +476,7 @@ public class TestPermission {
             Thread.sleep(3000);
         }
         //确认获取权限无异常后 增加sleep时间 此时间最好大于sdk从链上拉取权限列表时间
-        Thread.sleep(2000);
+        Thread.sleep(SLEEPTIME*3/2);
         String permList="";
         permList=permList+"Def:";
         //默认开启接口检查
@@ -503,7 +509,7 @@ public class TestPermission {
 
     }
 
-    @Test
+   // @Test
     public void pConfTest()throws Exception{
         String peerIP240="10.1.3.240:9300";
         String peerIP246="10.1.3.246:9300";

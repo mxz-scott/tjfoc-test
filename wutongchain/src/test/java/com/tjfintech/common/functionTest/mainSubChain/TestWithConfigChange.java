@@ -233,7 +233,7 @@ public class TestWithConfigChange {
 
     }
 
-    //@Test  数据节点异常
+    @Test  //数据节点异常
     public void TC1659_1655_createChainWithDataPeer()throws Exception{
         setAndRestartPeer(PEER3IP,"cp "+PTPATH+"peer/configobs.toml "+PTPATH+"peer/"+PeerMemConfig+".toml");
         //动态加入节点168
@@ -246,13 +246,20 @@ public class TestWithConfigChange {
                 " -c raft",ids+","+getPeerId(PEER3IP,USERNAME,PASSWD));
         assertEquals(res.contains("is not Consensus Node"), true);
 
-
-
         Thread.sleep(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         String resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
-        assertEquals(resp.contains(chainName1), true);
+        assertEquals(resp.contains(chainName1), false);
+
+
+        //恢复节点
+        testMgTool.quitPeer(PEER1IP+":"+PEER1RPCPort,PEER3IP);
+        //停止节点id3
+        Shell shell=new Shell(PEER3IP,USERNAME,PASSWD);
+        shell.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        ArrayList<String> stdout = shell.getStandardOutput();
+        log.info(StringUtils.join(stdout,"\n"));
 
         testMainSubChain.sendTxToMainActiveChain("1659 data");
 
@@ -261,7 +268,7 @@ public class TestWithConfigChange {
 
     @Test
     public void TC1523_subChainStatus()throws Exception{
-        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOnePeer240.toml "+PTPATH+"sdk/conf/config.toml");
+//        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOnePeer240.toml "+PTPATH+"sdk/conf/config.toml");
         //创建子链，包含两个节点
         String chainName="tc1523_01";
         String res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,
@@ -325,12 +332,12 @@ public class TestWithConfigChange {
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
         setAndRestartSDK("cp "+PTPATH+"sdk/conf/configSHA256.toml "+PTPATH+"sdk/conf/config.toml");
 
+        Thread.sleep(SLEEPTIME);
         //检查子链可以成功发送，主链无法成功发送
         subLedger="";
         String response2 = store.CreateStore("tc1649 data");
         assertThat(response2,containsString("hash error want"));
 
-        Thread.sleep(SLEEPTIME*2);
         subLedger=chainName;
         String response1 = store.CreateStore("tc1649 data");
         assertEquals("200",JSONObject.fromObject(response1).getString("State"));  //确认可以发送成功
