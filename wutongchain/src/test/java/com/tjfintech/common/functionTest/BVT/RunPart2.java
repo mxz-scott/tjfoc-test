@@ -7,15 +7,19 @@ import com.tjfintech.common.functionTest.mixTestWithConfigChange.*;
 import com.tjfintech.common.functionTest.syncInterfaceTest.SyncManageTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import lombok.extern.slf4j.Slf4j;
+import static com.tjfoc.utils.ReadFiletoByte.log;
 
+@Slf4j
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+
         BeforeCondition.class,
-        BlockSyncTest.class,
-//        SyncManageTest.class,
-//        TestSDKPeerConn.class,
-//        MixTxTest.class,
-//        TestTLSCert.class,
+        SyncManageTest.class,
+        TestSDKPeerConn.class,
+        MixTxTest.class,
+        TestTLSCert.class,
+        BlockSyncTest.class, //failed
 
 })
 
