@@ -77,16 +77,18 @@ public class StoreTest {
         JSONObject jsonObject=JSONObject.fromObject(response1);
         String StoreHashPwd = jsonObject.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(SLEEPTIME);
-        String response2= store.GetStorePost(StoreHashPwd,PRIKEY1);
-        String response3= store.GetStorePostPwd(StoreHashPwd,PRIKEY6,PWD6);
-        String response4= store.GetStorePost(StoreHashPwd,PRIKEY3);
-        assertThat(response2, containsString("200"));
 
+        String response2= store.GetStorePost(StoreHashPwd,PRIKEY1);
+        assertThat(response2, containsString("200"));
         assertThat(response2, containsString(Data));
+
+        String response3= store.GetStorePostPwd(StoreHashPwd,PRIKEY6,PWD6);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString(Data));
-        assertThat(response4, containsString("200"));
-        assertEquals(response4.contains(Data), false);
+
+        String response4= store.GetStorePost(StoreHashPwd,PRIKEY3);
+        assertThat(response4, containsString("500"));
+        assertThat(response4, containsString("you have no permission to get this transaction !"));
     }
 
     /**
@@ -253,7 +255,7 @@ public class StoreTest {
         String response2= store.GetTxDetail(storeHash);
         assertThat(response2,containsString("200"));
         final Base64.Decoder decoder = Base64.getDecoder();
-        String args=JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("Header").get("transactionHash").toString();
+        String args=JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("Header").get("TransactionHash").toString();
         log.info("123{}",args);
         //   .getJSONArray("smartContractArgs").get(0).toString();
         String DataInfo=args;

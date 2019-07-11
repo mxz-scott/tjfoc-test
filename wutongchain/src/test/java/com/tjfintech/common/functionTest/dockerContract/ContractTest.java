@@ -50,7 +50,7 @@ public class ContractTest {
 
         Thread.sleep(ContractInstallSleep);
         Thread.sleep(15000);
-        String response1=store.GetTransaction(hash);
+        String response1=store.GetTxDetail(hash);
         assertThat(response1,containsString("200"));
         assertThat(response1,containsString("success"));
 
@@ -122,7 +122,7 @@ public class ContractTest {
         Thread.sleep(6000);
         String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         log.info(name);
-        response=store.GetTransaction(hash3);
+        response=store.GetTxDetail(hash3);
         assertThat(response,containsString("failed to find transaction"));
 
 
@@ -146,7 +146,7 @@ public class ContractTest {
         //安装后恢复dockerFileName为默认好的simple.go
         dockerFileName="simple.go";
         Thread.sleep(ContractInstallSleep);
-        String response1=store.GetTransaction(hash);
+        String response1=store.GetTxDetail(hash);
         assertThat(response1,containsString("200"));
         assertThat(response1,containsString("success"));
 
@@ -158,7 +158,7 @@ public class ContractTest {
         Thread.sleep(36000); //合约timeout时间
         String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         log.info(name);
-        response=store.GetTransaction(hash3);
+        response=store.GetTxDetail(hash3);
         assertThat(response,containsString("failed to find transaction"));
 
         //销毁合约
@@ -242,7 +242,7 @@ public class ContractTest {
         String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
         response=store.GetTxDetail(hash3);
-        String contractResult = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("contractResult").getString("payload");
+        String contractResult = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
         assertThat(contractResult,containsString("success"));
 
         //重复添加 则显示已存在信息
@@ -253,7 +253,7 @@ public class ContractTest {
         String hash4 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
         response=store.GetTxDetail(hash4);
-        String contractResult1 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("contractResult").getString("message");
+        String contractResult1 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Message");
         assertThat(contractResult1,containsString("this data is exist"));
 
         //调用不存在的合约
@@ -264,7 +264,7 @@ public class ContractTest {
         String hash5 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
         response=store.GetTxDetail(hash5);
-        String contractResult2 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("contractResult").getString("payload");
+        String contractResult2 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
         assertThat(contractResult2,containsString("does not exist"));
 
         name=name1;

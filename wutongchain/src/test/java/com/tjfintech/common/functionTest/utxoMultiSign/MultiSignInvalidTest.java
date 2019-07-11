@@ -82,9 +82,9 @@ public class MultiSignInvalidTest {
         issuetoken = multiSign.issueTokenCarryPri(multiaddr2,"test211","900000000","abc","111","zz");
         assertThat(issuetoken, containsString("Private key must be base64 string"));//	PriKey传入非base64字符
         issuetoken = multiSign.issueTokenCarryPri(multiaddr2,"test211","900000000","YWJjeHg=","111","zz");
-        assertThat(issuetoken, containsString("not found"));//Prikey传入存在一些没有意义的字符的base64编码的值
+        assertThat(issuetoken, containsString("Incorrect private key or password"));//Prikey传入存在一些没有意义的字符的base64编码的值
         issuetoken = multiSign.issueTokenCarryPri(multiaddr2,"test211","900000000",UtilsClass.PRIKEY6,"22","zz");
-        assertThat(issuetoken, containsString("not found"));//Pwd字段和Prikey字段不匹配
+        assertThat(issuetoken, containsString("Incorrect private key or password"));//Pwd字段和Prikey字段不匹配
 
     }
 
@@ -145,7 +145,7 @@ public class MultiSignInvalidTest {
          transfer = multiSign.Transfer(UtilsClass.PRIKEY6, "111","", "122", tokenList);
         assertThat(transfer, containsString("Invalid multiple address"));//Multiaddr字段传入非法字符
         transfer = multiSign.Transfer(UtilsClass.PRIKEY6, "111","", "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo", tokenList);
-        assertThat(transfer, containsString("not found"));//Multiaddr字段不匹配
+        assertThat(transfer, containsString("Multiaddr is not matching for the prikey"));//Multiaddr字段不匹配
         map2.put("ToAddr",""); //接收方
         tokenList.add(map2);
         transfer = multiSign.Transfer(UtilsClass.PRIKEY6, "111","", multiaddr2, tokenList);

@@ -13,7 +13,7 @@ import java.util.*;
 
 @Slf4j
 public class UtilsClass {
-    public static final String SDKADD="http://10.1.3.247:7777";
+    public static final String SDKADD="http://10.1.3.246:7777";
 
     public static Integer  LONGTIMEOUT = 100000;//毫秒
     public static Integer  SHORTMEOUT = 3000;//毫秒

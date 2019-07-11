@@ -12,10 +12,10 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         BeforeCondition.class,
         BlockSyncTest.class,
-        SyncManageTest.class,
-        TestSDKPeerConn.class,
-        MixTxTest.class,
-        TestTLSCert.class,
+//        SyncManageTest.class,
+//        TestSDKPeerConn.class,
+//        MixTxTest.class,
+//        TestTLSCert.class,
 
 })
 
