@@ -13,7 +13,7 @@ import java.util.*;
 
 @Slf4j
 public class UtilsClass {
-    public static final String SDKADD="http://10.1.3.246:7777";
+    public static final String SDKADD="http://10.1.3.201:2222";
 
     public static Integer  LONGTIMEOUT = 100000;//毫秒
     public static Integer  SHORTMEOUT = 3000;//毫秒
@@ -98,7 +98,7 @@ public class UtilsClass {
 
 
     //20190614 修改接口兼容主子链
-    public static String subLedger="";
+    public static String subLedger="leg1";
 
 
     /**
