@@ -547,7 +547,7 @@ public class TestMultiSubChain {
         subLedger="";
         String response3 = store.CreateStore(Data);
 
-        Thread.sleep(SLEEPTIME);
+        Thread.sleep(SLEEPTIME*2);
 
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
@@ -672,6 +672,13 @@ public class TestMultiSubChain {
 
         Thread.sleep(SLEEPTIME);
 
+        //检查可以获取子链列表
+        String resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
+        assertEquals(resp.contains("name"), true);
+        assertEquals(resp.contains(chainName2), true);
+        assertEquals(resp.contains(chainName3), true);
+        Thread.sleep(SLEEPTIME);
+
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
@@ -691,11 +698,7 @@ public class TestMultiSubChain {
         assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));
         assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
 
-        //检查可以获取子链列表
-        String resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
-        assertEquals(resp.contains("name"), true);
-        assertEquals(resp.contains(chainName2), true);
-        assertEquals(resp.contains(chainName3), true);
+
     }
 
     @Test

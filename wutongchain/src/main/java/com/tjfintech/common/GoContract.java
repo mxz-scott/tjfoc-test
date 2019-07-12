@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.SDKADD;
+import static com.tjfintech.common.utils.UtilsClass.subLedger;
 
 @Slf4j
 public class GoContract implements Contract {
@@ -39,9 +40,11 @@ public class GoContract implements Contract {
         map.put("Version",version);
         map.put("Category",category);
         map.put("File",file);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
 
 //        String result=PostTest.sendPostToJson(SDKADD+"/contract/install",map);
-        String result=PostTest.postMethod(SDKADD+"/contract/install",map);
+        String result=PostTest.postMethod(SDKADD+"/contract/install"+param,map);
         log.info(result);
         return result ;
     }
@@ -79,8 +82,10 @@ public class GoContract implements Contract {
         map.put("Name",name);
         map.put("Version",version);
         map.put("Category",category);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
 
-        String result=PostTest.sendPostToJson(SDKADD+"/contract/destroy",map);
+        String result=PostTest.sendPostToJson(SDKADD+"/contract/destroy"+param,map);
         log.info(result);
         return result ;
     }
@@ -117,7 +122,9 @@ public class GoContract implements Contract {
         map.put("Version",version);
         map.put("Method",method);
         map.put("Args",args);
-        String result=PostTest.sendPostToJson(SDKADD+"/createnewtransaction",map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result=PostTest.sendPostToJson(SDKADD+"/createnewtransaction"+param,map);
         log.info(result);
         return result ;
     }
@@ -136,7 +143,9 @@ public class GoContract implements Contract {
         map.put("Category",category);
         map.put("Method",method);
         map.put("Args",args);
-        String result=PostTest.sendPostToJson(SDKADD+"/contract/invoke",map);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result=PostTest.sendPostToJson(SDKADD+"/contract/invoke"+param,map);
         log.info(result);
         return result ;
     }
@@ -167,14 +176,18 @@ public class GoContract implements Contract {
 
     @Override
     public String SearchByKey(String key, String contractName) {
-        String result=GetTest.SendGetTojson(SDKADD+"/search/bykey"+"?key="+key+"&cn="+contractName);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String result=GetTest.SendGetTojson(SDKADD+"/search/bykey"+"?key="+key+"&cn="+contractName+param);
         log.info(result);
         return result;
     }
 
     @Override
     public String SearchByPrefix(String prefix, String contractName) {
-        String result=GetTest.SendGetTojson(SDKADD+"/search/byprefix"+"?prefix="+prefix+"&cn="+contractName);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+        String result=GetTest.SendGetTojson(SDKADD+"/search/byprefix"+"?prefix="+prefix+"&cn="+contractName+param);
         log.info(result);
         return result;
     }

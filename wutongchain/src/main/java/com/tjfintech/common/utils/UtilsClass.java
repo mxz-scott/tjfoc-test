@@ -15,6 +15,8 @@ import java.util.*;
 public class UtilsClass {
     public static final String SDKADD="http://10.1.3.201:2222";
 
+    public static final String certPath="SM2"; //设置签名证书类型，需手动修改，可选值SM2，ECDSA，MIX1，MIX2，RSA
+
     public static Integer  LONGTIMEOUT = 100000;//毫秒
     public static Integer  SHORTMEOUT = 3000;//毫秒
     public static Integer  UTXOSHORTMEOUT = 4 * 1000;//毫秒
@@ -60,8 +62,6 @@ public class UtilsClass {
     public static String PWD6="111";
     public static String PWD7="222";
 
-    //add for diff type prikey & pubkey:SM2 ECDSA or RSA
-    public static final String certPath="SM2";
     public static boolean bReg=false;
    //add parameters for manage tool
     public static final String PEER1IP="10.1.3.240";
@@ -98,7 +98,7 @@ public class UtilsClass {
 
 
     //20190614 修改接口兼容主子链
-    public static String subLedger="leg1";
+    public static String subLedger="";
 
 
     /**
