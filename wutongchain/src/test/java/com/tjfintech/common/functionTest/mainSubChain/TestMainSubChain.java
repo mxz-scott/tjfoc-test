@@ -744,6 +744,26 @@ public class TestMainSubChain {
 //        subLedger="tc1518_20190704162";
 //        storeTypeSupportCheck("destory");
 //    }
+    @Test
+    public void TC1702_TC1703_createSpecMainNameChain()throws Exception{
+
+        //创建一个名称为main的子链（与链上主链标识一致）
+        String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+"main"," -t sm3"," -w first"," -c raft",ids);
+        assertEquals(res.contains("exist"), true);
+
+        Thread.sleep(SLEEPTIME);
+        //检查可以获取子链列表 中无main子链
+        String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
+        assertEquals(resp.contains("name"), true);
+        assertEquals(resp.contains("\"name\": \"main\""), false);
+
+        assertEquals(resp.contains("\"name\": \"wtchain\""), false);//wtchain 为节点配置文件中ledger字段后的内容
+
+        resp = getSubChain(PEER1IP,PEER1RPCPort,"-z wtchain");
+        assertEquals(resp.contains("not exist"), true);
+
+
+}
 
     @Test
     public void TC1475_1493_createExistChain()throws Exception{
