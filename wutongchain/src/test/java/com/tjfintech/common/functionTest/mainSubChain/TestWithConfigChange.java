@@ -245,6 +245,7 @@ public class TestWithConfigChange {
         //动态加入节点168
         testMgTool.addPeer("observer",PEER1IP+":"+PEER1RPCPort,
                 "/ip4/"+PEER3IP,"/tcp/60011",PEER3RPCPort,"success");
+        Thread.sleep(SLEEPTIME);
         //创建子链01 包含节点A、B、C
         String chainName1="tc1659_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         String res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1,
@@ -431,8 +432,8 @@ public class TestWithConfigChange {
 
 
 
-    //@AfterClass
-    public static void resetPeerAndSDK()throws  Exception {
+    //@After
+    public void resetPeerAndSDK()throws  Exception {
         setAndRestartPeerList("cp " + PTPATH + "peer/conf/baseOK.toml " + PTPATH + "peer/conf/base.toml");
         setAndRestartSDK("cp " + PTPATH + "sdk/conf/configOK.toml " + PTPATH + "sdk/conf/config.toml");
     }

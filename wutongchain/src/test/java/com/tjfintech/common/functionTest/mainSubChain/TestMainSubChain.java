@@ -759,7 +759,7 @@ public class TestMainSubChain {
 
         assertEquals(resp.contains("\"name\": \"wtchain\""), false);//wtchain 为节点配置文件中ledger字段后的内容
 
-        resp = getSubChain(PEER1IP,PEER1RPCPort,"-z wtchain");
+        resp = getSubChain(PEER1IP,PEER1RPCPort," -z wtchain");
         assertEquals(resp.contains("not exist"), true);
 
 
