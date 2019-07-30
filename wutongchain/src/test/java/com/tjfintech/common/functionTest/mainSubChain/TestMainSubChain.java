@@ -6,11 +6,9 @@ import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.TestMgTool;
 import com.tjfintech.common.utils.Shell;
-import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import oracle.jrockit.jfr.jdkevents.ThrowableTracer;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.*;
@@ -41,11 +39,6 @@ public class TestMainSubChain {
     String notSupport="not support service";
     String stateDestoryed ="has been destroyed";
     String stateFreezed ="not support service";
-
-    String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
-    String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
-    String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
-    String ids = " -m "+ id1+","+ id2+","+ id3;
 
     boolean bExe=false;
 

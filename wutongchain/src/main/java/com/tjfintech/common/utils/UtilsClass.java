@@ -10,17 +10,21 @@ import sun.misc.BASE64Encoder;
 import java.io.*;
 import java.util.*;
 
+import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
+
 
 @Slf4j
 public class UtilsClass {
-    public static final String SDKADD="http://10.1.3.201:2222";
+    public static final String SDKADD="http://10.1.3.240:7779";
 
-    public static final String certPath="SM2"; //设置签名证书类型，需手动修改，可选值SM2，ECDSA，MIX1，MIX2，RSA
+    public static final String certPath=""; //设置签名证书类型，需手动修改，可选值SM2，ECDSA，MIX1，MIX2，RSA
+    //20190614 修改接口兼容主子链
+    public static String subLedger="";
 
     public static Integer  LONGTIMEOUT = 100000;//毫秒
     public static Integer  SHORTMEOUT = 3000;//毫秒
     public static Integer  UTXOSHORTMEOUT = 4 * 1000;//毫秒
-    public   final static int  SLEEPTIME=5*1000;
+    public   final static int  SLEEPTIME=7*1000;
 
     //SM2公私钥对
      public static String  ADDRESS1 = "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo";
@@ -95,11 +99,10 @@ public class UtilsClass {
     public static String PeerInfoConfig="base";//全文件名为base.toml 节点运行相关配置
     public static String SDKConfig="config";//全文件名为config.toml SDK配置信息
 
-
-
-    //20190614 修改接口兼容主子链
-    public static String subLedger="";
-
+    public static String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
+    public static String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
+    public static String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
+    public static String ids = " -m "+ id1+","+ id2+","+ id3;
 
     /**
      * 多签转账操作的TOKEN数组构建方法，单签的在GosoloSign类中
@@ -388,6 +391,21 @@ public class UtilsClass {
         shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
     }
 
+    public static void configSDKNoRestart(String... cmdList)throws Exception{
+        String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
+        Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
+
+        //shellSDK.execute("ps -ef |grep "+SDKTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+
+        for (String cmd:cmdList
+        ) {
+            shellSDK.execute(cmd);
+            Thread.sleep(200);
+        }
+
+        //shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
+    }
+
     public static String getKeyPairsFromFile(String pemFileName)throws Exception{
         String filePath = System.getProperty("user.dir") + "/src/main/resources/"+pemFileName;
         InputStream inStream =new FileInputStream(filePath);
@@ -428,5 +446,51 @@ public class UtilsClass {
         }
         if( !bflag ) return "[0]";
         return stdout.get(index+2).substring(stdout.get(index+2).lastIndexOf(":")+1).trim();
+    }
+
+    public static String getSDKWalletDBConfig() {
+        String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
+        Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
+        String DBType=null;
+        String database=null;
+        shellSDK.execute("sh "+PTPATH+"sdk/getDBPath.sh");
+        ArrayList<String> stdout = shellSDK.getStandardOutput();
+        String resp = StringUtils.join(stdout,"");
+
+        assertEquals(false,resp.isEmpty());
+        //提取IP地址
+        String patternStr = resp;
+        String regexStr = ".*(\\d{3}(\\.\\d{1,3}){3}).*";
+        String IPString = patternStr.replaceAll(regexStr,"$1");
+        log.info("DB IP:"+IPString);
+
+        if(resp.contains("mongo")) {
+            //提取mongodb数据库地址及database信息
+            DBType = "mongo";
+            database = resp.substring(resp.lastIndexOf("/"));
+
+        }else{
+            DBType="mysql";
+            database = resp.substring(resp.lastIndexOf("/"),resp.lastIndexOf("?"));
+        }
+
+        return DBType+","+IPString+","+database;
+    }
+
+    public static void delDataBase()throws Exception{
+        String dbInfo = getSDKWalletDBConfig();
+
+         if (dbInfo.contains("mongo")){
+             MongoDBOperation mongo = new MongoDBOperation();
+             mongo.mongoIP = dbInfo.split(",")[1];
+             mongo.delDatabase(dbInfo.split(",")[2]);
+         }
+         else{
+             MysqlOperation mysql = new MysqlOperation();
+             mysql.mysqlIP=dbInfo.split(",")[1];
+             mysql.delDatabase(dbInfo.split(",")[2]);
+         }
+
+        Thread.sleep(3000);
     }
 }

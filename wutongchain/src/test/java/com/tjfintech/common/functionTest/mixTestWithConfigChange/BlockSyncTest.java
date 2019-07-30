@@ -6,6 +6,7 @@ import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.functionTest.dockerContract.ContractTest;
+import com.tjfintech.common.utils.MongoDBOperation;
 import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
@@ -45,8 +46,11 @@ public class BlockSyncTest {
         setAndRestartPeerList("rm -rf "+ PTPATH + "peer/*.db "
                 ,"cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml"
                 ,"cp "+ PTPATH + "peer/conf/configOK.toml "+ PTPATH +"peer/conf/"+PeerMemConfig+".toml");
-        setAndRestartSDK("sed -i \"s/newDB/newDB1/g\" "+ PTPATH+"sdk/conf/configNewDB.toml "
-                ,"cp "+PTPATH+"sdk/conf/configNewDB.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
+
+        delDataBase();//清空sdk当前使用数据库数据
+        setAndRestartSDK();
+//        setAndRestartSDK("sed -i \"s/newDB/newDB1/g\" "+ PTPATH+"sdk/conf/configNewDB.toml "
+//                ,"cp "+PTPATH+"sdk/conf/configNewDB.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
         hashList.clear();
 
         if(certPath!=""&& bRe==false) {
