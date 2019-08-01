@@ -4,21 +4,14 @@ import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.TestMgTool;
-import com.tjfintech.common.utils.MongoDBOperation;
-import com.tjfintech.common.utils.MysqlOperation;
-import com.tjfintech.common.utils.Shell;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.RandomUtils;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -44,7 +37,7 @@ public class TestDiffHashType {
     public static String glbChain01= "glbCh1";
     public static String glbChain02= "glbCh2";
 
-    //@Before
+    @Before
     public void beforeConfig() throws Exception {
         TestMainSubChain testMainSubChain=new TestMainSubChain();
 
@@ -176,11 +169,12 @@ public class TestDiffHashType {
 
     }
 
-    @AfterClass
+    //@AfterClass
     public static void resetPeerAndSDK()throws  Exception {
         setAndRestartPeerList("rm -rf "+ PTPATH + "peer/*.db "
                 ,"cp " + PTPATH + "peer/conf/baseOK.toml " + PTPATH + "peer/conf/base.toml");
-        configSDKNoRestart("cp " + PTPATH + "sdk/conf/configOK.toml " + PTPATH + "sdk/conf/config.toml");
+        shellExeCmd(SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":")),
+                "cp " + PTPATH + "sdk/conf/configOK.toml " + PTPATH + "sdk/conf/config.toml");
         delDataBase();//清空sdk当前使用数据库数据
         setAndRestartSDK("cp " + PTPATH + "sdk/conf/configOK.toml " + PTPATH + "sdk/conf/config.toml");
     }

@@ -307,7 +307,7 @@ public class TestWithConfigChange {
     }
 
 
-    @After
+    //@After
     public void resetPeerAndSDK()throws  Exception {
         setAndRestartPeerList("cp " + PTPATH + "peer/conf/baseOK.toml " + PTPATH + "peer/conf/base.toml");
         setAndRestartSDK("cp " + PTPATH + "sdk/conf/configOK.toml " + PTPATH + "sdk/conf/config.toml");

@@ -17,7 +17,7 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 public class UtilsClass {
     public static final String SDKADD="http://10.1.3.240:7779";
 
-    public static final String certPath=""; //设置签名证书类型，需手动修改，可选值SM2，ECDSA，MIX1，MIX2，RSA
+    public static String certPath=""; //设置签名证书类型，需手动修改，可选值SM2，ECDSA，MIX1，MIX2，RSA
     //20190614 修改接口兼容主子链
     public static String subLedger="";
 
@@ -391,19 +391,13 @@ public class UtilsClass {
         shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
     }
 
-    public static void configSDKNoRestart(String... cmdList)throws Exception{
-        String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
-        Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
-
-        //shellSDK.execute("ps -ef |grep "+SDKTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
-
+    public static void shellExeCmd(String IP, String... cmdList)throws Exception{
+        Shell shellCmd=new Shell(IP,USERNAME,PASSWD);
         for (String cmd:cmdList
         ) {
-            shellSDK.execute(cmd);
+            shellCmd.execute(cmd);
             Thread.sleep(200);
         }
-
-        //shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
     }
 
     public static String getKeyPairsFromFile(String pemFileName)throws Exception{
@@ -448,8 +442,14 @@ public class UtilsClass {
         return stdout.get(index+2).substring(stdout.get(index+2).lastIndexOf(":")+1).trim();
     }
 
+    public static String getIPFromStr(String src) {
+        String regexStr = ".*(\\d{3}(\\.\\d{1,3}){3}).*";
+        return src.replaceAll(regexStr,"$1");
+    }
+
     public static String getSDKWalletDBConfig() {
-        String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
+//        String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
+        String sdkIP = getIPFromStr(SDKADD);
         Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
         String DBType=null;
         String database=null;
@@ -459,9 +459,7 @@ public class UtilsClass {
 
         assertEquals(false,resp.isEmpty());
         //提取IP地址
-        String patternStr = resp;
-        String regexStr = ".*(\\d{3}(\\.\\d{1,3}){3}).*";
-        String IPString = patternStr.replaceAll(regexStr,"$1");
+        String IPString = getIPFromStr(resp);
         log.info("DB IP:"+IPString);
 
         if(resp.contains("mongo")) {
