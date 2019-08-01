@@ -4,11 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.junit.Test;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 
@@ -443,9 +446,15 @@ public class UtilsClass {
     }
 
     public static String getIPFromStr(String src) {
-        String regexStr = ".*(\\d{3}(\\.\\d{1,3}){3}).*";
-        return src.replaceAll(regexStr,"$1");
+        String IP ="";
+        Pattern p = Pattern.compile("(?<=//|)((\\w)+\\.)+\\w+");
+        Matcher matcher = p.matcher(src);
+        if (matcher.find()) {
+            IP = matcher.group();
+        }
+        return IP;
     }
+    
 
     public static String getSDKWalletDBConfig() {
 //        String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
@@ -459,17 +468,18 @@ public class UtilsClass {
 
         assertEquals(false,resp.isEmpty());
         //提取IP地址
+        log.info("*****"+resp);
         String IPString = getIPFromStr(resp);
         log.info("DB IP:"+IPString);
 
         if(resp.contains("mongo")) {
             //提取mongodb数据库地址及database信息
             DBType = "mongo";
-            database = resp.substring(resp.lastIndexOf("/"));
+            database = resp.substring(resp.lastIndexOf("/")+1);
 
         }else{
             DBType="mysql";
-            database = resp.substring(resp.lastIndexOf("/"),resp.lastIndexOf("?"));
+            database = resp.substring(resp.lastIndexOf("/")+1,resp.lastIndexOf("?"));
         }
 
         return DBType+","+IPString+","+database;

@@ -22,24 +22,20 @@ import static com.tjfintech.common.utils.UtilsClass.subLedger;
 
 
 @Slf4j
+//该类实现权限赋值999；更新证书类型，根据新的证书类型生成多签地址；注册发行地址和归集地址
 public class BeforeCondition {
     TestBuilder testBuilder = TestBuilder.getInstance();
     MultiSign multiSign = testBuilder.getMultiSign();
     SoloSign soloSign = testBuilder.getSoloSign();
 
 
-
-    //赋值权限999
+    //赋值权限999 区分是否主子链
     public void initTest()throws Exception{
 
         String toolPath="cd "+PTPATH+"toolkit;";
         String exeCmd="./toolkit permission ";
 
         SDKID=getSDKID();
-//        PEER1MAC=getMACAddr(PEER1IP,USERNAME,PASSWD).trim();
-//        PEER2MAC=getMACAddr(PEER2IP,USERNAME,PASSWD).trim();
-//        PEER3MAC=getMACAddr(PEER3IP,USERNAME,PASSWD).trim();
-//        PEER4MAC=getMACAddr(PEER4IP,USERNAME,PASSWD).trim();
         String ledger ="";
         ledger=(subLedger!="")?" -z "+subLedger:"";
         String preCmd=toolPath+exeCmd+"-p "+PEER1RPCPort+ledger+" -d "+SDKID+" -m ";
@@ -87,7 +83,7 @@ public class BeforeCondition {
     public  void collAddressTest() throws Exception{
 
         initTest();
-
+        updatePubPriKey();//从文件中根据配置certPath读取指定类型的公私钥对，并重新生成多签地址
         String response= multiSign.collAddress(PRIKEY1,IMPPUTIONADD);
         String response2= multiSign.collAddress(PRIKEY1,MULITADD3);
         String response3= multiSign.collAddress(PRIKEY1,ADDRESS1);
@@ -141,7 +137,7 @@ public class BeforeCondition {
 
 
     /**
-     * 创建多签地址
+     * 创建多签地址 保存在数据库中
      * 当数据库被清，库中没多签地址信息时候调用。
      */
     @Test

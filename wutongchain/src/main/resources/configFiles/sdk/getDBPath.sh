@@ -1,8 +1,8 @@
 #/bin/bash
 
-cp conf/config.toml test.toml
-sed -i 's/^[ \t]*//g' test.toml
-sed -i '/^#.*/d' test.toml
-cat test.toml |grep -E 'DBPath' |sed 's/.*\"\(.*\)\".*/\1/g'
+cp /root/zll/chain2.0.1/sdk/conf/config.toml /root/zll/chain2.0.1/sdk/test.toml
+sed -i 's/^[ \t]*//g' /root/zll/chain2.0.1/sdk/test.toml
+sed -i '/^#.*/d' /root/zll/chain2.0.1/sdk/test.toml
+cat /root/zll/chain2.0.1/sdk/test.toml |grep -E 'DBPath' |sed 's/.*\"\(.*\)\".*/\1/g'
 
-rm -f test.toml
+#rm -f test.toml
