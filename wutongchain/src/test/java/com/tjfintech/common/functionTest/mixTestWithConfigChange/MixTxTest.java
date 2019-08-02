@@ -53,7 +53,7 @@ public class MixTxTest {
         Thread.sleep(6000);
         //设置打包时间为20s 使得各种类型的交易同时打包
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/basePkTm20s.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
-        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
+        setAndRestartSDK(resetSDKConfig);
         String resp = store.GetHeight();
 
         //发送存证交易
@@ -127,8 +127,8 @@ public class MixTxTest {
     }
     @After
     public void  reset()throws Exception{
-        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
-        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
+        setAndRestartPeerList(resetPeerBase);
+        setAndRestartSDK(resetSDKConfig);
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
     }
 

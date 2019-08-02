@@ -158,7 +158,7 @@ public class TestWithConfigChange {
         subLedger="";
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash4)).getString("State"));  //确认可以c查询成功
 
-        //setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/config.toml");
+        //setAndRestartSDK(resetSDKConfig);
     }
 
     @Test
@@ -219,7 +219,7 @@ public class TestWithConfigChange {
         testMgTool.quitPeer(PEER1IP+":"+PEER1RPCPort,PEER3IP);
         //停止节点id3
         Shell shell=new Shell(PEER3IP,USERNAME,PASSWD);
-        shell.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shell.execute(killPeerCmd);
         ArrayList<String> stdout = shell.getStandardOutput();
         log.info(StringUtils.join(stdout,"\n"));
 
@@ -250,7 +250,7 @@ public class TestWithConfigChange {
         testMgTool.quitPeer(PEER1IP+":"+PEER1RPCPort,PEER3IP);
         //停止节点id3
         Shell shell=new Shell(PEER3IP,USERNAME,PASSWD);
-        shell.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shell.execute(killPeerCmd);
         ArrayList<String> stdout = shell.getStandardOutput();
         log.info(StringUtils.join(stdout,"\n"));
 
@@ -285,7 +285,7 @@ public class TestWithConfigChange {
 
         //停止节点id2
         Shell shell=new Shell(PEER2IP,USERNAME,PASSWD);
-        shell.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shell.execute(killPeerCmd);
         ArrayList<String> stdout = shell.getStandardOutput();
         log.info(StringUtils.join(stdout,"\n"));
 //        return StringUtils.join(stdout,"\n");
@@ -297,7 +297,7 @@ public class TestWithConfigChange {
         String txHash2 =JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
         assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));  //确认不可以c查询成功
 
-        shell.execute("sh "+PTPATH+"peer/start.sh");
+        shell.execute(startPeerCmd);
     }
 
     @Test
@@ -309,7 +309,7 @@ public class TestWithConfigChange {
 
     //@After
     public void resetPeerAndSDK()throws  Exception {
-        setAndRestartPeerList("cp " + PTPATH + "peer/conf/baseOK.toml " + PTPATH + "peer/conf/base.toml");
-        setAndRestartSDK("cp " + PTPATH + "sdk/conf/configOK.toml " + PTPATH + "sdk/conf/config.toml");
+        setAndRestartPeerList(resetPeerBase);
+        setAndRestartSDK(resetSDKConfig);
     }
 }

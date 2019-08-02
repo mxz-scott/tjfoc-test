@@ -75,8 +75,8 @@ public class TestDiffHashType {
         assertEquals(resp.contains(glbChain01), true);
 
         //设置主链sm3 sdk使用sha256 （子链sha256）
-        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
-        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configSHA256.toml "+PTPATH+"sdk/conf/config.toml");
+        setAndRestartPeerList(resetPeerBase);
+        setAndRestartSDK("cp "+ PTPATH + "sdk/conf/configSHA256.toml "+ PTPATH + "sdk/conf/config.toml");
 
         Thread.sleep(SLEEPTIME);
         //检查子链可以成功发送，主链无法成功发送
@@ -94,8 +94,8 @@ public class TestDiffHashType {
 
 
         //设置主链sm3 sdk使用sm3 （子链sha256）
-        //setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
-        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/config.toml");
+        //setAndRestartPeerList(resetPeerBase);
+        setAndRestartSDK(resetSDKConfig);
 
         //检查主链可以成功发送，子链无法成功发送
         subLedger="";
@@ -131,8 +131,8 @@ public class TestDiffHashType {
         assertEquals(resp.contains(glbChain01), true);
 
         //设置主链sha256 sdk使用sha256 （子链sm3）
-        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseSHA256.toml "+ PTPATH +"peer/conf/base.toml");
-        setAndRestartSDK("cp " + PTPATH + "sdk/conf/configSHA256.toml "+PTPATH+"sdk/conf/config.toml");
+        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseSHA256.toml " + PTPATH  + "peer/conf/base.toml");
+        setAndRestartSDK("cp " + PTPATH + "sdk/conf/configSHA256.toml "+ PTPATH + "sdk/conf/config.toml");
 
         Thread.sleep(SLEEPTIME*2);
         //检查主链可以成功发送，子链无法成功发送
@@ -151,7 +151,7 @@ public class TestDiffHashType {
 
         //设置主链sm3 sdk使用sha256 （子链sha256）
         //setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseSHA256.toml "+ PTPATH +"peer/conf/base.toml");
-        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/config.toml");
+        setAndRestartSDK(resetSDKConfig);
 
         Thread.sleep(SLEEPTIME);
         //检查子链可以成功发送，主链无法成功发送
@@ -171,11 +171,11 @@ public class TestDiffHashType {
 
     //@AfterClass
     public static void resetPeerAndSDK()throws  Exception {
-        setAndRestartPeerList("rm -rf "+ PTPATH + "peer/*.db "
-                ,"cp " + PTPATH + "peer/conf/baseOK.toml " + PTPATH + "peer/conf/base.toml");
+        setAndRestartPeerList(clearPeerDB
+                ,resetPeerBase);
         shellExeCmd(SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":")),
-                "cp " + PTPATH + "sdk/conf/configOK.toml " + PTPATH + "sdk/conf/config.toml");
+                resetSDKConfig);
         delDataBase();//清空sdk当前使用数据库数据
-        setAndRestartSDK("cp " + PTPATH + "sdk/conf/configOK.toml " + PTPATH + "sdk/conf/config.toml");
+        setAndRestartSDK(resetSDKConfig);
     }
 }

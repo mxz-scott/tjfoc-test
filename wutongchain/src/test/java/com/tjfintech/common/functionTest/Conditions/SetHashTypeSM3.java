@@ -11,12 +11,11 @@ public class SetHashTypeSM3 {
    @Test
     public void setHashsm3()throws Exception{
        //设置SDK 使用sm3 清空数据库
-       shellExeCmd(getIPFromStr(SDKADD),"cp " + PTPATH + "sdk/conf/configOK.toml " + PTPATH + "sdk/conf/config.toml");
+       shellExeCmd(getIPFromStr(SDKADD),resetSDKConfig);
        delDataBase();//清空sdk当前使用数据库数据
 
        //设置节点使用sm3 清空db数据 并重启
-       setAndRestartPeerList("rm -rf "+ PTPATH + "peer/*.db "
-               ,"cp " + PTPATH + "peer/conf/baseOK.toml " + PTPATH + "peer/conf/base.toml");
+       setAndRestartPeerList(clearPeerDB,resetPeerBase);
 
        //重启SDK
        setAndRestartSDK();

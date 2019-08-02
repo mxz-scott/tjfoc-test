@@ -92,7 +92,7 @@ public class TestPermission {
 
             String sdkIP = SDKADD.substring(SDKADD.lastIndexOf("/") + 1, SDKADD.lastIndexOf(":"));
             Shell shellSDK = new Shell(sdkIP, USERNAME, PASSWD);
-            shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
+            shellSDK.execute(killSDKCmd);
             Thread.sleep(2000);   log.info("sleep time/ms:"+2000);
             shellSDK.execute("sh " + PTPATH + "sdk/start.sh");
             Thread.sleep(3000);   log.info("sleep time/ms:"+3000);
@@ -537,8 +537,8 @@ public class TestPermission {
         //权限设置通知的节点与SDK配置的节点不一致，权限设置有效
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         shellCmd(sdkIP,"cd "+PTPATH+"sdk/conf;cp config1.toml config.toml");//配置文件中仅配置246作为发送节点
-        shellCmd(sdkIP,"ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellCmd(sdkIP,"sh "+PTPATH+"sdk/start.sh");
+        shellCmd(sdkIP,killSDKCmd);
+        shellCmd(sdkIP,startSDKCmd);
         //shellCmd("cd "+PTPATH+"sdk1;nohub httpservice &");
         Thread.sleep(5000);
         shellCmd(peerIP246.split(":")[0],cmd2+"211");//向节点246发送权限变更通知

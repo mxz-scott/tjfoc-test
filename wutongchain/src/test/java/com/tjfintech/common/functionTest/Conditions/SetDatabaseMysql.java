@@ -15,8 +15,7 @@ public class SetDatabaseMysql {
        delDataBase();//清空sdk当前使用数据库数据
 
        //设置节点 清空db数据 并重启
-       setAndRestartPeerList("rm -rf "+ PTPATH + "peer/*.db "
-               ,"cp " + PTPATH + "peer/conf/baseOK.toml " + PTPATH + "peer/conf/base.toml");
+       setAndRestartPeerList(clearPeerDB,resetPeerBase);
 
        //重启SDK
        setAndRestartSDK();

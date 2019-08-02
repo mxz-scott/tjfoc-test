@@ -1380,15 +1380,15 @@ public class TestMainSubChain {
         //创建子链，id格式错误 非集群中的id
         String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m 1,"+id2+","+id3);
-        assertEquals(res.contains("not found pid"), true);
+        assertEquals(res.contains("not in memberList"), true);
 
         res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m "+id1+",1,"+id3);
-        assertEquals(res.contains("not found pid"), true);
+        assertEquals(res.contains("not in memberList"), true);
 
         res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m "+id1+","+id2+",1");
-        assertEquals(res.contains("not found pid"), true);
+        assertEquals(res.contains("not in memberList"), true);
 
         Thread.sleep(SLEEPTIME/2);
         //检查可以获取子链列表
@@ -1402,15 +1402,15 @@ public class TestMainSubChain {
         //创建子链，id格式错误 非集群中的id
         String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m 1,"+id2+","+id3);
-        assertEquals(res.contains("not found pid"), true);
+        assertEquals(res.contains("not in memberList"), true);
 
         res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m "+id1+",1,"+id3);
-        assertEquals(res.contains("not found pid"), true);
+        assertEquals(res.contains("not in memberList"), true);
 
         res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m "+id1+","+id2+",1");
-        assertEquals(res.contains("not found pid"), true);
+        assertEquals(res.contains("not in memberList"), true);
 
         Thread.sleep(SLEEPTIME/2);
         //检查可以获取子链列表

@@ -16,8 +16,7 @@ public class SetHashTypeSHA256 {
        delDataBase();//清空sdk当前使用数据库数据
 
        //设置节点使用sha256 清空db数据 并重启
-       setAndRestartPeerList("rm -rf "+ PTPATH + "peer/*.db "
-               ,"cp " + PTPATH + "peer/conf/baseSHA256.toml " + PTPATH + "peer/conf/base.toml");
+       setAndRestartPeerList(clearPeerDB,"cp " + PTPATH + "peer/conf/baseSHA256.toml " + PTPATH + "peer/conf/base.toml");
 
        //重启SDK
        setAndRestartSDK();
