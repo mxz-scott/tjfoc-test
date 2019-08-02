@@ -185,8 +185,8 @@ public class BeforeCondition {
      * 测试用例T284的前提条件。发行对应token
      */
 
-    public  void  T284_BeforeCondition(){
-        String tokenType = "cx-chenxu";
+    public  void  T284_BeforeCondition(String tokenType){
+        //String tokenType = "cx-chenxu"+certPath;
         String amount="1000";
         //String amount = "1000";
         log.info(IMPPUTIONADD+ "发行" + tokenType + " token，数量为：" + amount);
@@ -199,6 +199,7 @@ public class BeforeCondition {
     }
 
     public void updatePubPriKey()throws Exception{
+        if(certPath == "") return;
         PRIKEY1 = getKeyPairsFromFile(certPath+"/keys1/key.pem");
         PRIKEY2 = getKeyPairsFromFile(certPath+"/keys2/key.pem");
         PRIKEY3 = getKeyPairsFromFile(certPath+"/keys3/key.pem");
