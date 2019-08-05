@@ -68,7 +68,14 @@ public class TestMainSubChain_UTXO {
         log.info(subLedger);
         BeforeCondition beforeCondition = new BeforeCondition();
         beforeCondition.initTest();
-
+        //添加发行地址
+        if(certPath!=""&& bReg==false) {
+            BeforeCondition bf = new BeforeCondition();
+            bf.updatePubPriKey();
+            bf.collAddressTest();
+            Thread.sleep(SLEEPTIME);
+            bReg=true;
+        }
         //多签的token发行
         log.info("发行两种token1000个");
         //两次发行之前不可以有sleep时间
@@ -119,7 +126,7 @@ public class TestMainSubChain_UTXO {
 
         log.info("冻结token");
         String freezeToken = multiSign.freezeToken(PRIKEY4, tokenType);
-        String freezeToken2 = multiSign.freezeToken(PRIKEY4, tokenType);
+        String freezeToken2 = multiSign.freezeToken(PRIKEY4, tokenType2);
         assertThat(freezeToken, containsString("200"));
         assertThat(freezeToken2, containsString("200"));
 
