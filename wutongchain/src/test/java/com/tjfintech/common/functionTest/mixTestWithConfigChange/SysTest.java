@@ -78,12 +78,12 @@ public class SysTest {
 
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
-        shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellSDK.execute(killSDKCmd);
         shellSDK.execute("cp "+PTPATH+"sdk/conf/configMongo.toml "+PTPATH+"sdk/conf/config.toml");
         log.info(mongoID);
         shellMongo.execute("docker restart "+mongoID);
         Thread.sleep(6000);
-        shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
+        shellSDK.execute(startSDKCmd);
         Thread.sleep(6000);
 
         String response= store.GetApiHealth();
@@ -104,8 +104,8 @@ public class SysTest {
 
         assertThat(store.GetApiHealth(),containsString("success"));
 
-        shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
+        shellSDK.execute(killSDKCmd);
+        shellSDK.execute(startSDKCmd);
         Thread.sleep(6000);
         assertThat(store.GetApiHealth(),containsString("success"));
     }
@@ -123,12 +123,12 @@ public class SysTest {
 
 
         //系统配置数据库为mysql时，且数据库正常进行检查
-        shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellSDK.execute(killSDKCmd);
         shellSDK.execute("cp "+PTPATH+"sdk/conf/configMysql.toml "+PTPATH+"sdk/conf/config.toml");
 
         shellMysql.execute("service mysql restart");
         Thread.sleep(4000);
-        shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
+        shellSDK.execute(startSDKCmd);
         Thread.sleep(10 * 1000);
 
         String response4= store.GetApiHealth();
@@ -165,12 +165,12 @@ public class SysTest {
         Shell shellMysql=new Shell(mysqlIP,"root","root");
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
-        shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellSDK.execute(killSDKCmd);
         shellSDK.execute("cp "+ PTPATH +"sdk/conf/configMongoMysql.toml "+ PTPATH +"sdk/conf/config.toml");
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");
         Thread.sleep(5 * 1000);
-        shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
+        shellSDK.execute(startSDKCmd);
         Thread.sleep(10 * 1000);
 
 
@@ -222,13 +222,13 @@ public class SysTest {
         Shell shellMysql=new Shell(mysqlIP,"root","root");
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
-        shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellSDK.execute(killSDKCmd);
         shellSDK.execute("cp "+PTPATH+"sdk/conf/configMysqlMongo.toml "+PTPATH+"sdk/conf/config.toml");
 
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");
         Thread.sleep(6000);
-        shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
+        shellSDK.execute(startSDKCmd);
         Thread.sleep(6000);
 
         String response4= store.GetApiHealth();
@@ -260,8 +260,8 @@ public class SysTest {
 
         assertThat(store.GetApiHealth(),containsString("success"));
 
-        shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
+        shellSDK.execute(killSDKCmd);
+        shellSDK.execute(startSDKCmd);
         Thread.sleep(10 * 1000);
         assertThat(store.GetApiHealth(),containsString("success"));
         //assertThat(response, containsString("success"));
@@ -275,10 +275,10 @@ public class SysTest {
         log.info(sdkIP);
         Shell shellSDK=new Shell(sdkIP,"root","root");
 
-        shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellSDK.execute("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/config.toml");
+        shellSDK.execute(killSDKCmd);
+        shellSDK.execute(resetSDKConfig);
 
-        shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
+        shellSDK.execute(startSDKCmd);
         Thread.sleep(6000);
 
         String response= store.GetApiHealth();

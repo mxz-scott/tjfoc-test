@@ -9,6 +9,7 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -787,12 +788,12 @@ public class  MultiTestInvalid {
      */
     @Test
     public void TC284_transferToImppution() throws Exception {//TODO
-        String tokenType = "cx-chenxu";
+        String tokenType = "cx-chenxu"+ RandomUtils.nextInt(10000);
         String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         Boolean flag=JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total").equals("0");
         if(flag){
             BeforeCondition beforeCondition=new BeforeCondition();
-            beforeCondition.T284_BeforeCondition();
+            beforeCondition.T284_BeforeCondition(tokenType);
             Thread.sleep(SLEEPTIME);
             queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         }
@@ -820,7 +821,8 @@ public class  MultiTestInvalid {
     @Test
     public void TC980_MultiAddrNotInDB() throws Exception{
         String MultiAddr="Ss6iNcwoJFf5EWbuqqU7o96XNVH9izRKk9exj96giAntEFPaWZ6";
-        assertThat(multiSign.Balance(MultiAddr,PRIKEY1,"test"), containsString("Multiaddr is not matching for the prikey !"));
+        //assertThat(multiSign.Balance(MultiAddr,PRIKEY1,"test"), containsString("Multiaddr is not matching for the prikey !"));
+        assertThat(multiSign.Balance(MultiAddr,PRIKEY1,"test"), containsString("not found"));
     }
 
     @Test

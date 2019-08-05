@@ -49,7 +49,7 @@ public class TestPermission {
     String errMsg="does not found Permission";
     String def="Def:111";
     //"+def+Sys0+Store0+Docker0+Mg0+UTXO0+"
-    String Sys0="Sys:000000001";
+    String Sys0="Sys:000000000";
     String Store0="Store:00";
     String Docker0="Docker:00000";
     String Mg0="Mg:000000";
@@ -75,7 +75,7 @@ public class TestPermission {
 
     boolean bExe=false;
 
-
+    //权限测试需要使用mongodb数据库进行测试 tx/search接口不支持mysql数据库
     @Before
     //@Test
     public void beforeTest() throws Exception {
@@ -92,7 +92,7 @@ public class TestPermission {
 
             String sdkIP = SDKADD.substring(SDKADD.lastIndexOf("/") + 1, SDKADD.lastIndexOf(":"));
             Shell shellSDK = new Shell(sdkIP, USERNAME, PASSWD);
-            shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
+            shellSDK.execute(killSDKCmd);
             Thread.sleep(2000);   log.info("sleep time/ms:"+2000);
             shellSDK.execute("sh " + PTPATH + "sdk/start.sh");
             Thread.sleep(3000);   log.info("sleep time/ms:"+3000);
@@ -181,11 +181,11 @@ public class TestPermission {
 //        checkAllInterface("3",def+"Sys:001100000"+Store0+Docker0+Mg0+UTXO0);//
 //        checkAllInterface("4",def+"Sys:000011110"+Store0+Docker0+Mg0+UTXO0);
 
-        checkAllInterface("1",def+"Sys:100000001"+Store0+Docker0+Mg0+UTXO0);
-        checkAllInterface("2",def+"Sys:010000001"+Store0+Docker0+Mg0+UTXO0);
-        checkAllInterface("3",def+"Sys:001100001"+Store0+Docker0+Mg0+UTXO0);
-        checkAllInterface("4",def+"Sys:000011111"+Store0+Docker0+Mg0+UTXO0);
-        //mysql数据库不支持/tx/search接口
+        checkAllInterface("1",def+"Sys:100000000"+Store0+Docker0+Mg0+UTXO0);
+        checkAllInterface("2",def+"Sys:010000000"+Store0+Docker0+Mg0+UTXO0);
+        checkAllInterface("3",def+"Sys:001100000"+Store0+Docker0+Mg0+UTXO0);
+        checkAllInterface("4",def+"Sys:000011110"+Store0+Docker0+Mg0+UTXO0);
+        //mysql数据库不支持/tx/search接口 测试时需要使用mongodb 否则需要修改测试预期结果
         checkAllInterface("8",def+"Sys:000000001"+Store0+Docker0+Mg0+UTXO0);
 
         for(int i=0;i<mArray.length;i++)
@@ -246,6 +246,7 @@ public class TestPermission {
             log.info("Destroy Docker:" + str);
             pFunCt.name=str;
             pFunCt.destroyContract();
+            Thread.sleep(SLEEPTIME);
         }
         Thread.sleep(10000);
     }
@@ -344,7 +345,6 @@ public class TestPermission {
         permStr=permStr+pFun1.getBlockByBlockHash(glbBlockHash); //SDK发送通过区块哈希获取区块信息请求
 
         permStr=permStr+pFun1.getStore(glbTxHash); //SDK发送查看基础存证交易请求
-        log.info("pri:----------"+glbPriTxHash);
         permStr=permStr+pFun1.getStorePost(glbPriTxHash); //SDK发送查看隐私存证交易请求
         permStr=permStr+pFun1.getTransaction(glbTxHash); //SDK发送查看交易请求
         permStr=permStr+pFun1.getTransactionIndex(glbTxHash); //SDK发送查看交易索引请求
@@ -537,8 +537,8 @@ public class TestPermission {
         //权限设置通知的节点与SDK配置的节点不一致，权限设置有效
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         shellCmd(sdkIP,"cd "+PTPATH+"sdk/conf;cp config1.toml config.toml");//配置文件中仅配置246作为发送节点
-        shellCmd(sdkIP,"ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
-        shellCmd(sdkIP,"sh "+PTPATH+"sdk/start.sh");
+        shellCmd(sdkIP,killSDKCmd);
+        shellCmd(sdkIP,startSDKCmd);
         //shellCmd("cd "+PTPATH+"sdk1;nohub httpservice &");
         Thread.sleep(5000);
         shellCmd(peerIP246.split(":")[0],cmd2+"211");//向节点246发送权限变更通知

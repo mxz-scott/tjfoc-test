@@ -6,6 +6,7 @@ import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.functionTest.dockerContract.ContractTest;
+import com.tjfintech.common.utils.MongoDBOperation;
 import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
@@ -42,11 +43,12 @@ public class BlockSyncTest {
     boolean bRe=false;
     @Before
     public void beforeConfig() throws Exception {
-        setAndRestartPeerList("rm -rf "+ PTPATH + "peer/*.db "
-                ,"cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml"
-                ,"cp "+ PTPATH + "peer/conf/configOK.toml "+ PTPATH +"peer/conf/"+PeerMemConfig+".toml");
-        setAndRestartSDK("sed -i \"s/newDB/newDB1/g\" "+ PTPATH+"sdk/conf/configNewDB.toml "
-                ,"cp "+PTPATH+"sdk/conf/configNewDB.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
+        setAndRestartPeerList(clearPeerDB,resetPeerBase,resetPeerConfig);
+
+        delDataBase();//清空sdk当前使用数据库数据
+        setAndRestartSDK();
+//        setAndRestartSDK("sed -i \"s/newDB/newDB1/g\" "+ PTPATH+"sdk/conf/configNewDB.toml "
+//                ,"cp "+PTPATH+"sdk/conf/configNewDB.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
         hashList.clear();
 
         if(certPath!=""&& bRe==false) {
@@ -68,12 +70,12 @@ public class BlockSyncTest {
         String syncPeer=PEER2IP;
         //停止节点PEER2
         Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
-        shellPeer.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer.execute(killPeerCmd);
 
         StoreUTXO();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         //停止其中一个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(syncPeer,"rm -rf "+ PTPATH + "peer/*.db ");
+        setAndRestartPeer(syncPeer,clearPeerDB);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3);
@@ -95,13 +97,13 @@ public class BlockSyncTest {
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseContractfalse.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
         //停止节点PEER2
         Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
-        shellPeer.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer.execute(killPeerCmd);
 
         StoreUTXO();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
 
         //个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(syncPeer,"rm -rf "+ PTPATH + "peer/*.db ");
+        setAndRestartPeer(syncPeer,clearPeerDB);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3);
@@ -126,8 +128,7 @@ public class BlockSyncTest {
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
 
         //节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(syncPeer,"rm -rf "+ PTPATH + "peer/*.db "
-                ,"cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+        setAndRestartPeer(syncPeer,clearPeerDB,resetPeerBase);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3);
@@ -149,13 +150,13 @@ public class BlockSyncTest {
         String syncPeer=PEER2IP;
         //停止节点PEER2
         Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
-        shellPeer.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer.execute(killPeerCmd);
 
         StoreUTXO();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         Contract();
         //停止其中一个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(syncPeer,"rm -rf "+ PTPATH + "peer/*.db ");
+        setAndRestartPeer(syncPeer,clearPeerDB);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*5+ContractInstallSleep);
@@ -173,7 +174,7 @@ public class BlockSyncTest {
 
     @Test
     public void TC986_SyncDataPeerWithTxEnableCtFlag()throws Exception{
-        setAndRestartPeerList("rm -rf "+ PTPATH + "peer/*.db "
+        setAndRestartPeerList(clearPeerDB
                 ,"cp "+ PTPATH + "peer/conf/configData.toml "+ PTPATH +"peer/conf/"+PeerMemConfig+".toml");
         setAndRestartSDK("sed -i \"s/newDB/newDB1/g\" "+ PTPATH+"sdk/conf/configNewDB.toml "
                 ,"cp "+PTPATH+"sdk/conf/configNewDB.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
@@ -187,13 +188,13 @@ public class BlockSyncTest {
 
         //停止节点PEER2
         Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
-        shellPeer.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer.execute(killPeerCmd);
 
         StoreUTXO();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         Contract();
         //停止其中一个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(syncPeer,"rm -rf "+ PTPATH + "peer/*.db ");
+        setAndRestartPeer(syncPeer,clearPeerDB);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3+ContractInstallSleep);
@@ -216,14 +217,14 @@ public class BlockSyncTest {
         String syncPeer=PEER2IP;
         //停止节点PEER2
         Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
-        shellPeer.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer.execute(killPeerCmd);
 
         StoreUTXO();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         Contract();
 
         //节点清除db数据，并将Contract Enabled设置为false 例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(syncPeer,"rm -rf "+ PTPATH + "peer/*.db "
+        setAndRestartPeer(syncPeer,clearPeerDB
                 ,"cp "+ PTPATH + "peer/conf/baseContractfalse.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
 
         //等待同步时间
@@ -237,7 +238,7 @@ public class BlockSyncTest {
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         //等待交易上链
         //恢复PEER2配置 检查可以正常同步
-        setAndRestartPeer(syncPeer,"cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+        setAndRestartPeer(syncPeer,resetPeerBase);
         Thread.sleep(OnChainSleep*5 +ContractInstallSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
         assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
@@ -249,7 +250,7 @@ public class BlockSyncTest {
         //停止节点PEER2,删除节点2上的基础镜像
         String syncPeer=PEER4IP;
         Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
-        shellPeer.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer.execute(killPeerCmd);
         shellPeer.execute("docker rm -f `docker ps -aq`");
         Thread.sleep(1500);
         shellPeer.execute("docker rmi `docker images`");
@@ -258,8 +259,7 @@ public class BlockSyncTest {
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         Contract();
         //无基础镜像时同步包含合约交易的区块交易
-        setAndRestartPeer(syncPeer,"rm -rf "+ PTPATH + "peer/*.db "
-                ,"cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+        setAndRestartPeer(syncPeer,clearPeerDB,resetPeerBase);
         //同步失败节点异常 停止运行
 
         //检查Peer2同步异常节点会停止
@@ -267,7 +267,7 @@ public class BlockSyncTest {
         mgTool.checkParam(syncPeer,"./toolkit height -p 9300","rpc error");
 
         //安装合约镜像
-        setAndRestartPeer(syncPeer,"rm -rf "+ PTPATH + "peer/*.db ","docker load < /root/ccenv.docker");
+        setAndRestartPeer(syncPeer,clearPeerDB,"docker load < /root/ccenv.docker");
 
         //等待同步时间+合约安装
         Thread.sleep(OnChainSleep*3+ContractInstallSleep);
@@ -290,18 +290,18 @@ public class BlockSyncTest {
 
         //停止节点PEER2 和PEER4
         Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
-        shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer2.execute(killPeerCmd);
 
         Shell shellPeer4=new Shell(PEER4IP,USERNAME,PASSWD);
-        shellPeer4.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer4.execute(killPeerCmd);
 
 
         StoreUTXONoCheck();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
 
         //清空剩下两个节点db数据 并重启
-        setAndRestartPeer(PEER2IP,"rm -rf "+ PTPATH + "peer/*.db ");
-        setAndRestartPeer(PEER4IP,"rm -rf "+ PTPATH + "peer/*.db ");
+        setAndRestartPeer(PEER2IP,clearPeerDB);
+        setAndRestartPeer(PEER4IP,clearPeerDB);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*5);
@@ -328,15 +328,15 @@ public class BlockSyncTest {
 
         //停止节点PEER2 和PEER4
         Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
-        shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer2.execute(killPeerCmd);
 
         Shell shellPeer4=new Shell(PEER4IP,USERNAME,PASSWD);
-        shellPeer4.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer4.execute(killPeerCmd);
 
         ContractNoCheck();
         //清空剩下两个节点db数据 并重启
-        setAndRestartPeer(PEER2IP,"rm -rf "+ PTPATH + "peer/*.db ");
-        setAndRestartPeer(PEER4IP,"rm -rf "+ PTPATH + "peer/*.db ");
+        setAndRestartPeer(PEER2IP,clearPeerDB);
+        setAndRestartPeer(PEER4IP,clearPeerDB);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3+ContractInstallSleep);
@@ -363,18 +363,18 @@ public class BlockSyncTest {
 
         //停止节点PEER2 和PEER4
         Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
-        shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer2.execute(killPeerCmd);
 
         Shell shellPeer4=new Shell(PEER4IP,USERNAME,PASSWD);
-        shellPeer4.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer4.execute(killPeerCmd);
 
 
         StoreUTXONoCheck();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         ContractNoCheck();
         //清空剩下两个节点db数据 并重启
-        setAndRestartPeer(PEER2IP,"rm -rf "+ PTPATH + "peer/*.db ");
-        setAndRestartPeer(PEER4IP,"rm -rf "+ PTPATH + "peer/*.db ");
+        setAndRestartPeer(PEER2IP,clearPeerDB);
+        setAndRestartPeer(PEER4IP,clearPeerDB);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*5+ContractInstallSleep);
@@ -628,10 +628,8 @@ public class BlockSyncTest {
 
     //@AfterClass
     public static void resetEnv()throws Exception{
-        setAndRestartPeerList("rm -rf "+ PTPATH + "peer/*.db "
-                ,"cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml"
-                ,"cp "+ PTPATH + "peer/conf/configOK.toml "+ PTPATH +"peer/conf/"+PeerMemConfig+".toml");
-        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
+        setAndRestartPeerList(clearPeerDB,resetPeerBase,resetPeerConfig);
+        setAndRestartSDK(resetSDKConfig);
     }
 
 }

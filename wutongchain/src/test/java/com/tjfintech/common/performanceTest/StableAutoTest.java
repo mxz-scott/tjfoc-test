@@ -63,7 +63,7 @@ public class StableAutoTest {
             Boolean flag=JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total").equals("0");
             if(flag){
                 BeforeCondition beforeCondition=new BeforeCondition();
-                beforeCondition.T284_BeforeCondition();
+                beforeCondition.T284_BeforeCondition(tokenType);
                 Thread.sleep(SLEEPTIME);
                 queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
                 assertThat(queryInfo, containsString("200"));

@@ -17,6 +17,7 @@ import java.util.Map;
 @Slf4j
 public class GetTest {
     public static String SendGetTojson(String url) {
+        log.info(url);
         BufferedReader in = null;
         try {
             URL realUrl = new URL(url);
@@ -80,6 +81,7 @@ public class GetTest {
     }
 
     public static String doGet2(String url) {
+        log.info(url);
         /*
          * 使用 GetMethod 来访问一个 URL 对应的网页,实现步骤: 1:生成一个 HttpClinet 对象并设置相应的参数。 2:生成一个
          * GetMethod 对象并设置响应的参数。 3:用 HttpClinet 生成的对象来执行 GetMethod 生成的Get 方法。 4:处理响应状态码。

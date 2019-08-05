@@ -22,6 +22,7 @@ import java.util.Map;
 @Slf4j
 public class PostTest {
     public static String sendPostToJson(String linkUrl, Map<String,Object> map) {
+        log.info(linkUrl);
         JSONObject jsonObject=JSONObject.fromObject(map);
         String jsonString=jsonObject.toString();
        // log .info(jsonString);
@@ -98,6 +99,7 @@ public class PostTest {
     }
 
     public static String postMethod(String linkUrl, Map<String,Object> map) {
+        log.info(linkUrl);
         JSONObject jsonObject = JSONObject.fromObject(map);
         String jsonString = jsonObject.toString();
         RequestEntity se=null;

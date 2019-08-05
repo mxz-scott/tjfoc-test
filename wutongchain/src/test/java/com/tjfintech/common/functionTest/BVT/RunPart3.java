@@ -11,13 +11,13 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         BeforeCondition.class,
 
-//        TestMgTool.class, // failed
-//        SysTest.class,        // failed
+        TestMgTool.class, // failed
+        SysTest.class,        // failed
         TestPermission.class,     // failed
 
 })
 
 //Build Validation Test
-public class RunDebug {
+public class RunPart3 {
     //执行这个类将执行suiteClass中的测试项
 }

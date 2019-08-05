@@ -4,23 +4,30 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.junit.Test;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 
 
 @Slf4j
 public class UtilsClass {
-    public static final String SDKADD="http://10.1.3.201:2222";
+    public static final String SDKADD="http://10.1.3.240:7779";
 
-    public static final String certPath="SM2"; //设置签名证书类型，需手动修改，可选值SM2，ECDSA，MIX1，MIX2，RSA
+    public static String certPath=""; //设置签名证书类型，需手动修改，可选值SM2，ECDSA，MIX1，MIX2，RSA
+    //20190614 修改接口兼容主子链
+    public static String subLedger="";
 
     public static Integer  LONGTIMEOUT = 100000;//毫秒
     public static Integer  SHORTMEOUT = 3000;//毫秒
     public static Integer  UTXOSHORTMEOUT = 4 * 1000;//毫秒
-    public   final static int  SLEEPTIME=5*1000;
+    public   final static int  SLEEPTIME=7*1000;
 
     //SM2公私钥对
      public static String  ADDRESS1 = "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo";
@@ -95,11 +102,19 @@ public class UtilsClass {
     public static String PeerInfoConfig="base";//全文件名为base.toml 节点运行相关配置
     public static String SDKConfig="config";//全文件名为config.toml SDK配置信息
 
+    public static String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
+    public static String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
+    public static String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
+    public static String ids = " -m "+ id1+","+ id2+","+ id3;
 
-
-    //20190614 修改接口兼容主子链
-    public static String subLedger="";
-
+    public static String startPeerCmd = "sh "+PTPATH+"peer/start.sh";
+    public static String startSDKCmd ="sh "+PTPATH+"sdk/start.sh";
+    public static String killPeerCmd = "ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9";
+    public static String killSDKCmd = "ps -ef |grep " + SDKTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9";
+    public static String clearPeerDB = "rm -rf "+ PTPATH + "peer/*.db ";
+    public static String resetPeerBase = "cp " + PTPATH + "peer/conf/baseOK.toml " + PTPATH + "peer/conf/base.toml";
+    public static String resetPeerConfig = "cp "+ PTPATH + "peer/conf/configOK.toml "+ PTPATH +"peer/conf/"+PeerMemConfig+".toml";
+    public static String resetSDKConfig = "cp " + PTPATH + "sdk/conf/configOK.toml " + PTPATH + "sdk/conf/config.toml";
 
     /**
      * 多签转账操作的TOKEN数组构建方法，单签的在GosoloSign类中
@@ -328,56 +343,54 @@ public class UtilsClass {
         return peerId;
     }
 
+    //该函数会让所有节点先执行同一个命令 再集群执行下一条命令
+    public static void sendCmdPeerList( ArrayList<String > peersList,String...cmdList)throws Exception{
+        for(String cmd:cmdList){
+            for (String IP:peersList) {
+                Shell shellPeer = new Shell(IP, USERNAME, PASSWD);
+                shellPeer.execute(cmd);
+                Thread.sleep(200);
+            }
+        }
+    }
+
+
     public static void setAndRestartPeerList(String...cmdList)throws Exception{
 
         peerList.clear();
         peerList.add(PEER1IP);
         peerList.add(PEER2IP);
         peerList.add(PEER4IP);
+
         //重启节点集群
-        for (String IP:peerList
-        ) {
-            Shell shellPeer=new Shell(IP,USERNAME,PASSWD);
-            shellPeer.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
-            for (String cmd:cmdList
-            ) {
-                shellPeer.execute(cmd);
-                Thread.sleep(200);
-            }
-            Thread.sleep(500);
-            shellPeer.execute("sh "+PTPATH+"peer/start.sh");
-        }
-        //重启sdk
+        sendCmdPeerList(peerList,killPeerCmd);
+        sendCmdPeerList(peerList,cmdList);
+        sendCmdPeerList(peerList,startPeerCmd);
 
         Thread.sleep(RESTARTTIME);
-        //resetAndRestartSDK();
-        //Thread.sleep(5000);
     }
     public static void setAndRestartPeer(String PeerIP,String...cmdList)throws Exception{
 
         Shell shellPeer=new Shell(PeerIP,USERNAME,PASSWD);
-        shellPeer.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellPeer.execute(killPeerCmd);
         for (String cmd:cmdList
         ) {
             shellPeer.execute(cmd);
             Thread.sleep(100);
         }
         Thread.sleep(500);
-        shellPeer.execute("sh "+PTPATH+"peer/start.sh");
+        shellPeer.execute(startPeerCmd);
 
 
         Thread.sleep(RESTARTTIME);
     }
 
-//    public static void resetAndRestartSDK()throws Exception{
-//        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
-//    }
 
     public static void setAndRestartSDK(String... cmdList)throws Exception{
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
 
-        shellSDK.execute("ps -ef |grep "+SDKTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellSDK.execute(killSDKCmd);
 
         for (String cmd:cmdList
         ) {
@@ -385,7 +398,16 @@ public class UtilsClass {
             Thread.sleep(200);
         }
 
-        shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
+        shellSDK.execute(startSDKCmd);
+    }
+
+    public static void shellExeCmd(String IP, String... cmdList)throws Exception{
+        Shell shellCmd=new Shell(IP,USERNAME,PASSWD);
+        for (String cmd:cmdList
+        ) {
+            shellCmd.execute(cmd);
+            Thread.sleep(200);
+        }
     }
 
     public static String getKeyPairsFromFile(String pemFileName)throws Exception{
@@ -428,5 +450,62 @@ public class UtilsClass {
         }
         if( !bflag ) return "[0]";
         return stdout.get(index+2).substring(stdout.get(index+2).lastIndexOf(":")+1).trim();
+    }
+
+    public static String getIPFromStr(String src) {
+        String IP ="";
+        Pattern p = Pattern.compile("(?<=//|)((\\w)+\\.)+\\w+");
+        Matcher matcher = p.matcher(src);
+        if (matcher.find()) {
+            IP = matcher.group();
+        }
+        return IP;
+    }
+    
+
+    public static String getSDKWalletDBConfig() {
+//        String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
+        String sdkIP = getIPFromStr(SDKADD);
+        Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
+        String DBType=null;
+        String database=null;
+        shellSDK.execute("sh "+PTPATH+"sdk/getDBPath.sh");
+        ArrayList<String> stdout = shellSDK.getStandardOutput();
+        String resp = StringUtils.join(stdout,"");
+
+        assertEquals(false,resp.isEmpty());
+        //提取IP地址
+        log.info("*****"+resp);
+        String IPString = getIPFromStr(resp);
+        log.info("DB IP:"+IPString);
+
+        if(resp.contains("mongo")) {
+            //提取mongodb数据库地址及database信息
+            DBType = "mongo";
+            database = resp.substring(resp.lastIndexOf("/")+1);
+
+        }else{
+            DBType="mysql";
+            database = resp.substring(resp.lastIndexOf("/")+1,resp.lastIndexOf("?"));
+        }
+
+        return DBType+","+IPString+","+database;
+    }
+
+    public static void delDataBase()throws Exception{
+        String dbInfo = getSDKWalletDBConfig();
+
+         if (dbInfo.contains("mongo")){
+             MongoDBOperation mongo = new MongoDBOperation();
+             mongo.mongoIP = dbInfo.split(",")[1];
+             mongo.delDatabase(dbInfo.split(",")[2]);
+         }
+         else{
+             MysqlOperation mysql = new MysqlOperation();
+             mysql.mysqlIP=dbInfo.split(",")[1];
+             mysql.delDatabase(dbInfo.split(",")[2]);
+         }
+
+        Thread.sleep(3000);
     }
 }

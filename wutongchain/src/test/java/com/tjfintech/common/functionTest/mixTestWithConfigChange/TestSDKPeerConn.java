@@ -28,9 +28,9 @@ public class TestSDKPeerConn {
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
 
-        shellSDK.execute("ps -ef |grep httpservice |grep -v grep |awk '{print $2}'|xargs kill -9");
+        shellSDK.execute(killSDKCmd);
         shellSDK.execute("cp "+PTPATH+"sdk/conf/config2P.toml "+PTPATH+"sdk/conf/config.toml");
-        shellSDK.execute("sh "+PTPATH+"sdk/start.sh");
+        shellSDK.execute(startSDKCmd);
 
         Shell shellPeer1 = new Shell(PEER1IP, USERNAME, PASSWD);
         Shell shellPeer2 = new Shell(PEER2IP, USERNAME, PASSWD);
@@ -40,9 +40,9 @@ public class TestSDKPeerConn {
         for(int i=0;i<20;i++) {
 
             log.info("**************--------------test times: "+i+"--------------**************");
-            shellPeer1.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
-            shellPeer2.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
-            shellPeer4.execute("ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9");
+            shellPeer1.execute(killPeerCmd);
+            shellPeer2.execute(killPeerCmd);
+            shellPeer4.execute(killPeerCmd);
 
             startPeer(PEER1IP);
             startPeer(PEER2IP);
@@ -65,7 +65,7 @@ public class TestSDKPeerConn {
     public void startPeer(String peerIP)throws Exception{
         Shell shell1=new Shell(peerIP,USERNAME,PASSWD);
         Thread.sleep(2000);
-        shell1.execute("sh "+PTPATH+"peer/start.sh");
+        shell1.execute(startPeerCmd);
     }
 
 }

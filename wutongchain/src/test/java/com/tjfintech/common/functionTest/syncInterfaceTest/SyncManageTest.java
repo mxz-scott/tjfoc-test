@@ -38,14 +38,14 @@ public class SyncManageTest {
     public void testTimeoutForAdmin() throws Exception{
         //设置打包时间为500ms 使得各种类型的交易同时打包
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/basePkTm500ms.toml "+ PTPATH +"peer/conf/base.toml");
-        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
+        setAndRestartSDK(resetSDKConfig);
         testSyncAdmin(String.valueOf(UTXOSHORTMEOUT),okCode);
     }
 
     //@After
     public void resetEnv()throws Exception{
-        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseOK.toml "+ PTPATH +"peer/conf/base.toml");
-        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOK.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
+        setAndRestartPeerList(resetPeerBase);
+        setAndRestartSDK(resetSDKConfig);
     }
 
     public void testSyncAdmin(String timeout,String code)throws Exception{

@@ -22,24 +22,20 @@ import static com.tjfintech.common.utils.UtilsClass.subLedger;
 
 
 @Slf4j
+//该类实现权限赋值999；更新证书类型，根据新的证书类型生成多签地址；注册发行地址和归集地址
 public class BeforeCondition {
     TestBuilder testBuilder = TestBuilder.getInstance();
     MultiSign multiSign = testBuilder.getMultiSign();
     SoloSign soloSign = testBuilder.getSoloSign();
 
 
-
-    //赋值权限999
+    //赋值权限999 区分是否主子链
     public void initTest()throws Exception{
 
         String toolPath="cd "+PTPATH+"toolkit;";
         String exeCmd="./toolkit permission ";
 
         SDKID=getSDKID();
-//        PEER1MAC=getMACAddr(PEER1IP,USERNAME,PASSWD).trim();
-//        PEER2MAC=getMACAddr(PEER2IP,USERNAME,PASSWD).trim();
-//        PEER3MAC=getMACAddr(PEER3IP,USERNAME,PASSWD).trim();
-//        PEER4MAC=getMACAddr(PEER4IP,USERNAME,PASSWD).trim();
         String ledger ="";
         ledger=(subLedger!="")?" -z "+subLedger:"";
         String preCmd=toolPath+exeCmd+"-p "+PEER1RPCPort+ledger+" -d "+SDKID+" -m ";
@@ -87,7 +83,7 @@ public class BeforeCondition {
     public  void collAddressTest() throws Exception{
 
         initTest();
-
+        updatePubPriKey();//从文件中根据配置certPath读取指定类型的公私钥对，并重新生成多签地址
         String response= multiSign.collAddress(PRIKEY1,IMPPUTIONADD);
         String response2= multiSign.collAddress(PRIKEY1,MULITADD3);
         String response3= multiSign.collAddress(PRIKEY1,ADDRESS1);
@@ -141,7 +137,7 @@ public class BeforeCondition {
 
 
     /**
-     * 创建多签地址
+     * 创建多签地址 保存在数据库中
      * 当数据库被清，库中没多签地址信息时候调用。
      */
     @Test
@@ -189,8 +185,8 @@ public class BeforeCondition {
      * 测试用例T284的前提条件。发行对应token
      */
 
-    public  void  T284_BeforeCondition(){
-        String tokenType = "cx-chenxu";
+    public  void  T284_BeforeCondition(String tokenType){
+        //String tokenType = "cx-chenxu"+certPath;
         String amount="1000";
         //String amount = "1000";
         log.info(IMPPUTIONADD+ "发行" + tokenType + " token，数量为：" + amount);
@@ -203,6 +199,7 @@ public class BeforeCondition {
     }
 
     public void updatePubPriKey()throws Exception{
+        if(certPath == "") return;
         PRIKEY1 = getKeyPairsFromFile(certPath+"/keys1/key.pem");
         PRIKEY2 = getKeyPairsFromFile(certPath+"/keys2/key.pem");
         PRIKEY3 = getKeyPairsFromFile(certPath+"/keys3/key.pem");
@@ -265,33 +262,5 @@ public class BeforeCondition {
         map.put("1", PUBKEY4);
         map.put("2", PUBKEY5);
         IMPPUTIONADD=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//45
-
-//        log.info(PRIKEY1);
-//        log.info("***************************************************************");
-//        log.info(PRIKEY2);
-//        log.info("***************************************************************");
-//        log.info(PRIKEY3);
-//        log.info("***************************************************************");
-//        log.info(PRIKEY4);
-//        log.info("***************************************************************");
-//        log.info(PRIKEY5);
-//        log.info("***************************************************************");
-//        log.info(PRIKEY6);
-//        log.info("***************************************************************");
-//        log.info(PUBKEY1);
-//        log.info("***************************************************************");
-//        log.info(PUBKEY2);
-//        log.info("***************************************************************");
-//        log.info(PUBKEY3);
-//        log.info("***************************************************************");
-//        log.info(PUBKEY4);
-//        log.info("***************************************************************");
-//        log.info(PUBKEY5);
-//        log.info("***************************************************************");
-//        log.info(PUBKEY6);
-//        log.info("***************************************************************");
-//        log.info(PUBKEY7);
-//        log.info("******:wq*********************************************************");
-
     }
 }

@@ -6,11 +6,9 @@ import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.TestMgTool;
 import com.tjfintech.common.utils.Shell;
-import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import oracle.jrockit.jfr.jdkevents.ThrowableTracer;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.*;
@@ -41,11 +39,6 @@ public class TestMainSubChain {
     String notSupport="not support service";
     String stateDestoryed ="has been destroyed";
     String stateFreezed ="not support service";
-
-    String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
-    String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
-    String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
-    String ids = " -m "+ id1+","+ id2+","+ id3;
 
     boolean bExe=false;
 
@@ -725,12 +718,12 @@ public class TestMainSubChain {
         assertEquals(bCheck2,store.GetStorePost(txHash2,PRIKEY1).contains(notSupport));
         assertEquals(bCheck2,store.GetBlockByHash(blockHash).contains(notSupport));
         assertEquals(false,store.GetPeerList().contains(notSupport));
-        assertEquals(bCheck1,store.CreateStorePwd("test",map).contains(notSupport));
+        assertEquals(bCheck1,store.CreateStorePwd("test1",map).contains(notSupport));
 
-        assertEquals(bCheck1,store.CreateStore("test").contains(notSupport));
-        Thread.sleep(SLEEPTIME);
-        assertEquals(bCheck1,store.SynCreateStore(SHORTMEOUT,"test").contains(notSupport));
-        assertEquals(bCheck1,store.SynCreateStore(SHORTMEOUT,"test",PUBKEY1).contains(notSupport));
+        assertEquals(bCheck1,store.CreateStore("test2").contains(notSupport));
+//        Thread.sleep(SLEEPTIME);
+        assertEquals(bCheck1,store.SynCreateStore(SHORTMEOUT,"test3").contains(notSupport));
+        assertEquals(bCheck1,store.SynCreateStore(SHORTMEOUT,"test4",PUBKEY1).contains(notSupport));
 
 
 
@@ -744,6 +737,26 @@ public class TestMainSubChain {
 //        subLedger="tc1518_20190704162";
 //        storeTypeSupportCheck("destory");
 //    }
+    @Test
+    public void TC1702_TC1703_createSpecMainNameChain()throws Exception{
+
+        //创建一个名称为main的子链（与链上主链标识一致）
+        String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+"main"," -t sm3"," -w first"," -c raft",ids);
+        assertEquals(res.contains("exist"), true);
+
+        Thread.sleep(SLEEPTIME);
+        //检查可以获取子链列表 中无main子链
+        String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
+        assertEquals(resp.contains("name"), true);
+        assertEquals(resp.contains("\"name\": \"main\""), false);
+
+        assertEquals(resp.contains("\"name\": \"wtchain\""), false);//wtchain 为节点配置文件中ledger字段后的内容
+
+        resp = getSubChain(PEER1IP,PEER1RPCPort," -z wtchain");
+        assertEquals(resp.contains("not exist"), true);
+
+
+}
 
     @Test
     public void TC1475_1493_createExistChain()throws Exception{
@@ -1367,15 +1380,15 @@ public class TestMainSubChain {
         //创建子链，id格式错误 非集群中的id
         String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m 1,"+id2+","+id3);
-        assertEquals(res.contains("not found peerid"), true);
+        assertEquals(res.contains("not in memberList"), true);
 
         res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m "+id1+",1,"+id3);
-        assertEquals(res.contains("not found peerid"), true);
+        assertEquals(res.contains("not in memberList"), true);
 
         res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m "+id1+","+id2+",1");
-        assertEquals(res.contains("not found peerid"), true);
+        assertEquals(res.contains("not in memberList"), true);
 
         Thread.sleep(SLEEPTIME/2);
         //检查可以获取子链列表
@@ -1389,15 +1402,15 @@ public class TestMainSubChain {
         //创建子链，id格式错误 非集群中的id
         String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m 1,"+id2+","+id3);
-        assertEquals(res.contains("not found peerid"), true);
+        assertEquals(res.contains("not in memberList"), true);
 
         res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m "+id1+",1,"+id3);
-        assertEquals(res.contains("not found peerid"), true);
+        assertEquals(res.contains("not in memberList"), true);
 
         res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m "+id1+","+id2+",1");
-        assertEquals(res.contains("not found peerid"), true);
+        assertEquals(res.contains("not in memberList"), true);
 
         Thread.sleep(SLEEPTIME/2);
         //检查可以获取子链列表
@@ -1711,10 +1724,11 @@ public class TestMainSubChain {
         log.info(StringUtils.join(stdout,"\n"));
 
         if(StringUtils.join(stdout,"\n").contains("transaction success")) {
-            Thread.sleep(SLEEPTIME);
+            Thread.sleep(SLEEPTIME*2);
             subLedger = chainNameParam.trim().split(" ")[1];
             log.info("**************  set permission 999 for " + subLedger);
-            testMgTool.setPeerPerm(PEER1IP + ":" + PEER1RPCPort, getSDKID(), "999");
+            String resp = testMgTool.setPeerPerm(PEER1IP + ":" + PEER1RPCPort, getSDKID(), "999");
+            //assertEquals(false,resp.contains("err"));
             subLedger = "";
         }
         return StringUtils.join(stdout,"\n");
