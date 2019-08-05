@@ -36,19 +36,12 @@ public class TestMainSubChain_UTXO {
     TestBuilder testBuilder = TestBuilder.getInstance();
     private static String tokenType;
     private static String tokenType2;
-    private static String sdkid = "a05b1c716e7dc89dc1a3d947b08596a175f1091d510f88af9302f8729e75c47dc7490c7d2ee4315478830d9afedb0324386025c3af8d2082f428171be2f6fa3c";
-    private static String subLedgerA = "leg1";
+    private static String subLedgerA = "leg0";
     MultiSign multiSign = testBuilder.getMultiSign();
     UtilsClass utilsClass = new UtilsClass();
     TestMgTool testMgTool = new TestMgTool();
     TestMainSubChain testMainSubChain = new TestMainSubChain();
 
-
-
-    String id1 = getPeerId(PEER1IP, USERNAME, PASSWD);
-    String id2 = getPeerId(PEER2IP, USERNAME, PASSWD);
-    String id3 = getPeerId(PEER4IP, USERNAME, PASSWD);
-    String ids = " -m " + id1 + "," + id2 + "," + id3;
 
 
     @Before
@@ -72,18 +65,9 @@ public class TestMainSubChain_UTXO {
     @Test
     public void TC1526_UTXOTranction_leg() throws Exception {
         subLedger = subLedgerA;
-        testMgTool.setPeerPerm(PEER1IP + ":" + PEER1RPCPort, sdkid, "999"); //给sdk的id赋权限 ================sdkid
-//        testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,""); //获取子链的信息
-        //生成地址
-        if (certPath != "" && bReg == false) {
-            BeforeCondition bf = new BeforeCondition();
-            bf.updatePubPriKey();
-            bf.collAddressTest();
-            Thread.sleep(SLEEPTIME * 1);
-            bReg = true;
-        }
-
-        Thread.sleep(SLEEPTIME);
+        log.info(subLedger);
+        BeforeCondition beforeCondition = new BeforeCondition();
+        beforeCondition.initTest();
 
         //多签的token发行
         log.info("发行两种token1000个");
@@ -147,16 +131,9 @@ public class TestMainSubChain_UTXO {
     public void TC1526_UTXOTranction() throws Exception {
         //在主链上查询余额
         subLedger = "";
-        testMgTool.setPeerPerm(PEER1IP + ":" + PEER1RPCPort, sdkid, "999"); //给sdk的id赋权限 ================sdkid
+        BeforeCondition beforeCondition = new BeforeCondition();
+        beforeCondition.initTest();
 
-        //生成地址
-        if (certPath != "" && bReg == false) {
-            BeforeCondition bf = new BeforeCondition();
-            bf.updatePubPriKey();
-            bf.collAddressTest();
-            Thread.sleep(SLEEPTIME * 1);
-            bReg = true;
-        }
         Thread.sleep(SLEEPTIME);
 
         log.info("主链查询子链上归集地址中两种token余额");
