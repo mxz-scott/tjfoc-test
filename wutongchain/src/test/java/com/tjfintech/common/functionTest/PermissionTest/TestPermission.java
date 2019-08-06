@@ -94,7 +94,7 @@ public class TestPermission {
             Shell shellSDK = new Shell(sdkIP, USERNAME, PASSWD);
             shellSDK.execute(killSDKCmd);
             Thread.sleep(2000);   log.info("sleep time/ms:"+2000);
-            shellSDK.execute("sh " + PTPATH + "sdk/start.sh");
+            shellSDK.execute(startSDKCmd);
             Thread.sleep(3000);   log.info("sleep time/ms:"+3000);
         }
 
@@ -511,9 +511,9 @@ public class TestPermission {
 
    // @Test
     public void pConfTest()throws Exception{
-        String peerIP240="10.1.3.240:9300";
-        String peerIP246="10.1.3.246:9300";
-        String nonIP247="10.1.3.168:9300";
+        String peerIP240=PEER1IP+":"+PEER1RPCPort;//"10.1.3.240:9300";
+        String peerIP246=PEER2IP+":"+PEER2RPCPort;//"10.1.3.246:9300";
+        String nonIP247=PEER3IP+":"+PEER3RPCPort;//"10.1.3.168:9300";
 
         String cmd1=toolPath+exeCmd+"-p "+peerIP240.split(":")[1]+" -d "+sdkID+" -m ";
         String cmd2=toolPath+exeCmd+"-p "+peerIP246.split(":")[1]+" -d "+sdkID+" -m ";
