@@ -24,8 +24,8 @@ public class TestMgTool {
     TestBuilder testBuilder=TestBuilder.getInstance();
     Store store =testBuilder.getStore();
 
-    String rpcPort="9300";
-    String tcpPort="60030";
+    String rpcPort=PEER3RPCPort;
+    String tcpPort=PEER3TCPPort;
     String consType="L";
     String dataType="D";
     int basePeerNo = 3;
@@ -446,23 +446,23 @@ public class TestMgTool {
         //Thread.sleep(20000);
     }
 
-    /**
-     *
-     * @param queryIPPort  查看节点地址
-     * @param tcpPort 节点tcpport  //checkinfo[0]
-     * @param version 节点版本 //checkinfo[1]
-     * @param Type 节点类型共识or数据节点 //checkinfo[2]
-     * @param launchTime 启动时间 //checkinfo[3]
-     * @param log 日志级别 //checkinfo[4]
-     * @param dbPath db数据库目录 //checkinfo[5]
-     * @param Crypt 加密算法 //checkinfo[6]
-     * @param Hash hash算法 //checkinfo[7]
-     * @param Consensus 共识算法 //checkinfo[8]
-     * @param dockerImage 合约版本 //checkinfo[9]
-     * @param blockPackTime 打包时间 //checkinfo[10]
-     * @param blockSize 区块大小 //checkinfo[11]
-     * @throws Exception
-     */
+//    /**
+//     *
+//     * @param queryIPPort  查看节点地址
+//     * @param tcpPort 节点tcpport  //checkinfo[0]
+//     * @param version 节点版本 //checkinfo[1]
+//     * @param Type 节点类型共识or数据节点 //checkinfo[2]
+//     * @param launchTime 启动时间 //checkinfo[3]
+//     * @param log 日志级别 //checkinfo[4]
+//     * @param dbPath db数据库目录 //checkinfo[5]
+//     * @param Crypt 加密算法 //checkinfo[6]
+//     * @param Hash hash算法 //checkinfo[7]
+//     * @param Consensus 共识算法 //checkinfo[8]
+//     * @param dockerImage 合约版本 //checkinfo[9]
+//     * @param blockPackTime 打包时间 //checkinfo[10]
+//     * @param blockSize 区块大小 //checkinfo[11]
+//     * @throws Exception
+//     */
     public void chkPeerDetailsOK(String queryIPPort,String...checkinfo)throws Exception{
         String tempCmd="";
         //queryIPPort : peer1IPPort
@@ -985,7 +985,7 @@ public class TestMgTool {
         shellPeer2.execute("cp "+PTPATH+"peer/conf/based1.toml "+PTPATH+"peer/conf/"+PeerInfoConfig+".toml");
         startPeer(PEER2IP);
         Thread.sleep(STARTSLEEPTIME);
-        checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
+        checkParam(PEER2IP,"./toolkit health -p " + PEER2RPCPort,"connection error");
 
         log.info("********************Test for dismatch license********************");
         //ToolIP= PEER2IP;
@@ -996,7 +996,7 @@ public class TestMgTool {
         shellPeer2.execute("cp "+PTPATH+"peer/conf/baseDisMatch.toml "+PTPATH+"peer/conf/"+PeerInfoConfig+".toml");
         startPeer(PEER2IP);
         Thread.sleep(STARTSLEEPTIME);
-        checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
+        checkParam(PEER2IP,"./toolkit health -p " + PEER2RPCPort,"connection error");
 
         log.info("********************Test for invalid peer count********************");
         //验证节点数据小于配置文件中节点数场景
@@ -1007,7 +1007,7 @@ public class TestMgTool {
         shellPeer2.execute("cp "+PTPATH+"peer/conf/basen1.toml "+PTPATH+"peer/conf/"+PeerInfoConfig+".toml");
         startPeer(PEER2IP);
         Thread.sleep(STARTSLEEPTIME);
-        checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
+        checkParam(PEER2IP,"./toolkit health -p " + PEER2RPCPort,"connection error");
 
         log.info("********************Test for invalid MAC addr ********************");
         //证书IP正确，MAC不正确 替换配置licence文件为Mac1文件
@@ -1017,7 +1017,7 @@ public class TestMgTool {
         shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerMac1.lic");
         startPeer(PEER2IP);
         Thread.sleep(STARTSLEEPTIME);
-        checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
+        checkParam(PEER2IP,"./toolkit health -p " + PEER2RPCPort,"connection error");
 
         log.info("********************Test for invalid IP addr ********************");
         //证书MAC正确，IP不正确 替换配置licence文件为IP1文件
@@ -1027,7 +1027,7 @@ public class TestMgTool {
         shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerIP1.lic");
         startPeer(PEER2IP);
         Thread.sleep(STARTSLEEPTIME);
-        checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
+        checkParam(PEER2IP,"./toolkit health -p " + PEER2RPCPort,"connection error");
 
         log.info("********************Test for invalid IP&MAC addr ********************");
         //使用其他节点licence
@@ -1037,7 +1037,7 @@ public class TestMgTool {
         shellPeer2.execute("cp "+PTPATH+"toolkit/peer.lic "+PTPATH+"peer/peerIPMac1.lic");
         startPeer(PEER2IP);
          Thread.sleep(STARTSLEEPTIME);
-        checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
+        checkParam(PEER2IP,"./toolkit health -p " + PEER2RPCPort,"connection error");
 
         log.info("********************Test for old license(no version check) ********************");
         //使用旧版本工具生成的不带version检查的licence 需要提前准备好旧版本的license
@@ -1045,7 +1045,7 @@ public class TestMgTool {
         shellPeer2.execute(killPeerCmd);
         startPeer(PEER2IP);
         Thread.sleep(STARTSLEEPTIME);
-        checkParam(PEER2IP,"./toolkit health -p 9300","connection error");
+        checkParam(PEER2IP,"./toolkit health -p " + PEER2RPCPort,"connection error");
 
         log.info("********************Test for valid licence********************");
         //恢复配置并重启，使用有效证书验证

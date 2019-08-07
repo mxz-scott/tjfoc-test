@@ -79,6 +79,14 @@ public class UtilsClass {
     public static final String PEER2RPCPort="9300";
     public static final String PEER3RPCPort="9300";
     public static final String PEER4RPCPort="9300";
+//    public static final String PEER1RPCPort="9400";
+//    public static final String PEER2RPCPort="9500";
+//    public static final String PEER3RPCPort="9400";
+//    public static final String PEER4RPCPort="9400";
+    public static final String PEER1TCPPort="60011";
+    public static final String PEER2TCPPort="60011";
+    public static final String PEER3TCPPort="60011";
+    public static final String PEER4TCPPort="60012";
     public static String PEER1MAC="02:42:fc:a2:5b:1b";
     public static String PEER2MAC="02:42:c0:31:6b:5c";
     public static String PEER3MAC="02:42:c4:b9:82:6e";
@@ -91,7 +99,9 @@ public class UtilsClass {
 //    public static final String PTPATH="/root/zll/chain2.0.1/";
     public  static String SDKID=null;
     public static String PeerTPName="auto";
+//    public static String PeerTPName="Mp";
     public static String SDKTPName="httpservice";
+//    public static String SDKTPName="sdk";
     public static ArrayList<String > peerList=new ArrayList<>();
     public static int RESTARTTIME=20000;
     public static long ContractInstallSleep=75000;
@@ -111,7 +121,7 @@ public class UtilsClass {
     public static String startSDKCmd ="sh "+PTPATH+"sdk/start.sh";
     public static String killPeerCmd = "ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9";
     public static String killSDKCmd = "ps -ef |grep " + SDKTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9";
-    public static String clearPeerDB = "rm -rf "+ PTPATH + "peer/*.db ";
+    public static String clearPeerDB = "rm -rf "+ PTPATH + "peer/*db ";
     public static String resetPeerBase = "cp " + PTPATH + "peer/conf/baseOK.toml " + PTPATH + "peer/conf/base.toml";
     public static String resetPeerConfig = "cp "+ PTPATH + "peer/conf/configOK.toml "+ PTPATH +"peer/conf/"+PeerMemConfig+".toml";
     public static String resetSDKConfig = "cp " + PTPATH + "sdk/conf/configOK.toml " + PTPATH + "sdk/conf/config.toml";
