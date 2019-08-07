@@ -36,12 +36,12 @@ public class TestMainSubChain_UTXO {
     TestBuilder testBuilder = TestBuilder.getInstance();
     private static String tokenType;
     private static String tokenType2;
-    private static String subLedgerA = "leg0";
+    private static String subLedgerA = "leg3";
+    private static String subLedgerB = "leg4";
     MultiSign multiSign = testBuilder.getMultiSign();
     UtilsClass utilsClass = new UtilsClass();
-    TestMgTool testMgTool = new TestMgTool();
     TestMainSubChain testMainSubChain = new TestMainSubChain();
-
+    BeforeCondition beforeCondition = new BeforeCondition();
 
 
     @Before
@@ -55,18 +55,137 @@ public class TestMainSubChain_UTXO {
             assertEquals(testMainSubChain.getSubChain(PEER1IP, PEER1RPCPort, "").contains("\"name\": \"" + subLedgerA + "\""), true);
         }
 
+        if (!resp.contains("\"name\": \"" + subLedgerB + "\"")) {//如果子链中不包含subLedgerB就新建一条子链
+            testMainSubChain.createSubChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerB, " -t sm3", " -w subA", " -c raft", ids);
+            Thread.sleep(SLEEPTIME * 2);
+            assertEquals(testMainSubChain.getSubChain(PEER1IP, PEER1RPCPort, "").contains("\"name\": \"" + subLedgerB + "\""), true);
+        }
     }
 
     /**
-     * 在子链上进行多签的发行，转账，回收，冻结
+     * 在子链上进行UTXO交易发行，转账，回收，冻结,在主链上进行交易查询
      *
      * @throws Exception
      */
+
     @Test
-    public void TC1526_UTXOTranction_leg() throws Exception {
+    public void TC1529_UTXOTranction() throws Exception {
         subLedger = subLedgerA;
         log.info(subLedger);
-        BeforeCondition beforeCondition = new BeforeCondition();
+        token_issue();
+
+        subLedger = "";
+        beforeCondition.initTest();
+        log.info("主链查询子链上归集地址中两种token余额");
+        String response3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String response4= multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        assertEquals("200", JSONObject.fromObject(response3).getString("State"));
+        assertEquals("0", JSONObject.fromObject(response3).getJSONObject("Data").getString("Total"));
+        assertEquals("200", JSONObject.fromObject(response4).getString("State"));
+        assertEquals("0", JSONObject.fromObject(response4).getJSONObject("Data").getString("Total"));
+
+        subLedger = subLedgerA;
+        Transfer();
+
+        subLedger = "";
+        beforeCondition.initTest();
+        log.info("查询归集地址跟MULITADD4余额，判断转账是否成功");
+        String queryInfo5 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String queryInfo6 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
+        assertEquals("200", JSONObject.fromObject(queryInfo5).getString("State"));
+        assertEquals("0", JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"));
+        assertEquals("200", JSONObject.fromObject(queryInfo6).getString("State"));
+        assertEquals("0", JSONObject.fromObject(queryInfo6).getJSONObject("Data").getString("Total"));
+
+        subLedger = subLedgerA;
+        Recovery_query_freeze();
+
+    }
+
+    /**
+     * 在主链上进行UTXO交易发行，转账，回收，冻结,在子链上进行交易查询
+     * @throws Exception
+     */
+    @Test
+    public void TC1532_UTXOTranction()throws Exception{
+        subLedger = "";
+        log.info(subLedger);
+        token_issue();
+
+        subLedger = subLedgerA;
+        beforeCondition.initTest();
+        log.info("主链查询子链上归集地址中两种token余额");
+        String response3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String response4= multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        assertEquals("200", JSONObject.fromObject(response3).getString("State"));
+        assertEquals("0", JSONObject.fromObject(response3).getJSONObject("Data").getString("Total"));
+        assertEquals("200", JSONObject.fromObject(response4).getString("State"));
+        assertEquals("0", JSONObject.fromObject(response4).getJSONObject("Data").getString("Total"));
+
+        subLedger = "";
+        Transfer();
+
+        subLedger =subLedgerA;
+        beforeCondition.initTest();
+        log.info("查询归集地址跟MULITADD4余额，判断转账是否成功");
+        String queryInfo5 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String queryInfo6 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
+        assertEquals("200", JSONObject.fromObject(queryInfo5).getString("State"));
+        assertEquals("0", JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"));
+        assertEquals("200", JSONObject.fromObject(queryInfo6).getString("State"));
+        assertEquals("0", JSONObject.fromObject(queryInfo6).getJSONObject("Data").getString("Total"));
+
+        subLedger = "";
+        Recovery_query_freeze();
+
+
+    }
+
+    /**
+     * 在子链A进行UTXO交易发行，转账，回收，冻结,在子链B上进行交易查询
+     * @throws Exception
+     */
+    @Test
+    public void TC1526_UTXOTranction()throws Exception{
+        subLedger = subLedgerA;
+        log.info(subLedger);
+        token_issue();
+
+        subLedger = subLedgerB;
+        beforeCondition.initTest();
+        log.info("主链查询子链上归集地址中两种token余额");
+        String response3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String response4= multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        assertEquals("200", JSONObject.fromObject(response3).getString("State"));
+        assertEquals("0", JSONObject.fromObject(response3).getJSONObject("Data").getString("Total"));
+        assertEquals("200", JSONObject.fromObject(response4).getString("State"));
+        assertEquals("0", JSONObject.fromObject(response4).getJSONObject("Data").getString("Total"));
+
+        subLedger = subLedgerA;
+        Transfer();
+
+        subLedger =subLedgerB;
+        beforeCondition.initTest();
+        log.info("查询归集地址跟MULITADD4余额，判断转账是否成功");
+        String queryInfo5 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String queryInfo6 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
+        assertEquals("200", JSONObject.fromObject(queryInfo5).getString("State"));
+        assertEquals("0", JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"));
+        assertEquals("200", JSONObject.fromObject(queryInfo6).getString("State"));
+        assertEquals("0", JSONObject.fromObject(queryInfo6).getJSONObject("Data").getString("Total"));
+
+        subLedger = subLedgerA;
+        Recovery_query_freeze();
+
+
+
+    }
+
+
+    /**
+     * token发行
+     */
+    public void token_issue()throws Exception{
         beforeCondition.initTest();
         //添加发行地址
         if(certPath!=""&& bReg==false) {
@@ -91,24 +210,12 @@ public class TestMainSubChain_UTXO {
         assertEquals("200", JSONObject.fromObject(response2).getString("State"));
         assertEquals("1000", JSONObject.fromObject(response2).getJSONObject("Data").getString("Total"));
 
+    }
 
-        //转账
-        String transferData = "归集地址向" + MULITADD4 + "转账10个" + tokenType;
-        log.info(transferData);
-        List<Map> list = utilsClass.constructToken(MULITADD4, tokenType, "10");
-        log.info(transferData);
-        String transferInfo = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, list);
-        Thread.sleep(SLEEPTIME);
-        assertThat(transferInfo, containsString("200"));
-
-        log.info("查询归集地址跟MULITADD4余额，判断转账是否成功");
-        String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String queryInfo2 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
-        assertEquals("200", JSONObject.fromObject(queryInfo).getString("State"));
-        assertEquals("990", JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
-        assertEquals("200", JSONObject.fromObject(queryInfo2).getString("State"));
-        assertEquals("10", JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"));
-
+    /**
+     * 回收 查询 冻结操作
+     */
+    public void Recovery_query_freeze()throws Exception{
         log.info("回收归集地址跟MULITADD4的新发token");
         String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "990");
         String recycleInfo2 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "10");
@@ -130,28 +237,14 @@ public class TestMainSubChain_UTXO {
         assertThat(freezeToken, containsString("200"));
         assertThat(freezeToken2, containsString("200"));
 
-
-
     }
 
-    @Test
-    public void TC1526_UTXOTranction() throws Exception {
-        //在主链上查询余额
-        subLedger = "";
-        BeforeCondition beforeCondition = new BeforeCondition();
-        beforeCondition.initTest();
+    /**
+     * 转账操作
+     * @throws Exception
+     */
 
-        Thread.sleep(SLEEPTIME);
-
-        log.info("主链查询子链上归集地址中两种token余额");
-        String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
-        assertEquals("200", JSONObject.fromObject(response1).getString("State"));
-        assertEquals("0", JSONObject.fromObject(response1).getJSONObject("Data").getString("Total"));
-        assertEquals("200", JSONObject.fromObject(response2).getString("State"));
-        assertEquals("0", JSONObject.fromObject(response2).getJSONObject("Data").getString("Total"));
-
-
+    public void Transfer()throws Exception{
         //转账
         String transferData = "归集地址向" + MULITADD4 + "转账10个" + tokenType;
         log.info(transferData);
@@ -159,26 +252,16 @@ public class TestMainSubChain_UTXO {
         log.info(transferData);
         String transferInfo = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, list);
         Thread.sleep(SLEEPTIME);
-        assertThat(transferInfo, containsString("400"));
+        assertThat(transferInfo, containsString("200"));
 
         log.info("查询归集地址跟MULITADD4余额，判断转账是否成功");
         String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String queryInfo2 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
         assertEquals("200", JSONObject.fromObject(queryInfo).getString("State"));
-        assertEquals("0", JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
+        assertEquals("990", JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
         assertEquals("200", JSONObject.fromObject(queryInfo2).getString("State"));
-        assertEquals("0", JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"));
-
-        log.info("回收归集地址跟MULITADD4的新发token");
-        String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "990");
-        String recycleInfo2 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "10");
-        assertEquals("400", JSONObject.fromObject(recycleInfo).getString("State"));
-        assertEquals("400", JSONObject.fromObject(recycleInfo2).getString("State"));
-        Thread.sleep(SLEEPTIME);
-
-
+        assertEquals("10", JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"));
     }
-
 
     public String IssueToken(int length, String amount) {
         multiSign.addissueaddress(IMPPUTIONADD,PUBKEY4);
