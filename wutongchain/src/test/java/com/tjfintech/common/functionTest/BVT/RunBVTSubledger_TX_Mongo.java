@@ -4,7 +4,7 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMongo;
 import com.tjfintech.common.functionTest.Conditions.SetSubLedger;
 import com.tjfintech.common.functionTest.PermissionTest.TestPermission;
-import com.tjfintech.common.functionTest.dockerContract.ContractTest;
+import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
 import com.tjfintech.common.functionTest.store.StoreTest;
 import com.tjfintech.common.functionTest.utxoMultiSign.MultiTest;
@@ -12,8 +12,6 @@ import com.tjfintech.common.functionTest.utxoMultiSign.MultiTest_33_12;
 import com.tjfintech.common.functionTest.utxoSingleSign.SoloTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-
-import java.util.concurrent.locks.Condition;
 
 
 @RunWith(Suite.class)
@@ -25,7 +23,7 @@ import java.util.concurrent.locks.Condition;
         MultiTest.class,
         MultiTest_33_12.class,
         SoloTest.class,
-        ContractTest.class,
+        DockerContractTest.class,
         TestTxType.class,
         TestPermission.class
 })

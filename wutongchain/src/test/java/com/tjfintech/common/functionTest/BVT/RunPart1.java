@@ -1,9 +1,7 @@
 package com.tjfintech.common.functionTest.BVT;
 
 import com.tjfintech.common.BeforeCondition;
-import com.tjfintech.common.functionTest.PermissionTest.TestPermission;
-import com.tjfintech.common.functionTest.mixTestWithConfigChange.*;
-import com.tjfintech.common.functionTest.dockerContract.ContractTest;
+import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
 import com.tjfintech.common.functionTest.mixTest.TimeofTxOnChain;
 import com.tjfintech.common.functionTest.store.LocalStoreTest;
@@ -37,7 +35,7 @@ import org.junit.runners.Suite;
         LocalMultiSignTest.class,
         MultiSignDetailTest.class,
 
-        ContractTest.class,
+        DockerContractTest.class,
 
         TestTxType.class,
         TimeofTxOnChain.class,

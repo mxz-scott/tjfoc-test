@@ -126,6 +126,8 @@ public class UtilsClass {
     public static String resetPeerConfig = "cp "+ PTPATH + "peer/conf/configOK.toml "+ PTPATH +"peer/conf/"+PeerMemConfig+".toml";
     public static String resetSDKConfig = "cp " + PTPATH + "sdk/conf/configOK.toml " + PTPATH + "sdk/conf/config.toml";
 
+    public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";
+
     /**
      * 多签转账操作的TOKEN数组构建方法，单签的在GosoloSign类中
      * @param toAddr     发送地址
@@ -421,7 +423,7 @@ public class UtilsClass {
     }
 
     public static String getKeyPairsFromFile(String pemFileName)throws Exception{
-        String filePath = System.getProperty("user.dir") + "/src/main/resources/"+pemFileName;
+        String filePath =resourcePath+pemFileName;
         InputStream inStream =new FileInputStream(filePath);
         ByteArrayOutputStream out =new ByteArrayOutputStream();
 
@@ -517,5 +519,10 @@ public class UtilsClass {
          }
 
         Thread.sleep(3000);
+    }
+
+    public static void sleepAndSaveInfo(long sleepTime)throws Exception{
+        Thread.sleep(sleepTime);
+        log.info("*************sleep time(ms): " + sleepTime);
     }
 }

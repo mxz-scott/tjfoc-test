@@ -60,13 +60,13 @@ public class TestMainSubChain {
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         if(! resp.contains("\"name\": \""+glbChain01+"\"")) {
             createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01, " -t sm3", " -w first", " -c raft", ids);
-            Thread.sleep(SLEEPTIME*2);
+            sleepAndSaveInfo(SLEEPTIME*2);
             assertEquals(getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01+"\""), true);
         }
 
         if(! resp.contains("\"name\": \""+glbChain02+"\"")) {
             createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain02, " -t sm3", " -w first", " -c raft", ids);
-            Thread.sleep(SLEEPTIME*2);
+            sleepAndSaveInfo(SLEEPTIME*2);
             assertEquals(getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02+"\""), true);
         }
     }
@@ -78,7 +78,7 @@ public class TestMainSubChain {
         //设置主链上sdk权限为0
         subLedger="";
         testMgTool.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"0");
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[0]");
         assertEquals(store.CreateStore("tc1660 no permission tx data").toLowerCase().contains(noPerm),true);
 
@@ -88,7 +88,7 @@ public class TestMainSubChain {
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -97,14 +97,14 @@ public class TestMainSubChain {
         //获取子链权限列表指定sdk为空 测试发送交易无权限
         subLedger=chainName;
         assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[0]");
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         assertEquals(store.CreateStore("tc1661 no permission tx data").toLowerCase().contains(noPerm),true);
 
 
         //设置子链权限为1 即只允许发送存证 不允许其他操作
         subLedger=chainName;
         testMgTool.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"211");
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //获取子链权限列表检查是否为211
         assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[211]");
 
@@ -120,7 +120,7 @@ public class TestMainSubChain {
         //设置主链权限为999,确认主链sdk权限恢复
         subLedger="";
         testMgTool.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"999");
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), fullPerm);
         //向子链glbChain01/glbChain02和主链发送交易
         sendTxToMainActiveChain("tc1661 with permission 999 tx data2");
@@ -132,7 +132,7 @@ public class TestMainSubChain {
             log.info("Current index " + i);
             String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
             assertEquals(resp.contains("name"), true);
-            Thread.sleep(1000);
+            sleepAndSaveInfo(1000);
         }
     }
 
@@ -142,7 +142,7 @@ public class TestMainSubChain {
         //设置主链上sdk权限为236/251;余额查询以及注册归集地址权限
         subLedger="";
         testMgTool.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"236,253");
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[236 253]");
         assertThat(multiSign.QueryZero(""),containsString("\"State\":200"));
         assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),containsString("\"State\":200"));
@@ -153,7 +153,7 @@ public class TestMainSubChain {
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -168,7 +168,7 @@ public class TestMainSubChain {
         //设置子链权限为3,211 即只允许发送存证 不允许其他操作
         subLedger=chainName;
         testMgTool.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"3,211");
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //获取子链权限列表检查是否为3,211
         assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[3 211]");
         //子链发送权限对应的接口以及检查无权限接口
@@ -189,7 +189,7 @@ public class TestMainSubChain {
         //设置主链权限为999,确认主链sdk权限恢复
         subLedger="";
         testMgTool.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"999");
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), fullPerm);
         //向子链glbChain01/glbChain02和主链发送交易
         sendTxToMainActiveChain("tc1662 with permission 999 tx data2");
@@ -201,7 +201,7 @@ public class TestMainSubChain {
         //设置主链上sdk权限为236/251;余额查询以及注册归集地址权限
         subLedger="";
         testMgTool.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"999");
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查主链权限列表
         assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), fullPerm);
 
@@ -215,7 +215,7 @@ public class TestMainSubChain {
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -224,14 +224,14 @@ public class TestMainSubChain {
         //获取子链权限列表指定sdk为空 测试发送交易无权限
         subLedger=chainName;
         assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[0]");
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         assertEquals(store.CreateStore("tc1663 no permission tx data").toLowerCase().contains(noPerm),true);
 
 
         //设置子链权限为3,211
         subLedger=chainName;
         testMgTool.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"3,211");
-        Thread.sleep(SLEEPTIME*3/2);
+        sleepAndSaveInfo(SLEEPTIME*3/2);
         //获取子链权限列表检查是否为3,211
         assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[3 211]");
         //子链发送权限对应的接口以及检查无权限接口
@@ -254,7 +254,7 @@ public class TestMainSubChain {
         //设置主链权限为999,确认主链sdk权限恢复
         subLedger="";
         //testMgTool.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"999");
-        //Thread.sleep(SLEEPTIME);
+        //sleepAndSaveInfo(SLEEPTIME);
         //向子链glbChain01/glbChain02和主链发送交易
         sendTxToMainActiveChain("tc1663 with permission 999 tx data2");
     }
@@ -268,7 +268,7 @@ public class TestMainSubChain {
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -277,7 +277,7 @@ public class TestMainSubChain {
         //冻结子链
         res = freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
         assertEquals(res.contains("send transaction success"), true);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
         assertEquals(resp.contains("\"state\": \"Freeze\""), true);
@@ -286,7 +286,7 @@ public class TestMainSubChain {
         //解除子链
         res = destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
         assertEquals(res.contains("send transaction success"), true);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
         assertEquals(resp.contains("\"state\": \"Destory\""), true);
@@ -294,13 +294,13 @@ public class TestMainSubChain {
         String chainName2="tc1658_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName2,
                 " -t sm3"," -w first"," -c raft",ids);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         String chainName3="tc1658_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName3,
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -320,7 +320,7 @@ public class TestMainSubChain {
         String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表 存在其他子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -330,7 +330,7 @@ public class TestMainSubChain {
         //冻结子链
         res = freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains("\"state\": \"Freeze\""), true);
@@ -339,13 +339,13 @@ public class TestMainSubChain {
         //解除子链
         res = recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains("\"state\": \"Normal\""), true);
 
 
-        Thread.sleep(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
         resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -357,7 +357,7 @@ public class TestMainSubChain {
         subLedger=chainName;
         String response1 = store.CreateStore(Data);
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
@@ -376,7 +376,7 @@ public class TestMainSubChain {
 //        String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3"," -w first"," -c raft",ids);
 //        assertEquals(res.contains("send transaction success"), true);
 //
-//        Thread.sleep(SLEEPTIME*2);
+//        sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表 存在其他子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -387,13 +387,13 @@ public class TestMainSubChain {
         //解除子链
         String res = recoverSubChain(PEER1IP,PEER1RPCPort," -z "+glbChain01);
         assertEquals(res.contains("send transaction success"), true);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+glbChain01);
         assertEquals(resp.contains("\"state\": \"Normal\""), true);
 
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表
         resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -404,7 +404,7 @@ public class TestMainSubChain {
 //        //向子链chainName发送交易
 //        subLedger=chainName;
 //        String response1 = store.CreateStore(Data);
-//        Thread.sleep(SLEEPTIME*2);
+//        sleepAndSaveInfo(SLEEPTIME*2);
 //        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
 //        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
 //        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
@@ -422,7 +422,7 @@ public class TestMainSubChain {
         String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表 存在其他子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -432,7 +432,7 @@ public class TestMainSubChain {
         //销毁子链
         res = destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains("\"state\": \"Destory\""), true);
@@ -441,13 +441,13 @@ public class TestMainSubChain {
         //解除销毁子链
         res = recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains("\"state\": \"Destory\""), true);
 
 
-        Thread.sleep(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
         resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -473,7 +473,7 @@ public class TestMainSubChain {
         String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表 存在其他子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -483,7 +483,7 @@ public class TestMainSubChain {
         //冻结子链
         res = freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains("\"state\": \"Freeze\""), true);
@@ -492,7 +492,7 @@ public class TestMainSubChain {
         //解除冻结子链
         res = recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains("\"state\": \"Normal\""), true);
@@ -501,13 +501,13 @@ public class TestMainSubChain {
         res = destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains("\"state\": \"Destory\""), true);
 
 
-        Thread.sleep(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
         resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -532,7 +532,7 @@ public class TestMainSubChain {
         String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -542,7 +542,7 @@ public class TestMainSubChain {
         //冻结子链
         res = freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains("\"state\": \"Freeze\""), true);
@@ -551,13 +551,13 @@ public class TestMainSubChain {
         res = destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains("\"state\": \"Destory\""), true);
 
 
-        Thread.sleep(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
         resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -583,7 +583,7 @@ public class TestMainSubChain {
         String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -594,7 +594,7 @@ public class TestMainSubChain {
         res = destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains("\"state\": \"Destory\""), true);
@@ -604,12 +604,12 @@ public class TestMainSubChain {
         res = destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains("\"state\": \"Destory\""), true);
 
-        Thread.sleep(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
         resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -639,7 +639,7 @@ public class TestMainSubChain {
         String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -649,7 +649,7 @@ public class TestMainSubChain {
         res = destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains("\"state\": \"Destory\""), true);
@@ -688,7 +688,7 @@ public class TestMainSubChain {
             bCheck1=false;
             bCheck2=false;
             blockHash=JSONObject.fromObject(store.GetBlockByHeight(1)).getJSONObject("Data").getJSONObject("header").getString("blockHash");
-            Thread.sleep(SLEEPTIME);
+            sleepAndSaveInfo(SLEEPTIME);
         }
         else if(type.toLowerCase()=="freeze"){
             notSupport=stateFreezed;
@@ -721,7 +721,7 @@ public class TestMainSubChain {
         assertEquals(bCheck1,store.CreateStorePwd("test1",map).contains(notSupport));
 
         assertEquals(bCheck1,store.CreateStore("test2").contains(notSupport));
-//        Thread.sleep(SLEEPTIME);
+//        sleepAndSaveInfo(SLEEPTIME);
         assertEquals(bCheck1,store.SynCreateStore(SHORTMEOUT,"test3").contains(notSupport));
         assertEquals(bCheck1,store.SynCreateStore(SHORTMEOUT,"test4",PUBKEY1).contains(notSupport));
 
@@ -744,7 +744,7 @@ public class TestMainSubChain {
         String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+"main"," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("exist"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 中无main子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -773,7 +773,7 @@ public class TestMainSubChain {
         String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+glbChain01," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链 确认异常操作后系统无异常
         resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -790,7 +790,7 @@ public class TestMainSubChain {
         String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -801,7 +801,7 @@ public class TestMainSubChain {
         res = destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         //检查可以获取子链列表 存在其他子链 确认异常操作后系统无异常
         resp = getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -810,7 +810,7 @@ public class TestMainSubChain {
         res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
         String txHash = res.substring(res.lastIndexOf(":")+1).trim();
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash)).getString("State"));
 
         String Data="1475 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
@@ -831,7 +831,7 @@ public class TestMainSubChain {
         //子链
         String chainName="tc1497_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -873,7 +873,7 @@ public class TestMainSubChain {
         subLedger="";
         String response3 = store.CreateStore(data);
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
@@ -901,7 +901,7 @@ public class TestMainSubChain {
         assertEquals(res.contains("send transaction success"), true);
 
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表 存在其他子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -910,7 +910,7 @@ public class TestMainSubChain {
 
         res = freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains("\"state\": \"Freeze\""), true);
@@ -923,7 +923,7 @@ public class TestMainSubChain {
 
         //向子链chainName发送交易
         subLedger=chainName;
-//        Thread.sleep(SLEEPTIME);
+//        sleepAndSaveInfo(SLEEPTIME);
         String response1 = store.CreateStore(Data);
         assertThat(response1, containsString(stateFreezed));
         //向子链glbChain01/glbChain02和主链发送交易
@@ -932,7 +932,7 @@ public class TestMainSubChain {
         //查看恢复子链后的子链状态并向子链发送交易
         res = recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains("\"state\": \"Normal\""), true);
@@ -944,7 +944,7 @@ public class TestMainSubChain {
 
         //向子链chainName发送交易
         String txHash2 = JSONObject.fromObject(store.CreateStore(Data)).getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));
         //向子链glbChain01/glbChain02和主链发送交易
         sendTxToMainActiveChain(Data);
@@ -960,7 +960,7 @@ public class TestMainSubChain {
                 " -w first"," -c raft"," -m "+id1+","+id2);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         //检查可以获取子链列表
         String res2 = getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -969,7 +969,7 @@ public class TestMainSubChain {
 
         //冻结子链
         String respon = freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         //子链信息检查
         String res3 = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
@@ -978,9 +978,9 @@ public class TestMainSubChain {
 
         //恢复冻结子链 连续两次恢复
         String respon1 = recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         respon1 = recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         //子链信息检查
         String res4 = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
@@ -988,7 +988,7 @@ public class TestMainSubChain {
 
         //确认恢复后再次恢复
         respon1 = recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         res4 = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res4.contains("\"state\": \"Normal\""), true);
 
@@ -997,7 +997,7 @@ public class TestMainSubChain {
         //向子链chainName发送交易
         subLedger=chainName;
         String txHash1 = JSONObject.fromObject(store.CreateStore(Data)).getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         //检查可以获取子链列表
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -1021,7 +1021,7 @@ public class TestMainSubChain {
         assertEquals(res.contains("send transaction success"), true);
 
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         //检查可以获取子链列表
         String res2 = getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -1031,11 +1031,11 @@ public class TestMainSubChain {
         //冻结前发送一笔交易
         subLedger=chainName;
         String response = store.CreateStore("tttttt");
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         //冻结子链
         String respon = freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
 
         //检查可以获取子链列表
@@ -1047,7 +1047,7 @@ public class TestMainSubChain {
 
         //向子链chainName2发送交易
         subLedger=chainName;
-//        Thread.sleep(SLEEPTIME);
+//        sleepAndSaveInfo(SLEEPTIME);
         String response1 = store.CreateStore(Data);
 
 
@@ -1075,7 +1075,7 @@ public class TestMainSubChain {
         res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName3," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
 
         //检查可以获取子链列表
         String res2 = getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -1086,7 +1086,7 @@ public class TestMainSubChain {
         //冻结两条子链
         String respon = freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName2);
         String respon2 = freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName3);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
 
         //检查可以获取子链列表
@@ -1107,7 +1107,7 @@ public class TestMainSubChain {
         subLedger=chainName3;
         String response2 = store.CreateStore(Data);
 
-       Thread.sleep(SLEEPTIME*2);
+       sleepAndSaveInfo(SLEEPTIME*2);
 
         //检查可以获取子链列表
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -1116,7 +1116,7 @@ public class TestMainSubChain {
         assertEquals(resp.contains(chainName3), true);
 
         subLedger=chainName2;
-//        Thread.sleep(SLEEPTIME);
+//        sleepAndSaveInfo(SLEEPTIME);
         assertThat(response1, containsString(stateFreezed));
 
         subLedger=chainName3;
@@ -1135,7 +1135,7 @@ public class TestMainSubChain {
         String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表 存在其他子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -1147,7 +1147,7 @@ public class TestMainSubChain {
         //1.冻结一个子链chainName
         String respon = freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertThat(respon, containsString("send transaction success"));
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         //2.查询子链状态为冻结
         String resp2 = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
@@ -1155,7 +1155,7 @@ public class TestMainSubChain {
 
         subLedger=chainName;
         //3.冻结后发送一笔存证交易 应该无法上链
-//        Thread.sleep(SLEEPTIME);
+//        sleepAndSaveInfo(SLEEPTIME);
         String response10 = store.CreateStore(Data);
         assertThat(response10, containsString(stateFreezed));
 
@@ -1163,7 +1163,7 @@ public class TestMainSubChain {
         //5.再次冻结已冻结的子链
         String respon1 = freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertThat(respon1, containsString("send transaction success"));
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //6.查询子链状态为冻结
         String resp21 = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp21.contains("\"state\": \"Freeze\""), true);
@@ -1183,7 +1183,7 @@ public class TestMainSubChain {
         //待发送子链名
         String chainName="tc1512_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
 
-        Thread.sleep(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表 存在其他子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -1206,7 +1206,7 @@ public class TestMainSubChain {
         //待发送子链名
         String chainName="tc1520_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
 
-        Thread.sleep(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表 存在其他子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -1230,7 +1230,7 @@ public class TestMainSubChain {
         //待发送子链名
         String chainName="tc1585_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
 
-        Thread.sleep(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表 存在其他子链
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -1255,7 +1255,7 @@ public class TestMainSubChain {
         assertEquals(res.contains("send transaction success"), true);
 
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表
         String res2 = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
@@ -1266,14 +1266,14 @@ public class TestMainSubChain {
         //向子链chainName2发送交易
         subLedger=chainName2;
         String response1 = store.CreateStore(Data);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         Data="1621 main tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
         //向主链发送交易
         subLedger="";
         String response3 = store.CreateStore(Data);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         //检查可以获取子链列表
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -1309,7 +1309,7 @@ public class TestMainSubChain {
                 " -w \""+word+"\""," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表
         String res2 = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains(chainName), true);
@@ -1352,7 +1352,7 @@ public class TestMainSubChain {
                 " -w first"," -c raft"," -m "+id1+","+id1+","+id1);
         assertEquals(res.contains("id repeat"), true);
 
-        Thread.sleep(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
         String res2 = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
@@ -1367,7 +1367,7 @@ public class TestMainSubChain {
                 " -w first"," -c raft"," -m "+id1+";"+id2+";"+id3);
         assertEquals(res.contains("send transaction success"), false);
 
-        Thread.sleep(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
         String res2 = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
@@ -1380,17 +1380,17 @@ public class TestMainSubChain {
         //创建子链，id格式错误 非集群中的id
         String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m 1,"+id2+","+id3);
-        assertEquals(res.contains("not in memberList"), true);
+        assertEquals(res.contains("not found peerId"), true);
 
         res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m "+id1+",1,"+id3);
-        assertEquals(res.contains("not in memberList"), true);
+        assertEquals(res.contains("not found peerId"), true);
 
         res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m "+id1+","+id2+",1");
-        assertEquals(res.contains("not in memberList"), true);
+        assertEquals(res.contains("not found peerId"), true);
 
-        Thread.sleep(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
         String res2 = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
@@ -1402,17 +1402,17 @@ public class TestMainSubChain {
         //创建子链，id格式错误 非集群中的id
         String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m 1,"+id2+","+id3);
-        assertEquals(res.contains("not in memberList"), true);
+        assertEquals(res.contains("not found peerId"), true);
 
         res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m "+id1+",1,"+id3);
-        assertEquals(res.contains("not in memberList"), true);
+        assertEquals(res.contains("not found peerId"), true);
 
         res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m "+id1+","+id2+",1");
-        assertEquals(res.contains("not in memberList"), true);
+        assertEquals(res.contains("not found peerId"), true);
 
-        Thread.sleep(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
         String res2 = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
@@ -1449,7 +1449,7 @@ public class TestMainSubChain {
                 " -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), false);
 
-        Thread.sleep(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
         String res2 = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
@@ -1511,7 +1511,7 @@ public class TestMainSubChain {
         assertEquals(res4.contains("Invalid ledger name"), true);
 
 
-        Thread.sleep(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
         String res2 = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
@@ -1553,7 +1553,7 @@ public class TestMainSubChain {
         res = createSubChain(PEER1IP,PEER1RPCPort," -z test"," -t sm3"," -w 566"," -c raft"," ");
         assertEquals(res.contains("requires at least two ids"), true);
 
-        Thread.sleep(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
         String res2 = getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
@@ -1571,7 +1571,7 @@ public class TestMainSubChain {
         String res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3"," -w first ","",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         //检查子链列表中存在刚创建的两条子链 以及各个子链的共识算法为默认raft
         String res2 = getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -1594,7 +1594,7 @@ public class TestMainSubChain {
                 " -w "+wordValue,"",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         //检查子链列表中存在刚创建的两条子链 以及各个子链的共识算法为默认raft
         String res2 = getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -1618,7 +1618,7 @@ public class TestMainSubChain {
                 " -w "+wordValue,"",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         //检查子链列表中存在刚创建的两条子链 以及各个子链的共识算法为默认raft
         String res2 = getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -1642,7 +1642,7 @@ public class TestMainSubChain {
                 " -w "+wordValue,"",ids);
         assertEquals(res.contains("Character Length Over 80"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         //检查子链列表中存在刚创建的两条子链 以及各个子链的共识算法为默认raft
         String res2 = getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -1686,7 +1686,7 @@ public class TestMainSubChain {
         assertEquals(res5.contains("send transaction success"), true);
         String txHash5 = res.substring(res5.lastIndexOf(":")+1).trim();
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         //检查子链列表中存在刚创建的两条子链 以及各个子链的共识算法为默认raft,确认可以查到数据
         String res6 = getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -1724,7 +1724,7 @@ public class TestMainSubChain {
         log.info(StringUtils.join(stdout,"\n"));
 
         if(StringUtils.join(stdout,"\n").contains("transaction success")) {
-            Thread.sleep(SLEEPTIME*2);
+            sleepAndSaveInfo(SLEEPTIME*2);
             subLedger = chainNameParam.trim().split(" ")[1];
             log.info("**************  set permission 999 for " + subLedger);
             String resp = testMgTool.setPeerPerm(PEER1IP + ":" + PEER1RPCPort, getSDKID(), "999");

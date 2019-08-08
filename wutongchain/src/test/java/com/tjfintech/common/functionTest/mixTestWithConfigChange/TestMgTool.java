@@ -79,10 +79,10 @@ public class TestMgTool {
         portList.add(PEER1RPCPort);
         portList.add(PEER2RPCPort);
         portList.add(PEER4RPCPort);
-        String leaderPeer="";
+//        String leaderPeer="";
 
 
-        //检查所有集群列表中的leader信息、节点信息及节点状态all connect is true信息
+        //检查所有集群列表中的leader信息、节点信息及节点状态all connect is true信息 2.1.1不再显示isLeader信息
         for (int i=0;i<peerList.size();i++) {
             Shell shellPeer=new Shell(peerList.get(i),USERNAME,PASSWD);
             Thread.sleep(100);
@@ -93,35 +93,35 @@ public class TestMgTool {
             //检查集群列表信息中存在leader信息及集群信息正确
             String response = StringUtils.join(stdout,"\n");
             log.info("\n"+response);
-            assertEquals(response.contains("isLeader"), true);
+            //assertEquals(response.contains("isLeader"), true); 2.1.1版本不再支持显示isLeader信息
             assertEquals(response.contains(PEER1IP), true);
             assertEquals(response.contains(PEER2IP), true);
             assertEquals(response.contains(PEER4IP), true);
 
-            //此部分检查集群中所有节点上获取的集群信息中leader中一致
-            for(String str :stdout)
-            {
-                if(str.contains("MemberList"))
-                {
-                    //默认所有集群中的节点全部是正常状态，异常链接状态另外测试
-                    assertEquals(str.contains("isconnect: true"), true);
-
-                    if(str.contains("isLeader")) {
-                        //第一次取leader时
-                        log.info(leaderPeer);
-                        if (leaderPeer.isEmpty()) {
-                            leaderPeer = str.substring(str.indexOf("id:") + 3, str.indexOf("version:") - 1).trim().replaceAll("\"", "");
-                        } else {
-                            //否则认为以及取到过leader，则进行leader信息比对
-                            assertEquals(str.contains(leaderPeer), true);
-                        }
-                    }
-
-                }
-
-            }
-            //如果没有取到leader信息则报错停止（包括第一次）
-            assertEquals(leaderPeer.isEmpty(), false);
+//            //此部分检查集群中所有节点上获取的集群信息中leader中一致
+//            for(String str :stdout)
+//            {
+//                if(str.contains("MemberList"))
+//                {
+//                    //默认所有集群中的节点全部是正常状态，异常链接状态另外测试
+//                    assertEquals(str.contains("isconnect: true"), true);
+//
+//                    if(str.contains("isLeader")) {
+//                        //第一次取leader时
+//                        log.info(leaderPeer);
+//                        if (leaderPeer.isEmpty()) {
+//                            leaderPeer = str.substring(str.indexOf("id:") + 3, str.indexOf("version:") - 1).trim().replaceAll("\"", "");
+//                        } else {
+//                            //否则认为以及取到过leader，则进行leader信息比对
+//                            assertEquals(str.contains(leaderPeer), true);
+//                        }
+//                    }
+//
+//                }
+//
+//            }
+//            //如果没有取到leader信息则报错停止（包括第一次）
+//            assertEquals(leaderPeer.isEmpty(), false);
 
         }
 
@@ -273,8 +273,8 @@ public class TestMgTool {
         checkParam(PEER1IP,"./toolkit permission -d","flag needs an argument: 'd' in -d");
         checkParam(PEER1IP,"./toolkit permission -m","flag needs an argument: 'm' in -m");
         checkParam(PEER1IP,"./toolkit permission","management");
-        checkParam(PEER1IP,"./toolkit permission -p "+ PEER1IP,"unknown port");
-        checkParam(PEER1IP,"./toolkit permission -p "+ peer1IPPort,"too many colons in address");
+        checkParam(PEER1IP,"./toolkit permission -p "+ PEER1IP,"management");
+        checkParam(PEER1IP,"./toolkit permission -p "+ peer1IPPort,"management");
 
         checkParam(PEER1IP,"./toolkit getpermission -p","flag needs an argument: 'p' in -p");
         checkParam(PEER1IP,"./toolkit getpermission -d","flag needs an argument: 'd' in -d");
@@ -321,7 +321,7 @@ public class TestMgTool {
         chkPeerSimInfoOK(peer1IPPort,tcpPort,version,consType);
 
         //检查动态加入的共识节点，即使用管理工具加入的共识节点信息
-        addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"update success");
+        addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"success");
         queryPeerListNo(peer1IPPort,DynamicPeerNo);
 
         Thread.sleep(3000);
@@ -346,7 +346,7 @@ public class TestMgTool {
         queryPeerListNo(peer1IPPort,basePeerNo);
         Thread.sleep(4000);
 
-        addPeer("observer",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"update success");
+        addPeer("observer",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"success");
         queryPeerListNo(peer1IPPort,DynamicPeerNo);//通过共识节点查询集群列表
         shellPeer3.execute("cp "+PTPATH+"peer/configobs.toml "+PTPATH+"peer/"+PeerMemConfig+".toml");
         startPeer(PEER3IP);
@@ -361,7 +361,7 @@ public class TestMgTool {
         quitPeer(peer1IPPort,PEER3IP);
         queryPeerListNo(peer1IPPort,basePeerNo);
         shellPeer3.execute(killPeerCmd);
-        addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"update success");
+        addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort,"success");
         startPeer(PEER3IP);//此步骤应该启动不成功，因节点当前配置文件中Type=1，但是使用addConsensusPeer 即join加入，两者不一致时无法启动成功
         Thread.sleep(STARTSLEEPTIME);
 //        queryPeerListNo(peer1IPPort,2);
@@ -387,8 +387,9 @@ public class TestMgTool {
         * @param dockerImage 合约版本 //checkinfo[9]
         * @param blockPackTime 打包时间 //checkinfo[10]
         * @param blockSize 区块大小 //checkinfo[11]* */
+        //所有非必须配置采用默认配置
         chkPeerDetailsOK(peer1IPPort,"60030",version,consType,"2019-",
-                        "Info","peer.db","sm2","sm3","Raft","tjfoc/tjfoc-ccenv 2.0","1000","1");
+                        "info","peerdb","sm2","sm3","Raft","tjfoc/tjfoc-ccenv 2.0","500","1024");
     }
 
     public void chkPeerSimInfoOK(String queryIPPort,String tcpPort,String version,String Type)throws Exception{
@@ -516,7 +517,7 @@ public class TestMgTool {
         ArrayList<String> stdout = shell1.getStandardOutput();
         for(String str :stdout)
         {
-            if(str.contains("MemberList"))
+            if(str.contains("shownName"))
                 No++;
         }
         String response = StringUtils.join(stdout,"\n");
@@ -804,8 +805,8 @@ public class TestMgTool {
         String response1 = StringUtils.join(stdout,",");
         log.info(response1);
         assertEquals(response1.contains("失败"), false);
-        //assertEquals(response1.contains("update success"), true);
-        if(response1.contains("update success"))
+        //assertEquals(response1.contains("success"), true);
+        if(response1.contains("success"))
             log.info("quit success");
         else if(response1.contains("memberlist does not have peer"))
             log.info("memberlist does not have peer");
@@ -857,7 +858,7 @@ public class TestMgTool {
         String sdkID3="45ff9d435282e28a6bae4081cf8b7ef61ee45d19b0503f3180a343355226b305a21bd6e714c5455becf28f83463a67ee771209b93c75d76c586b168a96666d26";
         String sdkID4="sdk56";
 
-        String succRsp="FuncUpdatePeerPermission success:  true";
+        String succRsp="success";
         String errRsp="FuncUpdatePeerPermission err";
         //分别给sdkID1~3 赋值权限，之后再做查询
         rsp = setPeerPerm(peer1IPPort,sdkID1,"1,2,3");
@@ -902,7 +903,7 @@ public class TestMgTool {
         assertEquals(getID(PEER1IP,"ecdsa/key.pem","eee").contains("unsupport sign algorithm"),true);
 
         assertEquals(getID(PEER1IP,"","sm2").contains("management"),true);
-        assertEquals(getID(PEER1IP,"key.pem","ecc").contains(" no such file or directory"),true);
+        assertEquals(getID(PEER1IP,"key11.pem","ecc").contains(" no such file or directory"),true);
     }
 
     public String getID(String shellIP,String keyPath,String cryptType)throws Exception{

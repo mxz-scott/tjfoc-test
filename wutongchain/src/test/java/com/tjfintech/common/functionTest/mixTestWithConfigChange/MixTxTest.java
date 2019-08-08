@@ -34,7 +34,7 @@ public class MixTxTest {
 
     @Before
     public void beforeConfig() throws Exception {
-        if(certPath!=""&& bReg==false) {
+        if(bReg==false) {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();

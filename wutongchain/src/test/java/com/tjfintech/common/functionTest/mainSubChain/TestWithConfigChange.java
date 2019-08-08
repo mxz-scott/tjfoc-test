@@ -51,14 +51,14 @@ public class TestWithConfigChange {
         if(! resp.contains("\"name\": \""+glbChain01+"\"")) {
             testMainSubChain.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01,
                     " -t sm3", " -w first", " -c raft", ids);
-            Thread.sleep(SLEEPTIME*2);
+            sleepAndSaveInfo(SLEEPTIME*2);
             assertEquals(testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01+"\""), true);
         }
 
         if(! resp.contains("\"name\": \""+glbChain02+"\"")) {
             testMainSubChain.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain02,
                     " -t sm3", " -w first", " -c raft", ids);
-            Thread.sleep(SLEEPTIME*2);
+            sleepAndSaveInfo(SLEEPTIME*2);
             assertEquals(testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02+"\""), true);
         }
     }
@@ -87,7 +87,7 @@ public class TestWithConfigChange {
         assertEquals(res3.contains("send transaction success"), true);
 
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表 存在其他子链
         String resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -100,7 +100,7 @@ public class TestWithConfigChange {
         //动态删除节点B，向主链和子链01/02/03发交易 子链1、2的交易可以成功上链，3无法上链（恢复后可以）
         testMgTool.quitPeer(PEER1IP+":"+PEER1RPCPort,PEER2IP);
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表 存在其他子链
         resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -134,7 +134,7 @@ public class TestWithConfigChange {
         String response4=store.CreateStore(Data);
         String txHash4= JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         subLedger=chainName1;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));  //确认可以c查询成功
         subLedger=chainName2;
@@ -148,7 +148,7 @@ public class TestWithConfigChange {
         //恢复节点
         testMgTool.addPeer("join",PEER1IP+":"+PEER1RPCPort,
                 "/ip4/"+PEER2IP,"/tcp/60011",PEER2RPCPort,"success");
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         subLedger=chainName1;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));  //确认可以c查询成功
         subLedger=chainName2;
@@ -167,7 +167,7 @@ public class TestWithConfigChange {
         //动态加入节点168
         testMgTool.addPeer("join",PEER1IP+":"+PEER1RPCPort,
                 "/ip4/"+PEER3IP,"/tcp/60011",PEER3RPCPort,"success");
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         //创建子链01 包含节点A、B、C
         String chainName1="tc1537_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
@@ -178,7 +178,7 @@ public class TestWithConfigChange {
 
 
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表 存在其他子链
         String resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -187,7 +187,7 @@ public class TestWithConfigChange {
 
         String Data = "tc1537 tx1 test";
 
-        Thread.sleep(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表 存在其他子链
         resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -203,7 +203,7 @@ public class TestWithConfigChange {
         String response4=store.CreateStore(Data);
         String txHash4= JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         subLedger=chainName1;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));  //确认可以c查询成功
         subLedger="";
@@ -211,7 +211,7 @@ public class TestWithConfigChange {
 
         //销毁子链 以便恢复集群（退出动态加入的节点）
         testMainSubChain.destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
-        Thread.sleep(SLEEPTIME*3/2);
+        sleepAndSaveInfo(SLEEPTIME*3/2);
         resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
         assertEquals(resp.contains("Destory"), true);
 
@@ -231,7 +231,7 @@ public class TestWithConfigChange {
         //动态加入节点168
         testMgTool.addPeer("observer",PEER1IP+":"+PEER1RPCPort,
                 "/ip4/"+PEER3IP,"/tcp/60011",PEER3RPCPort,"success");
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //创建子链01 包含节点A、B、C
         String chainName1="tc1659_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         String res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1,
@@ -239,7 +239,7 @@ public class TestWithConfigChange {
                 " -c raft",ids+","+getPeerId(PEER3IP,USERNAME,PASSWD));
         assertEquals(res.contains("is not Consensus Node"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         String resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -268,7 +268,7 @@ public class TestWithConfigChange {
                 " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME*3);
+        sleepAndSaveInfo(SLEEPTIME*3);
         //检查可以获取子链列表 存在其他子链
         String resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -279,7 +279,7 @@ public class TestWithConfigChange {
         String response1 = store.CreateStore("tc1523 data");
         assertEquals("200",JSONObject.fromObject(response1).getString("State"));  //确认可以发送成功
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         String txHash1 =JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));  //确认可以c查询成功
 
@@ -290,10 +290,10 @@ public class TestWithConfigChange {
         log.info(StringUtils.join(stdout,"\n"));
 //        return StringUtils.join(stdout,"\n");
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         String response2 = store.CreateStore("tc1523 data2");
         assertEquals("200",JSONObject.fromObject(response2).getString("State"));  //确认可以发送成功
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         String txHash2 =JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
         assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));  //确认不可以c查询成功
 

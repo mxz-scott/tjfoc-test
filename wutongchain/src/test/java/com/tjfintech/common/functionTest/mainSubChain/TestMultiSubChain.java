@@ -50,13 +50,13 @@ public class TestMultiSubChain {
         String resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
         if(! resp.contains("\"name\": \""+glbChain01+"\"")) {
             testMainSubChain.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01, " -t sm3", " -w first", " -c raft", ids);
-            Thread.sleep(SLEEPTIME*2);
+            sleepAndSaveInfo(SLEEPTIME*2);
             assertEquals(testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01+"\""), true);
         }
 
         if(! resp.contains("\"name\": \""+glbChain02+"\"")) {
             testMainSubChain.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain02, " -t sm3", " -w first", " -c raft", ids);
-            Thread.sleep(SLEEPTIME*2);
+            sleepAndSaveInfo(SLEEPTIME*2);
             assertEquals(testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02+"\""), true);
         }
     }
@@ -74,7 +74,7 @@ public class TestMultiSubChain {
                     " -t sm3", " -w first", " -c raft", ids);
         }
 
-        Thread.sleep(SLEEPTIME*3);
+        sleepAndSaveInfo(SLEEPTIME*3);
         //确认所有子链均存在
         String resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
         for(int i=1;i<10;i++){
@@ -95,7 +95,7 @@ public class TestMultiSubChain {
         String response10 = store.CreateStore(Data);
         String txHash10 = JSONObject.fromObject(response10).getJSONObject("Data").getString("Figure");
 
-        Thread.sleep(SLEEPTIME*3);
+        sleepAndSaveInfo(SLEEPTIME*3);
 
         //检查向新创建的所有子链发送交易均可以查询到
         for(int i=1;i<10;i++)
@@ -113,7 +113,7 @@ public class TestMultiSubChain {
 
         //设置主链上sdk权限为1,2,3,4,5,6,7,8,9,10
         testMgTool.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"1,2,3,4,5,6,7,8,9,10");
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         subLedger="";
         assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[1 2 3 4 5 6 7 8 9 10]");
         assertEquals(true,store.GetHeight().contains("\"State\":200"));
@@ -124,7 +124,7 @@ public class TestMultiSubChain {
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表 存在其他子链
         String resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -133,14 +133,14 @@ public class TestMultiSubChain {
         //获取子链权限列表指定sdk为空 测试发送交易无权限
         subLedger=chainName1;
         assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[0]");
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         assertThat(store.CreateStore("tc1666 no permission tx data").toLowerCase(),containsString(noPerm));
 
 
         subLedger="";
         //设置主链上sdk权限为0
         testMgTool.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"0");
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[0]");
         assertThat(store.CreateStore("tc1660 no permission tx data").toLowerCase(),containsString(noPerm));
@@ -151,7 +151,7 @@ public class TestMultiSubChain {
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表 存在其他子链
         resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -160,14 +160,14 @@ public class TestMultiSubChain {
         //获取子链权限列表指定sdk为空 测试发送交易无权限
         subLedger=chainName2;
         assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[0]");
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         assertThat(store.CreateStore("tc1660 no permission tx data").toLowerCase(),containsString(noPerm));
 
 
         subLedger="";
         //设置主链上sdk权限为999
         testMgTool.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"999");
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), fullPerm);
         assertThat(store.CreateStore("tc1660 no permission tx data"),containsString("\"State\":200"));
 
@@ -177,7 +177,7 @@ public class TestMultiSubChain {
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -186,12 +186,12 @@ public class TestMultiSubChain {
         //获取子链权限列表指定sdk为空 测试发送交易无权限
         subLedger=chainName3;
         assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[0]");
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         assertThat(store.CreateStore("tc1666 no permission tx data").toLowerCase(),containsString(noPerm));
 
         subLedger="";
         //设置主链权限为999,确认主链sdk权限恢复
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), fullPerm);
         //向子链glbChain01/glbChain02和主链发送交易
         testMainSubChain.sendTxToMainActiveChain("tc1656 tx data2");
@@ -211,7 +211,7 @@ public class TestMultiSubChain {
         subLedger="";
         int height =Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String response1 = store.CreateStore(Data);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
@@ -222,7 +222,7 @@ public class TestMultiSubChain {
         int height1 =Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String response2 = store.CreateStore(Data);
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
         assertEquals(height1+1,Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data")));
@@ -232,7 +232,7 @@ public class TestMultiSubChain {
         int height2 =Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String response3 = store.CreateStore(Data);
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
         assertEquals(height2+1,Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data")));
@@ -254,7 +254,7 @@ public class TestMultiSubChain {
         int height1 =Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String response2 = store.CreateStore(Data);
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
         assertEquals(height1+1,Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data")));
@@ -264,7 +264,7 @@ public class TestMultiSubChain {
         subLedger="";
         int height =Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String response1 = store.CreateStore(Data);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
@@ -276,7 +276,7 @@ public class TestMultiSubChain {
         int height2 =Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String response3 = store.CreateStore(Data);
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
         assertEquals(height2+1,Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data")));
@@ -297,7 +297,7 @@ public class TestMultiSubChain {
         int height1 =Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String response2 = store.CreateStore(Data);
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
         assertEquals(height1+1,Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data")));
@@ -308,7 +308,7 @@ public class TestMultiSubChain {
         int height2 =Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String response3 = store.CreateStore(Data);
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
         assertEquals(height2+1,Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data")));
@@ -317,7 +317,7 @@ public class TestMultiSubChain {
         subLedger="";
         int height =Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String response1 = store.CreateStore(Data);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
@@ -349,7 +349,7 @@ public class TestMultiSubChain {
         String response3 = store.CreateStore(Data);
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //查询主链交易
         subLedger="";
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
@@ -394,7 +394,7 @@ public class TestMultiSubChain {
         String response3 = store.CreateStore(Data);
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
 
         //查询子链glbChain01交易
         subLedger=glbChain01;
@@ -440,7 +440,7 @@ public class TestMultiSubChain {
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
 
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //查询主链交易
         subLedger="";
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
@@ -485,7 +485,7 @@ public class TestMultiSubChain {
         String response1 = store.CreateStore(Data);
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
 
         //查询子链glbChain01交易
         subLedger=glbChain01;
@@ -517,7 +517,7 @@ public class TestMultiSubChain {
         res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName3," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表
         String res2 = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
@@ -529,20 +529,20 @@ public class TestMultiSubChain {
         //向子链chainName2发送交易
         subLedger=chainName2;
         String response1 = store.CreateStore(Data);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         Data="1589 ledger2 tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
         //向子链chainName3发送交易
         subLedger=chainName3;
         String response2 = store.CreateStore(Data);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         Data="1589 main tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
         //向主链发送交易
         subLedger="";
         String response3 = store.CreateStore(Data);
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
 
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
@@ -576,7 +576,7 @@ public class TestMultiSubChain {
         res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName3," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
 
         //检查可以获取子链列表
         String res2 = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -598,7 +598,7 @@ public class TestMultiSubChain {
         subLedger="";
         String response3 = store.CreateStore(Data);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
@@ -628,19 +628,19 @@ public class TestMultiSubChain {
         String res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3"," -w first"," -c raft"," -m "+id1);
         assertEquals(res.contains("requires at least two ids"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //创建子链，包含两个节点 为主链中的一个共识节点和一个非共识节点
         String chainName2="tc1592_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName2," -t sm3"," -w first"," -c raft"," -m "+id1+","+id3);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //创建子链，包含三个节点
         String chainName3="tc1592_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName3," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        Thread.sleep(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表
         String res2 = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
@@ -665,14 +665,14 @@ public class TestMultiSubChain {
         subLedger="";
         String response3 = store.CreateStore(Data);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         //检查可以获取子链列表
         String resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName2), true);
         assertEquals(resp.contains(chainName3), true);
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
@@ -714,7 +714,7 @@ public class TestMultiSubChain {
         res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3"," -w first"," -c raft"," -m "+id1);
         assertEquals(res.contains("send transaction success"), false);
 
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表
         String res2 = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);

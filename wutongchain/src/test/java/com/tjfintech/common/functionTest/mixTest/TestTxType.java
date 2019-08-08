@@ -6,7 +6,7 @@ import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 
-import com.tjfintech.common.functionTest.dockerContract.ContractTest;
+import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -35,7 +35,7 @@ public class TestTxType {
     Store store =testBuilder.getStore();
     MultiSign multiSign =testBuilder.getMultiSign();
     SoloSign soloSign = testBuilder.getSoloSign();
-    ContractTest ct =new ContractTest();
+    DockerContractTest ct =new DockerContractTest();
     UtilsClass utilsClass=new UtilsClass();
     String typeStore="0";
     String subTypeStore="0";

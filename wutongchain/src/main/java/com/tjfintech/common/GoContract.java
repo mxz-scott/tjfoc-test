@@ -27,7 +27,26 @@ public class GoContract implements Contract {
 
     }
 
-    /**安装智能合约
+    /**
+     * 安装wvm合约
+     * @param file wvm合约文件名
+     * @param prikey 合约所有人的私钥，用于升级合约时的验证。仅wvm
+     * @return
+     * @throws Exception
+     */
+    public String InstallWVM(String file,String prikey) throws Exception{
+        Map<String,Object>map=new HashMap<>();
+        map.put("Category","wvm");
+        map.put("File",file);
+        map.put("PriKey",prikey);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result=PostTest.postMethod(SDKADD+"/contract/install"+param,map);
+        log.info(result);
+        return result ;
+    }
+
+    /**安装docker智能合约
      *
      * @param name  合约名
      * @param version  合约版本
@@ -70,11 +89,11 @@ public class GoContract implements Contract {
         return result ;
     }
 
-    /**安装智能合约
-     *
-     * @param name  合约名
-     * @param version  合约版本
-
+    /**
+     * 销毁docker智能合约
+     * @param name 销毁的智能合约名称
+     * @param version 合约版本
+     * @param category 合约类型 该函数中特定为docker
      * @return
      */
     public String Destroy(String name,String version,String category){
@@ -82,6 +101,23 @@ public class GoContract implements Contract {
         map.put("Name",name);
         map.put("Version",version);
         map.put("Category",category);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+
+        String result=PostTest.sendPostToJson(SDKADD+"/contract/destroy"+param,map);
+        log.info(result);
+        return result ;
+    }
+
+    /**
+     * 销毁wvm智能合约
+     * @param name  销毁wvm合约名 需要从安装合约时获取
+     * @return
+     */
+    public String DestroyWVM(String name){
+        Map<String,Object>map=new HashMap<>();
+        map.put("Name",name);
+        map.put("Category","wvm");
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
 
@@ -146,6 +182,37 @@ public class GoContract implements Contract {
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
         String result=PostTest.sendPostToJson(SDKADD+"/contract/invoke"+param,map);
+        log.info(result);
+        return result ;
+    }
+    //此函数兼容wvm和docker两种类型
+    public String Invoke(String name,String version,String category,String method,String caller,List<?> args){
+        Map<String,Object>map=new HashMap<>();
+        map.put("Name",name);
+        map.put("Version",version);
+        map.put("Category",category);
+        map.put("Method",method);
+        map.put("Caller",caller);
+        map.put("Args",args);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result=PostTest.sendPostToJson(SDKADD+"/contract/invoke"+param,map);
+        log.info(result);
+        return result ;
+    }
+
+    //此函数为WVM接口，支持执行合约内交易，但交易不会上链 同invoke，只是交易不会上链
+    public String QueryWVM(String name,String version,String category,String method,String caller,List<?> args){
+        Map<String,Object>map=new HashMap<>();
+        map.put("Name",name);
+        map.put("Version",version);
+        map.put("Category",category);
+        map.put("Method",method);
+        map.put("Caller",caller);
+        map.put("Args",args);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result=PostTest.sendPostToJson(SDKADD+"/contract/query"+param,map);
         log.info(result);
         return result ;
     }

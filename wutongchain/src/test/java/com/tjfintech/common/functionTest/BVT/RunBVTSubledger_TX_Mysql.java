@@ -3,7 +3,7 @@ package com.tjfintech.common.functionTest.BVT;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
 import com.tjfintech.common.functionTest.Conditions.SetSubLedger;
-import com.tjfintech.common.functionTest.dockerContract.ContractTest;
+import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
 import com.tjfintech.common.functionTest.store.StoreTest;
 import com.tjfintech.common.functionTest.utxoMultiSign.MultiTest;
@@ -22,7 +22,7 @@ import org.junit.runners.Suite;
         MultiTest.class,
         MultiTest_33_12.class,
         SoloTest.class,
-        ContractTest.class,
+        DockerContractTest.class,
         TestTxType.class
 })
 
