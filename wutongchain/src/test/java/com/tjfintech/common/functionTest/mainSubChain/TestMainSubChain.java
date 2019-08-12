@@ -1,6 +1,5 @@
 package com.tjfintech.common.functionTest.mainSubChain;
 
-import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -684,7 +683,7 @@ public class TestMainSubChain {
 
         if(type.toLowerCase()=="normal"){
             txHash1=JSONObject.fromObject(store.CreateStore("test")).getJSONObject("Data").getString("Figure");
-            txHash2=JSONObject.fromObject(store.CreateStorePwd("test",map)).getJSONObject("Data").getString("Figure");
+            txHash2=JSONObject.fromObject(store.CreatePrivateStore("test",map)).getJSONObject("Data").getString("Figure");
             bCheck1=false;
             bCheck2=false;
             blockHash=JSONObject.fromObject(store.GetBlockByHeight(1)).getJSONObject("Data").getJSONObject("header").getString("blockHash");
@@ -718,7 +717,7 @@ public class TestMainSubChain {
         assertEquals(bCheck2,store.GetStorePost(txHash2,PRIKEY1).contains(notSupport));
         assertEquals(bCheck2,store.GetBlockByHash(blockHash).contains(notSupport));
         assertEquals(false,store.GetPeerList().contains(notSupport));
-        assertEquals(bCheck1,store.CreateStorePwd("test1",map).contains(notSupport));
+        assertEquals(bCheck1,store.CreatePrivateStore("test1",map).contains(notSupport));
 
         assertEquals(bCheck1,store.CreateStore("test2").contains(notSupport));
 //        sleepAndSaveInfo(SLEEPTIME);

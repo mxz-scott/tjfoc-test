@@ -179,7 +179,7 @@ public  class GoStore implements Store {
      * @return
      */
     @Override
-    public String SynCreateStorePwd(Integer timeout, String Data, Map keyMap) {
+    public String SynCreatePrivateStore(Integer timeout, String Data, Map keyMap) {
         List<Object> PubkeysObjects = new ArrayList<>();
         for (Object value : keyMap.values()) {
             PubkeysObjects.add(value);
@@ -201,7 +201,7 @@ public  class GoStore implements Store {
      * @method POST
      */
 
-    public String CreateStorePwd(String Data, Map keyMap) {
+    public String CreatePrivateStore(String Data, Map keyMap) {
 
         List<Object> PubkeysObjects = new ArrayList<>();
         for (Object value : keyMap.values()) {
@@ -238,7 +238,7 @@ public  class GoStore implements Store {
     }
 
 
-    public String GetStore2(String hash) {
+    public String GetStoreLocal(String hash) {
         String param;
         String hashEncode = URLEncoder.encode(hash);
         //hash需要urlEncode编码

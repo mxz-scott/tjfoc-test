@@ -49,7 +49,7 @@ public class StableAutoTest {
             Map<String,Object> map=new HashMap<>();
             map.put("pubKeys",PUBKEY1);
             map.put("pubkeys",PUBKEY6);
-            String response1= store.CreateStorePwd(Data2,map);
+            String response1= store.CreatePrivateStore(Data2,map);
             JSONObject jsonObject2=JSONObject.fromObject(response1);
             String StoreHashPwd = jsonObject2.getJSONObject("Data").get("Figure").toString();
             Thread.sleep(SLEEPTIME);

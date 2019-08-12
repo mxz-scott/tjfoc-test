@@ -1,14 +1,12 @@
 package com.tjfintech.common.functionTest.PermissionTest;
 
 import com.tjfintech.common.Interface.MultiSign;
-import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.lang.*;
@@ -66,7 +64,7 @@ public class APermfuncSys {
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
         map.put("pubkeys",PUBKEY6);
-        String response= store.CreateStorePwd(Data,map);
+        String response= store.CreatePrivateStore(Data,map);
         Thread.sleep(3000);
         return retAllow(response);
     }

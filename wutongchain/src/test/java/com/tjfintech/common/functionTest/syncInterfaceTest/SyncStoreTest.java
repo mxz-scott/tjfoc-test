@@ -1,6 +1,5 @@
 package com.tjfintech.common.functionTest.syncInterfaceTest;
 
-import com.google.gson.JsonObject;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -14,8 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static com.tjfintech.common.utils.UtilsClass.PRIKEY3;
-import static com.tjfintech.common.utils.UtilsClass.PWD6;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -85,12 +82,12 @@ public class SyncStoreTest {
         Map<String,Object> map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
         map.put("pubkeys",PUBKEY6);
-        String response= store.SynCreateStorePwd(utilsClass.SHORTMEOUT,Data,map);
+        String response= store.SynCreatePrivateStore(utilsClass.SHORTMEOUT,Data,map);
         Thread.sleep(SLEEPTIME);
         assertThat("200", containsString(JSONObject.fromObject(response).getString("State")));
         assertThat("success",containsString(JSONObject.fromObject(response).getString("Message")));
         //超时的情况下
-//        String response1= store.SynCreateStorePwd(utilsClass.SHORTMEOUT,Data,map);
+//        String response1= store.SynCreatePrivateStore(utilsClass.SHORTMEOUT,Data,map);
 //        Thread.sleep(SLEEPTIME);
 //        assertThat("504", containsString(JSONObject.fromObject(response1).getString("State")));
 //        assertThat("timeout",containsString(JSONObject.fromObject(response1).getString("Message")));

@@ -96,7 +96,7 @@ public class TestTxType {
         map.put("pubKeys",PUBKEY1);
         map.put("pubkeys",PUBKEY6);
         log.info("隐私存证数据："+priData);
-        String response2 = store.CreateStorePwd(priData,map);
+        String response2 = store.CreatePrivateStore(priData,map);
 
         Thread.sleep(SLEEPTIME);
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();

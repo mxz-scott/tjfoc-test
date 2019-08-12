@@ -47,7 +47,7 @@
 //    }
 //
 //    @Override
-//    public String CreateStorePwd(String hash, Map keymap) {
+//    public String CreatePrivateStore(String hash, Map keymap) {
 //        return null;
 //    }
 //
@@ -58,7 +58,7 @@
 //    }
 //
 //    @Override
-//    public String GetStore2(String hash) {
+//    public String GetStoreLocal(String hash) {
 //
 //        return null;
 //    }

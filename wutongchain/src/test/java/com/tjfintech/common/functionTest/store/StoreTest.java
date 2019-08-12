@@ -2,7 +2,6 @@ package com.tjfintech.common.functionTest.store;
 
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
-import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -73,7 +72,7 @@ public class StoreTest {
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
         map.put("pubkeys",PUBKEY6);
-        String response1= store.CreateStorePwd(Data,map);
+        String response1= store.CreatePrivateStore(Data,map);
         JSONObject jsonObject=JSONObject.fromObject(response1);
         String StoreHashPwd = jsonObject.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(SLEEPTIME);
@@ -135,7 +134,7 @@ public class StoreTest {
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
         map.put("pubkeys",PUBKEY6);
-        String response1= store.CreateStorePwd(Data,map);
+        String response1= store.CreatePrivateStore(Data,map);
         JSONObject jsonObject=JSONObject.fromObject(response1);
         String StoreHashPwd = jsonObject.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(SLEEPTIME);
@@ -156,8 +155,8 @@ public class StoreTest {
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
         map.put("pubkeys",PUBKEY6);
-        String response = store.CreateStorePwd(data,map);
-        String response2 = store.CreateStorePwd(data2,map);
+        String response = store.CreatePrivateStore(data,map);
+        String response2 = store.CreatePrivateStore(data2,map);
         JSONObject jsonObject = JSONObject.fromObject(response);
         JSONObject jsonObject2 = JSONObject.fromObject(response2);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
@@ -368,7 +367,7 @@ public class StoreTest {
 
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
-        String response= store.CreateStorePwd(Data,map);
+        String response= store.CreatePrivateStore(Data,map);
         Thread.sleep(SLEEPTIME);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String hash = jsonObject.getJSONObject("Data").get("Figure").toString();
@@ -414,7 +413,7 @@ public class StoreTest {
 
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY7);
-        String response= store.CreateStorePwd(Data,map);
+        String response= store.CreatePrivateStore(Data,map);
         Thread.sleep(SLEEPTIME);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String hash = jsonObject.getJSONObject("Data").get("Figure").toString();
@@ -456,7 +455,7 @@ public class StoreTest {
 
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY7);
-        String response= store.CreateStorePwd(Data,map);
+        String response= store.CreatePrivateStore(Data,map);
         Thread.sleep(SLEEPTIME);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String hash = jsonObject.getJSONObject("Data").get("Figure").toString();
@@ -502,7 +501,7 @@ public class StoreTest {
         map.put("pubKeys",PUBKEY1);
         map.put("pubKeys",PUBKEY2);
         map.put("pubKeys",PUBKEY3);
-        String response= store.CreateStorePwd(Data,map);
+        String response= store.CreatePrivateStore(Data,map);
         Thread.sleep(SLEEPTIME);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String hash = jsonObject.getJSONObject("Data").get("Figure").toString();
@@ -563,7 +562,7 @@ public class StoreTest {
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
         map.put("pubKeys",PUBKEY6);
-        String response= store.CreateStorePwd(Data,map);
+        String response= store.CreatePrivateStore(Data,map);
         Thread.sleep(SLEEPTIME);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String hash = jsonObject.getJSONObject("Data").get("Figure").toString();
@@ -609,7 +608,7 @@ public class StoreTest {
 
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY6);
-        String response= store.CreateStorePwd(Data,map);
+        String response= store.CreatePrivateStore(Data,map);
         Thread.sleep(SLEEPTIME);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String hash = jsonObject.getJSONObject("Data").get("Figure").toString();

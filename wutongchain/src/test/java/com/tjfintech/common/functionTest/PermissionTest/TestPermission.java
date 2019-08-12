@@ -110,7 +110,7 @@ public class TestPermission {
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
         map.put("pubkeys",PUBKEY6);
-        String response1= store.CreateStorePwd(Data,map);
+        String response1= store.CreatePrivateStore(Data,map);
         log.info(response1);
         JSONObject jsonObject=JSONObject.fromObject(response1);
         glbPriTxHash = jsonObject.getJSONObject("Data").get("Figure").toString();

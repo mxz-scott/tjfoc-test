@@ -10,9 +10,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -38,14 +35,14 @@ public class LocalStoreTest {
         map.put("pubKey2", PUBKEY2);
         map.put("pubKey3", PUBKEY3);
 
-        String response1 = store.CreateStorePwd(Data, map);
+        String response1 = store.CreatePrivateStore(Data, map);
         JSONObject jsonObject = JSONObject.fromObject(response1);
         String StoreHash = jsonObject.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(SLEEPTIME);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("Data"));
 
-        String txContent2 = store.GetStore2(StoreHash);
+        String txContent2 = store.GetStoreLocal(StoreHash);
 
         JSONObject jsonObject2 = JSONObject.fromObject(txContent2);
         String data = jsonObject2.getJSONObject("Data").toString();
@@ -84,14 +81,14 @@ public class LocalStoreTest {
         map.put("pubKey6", PUBKEY6);
         map.put("pubKey7", PUBKEY7);
 
-        String response1 = store.CreateStorePwd(Data, map);
+        String response1 = store.CreatePrivateStore(Data, map);
         JSONObject jsonObject = JSONObject.fromObject(response1);
         String StoreHash = jsonObject.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(SLEEPTIME);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("Data"));
 
-        String txContent2 = store.GetStore2(StoreHash);
+        String txContent2 = store.GetStoreLocal(StoreHash);
 
         JSONObject jsonObject2 = JSONObject.fromObject(txContent2);
         String data = jsonObject2.getJSONObject("Data").toString();
@@ -134,14 +131,14 @@ public class LocalStoreTest {
         Map<String, Object> map = new HashMap<>();
         map.put("pubKey1", PUBKEY1);
 
-        String response1 = store.CreateStorePwd(Data, map);
+        String response1 = store.CreatePrivateStore(Data, map);
         JSONObject jsonObject = JSONObject.fromObject(response1);
         String StoreHash = jsonObject.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(SLEEPTIME);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("Data"));
 
-        String txContent2 = store.GetStore2(StoreHash);
+        String txContent2 = store.GetStoreLocal(StoreHash);
 
         JSONObject jsonObject2 = JSONObject.fromObject(txContent2);
         String data = jsonObject2.getJSONObject("Data").toString();
@@ -169,14 +166,14 @@ public class LocalStoreTest {
         Map<String, Object> map = new HashMap<>();
         map.put("pubKey1", PUBKEY6);
 
-        String response1 = store.CreateStorePwd(Data, map);
+        String response1 = store.CreatePrivateStore(Data, map);
         JSONObject jsonObject = JSONObject.fromObject(response1);
         String StoreHash = jsonObject.getJSONObject("Data").get("Figure").toString();
         Thread.sleep(SLEEPTIME);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("Data"));
 
-        String txContent2 = store.GetStore2(StoreHash);
+        String txContent2 = store.GetStoreLocal(StoreHash);
 
         JSONObject jsonObject2 = JSONObject.fromObject(txContent2);
         String data = jsonObject2.getJSONObject("Data").toString();

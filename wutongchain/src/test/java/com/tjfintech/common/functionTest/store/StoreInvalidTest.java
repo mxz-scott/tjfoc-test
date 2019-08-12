@@ -42,7 +42,7 @@ public class StoreInvalidTest {
 
         Map<String,Object> map=new HashMap<>();
         map.put("pubKeys",PUBKEY6);
-        createstore = store.CreateStorePwd("创建隐私存证",map);
+        createstore = store.CreatePrivateStore("创建隐私存证",map);
         Thread.sleep(SLEEPTIME);
         privacyhash = JSONObject.fromObject(createstore).getJSONObject("Data").getString("Figure");
         log.info("获取隐私存证交易hash"+privacyhash);
