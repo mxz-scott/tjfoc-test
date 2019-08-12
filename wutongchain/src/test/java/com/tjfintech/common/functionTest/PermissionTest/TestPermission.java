@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static com.tjfintech.common.utils.UtilsClass.USERNAME;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -550,6 +549,6 @@ public class TestPermission {
     @After
     public void resetPermission() throws Exception{
         BeforeCondition bf=new BeforeCondition();
-        bf.initTest();
+        bf.setPermission999();
     }
 }

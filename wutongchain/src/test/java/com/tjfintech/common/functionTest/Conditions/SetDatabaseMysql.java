@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.Conditions;
 
+import com.tjfintech.common.BeforeCondition;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -19,7 +20,6 @@ public class SetDatabaseMysql {
 
        //重启SDK
        setAndRestartSDK();
-
     }
 
 }

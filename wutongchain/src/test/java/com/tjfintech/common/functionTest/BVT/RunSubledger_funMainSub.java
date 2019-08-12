@@ -10,7 +10,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         BeforeCondition.class,
-        SetDatabaseMongo.class,
+        //SetDatabaseMongo.class,
         TestMainSubChain.class
 })
 

@@ -14,7 +14,7 @@ import java.io.IOException;
 public class FileOperation {
 
     //@Test
-    public void replace(String fulPathFile,String srcStr,String destStr){
+    public void replace(String fulPathFile,String srcStr,String destStr) throws Exception{
         String fileName = fulPathFile.substring(fulPathFile.lastIndexOf("/")+1,fulPathFile.lastIndexOf("."));
         File destFile = new File(fulPathFile.replace(fileName,fileName+"_temp"));
         String cont = read(fulPathFile);
@@ -24,6 +24,7 @@ public class FileOperation {
         //System.out.println(cont);
         //更新源文件
         write(cont, destFile);
+        Thread.sleep(2000);
 
     }
 

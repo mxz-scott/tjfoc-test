@@ -730,7 +730,7 @@ public class TestMainSubChain {
 
     }
 
-//    //@Test
+    //    //@Test
 //    public void test1() throws Exception{
 //        subLedger="tc1510_20190704776";
 //        storeTypeSupportCheck("freeze");
@@ -756,7 +756,7 @@ public class TestMainSubChain {
         assertEquals(resp.contains("not exist"), true);
 
 
-}
+    }
 
     @Test
     public void TC1475_1493_createExistChain()throws Exception{
@@ -1107,7 +1107,7 @@ public class TestMainSubChain {
         subLedger=chainName3;
         String response2 = store.CreateStore(Data);
 
-       sleepAndSaveInfo(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME*2);
 
         //检查可以获取子链列表
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -1714,7 +1714,7 @@ public class TestMainSubChain {
      * 创建子链
      * */
     public String createSubChain(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
-                               String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
+                                 String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
         Shell shell1=new Shell(shellIP,USERNAME,PASSWD);
         String mainCmd ="addledger ";
         String cmd1="cd "+ PTPATH +"toolkit;"+"./toolkit "
@@ -1735,7 +1735,7 @@ public class TestMainSubChain {
     }
 
     public String createSubChainNoPerm(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
-                                 String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
+                                       String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
         Shell shell1=new Shell(shellIP,USERNAME,PASSWD);
         String mainCmd ="addledger ";
         String cmd1="cd "+ PTPATH +"toolkit;"+"./toolkit "
@@ -1773,8 +1773,8 @@ public class TestMainSubChain {
     }
 
     /*
-    * 恢复子链
-    * */
+     * 恢复子链
+     * */
     public String recoverSubChain(String shellIP,String rpcPort,String chainNameParam){
         Shell shell1=new Shell(shellIP,USERNAME,PASSWD);
         String mainCmd ="recoverledger ";

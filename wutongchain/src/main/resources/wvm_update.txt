@@ -7,11 +7,12 @@ return "success"
 }
 //转账操作
 public string transfer(string from, string to, int amount) {
+print("test")
 int balA = db_get<int>(from)
 int balB = db_get<int>(to)
-balA = balA-amount
+balA = balA-amount/2
 if (balA>=0){
-balB = balB+amount
+balB = balB+amount/2
 db_set(from, balA)
 db_set(to, balB)
 }else{
@@ -21,7 +22,7 @@ return "transfer success"
 }
 
 //查询账户余额
-public int getBlance(string account){
+public int getBalance(string account){
 return db_get<int>(account)
 }
 }

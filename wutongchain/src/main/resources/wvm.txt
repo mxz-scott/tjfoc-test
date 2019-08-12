@@ -20,7 +20,7 @@ return "failed"
 return "success"
 }
 //查询账户余额
-public int getBlance(string account){
-return db_get<int>(account)
+public int getBalance(string account){
+   return db_get<int>(account)
 }
 }

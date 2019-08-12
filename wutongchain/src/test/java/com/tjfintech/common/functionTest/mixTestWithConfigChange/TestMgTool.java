@@ -49,7 +49,7 @@ public class TestMgTool {
     @Before
     public void resetPeerEnv()throws Exception{
         BeforeCondition bf =new BeforeCondition();
-        bf.initTest();
+        bf.setPermission999();
         PEER1MAC=getMACAddr(PEER1IP,USERNAME,PASSWD).trim();
         PEER2MAC=getMACAddr(PEER2IP,USERNAME,PASSWD).trim();
         PEER3MAC=getMACAddr(PEER3IP,USERNAME,PASSWD).trim();

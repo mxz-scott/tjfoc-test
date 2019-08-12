@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.BVT;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.functionTest.Conditions.SetMainLedger;
 import com.tjfintech.common.functionTest.PermissionTest.TestPermission;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.*;
 import com.tjfintech.common.functionTest.syncInterfaceTest.SyncManageTest;
@@ -9,6 +10,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+        SetMainLedger.class,
         BeforeCondition.class,
 
         TestMgTool.class, // failed

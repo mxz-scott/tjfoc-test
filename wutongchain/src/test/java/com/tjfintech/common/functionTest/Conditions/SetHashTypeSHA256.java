@@ -22,7 +22,7 @@ public class SetHashTypeSHA256 {
        setAndRestartSDK();
 
        //设置管理工具hashtype为sha256
-       shellExeCmd(PEER1IP,"cp " + PTPATH + "toolkit/conf/configSHA256.toml " + PTPATH + "toolkit/conf/config.toml");
+       shellExeCmd(PEER1IP,"cp " + PTPATH + "toolkit/conf/baseSHA256.toml " + PTPATH + "toolkit/conf/base.toml");
     }
 
 }

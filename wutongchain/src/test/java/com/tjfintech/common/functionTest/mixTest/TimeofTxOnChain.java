@@ -111,7 +111,7 @@ public class TimeofTxOnChain {
     @Test
     public void checkBlockHash()throws Exception{
         BeforeCondition bf =new BeforeCondition();
-        bf.initTest();
+        bf.setPermission999();
         int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String preBlockHash=JSONObject.fromObject(store.GetBlockByHeight(blockHeight)).getJSONObject("Data").getJSONObject("header").getString("previousHash");
         String currentBlockHash="";

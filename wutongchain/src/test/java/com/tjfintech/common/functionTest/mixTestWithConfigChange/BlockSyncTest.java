@@ -50,7 +50,7 @@ public class BlockSyncTest {
 
         if(bRe==false) {
             BeforeCondition bf = new BeforeCondition();
-            bf.initTest();//赋值权限999
+            bf.setPermission999();//赋值权限999
             bf.updatePubPriKey();//更新全局pub、prikey
             bf.collAddressTest();//添加归集地址和发行地址的注册
             bf.createAdd();//数据库中添加多签地址
@@ -174,7 +174,7 @@ public class BlockSyncTest {
         setAndRestartSDK("sed -i \"s/newDB/newDB1/g\" "+ PTPATH+"sdk/conf/configNewDB.toml "
                 ,"cp "+PTPATH+"sdk/conf/configNewDB.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
         BeforeCondition bf = new BeforeCondition();
-        bf.initTest();//赋值权限999
+        bf.setPermission999();//赋值权限999
         bf.updatePubPriKey();//更新全局pub、prikey
         bf.collAddressTest();//添加归集地址和发行地址的注册
         Thread.sleep(OnChainSleep);

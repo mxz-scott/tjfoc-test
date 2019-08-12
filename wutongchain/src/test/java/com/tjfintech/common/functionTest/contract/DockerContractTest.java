@@ -58,7 +58,11 @@ public class DockerContractTest {
         //检查合约交易接口
         response=initMobileTest();
         assertThat(response,containsString("200"));
+
         sleepAndSaveInfo(SLEEPTIME);
+        String hash11 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        assertThat(store.GetTransaction(hash11),containsString("200"));
+
         String response2 = contract.SearchByKey("Mobile0",name);//SDK发送按key查询请求
         assertThat(response2,containsString("200"));
         assertThat(response2,containsString("HUAWEI"));

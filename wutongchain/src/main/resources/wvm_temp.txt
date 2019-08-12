@@ -1,12 +1,12 @@
 //合约示例
-contract Test {
+contract A_2019081228465 {
 //初始化一个账户
-public string initB(string account,int amount){
+public string init(string account,int amount){
 db_set(account,amount)
 return "success"
 }
 //转账操作
-public string transferB(string from, string to, int amount) {
+public string transfer(string from, string to, int amount) {
 int balA = db_get<int>(from)
 int balB = db_get<int>(to)
 balA = balA-amount
@@ -20,7 +20,7 @@ return "failed"
 return "success"
 }
 //查询账户余额
-public int getBalanceB(string account){
-return db_get<int>(account)
+public int getBalance(string account){
+   return db_get<int>(account)
 }
 }

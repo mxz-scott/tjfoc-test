@@ -36,7 +36,7 @@ public class TestTLSCert {
     @Test
     public void setConfigECDSACert()throws Exception{
         BeforeCondition bf =new BeforeCondition();
-        bf.initTest();
+        bf.setPermission999();
         bf.collAddressTest();
         setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseECDSA.toml "+ PTPATH +"peer/conf/base.toml");
         setAndRestartSDK("cp "+PTPATH+"sdk/conf/configECDSAMongo.toml "+PTPATH+"sdk/conf/config.toml");

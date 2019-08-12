@@ -30,7 +30,7 @@ public class BeforeCondition {
 
 
     //赋值权限999 区分是否主子链
-    public void initTest()throws Exception{
+    public void setPermission999()throws Exception{
 
         String toolPath="cd "+PTPATH+"toolkit;";
         String exeCmd="./toolkit permission ";
@@ -82,7 +82,7 @@ public class BeforeCondition {
     @Test
     public  void collAddressTest() throws Exception{
 
-        initTest();
+        setPermission999();
         updatePubPriKey();//从文件中根据配置certPath读取指定类型的公私钥对，并重新生成多签地址
         String response= multiSign.collAddress(PRIKEY1,IMPPUTIONADD);
         String response2= multiSign.collAddress(PRIKEY1,MULITADD3);

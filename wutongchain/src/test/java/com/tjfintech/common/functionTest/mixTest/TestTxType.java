@@ -67,9 +67,9 @@ public class TestTxType {
     boolean bExe=false;
     @Before
     public void beforeConfig() throws Exception {
-        if(certPath!=""&& bExe==false) {
+        if(bExe==false) {
             BeforeCondition bf = new BeforeCondition();
-            bf.initTest();
+            bf.setPermission999();
             bf.updatePubPriKey();
             bf.collAddressTest();
             Thread.sleep(SLEEPTIME);

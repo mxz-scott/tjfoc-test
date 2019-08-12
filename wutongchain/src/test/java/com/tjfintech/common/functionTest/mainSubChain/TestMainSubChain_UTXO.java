@@ -2,30 +2,20 @@ package com.tjfintech.common.functionTest.mainSubChain;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
-import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.TestBuilder;
-import com.tjfintech.common.functionTest.mainSubChain.TestMainSubChain;
-import com.tjfintech.common.functionTest.mixTestWithConfigChange.TestMgTool;
-import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
-
-import com.tjfoc.base.SingleSignIssue;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static com.tjfintech.common.utils.UtilsClass.USERNAME;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -46,6 +36,16 @@ public class TestMainSubChain_UTXO {
 
     @Before
     public void beforeConfig() throws Exception {
+
+        beforeCondition.setPermission999();
+        //添加发行地址
+        if( bReg==false) {
+            beforeCondition.updatePubPriKey();
+            beforeCondition.collAddressTest();
+            beforeCondition.createAdd();
+            Thread.sleep(SLEEPTIME);
+            bReg=true;
+        }
 
         String resp = testMainSubChain.getSubChain(PEER1IP, PEER1RPCPort, ""); //获取子链的信息
 
@@ -75,7 +75,7 @@ public class TestMainSubChain_UTXO {
         token_issue();
 
         subLedger = "";
-        beforeCondition.initTest();
+        beforeCondition.setPermission999();
         log.info("主链查询子链上归集地址中两种token余额");
         String response3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String response4= multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
@@ -88,7 +88,7 @@ public class TestMainSubChain_UTXO {
         Transfer();
 
         subLedger = "";
-        beforeCondition.initTest();
+        beforeCondition.setPermission999();
         log.info("查询归集地址跟MULITADD4余额，判断转账是否成功");
         String queryInfo5 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String queryInfo6 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
@@ -113,7 +113,7 @@ public class TestMainSubChain_UTXO {
         token_issue();
 
         subLedger = subLedgerA;
-        beforeCondition.initTest();
+        beforeCondition.setPermission999();
         log.info("主链查询子链上归集地址中两种token余额");
         String response3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String response4= multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
@@ -126,7 +126,7 @@ public class TestMainSubChain_UTXO {
         Transfer();
 
         subLedger =subLedgerA;
-        beforeCondition.initTest();
+        beforeCondition.setPermission999();
         log.info("查询归集地址跟MULITADD4余额，判断转账是否成功");
         String queryInfo5 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String queryInfo6 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
@@ -152,7 +152,7 @@ public class TestMainSubChain_UTXO {
         token_issue();
 
         subLedger = subLedgerB;
-        beforeCondition.initTest();
+        beforeCondition.setPermission999();
         log.info("主链查询子链上归集地址中两种token余额");
         String response3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String response4= multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
@@ -165,7 +165,7 @@ public class TestMainSubChain_UTXO {
         Transfer();
 
         subLedger =subLedgerB;
-        beforeCondition.initTest();
+        beforeCondition.setPermission999();
         log.info("查询归集地址跟MULITADD4余额，判断转账是否成功");
         String queryInfo5 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String queryInfo6 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
@@ -186,18 +186,10 @@ public class TestMainSubChain_UTXO {
      * token发行
      */
     public void token_issue()throws Exception{
-        beforeCondition.initTest();
-        //添加发行地址
-        if(certPath!=""&& bReg==false) {
-            BeforeCondition bf = new BeforeCondition();
-            bf.updatePubPriKey();
-            bf.collAddressTest();
-            Thread.sleep(SLEEPTIME);
-            bReg=true;
-        }
+
         //多签的token发行
         log.info("发行两种token1000个");
-        //两次发行之前不可以有sleep时间
+        //两次发行之间不可以有sleep时间
         tokenType = IssueToken(5, "1000");
         tokenType2 = IssueToken(6, "1000");
         Thread.sleep(SLEEPTIME*2);
@@ -264,8 +256,6 @@ public class TestMainSubChain_UTXO {
     }
 
     public String IssueToken(int length, String amount) {
-        multiSign.addissueaddress(IMPPUTIONADD,PUBKEY4);
-        multiSign.collAddress(IMPPUTIONADD,PUBKEY4);
         String tokenType = "-" + UtilsClass.Random(length);
         log.info(IMPPUTIONADD + "发行" + tokenType + " token，数量为：" + amount);
         String data = "IMPPUTIONADD" + "发行" + tokenType + " token，数量为：" + amount;
