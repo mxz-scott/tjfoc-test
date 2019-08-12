@@ -5,7 +5,7 @@ import java.util.Map;
 public interface Store {
 
     String CreateStore(String Data);
-    String CreateStore(String Data,String... PubKeys);
+//    String CreateStore(String Data,String... PubKeys);
     String CreateStorePwd(String Data, Map keymap);
 
     String GetStore(String hash);
@@ -34,5 +34,10 @@ public interface Store {
     String SynGetStorePost(Integer timeout ,String Hash,String priKey,String keyPwd);  //同步获取隐私存证
 
 //    String GetStat(String type);
+
+    String StoreAuthorize(String hash, Map toPubKeys, String toPriKey);
+    String StoreAuthorize(String hash, Map toPubKeys, String toPriKey, String pwd);
+
+
 
 }

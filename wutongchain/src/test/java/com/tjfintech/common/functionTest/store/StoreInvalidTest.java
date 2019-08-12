@@ -11,6 +11,9 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 //import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -36,7 +39,10 @@ public class StoreInvalidTest {
         Thread.sleep(SLEEPTIME);
         hash = JSONObject.fromObject(createstore).getJSONObject("Data").getString("Figure");
         log.info("获取普通存证交易hash"+hash);
-        createstore = store.CreateStore("创建隐私存证",UtilsClass.PUBKEY6);
+
+        Map<String,Object> map=new HashMap<>();
+        map.put("pubKeys",PUBKEY6);
+        createstore = store.CreateStorePwd("创建隐私存证",map);
         Thread.sleep(SLEEPTIME);
         privacyhash = JSONObject.fromObject(createstore).getJSONObject("Data").getString("Figure");
         log.info("获取隐私存证交易hash"+privacyhash);

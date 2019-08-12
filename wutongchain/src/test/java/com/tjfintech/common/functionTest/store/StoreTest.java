@@ -356,5 +356,290 @@ public class StoreTest {
         assertThat(response2,containsString("200"));
     }
 
+    // new private store ...
+    @Test
+    public void TC1803_CreatePrivateStore()throws  Exception{
 
+        JSONObject result = new JSONObject();
+        result.put("test1", true);
+        result.put("test2", "30");
+        String Data = result.toString();
+        log.info(Data);
+
+        Map<String,Object>map=new HashMap<>();
+        map.put("pubKeys",PUBKEY1);
+        String response= store.CreateStorePwd(Data,map);
+        Thread.sleep(SLEEPTIME);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String hash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String res3 = store.GetStorePost(hash,PRIKEY1);
+        assertThat(res3,containsString("200"));
+        JSONObject jsonResult=JSONObject.fromObject(res3);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+
+        map=new HashMap<>();
+        map.put("pubKeys",PUBKEY2);
+        String res1 = store.StoreAuthorize(hash, map, PRIKEY1);
+        Thread.sleep(SLEEPTIME);
+        assertThat(res1,containsString("200"));
+        assertThat(res1,containsString("success"));
+        String res4 = store.GetStorePost(hash,PRIKEY2);
+        assertThat(res4,containsString("200"));
+        jsonResult=JSONObject.fromObject(res4);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+
+        map=new HashMap<>();
+        map.put("pubKeys",PUBKEY6);
+        String res2 = store.StoreAuthorize(hash, map, PRIKEY1);
+        Thread.sleep(SLEEPTIME);
+        assertThat(res2,containsString("200"));
+        assertThat(res2,containsString("success"));
+        String res5 = store.GetStorePostPwd(hash,PRIKEY6,PWD6);
+        assertThat(res5,containsString("200"));
+        jsonResult=JSONObject.fromObject(res5);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+    }
+
+    @Test
+    public void TC1804_CreatePrivateStore()throws  Exception{
+
+        JSONObject result = new JSONObject();
+        result.put("test1", true);
+        result.put("test2", "50");
+        String Data = result.toString();
+        log.info(Data);
+
+        Map<String,Object>map=new HashMap<>();
+        map.put("pubKeys",PUBKEY7);
+        String response= store.CreateStorePwd(Data,map);
+        Thread.sleep(SLEEPTIME);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String hash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String res3 = store.GetStorePostPwd(hash,PRIKEY7,PWD7);
+        assertThat(res3,containsString("200"));
+        JSONObject jsonResult=JSONObject.fromObject(res3);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+
+        map=new HashMap<>();
+        map.put("pubKeys",PUBKEY2);
+        String res1 = store.StoreAuthorize(hash, map, PRIKEY7,PWD7);
+        Thread.sleep(SLEEPTIME);
+        assertThat(res1,containsString("200"));
+        assertThat(res1,containsString("success"));
+        String res4 = store.GetStorePost(hash,PRIKEY2);
+        assertThat(res4,containsString("200"));
+        jsonResult=JSONObject.fromObject(res4);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+
+        map=new HashMap<>();
+        map.put("pubKeys",PUBKEY6);
+        String res2 = store.StoreAuthorize(hash, map, PRIKEY7,PWD7);
+        Thread.sleep(SLEEPTIME);
+        assertThat(res2,containsString("200"));
+        assertThat(res2,containsString("success"));
+        String res5 = store.GetStorePostPwd(hash,PRIKEY6,PWD6);
+        assertThat(res5,containsString("200"));
+        jsonResult=JSONObject.fromObject(res5);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+    }
+
+    @Test
+    public void TC1811_CreatePrivateStore()throws  Exception{
+
+        String Data = "test" + UtilsClass.Random(4);
+
+        Map<String,Object>map=new HashMap<>();
+        map.put("pubKeys",PUBKEY7);
+        String response= store.CreateStorePwd(Data,map);
+        Thread.sleep(SLEEPTIME);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String hash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String res3 = store.GetStorePostPwd(hash,PRIKEY7,PWD7);
+        assertThat(res3,containsString("200"));
+        JSONObject jsonResult=JSONObject.fromObject(res3);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+
+        map=new HashMap<>();
+        map.put("pubKeys",PUBKEY6);
+        String res2 = store.StoreAuthorize(hash, map, PRIKEY7,PWD7);
+        Thread.sleep(SLEEPTIME);
+        assertThat(res2,containsString("200"));
+        assertThat(res2,containsString("success"));
+
+
+        String res5 = store.GetStorePostPwd(hash,PRIKEY6,PWD6);
+        assertThat(res5,containsString("200"));
+        jsonResult=JSONObject.fromObject(res5);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+        String res6 = store.GetStorePost(hash,PRIKEY5);
+        assertThat(res6,containsString("500"));
+        assertThat(res6,containsString("wrong"));
+
+        String res7 = store.GetStorePostPwd(hash,PRIKEY6,PWD7);
+        assertThat(res7,containsString("500"));
+        assertThat(res7,containsString("wrong"));
+
+        String res8 = store.GetStorePostPwd(hash,PRIKEY1,PWD6);
+        assertThat(res8,containsString("500"));
+        assertThat(res8,containsString("wrong"));
+
+    }
+
+    @Test
+    public void TC1812_CreatePrivateStore()throws  Exception{
+
+        String Data = "test" + UtilsClass.Random(4);
+
+        Map<String,Object>map=new HashMap<>();
+        map.put("pubKeys",PUBKEY1);
+        map.put("pubKeys",PUBKEY2);
+        map.put("pubKeys",PUBKEY3);
+        String response= store.CreateStorePwd(Data,map);
+        Thread.sleep(SLEEPTIME);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String hash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String res3 = store.GetStorePost(hash,PRIKEY1);
+        assertThat(res3,containsString("200"));
+        JSONObject jsonResult=JSONObject.fromObject(res3);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+        res3 = store.GetStorePost(hash,PRIKEY2);
+        assertThat(res3,containsString("200"));
+        jsonResult=JSONObject.fromObject(res3);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+        res3 = store.GetStorePost(hash,PRIKEY3);
+        assertThat(res3,containsString("200"));
+        jsonResult=JSONObject.fromObject(res3);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+
+        map=new HashMap<>();
+        map.put("pubKeys",PUBKEY4);
+        String res1 = store.StoreAuthorize(hash, map, PRIKEY1);
+        Thread.sleep(SLEEPTIME);
+        assertThat(res1,containsString("200"));
+        assertThat(res1,containsString("success"));
+        String res4 = store.GetStorePost(hash,PRIKEY4);
+        assertThat(res4,containsString("200"));
+        jsonResult=JSONObject.fromObject(res4);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+        map=new HashMap<>();
+        map.put("pubKeys",PUBKEY5);
+        String res2 = store.StoreAuthorize(hash, map, PRIKEY2);
+        Thread.sleep(SLEEPTIME);
+        assertThat(res2,containsString("200"));
+        assertThat(res2,containsString("success"));
+        String res5 = store.GetStorePost(hash,PRIKEY5);
+        assertThat(res5,containsString("200"));
+        jsonResult=JSONObject.fromObject(res5);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+        map=new HashMap<>();
+        map.put("pubKeys",PUBKEY6);
+        res2 = store.StoreAuthorize(hash, map, PRIKEY3);
+        Thread.sleep(SLEEPTIME);
+        assertThat(res2,containsString("200"));
+        assertThat(res2,containsString("success"));
+        res5 = store.GetStorePostPwd(hash,PRIKEY6,PWD6);
+        assertThat(res5,containsString("200"));
+        jsonResult=JSONObject.fromObject(res5);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+    }
+
+    @Test
+    public void TC1813_CreatePrivateStore()throws  Exception{
+
+        String Data = "test" + UtilsClass.Random(4);
+
+        Map<String,Object>map=new HashMap<>();
+        map.put("pubKeys",PUBKEY1);
+        map.put("pubKeys",PUBKEY6);
+        String response= store.CreateStorePwd(Data,map);
+        Thread.sleep(SLEEPTIME);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String hash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String res3 = store.GetStorePost(hash,PRIKEY1);
+        assertThat(res3,containsString("200"));
+        JSONObject jsonResult=JSONObject.fromObject(res3);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+        res3 = store.GetStorePostPwd(hash,PRIKEY6,PWD6);
+        assertThat(res3,containsString("200"));
+        jsonResult=JSONObject.fromObject(res3);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+        map=new HashMap<>();
+        map.put("pubKeys",PUBKEY4);
+        String res1 = store.StoreAuthorize(hash, map, PRIKEY1);
+        Thread.sleep(SLEEPTIME);
+        assertThat(res1,containsString("200"));
+        assertThat(res1,containsString("success"));
+        String res4 = store.GetStorePost(hash,PRIKEY4);
+        assertThat(res4,containsString("200"));
+        jsonResult=JSONObject.fromObject(res4);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+        map=new HashMap<>();
+        map.put("pubKeys",PUBKEY7);
+        String res2 = store.StoreAuthorize(hash, map, PRIKEY6, PWD6);
+        Thread.sleep(SLEEPTIME);
+        assertThat(res2,containsString("200"));
+        assertThat(res2,containsString("success"));
+        String res5 = store.GetStorePostPwd(hash,PRIKEY7, PWD7);
+        assertThat(res5,containsString("200"));
+        jsonResult=JSONObject.fromObject(res5);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+
+    }
+
+
+    @Test
+    public void TC1814_CreatePrivateStore()throws  Exception{
+
+        String Data = "test" + UtilsClass.Random(4);
+
+        Map<String,Object>map=new HashMap<>();
+        map.put("pubKeys",PUBKEY6);
+        String response= store.CreateStorePwd(Data,map);
+        Thread.sleep(SLEEPTIME);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String hash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String res3 = store.GetStorePostPwd(hash,PRIKEY6,PWD6);
+        assertThat(res3,containsString("200"));
+        JSONObject jsonResult=JSONObject.fromObject(res3);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+        map=new HashMap<>();
+        map.put("pubKeys",PUBKEY1);
+        String res2 = store.StoreAuthorize(hash, map, PRIKEY6, PWD6);
+        Thread.sleep(SLEEPTIME);
+        assertThat(res2,containsString("200"));
+        assertThat(res2,containsString("success"));
+        String res5 = store.GetStorePost(hash,PRIKEY1);
+        assertThat(res5,containsString("200"));
+        jsonResult=JSONObject.fromObject(res5);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+        map=new HashMap<>();
+        map.put("pubKeys",PUBKEY2);
+        res2 = store.StoreAuthorize(hash, map, PRIKEY2);
+        Thread.sleep(SLEEPTIME);
+        assertThat(res2,containsString("200"));
+        assertThat(res2,containsString("success"));
+        res5 = store.GetStorePost(hash,PRIKEY2);
+        assertThat(res5,containsString("500"));
+        assertThat(res5,containsString("wrong"));
+
+
+
+    }
 }
