@@ -480,16 +480,24 @@ public class StoreTest {
 
         String res6 = store.GetStorePost(hash,PRIKEY5);
         assertThat(res6,containsString("500"));
-        assertThat(res6,containsString("wrong"));
+        assertThat(res6,containsString("you have no permission to get this transaction !"));
 
         String res7 = store.GetStorePostPwd(hash,PRIKEY6,PWD7);
-        assertThat(res7,containsString("500"));
-        assertThat(res7,containsString("wrong"));
+        assertThat(res7,containsString("400"));
+        assertThat(res7,containsString("Invalid private key or the password is not match the private key"));
 
         String res8 = store.GetStorePostPwd(hash,PRIKEY1,PWD6);
-        assertThat(res8,containsString("500"));
-        assertThat(res8,containsString("wrong"));
+        assertThat(res8,containsString("400"));
+        assertThat(res8,containsString("Invalid private key or the password is not match the private key"));
 
+
+        res8 = store.GetStorePost(hash,"123456");
+        assertThat(res8,containsString("400"));
+        assertThat(res8,containsString("illegal base64 data at input byte 4"));
+
+        res8 = store.GetStorePost(hash,"MTIzNDU2");
+        assertThat(res8,containsString("400"));
+        assertThat(res8,containsString("Invalid private key or the password is not match the private key"));
     }
 
     @Test
@@ -498,9 +506,9 @@ public class StoreTest {
         String Data = "test" + UtilsClass.Random(4);
 
         Map<String,Object>map=new HashMap<>();
-        map.put("pubKeys",PUBKEY1);
-        map.put("pubKeys",PUBKEY2);
-        map.put("pubKeys",PUBKEY3);
+        map.put("pubKey1",PUBKEY1);
+        map.put("pubKey2",PUBKEY2);
+        map.put("pubKey3",PUBKEY3);
         String response= store.CreatePrivateStore(Data,map);
         Thread.sleep(SLEEPTIME);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -534,23 +542,23 @@ public class StoreTest {
         map.put("pubKeys",PUBKEY5);
         String res2 = store.StoreAuthorize(hash, map, PRIKEY2);
         Thread.sleep(SLEEPTIME);
-        assertThat(res2,containsString("200"));
-        assertThat(res2,containsString("success"));
-        String res5 = store.GetStorePost(hash,PRIKEY5);
-        assertThat(res5,containsString("200"));
-        jsonResult=JSONObject.fromObject(res5);
-        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+        assertThat(res2,containsString("500"));
+        assertThat(res2,containsString("private key is not tx owner"));
+//        String res5 = store.GetStorePost(hash,PRIKEY5);
+//        assertThat(res5,containsString("200"));
+//        jsonResult=JSONObject.fromObject(res5);
+//        assertThat(jsonResult.get("Data").toString(),containsString(Data));
 
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY6);
         res2 = store.StoreAuthorize(hash, map, PRIKEY3);
         Thread.sleep(SLEEPTIME);
-        assertThat(res2,containsString("200"));
-        assertThat(res2,containsString("success"));
-        res5 = store.GetStorePostPwd(hash,PRIKEY6,PWD6);
-        assertThat(res5,containsString("200"));
-        jsonResult=JSONObject.fromObject(res5);
-        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+        assertThat(res2,containsString("500"));
+        assertThat(res2,containsString("private key is not tx owner"));
+//        res5 = store.GetStorePostPwd(hash,PRIKEY6,PWD6);
+//        assertThat(res5,containsString("200"));
+//        jsonResult=JSONObject.fromObject(res5);
+//        assertThat(jsonResult.get("Data").toString(),containsString(Data));
 
     }
 
@@ -560,8 +568,8 @@ public class StoreTest {
         String Data = "test" + UtilsClass.Random(4);
 
         Map<String,Object>map=new HashMap<>();
-        map.put("pubKeys",PUBKEY1);
-        map.put("pubKeys",PUBKEY6);
+        map.put("pubKey1",PUBKEY6);
+        map.put("pubKey2",PUBKEY1);
         String response= store.CreatePrivateStore(Data,map);
         Thread.sleep(SLEEPTIME);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -575,16 +583,6 @@ public class StoreTest {
         jsonResult=JSONObject.fromObject(res3);
         assertThat(jsonResult.get("Data").toString(),containsString(Data));
 
-        map=new HashMap<>();
-        map.put("pubKeys",PUBKEY4);
-        String res1 = store.StoreAuthorize(hash, map, PRIKEY1);
-        Thread.sleep(SLEEPTIME);
-        assertThat(res1,containsString("200"));
-        assertThat(res1,containsString("success"));
-        String res4 = store.GetStorePost(hash,PRIKEY4);
-        assertThat(res4,containsString("200"));
-        jsonResult=JSONObject.fromObject(res4);
-        assertThat(jsonResult.get("Data").toString(),containsString(Data));
 
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY7);
@@ -597,6 +595,16 @@ public class StoreTest {
         jsonResult=JSONObject.fromObject(res5);
         assertThat(jsonResult.get("Data").toString(),containsString(Data));
 
+        map=new HashMap<>();
+        map.put("pubKeys",PUBKEY4);
+        String res1 = store.StoreAuthorize(hash, map, PRIKEY1);
+        Thread.sleep(SLEEPTIME);
+        assertThat(res1,containsString("500"));
+        assertThat(res1,containsString("private key is not tx owner"));
+//        String res4 = store.GetStorePost(hash,PRIKEY4);
+//        assertThat(res4,containsString("200"));
+//        jsonResult=JSONObject.fromObject(res4);
+//        assertThat(jsonResult.get("Data").toString(),containsString(Data));
 
     }
 
@@ -630,14 +638,10 @@ public class StoreTest {
 
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY2);
-        res2 = store.StoreAuthorize(hash, map, PRIKEY2);
+        res2 = store.StoreAuthorize(hash, map, PRIKEY1);
         Thread.sleep(SLEEPTIME);
-        assertThat(res2,containsString("200"));
-        assertThat(res2,containsString("success"));
-        res5 = store.GetStorePost(hash,PRIKEY2);
-        assertThat(res5,containsString("500"));
-        assertThat(res5,containsString("wrong"));
-
+        assertThat(res2,containsString("500"));
+        assertThat(res2,containsString("private key is not tx owner"));
 
 
     }
