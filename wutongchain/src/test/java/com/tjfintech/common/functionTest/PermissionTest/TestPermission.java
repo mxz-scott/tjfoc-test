@@ -60,16 +60,16 @@ public class TestPermission {
     String glbSoloToken="";//ADDRESS1的全局预设发行token
 
 
-    String toolPath="cd "+PTPATH+"toolkit;";
+    String toolPath="cd "+ ToolPATH + ";";
     String ledger = (subLedger!="")?" -z "+subLedger:"";
-    String exeCmd="./toolkit permission "+ledger;
+    String exeCmd="./" + ToolTPName + " permission "+ledger;
 
     String peerIP=PEER1RPCPort;
 //    String peerIP="9300";
     String sdkID= UtilsClass.getSDKID();
     //String sdkID="144166a82d85a96d79388e987a456ba70db683d7105505c38d768829c702eba6717a447c5e858165faefdaa847b3558a4b72db87fd379ac5154ad8fc4f3e13d2";
     //String sdkID="7d8c8eb266a6a445cde55e086c2ee63e577e3ff8ba5724ff2090a2a691384cbf87a881bc690695836c3e99424756bf3a3726bc0ae6c66795e51d351e6de7c0db";
-    String preCmd=toolPath+exeCmd+" -p "+peerIP+" -d "+sdkID+" -m ";
+    String preCmd=toolPath + exeCmd + " -p " + peerIP + " -d " + sdkID + " -m ";
     ArrayList<String> dockerList =new ArrayList();
 
     boolean bExe=false;
@@ -535,13 +535,12 @@ public class TestPermission {
 
         //权限设置通知的节点与SDK配置的节点不一致，权限设置有效
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
-        shellCmd(sdkIP,"cd "+PTPATH+"sdk/conf;cp config1.toml config.toml");//配置文件中仅配置246作为发送节点
+        shellCmd(sdkIP,"cd "+ SDKPATH + "conf;cp config1.toml config.toml");//配置文件中仅配置246作为发送节点
         shellCmd(sdkIP,killSDKCmd);
         shellCmd(sdkIP,startSDKCmd);
-        //shellCmd("cd "+PTPATH+"sdk1;nohub httpservice &");
         Thread.sleep(5000);
         shellCmd(peerIP246.split(":")[0],cmd2+"211");//向节点246发送权限变更通知
-        shellCmd(sdkIP,"cd "+PTPATH+"sdk/conf;cp config2.toml config.toml");//恢复配置文件中的节点配置
+        shellCmd(sdkIP,"cd "+ SDKPATH + "conf;cp config2.toml config.toml");//恢复配置文件中的节点配置
         assertThat(pFun1.createStore(), containsString("1"));
 
 

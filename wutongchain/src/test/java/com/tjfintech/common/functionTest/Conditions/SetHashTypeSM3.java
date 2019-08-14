@@ -21,7 +21,7 @@ public class SetHashTypeSM3 {
        setAndRestartSDK();
 
        //设置管理工具hashtype为sm3
-       shellExeCmd(PEER1IP,"cp " + PTPATH + "toolkit/conf/baseOK.toml " + PTPATH + "toolkit/conf/base.toml");
+       shellExeCmd(PEER1IP,"cp " + ToolPATH + "conf/baseOK.toml " + ToolPATH + "conf/base.toml");
     }
 
 }

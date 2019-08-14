@@ -89,7 +89,7 @@ public class BlockSyncTest {
     @Test
     public void TC969_SyncNoContractTxDisableCtFlag()throws Exception{
         String syncPeer=PEER2IP;
-        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseContractfalse.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+        setAndRestartPeerList("cp "+ PeerPATH + "conf/baseContractfalse.toml "+ PeerPATH + "conf/"+PeerInfoConfig+".toml");
         //停止节点PEER2
         Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
         shellPeer.execute(killPeerCmd);
@@ -118,7 +118,7 @@ public class BlockSyncTest {
     @Test
     public void TC923_SyncNoContractTxCtFlagChange1()throws Exception{
         String syncPeer=PEER2IP;
-        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseContractfalse.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+        setAndRestartPeerList("cp "+ PeerPATH + "conf/baseContractfalse.toml "+ PeerPATH + "conf/"+PeerInfoConfig+".toml");
         StoreUTXO();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
 
@@ -170,9 +170,9 @@ public class BlockSyncTest {
     @Test
     public void TC986_SyncDataPeerWithTxEnableCtFlag()throws Exception{
         setAndRestartPeerList(clearPeerDB
-                ,"cp "+ PTPATH + "peer/conf/configData.toml "+ PTPATH +"peer/conf/"+PeerMemConfig+".toml");
-        setAndRestartSDK("sed -i \"s/newDB/newDB1/g\" "+ PTPATH+"sdk/conf/configNewDB.toml "
-                ,"cp "+PTPATH+"sdk/conf/configNewDB.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
+                ,"cp "+ PeerPATH + "conf/configData.toml "+ PeerPATH + "conf/"+PeerMemConfig+".toml");
+        setAndRestartSDK("sed -i \"s/newDB/newDB1/g\" "+ SDKPATH + "conf/configNewDB.toml "
+                ,"cp "+ SDKPATH + "conf/configNewDB.toml "+SDKPATH + "conf/"+SDKConfig+".toml");
         BeforeCondition bf = new BeforeCondition();
         bf.setPermission999();//赋值权限999
         bf.updatePubPriKey();//更新全局pub、prikey
@@ -220,7 +220,7 @@ public class BlockSyncTest {
 
         //节点清除db数据，并将Contract Enabled设置为false 例如Peer2 --》10.1.3.246，重启节点 开始同步数据
         setAndRestartPeer(syncPeer,clearPeerDB
-                ,"cp "+ PTPATH + "peer/conf/baseContractfalse.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+                ,"cp "+ PeerPATH + "conf/baseContractfalse.toml "+ PeerPATH + "conf/"+PeerInfoConfig+".toml");
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3);
@@ -364,7 +364,7 @@ public class BlockSyncTest {
         Shell shellPeer4=new Shell(PEER4IP,USERNAME,PASSWD);
         shellPeer4.execute(killPeerCmd);
 
-        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOnePeer240.toml "+PTPATH+"sdk/conf/"+SDKConfig+".toml");
+        setAndRestartSDK("cp "+ SDKPATH + "conf/configOnePeer240.toml "+ SDKPATH + "conf/"+SDKConfig+".toml");
 
         StoreUTXONoCheck();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
@@ -613,7 +613,7 @@ public class BlockSyncTest {
 
         Shell shell1=new Shell(shellIP,USERNAME,PASSWD);
 
-        String cmd1="cd "+PTPATH+"toolkit/;./toolkit height -p "+ rpcPort;
+        String cmd1="cd "+ ToolPATH + ";./" + ToolTPName + " height -p "+ rpcPort;
         shell1.execute(cmd1);
         ArrayList<String> stdout = shell1.getStandardOutput();
         log.info(StringUtils.join(stdout,"\n"));

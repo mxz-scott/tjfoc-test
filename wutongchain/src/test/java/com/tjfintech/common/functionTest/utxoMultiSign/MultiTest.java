@@ -654,6 +654,22 @@ public class MultiTest {
         assertEquals("0",JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"));
     }
 
+    /**
+     * 多签账户转账给自己 无法转给自己
+     * @throws Exception
+     */
+    @Test
+    public void TransferToSelf() throws Exception {
+        String transferData = IMPPUTIONADD + "转给自己1000个" + tokenType;
+        List<Map> listInit = utilsClass.constructToken(IMPPUTIONADD, tokenType, "1000");
+        List<Map> list0 = utilsClass.constructToken(MULITADD4, tokenType2, "1000", listInit);
+        log.info(transferData);
+        String transferInfoInit = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, list0);//转账给包含自己地址的多个地址
+        assertEquals(true,transferInfoInit.contains("can't transfer to self"));
+        String transferInfoInit2 = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, listInit);//仅转账给自己
+        assertEquals(true,transferInfoInit2.contains("can't transfer to self"));
+    }
+
     //-----------------------------------------------------------------------------------------------------------
 
     public  String IssueToken(int length,String  amount,String ToAddr){

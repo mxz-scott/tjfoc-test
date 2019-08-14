@@ -52,7 +52,7 @@ public class MixTxTest {
 
         Thread.sleep(6000);
         //设置打包时间为20s 使得各种类型的交易同时打包
-        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/basePkTm20s.toml "+ PTPATH +"peer/conf/"+PeerInfoConfig+".toml");
+        setAndRestartPeerList("cp "+ PeerPATH + "conf/basePkTm20s.toml "+ PeerPATH + "conf/" + PeerInfoConfig + ".toml");
         setAndRestartSDK(resetSDKConfig);
         String resp = store.GetHeight();
 

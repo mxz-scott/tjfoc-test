@@ -97,11 +97,15 @@ public class UtilsClass {
     //节点、SDK、Toolkit对等目录放置于PTPATH目录下
     public static final String PTPATH="/root/zll/permission/";
 //    public static final String PTPATH="/root/zll/chain2.0.1/";
+    public static final String SDKPATH = PTPATH + "sdk/";
+    public static final String PeerPATH = PTPATH + "peer/";
+    public static final String ToolPATH = PTPATH + "toolkit/";
     public  static String SDKID=null;
     public static String PeerTPName="auto";
 //    public static String PeerTPName="Mp";
     public static String SDKTPName="httpservice";
 //    public static String SDKTPName="sdk";
+    public static String ToolTPName="toolkit";
     public static ArrayList<String > peerList=new ArrayList<>();
     public static int RESTARTTIME=20000;
     public static long ContractInstallSleep=75000;
@@ -117,14 +121,14 @@ public class UtilsClass {
     public static String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
     public static String ids = " -m "+ id1+","+ id2+","+ id3;
 
-    public static String startPeerCmd = "sh "+PTPATH+"peer/start.sh";
-    public static String startSDKCmd ="sh "+PTPATH+"sdk/start.sh";
+    public static String startPeerCmd = "sh "+ PeerPATH +"start.sh";
+    public static String startSDKCmd ="sh "+ SDKPATH +"start.sh";
     public static String killPeerCmd = "ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9";
     public static String killSDKCmd = "ps -ef |grep " + SDKTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9";
-    public static String clearPeerDB = "rm -rf "+ PTPATH + "peer/*db ";
-    public static String resetPeerBase = "cp " + PTPATH + "peer/conf/baseOK.toml " + PTPATH + "peer/conf/base.toml";
-    public static String resetPeerConfig = "cp "+ PTPATH + "peer/conf/configOK.toml "+ PTPATH +"peer/conf/"+PeerMemConfig+".toml";
-    public static String resetSDKConfig = "cp " + PTPATH + "sdk/conf/configOK.toml " + PTPATH + "sdk/conf/config.toml";
+    public static String clearPeerDB = "rm -rf "+ PeerPATH + "*db ";
+    public static String resetPeerBase = "cp " + PeerPATH + "conf/baseOK.toml " + PeerPATH + "conf/base.toml";
+    public static String resetPeerConfig = "cp "+ PeerPATH + "conf/configOK.toml "+ PeerPATH +"conf/"+PeerMemConfig+".toml";
+    public static String resetSDKConfig = "cp " + SDKPATH + "conf/configOK.toml " + SDKPATH + "conf/config.toml";
 
     public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";
 
@@ -309,7 +313,7 @@ public class UtilsClass {
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
 
-        shellSDK.execute("cd "+PTPATH+"toolkit;"+"./toolkit getid -p "+PTPATH+"sdk/auth/key.pem");
+        shellSDK.execute("cd "+ ToolPATH+";./" + ToolTPName + " getid -p "+ SDKPATH +"auth/key.pem");
 
         ArrayList<String> stdout3 = shellSDK.getStandardOutput();
         for (String str1 : stdout3){
@@ -319,7 +323,7 @@ public class UtilsClass {
                 break;
             }
         }
-        log.info("SDK "+sdkIP+" ID:\n"+SDKID);
+        log.info("SDK " + sdkIP + " ID:\n" + SDKID);
         return SDKID;
     }
 
@@ -342,7 +346,7 @@ public class UtilsClass {
     public static String getPeerId(String IP,String userName,String passWd) {
         Shell shellPeer=new Shell(IP,userName,passWd);
         String peerId=null;
-        shellPeer.execute("cd "+PTPATH+"peer;"+"./"+PeerTPName+" init");
+        shellPeer.execute("cd "+ PeerPATH + ";./" + PeerTPName + " init");
         ArrayList<String> stdout3 = shellPeer.getStandardOutput();
         for (String str1 : stdout3){
             if(str1.contains("Local peer"))
@@ -446,7 +450,7 @@ public class UtilsClass {
         Shell shell1=new Shell(netPeerIP,USERNAME,PASSWD);
         //String cmd1="cd zll;ls";//替换为权限命令
         String ledger = (subLedger!="")?" -z "+subLedger:"";
-        shell1.execute("cd "+ PTPATH +"toolkit;"+"./toolkit getpermission "+ledger+" -p "+ netRpcPort);
+        shell1.execute("cd "+ ToolPATH + ";./" + ToolTPName + " getpermission "+ ledger + " -p "+ netRpcPort);
         ArrayList<String> stdout = shell1.getStandardOutput();
         String resp = StringUtils.join(stdout,"\n");
         log.info(resp);
@@ -481,7 +485,7 @@ public class UtilsClass {
         Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
         String DBType=null;
         String database=null;
-        shellSDK.execute("sh "+PTPATH+"sdk/getDBPath.sh");
+        shellSDK.execute("sh " + SDKPATH + "getDBPath.sh "+ SDKPATH); //即执行~/zll/chain2.0.1/sdk# ./getDBPath.sh /root/zll/chain2.0.1/sdk/
         ArrayList<String> stdout = shellSDK.getStandardOutput();
         String resp = StringUtils.join(stdout,"");
 
@@ -489,7 +493,7 @@ public class UtilsClass {
         //提取IP地址
         log.info("*****"+resp);
         String IPString = getIPFromStr(resp);
-        log.info("DB IP:"+IPString);
+        log.info("DB IP:" + IPString);
 
         if(resp.contains("mongo")) {
             //提取mongodb数据库地址及database信息
@@ -498,10 +502,10 @@ public class UtilsClass {
 
         }else{
             DBType="mysql";
-            database = resp.substring(resp.lastIndexOf("/")+1,resp.lastIndexOf("?"));
+            database = resp.substring(resp.lastIndexOf("/")+1, resp.lastIndexOf("?"));
         }
 
-        return DBType+","+IPString+","+database;
+        return DBType + "," + IPString + "," + database;
     }
 
     public static void delDataBase()throws Exception{
@@ -514,7 +518,7 @@ public class UtilsClass {
          }
          else{
              MysqlOperation mysql = new MysqlOperation();
-             mysql.mysqlIP=dbInfo.split(",")[1];
+             mysql.mysqlIP = dbInfo.split(",")[1];
              mysql.delDatabase(dbInfo.split(",")[2]);
          }
 

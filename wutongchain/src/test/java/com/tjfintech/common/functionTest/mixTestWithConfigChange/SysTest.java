@@ -79,7 +79,7 @@ public class SysTest {
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute(killSDKCmd);
-        shellSDK.execute("cp "+PTPATH+"sdk/conf/configMongo.toml "+PTPATH+"sdk/conf/config.toml");
+        shellSDK.execute("cp "+ SDKPATH + "conf/configMongo.toml "+ SDKPATH + "conf/config.toml");
         log.info(mongoID);
         shellMongo.execute("docker restart "+mongoID);
         Thread.sleep(6000);
@@ -124,7 +124,7 @@ public class SysTest {
 
         //系统配置数据库为mysql时，且数据库正常进行检查
         shellSDK.execute(killSDKCmd);
-        shellSDK.execute("cp "+PTPATH+"sdk/conf/configMysql.toml "+PTPATH+"sdk/conf/config.toml");
+        shellSDK.execute("cp "+ SDKPATH + "conf/configMysql.toml "+ SDKPATH + "conf/config.toml");
 
         shellMysql.execute("service mysql restart");
         Thread.sleep(4000);
@@ -166,7 +166,7 @@ public class SysTest {
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute(killSDKCmd);
-        shellSDK.execute("cp "+ PTPATH +"sdk/conf/configMongoMysql.toml "+ PTPATH +"sdk/conf/config.toml");
+        shellSDK.execute("cp "+ SDKPATH + "conf/configMongoMysql.toml "+ SDKPATH + "conf/config.toml");
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");
         Thread.sleep(5 * 1000);
@@ -223,7 +223,7 @@ public class SysTest {
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute(killSDKCmd);
-        shellSDK.execute("cp "+PTPATH+"sdk/conf/configMysqlMongo.toml "+PTPATH+"sdk/conf/config.toml");
+        shellSDK.execute("cp "+ SDKPATH + "conf/configMysqlMongo.toml "+ SDKPATH + "conf/config.toml");
 
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");

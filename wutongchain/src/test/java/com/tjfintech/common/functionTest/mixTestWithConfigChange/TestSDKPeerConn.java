@@ -29,7 +29,7 @@ public class TestSDKPeerConn {
         Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
 
         shellSDK.execute(killSDKCmd);
-        shellSDK.execute("cp "+PTPATH+"sdk/conf/config2P.toml "+PTPATH+"sdk/conf/config.toml");
+        shellSDK.execute("cp "+ SDKPATH + "conf/config2P.toml "+ SDKPATH + "conf/config.toml");
         shellSDK.execute(startSDKCmd);
 
         Shell shellPeer1 = new Shell(PEER1IP, USERNAME, PASSWD);

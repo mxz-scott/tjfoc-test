@@ -66,7 +66,7 @@ public class TestWithConfigChange {
     //此用例需要调整
     //@Test
     public void TC1538_quitMainJoinPeer()throws Exception{
-        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOnePeer240.toml "+PTPATH+"sdk/conf/config.toml");
+        setAndRestartSDK("cp "+ SDKPATH + "conf/configOnePeer240.toml "+ SDKPATH + "conf/config.toml");
         //创建子链01 包含节点A、B、C
         String chainName1="tc1538_01";
         String res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1,
@@ -163,7 +163,7 @@ public class TestWithConfigChange {
 
     @Test
     public void TC1537_createChainWithJoinPeer()throws Exception{
-        setAndRestartPeer(PEER3IP,"cp "+PTPATH+"peer/configjoin.toml "+PTPATH+"peer/"+PeerMemConfig+".toml");
+        setAndRestartPeer(PEER3IP,"cp "+ PeerPATH + "configjoin.toml " + PeerPATH + PeerMemConfig + ".toml");
         //动态加入节点168
         testMgTool.addPeer("join",PEER1IP+":"+PEER1RPCPort,
                 "/ip4/"+PEER3IP,"/tcp/60011",PEER3RPCPort,"success");
@@ -227,7 +227,7 @@ public class TestWithConfigChange {
 
     @Test  //数据节点异常
     public void TC1659_1655_createChainWithDataPeer()throws Exception{
-        setAndRestartPeer(PEER3IP,"cp "+PTPATH+"peer/configobs.toml "+PTPATH+"peer/"+PeerMemConfig+".toml");
+        setAndRestartPeer(PEER3IP,"cp "+ PeerPATH + "configobs.toml "+ PeerPATH + PeerMemConfig + ".toml");
         //动态加入节点168
         testMgTool.addPeer("observer",PEER1IP+":"+PEER1RPCPort,
                 "/ip4/"+PEER3IP,"/tcp/60011",PEER3RPCPort,"success");
@@ -261,7 +261,7 @@ public class TestWithConfigChange {
 
     @Test
     public void TC1523_subChainStatus()throws Exception{
-//        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configOnePeer240.toml "+PTPATH+"sdk/conf/config.toml");
+//        setAndRestartSDK("cp "+ SDKPATH + "conf/configOnePeer240.toml "+ SDKPATH + "conf/config.toml");
         //创建子链，包含两个节点
         String chainName="tc1523_01";
         String res = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,

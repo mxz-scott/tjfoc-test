@@ -32,14 +32,14 @@ public class BeforeCondition {
     //赋值权限999 区分是否主子链
     public void setPermission999()throws Exception{
 
-        String toolPath="cd "+PTPATH+"toolkit;";
-        String exeCmd="./toolkit permission ";
+        String toolPath="cd "+ ToolPATH +";";
+        String exeCmd="./" + ToolTPName + " permission ";
 
         SDKID=getSDKID();
         String ledger ="";
         ledger=(subLedger!="")?" -z "+subLedger:"";
         String preCmd=toolPath+exeCmd+"-p "+PEER1RPCPort+ledger+" -d "+SDKID+" -m ";
-        String getPerm=toolPath+"./toolkit getpermission -p "+PEER1RPCPort+ledger;
+        String getPerm=toolPath+"./" + ToolTPName + " getpermission -p "+PEER1RPCPort+ledger;
 
         Shell shellPeer1=new Shell(PEER1IP,USERNAME,PASSWD);
         int iFlag=0;

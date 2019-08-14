@@ -85,7 +85,7 @@ public class TestDiffHashType {
 
         //设置主链sm3 sdk使用sha256 （子链sha256）
         setAndRestartPeerList(resetPeerBase);
-        setAndRestartSDK("cp "+ PTPATH + "sdk/conf/configSHA256.toml "+ PTPATH + "sdk/conf/config.toml");
+        setAndRestartSDK("cp "+ SDKPATH + "conf/configSHA256.toml "+ SDKPATH + "conf/config.toml");
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链可以成功发送，主链无法成功发送
@@ -159,7 +159,6 @@ public class TestDiffHashType {
 
 
         //设置主链sm3 sdk使用sha256 （子链sha256）
-        //setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseSHA256.toml "+ PTPATH +"peer/conf/base.toml");
         setAndRestartSDK(resetSDKConfig);
 
         sleepAndSaveInfo(SLEEPTIME);

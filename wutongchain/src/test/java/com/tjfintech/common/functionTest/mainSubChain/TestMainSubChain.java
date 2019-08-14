@@ -1715,8 +1715,8 @@ public class TestMainSubChain {
     public String createSubChain(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
                                  String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
         Shell shell1=new Shell(shellIP,USERNAME,PASSWD);
-        String mainCmd ="addledger ";
-        String cmd1="cd "+ PTPATH +"toolkit;"+"./toolkit "
+        String mainCmd =" addledger ";
+        String cmd1="cd "+ ToolPATH + ";./" + ToolTPName
                 + mainCmd + " -p "+ rpcPort + chainNameParam + hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam;
         shell1.execute(cmd1);
         ArrayList<String> stdout = shell1.getStandardOutput();
@@ -1736,8 +1736,8 @@ public class TestMainSubChain {
     public String createSubChainNoPerm(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
                                        String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
         Shell shell1=new Shell(shellIP,USERNAME,PASSWD);
-        String mainCmd ="addledger ";
-        String cmd1="cd "+ PTPATH +"toolkit;"+"./toolkit "
+        String mainCmd =" addledger ";
+        String cmd1="cd "+ ToolPATH + ";./" + ToolTPName
                 + mainCmd + " -p "+ rpcPort + chainNameParam + hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam;
         shell1.execute(cmd1);
         ArrayList<String> stdout = shell1.getStandardOutput();
@@ -1750,8 +1750,8 @@ public class TestMainSubChain {
      * */
     public String getSubChain(String shellIP,String rpcPort,String chainNameParam){
         Shell shell1=new Shell(shellIP,USERNAME,PASSWD);
-        String mainCmd ="getledger ";
-        String cmd1="cd "+ PTPATH +"toolkit;"+"./toolkit " + mainCmd + " -p "+ rpcPort + chainNameParam;
+        String mainCmd =" getledger ";
+        String cmd1="cd "+ ToolPATH + ";./" + ToolTPName + mainCmd + " -p "+ rpcPort + chainNameParam;
         shell1.execute(cmd1);
         ArrayList<String> stdout = shell1.getStandardOutput();
         log.info(StringUtils.join(stdout,"\n"));
@@ -1763,8 +1763,8 @@ public class TestMainSubChain {
      * */
     public String freezeSubChain(String shellIP,String rpcPort,String chainNameParam){
         Shell shell1=new Shell(shellIP,USERNAME,PASSWD);
-        String mainCmd ="freezeledger ";
-        String cmd1="cd "+ PTPATH +"toolkit;"+"./toolkit " + mainCmd + " -p "+ rpcPort + chainNameParam;
+        String mainCmd =" freezeledger ";
+        String cmd1="cd "+ ToolPATH + ";./" + ToolTPName + mainCmd + " -p "+ rpcPort + chainNameParam;
         shell1.execute(cmd1);
         ArrayList<String> stdout = shell1.getStandardOutput();
         log.info(StringUtils.join(stdout,"\n"));
@@ -1776,8 +1776,8 @@ public class TestMainSubChain {
      * */
     public String recoverSubChain(String shellIP,String rpcPort,String chainNameParam){
         Shell shell1=new Shell(shellIP,USERNAME,PASSWD);
-        String mainCmd ="recoverledger ";
-        String cmd1="cd "+ PTPATH +"toolkit;"+"./toolkit " + mainCmd + " -p "+ rpcPort + chainNameParam;
+        String mainCmd =" recoverledger ";
+        String cmd1="cd "+ ToolPATH + ";./" + ToolTPName + mainCmd + " -p "+ rpcPort + chainNameParam;
         shell1.execute(cmd1);
         ArrayList<String> stdout = shell1.getStandardOutput();
         log.info(StringUtils.join(stdout,"\n"));
@@ -1789,8 +1789,8 @@ public class TestMainSubChain {
      * */
     public String destorySubChain(String shellIP,String rpcPort,String chainNameParam){
         Shell shell1=new Shell(shellIP,USERNAME,PASSWD);
-        String mainCmd ="destoryledger ";
-        String cmd1="cd "+ PTPATH +"toolkit;"+"./toolkit " + mainCmd + " -p "+ rpcPort + chainNameParam;
+        String mainCmd =" destoryledger ";
+        String cmd1="cd "+ ToolPATH + ";./" + ToolTPName + mainCmd + " -p "+ rpcPort + chainNameParam;
         shell1.execute(cmd1);
         ArrayList<String> stdout = shell1.getStandardOutput();
         log.info(StringUtils.join(stdout,"\n"));
@@ -1803,8 +1803,8 @@ public class TestMainSubChain {
 
     public String getSubChainInfoFromAll(String shellIP,String rpcPort,String chainName,String Keyword){
         Shell shell1=new Shell(shellIP,USERNAME,PASSWD);
-        String mainCmd ="getledger ";
-        String cmd1="cd "+ PTPATH +"toolkit;"+"./toolkit " + mainCmd + " -p "+ rpcPort;
+        String mainCmd =" getledger ";
+        String cmd1="cd "+ ToolPATH + ";./" + ToolTPName + mainCmd + " -p "+ rpcPort;
         shell1.execute(cmd1);
         ArrayList<String> stdout = shell1.getStandardOutput();
         stdout.remove(0);//删除版本号信息行

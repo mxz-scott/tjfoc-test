@@ -1,14 +1,22 @@
 package com.tjfintech.common.functionTest.mixTest;
 
+import com.google.gson.JsonArray;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 
+import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
+import com.tjfintech.common.functionTest.Conditions.SetSubLedger;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
+import com.tjfintech.common.functionTest.contract.WVMContractTest;
+import com.tjfintech.common.functionTest.mainSubChain.TestMainSubChain;
+import com.tjfintech.common.functionTest.mixTestWithConfigChange.TestMgTool;
+import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
 
@@ -55,6 +63,11 @@ public class TestTxType {
     String subTypeDockerTx="32";
     String subTypeDeleteDocker="31";
 
+    String typeWVM="3";
+    String subTypeCreateWVM="40";
+    String subTypeWVMTx="42";
+    String subTypeDeleteWVM="41";
+
     String typeAdmin="20";
     String subTypeAddColl="200";
     String subTypeDelColl="201";
@@ -63,26 +76,219 @@ public class TestTxType {
     String subTypeFreezeToken="204";
     String subTypeRecoverToken="205";
 
+    String typeSystem = "4";
+    String subTypePerm = "3";
+    String subTypeAddPeer = "0";
+    String subTypeQuitPeer = "1";
+    String subTypeAddLedger = "4";
+    String subTypeFreezeLedger = "5";
+    String subTypeRecoverLedger = "6";
+    String subTypeDestoryLedger = "7";
+
     String zeroAddr="0000000000000000";
-    boolean bExe=false;
-    @Before
+    //boolean bExe=false;
+    Date dt=new Date();
+    SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
+    SetSubLedger setSubLedger = new SetSubLedger();
+
+   @Before
     public void beforeConfig() throws Exception {
-        if(bExe==false) {
+       initSetting();
+    }
+
+    public void initSetting()throws Exception{
+        log.info("current bExe:" + bReg);
+        log.info("current Ledger:" + subLedger);
+        if(bReg == false) {
+            if(subLedger != "")   setSubLedger.createSubledger();
             BeforeCondition bf = new BeforeCondition();
             bf.setPermission999();
             bf.updatePubPriKey();
             bf.collAddressTest();
+            bf.createAdd();
+
             Thread.sleep(SLEEPTIME);
-            bExe=true;
+            bReg=true;
         }
     }
 
+    @Test
+    public void checkA1SysTx() throws Exception{
+        /**系统类型交易
+         * |System|4|
+         * ### 系统子类型
+         * |交易子类型|数值|
+         * |节点新增/修改|0|
+         * |删除节点|1|
+         * |权限交易|3|
+         * |创建子链|4|
+         * |冻结子链|5|
+         * |解冻子链|6|
+         * |销毁子链|7|
+         */
 
+        TestMgTool testMgTool = new TestMgTool();
+        TestMainSubChain testMainSubChain = new TestMainSubChain();
+        SetDatabaseMysql setDatabaseMysql = new SetDatabaseMysql();
+
+        //获取管理工具ID
+        String resp = testMgTool.getID(PEER1IP,ToolPATH + "crypt/key.pem","");
+        String toolID = resp.substring(resp.lastIndexOf(":")+1).trim();
+        assertEquals(false,toolID.isEmpty());  //主链才做数据库清理操作，因子链不测试节点动态变更交易
+        if(subLedger == "") {
+            setDatabaseMysql.setDBMysql();
+            bReg = false; //清除数据库后需要重新创建子链、赋权限、是否更新密钥类型、添加发行地址归集地址等
+            initSetting();
+        }
+
+        //给链赋权限 权限变更交易检查
+        String permResp = testMgTool.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"999","sdkName");
+        sleepAndSaveInfo(SLEEPTIME);
+        String permHash = permResp.substring(permResp.lastIndexOf(":")+1).trim();
+        JSONObject jsonObjectPerm = checkTriMsg(permHash,versionStore,typeSystem,subTypePerm);
+
+        assertEquals(toolID,
+                jsonObjectPerm.getJSONObject("Data").getJSONObject("System").getJSONObject("PermissionTransaction").getString("SendID"));
+        assertEquals(getSDKID(),
+                jsonObjectPerm.getJSONObject("Data").getJSONObject("System").getJSONObject("PermissionTransaction").getString("PeerID"));
+        assertEquals("sdkName",
+                jsonObjectPerm.getJSONObject("Data").getJSONObject("System").getJSONObject("PermissionTransaction").getString("ShownName"));
+        String permListStr = jsonObjectPerm.getJSONObject("Data").getJSONObject("System").getJSONObject("PermissionTransaction").getString("PermissionList");
+        assertEquals(fullPerm,permListStr.substring(permListStr.lastIndexOf(":")+1).trim().replaceAll(","," "));
+
+        //如果测试子链 则不测试其他系统交易
+        if(subLedger != "")  return;
+
+        //退出节点交易详情检查
+        String respQuit = testMgTool.quitPeer(PEER1IP + ":" + PEER1RPCPort, PEER2IP);
+        assertEquals(true, respQuit.contains("success"));
+        sleepAndSaveInfo(SLEEPTIME);
+        String quitPeerHash = respQuit.substring(respQuit.lastIndexOf(":") + 1).trim();
+        JSONObject jsonObjectQuitPeer = checkTriMsg(quitPeerHash, versionStore, typeSystem, subTypeQuitPeer);
+        assertEquals(toolID,
+                jsonObjectQuitPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("SendID"));
+        assertEquals(getPeerId(PEER2IP, USERNAME, PASSWD),
+                jsonObjectQuitPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("Id"));
+
+            //节点加入交易详情检查
+        String respAdd = testMgTool.addPeer("join", PEER1IP + ":" + PEER1RPCPort,
+                "/ip4/" + PEER2IP, "/tcp/60011", PEER2RPCPort, "success");
+        assertEquals(true, respAdd.contains("success"));
+        sleepAndSaveInfo(SLEEPTIME);
+        String addPeerHash = respAdd.substring(respAdd.lastIndexOf(":") + 1).trim();
+        JSONObject jsonObjectAddPeer = checkTriMsg(addPeerHash, versionStore, typeSystem, subTypeAddPeer);
+        assertEquals(toolID,
+                jsonObjectAddPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("SendID"));
+        assertEquals(getPeerId(PEER2IP, USERNAME, PASSWD),
+                jsonObjectAddPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("Id"));
+        assertEquals("peer" + PEER2IP.substring(PEER2IP.lastIndexOf(".") + 1).trim(),
+                jsonObjectAddPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("ShownName"));
+        assertEquals(true,
+                jsonObjectAddPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("LanAddrs").contains("/ip4/" + PEER2IP + "/tcp/60011"));
+        assertEquals(true,
+                jsonObjectAddPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("WlanAddrs").contains("/ip4/" + PEER2IP + "/tcp/60011"));
+        assertEquals(PEER2RPCPort,
+                jsonObjectAddPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("RpcPort"));
+        assertEquals("0",
+                jsonObjectAddPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("PeerType"));
+
+        //创建子链交易
+        String chainName="tx_"+sdf.format(dt)+ RandomUtils.nextInt(10000);
+        String addLedgerResp = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,
+                " -t sm3"," -w first"," -c raft",ids);
+        assertEquals(addLedgerResp.contains("send transaction success"), true);
+        String addLedgerHash = addLedgerResp.substring(addLedgerResp.lastIndexOf(":")+1).trim();
+        JSONObject jsonObjectAddLedger = checkTriMsg(addLedgerHash,versionStore,typeSystem,subTypeAddLedger);
+
+        assertEquals(toolID,
+                jsonObjectAddLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("SendID"));
+        assertEquals("0",
+                jsonObjectAddLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("OpType"));
+        assertEquals(chainName,
+                jsonObjectAddLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Name"));
+        assertEquals("sm3",
+                jsonObjectAddLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("HashType"));
+        assertEquals("first",
+                jsonObjectAddLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Word"));
+        assertEquals("raft",
+                jsonObjectAddLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Consensus"));
+        assertEquals("["+ids.replaceAll("-m","").replaceAll(" ","")+"]",
+                jsonObjectAddLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Member").replaceAll("\"",""));
+
+        //冻结子链交易
+        String freezeLedgerResp = testMainSubChain.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        assertEquals(freezeLedgerResp.contains("send transaction success"), true);
+        sleepAndSaveInfo(SLEEPTIME);
+        String freezeLedgerHash = freezeLedgerResp.substring(freezeLedgerResp.lastIndexOf(":")+1).trim();
+        JSONObject jsonObjectFreezeLedger = checkTriMsg(freezeLedgerHash,versionStore,typeSystem,subTypeFreezeLedger);
+        assertEquals(toolID,
+                jsonObjectFreezeLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("SendID"));
+        assertEquals("1",
+                jsonObjectFreezeLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("OpType"));
+        assertEquals(chainName,
+                jsonObjectFreezeLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Name"));
+        assertEquals("sm3",
+                jsonObjectFreezeLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("HashType"));
+        assertEquals("first",
+                jsonObjectFreezeLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Word"));
+        assertEquals("raft",
+                jsonObjectFreezeLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Consensus"));
+        assertEquals("["+ids.replaceAll("-m","").replaceAll(" ","")+"]",
+                jsonObjectFreezeLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Member").replaceAll("\"",""));
+
+        //恢复冻结子链交易
+
+        String recoverLedgerResp = testMainSubChain.recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        assertEquals(recoverLedgerResp.contains("send transaction success"), true);
+        sleepAndSaveInfo(SLEEPTIME);
+        String recoverLedgerHash = recoverLedgerResp.substring(recoverLedgerResp.lastIndexOf(":")+1).trim();
+        JSONObject jsonObjectRecoverLedger = checkTriMsg(recoverLedgerHash,versionStore,typeSystem,subTypeRecoverLedger);
+        assertEquals(toolID,
+                jsonObjectRecoverLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("SendID"));
+        assertEquals("2",
+                jsonObjectRecoverLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("OpType"));
+        assertEquals(chainName,
+                jsonObjectRecoverLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Name"));
+        assertEquals("sm3",
+                jsonObjectRecoverLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("HashType"));
+        assertEquals("first",
+                jsonObjectRecoverLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Word"));
+        assertEquals("raft",
+                jsonObjectRecoverLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Consensus"));
+        assertEquals("["+ids.replaceAll("-m","").replaceAll(" ","")+"]",
+                jsonObjectRecoverLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Member").replaceAll("\"",""));
+
+        //销毁子链交易
+        String destoryLedgerResp = testMainSubChain.destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        assertEquals(destoryLedgerResp.contains("send transaction success"), true);
+        sleepAndSaveInfo(SLEEPTIME);
+        String destoryLedgerHash = destoryLedgerResp.substring(destoryLedgerResp.lastIndexOf(":")+1).trim();
+        JSONObject jsonObjectDestoryLedger = checkTriMsg(destoryLedgerHash,versionStore,typeSystem,subTypeDestoryLedger);
+        assertEquals(toolID,
+                jsonObjectDestoryLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("SendID"));
+        assertEquals("3",
+                jsonObjectDestoryLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("OpType"));
+        assertEquals(chainName,
+                jsonObjectDestoryLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Name"));
+        assertEquals("sm3",
+                jsonObjectDestoryLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("HashType"));
+        assertEquals("first",
+                jsonObjectDestoryLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Word"));
+        assertEquals("raft",
+                jsonObjectDestoryLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Consensus"));
+        assertEquals("["+ids.replaceAll("-m","").replaceAll(" ","")+"]",
+                jsonObjectDestoryLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Member").replaceAll("\"",""));
+
+    }
 
     @Test
     public void checkStoreTx()throws Exception{
 
-        //存证类交易 Type 0 SubType 0 1
+        /**|存证|0|
+         * |基本存证|0|
+         * |加密存证|1|
+         * |0.9基本存证|2|
+         */
         //创建普通存证
         Date dt=new Date();
         SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
@@ -122,17 +328,13 @@ public class TestTxType {
         assertEquals(true,jsonObjecttx.getJSONObject("Store").getJSONObject("Extra").isNullObject());//检查合约extra
     }
 
-//    @Test
-//    public void test()throws Exception{
-//        String RecycleSoloInfo = multiSign.Recycle( PRIKEY1, "TxTypeSOLOTC-NXeqxe", "10");
-//        Thread.sleep(8000);
-//        String txHash7 = JSONObject.fromObject(RecycleSoloInfo).getString("Data");
-//        checkTriMsg(txHash7,versionMUTXO,typeUTXO,subTypeRecycle);
-//    }
-
-
     @Test
     public void checkUTXOTx()throws Exception{
+        /**|UTXO|1|
+         * |UTXO发行|10|
+         * |UTXO转账|11|
+         * |UTXO回收|12|
+         */
         //UTXO类交易 Type 1 SubType 10 11 12
         //单签发行
         String tokenTypeS = "TxTypeSOLOTC-"+ UtilsClass.Random(6);
@@ -280,8 +482,14 @@ public class TestTxType {
         assertEquals(TokenType,jsonObject.getJSONArray("Records").getJSONObject(index).getString("TokenType"));
         assertEquals(amount,jsonObject.getJSONArray("Records").getJSONObject(index).getString("Amount"));
     }
+
     @Test
     public void checkDockerTx()throws Exception{
+        /**|Docker|2|
+         * |合约安装|30|
+         * |合约销毁|31|
+         * |新建交易|32|
+         */
         //Docker类交易 Type 2 SubType 30 31 32
         //创建合约
         dockerFileName="simple.go";
@@ -294,6 +502,14 @@ public class TestTxType {
         String response81 = ct.initMobileTest();
         Thread.sleep(SLEEPTIME);
         String txHash81 = JSONObject.fromObject(response81).getJSONObject("Data").get("Figure").toString();
+        //发送合约交易changeCount 20190813补充测试
+        log.info("发送合约交易querymobile");
+        String response82 = ct.changeMobileCountTest("50","Mobile2");
+        Thread.sleep(SLEEPTIME);
+        String txHash82 = JSONObject.fromObject(response82).getJSONObject("Data").get("Figure").toString();
+        //检查交易详情中的scargs内容是否能够被base64解码成传入的参数
+        checkContractArgs(txHash82,"SCArgs","changeMobileCount","50","Mobile2");
+
         //发送合约交易querymobile
         log.info("发送合约交易querymobile");
         String response8 = ct.queryMobileTest("Mobile1");
@@ -333,6 +549,114 @@ public class TestTxType {
                 store.GetTxDetail(txHash9)).getJSONObject("Data").getJSONObject("Contract").getString("Message"));
         assertEquals("Delete chaincode ["+ct.name+"_"+ct.version+"] success!",JSONObject.fromObject(
                 store.GetTransaction(txHash9)).getJSONObject("Data").getString("message"));
+    }
+
+    @Test
+    public void checkWVMTx()throws Exception{
+        /**|WVM|3|
+         * |WVM安装|40|
+         * |WVM销毁|41|
+         * |WVM invoke|42|
+         */
+        FileOperation fileOper = new FileOperation();
+        String ctName="UI_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
+        WVMContractTest wvm = new WVMContractTest();
+        // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
+        // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
+        fileOper.replace(resourcePath + wvm.wvmFile + ".txt", wvm.orgName, ctName);
+
+        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
+        String response1 = wvm.wvmInstallTest( wvm.wvmFile +"_temp.txt",PRIKEY1);
+        log.info("Install Pri:"+PRIKEY1);
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
+        String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
+
+        sleepAndSaveInfo(SLEEPTIME);
+        //调用合约内的交易
+        String response2 = wvm.invokeNew(ctHash,"init",wvm.accountA,wvm.amountA);//初始化账户A 账户余额50
+        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
+
+        String response3 = wvm.invokeNew(ctHash,"init",wvm.accountB,wvm.amountB);//初始化账户B 账户余额60
+        String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
+
+        sleepAndSaveInfo(SLEEPTIME);
+
+        String response4 = wvm.invokeNew(ctHash,"transfer",wvm.accountA,wvm.accountB,wvm.transfer);//A向B转30
+        String txHash4 = JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
+
+        sleepAndSaveInfo(SLEEPTIME);
+
+        //查询余额invoke接口
+        String response5 = wvm.invokeNew(ctHash,"getBalance",wvm.accountA);//获取账户A账户余额
+        String txHash5 = JSONObject.fromObject(response5).getJSONObject("Data").getString("Figure");
+
+        sleepAndSaveInfo(SLEEPTIME/2);
+
+        //销毁wvm合约
+        String response9 = wvm.wvmDestroyTest(ctHash);
+        String txHash9 = JSONObject.fromObject(response9).getJSONObject("Data").getString("Figure");
+        sleepAndSaveInfo(SLEEPTIME);
+
+        //检查合约创建 检查Type和SubType类型
+        JSONObject jsonObjectCreate = checkTXDetailTriMsg(txHash1,versionStore,typeWVM,subTypeCreateWVM);
+        JSONObject jsonObjectInvokeInit = checkTXDetailTriMsg(txHash2,versionStore,typeWVM,subTypeWVMTx);
+        JSONObject jsonObjectInvokeTransfer = checkTXDetailTriMsg(txHash4,versionStore,typeWVM,subTypeWVMTx);
+        JSONObject jsonObjectDestory = checkTXDetailTriMsg(txHash9,versionStore,typeWVM,subTypeDeleteWVM);
+
+        //检查安装合约交易详情内参数
+        String data = encryptBASE64(readInput(
+                resourcePath + "wvm_temp.txt").toString().trim().getBytes()).replaceAll("\r\n", "");
+        assertEquals(ctHash,
+                jsonObjectCreate.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Name"));
+        //此处owner对应的是PubKey
+        assertEquals(PUBKEY1,
+                jsonObjectCreate.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Owner"));
+        assertEquals(data,
+                jsonObjectCreate.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Src"));
+        log.info("Check create wvm tx detail complete");
+
+
+        //检查invoke init交易详情内参数
+        assertEquals(ctHash,
+                jsonObjectInvokeInit.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Name"));
+        assertEquals("init",
+                jsonObjectInvokeInit.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getString("Method"));
+        assertEquals(wvm.caller,new String(decryptBASE64(
+                jsonObjectInvokeInit.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getString("Caller"))));
+
+        String argsinit0= new String(decryptBASE64(
+                jsonObjectInvokeInit.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getJSONArray("Args").getString(0)));
+        String argsinit1= new String(decryptBASE64(
+                jsonObjectInvokeInit.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getJSONArray("Args").getString(1)));
+        assertEquals(wvm.accountA, argsinit0);
+        assertEquals(Integer.toString(wvm.amountA),argsinit1);
+        log.info("Check invoke init wvm tx detail complete");
+
+
+        //检查invoke transfer交易详情内参数
+        assertEquals(ctHash,
+                jsonObjectInvokeTransfer.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Name"));
+        assertEquals("transfer",
+                jsonObjectInvokeTransfer.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getString("Method"));
+        assertEquals(wvm.caller,new String(decryptBASE64(
+                jsonObjectInvokeTransfer.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getString("Caller"))));
+
+        String argstrf0= new String(decryptBASE64(
+                jsonObjectInvokeTransfer.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getJSONArray("Args").getString(0)));
+        String argstrf1= new String(decryptBASE64(
+                jsonObjectInvokeTransfer.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getJSONArray("Args").getString(1)));
+        String argstrf2= new String(decryptBASE64(
+                jsonObjectInvokeTransfer.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getJSONArray("Args").getString(2)));
+        assertEquals(wvm.accountA, argstrf0);
+        assertEquals(wvm.accountB,argstrf1);
+        assertEquals(Integer.toString(wvm.transfer),argstrf2);
+        log.info("Check invoke transfer wvm tx detail complete");
+
+
+        //检查销毁合约交易详情参数
+        assertEquals(ctHash,
+                jsonObjectDestory.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Name"));
+        log.info("Check destory wvm tx detail complete");
     }
 
     @Test
@@ -392,8 +716,28 @@ public class TestTxType {
 
     }
 
+    public JSONObject checkTXDetailTriMsg(String hash,String version,String type,String subType)throws Exception{
+        log.info("hash:"+hash);
+        JSONObject objectDetail = JSONObject.fromObject(store.GetTxDetail(hash));
+        JSONObject jsonObject = objectDetail.getJSONObject("Data").getJSONObject("Header");
+        assertEquals(version,jsonObject.getString("Version"));
+        assertEquals(type,jsonObject.getString("Type"));
+        assertEquals(subType,jsonObject.getString("SubType"));
 
-    public void checkTriMsg(String hash,String version,String type,String subType)throws Exception{
+        return objectDetail;
+    }
+    public JSONObject checkTXTransTriMsg(String hash,String version,String type,String subType)throws Exception{
+        log.info("hash:"+hash);
+        JSONObject objectTrans = JSONObject.fromObject(store.GetTransaction(hash));
+        JSONObject jsonObject2 = objectTrans.getJSONObject("Data").getJSONObject("header");
+        assertEquals(version,jsonObject2.getString("version"));
+        assertEquals(type,jsonObject2.getString("type"));
+        assertEquals(subType,jsonObject2.getString("subType"));
+
+        return objectTrans;
+    }
+
+    public JSONObject checkTriMsg(String hash,String version,String type,String subType)throws Exception{
         log.info("hash:"+hash);
         JSONObject jsonObject = JSONObject.fromObject(store.GetTxDetail(hash)).getJSONObject("Data").getJSONObject("Header");
         assertEquals(version,jsonObject.getString("Version"));
@@ -404,6 +748,22 @@ public class TestTxType {
         assertEquals(version,jsonObject2.getString("version"));
         assertEquals(type,jsonObject2.getString("type"));
         assertEquals(subType,jsonObject2.getString("subType"));
+
+        return JSONObject.fromObject(store.GetTxDetail(hash));
+    }
+
+    public void checkContractArgs(String hash,String key,String...checkStr)throws Exception{
+        JSONObject jsonObjectOrg =JSONObject.fromObject(store.GetTxDetail(hash)).getJSONObject("Data");
+        JSONObject jsonObject =jsonObjectOrg.getJSONObject("Contract");
+        int i = 0;
+        for(String chkStr: checkStr) {
+            String scdecodeArgs = new String(decryptBASE64(jsonObject.getJSONArray(key).getString(i)));
+            log.info("org string: "+jsonObject.getJSONArray(key).getString(i));
+            log.info("base64 decode string: "+ scdecodeArgs);
+            log.info("Check String :"+chkStr);
+            i++;
+            assertEquals(chkStr, scdecodeArgs);
+        }
     }
 
     public void checkContractTx(String hash,String method,String cttype,String ctResultStatus,String code,String Msg)throws Exception{

@@ -38,8 +38,8 @@ public class TestTLSCert {
         BeforeCondition bf =new BeforeCondition();
         bf.setPermission999();
         bf.collAddressTest();
-        setAndRestartPeerList("cp "+ PTPATH + "peer/conf/baseECDSA.toml "+ PTPATH +"peer/conf/base.toml");
-        setAndRestartSDK("cp "+PTPATH+"sdk/conf/configECDSAMongo.toml "+PTPATH+"sdk/conf/config.toml");
+        setAndRestartPeerList("cp "+ PeerPATH + "conf/baseECDSA.toml "+ PeerPATH + "conf/base.toml");
+        setAndRestartSDK("cp "+ SDKPATH + "conf/configECDSAMongo.toml "+ SDKPATH + "conf/config.toml");
         Thread.sleep(6000);
 
 

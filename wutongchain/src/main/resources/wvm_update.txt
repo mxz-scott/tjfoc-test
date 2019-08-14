@@ -7,7 +7,6 @@ return "success"
 }
 //转账操作
 public string transfer(string from, string to, int amount) {
-print("test")
 int balA = db_get<int>(from)
 int balB = db_get<int>(to)
 balA = balA-amount/2

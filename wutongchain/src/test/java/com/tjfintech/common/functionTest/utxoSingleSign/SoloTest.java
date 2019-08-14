@@ -473,6 +473,15 @@ public class SoloTest {
 
     }
 
+    //验证无法转账给自己
+    @Test
+    public void TransferToSelf()throws Exception{
+        String transferData = ADDRESS1 + "转给自己" + "转账100.25个" + tokenType;
+        log.info(transferData);
+        List<Map> listModel = soloSign.constructToken(ADDRESS1,tokenType,"100.25");
+        String transferInfo= soloSign.Transfer(listModel,PRIKEY1, transferData);
+        assertEquals(true,transferInfo.contains("can't transfer to self"));
+    }
     /**
      * 单签发行token时指定其他地址，不发行token到本身.指定单签地址与多签地址
      * @throws Exception

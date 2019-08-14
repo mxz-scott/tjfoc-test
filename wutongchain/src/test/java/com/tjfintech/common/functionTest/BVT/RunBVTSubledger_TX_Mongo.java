@@ -17,15 +17,15 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         SetSubLedger.class,
-        SetDatabaseMongo.class,
+  //      SetDatabaseMongo.class,
         BeforeCondition.class,
-        StoreTest.class,
-        MultiTest.class,
-        MultiTest_33_12.class,
-        SoloTest.class,
+//        StoreTest.class,
+//        MultiTest.class,
+//        MultiTest_33_12.class,
+//        SoloTest.class,
         DockerContractTest.class,
-        TestTxType.class,
-        TestPermission.class
+//        TestTxType.class,
+//        TestPermission.class
 })
 
 //Build Validation Test

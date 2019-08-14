@@ -12,17 +12,17 @@ public class SetHashTypeSHA256 {
    @Test
     public void setHashSHA256()throws Exception{
        //设置SDK 使用SHA256 清空数据库
-       shellExeCmd(getIPFromStr(SDKADD),"cp " + PTPATH + "sdk/conf/configSHA256.toml " + PTPATH + "sdk/conf/config.toml");
+       shellExeCmd(getIPFromStr(SDKADD),"cp " + SDKPATH + "conf/configSHA256.toml " + SDKPATH + "conf/config.toml");
        delDataBase();//清空sdk当前使用数据库数据
 
        //设置节点使用sha256 清空db数据 并重启
-       setAndRestartPeerList(clearPeerDB,"cp " + PTPATH + "peer/conf/baseSHA256.toml " + PTPATH + "peer/conf/base.toml");
+       setAndRestartPeerList(clearPeerDB,"cp " + PeerPATH + "conf/baseSHA256.toml " + PeerPATH + "conf/base.toml");
 
        //重启SDK
        setAndRestartSDK();
 
        //设置管理工具hashtype为sha256
-       shellExeCmd(PEER1IP,"cp " + PTPATH + "toolkit/conf/baseSHA256.toml " + PTPATH + "toolkit/conf/base.toml");
+       shellExeCmd(PEER1IP,"cp " + ToolPATH + "conf/baseSHA256.toml " + ToolPATH + "conf/base.toml");
     }
 
 }
