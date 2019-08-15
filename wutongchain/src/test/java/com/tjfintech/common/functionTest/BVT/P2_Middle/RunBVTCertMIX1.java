@@ -1,8 +1,7 @@
-package com.tjfintech.common.functionTest.BVT;
+package com.tjfintech.common.functionTest.BVT.P2_Middle;
 
 import com.tjfintech.common.BeforeCondition;
-import com.tjfintech.common.functionTest.Conditions.SetCertMIX2;
-import com.tjfintech.common.functionTest.Conditions.SetSubLedger;
+import com.tjfintech.common.functionTest.Conditions.SetCertMIX1;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
 import com.tjfintech.common.functionTest.utxoMultiSign.MultiSignDetailTest;
 import com.tjfintech.common.functionTest.utxoMultiSign.MultiTest;
@@ -16,7 +15,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        SetCertMIX2.class,
+        SetCertMIX1.class,
         BeforeCondition.class,
         SoloTest.class,
         MultiTest.class,
@@ -28,7 +27,7 @@ import org.junit.runners.Suite;
 })
 
 //Build Validation Test
-public class RunBVTCertMIX2 {
+public class RunBVTCertMIX1 {
     //执行这个类将执行suiteClass中的测试项
 
 }

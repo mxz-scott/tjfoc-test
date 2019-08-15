@@ -1,9 +1,7 @@
-package com.tjfintech.common.functionTest.BVT;
+package com.tjfintech.common.functionTest.BVT.P2_Middle;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
-import com.tjfintech.common.functionTest.Conditions.SetMgToolHashTypeSM3;
-import com.tjfintech.common.functionTest.mainSubChain.TestDiffHashType;
 import com.tjfintech.common.functionTest.mainSubChain.TestMultiSubChain;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -11,14 +9,13 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        SetDatabaseMysql.class,
-        SetMgToolHashTypeSM3.class,
         BeforeCondition.class,
-        TestDiffHashType.class
+        SetDatabaseMysql.class,
+        TestMultiSubChain.class
 })
 
 //Build Validation Test
-public class RunSubledger_funDiffHash {
+public class RunSubledger_funMultiSub {
     //执行这个类将执行suiteClass中的测试项
 
 }
