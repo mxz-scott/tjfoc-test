@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.BVT.P1_High;
+package com.tjfintech.common.functionTest.BVT.P3_Low;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
@@ -36,10 +36,6 @@ import org.junit.runners.Suite;
         SingleSignInvalidTest.class,
         SoloTestInvalid.class,
 
-        DockerContractTest.class,
-        WVMContractTest.class,
-
-        TestTxType.class,
 })
 
 //Build Validation Test
