@@ -9,16 +9,17 @@ import javax.sql.*;
 public class MysqlOperation {
 
     //DBPath = "root:root@tcp(10.1.3.246:3306)/wallet0703?charset=utf8"
-    public static String mysqlIP ="10.1.3.246";
-    public static String mysqlUrl="jdbc:mysql://"+mysqlIP;
+    public String mysqlIP = "10.1.3.164";
+//    public String mysqlUrl = "jdbc:mysql://" + mysqlIP;
 
-    public static String driver="com.mysql.jdbc.Driver"; //连接driver
+    public static String driver = "com.mysql.jdbc.Driver"; //连接driver
 
     public static String mysqlName="root"; //连接登录账户名
     public static String mysqlPwd="root"; //连接登录账户密码
 
 
     public String createDatabase(String database) throws Exception{
+        String mysqlUrl = "jdbc:mysql://" + mysqlIP;
         Connection connection = null;
         Statement sta = null;
         try {
@@ -57,6 +58,7 @@ public class MysqlOperation {
 
 //    @Test
     public String calCountOfTableDatabase(String database,String table) throws Exception{
+        String mysqlUrl = "jdbc:mysql://" + mysqlIP;
         Connection connection = null;
         Statement sta = null;
         String count = "";
@@ -99,6 +101,7 @@ public class MysqlOperation {
     }
 
     public String delDatabase(String database) throws Exception {
+        String mysqlUrl = "jdbc:mysql://" + mysqlIP;
         Connection connection = null;
         Statement sta = null;
         try {
