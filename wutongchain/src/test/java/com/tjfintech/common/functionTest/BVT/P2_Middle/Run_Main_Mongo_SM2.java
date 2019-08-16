@@ -19,8 +19,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses(value = {
-        SetMainLedger.class,
         SetDatabaseMongo.class,
+        SetMainLedger.class,
         BeforeCondition.class,
 
         StoreTest.class,

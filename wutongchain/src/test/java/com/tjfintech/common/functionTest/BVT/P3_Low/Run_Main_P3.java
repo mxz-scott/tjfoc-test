@@ -17,6 +17,7 @@ import org.junit.runners.Suite;
         TimeofTxOnChain.class,        // failed
         TestTLSCert.class,     // failed
         SysTest.class,     // failed
+        TestLicence.class,
 })
 
 //Build Validation Test

@@ -9,8 +9,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        BeforeCondition.class,
         SetDatabaseMysql.class,
+        BeforeCondition.class,
         TestMultiSubChain.class
 })
 

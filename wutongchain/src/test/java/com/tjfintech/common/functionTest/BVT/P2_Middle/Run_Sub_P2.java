@@ -28,8 +28,6 @@ import org.junit.runners.Suite;
         LocalSingleSignTest.class,
 
         TestPermission.class,
-        TestMgTool.class,
-        MixTxTest.class,
 
 })
 

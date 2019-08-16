@@ -19,8 +19,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses(value = {
-        SetSubLedger.class,
         SetDatabaseMysql.class,
+        SetSubLedger.class,
         BeforeCondition.class,
 
         StoreTest.class,
