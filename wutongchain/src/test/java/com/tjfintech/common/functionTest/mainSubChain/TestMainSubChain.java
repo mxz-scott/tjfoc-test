@@ -32,11 +32,10 @@ public class TestMainSubChain {
     Store store =testBuilder.getStore();
     MultiSign multiSign =testBuilder.getMultiSign();
     TestMgTool testMgTool=new TestMgTool();
-    Date dt=new Date();
-    SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
+
     String noPerm="not found";
     String notSupport="not support service";
-    String stateDestoryed ="has been destroyed";
+    String stateDestroyed ="has been destroyed";
     String stateFreezed ="not support service";
 
     boolean bExe=false;
@@ -147,7 +146,7 @@ public class TestMainSubChain {
         assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),containsString("\"State\":200"));
 
         //创建子链01 包含节点A、B、C
-        String chainName="tc1662_01"+sdf.format(dt)+ RandomUtils.nextInt(1000);
+        String chainName="tc1662_01"+ sdf.format(dt)+ RandomUtils.nextInt(1000);
         String res = createSubChainNoPerm(PEER1IP,PEER1RPCPort," -z "+chainName,
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
@@ -259,7 +258,7 @@ public class TestMainSubChain {
     }
 
     @Test
-    public void TC1658_createAfterFreezeDestorySubChain()throws Exception{
+    public void TC1658_createAfterFreezeDestroySubChain()throws Exception{
 
         //创建子链01 包含节点A、B、C
         String chainName1="tc1658_01"+sdf.format(dt)+ RandomUtils.nextInt(1000);
@@ -283,12 +282,12 @@ public class TestMainSubChain {
 
 
         //解除子链
-        res = destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
+        res = destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
         assertEquals(res.contains("send transaction success"), true);
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
-        assertEquals(resp.contains("\"state\": \"Destory\""), true);
+        assertEquals(resp.contains("\"state\": \"Destroy\""), true);
 
         String chainName2="tc1658_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName2,
@@ -414,7 +413,7 @@ public class TestMainSubChain {
     }
 
     @Test
-    public void TC1517_recoverDestoryChain01()throws Exception{
+    public void TC1517_recoverDestroyChain01()throws Exception{
 
         //创建子链，包含三个节点
         String chainName="tc1517_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
@@ -429,12 +428,12 @@ public class TestMainSubChain {
         assertEquals(resp.contains(glbChain01), true);
 
         //销毁子链
-        res = destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
         sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Destory\""), true);
+        assertEquals(resp.contains("\"state\": \"Destroy\""), true);
 
 
         //解除销毁子链
@@ -443,7 +442,7 @@ public class TestMainSubChain {
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Destory\""), true);
+        assertEquals(resp.contains("\"state\": \"Destroy\""), true);
 
 
         sleepAndSaveInfo(SLEEPTIME/2);
@@ -457,7 +456,7 @@ public class TestMainSubChain {
         //向子链chainName发送交易
         subLedger=chainName;
         String response1 = store.CreateStore(Data);
-        assertThat(response1, containsString(stateDestoryed));
+        assertThat(response1, containsString(stateDestroyed));
 
         //向子链glbChain01/glbChain02和主链发送交易
         sendTxToMainActiveChain(Data);
@@ -465,7 +464,7 @@ public class TestMainSubChain {
 
 
     @Test
-    public void TC1522_destoryChain04()throws Exception{
+    public void TC1522_destroyChain04()throws Exception{
 
         //创建子链，包含三个节点
         String chainName="tc1522_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
@@ -497,13 +496,13 @@ public class TestMainSubChain {
         assertEquals(resp.contains("\"state\": \"Normal\""), true);
 
         //销毁一个被冻结子链
-        res = destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Destory\""), true);
+        assertEquals(resp.contains("\"state\": \"Destroy\""), true);
 
 
         sleepAndSaveInfo(SLEEPTIME/2);
@@ -517,14 +516,14 @@ public class TestMainSubChain {
         //向子链chainName发送交易
         subLedger=chainName;
         String response1 = store.CreateStore(Data);
-        assertThat(response1, containsString(stateDestoryed));
+        assertThat(response1, containsString(stateDestroyed));
 
         //向子链glbChain01/glbChain02和主链发送交易
         sendTxToMainActiveChain(Data);
     }
 
     @Test
-    public void TC1521_destoryChain03()throws Exception{
+    public void TC1521_destroyChain03()throws Exception{
 
         //创建子链，包含三个节点
         String chainName="tc1521_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
@@ -547,13 +546,13 @@ public class TestMainSubChain {
         assertEquals(resp.contains("\"state\": \"Freeze\""), true);
 
         //销毁一个被冻结子链
-        res = destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Destory\""), true);
+        assertEquals(resp.contains("\"state\": \"Destroy\""), true);
 
 
         sleepAndSaveInfo(SLEEPTIME/2);
@@ -567,7 +566,7 @@ public class TestMainSubChain {
         //向子链chainName发送交易
         subLedger=chainName;
         String response1 = store.CreateStore(Data);
-        assertThat(response1, containsString(stateDestoryed));
+        assertThat(response1, containsString(stateDestroyed));
 
 
         //向子链glbChain01/glbChain02和主链发送交易
@@ -575,7 +574,7 @@ public class TestMainSubChain {
     }
 
     @Test
-    public void TC1622_destoryChain02()throws Exception{
+    public void TC1622_destroyChain02()throws Exception{
 
         //创建子链，包含三个节点
         String chainName="tc1622_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
@@ -590,23 +589,23 @@ public class TestMainSubChain {
         assertEquals(resp.contains(glbChain01), true);
 
         //第一次销毁一个已存在的活跃子链
-        res = destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Destory\""), true);
+        assertEquals(resp.contains("\"state\": \"Destroy\""), true);
 
 
         //再次销毁已被销毁的子链
-        res = destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Destory\""), true);
+        assertEquals(resp.contains("\"state\": \"Destroy\""), true);
 
         sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
@@ -620,7 +619,7 @@ public class TestMainSubChain {
         //向子链chainName发送交易
         subLedger=chainName;
         String response1 = store.CreateStore(Data);
-        assertThat(response1,containsString(stateDestoryed));
+        assertThat(response1,containsString(stateDestroyed));
 
 
 
@@ -631,7 +630,7 @@ public class TestMainSubChain {
 
 
     @Test
-    public void TC1518_1519_1496_1646_destoryChain01()throws Exception{
+    public void TC1518_1519_1496_1646_destroyChain01()throws Exception{
 
         //创建子链，包含三个节点
         String chainName="tc1518_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
@@ -645,13 +644,13 @@ public class TestMainSubChain {
         assertEquals(resp.contains(chainName), true);
 
         //销毁一个已存在的活跃子链
-        res = destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Destory\""), true);
+        assertEquals(resp.contains("\"state\": \"Destroy\""), true);
         assertEquals(resp.contains("\"name\": \""+chainName+"\""), true);
         assertEquals(resp.contains("\"hashType\": \"sm3\""), true);
         assertEquals(resp.contains("\"cons\": \"raft\""), true);
@@ -661,7 +660,7 @@ public class TestMainSubChain {
 
         //向子链chainName发送交易
         subLedger=chainName;
-        storeTypeSupportCheck("destory");
+        storeTypeSupportCheck("destroy");
 
         Data="1518 ledger2 tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
         //向子链glbChain01/glbChain02和主链发送交易
@@ -695,8 +694,8 @@ public class TestMainSubChain {
             bCheck2=false;
             blockHash=JSONObject.fromObject(store.GetBlockByHeight(1)).getJSONObject("Data").getJSONObject("header").getString("blockHash");
         }
-        else if(type.toLowerCase()=="destory"){
-            notSupport=stateDestoryed;
+        else if(type.toLowerCase()=="destroy"){
+            notSupport=stateDestroyed;
             bCheck1=true;
             bCheck2=true;
         }
@@ -734,7 +733,7 @@ public class TestMainSubChain {
 //        subLedger="tc1510_20190704776";
 //        storeTypeSupportCheck("freeze");
 //        subLedger="tc1518_20190704162";
-//        storeTypeSupportCheck("destory");
+//        storeTypeSupportCheck("destroy");
 //    }
     @Test
     public void TC1702_TC1703_createSpecMainNameChain()throws Exception{
@@ -782,7 +781,7 @@ public class TestMainSubChain {
     }
 
     @Test
-    public void TC1476_createExistDestoryChain()throws Exception{
+    public void TC1476_createExistDestroyChain()throws Exception{
 
         //创建子链，包含三个节点
         String chainName="tc1476_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
@@ -797,7 +796,7 @@ public class TestMainSubChain {
 
 
         //销毁一个已存在的活跃子链
-        res = destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
@@ -818,7 +817,7 @@ public class TestMainSubChain {
         subLedger=chainName;
         String response1 = store.CreateStore(Data);
         Data="1476 main tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
-        assertThat(response1, containsString(stateDestoryed));
+        assertThat(response1, containsString(stateDestroyed));
 
         //向子链glbChain01/glbChain02和主链发送交易
         sendTxToMainActiveChain(Data);
@@ -1200,7 +1199,7 @@ public class TestMainSubChain {
     }
 
     @Test
-    public void TC1520_destoryNoExistChain()throws Exception{
+    public void TC1520_destroyNoExistChain()throws Exception{
 
         //待发送子链名
         String chainName="tc1520_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
@@ -1215,7 +1214,7 @@ public class TestMainSubChain {
         String Data="1520 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
 
         //销毁一个不存在的子链chainName
-        String respon = destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        String respon = destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertThat(respon, containsString(" subledger not exist"));
 
         //向子链glbChain01/glbChain02和主链发送交易
@@ -1787,9 +1786,9 @@ public class TestMainSubChain {
     /*
      * 销毁子链
      * */
-    public String destorySubChain(String shellIP,String rpcPort,String chainNameParam){
+    public String destroySubChain(String shellIP,String rpcPort,String chainNameParam){
         Shell shell1=new Shell(shellIP,USERNAME,PASSWD);
-        String mainCmd =" destoryledger ";
+        String mainCmd =" destroyledger ";
         String cmd1="cd "+ ToolPATH + ";./" + ToolTPName + mainCmd + " -p "+ rpcPort + chainNameParam;
         shell1.execute(cmd1);
         ArrayList<String> stdout = shell1.getStandardOutput();

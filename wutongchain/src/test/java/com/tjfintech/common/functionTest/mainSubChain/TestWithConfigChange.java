@@ -33,8 +33,6 @@ public class TestWithConfigChange {
     MultiSign multiSign =testBuilder.getMultiSign();
     TestMgTool testMgTool=new TestMgTool();
 
-    Date dt=new Date();
-    SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
     TestMainSubChain testMainSubChain=new TestMainSubChain();
 
 
@@ -210,10 +208,10 @@ public class TestWithConfigChange {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash4)).getString("State"));  //确认不可以c查询成功
 
         //销毁子链 以便恢复集群（退出动态加入的节点）
-        testMainSubChain.destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
+        testMainSubChain.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
         sleepAndSaveInfo(SLEEPTIME*3/2);
         resp = testMainSubChain.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
-        assertEquals(resp.contains("Destory"), true);
+        assertEquals(resp.contains("Destroy"), true);
 
         //恢复节点
         testMgTool.quitPeer(PEER1IP+":"+PEER1RPCPort,PEER3IP);

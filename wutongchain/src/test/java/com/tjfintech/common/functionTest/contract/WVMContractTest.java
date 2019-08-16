@@ -32,9 +32,6 @@ public class WVMContractTest {
     Contract contract=testBuilder.getContract();
     Store store=testBuilder.getStore();
 
-    Date dt=new Date();
-    SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
-
     public String category="wvm";
     public String caller="test";
     FileOperation fileOper = new FileOperation();
@@ -46,10 +43,10 @@ public class WVMContractTest {
     public int transfer = 30;
     public String wvmFile = "wvm";
 
-    //@BeforeClass
+    @BeforeClass
     public  static void setPermFull()throws Exception{
         BeforeCondition bf = new BeforeCondition();
-        bf.collAddressTest(); //给主链或者子链赋权限999
+        bf.setPermission999(); //给主链或者子链赋权限999
     }
 
     @Test
@@ -210,7 +207,7 @@ public class WVMContractTest {
     }
 
     @Test
-    public void TC1777_InstallDestoryContract() throws Exception{
+    public void TC1777_InstallDestroyContract() throws Exception{
         String ctName = "H_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
 
         //安装及销毁合约 未执行过合约内交易
@@ -228,7 +225,7 @@ public class WVMContractTest {
     }
 
     @Test
-    public void TC1778_MultiInstallDestoryContract() throws Exception{
+    public void TC1778_MultiInstallDestroyContract() throws Exception{
         String ctName = "I_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         fileOper.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
         String ctHash1 = "";
@@ -250,7 +247,7 @@ public class WVMContractTest {
     }
 
     @Test
-    public void TC1787_DestoryNotExistContract() throws Exception{
+    public void TC1787_DestroyNotExistContract() throws Exception{
         String ctHash = "1234567890";
         //销毁不存在的合约
         String response1 = wvmDestroyTest(ctHash);
@@ -260,7 +257,7 @@ public class WVMContractTest {
     }
 
     @Test
-    public void TC1788_DestoryAndTransfer() throws Exception{
+    public void TC1788_DestroyAndTransfer() throws Exception{
         String ctName = "J_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件

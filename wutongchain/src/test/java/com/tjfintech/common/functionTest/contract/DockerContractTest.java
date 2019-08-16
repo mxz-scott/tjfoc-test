@@ -27,9 +27,6 @@ public class DockerContractTest {
     Contract contract=testBuilder.getContract();
     Store store=testBuilder.getStore();
 
-    Date dt=new Date();
-    SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
-
     public String name=sdf.format(dt)+ RandomUtils.nextInt(100000);
     public String version="2.0";
     public String category="docker";
@@ -37,10 +34,10 @@ public class DockerContractTest {
     @Test
     public void testContract() throws Exception{
         BeforeCondition bf=new BeforeCondition();
-        bf.collAddressTest();
+        bf.setPermission999();
 
 
-        String response=null;
+        String response = null;
         log.info(name);
         //检查合约创建
         response=installTest();
@@ -129,13 +126,12 @@ public class DockerContractTest {
         response=store.GetTxDetail(hash3);
         assertThat(response,containsString("failed to find transaction"));
 
-
     }
 
     @Test
     public void testContractErrInvoke() throws Exception{
         BeforeCondition bf=new BeforeCondition();
-        bf.collAddressTest();
+        bf.setPermission999();
 
 
         String response=null;

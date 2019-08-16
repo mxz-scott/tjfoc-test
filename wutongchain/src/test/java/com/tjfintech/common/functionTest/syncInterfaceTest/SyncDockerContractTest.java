@@ -28,9 +28,7 @@ public class SyncDockerContractTest {
     UtilsClass utilsClass = new UtilsClass();
     Contract contract=testBuilder.getContract();
     Store store=testBuilder.getStore();
-
-    Date dt=new Date();
-    SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
+    
     String name=sdf.format(dt)+ RandomUtils.nextInt(100000);
     String version="1.0";
     String category="docker";

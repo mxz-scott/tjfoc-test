@@ -8,6 +8,7 @@ import com.mongodb.client.model.Filters;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.junit.Test;
 
 
 @Slf4j
@@ -32,6 +33,17 @@ public class MongoDBOperation {
             log.info("database name:"+str);
         }
         return "";
+    }
+
+    public long calCountOfTableDatabase(String database,String table) throws Exception{
+        //初始化mongodb客户端
+        MongoClient mgClient = new MongoClient(mongoIP,27017);
+        //连接到mongodb数据库
+        MongoDatabase mgDatabase = mgClient.getDatabase(database);
+
+        MongoCollection<Document>  collection = mgDatabase.getCollection(table);
+        log.info("tx_finish table data counts:" + collection.count());
+        return collection.count();
     }
 
     public String delDatabase(String database) throws Exception {

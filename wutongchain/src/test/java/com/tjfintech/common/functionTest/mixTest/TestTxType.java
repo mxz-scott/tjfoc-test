@@ -83,12 +83,9 @@ public class TestTxType {
     String subTypeAddLedger = "4";
     String subTypeFreezeLedger = "5";
     String subTypeRecoverLedger = "6";
-    String subTypeDestoryLedger = "7";
+    String subTypeDestroyLedger = "7";
 
     String zeroAddr="0000000000000000";
-    //boolean bExe=false;
-    Date dt=new Date();
-    SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
     SetSubLedger setSubLedger = new SetSubLedger();
 
    @Before
@@ -143,7 +140,7 @@ public class TestTxType {
 
         //给链赋权限 权限变更交易检查
         String permResp = testMgTool.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"999","sdkName");
-        sleepAndSaveInfo(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME, "等待设置权限999交易上链");
         String permHash = permResp.substring(permResp.lastIndexOf(":")+1).trim();
         JSONObject jsonObjectPerm = checkTriMsg(permHash,versionStore,typeSystem,subTypePerm);
 
@@ -162,7 +159,7 @@ public class TestTxType {
         //退出节点交易详情检查
         String respQuit = testMgTool.quitPeer(PEER1IP + ":" + PEER1RPCPort, PEER2IP);
         assertEquals(true, respQuit.contains("success"));
-        sleepAndSaveInfo(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME,"等待退出节点" + PEER2IP + "交易上链");
         String quitPeerHash = respQuit.substring(respQuit.lastIndexOf(":") + 1).trim();
         JSONObject jsonObjectQuitPeer = checkTriMsg(quitPeerHash, versionStore, typeSystem, subTypeQuitPeer);
         assertEquals(toolID,
@@ -174,7 +171,7 @@ public class TestTxType {
         String respAdd = testMgTool.addPeer("join", PEER1IP + ":" + PEER1RPCPort,
                 "/ip4/" + PEER2IP, "/tcp/60011", PEER2RPCPort, "success");
         assertEquals(true, respAdd.contains("success"));
-        sleepAndSaveInfo(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME,"等待新增子链交易上链");
         String addPeerHash = respAdd.substring(respAdd.lastIndexOf(":") + 1).trim();
         JSONObject jsonObjectAddPeer = checkTriMsg(addPeerHash, versionStore, typeSystem, subTypeAddPeer);
         assertEquals(toolID,
@@ -218,7 +215,7 @@ public class TestTxType {
         //冻结子链交易
         String freezeLedgerResp = testMainSubChain.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(freezeLedgerResp.contains("send transaction success"), true);
-        sleepAndSaveInfo(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME,"等待冻结子链交易上链");
         String freezeLedgerHash = freezeLedgerResp.substring(freezeLedgerResp.lastIndexOf(":")+1).trim();
         JSONObject jsonObjectFreezeLedger = checkTriMsg(freezeLedgerHash,versionStore,typeSystem,subTypeFreezeLedger);
         assertEquals(toolID,
@@ -240,7 +237,7 @@ public class TestTxType {
 
         String recoverLedgerResp = testMainSubChain.recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(recoverLedgerResp.contains("send transaction success"), true);
-        sleepAndSaveInfo(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME,"等待恢复冻结子链交易上链");
         String recoverLedgerHash = recoverLedgerResp.substring(recoverLedgerResp.lastIndexOf(":")+1).trim();
         JSONObject jsonObjectRecoverLedger = checkTriMsg(recoverLedgerHash,versionStore,typeSystem,subTypeRecoverLedger);
         assertEquals(toolID,
@@ -259,25 +256,25 @@ public class TestTxType {
                 jsonObjectRecoverLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Member").replaceAll("\"",""));
 
         //销毁子链交易
-        String destoryLedgerResp = testMainSubChain.destorySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(destoryLedgerResp.contains("send transaction success"), true);
-        sleepAndSaveInfo(SLEEPTIME);
-        String destoryLedgerHash = destoryLedgerResp.substring(destoryLedgerResp.lastIndexOf(":")+1).trim();
-        JSONObject jsonObjectDestoryLedger = checkTriMsg(destoryLedgerHash,versionStore,typeSystem,subTypeDestoryLedger);
+        String destroyLedgerResp = testMainSubChain.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        assertEquals(destroyLedgerResp.contains("send transaction success"), true);
+        sleepAndSaveInfo(SLEEPTIME,"等待销毁子链交易上链");
+        String destroyLedgerHash = destroyLedgerResp.substring(destroyLedgerResp.lastIndexOf(":")+1).trim();
+        JSONObject jsonObjectDestroyLedger = checkTriMsg(destroyLedgerHash,versionStore,typeSystem,subTypeDestroyLedger);
         assertEquals(toolID,
-                jsonObjectDestoryLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("SendID"));
+                jsonObjectDestroyLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("SendID"));
         assertEquals("3",
-                jsonObjectDestoryLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("OpType"));
+                jsonObjectDestroyLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("OpType"));
         assertEquals(chainName,
-                jsonObjectDestoryLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Name"));
+                jsonObjectDestroyLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Name"));
         assertEquals("sm3",
-                jsonObjectDestoryLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("HashType"));
+                jsonObjectDestroyLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("HashType"));
         assertEquals("first",
-                jsonObjectDestoryLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Word"));
+                jsonObjectDestroyLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Word"));
         assertEquals("raft",
-                jsonObjectDestoryLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Consensus"));
+                jsonObjectDestroyLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Consensus"));
         assertEquals("["+ids.replaceAll("-m","").replaceAll(" ","")+"]",
-                jsonObjectDestoryLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Member").replaceAll("\"",""));
+                jsonObjectDestroyLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Member").replaceAll("\"",""));
 
     }
 
@@ -290,8 +287,6 @@ public class TestTxType {
          * |0.9基本存证|2|
          */
         //创建普通存证
-        Date dt=new Date();
-        SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
         String Data="TxType tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
         log.info("普通存证数据："+Data);
         String response1=store.CreateStore(Data);
@@ -601,7 +596,7 @@ public class TestTxType {
         JSONObject jsonObjectCreate = checkTXDetailTriMsg(txHash1,versionStore,typeWVM,subTypeCreateWVM);
         JSONObject jsonObjectInvokeInit = checkTXDetailTriMsg(txHash2,versionStore,typeWVM,subTypeWVMTx);
         JSONObject jsonObjectInvokeTransfer = checkTXDetailTriMsg(txHash4,versionStore,typeWVM,subTypeWVMTx);
-        JSONObject jsonObjectDestory = checkTXDetailTriMsg(txHash9,versionStore,typeWVM,subTypeDeleteWVM);
+        JSONObject jsonObjectDestroy = checkTXDetailTriMsg(txHash9,versionStore,typeWVM,subTypeDeleteWVM);
 
         //检查安装合约交易详情内参数
         String data = encryptBASE64(readInput(
@@ -655,8 +650,8 @@ public class TestTxType {
 
         //检查销毁合约交易详情参数
         assertEquals(ctHash,
-                jsonObjectDestory.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Name"));
-        log.info("Check destory wvm tx detail complete");
+                jsonObjectDestroy.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Name"));
+        log.info("Check destroy wvm tx detail complete");
     }
 
     @Test

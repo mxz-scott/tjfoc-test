@@ -38,6 +38,7 @@ public class MixTxTest {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();
+            bf.createAdd();
             Thread.sleep(8000);
             bReg=true;
         }
@@ -57,8 +58,6 @@ public class MixTxTest {
         String resp = store.GetHeight();
 
         //发送存证交易
-        Date dt=new Date();
-        SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
         String Data="Mix tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
         String response1=store.CreateStore(Data);
         String response2= multiSign.collAddress(PRIKEY1,ADDRESS6);
@@ -108,7 +107,7 @@ public class MixTxTest {
 
 
         //等待一个打包周期
-        Thread.sleep(20000);
+        sleepAndSaveInfo(20000,"等待一个打包周期");
 
         response1=store.GetTransaction(StoreHash1);
         response2=store.GetTransaction(StoreHash2);
@@ -122,7 +121,9 @@ public class MixTxTest {
 
         int height =Integer.parseInt(JSONObject.fromObject(resp).getString("Data"));
         int height1=Integer.parseInt(JSONObject.fromObject(resp1).getString("Data"));
-        assertEquals(height,height1-1);
+//        assertEquals(height,height1-1);
+        boolean bright = height1 > height ? true: false;
+        assertEquals(true,bright);
 
     }
     @After

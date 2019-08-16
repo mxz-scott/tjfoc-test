@@ -30,8 +30,6 @@ public class TestDiffHashType {
     TestMgTool testMgTool=new TestMgTool();
     BeforeCondition beforeCondition = new BeforeCondition();
 
-    Date dt=new Date();
-    SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
     TestMainSubChain testMainSubChain=new TestMainSubChain();
 
     //String glbChain01= "glbCh1_"+sdf.format(dt)+ RandomUtils.nextInt(1000);

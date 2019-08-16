@@ -6,6 +6,9 @@ import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
+import com.tjfintech.common.functionTest.contract.WVMContractTest;
+import com.tjfintech.common.functionTest.mixTest.TestTxType;
+import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +41,9 @@ public class BlockSyncTest {
 
     public long OnChainSleep = 3000;
     ArrayList<String> hashList = new ArrayList<>();
+    TestTxType testTxType = new TestTxType();
 
-    boolean bRe=false;
+    //boolean bRe=false;
     @Before
     public void beforeConfig() throws Exception {
         setAndRestartPeerList(clearPeerDB,resetPeerBase,resetPeerConfig);
@@ -47,16 +51,7 @@ public class BlockSyncTest {
         delDataBase();//清空sdk当前使用数据库数据
         setAndRestartSDK();
         hashList.clear();
-
-        if(bRe==false) {
-            BeforeCondition bf = new BeforeCondition();
-            bf.setPermission999();//赋值权限999
-            bf.updatePubPriKey();//更新全局pub、prikey
-            bf.collAddressTest();//添加归集地址和发行地址的注册
-            bf.createAdd();//数据库中添加多签地址
-            Thread.sleep(OnChainSleep);
-            bRe=true;
-        }
+        testTxType.initSetting();
         log.info("*********************before config end*********************");
     }
 
@@ -69,21 +64,22 @@ public class BlockSyncTest {
 
         StoreUTXO();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        WVMTx();
         //停止其中一个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(syncPeer,clearPeerDB);
+        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3);
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-//        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         //等待交易上链
         Thread.sleep(OnChainSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-//        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
     }
 
     @Test
@@ -95,23 +91,23 @@ public class BlockSyncTest {
         shellPeer.execute(killPeerCmd);
 
         StoreUTXO();
-        MgToolStore();//使用管理工具短时间内发送多笔存证交易
-
+        MgToolStore();  //使用管理工具短时间内发送多笔存证交易
+        WVMTx();  //当前Contract下合约Enabled会影响wvm合约安装，按照开发解释是不应该有影响 20190815
         //个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(syncPeer,clearPeerDB);
+        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3);
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-//        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         //等待交易上链
         Thread.sleep(OnChainSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-//        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
     }
 
     //test case 923
@@ -121,22 +117,23 @@ public class BlockSyncTest {
         setAndRestartPeerList("cp "+ PeerPATH + "conf/baseContractfalse.toml "+ PeerPATH + "conf/"+PeerInfoConfig+".toml");
         StoreUTXO();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        WVMTx();
 
         //节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(syncPeer,clearPeerDB,resetPeerBase);
+        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,resetPeerBase);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3);
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-//        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         //等待交易上链
         Thread.sleep(OnChainSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-//        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
     }
 
 
@@ -149,35 +146,33 @@ public class BlockSyncTest {
 
         StoreUTXO();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        WVMTx();
         Contract();
         //停止其中一个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(syncPeer,clearPeerDB);
+        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*5+ContractInstallSleep);
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-//        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         //等待交易上链
         Thread.sleep(OnChainSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-//        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
     }
 
     @Test
     public void TC986_SyncDataPeerWithTxEnableCtFlag()throws Exception{
-        setAndRestartPeerList(clearPeerDB
+        setAndRestartPeerList(clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc
                 ,"cp "+ PeerPATH + "conf/configData.toml "+ PeerPATH + "conf/"+PeerMemConfig+".toml");
-        setAndRestartSDK("sed -i \"s/newDB/newDB1/g\" "+ SDKPATH + "conf/configNewDB.toml "
-                ,"cp "+ SDKPATH + "conf/configNewDB.toml "+SDKPATH + "conf/"+SDKConfig+".toml");
-        BeforeCondition bf = new BeforeCondition();
-        bf.setPermission999();//赋值权限999
-        bf.updatePubPriKey();//更新全局pub、prikey
-        bf.collAddressTest();//添加归集地址和发行地址的注册
-        Thread.sleep(OnChainSleep);
+        delDataBase();//清空sdk当前使用数据库数据
+        setAndRestartSDK();
+        bReg = false;//清除数据库后需要重新进行地址添加、注册、赋权限等操作
+        testTxType.initSetting();
 
         String syncPeer=PEER4IP; //247为非共识节点
 
@@ -187,22 +182,23 @@ public class BlockSyncTest {
 
         StoreUTXO();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        WVMTx();
         Contract();
         //停止其中一个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(syncPeer,clearPeerDB);
+        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3+ContractInstallSleep);
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-//        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         //等待交易上链
         Thread.sleep(OnChainSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-//        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
     }
 
 
@@ -216,10 +212,11 @@ public class BlockSyncTest {
 
         StoreUTXO();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        WVMTx();
         Contract();
 
         //节点清除db数据，并将Contract Enabled设置为false 例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(syncPeer,clearPeerDB
+        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc
                 ,"cp "+ PeerPATH + "conf/baseContractfalse.toml "+ PeerPATH + "conf/"+PeerInfoConfig+".toml");
 
         //等待同步时间
@@ -236,7 +233,7 @@ public class BlockSyncTest {
         setAndRestartPeer(syncPeer,resetPeerBase);
         Thread.sleep(OnChainSleep*5 +ContractInstallSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-        //assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
     }
 
     //989  操作节点PEER4
@@ -253,9 +250,10 @@ public class BlockSyncTest {
 
         StoreUTXO();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        WVMTx();
         Contract();
         //无基础镜像时同步包含合约交易的区块交易
-        setAndRestartPeer(syncPeer,clearPeerDB,resetPeerBase);
+        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,resetPeerBase);
         //同步失败节点异常 停止运行
 
         //检查Peer2同步异常节点会停止
@@ -263,20 +261,20 @@ public class BlockSyncTest {
         mgTool.checkParam(syncPeer,"./toolkit height -p "+ PEER2RPCPort,"rpc error");
 
         //安装合约镜像
-        setAndRestartPeer(syncPeer,clearPeerDB,"docker load < /root/ccenv.docker");
+        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,"docker load < /root/ccenv.docker");
 
         //等待同步时间+合约安装
         Thread.sleep(OnChainSleep*3+ContractInstallSleep);
         log.info("Check peer height after reloading base images");
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-//        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         //等待交易上链
         //同步成功后检查新交易后是否同步
         Thread.sleep(OnChainSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-//        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
     }
 
 
@@ -294,23 +292,24 @@ public class BlockSyncTest {
 
         StoreUTXONoCheck();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
+        WVMTxNoCheck();
 
         //清空剩下两个节点db数据 并重启
-        setAndRestartPeer(PEER2IP,clearPeerDB);
-        setAndRestartPeer(PEER4IP,clearPeerDB);
+        setAndRestartPeer(PEER2IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
+        setAndRestartPeer(PEER4IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*5);
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-//        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         //等待交易上链
         Thread.sleep(OnChainSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-//        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
         for(String hash : hashList){
             assertEquals("200",JSONObject.fromObject(store.GetTransaction(hash)).getString("State"));
@@ -331,8 +330,8 @@ public class BlockSyncTest {
 
         ContractNoCheck();
         //清空剩下两个节点db数据 并重启
-        setAndRestartPeer(PEER2IP,clearPeerDB);
-        setAndRestartPeer(PEER4IP,clearPeerDB);
+        setAndRestartPeer(PEER2IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
+        setAndRestartPeer(PEER4IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3+ContractInstallSleep);
@@ -340,13 +339,13 @@ public class BlockSyncTest {
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-//        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         //等待交易上链
         Thread.sleep(OnChainSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-//        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
         for(String hash : hashList){
             assertEquals("200",JSONObject.fromObject(store.GetTxDetail(hash)).getString("State"));
@@ -369,22 +368,23 @@ public class BlockSyncTest {
         StoreUTXONoCheck();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         ContractNoCheck();
+        WVMTxNoCheck();
         //清空剩下两个节点db数据 并重启
-        setAndRestartPeer(PEER2IP,clearPeerDB);
-        setAndRestartPeer(PEER4IP,clearPeerDB);
+        setAndRestartPeer(PEER2IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
+        setAndRestartPeer(PEER4IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*5+ContractInstallSleep);
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-//        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         //等待交易上链
         Thread.sleep(OnChainSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-//        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
         for(String hash : hashList){
             log.info("checking hash on chain: "+ hash);
@@ -398,8 +398,6 @@ public class BlockSyncTest {
 
         String resp = store.GetHeight();
         //发送存证交易
-        Date dt=new Date();
-        SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
         String Data="Mix tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
         String response1=store.CreateStore(Data);
         //构造错误交易
@@ -478,8 +476,6 @@ public class BlockSyncTest {
 
         String resp = store.GetHeight();
         //发送存证交易
-        Date dt=new Date();
-        SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
         String Data="Mix tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
         String response1=store.CreateStore(Data);
         //构造错误交易
@@ -546,6 +542,60 @@ public class BlockSyncTest {
         TestMgTool mgTool = new TestMgTool();
         mgTool.checkParam(PEER1IP,"./toolkit newtx -p " + PEER1RPCPort + " -n 50 -t 1","HashData");
     }
+
+    public void WVMTx()throws Exception{
+        WVMContractTest wvmContractTest = new WVMContractTest();
+        wvmContractTest.TC1774_1784_1786_testContract();
+    }
+
+    public void WVMTxNoCheck()throws Exception{
+        FileOperation fileOper = new FileOperation();
+        String ctName="UI_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
+        WVMContractTest wvm = new WVMContractTest();
+        // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
+        // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
+        fileOper.replace(resourcePath + wvm.wvmFile + ".txt", wvm.orgName, ctName);
+
+        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
+        String response1 = wvm.wvmInstallTest( wvm.wvmFile +"_temp.txt",PRIKEY1);
+        log.info("Install Pri:"+PRIKEY1);
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
+        String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
+
+        sleepAndSaveInfo(SLEEPTIME);
+        //调用合约内的交易
+        String response2 = wvm.invokeNew(ctHash,"init",wvm.accountA,wvm.amountA);//初始化账户A 账户余额50
+        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
+
+        String response3 = wvm.invokeNew(ctHash,"init",wvm.accountB,wvm.amountB);//初始化账户B 账户余额60
+        String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
+
+        sleepAndSaveInfo(SLEEPTIME);
+
+        String response4 = wvm.invokeNew(ctHash,"transfer",wvm.accountA,wvm.accountB,wvm.transfer);//A向B转30
+        String txHash4 = JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
+
+        sleepAndSaveInfo(SLEEPTIME);
+
+        //查询余额invoke接口
+        String response5 = wvm.invokeNew(ctHash,"getBalance",wvm.accountA);//获取账户A账户余额
+        String txHash5 = JSONObject.fromObject(response5).getJSONObject("Data").getString("Figure");
+
+        sleepAndSaveInfo(SLEEPTIME/2);
+
+        //销毁wvm合约
+        String response9 = wvm.wvmDestroyTest(ctHash);
+        String txHash9 = JSONObject.fromObject(response9).getJSONObject("Data").getString("Figure");
+        sleepAndSaveInfo(SLEEPTIME);
+
+        hashList.add(txHash1);
+        hashList.add(txHash2);
+        hashList.add(txHash3);
+        hashList.add(txHash4);
+        hashList.add(txHash5);
+        hashList.add(txHash9);
+    }
+
     public void Contract()throws Exception{
         //创建合约
         dockerFileName="simple.go";
@@ -626,7 +676,7 @@ public class BlockSyncTest {
 
     //@AfterClass
     public static void resetEnv()throws Exception{
-        setAndRestartPeerList(clearPeerDB,resetPeerBase,resetPeerConfig);
+        setAndRestartPeerList(clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,resetPeerBase,resetPeerConfig);
         setAndRestartSDK(resetSDKConfig);
     }
 

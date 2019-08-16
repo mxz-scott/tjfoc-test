@@ -20,8 +20,6 @@ import static org.junit.Assert.assertEquals;
 public class SetSubLedger {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
-    Date dt=new Date();
-    SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
 
    @Test
     public void createSubledger()throws Exception{

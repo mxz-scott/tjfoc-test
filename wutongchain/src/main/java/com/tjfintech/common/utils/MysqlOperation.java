@@ -1,5 +1,6 @@
 package com.tjfintech.common.utils;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Test;
 
 import java.sql.*;
 import javax.sql.*;
@@ -52,6 +53,49 @@ public class MysqlOperation {
                 }
 
             }
+    }
+
+//    @Test
+    public String calCountOfTableDatabase(String database,String table) throws Exception{
+        Connection connection = null;
+        Statement sta = null;
+        String count = "";
+        try {
+            //注册JDBC驱动
+            Class.forName(driver);
+            //打开连接
+            log.info("连接mysql数据库：" + mysqlUrl);
+            connection = (Connection) DriverManager.getConnection(mysqlUrl, mysqlName, mysqlPwd);
+            //创建database实例并默认utf-8编码格式
+            String getTableCount ="select count(*) from " + database + "." + table + ";";
+            sta = (Statement) connection.createStatement();
+            ResultSet rs  = sta.executeQuery(getTableCount);
+            while(rs.next()){
+                count = rs.getString(1);
+                log.info("get result :" + count);
+            }
+            return count;
+        }catch (SQLException e) {
+            e.printStackTrace();
+            return e.toString();
+        }
+        catch (Exception e1){
+            e1.printStackTrace();
+            return "Class.forName Error";
+        }
+        finally {
+            try {
+                connection.close();
+            }catch (SQLException e2){
+                e2.printStackTrace();
+            }
+            try {
+                if(sta != null) sta.close();
+            }catch (SQLException e3){
+                e3.printStackTrace();
+            }
+
+        }
     }
 
     public String delDatabase(String database) throws Exception {

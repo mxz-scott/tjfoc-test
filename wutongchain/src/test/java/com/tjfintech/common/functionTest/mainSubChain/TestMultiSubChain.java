@@ -34,8 +34,6 @@ public class TestMultiSubChain {
     Store store =testBuilder.getStore();
     MultiSign multiSign =testBuilder.getMultiSign();
     TestMgTool testMgTool=new TestMgTool();
-    Date dt=new Date();
-    SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
     TestMainSubChain testMainSubChain=new TestMainSubChain();
 
 

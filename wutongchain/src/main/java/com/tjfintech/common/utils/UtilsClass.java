@@ -9,6 +9,7 @@ import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -126,11 +127,16 @@ public class UtilsClass {
     public static String killPeerCmd = "ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9";
     public static String killSDKCmd = "ps -ef |grep " + SDKTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9";
     public static String clearPeerDB = "rm -rf "+ PeerPATH + "*db ";
+    public static String clearPeerWVMbin = "find "+ PeerPATH + "contracts/bin/* ! -name Sys_StoreEncrypted -exec rm -rf {} \\;";
+    public static String clearPeerWVMsrc = "find "+ PeerPATH + "contracts/src/* ! -name Sys_StoreEncrypted -exec rm -rf {} \\;";
     public static String resetPeerBase = "cp " + PeerPATH + "conf/baseOK.toml " + PeerPATH + "conf/base.toml";
     public static String resetPeerConfig = "cp "+ PeerPATH + "conf/configOK.toml "+ PeerPATH +"conf/"+PeerMemConfig+".toml";
     public static String resetSDKConfig = "cp " + SDKPATH + "conf/configOK.toml " + SDKPATH + "conf/config.toml";
 
     public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";
+
+    public static Date dt=new Date();
+    public static SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
 
     /**
      * 多签转账操作的TOKEN数组构建方法，单签的在GosoloSign类中
@@ -525,8 +531,9 @@ public class UtilsClass {
         Thread.sleep(3000);
     }
 
-    public static void sleepAndSaveInfo(long sleepTime)throws Exception{
+    public static void sleepAndSaveInfo(long sleepTime,String...info)throws Exception{
         Thread.sleep(sleepTime);
-        log.info("*************sleep time(ms): " + sleepTime);
+        if(info.length >0) log.info(info[0] + "(ms): " + sleepTime);
+        else log.info("*************sleep time(ms): " + sleepTime);
     }
 }

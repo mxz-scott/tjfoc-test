@@ -45,8 +45,6 @@ public class TestTLSCert {
 
 
         //发送存证交易
-        Date dt=new Date();
-        SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
         String Data="ECDSA store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
         String response1=store.CreateStore(Data);
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();

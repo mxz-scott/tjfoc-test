@@ -199,7 +199,10 @@ public class BeforeCondition {
     }
 
     public void updatePubPriKey()throws Exception{
-        if(certPath == "") return;
+        if(certPath == "") {
+            log.info("using default setting key pairs in UtilsClass");
+            return;
+        }
         PRIKEY1 = getKeyPairsFromFile(certPath+"/keys1/key.pem");
         PRIKEY2 = getKeyPairsFromFile(certPath+"/keys2/key.pem");
         PRIKEY3 = getKeyPairsFromFile(certPath+"/keys3/key.pem");
