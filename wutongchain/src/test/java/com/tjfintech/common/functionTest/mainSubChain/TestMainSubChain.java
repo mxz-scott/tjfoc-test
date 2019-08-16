@@ -37,8 +37,8 @@ public class TestMainSubChain {
     String notSupport="not support service";
     String stateDestroyed ="has been destroyed";
     String stateFreezed ="not support service";
-
-    boolean bExe=false;
+    String ledgerStateDestroy = "\"state\": \"Destory\"";
+    String ledgerStateFreeze = "\"state\": \"Freeze\"";
 
     //String glbChain01= "glbCh1_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
     //String glbChain02= "glbCh2_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
@@ -47,14 +47,6 @@ public class TestMainSubChain {
 
     @Before
     public void beforeConfig() throws Exception {
-//        if(certPath!=""&& bReg==false) {
-//            BeforeCondition bf = new BeforeCondition();
-//            bf.updatePubPriKey();
-//            bf.collAddressTest();
-//
-//            bReg=true;
-//        }
-
         String resp = getSubChain(PEER1IP,PEER1RPCPort,"");
         if(! resp.contains("\"name\": \""+glbChain01+"\"")) {
             createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01, " -t sm3", " -w first", " -c raft", ids);
@@ -278,7 +270,7 @@ public class TestMainSubChain {
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
-        assertEquals(resp.contains("\"state\": \"Freeze\""), true);
+        assertEquals(resp.contains(ledgerStateFreeze), true);
 
 
         //解除子链
@@ -287,7 +279,7 @@ public class TestMainSubChain {
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
-        assertEquals(resp.contains("\"state\": \"Destroy\""), true);
+        assertEquals(resp.contains(ledgerStateDestroy), true);
 
         String chainName2="tc1658_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         res = createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName2,
@@ -331,7 +323,7 @@ public class TestMainSubChain {
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Freeze\""), true);
+        assertEquals(resp.contains(ledgerStateFreeze), true);
 
 
         //解除子链
@@ -433,7 +425,7 @@ public class TestMainSubChain {
         sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Destroy\""), true);
+        assertEquals(resp.contains(ledgerStateDestroy), true);
 
 
         //解除销毁子链
@@ -442,7 +434,7 @@ public class TestMainSubChain {
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Destroy\""), true);
+        assertEquals(resp.contains(ledgerStateDestroy), true);
 
 
         sleepAndSaveInfo(SLEEPTIME/2);
@@ -484,7 +476,7 @@ public class TestMainSubChain {
         sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Freeze\""), true);
+        assertEquals(resp.contains(ledgerStateFreeze), true);
 
 
         //解除冻结子链
@@ -502,7 +494,7 @@ public class TestMainSubChain {
         sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Destroy\""), true);
+        assertEquals(resp.contains(ledgerStateDestroy), true);
 
 
         sleepAndSaveInfo(SLEEPTIME/2);
@@ -543,7 +535,7 @@ public class TestMainSubChain {
         sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Freeze\""), true);
+        assertEquals(resp.contains(ledgerStateFreeze), true);
 
         //销毁一个被冻结子链
         res = destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
@@ -552,7 +544,7 @@ public class TestMainSubChain {
         sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Destroy\""), true);
+        assertEquals(resp.contains(ledgerStateDestroy), true);
 
 
         sleepAndSaveInfo(SLEEPTIME/2);
@@ -595,7 +587,7 @@ public class TestMainSubChain {
         sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Destroy\""), true);
+        assertEquals(resp.contains(ledgerStateDestroy), true);
 
 
         //再次销毁已被销毁的子链
@@ -605,7 +597,7 @@ public class TestMainSubChain {
         sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Destroy\""), true);
+        assertEquals(resp.contains(ledgerStateDestroy), true);
 
         sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
@@ -650,7 +642,7 @@ public class TestMainSubChain {
         sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Destroy\""), true);
+        assertEquals(resp.contains(ledgerStateDestroy), true);
         assertEquals(resp.contains("\"name\": \""+chainName+"\""), true);
         assertEquals(resp.contains("\"hashType\": \"sm3\""), true);
         assertEquals(resp.contains("\"cons\": \"raft\""), true);
@@ -911,7 +903,7 @@ public class TestMainSubChain {
         sleepAndSaveInfo(SLEEPTIME);
 
         resp = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Freeze\""), true);
+        assertEquals(resp.contains(ledgerStateFreeze), true);
         assertEquals(resp.contains("\"name\": \""+chainName+"\""), true);
         assertEquals(resp.contains("\"hashType\": \"sm3\""), true);
         assertEquals(resp.contains("\"cons\": \"raft\""), true);
@@ -971,7 +963,7 @@ public class TestMainSubChain {
 
         //子链信息检查
         String res3 = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(res3.contains("\"state\": \"Freeze\""), true);
+        assertEquals(res3.contains(ledgerStateFreeze), true);
 
 
         //恢复冻结子链 连续两次恢复
@@ -1038,7 +1030,7 @@ public class TestMainSubChain {
 
         //检查可以获取子链列表
         String res3 = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(res3.contains("\"state\": \"Freeze\""), true);
+        assertEquals(res3.contains(ledgerStateFreeze), true);
 
 
         String Data="1510 ledger1 tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
@@ -1089,9 +1081,9 @@ public class TestMainSubChain {
 
         //检查可以获取子链列表
         String res3 = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName2);
-        assertEquals(res3.contains("\"state\": \"Freeze\""), true);
+        assertEquals(res3.contains(ledgerStateFreeze), true);
         String res4 = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName3);
-        assertEquals(res4.contains("\"state\": \"Freeze\""), true);
+        assertEquals(res4.contains(ledgerStateFreeze), true);
 
 
         String Data="1509 ledger1 tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
@@ -1149,7 +1141,7 @@ public class TestMainSubChain {
 
         //2.查询子链状态为冻结
         String resp2 = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp2.contains("\"state\": \"Freeze\""), true);
+        assertEquals(resp2.contains(ledgerStateFreeze), true);
 
         subLedger=chainName;
         //3.冻结后发送一笔存证交易 应该无法上链
@@ -1164,7 +1156,7 @@ public class TestMainSubChain {
         sleepAndSaveInfo(SLEEPTIME);
         //6.查询子链状态为冻结
         String resp21 = getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp21.contains("\"state\": \"Freeze\""), true);
+        assertEquals(resp21.contains(ledgerStateFreeze), true);
 
         subLedger=chainName;
         //7.冻结后发送一笔存证交易 应该无法上链
@@ -1788,7 +1780,7 @@ public class TestMainSubChain {
      * */
     public String destroySubChain(String shellIP,String rpcPort,String chainNameParam){
         Shell shell1=new Shell(shellIP,USERNAME,PASSWD);
-        String mainCmd =" destroyledger ";
+        String mainCmd =" destoryledger ";
         String cmd1="cd "+ ToolPATH + ";./" + ToolTPName + mainCmd + " -p "+ rpcPort + chainNameParam;
         shell1.execute(cmd1);
         ArrayList<String> stdout = shell1.getStandardOutput();

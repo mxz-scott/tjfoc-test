@@ -17,6 +17,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Before;
 import static org.hamcrest.Matchers.containsString;
+
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -43,11 +45,13 @@ public class BlockSyncTest {
     ArrayList<String> hashList = new ArrayList<>();
     TestTxType testTxType = new TestTxType();
 
+    String wvmHash = "";
+
     //boolean bRe=false;
     @Before
     public void beforeConfig() throws Exception {
-        setAndRestartPeerList(clearPeerDB,resetPeerBase,resetPeerConfig);
-
+        setAndRestartPeerList(clearPeerDB,clearPeerWVMsrc,clearPeerWVMbin,resetPeerBase,resetPeerConfig);
+        bReg = false;
         delDataBase();//清空sdk当前使用数据库数据
         setAndRestartSDK();
         hashList.clear();
@@ -92,7 +96,7 @@ public class BlockSyncTest {
 
         StoreUTXO();
         MgToolStore();  //使用管理工具短时间内发送多笔存证交易
-        WVMTx();  //当前Contract下合约Enabled会影响wvm合约安装，按照开发解释是不应该有影响 20190815
+//        WVMTx();  //当前Contract下合约Enabled会影响wvm合约安装，按照开发解释是不应该有影响 20190815
         //个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
         setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
@@ -115,9 +119,11 @@ public class BlockSyncTest {
     public void TC923_SyncNoContractTxCtFlagChange1()throws Exception{
         String syncPeer=PEER2IP;
         setAndRestartPeerList("cp "+ PeerPATH + "conf/baseContractfalse.toml "+ PeerPATH + "conf/"+PeerInfoConfig+".toml");
+        sleepAndSaveInfo(10000,"节点全部重启后，sdk能够成功连接上的时间较长");
+
         StoreUTXO();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
-        WVMTx();
+//        WVMTx();
 
         //节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
         setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,resetPeerBase);
@@ -280,6 +286,8 @@ public class BlockSyncTest {
 
     @Test
     public void TC983_OnePeerStoreUTXO()throws Exception{
+        WVMContractTest wvmContractTest = new WVMContractTest();
+        wvmHash = JSONObject.fromObject(wvmContractTest.intallUpdateName("testWVM")).getJSONObject("Data").getString("Name");
         //SDK配置文件中仅配置PEER1节点
 
         //停止节点PEER2 和PEER4
@@ -292,7 +300,7 @@ public class BlockSyncTest {
 
         StoreUTXONoCheck();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
-        WVMTxNoCheck();
+        WVMTxNoCheck(wvmHash);
 
         //清空剩下两个节点db数据 并重启
         setAndRestartPeer(PEER2IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
@@ -354,8 +362,10 @@ public class BlockSyncTest {
 
     @Test
     public void TC981_OnePeerAll()throws Exception{
+        WVMContractTest wvmContractTest = new WVMContractTest();
+        wvmHash = JSONObject.fromObject(wvmContractTest.intallUpdateName("testWVM")).getJSONObject("Data").getString("Name");
         //SDK配置文件中仅配置PEER1节点
-
+        sleepAndSaveInfo(SLEEPTIME,"等待wvm合约安装交易上链");
         //停止节点PEER2 和PEER4
         Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
         shellPeer2.execute(killPeerCmd);
@@ -368,7 +378,7 @@ public class BlockSyncTest {
         StoreUTXONoCheck();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         ContractNoCheck();
-        WVMTxNoCheck();
+        WVMTxNoCheck(wvmHash);
         //清空剩下两个节点db数据 并重启
         setAndRestartPeer(PEER2IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
         setAndRestartPeer(PEER4IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
@@ -548,7 +558,7 @@ public class BlockSyncTest {
         wvmContractTest.TC1774_1784_1786_testContract();
     }
 
-    public void WVMTxNoCheck()throws Exception{
+    public void WVMTxNoCheck(String existHash)throws Exception{
         FileOperation fileOper = new FileOperation();
         String ctName="UI_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         WVMContractTest wvm = new WVMContractTest();
@@ -563,22 +573,22 @@ public class BlockSyncTest {
         String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
 
         sleepAndSaveInfo(SLEEPTIME);
-        //调用合约内的交易
-        String response2 = wvm.invokeNew(ctHash,"init",wvm.accountA,wvm.amountA);//初始化账户A 账户余额50
+        //调用合约内的交易  调用已存在的合约wHash中的交易
+        String response2 = wvm.invokeNew(existHash,"init",wvm.accountA,wvm.amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
 
-        String response3 = wvm.invokeNew(ctHash,"init",wvm.accountB,wvm.amountB);//初始化账户B 账户余额60
+        String response3 = wvm.invokeNew(existHash,"init",wvm.accountB,wvm.amountB);//初始化账户B 账户余额60
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
 
         sleepAndSaveInfo(SLEEPTIME);
 
-        String response4 = wvm.invokeNew(ctHash,"transfer",wvm.accountA,wvm.accountB,wvm.transfer);//A向B转30
+        String response4 = wvm.invokeNew(existHash,"transfer",wvm.accountA,wvm.accountB,wvm.transfer);//A向B转30
         String txHash4 = JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
 
         sleepAndSaveInfo(SLEEPTIME);
 
         //查询余额invoke接口
-        String response5 = wvm.invokeNew(ctHash,"getBalance",wvm.accountA);//获取账户A账户余额
+        String response5 = wvm.invokeNew(existHash,"getBalance",wvm.accountA);//获取账户A账户余额
         String txHash5 = JSONObject.fromObject(response5).getJSONObject("Data").getString("Figure");
 
         sleepAndSaveInfo(SLEEPTIME/2);

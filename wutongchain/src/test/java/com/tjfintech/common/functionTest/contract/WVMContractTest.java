@@ -509,18 +509,43 @@ public class WVMContractTest {
 
     @Test
     public void TC1819_InvalidNameTest()throws Exception{
-        String ctName = sdf.format(dt)+ RandomUtils.nextInt(100000);
-        // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
-        // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
-        fileOper.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
+        ArrayList<String> ctNameList = new ArrayList<>();
+        ArrayList<String> txHashList = new ArrayList<>();
 
-        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-        String response1 = wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
+        ctNameList.add("___");
+        ctNameList.add("a1_");
+        ctNameList.add("aaaa");
+        ctNameList.add("_ae3");
+        ctNameList.add("a123");
+        ctNameList.add("asdfghjklqwertyuiop1234567833333333333333333333333333333333333333333333333390");
+        for(String name : ctNameList) {
+            txHashList.add(JSONObject.fromObject(intallUpdateName(name)).getJSONObject("Data").getString("Figure"));
+        }
 
         sleepAndSaveInfo(SLEEPTIME);
-        chkTxDetailRsp("500",txHash1);
+        assertEquals(6,txHashList.size());
+        for(String hash : txHashList){
+            chkTxDetailRsp("200",hash);
+        }
 
+        ctNameList.clear();
+        txHashList.clear();
+        ctNameList.add("123");
+        ctNameList.add("1a1_");
+        ctNameList.add("1a");
+        for(String name : ctNameList) {
+            assertEquals("500",JSONObject.fromObject(intallUpdateName(name)).getString("State"));
+        }
+    }
+
+    public String intallUpdateName(String name)throws Exception{
+        // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
+        // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
+        fileOper.replace(resourcePath + wvmFile + ".txt", orgName, name);
+        sleepAndSaveInfo(100,"文件操作后等待时间");
+
+        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
+        return wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1);
     }
 
     @After
