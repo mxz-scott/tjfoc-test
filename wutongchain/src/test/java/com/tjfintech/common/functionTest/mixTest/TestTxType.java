@@ -604,8 +604,11 @@ public class TestTxType {
         assertEquals(ctHash,
                 jsonObjectCreate.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Name"));
         //此处owner对应的是PubKey
-        assertEquals(PUBKEY1,
-                jsonObjectCreate.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Owner"));
+        String p1 = new String(decryptBASE64(PUBKEY1));
+        String p2 = new String (decryptBASE64(jsonObjectCreate.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Owner")));
+        assertEquals(p1.replaceAll("\r\n",""),p2.replaceAll("\n",""));
+//        assertEquals(PUBKEY1,
+//                jsonObjectCreate.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Owner"));
         assertEquals(data,
                 jsonObjectCreate.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Src"));
         log.info("Check create wvm tx detail complete");
