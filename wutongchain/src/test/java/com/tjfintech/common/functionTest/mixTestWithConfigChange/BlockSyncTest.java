@@ -18,14 +18,11 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Before;
 import static org.hamcrest.Matchers.containsString;
 
-import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
@@ -229,8 +226,7 @@ public class BlockSyncTest {
         Thread.sleep(OnChainSleep*3);
 
         //检查Peer2同步异常节点会停止
-        TestMgTool mgTool = new TestMgTool();
-        mgTool.checkParam(syncPeer,"./toolkit height -p "+ PEER2RPCPort,"rpc error");
+        ExeToolCmdAndChk(syncPeer,"./toolkit height -p "+ PEER2RPCPort,"rpc error");
 
 
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
@@ -263,8 +259,7 @@ public class BlockSyncTest {
         //同步失败节点异常 停止运行
 
         //检查Peer2同步异常节点会停止
-        TestMgTool mgTool = new TestMgTool();
-        mgTool.checkParam(syncPeer,"./toolkit height -p "+ PEER2RPCPort,"rpc error");
+        ExeToolCmdAndChk(syncPeer,"./toolkit height -p "+ PEER2RPCPort,"rpc error");
 
         //安装合约镜像
         setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,"docker load < /root/ccenv.docker");
@@ -549,8 +544,7 @@ public class BlockSyncTest {
     }
 
     public void MgToolStore()throws Exception{
-        TestMgTool mgTool = new TestMgTool();
-        mgTool.checkParam(PEER1IP,"./toolkit newtx -p " + PEER1RPCPort + " -n 50 -t 1","HashData");
+        ExeToolCmdAndChk(PEER1IP,"./toolkit newtx -p " + PEER1RPCPort + " -n 50 -t 1","HashData");
     }
 
     public void WVMTx()throws Exception{

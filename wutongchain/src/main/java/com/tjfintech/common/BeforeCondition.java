@@ -63,7 +63,7 @@ public class BeforeCondition {
                 resp = StringUtils.join(stdout,"\n");
                 log.info(resp);
                 assertEquals(resp.contains(fullPerm),true);
-                Thread.sleep(6000);
+                Thread.sleep(SLEEPTIME);
             }
         }
         else {
@@ -72,8 +72,18 @@ public class BeforeCondition {
             resp = StringUtils.join(stdout2,"\n");
             log.info(resp);
             assertEquals(resp.contains(fullPerm),true);
-            Thread.sleep(6000);
+            Thread.sleep(SLEEPTIME);
         }
+    }
+
+    public void clearDataSetPerm999() throws Exception{
+        delDataBase();//清空sdk当前使用数据库数据
+        //设置节点 清空db数据 并重启
+        setAndRestartPeerList(clearPeerDB,resetPeerBase);
+        //重启SDK
+        setAndRestartSDK();
+
+        setPermission999();
     }
     /**
      * 创建归集地址

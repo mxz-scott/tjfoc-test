@@ -79,28 +79,18 @@ public class TestPermission {
     //@Test
     public void beforeTest() throws Exception {
 
-        if(certPath!=""&& bReg==false) {
+        if(bExe == false) {
             BeforeCondition bf = new BeforeCondition();
+            bf.setPermission999();
+            sleepAndSaveInfo(SLEEPTIME,"赋权限999后等待");
             bf.updatePubPriKey();
             bf.collAddressTest();
-
+            bf.createAdd();
             bExe=true;
         }
 
-        if(bExe==false) {
+        setAndRestartSDK();
 
-            String sdkIP = SDKADD.substring(SDKADD.lastIndexOf("/") + 1, SDKADD.lastIndexOf(":"));
-            Shell shellSDK = new Shell(sdkIP, USERNAME, PASSWD);
-            shellSDK.execute(killSDKCmd);
-            Thread.sleep(2000);   log.info("sleep time/ms:"+2000);
-            shellSDK.execute(startSDKCmd);
-            Thread.sleep(3000);   log.info("sleep time/ms:"+3000);
-        }
-
-        String mValue="999";
-        String cmd=preCmd+mValue;
-
-        shellCmd(ToolIP,cmd);//添加所有权限
 
         pFun1.Data="GlobalStore:"+UtilsClass.Random(4);
         pFun1.createStore();  //SDK发送基础存证交易请求

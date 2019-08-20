@@ -2,12 +2,15 @@ package com.tjfintech.common.functionTest.mainSubChain;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
+import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.utils.SubLedgerCmd;
 import com.tjfintech.common.utils.UtilsClass;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -30,14 +33,19 @@ public class TestMainSubChain_UTXO {
     private static String subLedgerB = "leg4";
     MultiSign multiSign = testBuilder.getMultiSign();
     UtilsClass utilsClass = new UtilsClass();
-    TestMainSubChain testMainSubChain = new TestMainSubChain();
+    MgToolCmd mgToolCmd = new MgToolCmd();
     BeforeCondition beforeCondition = new BeforeCondition();
 
+    @BeforeClass
+    public static void clearData() throws Exception{
+        BeforeCondition beforeCondition = new BeforeCondition();
+        beforeCondition.clearDataSetPerm999();
+        bReg = false;
+    }
 
     @Before
     public void beforeConfig() throws Exception {
 
-        beforeCondition.setPermission999();
         //添加发行地址
         if( bReg==false) {
             beforeCondition.updatePubPriKey();
@@ -47,18 +55,18 @@ public class TestMainSubChain_UTXO {
             bReg=true;
         }
 
-        String resp = testMainSubChain.getSubChain(PEER1IP, PEER1RPCPort, ""); //获取子链的信息
+        String resp = mgToolCmd.getSubChain(PEER1IP, PEER1RPCPort, ""); //获取子链的信息
 
         if (!resp.contains("\"name\": \"" + subLedgerA + "\"")) {//如果子链中不包含subLedgerA就新建一条子链
-            testMainSubChain.createSubChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerA, " -t sm3", " -w subA", " -c raft", ids);
+            mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerA, " -t sm3", " -w subA", " -c raft", ids);
             Thread.sleep(SLEEPTIME * 2);
-            assertEquals(testMainSubChain.getSubChain(PEER1IP, PEER1RPCPort, "").contains("\"name\": \"" + subLedgerA + "\""), true);
+            assertEquals(mgToolCmd.getSubChain(PEER1IP, PEER1RPCPort, "").contains("\"name\": \"" + subLedgerA + "\""), true);
         }
 
         if (!resp.contains("\"name\": \"" + subLedgerB + "\"")) {//如果子链中不包含subLedgerB就新建一条子链
-            testMainSubChain.createSubChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerB, " -t sm3", " -w subA", " -c raft", ids);
+            mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerB, " -t sm3", " -w subA", " -c raft", ids);
             Thread.sleep(SLEEPTIME * 2);
-            assertEquals(testMainSubChain.getSubChain(PEER1IP, PEER1RPCPort, "").contains("\"name\": \"" + subLedgerB + "\""), true);
+            assertEquals(mgToolCmd.getSubChain(PEER1IP, PEER1RPCPort, "").contains("\"name\": \"" + subLedgerB + "\""), true);
         }
     }
 
@@ -72,6 +80,8 @@ public class TestMainSubChain_UTXO {
     public void TC1529_UTXOTranction() throws Exception {
         subLedger = subLedgerA;
         log.info(subLedger);
+        beforeCondition.collAddressTest();
+        sleepAndSaveInfo(SLEEPTIME,"添加归集地址和发行地址到子链");
         token_issue();
 
         subLedger = "";
@@ -110,6 +120,9 @@ public class TestMainSubChain_UTXO {
     public void TC1532_UTXOTranction()throws Exception{
         subLedger = "";
         log.info(subLedger);
+        beforeCondition.collAddressTest();
+        sleepAndSaveInfo(SLEEPTIME,"添加归集地址和发行地址到子链");
+
         token_issue();
 
         subLedger = subLedgerA;
@@ -149,6 +162,8 @@ public class TestMainSubChain_UTXO {
     public void TC1526_UTXOTranction()throws Exception{
         subLedger = subLedgerA;
         log.info(subLedger);
+        beforeCondition.collAddressTest();
+        sleepAndSaveInfo(SLEEPTIME,"添加归集地址和发行地址到子链");
         token_issue();
 
         subLedger = subLedgerB;

@@ -1,22 +1,19 @@
 package com.tjfintech.common.functionTest.mixTest;
 
-import com.google.gson.JsonArray;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
+import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
 import com.tjfintech.common.functionTest.Conditions.SetSubLedger;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
-import com.tjfintech.common.functionTest.mainSubChain.TestMainSubChain;
-import com.tjfintech.common.functionTest.mixTestWithConfigChange.TestMgTool;
 import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
 
@@ -25,7 +22,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -124,12 +120,11 @@ public class TestTxType {
          * |销毁子链|7|
          */
 
-        TestMgTool testMgTool = new TestMgTool();
-        TestMainSubChain testMainSubChain = new TestMainSubChain();
+        MgToolCmd mgToolCmd = new MgToolCmd();
         SetDatabaseMysql setDatabaseMysql = new SetDatabaseMysql();
 
         //获取管理工具ID
-        String resp = testMgTool.getID(PEER1IP,ToolPATH + "crypt/key.pem","");
+        String resp = mgToolCmd.getID(PEER1IP,ToolPATH + "crypt/key.pem","");
         String toolID = resp.substring(resp.lastIndexOf(":")+1).trim();
         assertEquals(false,toolID.isEmpty());  //主链才做数据库清理操作，因子链不测试节点动态变更交易
         if(subLedger == "") {
@@ -139,7 +134,7 @@ public class TestTxType {
         }
 
         //给链赋权限 权限变更交易检查
-        String permResp = testMgTool.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"999","sdkName");
+        String permResp = mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"999","sdkName");
         sleepAndSaveInfo(SLEEPTIME, "等待设置权限999交易上链");
         String permHash = permResp.substring(permResp.lastIndexOf(":")+1).trim();
         JSONObject jsonObjectPerm = checkTriMsg(permHash,versionStore,typeSystem,subTypePerm);
@@ -157,7 +152,7 @@ public class TestTxType {
         if(subLedger != "")  return;
 
         //退出节点交易详情检查
-        String respQuit = testMgTool.quitPeer(PEER1IP + ":" + PEER1RPCPort, PEER2IP);
+        String respQuit = mgToolCmd.quitPeer(PEER1IP + ":" + PEER1RPCPort, PEER2IP);
         assertEquals(true, respQuit.contains("success"));
         sleepAndSaveInfo(SLEEPTIME,"等待退出节点" + PEER2IP + "交易上链");
         String quitPeerHash = respQuit.substring(respQuit.lastIndexOf(":") + 1).trim();
@@ -168,8 +163,8 @@ public class TestTxType {
                 jsonObjectQuitPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("Id"));
 
             //节点加入交易详情检查
-        String respAdd = testMgTool.addPeer("join", PEER1IP + ":" + PEER1RPCPort,
-                "/ip4/" + PEER2IP, "/tcp/60011", PEER2RPCPort, "success");
+        String respAdd = mgToolCmd.addPeer("join", PEER1IP + ":" + PEER1RPCPort,
+                "/ip4/" + PEER2IP, "/tcp/60011", PEER2RPCPort);
         assertEquals(true, respAdd.contains("success"));
         sleepAndSaveInfo(SLEEPTIME,"等待新增子链交易上链");
         String addPeerHash = respAdd.substring(respAdd.lastIndexOf(":") + 1).trim();
@@ -191,7 +186,7 @@ public class TestTxType {
 
         //创建子链交易
         String chainName="tx_"+sdf.format(dt)+ RandomUtils.nextInt(10000);
-        String addLedgerResp = testMainSubChain.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,
+        String addLedgerResp = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(addLedgerResp.contains("send transaction success"), true);
         String addLedgerHash = addLedgerResp.substring(addLedgerResp.lastIndexOf(":")+1).trim();
@@ -213,7 +208,7 @@ public class TestTxType {
                 jsonObjectAddLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Member").replaceAll("\"",""));
 
         //冻结子链交易
-        String freezeLedgerResp = testMainSubChain.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        String freezeLedgerResp = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(freezeLedgerResp.contains("send transaction success"), true);
         sleepAndSaveInfo(SLEEPTIME,"等待冻结子链交易上链");
         String freezeLedgerHash = freezeLedgerResp.substring(freezeLedgerResp.lastIndexOf(":")+1).trim();
@@ -235,7 +230,7 @@ public class TestTxType {
 
         //恢复冻结子链交易
 
-        String recoverLedgerResp = testMainSubChain.recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        String recoverLedgerResp = mgToolCmd.recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(recoverLedgerResp.contains("send transaction success"), true);
         sleepAndSaveInfo(SLEEPTIME,"等待恢复冻结子链交易上链");
         String recoverLedgerHash = recoverLedgerResp.substring(recoverLedgerResp.lastIndexOf(":")+1).trim();
@@ -256,7 +251,7 @@ public class TestTxType {
                 jsonObjectRecoverLedger.getJSONObject("Data").getJSONObject("System").getJSONObject("SubLedgerTransaction").getString("Member").replaceAll("\"",""));
 
         //销毁子链交易
-        String destroyLedgerResp = testMainSubChain.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        String destroyLedgerResp = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(destroyLedgerResp.contains("send transaction success"), true);
         sleepAndSaveInfo(SLEEPTIME,"等待销毁子链交易上链");
         String destroyLedgerHash = destroyLedgerResp.substring(destroyLedgerResp.lastIndexOf(":")+1).trim();
@@ -603,12 +598,10 @@ public class TestTxType {
                 resourcePath + "wvm_temp.txt").toString().trim().getBytes()).replaceAll("\r\n", "");
         assertEquals(ctHash,
                 jsonObjectCreate.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Name"));
-        //此处owner对应的是PubKey
+        //此处owner对应的是PubKey 因编解码使用的库可能不太一样 因此此处校验原始pubkey
         String p1 = new String(decryptBASE64(PUBKEY1));
         String p2 = new String (decryptBASE64(jsonObjectCreate.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Owner")));
         assertEquals(p1.replaceAll("\r\n",""),p2.replaceAll("\n",""));
-//        assertEquals(PUBKEY1,
-//                jsonObjectCreate.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Owner"));
         assertEquals(data,
                 jsonObjectCreate.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Src"));
         log.info("Check create wvm tx detail complete");

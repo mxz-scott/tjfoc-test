@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.junit.Assert;
 import org.junit.Test;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
@@ -130,7 +131,7 @@ public class UtilsClass {
     public static String clearPeerWVMbin = "find "+ PeerPATH + "contracts/bin/* ! -name Sys_StoreEncrypted -exec rm -rf {} \\;";
     public static String clearPeerWVMsrc = "find "+ PeerPATH + "contracts/src/* ! -name Sys_StoreEncrypted -exec rm -rf {} \\;";
     public static String resetPeerBase = "cp " + PeerPATH + "conf/baseOK.toml " + PeerPATH + "conf/base.toml";
-    public static String resetPeerConfig = "cp "+ PeerPATH + "conf/configOK.toml "+ PeerPATH +"conf/"+PeerMemConfig+".toml";
+    public static String resetPeerConfig = "cp "+ PeerPATH + "configOK.toml "+ PeerPATH  + PeerMemConfig+".toml";
     public static String resetSDKConfig = "cp " + SDKPATH + "conf/configOK.toml " + SDKPATH + "conf/config.toml";
 
     public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";
@@ -432,6 +433,16 @@ public class UtilsClass {
         }
     }
 
+    public static void ExeToolCmdAndChk(String shellIP, String cmd, String chkStr)throws Exception{
+        Shell shell1=new Shell(shellIP,USERNAME,PASSWD);
+        String tempCmd = "cd "+ ToolPATH + ";" + cmd;
+        shell1.execute(tempCmd);
+        ArrayList<String> stdout = shell1.getStandardOutput();
+        String response = StringUtils.join(stdout,"\n");
+        log.info("\n" + response);
+        Assert.assertEquals(response.contains(chkStr),true);
+    }
+
     public static String getKeyPairsFromFile(String pemFileName)throws Exception{
         String filePath =resourcePath+pemFileName;
         InputStream inStream =new FileInputStream(filePath);
@@ -535,5 +546,34 @@ public class UtilsClass {
         Thread.sleep(sleepTime);
         if(info.length >0) log.info(info[0] + "(ms): " + sleepTime);
         else log.info("*************sleep time(ms): " + sleepTime);
+    }
+
+    public static String getPeerID(String peerIP)throws Exception{
+
+        Shell shell1=new Shell(peerIP,USERNAME,PASSWD);
+        shell1.execute("cd " + PeerPATH +";./" + PeerTPName + " init");
+        ArrayList<String> stdout = shell1.getStandardOutput();
+        String response = StringUtils.join(stdout,"\n");
+        log.info("\n"+response);
+
+        String peerID="";
+        for (String str : stdout) {
+            if(str.contains("Local peer"))
+            {
+                peerID=str.substring(str.indexOf(":")+1).trim();
+            }
+        }
+
+        assertEquals(peerID.isEmpty(),false);
+        return peerID;
+    }
+
+    public static String shExeAndReturn(String IP,String cmd){
+        Shell shell1=new Shell(IP,USERNAME,PASSWD);
+        shell1.execute(cmd);
+        ArrayList<String> stdout = shell1.getStandardOutput();
+        String response = StringUtils.join(stdout, "\n");
+        log.info("\n" + response);
+        return response;
     }
 }
