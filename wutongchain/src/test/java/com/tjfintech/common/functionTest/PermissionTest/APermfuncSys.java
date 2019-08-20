@@ -89,7 +89,7 @@ public class APermfuncSys {
      * @throws Exception
      */
     public String getTransaction(String storeHash) throws  Exception {
-        String response= store.GetTransaction(storeHash);
+        String response= store.GetTxDetail(storeHash);
         return retAllow(response);
     }
 

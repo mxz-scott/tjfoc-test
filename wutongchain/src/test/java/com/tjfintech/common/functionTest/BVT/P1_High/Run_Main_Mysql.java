@@ -44,7 +44,7 @@ import org.junit.runners.Suite;
 })
 
 //Build Validation Test
-public class Run_Main_Mysql_NewSM2 {
+public class Run_Main_Mysql {
     //执行这个类将执行suiteClass中的测试项
 
 }

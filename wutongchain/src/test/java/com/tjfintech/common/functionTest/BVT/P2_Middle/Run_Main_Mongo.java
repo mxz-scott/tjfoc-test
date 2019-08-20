@@ -3,7 +3,7 @@ package com.tjfintech.common.functionTest.BVT.P2_Middle;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMongo;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
-import com.tjfintech.common.functionTest.Conditions.SetSubLedger;
+import com.tjfintech.common.functionTest.Conditions.SetMainLedger;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
@@ -20,7 +20,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses(value = {
         SetDatabaseMongo.class,
-        SetSubLedger.class,
+        SetMainLedger.class,
         BeforeCondition.class,
 
         StoreTest.class,
@@ -43,8 +43,8 @@ import org.junit.runners.Suite;
 })
 
 //Build Validation Test
-public class Run_Sub_Mongo_SM2 {
+public class Run_Main_Mongo {
     //执行这个类将执行suiteClass中的测试项
-    //子链测试 + Mongo + sm2（旧版本 certPath为空） + sm3
+    //主链测试 + Mongo + sm2（旧版本 certPath为空） + sm3
 
 }

@@ -2,6 +2,7 @@ package com.tjfintech.common.functionTest.BVT.P2_Middle;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetCertMIX2;
+import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
 import com.tjfintech.common.functionTest.utxoMultiSign.MultiSignDetailTest;
 import com.tjfintech.common.functionTest.utxoMultiSign.MultiTest;
@@ -15,6 +16,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+        SetDatabaseMysql.class,
         SetCertMIX2.class,
         BeforeCondition.class,
         SoloTest.class,

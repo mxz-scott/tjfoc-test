@@ -50,7 +50,7 @@ public class SyncDockerContractTest {
         assertThat("200",containsString(JSONObject.fromObject(response).getString("State")));
         assertThat("success",containsString(JSONObject.fromObject(response).getString("Message")));
         Thread.sleep(SLEEPTIME*3);
-        String response2=store.GetTransaction(hash);
+        String response2=store.GetTxDetail(hash);
         assertThat(response2,containsString("200"));
 
         SynInvoke("InitMobile");
@@ -75,7 +75,7 @@ public class SyncDockerContractTest {
         String synInvoke = contract.SynInvoke(utilsClass.SHORTMEOUT, name, version, category, method, args);
         String hash= JSONObject.fromObject(synInvoke).getJSONObject("Data").getString("Figure");//获取hash值
         assertThat("200",containsString(JSONObject.fromObject(synInvoke).getString("State")));
-        assertThat("200",containsString(JSONObject.fromObject(store.GetTransaction(hash)).getString("State")));
+        assertThat("200",containsString(JSONObject.fromObject(store.GetTxDetail(hash)).getString("State")));
 
     }
 }

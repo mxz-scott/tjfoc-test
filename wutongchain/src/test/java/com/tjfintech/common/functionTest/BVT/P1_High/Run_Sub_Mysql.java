@@ -44,7 +44,7 @@ import org.junit.runners.Suite;
 })
 
 //Build Validation Test
-public class Run_Sub_Mysql_NewSM2 {
+public class Run_Sub_Mysql {
     //执行这个类将执行suiteClass中的测试项
     //子链测试 + mysql + sm2（旧版本 certPath为空） + sm3
 

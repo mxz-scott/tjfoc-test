@@ -32,25 +32,25 @@ public  class GoStore implements Store {
 
     }
 
-    /**
-     * 获取交易详情
-     *
-     * @author chenxu
-     * @version 1.0
-     * @method GET
-     */
-    public String GetTransaction(String hashData) {
-        String param;
-        String hashEncode = URLEncoder.encode(hashData);
-        Map<String, Object> map = new HashMap<>();
-        map.put("hashData", hashEncode);
-        param = GetTest.ParamtoUrl(map);
-        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/gettransaction" + "?" + param);
-        log.info(result);
-        return result;
-
-    }
+//    /**
+//     * 获取交易详情
+//     *
+//     * @author chenxu
+//     * @version 1.0
+//     * @method GET
+//     */
+//    public String GetTransaction(String hashData) {
+//        String param;
+//        String hashEncode = URLEncoder.encode(hashData);
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("hashData", hashEncode);
+//        param = GetTest.ParamtoUrl(map);
+//        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+//        String result = GetTest.doGet2(SDKADD + "/gettransaction" + "?" + param);
+//        log.info(result);
+//        return result;
+//
+//    }
 
     public String GetTxDetail(String hashData) {
         String param;

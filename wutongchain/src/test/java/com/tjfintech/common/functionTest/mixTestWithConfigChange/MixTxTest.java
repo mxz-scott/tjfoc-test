@@ -109,13 +109,13 @@ public class MixTxTest {
         //等待一个打包周期
         sleepAndSaveInfo(20000,"等待一个打包周期");
 
-        response1=store.GetTransaction(StoreHash1);
-        response2=store.GetTransaction(StoreHash2);
-        response3=store.GetTransaction(StoreHash3);
-        response4=store.GetTransaction(StoreHash4);
-        response5=store.GetTransaction(StoreHash5);
-        response6=store.GetTransaction(StoreHash6);
-        response8=store.GetTransaction(StoreHash8);
+        response1=store.GetTxDetail(StoreHash1);
+        response2=store.GetTxDetail(StoreHash2);
+        response3=store.GetTxDetail(StoreHash3);
+        response4=store.GetTxDetail(StoreHash4);
+        response5=store.GetTxDetail(StoreHash5);
+        response6=store.GetTxDetail(StoreHash6);
+        response8=store.GetTxDetail(StoreHash8);
 
         String resp1 = store.GetHeight();
 

@@ -305,13 +305,13 @@ public class TestTxType {
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
         checkTriMsg(txHash2,versionStore,typeStore,subTypePriStore);
 
-        JSONObject jsonObjecttran=JSONObject.fromObject(store.GetTransaction(txHash2)).getJSONObject("Data");
+//        JSONObject jsonObjecttran=JSONObject.fromObject(store.GetTransaction(txHash2)).getJSONObject("Data");
         JSONObject jsonObjecttx=JSONObject.fromObject(store.GetTxDetail(txHash2)).getJSONObject("Data");
 
         //隐私存证storeData中为加密后数据，目前仅判断不包含明文原始data数据
-        assertEquals(jsonObjecttran.getString("storeData").contains(priData), false);
+//        assertEquals(jsonObjecttran.getString("storeData").contains(priData), false);
         //assertEquals("store",jsonObjecttran.getString("transactionType"));//20190514 开发移除该字段
-        assertEquals(true,jsonObjecttran.getJSONObject("extra").isNullObject());//检查合约extra
+//        assertEquals(true,jsonObjecttran.getJSONObject("extra").isNullObject());//检查合约extra
 
         assertEquals(jsonObjecttx.getJSONObject("Store").getString("StoreData").contains(priData), false);
         //assertEquals("store",jsonObjecttx.getJSONObject("Store").getString("transactionType"));
@@ -517,8 +517,8 @@ public class TestTxType {
         //Install chaincode [041801_2.0] success!
         assertEquals("Install chaincode ["+ct.name+"_"+ct.version+"] success!",JSONObject.fromObject(
                 store.GetTxDetail(txHash7)).getJSONObject("Data").getJSONObject("Contract").getString("Message"));
-        assertEquals("Install chaincode ["+ct.name+"_"+ct.version+"] success!",JSONObject.fromObject(
-                store.GetTransaction(txHash7)).getJSONObject("Data").getString("message"));
+//        assertEquals("Install chaincode ["+ct.name+"_"+ct.version+"] success!",JSONObject.fromObject(
+//                store.GetTransaction(txHash7)).getJSONObject("Data").getString("message"));
 
 
         //检查合约交易信息initMobile
@@ -529,7 +529,7 @@ public class TestTxType {
         checkTriMsg(txHash8,versionStore,typeDocker,subTypeDockerTx);
         checkContractTx(txHash8,"queryMobile","scDocker","200","1",
                 "Transaction excute success!");
-        assertThat(JSONObject.fromObject(store.GetTransaction(txHash8)).getJSONObject("Data").getJSONObject("contractResult").getString("payload"), containsString("Apple"));
+//        assertThat(JSONObject.fromObject(store.GetTransaction(txHash8)).getJSONObject("Data").getJSONObject("contractResult").getString("payload"), containsString("Apple"));
         assertThat(JSONObject.fromObject(store.GetTxDetail(txHash8)).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload"), containsString("Apple"));
 
         //检查合约销毁交易信息
@@ -537,8 +537,8 @@ public class TestTxType {
         //Delete chaincode [041801_2.0] success!
         assertEquals("Delete chaincode ["+ct.name+"_"+ct.version+"] success!",JSONObject.fromObject(
                 store.GetTxDetail(txHash9)).getJSONObject("Data").getJSONObject("Contract").getString("Message"));
-        assertEquals("Delete chaincode ["+ct.name+"_"+ct.version+"] success!",JSONObject.fromObject(
-                store.GetTransaction(txHash9)).getJSONObject("Data").getString("message"));
+//        assertEquals("Delete chaincode ["+ct.name+"_"+ct.version+"] success!",JSONObject.fromObject(
+//                store.GetTransaction(txHash9)).getJSONObject("Data").getString("message"));
     }
 
     @Test
@@ -717,16 +717,16 @@ public class TestTxType {
 
         return objectDetail;
     }
-    public JSONObject checkTXTransTriMsg(String hash,String version,String type,String subType)throws Exception{
-        log.info("hash:"+hash);
-        JSONObject objectTrans = JSONObject.fromObject(store.GetTransaction(hash));
-        JSONObject jsonObject2 = objectTrans.getJSONObject("Data").getJSONObject("header");
-        assertEquals(version,jsonObject2.getString("version"));
-        assertEquals(type,jsonObject2.getString("type"));
-        assertEquals(subType,jsonObject2.getString("subType"));
-
-        return objectTrans;
-    }
+//    public JSONObject checkTXTransTriMsg(String hash,String version,String type,String subType)throws Exception{
+//        log.info("hash:"+hash);
+////        JSONObject objectTrans = JSONObject.fromObject(store.GetTransaction(hash));
+////        JSONObject jsonObject2 = objectTrans.getJSONObject("Data").getJSONObject("header");
+////        assertEquals(version,jsonObject2.getString("version"));
+////        assertEquals(type,jsonObject2.getString("type"));
+////        assertEquals(subType,jsonObject2.getString("subType"));
+//
+////        return objectTrans;
+//    }
 
     public JSONObject checkTriMsg(String hash,String version,String type,String subType)throws Exception{
         log.info("hash:"+hash);
@@ -735,10 +735,10 @@ public class TestTxType {
         assertEquals(type,jsonObject.getString("Type"));
         assertEquals(subType,jsonObject.getString("SubType"));
 
-        JSONObject jsonObject2 = JSONObject.fromObject(store.GetTransaction(hash)).getJSONObject("Data").getJSONObject("header");
-        assertEquals(version,jsonObject2.getString("version"));
-        assertEquals(type,jsonObject2.getString("type"));
-        assertEquals(subType,jsonObject2.getString("subType"));
+//        JSONObject jsonObject2 = JSONObject.fromObject(store.GetTransaction(hash)).getJSONObject("Data").getJSONObject("header");
+//        assertEquals(version,jsonObject2.getString("version"));
+//        assertEquals(type,jsonObject2.getString("type"));
+//        assertEquals(subType,jsonObject2.getString("subType"));
 
         return JSONObject.fromObject(store.GetTxDetail(hash));
     }
@@ -785,19 +785,19 @@ public class TestTxType {
 //        assertEquals(true,jsonObjectOrg.getJSONObject("WVM").isNullObject());
 
 
-        JSONObject jsonObject2 =JSONObject.fromObject(store.GetTransaction(hash)).getJSONObject("Data");
-        JSONObject jsonObjectSC=JSONObject.fromObject(new String(decryptBASE64(jsonObject2.getString("smartContract"))));
-        assertEquals(ct.name,jsonObjectSC.getString("Name"));//检查合约名称
-        assertEquals(ct.version,jsonObjectSC.getString("Version"));//检查合约Version
+//        JSONObject jsonObject2 =JSONObject.fromObject(store.GetTransaction(hash)).getJSONObject("Data");
+//        JSONObject jsonObjectSC=JSONObject.fromObject(new String(decryptBASE64(jsonObject2.getString("smartContract"))));
+//        assertEquals(ct.name,jsonObjectSC.getString("Name"));//检查合约名称
+//        assertEquals(ct.version,jsonObjectSC.getString("Version"));//检查合约Version
 
-        scArgs= new String(decryptBASE64(jsonObject2.getJSONArray("smartContractArgs").getString(0)));
-        assertThat(scArgs, containsString(method));
+//        scArgs= new String(decryptBASE64(jsonObject2.getJSONArray("smartContractArgs").getString(0)));
+//        assertThat(scArgs, containsString(method));
         //assertEquals(cttype,jsonObject2.getString("transactionType"));//检查交易类型
-        assertEquals(ctResultStatus,jsonObject2.getJSONObject("contractResult").getString("status"));//检查合约调用结果code status 200
-        assertEquals(code,jsonObject2.getString("code"));//检查合约交易结果code
-        assertEquals(Msg,jsonObject2.getString("message"));//检查合约交易结果message
-        assertEquals(true,jsonObject2.getJSONObject("writes").isNullObject());//检查合约writes
-        assertEquals(true,jsonObject2.getJSONObject("extra").isNullObject());//检查合约extra
+//        assertEquals(ctResultStatus,jsonObject2.getJSONObject("contractResult").getString("status"));//检查合约调用结果code status 200
+//        assertEquals(code,jsonObject2.getString("code"));//检查合约交易结果code
+//        assertEquals(Msg,jsonObject2.getString("message"));//检查合约交易结果message
+//        assertEquals(true,jsonObject2.getJSONObject("writes").isNullObject());//检查合约writes
+//        assertEquals(true,jsonObject2.getJSONObject("extra").isNullObject());//检查合约extra
     }
 
     public void checkStore(String hash,String storeData,String transactionType)throws Exception{
@@ -816,21 +816,21 @@ public class TestTxType {
         assertEquals(true,jsonObjectOrg.getJSONObject("WVM").isNullObject());
 
 
-        JSONObject jsonObject2 =JSONObject.fromObject(store.GetTransaction(hash)).getJSONObject("Data");
-        assertEquals(storeData,jsonObject2.getString("storeData"));//检查存证数据
+//        JSONObject jsonObject2 =JSONObject.fromObject(store.GetTransaction(hash)).getJSONObject("Data");
+//        assertEquals(storeData,jsonObject2.getString("storeData"));//检查存证数据
         //assertEquals(transactionType,jsonObject2.getString("transactionType"));//检查交易类型
-        assertEquals(true,jsonObject2.getJSONObject("extra").isNullObject());//检查extra
+//        assertEquals(true,jsonObject2.getJSONObject("extra").isNullObject());//检查extra
 
     }
 
     public void checkAdmin(String hash,String keywordTran,String keywordTxdetail,String checkstr,String txType)throws Exception{
 
-        JSONObject jsonObjectOrg1 =JSONObject.fromObject(store.GetTransaction(hash)).getJSONObject("Data");
+//        JSONObject jsonObjectOrg1 =JSONObject.fromObject(store.GetTransaction(hash)).getJSONObject("Data");
         JSONObject jsonObjectOrg2 =JSONObject.fromObject(store.GetTxDetail(hash)).getJSONObject("Data");
 
-        assertThat(jsonObjectOrg1.getJSONArray(keywordTran).getString(0),containsString(checkstr));
+//        assertThat(jsonObjectOrg1.getJSONArray(keywordTran).getString(0),containsString(checkstr));
         //assertEquals(txType,jsonObjectOrg1.getString("transactionType"));
-        assertEquals(true,jsonObjectOrg1.getJSONObject("extra").isNullObject());//检查extra
+//        assertEquals(true,jsonObjectOrg1.getJSONObject("extra").isNullObject());//检查extra
 
         assertThat(jsonObjectOrg2.getJSONObject("Admin").getJSONArray(keywordTxdetail).getString(0),containsString(checkstr));
         //assertEquals(txType,jsonObjectOrg2.getJSONObject("Admin").getString("transactionType"));

@@ -315,7 +315,7 @@ public class BlockSyncTest {
         assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
         for(String hash : hashList){
-            assertEquals("200",JSONObject.fromObject(store.GetTransaction(hash)).getString("State"));
+            assertEquals("200",JSONObject.fromObject(store.GetTxDetail(hash)).getString("State"));
         }
 
     }
@@ -393,7 +393,7 @@ public class BlockSyncTest {
 
         for(String hash : hashList){
             log.info("checking hash on chain: "+ hash);
-            assertEquals("200",JSONObject.fromObject(store.GetTransaction(hash)).getString("State"));
+            assertEquals("200",JSONObject.fromObject(store.GetTxDetail(hash)).getString("State"));
         }
     }
 
@@ -465,13 +465,13 @@ public class BlockSyncTest {
         //等待一个打包周期
         Thread.sleep(OnChainSleep);
 
-        assertEquals("200",JSONObject.fromObject(store.GetTransaction(StoreHash1)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetTransaction(StoreHash2)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetTransaction(StoreHash3)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetTransaction(StoreHash4)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetTransaction(StoreHash5)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetTransaction(StoreHash6)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetTransaction(StoreHash8)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash1)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash2)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash3)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash4)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash5)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash6)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash8)).getString("State"));
 
     }
 

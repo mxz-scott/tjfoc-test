@@ -58,7 +58,7 @@ public class DockerContractTest {
 
         sleepAndSaveInfo(SLEEPTIME);
         String hash11 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
-        assertThat(store.GetTransaction(hash11),containsString("200"));
+        assertThat(store.GetTxDetail(hash11),containsString("200"));
 
         String response2 = contract.SearchByKey("Mobile0",name);//SDK发送按key查询请求
         assertThat(response2,containsString("200"));
@@ -94,7 +94,7 @@ public class DockerContractTest {
         assertThat(response,containsString("200"));
         sleepAndSaveInfo(SLEEPTIME);
         String hash1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
-        response=store.GetTransaction(hash1);
+        response=store.GetTxDetail(hash1);
         assertThat(response,containsString("Mobile1"));
         assertThat(response,containsString("Mobile2"));
         assertThat(response,containsString("Mobile3"));
@@ -104,7 +104,7 @@ public class DockerContractTest {
         assertThat(response,containsString("200"));
         sleepAndSaveInfo(SLEEPTIME);
         String hash2 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
-        response=store.GetTransaction(hash2);
+        response=store.GetTxDetail(hash2);
         assertThat(response,containsString("iphoneXS"));
 
         response=eventTest();
@@ -366,7 +366,7 @@ public class DockerContractTest {
         String response = contract.CreateNewTransaction(name, version, method, args);
         String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         sleepAndSaveInfo(SLEEPTIME);
-        String result = store.GetTransaction(hash);
+        String result = store.GetTxDetail(hash);
         assertThat(result, containsString("200"));
         assertThat(result, containsString("success"));
 
