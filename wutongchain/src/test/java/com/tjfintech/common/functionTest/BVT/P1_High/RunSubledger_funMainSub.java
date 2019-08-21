@@ -2,10 +2,7 @@ package com.tjfintech.common.functionTest.BVT.P1_High;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
-import com.tjfintech.common.functionTest.mainSubChain.TestMainSubChain_Create_01;
-import com.tjfintech.common.functionTest.mainSubChain.TestMainSubChain_FRDG;
-import com.tjfintech.common.functionTest.mainSubChain.TestMainSubChain_Perm;
-import com.tjfintech.common.functionTest.mainSubChain.TestMainSubChain_UTXO;
+import com.tjfintech.common.functionTest.mainSubChain.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -15,8 +12,10 @@ import org.junit.runners.Suite;
         SetDatabaseMysql.class,
         BeforeCondition.class,
         TestMainSubChain_Create_01.class,
+        TestMainSubChain_Create_02.class,
         TestMainSubChain_FRDG.class,
-        TestMainSubChain_Perm.class
+        TestMainSubChain_Perm.class,
+        TestMainSubChain_UTXO.class
 })
 
 //Build Validation Test
