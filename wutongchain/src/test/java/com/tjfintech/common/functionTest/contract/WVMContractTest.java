@@ -45,8 +45,11 @@ public class WVMContractTest {
 
     @BeforeClass
     public  static void setPermFull()throws Exception{
-        BeforeCondition bf = new BeforeCondition();
-        bf.setPermission999(); //给主链或者子链赋权限999
+        BeforeCondition beforeCondition = new BeforeCondition();
+        beforeCondition.clearDataSetPerm999();
+        beforeCondition.collAddressTest();
+        beforeCondition.createAdd();
+        sleepAndSaveInfo(SLEEPTIME);
     }
 
     @Test

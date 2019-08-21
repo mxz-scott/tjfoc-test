@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.mainSubChain;
 
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
@@ -33,6 +34,15 @@ public class TestWithConfigChange {
 
     public static String glbChain01= "glbCh1";
     public static String glbChain02= "glbCh2";
+
+    @BeforeClass
+    public static void clearData()throws Exception{
+        BeforeCondition beforeCondition = new BeforeCondition();
+        beforeCondition.clearDataSetPerm999();
+        beforeCondition.collAddressTest();
+        beforeCondition.createAdd();
+        sleepAndSaveInfo(SLEEPTIME);
+    }
 
     @Before
     public void beforeConfig() throws Exception {

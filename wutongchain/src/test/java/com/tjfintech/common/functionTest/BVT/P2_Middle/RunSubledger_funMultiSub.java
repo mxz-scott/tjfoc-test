@@ -3,6 +3,7 @@ package com.tjfintech.common.functionTest.BVT.P2_Middle;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
 import com.tjfintech.common.functionTest.mainSubChain.TestMultiSubChain;
+import com.tjfintech.common.functionTest.mainSubChain.TestMultiSubChain_02;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -11,7 +12,8 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         SetDatabaseMysql.class,
         BeforeCondition.class,
-        TestMultiSubChain.class
+        TestMultiSubChain.class,
+        TestMultiSubChain_02.class
 })
 
 //Build Validation Test

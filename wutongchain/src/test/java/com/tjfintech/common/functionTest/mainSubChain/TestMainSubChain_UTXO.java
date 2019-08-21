@@ -40,20 +40,14 @@ public class TestMainSubChain_UTXO {
     public static void clearData() throws Exception{
         BeforeCondition beforeCondition = new BeforeCondition();
         beforeCondition.clearDataSetPerm999();
+        beforeCondition.collAddressTest();
+        beforeCondition.createAdd();
+        sleepAndSaveInfo(SLEEPTIME);
         bReg = false;
     }
 
     @Before
     public void beforeConfig() throws Exception {
-
-        //添加发行地址
-        if( bReg==false) {
-            beforeCondition.updatePubPriKey();
-            beforeCondition.collAddressTest();
-            beforeCondition.createAdd();
-            Thread.sleep(SLEEPTIME);
-            bReg=true;
-        }
 
         String resp = mgToolCmd.getSubChain(PEER1IP, PEER1RPCPort, ""); //获取子链的信息
 

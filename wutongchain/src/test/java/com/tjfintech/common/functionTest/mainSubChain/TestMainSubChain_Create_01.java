@@ -30,15 +30,7 @@ public class TestMainSubChain_Create_01 {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
-    SubLedgerCmd subLedgerCmd = new SubLedgerCmd();
     MgToolCmd mgToolCmd = new MgToolCmd();
-
-    String noPerm="not found";
-    String notSupport="not support service";
-    String stateDestroyed ="has been destroyed";
-    String stateFreezed ="not support service";
-    String ledgerStateDestroy = "\"state\": \"Destory\"";
-    String ledgerStateFreeze = "\"state\": \"Freeze\"";
 
     String glbChain01= "glbCh1";
     String glbChain02= "glbCh2";

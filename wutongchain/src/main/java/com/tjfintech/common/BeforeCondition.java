@@ -91,8 +91,6 @@ public class BeforeCondition {
      */
     @Test
     public  void collAddressTest() throws Exception{
-
-        setPermission999();
         updatePubPriKey();//从文件中根据配置certPath读取指定类型的公私钥对，并重新生成多签地址
         String response= multiSign.collAddress(PRIKEY1,IMPPUTIONADD);
         String response2= multiSign.collAddress(PRIKEY1,MULITADD3);
