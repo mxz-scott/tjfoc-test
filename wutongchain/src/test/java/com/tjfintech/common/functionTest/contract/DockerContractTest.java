@@ -111,7 +111,7 @@ public class DockerContractTest {
         assertThat(response,containsString("200"));
 
         //测试2.0.1兼容CreateNewTransaction接口 默认category为docker
-        invokeUpdate("initMobile");
+//        invokeUpdate("initMobile");
 
         //销毁合约
         response=destroyTest();
@@ -358,18 +358,18 @@ public class DockerContractTest {
         return response;
     }
 
-    public void invokeUpdate(String method, String... arg) throws Exception {
-        List<String> args = new LinkedList<>();
-        for (int i = 0; i < arg.length; i++) {
-            args.add(arg[i]);
-        }
-        String response = contract.CreateNewTransaction(name, version, method, args);
-        String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
-        sleepAndSaveInfo(SLEEPTIME);
-        String result = store.GetTxDetail(hash);
-        assertThat(result, containsString("200"));
-        assertThat(result, containsString("success"));
-
-    }
+//    public void invokeUpdate(String method, String... arg) throws Exception {
+//        List<String> args = new LinkedList<>();
+//        for (int i = 0; i < arg.length; i++) {
+//            args.add(arg[i]);
+//        }
+//        String response = contract.CreateNewTransaction(name, version, method, args);
+//        String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+//        sleepAndSaveInfo(SLEEPTIME);
+//        String result = store.GetTxDetail(hash);
+//        assertThat(result, containsString("200"));
+//        assertThat(result, containsString("success"));
+//
+//    }
 
 }
