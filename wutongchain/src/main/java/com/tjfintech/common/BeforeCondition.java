@@ -38,7 +38,7 @@ public class BeforeCondition {
         SDKID=getSDKID();
         String ledger ="";
         ledger=(subLedger!="")?" -z "+subLedger:"";
-        String preCmd=toolPath+exeCmd+"-p "+PEER1RPCPort+ledger+" -d "+SDKID+" -m ";
+        String preCmd=toolPath+exeCmd+"-p "+PEER1RPCPort+" -s SDK "+ledger+" -d "+SDKID+" -m ";
         String getPerm=toolPath+"./" + ToolTPName + " getpermission -p "+PEER1RPCPort+ledger;
 
         Shell shellPeer1=new Shell(PEER1IP,USERNAME,PASSWD);

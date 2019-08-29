@@ -334,13 +334,16 @@ public class StoreTest {
      */
     @Test
     public void TC276_getInlocal()  throws Exception{
-        String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
-        String response= store.CreateStore(Data);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
-        String response2= store.GetInlocal(storeHash);
-        assertThat(response2,containsString("200"));
+
+        for(int i = 0; i < 5; i++) {
+            String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
+            String response= store.CreateStore(Data);
+            JSONObject jsonObject=JSONObject.fromObject(response);
+            String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+            Thread.sleep(SLEEPTIME);
+            String response2= store.GetInlocal(storeHash);
+            assertThat(response2,containsString("200"));
+        }
     }
 
 
