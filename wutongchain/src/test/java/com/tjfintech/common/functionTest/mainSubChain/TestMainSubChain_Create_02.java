@@ -28,10 +28,7 @@ public class TestMainSubChain_Create_02 {
     SubLedgerCmd subLedgerCmd = new SubLedgerCmd();
     MgToolCmd mgToolCmd = new MgToolCmd();
 
-    String noPerm="not found";
-    String notSupport="not support service";
     String stateDestroyed ="has been destroyed";
-    String stateFreezed ="not support service";
     String ledgerStateDestroy = "\"state\": \"Destory\"";
     String ledgerStateFreeze = "\"state\": \"Freeze\"";
 

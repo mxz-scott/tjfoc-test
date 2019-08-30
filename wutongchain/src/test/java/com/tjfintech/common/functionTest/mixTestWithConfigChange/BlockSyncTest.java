@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
+import org.junit.AfterClass;
 import org.junit.Before;
 import static org.hamcrest.Matchers.containsString;
 
@@ -93,7 +94,7 @@ public class BlockSyncTest {
 
         StoreUTXO();
         MgToolStore();  //使用管理工具短时间内发送多笔存证交易
-//        WVMTx();  //当前Contract下合约Enabled会影响wvm合约安装，按照开发解释是不应该有影响 20190815
+        WVMTx();  //当前Contract下合约Enabled会影响wvm合约安装，按照开发解释是不应该有影响 20190815
         //个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
         setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
@@ -120,7 +121,7 @@ public class BlockSyncTest {
 
         StoreUTXO();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
-//        WVMTx();
+        WVMTx();
 
         //节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
         setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,resetPeerBase);
@@ -243,6 +244,7 @@ public class BlockSyncTest {
     public void TC989_SyncNoBaseImage()throws Exception{
         //停止节点PEER4,删除节点4上的基础镜像
         String syncPeer=PEER4IP;
+        String synvPeerPort = PEER4RPCPort;
         Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
         shellPeer.execute(killPeerCmd);
         shellPeer.execute("docker rm -f `docker ps -aq`");
@@ -258,8 +260,8 @@ public class BlockSyncTest {
         setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,resetPeerBase);
         //同步失败节点异常 停止运行
 
-        //检查Peer2同步异常节点会停止
-        ExeToolCmdAndChk(syncPeer,"./toolkit height -p "+ PEER2RPCPort,"rpc error");
+        //检查同步异常节点会停止
+        ExeToolCmdAndChk(syncPeer,"./toolkit height -p "+ synvPeerPort,"rpc error");
 
         //安装合约镜像
         setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,"docker load < /root/ccenv.docker");
@@ -276,6 +278,26 @@ public class BlockSyncTest {
         Thread.sleep(OnChainSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
         assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
+    }
+
+    //@Test
+    public void test()throws Exception{
+
+        //停止节点PEER4,删除节点4上的基础镜像
+        String syncPeer=PEER1IP;
+        Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
+
+        for(int i = 0; i< 100 ;i++) {
+            log.info("execute time: " + i);
+            shellPeer.execute(killPeerCmd);
+            shellPeer.execute(clearPeerDB);
+            Thread.sleep(500);
+            shellPeer.execute(startPeerCmd);
+
+            Thread.sleep(SLEEPTIME);
+            //检查同步异常节点会停止
+            ExeToolCmdAndChk(syncPeer, "./toolkit height -p " + PEER1RPCPort, "BlockHeight");
+        }
     }
 
 
@@ -681,6 +703,7 @@ public class BlockSyncTest {
     //@AfterClass
     public static void resetEnv()throws Exception{
         setAndRestartPeerList(clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,resetPeerBase,resetPeerConfig);
+        delDataBase();//清空sdk当前使用数据库数据
         setAndRestartSDK(resetSDKConfig);
     }
 

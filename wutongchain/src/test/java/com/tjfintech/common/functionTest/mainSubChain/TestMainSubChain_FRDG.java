@@ -32,11 +32,10 @@ public class TestMainSubChain_FRDG {
     MgToolCmd mgToolCmd = new MgToolCmd();
     SubLedgerCmd subLedgerCmd = new SubLedgerCmd();
 
-
-    String noPerm="not found";
     String notSupport="not support service";
     String stateDestroyed ="has been destroyed";
-    String stateFreezed ="not support service";
+    String stateFreezed ="has been freezed";
+//    String stateFreezed ="not support service";
     String ledgerStateDestroy = "\"state\": \"Destory\"";
     String ledgerStateFreeze = "\"state\": \"Freeze\"";
 
