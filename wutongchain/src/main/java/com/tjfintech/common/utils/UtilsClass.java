@@ -328,16 +328,18 @@ public class UtilsClass {
 
     public static String getPeerId(String IP,String userName,String passWd) {
         Shell shellPeer=new Shell(IP,userName,passWd);
-        String peerId=null;
+        String peerId="";
         shellPeer.execute("cd "+ PeerPATH + ";./" + PeerTPName + " init");
         ArrayList<String> stdout3 = shellPeer.getStandardOutput();
         for (String str1 : stdout3){
-            if(str1.contains("Local peer"))
+            if(str1.contains("peerID"))
             {
-                peerId=str1.substring(str1.indexOf("peer:")+5).trim();
+                peerId=str1.substring(str1.indexOf(":")+1).trim();
+                assertEquals(false, peerId.isEmpty());
                 break;
             }
         }
+        assertEquals(peerId.isEmpty(),false);
         log.info("IP "+IP+" with Id "+peerId);
         return peerId;
     }
@@ -524,25 +526,30 @@ public class UtilsClass {
         else log.info("*************sleep time(ms): " + sleepTime);
     }
 
-    public static String getPeerID(String peerIP)throws Exception{
-
-        Shell shell1=new Shell(peerIP,USERNAME,PASSWD);
-        shell1.execute("cd " + PeerPATH +";./" + PeerTPName + " init");
-        ArrayList<String> stdout = shell1.getStandardOutput();
-        String response = StringUtils.join(stdout,"\n");
-        log.info("\n"+response);
-
-        String peerID="";
-        for (String str : stdout) {
-            if(str.contains("Local peer"))
-            {
-                peerID=str.substring(str.indexOf(":")+1).trim();
-            }
-        }
-
-        assertEquals(peerID.isEmpty(),false);
-        return peerID;
+    @Test
+    public void test()throws Exception{
+//        getPeerId("10.1.3.240");
     }
+//    public static String getPeerID(String peerIP)throws Exception{
+//
+//        Shell shell1=new Shell(peerIP,USERNAME,PASSWD);
+//        shell1.execute("cd " + PeerPATH +";./" + PeerTPName + " init");
+//        ArrayList<String> stdout = shell1.getStandardOutput();
+//        String response = StringUtils.join(stdout,"\n");
+//        log.info("testeeee");
+//        log.info("\n"+response);
+//
+//        String peerID="";
+//        for (String str : stdout) {
+//            if(str.contains("peer"))
+//            {
+//                peerID=str.substring(str.indexOf(":")+1).trim();
+//            }
+//        }
+//
+//        assertEquals(peerID.isEmpty(),false);
+//        return peerID;
+//    }
 
     public static String shExeAndReturn(String IP,String cmd){
         Shell shell1=new Shell(IP,USERNAME,PASSWD);
