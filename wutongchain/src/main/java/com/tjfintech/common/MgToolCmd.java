@@ -51,7 +51,7 @@ public class MgToolCmd implements ManageTool {
 
         String[] temp = joinPeerIP.substring(joinPeerIP.lastIndexOf("/") + 1).split("\\.");
         log.info("peer ip ***************  " + joinPeerIP.substring(joinPeerIP.lastIndexOf("/")));
-        String peerID = getPeerID(joinPeerIP.substring(joinPeerIP.lastIndexOf("/") + 1));
+        String peerID = getPeerId(joinPeerIP.substring(joinPeerIP.lastIndexOf("/") + 1),USERNAME,PASSWD);
         String peerName = "peer" + temp[3];
         String peerIPlan = joinPeerIP + joinTcpPort;
         String peerIPwan = joinPeerIP + joinTcpPort;
@@ -65,7 +65,7 @@ public class MgToolCmd implements ManageTool {
     public String quitPeer(String queryIPPort,String peerIP)throws Exception{
         String rpcPort = queryIPPort.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
-        String peerID = getPeerID(peerIP);
+        String peerID = getPeerId(peerIP,USERNAME,PASSWD);
 
         String cmd = toolExePath + " quit -p " + rpcPort + " -n " + peerID;
         return shExeAndReturn(queryIP,cmd);

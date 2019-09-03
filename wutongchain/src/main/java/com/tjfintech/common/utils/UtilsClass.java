@@ -103,8 +103,8 @@ public class UtilsClass {
     public static String killPeerCmd = "ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9";
     public static String killSDKCmd = "ps -ef |grep " + SDKTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9";
     public static String clearPeerDB = "rm -rf "+ PeerPATH + "*db ";
-    public static String clearPeerWVMbin = "find "+ PeerPATH + "contracts/bin/* ! -name Sys_StoreEncrypted -exec rm -rf {} \\;";
-    public static String clearPeerWVMsrc = "find "+ PeerPATH + "contracts/src/* ! -name Sys_StoreEncrypted -exec rm -rf {} \\;";
+    public static String clearPeerWVMsrc = "cd "+ PeerPATH + "contracts/src/;rm -rf *";
+    public static String clearPeerWVMbin = "cd "+ PeerPATH + "contracts/bin/;ls |grep -v Sys_StoreEncrypted|xargs rm -rf ";
     public static String resetPeerBase = "cp " + PeerPATH + "conf/baseOK.toml " + PeerPATH + "conf/base.toml";
     public static String resetPeerConfig = "cp "+ PeerPATH + "configOK.toml "+ PeerPATH  + PeerMemConfig+".toml";
     public static String resetSDKConfig = "cp " + SDKPATH + "conf/configOK.toml " + SDKPATH + "conf/config.toml";
