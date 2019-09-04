@@ -85,7 +85,7 @@ public class TestPermission {
             sleepAndSaveInfo(SLEEPTIME,"赋权限999后等待");
             bf.updatePubPriKey();
             bf.collAddressTest();
-            bf.createAdd();
+//            bf.createAdd();
             bExe=true;
         }
 

@@ -45,11 +45,11 @@ public class WVMContractTest {
 
     @BeforeClass
     public  static void setPermFull()throws Exception{
-        BeforeCondition beforeCondition = new BeforeCondition();
-        beforeCondition.clearDataSetPerm999();
-        beforeCondition.collAddressTest();
-        beforeCondition.createAdd();
-        sleepAndSaveInfo(SLEEPTIME);
+//        BeforeCondition beforeCondition = new BeforeCondition();
+//        beforeCondition.clearDataSetPerm999();
+//        beforeCondition.collAddressTest();
+////        beforeCondition.createAdd();
+//        sleepAndSaveInfo(SLEEPTIME);
     }
 
     @Test

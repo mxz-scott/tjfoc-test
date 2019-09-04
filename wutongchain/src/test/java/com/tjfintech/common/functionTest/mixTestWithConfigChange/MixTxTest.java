@@ -38,7 +38,7 @@ public class MixTxTest {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();
-            bf.createAdd();
+//            bf.createAdd();
             Thread.sleep(8000);
             bReg=true;
         }

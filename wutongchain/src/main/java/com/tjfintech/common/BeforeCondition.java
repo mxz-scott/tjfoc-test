@@ -145,50 +145,50 @@ public class BeforeCondition {
 //    }
 
 
-    /**
-     * 创建多签地址 保存在数据库中
-     * 当数据库被清，库中没多签地址信息时候调用。
-     */
-    @Test
-    public void createAdd() {
-        int M = 3;
-        Map<String, Object> map = new HashMap<>();
-        map.put("1", PUBKEY1);
-        map.put("2", PUBKEY2);
-        map.put("3", PUBKEY3);
-        multiSign.genMultiAddress(M, map);
-        map = new HashMap<>();
-        map.put("1", PUBKEY1);
-        map.put("2", PUBKEY2);
-        map.put("3", PUBKEY6);
-        multiSign.genMultiAddress(M, map);
-        map = new HashMap<>();
-        map.put("1", PUBKEY1);
-        map.put("2", PUBKEY6);
-        map.put("3", PUBKEY7);
-        multiSign.genMultiAddress(M, map);
-        M = 1;
-        map = new HashMap<>();
-        map.put("1", PUBKEY1);
-        map.put("2", PUBKEY2);
-        multiSign.genMultiAddress(M, map);
-        map = new HashMap<>();
-        map.put("1", PUBKEY1);
-        map.put("2", PUBKEY3);
-        multiSign.genMultiAddress(M, map);
-        map = new HashMap<>();
-        map.put("1", PUBKEY3);
-        map.put("2", PUBKEY4);
-        multiSign.genMultiAddress(M, map);
-        map = new HashMap<>();
-        map.put("1", PUBKEY4);
-        map.put("2", PUBKEY5);
-        multiSign.genMultiAddress(1, map);
-        map = new HashMap<>();
-        map.put("1", PUBKEY1);
-        map.put("2", PUBKEY6);
-        multiSign.genMultiAddress(M, map);//34
-    }
+//    /**
+//     * 创建多签地址 保存在数据库中
+//     * 当数据库被清，库中没多签地址信息时候调用。
+//     */
+//    @Test
+//    public void createAdd() {
+//        int M = 3;
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("1", PUBKEY1);
+//        map.put("2", PUBKEY2);
+//        map.put("3", PUBKEY3);
+//        multiSign.genMultiAddress(M, map);
+//        map = new HashMap<>();
+//        map.put("1", PUBKEY1);
+//        map.put("2", PUBKEY2);
+//        map.put("3", PUBKEY6);
+//        multiSign.genMultiAddress(M, map);
+//        map = new HashMap<>();
+//        map.put("1", PUBKEY1);
+//        map.put("2", PUBKEY6);
+//        map.put("3", PUBKEY7);
+//        multiSign.genMultiAddress(M, map);
+//        M = 1;
+//        map = new HashMap<>();
+//        map.put("1", PUBKEY1);
+//        map.put("2", PUBKEY2);
+//        multiSign.genMultiAddress(M, map);
+//        map = new HashMap<>();
+//        map.put("1", PUBKEY1);
+//        map.put("2", PUBKEY3);
+//        multiSign.genMultiAddress(M, map);
+//        map = new HashMap<>();
+//        map.put("1", PUBKEY3);
+//        map.put("2", PUBKEY4);
+//        multiSign.genMultiAddress(M, map);
+//        map = new HashMap<>();
+//        map.put("1", PUBKEY4);
+//        map.put("2", PUBKEY5);
+//        multiSign.genMultiAddress(1, map);
+//        map = new HashMap<>();
+//        map.put("1", PUBKEY1);
+//        map.put("2", PUBKEY6);
+//        multiSign.genMultiAddress(M, map);//34
+//    }
 
     /**
      * 测试用例T284的前提条件。发行对应token

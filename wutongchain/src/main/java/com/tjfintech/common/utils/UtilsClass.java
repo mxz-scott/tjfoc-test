@@ -526,10 +526,6 @@ public class UtilsClass {
         else log.info("*************sleep time(ms): " + sleepTime);
     }
 
-    @Test
-    public void test()throws Exception{
-//        getPeerId("10.1.3.240");
-    }
 //    public static String getPeerID(String peerIP)throws Exception{
 //
 //        Shell shell1=new Shell(peerIP,USERNAME,PASSWD);

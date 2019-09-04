@@ -98,7 +98,7 @@ public class TestTxType {
             bf.setPermission999();
             bf.updatePubPriKey();
             bf.collAddressTest();
-            bf.createAdd();
+//            bf.createAdd();
 
             Thread.sleep(SLEEPTIME);
             bReg=true;

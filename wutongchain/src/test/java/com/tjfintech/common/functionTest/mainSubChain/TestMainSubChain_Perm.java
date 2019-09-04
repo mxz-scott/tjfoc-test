@@ -39,7 +39,7 @@ public class TestMainSubChain_Perm {
         BeforeCondition beforeCondition = new BeforeCondition();
         beforeCondition.clearDataSetPerm999();
         beforeCondition.collAddressTest();
-        beforeCondition.createAdd();
+//        beforeCondition.createAdd();
         sleepAndSaveInfo(SLEEPTIME);
     }
 
