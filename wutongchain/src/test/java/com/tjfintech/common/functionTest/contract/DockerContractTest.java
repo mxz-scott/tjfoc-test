@@ -191,6 +191,17 @@ public class DockerContractTest {
         response=destroyTest();
         assertThat(response,containsString("error Category or empty Category!!"));
 
+        //TC1797 TC1799
+        category="wvm"; //category设置合法的但不匹配的合约类型wvm  此部分未调试
+        response=installTest();
+        assertThat(response,containsString("error Category or empty Category!!"));
+
+        response=queryMobileTest("Mobile1");
+        assertThat(response,containsString("error Category or empty Category!!"));
+
+        response=destroyTest();
+        assertThat(response,containsString("error Category or empty Category!!"));
+
         category="docker";
         name="A12"+RandomUtils.nextInt(100000);
         response=installTest();

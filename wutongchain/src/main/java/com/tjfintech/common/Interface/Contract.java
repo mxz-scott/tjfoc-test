@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface Contract {
-    String InstallWVM(String file,String prikey) throws Exception;
+    String InstallWVM(String file,String category,String prikey) throws Exception;
     String QueryWVM(String name,String version,String category,String method,String caller,List<?> args);
-    String DestroyWVM(String name)throws Exception;
+    String DestroyWVM(String name,String category)throws Exception;
     String Invoke(String name,String version,String category,String method,String caller,List<?> args);
     String Install(String name,String version,String category,String file) throws Exception;
     String Invoke(String name,String version,String category,String method,List<?> args);

@@ -34,7 +34,7 @@ public class GoContract implements Contract {
      * @return
      * @throws Exception
      */
-    public String InstallWVM(String file,String prikey) throws Exception{
+    public String InstallWVM(String file,String category,String prikey) throws Exception{
         Map<String,Object>map=new HashMap<>();
         map.put("Category","wvm");
         map.put("File",file);
@@ -114,10 +114,10 @@ public class GoContract implements Contract {
      * @param name  销毁wvm合约名 需要从安装合约时获取
      * @return
      */
-    public String DestroyWVM(String name){
+    public String DestroyWVM(String name,String category){
         Map<String,Object>map=new HashMap<>();
         map.put("Name",name);
-        map.put("Category","wvm");
+        map.put("Category",category);
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
 

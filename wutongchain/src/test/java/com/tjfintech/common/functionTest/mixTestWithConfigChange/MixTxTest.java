@@ -5,6 +5,8 @@ import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.functionTest.contract.WVMContractTest;
+import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -17,9 +19,11 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -31,7 +35,10 @@ public class MixTxTest {
     Store store =testBuilder.getStore();
     MultiSign multiSign =testBuilder.getMultiSign();
     SoloSign soloSign = testBuilder.getSoloSign();
-
+    WVMContractTest wvmContractTest = new WVMContractTest();
+    FileOperation fileOper = new FileOperation();
+    ArrayList<String> txHashList = new ArrayList<>();
+    ArrayList<String> txHashNo = new ArrayList<>();
     @Before
     public void beforeConfig() throws Exception {
         if(bReg==false) {
@@ -46,10 +53,17 @@ public class MixTxTest {
 
     @Test
     public void TestMultiTypeTx()throws Exception{
-        assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS6), CoreMatchers.containsString("200"));
-        assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS1), CoreMatchers.containsString("200"));
-        assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS6), CoreMatchers.containsString("200"));
-        assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS1), CoreMatchers.containsString("200"));
+        //TC1845
+        txHashList.clear();
+        String response12 = multiSign.collAddress(PRIKEY1,ADDRESS6);
+        String response13 = multiSign.collAddress(PRIKEY1,ADDRESS1);
+        String response14 = multiSign.addissueaddress(PRIKEY1,ADDRESS6);
+        String response15 = multiSign.addissueaddress(PRIKEY1,ADDRESS1);
+
+        assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS5), CoreMatchers.containsString("200"));
+        assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS2), CoreMatchers.containsString("200"));
+        assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS5), CoreMatchers.containsString("200"));
+        assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS2), CoreMatchers.containsString("200"));
 
         Thread.sleep(6000);
         //设置打包时间为20s 使得各种类型的交易同时打包
@@ -60,10 +74,10 @@ public class MixTxTest {
         //发送存证交易
         String Data="Mix tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
         String response1=store.CreateStore(Data);
-        String response2= multiSign.collAddress(PRIKEY1,ADDRESS6);
-        String response3= multiSign.collAddress(PRIKEY1,ADDRESS1);
-        String response4= multiSign.addissueaddress(PRIKEY1,ADDRESS6);
-        String response5= multiSign.addissueaddress(PRIKEY1,ADDRESS1);
+        String response2= multiSign.collAddress(PRIKEY1,ADDRESS5);
+        String response3= multiSign.collAddress(PRIKEY1,ADDRESS2);
+        String response4= multiSign.addissueaddress(PRIKEY1,ADDRESS5);
+        String response5= multiSign.addissueaddress(PRIKEY1,ADDRESS2);
 
         String tokenTypeS = "MixSOLOTC-"+ UtilsClass.Random(6);
         log.info(ADDRESS1+"发行token "+tokenTypeS);
@@ -79,6 +93,11 @@ public class MixTxTest {
         String Tx1 = JSONObject.fromObject(response7).getJSONObject("Data").getString("Tx");
         log.info("第一次签名");
         String response8 = multiSign.Sign(Tx1, PRIKEY5);
+
+
+        //执行wvm合约测试
+        wvm_install_invoke_destory();
+
 
         assertThat(response1, CoreMatchers.containsString("200"));
         assertThat(response2, CoreMatchers.containsString("200"));
@@ -117,6 +136,16 @@ public class MixTxTest {
         response6=store.GetTxDetail(StoreHash6);
         response8=store.GetTxDetail(StoreHash8);
 
+
+        txHashList.add(StoreHash1);
+        txHashList.add(StoreHash2);
+        txHashList.add(StoreHash3);
+        txHashList.add(StoreHash4);
+        txHashList.add(StoreHash5);
+        txHashList.add(StoreHash6);
+        txHashList.add(StoreHash8);
+
+
         String resp1 = store.GetHeight();
 
         int height =Integer.parseInt(JSONObject.fromObject(resp).getString("Data"));
@@ -125,7 +154,47 @@ public class MixTxTest {
         boolean bright = height1 > height ? true: false;
         assertEquals(true,bright);
 
+        log.info("list no.:" + txHashList.size());
+
+        for(String hash : txHashList){
+            wvmContractTest.chkTxDetailRsp("200",hash );
+        }
+
+        for(String hash : txHashNo){
+            wvmContractTest.chkTxDetailRsp("404",hash );
+        }
+
     }
+
+
+    public void wvm_install_invoke_destory() throws Exception{
+
+        String ctName="MIX_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
+
+        // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
+        // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
+        fileOper.replace(resourcePath + wvmContractTest.wvmFile + ".txt", wvmContractTest.orgName, ctName);
+
+        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
+        String response1 = wvmContractTest.wvmInstallTest(wvmContractTest.wvmFile +"_temp.txt",PRIKEY1);
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
+        String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
+
+        //调用合约内的交易
+        String response2 = wvmContractTest.invokeNew(ctHash,"init",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
+        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
+
+
+        //销毁wvm合约
+        String response9 = wvmContractTest.wvmDestroyTest(ctHash);
+        String txHash9 = JSONObject.fromObject(response9).getJSONObject("Data").getString("Figure");
+
+        txHashList.add(txHash1);
+        txHashList.add(txHash9);
+
+        txHashNo.add(txHash2);
+    }
+
     @After
     public void  reset()throws Exception{
         setAndRestartPeerList(resetPeerBase);

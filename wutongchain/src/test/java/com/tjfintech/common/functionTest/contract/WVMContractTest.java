@@ -45,10 +45,11 @@ public class WVMContractTest {
 
     @BeforeClass
     public  static void setPermFull()throws Exception{
-//        BeforeCondition beforeCondition = new BeforeCondition();
+        BeforeCondition beforeCondition = new BeforeCondition();
 //        beforeCondition.clearDataSetPerm999();
 //        beforeCondition.collAddressTest();
-////        beforeCondition.createAdd();
+        beforeCondition.updatePubPriKey();
+//        beforeCondition.createAdd();
 //        sleepAndSaveInfo(SLEEPTIME);
     }
 
@@ -283,7 +284,6 @@ public class WVMContractTest {
         sleepAndSaveInfo(SLEEPTIME);
         //调用transfer和销毁一起
         String response4 = invokeNew(ctHash,"transfer",accountA,accountB,transfer);//A向B转30
-        sleepAndSaveInfo(100);
         String response5 = wvmDestroyTest(ctHash);//销毁
         String txHash4 = JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
         String txHash5 = JSONObject.fromObject(response5).getJSONObject("Data").getString("Figure");
@@ -323,7 +323,7 @@ public class WVMContractTest {
 
     }
     @Test
-    public void TC1815_ConcurrentTransfer() throws Exception{
+    public void TC1815_1847_ConcurrentTransfer() throws Exception{
         String ctName = "L_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
@@ -354,8 +354,9 @@ public class WVMContractTest {
         assertEquals(Integer.toString(amountA-transfer),JSONObject.fromObject(response7).getJSONObject("Data").getString("Result"));
     }
 
+
     @Test
-    public void TC1783_InstallMultiCtConcurrent() throws Exception{
+    public void TC1783_1848_1846_InstallMultiCtConcurrent() throws Exception{
         ArrayList<String> ctHashList = new ArrayList<>();
         //安装及销毁合约 未执行过合约内交易
         for(int i = 0; i < 30; i++) {
@@ -510,36 +511,6 @@ public class WVMContractTest {
         }
     }
 
-    @Test
-    public void TC1819_InvalidNameTest()throws Exception{
-        ArrayList<String> ctNameList = new ArrayList<>();
-        ArrayList<String> txHashList = new ArrayList<>();
-
-        ctNameList.add("___");
-        ctNameList.add("a1_");
-        ctNameList.add("aaaa");
-        ctNameList.add("_ae3");
-        ctNameList.add("a123");
-        ctNameList.add("asdfghjklqwertyuiop1234567833333333333333333333333333333333333333333333333390");
-        for(String name : ctNameList) {
-            txHashList.add(JSONObject.fromObject(intallUpdateName(name)).getJSONObject("Data").getString("Figure"));
-        }
-
-        sleepAndSaveInfo(SLEEPTIME);
-        assertEquals(6,txHashList.size());
-        for(String hash : txHashList){
-            chkTxDetailRsp("200",hash);
-        }
-
-        ctNameList.clear();
-        txHashList.clear();
-        ctNameList.add("123");
-        ctNameList.add("1a1_");
-        ctNameList.add("1a");
-        for(String name : ctNameList) {
-            assertEquals("500",JSONObject.fromObject(intallUpdateName(name)).getString("State"));
-        }
-    }
 
     public String intallUpdateName(String name)throws Exception{
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
@@ -559,20 +530,20 @@ public class WVMContractTest {
 
 
     public String wvmInstallTest(String wvmfile,String Prikey) throws Exception {
+        if(wvmfile == "") return contract.InstallWVM("",category,Prikey);
+
         String filePath = resourcePath + wvmfile;
         log.info("filepath "+ filePath);
         String file = readInput(filePath).toString().trim();
         String data = encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码
-//        String file = readInput(filePath).toString();
-//        String data = encryptBASE64(file.getBytes());
         log.info("base64 data: " + data);
-        String response=contract.InstallWVM(data,Prikey);
+        String response=contract.InstallWVM(data,category,Prikey);
         return response;
     }
 
 
     public String wvmDestroyTest(String cthash) throws Exception {
-        String response = contract.DestroyWVM(cthash);
+        String response = contract.DestroyWVM(cthash,category);
         return response;
 
     }
