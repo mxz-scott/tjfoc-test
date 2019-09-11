@@ -4,6 +4,8 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetCertECDSA;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
+import com.tjfintech.common.functionTest.store.StoreInvalidTest;
+import com.tjfintech.common.functionTest.store.StoreTest;
 import com.tjfintech.common.functionTest.utxoMultiSign.MultiSignDetailTest;
 import com.tjfintech.common.functionTest.utxoMultiSign.MultiTest;
 import com.tjfintech.common.functionTest.utxoMultiSign.MultiTestInvalid;
@@ -25,6 +27,8 @@ import org.junit.runners.Suite;
         MultiSignDetailTest.class,
         SoloTestInvalid.class,
         MultiTestInvalid.class,
+        StoreTest.class,
+        StoreInvalidTest.class,
         TestTxType.class
 })
 
