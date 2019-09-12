@@ -9,6 +9,9 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -120,6 +123,31 @@ public class StoreTest {
 //        assertThat(response6, containsString("200"));
 //
 //    }
+
+    @Test
+    public void TC278_createBigSizeStore() throws Exception {
+
+        String Data = UtilsClass.Random(10) + readStringFromFile(resourcePath +
+                "bigsize1.txt");
+        String response = store.CreateStore(Data);
+        assertThat(response, containsString("200"));
+        assertThat(response, containsString("Data"));
+
+
+        String Data2 = UtilsClass.Random(10) + readStringFromFile(resourcePath
+                +  "bigsize2.txt");
+        String response2 = store.CreateStore(Data2);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("Data"));
+
+
+        String Data3 = UtilsClass.Random(10) + readStringFromFile(resourcePath
+                + "bigsize3.txt");
+        String response3 = store.CreateStore(Data3);
+        assertThat(response3, containsString("200"));
+        assertThat(response3, containsString("Data"));
+
+    }
 
     /**
      *TC09-创建隐私存证交易，数据格式为Json
@@ -647,5 +675,33 @@ public class StoreTest {
         assertThat(res2,containsString("private key is not tx owner"));
 
 
+    }
+
+    //------------------------------------------------------------------------
+
+    /**
+     * 读文件中的字符串
+     *
+     * @param filepath
+     * @return
+     */
+    public String readStringFromFile(String filepath) {
+        String str = "";
+        File file = new File(filepath);
+        try {
+            FileInputStream in = new FileInputStream(file);
+            // size 为字串的长度 ，这里一次性读完
+            int size = in.available();
+            byte[] buffer = new byte[size];
+            in.read(buffer);
+            in.close();
+            str = new String(buffer, "GB2312");
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+
+            e.printStackTrace();
+            return null;
+        }
+        return str;
     }
 }
