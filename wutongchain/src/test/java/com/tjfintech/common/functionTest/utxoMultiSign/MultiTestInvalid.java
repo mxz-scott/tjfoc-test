@@ -821,8 +821,10 @@ public class  MultiTestInvalid {
     @Test
     public void TC980_MultiAddrNotInDB() throws Exception{
         String MultiAddr="Ss6iNcwoJFf5EWbuqqU7o96XNVH9izRKk9exj96giAntEFPaWZ6";
+//        assertThat(multiSign.Balance(MultiAddr,PRIKEY1,"test"),
+//                containsString("GetMulBalance : Multiaddr not generated, cannot be used !"));
         assertThat(multiSign.Balance(MultiAddr,PRIKEY1,"test"),
-                containsString("GetMulBalance : Multiaddr not generated, cannot be used !"));
+                containsString("not found multiladdress"));
     }
 
     @Test
