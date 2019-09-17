@@ -10,6 +10,7 @@ import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -70,8 +71,9 @@ public class PostTest {
                 // 请求返回的数据
                 InputStream in = conn.getInputStream();
                 try {
-                    byte[] data1 = new byte[in.available()];
-                    in.read(data1);
+                    byte[] data1 = readStream(in);
+//                    byte[] data1 = new byte[in.available()];
+//                    in.read(data1);
                     // 转成字符串
                     resultStr = new String(data1);
                     JSONObject jsonObject3 = JSONObject.fromObject(resultStr);
@@ -96,6 +98,18 @@ public class PostTest {
             resultStr = e.getMessage();
         }
         return resultStr;
+    }
+
+    public static byte[] readStream(InputStream inputStream)throws Exception{
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int len = -1;
+        while ((len = inputStream.read(buffer)) != -1){
+            outputStream.write(buffer,0,len);
+        }
+        outputStream.close();
+        inputStream.close();
+        return outputStream.toByteArray();
     }
 
     public static String postMethod(String linkUrl, Map<String,Object> map) {
