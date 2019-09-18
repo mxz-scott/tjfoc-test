@@ -78,11 +78,11 @@ public class UtilsClass {
     public static final String PeerPATH = PTPATH + "peer/";
     public static final String ToolPATH = PTPATH + "toolkit/";
     public  static String SDKID=null;
-    public static String PeerTPName="auto";
+    public static String PeerTPName="wtchain";
 //    public static String PeerTPName="Mp";
-    public static String SDKTPName="httpservice";
+    public static String SDKTPName="wtsdk";
 //    public static String SDKTPName="sdk";
-    public static String ToolTPName="toolkit";
+    public static String ToolTPName="wttool";
     public static ArrayList<String > peerList=new ArrayList<>();
     public static int RESTARTTIME=20000;
     public static long ContractInstallSleep=75000;
