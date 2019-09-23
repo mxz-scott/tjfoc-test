@@ -178,7 +178,7 @@ public class MultiSignInvalidTest {
         assertThat(transfer, containsString("Invalid multiple address"));//Multiaddr字段传入非法字符
         transfer = multiSign.Transfer(UtilsClass.PRIKEY6, "111","", "4QqVU8DvcZNWQ7mAiuq8SFzZkhKW27PRAgo91Q716KqvK3jYxo", tokenList);
 //        assertThat(transfer, containsString("Multiaddr is not matching for the prikey"));//Multiaddr字段不匹配
-        assertThat(transfer, containsString("not found multiladdress"));//Multiaddr字段不匹配
+        assertThat(transfer, containsString("not found multiaddress"));//Multiaddr字段不匹配
         map2.put("ToAddr",""); //接收方
         tokenList.add(map2);
         transfer = multiSign.Transfer(UtilsClass.PRIKEY6, utilsClass.PWD6,"", multiaddr2, tokenList);

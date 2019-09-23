@@ -824,7 +824,7 @@ public class  MultiTestInvalid {
 //        assertThat(multiSign.Balance(MultiAddr,PRIKEY1,"test"),
 //                containsString("GetMulBalance : Multiaddr not generated, cannot be used !"));
         assertThat(multiSign.Balance(MultiAddr,PRIKEY1,"test"),
-                containsString("not found multiladdress"));
+                containsString("not found multiaddress"));
     }
 
     @Test
