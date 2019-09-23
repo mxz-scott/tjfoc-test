@@ -615,10 +615,8 @@ public class TestTxType {
         assertEquals(wvm.caller,new String(decryptBASE64(
                 jsonObjectInvokeInit.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getString("Caller"))));
 
-        String argsinit0= new String(decryptBASE64(
-                jsonObjectInvokeInit.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getJSONArray("Args").getString(0)));
-        String argsinit1= new String(decryptBASE64(
-                jsonObjectInvokeInit.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getJSONArray("Args").getString(1)));
+        String argsinit0= jsonObjectInvokeInit.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getJSONArray("Args").getString(0);
+        String argsinit1= jsonObjectInvokeInit.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getJSONArray("Args").getString(1);
         assertEquals(wvm.accountA, argsinit0);
         assertEquals(Integer.toString(wvm.amountA),argsinit1);
         log.info("Check invoke init wvm tx detail complete");
@@ -632,12 +630,9 @@ public class TestTxType {
         assertEquals(wvm.caller,new String(decryptBASE64(
                 jsonObjectInvokeTransfer.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getString("Caller"))));
 
-        String argstrf0= new String(decryptBASE64(
-                jsonObjectInvokeTransfer.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getJSONArray("Args").getString(0)));
-        String argstrf1= new String(decryptBASE64(
-                jsonObjectInvokeTransfer.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getJSONArray("Args").getString(1)));
-        String argstrf2= new String(decryptBASE64(
-                jsonObjectInvokeTransfer.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getJSONArray("Args").getString(2)));
+        String argstrf0= jsonObjectInvokeTransfer.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getJSONArray("Args").getString(0);
+        String argstrf1= jsonObjectInvokeTransfer.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getJSONArray("Args").getString(1);
+        String argstrf2= jsonObjectInvokeTransfer.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getJSONArray("Args").getString(2);
         assertEquals(wvm.accountA, argstrf0);
         assertEquals(wvm.accountB,argstrf1);
         assertEquals(Integer.toString(wvm.transfer),argstrf2);

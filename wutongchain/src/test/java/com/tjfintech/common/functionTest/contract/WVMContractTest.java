@@ -89,9 +89,9 @@ public class WVMContractTest {
         String response6 = invokeNew(ctHash,"getBalance",accountB);//获取账户A账户余额
         String txHash6 = JSONObject.fromObject(response6).getJSONObject("Data").getString("Figure");
         sleepAndSaveInfo(SLEEPTIME/2);
-        //查询余额query接口 交易不上链
+        //查询余额query接口 交易不上链 //query接口不再显示交易hash
         String response7 = query(ctHash,"getBalance",accountA);//获取转账后账户A账户余额
-        String txHash7 = JSONObject.fromObject(response7).getJSONObject("Data").getString("Figure");
+//        String txHash7 = JSONObject.fromObject(response7).getJSONObject("Data").getString("Figure");
         assertEquals(Integer.toString(amountA-transfer),JSONObject.fromObject(response7).getJSONObject("Data").getString("Result"));
 
         String response8 = query(ctHash,"getBalance",accountB);//获取转账后账户B账户余额
@@ -105,7 +105,7 @@ public class WVMContractTest {
         assertThat(JSONObject.fromObject(response10).getString("Message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
 
         chkTxDetailRsp("200",txHash1,txHash2,txHash3,txHash4,txHash5,txHash6,txHash9);
-        chkTxDetailRsp("404",txHash7);
+//        chkTxDetailRsp("404",txHash7);
     }
 
     @Test
@@ -450,14 +450,12 @@ public class WVMContractTest {
 
         //调用合约内的方法 getBalance方法查询余额query接口 交易不上链
         String response7 = query(ctHash,method[2],accountA);//获取转账后账户A账户余额
-        String txHash7 = JSONObject.fromObject(response7).getJSONObject("Data").getString("Figure");
         assertEquals(Integer.toString(amountA-transfer),JSONObject.fromObject(response7).getJSONObject("Data").getString("Result"));
 
         String response8 = query(ctHash,method[2],accountB);//获取转账后账户B账户余额
         assertEquals(Integer.toString(amountB+transfer),JSONObject.fromObject(response8).getJSONObject("Data").getString("Result"));
 
         sleepAndSaveInfo(SLEEPTIME);
-        chkTxDetailRsp("404",txHash7);
 
         return ctHash;
     }
@@ -492,14 +490,12 @@ public class WVMContractTest {
 
         //调用合约内的方法 getBalance方法查询余额query接口 交易不上链
         String response7 = query(ctHash,method[2],accountA);//获取转账后账户A账户余额
-        String txHash7 = JSONObject.fromObject(response7).getJSONObject("Data").getString("Figure");
         assertEquals(Integer.toString(amountA-transfer/2),JSONObject.fromObject(response7).getJSONObject("Data").getString("Result"));
 
         String response8 = query(ctHash,method[2],accountB);//获取转账后账户B账户余额
         assertEquals(Integer.toString(amountB+transfer/2),JSONObject.fromObject(response8).getJSONObject("Data").getString("Result"));
 
         sleepAndSaveInfo(SLEEPTIME);
-        chkTxDetailRsp("404",txHash7);
 
         return ctHash;
     }
