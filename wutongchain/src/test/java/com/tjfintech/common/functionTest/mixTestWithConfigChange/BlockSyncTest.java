@@ -304,7 +304,7 @@ public class BlockSyncTest {
     @Test
     public void TC983_OnePeerStoreUTXO()throws Exception{
         WVMContractTest wvmContractTest = new WVMContractTest();
-        wvmHash = JSONObject.fromObject(wvmContractTest.intallUpdateName("testWVM")).getJSONObject("Data").getString("Name");
+        wvmHash = JSONObject.fromObject(wvmContractTest.intallUpdateName("testWVM",PRIKEY1)).getJSONObject("Data").getString("Name");
         //SDK配置文件中仅配置PEER1节点
 
         //停止节点PEER2 和PEER4
@@ -380,7 +380,7 @@ public class BlockSyncTest {
     @Test
     public void TC981_OnePeerAll()throws Exception{
         WVMContractTest wvmContractTest = new WVMContractTest();
-        wvmHash = JSONObject.fromObject(wvmContractTest.intallUpdateName("testWVM")).getJSONObject("Data").getString("Name");
+        wvmHash = JSONObject.fromObject(wvmContractTest.intallUpdateName("testWVM",PRIKEY1)).getJSONObject("Data").getString("Name");
         //SDK配置文件中仅配置PEER1节点
         sleepAndSaveInfo(SLEEPTIME,"等待wvm合约安装交易上链");
         //停止节点PEER2 和PEER4

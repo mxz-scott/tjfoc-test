@@ -89,7 +89,7 @@ public class WVMContractInvalidTest {
         ctNameList.add("a123");
         ctNameList.add("asdfghjklqwertyuiop1234567833333333333333333333333333333333333333333333333390");
         for(String name : ctNameList) {
-            txHashList.add(JSONObject.fromObject(wvmContractTest.intallUpdateName(name)).getJSONObject("Data").getString("Figure"));
+            txHashList.add(JSONObject.fromObject(wvmContractTest.intallUpdateName(name,PRIKEY1)).getJSONObject("Data").getString("Figure"));
         }
 
         sleepAndSaveInfo(SLEEPTIME);
@@ -104,7 +104,7 @@ public class WVMContractInvalidTest {
         ctNameList.add("1a1_");
         ctNameList.add("1a");
         for(String name : ctNameList) {
-            assertEquals("500",JSONObject.fromObject(wvmContractTest.intallUpdateName(name)).getString("State"));
+            assertEquals("500",JSONObject.fromObject(wvmContractTest.intallUpdateName(name,PRIKEY1)).getString("State"));
         }
     }
 
