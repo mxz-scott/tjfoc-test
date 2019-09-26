@@ -156,23 +156,4 @@ public class StoreInvalidTest {
         assertEquals(response.contains("400"),true);
     }
 
-    /**
-     * TC17创建两笔数据一样的存证
-     * 预期：两者返回相同哈希，返回500 提示重复存证
-     * @throws Exception
-     */
-    @Test
-    public void TC17_CreateStoreDouble()throws Exception{
-        String data="cxTest-"+ UtilsClass.Random(2);
-        String response= store.CreateStore(data);
-        Thread.sleep(1*1000);
-        String response2= store.CreateStore(data);
-        Thread.sleep(SLEEPTIME);
-        String hash1=JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
-        String hash2=JSONObject.fromObject(response2).getString("Message");
-        assertThat(response, CoreMatchers.containsString("200"));
-        assertThat(response2, CoreMatchers.containsString("500"));
-        assertThat(hash2, CoreMatchers.containsString("Duplicate transaction"));
-        assertThat(hash2, CoreMatchers.containsString(hash1));
-    }
 }

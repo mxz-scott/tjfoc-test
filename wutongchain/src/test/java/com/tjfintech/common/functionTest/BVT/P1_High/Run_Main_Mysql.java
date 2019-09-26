@@ -9,6 +9,7 @@ import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
 import com.tjfintech.common.functionTest.store.StoreInvalidTest;
 import com.tjfintech.common.functionTest.store.StoreTest;
+import com.tjfintech.common.functionTest.store.StoreWalletRelatedTest;
 import com.tjfintech.common.functionTest.utxoMultiSign.*;
 import com.tjfintech.common.functionTest.utxoSingleSign.SingleSignInvalidTest;
 import com.tjfintech.common.functionTest.utxoSingleSign.SoloTest;
@@ -26,6 +27,7 @@ import org.junit.runners.Suite;
 
         StoreTest.class,
         StoreInvalidTest.class,
+        StoreWalletRelatedTest.class,
 
         MultiTest.class,
         MultiTest_33_12.class,

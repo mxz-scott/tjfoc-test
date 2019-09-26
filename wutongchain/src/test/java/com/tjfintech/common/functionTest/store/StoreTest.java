@@ -22,7 +22,6 @@ import static org.junit.Assert.assertThat;
 @Slf4j
 public class StoreTest {
 
-    //public   final static int   SLEEPTIME=5*1000;
     public   final static int   SHORTSLEEPTIME=3*1000;
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
@@ -360,23 +359,6 @@ public class StoreTest {
 //       assertThat(response,containsString("200"));
 //    }
 
-    /**
-     * TC276根据哈希判断交易是否存在于钱包数据库
-     * @throws Exception
-     */
-    @Test
-    public void TC276_getInlocal()  throws Exception{
-
-        for(int i = 0; i < 5; i++) {
-            String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
-            String response= store.CreateStore(Data);
-            JSONObject jsonObject=JSONObject.fromObject(response);
-            String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-            Thread.sleep(SLEEPTIME);
-            String response2= store.GetInlocal(storeHash);
-            assertThat(response2,containsString("200"));
-        }
-    }
 
 
     @Test
