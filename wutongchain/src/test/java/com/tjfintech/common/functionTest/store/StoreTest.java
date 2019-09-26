@@ -47,6 +47,10 @@ public class StoreTest {
 
     }
 
+    @Test
+    public void TC_apiHealthTest() throws Exception {
+        assertThat(store.GetApiHealth(),containsString("success"));
+    }
 
     /**
      *TC292-获取存证交易byhash

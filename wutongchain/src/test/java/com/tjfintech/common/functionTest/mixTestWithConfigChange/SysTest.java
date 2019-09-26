@@ -2,6 +2,7 @@ package com.tjfintech.common.functionTest.mixTestWithConfigChange;
 
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.functionTest.Conditions.SetSDKWalletDisabled;
 import com.tjfintech.common.utils.Shell;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -207,6 +208,29 @@ public class SysTest {
 
     }
 
+    @Test
+    public void peerHealthChk()throws Exception{
+        assertThat(store.GetApiHealth(),containsString("success"));
+
+        //停止其中两个节点
+        shellExeCmd(PEER1IP,killPeerCmd);
+        shellExeCmd(PEER2IP,killPeerCmd);
+
+        assertThat(store.GetApiHealth(),containsString("rpc error"));
+
+        //停止所有节点
+        shellExeCmd(PEER4IP,killPeerCmd);
+        assertThat(store.GetApiHealth(),containsString("rpc error"));
+
+        //重启所有节点
+        shellExeCmd(PEER1IP,startPeerCmd);
+        shellExeCmd(PEER1IP,startPeerCmd);
+        shellExeCmd(PEER1IP,startPeerCmd);
+
+        sleepAndSaveInfo(SLEEPTIME*4);
+        assertThat(store.GetApiHealth(),containsString("success"));
+    }
+
 
     @Test
     public void fsetConfigMysqlMongoAndStop() throws Exception {
@@ -268,12 +292,23 @@ public class SysTest {
         //assertThat(response,containsString("200"));
     }
 
+    @Test
+    public void TC2008_WalletDisabled()throws Exception{
+        SetSDKWalletDisabled setSDKWalletDisabled = new SetSDKWalletDisabled();
+        //关闭wallet
+        setSDKWalletDisabled.setWalletDisabled();
+
+        assertThat(store.GetApiHealth(),containsString("success"));
+
+        peerHealthChk();
+    }
+
     @After
     public void recoverConfigSt()throws Exception{
 
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         log.info(sdkIP);
-        Shell shellSDK=new Shell(sdkIP,"root","root");
+        Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
 
         shellSDK.execute(killSDKCmd);
         shellSDK.execute(resetSDKConfig);
