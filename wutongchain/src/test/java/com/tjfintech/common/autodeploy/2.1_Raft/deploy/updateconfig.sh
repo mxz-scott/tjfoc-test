@@ -36,13 +36,12 @@ remotetoolName=wtkit
 
 walletEnabled=false
 remoteSDKDBProvider=mysql
-remoteSDKDBPath="root:root@tcp(10.1.3.246:3306)/wallet210?charset=utf8"
+remoteSDKDBPath="root:root@tcp(10.1.3.246:3306)/wallet211?charset=utf8"
 
 peerCAEnabled=false
-peerCAAddr=10.1.3.224:9001
+peerCAAddr=10.1.3.220:9003
 
 contractEnabled=true
-consenType=0
 
 #是否自动生成证书peer.lic
 licAuto=true
@@ -50,13 +49,13 @@ licAuto=true
 #定义是否所有节点使用同一个port端口
 #same=1
 #定义节点tcp port
-peerTcpPort=50030
+peerTcpPort=50050
 
 #定义节点rpc port
-peerRpcPort=9800
+peerRpcPort=9600
 
 #定义sdk使用的port接口
-sdkPort=9999
+sdkPort=9997
 
 
 #定义数组存放指定数据
@@ -65,8 +64,6 @@ declare -a peerPaths
 
 declare -a sdkIPs
 declare -a sdkPaths
-
-declare -a types
 
 
 #临时文件解析目录
@@ -80,7 +77,6 @@ remotepeerconfig=$tempdir/peerconfigtemp.toml
 
 
 ###########################函数定义###########################
- 
  ##//-----------------------------------------------------------------------------//
  function chkExpect(){
   chk=`which expect`
@@ -325,7 +321,7 @@ remotepeerconfig=$tempdir/peerconfigtemp.toml
 	done < $2
  }
  
- ##//-----------------------------------------------------------------------------//
+ ##//-----------------------------------------------------------------------------// 
  function parseSettingIni(){
     #预先处理获取节点、sdk及管理工具部署主机IP配置信息，分别获取各个section的位置
 	#删除setting.ini中的空行，之后再在末尾添加一行 
@@ -354,6 +350,23 @@ remotepeerconfig=$tempdir/peerconfigtemp.toml
 	fi
   
  }
+ 
+ 
+ ##//-----------------------------------------------------------------------------//
+ #设置echo显示字体突出颜色 天蓝色字
+ function echoblue(){
+    echo -e "\033[36m $1 \033[0m"
+ }
+ 
+ #设置echo显示字体突出颜色 红字
+ function echored(){
+    echo -e "\033[31m $1 \033[0m"
+ }
+ 
+ #设置echo显示字体突出颜色 红底白字
+ function echowhitered(){
+    echo -e "\033[41;37m $1 \033[0m"
+ }
  ##//-----------------------------------------------------------------------------//
 
  function getArrFromFile(){
@@ -377,20 +390,9 @@ remotepeerconfig=$tempdir/peerconfigtemp.toml
  } 
  
  ##//-----------------------------------------------------------------------------//
- #设置echo显示字体突出颜色 天蓝色字
- function echoblue(){
-    echo -e "\033[36m $1 \033[0m"
- }
  
- #设置echo显示字体突出颜色 红字
- function echored(){
-    echo -e "\033[31m $1 \033[0m"
- }
  
- #设置echo显示字体突出颜色 红底白字
- function echowhitered(){
-    echo -e "\033[41;37m $1 \033[0m"
- }
+ 
 ######======================================处理执行========================================######
 echo  ====================================== start ======================================
 #预先处理
@@ -402,7 +404,6 @@ echo =====================start time $starttime=====================
 chkExpect
 
 rm -rf $tempdir
-
 mkdir $tempdir
 
 #将需要处理的配置文件备份一份至temp目录下
@@ -430,22 +431,10 @@ typeNo=${#types[*]}
 echo "consensus type array no: $typeNo"
 
 
-
-#for i in ${!peerIPs[@]}
-#do
-#	echored ${peerIPs[$i]}
-#done
-
-
 #先将节点及sdk进程关闭
 echoblue " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~pre kill~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 preKillProcessIPFromFile $remotepeerName $tempdir/peer.ini
 preKillProcessIPFromFile $remotesdkName $tempdir/sdk.ini
-
-#在各个节点机器上创建部署目录
-echoblue " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~creat deploy dir~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-creatDir $deploydir
-
 
 #########################################################################
 #拷贝wttool文件夹至每个节点主机的对应目录
@@ -459,16 +448,7 @@ do
  if [ -z "$line" ]
    then continue
  fi
-  
 
-  ./transfer.sh $dir/$localtoolDir $line $deploydir/$remotetoolDir
-  ./ssh.sh $line "cd $deploydir/$remotetoolDir;mv $localtoolName $remotetoolName"
-
-  
-  replaceCert $toolCert$toolNo $line $deploydir/$remotetoolDir/tls
-  #管理工具auth建议使用同一个key.pem 因此暂时不做auth目录下文件替换
-  #replaceCert $toolCert$toolNo $line $deploydir/$remotetoolDir/auth
- 
   toolIPs[scpPathNo]=$line
   toolPaths[scpPathNo]=$deploydir/$remotetoolDir/
   
@@ -486,7 +466,7 @@ replaceAdminId ${toolIPs[0]} "id:" "cd ${toolPaths[0]}" "./$remotetoolName getid
 
 #########################################################################
 #拷贝wtchain文件夹至配置的peer主机目录
-echoblue " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~copy wtchain files~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+echoblue " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~copy wtchain config/base files~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 #offset=0
 peerNo=1
 scpPathNo=0;
@@ -498,27 +478,6 @@ do
    then continue
  fi
   
- #传送节点文件
- ./transfer.sh $dir/$localpeerDir $line $deploydir/$remotepeerDir
- ./ssh.sh $line "cd $deploydir/$remotepeerDir;mv $localpeerName $remotepeerName"
-
- 
- #替换peer.lic  licAuto=false时执行 判断文件夹中的lic个数是否满足主机个数，不满足则退出
- if [[ $licAuto == false ]];then
-    licno=$(ls -l |grep "^-"|wc -l)
-	if [ $licno -le $peerNo ];then
-	    echored "peerlic is not enough,please check \"$licdir\""
-		exit
-	fi
-    ./transfer.sh $licdir/peer$peerNo.lic $line $deploydir/$remotepeerDir/peer.lic
- fi
- 
- #替换tls cert 目录下证书
- replaceCert $peerCert$peerNo $line $deploydir/$remotepeerDir/tls
- replaceCert $peerCert$peerNo $line $deploydir/$remotepeerDir/cert
- #替换/ca/crypt目录下证书 与管理系统通讯证书
- replaceCert $peerCACert $line $deploydir/$remotepeerDir/ca/crypt
- 
  
  echo "********************replace peer conf/base.toml********************"
  matchBaseInfo $(($peerTcpPort)) $(($peerRpcPort)) $peerCAEnabled $peerCAAddr $contractEnabled
@@ -531,10 +490,12 @@ if [[ $typeNo -gt 0 ]];then
 	consenType=${types[$scpPathNo]}
 fi
 
-addConf peer$peerNo $line $(($peerTcpPort)) $(($peerRpcPort)) $consenType
-#替换peerconfigtemp.toml中的节点Id信息
-replacePeerId $line "ID:" "cd $deploydir/$remotepeerDir/" "./$remotepeerName id"
 
+addConf peer$peerNo $line $(($peerTcpPort)) $(($peerRpcPort)) $consenType
+
+
+#替换peerconfigtemp.toml中的节点Id信息
+replacePeerId $line "ID:" "cd $deploydir/$remotepeerDir/" "./$remotepeerName init"
 
 addSDKconfCluster $line:$(($peerRpcPort))
   
@@ -542,9 +503,7 @@ peerIPs[scpPathNo]=$line
 peerPaths[scpPathNo]=$deploydir/$remotepeerDir/
 ((peerNo++))
 ((scpPathNo++))
-  #if [ $same -eq 0 ];then     
-  #   ((offset++))
-  #fi
+
 done < $tempdir/peer.ini
 
 
@@ -558,17 +517,8 @@ for i in ${!peerPaths[@]}
   
 
 #########################################################################
-echoblue " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~replace peerlic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-#创建peer.lic并替换peer节点目录下的peerlic
-#如果使用该方法创建并替换peerlic 必须tool和peer配置的IP地址顺序及内容完全一致
-if [[ $licAuto == true ]];then
-	createpeerlic
-fi
-
-
-#########################################################################
 #拷贝sdk文件以及sdkconf.yaml至配置的sdk主机目录
-echoblue " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~copy sdk files~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+echoblue " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~copy sdk config file~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 #offset=0
 index=0
 sdkNo=1
@@ -580,13 +530,6 @@ do
    then continue
  fi
 
-  ./transfer.sh $dir/$localsdkDir $line $deploydir/$remotesdkDir
-  ./ssh.sh $line "cd $deploydir/$remotesdkDir;mv $localsdkName $remotesdkName"
-
-  
-  #更新证书
-  replaceCert $sdkCert$sdkNo $line $deploydir/$remotesdkDir/tls
-  replaceCert $sdkCert$sdkNo $line $deploydir/$remotesdkDir/auth
 
   #将节点集群信息更新到sdk/conf/config.toml文件中
   updateSDKPeerClusterInfo
@@ -602,15 +545,12 @@ do
   
   ((sdkNo++))
   ((index++))
-  #if [ $same -eq 0 ];then
-  #   ((offset++))
-  #fi
 done < $tempdir/sdk.ini
 
   
 #########################################################################
 echoblue " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~start peer process~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-#启动所有节点和SDK
+#启动所有节点
 for i in ${!peerPaths[@]}
   do
      ./ssh.sh ${peerIPs[$i]} "cd ${peerPaths[$i]};./$remotepeerName start -d"
@@ -623,34 +563,16 @@ sleep 10
 echowhitered "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~wtpeer test status~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 ./ssh.sh ${peerIPs[0]} "cd ${peerPaths[0]};./$remotepeerName test"
 ./ssh.sh ${peerIPs[1]} "cd ${peerPaths[1]};./$remotepeerName test"
+ 
 
 #########################################################################
-#给所有sdk赋权限
-echowhitered "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~set SDK permission~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+echoblue " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~start peer process~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+#启动所有sdk
 for i in ${!sdkIPs[@]}
   do
-     echo "********************start $remotesdkName process********************"
-	 key="SDK_ID:"
-     ./getRemoteInfo.sh "${sdkIPs[$i]}" "$key" "cd ${sdkPaths[$i]}" "./$remotesdkName start -d"
-	 #去掉文件中可能存在的行尾换行符
-	 sed -i 's/[\r]//g' $tempdir/${key}_${sdkIPs[$i]}
-	 cat $tempdir/${key}_${sdkIPs[$i]}
-	 
-     sdkId=`grep ${sdkIPs[$i]} $tempdir/${key}_${sdkIPs[$i]} | cut -d ":" -f 2`
-	 echo "********************set permission 999********************"
-	 rpcport=$(($peerRpcPort))
-	 setperm="./$remotetoolName permission -p $rpcport -d $sdkId -m 999"
-	./getRemoteInfo.sh ${toolIPs[0]} "success:" "cd ${toolPaths[0]}" "$setperm"
-     
+     ./ssh.sh ${peerIPs[$i]} "cd ${sdkPaths[$i]};./$remotesdkName start -d"     
   done
-  
-#########################################################################
-#可访问SDK地址
-echo -e "\033[36;37m ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~SDK http info~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \033[0m"
-for i in ${!sdkIPs[@]}
-  do	 
-	 echo "http://${sdkIPs[$i]}:$sdkPort"     
-  done
+
 
 endtime=$(date '+%Y-%m-%d %H:%M:%S')  
 echo =====================execute period:$starttime ~~~~~ $endtime=====================   
