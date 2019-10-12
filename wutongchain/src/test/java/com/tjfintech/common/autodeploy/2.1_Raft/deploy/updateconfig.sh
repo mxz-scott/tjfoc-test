@@ -573,8 +573,14 @@ for i in ${!sdkIPs[@]}
      ./ssh.sh ${peerIPs[$i]} "cd ${sdkPaths[$i]};./$remotesdkName start -d"     
   done
 
+#########################################################################
+#可访问SDK地址
+echo -e "\033[36;37m ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~SDK http info~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \033[0m"
+for i in ${!sdkIPs[@]}
+  do	 
+	 echo "http://${sdkIPs[$i]}:$sdkPort"     
+  done
 
 endtime=$(date '+%Y-%m-%d %H:%M:%S')  
 echo =====================execute period:$starttime ~~~~~ $endtime=====================   
 echo  ====================================== complete ======================================
-
