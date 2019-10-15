@@ -27,6 +27,8 @@ public interface Store {
     String GetPeerList();
     String GetApiHealth();
 
+    String GetLedger(String ledgerName);//查询子链信息
+
     String SynCreateStore(Integer timeout ,String Data);  //同步创建存证接口
     String SynCreateStore(Integer timeout ,String Data,String... PubKeys);  //同步创建存证接口
     String SynCreatePrivateStore(Integer timeout , String Data, Map keymap);//同步创建隐私存证

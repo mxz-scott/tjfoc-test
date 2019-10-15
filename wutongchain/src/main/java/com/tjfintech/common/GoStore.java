@@ -32,6 +32,21 @@ public  class GoStore implements Store {
 
     }
 
+    /**
+     * 获取系统健康状态
+     *
+     * @method GET
+     */
+
+    public String GetLedger(String ledgerName) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("ledger", ledgerName);
+        String result = PostTest.sendPostToJson(SDKADD + "/getledger", map);
+        log.info(result);
+        return result;
+
+    }
+
 //    /**
 //     * 获取交易详情
 //     *
