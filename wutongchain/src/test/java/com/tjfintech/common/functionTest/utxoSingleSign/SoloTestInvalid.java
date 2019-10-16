@@ -12,6 +12,7 @@ import net.sf.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.JUnitCore;
 
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,12 @@ public class SoloTestInvalid {
     private static String tokenType;
     private static String tokenType2;
 
+    private static String issueAmount1;
+    private static String issueAmount2;
+
+    private static String actualAmount1;
+    private static String actualAmount2;
+
     @Before
     //@Test
     public void beforeConfig() throws Exception {
@@ -43,15 +50,25 @@ public class SoloTestInvalid {
             bReg=true;
         }
 
+        issueAmount1 = "100.12345678912345";
+        issueAmount2 = "200.876543212345";
+
+        if (UtilsClass.PRECISION == 10) {
+            actualAmount1 = "100.1234567891";
+            actualAmount2 = "200.8765432123";
+        }else {
+            actualAmount1 = "100.123456";
+            actualAmount2 = "200.876543";
+        }
 
         log.info("发行两种token");
         log.info(ADDRESS1);
         log.info(PRIKEY1);
         tokenType = "SOLOTC-" + UtilsClass.Random(6);
-        String issueInfo1=  soloSign.issueToken(PRIKEY1, tokenType, "100.123456789", tokenType,ADDRESS1);
+        String issueInfo1=  soloSign.issueToken(PRIKEY1, tokenType, issueAmount1, tokenType,ADDRESS1);
         //Thread.sleep(SLEEPTIME);
         tokenType2 = "SOLOTC-" + UtilsClass.Random(6);
-        String issueInfo2= soloSign.issueToken(PRIKEY1, tokenType2, "200.87654321", tokenType2,ADDRESS1);
+        String issueInfo2= soloSign.issueToken(PRIKEY1, tokenType2, issueAmount2, tokenType2,ADDRESS1);
         Thread.sleep(SLEEPTIME);
         assertThat(issueInfo1,containsString("200"));
         assertThat(issueInfo2,containsString("200"));
@@ -60,8 +77,8 @@ public class SoloTestInvalid {
         String response2 = soloSign.Balance(PRIKEY1, tokenType2);
         assertThat(tokenType + "查询余额错误", response1, containsString("200"));
         assertThat(tokenType + "查询余额错误", response2, containsString("200"));
-        assertThat(tokenType + "查询余额不正确", response1, containsString("100.123456789"));
-        assertThat(tokenType + "查询余额不正确", response2, containsString("200.87654321"));
+        assertThat(tokenType + "查询余额不正确", response1, containsString(actualAmount1));
+        assertThat(tokenType + "查询余额不正确", response2, containsString(actualAmount2));
     }
 
     /**

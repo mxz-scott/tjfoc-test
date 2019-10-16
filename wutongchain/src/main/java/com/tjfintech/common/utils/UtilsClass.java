@@ -30,6 +30,9 @@ public class UtilsClass {
     public static Integer  UTXOSHORTMEOUT = 4 * 1000;//毫秒
     public final static int  SLEEPTIME = 7*1000;
 
+    //UTXO精度
+    public static Integer PRECISION = 6;
+
     //SM2公私钥对
     public static String  ADDRESS1, ADDRESS2, ADDRESS3, ADDRESS4, ADDRESS5, ADDRESS6, ADDRESS7;
     public static String  MULITADD1 ="";//123 (3/3签名)

@@ -31,6 +31,12 @@ public class SoloTest {
     private static String tokenType;
     private static String tokenType2;
 
+    private static String issueAmount1;
+    private static String issueAmount2;
+
+    private static String actualAmount1;
+    private static String actualAmount2;
+
     @Before
     public void beforeConfig() throws Exception {
         if(certPath!=""&& bReg==false) {
@@ -41,15 +47,23 @@ public class SoloTest {
             bReg=true;
         }
 
-//        BeforeCondition beforeCondition=new BeforeCondition();
-//        beforeCondition.collAddressTest();
+        issueAmount1 = "10000.12345678912345";
+        issueAmount2 = "20000.876543212345";
 
-        log.info("发行两种token1000个");
+        if (UtilsClass.PRECISION == 10) {
+            actualAmount1 = "10000.1234567891";
+            actualAmount2 = "20000.8765432123";
+        }else {
+            actualAmount1 = "10000.123456";
+            actualAmount2 = "20000.876543";
+        }
+
+        log.info("发行两种token");
         tokenType = "SOLOTC-"+UtilsClass.Random(6);
-        String isResult= soloSign.issueToken(PRIKEY1,tokenType,"10000.123456789","发行token",ADDRESS1);
+        String isResult= soloSign.issueToken(PRIKEY1,tokenType,issueAmount1,"发行token",ADDRESS1);
         //Thread.sleep(SLEEPTIME);
         tokenType2 = "SOLOTC-"+UtilsClass.Random(6);
-        String isResult2= soloSign.issueToken(PRIKEY1,tokenType2,"20000.87654321","发行token",ADDRESS1);
+        String isResult2= soloSign.issueToken(PRIKEY1,tokenType2,issueAmount2,"发行token",ADDRESS1);
         assertThat(tokenType+"发行token错误",isResult, containsString("200"));
         assertThat(tokenType+"发行token错误",isResult2, containsString("200"));
 
@@ -57,12 +71,11 @@ public class SoloTest {
         log.info("查询归集地址中两种token余额");
         String response1 = soloSign.Balance( PRIKEY1, tokenType);
         String response2 = soloSign.Balance( PRIKEY1, tokenType2);
-       // String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-       // String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+
         assertThat(tokenType+"查询余额错误",response1, containsString("200"));
         assertThat(tokenType+"查询余额错误",response2, containsString("200"));
-        assertThat(tokenType+"查询余额不正确",response1, containsString("10000.123456789"));
-        assertThat(tokenType+"查询余额不正确",response2, containsString("20000.87654321"));
+        assertThat(tokenType+"查询余额不正确",response1, containsString(actualAmount1));
+        assertThat(tokenType+"查询余额不正确",response2, containsString(actualAmount2));
     }
 
     /**
@@ -201,6 +214,54 @@ public class SoloTest {
         assertThat(Info5, containsString("200"));
         log.info("帐号6，token2余额正确");
     }
+
+
+    /**
+     * 精度测试
+     *
+     */
+    @Test
+    public void TC024_PrecisionTest() throws Exception {
+        String transferData = "归集地址向" + PUBKEY3 + "转账" + tokenType+",并向"+PUBKEY5+"转账";
+        log.info(transferData);
+        List<Map> listModel = soloSign.constructToken(ADDRESS3,tokenType,issueAmount1);
+        log.info(ADDRESS3);
+        List<Map> list=soloSign.constructToken(ADDRESS5,tokenType2,issueAmount2,listModel);
+        String transferInfo= soloSign.Transfer(list,PRIKEY1, transferData);
+        Thread.sleep(SLEEPTIME);
+        assertThat(transferInfo, containsString("200"));
+
+        String amount1, amount2;
+        if (UtilsClass.PRECISION == 10) {
+            amount1 = "10000.1234567891";
+            amount2 = "20000.8765432123";
+        }else {
+            amount1 = "10000.123456";
+            amount2 = "20000.876543";
+        }
+
+        log.info("查询帐号3跟帐号5余额，判断转账是否成功");
+        String queryInfo = soloSign.Balance( PRIKEY3, tokenType);
+        String queryInfo2 = soloSign.Balance( PRIKEY5, tokenType2);
+        assertThat(queryInfo, containsString("200"));
+        assertThat(queryInfo, containsString(amount1));
+        assertThat(queryInfo2, containsString("200"));
+        assertThat(queryInfo2, containsString(amount2));
+
+        String Info3 = multiSign.Recycle("", PRIKEY3, tokenType, issueAmount1);
+        assertThat(Info3, containsString("200"));
+        String Info4 = multiSign.Recycle("", PRIKEY5, tokenType2, issueAmount2);
+        assertThat(Info4, containsString("200"));
+
+        Thread.sleep(SLEEPTIME);
+        String queryInfo5 = multiSign.QueryZero(tokenType);
+        assertEquals(amount1,JSONObject.fromObject(queryInfo5).getJSONObject("Data").getJSONObject("Detail").getString(tokenType));
+        String queryInfo6 = multiSign.QueryZero(tokenType2);
+        assertEquals(amount2,JSONObject.fromObject(queryInfo6).getJSONObject("Data").getJSONObject("Detail").getString(tokenType2));
+
+
+    }
+
 
     /**
      * Tc024锁定后转账:
