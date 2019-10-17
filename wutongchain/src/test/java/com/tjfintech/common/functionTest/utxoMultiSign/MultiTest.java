@@ -78,6 +78,31 @@ public class MultiTest {
     }
 
     /**
+     *  测试最大发行量
+     *
+     */
+    @Test
+    public void TC001_TestMaxValue()throws Exception {
+
+        if (UtilsClass.PRECISION == 10) {
+            actualAmount1 = "1844674407";
+        }else {
+            actualAmount1 = "18446744073709";
+        }
+        tokenType = IssueToken(5, actualAmount1);
+        Thread.sleep(SLEEPTIME);
+        log.info("查询归集地址中token余额");
+        String response1 = multiSign.Balance(IMPPUTIONADD,PRIKEY4, tokenType);
+
+        assertEquals("200",JSONObject.fromObject(response1).getString("State"));
+        assertEquals(actualAmount1,JSONObject.fromObject(response1).getJSONObject("Data").getString("Total"));
+        Thread.sleep(SLEEPTIME);
+    }
+
+
+
+
+    /**
      * 多签发行检查发行地址注册、未注册时的发行结果
      * @throws Exception
      */

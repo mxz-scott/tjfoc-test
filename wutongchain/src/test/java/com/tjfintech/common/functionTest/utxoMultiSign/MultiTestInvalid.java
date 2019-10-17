@@ -643,30 +643,7 @@ public class  MultiTestInvalid {
 
     }
 
-    /**
-     * TC282 发行Token异常测试
-     * token类型长度
-     * 入参金额的大小、精度
-     * 未在CA中配置3/3地址/删除配置的3/3地址
-     */
-    @Test
-    public void TC282_issueTokenInvalid() {
-        String tokenType = "CX-" + UtilsClass.Random(4);
-        String amount = "90";
-        log.info(MULITADD2 + "发行" + tokenType + " token，数量为：" + amount);
-        String data = "MULITADD2" + "发行" + tokenType + " token，数量为：" + amount;
-        //String response = multiSign.issueToken(MULITADD2, tokenType+"123456789000000000000000000", amount, data);
-        String response2 = multiSign.issueToken(MULITADD2, tokenType, "900000000000000000000000000000000000", data);
-        String response4 = multiSign.issueToken("0123", tokenType, amount, data);
-        // String response5 = multiSign.issueToken("0123", tokenType, amount, data);
-        // assertThat(response, containsString("400"));
-//        assertThat(response2, containsString("400"));
-//        assertThat(response4, containsString("400"));
-        assertThat(response2, containsString("Amount must be greater than 0 and less than 900000000"));
-        assertThat(response4, containsString("Invalid multiple address"));
-        //     assertThat(response5, containsString("400"));
 
-    }
 
     /**
      * TC283签名发行token交易异常测试
@@ -712,41 +689,7 @@ public class  MultiTestInvalid {
 
     }
 
-    /**
-     * TC21-23多签地址回收异常测试
-     */
-    @Test
-    public void TC21_23recycleInvalid() {
-        String tokenType = "cx-8oVNI";
-        String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        assertThat(queryInfo, containsString("200"));
-        String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, "abc", "1");
-        String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "0");
-        String recycleInfo3 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "9000000000000000");
-        String recycleInfo4 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "-10");
-        String recycleInfo5 = multiSign.Recycle(IMPPUTIONADD, "123", tokenType, "1");
-        String recycleInfo6 = multiSign.Recycle(IMPPUTIONADD, PRIKEY3, tokenType, "1");
-        String recycleInfo7 = multiSign.Recycle(IMPPUTIONADD, "0", tokenType, "1");
-        String recycleInfo8 = multiSign.Recycle("0", PRIKEY4, tokenType, "1");
-        String recycleInfo9 = multiSign.Recycle(MULITADD3, PRIKEY4, tokenType, "1");
-//        assertThat(recycleInfo, containsString("400"));
-//        assertThat(recycleInfo2, containsString("400"));
-//        assertThat(recycleInfo3, containsString("400"));
-//        assertThat(recycleInfo4, containsString("400"));
-//        assertThat(recycleInfo5, containsString("400"));
-//        assertThat(recycleInfo6, containsString("400"));
-//        assertThat(recycleInfo7, containsString("400"));
-//        assertThat(recycleInfo8, containsString("400"));
-//        assertThat(recycleInfo9, containsString("400"));
-        assertThat(recycleInfo, containsString("insufficient balance"));
-        assertThat(recycleInfo2, containsString("Amount must be greater than 0 and less than 900000000"));
-        assertThat(recycleInfo3, containsString("Amount must be greater than 0 and less than 900000000"));
-        assertThat(recycleInfo4, containsString("Token amount must be a valid number and less than 900000000"));
-        assertThat(recycleInfo5, containsString("Private key must be base64 string"));
-        assertThat(recycleInfo6, containsString("Multiaddr is not matching for the prikey"));
-        assertThat(recycleInfo8, containsString("Invalid multiple address"));
-        assertThat(recycleInfo9, containsString("Multiaddr is not matching for the prikey"));
-    }
+
 
     /**
      * TC13 14 20 多签查询异常测试

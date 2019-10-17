@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.utxoMultiSign;
 
 import com.google.gson.JsonObject;
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.Store;
@@ -34,8 +35,19 @@ public class MultiSignInvalidTest {
     private static String multiaddr1;
     private static String multiaddr2;
     private static String Tokentype;
+    private static String MaxValue;
+    private static String MaxValuePlus1;
     @Before
-    public void createmultiaddr(){
+    public void createmultiaddr() throws Exception{
+
+        if(certPath!=""&& bReg==false) {
+            BeforeCondition bf = new BeforeCondition();
+            bf.updatePubPriKey();
+            bf.collAddressTest();
+            Thread.sleep(SLEEPTIME);
+            bReg=true;
+        }
+
         Map<String, Object> map =  new HashMap<>();
         //传入3个公钥
         map.put("PUBKEY1",utilsClass.PUBKEY1);
@@ -54,6 +66,16 @@ public class MultiSignInvalidTest {
         //随机生成一个Tokentype
         Tokentype = UtilsClass.Random(4);
         log.info("生成随机数tokentype"+Tokentype);
+
+
+        if (UtilsClass.PRECISION == 10) {
+            MaxValue = "1844674407";
+            MaxValuePlus1 = "1844674407.1";
+        }else {
+            MaxValue = "18446744073709";
+            MaxValuePlus1 = "18446744073709.1";
+        }
+
     }
 
 
@@ -93,6 +115,9 @@ public class MultiSignInvalidTest {
      */
     @Test
     public void TC1335_issuetoken(){
+
+
+
         String issuetoken;
         issuetoken = multiSign.issueTokenCarryPri("11","test211","10000000",utilsClass.PRIKEY6,utilsClass.PWD6,"zz");//	MultiAddr字段传入无效字段
         assertThat(issuetoken, containsString("Invalid multiple address(from addr)"));
@@ -100,19 +125,24 @@ public class MultiSignInvalidTest {
         assertThat(issuetoken, containsString("Invalid multiple address(from addr)"));//	MultiAddr字段传入错误的地址
         issuetoken = multiSign.issueTokenCarryPri(multiaddr2,"","10000000",utilsClass.PRIKEY6,utilsClass.PWD6,"zz");
         assertThat(issuetoken, containsString("TokenType shouldn't be empty"));//Tokentype字段为空
+        //	Amount字段为空值
         issuetoken = multiSign.issueTokenCarryPri(multiaddr2,Tokentype,"",utilsClass.PRIKEY6,utilsClass.PWD6,"zz");
-        assertThat(issuetoken, containsString("Amount must be greater than 0 and less than 900000000"));//	Amount字段为空值
+        assertThat(issuetoken, containsString("Amount must be greater than 0 and less than "+MaxValue));
+        //	Amount字段为负值
         issuetoken = multiSign.issueTokenCarryPri(multiaddr2,Tokentype,"-1",utilsClass.PRIKEY6,utilsClass.PWD6,"zz");
-        assertThat(issuetoken, containsString("Amount must be greater than 0 and less than 900000000"));//	Amount字段为负值
-        issuetoken = multiSign.issueTokenCarryPri(multiaddr2,Tokentype,"90000000000",utilsClass.PRIKEY6,utilsClass.PWD6,"zz");
-        assertThat(issuetoken, containsString("Amount must be greater than 0 and less than 900000000"));//	Amount字段为小数点后位数超出9亿
-        issuetoken = multiSign.issueTokenCarryPri(multiaddr2,Tokentype,"900000000","abc",utilsClass.PWD6,"zz");
-        assertThat(issuetoken, containsString("Private key must be base64 string"));//	PriKey传入非base64字符
+        assertThat(issuetoken, containsString("Amount must be greater than 0 and less than "+MaxValue));
+        //	Amount字段超出最大值
+        issuetoken = multiSign.issueTokenCarryPri(multiaddr2,Tokentype,MaxValuePlus1,utilsClass.PRIKEY6,utilsClass.PWD6,"zz");
+        assertThat(issuetoken, containsString("Amount must be greater than 0 and less than "+MaxValue));
 
-        issuetoken = multiSign.issueTokenCarryPri(multiaddr2,Tokentype,"9000000","YWJjeHg=",utilsClass.PWD6,"zz");
+        //	PriKey传入非base64字符
+        issuetoken = multiSign.issueTokenCarryPri(multiaddr2,Tokentype,"90000","abc",utilsClass.PWD6,"zz");
+        assertThat(issuetoken, containsString("Private key must be base64 string"));
+
+        issuetoken = multiSign.issueTokenCarryPri(multiaddr2,Tokentype,"90000","YWJjeHg=",utilsClass.PWD6,"zz");
         assertThat(issuetoken, containsString("Invalid multiple address(from addr)"));
 
-        issuetoken = multiSign.issueTokenCarryPri(multiaddr2,Tokentype,"900000000",utilsClass.PRIKEY6,"abc22","zz");
+        issuetoken = multiSign.issueTokenCarryPri(multiaddr2,Tokentype,"90000",utilsClass.PRIKEY6,"abc22","zz");
         assertThat(issuetoken, containsString("Invalid multiple address(from addr)"));//Pwd字段和Prikey字段不匹配
 
     }
@@ -140,6 +170,68 @@ public class MultiSignInvalidTest {
         assertThat(sign, containsString("Incorrect private key or password"));//	Pwd字段不匹配
 
     }
+
+    /**
+     * TC282 发行Token异常测试
+     * token类型长度
+     * 入参金额的大小、精度
+     * 未在CA中配置3/3地址/删除配置的3/3地址
+     */
+    @Test
+    public void TC282_issueTokenInvalid() {
+        String tokenType = "CX-" + UtilsClass.Random(4);
+        String amount = "90";
+        log.info(MULITADD2 + "发行" + tokenType + " token，数量为：" + amount);
+        String data = "MULITADD2" + "发行" + tokenType + " token，数量为：" + amount;
+        //String response = multiSign.issueToken(MULITADD2, tokenType+"123456789000000000000000000", amount, data);
+        String response2 = multiSign.issueToken(MULITADD2, tokenType, MaxValuePlus1, data);
+        String response4 = multiSign.issueToken("0123", tokenType, amount, data);
+        // String response5 = multiSign.issueToken("0123", tokenType, amount, data);
+        // assertThat(response, containsString("400"));
+//        assertThat(response2, containsString("400"));
+//        assertThat(response4, containsString("400"));
+        assertThat(response2, containsString("Amount must be greater than 0 and less than "+MaxValue));
+        assertThat(response4, containsString("Invalid multiple address"));
+        //     assertThat(response5, containsString("400"));
+
+    }
+
+    /**
+     * TC21-23多签地址回收异常测试
+     */
+    @Test
+    public void TC21_23recycleInvalid() {
+        String tokenType = "cx-8oVNI";
+        String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        assertThat(queryInfo, containsString("200"));
+        String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, "abc", "1");
+        String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "0");
+        String recycleInfo3 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, MaxValuePlus1);
+        String recycleInfo4 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "-10");
+        String recycleInfo5 = multiSign.Recycle(IMPPUTIONADD, "123", tokenType, "1");
+        String recycleInfo6 = multiSign.Recycle(IMPPUTIONADD, PRIKEY3, tokenType, "1");
+        String recycleInfo7 = multiSign.Recycle(IMPPUTIONADD, "0", tokenType, "1");
+        String recycleInfo8 = multiSign.Recycle("0", PRIKEY4, tokenType, "1");
+        String recycleInfo9 = multiSign.Recycle(MULITADD3, PRIKEY4, tokenType, "1");
+//        assertThat(recycleInfo, containsString("400"));
+//        assertThat(recycleInfo2, containsString("400"));
+//        assertThat(recycleInfo3, containsString("400"));
+//        assertThat(recycleInfo4, containsString("400"));
+//        assertThat(recycleInfo5, containsString("400"));
+//        assertThat(recycleInfo6, containsString("400"));
+//        assertThat(recycleInfo7, containsString("400"));
+//        assertThat(recycleInfo8, containsString("400"));
+//        assertThat(recycleInfo9, containsString("400"));
+        assertThat(recycleInfo, containsString("insufficient balance"));
+        assertThat(recycleInfo2, containsString("Amount must be greater than 0 and less than "+MaxValue));
+        assertThat(recycleInfo3, containsString("Token amount must be a valid number and less than "+MaxValue));
+        assertThat(recycleInfo4, containsString("Token amount must be a valid number and less than "+MaxValue));
+        assertThat(recycleInfo5, containsString("Private key must be base64 string"));
+        assertThat(recycleInfo6, containsString("Multiaddr is not matching for the prikey"));
+        assertThat(recycleInfo8, containsString("Invalid multiple address"));
+        assertThat(recycleInfo9, containsString("Multiaddr is not matching for the prikey"));
+    }
+
     /**
      * 发起多签转账交易(带密码)
      */
@@ -187,16 +279,24 @@ public class MultiSignInvalidTest {
         tokenList.add(map2);
         transfer = multiSign.Transfer(UtilsClass.PRIKEY6, utilsClass.PWD6,"", multiaddr2, tokenList);
         assertThat(transfer, containsString("Invalid multiple address"));//ToAddr字段传入非法字符
+
+        //Amount字段为空值
         map1.put("Amount","");
         list.add(map1);
         transfer = multiSign.Transfer(UtilsClass.PRIKEY6, utilsClass.PWD6,"", multiaddr2, tokenList);
-        assertThat(transfer, containsString("Token amount must be a valid number and less than 900000000"));//Amount字段为空值,
+        assertThat(transfer, containsString("Token amount must be a valid number and less than "+MaxValue));
+
+        //Amount字段为负值
         map1.put("Amount","-1");
         list.add(map1);
         transfer = multiSign.Transfer(UtilsClass.PRIKEY6, utilsClass.PWD6,"", multiaddr2, tokenList);
-        assertThat(transfer, containsString("Token amount must be a valid number and less than 900000000"));//Amount字段为负值,
+        assertThat(transfer, containsString("Token amount must be a valid number and less than "+MaxValue));
 
-
+        //Amount超出最大值
+        map1.put("Amount",MaxValuePlus1);
+        list.add(map1);
+        transfer = multiSign.Transfer(UtilsClass.PRIKEY6, utilsClass.PWD6,"", multiaddr2, tokenList);
+        assertThat(transfer, containsString("Token amount must be a valid number and less than "+MaxValue));
     }
 
     /**
@@ -215,12 +315,16 @@ public class MultiSignInvalidTest {
         assertThat(recycle, containsString("Invalid multiple address")); //MultiAddr字段为非法字符
         recycle = multiSign.Recycle(multiaddr2, UtilsClass.PRIKEY6, UtilsClass.PWD6,"", "1000");
         assertThat(recycle, containsString("Token type is mandatory")); //TokenType字段为空
+        //Amount字段为空值
         recycle = multiSign.Recycle(multiaddr2, UtilsClass.PRIKEY6, UtilsClass.PWD6,Tokentype, "");
-        assertThat(recycle, containsString("Token amount must be a valid number and less than 900000000")); //Amount字段为空值
+        assertThat(recycle, containsString("Token amount must be a valid number and less than "+MaxValue));
+        //Amount字段为负值
         recycle = multiSign.Recycle(multiaddr2, UtilsClass.PRIKEY6, UtilsClass.PWD6,Tokentype, "-1");
-        assertThat(recycle, containsString("Token amount must be a valid number and less than 900000000")); //Amount字段为负值
-        recycle = multiSign.Recycle(multiaddr2, UtilsClass.PRIKEY6, UtilsClass.PWD6,Tokentype, "10100000");
-        assertThat(recycle, containsString("Invalid multiple address")); //Amount字段超出余额
+        assertThat(recycle, containsString("Token amount must be a valid number and less than "+MaxValue));
+        //Amount超出最大值
+        recycle = multiSign.Recycle(multiaddr2, UtilsClass.PRIKEY6, UtilsClass.PWD6,Tokentype, MaxValuePlus1);
+        assertThat(recycle, containsString("Token amount must be a valid number and less than "+MaxValue));
+
         recycle = multiSign.Recycle(multiaddr2, UtilsClass.PRIKEY6, "",Tokentype, "10100000");
         assertThat(recycle, containsString("Incorrect private key or password")); //Pwd字段为空值
         recycle = multiSign.Recycle(multiaddr2, UtilsClass.PRIKEY6, "55",Tokentype, "10100000");

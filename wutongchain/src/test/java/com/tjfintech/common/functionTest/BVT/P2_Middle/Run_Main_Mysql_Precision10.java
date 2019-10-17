@@ -24,12 +24,12 @@ import org.junit.runners.Suite;
         MultiTest.class,
         MultiTest_33_12.class,
         MultiSignDetailTest.class,
-        MultiSignInvalidTest.class,
         MultiTestInvalid.class,
+        MultiSignInvalidTest.class,
 
         SoloTest.class,
-        SingleSignInvalidTest.class,
         SoloTestInvalid.class,
+        SingleSignInvalidTest.class,
 
 })
 

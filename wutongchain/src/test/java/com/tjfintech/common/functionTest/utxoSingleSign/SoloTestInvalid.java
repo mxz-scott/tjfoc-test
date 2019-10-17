@@ -95,79 +95,9 @@ public class SoloTestInvalid {
 
     }
 
-    /**
-     * TC248 转账金额非法测试
-     * 1    转账金额为0
-     * 2	转账金额为非数字字符
-     * 3	转账金额为负数
-     * 4	转账金额超过最大值
-     * 5	转账token type不存在
-     */
-    @Test
-    public void TC248_transferInvalid() throws Exception {
-        String transferData = "单签地址向" + PUBKEY3 + "转账非法测试";
 
 
-        List<Map> list1 = soloSign.constructToken(ADDRESS3, tokenType, "0");
-        List<Map> list2 = soloSign.constructToken(ADDRESS3, tokenType, "abc");
-        List<Map> list3 = soloSign.constructToken(ADDRESS3, tokenType, "-10");
-        List<Map> list4 = soloSign.constructToken(ADDRESS3, tokenType, "92000000000000000000000000000000000000000000000000");
-        List<Map> list5 = soloSign.constructToken(ADDRESS3, "nullToken", "100.25");
-        log.info(transferData);
 
-
-        String transferInfo1 = soloSign.Transfer(list1, PRIKEY1, transferData);
-        String transferInfo2 = soloSign.Transfer(list2, PRIKEY1, transferData);
-        String transferInfo3 = soloSign.Transfer(list3, PRIKEY1, transferData);
-        String transferInfo4 = soloSign.Transfer(list4, PRIKEY1, transferData);
-        String transferInfo5 = soloSign.Transfer(list5, PRIKEY1, transferData);
-
-        Thread.sleep(SLEEPTIME);
-
-//        assertThat(transferInfo1, containsString("400"));
-//        assertThat(transferInfo2, containsString("400"));
-//        assertThat(transferInfo3, containsString("400"));
-//        assertThat(transferInfo4, containsString("400"));
-//        assertThat(transferInfo5, containsString("400"));
-        assertThat(transferInfo1, containsString("Amount must be greater than 0 and less than 900000000"));
-        assertThat(transferInfo2, containsString("Token amount must be a valid number and less than 900000000"));
-        assertThat(transferInfo3, containsString("Token amount must be a valid number and less than 900000000"));
-        assertThat(transferInfo4, containsString("Token amount must be a valid number and less than 900000000"));
-        assertThat(transferInfo5, containsString("insufficient balance"));
-    }
-
-    /**
-     * Tc 249发行token的非法测试
-     * 1	发行token的金额超过允许的最大值
-     * 2	发行token的金额为0
-     * 3	发行token的金额为负数
-     * 4	发行token的金额为非数字字符
-     * 5	token type为空
-     */
-    @Test
-    public void TC249_IssueTokenInvalid() {
-        String tokenTypeInvalid = "SOLOTC-" + UtilsClass.Random(2);
-        String issueInfo1 = soloSign.issueToken(PRIKEY1, tokenTypeInvalid, "900000000000000000000000000000", "发行token",ADDRESS1);
-        String issueInfo2 = soloSign.issueToken(PRIKEY1, tokenTypeInvalid, "0", "发行token",ADDRESS1);
-        String issueInfo3 = soloSign.issueToken(PRIKEY1, tokenTypeInvalid, "-140", "发行token",ADDRESS1);
-    String issueInfo4 = soloSign.issueToken(PRIKEY1, tokenTypeInvalid, "abc", "发行token",ADDRESS1);
-        String issueInfo5 = soloSign.issueToken(PRIKEY1, "", "1000", "发行token",ADDRESS1);
-//        assertThat(issueInfo1, containsString("400"));
-//        assertThat(issueInfo2, containsString("400"));
-//        assertThat(issueInfo3, containsString("400"));
-//        assertThat(issueInfo4, containsString("400"));
-//        assertThat(issueInfo5, containsString("400"));
-        assertThat(issueInfo1, containsString("Amount must be greater than 0 and less than 900000000"));
-        assertThat(issueInfo2, containsString("Amount must be greater than 0 and less than 900000000"));
-        assertThat(issueInfo3, containsString("Amount must be greater than 0 and less than 900000000"));
-        assertThat(issueInfo4, containsString("Amount must be greater than 0 and less than 900000000"));
-        assertThat(issueInfo5,containsString("TokenType shouldn't be empty"));
-        log.info("查询归集地址中token余额");
-        String response1 = soloSign.Balance(PRIKEY1, tokenTypeInvalid);
-        assertThat(response1, containsString("200"));
-        assertThat(response1, containsString("0"));
-
-    }
 
     /**
      * TC250用错误的公钥创建账号地址

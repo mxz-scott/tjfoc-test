@@ -79,6 +79,31 @@ public class SoloTest {
     }
 
     /**
+     *  测试最大发行量
+     *
+     */
+    @Test
+    public void TC001_TestMaxValue()throws Exception {
+
+        if (UtilsClass.PRECISION == 10) {
+            actualAmount1 = "1844674407";
+        }else {
+            actualAmount1 = "18446744073709";
+        }
+
+        tokenType = "SOLOTC-"+UtilsClass.Random(6);
+
+        String isResult = soloSign.issueToken(PRIKEY1,tokenType,actualAmount1,"发行token",ADDRESS1);
+        assertThat(isResult, containsString("200"));
+        Thread.sleep(SLEEPTIME);
+        log.info("查询归集地址中token余额");
+        String response1 = soloSign.Balance( PRIKEY1, tokenType);
+
+        assertEquals("200",JSONObject.fromObject(response1).getString("State"));
+        assertEquals(actualAmount1,JSONObject.fromObject(response1).getJSONObject("Data").getString("Total"));
+    }
+
+    /**
      * 单签发行检查发行地址注册、未注册时的发行结果
      * @throws Exception
      */
