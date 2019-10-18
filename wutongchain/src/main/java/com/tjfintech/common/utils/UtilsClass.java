@@ -112,11 +112,27 @@ public class UtilsClass {
     public static String resetPeerBase = "cp " + PeerPATH + "conf/baseOK.toml " + PeerPATH + "conf/base.toml";
     public static String resetPeerConfig = "cp "+ PeerPATH + "configOK.toml "+ PeerPATH  + PeerMemConfig+".toml";
     public static String resetSDKConfig = "cp " + SDKPATH + "conf/configOK.toml " + SDKPATH + "conf/config.toml";
-
+    public static String getPeerVerByShell = "cd " + PeerPATH + ";./"+ PeerTPName + " version| grep \"Peer Version\" |cut -d \":\" -f 2";
+    public static String getSDKVerByShell = "cd " + SDKPATH + ";./"+ SDKTPName + " version| grep \"SDK Version\" |cut -d \":\" -f 2";
     public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";
 
     public static Date dt=new Date();
     public static SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
+
+    public static Map accountPri = new HashMap();
+    public static int subTypeNo = 24;
+    public static String release = "Release";
+    public static String latest = "Latest";
+    public static String releasePeer = PeerTPName + release;
+    public static String releaseSDK = SDKTPName + release;
+    public static String latestPeer = PeerTPName + latest;
+    public static String latestSDK = SDKTPName + latest;
+    public static Map<String,String> verMap = new HashMap<>();
+
+    public static String provider = "mysql";
+    public static String mongoDBAddr = "\"mongodb://10.1.3.246:27017/ww22\"";
+    public static String mysqlDBAddr = "\"root:root@tcp(10.1.3.246:3306)/wallet0703?charset=utf8\"";
+
 
 
     /**

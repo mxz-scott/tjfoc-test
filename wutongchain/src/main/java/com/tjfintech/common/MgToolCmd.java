@@ -84,7 +84,9 @@ public class MgToolCmd implements ManageTool {
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
 
         String cmd = toolExePath + " height -p " + rpcPort;
-        return shExeAndReturn(queryIP,cmd);
+        String resp = shExeAndReturn(queryIP,cmd);
+        //管理工具加入执行时间打印，高度值需要处理后返回
+        return resp.substring(resp.lastIndexOf("Height:")+7).trim();
     }
 
     public String queryBlockByHeight(String queryIPPort,String height)throws Exception{
