@@ -35,6 +35,6 @@ import org.junit.runners.Suite;
 })
 
 //Build Validation Test
-public class Run_Sub_P2_Mongo {
+public class Run_Sub_P2_Mysql {
     //执行这个类将执行suiteClass中的测试项
 }

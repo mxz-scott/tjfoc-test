@@ -36,6 +36,6 @@ import lombok.extern.slf4j.Slf4j;
 })
 
 //Build Validation Test
-public class Run_Main_P2_Mongo {
+public class Run_Main_P2_Mysql {
     //执行这个类将执行suiteClass中的测试项
 }

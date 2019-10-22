@@ -46,6 +46,7 @@ public class TestTxType {
     String subTypePriStore="1";
 
     String versionStore="0";
+    String versionWVM1="1";
     String versionSUTXO="0";
     String versionMUTXO="0";
 
@@ -588,10 +589,10 @@ public class TestTxType {
         sleepAndSaveInfo(SLEEPTIME);
 
         //检查合约创建 检查Type和SubType类型
-        JSONObject jsonObjectCreate = checkTXDetailTriMsg(txHash1,versionStore,typeWVM,subTypeCreateWVM);
-        JSONObject jsonObjectInvokeInit = checkTXDetailTriMsg(txHash2,versionStore,typeWVM,subTypeWVMTx);
-        JSONObject jsonObjectInvokeTransfer = checkTXDetailTriMsg(txHash4,versionStore,typeWVM,subTypeWVMTx);
-        JSONObject jsonObjectDestroy = checkTXDetailTriMsg(txHash9,versionStore,typeWVM,subTypeDeleteWVM);
+        JSONObject jsonObjectCreate = checkTXDetailTriMsg(txHash1,versionWVM1,typeWVM,subTypeCreateWVM);
+        JSONObject jsonObjectInvokeInit = checkTXDetailTriMsg(txHash2,versionWVM1,typeWVM,subTypeWVMTx);
+        JSONObject jsonObjectInvokeTransfer = checkTXDetailTriMsg(txHash4,versionWVM1,typeWVM,subTypeWVMTx);
+        JSONObject jsonObjectDestroy = checkTXDetailTriMsg(txHash9,versionWVM1,typeWVM,subTypeDeleteWVM);
 
         //检查安装合约交易详情内参数
         String data = encryptBASE64(readInput(
