@@ -9,7 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
 
@@ -17,6 +19,7 @@ import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 
 @Slf4j
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DynamicChangePeerCluster {
     public static final int STARTSLEEPTIME=40000;
     TestBuilder testBuilder=TestBuilder.getInstance();

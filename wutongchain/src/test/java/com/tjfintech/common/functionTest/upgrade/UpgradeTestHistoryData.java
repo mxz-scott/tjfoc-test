@@ -72,9 +72,10 @@ public class UpgradeTestHistoryData {
 
     @Test
     public void CheckUpgradeInteraceResp()throws Exception{
-        SetVerRelease setVerRelease = new SetVerRelease();
-        setVerRelease.test();//设置为发布版本进程
-        subLedger="";//切换回主链测试
+//        以下三行单独执行时根据需要自行修改
+//        SetVerRelease setVerRelease = new SetVerRelease();
+//        setVerRelease.test();//设置为发布版本进程
+//        subLedger="";//切换回主链测试
         //升级前执行回归测试
 
         txHashList = getAllTxHashData();
@@ -84,12 +85,13 @@ public class UpgradeTestHistoryData {
         //更新版本文件 远程调用
         SetVerLatest setVerLatest = new SetVerLatest();
         setVerLatest.test();//更新版本为最新版本
-        log.info("before upgrade size : " + beforeUpgrade.size());
-        log.info("before txlist size : " + txHashList.size());
+        if (!subLedger.isEmpty()) sleepAndSaveInfo(SLEEPTIME,"Latest version start waiting...");
+//        log.info("before upgrade size : " + beforeUpgrade.size());
+//        log.info("before txlist size : " + txHashList.size());
         Map<String,String> afterUpgrade = SaveResponseToHashMap(txHashList);
-        log.info("after upgrade size : " + afterUpgrade.size());
-        log.info("after txlist size : " + txHashList.size());
-        assertEquals(beforeUpgrade.size(),afterUpgrade.size());
+//        log.info("after upgrade size : " + afterUpgrade.size());
+//        log.info("after txlist size : " + txHashList.size());
+//        assertEquals(beforeUpgrade.size(),afterUpgrade.size());
 
         //比对升级前后hashresp Map内容是否完全一致
 
@@ -116,7 +118,30 @@ public class UpgradeTestHistoryData {
                 FileOperation fileOperation = new FileOperation();
                 fileOperation.appendToFile(diffRespList.get(i),diffSaveFile);
             }
-            assertEquals("datas is not same",false,true);
+            assertEquals("datas not same",false,true);
+        }
+
+    }
+
+    //@Test
+    public void test()throws Exception{
+        txHashList = getAllTxHashData();
+        //log.info("hash no:" + txHashList.size());
+        Map<String,String> beforeUpgrade = SaveResponseToHashMap(txHashList);
+        saveToFile(beforeUpgrade,"new.txt");
+    }
+
+    public void saveToFile(Map<String,String> mapHashResp,String fileName)throws Exception{
+        FileOperation fileOperation = new FileOperation();
+        String diffSaveFile = resourcePath + fileName;
+        File saveFile = new File(diffSaveFile);
+        if(saveFile.exists()) saveFile.delete();//如果存在则先删除
+        Iterator iter = mapHashResp.keySet().iterator();
+        while (iter.hasNext()) {
+            Object key = iter.next();
+            Object val = mapHashResp.get(key);
+            fileOperation.appendToFile(key.toString(),diffSaveFile);
+            fileOperation.appendToFile(val.toString(),diffSaveFile);
         }
 
     }
@@ -130,7 +155,8 @@ public class UpgradeTestHistoryData {
         for(int k = 0; k < txList.size(); k++){
             String response = store.GetTxDetail(txList.get(k));
             //if(!response.contains("{")) continue;
-            JSONObject jsonObject = JSONObject.fromObject(store.GetTxDetail(txList.get(k))).getJSONObject("Data").getJSONObject("Header");
+            log.info("tx detail ");
+            JSONObject jsonObject = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Header");
 
             String txType = jsonObject.getString("Type");
             String txSubType = jsonObject.getString("SubType");
@@ -146,14 +172,14 @@ public class UpgradeTestHistoryData {
             mapTXHashResp.put(txList.get(k),response);
         }
 
-        Iterator iter = txTypeSubType.keySet().iterator();
-        while (iter.hasNext()) {
-            Object key = iter.next();
-            Object val = txTypeSubType.get(key);
-            log.info(key.toString() + "with value:" + val.toString());
-        }
+//        Iterator iter = txTypeSubType.keySet().iterator();
+//        while (iter.hasNext()) {
+//            Object key = iter.next();
+//            Object val = txTypeSubType.get(key);
+//            log.info(key.toString() + "with value:" + val.toString());
+//        }
 
-        assertEquals(subTypeNo,txTypeSubType.size()); //确认所有1.0以上的子交易类型全部覆盖
+        //assertEquals(subTypeNo,txTypeSubType.size()); //确认所有1.0以上的子交易类型全部覆盖
 
         mapTXHashResp.put("getheight",store.GetHeight());
         mapTXHashResp.put("getblockbyheight?number=1",store.GetBlockByHeight(1));//增加字段version
@@ -187,9 +213,9 @@ public class UpgradeTestHistoryData {
     }
 
 
-    public ArrayList<String> getAllTxHashData(){
+    public ArrayList<String> getAllTxHashData()throws Exception{
         ArrayList<String> txHashList = new ArrayList<>();
-
+        if (!subLedger.isEmpty()) sleepAndSaveInfo(SLEEPTIME,"start waiting...");
         int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         for(int i= blockHeight;i>0;i--){
             JSONArray blockTxArr = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONArray("txs");
