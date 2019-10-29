@@ -14,7 +14,6 @@ import (
 	"strconv"
 
 	"github.com/tjfoc/tjfoc/core.v2/chaincode/shim"
-	"github.com/tjfoc/tjfoc/core.v2/event"
 	pb "github.com/tjfoc/tjfoc/protos/chaincode"
 )
 
@@ -35,7 +34,6 @@ func newSmartContract() *SmartContract {
 		"queryMobile":       cc.queryMobile,
 		"changeMobileCount": cc.changeMobileCount,
 		"deleteMobile":      cc.deleteMobile,
-		"event":             cc.event,
 	}
 	return cc
 }
@@ -49,12 +47,6 @@ type Mobile struct {
 	Count int     `json:"count"`
 }
 
-func (c *SmartContract) event(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	event.New([]string{"10.1.3.247:9070"}, true)
-	eventSender := event.GetInstance()
-	eventSender.SendEvent(event.USER, "test", []byte("Hello zll"))
-	return shim.Success(nil)
-}
 
 //初始化手机信息,将手机的信息添加到链上
 //由供应商操作这个方法，用于系统开始运行时，初始化库存手机信息

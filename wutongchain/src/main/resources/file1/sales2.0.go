@@ -66,7 +66,7 @@ func (cc *MyChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 // args[1]: Saas合作方对销售数据的数字签名
 // args[2]: 白名单合约的版本号
 func (cc *MyChaincode) addSalesInfo(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	if len(args) != 5{
+	if len(args) != 4{
 		return shim.Error("Invalid parameter")
 	}
 
@@ -91,7 +91,7 @@ func (cc *MyChaincode) addSalesInfo(stub shim.ChaincodeStubInterface, args []str
 	var callArg [][]byte
 	callArg = append(callArg, []byte("analysiswhitelist"))
 	callArg = append(callArg, []byte(args[0]))
-	return stub.InvokeChaincode(args[3], string(args[2]),args[4],callArg) //调用白名单合约
+	return stub.InvokeChaincode(args[3], string(args[2]), callArg) //调用白名单合约
 }
 
 func (cc *MyChaincode) verifySign(msg, sign, pubkey []byte) bool {
