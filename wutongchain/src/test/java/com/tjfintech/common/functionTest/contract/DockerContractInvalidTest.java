@@ -31,10 +31,11 @@ public class DockerContractInvalidTest {
     Store store=testBuilder.getStore();
 
     public String name=sdf.format(dt)+ RandomUtils.nextInt(100000);
-    public String version="2.0";
+    public String version="2.1";
     public String category="docker";
 
 
+    //调用不存在的方法
     @Test
     public void testContractErrInvoke() throws Exception{
         BeforeCondition bf=new BeforeCondition();
@@ -43,7 +44,7 @@ public class DockerContractInvalidTest {
 
         String response=null;
         log.info(name);
-        dockerFileName="simple_err1.go";
+        dockerFileName="simple_err1.go"; //无event方法
         //检查合约创建
         response=installTest();
         assertThat(response,containsString("200"));
@@ -66,7 +67,8 @@ public class DockerContractInvalidTest {
         String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         log.info(name);
         response=store.GetTxDetail(hash3);
-        assertThat(response,containsString("failed to find transaction"));
+        assertThat(response,containsString("Invalid method"));
+//        assertThat(response,containsString("failed to find transaction"));
 
         //销毁合约
         response=destroyTest();
@@ -101,13 +103,7 @@ public class DockerContractInvalidTest {
         //TC1797 TC1799
         category="wvm"; //category设置合法的但不匹配的合约类型wvm  此部分未调试
         response=installTest();
-        assertThat(response,containsString("error Category or empty Category!!"));
-
-        response=queryMobileTest("Mobile1");
-        assertThat(response,containsString("error Category or empty Category!!"));
-
-        response=destroyTest();
-        assertThat(response,containsString("error Category or empty Category!!"));
+        assertThat(response,containsString("prikey cannot be empty !"));
 
         category="docker";
         name="A12"+RandomUtils.nextInt(100000);

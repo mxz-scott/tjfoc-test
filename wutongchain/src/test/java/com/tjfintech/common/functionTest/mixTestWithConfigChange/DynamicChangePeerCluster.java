@@ -65,6 +65,7 @@ public class DynamicChangePeerCluster {
     @Test
     public void joinConsensusPeer()throws Exception{
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
+        shellPeer3.execute("cp " + PeerPATH + "configjoin.toml " + PeerPATH + "config.toml" );//配置文件中节点共识节点标识为0
         //检查动态加入的共识节点，即使用管理工具加入的共识节点信息
         String resp = mgToolCmd.addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort);
         assertEquals(true,resp.contains("success"));
@@ -92,6 +93,7 @@ public class DynamicChangePeerCluster {
     @Test
     public void joinDataPeer()throws Exception{
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
+        shellPeer3.execute("cp " + PeerPATH + "configobs.toml " + PeerPATH + "config.toml" );//配置文件中节点共识节点标识为0
         //检查动态加入的共识节点，即使用管理工具加入的共识节点信息
         String resp = mgToolCmd.addPeer("observer",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort);
         assertEquals(true,resp.contains("success"));

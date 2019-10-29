@@ -6,12 +6,14 @@ import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.Shell;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
@@ -31,6 +33,7 @@ public class TestMgTool {
     int DynamicPeerNo = 4;
     String ipType="/ip4/";
     String tcpType="/tcp/";
+    int memInfoNo = 9;//memberlist中返回节点信息字段个数，目前返回id，state，version，port，shownName，inAddr，outAddr，typ，height
 
 
     String toolPath="cd " + ToolPATH + ";";
@@ -40,7 +43,7 @@ public class TestMgTool {
 
     ArrayList<String > txHashList =new ArrayList<>();
 
-    @Before
+    //@Before
     public void resetPeerEnv()throws Exception{
         BeforeCondition bf =new BeforeCondition();
         bf.setPermission999();
@@ -62,8 +65,34 @@ public class TestMgTool {
 
     }
 
+    public String parseMemInfo(String sourceStr,String uniqueValue,String queryKey) throws Exception{
+        JSONObject memObj = JSONObject.fromObject(sourceStr.substring(sourceStr.indexOf("{")));
+        JSONArray jsonArrayMem = memObj.getJSONArray("memberList");
+        log.info("Member No.: " + jsonArrayMem.size());
+        String queryValue = "";
+        log.info("unique string: " + uniqueValue);
+        for(int i = 0 ;i < jsonArrayMem.size();i++){
+            String temp = jsonArrayMem.get(i).toString();
+            if(!(temp.contains(uniqueValue) && temp.contains(queryKey))) continue;
+
+            JSONObject eachMem = JSONObject.fromObject(temp);
+            log.info("each mem key no.: " + eachMem.size());
+            assertEquals(memInfoNo,eachMem.size());
+            queryValue = eachMem.getString(queryKey);
+        }
+        assertEquals(false,queryValue.isEmpty()); //确认查询关键字结果非空
+        return queryValue;
+    }
+
+   // @Test
+    public void CheckMemRespInfo() throws Exception{
+        String response = mgToolCmd.queryMemberList(PEER1IP + ":" +PEER1RPCPort);
+        parseMemInfo(response,"10.1.3.240","state");
+    }
+
     @Test
     public void chkMemberList() throws Exception{
+        long killSleepTime = 5000;//节点状态是通过p2p实现状态信息传送，当前默认4s 因此需要差不多此时间的等待
         peerList.clear();
         peerList.add(PEER1IP);
         peerList.add(PEER2IP);
@@ -77,7 +106,7 @@ public class TestMgTool {
 
         //检查所有集群列表中的leader信息、节点信息及节点状态all connect is true信息 2.1.1不再显示isLeader信息
         for (int i=0;i<peerList.size();i++) {
-            String response = mgToolCmd.queryMemberList(peerList.get(i));
+            String response = mgToolCmd.queryMemberList(peerList.get(i) + ":" + portList.get(i));
             //assertEquals(response.contains("isLeader"), true); 2.1.1版本不再支持显示isLeader信息
             assertEquals(response.contains(PEER1IP), true);
             assertEquals(response.contains(PEER2IP), true);
@@ -91,63 +120,24 @@ public class TestMgTool {
         Shell shellPeer4=new Shell(peerList.get(2),USERNAME,PASSWD);
 
         shellPeer2.execute(killPeerCmd);
-        shellPeer1.execute(toolPath+"./toolkit mem -p "+portList.get(0));
-        Thread.sleep(300);
-        ArrayList<String> stdout2 = shellPeer1.getStandardOutput();
-        for(String str :stdout2)
-        {
-            if(str.contains("MemberList")&&str.contains(peerList.get(1)))
-            {
-                //检查集群中被停止进程的节点状态
-                assertEquals(str.contains("isconnect: false"), true);
-
-            }
-
-        }
+        sleepAndSaveInfo(killSleepTime,"kill peer exe waiting p2p sync...");
+        String queryPeer10 = mgToolCmd.queryMemberList(peerList.get(0) + ":" + portList.get(0));
+        assertEquals(parseMemInfo(queryPeer10,peerList.get(1),"state"),"1");
 
         shellPeer4.execute(killPeerCmd);
-        shellPeer1.execute(toolPath+"./toolkit mem -p "+portList.get(0));
-        Thread.sleep(300);
-        ArrayList<String> stdout3 = shellPeer1.getStandardOutput();
-        for(String str :stdout3)
-        {
-            if(str.contains("MemberList")&&str.contains(peerList.get(1)))
-            {
-                //检查集群中被停止进程的节点状态
-                assertEquals(str.contains("isconnect: false"), true);
+        sleepAndSaveInfo(killSleepTime,"kill peer exe waiting p2p sync...");
 
-            }
-            if(str.contains("MemberList")&&str.contains(peerList.get(2)))
-            {
-                //检查集群中被停止进程的节点状态
-                assertEquals(str.contains("isconnect: false"), true);
-
-            }
-
-        }
+        String queryPeer11 = mgToolCmd.queryMemberList(peerList.get(0) + ":" + portList.get(0));
+        assertEquals(parseMemInfo(queryPeer11,peerList.get(1),"state"),"1");
+        assertEquals(parseMemInfo(queryPeer11,peerList.get(2),"state"),"1");
 
         shellPeer2.execute(startPeerCmd);
         shellPeer4.execute(startPeerCmd);
-        Thread.sleep(30000);
-        shellPeer1.execute(toolPath+"./toolkit mem -p "+portList.get(0));
-        Thread.sleep(300);
-        ArrayList<String> stdout4 = shellPeer1.getStandardOutput();
-        for(String str :stdout4)
-        {
-            if(str.contains("MemberList")&&str.contains(peerList.get(1)))
-            {
-                //检查集群中被停止进程的节点状态
-                assertEquals(str.contains("isconnect: true"), true);
+        Thread.sleep(STARTSLEEPTIME);
 
-            }
-            if(str.contains("MemberList")&&str.contains(peerList.get(2)))
-            {
-                //检查集群中被停止进程的节点状态
-                assertEquals(str.contains("isconnect: true"), true);
-
-            }
-
-        }
+        String queryPeer12 = mgToolCmd.queryMemberList(peerList.get(0) + ":" + portList.get(0));
+        assertEquals(parseMemInfo(queryPeer12,peerList.get(1),"state"),"0");
+        assertEquals(parseMemInfo(queryPeer12,peerList.get(2),"state"),"0");
 
     }
     

@@ -4,9 +4,11 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.functionTest.Conditions.SetSubLedger;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -28,14 +30,17 @@ public class DockerContractTest {
     Store store=testBuilder.getStore();
 
     public String name=sdf.format(dt)+ RandomUtils.nextInt(100000);
-    public String version="2.0";
+    public String version="2.1";
     public String category="docker";
+
+    @BeforeClass
+    public static void beforeCondition()throws Exception{
+        BeforeCondition bf=new BeforeCondition();
+        bf.setPermission999();
+    }
 
     @Test
     public void testContract() throws Exception{
-        BeforeCondition bf=new BeforeCondition();
-        bf.setPermission999();
-
 
         String response = null;
         log.info(name);
@@ -128,8 +133,10 @@ public class DockerContractTest {
 
     }
 
+    //主链调用主链旧合约 旧接口
     @Test
-    public void testCrossContractTx()throws Exception{
+    public void TC2102_testCrossContractTxOldSales()throws Exception{
+        subLedger = "";
         //sales.go 调用whitelist.go中的接口
         String response=null;
         category="docker";
@@ -139,7 +146,7 @@ public class DockerContractTest {
 
         //安装第一个合约 销售
         name=name1;
-        dockerFileName="\\file1\\sales.go";
+        dockerFileName="\\file1\\sales2.0.go";
         log.info("docker file 1: "+name1);
         response=installTest();
         assertThat(response,containsString("200"));
@@ -196,6 +203,150 @@ public class DockerContractTest {
         sleepAndSaveInfo(SLEEPTIME);
     }
 
+    //主链调用主链新合约 新接口  主链跨合约调用时 必须使用main 不能使用"" 20191028 确认未处理""
+    @Test
+    public void TC2105_testCrossContractTxNewSales()throws Exception{
+        subLedger = "";
+        //sales.go 调用whitelist.go中的接口
+        String crossLedger = "main";
+        String response=null;
+        category="docker";
+        String name1=sdf.format(dt)+ RandomUtils.nextInt(100000);
+        String name2=sdf.format(dt)+ RandomUtils.nextInt(100000);
+        assertEquals(name1.equals(name2),false);
+
+        //安装第一个合约 销售
+        name=name1;
+        dockerFileName="\\file1\\sales.go";
+        log.info("docker file 1: "+name1);
+        response=installTest();
+        assertThat(response,containsString("200"));
+
+        //安装第二个合约 白名单
+        name=name2;
+        dockerFileName="\\file2\\whitelist.go";
+        log.info("docker file 2: "+name2);
+        response=installTest();
+        assertThat(response,containsString("200"));
+
+        sleepAndSaveInfo(ContractInstallSleep);
+        sleepAndSaveInfo(30 * 1000);
+
+        //跨合约调用
+        log.info("正常跨合约调用");
+        name=name1;
+        response=addSalesInfoNew("Company01",123456,name2,crossLedger);
+        assertThat(response,containsString("200"));
+        sleepAndSaveInfo(SLEEPTIME*2);
+        String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+
+        response=store.GetTxDetail(hash3);
+        String contractResult = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        assertThat(contractResult,containsString("success"));
+
+        //重复添加 则显示已存在信息
+        log.info("跨合约调用接口重复添加信息");
+        response=addSalesInfoNew("Company01",123456,name2,crossLedger);
+        assertThat(response,containsString("200"));
+        sleepAndSaveInfo(SLEEPTIME);
+        String hash4 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+
+        response=store.GetTxDetail(hash4);
+        String contractResult1 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Message");
+        assertThat(contractResult1,containsString("this data is exist"));
+
+        //调用不存在的合约
+        log.info("跨不存在的合约调用接口");
+        response=addSalesInfoNew("Company02",2356,"tt",crossLedger);
+        assertThat(response,containsString("200"));
+        sleepAndSaveInfo(SLEEPTIME);
+        String hash5 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+
+        response=store.GetTxDetail(hash5);
+        String contractResult2 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        assertThat(contractResult2,containsString("does not exist"));
+
+        name=name1;
+        destroyTest();
+        sleepAndSaveInfo(SLEEPTIME);
+        name=name2;
+        destroyTest();
+        sleepAndSaveInfo(SLEEPTIME);
+    }
+
+
+    //子链调用子链新合约 新接口
+    @Test
+    public void TC2107_testCrossContractTxNewSalesSub()throws Exception{
+
+        SetSubLedger setSubLedger = new SetSubLedger();
+        setSubLedger.createSubledger();
+        String crossLedger = subLedger;
+        //sales.go 调用whitelist.go中的接口
+        String response=null;
+        category="docker";
+        String name1=sdf.format(dt)+ RandomUtils.nextInt(100000);
+        String name2=sdf.format(dt)+ RandomUtils.nextInt(100000);
+        assertEquals(name1.equals(name2),false);
+
+        //安装第一个合约 销售
+        name=name1;
+        dockerFileName="\\file1\\sales.go";
+        log.info("docker file 1: "+name1);
+        response=installTest();
+        assertThat(response,containsString("200"));
+
+        //安装第二个合约 白名单
+        name=name2;
+        dockerFileName="\\file2\\whitelist.go";
+        log.info("docker file 2: "+name2);
+        response=installTest();
+        assertThat(response,containsString("200"));
+
+        sleepAndSaveInfo(ContractInstallSleep);
+        sleepAndSaveInfo(30 * 1000);
+
+        //跨合约调用
+        log.info("正常跨合约调用");
+        name=name1;
+        response=addSalesInfoNew("Company01",123456,name2,crossLedger);
+        assertThat(response,containsString("200"));
+        sleepAndSaveInfo(SLEEPTIME*2);
+        String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+
+        response=store.GetTxDetail(hash3);
+        String contractResult = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        assertThat(contractResult,containsString("success"));
+
+        //重复添加 则显示已存在信息
+        log.info("跨合约调用接口重复添加信息");
+        response=addSalesInfoNew("Company01",123456,name2,crossLedger);
+        assertThat(response,containsString("200"));
+        sleepAndSaveInfo(SLEEPTIME);
+        String hash4 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+
+        response=store.GetTxDetail(hash4);
+        String contractResult1 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Message");
+        assertThat(contractResult1,containsString("this data is exist"));
+
+        //调用不存在的合约
+        log.info("跨不存在的合约调用接口");
+        response=addSalesInfoNew("Company02",2356,"tt",crossLedger);
+        assertThat(response,containsString("200"));
+        sleepAndSaveInfo(SLEEPTIME);
+        String hash5 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+
+        response=store.GetTxDetail(hash5);
+        String contractResult2 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        assertThat(contractResult2,containsString("does not exist"));
+
+        name=name1;
+        destroyTest();
+        sleepAndSaveInfo(SLEEPTIME);
+        name=name2;
+        destroyTest();
+        sleepAndSaveInfo(SLEEPTIME);
+    }
 
 
     public String installTest() throws Exception {
@@ -259,6 +410,16 @@ public class DockerContractTest {
 
     }
 
+
+    public String addSalesInfoNew(String compID,int sales,String anoDockerName,String ledgerName) throws Exception {
+        String method = "addSalesInfo";
+        Map<String, Object> map = new HashMap<>();
+        map.put("CompanyID", compID);
+        map.put("Sales", sales);
+        JSONObject json = JSONObject.fromObject(map);
+        String a ="\""+json.toString()+"\"";
+        return invokeNew(method,a,"",version,anoDockerName,ledgerName);
+    }
 
     public String addSalesInfo(String compID,int sales,String anoDockerName) throws Exception {
         String method = "addSalesInfo";
