@@ -1,10 +1,12 @@
 package com.tjfintech.common.functionTest.store;
 
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -26,7 +28,15 @@ public class StoreTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
 
-
+    @Before
+    public void beforeConfig() throws Exception {
+        if (certPath != "" && bReg == false) {
+            BeforeCondition bf = new BeforeCondition();
+            bf.updatePubPriKey();
+            Thread.sleep(SLEEPTIME);
+            bReg = true;
+        }
+    }
     /**
      * TC05-创建存证交易，数据格式为Json
      * 创建后需要休眠5秒等待数据上链
@@ -36,7 +46,7 @@ public class StoreTest {
     @Test
     public void TC05_createStore() throws Exception {
 
-        String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
+        String Data = "test11234567"+UtilsClass.Random(4);
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
@@ -58,7 +68,7 @@ public class StoreTest {
      */
     @Test
     public void TC292_getStore() throws  Exception {
-        String Data = "\"test\":\"json"+UtilsClass.Random(3)+"\"";
+        String Data = "\"testJson\":\"json"+UtilsClass.Random(3)+"\"";
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String  storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
@@ -74,7 +84,7 @@ public class StoreTest {
      */
     @Test
     public void TC277_getStorePost() throws Exception {
-        String Data = "cxTest-" + UtilsClass.Random(7);
+        String Data = "cxTest-private" + UtilsClass.Random(7);
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
         map.put("pubkeys",PUBKEY6);
@@ -127,6 +137,7 @@ public class StoreTest {
 //
 //    }
 
+    //存证大数据
     @Test
     public void TC278_createBigSizeStore() throws Exception {
 
@@ -681,7 +692,7 @@ public class StoreTest {
             byte[] buffer = new byte[size];
             in.read(buffer);
             in.close();
-            str = new String(buffer, "GB2312");
+            str = new String(buffer, "utf-8");
         } catch (IOException e) {
             // TODO Auto-generated catch block
 
