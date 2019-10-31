@@ -70,7 +70,7 @@ public class StoreTest {
      */
     @Test
     public void TC292_getStore() throws  Exception {
-        String Data = "\"testJson\":\"json"+UtilsClass.Random(3)+"\"";
+        String Data = "{\"testJson\":\"json"+UtilsClass.Random(3)+"\"}";
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String  storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();

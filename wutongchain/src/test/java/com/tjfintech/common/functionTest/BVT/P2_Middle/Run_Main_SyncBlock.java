@@ -21,6 +21,9 @@ import org.junit.runners.Suite;
         SetMainLedger.class,
         BeforeCondition.class,
 
+        TestPermission.class,
+        TestMgTool.class,
+        MixTxTest.class,
         BlockSyncTest.class,
 })
 

@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.BVT.P2_Middle;
+package com.tjfintech.common.functionTest.BVT.P3_Low;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetCertSM2;

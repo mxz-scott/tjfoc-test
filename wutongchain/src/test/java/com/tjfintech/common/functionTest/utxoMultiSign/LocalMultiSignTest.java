@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.utxoMultiSign;
 
 
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -9,6 +10,7 @@ import com.tjfoc.base.MultiSignTransferAccounts;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -33,10 +35,15 @@ public class LocalMultiSignTest {
     MultiSignTransferAccounts multiTrans = new MultiSignTransferAccounts();
 
 
-    @Before
-    public void beforeConfig() throws Exception {
-
-
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        if (certPath != "" && bReg == false) {
+            BeforeCondition bf = new BeforeCondition();
+            bf.updatePubPriKey();
+            bf.collAddressTest();
+            Thread.sleep(SLEEPTIME);
+            bReg = true;
+        }
     }
 
 

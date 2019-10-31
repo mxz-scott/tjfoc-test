@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.utxoSingleSign;
 
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.TestBuilder;
@@ -10,6 +11,7 @@ import com.tjfoc.base.SingleSignTransferAccounts;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -35,6 +37,17 @@ public class LocalSingleSignTest {
     MultiSignTransferAccounts multiTrans = new MultiSignTransferAccounts();
     SingleSignTransferAccounts singleTrans = new SingleSignTransferAccounts();
 
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        if (certPath != "" && bReg == false) {
+            BeforeCondition bf = new BeforeCondition();
+            bf.updatePubPriKey();
+            bf.collAddressTest();
+            Thread.sleep(SLEEPTIME);
+            bReg = true;
+        }
+    }
+
     @Before
     public void beforeConfig() throws Exception {
 
@@ -51,9 +64,9 @@ public class LocalSingleSignTest {
         String balance2 = soloSign.Balance(PRIKEY1, tokenType2);
 
         assertThat(tokenType + "查询余额错误", balance, containsString("200"));
-        assertThat(tokenType + "查询余额不正确", balance, containsString("10000.123456789"));
+        assertThat(tokenType + "查询余额不正确", balance, containsString("10000.123456"));
         assertThat(tokenType2 + "查询余额错误", balance2, containsString("200"));
-        assertThat(tokenType2 + "查询余额不正确", balance2, containsString("20000.87654321"));
+        assertThat(tokenType2 + "查询余额不正确", balance2, containsString("20000.876543"));
 
     }
 
@@ -87,11 +100,11 @@ public class LocalSingleSignTest {
         //查询归集地址
         String queryInfo2 = multiSign.BalanceByAddr(ADDRESS1, tokenType);
         assertThat(queryInfo2, containsString("200"));
-        assertThat(queryInfo2, containsString(tokenType + "\":\"9899.873456789\""));
+        assertThat(queryInfo2, containsString(tokenType + "\":\"9899.873456\""));
 
         String queryInfo4 = multiSign.BalanceByAddr(ADDRESS1, tokenType2);
         assertThat(queryInfo4, containsString("200"));
-        assertThat(queryInfo4, containsString(tokenType2 + "\":\"19800.32154321\""));
+        assertThat(queryInfo4, containsString(tokenType2 + "\":\"19800.321543\""));
 
 
         String data1 = "ADDRESS3向ADDRESS4转账30个" + tokenType;
@@ -236,11 +249,11 @@ public class LocalSingleSignTest {
         //查询归集地址
         String queryInfo2 = multiSign.BalanceByAddr(ADDRESS1, tokenType);
         assertThat(queryInfo2, containsString("200"));
-        assertThat(queryInfo2, containsString(tokenType + "\":\"9899.873456789\""));
+        assertThat(queryInfo2, containsString(tokenType + "\":\"9899.873456\""));
 
         String queryInfo4 = multiSign.BalanceByAddr(ADDRESS1, tokenType2);
         assertThat(queryInfo4, containsString("200"));
-        assertThat(queryInfo4, containsString(tokenType2 + "\":\"19800.32154321\""));
+        assertThat(queryInfo4, containsString(tokenType2 + "\":\"19800.321543\""));
 
 
         String data1 = "ADDRESS3向ADDRESS4转账30个" + tokenType;
@@ -514,13 +527,13 @@ public class LocalSingleSignTest {
 
         //单签发行
         log.info("发行两种token");
-        tokenType = issueTokenLocalSign(7, "10000.123456789");
+        tokenType = issueTokenLocalSign(7, "10000.123456");
         //查询余额
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中token余额");
         String balance = multiSign.BalanceByAddr(ADDRESS1, tokenType);
         assertThat(tokenType + "查询余额错误", balance, containsString("200"));
-        assertThat(tokenType + "查询余额不正确", balance, containsString("10000.123456789"));
+        assertThat(tokenType + "查询余额不正确", balance, containsString("10000.123456"));
 
         //转账
         String transferData = "归集地址向ADDRESS7转账100.25个" + tokenType ;
@@ -534,7 +547,7 @@ public class LocalSingleSignTest {
         log.info("查询ADDRESS7和归集地址余额");
         String queryInfo = multiSign.BalanceByAddr(ADDRESS1, tokenType);
         assertThat(queryInfo, containsString("200"));
-        assertThat(queryInfo, containsString(tokenType + "\":\"9899.873456789\""));
+        assertThat(queryInfo, containsString(tokenType + "\":\"9899.873456\""));
 
 
         String queryInfo2 = multiSign.BalanceByAddr(ADDRESS7, tokenType);

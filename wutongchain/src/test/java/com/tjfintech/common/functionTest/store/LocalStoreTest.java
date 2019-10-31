@@ -1,11 +1,13 @@
 package com.tjfintech.common.functionTest.store;
 
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import com.tjfoc.base.PrivacyPolicyStore;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -13,6 +15,7 @@ import org.junit.runners.MethodSorters;
 import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClass.SLEEPTIME;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -25,6 +28,16 @@ public class LocalStoreTest {
     TestBuilder testBuilder = TestBuilder.getInstance();
     Store store = testBuilder.getStore();
     PrivacyPolicyStore priStore = new PrivacyPolicyStore();
+
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        if (certPath != "" && bReg == false) {
+            BeforeCondition bf = new BeforeCondition();
+            bf.updatePubPriKey();
+            Thread.sleep(SLEEPTIME);
+            bReg = true;
+        }
+    }
 
     @Test
     public void TC09_createPriStore() throws Exception {
