@@ -174,7 +174,7 @@ public class StoreTest {
 
     @Test
     public void TC09_createStorePwd()throws  Exception {
-        String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
+        String Data = "{\"test\":\"json"+UtilsClass.Random(4)+"\"}";
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
         map.put("pubkeys",PUBKEY6);
@@ -290,7 +290,7 @@ public class StoreTest {
 //    }
     @Test
     public void TC279_getTxDetail() throws  Exception {
-        String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
+        String Data = "{\"test\":\"json"+UtilsClass.Random(4)+"\"}";
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
@@ -313,7 +313,7 @@ public class StoreTest {
      */
     @Test
     public void TC279_getTransactionIndex() throws  Exception {
-        String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
+        String Data = "{\"test\":\"json"+UtilsClass.Random(4)+"\"}";
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
@@ -376,7 +376,7 @@ public class StoreTest {
 
     @Test
     public void TC254_getTransationBlock()throws  Exception{
-        String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
+        String Data = "{\"test\":\"json"+UtilsClass.Random(4)+"\"}";
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
