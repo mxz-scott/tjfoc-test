@@ -9,6 +9,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -39,16 +40,20 @@ public class MultiTest {
     private static String actualAmount1;
     private static String actualAmount2;
 
-    //@Test
-    @Before
-    public void beforeConfig() throws Exception {
-        if(certPath!=""&& bReg==false) {
+
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        if (certPath != "" && bReg == false) {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();
             Thread.sleep(SLEEPTIME);
-            bReg=true;
+            bReg = true;
         }
+    }
+
+    @Before
+    public void beforeConfig() throws Exception {
 
         issueAmount1 = "1000.12345678912345";
         issueAmount2 = "1000.876543212345";

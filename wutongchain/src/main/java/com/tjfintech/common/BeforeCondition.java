@@ -85,14 +85,25 @@ public class BeforeCondition {
 
         setPermission999();
     }
+
+
     /**
-     * 创建归集地址
-     * 第一个参数为私钥。后续...参数为地址
+     * 赋予权限和读取公私钥对。
+     *
      */
     @Test
-    public  void collAddressTest() throws Exception{
+    public  void givePermission() throws Exception{
         setPermission999();
-        updatePubPriKey();//从文件中根据配置certPath读取指定类型的公私钥对，并重新生成多签地址
+        updatePubPriKey();//从文件中根据配置certPath读取指定类型的公私钥对
+     }
+
+
+    /**
+     * 添加发行地址和归集地址
+     *
+     */
+    public  void collAddressTest() throws Exception{
+        createAddresses(); //生成多签地址
         String response= multiSign.collAddress(PRIKEY1,IMPPUTIONADD);
         String response2= multiSign.collAddress(PRIKEY1,MULITADD3);
         String response3= multiSign.collAddress(PRIKEY1,ADDRESS1);
@@ -129,66 +140,6 @@ public class BeforeCondition {
 
     }
 
-//        /**
-//     * 创建单签地址
-//     *
-//     */
-//    @Test
-//    public void TC12_createAdd() {
-//        soloSign.genAddress(PUBKEY1);
-//        soloSign.genAddress(PUBKEY2);
-//        soloSign.genAddress(PUBKEY3);
-//        soloSign.genAddress(PUBKEY4);
-//        soloSign.genAddress(PUBKEY5);
-//        soloSign.genAddress(PUBKEY6);
-//        soloSign.genAddress(PUBKEY7);
-//    }
-
-
-//    /**
-//     * 创建多签地址 保存在数据库中
-//     * 当数据库被清，库中没多签地址信息时候调用。
-//     */
-//    @Test
-//    public void createAdd() {
-//        int M = 3;
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("1", PUBKEY1);
-//        map.put("2", PUBKEY2);
-//        map.put("3", PUBKEY3);
-//        multiSign.genMultiAddress(M, map);
-//        map = new HashMap<>();
-//        map.put("1", PUBKEY1);
-//        map.put("2", PUBKEY2);
-//        map.put("3", PUBKEY6);
-//        multiSign.genMultiAddress(M, map);
-//        map = new HashMap<>();
-//        map.put("1", PUBKEY1);
-//        map.put("2", PUBKEY6);
-//        map.put("3", PUBKEY7);
-//        multiSign.genMultiAddress(M, map);
-//        M = 1;
-//        map = new HashMap<>();
-//        map.put("1", PUBKEY1);
-//        map.put("2", PUBKEY2);
-//        multiSign.genMultiAddress(M, map);
-//        map = new HashMap<>();
-//        map.put("1", PUBKEY1);
-//        map.put("2", PUBKEY3);
-//        multiSign.genMultiAddress(M, map);
-//        map = new HashMap<>();
-//        map.put("1", PUBKEY3);
-//        map.put("2", PUBKEY4);
-//        multiSign.genMultiAddress(M, map);
-//        map = new HashMap<>();
-//        map.put("1", PUBKEY4);
-//        map.put("2", PUBKEY5);
-//        multiSign.genMultiAddress(1, map);
-//        map = new HashMap<>();
-//        map.put("1", PUBKEY1);
-//        map.put("2", PUBKEY6);
-//        multiSign.genMultiAddress(M, map);//34
-//    }
 
     /**
      * 测试用例T284的前提条件。发行对应token
@@ -207,6 +158,10 @@ public class BeforeCondition {
         String response2 = multiSign.Sign(Tx1, PRIKEY4);
     }
 
+    /**
+     * 创建公私钥对
+     *
+     */
     public void updatePubPriKey()throws Exception{
         if(certPath == "") {
             log.info("using default setting key pairs in UtilsClass");
@@ -228,6 +183,14 @@ public class BeforeCondition {
         PUBKEY6 = getKeyPairsFromFile(certPath+"/keys6/pubkey.pem");
         PUBKEY7 = getKeyPairsFromFile(certPath+"/keys7/pubkey.pem");
 
+     }
+
+     /**
+     * 创建多签地址 保存在数据库中
+     * 当数据库被清，库中没多签地址信息时候调用。
+     */
+    public void createAddresses()throws Exception{
+
         ADDRESS1 =JSONObject.fromObject(soloSign.genAddress(PUBKEY1)).getJSONObject("Data").getString("Address");
         ADDRESS2 =JSONObject.fromObject(soloSign.genAddress(PUBKEY2)).getJSONObject("Data").getString("Address");
         ADDRESS3 =JSONObject.fromObject(soloSign.genAddress(PUBKEY3)).getJSONObject("Data").getString("Address");
@@ -235,7 +198,6 @@ public class BeforeCondition {
         ADDRESS5 =JSONObject.fromObject(soloSign.genAddress(PUBKEY5)).getJSONObject("Data").getString("Address");
         ADDRESS6 =JSONObject.fromObject(soloSign.genAddress(PUBKEY6)).getJSONObject("Data").getString("Address");
         ADDRESS7 =JSONObject.fromObject(soloSign.genAddress(PUBKEY7)).getJSONObject("Data").getString("Address");
-
 
         int M = 3;
         Map<String, Object> map = new HashMap<>();
@@ -275,4 +237,6 @@ public class BeforeCondition {
         map.put("2", PUBKEY5);
         IMPPUTIONADD=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//45
     }
+
+
 }

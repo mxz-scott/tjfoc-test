@@ -8,6 +8,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -37,15 +38,19 @@ public class SoloTest {
     private static String actualAmount1;
     private static String actualAmount2;
 
-    @Before
-    public void beforeConfig() throws Exception {
-        if(certPath!=""&& bReg==false) {
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        if (certPath != "" && bReg == false) {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();
-
-            bReg=true;
+            Thread.sleep(SLEEPTIME);
+            bReg = true;
         }
+    }
+
+    @Before
+    public void beforeConfig() throws Exception {
 
         issueAmount1 = "10000.12345678912345";
         issueAmount2 = "20000.876543212345";

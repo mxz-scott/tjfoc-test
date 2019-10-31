@@ -21,6 +21,8 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 @Slf4j
 public class UtilsClass {
     public static final String SDKADD = "http://10.1.3.246:7777";
+//    public static final String SDKADD = "http://180.101.204.164:8800";
+
 
     public static String certPath = "SM2"; // 设置签名证书类型，可选值SM2(默认值)，ECDSA，MIX1，MIX2，RSA
     public static String subLedger = ""; // 修改接口兼容主子链
@@ -28,7 +30,7 @@ public class UtilsClass {
     public static Integer  LONGTIMEOUT = 100000;//毫秒
     public static Integer  SHORTMEOUT = 3000;//毫秒
     public static Integer  UTXOSHORTMEOUT = 4 * 1000;//毫秒
-    public final static int  SLEEPTIME = 7*1000;
+    public final static int  SLEEPTIME = 6*1000;
 
     //UTXO精度
     public static Integer PRECISION = 6;

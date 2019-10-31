@@ -7,6 +7,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -28,8 +29,8 @@ public class StoreTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
 
-    @Before
-    public void beforeConfig() throws Exception {
+    @BeforeClass
+    public static void beforeConfig() throws Exception {
         if (certPath != "" && bReg == false) {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
@@ -37,6 +38,7 @@ public class StoreTest {
             bReg = true;
         }
     }
+
     /**
      * TC05-创建存证交易，数据格式为Json
      * 创建后需要休眠5秒等待数据上链
