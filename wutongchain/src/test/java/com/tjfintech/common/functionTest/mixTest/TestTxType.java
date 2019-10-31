@@ -515,8 +515,11 @@ public class TestTxType {
 
         //检查合约创建交易信息
         checkTriMsg(txHash7,versionStore,typeDocker,subTypeCreateDocker);
-        //Install chaincode [041801_2.0] success!
-        assertEquals("Install chaincode ["+ct.name+"_"+ct.version+"] success!",JSONObject.fromObject(
+        //Install chaincode [041801_2.0] success!  Install chaincode [2019103155687_sub20191031951_2.1] success!
+        String checkMsg = "";
+        if(subLedger.isEmpty()) checkMsg ="Install chaincode [" + ct.name + "_" + ct.version + "] success!";
+        else checkMsg = "Install chaincode [" + ct.name + "_" + subLedger + "_" + ct.version + "] success!";
+        assertEquals(checkMsg,JSONObject.fromObject(
                 store.GetTxDetail(txHash7)).getJSONObject("Data").getJSONObject("Contract").getString("Message"));
 //        assertEquals("Install chaincode ["+ct.name+"_"+ct.version+"] success!",JSONObject.fromObject(
 //                store.GetTransaction(txHash7)).getJSONObject("Data").getString("message"));
@@ -536,7 +539,10 @@ public class TestTxType {
         //检查合约销毁交易信息
         checkTriMsg(txHash9,versionStore,typeDocker,subTypeDeleteDocker);
         //Delete chaincode [041801_2.0] success!
-        assertEquals("Delete chaincode ["+ct.name+"_"+ct.version+"] success!",JSONObject.fromObject(
+        String msg = "";
+        if(subLedger.isEmpty()) msg = "Delete chaincode ["+ct.name+"_"+ct.version+"] success!";
+        else msg = "Delete chaincode [" + ct.name+ "_" + subLedger + "_" + ct.version + "] success!";
+        assertEquals(msg,JSONObject.fromObject(
                 store.GetTxDetail(txHash9)).getJSONObject("Data").getJSONObject("Contract").getString("Message"));
 //        assertEquals("Delete chaincode ["+ct.name+"_"+ct.version+"] success!",JSONObject.fromObject(
 //                store.GetTransaction(txHash9)).getJSONObject("Data").getString("message"));

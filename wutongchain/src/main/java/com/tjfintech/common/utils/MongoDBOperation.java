@@ -15,7 +15,7 @@ import org.junit.Test;
 public class MongoDBOperation {
 
     //DBPath = "mongodb://10.1.3.246:27017/ww22"
-    public static String mongoIP = "10.1.3.246";
+    public static String mongoIP = "10.1.3.240";
 
     public String createDatabase(String database) throws Exception{
         //初始化mongodb客户端
