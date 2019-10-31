@@ -134,6 +134,7 @@ public class UtilsClass {
     public static String provider = "mysql";
     public static String mongoDBAddr = "\"mongodb://10.1.3.246:27017/ww22\"";
     public static String mysqlDBAddr = "\"root:root@tcp(10.1.3.246:3306)/wallet0703?charset=utf8\"";
+    public static Map<String,String> mapledgerDockerName = new HashMap<>();
 
 
 
