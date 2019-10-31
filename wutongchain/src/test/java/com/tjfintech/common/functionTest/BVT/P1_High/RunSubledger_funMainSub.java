@@ -15,7 +15,8 @@ import org.junit.runners.Suite;
         TestMainSubChain_Create_02.class,
         TestMainSubChain_FRDG.class,
         TestMainSubChain_Perm.class,
-        TestMainSubChain_UTXO.class
+        TestMainSubChain_UTXO.class,
+        TestMainSubChain_DockerContract.class //当前存在bug 20191031
 })
 
 //Build Validation Test
