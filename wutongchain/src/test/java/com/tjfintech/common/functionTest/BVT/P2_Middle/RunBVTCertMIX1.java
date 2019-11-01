@@ -25,7 +25,7 @@ import org.junit.runners.Suite;
         MultiSignDetailTest.class,
         SoloTestInvalid.class,
         MultiTestInvalid.class,
-        TestTxType.class
+        //TestTxType.class
 })
 
 //Build Validation Test

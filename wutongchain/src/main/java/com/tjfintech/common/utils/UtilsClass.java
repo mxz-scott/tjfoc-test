@@ -449,7 +449,6 @@ public class UtilsClass {
         InputStream inStream =new FileInputStream(filePath);
         ByteArrayOutputStream out =new ByteArrayOutputStream();
 
-        //String manEncode="LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR1RBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUJITTlWQVlJdEJIa3dkd0lCQVFRZ3Y2R0NWb0NMcVp2SkpjYW4KRDQvMDRYUTF1WEJSZk80aHRNT3p6L2Q5VXFPZ0NnWUlLb0VjejFVQmdpMmhSQU5DQUFUQkdibGhmQVJIZDk0OApDYlYxUDkxT3ZyVmxKNHBtS21KcFZFLzFsQmcxS2kyZEtVOUMxK2xlTnVyM1hiZTliK3U1VDd0RUkrYWxDU0V5CkI2QXZSL1ZpCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K";
         int ch;
         String res="";
         while ((ch = inStream.read())!= -1){
@@ -458,7 +457,7 @@ public class UtilsClass {
         byte[] result=out.toByteArray();
 
         res=(new BASE64Encoder()).encodeBuffer(result);
-        log.info(res.replaceAll("\r\n", ""));
+        //log.info(res.replaceAll("\r\n", ""));
         //assertEquals(res.replaceAll("\r\n", ""),manEncode);
         return res.replaceAll("\r\n", "");
     }

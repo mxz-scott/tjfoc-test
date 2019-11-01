@@ -29,7 +29,7 @@ import org.junit.runners.Suite;
         MultiTestInvalid.class,
         StoreTest.class,
         StoreInvalidTest.class,
-        TestTxType.class
+        //TestTxType.class
 })
 
 //Build Validation Test

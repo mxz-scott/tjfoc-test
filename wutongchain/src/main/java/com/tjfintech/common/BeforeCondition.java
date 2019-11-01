@@ -183,6 +183,15 @@ public class BeforeCondition {
         PUBKEY6 = getKeyPairsFromFile(certPath+"/keys6/pubkey.pem");
         PUBKEY7 = getKeyPairsFromFile(certPath+"/keys7/pubkey.pem");
 
+
+        log.info("PRIKEY1 :" + PRIKEY1);
+        log.info("PUBKEY1 :" + PUBKEY1);
+
+        log.info("PRIKEY2 :" + PRIKEY2);
+        log.info("PUBKEY2 :" + PUBKEY2);
+
+        log.info("PRIKEY6 :" + PRIKEY6);
+        log.info("PUBKEY6 :" + PUBKEY6);
      }
 
      /**

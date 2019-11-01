@@ -58,27 +58,6 @@ public class StoreTest {
 
     }
 
-    @Test
-    public void TC_apiHealthTest() throws Exception {
-        assertThat(store.GetApiHealth(),containsString("success"));
-    }
-
-    /**
-     *TC292-获取存证交易byhash
-     * 通过TC05全局变量storeHash用于查询测试
-     * 预期：返回200，Data为存证内容
-     */
-    @Test
-    public void TC292_getStore() throws  Exception {
-        String Data = "{\"testJson\":\"json"+UtilsClass.Random(3)+"\"}";
-        String response= store.CreateStore(Data);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String  storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
-        String response2= store.GetStore(storeHash);
-        assertThat(response2, containsString("200"));
-        assertThat(response2,containsString("json"));
-    }
     /**
      *tc277获取隐私存证交易byhash
      * 预期：返回200，Data为存证内容
@@ -107,6 +86,29 @@ public class StoreTest {
         assertThat(response4, containsString("500"));
         assertThat(response4, containsString("you have no permission to get this transaction !"));
     }
+
+    @Test
+    public void TC_apiHealthTest() throws Exception {
+        assertThat(store.GetApiHealth(),containsString("success"));
+    }
+
+    /**
+     *TC292-获取存证交易byhash
+     * 通过TC05全局变量storeHash用于查询测试
+     * 预期：返回200，Data为存证内容
+     */
+    @Test
+    public void TC292_getStore() throws  Exception {
+        String Data = "{\"testJson\":\"json"+UtilsClass.Random(3)+"\"}";
+        String response= store.CreateStore(Data);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String  storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        Thread.sleep(SLEEPTIME);
+        String response2= store.GetStore(storeHash);
+        assertThat(response2, containsString("200"));
+        assertThat(response2,containsString("json"));
+    }
+
 
     /**
      * TC07复杂查询存证交易，数据格式为String
@@ -242,13 +244,13 @@ public class StoreTest {
 //    }
 
     /**
-     * TC18 连续发送500笔存证交易
+     * TC18 连续发送N笔存证交易
      * @throws Exception
      */
    @Test
-   public void TC18_CreateStore500()throws  Exception{
+   public void TC18_CreateStore50()throws  Exception{
        List<String>list=new ArrayList<>();
-       for(int i=0;i<500;i++){
+       for(int i=0;i<50;i++){
            list.add(store.CreateStore("cx"+UtilsClass.Random(4)));
        }
        for(int i=0;i<list.size();i++){
