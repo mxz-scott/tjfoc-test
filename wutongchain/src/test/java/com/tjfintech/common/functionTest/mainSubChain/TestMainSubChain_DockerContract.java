@@ -83,8 +83,8 @@ public class TestMainSubChain_DockerContract {
         String testResp1 = dockerCreateExeTx(dockerName1,true,true,false, changeCount2);
         log.info(testResp1);
         assertNotEquals("{}",testResp1);
-        assertEquals(true,testResp2.contains(changeCount2));//新修改的mobile1数量 确保当前没有mobile信息中没有相同数量存在
-        assertEquals(false,testResp2.contains("Mobile8")); //新添加的mobile型号信息
+        assertEquals(true,testResp1.contains(changeCount2));//新修改的mobile1数量 确保当前没有mobile信息中没有相同数量存在
+        assertEquals(false,testResp1.contains("Mobile8")); //新添加的mobile型号信息
 
         assertNotEquals(testResp2,testResp1);
 
@@ -128,9 +128,9 @@ public class TestMainSubChain_DockerContract {
         //主链创建合约 执行合约交易 合约交易中不会创建新mobile信息 修改Mobile1 数量为changeCount2
         String testResp1 = dockerCreateExeTx(dockerName1,true,true,false, changeCount2);
         log.info(testResp1);
-        assertNotEquals("",testResp1);
-        assertEquals(true,testResp2.contains(changeCount2));//新修改的mobile1数量 确保当前没有mobile信息中没有相同数量存在
-        assertEquals(false,testResp2.contains("Mobile8")); //新添加的mobile型号信息
+        assertNotEquals("{}",testResp1);
+        assertEquals(true,testResp1.contains(changeCount2));//新修改的mobile1数量 确保当前没有mobile信息中没有相同数量存在
+        assertEquals(false,testResp1.contains("Mobile8")); //新添加的mobile型号信息
 
         assertNotEquals(testResp2,testResp1);
 
@@ -176,8 +176,8 @@ public class TestMainSubChain_DockerContract {
         String testResp1 = dockerCreateExeTx(dockerName2,true,true,false, changeCount2);
         log.info(testResp1);
         assertNotEquals("{}",testResp1);
-        assertEquals(true,testResp2.contains(changeCount2));//新修改的mobile1数量 确保当前没有mobile信息中没有相同数量存在
-        assertEquals(false,testResp2.contains("Mobile8")); //新添加的mobile型号信息
+        assertEquals(true,testResp1.contains(changeCount2));//新修改的mobile1数量 确保当前没有mobile信息中没有相同数量存在
+        assertEquals(false,testResp1.contains("Mobile8")); //新添加的mobile型号信息
 
         assertNotEquals(testResp2,testResp1);
 
@@ -225,8 +225,8 @@ public class TestMainSubChain_DockerContract {
         String testResp1 = dockerCreateExeTx(dockerName2,true,true,false, changeCount2);
         log.info(testResp1);
         assertNotEquals("{}",testResp1);
-        assertEquals(true,testResp2.contains(changeCount2));//新修改的mobile1数量 确保当前没有mobile信息中没有相同数量存在
-        assertEquals(false,testResp2.contains("Mobile8")); //新添加的mobile型号信息
+        assertEquals(true,testResp1.contains(changeCount2));//新修改的mobile1数量 确保当前没有mobile信息中没有相同数量存在
+        assertEquals(false,testResp1.contains("Mobile8")); //新添加的mobile型号信息
 
         assertNotEquals(testResp2,testResp1);
 
@@ -283,8 +283,8 @@ public class TestMainSubChain_DockerContract {
         testResp1 = dockerCreateExeTx(dockerName2,false,true,true, changeCount2);
         log.info(testResp1);
         assertNotEquals("{}",testResp1);
-        assertEquals(true,testResp2.contains(changeCount2));//新修改的mobile1数量 确保当前没有mobile信息中没有相同数量存在
-        assertEquals(true,testResp2.contains("Mobile8")); //新添加的mobile型号信息
+        assertEquals(true,testResp1.contains(changeCount2));//新修改的mobile1数量 确保当前没有mobile信息中没有相同数量存在
+        assertEquals(true,testResp1.contains("Mobile8")); //新添加的mobile型号信息
 
 
         assertNotEquals(testResp2,testResp1);
@@ -341,8 +341,8 @@ public class TestMainSubChain_DockerContract {
         testResp1 = dockerCreateExeTx(dockerName1,false,true,true, changeCount2);
         log.info(testResp1);
         assertNotEquals("{}",testResp1);
-        assertEquals(true,testResp2.contains(changeCount2));//新修改的mobile1数量 确保当前没有mobile信息中没有相同数量存在
-        assertEquals(true,testResp2.contains("Mobile8")); //新添加的mobile型号信息
+        assertEquals(true,testResp1.contains(changeCount2));//新修改的mobile1数量 确保当前没有mobile信息中没有相同数量存在
+        assertEquals(true,testResp1.contains("Mobile8")); //新添加的mobile型号信息
 
 
         assertNotEquals(testResp2,testResp1);
@@ -399,8 +399,8 @@ public class TestMainSubChain_DockerContract {
         testResp1 = dockerCreateExeTx(dockerName1,false,true,true, changeCount2);
         log.info(testResp1);
         assertNotEquals("{}",testResp1);
-        assertEquals(true,testResp2.contains(changeCount2));//新修改的mobile1数量 确保当前没有mobile信息中没有相同数量存在
-        assertEquals(true,testResp2.contains("Mobile8")); //新添加的mobile型号信息
+        assertEquals(true,testResp1.contains(changeCount2));//新修改的mobile1数量 确保当前没有mobile信息中没有相同数量存在
+        assertEquals(true,testResp1.contains("Mobile8")); //新添加的mobile型号信息
 
 
         assertNotEquals(testResp2,testResp1);
@@ -459,8 +459,8 @@ public class TestMainSubChain_DockerContract {
         testResp1 = dockerCreateExeTx(dockerName2,false,true,true, changeCount2);
         log.info(testResp1);
         assertNotEquals("{}",testResp1);
-        assertEquals(true,testResp2.contains(changeCount2));//新修改的mobile1数量 确保当前没有mobile信息中没有相同数量存在
-        assertEquals(true,testResp2.contains("Mobile8")); //新添加的mobile型号信息
+        assertEquals(true,testResp1.contains(changeCount2));//新修改的mobile1数量 确保当前没有mobile信息中没有相同数量存在
+        assertEquals(true,testResp1.contains("Mobile8")); //新添加的mobile型号信息
 
 
         assertNotEquals(testResp2,testResp1);
@@ -658,6 +658,17 @@ public class TestMainSubChain_DockerContract {
         return retMsg;
     }
 
+    @Test
+    public void crossDockerTestMS()throws Exception{
+        //主链上执行跨合约调用
+        subLedger = "";
+        dockerContractTest.TC2105_testCrossContractTxNewSales();
+
+        //子链上执行跨合约调用
+        SetSubLedger setSubLedger = new SetSubLedger();
+        setSubLedger.createSubledger();
+        dockerContractTest.TC2105_testCrossContractTxNewSales();
+    }
 
 
     @AfterClass

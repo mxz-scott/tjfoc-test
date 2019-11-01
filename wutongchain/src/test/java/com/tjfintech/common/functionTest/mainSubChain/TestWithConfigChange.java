@@ -214,7 +214,7 @@ public class TestWithConfigChange {
         mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
         sleepAndSaveInfo(SLEEPTIME*3/2);
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
-        assertEquals(resp.contains("Destroy"), true);
+        assertEquals(resp.contains("Destory"), true);
 
         //恢复节点
         mgToolCmd.quitPeer(PEER1IP+":"+PEER1RPCPort,PEER3IP);
@@ -309,7 +309,7 @@ public class TestWithConfigChange {
     }
 
 
-    @After
+    //@After
     public void resetPeerAndSDK()throws  Exception {
         setAndRestartPeerList(resetPeerBase);
         setAndRestartSDK(resetSDKConfig);
