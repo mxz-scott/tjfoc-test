@@ -8,6 +8,7 @@ import com.tjfintech.common.functionTest.Conditions.SetSDKWalletDisabled;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
+import com.tjfintech.common.functionTest.store.PrivateStoreTest;
 import com.tjfintech.common.functionTest.store.StoreInvalidTest;
 import com.tjfintech.common.functionTest.store.StoreTest;
 import com.tjfintech.common.functionTest.utxoMultiSign.*;
@@ -27,6 +28,7 @@ import org.junit.runners.Suite;
         SetSDKWalletDisabled.class,
 
         StoreTest.class,
+        PrivateStoreTest.class,
         StoreInvalidTest.class,
 
         DockerContractTest.class,
