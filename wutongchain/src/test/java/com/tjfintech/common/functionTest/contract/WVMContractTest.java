@@ -150,7 +150,7 @@ public class WVMContractTest {
         assertEquals(false,ctHash1.equals(ctHash2));
 
 
-        //使用RSA私钥 20190813目前是有问题的
+        //使用RSA私钥
         priKey = getKeyPairsFromFile("RSA/keys1/key.pem");
         String ctHash3 =installInitTransfer(ctName,priKey,"init","transfer","getBalance");
         assertEquals(false,ctHash1.equals(ctHash3));

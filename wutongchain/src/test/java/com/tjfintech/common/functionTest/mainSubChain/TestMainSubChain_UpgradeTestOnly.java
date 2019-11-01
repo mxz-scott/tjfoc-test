@@ -41,6 +41,7 @@ public class TestMainSubChain_UpgradeTestOnly {
     @BeforeClass
     public static void clearData()throws Exception{
         BeforeCondition beforeCondition = new BeforeCondition();
+        beforeCondition.updatePubPriKey();
         beforeCondition.collAddressTest();
         sleepAndSaveInfo(SLEEPTIME);
     }

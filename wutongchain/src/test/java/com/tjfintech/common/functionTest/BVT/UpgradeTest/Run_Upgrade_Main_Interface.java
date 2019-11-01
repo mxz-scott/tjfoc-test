@@ -46,7 +46,7 @@ import org.junit.runners.Suite;
         DynamicChangePeerCluster.class,
 
         TestMainSubChain_UpgradeTestOnly.class,
-
+        SetMainLedger.class,
         UpgradeTestHistoryData.class
 })
 

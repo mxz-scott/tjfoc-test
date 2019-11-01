@@ -44,6 +44,7 @@ public class TestMainSubChain_WVM {
     public static void clearData() throws Exception{
         BeforeCondition beforeCondition = new BeforeCondition();
         //beforeCondition.clearDataSetPerm999();
+        beforeCondition.updatePubPriKey();
         beforeCondition.collAddressTest();
 //        beforeCondition.createAdd();
         sleepAndSaveInfo(SLEEPTIME);

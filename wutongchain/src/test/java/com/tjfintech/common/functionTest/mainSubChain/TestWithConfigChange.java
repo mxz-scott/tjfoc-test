@@ -39,8 +39,6 @@ public class TestWithConfigChange {
     public static void clearData()throws Exception{
         BeforeCondition beforeCondition = new BeforeCondition();
         beforeCondition.clearDataSetPerm999();
-        beforeCondition.collAddressTest();
-//        beforeCondition.createAdd();
         sleepAndSaveInfo(SLEEPTIME);
     }
 
@@ -270,7 +268,7 @@ public class TestWithConfigChange {
                 " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2);
         assertEquals(res.contains("send transaction success"), true);
 
-        sleepAndSaveInfo(SLEEPTIME*3);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
