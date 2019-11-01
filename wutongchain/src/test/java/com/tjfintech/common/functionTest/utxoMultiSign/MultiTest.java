@@ -43,13 +43,10 @@ public class MultiTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        if (certPath != "" && bReg == false) {
-            BeforeCondition bf = new BeforeCondition();
-            bf.updatePubPriKey();
-            bf.collAddressTest();
-            Thread.sleep(SLEEPTIME);
-            bReg = true;
-        }
+        BeforeCondition bf = new BeforeCondition();
+        bf.updatePubPriKey();
+        bf.collAddressTest();
+        Thread.sleep(SLEEPTIME);
     }
 
     @Before
