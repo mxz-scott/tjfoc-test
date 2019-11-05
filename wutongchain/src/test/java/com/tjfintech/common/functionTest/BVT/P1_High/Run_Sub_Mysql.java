@@ -4,6 +4,7 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetCertSM2;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
 import com.tjfintech.common.functionTest.Conditions.SetSubLedger;
+import com.tjfintech.common.functionTest.Conditions.SetSubLedgerSleepTime;
 import com.tjfintech.common.functionTest.contract.DockerContractInvalidTest;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
@@ -24,6 +25,7 @@ import org.junit.runners.Suite;
         SetDatabaseMysql.class,
         SetCertSM2.class,
         SetSubLedger.class,
+        SetSubLedgerSleepTime.class,
         BeforeCondition.class,
 
         StoreTest.class,
