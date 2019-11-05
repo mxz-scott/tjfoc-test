@@ -29,8 +29,8 @@ public class TestMainSubChain_UTXO {
     TestBuilder testBuilder = TestBuilder.getInstance();
     private static String tokenType;
     private static String tokenType2;
-    private static String subLedgerA = "leg3";
-    private static String subLedgerB = "leg4";
+    private static String subLedgerA = "Leg3";
+    private static String subLedgerB = "Leg4";
     MultiSign multiSign = testBuilder.getMultiSign();
     UtilsClass utilsClass = new UtilsClass();
     MgToolCmd mgToolCmd = new MgToolCmd();

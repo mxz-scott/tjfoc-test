@@ -29,8 +29,8 @@ public class TestMainSubChain_Create_02 {
     MgToolCmd mgToolCmd = new MgToolCmd();
 
     String stateDestroyed ="has been destroyed";
-    String ledgerStateDestroy = "\"state\": \"Destory\"";
-    String ledgerStateFreeze = "\"state\": \"Freeze\"";
+//    String ledgerStateDestroy = "\"state\": \"Destory\"";
+//    String ledgerStateFreeze = "\"state\": \"Freeze\"";
 
     String glbChain01= "glbCh1";
     String glbChain02= "glbCh2";

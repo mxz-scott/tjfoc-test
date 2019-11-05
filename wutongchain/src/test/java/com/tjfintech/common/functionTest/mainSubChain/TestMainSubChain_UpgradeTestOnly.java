@@ -30,12 +30,9 @@ public class TestMainSubChain_UpgradeTestOnly {
     Store store =testBuilder.getStore();
     MgToolCmd mgToolCmd = new MgToolCmd();
 
-    String notSupport="not support service";
-    String stateDestroyed ="has been destroyed";
-    String stateFreezed ="has been freezed";
 //    String stateFreezed ="not support service";
-    String ledgerStateDestroy = "\"state\": \"Destory\"";
-    String ledgerStateFreeze = "\"state\": \"Freeze\"";
+//    String ledgerStateDestroy = "\"state\": \"Destory\"";
+//    String ledgerStateFreeze = "\"state\": \"Freeze\"";
 
 
     @BeforeClass

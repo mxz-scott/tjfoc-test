@@ -29,12 +29,8 @@ import static org.junit.Assert.assertThat;
 @Slf4j
 public class TestMainSubChain_WVM {
     TestBuilder testBuilder = TestBuilder.getInstance();
-    private static String tokenType;
-    private static String tokenType2;
-    private static String subLedgerA = "leg5";
-    private static String subLedgerB = "leg6";
-    MultiSign multiSign = testBuilder.getMultiSign();
-    UtilsClass utilsClass = new UtilsClass();
+    private static String subLedgerA = "Leg5";
+    private static String subLedgerB = "Leg6";
     MgToolCmd mgToolCmd = new MgToolCmd();
     BeforeCondition beforeCondition = new BeforeCondition();
     WVMContractTest wvmContractTest = new WVMContractTest();

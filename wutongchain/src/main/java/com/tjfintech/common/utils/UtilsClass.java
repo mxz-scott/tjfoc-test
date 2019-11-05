@@ -137,6 +137,11 @@ public class UtilsClass {
     public static Map<String,String> mapledgerDockerName = new HashMap<>();
 
 
+    public static String ledgerStateDestroy = "\"state\": \"2\"";
+    public static String ledgerStateFreeze = "\"state\": \"1\"";
+    public static String ledgerStateNormal = "\"state\": \"0\"";
+
+
 
     /**
      * 多签转账操作的TOKEN数组构建方法，单签的在GosoloSign类中

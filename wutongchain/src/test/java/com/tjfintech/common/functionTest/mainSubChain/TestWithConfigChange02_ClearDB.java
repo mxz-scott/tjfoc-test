@@ -35,9 +35,6 @@ public class TestWithConfigChange02_ClearDB {
 
     public static String glbChain01= "glbCh1";
 
-    String ledgerStateDestroy = "\"state\": \"Destory\"";
-    String ledgerStateFreeze = "\"state\": \"Freeze\"";
-
 
     @Before
     public void clearData()throws Exception{
