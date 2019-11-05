@@ -10,6 +10,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.List;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 
+//管理工具不再对外提供 故管理工具仅作为测试辅助工具 不作为版本测试内容 20191105
 @Slf4j
 public class TestMgTool {
     public static final int STARTSLEEPTIME=40000;

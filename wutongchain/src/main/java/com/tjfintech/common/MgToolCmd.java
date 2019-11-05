@@ -131,7 +131,7 @@ public class MgToolCmd implements ManageTool {
         String rpcPort = queryIPPort.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
 
-        String cmd = toolExePath + " peer -p " + rpcPort + " -i";
+        String cmd = toolExePath + " peer -p " + rpcPort;//20191105 管理工具不再对外提供 因此去掉simple info的功能
         return shExeAndReturn(queryIP,cmd);
     }
 

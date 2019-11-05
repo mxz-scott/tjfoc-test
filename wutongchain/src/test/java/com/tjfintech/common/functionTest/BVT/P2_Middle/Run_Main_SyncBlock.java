@@ -22,7 +22,7 @@ import org.junit.runners.Suite;
         BeforeCondition.class,
 
         TestPermission.class,
-        TestMgTool.class,
+//        TestMgTool.class,
         MixTxTest.class,
         BlockSyncTest.class,
 })
