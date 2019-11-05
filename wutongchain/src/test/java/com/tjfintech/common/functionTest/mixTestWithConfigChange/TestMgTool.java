@@ -33,7 +33,7 @@ public class TestMgTool {
     int DynamicPeerNo = 4;
     String ipType="/ip4/";
     String tcpType="/tcp/";
-    int memInfoNo = 9;//memberlist中返回节点信息字段个数，目前返回id，state，version，port，shownName，inAddr，outAddr，typ，height
+    int memInfoNo = 12;//memberlist中返回节点信息字段个数，目前返回id，state，version，port，shownName，inAddr，outAddr，typ，height
 
 
     String toolPath="cd " + ToolPATH + ";";
@@ -77,11 +77,28 @@ public class TestMgTool {
 
             JSONObject eachMem = JSONObject.fromObject(temp);
             log.info("each mem key no.: " + eachMem.size());
+            log.info(eachMem.toString());
             assertEquals(memInfoNo,eachMem.size());
             queryValue = eachMem.getString(queryKey);
         }
         assertEquals(false,queryValue.isEmpty()); //确认查询关键字结果非空
-        return queryValue;
+        return queryValue.trim();
+    }
+
+    public void checkMemInfoExHeight(String chkResp,String peerIP,String...memInfoArr)throws Exception{
+        assertEquals(memInfoArr[0],parseMemInfo(chkResp,peerIP,"id"));
+        assertEquals(memInfoArr[1],parseMemInfo(chkResp,peerIP,"state"));
+        assertEquals(memInfoArr[2],parseMemInfo(chkResp,peerIP,"version"));
+        assertEquals(memInfoArr[3],parseMemInfo(chkResp,peerIP,"port"));
+        assertEquals(memInfoArr[4],parseMemInfo(chkResp,peerIP,"shownName"));
+        assertEquals(memInfoArr[5],parseMemInfo(chkResp,peerIP,"inAddr"));
+        assertEquals(memInfoArr[6],parseMemInfo(chkResp,peerIP,"outAddr"));
+        assertEquals(memInfoArr[7],parseMemInfo(chkResp,peerIP,"typ"));
+//        assertEquals(memInfoArr[8],parseMemInfo(chkResp,peerIP,"height"));
+        assertEquals(memInfoArr[9],parseMemInfo(chkResp,peerIP,"TLSEnabled"));
+        assertEquals(memInfoArr[10],parseMemInfo(chkResp,peerIP,"hashType"));
+        assertEquals(memInfoArr[11],parseMemInfo(chkResp,peerIP,"consensus"));
+
     }
 
    // @Test

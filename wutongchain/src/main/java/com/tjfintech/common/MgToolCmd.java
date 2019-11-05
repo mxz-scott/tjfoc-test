@@ -82,7 +82,7 @@ public class MgToolCmd implements ManageTool {
     public String queryBlockHeight(String queryIPPort)throws Exception{
         String rpcPort = queryIPPort.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
-
+        if(subLedger!="")  rpcPort = rpcPort + " -z " + subLedger;
         String cmd = toolExePath + " height -p " + rpcPort;
         String resp = shExeAndReturn(queryIP,cmd);
         //管理工具加入执行时间打印，高度值需要处理后返回
@@ -92,6 +92,7 @@ public class MgToolCmd implements ManageTool {
     public String queryBlockByHeight(String queryIPPort,String height)throws Exception{
         String rpcPort = queryIPPort.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
+        if(subLedger!="")  rpcPort = rpcPort + " -z " + subLedger;
         String cmd = toolExePath + " query -p "+ rpcPort + " -v " + height;
 
         return shExeAndReturn(queryIP,cmd);
@@ -104,7 +105,7 @@ public class MgToolCmd implements ManageTool {
         String tempTxNo = txNo.isEmpty()?"":" -n " + txNo;
         String tempTxType = txType.isEmpty() ? "" : " -t " + txType;
         String temp = tempTxNo + tempTxType;
-
+        if(subLedger!="")  rpcPort = rpcPort + " -z " + subLedger;
         String cmd = toolExePath + " newtx -p "+ rpcPort + temp;
         return shExeAndReturn(queryIP,cmd);
     }

@@ -24,12 +24,13 @@ import com.tjfintech.common.functionTest.mixTestWithConfigChange.TestMgTool;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class TestWithConfigChange {
+public class TestWithConfigChange_ClearDB {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
 
     MgToolCmd mgToolCmd = new MgToolCmd();
+    TestMgTool testMgTool = new TestMgTool();
     SubLedgerCmd subLedgerCmd = new SubLedgerCmd();
 
     public static String glbChain01= "glbCh1";
@@ -40,10 +41,7 @@ public class TestWithConfigChange {
         BeforeCondition beforeCondition = new BeforeCondition();
         beforeCondition.clearDataSetPerm999();
         sleepAndSaveInfo(SLEEPTIME);
-    }
-
-    @Before
-    public void beforeConfig() throws Exception {
+        MgToolCmd mgToolCmd = new MgToolCmd();
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         if(! resp.contains("\"name\": \""+glbChain01+"\"")) {
             mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01,
@@ -60,8 +58,7 @@ public class TestWithConfigChange {
         }
     }
 
-    //此用例需要调整
-    //@Test
+    @Test
     public void TC1538_quitMainJoinPeer()throws Exception{
         setAndRestartSDK("cp "+ SDKPATH + "conf/configOnePeer240.toml "+ SDKPATH + "conf/config.toml");
         //创建子链01 包含节点A、B、C
@@ -94,22 +91,22 @@ public class TestWithConfigChange {
 
 
         String Data = "tc1538 tx1 test";
-        //动态删除节点B，向主链和子链01/02/03发交易 子链1、2的交易可以成功上链，3无法上链（恢复后可以）
-        mgToolCmd.quitPeer(PEER1IP+":"+PEER1RPCPort,PEER2IP);
+        //动态删除节点B，因已有子链使用 无法成功删除
+        String respQuit = mgToolCmd.quitPeer(PEER1IP+":"+PEER1RPCPort,PEER2IP);
+        assertEquals(respQuit.contains("quit failed:some ledger is using this peer"), true);
 
         sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表 存在其他子链
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
-        assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName1), true);
         assertEquals(resp.contains(chainName2), true);
         assertEquals(resp.contains(chainName3), true);
 
-
+        //确认包含节点B的子链集群信息无异常
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
-        assertEquals(resp.contains(PEER2IP), false);
+        assertEquals(resp.contains(PEER2IP), true);
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName3);
-        assertEquals(resp.contains(PEER2IP), false);
+        assertEquals(resp.contains(PEER2IP), true);
 
         subLedger=chainName1;
         String response1=store.CreateStore(Data);
@@ -135,28 +132,11 @@ public class TestWithConfigChange {
         subLedger=chainName1;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));  //确认可以c查询成功
         subLedger=chainName2;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));  //确认不可以c查询成功
-        subLedger=chainName3;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));  //确认不可以c查询成功
-        subLedger="";
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash4)).getString("State"));  //确认不可以c查询成功
-
-
-        //恢复节点
-        String resp2 = mgToolCmd.addPeer("join",PEER1IP+":"+PEER1RPCPort,
-                "/ip4/"+PEER2IP,"/tcp/60011",PEER2RPCPort);
-        assertEquals(true,resp2.contains("success"));
-        sleepAndSaveInfo(SLEEPTIME*2);
-        subLedger=chainName1;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));  //确认可以c查询成功
-        subLedger=chainName2;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));  //确认可以c查询成功
         subLedger=chainName3;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));  //确认可以c查询成功
         subLedger="";
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash4)).getString("State"));  //确认可以c查询成功
-
-        //setAndRestartSDK(resetSDKConfig);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash4)).getString("State"));  //确认不可以c查询成功
     }
 
     @Test
@@ -224,7 +204,38 @@ public class TestWithConfigChange {
 
     }
 
-    @Test  //数据节点异常
+    @Test
+    public void TC1771_changePeerInfo()throws Exception{
+        //所有信息不变更，重复join，提示变更失败，因节点B参与子链
+        String resp2 = mgToolCmd.addPeer("join",PEER1IP + ":" + PEER1RPCPort,
+                "/ip4/" + PEER2IP,"/tcp/" + PEER2TCPPort,String.valueOf(Integer.valueOf(PEER2RPCPort) + 1));
+        assertEquals(true,resp2.contains("join failed:some ledger is using this peer"));
+
+        //变更节点B为数据节点，提示变更失败，因节点B参与子链
+        resp2 = mgToolCmd.addPeer("observer",PEER1IP + ":" + PEER1RPCPort,
+                "/ip4/" + PEER2IP,"/tcp/" + PEER2TCPPort,PEER2RPCPort);
+        assertEquals(true,resp2.contains("join failed:some ledger is using this peer"));
+
+        //变更节点B tcp端口信息，提示变更失败，因节点B参与子链
+        resp2 = mgToolCmd.addPeer("join",PEER1IP + ":" + PEER1RPCPort,
+                "/ip4/" + PEER2IP,"/tcp/60015",PEER2RPCPort);
+        assertEquals(true,resp2.contains("join failed:some ledger is using this peer"));
+
+        //变更节点B rpc端口信息，提示变更失败，因节点B参与子链
+        resp2 = mgToolCmd.addPeer("join",PEER1IP + ":" + PEER1RPCPort,
+                "/ip4/" + PEER2IP,"/tcp/" + PEER2TCPPort,String.valueOf(Integer.valueOf(PEER2RPCPort) + 1));
+        assertEquals(true,resp2.contains("join failed:some ledger is using this peer"));
+
+        String meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);
+        assertEquals("0",testMgTool.parseMemInfo(meminfo,PEER2IP,"typ"));
+        assertEquals(PEER2RPCPort,testMgTool.parseMemInfo(meminfo,PEER2IP,"port"));
+        assertEquals("/ip4/" + PEER2IP + "/tcp/" + PEER2TCPPort,testMgTool.parseMemInfo(meminfo,PEER2IP,"inAddr"));
+
+        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"1771 data");
+
+    }
+
+    @Test
     public void TC1659_1655_createChainWithDataPeer()throws Exception{
         setAndRestartPeer(PEER3IP,"cp "+ PeerPATH + "configobs.toml "+ PeerPATH + PeerMemConfig + ".toml");
         //动态加入节点168
@@ -306,8 +317,27 @@ public class TestWithConfigChange {
         subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"tc1608 data");
     }
 
+    @Test
+    public void TC1726_createWithStopPeer()throws Exception{
+        testMgTool.queryPeerListNo(PEER1IP+":"+PEER1RPCPort,3);
 
-    //@After
+        shExeAndReturn(PEER2IP,killPeerCmd);
+        String chainName="tc1726_01";
+        String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,
+                " -t sm3"," -w first"," -c raft",ids);
+        assertEquals(res.contains("send transaction success"), true);
+
+        sleepAndSaveInfo(SLEEPTIME);
+        //检查可以获取子链列表 存在其他子链
+        String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
+        assertEquals(resp.contains(chainName), true);
+
+        shExeAndReturn(PEER2IP,startPeerCmd);
+
+    }
+
+
+    @After
     public void resetPeerAndSDK()throws  Exception {
         setAndRestartPeerList(resetPeerBase);
         setAndRestartSDK(resetSDKConfig);

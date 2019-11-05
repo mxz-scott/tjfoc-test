@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -25,6 +27,7 @@ public class DynamicChangePeerCluster {
     TestBuilder testBuilder=TestBuilder.getInstance();
     Store store =testBuilder.getStore();
     MgToolCmd mgToolCmd = new MgToolCmd();
+    TestMgTool testMgTool = new TestMgTool();
 
     String rpcPort=PEER3RPCPort;
     String tcpPort=PEER3TCPPort;
@@ -41,23 +44,18 @@ public class DynamicChangePeerCluster {
     String peer2IPPort=PEER2IP+":"+PEER2RPCPort;
     String peer3IPPort=PEER3IP+":"+PEER3RPCPort;
 
-    ArrayList<String > txHashList =new ArrayList<>();
 
     @Before
     public void resetPeerEnv()throws Exception{
-        BeforeCondition bf =new BeforeCondition();
+        BeforeCondition bf = new BeforeCondition();
         bf.setPermission999();
-        PEER1MAC=getMACAddr(PEER1IP,USERNAME,PASSWD).trim();
-        PEER2MAC=getMACAddr(PEER2IP,USERNAME,PASSWD).trim();
-        PEER3MAC=getMACAddr(PEER3IP,USERNAME,PASSWD).trim();
-        PEER4MAC=getMACAddr(PEER4IP,USERNAME,PASSWD).trim();
 
         mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
 
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
         shellPeer3.execute(killPeerCmd);
         shellPeer3.execute(resetPeerBase);
-        queryPeerListNo(peer1IPPort,basePeerNo);
+        testMgTool.queryPeerListNo(peer1IPPort,basePeerNo);
 
     }
 
@@ -75,9 +73,28 @@ public class DynamicChangePeerCluster {
 
         shellExeCmd(PEER3IP,startPeerCmd);
         Thread.sleep(STARTSLEEPTIME);
-        chkPeerSimInfoOK(peer3IPPort,tcpPort,version,consType);
-        queryPeerListNo(peer1IPPort,DynamicPeerNo);
-        queryPeerListNo(PEER3IP+":"+rpcPort,DynamicPeerNo);
+
+
+        String meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);//查询集群信息
+        testMgTool.checkMemInfoExHeight(meminfo,PEER3IP,
+                getPeerId(PEER3IP,USERNAME,PASSWD), //id信息
+                "0",  //state 连接状态
+                shExeAndReturn(PEER3IP,getPeerVerByShell).trim(), //版本信息
+                PEER3RPCPort, //节点rpc端口信息
+                "peer168",   //节点名称
+                ipType+PEER3IP+tcpType+tcpPort,  //节点inaddr信息
+                ipType+PEER3IP+tcpType+tcpPort,  //节点outaddr信息
+                "0",  //节点类型 共识节点还是数据节点
+                "1",  //tls是否开启
+                "sm3", //hash 类型 当前默认sm3
+                "raft" //共识算法
+        );
+        assertNotEquals("0",testMgTool.parseMemInfo(meminfo,PEER3IP,"height")); //不确定当前区块高度是否有新交易目前自动化仅判断非0
+
+
+        testMgTool.chkPeerSimInfoOK(peer3IPPort,tcpPort,version,consType);
+        testMgTool.queryPeerListNo(peer1IPPort,DynamicPeerNo);
+        testMgTool.queryPeerListNo(PEER3IP+":"+rpcPort,DynamicPeerNo);
 
         //做简单数据高度大于零判断，因原系统中数据较多时，同步完成时间无法确认，因此不检查是否与其他节点高度一致
         assertEquals(true,Integer.parseInt(mgToolCmd.queryBlockHeight(peer3IPPort)) > 0);
@@ -89,23 +106,56 @@ public class DynamicChangePeerCluster {
 
     }
 
+
     //动态加入数据节点
     @Test
-    public void joinDataPeer()throws Exception{
+    public void TC2136_2137_joinDataPeer()throws Exception{
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
         shellPeer3.execute("cp " + PeerPATH + "configobs.toml " + PeerPATH + "config.toml" );//配置文件中节点共识节点标识为0
         //检查动态加入的共识节点，即使用管理工具加入的共识节点信息
         String resp = mgToolCmd.addPeer("observer",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort);
         assertEquals(true,resp.contains("success"));
-        queryPeerListNo(peer1IPPort,DynamicPeerNo);
+        testMgTool.queryPeerListNo(peer1IPPort,DynamicPeerNo);
 
-        Thread.sleep(3000);
+        String meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);//查询集群信息
+        testMgTool.checkMemInfoExHeight(meminfo,PEER3IP,
+                getPeerId(PEER3IP,USERNAME,PASSWD), //id信息
+                "1",  //state 连接状态
+                shExeAndReturn(PEER3IP,getPeerVerByShell).trim(), //版本信息
+                PEER3RPCPort, //节点rpc端口信息
+                "peer168",   //节点名称
+                ipType+PEER3IP+tcpType+tcpPort,  //节点inaddr信息
+                ipType+PEER3IP+tcpType+tcpPort,  //节点outaddr信息
+                "0",  //节点类型 共识节点还是数据节点
+                "0",  //tls是否开启
+                "", //hash 类型 当前默认sm3
+                "" //共识算法
+        );
+        assertEquals("0",testMgTool.parseMemInfo(meminfo,PEER3IP,"height"));
 
-        shellExeCmd(PEER3IP,startPeerCmd);
-        Thread.sleep(STARTSLEEPTIME);
-        chkPeerSimInfoOK(peer3IPPort,tcpPort,version,dataType);
-        queryPeerListNo(peer1IPPort,DynamicPeerNo);
-        queryPeerListNo(PEER3IP+":"+rpcPort,DynamicPeerNo);
+        shellExeCmd(PEER3IP,startPeerCmd);//启动节点
+        Thread.sleep(STARTSLEEPTIME);//等待启动时间
+
+        meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);//查询集群信息
+        testMgTool.checkMemInfoExHeight(meminfo,PEER3IP,
+                getPeerId(PEER3IP,USERNAME,PASSWD), //id信息
+                "0",  //state 连接状态
+                shExeAndReturn(PEER3IP,getPeerVerByShell).trim(), //版本信息
+                PEER3RPCPort, //节点rpc端口信息
+                "peer168",   //节点名称
+                ipType+PEER3IP+tcpType+tcpPort,  //节点inaddr信息
+                ipType+PEER3IP+tcpType+tcpPort,  //节点outaddr信息
+                "1",  //节点类型 共识节点还是数据节点
+                "1",  //tls是否开启
+                "sm3", //hash 类型 当前默认sm3
+                "raft" //共识算法
+        );
+        assertNotEquals("0",testMgTool.parseMemInfo(meminfo,PEER3IP,"height")); //不确定当前区块高度是否有新交易目前自动化仅判断非0
+
+        testMgTool.chkPeerSimInfoOK(peer3IPPort,tcpPort,version,dataType);
+        testMgTool.queryPeerListNo(peer1IPPort,DynamicPeerNo);
+        testMgTool.queryPeerListNo(PEER3IP+":"+rpcPort,DynamicPeerNo);
+
 
         //做简单数据高度大于零判断，因原系统中数据较多时，同步完成时间无法确认，因此不检查是否与其他节点高度一致
         assertEquals(true,Integer.parseInt(mgToolCmd.queryBlockHeight(peer3IPPort)) > 0);
@@ -115,83 +165,4 @@ public class DynamicChangePeerCluster {
 
         mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
     }
-
-
-    //动态变更已加入节点信息 无子链
-    //@Test
-    public void changePeerInfo()throws Exception{
-        Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
-        //检查动态加入的共识节点，即使用管理工具加入的共识节点信息
-        String resp = mgToolCmd.addPeer("observer",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort);
-        assertEquals(true,resp.contains("success"));
-        queryPeerListNo(peer1IPPort,DynamicPeerNo);
-
-        Thread.sleep(3000);
-
-        shellExeCmd(PEER3IP,startPeerCmd);
-        int TpcPort2 = Integer.parseInt(tcpPort) + 1;
-        resp = mgToolCmd.addPeer("observer",peer1IPPort,ipType+PEER3IP,tcpType+TpcPort2,rpcPort);
-        Thread.sleep(STARTSLEEPTIME);
-        chkPeerSimInfoOK(peer3IPPort,String.valueOf(TpcPort2),version,dataType);
-        queryPeerListNo(peer1IPPort,DynamicPeerNo);
-        queryPeerListNo(PEER3IP+":"+rpcPort,DynamicPeerNo);
-
-        //做简单数据高度大于零判断，因原系统中数据较多时，同步完成时间无法确认，因此不检查是否与其他节点高度一致
-        assertEquals(true,Integer.parseInt(mgToolCmd.queryBlockHeight(peer3IPPort)) > 0);
-
-        shellPeer3.execute(killPeerCmd);
-        Thread.sleep(3000);
-
-        mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
-    }
-
-    public void chkPeerSimInfoOK(String queryIPPort,String tcpPort,String version,String Type)throws Exception{
-
-        String rpcPort=queryIPPort.split(":")[1];//9300
-        String queryIP=queryIPPort.split(":")[0];//10.1.3.240
-        String[] temp = queryIP.split("\\.");
-        String tcpIP=queryIP+"/tcp/"+tcpPort; //10.1.3.240:60030
-        String peerID=getPeerId(queryIP,USERNAME,PASSWD);  //取IP的最后一位点分十进制作为节点ID,ex. 240
-        String peerName="peer"+temp[3];//peer240
-
-        String response = mgToolCmd.getPeerSimpleInfo(queryIPPort);
-
-        //assertEquals(response.contains("失败"), false);
-        assertEquals(response.contains(version), true);
-        assertEquals(response.contains(tcpIP), true);
-        assertEquals(response.contains(peerID), true);
-        assertEquals(response.contains(peerName), true);
-        assertEquals(response.contains(Type), true);
-        assertEquals(response.contains(rpcPort), true);
-    }
-
-
-
-    public void queryPeerListNo(String queryIPPort,int peerNo) throws Exception{
-        Thread.sleep(1500);
-        String tempCmd="";
-
-        String rpcPort=queryIPPort.split(":")[1];//9300
-        String queryIP=queryIPPort.split(":")[0];//10.1.3.240
-
-        tempCmd=toolPath+"./toolkit mem -p "+rpcPort;
-
-        Shell shell1=new Shell(queryIP,USERNAME,PASSWD);
-        shell1.execute(tempCmd);
-        int No=0;
-        ArrayList<String> stdout = shell1.getStandardOutput();
-        for(String str :stdout)
-        {
-            if(str.contains("shownName"))
-                No++;
-        }
-        String response = StringUtils.join(stdout,"\n");
-        log.info("\n"+response);
-        assertEquals(peerNo,No);
-        //assertEquals(response.contains("isLeader"), true);
-
-    }
-
-
-
 }
