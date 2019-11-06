@@ -46,7 +46,7 @@ public class TestWithConfigChange02_ClearDB {
     @Test
     public void TC1767_1766_1765_1732_1730_1602_changePeerWithSubledger()throws Exception{
         String resp = mgToolCmd.getSubChain(PEER1IP, PEER1RPCPort, "");
-        assertEquals(true,resp.contains("do not found any ledgers"));
+        assertEquals(true,resp.contains("{}"));
 
         mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01,
                 " -t sm3", " -w first", " -c raft", ids);
@@ -161,7 +161,7 @@ public class TestWithConfigChange02_ClearDB {
         assertEquals(respFreeze.contains(ledgerStateFreeze), true);
     }
 
-    @AfterClass
+    //@AfterClass
     public static void resetPeerAndSDK()throws  Exception {
         setAndRestartPeerList(resetPeerBase);
         setAndRestartSDK(resetSDKConfig);

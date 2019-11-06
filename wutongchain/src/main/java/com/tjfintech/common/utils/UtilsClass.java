@@ -55,7 +55,7 @@ public class UtilsClass {
    //add parameters for manage tool
     public static final String PEER1IP="10.1.3.240";
     public static final String PEER2IP="10.1.3.246";
-    public static final String PEER3IP="10.1.3.168";
+    public static final String PEER3IP="10.1.5.168";
     public static final String PEER4IP="10.1.3.247";
     public static final String PEER1RPCPort="9300";
     public static final String PEER2RPCPort="9300";
@@ -73,7 +73,7 @@ public class UtilsClass {
     public static String PEER2MAC="02:42:c0:31:6b:5c";
     public static String PEER3MAC="02:42:c4:b9:82:6e";
     public static String PEER4MAC="02:42:dd:6c:4a:92";
-    public static final String version="2.0";
+    public static final String version="2.1";
     public static final String USERNAME="root";
     public static final String PASSWD="root";
     //节点、SDK、Toolkit对等目录放置于PTPATH目录下
@@ -121,7 +121,6 @@ public class UtilsClass {
     public static Date dt=new Date();
     public static SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
 
-    public static Map accountPri = new HashMap();
     public static int subTypeNo = 24;
     public static String release = "Release";
     public static String latest = "Latest";
@@ -137,9 +136,12 @@ public class UtilsClass {
     public static Map<String,String> mapledgerDockerName = new HashMap<>();
 
 
-    public static String ledgerStateDestroy = "\"state\": \"2\"";
-    public static String ledgerStateFreeze = "\"state\": \"1\"";
-    public static String ledgerStateNormal = "\"state\": \"0\"";
+    public static String ledgerStateDestroy = "\"state\": 2";
+    public static String ledgerStateFreeze = "\"state\": 1";
+    public static String ledgerStateNormal = "\"state\": 0";
+
+    public static boolean bUpgradePeer = true;
+    public static boolean bUpgradeSDK = true;
 
 
 

@@ -192,7 +192,7 @@ public class TestWithConfigChange_ClearDB {
         mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
         sleepAndSaveInfo(SLEEPTIME*3/2);
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
-        assertEquals(resp.contains("Destory"), true);
+        assertEquals(resp.contains(ledgerStateDestroy), true);
 
         //恢复节点
         mgToolCmd.quitPeer(PEER1IP+":"+PEER1RPCPort,PEER3IP);

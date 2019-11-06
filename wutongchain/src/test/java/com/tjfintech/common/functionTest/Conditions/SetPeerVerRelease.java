@@ -9,12 +9,11 @@ import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 
 @Slf4j
-public class SetVerRelease {
+public class SetPeerVerRelease {
 
     @Test
     public void test() throws Exception{
         String replacePeer = releasePeer;
-        String replaceSDK = releaseSDK;
 
         ArrayList<String> hostList = new ArrayList<>();
         hostList.add(PEER1IP);
@@ -30,12 +29,6 @@ public class SetVerRelease {
 
             shellExeCmd(hostList.get(i),"cd " + PeerPATH + ";find . -name \""+ PeerTPName + "*\" | xargs chmod +x");
         }
-        //检查sdk是否包含release文件
-        String response = shExeAndReturn(getIPFromStr(SDKADD),"cd " + SDKPATH + ";find . -name " + replaceSDK);
-        if(response.isEmpty())   log.info("host " + getIPFromStr(SDKADD) + " not found file: " + SDKPATH + replaceSDK);
-        assertEquals(false, response.isEmpty());
-        shellExeCmd(getIPFromStr(SDKADD),"cd " + SDKPATH + ";find . -name \""+ SDKTPName + "*\" | xargs chmod +x");
-
 
         //存在则停止现有进程后替换
         //节点
@@ -45,10 +38,6 @@ public class SetVerRelease {
             //存储release peer版本 以便后续检查
             verMap.put("peer_"+ hostList.get(i),shExeAndReturn(hostList.get(i),getPeerVerByShell));
         }
-        //SDK
-        shellExeCmd(getIPFromStr(SDKADD),killSDKCmd, "rm -f " + SDKPATH + SDKTPName,"cp " + SDKPATH + replaceSDK + " " + SDKPATH + SDKTPName);
-        //verMap.put("sdk_"+ getIPFromStr(SDKADD),shExeAndReturn(getIPFromStr(SDKADD),getSDKVerByShell));//存储release sdk版本 以便后续检查
-
 
         //启动替换后的进程
         //节点仅启动集群节点 不启动动态加入节点
@@ -56,7 +45,5 @@ public class SetVerRelease {
             shellExeCmd(hostList.get(i),startPeerCmd);
         }
         sleepAndSaveInfo(SLEEPTIME*2,"start peer sleeptime");
-        //SDK
-        shellExeCmd(getIPFromStr(SDKADD),startSDKCmd);
     }
 }

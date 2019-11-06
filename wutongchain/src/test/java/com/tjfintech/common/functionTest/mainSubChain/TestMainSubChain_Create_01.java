@@ -152,47 +152,62 @@ public class TestMainSubChain_Create_01 {
     public void TC1472_CreateNameValid()throws Exception{
 
         //创建子链，名称为"1"
-        String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z 1",
+        String chainName1 = "1";
+        String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z " + chainName1,
                 " -t sm3"," -w first word"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
-        String txHash = res.substring(res.lastIndexOf(":")+1).trim();
 
         //创建子链，名称为"A"
-        String res1 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z A",
+        String chainName2 = "A";
+        String res1 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z " + chainName2,
                 " -t sm3"," -w first word"," -c raft",ids);
         assertEquals(res1.contains("send transaction success"), true);
-        String txHash1 = res.substring(res1.lastIndexOf(":")+1).trim();
 
         //创建子链，名称为"test"
-        String res2 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z test",
+        String chainName3 = "test";
+        String res2 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z " + chainName3,
                 " -t sm3"," -w first word"," -c raft",ids);
         assertEquals(res2.contains("send transaction success"), true);
-        String txHash2 = res.substring(res2.lastIndexOf(":")+1).trim();
-
 
         //创建子链，名称为"_a"
-        String res3 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z _a",
+        String chainName4 = "a_.Q123";
+        String res3 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z " + chainName4,
                 " -t sm3"," -w first word"," -c raft",ids);
         assertEquals(res3.contains("send transaction success"), true);
-        String txHash3 = res.substring(res3.lastIndexOf(":")+1).trim();
 
-        //创建子链，名称为"."
-        String res4 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z .a",
-                " -t sm3"," -w first word"," -c raft",ids);
-        assertEquals(res4.contains("send transaction success"), true);
-        String txHash4 = res.substring(res4.lastIndexOf(":")+1).trim();
+        //20191106 规则测试有变更
+//        //创建子链，名称为"_a"
+//        String chainName4 = "_a";
+//        String res3 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z " + chainName4,
+//                " -t sm3"," -w first word"," -c raft",ids);
+//        assertEquals(res3.contains("send transaction success"), true);
+//        String txHash3 = res.substring(res3.lastIndexOf(":")+1).trim();
 
-        //创建子链，名称为"_1aZ."
-        String res5 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z _1aZ.",
-                " -t sm3"," -w first word"," -c raft",ids);
-        assertEquals(res5.contains("send transaction success"), true);
-        String txHash5 = res.substring(res5.lastIndexOf(":")+1).trim();
+//        //创建子链，名称为"."
+//        String chainName5 = ".a";
+//        String res4 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z " + chainName5,
+//                " -t sm3"," -w first word"," -c raft",ids);
+//        assertEquals(res4.contains("send transaction success"), true);
+//        String txHash4 = res.substring(res4.lastIndexOf(":")+1).trim();
+//
+//        //创建子链，名称为"_1aZ."
+//        String chainName6 = "_1aZ.";
+//        String res5 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z " + chainName6,
+//                " -t sm3"," -w first word"," -c raft",ids);
+//        assertEquals(res5.contains("send transaction success"), true);
+//        String txHash5 = res.substring(res5.lastIndexOf(":")+1).trim();
 
         sleepAndSaveInfo(SLEEPTIME);
 
-        //检查子链列表中存在刚创建的两条子链 以及各个子链的共识算法为默认raft,确认可以查到数据
+        //检查子链列表
         String res6 = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res6.contains("name"), true);
+        assertEquals(res6.contains("\"name\": \""+chainName1+"\""), true);
+        assertEquals(res6.contains("\"name\": \""+chainName2+"\""), true);
+        assertEquals(res6.contains("\"name\": \""+chainName3+"\""), true);
+        assertEquals(res6.contains("\"name\": \""+chainName4+"\""), true);
+//        assertEquals(res6.contains("\"name\": \""+chainName5+"\""), true);
+//        assertEquals(res6.contains("\"name\": \""+chainName6+"\""), true);
     }
 
     @Test

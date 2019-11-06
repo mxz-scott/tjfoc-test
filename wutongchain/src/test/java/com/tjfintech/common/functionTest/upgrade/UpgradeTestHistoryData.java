@@ -1,34 +1,27 @@
 package com.tjfintech.common.functionTest.upgrade;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
-import com.tjfintech.common.functionTest.Conditions.SetVerLatest;
-import com.tjfintech.common.functionTest.Conditions.SetVerRelease;
+import com.tjfintech.common.functionTest.Conditions.SetPeerVerLatest;
+import com.tjfintech.common.functionTest.Conditions.SetSDKVerLatest;
+import com.tjfintech.common.functionTest.Conditions.SetTestVersionLatest;
 import com.tjfintech.common.utils.FileOperation;
-import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.bouncycastle.util.StringList;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.slf4j.Logger;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -73,8 +66,8 @@ public class UpgradeTestHistoryData {
     @Test
     public void CheckUpgradeInteraceResp()throws Exception{
 //        以下三行单独执行时根据需要自行修改
-//        SetVerRelease setVerRelease = new SetVerRelease();
-//        setVerRelease.test();//设置为发布版本进程
+//        SetTestVersionLatest setTestVersionLatest = new SetTestVersionLatest();
+//        setTestVersionLatest.test();
 //        subLedger="";//切换回主链测试
         //升级前执行回归测试
 
@@ -83,15 +76,11 @@ public class UpgradeTestHistoryData {
         Map<String,String> beforeUpgrade = SaveResponseToHashMap(txHashList);
 
         //更新版本文件 远程调用
-        SetVerLatest setVerLatest = new SetVerLatest();
-        setVerLatest.test();//更新版本为最新版本
+        SetTestVersionLatest setTestVersionLatest = new SetTestVersionLatest();
+        setTestVersionLatest.test();//更新版本为最新版本
+
         if (!subLedger.isEmpty()) sleepAndSaveInfo(SLEEPTIME,"Latest version start waiting...");
-//        log.info("before upgrade size : " + beforeUpgrade.size());
-//        log.info("before txlist size : " + txHashList.size());
         Map<String,String> afterUpgrade = SaveResponseToHashMap(txHashList);
-//        log.info("after upgrade size : " + afterUpgrade.size());
-//        log.info("after txlist size : " + txHashList.size());
-//        assertEquals(beforeUpgrade.size(),afterUpgrade.size());
 
         //比对升级前后hashresp Map内容是否完全一致
 
@@ -100,7 +89,6 @@ public class UpgradeTestHistoryData {
         Iterator iter = beforeUpgrade.keySet().iterator();
         while (iter.hasNext()) {
             Object key = iter.next();
-            //log.info("Check TxHash: "+key);
             if(!beforeUpgrade.get(key).equals(afterUpgrade.get(key)))
             {
                 diffRespList.add(key.toString());
@@ -171,14 +159,6 @@ public class UpgradeTestHistoryData {
             }
             mapTXHashResp.put(txList.get(k),response);
         }
-
-//        Iterator iter = txTypeSubType.keySet().iterator();
-//        while (iter.hasNext()) {
-//            Object key = iter.next();
-//            Object val = txTypeSubType.get(key);
-//            log.info(key.toString() + "with value:" + val.toString());
-//        }
-
         //assertEquals(subTypeNo,txTypeSubType.size()); //确认所有1.0以上的子交易类型全部覆盖
 
         mapTXHashResp.put("getheight",store.GetHeight());

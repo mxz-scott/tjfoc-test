@@ -139,7 +139,7 @@ public class TestMainSubChain_Create_02 {
     public void TC1475_1493_createExistChain()throws Exception{
 
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+ glbChain01);
-        assertEquals(resp.contains("\"state\": \"Normal\""), true);
+        assertEquals(resp.contains(ledgerStateNormal), true);
         assertEquals(resp.contains("\"name\": \""+ glbChain01 +"\""), true);
         assertEquals(resp.contains("\"hashType\": \"sm3\""), true);
         assertEquals(resp.contains("\"cons\": \"raft\""), true);
@@ -188,7 +188,7 @@ public class TestMainSubChain_Create_02 {
 
         res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,
                 " -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
+        assertEquals(res.contains("has exist"), true);
         String txHash = res.substring(res.lastIndexOf(":")+1).trim();
         sleepAndSaveInfo(SLEEPTIME);
         assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash)).getString("State"));
@@ -441,11 +441,24 @@ public class TestMainSubChain_Create_02 {
                 " -t sm3"," -w first word"," -c raft",ids);
         assertEquals(res4.contains("Invalid ledger name"), true);
 
+        //创建子链，名称为".a" 不支持以非字母数字开头的子链名
+        String chainName11=".a";
+        String res5 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName11,
+                " -t sm3"," -w first word"," -c raft",ids);
+        assertEquals(res5.contains("Invalid ledger name"), true);
+
+        String chainName12="_a";
+        String res6 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName12,
+                " -t sm3"," -w first word"," -c raft",ids);
+        assertEquals(res6.contains("Invalid ledger name"), true);
+
 
         sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
         String res2 = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
+        assertEquals(res2.contains(" \"name\": \""+chainName12+"\""), false);
+        assertEquals(res2.contains(" \"name\": \""+chainName11+"\""), false);
         assertEquals(res2.contains(" \"name\": \""+chainName10+"\""), false);
         assertEquals(res2.contains(" \"name\": \""+chainName9+"\""), false);
         assertEquals(res2.contains(" \"name\": \""+chainName8+"\""), false);

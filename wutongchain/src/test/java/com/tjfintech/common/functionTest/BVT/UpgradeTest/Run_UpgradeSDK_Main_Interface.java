@@ -24,17 +24,14 @@ import org.junit.runners.Suite;
  * 如果没有以上两类文件，会在执行时报错
  */
 
-
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         SetDatabaseMysql.class,
         SetCertSM2.class,
         SetMainLedger.class,
 
-        SetVerRelease.class,
-        BeforeCondition.class,
+        SetTestVersionRelease.class,
 
-        SetSubLedger.class,
         BeforeCondition.class,
 
         StoreTest_UpgradeTestOnly.class,
@@ -43,11 +40,20 @@ import org.junit.runners.Suite;
         DockerContractTest.class,
         WVMContractTest_UpgradeTestOnly.class,
 
+        DynamicChangePeerCluster.class,
+
+        TestMainSubChain_UpgradeTestOnly.class,
+
+        //升级比对 设置主链 设置升级节点和sdk
+        SetMainLedger.class,
+        SetPeerUpgradeFalse.class,
+        SetSDKUpgradeTrue.class,
+
         UpgradeTestHistoryData.class
 })
 
 //Build Validation Test
-public class Run_Upgrade_SubLedger_Interface {
+public class Run_UpgradeSDK_Main_Interface {
     //执行这个类将执行suiteClass中的测试项
 
 }
