@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 public class TestMainSubChain_DockerContract {
     TestBuilder testBuilder = TestBuilder.getInstance();
 
-    private static String subLedgerA = "Leg5";
+    private static String subLedgerA = "Le_g.5";
     private static String subLedgerB = "Leg6";
 
     DockerContractTest dockerContractTest = new DockerContractTest();

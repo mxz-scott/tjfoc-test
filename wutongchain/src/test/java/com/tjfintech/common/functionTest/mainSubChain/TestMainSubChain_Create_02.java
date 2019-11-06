@@ -29,8 +29,6 @@ public class TestMainSubChain_Create_02 {
     MgToolCmd mgToolCmd = new MgToolCmd();
 
     String stateDestroyed ="has been destroyed";
-//    String ledgerStateDestroy = "\"state\": \"Destory\"";
-//    String ledgerStateFreeze = "\"state\": \"Freeze\"";
 
     String glbChain01= "glbCh1";
     String glbChain02= "glbCh2";
@@ -38,7 +36,7 @@ public class TestMainSubChain_Create_02 {
     @BeforeClass
     public static void clearData()throws Exception{
         BeforeCondition beforeCondition = new BeforeCondition();
-        beforeCondition.clearDataSetPerm999();
+        beforeCondition.clearDataSetPerm999(); //清空数据库 目的是让当前系统存在的子链少一些
     }
 
     @Before

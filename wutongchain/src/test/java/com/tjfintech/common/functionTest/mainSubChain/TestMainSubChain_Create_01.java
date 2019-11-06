@@ -148,6 +148,7 @@ public class TestMainSubChain_Create_01 {
     }
 
    //此用例在执行后进检查可以使用 不检查是否成功创建
+   //20191106 规则测试有变更 首字母仅允许数字字母（大小写）
     @Test
     public void TC1472_CreateNameValid()throws Exception{
 
@@ -169,33 +170,11 @@ public class TestMainSubChain_Create_01 {
                 " -t sm3"," -w first word"," -c raft",ids);
         assertEquals(res2.contains("send transaction success"), true);
 
-        //创建子链，名称为"_a"
+        //创建子链，名称为"a_.Q123"
         String chainName4 = "a_.Q123";
         String res3 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z " + chainName4,
                 " -t sm3"," -w first word"," -c raft",ids);
         assertEquals(res3.contains("send transaction success"), true);
-
-        //20191106 规则测试有变更
-//        //创建子链，名称为"_a"
-//        String chainName4 = "_a";
-//        String res3 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z " + chainName4,
-//                " -t sm3"," -w first word"," -c raft",ids);
-//        assertEquals(res3.contains("send transaction success"), true);
-//        String txHash3 = res.substring(res3.lastIndexOf(":")+1).trim();
-
-//        //创建子链，名称为"."
-//        String chainName5 = ".a";
-//        String res4 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z " + chainName5,
-//                " -t sm3"," -w first word"," -c raft",ids);
-//        assertEquals(res4.contains("send transaction success"), true);
-//        String txHash4 = res.substring(res4.lastIndexOf(":")+1).trim();
-//
-//        //创建子链，名称为"_1aZ."
-//        String chainName6 = "_1aZ.";
-//        String res5 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z " + chainName6,
-//                " -t sm3"," -w first word"," -c raft",ids);
-//        assertEquals(res5.contains("send transaction success"), true);
-//        String txHash5 = res.substring(res5.lastIndexOf(":")+1).trim();
 
         sleepAndSaveInfo(SLEEPTIME);
 
@@ -206,8 +185,6 @@ public class TestMainSubChain_Create_01 {
         assertEquals(res6.contains("\"name\": \""+chainName2+"\""), true);
         assertEquals(res6.contains("\"name\": \""+chainName3+"\""), true);
         assertEquals(res6.contains("\"name\": \""+chainName4+"\""), true);
-//        assertEquals(res6.contains("\"name\": \""+chainName5+"\""), true);
-//        assertEquals(res6.contains("\"name\": \""+chainName6+"\""), true);
     }
 
     @Test

@@ -35,10 +35,6 @@ public class TestMainSubChain_FRDG {
     String notSupport="not support service";
     String stateDestroyed ="has been destroyed";
     String stateFreezed ="has been freezed";
-//    String stateFreezed ="not support service";
-//    String ledgerStateDestroy = "\"state\": \"Destory\"";
-//    String ledgerStateFreeze = "\"state\": \"Freeze\"";
-
 
     String glbChain01= "glbCh1";
     String glbChain02= "glbCh2";

@@ -518,7 +518,7 @@ public class TestTxType {
         //Install chaincode [041801_2.0] success!  Install chaincode [2019103155687_sub20191031951_2.1] success!
         String checkMsg = "";
         if(subLedger.isEmpty()) checkMsg ="Install chaincode [" + ct.name + "_" + ct.version + "] success!";
-        else checkMsg = "Install chaincode [" + ct.name + "_" + subLedger + "_" + ct.version + "] success!";
+        else checkMsg = "Install chaincode [" + ct.name + "_" + subLedger.toLowerCase() + "_" + ct.version + "] success!";
         assertEquals(checkMsg,JSONObject.fromObject(
                 store.GetTxDetail(txHash7)).getJSONObject("Data").getJSONObject("Contract").getString("Message"));
 //        assertEquals("Install chaincode ["+ct.name+"_"+ct.version+"] success!",JSONObject.fromObject(
@@ -541,7 +541,7 @@ public class TestTxType {
         //Delete chaincode [041801_2.0] success!
         String msg = "";
         if(subLedger.isEmpty()) msg = "Delete chaincode ["+ct.name+"_"+ct.version+"] success!";
-        else msg = "Delete chaincode [" + ct.name+ "_" + subLedger + "_" + ct.version + "] success!";
+        else msg = "Delete chaincode [" + ct.name+ "_" + subLedger.toLowerCase() + "_" + ct.version + "] success!";
         assertEquals(msg,JSONObject.fromObject(
                 store.GetTxDetail(txHash9)).getJSONObject("Data").getJSONObject("Contract").getString("Message"));
 //        assertEquals("Delete chaincode ["+ct.name+"_"+ct.version+"] success!",JSONObject.fromObject(
