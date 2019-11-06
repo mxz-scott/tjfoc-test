@@ -118,7 +118,7 @@ public class UpgradeTestHistoryData {
                 FileOperation fileOperation = new FileOperation();
                 fileOperation.appendToFile(diffRespList.get(i),diffSaveFile);
             }
-            assertEquals("datas not same",false,true);
+            assertEquals("data not same",false,true);
         }
 
     }
@@ -195,10 +195,12 @@ public class UpgradeTestHistoryData {
         log.info("pri store hash: " + priStoreHash + "\n" + PRIKEY1);
         mapTXHashResp.put("getstore",store.GetStore(storeHash));
         mapTXHashResp.put("get pri store",store.GetStorePost(priStoreHash,PRIKEY1));
+        mapTXHashResp.put("getapihealth",store.GetApiHealth());
+
+        //UTXO交易
         mapTXHashResp.put("get multi utxo balance",multiSign.Balance(IMPPUTIONADD,PRIKEY4, ""));
         mapTXHashResp.put("get solo utxo balance",soloSign.Balance(PRIKEY1,""));
         mapTXHashResp.put("get zero account balance",multiSign.QueryZero(""));
-        mapTXHashResp.put("getapihealth",store.GetApiHealth());
 
         //获取合约交易search/byprefix  search/bykey
         String resp = store.GetTxDetail(contractHash);
