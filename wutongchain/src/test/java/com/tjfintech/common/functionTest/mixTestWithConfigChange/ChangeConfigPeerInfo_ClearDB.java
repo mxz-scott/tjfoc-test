@@ -57,6 +57,7 @@ public class ChangeConfigPeerInfo_ClearDB {
 
     //该测试用例必须保证系统无子链使用待测试节点，否则将会执行失败
     //动态变更原配置文件中的节点信息
+    //20191106 节点动态变更仅支持变更name 和 datatype 不支持其他信息变更 包括rpc tcp端口
     @Test
     public void TC1759_2129_1470_changeClusterPeerInfo()throws Exception{
         //检查正常配置共识节点mem信息
@@ -91,19 +92,18 @@ public class ChangeConfigPeerInfo_ClearDB {
 
         Thread.sleep(SLEEPTIME);//等待P2P更新
 
-        testMgTool.chkPeerSimInfoOK(opIP + ":" + RpcPort2,String.valueOf(TpcPort2),version,dataType);
         testMgTool.queryPeerListNo(peer1IPPort,basePeerNo);
-        testMgTool.queryPeerListNo(opIP + ":" + RpcPort2,basePeerNo);
+        testMgTool.queryPeerListNo(opIP + ":" + rpcPort,basePeerNo);
 
         meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);//其他节点查询
-        assertEquals(ipType + PEER3IP + tcpType + TpcPort2,testMgTool.parseMemInfo(meminfo,opIP,"inAddr"));
-        assertEquals(String.valueOf(RpcPort2),testMgTool.parseMemInfo(meminfo,opIP,"port"));
+        assertEquals(ipType + opIP + tcpType + tcpPort,testMgTool.parseMemInfo(meminfo,opIP,"inAddr"));
+        assertEquals(String.valueOf(rpcPort),testMgTool.parseMemInfo(meminfo,opIP,"port"));
         assertEquals("1",testMgTool.parseMemInfo(meminfo,opIP,"typ"));
 
-        meminfo = mgToolCmd.queryMemberList(opIP + ":" + RpcPort2);//自己查询
-        assertEquals(ipType + opIP + tcpType + TpcPort2,testMgTool.parseMemInfo(meminfo,opIP,"inAddr"));
-        assertEquals(String.valueOf(RpcPort2),testMgTool.parseMemInfo(meminfo,opIP,"port"));
+        meminfo = mgToolCmd.queryMemberList(opIP + ":" + rpcPort);//自己查询
+        assertEquals(ipType + opIP + tcpType + tcpPort,testMgTool.parseMemInfo(meminfo,opIP,"inAddr"));
+        assertEquals(String.valueOf(rpcPort),testMgTool.parseMemInfo(meminfo,opIP,"port"));
         assertEquals("1",testMgTool.parseMemInfo(meminfo,opIP,"typ"));
-        testMgTool.chkPeerSimInfoOK(PEER1IP + ":" + RpcPort2,String.valueOf(TpcPort2),version,dataType);//自己查询节点信息
+        testMgTool.chkPeerSimInfoOK(opIP + ":" + rpcPort,String.valueOf(tcpPort),version,dataType);//自己查询节点信息
     }
 }

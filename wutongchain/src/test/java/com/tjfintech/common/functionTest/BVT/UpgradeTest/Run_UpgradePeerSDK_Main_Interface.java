@@ -49,7 +49,16 @@ import org.junit.runners.Suite;
         SetPeerUpgradeTrue.class,
         SetSDKUpgradeTrue.class,
 
-        UpgradeTestHistoryData.class
+        UpgradeTestHistoryData.class,
+
+        //升级后简单回归测试
+        StoreTest_UpgradeTestOnly.class,
+        MultiTest.class,
+        SoloTest.class,
+        DockerContractTest.class,
+        WVMContractTest_UpgradeTestOnly.class,
+        DynamicChangePeerCluster.class,
+        TestMainSubChain_UpgradeTestOnly.class,
 })
 
 //Build Validation Test

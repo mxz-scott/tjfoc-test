@@ -659,7 +659,7 @@ public class TestMainSubChain_DockerContract {
     }
 
     @Test
-    public void crossDockerTestMS()throws Exception{
+    public void TC2128_crossDockerTestMS()throws Exception{
         //主链上执行跨合约调用
         subLedger = "";
         dockerContractTest.TC2105_testCrossContractTxNewSales();

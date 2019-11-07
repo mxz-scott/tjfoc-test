@@ -97,9 +97,9 @@ public class TestMgTool {
         assertEquals(memInfoArr[6],parseMemInfo(chkResp,peerIP,"outAddr"));
         assertEquals(memInfoArr[7],parseMemInfo(chkResp,peerIP,"typ"));
 //        assertEquals(memInfoArr[8],parseMemInfo(chkResp,peerIP,"height"));
-        assertEquals(memInfoArr[9],parseMemInfo(chkResp,peerIP,"TLSEnabled"));
-        assertEquals(memInfoArr[10],parseMemInfo(chkResp,peerIP,"hashType"));
-        assertEquals(memInfoArr[11],parseMemInfo(chkResp,peerIP,"consensus"));
+        assertEquals(memInfoArr[8],parseMemInfo(chkResp,peerIP,"TLSEnabled"));
+        assertEquals(memInfoArr[9],parseMemInfo(chkResp,peerIP,"hashType"));
+        assertEquals(memInfoArr[10],parseMemInfo(chkResp,peerIP,"consensus"));
 
     }
 
