@@ -68,22 +68,23 @@ public class TestMgTool {
     }
 
     public String parseMemInfo(String sourceStr,String uniqueValue,String queryKey) throws Exception{
+        assertEquals(uniqueValue + " is not existing",true,sourceStr.contains(uniqueValue));
         JSONObject memObj = JSONObject.fromObject(sourceStr.substring(sourceStr.indexOf("{")));
         JSONArray jsonArrayMem = memObj.getJSONArray("memberList");
-        log.info("Member No.: " + jsonArrayMem.size());
+        //log.info("Member No.: " + jsonArrayMem.size());
         String queryValue = "";
-        log.info("unique string: " + uniqueValue);
+        //log.info("unique string: " + uniqueValue);
         for(int i = 0 ;i < jsonArrayMem.size();i++){
             String temp = jsonArrayMem.get(i).toString();
             if(!(temp.contains(uniqueValue) && temp.contains(queryKey))) continue;
 
             JSONObject eachMem = JSONObject.fromObject(temp);
-            log.info("each mem key no.: " + eachMem.size());
-            log.info(eachMem.toString());
+            //log.info("each mem key no.: " + eachMem.size());
+            //log.info(eachMem.toString());
             assertEquals(memInfoNo,eachMem.size());
             queryValue = eachMem.getString(queryKey);
         }
-        assertEquals(false,queryValue.isEmpty()); //确认查询关键字结果非空
+        //assertEquals(false,queryValue.isEmpty()); //确认查询关键字结果非空
         return queryValue.trim();
     }
 

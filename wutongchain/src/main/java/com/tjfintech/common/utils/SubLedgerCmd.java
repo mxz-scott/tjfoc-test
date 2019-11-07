@@ -18,6 +18,8 @@ public class SubLedgerCmd {
     MgToolCmd mgToolCmd=new MgToolCmd();
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
+    String queryIP = PEER1IP;
+    String queryPort = PEER1RPCPort;
 
 
     public String getSubChainInfoFromAll(String shellIP,String rpcPort,String chainName,String Keyword){
@@ -26,11 +28,11 @@ public class SubLedgerCmd {
         String cmd1 = "cd "+ ToolPATH + ";./" + ToolTPName + mainCmd + " -p "+ rpcPort;
         shell1.execute(cmd1);
         ArrayList<String> stdout = shell1.getStandardOutput();
-        stdout.remove(0);//删除版本号信息行
-        stdout.remove(0);//删除=================行
+//        stdout.remove(0);//删除版本号信息行
+//        stdout.remove(0);//删除=================行
         String response =StringUtils.join(stdout,"");
 
-        JSONObject jsonObject = JSONObject.fromObject(response);
+        JSONObject jsonObject = JSONObject.fromObject(response.substring(response.indexOf("{")));
         String ledgerNo = jsonObject.getString("number");
         JSONArray ledMemList = jsonObject.getJSONArray("subLedgers");
 
@@ -52,9 +54,17 @@ public class SubLedgerCmd {
 
     }
 
+    public int getLedgerMemNo(String ledgerName)throws Exception{
+        String getledgerInfo = mgToolCmd.getSubChain(queryIP,queryPort," -z " + ledgerName);
+        JSONObject jsonObject = JSONObject.fromObject(getledgerInfo.substring(getledgerInfo.indexOf("{")));
+        int memNo = JSONObject.fromObject(jsonObject.getJSONArray("subLedgers").getString(0)).getJSONArray("memberList").size();
+        log.info(ledgerName + "has " + memNo + "members");
+        return memNo;
+    }
+
     public void sendTxToMainActiveChain(String glbChain01, String glbChain02, String data)throws Exception{
         //检查可以执行获取所有子链信息命令
-        assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("name"), true);
+        assertEquals(mgToolCmd.getSubChain(queryIP,queryPort,"").contains("name"), true);
 
         //向子链glbChain01发送交易
         subLedger=glbChain01;

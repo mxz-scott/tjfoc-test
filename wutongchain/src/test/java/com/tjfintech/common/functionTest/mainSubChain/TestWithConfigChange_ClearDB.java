@@ -40,6 +40,7 @@ public class TestWithConfigChange_ClearDB {
     public static void clearData()throws Exception{
         BeforeCondition beforeCondition = new BeforeCondition();
         beforeCondition.clearDataSetPerm999();
+//        beforeCondition.setPermission999();
         sleepAndSaveInfo(SLEEPTIME);
         MgToolCmd mgToolCmd = new MgToolCmd();
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -139,8 +140,11 @@ public class TestWithConfigChange_ClearDB {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash4)).getString("State"));  //确认不可以c查询成功
     }
 
+
     @Test
-    public void TC1537_createChainWithJoinPeer()throws Exception{
+    public void TC1537_2144_createChainWithJoinPeer()throws Exception{
+        assertEquals(3,subLedgerCmd.getLedgerMemNo(glbChain01));//动态加入节点前检查节点集群信息
+
         setAndRestartPeer(PEER3IP,"cp "+ PeerPATH + "configjoin.toml " + PeerPATH + PeerMemConfig + ".toml");
         //动态加入节点168
         String resp2 = mgToolCmd.addPeer("join",PEER1IP+":"+PEER1RPCPort,
@@ -148,6 +152,7 @@ public class TestWithConfigChange_ClearDB {
         assertEquals(true,resp2.contains("success"));
         sleepAndSaveInfo(SLEEPTIME);
 
+        assertEquals(3,subLedgerCmd.getLedgerMemNo(glbChain01));//动态加入节点前检查节点集群信息
         //创建子链01 包含节点A、B、C
         String chainName1="tc1537_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1,
@@ -156,8 +161,9 @@ public class TestWithConfigChange_ClearDB {
         assertEquals(res.contains("send transaction success"), true);
 
 
-
         sleepAndSaveInfo(SLEEPTIME*2);
+        assertEquals(4,subLedgerCmd.getLedgerMemNo(chainName1));//动态加入节点前检查节点集群信息
+
         //检查可以获取子链列表 存在其他子链
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -228,7 +234,7 @@ public class TestWithConfigChange_ClearDB {
 
         String meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);
         assertEquals("0",testMgTool.parseMemInfo(meminfo,PEER2IP,"typ"));
-        assertEquals(PEER2RPCPort,testMgTool.parseMemInfo(meminfo,PEER2IP,"port"));
+        assertEquals("0",testMgTool.parseMemInfo(meminfo,PEER2IP,"port"));
         assertEquals("/ip4/" + PEER2IP + "/tcp/" + PEER2TCPPort,testMgTool.parseMemInfo(meminfo,PEER2IP,"inAddr"));
 
         subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"1771 data");

@@ -21,7 +21,7 @@ public class SetSubLedger {
    @Test
     public void createSubledger()throws Exception{
        MgToolCmd mgToolCmd = new MgToolCmd();
-       String ledger = "sub"+sdf.format(dt)+ RandomUtils.nextInt(1000);
+       String ledger = "sO.l_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些
        mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + ledger,
                " -t sm3", " -w first", " -c raft", ids);
        Thread.sleep(SLEEPTIME*2);
