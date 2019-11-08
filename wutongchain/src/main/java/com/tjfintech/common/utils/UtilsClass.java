@@ -359,7 +359,7 @@ public class UtilsClass {
     public static String getPeerId(String IP,String userName,String passWd) {
         Shell shellPeer=new Shell(IP,userName,passWd);
         String peerId="";
-        shellPeer.execute("cd "+ PeerPATH + ";./" + PeerTPName + " init");
+        shellPeer.execute("cd "+ PeerPATH + ";./" + PeerTPName + " id");
         ArrayList<String> stdout3 = shellPeer.getStandardOutput();
         for (String str1 : stdout3){
             if(str1.contains("peerID"))

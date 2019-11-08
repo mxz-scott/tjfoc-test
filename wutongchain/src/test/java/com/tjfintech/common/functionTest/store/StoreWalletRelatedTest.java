@@ -65,4 +65,9 @@ public class StoreWalletRelatedTest {
             assertThat(response2,containsString("200"));
         }
     }
+
+    @Test
+    public void TC_apiHealthTest() throws Exception {
+        assertThat(store.GetApiHealth(),containsString("success"));
+    }
 }

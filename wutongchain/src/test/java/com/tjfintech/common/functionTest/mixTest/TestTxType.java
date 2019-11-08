@@ -180,8 +180,8 @@ public class TestTxType {
                 jsonObjectAddPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("LanAddrs").contains("/ip4/" + PEER2IP + "/tcp/60011"));
         assertEquals(true,
                 jsonObjectAddPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("WlanAddrs").contains("/ip4/" + PEER2IP + "/tcp/60011"));
-        assertEquals(PEER2RPCPort,
-                jsonObjectAddPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("RpcPort"));
+//        assertEquals(PEER2RPCPort,
+//                jsonObjectAddPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("RpcPort"));
         assertEquals("0",
                 jsonObjectAddPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("PeerType"));
 
