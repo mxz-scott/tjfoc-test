@@ -47,7 +47,7 @@ public  class GoToken implements Token {
      * @param tags
      * @return
      */
-    public String createAccount(String entityID, String entityName, String groupID, String comments, Map tags){
+    public String tokenCreateAccount(String entityID, String entityName, String groupID, String comments, Map tags){
         List<Object> tagsArray = new ArrayList<>();
         for (Object value : tags.values()) {
             tagsArray.add(value);
@@ -75,7 +75,7 @@ public  class GoToken implements Token {
      * @param tags
      * @return
      */
-    public String createMultiAddrAccount(Map addresses, String name, String minSignatures,
+    public String tokenCreateMultiAddr(Map addresses, String name, String minSignatures,
                                          String groupID, String comments, Map tags){
 
         List<Object> addressesArray = new ArrayList<>();

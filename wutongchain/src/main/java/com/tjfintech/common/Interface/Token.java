@@ -7,11 +7,18 @@ public interface Token {
 
     String createGroup(String id, String name, String comments, Map tags);
 
-    String createAccount(String entityID, String entityName, String groupID, String comments, Map tags);
+    String tokenCreateAccount(String entityID, String entityName, String groupID, String comments, Map tags);
 
-    String createMultiAddrAccount(Map addresses, String name, String minSignatures, String groupID,
+    String tokenCreateMultiAddr(Map addresses, String name, String minSignatures, String groupID,
                                   String comments, Map tags);
 
+    String tokenAddMintAddr(String address);
+    String tokenAddCollAddr(String address);
+    String tokenIssue(String address ,String collAddr,String tokenType,String amount,String comments);
+    String tokenTransfer(String from,String to,String tokenType,String amount,String comments);
+    String tokenDestory(String address,String tokenType,String amount);
+    String tokenGetBalance(String address,String tokenType);
+    String tokenGetDestroyBalance(String address,String tokenType);
 
 
 }
