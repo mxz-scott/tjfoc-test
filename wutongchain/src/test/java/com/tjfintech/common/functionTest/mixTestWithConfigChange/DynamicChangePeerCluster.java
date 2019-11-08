@@ -143,9 +143,9 @@ public class DynamicChangePeerCluster {
         //未启动节点前检查动态加入节点信息
         testMgTool.checkMemInfoExHeight(meminfo,PEER3IP,
                 getPeerId(PEER3IP,USERNAME,PASSWD), //id信息
-                "0",  //state 连接状态 当前默认值为0 为类型默认值 已提优化ID1002346
+                "1",  //state 连接状态 当前默认值为0 为类型默认值 已提优化ID1002346
                 "", //版本信息
-                "9400", //节点rpc端口信息
+                "0", //节点rpc端口信息
                 "peer168",   //节点名称
                 ipType+PEER3IP+tcpType+PEER3TCPPort,  //节点inaddr信息
                 ipType+PEER3IP+tcpType+PEER3TCPPort,  //节点outaddr信息

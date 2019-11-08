@@ -147,7 +147,7 @@ public class TestMainSubChain_Create_02 {
         //创建一个已存在的活跃子链glbChain01
         String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+glbChain01,
                 " -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
+        assertEquals(res.contains("has exist"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链 确认异常操作后系统无异常
@@ -187,9 +187,9 @@ public class TestMainSubChain_Create_02 {
         res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("has exist"), true);
-        String txHash = res.substring(res.lastIndexOf(":")+1).trim();
-        sleepAndSaveInfo(SLEEPTIME);
-        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash)).getString("State"));
+//        String txHash = res.substring(res.lastIndexOf(":")+1).trim();
+//        sleepAndSaveInfo(SLEEPTIME);
+//        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash)).getString("State"));
 
         String Data="1475 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
 

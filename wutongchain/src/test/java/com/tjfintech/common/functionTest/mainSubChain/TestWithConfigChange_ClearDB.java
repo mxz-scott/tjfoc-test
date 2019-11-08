@@ -234,7 +234,7 @@ public class TestWithConfigChange_ClearDB {
 
         String meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);
         assertEquals("0",testMgTool.parseMemInfo(meminfo,PEER2IP,"typ"));
-        assertEquals("0",testMgTool.parseMemInfo(meminfo,PEER2IP,"port"));
+        assertEquals(PEER2RPCPort,testMgTool.parseMemInfo(meminfo,PEER2IP,"port"));
         assertEquals("/ip4/" + PEER2IP + "/tcp/" + PEER2TCPPort,testMgTool.parseMemInfo(meminfo,PEER2IP,"inAddr"));
 
         subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"1771 data");
