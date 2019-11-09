@@ -51,6 +51,15 @@ public class UtilsClass {
     public static String PWD6="111";
     public static String PWD7="222";
 
+    public static String tokenAccount1 = "";
+    public static String tokenAccount2 = "";
+    public static String tokenAccount3 = "";
+    public static String tokenMultiAddr1 = "";//3/3账户
+    public static String tokenMultiAddr2 = "";//1/2账户  tokenAccount1 tokenAccount2
+    public static String userId01 = "tkAc1" + Random(6);
+    public static String userId02 = "tkAc2" + Random(6);
+    public static String userId03 = "tkAc3" + Random(6);
+
     public static boolean bReg=false;
    //add parameters for manage tool
     public static final String PEER1IP="10.1.3.240";

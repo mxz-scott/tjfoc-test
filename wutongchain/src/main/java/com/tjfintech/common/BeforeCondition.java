@@ -4,6 +4,7 @@ package com.tjfintech.common;
 import com.sun.deploy.util.StringUtils;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
+import com.tjfintech.common.Interface.Token;
 import com.tjfintech.common.utils.Shell;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -27,6 +28,7 @@ public class BeforeCondition {
     TestBuilder testBuilder = TestBuilder.getInstance();
     MultiSign multiSign = testBuilder.getMultiSign();
     SoloSign soloSign = testBuilder.getSoloSign();
+    Token tokenModule = testBuilder.getToken();
 
 
     //赋值权限999 区分是否主子链
@@ -245,6 +247,41 @@ public class BeforeCondition {
         map.put("1", PUBKEY4);
         map.put("2", PUBKEY5);
         IMPPUTIONADD=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//45
+    }
+
+
+    /**
+     * 创建token 模块使用的单签以及多签地址
+     * @throws Exception
+     */
+    public void createTokenAccount()throws Exception{
+        Map<String, Object> mapTag = new HashMap<>();
+        mapTag.put("1", "test");
+        mapTag.put("2", "test02");
+        mapTag.put("3", "test03");
+
+        tokenAccount1 =JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(userId01,userId01,"","",mapTag)).getString("data");
+        tokenAccount2 =JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(userId02,userId02,"","",mapTag)).getString("data");
+        tokenAccount3 =JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(userId03,userId03,"","",mapTag)).getString("data");
+
+        int M = 3;
+        Map<String, Object> map = new HashMap<>();
+        map.put("1", tokenAccount1);
+        map.put("2", tokenAccount2);
+        map.put("3", tokenAccount3);
+
+        tokenMultiAddr1 = JSONObject.fromObject(
+                tokenModule.tokenCreateMultiAddr(map,"multiaddr1",M,"","",mapTag)).getString("data");
+
+        M =1;
+        map = new HashMap<>();
+        map.put("1", tokenAccount1);
+        map.put("2", tokenAccount2);
+        tokenMultiAddr2 = JSONObject.fromObject(
+                tokenModule.tokenCreateMultiAddr(map,"multiaddr2",M,"","",mapTag)).getString("data");
     }
 
 

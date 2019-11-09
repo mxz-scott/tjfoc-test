@@ -9,7 +9,7 @@ public interface Token {
 
     String tokenCreateAccount(String entityID, String entityName, String groupID, String comments, Map tags);
 
-    String tokenCreateMultiAddr(Map addresses, String name, String minSignatures, String groupID,
+    String tokenCreateMultiAddr(Map addresses, String name, int minSignatures, String groupID,
                                   String comments, Map tags);
 
     String tokenAddMintAddr(String address);
@@ -18,7 +18,7 @@ public interface Token {
     String tokenTransfer(String from,String to,String tokenType,String amount,String comments);
     String tokenDestory(String address,String tokenType,String amount,String comments);
     String tokenGetBalance(String address,String tokenType);
-    String tokenGetDestroyBalance(String address,String tokenType);
+    String tokenGetDestroyBalance(String tokenType);
 
 
 }

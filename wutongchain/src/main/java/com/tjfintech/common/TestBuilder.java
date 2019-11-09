@@ -1,14 +1,13 @@
 package com.tjfintech.common;
 
-import com.tjfintech.common.Interface.MultiSign;
-import com.tjfintech.common.Interface.SoloSign;
-import com.tjfintech.common.Interface.Store;
-import com.tjfintech.common.Interface.Contract;
+import com.tjfintech.common.Interface.*;
+
 public class TestBuilder {
     private Store store;
     private SoloSign soloSign;
     private MultiSign multiSign;
     private Contract contract;
+    private Token token;
     TestBuilder() {
         setGoTest();
     // SetJavaTest();
@@ -36,6 +35,7 @@ public class TestBuilder {
         soloSign = new GoSoloSign();
         multiSign = new GoMultiSign();
         contract=new GoContract();
+        token = new GoToken();
     }
 
 //    public void SetJavaTest() {
@@ -54,5 +54,8 @@ public class TestBuilder {
 
     public MultiSign getMultiSign() {
         return multiSign;
+    }
+    public Token getToken() {
+        return token;
     }
 }

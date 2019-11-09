@@ -78,7 +78,7 @@ public  class GoToken implements Token {
      * @param tags
      * @return
      */
-    public String tokenCreateMultiAddr(Map addresses, String name, String minSignatures,
+    public String tokenCreateMultiAddr(Map addresses, String name, int minSignatures,
                                          String groupID, String comments, Map tags){
 
         List<Object> addressesArray = new ArrayList<>();
@@ -105,15 +105,15 @@ public  class GoToken implements Token {
     }
 
     public String tokenTransfer(String from,String to,String tokenType,String amount,String comments){
-
+        List<Map>tokenList=new ArrayList<>();
         Map<String, String> mapTo = new HashMap();
         mapTo.put("address", to);
         mapTo.put("tokenType", tokenType);
         mapTo.put("amount", amount);
-
+        tokenList.add(mapTo);
         Map<String, Object> map = new HashMap<>();
         map.put("from", from);
-        map.put("to", mapTo.toString());
+        map.put("to", tokenList.get(0));
         map.put("comments", comments);
 
         String result = PostTest.postMethod(SDKADD + "/v1/token/transfer", map);
@@ -127,17 +127,16 @@ public  class GoToken implements Token {
         map.put("address",address);
         if(tokenType!="") map.put("tt",tokenType);
         param= GetTest.ParamtoUrl(map);
-        String result=GetTest.SendGetTojson(SDKADD+"/v1/token/balance?"+param);
+        String result=GetTest.doGet2(SDKADD+"/v1/token/balance?"+param);
         log.info(result);
         return result ;
     }
-    public String tokenGetDestroyBalance(String address,String tokenType){
+    public String tokenGetDestroyBalance(String tokenType){
         String param;
         Map<String,Object>map=new HashMap<>();
-        map.put("address",address);
         if(tokenType!="") map.put("tt",tokenType);
         param= GetTest.ParamtoUrl(map);
-        String result=GetTest.SendGetTojson(SDKADD+"/v1/token/balance/destroyed?"+param);
+        String result=GetTest.doGet2(SDKADD+"/v1/token/balance/destroyed?"+param);
         log.info(result);
         return result ;
     }
