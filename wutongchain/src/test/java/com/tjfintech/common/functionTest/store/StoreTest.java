@@ -106,6 +106,48 @@ public class StoreTest {
     }
 
     /**
+     * 普通存证，内容为json
+     * 数量为1
+     */
+    @Test
+    public void TC_createJsonStore() throws Exception {
+
+        for (int i = 0; i < 30; i++) {
+            JSONObject fileInfo = new JSONObject();
+            JSONObject data = new JSONObject();
+
+            fileInfo.put("fileName", "201911041058.jpg");
+            fileInfo.put("fileSize", "298KB");
+            fileInfo.put("fileModel", UtilsClass.Random(6));
+            fileInfo.put("fileLongitude", 123.45784545);
+            fileInfo.put("fileStartTime", "1571901219");
+            fileInfo.put("fileFormat", "jpg");
+            fileInfo.put("fileLatitude", 31.25648);
+
+            data.put("projectCode", UtilsClass.Random(10));
+            data.put("waybillId", "1260");
+            data.put("fileInfo", fileInfo);
+            data.put("fileUrl", "/var/mobile/containers/data/111");
+            data.put("projectName", "钰翔供应链测试005");
+            data.put("projectId", "1234");
+            data.put("fileType", "2");
+            data.put("fileId", "");
+            data.put("waybillNo", "y201911041032");
+            String Data = data.toString();
+            log.info(Data);
+
+            String response= store.CreateStore(Data);
+            Thread.sleep(1000);
+            assertThat(response, containsString("200"));
+            assertThat(response,containsString("Data"));
+            assertThat(response,containsString("Figure"));
+
+
+        }
+
+    }
+
+    /**
      * TC07复杂查询存证交易，数据格式为String
      * 创建2笔存证交易，数据格式为string
      * 使用复杂查询接口查询交易，size设为1
