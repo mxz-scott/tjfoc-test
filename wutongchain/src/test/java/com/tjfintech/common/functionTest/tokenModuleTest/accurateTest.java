@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.tokenUTXOTest;
+package com.tjfintech.common.functionTest.tokenModuleTest;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.Token;

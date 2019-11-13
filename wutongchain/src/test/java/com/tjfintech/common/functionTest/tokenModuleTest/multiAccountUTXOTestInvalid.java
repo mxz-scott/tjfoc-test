@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.tokenUTXOTest;
+package com.tjfintech.common.functionTest.tokenModuleTest;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.Token;
@@ -84,7 +84,8 @@ public class multiAccountUTXOTestInvalid {
         sleepAndSaveInfo(3000,"register issue and coll address waiting......");
 
         String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
-        tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
+        String issueResp = tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
+        assertEquals(true,issueResp.contains("Amount must be greater than 0 and less than 18446744073709"));
         sleepAndSaveInfo(3000,"issue waiting......");
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);

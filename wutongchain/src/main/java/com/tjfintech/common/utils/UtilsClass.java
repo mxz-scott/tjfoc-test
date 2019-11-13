@@ -371,7 +371,7 @@ public class UtilsClass {
         shellPeer.execute("cd "+ PeerPATH + ";./" + PeerTPName + " id");
         ArrayList<String> stdout3 = shellPeer.getStandardOutput();
         for (String str1 : stdout3){
-            if(str1.contains("peerID"))
+            if(str1.toLowerCase().contains("peerid"))
             {
                 peerId=str1.substring(str1.indexOf(":")+1).trim();
                 assertEquals(false, peerId.isEmpty());
@@ -563,27 +563,6 @@ public class UtilsClass {
         if(info.length >0) log.info(info[0] + "(ms): " + sleepTime);
         else log.info("*************sleep time(ms): " + sleepTime);
     }
-
-//    public static String getPeerID(String peerIP)throws Exception{
-//
-//        Shell shell1=new Shell(peerIP,USERNAME,PASSWD);
-//        shell1.execute("cd " + PeerPATH +";./" + PeerTPName + " init");
-//        ArrayList<String> stdout = shell1.getStandardOutput();
-//        String response = StringUtils.join(stdout,"\n");
-//        log.info("testeeee");
-//        log.info("\n"+response);
-//
-//        String peerID="";
-//        for (String str : stdout) {
-//            if(str.contains("peer"))
-//            {
-//                peerID=str.substring(str.indexOf(":")+1).trim();
-//            }
-//        }
-//
-//        assertEquals(peerID.isEmpty(),false);
-//        return peerID;
-//    }
 
     public static String shExeAndReturn(String IP,String cmd){
         Shell shell1=new Shell(IP,USERNAME,PASSWD);

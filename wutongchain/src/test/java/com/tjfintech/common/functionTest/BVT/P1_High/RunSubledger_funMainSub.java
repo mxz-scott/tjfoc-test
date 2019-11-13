@@ -2,6 +2,7 @@ package com.tjfintech.common.functionTest.BVT.P1_High;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
+import com.tjfintech.common.functionTest.Conditions.SetMainLedger;
 import com.tjfintech.common.functionTest.mainSubChain.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -10,6 +11,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         SetDatabaseMysql.class,
+        SetMainLedger.class,
         BeforeCondition.class,
         TestMainSubChain_Create_01.class,
         TestMainSubChain_Create_02.class,
