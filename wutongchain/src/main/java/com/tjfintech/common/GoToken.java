@@ -121,6 +121,17 @@ public  class GoToken implements Token {
         return result;
     }
 
+    public String tokenTransfer(String from,List<Map> toTrfList,String comments){
+        Map<String, Object> map = new HashMap<>();
+        map.put("from", from);
+        map.put("to", toTrfList.get(0));
+        map.put("comments", comments);
+
+        String result = PostTest.postMethod(SDKADD + "/v1/token/transfer", map);
+        log.info(result);
+        return result;
+    }
+
     public String tokenGetBalance(String address,String tokenType){
         String param;
         Map<String,Object>map=new HashMap<>();
@@ -154,6 +165,19 @@ public  class GoToken implements Token {
         return result;
 
     }
+    /**
+     *  删除发行地址
+     */
+    public String tokenDelMintAddr(String address){
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("address", address);
+
+        String result = PostTest.postMethod(SDKADD + "/v1/setting/mintaddr/delete", map);
+        log.info(result);
+        return result;
+
+    }
 
     /**
      *  添加归集地址
@@ -164,6 +188,20 @@ public  class GoToken implements Token {
         map.put("address", address);
 
         String result = PostTest.postMethod(SDKADD + "/v1/setting/colladdr/add", map);
+        log.info(result);
+        return result;
+
+    }
+
+    /**
+     *  删除归集地址
+     */
+    public String tokenDelCollAddr(String address){
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("address", address);
+
+        String result = PostTest.postMethod(SDKADD + "/v1/setting/colladdr/delete", map);
         log.info(result);
         return result;
 
@@ -203,5 +241,40 @@ public  class GoToken implements Token {
         return result;
     }
 
+    public String tokenCreateStore(String Data) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("Data", Data);
+        String param = "";
+//        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/v1/store" + param, map);
+        log.info(result);
+        return result;
+    }
 
+    public String tokenCreatePrivateStore(String Data, Map keyMap) {
+
+        List<Object> addrsObjects = new ArrayList<>();
+        for (Object value : keyMap.values()) {
+            addrsObjects.add(value);
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("Data", Data);
+        map.put("addresses", addrsObjects);
+        String param = "";
+//        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
+        String result = PostTest.postMethod(SDKADD + "/v1/store" + param, map);
+        log.info(result);
+        return result;
+    }
+
+    public String tokenGetPrivateStore(String Hash, String addr) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("address", addr);
+        map.put("Hash", Hash);
+        String param = "";
+//        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
+        String result = PostTest.postMethod(SDKADD + "/v1/getstore" + param, map);
+        log.info(result);
+        return result;
+    }
 }

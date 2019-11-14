@@ -87,8 +87,6 @@ public class PrivateStoreTest {
         Thread.sleep(SLEEPTIME);
         assertThat(response1, containsString("200"));
         assertThat(response1,containsString("Data"));
-
-
     }
 
     /**

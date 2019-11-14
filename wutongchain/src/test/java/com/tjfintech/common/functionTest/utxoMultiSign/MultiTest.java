@@ -127,7 +127,7 @@ public class MultiTest {
         assertEquals("0",JSONObject.fromObject(response3).getJSONObject("Data").getString("Total"));
 
         //删除发行地址和归集地址
-        String response41=multiSign.delCollAddress(PRIKEY1,IMPPUTIONADD);
+        String response41=multiSign.delCollAddress(PRIKEY1,MULITADD3);
         assertEquals("200",JSONObject.fromObject(response41).getString("State"));
         Thread.sleep(SLEEPTIME);
         tokenType = IssueToken(7, "1000",MULITADD3);
@@ -144,10 +144,10 @@ public class MultiTest {
         Thread.sleep(SLEEPTIME);
         String response53 = multiSign.Balance(MULITADD3,PRIKEY1, tokenType);
         assertEquals("200",JSONObject.fromObject(response53).getString("State"));
-        assertEquals("1000",JSONObject.fromObject(response53).getJSONObject("Data").getString("Total"));
+        assertEquals("0",JSONObject.fromObject(response53).getJSONObject("Data").getString("Total"));
 
         //重新添加发行地址和归集地址
-        String response6=multiSign.collAddress(PRIKEY1,IMPPUTIONADD);
+        String response6=multiSign.collAddress(PRIKEY1,MULITADD3);
         assertEquals("200",JSONObject.fromObject(response6).getString("State"));
         Thread.sleep(SLEEPTIME);
         tokenType = IssueToken(7, "1000",MULITADD3);

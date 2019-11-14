@@ -142,6 +142,43 @@ public class BeforeCondition {
 
     }
 
+    /**
+     * 添加发行地址和归集地址
+     *
+     */
+    public  void tokenAddIssueCollAddr() throws Exception{
+        createTokenAccount(); //生成token单签及多签地址
+        String response1 = tokenModule.tokenAddMintAddr(tokenAccount1);
+        String response2 = tokenModule.tokenAddMintAddr(tokenAccount2);
+        String response3 = tokenModule.tokenAddMintAddr(tokenAccount3);
+        String response4 = tokenModule.tokenAddMintAddr(tokenMultiAddr1);
+        String response5 = tokenModule.tokenAddMintAddr(tokenMultiAddr2);
+        String response6 = tokenModule.tokenAddMintAddr(tokenMultiAddr3);
+
+        String response11 = tokenModule.tokenAddCollAddr(tokenAccount1);
+        String response12 = tokenModule.tokenAddCollAddr(tokenAccount2);
+        String response13 = tokenModule.tokenAddCollAddr(tokenAccount3);
+        String response14 = tokenModule.tokenAddCollAddr(tokenMultiAddr1);
+        String response15 = tokenModule.tokenAddCollAddr(tokenMultiAddr2);
+        String response16 = tokenModule.tokenAddCollAddr(tokenMultiAddr3);
+
+        assertThat(response1,containsString("200"));
+        assertThat(response2,containsString("200"));
+        assertThat(response3,containsString("200"));
+        assertThat(response4,containsString("200"));
+        assertThat(response5,containsString("200"));
+        assertThat(response6,containsString("200"));
+
+        assertThat(response11,containsString("200"));
+        assertThat(response12,containsString("200"));
+        assertThat(response13,containsString("200"));
+        assertThat(response14,containsString("200"));
+        assertThat(response15,containsString("200"));
+        assertThat(response16,containsString("200"));
+        sleepAndSaveInfo(SLEEPTIME,"add issue and collect addr waiting......");
+
+    }
+
 
     /**
      * 测试用例T284的前提条件。发行对应token
@@ -281,6 +318,13 @@ public class BeforeCondition {
         map.put("1", tokenAccount1);
         map.put("2", tokenAccount2);
         tokenMultiAddr2 = JSONObject.fromObject(
+                tokenModule.tokenCreateMultiAddr(map,"multiaddr2",M,"","",mapTag)).getString("data");
+
+        M =1;
+        map = new HashMap<>();
+        map.put("1", tokenAccount1);
+        map.put("2", tokenAccount3);
+        tokenMultiAddr3 = JSONObject.fromObject(
                 tokenModule.tokenCreateMultiAddr(map,"multiaddr2",M,"","",mapTag)).getString("data");
     }
 

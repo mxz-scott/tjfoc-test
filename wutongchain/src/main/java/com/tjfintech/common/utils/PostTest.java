@@ -126,7 +126,7 @@ public class PostTest {
         HttpClient httpClient = new HttpClient();
         PostMethod postMethod = new PostMethod(linkUrl);
 
-        httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+        httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(8000);
 
         postMethod.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, 8000);
         postMethod.setRequestEntity(se);

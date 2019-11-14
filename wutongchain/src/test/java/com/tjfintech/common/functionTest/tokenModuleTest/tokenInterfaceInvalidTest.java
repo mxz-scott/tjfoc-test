@@ -51,11 +51,12 @@ public class tokenInterfaceInvalidTest {
          String comments = "issue invalid test";
 
         //使用未注册的发行地址进行发行
-         String issueResp = tokenModule.tokenIssue(issueAddr,collAddr,stokenType11,issAmount,comments);
+         String issueResp = "";
+         issueResp = tokenModule.tokenIssue(tokenAccount3,collAddr,stokenType11,issAmount,comments);
 
          String stokenType12 = "ng12Token"+ UtilsClass.Random(3);
          //归集地址未注册
-         issueResp = tokenModule.tokenIssue(collAddr,collAddr,stokenType12,issAmount,comments);
+         issueResp = tokenModule.tokenIssue(issueAddr,tokenAccount3,stokenType12,issAmount,comments);
 
 
         //添加发行地址和归集地址
