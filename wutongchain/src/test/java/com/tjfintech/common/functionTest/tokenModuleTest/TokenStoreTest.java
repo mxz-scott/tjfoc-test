@@ -40,8 +40,12 @@ public class TokenStoreTest {
         String storeHash = JSONObject.fromObject(response).getString("data");
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
-        Thread.sleep(SLEEPTIME);
         sleepAndSaveInfo(SLEEPTIME,"store on chain waiting");
+
+        //使用token模块getstore接口查询
+        String response3 = tokenModule.tokenGetPrivateStore(storeHash,"");
+        assertEquals("200",JSONObject.fromObject(response3).getString("State"));
+        assertEquals(Data,JSONObject.fromObject(response3).getString("Data"));
 
         SDKADD = rSDKADD;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("State"));
@@ -66,7 +70,6 @@ public class TokenStoreTest {
         String storeHash = JSONObject.fromObject(response).getString("data");
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
-        Thread.sleep(SLEEPTIME);
         sleepAndSaveInfo(SLEEPTIME,"store on chain waiting");
 
         SDKADD = rSDKADD;

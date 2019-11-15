@@ -6,6 +6,7 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+//import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -16,6 +17,8 @@ import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -25,11 +28,14 @@ public class tokenInterfaceInvalidTest {
 
     String AddrNotInDB = "4AEeTzUkL8g2GN2kcK3GXWdv7nPyNjKR4hxJ5J96nFqxAGAHnB";
 //    String errParamCode = "\"state\": 400";
-    String errParamMsg = "client parameter error";
-
+//    String errParamMsg = "client parameter error";
+    String errParamMsgIss = "address,tokentype,amount and colladdr should not be empty!";
+    String errParamMsgDes = "address,amount and tokentype should not be empty!";
+    String errParamMsgTrf = "address,des address,tokentype,amount and colladdr should not be empty!";
     @BeforeClass
     public static void init()throws Exception
     {
+        SDKADD = TOKENADD;
         if(tokenMultiAddr1.isEmpty()) {
             BeforeCondition beforeCondition = new BeforeCondition();
             beforeCondition.createTokenAccount();
@@ -147,13 +153,13 @@ public class tokenInterfaceInvalidTest {
          String stokenType31 = "";
          //sdk无报错 空tokenType可以发行成功
          issueResp = tokenModule.tokenIssue(issueAddr,collAddr,stokenType31,issAmount,comments);
-         assertEquals(true, issueResp.contains(errParamMsg));
+         assertEquals(true, issueResp.contains(errParamMsgIss));
 
          //tokenType为空格
          String stokenType32 = " ";
          //sdk无报错 空格tokenType可以发行成功
          issueResp = tokenModule.tokenIssue(issueAddr,collAddr,stokenType32,issAmount,comments);
-         assertEquals(true, issueResp.contains(errParamMsg));
+         assertEquals(true, issueResp.contains(errParamMsgIss));
 
          //tokenType为超长字符
          String stokenType33 = UtilsClass.Random(65);
@@ -186,7 +192,7 @@ public class tokenInterfaceInvalidTest {
          String stokenType41 = "ng41Token" + UtilsClass.Random(6);
          issAmount = "";
          issueResp = tokenModule.tokenIssue(issueAddr,collAddr,stokenType41,issAmount,comments);
-         assertEquals(true, issueResp.contains(errParamMsg));
+         assertEquals(true, issueResp.contains(errParamMsgIss));
 
          //数量为带负号的字串
          String stokenType42 = "ng42Token" + UtilsClass.Random(6);
@@ -347,7 +353,7 @@ public class tokenInterfaceInvalidTest {
         log.info("test from parameter...............");
         //from地址为空
         transferResp = tokenModule.tokenTransfer("",to,transferToken,transferAmount,comments);
-        assertEquals(true,transferResp.contains(errParamMsg));
+        assertEquals(true,transferResp.contains(errParamMsgTrf));
 
         //from地址非法-456
         transferResp = tokenModule.tokenTransfer("456",to,transferToken,transferAmount,comments);
@@ -378,7 +384,7 @@ public class tokenInterfaceInvalidTest {
         log.info("test to parameter...............");
         //to地址为空
         transferResp = tokenModule.tokenTransfer(from,"",transferToken,transferAmount,comments);
-        assertEquals(true,transferResp.contains(errParamMsg));
+        assertEquals(true,transferResp.contains(errParamMsgTrf));
 
         //to地址非法-456
         transferResp = tokenModule.tokenTransfer(from,"456",transferToken,transferAmount,comments);
@@ -404,11 +410,11 @@ public class tokenInterfaceInvalidTest {
         log.info("test tokenType parameter...............");
         //tokenType为空
         transferResp = tokenModule.tokenTransfer(from,to,"",transferAmount,comments);
-        assertEquals(true,transferResp.contains(errParamMsg));
+        assertEquals(true,transferResp.contains(errParamMsgTrf));
 
         //tokenType为空格
         transferResp = tokenModule.tokenTransfer(from,to," ",transferAmount,comments);
-        assertEquals(true,transferResp.contains(errParamMsg));
+        assertEquals(true,transferResp.contains(errParamMsgTrf));
 
         //tokenType为*
         transferResp = tokenModule.tokenTransfer(from,to,"*",transferAmount,comments);
@@ -433,7 +439,7 @@ public class tokenInterfaceInvalidTest {
         log.info("test amount parameter...............");
         //数量为空
         transferResp = tokenModule.tokenTransfer(from,to,transferToken,"",comments);
-        assertEquals(true, transferResp.contains(errParamMsg));
+        assertEquals(true, transferResp.contains(errParamMsgTrf));
 
         //数量为带负号的字串
         transferResp = tokenModule.tokenTransfer(from,to,transferToken,"-100",comments);
@@ -537,7 +543,7 @@ public class tokenInterfaceInvalidTest {
         log.info("test from parameter...............");
         //回收地址为空
         destoryResp = tokenModule.tokenDestory("",issueToken,"100",comments);
-        assertEquals(true,destoryResp.contains(errParamMsg));
+        assertEquals(true,destoryResp.contains(errParamMsgDes));
 
         //回收地址非法-456
         destoryResp = tokenModule.tokenDestory("456",issueToken,"100",comments);
@@ -570,22 +576,21 @@ public class tokenInterfaceInvalidTest {
 
         //回收地址为无token账户 填写tokentype不填写amount
         destoryResp = tokenModule.tokenDestory(tokenAccount3,issueToken,"",comments);
-        assertEquals("200",JSONObject.fromObject(destoryResp).getString("state"));
-        sleepAndSaveInfo(3000,"destory waiting......");
+        assertEquals(true,destoryResp.contains(errParamMsgDes));
         getOtherBalance = tokenModule.tokenGetBalance(tokenAccount3,"");
 
         //回收地址为无token账户 不填写tokentype填写amount
         destoryResp = tokenModule.tokenDestory(tokenAccount3,"","100",comments);
-        assertEquals(true,destoryResp.contains(errParamMsg));
+        assertEquals(true,destoryResp.contains(errParamMsgDes));
 
         //回收地址为无token账户 不填写tokentype和amount
         destoryResp = tokenModule.tokenDestory(tokenAccount3,"","",comments);
-        assertEquals(true,destoryResp.contains(errParamMsg));
+        assertEquals(true,destoryResp.contains(errParamMsgDes));
 
         getOtherBalance = tokenModule.tokenGetBalance(tokenAccount3,"");
 
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");
-        assertEquals("4900.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        assertEquals("5000.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
         tokenModule.tokenGetDestroyBalance("");
 
@@ -595,10 +600,10 @@ public class tokenInterfaceInvalidTest {
 
         //tokenType不填写
         destoryResp = tokenModule.tokenDestory(collAddr,"","100",comments);
-        assertEquals(true,destoryResp.contains(errParamMsg));
+        assertEquals(true,destoryResp.contains(errParamMsgDes));
 
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");
-        assertEquals("4900.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        assertEquals("5000.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
         tokenModule.tokenGetDestroyBalance("");
 
@@ -607,7 +612,7 @@ public class tokenInterfaceInvalidTest {
         assertEquals(true,destoryResp.contains("Insufficient Balance"));
 
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");
-        assertEquals("4900.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        assertEquals("5000.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
         tokenModule.tokenGetDestroyBalance("");
 
@@ -616,7 +621,7 @@ public class tokenInterfaceInvalidTest {
         assertEquals(true,destoryResp.contains("Insufficient Balance"));
 
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");
-        assertEquals("4900.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        assertEquals("5000.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
         tokenModule.tokenGetDestroyBalance("");
 
@@ -625,7 +630,7 @@ public class tokenInterfaceInvalidTest {
         assertEquals(true,destoryResp.contains("Insufficient Balance"));
 
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");
-        assertEquals("4900.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        assertEquals("5000.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
         tokenModule.tokenGetDestroyBalance("");
 
@@ -634,7 +639,7 @@ public class tokenInterfaceInvalidTest {
         assertEquals(true,destoryResp.contains("Insufficient Balance"));
 
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");
-        assertEquals("4900.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        assertEquals("5000.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
         tokenModule.tokenGetDestroyBalance("");
 
@@ -642,10 +647,10 @@ public class tokenInterfaceInvalidTest {
         log.info("test amount parameter...............");
         //数量字段变更为必输字段
         destoryResp = tokenModule.tokenDestory(collAddr,issueToken,"",comments);
-        assertEquals(true,destoryResp.contains(errParamMsg));
+        assertEquals(true,destoryResp.contains(errParamMsgDes));
 
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");
-        assertEquals("4900.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        assertEquals("5000.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
         tokenModule.tokenGetDestroyBalance("");
 
@@ -773,7 +778,7 @@ public class tokenInterfaceInvalidTest {
 
         //id为空
         String createResp = tokenModule.tokenCreateAccount("","test","","",mapTag);
-        assertEquals(true,createResp.contains("ID and namecan't be empty"));
+        assertEquals(true,createResp.contains("ID and name can't be empty"));
 
         //id界限长度上限
         entityID = UtilsClass.Random(64);
@@ -787,12 +792,12 @@ public class tokenInterfaceInvalidTest {
         //id为已存在id name也是已存在的
         createResp = tokenModule.tokenCreateAccount(entityID,"test","","",mapTag);
         assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
-        assertEquals(true,createResp.contains("create account failed: [entityID [" + entityID + "] exist!"));
+        assertEquals(true,createResp.contains("create account failed: entityID [" + entityID + "] exist!"));
 
         //id为已存在id name不存在
         createResp = tokenModule.tokenCreateAccount(entityID,"test"+ UtilsClass.Random(6),"","",mapTag);
         assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
-        assertEquals(true,createResp.contains("create account failed: [entityID [" + entityID + "] exist!"));
+        assertEquals(true,createResp.contains("create account failed: entityID [" + entityID + "] exist!"));
 
         //id长度超过上限
         entityID = UtilsClass.Random(65);
@@ -802,7 +807,7 @@ public class tokenInterfaceInvalidTest {
 
         //name为空
         createResp = tokenModule.tokenCreateAccount(UtilsClass.Random(6),"","","",mapTag);
-        assertEquals(true,createResp.contains("ID and namecan't be empty"));
+        assertEquals(true,createResp.contains("ID and name can't be empty"));
 
         //name长度上限64位
         entityName = UtilsClass.Random(64);
@@ -818,6 +823,70 @@ public class tokenInterfaceInvalidTest {
         createResp = tokenModule.tokenCreateAccount(UtilsClass.Random(6),"test","","",mapTag);
         assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
 
+
+    }
+
+    @Test
+    public void tokenGetPrivateStoreInterfaceTest()throws Exception{
+        String Data = "cxTest-private" + UtilsClass.Random(7);
+        Map<String,Object>map=new HashMap<>();
+        map.put("address1",tokenAccount1);
+        map.put("address2",tokenAccount2);
+
+        String response= tokenModule.tokenCreatePrivateStore(Data,map);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String StoreHashPwd = jsonObject.getString("data");
+
+        sleepAndSaveInfo(SLEEPTIME,"private store on chain waiting......");
+
+        String response1= tokenModule.tokenGetPrivateStore(StoreHashPwd,tokenAccount1);
+        assertEquals("200",JSONObject.fromObject(response1).getString("state"));
+        assertEquals(Data,JSONObject.fromObject(response1).getString("data"));
+
+        //hash为空
+        String response2= tokenModule.tokenGetPrivateStore("",tokenAccount2);
+        assertEquals("400",JSONObject.fromObject(response2).getString("state"));
+        assertThat(JSONObject.fromObject(response2).getString("data"),
+                containsString("invalid"));
+
+        //hash非法123
+        response2= tokenModule.tokenGetPrivateStore("123",tokenAccount2);
+        assertEquals("400",JSONObject.fromObject(response2).getString("state"));
+        assertThat(JSONObject.fromObject(response2).getString("data"),
+                containsString("Invalid parameter:hash"));
+
+        //hash非法#
+        response2= tokenModule.tokenGetPrivateStore("#",tokenAccount2);
+        assertEquals("400",JSONObject.fromObject(response2).getString("state"));
+        assertThat(JSONObject.fromObject(response2).getString("data"),
+                containsString("Invalid parameter:hash"));
+
+        //hash非法hash的一部分
+        response2= tokenModule.tokenGetPrivateStore(StoreHashPwd.substring(8),tokenAccount2);
+        assertEquals("400",JSONObject.fromObject(response2).getString("state"));
+        assertThat(JSONObject.fromObject(response2).getString("data"),
+                containsString("Invalid parameter:hash"));
+
+
+        //地址使用无查询权限的用户进行查询
+        String response3= tokenModule.tokenGetPrivateStore(StoreHashPwd,tokenAccount3);
+        assertThat(JSONObject.fromObject(response3).getString("data"),
+                containsString("you have no permission to get this transaction !"));
+
+        //地址为有account1生成的多签地址
+        response3= tokenModule.tokenGetPrivateStore(StoreHashPwd,tokenMultiAddr1);
+        assertThat(JSONObject.fromObject(response3).getString("data"),
+                containsString("you have no permission to get this transaction !"));
+
+        //地址为空
+        response3= tokenModule.tokenGetPrivateStore(StoreHashPwd,"");
+        assertThat(JSONObject.fromObject(response3).getString("data"),
+                containsString("Query privacy store need incoming address"));
+
+        //地址非法159
+        response3= tokenModule.tokenGetPrivateStore(StoreHashPwd,"159");
+        assertThat(JSONObject.fromObject(response3).getString("data"),
+                containsString("invalid address"));
 
     }
 }
