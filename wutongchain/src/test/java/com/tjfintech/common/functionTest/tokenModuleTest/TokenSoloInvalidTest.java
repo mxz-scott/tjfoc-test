@@ -53,11 +53,11 @@ public class TokenSoloInvalidTest {
         tokenModule.tokenAddMintAddr(issueAddr);
         tokenModule.tokenAddCollAddr(collAddr);
 
-        sleepAndSaveInfo(3000,"register issue and coll address waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
 
         String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
         tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
-        sleepAndSaveInfo(3000,"issue waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -83,11 +83,11 @@ public class TokenSoloInvalidTest {
         tokenModule.tokenAddMintAddr(issueAddr);
         tokenModule.tokenAddCollAddr(collAddr);
 
-        sleepAndSaveInfo(3000,"register issue and coll address waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
 
         String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
         tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
-        sleepAndSaveInfo(3000,"issue waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
         assertEquals(false, queryBalance.contains(issueToken));
@@ -117,14 +117,14 @@ public class TokenSoloInvalidTest {
         tokenModule.tokenAddMintAddr(collAddr);
         tokenModule.tokenAddCollAddr(issueAddr);
 
-        sleepAndSaveInfo(3000,"register issue and coll address waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
 
         String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
         tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
         tokenModule.tokenIssue(collAddr,issueAddr,issueToken2,issAmount2,"");
 
 
-        sleepAndSaveInfo(3000,"issue waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -170,11 +170,11 @@ public class TokenSoloInvalidTest {
         tokenModule.tokenAddMintAddr(issueAddr);
         tokenModule.tokenAddCollAddr(collAddr);
 
-        sleepAndSaveInfo(3000,"register issue and coll address waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
 
         String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
         tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
-        sleepAndSaveInfo(3000,"issue waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -186,14 +186,14 @@ public class TokenSoloInvalidTest {
         to = to1;
         comments = from + "向" + to + " 转账token：" + transferToken + " 数量：" + transferAmount;
         String transferResp = tokenModule.tokenTransfer(from,to,transferToken,transferAmount,comments);
-        sleepAndSaveInfo(3000,"transfer waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
         to = to2;
         transferAmount = String.valueOf(trfAmount2);
         comments = from + "向" + to + " 转账token：" + issueToken + " 数量：" + transferAmount;
         transferResp = tokenModule.tokenTransfer(from,to,issueToken,transferAmount,comments);
 
 
-        sleepAndSaveInfo(3000,"transfer waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
@@ -211,7 +211,7 @@ public class TokenSoloInvalidTest {
         comments = "回收" + desAddr + " token：" + desToken + " 数量：" + desAmountStr;
         String destroyResp = tokenModule.tokenDestory(desAddr,desToken,desAmountStr,comments);
 
-        sleepAndSaveInfo(3000,"destroy waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);

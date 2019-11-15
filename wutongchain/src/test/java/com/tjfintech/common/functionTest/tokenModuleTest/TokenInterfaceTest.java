@@ -59,7 +59,7 @@ public class TokenInterfaceTest {
 
          tokenModule.tokenDelMintAddr(issueAddr);
          tokenModule.tokenDelCollAddr(collAddr);
-         sleepAndSaveInfo(3000,"register issue and coll address waiting......");
+         sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
 
         //使用未注册的发行地址进行发行
          String issueResp = "";
@@ -73,7 +73,7 @@ public class TokenInterfaceTest {
         //添加发行地址和归集地址
         tokenModule.tokenAddMintAddr(issueAddr);
         tokenModule.tokenAddCollAddr(collAddr);
-        sleepAndSaveInfo(3000,"register issue and coll address waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
 
          log.info("test issueAddr parameter...............");
          String stokenType13 = "ng13Token"+ UtilsClass.Random(3);
@@ -336,11 +336,11 @@ public class TokenInterfaceTest {
         tokenModule.tokenAddMintAddr(issueAddr);
         tokenModule.tokenAddCollAddr(collAddr);
 
-        sleepAndSaveInfo(3000,"register issue and coll address waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
 
         String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
         tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
-        sleepAndSaveInfo(3000,"issue waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -438,7 +438,7 @@ public class TokenInterfaceTest {
         assertEquals(true,transferResp.contains("Insufficient Balance"));
 
 
-        sleepAndSaveInfo(3000,"transfer waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
 
 
         log.info("test amount parameter...............");
@@ -469,32 +469,32 @@ public class TokenInterfaceTest {
         //comments为空
         transferResp = tokenModule.tokenTransfer(from,to,transferToken,transferAmount,"");
         assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
-        sleepAndSaveInfo(3000,"transfer waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
 
         //comments字符超长257位
         comments = "a100000000000000123456789010000000000000012345678901000000000000001234567890100000000000000123456789010000000000000012345678901000000000000001234567890100000000000000123456789010000000000000012345678901000000000000001234567890100000000000000123456789012345627";
         transferResp = tokenModule.tokenTransfer(from,to,transferToken,transferAmount,comments);
         assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
 
-        sleepAndSaveInfo(3000,"transfer waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
 
         //comments字符256位
         comments = UtilsClass.Random(256);
         transferResp = tokenModule.tokenTransfer(from,to,transferToken,transferAmount,comments);
         assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
-        sleepAndSaveInfo(3000,"transfer waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
 
         //comments字符255位
         comments = UtilsClass.Random(255);
         transferResp = tokenModule.tokenTransfer(from,to,transferToken,transferAmount,comments);
         assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
-        sleepAndSaveInfo(3000,"transfer waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
 
         //comments为空格
         comments = " ";
         transferResp = tokenModule.tokenTransfer(from,to,transferToken,transferAmount,comments);
         assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
-        sleepAndSaveInfo(3000,"transfer waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
 
 
         log.info("query from address balance ......");
@@ -524,13 +524,13 @@ public class TokenInterfaceTest {
         tokenModule.tokenAddMintAddr(issueAddr);
         tokenModule.tokenAddCollAddr(collAddr);
 
-        sleepAndSaveInfo(3000, "register issue and coll address waiting......");
+        sleepAndSaveInfo(SLEEPTIME, "register issue and coll address waiting......");
 
         String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
         tokenModule.tokenIssue(issueAddr, collAddr, issueToken, issAmount, comments);
         String issueToken2 = "tokenSo-" + UtilsClass.Random(8);
         tokenModule.tokenIssue(issueAddr, collAddr, issueToken2, issAmount, comments);
-        sleepAndSaveInfo(3000, "issue waiting......");
+        sleepAndSaveInfo(SLEEPTIME, "issue waiting......");
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr, "");
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -696,13 +696,13 @@ public class TokenInterfaceTest {
         tokenModule.tokenAddMintAddr(issueAddr);
         tokenModule.tokenAddCollAddr(collAddr);
 
-        sleepAndSaveInfo(3000, "register issue and coll address waiting......");
+        sleepAndSaveInfo(SLEEPTIME, "register issue and coll address waiting......");
 
         String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
         tokenModule.tokenIssue(issueAddr, collAddr, issueToken, issAmount, comments);
         String issueToken2 = "tokenSo-" + UtilsClass.Random(8);
         tokenModule.tokenIssue(issueAddr, collAddr, issueToken2, issAmount, comments);
-        sleepAndSaveInfo(3000, "issue waiting......");
+        sleepAndSaveInfo(SLEEPTIME, "issue waiting......");
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr, "");
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));

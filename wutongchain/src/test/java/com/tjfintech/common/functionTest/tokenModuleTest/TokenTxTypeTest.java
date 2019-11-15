@@ -67,12 +67,11 @@ public class TokenTxTypeTest {
     public static void beforeSetting()throws Exception
     {
         SDKADD = TOKENADD;
-        log.info("current sdkAddr: " + SDKADD);
+        BeforeCondition beforeCondition = new BeforeCondition();
         if(tokenAccount1.isEmpty()) {
-            BeforeCondition beforeCondition = new BeforeCondition();
             beforeCondition.createTokenAccount();
-            beforeCondition.tokenAddIssueCollAddr();
         }
+        beforeCondition.tokenAddIssueCollAddr();
     }
     
     @Test
@@ -114,12 +113,17 @@ public class TokenTxTypeTest {
 
     @Test
     public void checkUTXOTx()throws Exception{
+
         /**|UTXO|1|
          * |UTXO发行|10|
          * |UTXO转账|11|
          * |UTXO回收|12|
          */
         SDKADD = TOKENADD; //设置sdk为token模块sdk
+
+        BeforeCondition beforeCondition = new BeforeCondition();
+        beforeCondition.tokenAddIssueCollAddr();
+
         //UTXO类交易 Type 1 SubType 10 11 12
         //单签发行给自己
         String tokenTypeS1 = "TxTypeSOLOTC-"+ UtilsClass.Random(6);
@@ -358,6 +362,7 @@ public class TokenTxTypeTest {
 
     @AfterClass
     public static void resetAddr()throws Exception{
+        SDKADD = TOKENADD;
         BeforeCondition beforeCondition = new BeforeCondition();
         beforeCondition.tokenAddIssueCollAddr();
     }
