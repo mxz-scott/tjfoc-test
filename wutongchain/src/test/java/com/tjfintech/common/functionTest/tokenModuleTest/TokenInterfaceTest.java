@@ -38,7 +38,7 @@ public class TokenInterfaceTest {
         SDKADD = TOKENADD;
         if(tokenMultiAddr1.isEmpty()) {
             BeforeCondition beforeCondition = new BeforeCondition();
-            beforeCondition.createTokenAccount();
+            beforeCondition.tokenAddIssueCollAddr();
         }
     }
 

@@ -28,7 +28,7 @@ public class TokenSoloInvalidTest {
         SDKADD = TOKENADD;
         if(tokenAccount1.isEmpty()) {
             BeforeCondition beforeCondition = new BeforeCondition();
-            beforeCondition.createTokenAccount();
+            beforeCondition.tokenAddIssueCollAddr();
         }
     }
 

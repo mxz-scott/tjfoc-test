@@ -44,8 +44,8 @@ public class TokenStoreTest {
 
         //使用token模块getstore接口查询
         String response3 = tokenModule.tokenGetPrivateStore(storeHash,"");
-        assertEquals("200",JSONObject.fromObject(response3).getString("State"));
-        assertEquals(Data,JSONObject.fromObject(response3).getString("Data"));
+        assertEquals("200",JSONObject.fromObject(response3).getString("state"));
+        assertEquals(Data,JSONObject.fromObject(response3).getString("data"));
 
         SDKADD = rSDKADD;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("State"));

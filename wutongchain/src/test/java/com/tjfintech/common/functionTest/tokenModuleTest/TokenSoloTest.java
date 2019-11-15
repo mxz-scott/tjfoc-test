@@ -923,4 +923,11 @@ public class TokenSoloTest {
         log.info(comments);
         return tokenModule.tokenDestory(addr,tokenType,amount,comments);
     }
+
+
+    @BeforeClass
+    public static void resetAddr()throws Exception{
+        BeforeCondition beforeCondition = new BeforeCondition();
+        beforeCondition.tokenAddIssueCollAddr();
+    }
 }

@@ -28,7 +28,7 @@ public class TokenMultiInvalidTest {
         SDKADD = TOKENADD;
         if(tokenMultiAddr1.isEmpty()) {
             BeforeCondition beforeCondition = new BeforeCondition();
-            beforeCondition.createTokenAccount();
+            beforeCondition.tokenAddIssueCollAddr();
         }
     }
 

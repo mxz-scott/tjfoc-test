@@ -356,4 +356,10 @@ public class TokenTxTypeTest {
         assertEquals(true,jsonObjectOrg2.getJSONObject("Store").isNullObject());
         assertEquals(true,jsonObjectOrg2.getJSONObject("WVM").isNullObject());
     }
+
+    @BeforeClass
+    public static void resetAddr()throws Exception{
+        BeforeCondition beforeCondition = new BeforeCondition();
+        beforeCondition.tokenAddIssueCollAddr();
+    }
 }
