@@ -25,6 +25,7 @@ public class multiAccountUTXOTestInvalid {
     @BeforeClass
     public static void init()throws Exception
     {
+        SDKADD = TOKENADD;
         if(tokenMultiAddr1.isEmpty()) {
             BeforeCondition beforeCondition = new BeforeCondition();
             beforeCondition.createTokenAccount();

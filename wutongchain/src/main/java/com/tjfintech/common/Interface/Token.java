@@ -18,7 +18,7 @@ public interface Token {
     String tokenDelCollAddr(String address);
     String tokenIssue(String address ,String collAddr,String tokenType,String amount,String comments);
     String tokenTransfer(String from,String to,String tokenType,String amount,String comments);
-    String tokenTransfer(String from,List<Map> toTrfList,String comments);
+//    String tokenTransfer(String from,List<Map> toTrfList,String comments);
     String tokenDestory(String address,String tokenType,String amount,String comments);
     String tokenGetBalance(String address,String tokenType);
     String tokenGetDestroyBalance(String tokenType);

@@ -25,6 +25,7 @@ public class singleAccountUTXOTestInvalid {
     @BeforeClass
     public static void init()throws Exception
     {
+        SDKADD = TOKENADD;
         if(tokenAccount1.isEmpty()) {
             BeforeCondition beforeCondition = new BeforeCondition();
             beforeCondition.createTokenAccount();

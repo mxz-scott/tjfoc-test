@@ -121,16 +121,16 @@ public  class GoToken implements Token {
         return result;
     }
 
-    public String tokenTransfer(String from,List<Map> toTrfList,String comments){
-        Map<String, Object> map = new HashMap<>();
-        map.put("from", from);
-        map.put("to", toTrfList.get(0));
-        map.put("comments", comments);
-
-        String result = PostTest.postMethod(SDKADD + "/v1/token/transfer", map);
-        log.info(result);
-        return result;
-    }
+//    public String tokenTransfer(String from,List<Map> toTrfList,String comments){
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("from", from);
+//        map.put("to", toTrfList.get(0));
+//        map.put("comments", comments);
+//
+//        String result = PostTest.postMethod(SDKADD + "/v1/token/transfer", map);
+//        log.info(result);
+//        return result;
+//    }
 
     public String tokenGetBalance(String address,String tokenType){
         String param;
