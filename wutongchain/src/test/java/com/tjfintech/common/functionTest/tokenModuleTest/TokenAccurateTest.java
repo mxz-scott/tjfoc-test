@@ -18,7 +18,7 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class accurateTest {
+public class TokenAccurateTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Token tokenModule = testBuilder.getToken();
 

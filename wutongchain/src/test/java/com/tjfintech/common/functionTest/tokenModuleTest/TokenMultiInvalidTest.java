@@ -18,7 +18,7 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class singleAccountUTXOTestInvalid {
+public class TokenMultiInvalidTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Token tokenModule = testBuilder.getToken();
 
@@ -26,7 +26,7 @@ public class singleAccountUTXOTestInvalid {
     public static void init()throws Exception
     {
         SDKADD = TOKENADD;
-        if(tokenAccount1.isEmpty()) {
+        if(tokenMultiAddr1.isEmpty()) {
             BeforeCondition beforeCondition = new BeforeCondition();
             beforeCondition.createTokenAccount();
         }
@@ -42,8 +42,8 @@ public class singleAccountUTXOTestInvalid {
 
         //单签地址发行token 5000.999999
         String stokenType = "tokenSo-"+ UtilsClass.Random(8);
-        issueAddr = tokenAccount1;
-        collAddr = tokenAccount1;
+        issueAddr = tokenMultiAddr1;
+        collAddr = tokenMultiAddr1;
         issueToken =stokenType;
         issAmount = "18446744073709";
 
@@ -72,8 +72,8 @@ public class singleAccountUTXOTestInvalid {
 
         //单签地址发行token 5000.999999
         String stokenType = "tokenSo-"+ UtilsClass.Random(8);
-        issueAddr = tokenAccount1;
-        collAddr = tokenAccount1;
+        issueAddr = tokenMultiAddr1;
+        collAddr = tokenMultiAddr1;
         issueToken =stokenType;
         issAmount = "18446744073709.1";
 
@@ -85,7 +85,8 @@ public class singleAccountUTXOTestInvalid {
         sleepAndSaveInfo(3000,"register issue and coll address waiting......");
 
         String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
-        tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
+        String issueResp = tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
+        assertEquals(true,issueResp.contains("Amount must be greater than 0 and less than 18446744073709"));
         sleepAndSaveInfo(3000,"issue waiting......");
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
@@ -104,7 +105,7 @@ public class singleAccountUTXOTestInvalid {
         //单签地址发行token 5000.999999
         String stokenType = "tokenSo-"+ UtilsClass.Random(8);
         issueAddr = tokenAccount2;
-        collAddr = tokenAccount1;
+        collAddr = tokenMultiAddr1;
         issueToken = stokenType;
         issAmount = "1844674";
         String issueToken2 = "tokenS2o-"+ UtilsClass.Random(8);
@@ -131,7 +132,7 @@ public class singleAccountUTXOTestInvalid {
         assertEquals(false,queryBalance.contains(issueToken2));
 
 
-        queryBalance = tokenModule.tokenGetBalance(issueAddr,issueToken2);
+        queryBalance = tokenModule.tokenGetBalance(issueAddr,"");
         assertEquals(issAmount2, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
         queryBalance = tokenModule.tokenGetBalance(issueAddr,issueToken);
         assertEquals(false,queryBalance.contains(issueToken));
@@ -139,7 +140,7 @@ public class singleAccountUTXOTestInvalid {
     }
 
 
-    //转账回收超出余额
+    //转账超出余额
     @Test
     public void tranferExtBalance()throws Exception{
         String issueAddr = "";
@@ -150,8 +151,8 @@ public class singleAccountUTXOTestInvalid {
         //单签地址发行token 5000.999999
         String stokenType = "tokenSo-"+ UtilsClass.Random(8);
         double sAmount = 500.999999;
-        issueAddr = tokenAccount1;
-        collAddr = tokenAccount1;
+        issueAddr = tokenMultiAddr1;
+        collAddr = tokenMultiAddr1;
         issueToken =stokenType;
         issAmount = String.valueOf(sAmount);
 
@@ -159,7 +160,7 @@ public class singleAccountUTXOTestInvalid {
         String from = collAddr;
         String to = "";
         String to1 = tokenAccount2;
-        String to2 = tokenMultiAddr1;
+        String to2 = tokenMultiAddr2;
         double trfAmount1 = 689.333;
         double trfAmount2 = 100.333;
 
@@ -202,7 +203,7 @@ public class singleAccountUTXOTestInvalid {
         queryBalance = tokenModule.tokenGetBalance(to2,issueToken);
         assertEquals(String.valueOf(trfAmount2), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
 
-        //执行回收超出余额
+        //执行回收
         String desAddr = collAddr;
         double desAmount = 510.698547;
         String desToken = issueToken;

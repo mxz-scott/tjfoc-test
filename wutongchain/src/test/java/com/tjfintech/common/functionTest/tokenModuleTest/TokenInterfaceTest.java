@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class tokenInterfaceInvalidTest {
+public class TokenInterfaceTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Token tokenModule = testBuilder.getToken();
 
