@@ -601,4 +601,10 @@ public class UtilsClass {
         }
         return str;
     }
+
+    public static String get6(double org){
+        DecimalFormat df = new DecimalFormat("#.000000");
+        String str = df.format(org);
+        return str;
+    }
 }

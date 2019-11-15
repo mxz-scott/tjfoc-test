@@ -147,7 +147,6 @@ public class BeforeCondition {
      *
      */
     public  void tokenAddIssueCollAddr() throws Exception{
-        createTokenAccount(); //生成token单签及多签地址
         String response1 = tokenModule.tokenAddMintAddr(tokenAccount1);
         String response2 = tokenModule.tokenAddMintAddr(tokenAccount2);
         String response3 = tokenModule.tokenAddMintAddr(tokenAccount3);

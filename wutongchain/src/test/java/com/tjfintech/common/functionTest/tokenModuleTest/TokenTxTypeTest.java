@@ -16,10 +16,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runners.MethodSorters;
 
 import java.util.HashMap;
@@ -67,11 +64,13 @@ public class TokenTxTypeTest {
 
 
     @BeforeClass
-    public static void init()throws Exception
+    public static void beforeSetting()throws Exception
     {
         SDKADD = TOKENADD;
+        log.info("current sdkAddr: " + SDKADD);
         if(tokenAccount1.isEmpty()) {
             BeforeCondition beforeCondition = new BeforeCondition();
+            beforeCondition.createTokenAccount();
             beforeCondition.tokenAddIssueCollAddr();
         }
     }
@@ -357,7 +356,7 @@ public class TokenTxTypeTest {
         assertEquals(true,jsonObjectOrg2.getJSONObject("WVM").isNullObject());
     }
 
-    @BeforeClass
+    @AfterClass
     public static void resetAddr()throws Exception{
         BeforeCondition beforeCondition = new BeforeCondition();
         beforeCondition.tokenAddIssueCollAddr();

@@ -8,10 +8,7 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runners.MethodSorters;
 
 import java.text.DecimalFormat;
@@ -50,6 +47,7 @@ public class TokenSoloTest {
         SDKADD = TOKENADD;
         if(tokenAccount1.isEmpty()) {
             BeforeCondition beforeCondition = new BeforeCondition();
+            beforeCondition.createTokenAccount();
             beforeCondition.tokenAddIssueCollAddr();
         }
     }
@@ -925,7 +923,7 @@ public class TokenSoloTest {
     }
 
 
-    @BeforeClass
+    @AfterClass
     public static void resetAddr()throws Exception{
         BeforeCondition beforeCondition = new BeforeCondition();
         beforeCondition.tokenAddIssueCollAddr();

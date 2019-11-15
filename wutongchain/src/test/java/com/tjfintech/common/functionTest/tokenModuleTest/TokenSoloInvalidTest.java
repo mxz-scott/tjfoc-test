@@ -28,6 +28,7 @@ public class TokenSoloInvalidTest {
         SDKADD = TOKENADD;
         if(tokenAccount1.isEmpty()) {
             BeforeCondition beforeCondition = new BeforeCondition();
+            beforeCondition.createTokenAccount();
             beforeCondition.tokenAddIssueCollAddr();
         }
     }
@@ -223,13 +224,5 @@ public class TokenSoloInvalidTest {
         queryBalance = tokenModule.tokenGetDestroyBalance("");
         assertEquals(false,queryBalance.contains(desToken));
 
-    }
-
-
-
-    public String get6(double org){
-        DecimalFormat df = new DecimalFormat("#.000000");
-        String str = df.format(org);
-        return str;
     }
 }

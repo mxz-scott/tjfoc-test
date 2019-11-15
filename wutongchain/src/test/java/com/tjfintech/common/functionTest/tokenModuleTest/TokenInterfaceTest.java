@@ -38,6 +38,7 @@ public class TokenInterfaceTest {
         SDKADD = TOKENADD;
         if(tokenMultiAddr1.isEmpty()) {
             BeforeCondition beforeCondition = new BeforeCondition();
+            beforeCondition.createTokenAccount();
             beforeCondition.tokenAddIssueCollAddr();
         }
     }
@@ -55,6 +56,10 @@ public class TokenInterfaceTest {
         collAddr = tokenMultiAddr1;
         issAmount = "18446744073709";
          String comments = "issue invalid test";
+
+         tokenModule.tokenDelMintAddr(issueAddr);
+         tokenModule.tokenDelCollAddr(collAddr);
+         sleepAndSaveInfo(3000,"register issue and coll address waiting......");
 
         //使用未注册的发行地址进行发行
          String issueResp = "";

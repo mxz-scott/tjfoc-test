@@ -28,6 +28,7 @@ public class TokenAccurateTest {
         SDKADD = TOKENADD;
         if(tokenMultiAddr1.isEmpty()) {
             BeforeCondition beforeCondition = new BeforeCondition();
+            beforeCondition.createTokenAccount();
             beforeCondition.tokenAddIssueCollAddr();
         }
     }
@@ -325,10 +326,4 @@ public class TokenAccurateTest {
 
     }
 
-
-    public String get6(double org){
-        DecimalFormat df = new DecimalFormat("#.000000");
-        String str = df.format(org);
-        return str;
-    }
 }
