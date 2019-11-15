@@ -10,6 +10,7 @@ import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 import java.io.*;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -20,7 +21,7 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 
 @Slf4j
 public class UtilsClass {
-    public static final String SDKADD = "http://10.1.3.246:7777";
+    public static String SDKADD = "http://10.1.3.246:7777";
 //    public static final String SDKADD = "http://180.101.204.164:8800";
     public static String rSDKADD = "http://10.1.3.240:9997";
     public static String TOKENADD = "http://10.1.3.247:8888";
