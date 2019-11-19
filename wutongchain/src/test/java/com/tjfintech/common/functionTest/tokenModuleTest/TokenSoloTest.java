@@ -82,6 +82,38 @@ public class TokenSoloTest {
         assertThat(tokenType+"查询余额不正确",response2, containsString(actualAmount2));
     }
 
+
+    @Test
+    public void soloToMultiIssue() throws Exception {
+
+        issueAmount1 = "10000.12345678912345";
+        issueAmount2 = "20000.876543212345";
+
+        if (UtilsClass.PRECISION == 10) {
+            actualAmount1 = "10000.1234567891";
+            actualAmount2 = "20000.8765432123";
+        }else {
+            actualAmount1 = "10000.123456";
+            actualAmount2 = "20000.876543";
+        }
+
+        log.info("发行两种token");
+        tokenType = IssueToken(tokenAccount1,tokenMultiAddr1,issueAmount1);
+        tokenType2 = IssueToken(tokenAccount1,tokenAccount1,issueAmount2);
+
+
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        log.info("查询归集地址中两种token余额");
+        String response1 = tokenModule.tokenGetBalance( tokenMultiAddr1, tokenType);
+        String response2 = tokenModule.tokenGetBalance( tokenAccount1, tokenType2);
+
+        assertThat(tokenType+"查询余额错误",response1, containsString("200"));
+        assertThat(tokenType+"查询余额错误",response2, containsString("200"));
+        assertThat(tokenType+"查询余额不正确",response1, containsString(actualAmount1));
+        assertThat(tokenType+"查询余额不正确",response2, containsString(actualAmount2));
+    }
+
+
     /**
      *  测试最大发行量
      *

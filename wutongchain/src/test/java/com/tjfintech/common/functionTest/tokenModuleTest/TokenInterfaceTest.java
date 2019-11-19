@@ -832,6 +832,163 @@ public class TokenInterfaceTest {
     }
 
     @Test
+    public void createMultiAccountInterfaceTest()throws Exception{
+
+        Map<String, Object> addresses = new HashMap<>();
+        String name = "test";
+        int minSignatures = 1;
+        String groupID = "testid";
+        String comments = "create multi address";
+        Map<String, Object> mapTag = new HashMap<>();
+
+        //addresses仅有一个且为空
+        String createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("n[0](number of addresses) \\u003c minSignature[1]"));
+
+        //addresses 一个地址 单签地址
+        addresses.put("1",tokenAccount1);
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("Need more than one address"));
+
+
+        //addresses 一个地址 多签地址
+        addresses.put("1",tokenMultiAddr1);
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("Need more than one address"));
+
+        //addresses 一个地址 数据库中不存在的地址
+        addresses.put("1",AddrNotInDB);
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("Need more than one address"));
+
+
+        //addresses 一个地址 单签地址的一部分
+        addresses.put("1",tokenAccount1.substring(10));
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("Need more than one address"));
+
+
+        //addresses 两个 两个都为空
+        addresses.put("1","");
+        addresses.put("2","");
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("address should not be empty!"));
+
+        //addresses 两个 其中一个为空 一个为单签地址
+        addresses.clear();
+        addresses.put("1",tokenAccount1);
+        addresses.put("2","");
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("address should not be empty!"));
+
+        //addresses 两个 其中一个为空 一个为多签地址
+        addresses.clear();
+        addresses.put("1",tokenMultiAddr1);
+        addresses.put("2","");
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("address should not be empty!"));
+
+        //addresses 两个 其中一个单签 一个多签
+        addresses.clear();
+        addresses.put("1",tokenAccount1);
+        addresses.put("2",tokenMultiAddr1);
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("Must be simple address"));
+
+        //addresses 两个 地址相同
+        addresses.clear();
+        addresses.put("1",tokenAccount1);
+        addresses.put("2",tokenAccount1);
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("The subaddresses cannot be the same"));
+
+        //addresses 三个 其中一个为空
+        addresses.clear();
+        addresses.put("1",tokenAccount1);
+        addresses.put("2",tokenAccount2);
+        addresses.put("3","");
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("address should not be empty!"));
+
+
+        //addresses 三个 其中两个为空
+        addresses.clear();
+        addresses.put("1",tokenAccount1);
+        addresses.put("2","");
+        addresses.put("3","");
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("address should not be empty!"));
+
+        //addresses 三个 一个多签 两个单签
+        addresses.clear();
+        addresses.put("1",tokenAccount1);
+        addresses.put("2",tokenAccount2);
+        addresses.put("3",tokenMultiAddr1);
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("Must be simple address"));
+
+        //addresses 三个 两个相同
+        addresses.clear();
+        addresses.put("1",tokenAccount1);
+        addresses.put("2",tokenAccount2);
+        addresses.put("3",tokenAccount2);
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("The subaddresses cannot be the same"));
+
+        //addresses 三个 包含一个不存在的地址
+        addresses.clear();
+        addresses.put("1",tokenAccount1);
+        addresses.put("2",tokenAccount2);
+        addresses.put("3",AddrNotInDB);
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("\"state\":200"));
+
+
+
+        //name为空
+        name="";
+        addresses.clear();
+        addresses.put("1",tokenAccount1);
+        addresses.put("2",AddrNotInDB);
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("\"state\":200"));
+
+        //name长度上限64位
+        name=Random(64);
+        addresses.clear();
+        addresses.put("1",tokenAccount2);
+        addresses.put("2",AddrNotInDB);
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("\"state\":200"));
+
+        //name长度超过上限64位
+        name=Random(65);
+        addresses.clear();
+        addresses.put("1",tokenAccount3);
+        addresses.put("2",AddrNotInDB);
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("Data too long for column 'name' at row 1"));
+
+        //minSignatures 为0
+        name=Random(6);
+        addresses.clear();
+        addresses.put("1",tokenAccount3);
+        addresses.put("2",AddrNotInDB);
+        minSignatures = 0;
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("minSignature[0] \\u003c 1"));
+
+        //minSignatures超过地址个数
+        addresses.clear();
+        addresses.put("1",tokenAccount3);
+        addresses.put("2",AddrNotInDB);
+        minSignatures = 3;
+        createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,mapTag);
+        assertEquals(true,createResp.contains("n[2](number of addresses) \\u003c minSignature[3]"));
+
+    }
+
+    @Test
     public void tokenGetPrivateStoreInterfaceTest()throws Exception{
         String Data = "cxTest-private" + UtilsClass.Random(7);
         Map<String,Object>map=new HashMap<>();

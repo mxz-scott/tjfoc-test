@@ -15,6 +15,8 @@ import org.junit.runners.MethodSorters;
 import java.text.DecimalFormat;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 
@@ -71,6 +73,35 @@ public class TokenMultiTest {
         log.info("查询归集地址中两种token余额");
 
         String response1 = tokenModule.tokenGetBalance(tokenMultiAddr1, tokenType);
+        String response2 = tokenModule.tokenGetBalance(tokenMultiAddr1, tokenType2);
+        assertEquals("200",JSONObject.fromObject(response1).getString("state"));
+        assertEquals(actualAmount1,JSONObject.fromObject(response1).getJSONObject("data").getString(tokenType));
+        assertEquals("200",JSONObject.fromObject(response2).getString("state"));
+        assertEquals(actualAmount2,JSONObject.fromObject(response2).getJSONObject("data").getString(tokenType2));
+    }
+
+    @Test
+    public void multiToSoloIssue() throws Exception {
+
+        issueAmount1 = "1000.12345678912345";
+        issueAmount2 = "1000.876543212345";
+
+        if (UtilsClass.PRECISION == 10) {
+            actualAmount1 = "1000.1234567891";
+            actualAmount2 = "1000.8765432123";
+        }else {
+            actualAmount1 = "1000.123456";
+            actualAmount2 = "1000.876543";
+        }
+
+        log.info("多签发行两种token");
+        //两次发行之前不可以有sleep时间
+        tokenType = IssueToken(tokenMultiAddr1,tokenAccount1,issueAmount1);
+        tokenType2 = IssueToken(tokenMultiAddr1,tokenMultiAddr1,issueAmount2);
+        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+        log.info("查询归集地址中两种token余额");
+
+        String response1 = tokenModule.tokenGetBalance(tokenAccount1, tokenType);
         String response2 = tokenModule.tokenGetBalance(tokenMultiAddr1, tokenType2);
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));
         assertEquals(actualAmount1,JSONObject.fromObject(response1).getJSONObject("data").getString(tokenType));
