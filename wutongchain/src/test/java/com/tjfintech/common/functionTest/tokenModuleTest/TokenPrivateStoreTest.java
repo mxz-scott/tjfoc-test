@@ -163,4 +163,24 @@ public class TokenPrivateStoreTest {
 
         //20191114 暂未支持授权
     }
+
+    @Test
+    public void tokenCreatePrivateStoreWithMultiAddr()throws  Exception{
+
+        JSONObject result = new JSONObject();
+        result.put("test1", true);
+        result.put("test2", "30");
+        String Data = result.toString();
+        log.info(Data);
+
+        Map<String,Object>map=new HashMap<>();
+        map.put("address1",tokenMultiAddr1);
+        String response= tokenModule.tokenCreatePrivateStore(Data,map);
+        assertEquals(true,response.contains("address can not be multi address!"));
+
+        map.put("address2",tokenAccount1);
+        response= tokenModule.tokenCreatePrivateStore(Data,map);
+        assertEquals(true,response.contains("address can not be multi address!"));
+
+    }
 }

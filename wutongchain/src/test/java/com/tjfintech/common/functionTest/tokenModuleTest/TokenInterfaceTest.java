@@ -852,7 +852,7 @@ public class TokenInterfaceTest {
         String response2= tokenModule.tokenGetPrivateStore("",tokenAccount2);
         assertEquals("400",JSONObject.fromObject(response2).getString("state"));
         assertThat(JSONObject.fromObject(response2).getString("data"),
-                containsString("invalid"));
+                containsString("hash should not be empty!"));
 
         //hash非法123
         response2= tokenModule.tokenGetPrivateStore("123",tokenAccount2);
@@ -870,7 +870,7 @@ public class TokenInterfaceTest {
         response2= tokenModule.tokenGetPrivateStore(StoreHashPwd.substring(8),tokenAccount2);
         assertEquals("400",JSONObject.fromObject(response2).getString("state"));
         assertThat(JSONObject.fromObject(response2).getString("data"),
-                containsString("Invalid parameter:hash"));
+                containsString("failed to find transaction"));
 
 
         //地址使用无查询权限的用户进行查询
@@ -881,7 +881,7 @@ public class TokenInterfaceTest {
         //地址为有account1生成的多签地址
         response3= tokenModule.tokenGetPrivateStore(StoreHashPwd,tokenMultiAddr1);
         assertThat(JSONObject.fromObject(response3).getString("data"),
-                containsString("you have no permission to get this transaction !"));
+                containsString("address can not be multi address!"));
 
         //地址为空
         response3= tokenModule.tokenGetPrivateStore(StoreHashPwd,"");
