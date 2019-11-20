@@ -15,6 +15,7 @@ import org.junit.runners.MethodSorters;
 import java.text.DecimalFormat;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -1083,13 +1084,16 @@ public class TokenMultiTest {
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
-        assertEquals(String.valueOf(sAmount - trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+
+        assertThat(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken),
+                anyOf(containsString(String.valueOf(sAmount - trfAmount1)),containsString(String.valueOf(sAmount - trfAmount2))));
         queryBalance = tokenModule.tokenGetBalance(to1,issueToken);
-        assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        assertThat(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken),
+                anyOf(containsString(String.valueOf(trfAmount1)),containsString(String.valueOf(trfAmount2))));
 
         //执行回收
         String desAddr = collAddr;
-        double desAmount = 500.698547;
+        double desAmount = 50.123;
         String desToken = issueToken;
         String desAmountStr = String.valueOf(desAmount);
         comments = "回收" + desAddr + " token：" + desToken + " 数量：" + desAmountStr;
@@ -1099,9 +1103,9 @@ public class TokenMultiTest {
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
-        assertEquals(get6(sAmount - trfAmount1 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
-        queryBalance = tokenModule.tokenGetBalance(to1,desToken);
-        assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+        assertThat(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken),
+                anyOf(containsString(String.valueOf(sAmount - trfAmount1 - desAmount)),
+                        containsString(String.valueOf(sAmount - trfAmount2 - desAmount))));
 
         queryBalance = tokenModule.tokenGetDestroyBalance("");
         assertEquals(String.valueOf(desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));

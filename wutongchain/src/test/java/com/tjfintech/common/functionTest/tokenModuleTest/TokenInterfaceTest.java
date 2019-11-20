@@ -263,7 +263,7 @@ public class TokenInterfaceTest {
          issueResp = tokenModule.tokenIssue(issueAddr,collAddr,stokenTypeOK56,issAmount,comments);
 
 
-         sleepAndSaveInfo(6000,"issue waiting......");
+         sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
 //
          String queryBalance = tokenModule.tokenGetBalance(collAddr,"");
          assertEquals(false, queryBalance.contains(stokenType11));
