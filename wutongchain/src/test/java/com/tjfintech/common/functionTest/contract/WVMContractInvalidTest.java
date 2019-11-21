@@ -156,7 +156,7 @@ public class WVMContractInvalidTest {
         String response3 = wvmContractTest.wvmDestroyTest(ctHash);
         assertEquals(false,JSONObject.fromObject(response3).getString("State").contains("200"));
 
-        String response4 = wvmContractTest.invokeNew(ctHash,"init",accountA,amountA);
+        String response4 = wvmContractTest.invokeNew(ctHash,"initAccount",accountA,amountA);
 //        assertEquals(false,JSONObject.fromObject(response4).getString("State").contains("200"));//当前存在bug sdk panic
 
         String response5 = wvmContractTest.wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1);

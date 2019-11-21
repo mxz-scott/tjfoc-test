@@ -65,10 +65,10 @@ public class WVMContractTest_UpgradeTestOnly {
 
         sleepAndSaveInfo(SLEEPTIME);
         //调用合约内的交易
-        String response2 = invokeNew(ctHash,"init",accountA,amountA);//初始化账户A 账户余额50
+        String response2 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
 
-        String response3 = invokeNew(ctHash,"init",accountB,amountB);//初始化账户B 账户余额60
+        String response3 = invokeNew(ctHash,"initAccount",accountB,amountB);//初始化账户B 账户余额60
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
 
         sleepAndSaveInfo(SLEEPTIME);

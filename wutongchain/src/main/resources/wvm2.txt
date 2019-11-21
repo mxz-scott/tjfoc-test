@@ -1,7 +1,11 @@
 //合约示例
 contract Test {
+public string init(){
+return "success"
+}
+
 //初始化一个账户
-public string initB(string account,int amount){
+public string initBAccount(string account,int amount){
 db_set(account,amount)
 return "success"
 }

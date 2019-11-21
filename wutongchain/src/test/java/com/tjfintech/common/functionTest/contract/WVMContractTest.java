@@ -69,10 +69,10 @@ public class WVMContractTest {
 
         sleepAndSaveInfo(SLEEPTIME);
         //调用合约内的交易
-        String response2 = invokeNew(ctHash,"init",accountA,amountA);//初始化账户A 账户余额50
+        String response2 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
 
-        String response3 = invokeNew(ctHash,"init",accountB,amountB);//初始化账户B 账户余额60
+        String response3 = invokeNew(ctHash,"initAccount",accountB,amountB);//初始化账户B 账户余额60
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
 
         sleepAndSaveInfo(SLEEPTIME);
@@ -112,11 +112,11 @@ public class WVMContractTest {
     public void TC1779_SamePriDiffCt() throws Exception{
         String ctName = "B_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
 
-        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"init","transfer","getBalance");
+        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","getBalance");
 
         //再安装一个不同合约名 相同合约内容的合约
         ctName = "B_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
-        String ctHash2 =installInitTransfer(ctName,PRIKEY1,"init","transfer","getBalance");
+        String ctHash2 =installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","getBalance");
 
         assertEquals(false,ctHash1.equals(ctHash2)); //确认两个hash不相同
     }
@@ -125,13 +125,13 @@ public class WVMContractTest {
     public void TC1780_DiffPriDiffCt() throws Exception{
         String ctName = "C_" +sdf.format(dt)+ RandomUtils.nextInt(100000);
 
-        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"init","transfer","getBalance");
+        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","getBalance");
 
         //再安装一个不同合约名 相同合约内容的合约
         ctName = "C_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         wvmFile = "wvm2";
         orgName = "Test";
-        String ctHash2 =installInitTransfer(ctName,PRIKEY2,"initB","transferB","getBalanceB");
+        String ctHash2 =installInitTransfer(ctName,PRIKEY2,"initBAccount","transferB","getBalanceB");
         assertEquals(false,ctHash1.equals(ctHash2)); //确认两个hash不相同
 
     }
@@ -142,17 +142,17 @@ public class WVMContractTest {
         String ctName = "D_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         String priKey = getKeyPairsFromFile("SM2/keys1/key.pem");
         //使用SM2类型私钥
-        String ctHash1 = installInitTransfer(ctName,priKey,"init","transfer","getBalance");
+        String ctHash1 = installInitTransfer(ctName,priKey,"initAccount","transfer","getBalance");
 
         //使用ECDSA私钥
         priKey = getKeyPairsFromFile("ECDSA/keys1/key.pem");
-        String ctHash2 =installInitTransfer(ctName,priKey,"init","transfer","getBalance");
+        String ctHash2 =installInitTransfer(ctName,priKey,"initAccount","transfer","getBalance");
         assertEquals(false,ctHash1.equals(ctHash2));
 
 
         //使用RSA私钥
         priKey = getKeyPairsFromFile("RSA/keys1/key.pem");
-        String ctHash3 =installInitTransfer(ctName,priKey,"init","transfer","getBalance");
+        String ctHash3 =installInitTransfer(ctName,priKey,"initAccount","transfer","getBalance");
         assertEquals(false,ctHash1.equals(ctHash3));
         assertEquals(false,ctHash2.equals(ctHash3));
     }
@@ -161,10 +161,10 @@ public class WVMContractTest {
     public void TC1781_DiffPriSameCt() throws Exception{
         String ctName = "E_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
 
-        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"init","transfer","getBalance");
+        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","getBalance");
 
         //使用不同私钥安装相同合约及内容的合约
-        String ctHash2 =installInitTransfer(ctName,PRIKEY2,"init","transfer","getBalance");
+        String ctHash2 =installInitTransfer(ctName,PRIKEY2,"initAccount","transfer","getBalance");
 
         assertEquals(false,ctHash1.equals(ctHash2)); //确认两个hash不相同
     }
@@ -197,7 +197,7 @@ public class WVMContractTest {
     public void TC1776_InstallSame() throws Exception{
         String ctName = "G_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         //第一次安装 并调用init transfer接口
-        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"init","transfer","getBalance");
+        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","getBalance");
 
         //再次安装合约
         String response1 = wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1);
@@ -275,10 +275,10 @@ public class WVMContractTest {
         sleepAndSaveInfo(SLEEPTIME);
         chkTxDetailRsp("200",txHash1);
         //调用合约内的方法 init方法
-        String response2 = invokeNew(ctHash,"init",accountA,amountA);//初始化账户A 账户余额50
+        String response2 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
 
-        String response3 = invokeNew(ctHash,"init",accountB,amountB);//初始化账户B 账户余额60
+        String response3 = invokeNew(ctHash,"initAccount",accountB,amountB);//初始化账户B 账户余额60
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
 
         sleepAndSaveInfo(SLEEPTIME);
@@ -299,7 +299,7 @@ public class WVMContractTest {
     @Test
     public void upgradeWVMContract()throws Exception{
         String ctName = "K_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
-        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"init","transfer","getBalance");
+        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","getBalance");
 
         //升级合约
         wvmFile ="wvm_update";
@@ -337,10 +337,10 @@ public class WVMContractTest {
         sleepAndSaveInfo(SLEEPTIME);
         chkTxDetailRsp("200",txHash1);
         //调用合约内的方法 init方法
-        String response2 = invokeNew(ctHash,"init",accountA,amountA);//初始化账户A 账户余额50
+        String response2 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
 
-        String response3 = invokeNew(ctHash,"init",accountB,amountB);//初始化账户B 账户余额60
+        String response3 = invokeNew(ctHash,"initAccount",accountB,amountB);//初始化账户B 账户余额60
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
 
         sleepAndSaveInfo(SLEEPTIME);
@@ -387,11 +387,11 @@ public class WVMContractTest {
     public void TC1782_DiffPriSameCtDiffContent() throws Exception{
         String ctName = "N_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
 
-        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"init","transfer","getBalance");
+        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","getBalance");
 
         //再安装不同私钥 相同合约名 不同合约内容的合约
         wvmFile = "wvm_update";
-        String ctHash2 =installInitTransferUpdate(ctName,PRIKEY2,"init","transfer","getBalance");
+        String ctHash2 =installInitTransferUpdate(ctName,PRIKEY2,"initAccount","transfer","getBalance");
         assertEquals(false,ctHash1.equals(ctHash2)); //确认两个hash不相同
     }
 
@@ -411,10 +411,10 @@ public class WVMContractTest {
 
         sleepAndSaveInfo(SLEEPTIME);
         //调用合约内的交易
-        String response2 = invokeNew(ctHash,"init",accountA,amountA);//初始化账户A 账户余额50
+        String response2 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
 
-        String response3 = invokeNew(ctHash,"init",accountB,amountB);//初始化账户B 账户余额60
+        String response3 = invokeNew(ctHash,"initAccount",accountB,amountB);//初始化账户B 账户余额60
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
 
         sleepAndSaveInfo(SLEEPTIME);
