@@ -33,7 +33,7 @@ public class UtilsClass {
     public static Integer  LONGTIMEOUT = 100000;//毫秒
     public static Integer  SHORTMEOUT = 3000;//毫秒
     public static Integer  UTXOSHORTMEOUT = 4 * 1000;//毫秒
-    public static int  SLEEPTIME = 6*1000;
+    public static int  SLEEPTIME = 7*1000;
 
     //UTXO精度
     public static Integer PRECISION = 6;

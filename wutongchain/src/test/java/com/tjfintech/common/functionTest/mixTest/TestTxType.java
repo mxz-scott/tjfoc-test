@@ -570,10 +570,10 @@ public class TestTxType {
 
         sleepAndSaveInfo(SLEEPTIME);
         //调用合约内的交易
-        String response2 = wvm.invokeNew(ctHash,"init",wvm.accountA,wvm.amountA);//初始化账户A 账户余额50
+        String response2 = wvm.invokeNew(ctHash,"initAccount",wvm.accountA,wvm.amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
 
-        String response3 = wvm.invokeNew(ctHash,"init",wvm.accountB,wvm.amountB);//初始化账户B 账户余额60
+        String response3 = wvm.invokeNew(ctHash,"initAccount",wvm.accountB,wvm.amountB);//初始化账户B 账户余额60
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
 
         sleepAndSaveInfo(SLEEPTIME);
@@ -617,7 +617,7 @@ public class TestTxType {
         //检查invoke init交易详情内参数
         assertEquals(ctHash,
                 jsonObjectInvokeInit.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Name"));
-        assertEquals("init",
+        assertEquals("initAccount",
                 jsonObjectInvokeInit.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getString("Method"));
         assertEquals(wvm.caller,new String(decryptBASE64(
                 jsonObjectInvokeInit.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getString("Caller"))));
