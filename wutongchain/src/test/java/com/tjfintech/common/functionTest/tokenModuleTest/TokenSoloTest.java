@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.tokenModuleTest;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Token;
@@ -21,15 +22,11 @@ import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-//import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
-
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TokenSoloTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
-    MultiSign multiSign =testBuilder.getMultiSign();
-    SoloSign soloSign = testBuilder.getSoloSign();
-    UtilsClass utilsClass=new UtilsClass();
+
     private static String tokenType;
     private static String tokenType2;
 
@@ -40,6 +37,8 @@ public class TokenSoloTest {
     private static String actualAmount2;
 
     Token tokenModule = testBuilder.getToken();
+    CommonFunc commonFunc = new CommonFunc();
+    UtilsClass utilsClass=new UtilsClass();
 
     @BeforeClass
     public static void init()throws Exception
@@ -67,8 +66,8 @@ public class TokenSoloTest {
         }
 
         log.info("发行两种token");
-        tokenType = IssueToken(tokenAccount1,tokenAccount1,issueAmount1);
-        tokenType2 = IssueToken(tokenAccount1,tokenAccount1,issueAmount2);
+        tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,issueAmount1);
+        tokenType2 = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,issueAmount2);
 
 
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
@@ -98,8 +97,8 @@ public class TokenSoloTest {
         }
 
         log.info("发行两种token");
-        tokenType = IssueToken(tokenAccount1,tokenMultiAddr1,issueAmount1);
-        tokenType2 = IssueToken(tokenAccount1,tokenAccount1,issueAmount2);
+        tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenMultiAddr1,issueAmount1);
+        tokenType2 = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,issueAmount2);
 
 
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
@@ -127,7 +126,7 @@ public class TokenSoloTest {
             actualAmount1 = "18446744073709";
         }
 
-        tokenType = IssueToken(tokenAccount1,tokenAccount1,actualAmount1);
+        tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,actualAmount1);
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
         log.info("查询归集地址中token余额");
         String response1 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
@@ -144,7 +143,7 @@ public class TokenSoloTest {
     public void    TC1279_checkSoloIssueAddr()throws Exception {
         //Thread.sleep(8000);
         //先前已经注册发行和归集地址tokenAccount1，确认发行无问题
-        tokenType = IssueToken(tokenAccount1,tokenAccount1,"1009");
+        tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,"1009");
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
         String response1 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));
@@ -156,7 +155,7 @@ public class TokenSoloTest {
         assertThat(response3, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
-        tokenType = IssueToken(tokenAccount1,tokenAccount1,"1009");
+        tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,"1009");
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
         String response2 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
         assertEquals("200",JSONObject.fromObject(response2).getString("state"));
@@ -168,7 +167,7 @@ public class TokenSoloTest {
         assertThat(response4, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
-        tokenType = IssueToken(tokenAccount1,tokenAccount1,"1009");
+        tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,"1009");
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
         String response41 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
         assertEquals("200",JSONObject.fromObject(response41).getString("state"));
@@ -180,7 +179,7 @@ public class TokenSoloTest {
         assertThat(response51, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
-        tokenType = IssueToken(tokenAccount1,tokenAccount1,"1009");
+        tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,"1009");
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
         String response52 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
@@ -192,7 +191,7 @@ public class TokenSoloTest {
         assertThat(response6, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
-        tokenType = IssueToken(tokenAccount1,tokenAccount1,"2356");
+        tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,"2356");
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
         String response7 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
@@ -200,59 +199,107 @@ public class TokenSoloTest {
     }
 
     /**
-     * Tc024单签正常流程:
+     * Tc024单签正常流程:归集地址向两个单签地址转账
      *
      */
     @Test
     public void TC024_SoloProgress() throws Exception {
-        //"归集地址向" + tokenAccount2 + "转账100.25个" + tokenType+",并向"+tokenAccount3 +"转账";
-        String transferInfo= TransferToken(tokenAccount1,tokenAccount2,tokenType,"100.25");
-        assertThat(transferInfo, containsString("200"));
-        String transferInfo2= TransferToken(tokenAccount1,tokenAccount3,tokenType2,"200.555");
-        assertThat(transferInfo2, containsString("200"));
+        //"归集地址向" + tokenAccount3 + "转账100.25个" + tokenType+",并向"+tokenAccount5 +"转账";
+        List<Map> listModel = utilsClass.tokenConstructToken(tokenAccount3,tokenType,"100.25");
+        List<Map> list = utilsClass.tokenConstructToken(tokenAccount5,tokenType2,"200.555",listModel);
+
+        String transferInfo= commonFunc.tokenModule_TransferTokenList(tokenAccount1,list);
+        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
 
-        log.info("查询"+ tokenAccount2 + "跟" +tokenAccount3+"余额，判断转账是否成功");
-        String queryInfo = tokenModule.tokenGetBalance( tokenAccount2, tokenType);
-        String queryInfo2 = tokenModule.tokenGetBalance( tokenAccount3, tokenType2);
+        log.info("查询"+ tokenAccount3 + "跟" + tokenAccount5 + "余额，判断转账是否成功");
+        String queryInfo = tokenModule.tokenGetBalance( tokenAccount3, "");
+        String queryInfo2 = tokenModule.tokenGetBalance( tokenAccount5, "");
         assertEquals("100.25",JSONObject.fromObject(queryInfo).getJSONObject("data").getString(tokenType));
         assertEquals("200.555",JSONObject.fromObject(queryInfo2).getJSONObject("data").getString(tokenType2));
 
         
-        log.info(tokenAccount2 + " --> " + tokenAccount3 + "转账: " + tokenType);
-        transferInfo = TransferToken(tokenAccount2,tokenAccount3,tokenType,"30");
+        log.info(tokenAccount3 + " --> " + tokenAccount4 + "转账: " + tokenType);
+        List<Map> list1 = utilsClass.tokenConstructToken(tokenAccount4,tokenType,"30");
+        transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount3,list1);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
-        log.info(tokenAccount3 + " --> " + tokenAccount2 + "转账: " + tokenType2);
-        transferInfo = TransferToken(tokenAccount3,tokenAccount2,tokenType2,"80");
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+
+        log.info(tokenAccount5 + " --> " + tokenAccount4 + "转账: " + tokenType2);
+        List<Map> list2 = utilsClass.tokenConstructToken(tokenAccount4,tokenType2,"80");
+        transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount5,list2);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
-        String query = tokenModule.tokenGetBalance(tokenAccount1, "");
-        query = tokenModule.tokenGetBalance(tokenAccount2, "");
-        query = tokenModule.tokenGetBalance(tokenAccount3, "");
+        log.info(tokenAccount4 + " --> " + tokenAccount2 + "转账: " + tokenType2 + " " + tokenType2);
+        List<Map> list3 = utilsClass.tokenConstructToken(tokenAccount2,tokenType,"30");
+        List<Map> list4 = utilsClass.tokenConstructToken(tokenAccount2,tokenType2,"70",list3);
 
+        transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount4,list4);
+        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
-        String Info2 = DestoryToken(tokenAccount2, tokenType, "70.25");
-        String Info3 = DestoryToken(tokenAccount2, tokenType2, "80");
-        String Info4 = DestoryToken(tokenAccount3, tokenType, "30");
-        String Info5 = DestoryToken(tokenAccount3, tokenType2, "120.555");
+        log.info(tokenAccount5 + " --> " + tokenAccount2 + "转账: " + tokenType2 );
+        List<Map> list5 = utilsClass.tokenConstructToken(tokenAccount2,tokenType2,"20");
+        transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount5,list5);
+        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+        List<Map> list6 = utilsClass.tokenConstructToken(tokenAccount4,tokenType,"30");
+        List<Map> list7 = utilsClass.tokenConstructToken(tokenAccount4,tokenType2,"50",list6);
+
+        transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount2,list7);
+        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+//        String query1 = tokenModule.tokenGetBalance(tokenAccount1, "");
+        String query2 = tokenModule.tokenGetBalance(tokenAccount2, "");
+        String query3 = tokenModule.tokenGetBalance(tokenAccount3, "");
+        String query4 = tokenModule.tokenGetBalance(tokenAccount4, "");
+        String query5 = tokenModule.tokenGetBalance(tokenAccount5, "");
+
+        assertEquals("70.25",JSONObject.fromObject(query3).getJSONObject("data").getString(tokenType));
+        String Info2 = commonFunc.tokenModule_DestoryToken(tokenAccount3, tokenType, "70.25");
+
+        assertEquals("30",JSONObject.fromObject(query4).getJSONObject("data").getString(tokenType));
+        assertEquals("60",JSONObject.fromObject(query4).getJSONObject("data").getString(tokenType2));
+        String Info3 = commonFunc.tokenModule_DestoryToken(tokenAccount4, tokenType2, "60");
+        String Info31 = commonFunc.tokenModule_DestoryToken(tokenAccount4, tokenType, "30");
+
+        assertEquals("100.555",JSONObject.fromObject(query5).getJSONObject("data").getString(tokenType2));
+        String Info4 = commonFunc.tokenModule_DestoryToken(tokenAccount5, tokenType2, "100.555");
+
+//        assertEquals("30",JSONObject.fromObject(query2).getJSONObject("data").getString(tokenType));
+        assertEquals("40",JSONObject.fromObject(query2).getJSONObject("data").getString(tokenType2));
+//        String Info5 = commonFunc.tokenModule_DestoryToken(tokenAccount2, tokenType, "30");
+        String Info6 = commonFunc.tokenModule_DestoryToken(tokenAccount2, tokenType2, "40");
 
         assertEquals("200",JSONObject.fromObject(Info2).getString("state"));
         assertEquals("200",JSONObject.fromObject(Info3).getString("state"));
+        assertEquals("200",JSONObject.fromObject(Info31).getString("state"));
         assertEquals("200",JSONObject.fromObject(Info4).getString("state"));
         assertEquals("200",JSONObject.fromObject(Info4).getString("state"));
+//        assertEquals("200",JSONObject.fromObject(Info5).getString("state"));
+        assertEquals("200",JSONObject.fromObject(Info6).getString("state"));
 
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
         String queryBalanceInfo2 = tokenModule.tokenGetBalance(tokenAccount2, "");
         String queryBalanceInfo3 = tokenModule.tokenGetBalance(tokenAccount3, "");
+        String queryBalanceInfo4 = tokenModule.tokenGetBalance(tokenAccount4, "");
+        String queryBalanceInfo5 = tokenModule.tokenGetBalance(tokenAccount5, "");
 
         assertEquals(false,queryBalanceInfo2.contains(tokenType));
         assertEquals(false,queryBalanceInfo2.contains(tokenType2));
         assertEquals(false,queryBalanceInfo3.contains(tokenType));
         assertEquals(false,queryBalanceInfo3.contains(tokenType2));
+        assertEquals(false,queryBalanceInfo4.contains(tokenType));
+        assertEquals(false,queryBalanceInfo4.contains(tokenType2));
+        assertEquals(false,queryBalanceInfo5.contains(tokenType));
+        assertEquals(false,queryBalanceInfo5.contains(tokenType2));
 
     }
 
@@ -264,10 +311,10 @@ public class TokenSoloTest {
     @Test
     public void TC024_PrecisionTest() throws Exception {
 
-        String transferInfo1 = TransferToken(tokenAccount1,tokenAccount2,tokenType,issueAmount1);
-        String transferInfo2 = TransferToken(tokenAccount1,tokenAccount3,tokenType2,issueAmount2);
+        List<Map> listModel = utilsClass.tokenConstructToken(tokenAccount3,tokenType,issueAmount1);
+        List<Map> list = utilsClass.tokenConstructToken(tokenAccount5,tokenType2,issueAmount2,listModel);
+        String transferInfo1 = commonFunc.tokenModule_TransferTokenList(tokenAccount1,list);
         assertEquals("200",JSONObject.fromObject(transferInfo1).getString("state"));
-        assertEquals("200",JSONObject.fromObject(transferInfo2).getString("state"));
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
         String amount1, amount2;
@@ -280,22 +327,22 @@ public class TokenSoloTest {
         }
 
         log.info("查询帐号3跟帐号2余额，判断转账是否成功");
-        String queryInfo = tokenModule.tokenGetBalance( tokenAccount2, tokenType);
-        String queryInfo2 = tokenModule.tokenGetBalance( tokenAccount3, tokenType2);
+        String queryInfo = tokenModule.tokenGetBalance( tokenAccount3, tokenType);
+        String queryInfo2 = tokenModule.tokenGetBalance( tokenAccount5, tokenType2);
         assertEquals(amount1,JSONObject.fromObject(queryInfo).getJSONObject("data").getString(tokenType));
         assertEquals(amount2,JSONObject.fromObject(queryInfo2).getJSONObject("data").getString(tokenType2));
 
 
-        String Info3 = DestoryToken(tokenAccount2,tokenType, issueAmount1);
+        String Info3 = commonFunc.tokenModule_DestoryToken(tokenAccount3,tokenType, issueAmount1);
         assertEquals("200",JSONObject.fromObject(Info3).getString("state"));
-        String Info4 = DestoryToken(tokenAccount3, tokenType2, issueAmount2);
+        String Info4 = commonFunc.tokenModule_DestoryToken(tokenAccount5, tokenType2, issueAmount2);
         assertEquals("200",JSONObject.fromObject(Info4).getString("state"));
 
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
-        String queryInfo11 = tokenModule.tokenGetBalance( tokenAccount2, tokenType);
-        String queryInfo12 = tokenModule.tokenGetBalance( tokenAccount3, tokenType2);
-        String queryInfo5 = tokenModule.tokenGetDestroyBalance(tokenType);
-        String queryInfo6 = tokenModule.tokenGetDestroyBalance(tokenType2);
+        String queryInfo11 = tokenModule.tokenGetBalance( tokenAccount3, "");
+        String queryInfo12 = tokenModule.tokenGetBalance( tokenAccount5, "");
+        String queryInfo5 = tokenModule.tokenGetDestroyBalance();
+        String queryInfo6 = tokenModule.tokenGetDestroyBalance();
 
         assertEquals(false,queryInfo11.contains(tokenType));
         assertEquals(false,queryInfo12.contains(tokenType2));
@@ -306,54 +353,47 @@ public class TokenSoloTest {
     }
 
 
-//    /**
-//     * Tc024锁定后转账:
-//     *
-//     */
-//    @Test
-//    public void TC024_TransferAfterFrozen() throws Exception {
-//
-//        //20190411增加锁定步骤后进行转账
-//        log.info("锁定待转账Token: "+tokenType);
-//        String resp=multiSign.freezeToken(tokenAccount1,tokenType);
-//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
-//
-//        String transferData = "归集地址向" + PUBKEY3 + "转账100.25个" + tokenType+",并向"+PUBKEY4+"转账";
-//        log.info(transferData);
-//        List<Map> listModel1 = soloSign.constructToken(tokenAccount3,tokenType,"100.25");
-//        log.info(tokenAccount3);
-//        List<Map> list1=soloSign.constructToken(ADDRESS5,tokenType2,"200.555",listModel1);
-//        String transferInfo= TransferToken(list1,tokenAccount1, transferData);
-//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
-//        assertThat(transferInfo, containsString("200"));
-//        log.info("查询帐号3跟帐号5余额，判断转账是否成功");
-//        String queryInfo = tokenModule.tokenGetBalance( tokenAccount2, tokenType);
-//        String queryInfo2 = tokenModule.tokenGetBalance( tokenAccount3, tokenType2);
-//        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("data").getString(tokenType), containsString("0"));
-//        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("data").getString(tokenType), containsString("0"));
-//
-//
-//        log.info("解除锁定待转账Token: "+tokenType);
-//        String resp1=multiSign.recoverFrozenToken(tokenAccount1,tokenType);
-//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
-//
-//        transferData = "归集地址向" + PUBKEY3 + "转账100.25个" + tokenType+",并向"+PUBKEY4+"转账";
-//        log.info(transferData);
-//        List<Map> listModel = soloSign.constructToken(tokenAccount3,tokenType,"100.25");
-//        log.info(tokenAccount3);
-//        List<Map> list=soloSign.constructToken(ADDRESS5,tokenType2,"200.555",listModel);
-//        transferInfo= TransferToken(list,tokenAccount1, transferData);
-//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
-//        assertThat(transferInfo, containsString("200"));
-//        log.info("查询帐号3跟帐号5余额，判断转账是否成功");
-//        queryInfo = tokenModule.tokenGetBalance( tokenAccount2, tokenType);
-//        queryInfo2 = tokenModule.tokenGetBalance( tokenAccount3, tokenType2);
-//        assertThat(queryInfo, containsString("200"));
-//        assertThat(queryInfo, containsString("100.25"));
-//        assertThat(queryInfo2, containsString("200"));
-//        assertThat(queryInfo2, containsString("200.555"));
-//
-//    }
+    /**
+     * Tc024锁定后转账:
+     *
+     */
+    @Test
+    public void TC024_TransferAfterFrozen() throws Exception {
+
+        //20190411增加锁定步骤后进行转账
+        log.info("锁定待转账Token: "+tokenType);
+        String resp = tokenModule.tokenFreezeToken(tokenType);
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+        List<Map> listModel1 = utilsClass.tokenConstructToken(tokenAccount3,tokenType,"100.25");
+        List<Map> list1 = utilsClass.tokenConstructToken(tokenAccount5,tokenType2,"200.555",listModel1);
+        String transferInfo= commonFunc.tokenModule_TransferTokenList(tokenAccount1, list1);
+        assertEquals(true,transferInfo.contains("toketype(" + tokenType + ") has been freezed!"));
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+        log.info("查询帐号3跟帐号5余额，判断转账是否成功");
+        String queryInfo = tokenModule.tokenGetBalance( tokenAccount3, "");
+        String queryInfo2 = tokenModule.tokenGetBalance( tokenAccount5, "");
+        assertEquals(false,queryInfo.contains(tokenType));
+        assertEquals(false,queryInfo2.contains(tokenType2));
+
+
+        log.info("解除锁定待转账Token: "+tokenType);
+        String resp1 = tokenModule.tokenRecoverToken(tokenType);
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+        List<Map> listModel = utilsClass.tokenConstructToken(tokenAccount3,tokenType,"100.25");
+        List<Map> list = utilsClass.tokenConstructToken(tokenAccount5,tokenType2,"200.555",listModel);
+        transferInfo= commonFunc.tokenModule_TransferTokenList(tokenAccount1,list);
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        assertThat(transferInfo, containsString("200"));
+        log.info("查询帐号3跟帐号5余额，判断转账是否成功");
+        queryInfo = tokenModule.tokenGetBalance( tokenAccount3, tokenType);
+        queryInfo2 = tokenModule.tokenGetBalance( tokenAccount5, tokenType2);
+        assertEquals("100.25",JSONObject.fromObject(queryInfo).getJSONObject("data").getString(tokenType));
+        assertEquals("200.555",JSONObject.fromObject(queryInfo2).getJSONObject("data").getString(tokenType2));
+
+    }
 
     /**
      * Tc040单签转单签异常测试:
@@ -361,33 +401,44 @@ public class TokenSoloTest {
      */
     @Test
     public void TC040_SoloProgress() throws Exception {
-        //"归集地址向" + PUBKEY3 + "转账3000个" + tokenType+",并向"+PUBKEY4+"转账";;
-        String transferInfo = TransferToken(tokenAccount1,tokenAccount2,tokenType,"3000");
-        String transferInfo2 = TransferToken(tokenAccount1,tokenAccount2,tokenType2,"3000");
+        //"归集地址向" + PUBKEY3 + "转账3000个" + tokenType+",并向"+PUBKEY4+"转账";
+        List<Map> list = utilsClass.tokenConstructToken(tokenAccount3,tokenType,"3000");
+        List<Map> list1 = utilsClass.tokenConstructToken(tokenAccount5,tokenType2,"3000",list);
+
+        String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount1,list1);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
-        assertEquals("200",JSONObject.fromObject(transferInfo2).getString("state"));
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
-        //tokenAccount2 向 tokenAccount3转账4000 tokenType
-        String recycleInfo2 = TransferToken(tokenAccount2, tokenAccount3,tokenType,"4000");
+        //tokenAccount3 向 tokenAccount4和5 转账4000 tokenType
+        List<Map> list2 = utilsClass.tokenConstructToken(tokenAccount4,tokenType,"4000");
+        List<Map>list3= utilsClass.tokenConstructToken(tokenAccount5,tokenType,"70",list2);
+        String recycleInfo2 = commonFunc.tokenModule_TransferTokenList(tokenAccount3,list3);
         assertThat(recycleInfo2, containsString("Insufficient Balance"));
 
-        //tokenAccount2 向 tokenAccount3转账4000 tokenType2
-        String recycleInfo3 = TransferToken(tokenAccount2, tokenAccount3,tokenType2,"4000");
+
+        //tokenAccount3 向 tokenAccount4和5 转账4000 tokenType
+        List<Map> list4 = utilsClass.tokenConstructToken(tokenAccount4,tokenType,"4000");
+        List<Map>list5 = utilsClass.tokenConstructToken(tokenAccount5,tokenType2,"4001",list4);
+        String recycleInfo3 = commonFunc.tokenModule_TransferTokenList(tokenAccount3,list5);
         assertThat(recycleInfo3, containsString("Insufficient Balance"));
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        //tokenAccount3 向 tokenAccount4和5 转账4000 tokenType
+        List<Map> list6 = utilsClass.tokenConstructToken(tokenAccount4,tokenType,"4000");
+        List<Map>list7 = utilsClass.tokenConstructToken(tokenAccount5,tokenType2,"60",list6);
+        String recycleInfo4 = commonFunc.tokenModule_TransferTokenList(tokenAccount3,list7);
+        assertThat(recycleInfo4, containsString("Insufficient Balance"));
 
-        String Info = DestoryToken(tokenAccount2, tokenType, "3000");
-        String Info3 = DestoryToken(tokenAccount2, tokenType2, "3000");
+
+        String Info = commonFunc.tokenModule_DestoryToken(tokenAccount3, tokenType, "3000");
+        String Info3 = commonFunc.tokenModule_DestoryToken(tokenAccount5, tokenType2, "3000");
         assertEquals("200",JSONObject.fromObject(Info).getString("state"));
         assertEquals("200",JSONObject.fromObject(Info3).getString("state"));
 
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
-        String queryInfo11 = tokenModule.tokenGetBalance( tokenAccount3, tokenType);
-        String queryInfo12 = tokenModule.tokenGetBalance( tokenAccount3, tokenType2);
-        String queryInfo5 = tokenModule.tokenGetDestroyBalance("");
+        String queryInfo11 = tokenModule.tokenGetBalance( tokenAccount4, tokenType);
+        String queryInfo12 = tokenModule.tokenGetBalance( tokenAccount5, tokenType2);
+        String queryInfo5 = tokenModule.tokenGetDestroyBalance();
 
         assertEquals(false,queryInfo11.contains(tokenType));
         assertEquals(false,queryInfo12.contains(tokenType2));
@@ -401,148 +452,116 @@ public class TokenSoloTest {
     @Test
     public void TC041_SoloProgress() throws Exception {
         //"归集地址向" + tokenAccount3 + "转账3000个" + tokenType+",并向"+tokenMultiAddr3+"转账";
-        String transferInfo = TransferToken(tokenAccount1, tokenAccount3,tokenType,"3000");
-        String transferInfo2= TransferToken(tokenAccount1, tokenMultiAddr3,tokenType2,"3000");
+        List<Map> list = utilsClass.tokenConstructToken(tokenAccount3,tokenType,"3000");
+        List<Map> list1 = utilsClass.tokenConstructToken(tokenAccount3,tokenType2,"3000",list);
+
+        String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount1, list1);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
-        assertEquals("200",JSONObject.fromObject(transferInfo2).getString("state"));
 
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
-        String transferInfo3 = TransferToken(tokenAccount3, tokenAccount2,tokenType,"7000");
-        String transferInfo4 = TransferToken(tokenMultiAddr3, tokenMultiAddr2,tokenType2,"7000");
+        List<Map> list2 = utilsClass.tokenConstructToken(tokenAccount2,tokenType,"200");
+        List<Map>list3= utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType,"7000",list2);
+        String transferInfo3 = commonFunc.tokenModule_TransferTokenList(tokenAccount3, list3);
         assertThat(transferInfo3, containsString("Insufficient Balance"));
+
+        List<Map> list4 = utilsClass.tokenConstructToken(tokenAccount2,tokenType,"4000");
+        List<Map>list5 = utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType,"4001",list4);
+        String transferInfo4 = commonFunc.tokenModule_TransferTokenList(tokenAccount3, list5);
         assertThat(transferInfo4, containsString("Insufficient Balance"));
 
-        //转账余额不足后余额范围内转账
-        String transferInfo5 = TransferToken(tokenAccount3, tokenAccount2,tokenType,"1000");
-        String transferInfo6 = TransferToken(tokenMultiAddr3, tokenMultiAddr2,tokenType2,"1000");
-        assertEquals("200",JSONObject.fromObject(transferInfo5).getString("state"));
-        assertEquals("200",JSONObject.fromObject(transferInfo6).getString("state"));
+        List<Map> list6 = utilsClass.tokenConstructToken(tokenAccount2,tokenType,"4000");
+        List<Map>list7 = utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType,"400",list6);
+        String transferInfo5 = commonFunc.tokenModule_TransferTokenList(tokenAccount3, list7);
+        assertThat(transferInfo5, containsString("Insufficient Balance"));
 
 
+        //20190411增加锁定解锁操作步骤后进行回收
+        log.info("锁定待回收Token: "+tokenType);
+        String resp=tokenModule.tokenFreezeToken(tokenType);
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        log.info("解除锁定待回收Token: "+tokenType);
+        String resp1= tokenModule.tokenRecoverToken(tokenType);
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
-//        //20190411增加锁定解锁操作步骤后进行回收
-//        log.info("锁定待回收Token: "+tokenType);
-//        String resp=multiSign.freezeToken(tokenAccount1,tokenType);
-//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
-//        log.info("解除锁定待回收Token: "+tokenType);
-//        String resp1=multiSign.recoverFrozenToken(tokenAccount1,tokenType);
-//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        log.info("开始回收....");
+        String Info = commonFunc.tokenModule_DestoryToken(tokenAccount3, tokenType, "3000");
+        String Info2 = commonFunc.tokenModule_DestoryToken(tokenAccount3, tokenType2, "3000");
+
+        assertEquals("200",JSONObject.fromObject(Info).getString("state"));
+        assertEquals("200",JSONObject.fromObject(Info2).getString("state"));
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+        log.info("开始查询余额....");
+        String response1 = tokenModule.tokenGetBalance(tokenAccount3, "");
+        assertEquals("200",JSONObject.fromObject(response1).getString("state"));
+
+        assertEquals(false,response1.contains(tokenType));
+        assertEquals(false,response1.contains(tokenType2));
+
+    }
+
+    /**
+     * Tc042单签转单签+多签测试:回收前锁定token
+     *
+     */
+    @Test
+    public void TC042_SoloProgress() throws Exception {
+
+        List<Map> list=utilsClass.tokenConstructToken(tokenAccount3,tokenType,"3000");
+        List<Map> list1=utilsClass.tokenConstructToken(tokenAccount3,tokenType2,"3000",list);
+        String transferInfo= commonFunc.tokenModule_TransferTokenList(tokenAccount1,list1);
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
+
+        List<Map> list2 = utilsClass.tokenConstructToken(tokenAccount4,tokenType,"200");
+        List<Map>list3= utilsClass.tokenConstructToken(tokenMultiAddr3,tokenType,"70",list2);
+        String recycleInfo2 = commonFunc.tokenModule_TransferTokenList(tokenAccount3, list3);
+        assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("state"));
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+        List<Map> list4 = utilsClass.tokenConstructToken(tokenAccount4,tokenType,"400");
+        List<Map>list5= utilsClass.tokenConstructToken(tokenMultiAddr3,tokenType2,"401",list4);
+        String recycleInfo3 = commonFunc.tokenModule_TransferTokenList(tokenAccount3, list5);
+        assertEquals("200",JSONObject.fromObject(recycleInfo3).getString("state"));
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+        //20190411增加锁定操作步骤后进行回收
+        log.info("锁定待回收Token: "+tokenType);
+        String resp= tokenModule.tokenFreezeToken(tokenType);
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
         log.info("开始回收....");
-        String Info = DestoryToken(tokenAccount3, tokenType, "2000");
-        String Info1 = DestoryToken(tokenMultiAddr3, tokenType2, "2000");
-        String Info2 = DestoryToken(tokenAccount1, tokenType, "7000.123456789");
-        String Info3 = DestoryToken(tokenAccount1, tokenType2, "17000.87654321");
-        String Info4 = DestoryToken(tokenAccount2, tokenType, "1000");
-        String Info5 = DestoryToken(tokenMultiAddr2, tokenType2, "1000");
+        String Info = commonFunc.tokenModule_DestoryToken( tokenAccount3, tokenType, "2330");
+        String Info1 = commonFunc.tokenModule_DestoryToken( tokenAccount3, tokenType2, "2599");
+        String Info2 = commonFunc.tokenModule_DestoryToken( tokenAccount4, tokenType, "600");
+        String Info3 = commonFunc.tokenModule_DestoryToken(tokenMultiAddr3, tokenType, "70");
+        String Info4 = commonFunc.tokenModule_DestoryToken(tokenMultiAddr3, tokenType2, "401");
 
         assertEquals("200",JSONObject.fromObject(Info).getString("state"));
         assertEquals("200",JSONObject.fromObject(Info1).getString("state"));
         assertEquals("200",JSONObject.fromObject(Info2).getString("state"));
         assertEquals("200",JSONObject.fromObject(Info3).getString("state"));
         assertEquals("200",JSONObject.fromObject(Info4).getString("state"));
-        assertEquals("200",JSONObject.fromObject(Info5).getString("state"));
+
 
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
-
         log.info("开始查询余额....");
-        String response1 = tokenModule.tokenGetBalance(tokenAccount1, "");
-        String response2 = tokenModule.tokenGetBalance(tokenAccount2,  "");
-        String response3 = tokenModule.tokenGetBalance( tokenMultiAddr2, "");
-        String response4 = tokenModule.tokenGetBalance( tokenMultiAddr3, "");
+        String response1 = tokenModule.tokenGetBalance(tokenAccount3, "");
+        String response2 = tokenModule.tokenGetBalance(tokenAccount4, "");
+        String response3 = tokenModule.tokenGetBalance(tokenMultiAddr3, "");
+
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));
         assertEquals("200",JSONObject.fromObject(response2).getString("state"));
         assertEquals("200",JSONObject.fromObject(response3).getString("state"));
-        assertEquals("200",JSONObject.fromObject(response4).getString("state"));
 
-        assertEquals(false,response1.contains(tokenType));
-        assertEquals(false,response1.contains(tokenType2));
-        assertEquals(false,response2.contains(tokenType));
-        assertEquals(false,response2.contains(tokenType2));
-        assertEquals(false,response3.contains(tokenType));
-        assertEquals(false,response3.contains(tokenType2));
-        assertEquals(false,response4.contains(tokenType));
-        assertEquals(false,response4.contains(tokenType2));
-
+        assertEquals(false, response1.contains(tokenType));
+        assertEquals(false, response1.contains(tokenType2));
+        assertEquals(false, response2.contains(tokenType));
+        assertEquals(false, response2.contains(tokenType2));
+        assertEquals(false, response3.contains(tokenType));
+        assertEquals(false, response3.contains(tokenType2));
     }
-
-//    /**
-//     * Tc042单签转单签+多签测试:回收前锁定token
-//     *
-//     */
-//    @Test
-//    public void TC042_SoloProgress() throws Exception {
-//        String transferData = "归集地址向" + "PUBKEY3" + "转账3000个" + "tokenType"+",并向"+"PUBKEY4"+"转账tokenType2";
-//        log.info(transferData);
-//
-//        List<Map> list=soloSign.constructToken(tokenAccount3,tokenType,"3000");
-//        List<Map> list1=soloSign.constructToken(tokenAccount3,tokenType2,"3000",list);
-//        String transferInfo= TransferToken(list1,tokenAccount1,transferData);
-//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
-//        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
-//
-//        List<Map> list2 = soloSign.constructToken(tokenAccount3,tokenType,"200");
-//        List<Map>list3= soloSign.constructToken(MULITADD5,tokenType,"70",list2);
-//        String recycleInfo2 = TransferToken(list3, tokenAccount2, "李四向小六转账4000 TT001, 70 TT001");
-//        assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("state"));
-//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
-//        List<Map> list4 = soloSign.constructToken(tokenAccount3,tokenType,"400");
-//        List<Map>list5= soloSign.constructToken(MULITADD5,tokenType2,"401",list4);
-//        String recycleInfo3 = TransferToken(list5, tokenAccount2, "李四向小六转账4000 TT001, 4001 TT002");
-//        assertEquals("200",JSONObject.fromObject(recycleInfo3).getString("state"));
-//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
-//
-//        //20190411增加锁定操作步骤后进行回收
-//        log.info("锁定待回收Token: "+tokenType);
-//        String resp=multiSign.freezeToken(tokenAccount1,tokenType);
-//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
-//
-//        log.info("开始回收....");
-//        String Info = DestoryToken( tokenAccount2, tokenType, "2330");
-//        String Info1 = DestoryToken( tokenAccount2, tokenType2, "2599");
-//        String Info2 = DestoryToken( PRIKEY4, tokenType, "600");
-//        String Info3 = DestoryToken(MULITADD5, tokenAccount1, tokenType, "70");
-//        String Info4 = DestoryToken(MULITADD5, tokenAccount2, tokenType2, "401");
-//        String Info5 = DestoryToken(tokenAccount1, tokenType, "7000.123456789");
-//        String Info6 = DestoryToken(tokenAccount1, tokenType2, "17000.87654321");
-//
-//        assertEquals("200",JSONObject.fromObject(Info).getString("state"));
-//        assertEquals("200",JSONObject.fromObject(Info1).getString("state"));
-//        assertEquals("200",JSONObject.fromObject(Info2).getString("state"));
-//        assertEquals("200",JSONObject.fromObject(Info3).getString("state"));
-//        assertEquals("200",JSONObject.fromObject(Info4).getString("state"));
-//        assertEquals("200",JSONObject.fromObject(Info5).getString("state"));
-//        assertEquals("200",JSONObject.fromObject(Info6).getString("state"));
-//
-//
-//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
-//        log.info("开始查询余额....");
-//        String response1 = tokenModule.tokenGetBalance(IMPPUTIONADD, PRIKEY4, tokenType);
-//        String response2 = tokenModule.tokenGetBalance(IMPPUTIONADD, PRIKEY4, tokenType2);
-//        String response3 = tokenModule.tokenGetBalance(MULITADD5, tokenAccount1, tokenType);
-//        String response4 = tokenModule.tokenGetBalance(MULITADD5, tokenAccount1, tokenType2);
-//        String response5 = tokenModule.tokenGetBalance( tokenAccount2, tokenType);
-//        String response6 = tokenModule.tokenGetBalance( tokenAccount2, tokenType2);
-//        String response7 = tokenModule.tokenGetBalance( PRIKEY4, tokenType);
-//
-//        assertEquals("200",JSONObject.fromObject(response1).getString("state"));
-//        assertEquals("200",JSONObject.fromObject(response2).getString("state"));
-//        assertEquals("200",JSONObject.fromObject(response3).getString("state"));
-//        assertEquals("200",JSONObject.fromObject(response4).getString("state"));
-//        assertEquals("200",JSONObject.fromObject(response5).getString("state"));
-//        assertEquals("200",JSONObject.fromObject(response6).getString("state"));
-//        assertEquals("200",JSONObject.fromObject(response7).getString("state"));
-//
-//        assertEquals(JSONObject.fromObject(response1).getJSONObject("data").getString(tokenType).equals("0"),true);
-//        assertEquals(JSONObject.fromObject(response2).getJSONObject("data").getString(tokenType).equals("0"),true);
-//        assertEquals(JSONObject.fromObject(response3).getJSONObject("data").getString(tokenType).equals("0"),true);
-//        assertEquals(JSONObject.fromObject(response4).getJSONObject("data").getString(tokenType).equals("0"),true);
-//        assertEquals(JSONObject.fromObject(response5).getJSONObject("data").getString(tokenType).equals("0"),true);
-//        assertEquals(JSONObject.fromObject(response6).getJSONObject("data").getString(tokenType).equals("0"),true);
-//        assertEquals(JSONObject.fromObject(response7).getJSONObject("data").getString(tokenType).equals("0"),true);
-//    }
 
     /**
      * Tc244单签接口双花测试:
@@ -551,298 +570,290 @@ public class TokenSoloTest {
     @Test
     public void TC0244_SoloProgress() throws Exception {
         //"归集地址向" + PUBKEY3 + "转账3000个" + tokenType+",并向"+PUBKEY4+"转账";
-        String transferInfo1= TransferToken(tokenAccount1, tokenAccount3,tokenType2,"3000");
-        String transferInfo2= TransferToken(tokenAccount1, tokenAccount2,tokenType2,"3000");
-        assertEquals("200",JSONObject.fromObject(transferInfo1).getString("state"));
-        assertEquals("200",JSONObject.fromObject(transferInfo2).getString("state"));
+        List<Map> list = utilsClass.tokenConstructToken(tokenAccount3,tokenType2,"3000");
+        List<Map> list0 = utilsClass.tokenConstructToken(tokenAccount3,tokenType,"4000",list);
+        String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount1, list0);
+        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
         String response = tokenModule.tokenGetBalance(tokenAccount1,"");
         assertEquals("17000.876543",JSONObject.fromObject(response).getJSONObject("data").getString(tokenType2));
-        assertEquals("10000.123456",JSONObject.fromObject(response).getJSONObject("data").getString(tokenType));
+        assertEquals("6000.123456",JSONObject.fromObject(response).getJSONObject("data").getString(tokenType));
 
 
-        String transferInfo3= TransferToken(tokenAccount1, tokenAccount3,tokenType,"2000");
-        String transferInfo4= TransferToken(tokenAccount1, tokenAccount2,tokenType,"2000");
-        assertEquals("200",JSONObject.fromObject(transferInfo3).getString("state"));
-        assertEquals("200",JSONObject.fromObject(transferInfo4).getString("state"));
+        List<Map> list1= utilsClass.tokenConstructToken(tokenAccount4,tokenType,"300");
+        List<Map> list2= utilsClass.tokenConstructToken(tokenAccount4,tokenType,"301");
+        String transferInfo1 = commonFunc.tokenModule_TransferTokenList(tokenAccount3, list1);
+        String transferInfo2 = commonFunc.tokenModule_TransferTokenList(tokenAccount3, list2);
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
-        String response2 = tokenModule.tokenGetBalance(tokenAccount1,"");
-        assertEquals("17000.876543",JSONObject.fromObject(response2).getJSONObject("data").getString(tokenType2));
-        assertEquals("8000.123456",JSONObject.fromObject(response2).getJSONObject("data").getString(tokenType));
+        String queryInfo = tokenModule.tokenGetBalance(tokenAccount4,"");
+        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("data").getString(tokenType),
+                anyOf(containsString("300"),containsString("301")));
 
+
+
+        List<Map> list3= utilsClass.tokenConstructToken(tokenAccount4,tokenType,"400");
+        List<Map> list4= utilsClass.tokenConstructToken(tokenAccount4,tokenType2,"411",list3);
+        String transferInfo3= commonFunc.tokenModule_TransferTokenList(tokenAccount3, list3);
+        String transferInfo4= commonFunc.tokenModule_TransferTokenList(tokenAccount3,list4);
+        assertEquals("200",JSONObject.fromObject(transferInfo3).getString("state"));
+        assertEquals("200",JSONObject.fromObject(transferInfo4).getString("state"));
+
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+        String response1 = tokenModule.tokenGetBalance(tokenAccount4,"");
+        assertThat(JSONObject.fromObject(response1).getJSONObject("data").getString(tokenType),
+                anyOf(containsString("700"),containsString("701")));
+//        assertThat(JSONObject.fromObject(response1).getJSONObject("data").getString(tokenType2),
+//                anyOf(containsString("411"),containsString("0")));
+
+
+        List<Map> list5= utilsClass.tokenConstructToken(tokenAccount4,tokenType,"320");
+        List<Map> list6= utilsClass.tokenConstructToken(tokenAccount4,tokenType2,"320");
+        String transferInfo5= commonFunc.tokenModule_TransferTokenList( tokenAccount3, list5);
+        String transferInfo6= commonFunc.tokenModule_TransferTokenList(tokenAccount3, list6);
+        assertEquals("200",JSONObject.fromObject(transferInfo5).getString("state"));
+        assertEquals("200",JSONObject.fromObject(transferInfo6).getString("state"));
+
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+        String response2 = tokenModule.tokenGetBalance(tokenAccount4,"");
+        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getString(tokenType),
+                anyOf(containsString("1020"),containsString("1021")));
+        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getString(tokenType2),
+                anyOf(containsString("731"),containsString("320")));
     }
 
     //验证无法转账给自己
     @Test
     public void TransferToSelf()throws Exception{
-        String transferInfo= TransferToken(tokenAccount1, tokenAccount1,tokenType,"100.25");
+        List<Map> list = utilsClass.tokenConstructToken(tokenAccount1,tokenType2,"3000");
+        String transferInfo= commonFunc.tokenModule_TransferTokenList(tokenAccount1, list);
         assertEquals(true,transferInfo.contains("can't transfer it to yourself"));
         String response = tokenModule.tokenGetBalance(tokenAccount1,tokenType);
         assertEquals(actualAmount1,JSONObject.fromObject(response).getJSONObject("data").getString(tokenType));
     }
 
 
-    @Test
-    public void singleAccountDoubleSpend_IssueSelf()throws Exception{
-        String issueAddr = "";
-        String collAddr = "";
-        String issueToken = "";
-        String issAmount ="";
-
-        //单签地址发行token 5000.999999
-        String stokenType = "tokenSo-"+ UtilsClass.Random(8);
-        double sAmount = 5000.999999;
-        issueAddr = tokenAccount1;
-        collAddr = tokenAccount1;
-        issueToken =stokenType;
-        issAmount = String.valueOf(sAmount);
-
-        //转账信息
-        String from = collAddr;
-        String to = "";
-        String to1 = tokenAccount2;
-        String to2 = tokenMultiAddr1;
-        double trfAmount1 = 100.253;
-        double trfAmount2 = 689.333;
-
-
-
-        //添加发行地址和归集地址
-        tokenModule.tokenAddMintAddr(issueAddr);
-        tokenModule.tokenAddCollAddr(collAddr);
-
-        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
-
-        String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
-        tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
-
-        String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
-        assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
-
-        //连续向单签账户转账和多签账户转账
-
-        String transferToken = issueToken;
-        String transferAmount = String.valueOf(trfAmount1);
-        to = to1;
-        comments = from + "向" + to + " 转账token：" + transferToken + " 数量：" + transferAmount;
-        String transferResp = tokenModule.tokenTransfer(from,to,transferToken,transferAmount,comments);
-
-        to = to2;
-        transferAmount = String.valueOf(trfAmount2);
-        comments = from + "向" + to + " 转账token：" + issueToken + " 数量：" + transferAmount;
-        transferResp = tokenModule.tokenTransfer(from,to,issueToken,transferAmount,comments);
-
-
-        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
-
-        //余额查询
-        queryBalance = tokenModule.tokenGetBalance(collAddr,"");
-        assertEquals(String.valueOf(sAmount - trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
-        queryBalance = tokenModule.tokenGetBalance(to1,issueToken);
-        assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
-        queryBalance = tokenModule.tokenGetBalance(to2,issueToken);
-        assertEquals(false,queryBalance.contains(issueToken));
-
-        //执行回收
-        String desAddr = collAddr;
-        double desAmount = 500.698547;
-        String desToken = issueToken;
-        String desAmountStr = String.valueOf(desAmount);
-        comments = "回收" + desAddr + " token：" + desToken + " 数量：" + desAmountStr;
-        String destroyResp = tokenModule.tokenDestory(desAddr,desToken,desAmountStr,comments);
-
-        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
-
-        //余额查询
-        queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
-        assertEquals(get6(sAmount - trfAmount1 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
-        queryBalance = tokenModule.tokenGetBalance(to1,desToken);
-        assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
-        queryBalance = tokenModule.tokenGetBalance(to2,desToken);
-        assertEquals(false,queryBalance.contains(desToken));
-
-        queryBalance = tokenModule.tokenGetDestroyBalance("");
-        assertEquals(String.valueOf(desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
-
-    }
-
-    @Test
-    public void singleAccountDoubleSpend_IssueOther()throws Exception{
-        String issueAddr = "";
-        String collAddr = "";
-        String issueToken = "";
-        String issAmount ="";
-
-        //单签地址发行token 5000.999999
-        String stokenType = "tokenSo-"+ UtilsClass.Random(8);
-        double sAmount = 5000.999999;
-        issueAddr = tokenAccount1;
-        collAddr = tokenAccount2;
-        issueToken =stokenType;
-        issAmount = String.valueOf(sAmount);
-
-        //转账信息
-        String from = collAddr;
-        String to = "";
-        String to1 = tokenAccount1;
-        String to2 = tokenMultiAddr1;
-        double trfAmount1 = 100.253;
-        double trfAmount2 = 689.333;
-
-        //添加发行地址和归集地址
-        tokenModule.tokenAddMintAddr(issueAddr);
-        tokenModule.tokenAddCollAddr(collAddr);
-
-        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
-
-        String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
-        tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
-
-
-        //查询余额归集地址 和 发行地址
-        String queryBalance = tokenModule.tokenGetBalance(issueAddr,issueToken);
-        assertEquals(false,queryBalance.contains(issueToken));
-
-        queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
-        assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
-
-        //连续向单签账户转账和多签账户转账
-        String transferToken = issueToken;
-        String transferAmount = String.valueOf(trfAmount1);
-        to = to1;
-        comments = from + "向" + to + " 转账token：" + transferToken + " 数量：" + transferAmount;
-        String transferResp = tokenModule.tokenTransfer(from,to,transferToken,transferAmount,comments);
-
-        to = to2;
-        transferAmount = String.valueOf(trfAmount2);
-        comments = from + "向" + to + " 转账token：" + issueToken + " 数量：" + transferAmount;
-        transferResp = tokenModule.tokenTransfer(from,to,issueToken,transferAmount,comments);
-
-
-        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
-
-        //余额查询
-        queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
-        assertEquals(String.valueOf(sAmount - trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
-        queryBalance = tokenModule.tokenGetBalance(to1,issueToken);
-        assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
-        queryBalance = tokenModule.tokenGetBalance(to2,issueToken);
-        assertEquals(false,queryBalance.contains(issueToken));
-
-        //执行回收
-        String desAddr = collAddr;
-        double desAmount = 500.698547;
-        String desToken = issueToken;
-        String desAmountStr = String.valueOf(desAmount);
-        comments = "回收" + desAddr + " token：" + desToken + " 数量：" + desAmountStr;
-        String destroyResp = tokenModule.tokenDestory(desAddr,desToken,desAmountStr,comments);
-
-        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
-
-        //余额查询
-        queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
-        assertEquals(get6(sAmount - trfAmount1 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
-        queryBalance = tokenModule.tokenGetBalance(to1,desToken);
-        assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
-        queryBalance = tokenModule.tokenGetBalance(to2,desToken);
-        assertEquals(false,queryBalance.contains(desToken));
-
-        queryBalance = tokenModule.tokenGetDestroyBalance("");
-        assertEquals(String.valueOf(desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
-
-    }
-
-
-    @Test
-    public void singleAccount_IssueSelf()throws Exception{
-        String issueAddr = "";
-        String collAddr = "";
-        String issueToken = "";
-        String issAmount ="";
-
-        //单签地址发行token 5000.999999
-        String stokenType = "tokenSo-"+ UtilsClass.Random(8);
-        double sAmount = 5000.999999;
-        issueAddr = tokenAccount1;
-        collAddr = tokenAccount1;
-        issueToken =stokenType;
-        issAmount = String.valueOf(sAmount);
-
-        //转账信息
-        String from = collAddr;
-        String to = "";
-        String to1 = tokenAccount2;
-        String to2 = tokenMultiAddr1;
-        double trfAmount1 = 100.253;
-        double trfAmount2 = 689.333;
-
-
-
-        //添加发行地址和归集地址
-        tokenModule.tokenAddMintAddr(issueAddr);
-        tokenModule.tokenAddCollAddr(collAddr);
-
-        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
-
-        String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
-        tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
-
-        String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
-        assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
-
-        //连续向单签账户转账和多签账户转账
-
-        String transferToken = issueToken;
-        String transferAmount = String.valueOf(trfAmount1);
-        to = to1;
-        comments = from + "向" + to + " 转账token：" + transferToken + " 数量：" + transferAmount;
-        String transferResp = tokenModule.tokenTransfer(from,to,transferToken,transferAmount,comments);
-
-        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
-
-        to = to2;
-        transferAmount = String.valueOf(trfAmount2);
-        comments = from + "向" + to + " 转账token：" + issueToken + " 数量：" + transferAmount;
-        transferResp = tokenModule.tokenTransfer(from,to,issueToken,transferAmount,comments);
-
-
-        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
-
-        //余额查询
-        queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
-        assertEquals(String.valueOf(sAmount - trfAmount1- trfAmount2), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
-        queryBalance = tokenModule.tokenGetBalance(to1,issueToken);
-        assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
-        queryBalance = tokenModule.tokenGetBalance(to2,issueToken);
-        assertEquals(String.valueOf(trfAmount2), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
-
-        //执行回收
-        String desAddr = collAddr;
-        double desAmount = 500.698547;
-        String desToken = issueToken;
-        String desAmountStr = String.valueOf(desAmount);
-        comments = "回收" + desAddr + " token：" + desToken + " 数量：" + desAmountStr;
-        String destroyResp = tokenModule.tokenDestory(desAddr,desToken,desAmountStr,comments);
-
-        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
-
-        //余额查询
-        queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
-        assertEquals(get6(sAmount - trfAmount1 - trfAmount2 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
-        queryBalance = tokenModule.tokenGetBalance(to1,desToken);
-        assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
-        queryBalance = tokenModule.tokenGetBalance(to2,desToken);
-        assertEquals(String.valueOf(trfAmount2), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
-
-        queryBalance = tokenModule.tokenGetDestroyBalance("");
-        assertEquals(String.valueOf(desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
-
-    }
+//    @Test
+//    public void singleAccountDoubleSpend_IssueSelf()throws Exception{
+//        String issueAddr = "";
+//        String collAddr = "";
+//        String issueToken = "";
+//        String issAmount ="";
+//
+//        //单签地址发行token 5000.999999
+//        double sAmount = 5000.999999;
+//        issueAddr = tokenAccount1;
+//        collAddr = tokenAccount1;
+//        issAmount = String.valueOf(sAmount);
+//
+//        //转账信息
+//        String from = collAddr;
+//        String to = "";
+//        String to1 = tokenAccount2;
+//        String to2 = tokenMultiAddr1;
+//        double trfAmount1 = 100.253;
+//        double trfAmount2 = 689.333;
+//
+//        issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
+//        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+//
+//        String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
+//        assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+//
+//        //连续向单签账户转账和多签账户转账
+//
+//        String transferToken = issueToken;
+//        String transferAmount = String.valueOf(trfAmount1);
+//        to = to1;
+//        String transferResp = commonFunc.tokenModule_TransferToken(from,to,transferToken,transferAmount);
+//
+//        to = to2;
+//        transferAmount = String.valueOf(trfAmount2);
+//        transferResp = commonFunc.tokenModule_TransferToken(from,to,issueToken,transferAmount);
+//
+//
+//        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
+//
+//        //余额查询
+//        queryBalance = tokenModule.tokenGetBalance(collAddr,"");
+//        assertEquals(String.valueOf(sAmount - trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+//        queryBalance = tokenModule.tokenGetBalance(to1,issueToken);
+//        assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+//        queryBalance = tokenModule.tokenGetBalance(to2,issueToken);
+//        assertEquals(false,queryBalance.contains(issueToken));
+//
+//        //执行回收
+//        String desAddr = collAddr;
+//        double desAmount = 500.698547;
+//        String desToken = issueToken;
+//        String desAmountStr = String.valueOf(desAmount);
+//        String destroyResp = commonFunc.tokenModule_DestoryToken (desAddr,desToken,desAmountStr);
+//
+//        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
+//
+//        //余额查询
+//        queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
+//        assertEquals(get6(sAmount - trfAmount1 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+//        queryBalance = tokenModule.tokenGetBalance(to1,desToken);
+//        assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+//        queryBalance = tokenModule.tokenGetBalance(to2,desToken);
+//        assertEquals(false,queryBalance.contains(desToken));
+//
+//        queryBalance = tokenModule.tokenGetDestroyBalance();
+//        assertEquals(String.valueOf(desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+//
+//    }
+//
+//    @Test
+//    public void singleAccountDoubleSpend_IssueOther()throws Exception{
+//        String issueAddr = "";
+//        String collAddr = "";
+//        String issueToken = "";
+//        String issAmount ="";
+//
+//        //单签地址发行token 5000.999999
+//        double sAmount = 5000.999999;
+//        issueAddr = tokenAccount1;
+//        collAddr = tokenAccount2;
+//        issAmount = String.valueOf(sAmount);
+//
+//        //转账信息
+//        String from = collAddr;
+//        String to = "";
+//        String to1 = tokenAccount1;
+//        String to2 = tokenMultiAddr1;
+//        double trfAmount1 = 100.253;
+//        double trfAmount2 = 689.333;
+//        issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
+//        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+//
+//
+//        //查询余额归集地址 和 发行地址
+//        String queryBalance = tokenModule.tokenGetBalance(issueAddr,issueToken);
+//        assertEquals(false,queryBalance.contains(issueToken));
+//
+//        queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
+//        assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+//
+//        //连续向单签账户转账和多签账户转账
+//        String transferToken = issueToken;
+//        String transferAmount = String.valueOf(trfAmount1);
+//        to = to1;
+//        String transferResp = commonFunc.tokenModule_TransferToken(from,to,transferToken,transferAmount);
+//
+//        to = to2;
+//        transferAmount = String.valueOf(trfAmount2);
+//        transferResp = commonFunc.tokenModule_TransferToken(from,to,issueToken,transferAmount);
+//
+//
+//        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
+//
+//        //余额查询
+//        queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
+//        assertEquals(String.valueOf(sAmount - trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+//        queryBalance = tokenModule.tokenGetBalance(to1,issueToken);
+//        assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+//        queryBalance = tokenModule.tokenGetBalance(to2,issueToken);
+//        assertEquals(false,queryBalance.contains(issueToken));
+//
+//        //执行回收
+//        String desAddr = collAddr;
+//        double desAmount = 500.698547;
+//        String desToken = issueToken;
+//        String desAmountStr = String.valueOf(desAmount);
+//        String destroyResp = commonFunc.tokenModule_DestoryToken (desAddr,desToken,desAmountStr);
+//
+//        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
+//
+//        //余额查询
+//        queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
+//        assertEquals(get6(sAmount - trfAmount1 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+//        queryBalance = tokenModule.tokenGetBalance(to1,desToken);
+//        assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+//        queryBalance = tokenModule.tokenGetBalance(to2,desToken);
+//        assertEquals(false,queryBalance.contains(desToken));
+//
+//        queryBalance = tokenModule.tokenGetDestroyBalance();
+//        assertEquals(String.valueOf(desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+//
+//    }
+//
+//
+//    @Test
+//    public void singleAccount_IssueSelf()throws Exception{
+//        String issueAddr = "";
+//        String collAddr = "";
+//        String issueToken = "";
+//        String issAmount ="";
+//
+//        //单签地址发行token 5000.999999
+//        double sAmount = 5000.999999;
+//        issueAddr = tokenAccount1;
+//        collAddr = tokenAccount1;
+//        issAmount = String.valueOf(sAmount);
+//
+//        //转账信息
+//        String from = collAddr;
+//        String to = "";
+//        String to1 = tokenAccount2;
+//        String to2 = tokenMultiAddr1;
+//        double trfAmount1 = 100.253;
+//        double trfAmount2 = 689.333;
+//
+//        issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
+//        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+//
+//        String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
+//        assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+//
+//        //连续向单签账户转账和多签账户转账
+//
+//        String transferToken = issueToken;
+//        String transferAmount = String.valueOf(trfAmount1);
+//        to = to1;
+//        String transferResp = commonFunc.tokenModule_TransferToken(from,to,transferToken,transferAmount);
+//
+//        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
+//
+//        to = to2;
+//        transferAmount = String.valueOf(trfAmount2);
+//        transferResp = commonFunc.tokenModule_TransferToken(from,to,issueToken,transferAmount);
+//
+//
+//        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
+//
+//        //余额查询
+//        queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
+//        assertEquals(String.valueOf(sAmount - trfAmount1- trfAmount2), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+//        queryBalance = tokenModule.tokenGetBalance(to1,issueToken);
+//        assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+//        queryBalance = tokenModule.tokenGetBalance(to2,issueToken);
+//        assertEquals(String.valueOf(trfAmount2), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+//
+//        //执行回收
+//        String desAddr = collAddr;
+//        double desAmount = 500.698547;
+//        String desToken = issueToken;
+//        String desAmountStr = String.valueOf(desAmount);
+//        String destroyResp = commonFunc.tokenModule_DestoryToken (desAddr,desToken,desAmountStr);
+//
+//        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
+//
+//        //余额查询
+//        queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
+//        assertEquals(get6(sAmount - trfAmount1 - trfAmount2 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+//        queryBalance = tokenModule.tokenGetBalance(to1,desToken);
+//        assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+//        queryBalance = tokenModule.tokenGetBalance(to2,desToken);
+//        assertEquals(String.valueOf(trfAmount2), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+//
+//        queryBalance = tokenModule.tokenGetDestroyBalance();
+//        assertEquals(String.valueOf(desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+//
+//    }
 
     @Test
     public void singleAccount_IssueOther()throws Exception{
@@ -852,11 +863,9 @@ public class TokenSoloTest {
         String issAmount ="";
 
         //单签地址发行token 5000.999999
-        String stokenType = "tokenSo-"+ UtilsClass.Random(8);
         double sAmount = 5000.999999;
         issueAddr = tokenAccount1;
         collAddr = tokenAccount2;
-        issueToken =stokenType;
         issAmount = String.valueOf(sAmount);
 
         //转账信息
@@ -866,15 +875,7 @@ public class TokenSoloTest {
         String to2 = tokenMultiAddr1;
         double trfAmount1 = 100.253;
         double trfAmount2 = 689.333;
-
-        //添加发行地址和归集地址
-        tokenModule.tokenAddMintAddr(issueAddr);
-        tokenModule.tokenAddCollAddr(collAddr);
-
-        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
-
-        String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
-        tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
+        issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
         sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
 
 
@@ -886,19 +887,15 @@ public class TokenSoloTest {
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
 
         //连续向单签账户转账和多签账户转账
-        String transferToken = issueToken;
+
         String transferAmount = String.valueOf(trfAmount1);
-        to = to1;
-        comments = from + "向" + to + " 转账token：" + transferToken + " 数量：" + transferAmount;
-        String transferResp = tokenModule.tokenTransfer(from,to,transferToken,transferAmount,comments);
+        List<Map> list = utilsClass.tokenConstructToken(to1,issueToken,transferAmount);
+        String transferResp = commonFunc.tokenModule_TransferTokenList(from,list);
         sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
 
-        to = to2;
         transferAmount = String.valueOf(trfAmount2);
-        comments = from + "向" + to + " 转账token：" + issueToken + " 数量：" + transferAmount;
-        transferResp = tokenModule.tokenTransfer(from,to,issueToken,transferAmount,comments);
-
-
+        List<Map> list2 = utilsClass.tokenConstructToken(to2,issueToken,transferAmount);
+        String transferResp2 = commonFunc.tokenModule_TransferTokenList(from,list2);
         sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
 
         //余额查询
@@ -909,13 +906,13 @@ public class TokenSoloTest {
         queryBalance = tokenModule.tokenGetBalance(to2,issueToken);
         assertEquals(String.valueOf(trfAmount2), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
 
+               
         //执行回收
         String desAddr = collAddr;
         double desAmount = 500.698547;
         String desToken = issueToken;
         String desAmountStr = String.valueOf(desAmount);
-        comments = "回收" + desAddr + " token：" + desToken + " 数量：" + desAmountStr;
-        String destroyResp = tokenModule.tokenDestory(desAddr,desToken,desAmountStr,comments);
+        String destroyResp = commonFunc.tokenModule_DestoryToken (desAddr,desToken,desAmountStr);
 
         sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
 
@@ -927,33 +924,119 @@ public class TokenSoloTest {
         queryBalance = tokenModule.tokenGetBalance(to2,desToken);
         assertEquals(String.valueOf(trfAmount2), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
 
-        queryBalance = tokenModule.tokenGetDestroyBalance("");
+        queryBalance = tokenModule.tokenGetDestroyBalance();
         assertEquals(String.valueOf(desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
 
     }
+    @Test
+    public void destoryByTokenTest()throws Exception{
+        //"归集地址向" + PUBKEY3 + "转账3000个" + tokenType+",并向"+PUBKEY4+"转账";
+        List<Map> list = utilsClass.tokenConstructToken(tokenAccount3,tokenType2,"3000");
+        List<Map> list2= utilsClass.tokenConstructToken(tokenAccount3,tokenType,"4000",list);
 
-//-----------------------------------------------------------------------------------------------------------
+        List<Map> list3 = utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType,"3000",list2);
+        List<Map> list4 = utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType2,"4000",list3);
+        String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount1, list4);
+        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
-    public  String IssueToken(String issueAddr,String collAddr,String amount){
-        String issueToken = "tokenSo-"+ UtilsClass.Random(8);
-        String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + amount;
-        log.info(comments);
-        tokenModule.tokenIssue(issueAddr,collAddr,issueToken,amount,comments);
-        return issueToken;
+        String amount1,amount2;
+        if (UtilsClass.PRECISION == 10) {
+            amount1 = "3000.1234567891";
+            amount2 = "13000.8765432123";
+        }else {
+            amount1 = "3000.123456";
+            amount2 = "13000.876543";
+        }
+
+
+        String desInfo = commonFunc.tokenModule_DestoryTokenByTokenType(tokenType);
+        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
+        assertEquals(actualAmount1,JSONObject.fromObject(desInfo).getJSONObject("data").getString("total"));
+//        assertEquals(true,desInfo.contains("\"address\":\""+tokenAccount3+"\"," + "\"amount\":\"4000\""));
+//        assertEquals(true,desInfo.contains("\"address\":\""+tokenMultiAddr2+"\"," + "\"amount\":\"3000\""));
+//        assertEquals(true,desInfo.contains("\"address\":\""+tokenAccount1+"\"," + "\"amount\":\"" + amount1 + "\""));
+
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+        String getZeroAc = tokenModule.tokenGetDestroyBalance();
+        assertEquals(actualAmount1,JSONObject.fromObject(getZeroAc).getJSONObject("data").getString(tokenType));
+
+        desInfo = commonFunc.tokenModule_DestoryTokenByTokenType(tokenType2);
+        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
+        assertEquals(actualAmount2,JSONObject.fromObject(desInfo).getJSONObject("data").getString("total"));
+//        assertEquals(true,desInfo.contains("\"address\":\""+tokenAccount3+"\"," + "\"amount\":\"3000\""));
+//        assertEquals(true,desInfo.contains("\"address\":\""+tokenMultiAddr2+"\"," + "\"amount\":\"4000\""));
+//        assertEquals(true,desInfo.contains("\"address\":\""+tokenAccount1+"\"," + "\"amount\":\"" + amount2 + "\""));
+
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+        getZeroAc = tokenModule.tokenGetDestroyBalance();
+        assertEquals(actualAmount2,JSONObject.fromObject(getZeroAc).getJSONObject("data").getString(tokenType2));
+
+        String queryInfo1 = tokenModule.tokenGetBalance(tokenAccount3,"");
+        String queryInfo2 = tokenModule.tokenGetBalance(tokenMultiAddr1,"");
+        String queryInfo3 = tokenModule.tokenGetBalance(tokenAccount1,"");
+
+        assertEquals(false,queryInfo1.contains(tokenType2));
+        assertEquals(false,queryInfo1.contains(tokenType));
+        assertEquals(false,queryInfo2.contains(tokenType2));
+        assertEquals(false,queryInfo2.contains(tokenType));
+        assertEquals(false,queryInfo3.contains(tokenType2));
+        assertEquals(false,queryInfo3.contains(tokenType));
+
     }
 
-    public  String TransferToken(String from,String to, String tokenType,String amount){
-        String comments = from + "向" + to + " 转账token：" + tokenType + " 数量：" + amount;
-        log.info(comments);
-        return tokenModule.tokenTransfer(from,to,tokenType,amount,comments);
+    @Test
+    public void destoryByList()throws Exception{
+        //"归集地址向" + PUBKEY3 + "转账3000个" + tokenType+",并向"+PUBKEY4+"转账";
+        List<Map> list = utilsClass.tokenConstructToken(tokenAccount3,tokenType2,"300");
+        List<Map> list2= utilsClass.tokenConstructToken(tokenAccount3,tokenType,"400",list);
+
+        List<Map> list3 = utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType,"300",list2);
+        List<Map> list4 = utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType2,"400",list3);
+        String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount1, list4);
+        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+        String desInfo = commonFunc.tokenModule_DestoryTokenByList2(list4);
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+        String getZeroAc = tokenModule.tokenGetDestroyBalance();
+        assertEquals("700",JSONObject.fromObject(getZeroAc).getJSONObject("data").getString(tokenType));
+        assertEquals("700",JSONObject.fromObject(getZeroAc).getJSONObject("data").getString(tokenType2));
     }
 
-    public  String DestoryToken(String addr,String tokenType,String amount){
-        String comments = addr + "销毁token：" + tokenType + " 数量：" + amount;
-        log.info(comments);
-        return tokenModule.tokenDestory(addr,tokenType,amount,comments);
-    }
+    @Test
+    public void peerTokenBlockAsyncTest()throws Exception{
+        //"归集地址向" + PUBKEY3 + "转账3000个" + tokenType+",并向"+PUBKEY4+"转账";
+        List<Map> list = utilsClass.tokenConstructToken(tokenAccount3,tokenType2,"300");
+        List<Map> list2= utilsClass.tokenConstructToken(tokenAccount3,tokenType,"400",list);
 
+        List<Map> list3 = utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType,"300",list2);
+        List<Map> list4 = utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType2,"400",list3);
+        String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount1, list4);
+        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
+        String queryAsync = tokenModule.tokenGetBalance(tokenMultiAddr2,"");
+        assertEquals("500",JSONObject.fromObject(transferInfo).getString("state"));
+        assertEquals("height mismatch",JSONObject.fromObject(transferInfo).getString("message"));
+        assertEquals(false,transferInfo.contains(tokenType));
+
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        String query1 = tokenModule.tokenGetBalance(tokenMultiAddr2,"");
+        String query2 = tokenModule.tokenGetBalance(tokenAccount3,"");
+        assertEquals("400",JSONObject.fromObject(query1).getJSONObject("data").getString(tokenType));
+        assertEquals("300",JSONObject.fromObject(query1).getJSONObject("data").getString(tokenType2));
+        assertEquals("300",JSONObject.fromObject(query2).getJSONObject("data").getString(tokenType));
+        assertEquals("400",JSONObject.fromObject(query2).getJSONObject("data").getString(tokenType2));
+
+        String desInfo = commonFunc.tokenModule_DestoryTokenByList2(list4);
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+        String getZeroAc = tokenModule.tokenGetDestroyBalance();
+        assertEquals("700",JSONObject.fromObject(getZeroAc).getJSONObject("data").getString(tokenType));
+        assertEquals("700",JSONObject.fromObject(getZeroAc).getJSONObject("data").getString(tokenType2));
+    }
 
     @AfterClass
     public static void resetAddr()throws Exception{

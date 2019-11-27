@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.tokenModuleTest;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Token;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -12,6 +13,8 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.text.DecimalFormat;
+import java.util.List;
+import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
@@ -21,6 +24,8 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 public class TokenAccurateTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Token tokenModule = testBuilder.getToken();
+    UtilsClass utilsClass=new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
     @BeforeClass
     public static void init()throws Exception
@@ -42,21 +47,11 @@ public class TokenAccurateTest {
         String issAmount ="";
 
         //单签地址发行token 5000.999999
-        String stokenType = "tokenSo-"+ UtilsClass.Random(8);
         issueAddr = tokenMultiAddr1;
         collAddr = tokenMultiAddr1;
-        issueToken =stokenType;
         double amount = 5869.8989284222222;
         issAmount = String.valueOf(amount);
-
-        //添加发行地址和归集地址
-        tokenModule.tokenAddMintAddr(issueAddr);
-        tokenModule.tokenAddCollAddr(collAddr);
-
-        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
-
-        String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
-        tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
+        issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
         sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
@@ -72,21 +67,12 @@ public class TokenAccurateTest {
         String issAmount ="";
 
         //单签地址发行token 5000.999999
-        String stokenType = "tokenSo-"+ UtilsClass.Random(8);
         issueAddr = tokenMultiAddr1;
         collAddr = tokenMultiAddr1;
-        issueToken =stokenType;
         double amount = 586699.89892;
         issAmount = String.valueOf(amount);
 
-        //添加发行地址和归集地址
-        tokenModule.tokenAddMintAddr(issueAddr);
-        tokenModule.tokenAddCollAddr(collAddr);
-
-        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
-
-        String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
-        tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
+        issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
         sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
@@ -102,21 +88,12 @@ public class TokenAccurateTest {
         String issAmount ="";
 
         //单签地址发行token 5000.999999
-        String stokenType = "tokenSo-"+ UtilsClass.Random(8);
         issueAddr = tokenMultiAddr1;
         collAddr = tokenMultiAddr1;
-        issueToken =stokenType;
         double amount = 85696.36;
         issAmount = String.valueOf(amount);
 
-        //添加发行地址和归集地址
-        tokenModule.tokenAddMintAddr(issueAddr);
-        tokenModule.tokenAddCollAddr(collAddr);
-
-        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
-
-        String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
-        tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
+        issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
         sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
@@ -132,23 +109,12 @@ public class TokenAccurateTest {
         String issAmount ="";
 
         //单签地址发行token 5000.999999
-        String stokenType = "tokenSo-"+ UtilsClass.Random(8);
         issueAddr = tokenMultiAddr1;
         collAddr = tokenMultiAddr1;
-        issueToken =stokenType;
         double amount = 856965636;
         issAmount = "856965636";
 
-
-        //添加发行地址和归集地址
-        tokenModule.tokenAddMintAddr(issueAddr);
-        tokenModule.tokenAddCollAddr(collAddr);
-
-        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
-
-        String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
-        log.info(comments);
-        tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
+        issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
         sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
@@ -158,86 +124,40 @@ public class TokenAccurateTest {
 
     @Test
     public void transferAccurateInt_IssueSelf()throws Exception{
-        String issueAddr = "";
-        String collAddr = "";
-        String issueToken = "";
-        String issAmount ="";
 
-        //单签地址发行token 5000.999999
-        String stokenType = "tokenSo-"+ UtilsClass.Random(8);
-        double sAmount = 5000;
-        issueAddr = tokenAccount1;
-        collAddr = tokenAccount1;
-        issueToken =stokenType;
-        issAmount = "5000";
-
-        //转账信息
-        String from = collAddr;
-        String to = "";
-        String to1 = tokenAccount2;
-        String to2 = tokenMultiAddr1;
-        double trfAmount1 = 100;
-        double trfAmount2 = 689;
-
-
-
-        //添加发行地址和归集地址
-        tokenModule.tokenAddMintAddr(issueAddr);
-        tokenModule.tokenAddCollAddr(collAddr);
-
-        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
-
-        String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
-        tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
+        String issueToken = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,"5000");
         sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
 
-        String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
-        assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        String queryBalance = tokenModule.tokenGetBalance(tokenAccount1,issueToken);
+        assertEquals("5000", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
 
-        //连续向单签账户转账和多签账户转账
 
-        String transferToken = issueToken;
-        String transferAmount = String.valueOf(trfAmount1);
-        to = to1;
-        comments = from + "向" + to + " 转账token：" + transferToken + " 数量：" + transferAmount;
-        String transferResp = tokenModule.tokenTransfer(from,to,transferToken,transferAmount,comments);
-
-        to = to2;
-        transferAmount = String.valueOf(trfAmount2);
-        comments = from + "向" + to + " 转账token：" + issueToken + " 数量：" + transferAmount;
-        transferResp = tokenModule.tokenTransfer(from,to,issueToken,transferAmount,comments);
+        List<Map> list = utilsClass.tokenConstructToken(tokenMultiAddr1,issueToken,"100");
+        String transferResp = commonFunc.tokenModule_TransferTokenList(tokenAccount1,list);
 
 
         sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
 
         //余额查询
-        queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
+        queryBalance = tokenModule.tokenGetBalance(tokenAccount1,issueToken);
         assertEquals(String.valueOf("4900"), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
-        queryBalance = tokenModule.tokenGetBalance(to1,issueToken);
+        queryBalance = tokenModule.tokenGetBalance(tokenMultiAddr1,issueToken);
         assertEquals(String.valueOf("100"), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
-        queryBalance = tokenModule.tokenGetBalance(to2,issueToken);
-        assertEquals(false,queryBalance.contains(issueToken));
 
         //执行回收
-        String desAddr = collAddr;
-        double desAmount = 500.6985474;
-        String desToken = issueToken;
-        String desAmountStr = String.valueOf(desAmount);
-        comments = "回收" + desAddr + " token：" + desToken + " 数量：" + desAmountStr;
-        String destroyResp = tokenModule.tokenDestory(desAddr,desToken,desAmountStr,comments);
+
+        String destroyResp = commonFunc.tokenModule_DestoryToken(tokenAccount1,issueToken,"500");
 
         sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
 
         //余额查询
-        queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
-        assertEquals(get6(sAmount - trfAmount1 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
-        queryBalance = tokenModule.tokenGetBalance(to1,desToken);
-        assertEquals(String.valueOf("100"), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
-        queryBalance = tokenModule.tokenGetBalance(to2,desToken);
-        assertEquals(false,queryBalance.contains(desToken));
+        queryBalance = tokenModule.tokenGetBalance(tokenAccount1,"");
+        assertEquals("4400", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        queryBalance = tokenModule.tokenGetBalance(tokenMultiAddr1,"");
+        assertEquals(String.valueOf("100"), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
 
-        queryBalance = tokenModule.tokenGetDestroyBalance("");
-        assertEquals(get6(desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+        queryBalance = tokenModule.tokenGetDestroyBalance();
+        assertEquals("500", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
 
     }
 
@@ -249,11 +169,9 @@ public class TokenAccurateTest {
         String issAmount ="";
 
         //单签地址发行token 5000.999999
-        String stokenType = "tokenSo-"+ UtilsClass.Random(8);
         double sAmount = 5000;
         issueAddr = tokenAccount1;
         collAddr = tokenAccount1;
-        issueToken =stokenType;
         issAmount = "5000";
 
         //转账信息
@@ -264,16 +182,7 @@ public class TokenAccurateTest {
         double trfAmount1 = 100.3;
         double trfAmount2 = 689.2;
 
-
-
-        //添加发行地址和归集地址
-        tokenModule.tokenAddMintAddr(issueAddr);
-        tokenModule.tokenAddCollAddr(collAddr);
-
-        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
-
-        String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + issAmount;
-        tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
+        issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
         sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
@@ -284,14 +193,8 @@ public class TokenAccurateTest {
         String transferToken = issueToken;
         String transferAmount = String.valueOf(trfAmount1);
         to = to1;
-        comments = from + "向" + to + " 转账token：" + transferToken + " 数量：" + transferAmount;
-        String transferResp = tokenModule.tokenTransfer(from,to,transferToken,transferAmount,comments);
-
-        to = to2;
-        transferAmount = String.valueOf(trfAmount2);
-        comments = from + "向" + to + " 转账token：" + issueToken + " 数量：" + transferAmount;
-        transferResp = tokenModule.tokenTransfer(from,to,issueToken,transferAmount,comments);
-
+        List<Map> list = utilsClass.tokenConstructToken(to,transferToken,transferAmount);
+        String transferResp = commonFunc.tokenModule_TransferTokenList(from,list);
 
         sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
 
@@ -308,8 +211,7 @@ public class TokenAccurateTest {
         double desAmount = 500.69856;
         String desToken = issueToken;
         String desAmountStr = String.valueOf(desAmount);
-        comments = "回收" + desAddr + " token：" + desToken + " 数量：" + desAmountStr;
-        String destroyResp = tokenModule.tokenDestory(desAddr,desToken,desAmountStr,comments);
+        String destroyResp = commonFunc.tokenModule_DestoryToken(desAddr,desToken,desAmountStr);
 
         sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
 
@@ -321,7 +223,7 @@ public class TokenAccurateTest {
         queryBalance = tokenModule.tokenGetBalance(to2,desToken);
         assertEquals(false,queryBalance.contains(desToken));
 
-        queryBalance = tokenModule.tokenGetDestroyBalance("");
+        queryBalance = tokenModule.tokenGetDestroyBalance();
         assertEquals(String.valueOf(desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
 
     }

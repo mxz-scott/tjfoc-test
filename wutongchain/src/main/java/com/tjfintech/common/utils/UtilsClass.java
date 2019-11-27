@@ -57,12 +57,17 @@ public class UtilsClass {
     public static String tokenAccount1 = "";
     public static String tokenAccount2 = "";
     public static String tokenAccount3 = "";
+    public static String tokenAccount4 = "";
+    public static String tokenAccount5 = "";
     public static String tokenMultiAddr1 = "";//3/3账户
     public static String tokenMultiAddr2 = "";//1/2账户  tokenAccount1 tokenAccount2
     public static String tokenMultiAddr3 = "";//1/3账户  tokenAccount1 tokenAccount2
+    public static String tokenMultiAddr4 = "";//1/2账户  tokenAccount2 tokenAccount3
     public static String userId01 = "tkAc1" + Random(6);
     public static String userId02 = "tkAc2" + Random(6);
     public static String userId03 = "tkAc3" + Random(6);
+    public static String userId04 = "tkAc4" + Random(6);
+    public static String userId05 = "tkAc5" + Random(6);
 
     public static boolean bReg=false;
    //add parameters for manage tool
@@ -156,7 +161,45 @@ public class UtilsClass {
     public static boolean bUpgradePeer = true;
     public static boolean bUpgradeSDK = true;
 
+    /**
+     * token平台转账TOKEN数组构建方法
+     * @param toAddr     发送地址
+     * @param tokenType  币种
+     * @param amount      数量
+     * @return     返回TOKEN的LIST
+     */
+    public  List<Map>   tokenConstructToken(String toAddr, String tokenType, String amount){
 
+        Map<String,Object>amountMap=new HashMap<>();
+        amountMap.put("address",toAddr);
+        amountMap.put("tokenType",tokenType);
+        amountMap.put("amount",amount);
+
+        List<Map>tokenList=new ArrayList<>();
+        tokenList.add(amountMap);
+        return tokenList;
+    }
+
+    /**
+     * token平台转账TOKEN数组构建方法
+     * @param toAddr     发送地址
+     * @param tokenType  币种
+     * @param amount      数量
+     * @return     返回TOKEN的LIST
+     */
+    public  List<Map>   tokenConstructToken(String toAddr, String tokenType, String amount, List<Map> list){
+        List<Map>tokenList=new ArrayList<>();
+        for(int i = 0 ; i < list.size() ; i++) {
+            tokenList.add(list.get(i));
+        }
+        Map<String,Object>amountMap=new HashMap<>();
+        amountMap.put("address",toAddr);
+        amountMap.put("tokenType",tokenType);
+        amountMap.put("amount",amount);
+
+        tokenList.add(amountMap);
+        return tokenList;
+    }
 
     /**
      * 多签转账操作的TOKEN数组构建方法，单签的在GosoloSign类中

@@ -147,33 +147,45 @@ public class BeforeCondition {
      *
      */
     public  void tokenAddIssueCollAddr() throws Exception{
-        String response1 = tokenModule.tokenAddMintAddr(tokenAccount1);
-        String response2 = tokenModule.tokenAddMintAddr(tokenAccount2);
-        String response3 = tokenModule.tokenAddMintAddr(tokenAccount3);
-        String response4 = tokenModule.tokenAddMintAddr(tokenMultiAddr1);
-        String response5 = tokenModule.tokenAddMintAddr(tokenMultiAddr2);
-        String response6 = tokenModule.tokenAddMintAddr(tokenMultiAddr3);
+        String response11 = tokenModule.tokenAddMintAddr(tokenAccount1);
+        String response12 = tokenModule.tokenAddMintAddr(tokenAccount2);
+        String response13 = tokenModule.tokenAddMintAddr(tokenAccount3);
+        String response14 = tokenModule.tokenAddMintAddr(tokenAccount4);
+        String response15 = tokenModule.tokenAddMintAddr(tokenAccount5);
+        String response21 = tokenModule.tokenAddMintAddr(tokenMultiAddr1);
+        String response22 = tokenModule.tokenAddMintAddr(tokenMultiAddr2);
+        String response23 = tokenModule.tokenAddMintAddr(tokenMultiAddr3);
+        String response24 = tokenModule.tokenAddMintAddr(tokenMultiAddr4);
 
-        String response11 = tokenModule.tokenAddCollAddr(tokenAccount1);
-        String response12 = tokenModule.tokenAddCollAddr(tokenAccount2);
-        String response13 = tokenModule.tokenAddCollAddr(tokenAccount3);
-        String response14 = tokenModule.tokenAddCollAddr(tokenMultiAddr1);
-        String response15 = tokenModule.tokenAddCollAddr(tokenMultiAddr2);
-        String response16 = tokenModule.tokenAddCollAddr(tokenMultiAddr3);
-
-        assertThat(response1,containsString("200"));
-        assertThat(response2,containsString("200"));
-        assertThat(response3,containsString("200"));
-        assertThat(response4,containsString("200"));
-        assertThat(response5,containsString("200"));
-        assertThat(response6,containsString("200"));
+        String response31 = tokenModule.tokenAddCollAddr(tokenAccount1);
+        String response32 = tokenModule.tokenAddCollAddr(tokenAccount2);
+        String response33 = tokenModule.tokenAddCollAddr(tokenAccount3);
+        String response34 = tokenModule.tokenAddCollAddr(tokenAccount4);
+        String response35 = tokenModule.tokenAddCollAddr(tokenAccount5);
+        String response41 = tokenModule.tokenAddCollAddr(tokenMultiAddr1);
+        String response42 = tokenModule.tokenAddCollAddr(tokenMultiAddr2);
+        String response43 = tokenModule.tokenAddCollAddr(tokenMultiAddr3);
+        String response44 = tokenModule.tokenAddCollAddr(tokenMultiAddr4);
 
         assertThat(response11,containsString("200"));
         assertThat(response12,containsString("200"));
         assertThat(response13,containsString("200"));
         assertThat(response14,containsString("200"));
         assertThat(response15,containsString("200"));
-        assertThat(response16,containsString("200"));
+        assertThat(response21,containsString("200"));
+        assertThat(response22,containsString("200"));
+        assertThat(response23,containsString("200"));
+        assertThat(response24,containsString("200"));
+
+        assertThat(response31,containsString("200"));
+        assertThat(response32,containsString("200"));
+        assertThat(response33,containsString("200"));
+        assertThat(response34,containsString("200"));
+        assertThat(response35,containsString("200"));
+        assertThat(response41,containsString("200"));
+        assertThat(response42,containsString("200"));
+        assertThat(response43,containsString("200"));
+        assertThat(response44,containsString("200"));
         sleepAndSaveInfo(SLEEPTIME,"add issue and collect addr waiting......");
 
     }
@@ -302,6 +314,11 @@ public class BeforeCondition {
                 tokenModule.tokenCreateAccount(userId02,userId02,"","",mapTag)).getString("data");
         tokenAccount3 =JSONObject.fromObject(
                 tokenModule.tokenCreateAccount(userId03,userId03,"","",mapTag)).getString("data");
+        tokenAccount4 =JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(userId04,userId04,"","",mapTag)).getString("data");
+        tokenAccount5 =JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(userId05,userId05,"","",mapTag)).getString("data");
+
 
         int M = 3;
         Map<String, Object> map = new HashMap<>();
@@ -319,12 +336,18 @@ public class BeforeCondition {
         tokenMultiAddr2 = JSONObject.fromObject(
                 tokenModule.tokenCreateMultiAddr(map,"multiaddr2",M,"","",mapTag)).getString("data");
 
-        M =1;
-        map = new HashMap<>();
+        map.clear();
         map.put("1", tokenAccount1);
-        map.put("2", tokenAccount3);
+        map.put("2", tokenAccount2);
+        map.put("3", tokenAccount3);
         tokenMultiAddr3 = JSONObject.fromObject(
-                tokenModule.tokenCreateMultiAddr(map,"multiaddr2",M,"","",mapTag)).getString("data");
+                tokenModule.tokenCreateMultiAddr(map,"multiaddr3",M,"","",mapTag)).getString("data");
+
+        map.clear();
+        map.put("1", tokenAccount2);
+        map.put("2", tokenAccount3);
+        tokenMultiAddr4 = JSONObject.fromObject(
+                tokenModule.tokenCreateMultiAddr(map,"multiaddr4",M,"","",mapTag)).getString("data");
     }
 
 

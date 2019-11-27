@@ -6,6 +6,8 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -13,6 +15,7 @@ import org.junit.runners.MethodSorters;
 import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -55,6 +58,56 @@ public class TokenStoreTest {
         assertEquals(Data,JSONObject.fromObject(response2).getString("Data"));
     }
 
+
+    /**
+     * TC05-重复性检查
+     * 创建后需要休眠5秒等待数据上链
+     * 预期：返回200，data为交易哈希
+     * 查询交易上链
+     * getstore查询存证数据
+     */
+    @Test
+    public void createStoreDupDataString() throws Exception {
+        SDKADD = TOKENADD;
+        String Data = "test11234567";
+        String response= tokenModule.tokenCreateStore(Data);
+        String storeHash = JSONObject.fromObject(response).getString("data");
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+
+        String response12 = tokenModule.tokenCreateStore(Data);
+//        assertEquals(true,response12.contains("Duplicate transaction, hash: " + storeHash));
+        MatcherAssert.assertThat(response12,
+                anyOf(CoreMatchers.containsString("Duplicate transaction, hash: " + storeHash),
+                        CoreMatchers.containsString("transactionFilter exist")));
+
+        String response13 = tokenModule.tokenCreateStore(Data);
+//        assertEquals(true,response13.contains("Duplicate transaction, hash: " + storeHash));
+        MatcherAssert.assertThat(response13,
+                anyOf(CoreMatchers.containsString("Duplicate transaction, hash: " + storeHash),
+                        CoreMatchers.containsString("transactionFilter exist")));
+        String response14 = tokenModule.tokenCreateStore(Data);
+//        assertEquals(true,response13.contains("Duplicate transaction, hash: " + storeHash));
+        MatcherAssert.assertThat(response14,
+                anyOf(CoreMatchers.containsString("Duplicate transaction, hash: " + storeHash),
+                        CoreMatchers.containsString("transactionFilter exist")));
+
+
+        sleepAndSaveInfo(SLEEPTIME,"store on chain waiting"); //超过dup检测时间
+        String response15 = tokenModule.tokenCreateStore(Data);
+        assertEquals("200",JSONObject.fromObject(response15).getString("state"));
+
+        //使用token模块getstore接口查询
+        String response3 = tokenModule.tokenGetPrivateStore(storeHash,"");
+        assertEquals("200",JSONObject.fromObject(response3).getString("state"));
+        assertEquals(Data,JSONObject.fromObject(response3).getString("data"));
+
+        SDKADD = rSDKADD;
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("State"));
+
+        String response2= store.GetStore(storeHash);
+        assertEquals("200",JSONObject.fromObject(response2).getString("State"));
+        assertEquals(Data,JSONObject.fromObject(response2).getString("Data"));
+    }
 
     /**
      *TC292-获取存证交易byhash
@@ -218,6 +271,7 @@ public class TokenStoreTest {
 
         sleepAndSaveInfo(SLEEPTIME,"multi store on chain waiting......");
         SDKADD = rSDKADD;
+
         for(int i=0;i<hashList.size();i++){
             String hash = hashList.get(i);
             //确认交易上链
@@ -252,6 +306,18 @@ public class TokenStoreTest {
        }
 
        sleepAndSaveInfo(SLEEPTIME,"multi store onchain waiting......");
+
+       //token模块查询
+       for(int i=0;i<hashList.size();i++){
+           String hash = hashList.get(i);
+           //确认交易上链
+           assertEquals("200",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash)).getString("state"));
+
+           //确认交易可以成功查询
+           String response2= tokenModule.tokenGetPrivateStore(hash,"");
+           assertEquals("200",JSONObject.fromObject(response2).getString("state"));
+           assertEquals(listData.get(i),JSONObject.fromObject(response2).getString("data"));
+       }
 
        SDKADD = rSDKADD;
        for(int i=0;i<hashList.size();i++){

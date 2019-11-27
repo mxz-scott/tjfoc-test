@@ -6,12 +6,14 @@ import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.SDKADD;
+import static com.tjfintech.common.utils.UtilsClass.subLedger;
 
 @Slf4j
 public  class GoToken implements Token {
@@ -113,7 +115,7 @@ public  class GoToken implements Token {
         tokenList.add(mapTo);
         Map<String, Object> map = new HashMap<>();
         map.put("from", from);
-        map.put("to", tokenList.get(0));
+        map.put("to", tokenList);
         map.put("comments", comments);
 
         String result = PostTest.postMethod(SDKADD + "/v1/token/transfer", map);
@@ -121,16 +123,19 @@ public  class GoToken implements Token {
         return result;
     }
 
-//    public String tokenTransfer(String from,List<Map> toTrfList,String comments){
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("from", from);
-//        map.put("to", toTrfList.get(0));
-//        map.put("comments", comments);
-//
-//        String result = PostTest.postMethod(SDKADD + "/v1/token/transfer", map);
-//        log.info(result);
-//        return result;
-//    }
+    public String tokenTransfer(String from,String comments,List<Map>tokenList) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("from", from);
+        map.put("comments", comments);
+        map.put("to", tokenList);
+        String param = "";
+//        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result=PostTest.postMethod(SDKADD + "/v1/token/transfer" + param, map);
+        log.info(result);
+        return result;
+
+    }
 
     public String tokenGetBalance(String address,String tokenType){
         String param;
@@ -142,12 +147,9 @@ public  class GoToken implements Token {
         log.info(result);
         return result ;
     }
-    public String tokenGetDestroyBalance(String tokenType){
-        String param;
-        Map<String,Object>map=new HashMap<>();
-        if(tokenType!="") map.put("tt",tokenType);
-        param= GetTest.ParamtoUrl(map);
-        String result=GetTest.doGet2(SDKADD+"/v1/token/balance/destroyed?"+param);
+    public String tokenGetDestroyBalance(){
+        String param = "";
+        String result=GetTest.doGet2(SDKADD+"/v1/token/balance/destroyed?" + param);
         log.info(result);
         return result ;
     }
@@ -173,7 +175,7 @@ public  class GoToken implements Token {
         Map<String, Object> map = new HashMap<>();
         map.put("address", address);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/setting/mintaddr/delete", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/setting/mintaddr/remove", map);
         log.info(result);
         return result;
 
@@ -187,7 +189,7 @@ public  class GoToken implements Token {
         Map<String, Object> map = new HashMap<>();
         map.put("address", address);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/setting/colladdr/add", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/setting/colladdress/add", map);
         log.info(result);
         return result;
 
@@ -201,7 +203,7 @@ public  class GoToken implements Token {
         Map<String, Object> map = new HashMap<>();
         map.put("address", address);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/setting/colladdr/delete", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/setting/colladdress/remove", map);
         log.info(result);
         return result;
 
@@ -229,13 +231,39 @@ public  class GoToken implements Token {
     /**
      *  token销毁
      */
-    public String tokenDestory(String address,String tokenType,String amount, String comments){
+    public String tokenDestoryByTokenType(String tokenType,String comments){
         Map<String, Object> map = new HashMap<>();
-        map.put("address", address);
         map.put("tokenType", tokenType);
-        map.put("amount", amount);
         map.put("comments", comments);
+        String result = PostTest.postMethod(SDKADD + "/v1/token/destroybytoken", map);
+        log.info(result);
+        return result;
+    }
 
+    /**
+     *  token销毁
+     */
+    public String tokenDestoryByList(String address,String tokenType ,String amount, String comments){
+        List<Map>tokenList=new ArrayList<>();
+        Map<String, String> mapTo = new HashMap();
+        mapTo.put("address", address);
+        mapTo.put("tokenType", tokenType);
+        mapTo.put("amount", amount);
+        tokenList.add(mapTo);
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", tokenList);
+        map.put("comments", comments);
+        String result = PostTest.postMethod(SDKADD + "/v1/token/destroy", map);
+        log.info(result);
+        return result;
+    }
+    /**
+     *  token销毁
+     */
+    public String tokenDestoryByList(List<Map> tokenList, String comments){
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", tokenList);
+        map.put("comments",comments);
         String result = PostTest.postMethod(SDKADD + "/v1/token/destroy", map);
         log.info(result);
         return result;
@@ -274,6 +302,48 @@ public  class GoToken implements Token {
         String param = "";
 //        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
         String result = PostTest.postMethod(SDKADD + "/v1/getstore" + param, map);
+        log.info(result);
+        return result;
+    }
+
+    public String tokenFreezeToken(String tokenType) {
+        Map<String ,Object>map=new HashMap<>();
+        map.put("TokenType",tokenType);
+        String param="";
+//        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result =PostTest.sendPostToJson(SDKADD+"/v1/token/freeze"+param,map);
+        log.info(result);
+        return result;
+    }
+
+    public String tokenRecoverToken(String tokenType) {
+        Map<String ,Object>map=new HashMap<>();
+        map.put("TokenType",tokenType);
+        String param="";
+//        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result =PostTest.sendPostToJson(SDKADD+"/v1/token/recover"+param,map);
+        log.info(result);
+        return result;
+    }
+
+    public String tokenGetPubkey(String address){
+        Map<String ,Object>map=new HashMap<>();
+        map.put("address",address);
+        String param="";
+//        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result =PostTest.sendPostToJson(SDKADD+"/v1/account/getpublickey" + param,map);
+        log.info(result);
+        return result;
+    }
+
+    public String tokenGetTxDetail(String hashData){
+        String param;
+        String hashEncode = URLEncoder.encode(hashData);
+        Map<String, Object> map = new HashMap<>();
+        map.put("hash", hashEncode);
+        param = GetTest.ParamtoUrl(map);
+//        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+        String result = GetTest.doGet2(SDKADD + "/v1/gettxdetail" + "?" + param);
         log.info(result);
         return result;
     }

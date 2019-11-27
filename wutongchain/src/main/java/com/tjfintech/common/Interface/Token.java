@@ -18,14 +18,22 @@ public interface Token {
     String tokenDelCollAddr(String address);
     String tokenIssue(String address ,String collAddr,String tokenType,String amount,String comments);
     String tokenTransfer(String from,String to,String tokenType,String amount,String comments);
-//    String tokenTransfer(String from,List<Map> toTrfList,String comments);
-    String tokenDestory(String address,String tokenType,String amount,String comments);
+    String tokenTransfer(String from,String comments,List<Map>tokenList);
+    String tokenDestoryByTokenType(String tokenType,String comments);
+    String tokenDestoryByList(List<Map>tokenList, String comments);
+    String tokenDestoryByList(String address,String tokenType ,String amount, String comments);
     String tokenGetBalance(String address,String tokenType);
-    String tokenGetDestroyBalance(String tokenType);
+    String tokenGetDestroyBalance();
+
+    String tokenFreezeToken(String tokenType);
+    String tokenRecoverToken(String tokenType);
 
     String tokenCreateStore(String Data);
     String tokenCreatePrivateStore(String Data, Map keyMap);
     String tokenGetPrivateStore(String Data, String addr);
+
+    String tokenGetPubkey(String address);
+    String tokenGetTxDetail(String hashData);
 
 
 }
