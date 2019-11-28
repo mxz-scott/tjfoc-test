@@ -318,6 +318,10 @@ public class BeforeCondition {
                 tokenModule.tokenCreateAccount(userId04,userId04,"","",mapTag)).getString("data");
         tokenAccount5 =JSONObject.fromObject(
                 tokenModule.tokenCreateAccount(userId05,userId05,"","",mapTag)).getString("data");
+        tokenAccount6 =JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(userId06,userId06,"","",mapTag)).getString("data");
+        tokenAccount7 =JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(userId07,userId07,"","",mapTag)).getString("data");
 
 
         int M = 3;

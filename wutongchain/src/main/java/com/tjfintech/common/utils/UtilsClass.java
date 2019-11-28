@@ -38,6 +38,8 @@ public class UtilsClass {
     //UTXO精度
     public static Integer PRECISION = 6;
 
+    //零地址/回收地址账户
+    public static String zeroAccount = "0000000000000000";
     //SM2公私钥对
     public static String  ADDRESS1, ADDRESS2, ADDRESS3, ADDRESS4, ADDRESS5, ADDRESS6, ADDRESS7;
     public static String  MULITADD1 ="";//123 (3/3签名)
@@ -59,6 +61,8 @@ public class UtilsClass {
     public static String tokenAccount3 = "";
     public static String tokenAccount4 = "";
     public static String tokenAccount5 = "";
+    public static String tokenAccount6 = "";
+    public static String tokenAccount7 = "";
     public static String tokenMultiAddr1 = "";//3/3账户
     public static String tokenMultiAddr2 = "";//1/2账户  tokenAccount1 tokenAccount2
     public static String tokenMultiAddr3 = "";//1/3账户  tokenAccount1 tokenAccount2
@@ -68,6 +72,8 @@ public class UtilsClass {
     public static String userId03 = "tkAc3" + Random(6);
     public static String userId04 = "tkAc4" + Random(6);
     public static String userId05 = "tkAc5" + Random(6);
+    public static String userId06 = "tkAc6" + Random(6);
+    public static String userId07 = "tkAc7" + Random(6);
 
     public static boolean bReg=false;
    //add parameters for manage tool

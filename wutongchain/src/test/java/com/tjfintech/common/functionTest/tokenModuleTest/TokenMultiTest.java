@@ -9,6 +9,7 @@ import com.tjfintech.common.Interface.Token;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
@@ -41,7 +42,6 @@ public class TokenMultiTest {
     private static String actualAmount2;
 
     Token tokenModule = testBuilder.getToken();
-
 
     @BeforeClass
     public static void init()throws Exception
@@ -1725,7 +1725,7 @@ public class TokenMultiTest {
 
     }
     @Test
-    public void destory10Addr()throws Exception{
+    public void destory10AddrAndCheckTxDetail()throws Exception{
         List<Map> list = utilsClass.tokenConstructToken(tokenAccount1,tokenType,"10");
         List<Map> list2 = utilsClass.tokenConstructToken(tokenAccount2,tokenType,"10",list);
         List<Map> list3 = utilsClass.tokenConstructToken(tokenAccount3,tokenType,"10",list2);
@@ -1740,21 +1740,58 @@ public class TokenMultiTest {
 
         List<Map> list12 = utilsClass.tokenConstructToken(tokenMultiAddr1,tokenType2,"10",list);
 
+        String amount1,amount2;
+        if (UtilsClass.PRECISION == 10) {
+            amount1 = "950.1234567891";
+            amount2 = "950.8765432123";
+        }else {
+            amount1 = "950.123456";
+            amount2 = "950.876543";
+        }
+        //构造一转多交易详情中的list信息
+        List<Map> listT = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenAccount1,tokenType,"10");
+        List<Map> listT2 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenAccount2,tokenType,"10",listT);
+        List<Map> listT3 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenAccount3,tokenType,"10",listT2);
+        List<Map> listT4 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenAccount4,tokenType,"10",listT3);
+        List<Map> listT5 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenMultiAddr2,tokenType,"10",listT4);
+        List<Map> listT6 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenMultiAddr2,tokenType2,"10",listT5);
+        List<Map> listT7 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenMultiAddr3,tokenType2,"10",listT6);
+        List<Map> listT8 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenAccount1,tokenType2,"10",listT7);
+        List<Map> listT9 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenAccount2,tokenType2,"10",listT8);
+        List<Map> listT10 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenAccount3,tokenType2,"10",listT9);
+        List<Map> listT11 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenMultiAddr1,tokenType,amount1,listT10);//转出账户信息
+        List<Map> listT12 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenMultiAddr1,tokenType2,amount2,listT11);//转出账户信息
+
+        //构造多账户回收交易详情中的list信息
+        List<Map> listR = commonFunc.constructUTXOTxDetailList(tokenAccount1,zeroAccount,tokenType,"10");
+        List<Map> listR2 = commonFunc.constructUTXOTxDetailList(tokenAccount2,zeroAccount,tokenType,"10",listR);
+        List<Map> listR3 = commonFunc.constructUTXOTxDetailList(tokenAccount3,zeroAccount,tokenType,"10",listR2);
+        List<Map> listR4 = commonFunc.constructUTXOTxDetailList(tokenAccount4,zeroAccount,tokenType,"10",listR3);
+        List<Map> listR5 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr2,zeroAccount,tokenType,"10",listR4);
+        List<Map> listR6 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr2,zeroAccount,tokenType2,"10",listR5);
+        List<Map> listR7 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr3,zeroAccount,tokenType2,"10",listR6);
+        List<Map> listR8 = commonFunc.constructUTXOTxDetailList(tokenAccount1,zeroAccount,tokenType2,"10",listR7);
+        List<Map> listR9 = commonFunc.constructUTXOTxDetailList(tokenAccount2,zeroAccount,tokenType2,"10",listR8);
+        List<Map> listR10 = commonFunc.constructUTXOTxDetailList(tokenAccount3,zeroAccount,tokenType2,"10",listR9);
+
         String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1,list10);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
+        String transferHash = JSONObject.fromObject(transferInfo).getString("data");
 
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
 
         String query = tokenModule.tokenGetBalance(tokenMultiAddr1,"");
-        assertEquals(true,JSONObject.fromObject(query).getJSONObject("data").getString(tokenType).contains("950."));
-        assertEquals(true,JSONObject.fromObject(query).getJSONObject("data").getString(tokenType2).contains("950."));
+        assertEquals(amount1,JSONObject.fromObject(query).getJSONObject("data").getString(tokenType));
+        assertEquals(amount2,JSONObject.fromObject(query).getJSONObject("data").getString(tokenType2));
 
         String destoryInfo = commonFunc.tokenModule_DestoryTokenByList2(list11);
         assertEquals(true,destoryInfo.contains("Transfer list cannot be more than 10"));
 
         destoryInfo = commonFunc.tokenModule_DestoryTokenByList2(list10);
         assertEquals("200",JSONObject.fromObject(destoryInfo).getString("state"));
+        String desHash = JSONObject.fromObject(destoryInfo).getString("data");
+
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
         String query2 = tokenModule.tokenGetDestroyBalance();
@@ -1763,6 +1800,70 @@ public class TokenMultiTest {
 
         destoryInfo = commonFunc.tokenModule_DestoryTokenByList2(list12);
         assertEquals("Insufficient Balance",JSONObject.fromObject(destoryInfo).getString("data"));
+
+        //检查多账户回收交易详情信息正确性
+        String detailInfo = tokenModule.tokenGetTxDetail(desHash);
+        JSONArray jsonArray = JSONObject.fromObject(detailInfo).getJSONObject("data").getJSONObject("UTXO").getJSONArray("Records");
+        assertEquals(true,commonFunc.checkListArray(listR10,jsonArray));
+
+        //检查一转多交易信息正确性
+        String detailInfo2 = tokenModule.tokenGetTxDetail(transferHash);
+        JSONArray jsonArray2 = JSONObject.fromObject(detailInfo2).getJSONObject("data").getJSONObject("UTXO").getJSONArray("Records");
+        assertEquals(true,commonFunc.checkListArray(listT12,jsonArray2));
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //再次执行转账，之后执行回收bytokentype
+        String transferInfo2 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1,list10);
+        assertEquals("200",JSONObject.fromObject(transferInfo2).getString("state"));
+
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+        if (UtilsClass.PRECISION == 10) {
+            amount1 = "900.1234567891";
+            amount2 = "900.8765432123";
+        }else {
+            amount1 = "900.123456";
+            amount2 = "900.876543";
+        }
+
+        String query3 = tokenModule.tokenGetBalance(tokenMultiAddr1,"");
+        assertEquals(amount1,JSONObject.fromObject(query3).getJSONObject("data").getString(tokenType));
+        assertEquals(amount2,JSONObject.fromObject(query3).getJSONObject("data").getString(tokenType2));
+
+        //执行回收bytokentype  当前再往下执行回收有问题
+        String desInfo2 = commonFunc.tokenModule_DestoryTokenByTokenType(tokenType);
+        String desHash2 = JSONObject.fromObject(desInfo2).getJSONObject("data").getString("hash");
+        String desInfo3 = commonFunc.tokenModule_DestoryTokenByTokenType(tokenType2);
+        String desHash3 = JSONObject.fromObject(desInfo3).getJSONObject("data").getString("hash");
+
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+        //tokenType
+        List<Map> list2R = commonFunc.constructUTXOTxDetailList(tokenAccount1,zeroAccount,tokenType,"10");
+        List<Map> list2R2 = commonFunc.constructUTXOTxDetailList(tokenAccount2,zeroAccount,tokenType,"10",list2R);
+        List<Map> list2R3 = commonFunc.constructUTXOTxDetailList(tokenAccount3,zeroAccount,tokenType,"10",list2R2);
+        List<Map> list2R4 = commonFunc.constructUTXOTxDetailList(tokenAccount4,zeroAccount,tokenType,"10",list2R3);
+        List<Map> list2R5 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr2,zeroAccount,tokenType,"10",list2R4);
+        List<Map> list2R6 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,zeroAccount,tokenType,amount1,list2R5);
+
+        //tokenType2
+        List<Map> list3R6 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr2,zeroAccount,tokenType2,"10");
+        List<Map> list3R7 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr3,zeroAccount,tokenType2,"10",list3R6);
+        List<Map> list3R8 = commonFunc.constructUTXOTxDetailList(tokenAccount1,zeroAccount,tokenType2,"10",list3R7);
+        List<Map> list3R9 = commonFunc.constructUTXOTxDetailList(tokenAccount2,zeroAccount,tokenType2,"10",list3R8);
+        List<Map> list3R10 = commonFunc.constructUTXOTxDetailList(tokenAccount3,zeroAccount,tokenType2,"10",list3R9);
+        List<Map> list3R11 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,zeroAccount,tokenType2,amount2,list3R10);
+        //构造回收bytokentype交易详情中的list信息
+
+        //检查回收交易详情信息正确性
+        String detailInfo3 = tokenModule.tokenGetTxDetail(desHash2);
+        JSONArray jsonArray3 = JSONObject.fromObject(detailInfo3).getJSONObject("data").getJSONObject("UTXO").getJSONArray("Records");
+        assertEquals(true,commonFunc.checkListArray(list2R6,jsonArray3));
+
+        String detailInfo4 = tokenModule.tokenGetTxDetail(desHash3);
+        JSONArray jsonArray4 = JSONObject.fromObject(detailInfo4).getJSONObject("data").getJSONObject("UTXO").getJSONArray("Records");
+        assertEquals(true,commonFunc.checkListArray(list3R11,jsonArray4));
+
     }
 
     @Test
@@ -1770,7 +1871,6 @@ public class TokenMultiTest {
         //"归集地址向" + PUBKEY3 + "转账3000个" + tokenType+",并向"+PUBKEY4+"转账";
         List<Map> list = utilsClass.tokenConstructToken(tokenAccount3,tokenType2,"300");
         List<Map> list2= utilsClass.tokenConstructToken(tokenAccount3,tokenType,"400",list);
-
         List<Map> list3 = utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType,"300",list2);
         List<Map> list4 = utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType2,"400",list3);
         String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1, list4);
@@ -1785,13 +1885,22 @@ public class TokenMultiTest {
             amount1 = "300.123456";
             amount2 = "300.876543";
         }
+        //此部分与list-list4保持一致
+        List<Map> listR = commonFunc.ConstructDesByTokenRespList(tokenAccount3,"400");
+        List<Map> listR2= commonFunc.ConstructDesByTokenRespList(tokenMultiAddr2,"300",listR);
+        List<Map> listR3= commonFunc.ConstructDesByTokenRespList(tokenMultiAddr1,amount1,listR2);
+
+        List<Map> list1R = commonFunc.ConstructDesByTokenRespList(tokenAccount3,"300");
+        List<Map> list1R2= commonFunc.ConstructDesByTokenRespList(tokenMultiAddr2,"400",list1R);
+        List<Map> list1R3= commonFunc.ConstructDesByTokenRespList(tokenMultiAddr1,amount2,list1R2);
 
         String desInfo = commonFunc.tokenModule_DestoryTokenByTokenType(tokenType);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
         assertEquals(actualAmount1,JSONObject.fromObject(desInfo).getJSONObject("data").getString("total"));
-//        assertEquals(true,desInfo.contains("\"address\":\""+tokenAccount3+"\"," + "\"amount\":\"400\""));
-//        assertEquals(true,desInfo.contains("\"address\":\""+tokenMultiAddr2+"\"," + "\"amount\":\"300\""));
-//        assertEquals(true,desInfo.contains("\"address\":\""+tokenMultiAddr1+"\"," + "\"amount\":\""+amount1+"\""));
+        JSONArray jsonArray = JSONObject.fromObject(desInfo).getJSONObject("data").getJSONArray("detail");
+
+        assertEquals(3,jsonArray.size());//判断账户数量正确
+        assertEquals(true, commonFunc.checkListArray(listR3,jsonArray));//检查detail项目结果正确
 
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
@@ -1799,14 +1908,14 @@ public class TokenMultiTest {
         assertEquals(actualAmount1,JSONObject.fromObject(getZeroAc).getJSONObject("data").getString(tokenType));
 
         desInfo = commonFunc.tokenModule_DestoryTokenByTokenType(tokenType2);
-        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
+        assertEquals("200",JSONObject.fromObject(desInfo).getString("state"));
         assertEquals(actualAmount2,JSONObject.fromObject(desInfo).getJSONObject("data").getString("total"));
 
+        jsonArray.clear();
+        jsonArray = JSONObject.fromObject(desInfo).getJSONObject("data").getJSONArray("detail");
 
-
-//        assertEquals(true,desInfo.contains("\"address\":\""+tokenAccount3+"\"," + "\"amount\":\"300\""));
-//        assertEquals(true,desInfo.contains("\"address\":\""+tokenMultiAddr2+"\"," + "\"amount\":\"400\""));
-//        assertEquals(true,desInfo.contains("\"address\":\""+tokenMultiAddr1+"\"," + "\"amount\":\""+amount2+"\""));
+        assertEquals(3,jsonArray.size());//判断账户数量正确
+        assertEquals(true, commonFunc.checkListArray(list1R3,jsonArray));//检查detail项目结果正确
 
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
@@ -1832,14 +1941,15 @@ public class TokenMultiTest {
         //"归集地址向" + PUBKEY3 + "转账3000个" + tokenType+",并向"+PUBKEY4+"转账";
         List<Map> list = utilsClass.tokenConstructToken(tokenAccount3,tokenType2,"300");
         List<Map> list2= utilsClass.tokenConstructToken(tokenAccount3,tokenType,"400",list);
-
         List<Map> list3 = utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType,"300",list2);
         List<Map> list4 = utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType2,"400",list3);
+
         String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1, list4);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
         String desInfo = commonFunc.tokenModule_DestoryTokenByList2(list4);
+        assertEquals("200",JSONObject.fromObject(desInfo).getString("state"));
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
         String getZeroAc = tokenModule.tokenGetDestroyBalance();

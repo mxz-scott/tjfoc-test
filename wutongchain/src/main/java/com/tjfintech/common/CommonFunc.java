@@ -4,11 +4,11 @@ import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Token;
 import com.tjfintech.common.utils.UtilsClass;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.java.tar.gz.FileUtil.log;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -99,4 +99,112 @@ public class CommonFunc {
         assertEquals("200",JSONObject.fromObject(isResult).getString("State"));
         return tokenType;
     }
+
+    //-----------------------------------------------------------------------------------------------------------
+    //结果确认辅助函数 回收结果list map for 回收bytoken
+    /***
+     * 返回信息中的结果确认
+     * @param address
+     * @param amount
+     * @return
+     */
+    public List<Map> ConstructDesByTokenRespList(String address, String amount){
+        List<Map> tokenList = new ArrayList<>();
+        Map<String,Object> amountMap = new LinkedHashMap<>();
+        amountMap.put("\"address\"","\"" + address + "\"");
+        amountMap.put("\"amount\"","\"" + amount + "\"");
+
+        tokenList.add(amountMap);
+        return tokenList;
+    }
+    /***
+     * 返回信息中的结果确认
+     * @param address
+     * @param amount
+     * @param list
+     * @return
+     */
+    public List<Map> ConstructDesByTokenRespList(String address, String amount, List<Map> list){
+        List<Map> tokenList = new ArrayList<>();
+        for(int i = 0 ; i < list.size() ; i++) {
+            tokenList.add(list.get(i));
+        }
+        Map<String,Object> amountMap = new LinkedHashMap<String, Object>();
+        amountMap.put("\"address\"","\"" + address + "\"");
+        amountMap.put("\"amount\"","\"" + amount + "\"");
+
+
+        tokenList.add(amountMap);
+        return tokenList;
+    }
+
+
+    /***
+     * 返回信息中的结果确认
+     * @param from
+     * @param to
+     * @param tokenType
+     * @param amount
+     * @return
+     */
+    public List<Map> constructUTXOTxDetailList(String from, String to, String tokenType, String amount){
+        List<Map> tokenList = new ArrayList<>();
+        Map<String,Object> amountMap = new LinkedHashMap<>();
+
+        amountMap.put("\"From\"","\"" + from + "\"");
+        amountMap.put("\"To\"","\"" + to + "\"");
+        amountMap.put("\"TokenType\"","\"" + tokenType + "\"");
+        amountMap.put("\"Amount\"","\"" + amount + "\"");
+
+        tokenList.add(amountMap);
+        return tokenList;
+    }
+    /***
+     * 返回信息中的结果确认
+     * @param from
+     * @param to
+     * @param tokenType
+     * @param amount
+     * @param list
+     * @return
+     */
+    public List<Map> constructUTXOTxDetailList(String from, String to, String tokenType, String amount, List<Map> list){
+        List<Map>tokenList=new ArrayList<>();
+        for(int i = 0 ; i < list.size() ; i++) {
+            tokenList.add(list.get(i));
+        }
+        Map<String,Object>amountMap=new LinkedHashMap<>();
+
+        amountMap.put("\"From\"","\"" + from + "\"");
+        amountMap.put("\"To\"","\"" + to + "\"");
+        amountMap.put("\"TokenType\"","\"" + tokenType + "\"");
+        amountMap.put("\"Amount\"","\"" + amount + "\"");
+
+        tokenList.add(amountMap);
+        return tokenList;
+    }
+
+
+    public boolean checkListArray(List<Map> list, JSONArray jsonArray){
+        boolean bResult = true;
+
+        for(int i= 0;i<list.size();i++){
+            String checkStr = list.get(i).toString().replaceAll("=",":").replaceAll(" ","");
+            boolean bMatch = false;
+            log.info("+++++++++++++++++" + checkStr);
+            log.info("+++++++++++++++++" + jsonArray.toString());
+            for(int j = 0;j < jsonArray.size(); j++){
+                if(checkStr.equals(jsonArray.get(j).toString())){
+                    bMatch = true;
+                    jsonArray.remove(j);
+                    break;
+                }
+            }
+            bResult = bResult && bMatch;
+            assertEquals(true,bMatch);
+        }
+        log.info("matching complete.............");
+        return bResult;
+    }
+
 }

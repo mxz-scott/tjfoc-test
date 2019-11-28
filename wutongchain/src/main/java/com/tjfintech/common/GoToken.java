@@ -235,7 +235,7 @@ public  class GoToken implements Token {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenType", tokenType);
         map.put("comments", comments);
-        String result = PostTest.postMethod(SDKADD + "/v1/token/destroybytoken", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/token/destroy/bytype", map);
         log.info(result);
         return result;
     }
