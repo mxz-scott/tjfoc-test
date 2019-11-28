@@ -147,4 +147,26 @@ public class TokenMultiInvalidTest {
         assertEquals(false,queryBalance.contains(desToken));
 
     }
+
+    //一笔待回收的交易都没有的话
+    @Test
+    public void destoryByTokenNoDesToken()throws Exception{
+
+
+        String issueToken = commonFunc.tokenModule_IssueToken(tokenMultiAddr1,tokenMultiAddr2,"500");
+        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+
+        String queryBalance = tokenModule.tokenGetBalance(tokenMultiAddr2,issueToken);
+        assertEquals("500", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+
+        //执行一次回收by tokentype
+        String destroyResp = commonFunc.tokenModule_DestoryTokenByTokenType(issueToken);
+        assertEquals("200", JSONObject.fromObject(destroyResp).getString("state"));
+        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
+
+        //余额查询
+        String destroyResp2 = commonFunc.tokenModule_DestoryTokenByTokenType(issueToken);
+        assertEquals(true, destroyResp2.contains("addr doesn't exist!"));
+
+    }
 }
