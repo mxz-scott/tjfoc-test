@@ -197,20 +197,20 @@ public class TokenTxTypeTest2 {
         //检查单签发行交易信息
         JSONObject jsonObject = checkDataHeaderMsg(singleIssHash1,versionSUTXO,typeUTXO,subTypeIssue);
         JSONObject uxtoJson= jsonObject.getJSONObject("data").getJSONObject("UTXO");
-//        assertEquals(siData1,uxtoJson.getString("data"));
+        assertEquals(siData1,uxtoJson.getString("Data"));
         checkFromTo(uxtoJson,tokenAccount1,tokenAccount1,tokenTypeS1,amount1,0);
 
         uxtoJson.clear();
         jsonObject.clear();
         jsonObject = checkDataHeaderMsg(singleIssHash2,versionSUTXO,typeUTXO,subTypeIssue);
         uxtoJson= jsonObject.getJSONObject("data").getJSONObject("UTXO");
-//        assertEquals(siData2,uxtoJson.getString("data"));
+        assertEquals(siData2,uxtoJson.getString("Data"));
         checkFromTo(uxtoJson,tokenAccount1,tokenAccount2,tokenTypeS2,amount2,0);
 
 
         //检查单签转账交易信息
         JSONObject jsonObject1 = checkDataHeaderMsg(soTransfHash,versionSUTXO,typeUTXO,subTypeTransfer);
-//        assertEquals(tranferSdata,jsonObject1.getJSONObject("data").getJSONObject("UTXO").getString("data"));
+        assertEquals(tranferSdata,jsonObject1.getJSONObject("data").getJSONObject("UTXO").getString("Data"));
 
         checkFromTo(jsonObject1.getJSONObject("data").getJSONObject("UTXO"),
                 tokenAccount1,tokenAccount3,tokenTypeS1,amountTransfer,0);
@@ -222,14 +222,14 @@ public class TokenTxTypeTest2 {
         JSONObject jsonObject2 = checkDataHeaderMsg(multiIssHashM1,versionMUTXO,typeUTXO,subTypeIssue);
         uxtoJson.clear();
         uxtoJson= jsonObject2.getJSONObject("data").getJSONObject("UTXO");
-//        assertEquals(mulDataM1,uxtoJson.getString("data"));
+        assertEquals(mulDataM1,uxtoJson.getString("Data"));
         checkFromTo(uxtoJson,tokenMultiAddr1,tokenMultiAddr1,tokenTypeM1,amountM1,0);
 
 
         jsonObject2 = checkDataHeaderMsg(multiIssHashM2,versionMUTXO,typeUTXO,subTypeIssue);
         uxtoJson.clear();
         uxtoJson= jsonObject2.getJSONObject("data").getJSONObject("UTXO");
-//        assertEquals(mulDataM2,uxtoJson.getString("data"));
+        assertEquals(mulDataM2,uxtoJson.getString("Data"));
         checkFromTo(uxtoJson,tokenMultiAddr1,tokenMultiAddr2,tokenTypeM2,amountM2,0);
 
 
@@ -238,7 +238,7 @@ public class TokenTxTypeTest2 {
         JSONObject jsonObject3 = checkDataHeaderMsg(muTransfHash,versionMUTXO,typeUTXO,subTypeTransfer);
         uxtoJson.clear();
         uxtoJson = jsonObject3.getJSONObject("data").getJSONObject("UTXO");
-//        assertEquals(transferData,uxtoJson.getString("data"));
+        assertEquals(transferData,uxtoJson.getString("Data"));
         checkFromTo(uxtoJson,tokenMultiAddr1,tokenMultiAddr3,tokenTypeM1,tranferAmount,0);
         checkFromTo(uxtoJson,tokenMultiAddr1,tokenMultiAddr1,tokenTypeM1,String.valueOf(Integer.parseInt(amountM1)-Integer.parseInt(tranferAmount)),1);
 

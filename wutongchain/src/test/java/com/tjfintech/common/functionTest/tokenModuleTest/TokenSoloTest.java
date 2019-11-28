@@ -1007,7 +1007,7 @@ public class TokenSoloTest {
         assertEquals("700",JSONObject.fromObject(getZeroAc).getJSONObject("data").getString(tokenType2));
     }
 
-    @Test
+    //@Test
     public void peerTokenBlockAsyncTest()throws Exception{
         //"归集地址向" + PUBKEY3 + "转账3000个" + tokenType+",并向"+PUBKEY4+"转账";
         List<Map> list = utilsClass.tokenConstructToken(tokenAccount3,tokenType2,"300");
@@ -1036,6 +1036,47 @@ public class TokenSoloTest {
         String getZeroAc = tokenModule.tokenGetDestroyBalance();
         assertEquals("700",JSONObject.fromObject(getZeroAc).getJSONObject("data").getString(tokenType));
         assertEquals("700",JSONObject.fromObject(getZeroAc).getJSONObject("data").getString(tokenType2));
+    }
+
+    @Test
+    public void destory10Addr()throws Exception{
+        List<Map> list = utilsClass.tokenConstructToken(tokenMultiAddr1,tokenType,"10");
+        List<Map> list2 = utilsClass.tokenConstructToken(tokenAccount2,tokenType,"10",list);
+        List<Map> list3 = utilsClass.tokenConstructToken(tokenAccount3,tokenType,"10",list2);
+        List<Map> list4 = utilsClass.tokenConstructToken(tokenAccount4,tokenType,"10",list3);
+        List<Map> list5 = utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType,"10",list4);
+        List<Map> list6 = utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType2,"10",list5);
+        List<Map> list7 = utilsClass.tokenConstructToken(tokenMultiAddr3,tokenType2,"10",list6);
+        List<Map> list8 = utilsClass.tokenConstructToken(tokenMultiAddr1,tokenType2,"10",list7);
+        List<Map> list9 = utilsClass.tokenConstructToken(tokenAccount2,tokenType2,"10",list8);
+        List<Map> list10 = utilsClass.tokenConstructToken(tokenAccount3,tokenType2,"10",list9);
+        List<Map> list11 = utilsClass.tokenConstructToken(tokenAccount3,tokenType2,"10",list10);
+
+        List<Map> list12 = utilsClass.tokenConstructToken(tokenAccount1,tokenType2,"10",list);
+
+        String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount1,list10);
+        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
+
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+
+        String query = tokenModule.tokenGetBalance(tokenAccount1,"");
+        assertEquals(true,JSONObject.fromObject(query).getJSONObject("data").getString(tokenType).contains("950."));
+        assertEquals(true,JSONObject.fromObject(query).getJSONObject("data").getString(tokenType2).contains("950."));
+
+        String destoryInfo = commonFunc.tokenModule_DestoryTokenByList2(list11);
+        assertEquals(true,destoryInfo.contains("Transfer list cannot be more than 10"));
+
+        destoryInfo = commonFunc.tokenModule_DestoryTokenByList2(list10);
+        assertEquals("200",JSONObject.fromObject(destoryInfo).getString("state"));
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+        String query2 = tokenModule.tokenGetDestroyBalance();
+        assertEquals("50",JSONObject.fromObject(query2).getJSONObject("data").getString(tokenType));
+        assertEquals("50",JSONObject.fromObject(query2).getJSONObject("data").getString(tokenType2));
+
+        destoryInfo = commonFunc.tokenModule_DestoryTokenByList2(list12);
+        assertEquals("Insufficient Balance",JSONObject.fromObject(destoryInfo).getString("data"));
     }
 
     @AfterClass
