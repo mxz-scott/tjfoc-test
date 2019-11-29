@@ -191,8 +191,8 @@ public class CommonFunc {
         for(int i= 0;i<list.size();i++){
             String checkStr = list.get(i).toString().replaceAll("=",":").replaceAll(" ","");
             boolean bMatch = false;
-            log.info("+++++++++++++++++" + checkStr);
-            log.info("+++++++++++++++++" + jsonArray.toString());
+//            log.info("+++++++++++++++++" + checkStr);
+//            log.info("+++++++++++++++++" + jsonArray.toString());
             for(int j = 0;j < jsonArray.size(); j++){
                 if(checkStr.equals(jsonArray.get(j).toString())){
                     bMatch = true;

@@ -166,7 +166,7 @@ public class TokenMultiInvalidTest {
 
         //余额查询
         String destroyResp2 = commonFunc.tokenModule_DestoryTokenByTokenType(issueToken);
-        assertEquals(true, destroyResp2.contains("addr doesn't exist!"));
+        assertEquals(true, destroyResp2.contains("invalid tokenType"));
 
     }
 }

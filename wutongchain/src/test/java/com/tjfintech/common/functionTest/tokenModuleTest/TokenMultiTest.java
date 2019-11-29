@@ -101,12 +101,12 @@ public class TokenMultiTest {
         log.info("多签发行两种token");
         //两次发行之前不可以有sleep时间
         tokenType = commonFunc.tokenModule_IssueToken(tokenMultiAddr1,tokenAccount1,issueAmount1);
-        tokenType2 = commonFunc.tokenModule_IssueToken(tokenMultiAddr1,tokenMultiAddr1,issueAmount2);
+        tokenType2 = commonFunc.tokenModule_IssueToken(tokenMultiAddr1,tokenAccount2,issueAmount2);
         sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
         log.info("查询归集地址中两种token余额");
 
         String response1 = tokenModule.tokenGetBalance(tokenAccount1, tokenType);
-        String response2 = tokenModule.tokenGetBalance(tokenMultiAddr1, tokenType2);
+        String response2 = tokenModule.tokenGetBalance(tokenAccount2, tokenType2);
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));
         assertEquals(actualAmount1,JSONObject.fromObject(response1).getJSONObject("data").getString(tokenType));
         assertEquals("200",JSONObject.fromObject(response2).getString("state"));
@@ -223,7 +223,7 @@ public class TokenMultiTest {
         String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1,list);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
 
         String amount1;
@@ -459,7 +459,6 @@ public class TokenMultiTest {
         assertEquals(false,queryInfo.contains(tokenType));
         assertEquals(false,queryInfo.contains(tokenType2));
         assertEquals(false,queryInfo2.contains(tokenType));
-        log.info(tokenType2);
         assertEquals(false,queryInfo2.contains(tokenType2));
         assertEquals(false,queryInfo3.contains(tokenType));
         assertEquals(false,queryInfo3.contains(tokenType2));
