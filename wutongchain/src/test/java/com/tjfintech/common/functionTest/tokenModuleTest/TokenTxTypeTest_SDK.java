@@ -125,14 +125,20 @@ public class TokenTxTypeTest_SDK {
         String amount1="10000";
         log.info(siData1);
         String response1 = tokenModule.tokenIssue(tokenAccount1,tokenAccount1,tokenTypeS1,amount1,siData1);
+        assertEquals("200",JSONObject.fromObject(response1).getString("state"));
         String singleIssHash1 = JSONObject.fromObject(response1).getString("data");
+        String tokenTypeS3 = "TxTypeSOLOTC-"+ UtilsClass.Random(6);
+        String response11 = tokenModule.tokenIssue(tokenAccount1,tokenAccount1,tokenTypeS3,amount1,siData1);
+        assertEquals("200",JSONObject.fromObject(response11).getString("state"));
+
 
         //单签发行给别人
         String tokenTypeS2 = "TxTypeSOLOTC-"+ UtilsClass.Random(6);
-        String siData2= "单签" + tokenAccount1 +"向" +  tokenAccount2 + " 发行token " + tokenTypeS2;
-        String amount2="10000";
+        String siData2 = "单签" + tokenAccount1 +"向" +  tokenAccount2 + " 发行token " + tokenTypeS2;
+        String amount2 ="10000";
         log.info(siData2);
         String response2 = tokenModule.tokenIssue(tokenAccount1,tokenAccount2,tokenTypeS2,amount2,siData2);
+        assertEquals("200",JSONObject.fromObject(response2).getString("state"));
         String singleIssHash2 = JSONObject.fromObject(response2).getString("data");
 
     
@@ -142,7 +148,13 @@ public class TokenTxTypeTest_SDK {
         String  mulDataM1= "多签"+ tokenMultiAddr1 + "发行给自己" + tokenTypeM1 + " token，数量为：" + amountM1;
         log.info(mulDataM1);
         String responseM1 = tokenModule.tokenIssue(tokenMultiAddr1,tokenMultiAddr1,tokenTypeM1, amountM1, mulDataM1);
+        assertEquals("200",JSONObject.fromObject(responseM1).getString("state"));
         String multiIssHashM1 = JSONObject.fromObject(responseM1).getString("data");
+
+        String tokenTypeM3 = "TxTypeMULTIC" + UtilsClass.Random(8);
+        String responseM3 = tokenModule.tokenIssue(tokenMultiAddr1,tokenMultiAddr1,tokenTypeM3, amountM1, mulDataM1);
+        assertEquals("200",JSONObject.fromObject(responseM3).getString("state"));
+
 
         //多签发行给别人
         String tokenTypeM2 = "TxTypeMULTIC" + UtilsClass.Random(8);
@@ -157,33 +169,62 @@ public class TokenTxTypeTest_SDK {
         
         //单签转账
         assertEquals(JSONObject.fromObject(tokenModule.tokenGetBalance(tokenAccount1,"")).getJSONObject("data").getString(tokenTypeS1),amount1);
-        String amountTransfer = "3000";
-        String tranferSdata="transfer to "+tokenAccount3+" with amount "+amountTransfer;
-        String response4= tokenModule.tokenTransfer(tokenAccount1,tokenAccount3,tokenTypeS1,"3000",tranferSdata);
+        assertEquals(JSONObject.fromObject(tokenModule.tokenGetBalance(tokenAccount1,"")).getJSONObject("data").getString(tokenTypeS3),amount1);
+        String tranferSdata="transfer to "+tokenAccount3 + " with amount 3000";
+
+        List<Map> listTFS = utilsClass.tokenConstructToken(tokenAccount3,tokenTypeS1,"3000");
+        List<Map> listTFS2 = utilsClass.tokenConstructToken(tokenAccount3,tokenTypeS3,"3000",listTFS);
+
+        List<Map> listST = commonFunc.constructUTXOTxDetailList(tokenAccount1,tokenAccount3,tokenTypeS1,"3000");
+        List<Map> listST2 = commonFunc.constructUTXOTxDetailList(tokenAccount1,tokenAccount1,tokenTypeS1,"7000",listST);//转回给自己7000
+        List<Map> listST3 = commonFunc.constructUTXOTxDetailList(tokenAccount1,tokenAccount3,tokenTypeS3,"3000",listST2);
+        List<Map> listST4 = commonFunc.constructUTXOTxDetailList(tokenAccount1,tokenAccount1,tokenTypeS3,"7000",listST3);//转回给自己7000
+
+        String response4= tokenModule.tokenTransfer(tokenAccount1,tranferSdata,listTFS2);
+        assertEquals("200",JSONObject.fromObject(response4).getString("state"));
         String soTransfHash = JSONObject.fromObject(response4).getString("data");
 
 
         //多签转账
         assertEquals(JSONObject.fromObject( tokenModule.tokenGetBalance(tokenMultiAddr1,"")).getJSONObject("data").getString(tokenTypeM1),amountM1);
-        String tranferAmount="3000";
-        String transferData = tokenMultiAddr1+" 向 " + tokenMultiAddr3 + " 转账 " + tranferAmount + " " +tokenTypeM1;
+        assertEquals(JSONObject.fromObject( tokenModule.tokenGetBalance(tokenMultiAddr1,"")).getJSONObject("data").getString(tokenTypeM3),amountM1);
+        String transferData = tokenMultiAddr1 + " 向 " + tokenMultiAddr3 + " 转账3000";
         log.info(transferData);
-        String response6 = tokenModule.tokenTransfer(tokenMultiAddr1, tokenMultiAddr3, tokenTypeM1, "3000", transferData);
+        List<Map> listTFM = utilsClass.tokenConstructToken(tokenMultiAddr3,tokenTypeM1,"3000");
+        List<Map> listTFM2 = utilsClass.tokenConstructToken(tokenMultiAddr3,tokenTypeM3,"3000",listTFM);
+
+        List<Map> listMT = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenMultiAddr3,tokenTypeM1,"3000");
+        List<Map> listMT2 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenMultiAddr1,tokenTypeM1,"47000",listMT);
+        List<Map> listMT3 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenMultiAddr3,tokenTypeM3,"3000",listMT2);
+        List<Map> listMT4 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenMultiAddr1,tokenTypeM3,"47000",listMT3);
+
+        String response6 = tokenModule.tokenTransfer(tokenMultiAddr1,transferData,listTFM2);
+        assertEquals("200",JSONObject.fromObject(response6).getString("state"));
         String muTransfHash = JSONObject.fromObject(response6).getString("data");
 
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting");
 
-        //单签回收
+        //单签回收bylist
         String recySoloAmount="600";
         log.info("单签回收");
         String desInfo1 = "destory 1111";
         List<Map> list = utilsClass.tokenConstructToken(tokenAccount1, tokenTypeS1, recySoloAmount);
-        String RecycleSoloInfo = tokenModule.tokenDestoryByList(list,desInfo1);
+        List<Map> list2 = utilsClass.tokenConstructToken(tokenAccount3, tokenTypeS3, recySoloAmount,list);
+
+        List<Map> listSD = commonFunc.constructUTXOTxDetailList(tokenAccount1,zeroAccount,tokenTypeS1,recySoloAmount);
+        List<Map> listSD2 = commonFunc.constructUTXOTxDetailList(tokenAccount3,zeroAccount,tokenTypeS3,recySoloAmount,listSD);
+        List<Map> listSD3 = commonFunc.constructUTXOTxDetailList(tokenAccount1,tokenAccount1,tokenTypeS1,"6400",listSD2);//转回自己6400
+        List<Map> listSD4 = commonFunc.constructUTXOTxDetailList(tokenAccount3,tokenAccount3,tokenTypeS3,"2400",listSD3);//转回自己2400
+
+        String RecycleSoloInfo = tokenModule.tokenDestoryByList(list2,desInfo1);
         String soDesHash = JSONObject.fromObject(RecycleSoloInfo).getString("data");
 
-        //多签回收
+        //多签回收 bytokentype
         log.info("多签回收");
         String desInfo2 = "destory 2222";
+        List<Map> listMD = commonFunc.constructUTXOTxDetailList(tokenMultiAddr3,zeroAccount,tokenTypeM1,"3000");
+        List<Map> listMD2 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,zeroAccount,tokenTypeM1,"47000",listMD);
+
         String RecycleMultiInfo = tokenModule.tokenDestoryByTokenType(tokenTypeM1,desInfo2);
         String muDesHash = JSONObject.fromObject(RecycleMultiInfo).getJSONObject("data").getString("hash");
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting");
@@ -194,6 +235,7 @@ public class TokenTxTypeTest_SDK {
         JSONObject jsonObject = checkDataHeaderMsg(singleIssHash1,versionSUTXO,typeUTXO,subTypeIssue);
         JSONObject uxtoJson= jsonObject.getJSONObject("Data").getJSONObject("UTXO");
         assertEquals(siData1,uxtoJson.getString("Data"));
+        assertEquals(1,uxtoJson.getJSONArray("Records").size());
         checkFromTo(uxtoJson,tokenAccount1,tokenAccount1,tokenTypeS1,amount1,0);
 
         uxtoJson.clear();
@@ -201,6 +243,7 @@ public class TokenTxTypeTest_SDK {
         jsonObject = checkDataHeaderMsg(singleIssHash2,versionSUTXO,typeUTXO,subTypeIssue);
         uxtoJson= jsonObject.getJSONObject("Data").getJSONObject("UTXO");
         assertEquals(siData2,uxtoJson.getString("Data"));
+        assertEquals(1,uxtoJson.getJSONArray("Records").size());
         checkFromTo(uxtoJson,tokenAccount1,tokenAccount2,tokenTypeS2,amount2,0);
 
 
@@ -208,10 +251,7 @@ public class TokenTxTypeTest_SDK {
         JSONObject jsonObject1 = checkDataHeaderMsg(soTransfHash,versionSUTXO,typeUTXO,subTypeTransfer);
         assertEquals(tranferSdata,jsonObject1.getJSONObject("Data").getJSONObject("UTXO").getString("Data"));
 
-        checkFromTo(jsonObject1.getJSONObject("Data").getJSONObject("UTXO"),
-                tokenAccount1,tokenAccount3,tokenTypeS1,amountTransfer,0);
-        checkFromTo(jsonObject1.getJSONObject("Data").getJSONObject("UTXO"),
-                tokenAccount1,tokenAccount1,tokenTypeS1,String.valueOf(Integer.parseInt(amount1)-Integer.parseInt(amountTransfer)),1);
+        commonFunc.checkListArray(listST4,jsonObject1.getJSONObject("Data").getJSONObject("UTXO").getJSONArray("Records"));
 
 
         //检查多签发行交易信息
@@ -219,6 +259,7 @@ public class TokenTxTypeTest_SDK {
         uxtoJson.clear();
         uxtoJson= jsonObject2.getJSONObject("Data").getJSONObject("UTXO");
         assertEquals(mulDataM1,uxtoJson.getString("Data"));
+        assertEquals(1,uxtoJson.getJSONArray("Records").size());
         checkFromTo(uxtoJson,tokenMultiAddr1,tokenMultiAddr1,tokenTypeM1,amountM1,0);
 
 
@@ -226,8 +267,8 @@ public class TokenTxTypeTest_SDK {
         uxtoJson.clear();
         uxtoJson= jsonObject2.getJSONObject("Data").getJSONObject("UTXO");
         assertEquals(mulDataM2,uxtoJson.getString("Data"));
+        assertEquals(1,uxtoJson.getJSONArray("Records").size());
         checkFromTo(uxtoJson,tokenMultiAddr1,tokenMultiAddr2,tokenTypeM2,amountM2,0);
-
 
 
         //检查多签转账交易信息
@@ -235,27 +276,21 @@ public class TokenTxTypeTest_SDK {
         uxtoJson.clear();
         uxtoJson = jsonObject3.getJSONObject("Data").getJSONObject("UTXO");
         assertEquals(transferData,uxtoJson.getString("Data"));
-        checkFromTo(uxtoJson,tokenMultiAddr1,tokenMultiAddr3,tokenTypeM1,tranferAmount,0);
-        checkFromTo(uxtoJson,tokenMultiAddr1,tokenMultiAddr1,tokenTypeM1,String.valueOf(Integer.parseInt(amountM1)-Integer.parseInt(tranferAmount)),1);
+        commonFunc.checkListArray(listMT4,uxtoJson.getJSONArray("Records"));
 
-        
 
         //检查单签回收交易信息
         JSONObject jsonObject4 = checkDataHeaderMsg(soDesHash,versionMUTXO,typeUTXO,subTypeRecycle);
         uxtoJson.clear();
         log.info("****************");
         uxtoJson = jsonObject4.getJSONObject("Data").getJSONObject("UTXO");
-        checkFromTo(uxtoJson,tokenAccount1,zeroAccount,tokenTypeS1,recySoloAmount,0);
-        checkFromTo(uxtoJson,tokenAccount1,tokenAccount1,tokenTypeS1,String.valueOf(Integer.parseInt(amount1)-Integer.parseInt(amountTransfer)-Integer.parseInt(recySoloAmount)),1);
+        commonFunc.checkListArray(listSD4,uxtoJson.getJSONArray("Records"));
 
         //检查多签回收交易信息
         JSONObject jsonObject5 = checkDataHeaderMsg(muDesHash,versionMUTXO,typeUTXO,subTypeRecycle);
         uxtoJson.clear();
         uxtoJson= jsonObject5.getJSONObject("Data").getJSONObject("UTXO");
-
-        List <Map> list1 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr3,zeroAccount,tokenTypeM1,"3000");
-        List <Map> list2 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,zeroAccount,tokenTypeM1,"47000",list1);
-        commonFunc.checkListArray(list2,uxtoJson.getJSONArray("Records"));
+        commonFunc.checkListArray(listMD2,uxtoJson.getJSONArray("Records"));
     }
 
     public void checkFromTo(JSONObject jsonObject,String from,String to,String TokenType,String amount,int index)throws Exception{
