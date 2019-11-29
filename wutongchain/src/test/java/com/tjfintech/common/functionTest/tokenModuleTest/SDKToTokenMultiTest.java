@@ -52,7 +52,7 @@ public class SDKToTokenMultiTest {
     {
         BeforeCondition beforeCondition = new BeforeCondition();
         //添加sdk的发行地址归集地址
-        if(tokenAccount1.isEmpty()) {
+        if(IMPPUTIONADD.isEmpty()) {
             SDKADD = rSDKADD;
             beforeCondition.updatePubPriKey();
             beforeCondition.collAddressTest();
