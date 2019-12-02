@@ -134,6 +134,49 @@ public class TokenMultiTest {
 
     }
 
+    //同时发行地址与归集地址相互给对方发行
+    @Test
+    public void issueTwo()throws Exception{
+        String issueAddr = "";
+        String collAddr = "";
+        String issueToken = "";
+        String issAmount ="";
+
+        //单签地址发行token 5000.999999
+        String stokenType = "tokenSo-"+ UtilsClass.Random(8);
+        issueAddr = tokenAccount2;
+        collAddr = tokenMultiAddr1;
+        issueToken = stokenType;
+        issAmount = "1844674";
+        String issueToken2 = "tokenS2o-"+ UtilsClass.Random(8);
+        String issAmount2 = "18022.1";
+
+        //添加发行地址和归集地址
+        tokenModule.tokenAddMintAddr(issueAddr);
+        tokenModule.tokenAddCollAddr(collAddr);
+        tokenModule.tokenAddMintAddr(collAddr);
+        tokenModule.tokenAddCollAddr(issueAddr);
+
+        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
+
+        issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
+        issueToken2 = commonFunc.tokenModule_IssueToken(collAddr,issueAddr,issAmount2);
+
+
+        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+
+        String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
+        assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken2);
+        assertEquals(false,queryBalance.contains(issueToken2));
+
+
+        queryBalance = tokenModule.tokenGetBalance(issueAddr,"");
+        assertEquals(issAmount2, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
+        queryBalance = tokenModule.tokenGetBalance(issueAddr,issueToken);
+        assertEquals(false,queryBalance.contains(issueToken));
+
+    }
 
 
 
@@ -1042,6 +1085,8 @@ public class TokenMultiTest {
 
     }
 
+    //----------------------------------------------------------------------------------------------------------------------//
+    //以下是双花验证
     @Test
     public void multi33AccountDoubleSpend_IssueOther()throws Exception{
         String issueAddr = "";

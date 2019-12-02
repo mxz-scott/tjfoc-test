@@ -67,6 +67,7 @@ public class UtilsClass {
     public static String tokenMultiAddr2 = "";//1/2账户  tokenAccount1 tokenAccount2
     public static String tokenMultiAddr3 = "";//1/3账户  tokenAccount1 tokenAccount2
     public static String tokenMultiAddr4 = "";//1/2账户  tokenAccount2 tokenAccount3
+    public static String tokenMultiAddr5 = "";//1/2账户  tokenAccount3 tokenAccount4
     public static String userId01 = "tkAc1" + Random(6);
     public static String userId02 = "tkAc2" + Random(6);
     public static String userId03 = "tkAc3" + Random(6);
