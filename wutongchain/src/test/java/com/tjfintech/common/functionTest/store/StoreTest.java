@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -318,5 +319,61 @@ public class StoreTest {
         assertThat(response2,containsString("200"));
     }
 
+    @Test
+    public void createStoreDupDataString() throws Exception {
+        String Data = "test11234567";
+        String response= store.CreateStore(Data);
+        String storeHash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        assertEquals("200",JSONObject.fromObject(response).getString("State"));
+
+        String response12 = store.CreateStore(Data);
+//        assertEquals(true,response12.contains("Duplicate transaction, hash: " + storeHash));
+        assertThat(response12,
+                anyOf(containsString("Duplicate transaction, hash: " + storeHash),
+                        containsString("transactionFilter exist")));
+
+        sleepAndSaveInfo(400,"waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
+        String response13 = store.CreateStore(Data);
+//        assertEquals(true,response13.contains("Duplicate transaction, hash: " + storeHash));
+        assertThat(response13,
+                anyOf(containsString("Duplicate transaction, hash: " + storeHash),
+                        containsString("transactionFilter exist")));
+        sleepAndSaveInfo(400,"waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
+        String response14 = store.CreateStore(Data);
+//        assertEquals(true,response14.contains("Duplicate transaction, hash: " + storeHash));
+        assertThat(response14,
+                anyOf(containsString("Duplicate transaction, hash: " + storeHash),
+                        containsString("transactionFilter exist")));
+        sleepAndSaveInfo(400,"waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
+        String response15 = store.CreateStore(Data);
+//        assertEquals(true,response15.contains("Duplicate transaction, hash: " + storeHash));
+        assertThat(response15,
+                anyOf(containsString("Duplicate transaction, hash: " + storeHash),
+                        containsString("transactionFilter exist")));
+        sleepAndSaveInfo(400,"waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
+        String response16 = store.CreateStore(Data);
+//        assertEquals(true,response16.contains("Duplicate transaction, hash: " + storeHash));
+        assertThat(response16,
+                anyOf(containsString("Duplicate transaction, hash: " + storeHash),
+                        containsString("transactionFilter exist")));
+        sleepAndSaveInfo(400,"waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
+        String response17 = store.CreateStore(Data);
+//        assertEquals(true,response16.contains("Duplicate transaction, hash: " + storeHash));
+        assertThat(response17,
+                anyOf(containsString("Duplicate transaction, hash: " + storeHash),
+                        containsString("transactionFilter exist")));
+
+
+        sleepAndSaveInfo(SLEEPTIME,"store on chain waiting"); //超过dup检测时间
+        String response2 = store.CreateStore(Data);
+        assertEquals("200",JSONObject.fromObject(response2).getString("State"));
+
+
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("State"));
+
+        String response4= store.GetStore(storeHash);
+        assertEquals("200",JSONObject.fromObject(response4).getString("State"));
+        assertEquals(Data,JSONObject.fromObject(response4).getString("Data"));
+    }
 
 }

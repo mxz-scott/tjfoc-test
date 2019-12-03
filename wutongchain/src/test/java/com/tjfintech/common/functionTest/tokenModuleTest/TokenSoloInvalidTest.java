@@ -7,6 +7,8 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.hamcrest.Matcher;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -16,13 +18,26 @@ import java.text.DecimalFormat;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
+import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertThat;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TokenSoloInvalidTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
+    private static String tokenType;
+    private static String tokenType2;
+
+    private static String issueAmount1;
+    private static String issueAmount2;
+
+    private static String actualAmount1;
+    private static String actualAmount2;
+
     Token tokenModule = testBuilder.getToken();
     CommonFunc commonFunc = new CommonFunc();
+    UtilsClass utilsClass=new UtilsClass();
 
     @BeforeClass
     public static void init()throws Exception
@@ -36,23 +51,70 @@ public class TokenSoloInvalidTest {
     }
 
 
-     @Test
-    public void issueMax_IssueSelf()throws Exception{
-        String issueAddr = "";
-        String collAddr = "";
-        String issueToken = "";
-        String issAmount ="";
+    @Before
+    //@Test
+    public void beforeConfig() throws Exception {
 
-        //单签地址发行token 5000.999999
-        issueAddr = tokenAccount1;
-        collAddr = tokenAccount1;
-        issAmount = "18446744073709";
+        issueAmount1 = "10000.12345678912345";
+        issueAmount2 = "20000.876543212345";
 
-        issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+        if (UtilsClass.PRECISION == 10) {
+            actualAmount1 = "10000.1234567891";
+            actualAmount2 = "20000.8765432123";
+        }else {
+            actualAmount1 = "10000.123456";
+            actualAmount2 = "20000.876543";
+        }
 
-        String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
-        assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        log.info("发行两种token");
+        tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,issueAmount1);
+        tokenType2 = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,issueAmount2);
+
+
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        log.info("查询归集地址中两种token余额");
+        String response1 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
+        String response2 = tokenModule.tokenGetBalance( tokenAccount1, tokenType2);
+
+        assertThat(tokenType+"查询余额错误",response1, containsString("200"));
+        assertThat(tokenType+"查询余额错误",response2, containsString("200"));
+        assertThat(tokenType+"查询余额不正确",response1, containsString(actualAmount1));
+        assertThat(tokenType+"查询余额不正确",response2, containsString(actualAmount2));
+    }
+
+
+    /**
+     * TC247发行token后, 再发行一笔存证交易，两笔交易的data字段相同
+     */
+    @Test
+    public void TC247_issueThenStore() throws Exception {
+        String response = tokenModule.tokenCreateStore(tokenType);
+        Thread.sleep(1*1000);
+        String response2= tokenModule.tokenCreateStore(tokenType);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+        assertEquals("400",JSONObject.fromObject(response2).getString("state"));
+        assertThat(response2,
+                anyOf(containsString("Duplicate transaction"),
+                        containsString("transactionFilter exist")));
+
+    }
+
+    /**
+     * TC251重复发行相同token
+     */
+    @Test
+    public void TC251_issueDoubleInvalid() throws Exception {
+
+        String issueInfo2 = tokenModule.tokenIssue(tokenAccount1, tokenAccount3, tokenType, "1000","发行token1");
+        String issueInfo3 = tokenModule.tokenIssue(tokenAccount1, tokenAccount2, tokenType, "1000","发行token");
+        assertThat(issueInfo2,containsString("tokentype has been used :" + tokenType));
+        assertThat(issueInfo3,containsString("tokentype has been used :" + tokenType));
+
+        log.info("查询归集地址中token余额");
+        String response1 = tokenModule.tokenGetBalance(tokenAccount3, tokenType);
+        assertThat(response1, containsString("200"));
+
+
 
     }
 
@@ -76,40 +138,7 @@ public class TokenSoloInvalidTest {
 
     }
 
-    //同时发行
-    @Test
-    public void issueTwo()throws Exception{
-        String issueAddr = "";
-        String collAddr = "";
-        String issueToken = "";
-        String issAmount ="";
 
-        //单签地址发行token 5000.999999
-        issueAddr = tokenAccount2;
-        collAddr = tokenAccount1;
-
-        issAmount = "1844674";
-        String issAmount2 = "18022.1";
-        String issueToken2 = "";
-
-        issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
-        issueToken2 = commonFunc.tokenModule_IssueToken(collAddr,issueAddr,issAmount2);
-
-
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
-
-        String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
-        assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
-        queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken2);
-        assertEquals(false,queryBalance.contains(issueToken2));
-
-
-        queryBalance = tokenModule.tokenGetBalance(issueAddr,issueToken2);
-        assertEquals(issAmount2, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
-        queryBalance = tokenModule.tokenGetBalance(issueAddr,issueToken);
-        assertEquals(false,queryBalance.contains(issueToken));
-
-    }
 
 
     //回收超出余额

@@ -74,8 +74,8 @@ public class TokenSoloTest {
         String response1 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
         String response2 = tokenModule.tokenGetBalance( tokenAccount1, tokenType2);
 
-        assertThat(tokenType+"查询余额错误",response1, containsString("200"));
-        assertThat(tokenType+"查询余额错误",response2, containsString("200"));
+//        assertThat(tokenType+"查询余额错误",response1, containsString("200"));
+//        assertThat(tokenType+"查询余额错误",response2, containsString("200"));
         assertThat(tokenType+"查询余额不正确",response1, containsString(actualAmount1));
         assertThat(tokenType+"查询余额不正确",response2, containsString(actualAmount2));
     }
@@ -97,18 +97,53 @@ public class TokenSoloTest {
 
         log.info("发行两种token");
         tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenMultiAddr1,issueAmount1);
-        tokenType2 = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,issueAmount2);
+        tokenType2 = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenMultiAddr2,issueAmount2);
 
 
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
         log.info("查询归集地址中两种token余额");
         String response1 = tokenModule.tokenGetBalance( tokenMultiAddr1, tokenType);
-        String response2 = tokenModule.tokenGetBalance( tokenAccount1, tokenType2);
+        String response2 = tokenModule.tokenGetBalance( tokenMultiAddr2, tokenType2);
 
         assertThat(tokenType+"查询余额错误",response1, containsString("200"));
         assertThat(tokenType+"查询余额错误",response2, containsString("200"));
         assertThat(tokenType+"查询余额不正确",response1, containsString(actualAmount1));
         assertThat(tokenType+"查询余额不正确",response2, containsString(actualAmount2));
+    }
+
+    //同时发行地址与归集地址相互给对方发行
+    @Test
+    public void issueTwo()throws Exception{
+        String issueAddr = "";
+        String collAddr = "";
+        String issueToken = "";
+        String issAmount ="";
+
+        //单签地址发行token 5000.999999
+        issueAddr = tokenAccount2;
+        collAddr = tokenAccount1;
+
+        issAmount = "1844674";
+        String issAmount2 = "18022.1";
+        String issueToken2 = "";
+
+        issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
+        issueToken2 = commonFunc.tokenModule_IssueToken(collAddr,issueAddr,issAmount2);
+
+
+        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+
+        String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
+        assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken2);
+        assertEquals(false,queryBalance.contains(issueToken2));
+
+
+        queryBalance = tokenModule.tokenGetBalance(issueAddr,issueToken2);
+        assertEquals(issAmount2, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
+        queryBalance = tokenModule.tokenGetBalance(issueAddr,issueToken);
+        assertEquals(false,queryBalance.contains(issueToken));
+
     }
 
 

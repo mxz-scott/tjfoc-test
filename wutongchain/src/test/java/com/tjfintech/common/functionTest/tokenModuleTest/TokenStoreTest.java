@@ -60,7 +60,7 @@ public class TokenStoreTest {
 
 
     /**
-     * TC05-重复性检查
+     * TC05-重复性检查 包括设定的检查时间
      * 创建后需要休眠5秒等待数据上链
      * 预期：返回200，data为交易哈希
      * 查询交易上链
@@ -76,25 +76,45 @@ public class TokenStoreTest {
 
         String response12 = tokenModule.tokenCreateStore(Data);
 //        assertEquals(true,response12.contains("Duplicate transaction, hash: " + storeHash));
-        MatcherAssert.assertThat(response12,
-                anyOf(CoreMatchers.containsString("Duplicate transaction, hash: " + storeHash),
-                        CoreMatchers.containsString("transactionFilter exist")));
+        assertThat(response12,
+                anyOf(containsString("Duplicate transaction, hash: " + storeHash),
+                        containsString("transactionFilter exist")));
 
+        sleepAndSaveInfo(400,"waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
         String response13 = tokenModule.tokenCreateStore(Data);
 //        assertEquals(true,response13.contains("Duplicate transaction, hash: " + storeHash));
-        MatcherAssert.assertThat(response13,
-                anyOf(CoreMatchers.containsString("Duplicate transaction, hash: " + storeHash),
-                        CoreMatchers.containsString("transactionFilter exist")));
+        assertThat(response13,
+                anyOf(containsString("Duplicate transaction, hash: " + storeHash),
+                        containsString("transactionFilter exist")));
+        sleepAndSaveInfo(400,"waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
         String response14 = tokenModule.tokenCreateStore(Data);
-//        assertEquals(true,response13.contains("Duplicate transaction, hash: " + storeHash));
-        MatcherAssert.assertThat(response14,
-                anyOf(CoreMatchers.containsString("Duplicate transaction, hash: " + storeHash),
-                        CoreMatchers.containsString("transactionFilter exist")));
+//        assertEquals(true,response14.contains("Duplicate transaction, hash: " + storeHash));
+        assertThat(response14,
+                anyOf(containsString("Duplicate transaction, hash: " + storeHash),
+                        containsString("transactionFilter exist")));
+        sleepAndSaveInfo(400,"waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
+        String response15 = tokenModule.tokenCreateStore(Data);
+//        assertEquals(true,response15.contains("Duplicate transaction, hash: " + storeHash));
+        assertThat(response15,
+                anyOf(containsString("Duplicate transaction, hash: " + storeHash),
+                        containsString("transactionFilter exist")));
+        sleepAndSaveInfo(400,"waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
+        String response16 = tokenModule.tokenCreateStore(Data);
+//        assertEquals(true,response16.contains("Duplicate transaction, hash: " + storeHash));
+        assertThat(response16,
+                anyOf(containsString("Duplicate transaction, hash: " + storeHash),
+                        containsString("transactionFilter exist")));
+        sleepAndSaveInfo(400,"waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
+        String response17 = tokenModule.tokenCreateStore(Data);
+//        assertEquals(true,response16.contains("Duplicate transaction, hash: " + storeHash));
+        assertThat(response17,
+                anyOf(containsString("Duplicate transaction, hash: " + storeHash),
+                        containsString("transactionFilter exist")));
 
 
         sleepAndSaveInfo(SLEEPTIME,"store on chain waiting"); //超过dup检测时间
-        String response15 = tokenModule.tokenCreateStore(Data);
-        assertEquals("200",JSONObject.fromObject(response15).getString("state"));
+        String response2 = tokenModule.tokenCreateStore(Data);
+        assertEquals("200",JSONObject.fromObject(response2).getString("state"));
 
         //使用token模块getstore接口查询
         String response3 = tokenModule.tokenGetPrivateStore(storeHash,"");
@@ -104,9 +124,9 @@ public class TokenStoreTest {
         SDKADD = rSDKADD;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("State"));
 
-        String response2= store.GetStore(storeHash);
-        assertEquals("200",JSONObject.fromObject(response2).getString("State"));
-        assertEquals(Data,JSONObject.fromObject(response2).getString("Data"));
+        String response4= store.GetStore(storeHash);
+        assertEquals("200",JSONObject.fromObject(response4).getString("State"));
+        assertEquals(Data,JSONObject.fromObject(response4).getString("Data"));
     }
 
     /**

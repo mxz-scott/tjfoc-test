@@ -1234,6 +1234,7 @@ public class TokenMultiTest {
 
     }
 
+    //同时转账向3个地址
     @Test
     public void multi12AccountDoubleSpend_IssueOther()throws Exception{
         String issueAddr = "";
@@ -1276,6 +1277,8 @@ public class TokenMultiTest {
         to = to2;
         transferAmount = String.valueOf(trfAmount2);
         transferResp = commonFunc.tokenModule_TransferToken(from,to,issueToken,transferAmount);
+
+        transferResp = commonFunc.tokenModule_TransferToken(from,tokenAccount3,issueToken,transferAmount);
 
 
         sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
@@ -1355,6 +1358,7 @@ public class TokenMultiTest {
         String transferResp = commonFunc.tokenModule_TransferToken(from,to,transferToken,transferAmount);
 
         transferAmount = String.valueOf(trfAmount2);
+        transferResp = commonFunc.tokenModule_TransferToken(from,to,issueToken,transferAmount);
         transferResp = commonFunc.tokenModule_TransferToken(from,to,issueToken,transferAmount);
 
 
