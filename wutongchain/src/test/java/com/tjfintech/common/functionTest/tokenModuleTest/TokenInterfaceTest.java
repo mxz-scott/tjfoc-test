@@ -1147,7 +1147,7 @@ public class TokenInterfaceTest {
         tokenModule.tokenGetDestroyBalance();
     }
 
-
+    @Test
     public void getpublickeyInterfacetest(){
         //地址为空
         String resp = tokenModule.tokenGetPubkey("");
@@ -1174,6 +1174,7 @@ public class TokenInterfaceTest {
         assertEquals(true,resp.contains("error"));
     }
 
+    @Test
     public void gettxdetailInterfaceTest(){
         //hash为空
         String resp ="";
@@ -1188,6 +1189,74 @@ public class TokenInterfaceTest {
         resp = tokenModule.tokenGetTxDetail("*");
         assertEquals(true,resp.contains("error"));
 
-        //hash为不存在的hash
+        //tokenType为不存在的tokenType
+        resp = tokenModule.tokenGetTxDetail("_");
+        assertEquals(true,resp.contains("error"));
+    }
+
+    @Test
+    public void freezeTokenInterfaceTest(){
+        //tokenType为空
+        String resp ="";
+        resp = tokenModule.tokenFreezeToken("");
+        assertEquals(true,resp.contains("error"));
+
+        //tokenType为"#
+        resp = tokenModule.tokenFreezeToken("#");
+        assertEquals(true,resp.contains("error"));
+
+        //tokenType为*
+        resp = tokenModule.tokenFreezeToken("*");
+        assertEquals(true,resp.contains("error"));
+
+        //tokenType为%
+        resp = tokenModule.tokenFreezeToken("%");
+        assertEquals(true,resp.contains("error"));
+
+        //tokenType为_
+        resp = tokenModule.tokenFreezeToken("_");
+        assertEquals(true,resp.contains("error"));
+
+        //tokenType为不存在的tokenType
+        resp = tokenModule.tokenFreezeToken("tokenSo-12Gh6uQVIZ");
+        assertEquals(true,resp.contains("error"));
+    }
+
+    @Test
+    public void recoverTokenInterfaceTest()throws Exception{
+        //tokenType为空
+        String resp ="";
+        resp = tokenModule.tokenRecoverToken("");
+        assertEquals(true,resp.contains("error"));
+
+        //tokenType为"#
+        resp = tokenModule.tokenRecoverToken("#");
+        assertEquals(true,resp.contains("error"));
+
+        //tokenType为*
+        resp = tokenModule.tokenRecoverToken("*");
+        assertEquals(true,resp.contains("error"));
+
+        //tokenType为%
+        resp = tokenModule.tokenRecoverToken("%");
+        assertEquals(true,resp.contains("error"));
+
+        //tokenType为_
+        resp = tokenModule.tokenRecoverToken("_");
+        assertEquals(true,resp.contains("error"));
+
+        //tokenType为不存在的tokenType
+        resp = tokenModule.tokenRecoverToken("tokenSo-12Gh6uQVIZ");
+        assertEquals(true,resp.contains("error"));
+
+        //恢复一个未冻结的token
+        String tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,"100");
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain time waiting...");
+        assertEquals("100",
+                JSONObject.fromObject(tokenModule.tokenGetBalance(tokenAccount1,"")).getJSONObject("data").getString(tokenType));
+        resp = tokenModule.tokenRecoverToken(tokenType);
+        String hash = JSONObject.fromObject(resp).getString("data");
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain time waiting...");
+        assertEquals("404",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash)).getString("state"));
     }
 }

@@ -352,6 +352,12 @@ public class BeforeCondition {
         map.put("2", tokenAccount3);
         tokenMultiAddr4 = JSONObject.fromObject(
                 tokenModule.tokenCreateMultiAddr(map,"multiaddr4",M,"","",mapTag)).getString("data");
+
+        map.clear();
+        map.put("1", tokenAccount3);
+        map.put("2", tokenAccount4);
+        tokenMultiAddr5 = JSONObject.fromObject(
+                tokenModule.tokenCreateMultiAddr(map,"multiaddr5",M,"","",mapTag)).getString("data");
     }
 
 
