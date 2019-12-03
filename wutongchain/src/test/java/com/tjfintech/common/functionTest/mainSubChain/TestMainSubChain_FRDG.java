@@ -486,7 +486,7 @@ public class TestMainSubChain_FRDG {
         assertEquals(resp.contains(glbChain01), true);
 
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("subledger not exist"), true);
+        assertEquals(resp.contains("has not exist"), true);
 
 
         //检查可以获取子链列表 存在其他子链 确认异常操作后系统无异常
@@ -814,7 +814,7 @@ public class TestMainSubChain_FRDG {
 
         //解除一个不存在的子链chainName
         String respon = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertThat(respon, containsString(" subledger not exist"));
+        assertThat(respon, containsString(" has not exist"));
 
         //向子链glbChain01/glbChain02和主链发送交易
         subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
@@ -837,7 +837,7 @@ public class TestMainSubChain_FRDG {
 
         //销毁一个不存在的子链chainName
         String respon = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertThat(respon, containsString(" subledger not exist"));
+        assertThat(respon, containsString(" has not exist"));
 
         //向子链glbChain01/glbChain02和主链发送交易
         subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
@@ -861,7 +861,7 @@ public class TestMainSubChain_FRDG {
 
         //恢复一个不存在的子链chainName
         String respon = mgToolCmd.recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertThat(respon, containsString(" subledger not exist"));
+        assertThat(respon, containsString(" has not exist"));
 
         //向子链glbChain01/glbChain02和主链发送交易
         subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);

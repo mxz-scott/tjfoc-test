@@ -24,7 +24,7 @@ public class UtilsClass {
     public static String SDKADD = "http://10.1.3.246:7777";
 //    public static final String SDKADD = "http://180.101.204.164:8800";
     public static String rSDKADD = "http://10.1.3.240:9997";
-    public static String TOKENADD = "http://10.1.3.247:8888";
+    public static String TOKENADD = "http://10.1.3.246:9999";
 
 
     public static String certPath = "SM2"; // 设置签名证书类型，可选值SM2(默认值)，ECDSA，MIX1，MIX2，RSA
