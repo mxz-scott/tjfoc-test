@@ -1255,8 +1255,10 @@ public class TokenInterfaceTest {
         assertEquals("100",
                 JSONObject.fromObject(tokenModule.tokenGetBalance(tokenAccount1,"")).getJSONObject("data").getString(tokenType));
         resp = tokenModule.tokenRecoverToken(tokenType);
-        String hash = JSONObject.fromObject(resp).getString("data");
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain time waiting...");
-        assertEquals("404",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash)).getString("state"));
+        String data = JSONObject.fromObject(resp).getString("data");
+        String state = JSONObject.fromObject(resp).getString("state");
+        assertEquals("400", state);
+        assertEquals(true, data.contains("hasn't been freezed"));
+
     }
 }
