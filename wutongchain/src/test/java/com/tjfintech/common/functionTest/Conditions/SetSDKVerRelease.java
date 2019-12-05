@@ -23,6 +23,7 @@ public class SetSDKVerRelease {
 
         //SDK
         shellExeCmd(getIPFromStr(SDKADD),killSDKCmd, "rm -f " + SDKPATH + SDKTPName,"cp " + SDKPATH + replaceSDK + " " + SDKPATH + SDKTPName);
+        //从2.1.190826.1版本升级时，需要注释掉下面这行。
         verMap.put("sdk_"+ getIPFromStr(SDKADD),shExeAndReturn(getIPFromStr(SDKADD),getSDKVerByShell));//存储release sdk版本 以便后续检查
 
         //SDK
