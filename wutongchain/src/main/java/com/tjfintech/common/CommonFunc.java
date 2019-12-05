@@ -89,9 +89,6 @@ public class CommonFunc {
     }
 
     public String sdkSoloIssueToken(String Prikey,String amount,String toAddr)throws Exception{
-        BeforeCondition beforeCondition=new BeforeCondition();
-        beforeCondition.collAddressTest();
-
         String tokenType = "SOLOTC-"+UtilsClass.Random(6);
         String data = "Prikey issue token: " + tokenType + "*" + amount + "to " + toAddr;
         log.info(data);

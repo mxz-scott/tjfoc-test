@@ -173,7 +173,7 @@ public class DockerContractTest {
         name=name1;
         response=addSalesInfoNew("Company01",123456,name2,crossLedger);
         assertThat(response,containsString("200"));
-        sleepAndSaveInfo(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME);
         String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
 
         response=store.GetTxDetail(hash3);

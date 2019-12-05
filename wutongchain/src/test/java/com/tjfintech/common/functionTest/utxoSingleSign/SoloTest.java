@@ -575,6 +575,7 @@ public class SoloTest {
     }
     /**
      * 单签发行token时指定其他地址，不发行token到本身.指定单签地址与多签地址
+     * 2019-1-10 开发备注单签只能发行给自己 不支持发行给其他账户
      * @throws Exception
      */
     //@Test
