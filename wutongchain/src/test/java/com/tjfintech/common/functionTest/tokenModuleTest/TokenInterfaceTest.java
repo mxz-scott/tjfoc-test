@@ -393,6 +393,9 @@ public class TokenInterfaceTest {
         transferResp = tokenModule.tokenTransfer("*",to,transferToken,transferAmount,comments);
         assertEquals(true,transferResp.contains("invalid address"));
 
+        log.info("test to list null");
+        transferResp = commonFunc.tokenModule_TransferTokenList(from,null);
+        assertEquals(true,transferResp.contains(errParamMsgTrf));
 
         log.info("test to parameter...............");
         //to地址为空
@@ -461,6 +464,11 @@ public class TokenInterfaceTest {
         //数量为字母的字串
         transferResp = tokenModule.tokenTransfer(from,to,transferToken,"an",comments);
         assertEquals(true, transferResp.contains("Amount must be greater than 0 and less than 18446744073709"));
+
+        //数量为中文的字串
+        transferResp = tokenModule.tokenTransfer(from,to,transferToken,"中文",comments);
+        assertEquals(true, transferResp.contains("Amount must be greater than 0 and less than 18446744073709"));
+
 
         //数量为0
         transferResp = tokenModule.tokenTransfer(from,to,transferToken,"0",comments);
@@ -552,6 +560,10 @@ public class TokenInterfaceTest {
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
         tokenModule.tokenGetDestroyBalance();
+
+        log.info("test list null");
+        destoryResp = commonFunc.tokenModule_DestoryTokenByList2(null);
+        assertEquals(true,destoryResp.contains("error"));
 
         log.info("test from parameter...............");
         //回收地址为空
@@ -1195,7 +1207,7 @@ public class TokenInterfaceTest {
     }
 
     @Test
-    public void freezeTokenInterfaceTest(){
+    public void freezeTokenInterfaceTest()throws Exception{
         //tokenType为空
         String resp ="";
         resp = tokenModule.tokenFreezeToken("");
@@ -1203,23 +1215,36 @@ public class TokenInterfaceTest {
 
         //tokenType为"#
         resp = tokenModule.tokenFreezeToken("#");
-        assertEquals(true,resp.contains("error"));
+        String hash1 = JSONObject.fromObject(resp).getString("data");
+//        assertEquals(true,resp.contains("error"));
 
         //tokenType为*
         resp = tokenModule.tokenFreezeToken("*");
-        assertEquals(true,resp.contains("error"));
+        String hash2 = JSONObject.fromObject(resp).getString("data");
+//        assertEquals(true,resp.contains("error"));
 
         //tokenType为%
         resp = tokenModule.tokenFreezeToken("%");
-        assertEquals(true,resp.contains("error"));
+        String hash3 = JSONObject.fromObject(resp).getString("data");
+//        assertEquals(true,resp.contains("error"));
 
         //tokenType为_
         resp = tokenModule.tokenFreezeToken("_");
-        assertEquals(true,resp.contains("error"));
+        String hash4 = JSONObject.fromObject(resp).getString("data");
+//        assertEquals(true,resp.contains("error"));
 
         //tokenType为不存在的tokenType
         resp = tokenModule.tokenFreezeToken("tokenSo-12Gh6uQVIZ");
-        assertEquals(true,resp.contains("error"));
+        String hash5 = JSONObject.fromObject(resp).getString("data");
+//        assertEquals(true,resp.contains("error"));
+
+
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting .....");
+        assertEquals("400",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash1)).getString("state"));
+        assertEquals("400",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash2)).getString("state"));
+        assertEquals("400",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash3)).getString("state"));
+        assertEquals("400",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash4)).getString("state"));
+        assertEquals("400",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash5)).getString("state"));
     }
 
     @Test
@@ -1227,27 +1252,27 @@ public class TokenInterfaceTest {
         //tokenType为空
         String resp ="";
         resp = tokenModule.tokenRecoverToken("");
-        assertEquals(true,resp.contains("error"));
+        assertEquals(true,resp.contains("tokentype should not be empty!"));
 
         //tokenType为"#
         resp = tokenModule.tokenRecoverToken("#");
-        assertEquals(true,resp.contains("error"));
+        assertEquals(true,resp.contains("has not been freezed"));
 
         //tokenType为*
         resp = tokenModule.tokenRecoverToken("*");
-        assertEquals(true,resp.contains("error"));
+        assertEquals(true,resp.contains("has not been freezed"));
 
         //tokenType为%
         resp = tokenModule.tokenRecoverToken("%");
-        assertEquals(true,resp.contains("error"));
+        assertEquals(true,resp.contains("has not been freezed"));
 
         //tokenType为_
         resp = tokenModule.tokenRecoverToken("_");
-        assertEquals(true,resp.contains("error"));
+        assertEquals(true,resp.contains("has not been freezed"));
 
         //tokenType为不存在的tokenType
         resp = tokenModule.tokenRecoverToken("tokenSo-12Gh6uQVIZ");
-        assertEquals(true,resp.contains("error"));
+        assertEquals(true,resp.contains("has not been freezed"));
 
         //恢复一个未冻结的token
         String tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,"100");
@@ -1258,7 +1283,7 @@ public class TokenInterfaceTest {
         String data = JSONObject.fromObject(resp).getString("data");
         String state = JSONObject.fromObject(resp).getString("state");
         assertEquals("400", state);
-        assertEquals(true, data.contains("hasn't been freezed"));
+        assertEquals(true, data.contains("has not been freezed"));
 
     }
 }
