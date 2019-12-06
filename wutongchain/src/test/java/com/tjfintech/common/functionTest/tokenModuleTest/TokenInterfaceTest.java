@@ -32,7 +32,7 @@ public class TokenInterfaceTest {
 //    String errParamCode = "\"state\": 400";
 //    String errParamMsg = "client parameter error";
     String errParamMsgIss = "address,tokentype,amount and colladdr should not be empty!";
-    String errParamMsgDes = "address,amount and tokentype should not be empty!";
+    String errParamMsgDes = "address,amount,tokentype and list should not be empty!";
     String errParamMsgTrf = "address,des address,tokentype and amount should not be empty!";
     String errParamMsgDes2 = "tokentype should not be empty!";
     @BeforeClass
@@ -395,7 +395,7 @@ public class TokenInterfaceTest {
 
         log.info("test to list null");
         transferResp = commonFunc.tokenModule_TransferTokenList(from,null);
-        assertEquals(true,transferResp.contains(errParamMsgTrf));
+        assertEquals(true,transferResp.contains("to list should not be empty!"));
 
         log.info("test to parameter...............");
         //to地址为空
