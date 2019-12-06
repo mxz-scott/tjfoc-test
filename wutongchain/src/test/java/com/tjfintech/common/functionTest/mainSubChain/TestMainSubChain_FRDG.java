@@ -43,6 +43,7 @@ public class TestMainSubChain_FRDG {
     public static void clearData()throws Exception{
         BeforeCondition beforeCondition = new BeforeCondition();
         beforeCondition.clearDataSetPerm999();
+        beforeCondition.updatePubPriKey();
         sleepAndSaveInfo(SLEEPTIME);
     }
 
