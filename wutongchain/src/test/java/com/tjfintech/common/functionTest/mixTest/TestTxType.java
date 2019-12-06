@@ -91,19 +91,13 @@ public class TestTxType {
     }
 
     public void initSetting()throws Exception{
-        log.info("current bExe:" + bReg);
         log.info("current Ledger:" + subLedger);
-        if(bReg == false) {
-            if(subLedger != "")   setSubLedger.createSubledger();
-            BeforeCondition bf = new BeforeCondition();
-            bf.setPermission999();
-            bf.updatePubPriKey();
-            bf.collAddressTest();
-//            bf.createAdd();
-
-            Thread.sleep(SLEEPTIME);
-            bReg=true;
-        }
+        if(subLedger != "")   setSubLedger.createSubledger();
+        BeforeCondition bf = new BeforeCondition();
+        bf.setPermission999();
+        bf.updatePubPriKey();
+        bf.collAddressTest();
+        Thread.sleep(SLEEPTIME);
     }
 
     @Test
@@ -130,7 +124,6 @@ public class TestTxType {
         assertEquals(false,toolID.isEmpty());  //主链才做数据库清理操作，因子链不测试节点动态变更交易
         if(subLedger == "") {
             setDatabaseMysql.setDBMysql();
-            bReg = false; //清除数据库后需要重新创建子链、赋权限、是否更新密钥类型、添加发行地址归集地址等
             initSetting();
         }
 

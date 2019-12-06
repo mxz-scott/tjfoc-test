@@ -31,11 +31,10 @@ public class LocalStoreTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        if (certPath != "" && bReg == false) {
+        if (MULITADD1.isEmpty()) {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             Thread.sleep(SLEEPTIME);
-            bReg = true;
         }
     }
 

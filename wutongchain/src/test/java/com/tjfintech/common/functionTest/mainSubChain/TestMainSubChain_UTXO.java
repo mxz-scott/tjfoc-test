@@ -42,9 +42,7 @@ public class TestMainSubChain_UTXO {
         beforeCondition.clearDataSetPerm999();
         beforeCondition.updatePubPriKey();
         beforeCondition.collAddressTest();
-//        beforeCondition.createAdd();
         sleepAndSaveInfo(SLEEPTIME);
-        bReg = false;
     }
 
     @Before

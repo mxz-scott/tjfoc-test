@@ -40,12 +40,11 @@ public class MultiSignInvalidTest {
     @Before
     public void createmultiaddr() throws Exception{
 
-        if(certPath!=""&& bReg==false) {
+        if(MULITADD1.isEmpty()) {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();
             Thread.sleep(SLEEPTIME);
-            bReg=true;
         }
 
         Map<String, Object> map =  new HashMap<>();

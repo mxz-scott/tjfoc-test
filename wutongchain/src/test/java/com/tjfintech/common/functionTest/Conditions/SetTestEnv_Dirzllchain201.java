@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 @Slf4j
-public class SetTestEnv2 {
+public class SetTestEnv_Dirzllchain201 {
 
    @Test
     public void test(){
@@ -30,6 +30,7 @@ public class SetTestEnv2 {
        PeerTPName = "Mp";
        SDKTPName = "sdk";
        ToolTPName = "toolkit";
+       tmuxSession = "tmux send -t M2 ";
     }
 
 }

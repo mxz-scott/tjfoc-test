@@ -42,12 +42,11 @@ public class  MultiTestInvalid {
     @Before
     public void beforeConfig() throws Exception {
 
-        if(certPath!=""&& bReg==false) {
+        if(MULITADD1.isEmpty()) {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();
             Thread.sleep(SLEEPTIME);
-            bReg=true;
         }
 
         log.info("发行两种token100.123个");
