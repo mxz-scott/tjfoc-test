@@ -97,6 +97,7 @@ public class UtilsClass {
     public static String PeerTPName="wtchain";
     public static String SDKTPName="wtsdk";
     public static String ToolTPName="toolkit";
+    public static String tmuxSession = "tmux send -t M2 ";
 
     public static String PEER1MAC="";
     public static String PEER2MAC="";
@@ -122,7 +123,7 @@ public class UtilsClass {
     public static String ids = " -m "+ id1+","+ id2+","+ id3;
 
     public static String startPeerCmd = "sh "+ PeerPATH +"start.sh";
-    public static String tmuxSession = "tmux send -t M2 ";
+
     public static String startSDKCmd ="sh "+ SDKPATH +"start.sh";
     public static String killPeerCmd = "ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9";
     public static String killSDKCmd = "ps -ef |grep " + SDKTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9";
