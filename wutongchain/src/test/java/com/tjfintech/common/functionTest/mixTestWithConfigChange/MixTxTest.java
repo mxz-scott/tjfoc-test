@@ -179,7 +179,7 @@ public class MixTxTest {
         String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
 
         //调用合约内的交易
-        String response2 = wvmContractTest.invokeNew(ctHash,"init",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
+        String response2 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
 
 
