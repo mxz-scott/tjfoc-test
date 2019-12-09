@@ -10,6 +10,9 @@ public class SetTestEnv_Dirzxx {
 
    @Test
     public void test(){
+     SDKADD = "http://10.1.3.246:8080";
+     rSDKADD = "http://10.1.3.246:8080";
+     TOKENADD = "http://10.1.3.246:9090";
        //设置测试环境使用的节点端口及部署目录信息
       PEER1IP="10.1.3.240";
       PEER2IP="10.1.3.246";

@@ -9,6 +9,7 @@ public class SetTestEnv_Dirzllchain201 {
 
    @Test
     public void test(){
+       SDKADD = "http://10.1.3.240:7779";
        //设置测试环境使用的节点端口及部署目录信息
        PEER1IP = "10.1.3.240";
        PEER2IP = "10.1.3.246";

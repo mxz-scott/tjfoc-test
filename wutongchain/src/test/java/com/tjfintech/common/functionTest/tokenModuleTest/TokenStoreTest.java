@@ -104,7 +104,7 @@ public class TokenStoreTest {
         assertThat(response16,
                 anyOf(containsString("Duplicate transaction, hash: " + storeHash),
                         containsString("transactionFilter exist")));
-        sleepAndSaveInfo(400,"waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
+        sleepAndSaveInfo(200,"waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
         String response17 = tokenModule.tokenCreateStore(Data);
 //        assertEquals(true,response16.contains("Duplicate transaction, hash: " + storeHash));
         assertThat(response17,

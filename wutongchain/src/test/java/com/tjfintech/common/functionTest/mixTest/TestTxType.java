@@ -15,6 +15,7 @@ import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.UtilsClass;
 import static com.tjfintech.common.CommonFunc.*;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
 
@@ -385,14 +386,8 @@ public class TestTxType {
         List<Map> listST = constructUTXOTxDetailList(ADDRESS1,ADDRESS3,tokenTypeS,amountTransfer);
         List<Map> listST2 = constructUTXOTxDetailList(ADDRESS1,ADDRESS1,tokenTypeS,String.valueOf(Integer.parseInt(amount)-Integer.parseInt(amountTransfer)),listST);
 
-        checkListArray(listST2,uxtoJson.getJSONArray("Records"));
-
-        assertEquals(ADDRESS1,uxtoJson.getJSONArray("Records").getJSONObject(0).getString("From"));
-        assertEquals(ADDRESS3,uxtoJson.getJSONArray("Records").getJSONObject(0).getString("To"));
-        assertEquals(tokenTypeS,uxtoJson.getJSONArray("Records").getJSONObject(0).getString("TokenType"));
-        assertEquals(amountTransfer,uxtoJson.getJSONArray("Records").getJSONObject(0).getString("Amount"));
-        checkFromTo(uxtoJson,ADDRESS1,ADDRESS3,tokenTypeS,amountTransfer,0);
-        checkFromTo(uxtoJson,ADDRESS1,ADDRESS1,tokenTypeS,String.valueOf(Integer.parseInt(amount)-Integer.parseInt(amountTransfer)),1);
+        JSONArray jsonArrayCheck = uxtoJson.getJSONArray("Records");
+        checkListArray(listST2,jsonArrayCheck);
 
 
         //检查多签发行交易信息
@@ -419,9 +414,8 @@ public class TestTxType {
         List<Map> listMT = constructUTXOTxDetailList(IMPPUTIONADD,ADDRESS5,tokenTypeM,tranferAmount);
         List<Map> listMT2 = constructUTXOTxDetailList(IMPPUTIONADD,IMPPUTIONADD,tokenTypeM,String.valueOf(Integer.parseInt(amount1)-Integer.parseInt(tranferAmount)),listMT);
 
-        checkFromTo(uxtoJson,IMPPUTIONADD,ADDRESS5,tokenTypeM,tranferAmount,0);
-        checkFromTo(uxtoJson,IMPPUTIONADD,IMPPUTIONADD,tokenTypeM, String.valueOf(Integer.parseInt(amount1)-Integer.parseInt(tranferAmount)),1);
-        checkListArray(listMT2,uxtoJson.getJSONArray("Records"));
+        jsonArrayCheck = uxtoJson.getJSONArray("Records");
+        checkListArray(listMT2,jsonArrayCheck);
 
         //单签回收
         String recySoloAmount="600";
@@ -444,12 +438,9 @@ public class TestTxType {
         uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash7)).getJSONObject("Data").getJSONObject("UTXO"));
 
         List<Map> listSD = constructUTXOTxDetailList(ADDRESS1,zeroAddr,tokenTypeS,recySoloAmount);
-        List<Map> listSD2 = constructUTXOTxDetailList(ADDRESS1,ADDRESS1,tokenTypeM,String.valueOf(Integer.parseInt(amount)-Integer.parseInt(amountTransfer)-Integer.parseInt(recySoloAmount)),listSD);
-        checkListArray(listSD2,uxtoJson.getJSONArray("Records"));
-
-        checkFromTo(uxtoJson,ADDRESS1,zeroAddr,tokenTypeS,recySoloAmount,0);
-        checkFromTo(uxtoJson,ADDRESS1,ADDRESS1,tokenTypeS,String.valueOf(Integer.parseInt(amount)-Integer.parseInt(amountTransfer)-Integer.parseInt(recySoloAmount)),1);
-
+        List<Map> listSD2 = constructUTXOTxDetailList(ADDRESS1,ADDRESS1,tokenTypeS,String.valueOf(Integer.parseInt(amount)-Integer.parseInt(amountTransfer)-Integer.parseInt(recySoloAmount)),listSD);
+        jsonArrayCheck = uxtoJson.getJSONArray("Records");
+        checkListArray(listSD2,jsonArrayCheck);
 
         //检查多签回收交易信息
         String txHash8 = JSONObject.fromObject(RecycleMultiInfo).getJSONObject("Data").get("TxId").toString();
@@ -458,11 +449,9 @@ public class TestTxType {
 
         List<Map> listMD = constructUTXOTxDetailList(IMPPUTIONADD,zeroAddr,tokenTypeM,recyMultiAmount);
         List<Map> listMD2 = constructUTXOTxDetailList(IMPPUTIONADD,IMPPUTIONADD,tokenTypeM,String.valueOf(Integer.parseInt(amount1)-Integer.parseInt(tranferAmount)-Integer.parseInt(recyMultiAmount)),listMD);
-        checkListArray(listMD2,uxtoJson.getJSONArray("Records"));
-
-        checkFromTo(uxtoJson,IMPPUTIONADD,zeroAddr,tokenTypeM,recyMultiAmount,0);
-        checkFromTo(uxtoJson,IMPPUTIONADD,IMPPUTIONADD,tokenTypeM,String.valueOf(Integer.parseInt(amount1)-Integer.parseInt(tranferAmount)-Integer.parseInt(recyMultiAmount)),1);
-    }
+        jsonArrayCheck = uxtoJson.getJSONArray("Records");
+        checkListArray(listMD2,jsonArrayCheck);
+   }
 
     public void checkFromTo(JSONObject jsonObject,String from,String to,String TokenType,String amount,int index)throws Exception{
         assertEquals(from,jsonObject.getJSONArray("Records").getJSONObject(index).getString("From"));
