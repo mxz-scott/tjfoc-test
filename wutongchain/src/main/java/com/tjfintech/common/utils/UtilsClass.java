@@ -75,43 +75,38 @@ public class UtilsClass {
     public static String userId06 = "tkAc6" + Random(6);
     public static String userId07 = "tkAc7" + Random(6);
 
-    public static boolean bReg=false;
-   //add parameters for manage tool
-    public static final String PEER1IP="10.1.3.240";
-    public static final String PEER2IP="10.1.3.246";
-    public static final String PEER3IP="10.1.5.168";
-    public static final String PEER4IP="10.1.3.247";
-    public static final String PEER1RPCPort="9300";
-    public static final String PEER2RPCPort="9300";
-    public static final String PEER3RPCPort="9300";
-    public static final String PEER4RPCPort="9300";
-//    public static final String PEER1RPCPort="9400";
-//    public static final String PEER2RPCPort="9500";
-//    public static final String PEER3RPCPort="9400";
-//    public static final String PEER4RPCPort="9400";
-    public static final String PEER1TCPPort="60011";
-    public static final String PEER2TCPPort="60011";
-    public static final String PEER3TCPPort="60011";
-    public static final String PEER4TCPPort="60012";
-    public static String PEER1MAC="02:42:fc:a2:5b:1b";
-    public static String PEER2MAC="02:42:c0:31:6b:5c";
-    public static String PEER3MAC="02:42:c4:b9:82:6e";
-    public static String PEER4MAC="02:42:dd:6c:4a:92";
-    public static final String version="2.1";
-    public static final String USERNAME="root";
-    public static final String PASSWD="root";
-    //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-    public static final String PTPATH="/root/zll/permission/";
-//    public static final String PTPATH="/root/zll/chain2.0.1/";
-    public static final String SDKPATH = PTPATH + "sdk/";
-    public static final String PeerPATH = PTPATH + "peer/";
-    public static final String ToolPATH = PTPATH + "toolkit/";
-    public  static String SDKID=null;
+   //add parameters for manage tool 环境变更有变更
+    public static String PEER1IP = "10.1.3.240";
+    public static String PEER2IP = "10.1.3.246";
+    public static String PEER3IP = "10.1.5.168";
+    public static String PEER4IP = "10.1.3.247";
+    public static String PEER1RPCPort = "9300";
+    public static String PEER2RPCPort = "9300";
+    public static String PEER3RPCPort = "9300";
+    public static String PEER4RPCPort = "9300";
+    public static String PEER1TCPPort = "60010";
+    public static String PEER2TCPPort = "60010";
+    public static String PEER3TCPPort = "60010";
+    public static String PEER4TCPPort = "60010";
+
+    //节点、SDK、Toolkit对等目录放置于PTPATH目录下 环境变更有变更
+    public static String PTPATH="/root/zll/permission/";
+    public static String SDKPATH = PTPATH + "sdk/";
+    public static String PeerPATH = PTPATH + "peer/";
+    public static String ToolPATH = PTPATH + "toolkit/";
     public static String PeerTPName="wtchain";
-//    public static String PeerTPName="Mp";
     public static String SDKTPName="wtsdk";
-//    public static String SDKTPName="sdk";
-    public static String ToolTPName="wttool";
+    public static String ToolTPName="toolkit";
+    public static String tmuxSession = "tmux send -t M2 ";
+
+    public static String PEER1MAC="";
+    public static String PEER2MAC="";
+    public static String PEER3MAC="";
+    public static String PEER4MAC="";
+    public static String version="2.1";
+    public static String USERNAME="root";
+    public static String PASSWD="root";
+    public static String SDKID=null;
     public static ArrayList<String > peerList=new ArrayList<>();
     public static int RESTARTTIME=20000;
     public static long ContractInstallSleep=75000;
@@ -128,7 +123,7 @@ public class UtilsClass {
     public static String ids = " -m "+ id1+","+ id2+","+ id3;
 
     public static String startPeerCmd = "sh "+ PeerPATH +"start.sh";
-    public static String tmuxSession = "tmux send -t M2 ";
+
     public static String startSDKCmd ="sh "+ SDKPATH +"start.sh";
     public static String killPeerCmd = "ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9";
     public static String killSDKCmd = "ps -ef |grep " + SDKTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9";

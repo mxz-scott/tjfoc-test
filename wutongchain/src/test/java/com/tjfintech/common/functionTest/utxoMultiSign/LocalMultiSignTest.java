@@ -37,12 +37,11 @@ public class LocalMultiSignTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        if (certPath != "" && bReg == false) {
+        if (MULITADD1.isEmpty()) {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();
             Thread.sleep(SLEEPTIME);
-            bReg = true;
         }
     }
 

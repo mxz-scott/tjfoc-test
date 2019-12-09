@@ -36,12 +36,10 @@ public class MultiTest_33_12 {
     //@Test
     @Before
     public void beforeConfig() throws Exception {
-        if(certPath!=""&& bReg==false) {
+        if(MULITADD1.isEmpty()) {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();
-
-            bReg=true;
         }
     }
 

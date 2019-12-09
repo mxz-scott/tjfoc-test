@@ -144,7 +144,7 @@ public class CommonFunc {
      * @param amount
      * @return
      */
-    public List<Map> constructUTXOTxDetailList(String from, String to, String tokenType, String amount){
+    public static List<Map> constructUTXOTxDetailList(String from, String to, String tokenType, String amount){
         List<Map> tokenList = new ArrayList<>();
         Map<String,Object> amountMap = new LinkedHashMap<>();
 
@@ -165,7 +165,7 @@ public class CommonFunc {
      * @param list
      * @return
      */
-    public List<Map> constructUTXOTxDetailList(String from, String to, String tokenType, String amount, List<Map> list){
+    public static List<Map> constructUTXOTxDetailList(String from, String to, String tokenType, String amount, List<Map> list){
         List<Map>tokenList=new ArrayList<>();
         for(int i = 0 ; i < list.size() ; i++) {
             tokenList.add(list.get(i));
@@ -182,14 +182,14 @@ public class CommonFunc {
     }
 
 
-    public boolean checkListArray(List<Map> list, JSONArray jsonArray){
+    public static boolean checkListArray(List<Map> list, JSONArray jsonArray){
         boolean bResult = true;
 
         for(int i= 0;i<list.size();i++){
             String checkStr = list.get(i).toString().replaceAll("=",":").replaceAll(" ","");
             boolean bMatch = false;
-//            log.info("+++++++++++++++++" + checkStr);
-//            log.info("+++++++++++++++++" + jsonArray.toString());
+            log.info("+++++++++++++++++" + checkStr);
+            log.info("+++++++++++++++++" + jsonArray.toString());
             for(int j = 0;j < jsonArray.size(); j++){
                 if(checkStr.equals(jsonArray.get(j).toString())){
                     bMatch = true;

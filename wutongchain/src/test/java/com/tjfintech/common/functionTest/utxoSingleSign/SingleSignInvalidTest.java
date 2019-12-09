@@ -36,12 +36,11 @@ public class SingleSignInvalidTest {
     @Before
     public void updateMaxValue() throws Exception {
 
-        if(certPath!=""&& bReg==false) {
+        if(MULITADD1.isEmpty()) {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();
             Thread.sleep(SLEEPTIME);
-            bReg=true;
         }
 
         if (UtilsClass.PRECISION == 10) {

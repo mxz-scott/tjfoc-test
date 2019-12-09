@@ -42,12 +42,10 @@ public class SoloTestInvalid {
     @Before
     //@Test
     public void beforeConfig() throws Exception {
-        if(certPath!=""&& bReg==false) {
+        if(MULITADD1.isEmpty()) {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();
-
-            bReg=true;
         }
 
         issueAmount1 = "100.12345678912345";

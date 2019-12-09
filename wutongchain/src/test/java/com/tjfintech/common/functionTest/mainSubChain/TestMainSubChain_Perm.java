@@ -39,6 +39,7 @@ public class TestMainSubChain_Perm {
         BeforeCondition beforeCondition = new BeforeCondition();
         beforeCondition.clearDataSetPerm999();
         beforeCondition.updatePubPriKey();
+        beforeCondition.createAddresses();
         sleepAndSaveInfo(SLEEPTIME);
     }
 

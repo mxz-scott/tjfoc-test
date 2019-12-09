@@ -41,13 +41,11 @@ public class MixTxTest {
     ArrayList<String> txHashNo = new ArrayList<>();
     @Before
     public void beforeConfig() throws Exception {
-        if(bReg==false) {
+        if(MULITADD1.isEmpty()) {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();
-//            bf.createAdd();
             Thread.sleep(8000);
-            bReg=true;
         }
     }
 

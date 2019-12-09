@@ -45,11 +45,9 @@ public class BlockSyncTest {
 
     String wvmHash = "";
 
-    //boolean bRe=false;
     @Before
     public void beforeConfig() throws Exception {
         setAndRestartPeerList(clearPeerDB,clearPeerWVMsrc,clearPeerWVMbin,resetPeerBase,resetPeerConfig);
-        bReg = false;
         delDataBase();//清空sdk当前使用数据库数据
         setAndRestartSDK();
         hashList.clear();
@@ -175,7 +173,6 @@ public class BlockSyncTest {
                 ,"cp "+ PeerPATH + "conf/configData.toml "+ PeerPATH + "conf/"+PeerMemConfig+".toml");
         delDataBase();//清空sdk当前使用数据库数据
         setAndRestartSDK();
-        bReg = false;//清除数据库后需要重新进行地址添加、注册、赋权限等操作
         testTxType.initSetting();
 
         String syncPeer=PEER4IP; //247为非共识节点
