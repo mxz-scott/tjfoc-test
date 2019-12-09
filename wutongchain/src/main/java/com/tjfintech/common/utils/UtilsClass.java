@@ -132,7 +132,7 @@ public class UtilsClass {
     public static String clearPeerWVMbin = "cd "+ PeerPATH + "contracts/bin/;ls |grep -v Sys_StoreEncrypted|xargs rm -rf ";
     public static String resetPeerBase = "cp " + PeerPATH + "conf/baseOK.toml " + PeerPATH + "conf/base.toml";
     public static String resetPeerConfig = "cp "+ PeerPATH + "configOK.toml "+ PeerPATH  + PeerMemConfig+".toml";
-    public static String resetSDKConfig = "cp " + SDKPATH + "conf/configOK.toml " + SDKPATH + "conf/config.toml";
+    public static String resetSDKConfig = "cp " + SDKPATH + "conf/configMysql.toml " + SDKPATH + "conf/config.toml";
     public static String getPeerVerByShell = "cd " + PeerPATH + ";./"+ PeerTPName + " version| grep \"Peer Version\" |cut -d \":\" -f 2";
     public static String getSDKVerByShell = "cd " + SDKPATH + ";./"+ SDKTPName + " version| grep \"SDK Version\" |cut -d \":\" -f 2";
     public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";

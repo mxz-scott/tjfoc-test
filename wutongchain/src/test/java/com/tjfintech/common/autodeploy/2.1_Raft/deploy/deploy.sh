@@ -20,7 +20,7 @@ peerCACert=cacert
 
 #节点部署目录 仅支持创建最后一级目录，即主机当前必须存在deployRootdir目录
 deployRootdir=/root
-deploydir=$deployRootdir/ate
+deploydir=$deployRootdir/ake
 if [[ ${deployRootdir//\//}  == ${deploydir//\//} ]];then
    echo "\"deploydir\" should not be equal to \"deployRootdir\" for rm file risk"
    exit
@@ -34,9 +34,9 @@ remotesdkName=wtcli
 remotetoolDir=wttool
 remotetoolName=wtkit
 
-walletEnabled=false
+walletEnabled=true
 remoteSDKDBProvider=mysql
-remoteSDKDBPath="root:root@tcp(10.1.3.246:3306)/wallet210?charset=utf8"
+remoteSDKDBPath="root:root@tcp(10.1.3.162:3306)/wallet210?charset=utf8"
 
 peerCAEnabled=false
 peerCAAddr=10.1.3.224:9001
@@ -50,10 +50,10 @@ licAuto=true
 #定义是否所有节点使用同一个port端口
 #same=1
 #定义节点tcp port
-peerTcpPort=50030
+peerTcpPort=56000
 
 #定义节点rpc port
-peerRpcPort=9800
+peerRpcPort=9600
 
 #定义sdk使用的port接口
 sdkPort=9999
@@ -67,6 +67,13 @@ declare -a sdkIPs
 declare -a sdkPaths
 
 declare -a types
+
+declare -a users
+declare -a passwds
+
+declare -A usersMap
+declare -A pwdsMap
+
 
 
 #临时文件解析目录
@@ -105,10 +112,8 @@ remotepeerconfig=$tempdir/peerconfigtemp.toml
 	echo -e "[[Members.Peers]]" >> $remotepeerconfig
 	echo -e "Id = \"empty$2\"" >> $remotepeerconfig
 	echo -e "ShownName = \"$1\"" >> $remotepeerconfig
-	echo -e "Type = $5" >> $remotepeerconfig
+	echo -e "Type = $4" >> $remotepeerconfig
 	echo -e "Addr = \"/ip4/$2/tcp/$3\"" >> $remotepeerconfig
-	echo -e "OutAddr = \"/ip4/$2/tcp/$3\"" >> $remotepeerconfig
-	echo -e "RpcPort = $4" >> $remotepeerconfig
 	echo -e >> $remotepeerconfig
  }
 
@@ -136,6 +141,11 @@ remotepeerconfig=$tempdir/peerconfigtemp.toml
 		then 
 			continue
 	fi
+	
+	if [[ $line = *[type]* ]]
+		then 
+			break
+	fi
 
 	if [ `grep -c "$line" $tempdir/temp.ini` -eq '0' ];then
 		echo $line >> $tempdir/temp.ini
@@ -146,9 +156,9 @@ remotepeerconfig=$tempdir/peerconfigtemp.toml
 	while read -r line
 	do
 		#./transfer.sh ./mkdir.sh $line /root 
-		./ssh.sh $line "rm -rf $1" 
-		./ssh.sh $line "rm -rf $1" 
-		./ssh.sh $line "mkdir $1"
+		./ssh.sh $line "rm -rf $1" ${usersMap[$line]} ${pwdsMap[$line]}
+		./ssh.sh $line "rm -rf $1" ${usersMap[$line]} ${pwdsMap[$line]}
+		./ssh.sh $line "mkdir $1" ${usersMap[$line]} ${pwdsMap[$line]}
 	
 	done < $tempdir/temp.ini
  }
@@ -159,15 +169,14 @@ remotepeerconfig=$tempdir/peerconfigtemp.toml
 
 	replaceAndInsert "TcpPort" $1 $remoteconfbase
 	replaceAndInsert "RpcPort" $2 $remoteconfbase
-	replaceAndInsert "OnlineCAEnabled" $3 $remoteconfbase
-	replaceAndInsert "CAAddress" \"$4\" $remoteconfbase
 	
 	contractlineno=`grep -n Contract ${remoteconfbase} | cut -d ":" -f 1`
 	sed -i -e ''$((contractlineno+1))'d' $remoteconfbase
-	sed -i ''$((contractlineno+1))'i Enabled = '$5'' $remoteconfbase
+	sed -i ''$((contractlineno+1))'i Enabled = '$3'' $remoteconfbase
 	
  }
  
+ #此func仅适用于被赋值的值为整数
  function replaceAndInsert(){
 
     lineno=`grep -n $1 $3 | cut -d ":" -f 1`
@@ -183,16 +192,17 @@ remotepeerconfig=$tempdir/peerconfigtemp.toml
 	echo "***********************************************"
 	echo $tempdir/tempsdkcluster.toml
 	echo $remotesdkconf
-	#sed -i '1 r "${tempdir}/tempsdkcluster.toml"' $remotesdkconf
-	sed -i '1 r temp/tempsdkcluster.toml' $remotesdkconf	
+	sed -i '2 r temp/tempsdkcluster.toml' $remotesdkconf	
  }
 
  ##//-----------------------------------------------------------------------------//
  function replaceCert(){
-	./transfer.sh "$certdir/$1/ca.pem" $2 $3
-	./transfer.sh "$certdir/$1/cert.pem" $2 $3
-	./transfer.sh "$certdir/$1/key.pem" $2 $3
-	./transfer.sh "$certdir/$1/pubkey.pem" $2 $3
+ #参数1为部署目录中指定证书目录名称 参数2为远程主机IP 参数3位传送至远程主机目录
+ #参数4和5分别是远程主机账户密码
+	./transfer.sh "$certdir/$1/ca.pem" $2 $3 $4 $5
+	./transfer.sh "$certdir/$1/cert.pem" $2 $3 $4 $5
+	./transfer.sh "$certdir/$1/key.pem" $2 $3 $4 $5
+	./transfer.sh "$certdir/$1/pubkey.pem" $2 $3 $4 $5
  }
  
  ##//-----------------------------------------------------------------------------// 
@@ -200,7 +210,8 @@ remotepeerconfig=$tempdir/peerconfigtemp.toml
 	
 	#replace peer id information
 	#参数1是远程主机IP；参数2是匹配关键字 ID；参数3是进入节点目录的指令:cd /root/zll/ate/wtchain1，参数4是节点init命令：./peer init
-	./getRemoteInfo.sh "$1" "$2" "$3" "$4"
+	#参数5 和参数6分别是主机的账户密码
+	./getRemoteInfo.sh "$1" "$2" "$3" "$4" "$5" "$6"
 	sed -i 's/[\r]//g' $tempdir/${2}_$1
 	echo **********************replacePeerId**************************
 	peerId=`grep $1 $tempdir/${2}_$1 | cut -d ":" -f 2`
@@ -220,7 +231,8 @@ remotepeerconfig=$tempdir/peerconfigtemp.toml
   #获取管理工具ID并替换节点base文件中的Admin
   echo **********************replaceAdminId**************************
    #参数1是远程主机IP；参数2是匹配关键字 id；参数3是进入节点目录的指令:cd /root/zll/ate/wttool1，参数4是节点getid命令：./wtkit getid -p crypt/key.pem
-  ./getRemoteInfo.sh "$1" "$2" "$3" "$4"
+   #参数5 和参数6分别是主机的账户密码
+  ./getRemoteInfo.sh "$1" "$2" "$3" "$4" "$5" "$6"
     #替换文件中可能存在的行尾换行符
     sed -i 's/[\r]//g' $tempdir/${2}_$1
     toolId=`grep $1 $tempdir/${2}_$1 | cut -d ":" -f 2`
@@ -239,7 +251,8 @@ remotepeerconfig=$tempdir/peerconfigtemp.toml
     echo **********************replaceSDKHttpPort**************************
     lineno=`grep -n Port $remotesdkconf | cut -d ":" -f 1`
 	sed -i -e ''$lineno'd' $remotesdkconf
-	sed -i '1i Port = '$1'' $remotesdkconf
+	#sed -i '1i Port = '$1'' $remotesdkconf
+	sed -i ''$lineno'i Port = '$1'' $remotesdkconf
 	#替换后可能存在dos下的换行，将其删除处理
 	sed -i 's/[\r]//g' $remoteconfbase
  }
@@ -276,34 +289,16 @@ remotepeerconfig=$tempdir/peerconfigtemp.toml
            then continue
         fi
 	    echo ++++++++++++++++++++++++++++createpeerlic exe++++++++++++++++++++++++++++++++++++++
-		./transfer.sh createLic.sh $line ${toolPaths[$index]}
-		./transfer.sh license $line ${toolPaths[$index]}
-		./ssh.sh $line "rm -f ${peerPaths[$index]}peer.lic"
-		./ssh.sh $line "cd ${toolPaths[$index]};./createLic.sh"
-		./ssh.sh $line "cp ${toolPaths[$index]}peer.lic ${peerPaths[$index]}"
+		./transfer.sh createLic.sh $line ${toolPaths[$index]} ${usersMap[$line]} ${pwdsMap[$line]}
+		./transfer.sh license $line ${toolPaths[$index]} ${usersMap[$line]} ${pwdsMap[$line]}
+		./ssh.sh $line "rm -f ${peerPaths[$index]}peer.lic" ${usersMap[$line]} ${pwdsMap[$line]}
+		./ssh.sh $line "cd ${toolPaths[$index]};./createLic.sh" ${usersMap[$line]} ${pwdsMap[$line]}
+		./ssh.sh $line "cp ${toolPaths[$index]}peer.lic ${peerPaths[$index]}" ${usersMap[$line]} ${pwdsMap[$line]}
 		
 		((index++))		
 	done < $tempdir/peer.ini
  }
  
- ##//-----------------------------------------------------------------------------//
- #确认在节点启动后是否存在无法连通的节点 使用wtchain test命令
- function checkPeerstatus(){
-
-    echo **********************checkPeerstatus**************************
-    #参数1是远程主机IP；参数2是匹配关键字 id；参数3是进入节点目录的指令:cd /root/zll/ate/wtchain，参数4是节点test命令：./wtpeer test
-   ./getRemoteInfo.sh "$1" "$2" "$3" "$4"
-    #替换文件中可能存在的行尾换行符
-    sed -i 's/[\r]//g' $tempdir/${2}_$1
-    toolId=`grep $1 $tempdir/${2}_$1 | cut -d ":" -f 2`
-	echo $toolId
-    idlineno=`grep -n Admin $remoteconfbase | cut -d ":" -f 1`
-	sed -i -e ''$idlineno'd' $remoteconfbase
-	sed -i ''$idlineno'i Admin = \"'$toolId'\"' $remoteconfbase
-	
-	#替换后可能存在dos下的换行，将其删除处理
-	sed -i 's/[\r]//g' $remoteconfbase
- }
  
  ##//-----------------------------------------------------------------------------//
  #部署之前先将目标主机节点及sdk进程关闭，否则可能会对数据产生影响
@@ -319,8 +314,8 @@ remotepeerconfig=$tempdir/peerconfigtemp.toml
 	 echo "********************kill $1 process********************"
 	 killprocess="ps -ef |grep $1 |grep -v grep |awk '{print \$2}'|xargs kill -9"
 	 checkpces="ps -ef |grep $1 |grep -v grep "
-	 ./ssh.sh $line "$checkpces"	
-	 ./ssh.sh $line "$killprocess"	
+	 ./ssh.sh $line "$checkpces" ${usersMap[$line]} ${pwdsMap[$line]}
+	 ./ssh.sh $line "$killprocess" ${usersMap[$line]} ${pwdsMap[$line]}
   
 	done < $2
  }
@@ -336,23 +331,15 @@ remotepeerconfig=$tempdir/peerconfigtemp.toml
 	no2=`cat -n setting.ini |grep sdk|awk '{print $1}'`
 	no3=`cat -n setting.ini |grep tool|awk '{print $1}'`
 	no4=`cat -n setting.ini |grep type|awk '{print $1}'`
+	no5=`cat -n setting.ini |grep IPUserPwd|awk '{print $1}'`
+	no6=`cat setting.ini | wc -l`
 
-	if [[ -z $no4 ]];then
-		no4=`cat setting.ini | wc -l`
-	else
-		no5=`cat setting.ini | wc -l`
-	fi
 
 	sed -n ''$(($no1+1))','$(($no2-1))'p' setting.ini > $tempdir/peer.ini
 	sed -n ''$(($no2+1))','$(($no3-1))'p' setting.ini > $tempdir/sdk.ini
-
-	if [[ -n $no5 ]];then
-		sed -n ''$(($no3+1))','$(($no4-1))'p' setting.ini > $tempdir/tool.ini
-		sed -n ''$(($no4+1))','$(($no5))'p' setting.ini > $tempdir/type.ini
-	else
-		sed -n ''$(($no3+1))','$(($no4))'p' setting.ini > $tempdir/tool.ini
-	fi
-  
+	sed -n ''$(($no3+1))','$(($no4-1))'p' setting.ini > $tempdir/tool.ini
+	sed -n ''$(($no4+1))','$(($no5))'p' setting.ini > $tempdir/type.ini
+	sed -n ''$(($no5+1))','$(($no6))'p' setting.ini > $tempdir/IPUserPwd.ini
  }
  ##//-----------------------------------------------------------------------------//
 
@@ -375,7 +362,7 @@ remotepeerconfig=$tempdir/peerconfigtemp.toml
 	fi
  
  } 
- 
+
  ##//-----------------------------------------------------------------------------//
  #设置echo显示字体突出颜色 天蓝色字
  function echoblue(){
@@ -420,9 +407,17 @@ find . -name license |xargs chmod +x
  
 #将setting.ini文件中的各个项分别另存到另外一个对应的文件中
 #setting.ini --> peer.ini sdk.ini tool.ini type.ini
-parseSettingIni
-
-
+parseSettingIni 
+#sed -i 's/[\r]//g' $tempdir/IPUserPwd.ini
+#将IP user 及IP passwd保存到map中
+while read -r line
+do 
+	array=(`echo $line`)
+	
+	usersMap[${array[0]}]=${array[1]}
+	pwdsMap[${array[0]}]=${array[2]}
+	
+done < $tempdir/IPUserPwd.ini
 
 #获取setting各个配置项数组
 types=($(getArrFromFile $tempdir/type.ini $arg1))
@@ -461,13 +456,13 @@ do
  fi
   
 
-  ./transfer.sh $dir/$localtoolDir $line $deploydir/$remotetoolDir
-  ./ssh.sh $line "cd $deploydir/$remotetoolDir;mv $localtoolName $remotetoolName"
+  ./transfer.sh $dir/$localtoolDir $line $deploydir/$remotetoolDir ${usersMap[$line]} ${pwdsMap[$line]}
+  ./ssh.sh $line "cd $deploydir/$remotetoolDir;mv $localtoolName $remotetoolName" ${usersMap[$line]} ${pwdsMap[$line]}
 
   
-  replaceCert $toolCert$toolNo $line $deploydir/$remotetoolDir/tls
+  replaceCert $toolCert$toolNo $line $deploydir/$remotetoolDir/tls ${usersMap[$line]} ${pwdsMap[$line]}
   #管理工具auth建议使用同一个key.pem 因此暂时不做auth目录下文件替换
-  #replaceCert $toolCert$toolNo $line $deploydir/$remotetoolDir/auth
+  #replaceCert $toolCert$toolNo $line $deploydir/$remotetoolDir/auth ${usersMap[$line]} ${pwdsMap[$line]}
  
   toolIPs[scpPathNo]=$line
   toolPaths[scpPathNo]=$deploydir/$remotetoolDir/
@@ -481,7 +476,7 @@ done < $tempdir/tool.ini
 #########################################################################
 #替换中的$tempdir/basetemp.toml 仅取其中一个wttool的id 默认第一个
 echoblue " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~replaceAdminId~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-replaceAdminId ${toolIPs[0]} "id:" "cd ${toolPaths[0]}" "./$remotetoolName getid -p crypt/key.pem"
+replaceAdminId ${toolIPs[0]} "id:" "cd ${toolPaths[0]}" "./$remotetoolName getid -p crypt/key.pem" ${usersMap[${toolIPs[0]}]} ${pwdsMap[${toolIPs[0]}]}
 
 
 #########################################################################
@@ -499,8 +494,8 @@ do
  fi
   
  #传送节点文件
- ./transfer.sh $dir/$localpeerDir $line $deploydir/$remotepeerDir
- ./ssh.sh $line "cd $deploydir/$remotepeerDir;mv $localpeerName $remotepeerName"
+ ./transfer.sh $dir/$localpeerDir $line $deploydir/$remotepeerDir ${usersMap[$line]} ${pwdsMap[$line]}
+ ./ssh.sh $line "cd $deploydir/$remotepeerDir;mv $localpeerName $remotepeerName" ${usersMap[$line]} ${pwdsMap[$line]}
 
  
  #替换peer.lic  licAuto=false时执行 判断文件夹中的lic个数是否满足主机个数，不满足则退出
@@ -510,19 +505,19 @@ do
 	    echored "peerlic is not enough,please check \"$licdir\""
 		exit
 	fi
-    ./transfer.sh $licdir/peer$peerNo.lic $line $deploydir/$remotepeerDir/peer.lic
+    ./transfer.sh $licdir/peer$peerNo.lic $line $deploydir/$remotepeerDir/peer.lic ${usersMap[$line]} ${pwdsMap[$line]}
  fi
  
  #替换tls cert 目录下证书
- replaceCert $peerCert$peerNo $line $deploydir/$remotepeerDir/tls
- replaceCert $peerCert$peerNo $line $deploydir/$remotepeerDir/cert
+ replaceCert $peerCert$peerNo $line $deploydir/$remotepeerDir/tls ${usersMap[$line]} ${pwdsMap[$line]}
+ replaceCert $peerCert$peerNo $line $deploydir/$remotepeerDir/cert ${usersMap[$line]} ${pwdsMap[$line]}
  #替换/ca/crypt目录下证书 与管理系统通讯证书
- replaceCert $peerCACert $line $deploydir/$remotepeerDir/ca/crypt
+ replaceCert $peerCACert $line $deploydir/$remotepeerDir/ca/crypt ${usersMap[$line]} ${pwdsMap[$line]}
  
  
  echo "********************replace peer conf/base.toml********************"
- matchBaseInfo $(($peerTcpPort)) $(($peerRpcPort)) $peerCAEnabled $peerCAAddr $contractEnabled
- ./transfer.sh $tempdir/basetemp.toml $line $deploydir/$remotepeerDir/conf/base.toml
+ matchBaseInfo $(($peerTcpPort)) $(($peerRpcPort)) $contractEnabled
+ ./transfer.sh $tempdir/basetemp.toml $line $deploydir/$remotepeerDir/conf/base.toml ${usersMap[$line]} ${pwdsMap[$line]}
  #rm -f $tempdir/basetemp.toml
 
 #配置peerconfigtemp.toml中的节点信息 
@@ -531,9 +526,12 @@ if [[ $typeNo -gt 0 ]];then
 	consenType=${types[$scpPathNo]}
 fi
 
-addConf peer$peerNo $line $(($peerTcpPort)) $(($peerRpcPort)) $consenType
+addConf peer$peerNo $line $(($peerTcpPort)) $consenType
+
+
+#$(($peerRpcPort))
 #替换peerconfigtemp.toml中的节点Id信息
-replacePeerId $line "ID:" "cd $deploydir/$remotepeerDir/" "./$remotepeerName id"
+replacePeerId $line "ID:" "cd $deploydir/$remotepeerDir/" "./$remotepeerName id" ${usersMap[$line]} ${pwdsMap[$line]}
 
 
 addSDKconfCluster $line:$(($peerRpcPort))
@@ -548,12 +546,11 @@ peerPaths[scpPathNo]=$deploydir/$remotepeerDir/
 done < $tempdir/peer.ini
 
 
-
 #替换部署节点中的所有的config.toml文件
 for i in ${!peerPaths[@]}
   do
 	 echo "********************replace peer config.toml********************"
-     ./transfer.sh $remotepeerconfig ${peerIPs[$i]} ${peerPaths[$i]}config.toml
+     ./transfer.sh $remotepeerconfig ${peerIPs[$i]} ${peerPaths[$i]}config.toml ${usersMap[${peerIPs[$i]}]} ${pwdsMap[${peerIPs[$i]}]}
   done
   
 
@@ -580,13 +577,13 @@ do
    then continue
  fi
 
-  ./transfer.sh $dir/$localsdkDir $line $deploydir/$remotesdkDir
-  ./ssh.sh $line "cd $deploydir/$remotesdkDir;mv $localsdkName $remotesdkName"
+  ./transfer.sh $dir/$localsdkDir $line $deploydir/$remotesdkDir ${usersMap[$line]} ${pwdsMap[$line]}
+  ./ssh.sh $line "cd $deploydir/$remotesdkDir;mv $localsdkName $remotesdkName" ${usersMap[$line]} ${pwdsMap[$line]}
 
   
   #更新证书
-  replaceCert $sdkCert$sdkNo $line $deploydir/$remotesdkDir/tls
-  replaceCert $sdkCert$sdkNo $line $deploydir/$remotesdkDir/auth
+  replaceCert $sdkCert$sdkNo $line $deploydir/$remotesdkDir/tls ${usersMap[$line]} ${pwdsMap[$line]}
+  replaceCert $sdkCert$sdkNo $line $deploydir/$remotesdkDir/auth ${usersMap[$line]} ${pwdsMap[$line]}
 
   #将节点集群信息更新到sdk/conf/config.toml文件中
   updateSDKPeerClusterInfo
@@ -595,7 +592,7 @@ do
   replaceSDKHttpPort $(($sdkPort))
   replaceDBInfo $remoteSDKDBProvider $remoteSDKDBPath $walletEnabled
   #传送sdk配置文件至远程sdk主机
-  ./transfer.sh $remotesdkconf $line $deploydir/$remotesdkDir/conf/config.toml
+  ./transfer.sh $remotesdkconf $line $deploydir/$remotesdkDir/conf/config.toml ${usersMap[$line]} ${pwdsMap[$line]}
 
   sdkIPs[index]=$line
   sdkPaths[index]=$deploydir/$remotesdkDir 
@@ -613,7 +610,7 @@ echoblue " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~start peer process~~~~~~~~~~~~~~~~
 #启动所有节点和SDK
 for i in ${!peerPaths[@]}
   do
-     ./ssh.sh ${peerIPs[$i]} "cd ${peerPaths[$i]};./$remotepeerName start -d"
+     ./ssh.sh ${peerIPs[$i]} "cd ${peerPaths[$i]};./$remotepeerName start -d" ${usersMap[${peerIPs[$i]}]} ${pwdsMap[${peerIPs[$i]}]}
   done
 
 sleep 10
@@ -621,8 +618,8 @@ sleep 10
 #########################################################################
 #通过wtpeer test指令检查节点情况,需要查看脚本执行信息  红底白字
 echowhitered "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~wtpeer test status~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-./ssh.sh ${peerIPs[0]} "cd ${peerPaths[0]};./$remotepeerName test"
-./ssh.sh ${peerIPs[1]} "cd ${peerPaths[1]};./$remotepeerName test"
+./ssh.sh ${peerIPs[0]} "cd ${peerPaths[0]};./$remotepeerName test" ${usersMap[${peerIPs[0]}]} ${pwdsMap[${peerIPs[0]}]}
+./ssh.sh ${peerIPs[1]} "cd ${peerPaths[1]};./$remotepeerName test" ${usersMap[${peerIPs[1]}]} ${pwdsMap[${peerIPs[1]}]}
 
 #########################################################################
 #给所有sdk赋权限
@@ -631,7 +628,7 @@ for i in ${!sdkIPs[@]}
   do
      echo "********************start $remotesdkName process********************"
 	 key="SDK_ID:"
-     ./getRemoteInfo.sh "${sdkIPs[$i]}" "$key" "cd ${sdkPaths[$i]}" "./$remotesdkName start -d"
+     ./getRemoteInfo.sh "${sdkIPs[$i]}" "$key" "cd ${sdkPaths[$i]}" "./$remotesdkName getid" ${usersMap[${sdkIPs[$i]}]} ${pwdsMap[${sdkIPs[$i]}]}
 	 #去掉文件中可能存在的行尾换行符
 	 sed -i 's/[\r]//g' $tempdir/${key}_${sdkIPs[$i]}
 	 cat $tempdir/${key}_${sdkIPs[$i]}
@@ -640,7 +637,7 @@ for i in ${!sdkIPs[@]}
 	 echo "********************set permission 999********************"
 	 rpcport=$(($peerRpcPort))
 	 setperm="./$remotetoolName permission -p $rpcport -d $sdkId -m 999"
-	./getRemoteInfo.sh ${toolIPs[0]} "success:" "cd ${toolPaths[0]}" "$setperm"
+	./getRemoteInfo.sh ${toolIPs[0]} "success:" "cd ${toolPaths[0]}" "$setperm" ${usersMap[${toolIPs[0]}]} ${pwdsMap[${toolIPs[0]}]}
      
   done
   

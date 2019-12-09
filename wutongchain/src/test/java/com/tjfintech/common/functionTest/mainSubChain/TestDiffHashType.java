@@ -39,6 +39,8 @@ public class TestDiffHashType {
         setSM3part.setHashsm3();
         subLedger = "";
         beforeCondition.setPermission999();
+        beforeCondition.updatePubPriKey();
+        Thread.sleep(SLEEPTIME);
         //创建子链，包含三个节点 hashtype 使用sha256 主链使用sm3
         String chainName="tc1649_01";
         String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,
@@ -53,8 +55,8 @@ public class TestDiffHashType {
 //        assertEquals(resp.contains(glbChain01), true);
 
         //设置主链sm3 sdk使用sha256 （子链sha256）
-        setAndRestartPeerList(resetPeerBase);
-        setAndRestartSDK("cp "+ SDKPATH + "conf/configSHA256.toml "+ SDKPATH + "conf/config.toml");
+//        setAndRestartPeerList("sed -i 's/sm3/sha256/g " + PTPATH + "conf/base.toml");
+        setAndRestartSDK("sed -i 's/sm3/sha256/g' " + SDKPATH + "conf/config.toml");//将sm3替换成sha256
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链可以成功发送，主链无法成功发送
@@ -63,6 +65,8 @@ public class TestDiffHashType {
         assertThat(response2,containsString("hash error want"));
 
         subLedger=chainName;
+        beforeCondition.collAddressTest();
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
         String response1 = store.CreateStore("tc1649 data");
         assertEquals("200",JSONObject.fromObject(response1).getString("State"));  //确认可以发送成功
 
@@ -82,9 +86,9 @@ public class TestDiffHashType {
 
         //设置主链sm3 sdk使用sm3 （子链sha256）
         //setAndRestartPeerList(resetPeerBase);
-        setAndRestartSDK(resetSDKConfig);
+        setAndRestartSDK("sed -i 's/sha256/sm3/g' " + SDKPATH + "conf/config.toml");//将sha256替换成sm3
 
-        //检查主链可以成功发送，子链无法成功发送
+        //检查主/子链可以成功发送
         subLedger="";
         String response3 = store.CreateStore("tc1650 data");
         assertEquals("200",JSONObject.fromObject(response3).getString("State"));  //确认可以发送成功
@@ -98,6 +102,16 @@ public class TestDiffHashType {
         String response4 = store.CreateStore("tc1649 data");
         assertEquals("200",JSONObject.fromObject(response4).getString("State"));  //确认可以发送成功
 
+        String tokenType2 = "subTT" + Random(5);
+        String issueInfo2 = soloSign.issueToken(PRIKEY1,tokenType2,"1000","PRIKEY1 发行",PRIKEY1);
+        assertEquals("200",JSONObject.fromObject(issueInfo2).getString("State"));
+
+        sleepAndSaveInfo(SLEEPTIME*2);
+        String txHash3 =JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));  //确认可以c查询成功
+        //确认数据库同步无异常
+        String query2 = soloSign.Balance(PRIKEY1,tokenType2);
+        assertEquals("1000", JSONObject.fromObject(query2).getJSONObject("Data").getString("Total"));
     }
 
     @Test
@@ -107,6 +121,7 @@ public class TestDiffHashType {
         setSHA256.setHashSHA256();
         subLedger = "";
         beforeCondition.setPermission999();
+        beforeCondition.updatePubPriKey();
         sleepAndSaveInfo(SLEEPTIME);
 
         //创建子链，包含三个节点 hashtype 子链sm3 主链使用sha256
@@ -114,16 +129,19 @@ public class TestDiffHashType {
         String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        sleepAndSaveInfo(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), true);
-//        assertEquals(resp.contains(glbChain01), true);
 
-        sleepAndSaveInfo(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME);
         mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
+
         subLedger=chainName;
+        beforeCondition.collAddressTest();
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
         String response2 = store.CreateStore("tc1649 data");
         assertEquals("200",JSONObject.fromObject(response2).getString("State"));  //确认可以发送成功
 
@@ -148,7 +166,7 @@ public class TestDiffHashType {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));  //确认可以c查询成功
 
 
-        //设置主链sm3 sdk使用sha256 （子链sha256）
+        //设置主链sha256 sdk使用sm3 （子链sha256）
         setAndRestartSDK(resetSDKConfig);
 
         sleepAndSaveInfo(SLEEPTIME);
@@ -157,9 +175,16 @@ public class TestDiffHashType {
         String response3 = store.CreateStore("tc1650 data");
         assertEquals("200",JSONObject.fromObject(response3).getString("State"));  //确认可以发送成功
 
+        String tokenType2 = "subTT" + Random(5);
+        String issueInfo2 = soloSign.issueToken(PRIKEY1,tokenType2,"1000","PRIKEY1 发行",PRIKEY1);
+        assertEquals("200",JSONObject.fromObject(issueInfo2).getString("State"));
+
         sleepAndSaveInfo(SLEEPTIME*2);
-        String txHash2 =JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));  //确认可以c查询成功
+        String txHash3 =JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));  //确认可以c查询成功
+        //确认数据库同步无异常
+        String query2 = soloSign.Balance(PRIKEY1,tokenType2);
+        assertEquals("1000", JSONObject.fromObject(query2).getJSONObject("Data").getString("Total"));
 
         subLedger="";
         String response4 = store.CreateStore("tc1651 data");
