@@ -8,6 +8,7 @@ import com.tjfintech.common.functionTest.contract.DockerContractInvalidTest;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
+import com.tjfintech.common.functionTest.mixTest.VerifyBlockTxsTimeDiff;
 import com.tjfintech.common.functionTest.store.PrivateStoreTest;
 import com.tjfintech.common.functionTest.store.StoreInvalidTest;
 import com.tjfintech.common.functionTest.store.StoreTest;
@@ -47,6 +48,7 @@ import org.junit.runners.Suite;
         WVMContractTest.class,
 
         TestTxType.class,
+        VerifyBlockTxsTimeDiff.class
 })
 
 //Build Validation Test
