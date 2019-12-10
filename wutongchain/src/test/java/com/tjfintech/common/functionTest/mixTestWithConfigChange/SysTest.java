@@ -25,15 +25,15 @@ public class SysTest {
     public   final static int   SLEEPTIME=10*1000;
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
-    String mongoIP="10.1.3.246";
     String mongoID="e5b4023db787";
-    String mysqlIP="10.1.3.164";
+    String databaseIP="";
 
     boolean bResult=false;
     int iCount=0;
 
     public void startMongo()throws Exception{
-        Shell shellMongo=new Shell(mongoIP,USERNAME,PASSWD);
+        databaseIP=getSDKWalletDBConfig().split(",")[1];;
+        Shell shellMongo=new Shell(databaseIP,USERNAME,PASSWD);
         shellMongo.execute("docker ps -a");
         ArrayList<String> stdout = shellMongo.getStandardOutput();
         String response = StringUtils.join(stdout,"\n");
@@ -49,7 +49,7 @@ public class SysTest {
             else
             {
                 shellMongo.execute("docker run --name mongo -p 27017:27017 -v /data/database/mongotest:/data -d mongo:3.6");
-                Thread.sleep(6000);
+               sleepAndSaveInfo(6000);
                 shellMongo.execute("docker ps -a |grep mongo|awk '{print $1}");
                 ArrayList<String> stdout1 = shellMongo.getStandardOutput();
                 mongoID=stdout1.get(0).trim();
@@ -68,24 +68,21 @@ public class SysTest {
     @Test
     public void asetConfigMongoAndStop() throws Exception {
         bResult=false;
-
-        startMongo();
-
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         log.info(sdkIP);
-
         Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
-        Shell shellMongo=new Shell(mongoIP,USERNAME,PASSWD);
-
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute(killSDKCmd);
         shellSDK.execute("cp "+ SDKPATH + "conf/configMongo.toml "+ SDKPATH + "conf/config.toml");
+        startMongo();
+        databaseIP=getSDKWalletDBConfig().split(",")[1];
+        Shell shellMongo=new Shell(databaseIP,USERNAME,PASSWD);
         log.info(mongoID);
         shellMongo.execute("docker restart "+mongoID);
-        Thread.sleep(6000);
+        sleepAndSaveInfo(6000);
         shellSDK.execute(startSDKCmd);
-        Thread.sleep(6000);
+        sleepAndSaveInfo(6000);
 
         String response= store.GetApiHealth();
         assertThat(response, containsString("success"));
@@ -93,21 +90,21 @@ public class SysTest {
 
         //停止mongo数据库进程
         shellMongo.execute("docker stop "+mongoID);
-        Thread.sleep(5000);
+        sleepAndSaveInfo(5000);
         assertThat(store.GetApiHealth(),containsString("[walletDB]:ping mgodb err;[addressDB]:ping mgodb err;"));
 
 //        log.info("******************please getapihealth manual with configMongo stop momgo************");
-//        Thread.sleep(15000);
+//       sleepAndSaveInfo(15000);
 
 
         shellMongo.execute("docker restart "+mongoID);
-        Thread.sleep(6000);
+        sleepAndSaveInfo(6000);
 
         assertThat(store.GetApiHealth(),containsString("success"));
 
         shellSDK.execute(killSDKCmd);
         shellSDK.execute(startSDKCmd);
-        Thread.sleep(6000);
+        sleepAndSaveInfo(6000);
         assertThat(store.GetApiHealth(),containsString("success"));
     }
 
@@ -120,17 +117,18 @@ public class SysTest {
         log.info(sdkIP);
 
         Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
-        Shell shellMysql=new Shell(mysqlIP,USERNAME,PASSWD);
-
 
         //系统配置数据库为mysql时，且数据库正常进行检查
         shellSDK.execute(killSDKCmd);
         shellSDK.execute("cp "+ SDKPATH + "conf/configMysql.toml "+ SDKPATH + "conf/config.toml");
+        databaseIP=getSDKWalletDBConfig().split(",")[1];
+        Shell shellMysql=new Shell(databaseIP,USERNAME,PASSWD);
 
         shellMysql.execute("service mysql restart");
-        Thread.sleep(4000);
+        sleepAndSaveInfo(10000);
+        
         shellSDK.execute(startSDKCmd);
-        Thread.sleep(10 * 1000);
+        sleepAndSaveInfo(10000);
 
         String response4= store.GetApiHealth();
         assertThat(response4, containsString("success"));
@@ -138,24 +136,26 @@ public class SysTest {
 
         //停止mysql进程
         shellMysql.execute("service mysql stop");
-        Thread.sleep(5000);
+        sleepAndSaveInfo(10000);
         assertThat(store.GetApiHealth(),containsString("[walletDB]:ping mysql err;[addressDB]:ping mysql err;"));
 //        log.info("******************please getapihealth manual with configMysql stop mysql************");
-//        Thread.sleep(15000);
+//       sleepAndSaveInfo(15000);
 
 
         shellMysql.execute("service mysql restart");
-        Thread.sleep(3000);
+        sleepAndSaveInfo(10000);
         String response6= store.GetApiHealth();
         assertThat(response6, containsString("success"));
         assertThat(response6,containsString("200"));
     }
 
 
-    @Test
+    //非常规应用场景 暂不测试
+//    @Test
     public void esetConfigMongoMysqlAndStop() throws Exception {
         bResult=false;
-
+        String mongoIP = "10.1.3.246";
+        String mysqlIP = "10.1.3.246";
         startMongo();
 
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
@@ -170,9 +170,9 @@ public class SysTest {
         shellSDK.execute("cp "+ SDKPATH + "conf/configMongoMysql.toml "+ SDKPATH + "conf/config.toml");
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");
-        Thread.sleep(5 * 1000);
+       sleepAndSaveInfo(5 * 1000);
         shellSDK.execute(startSDKCmd);
-        Thread.sleep(10 * 1000);
+       sleepAndSaveInfo(10 * 1000);
 
 
         String response4= store.GetApiHealth();
@@ -181,26 +181,26 @@ public class SysTest {
 
         //停止mongo数据库进程
         shellMongo.execute("docker stop "+mongoID);
-        Thread.sleep(5000);
+       sleepAndSaveInfo(5000);
         assertThat(store.GetApiHealth(),containsString("[walletDB]:ping mgodb err;"));
 //        log.info("******************please getapihealth manual with configMongoMysql stop mongo************");
-//        Thread.sleep(15000);
+//       sleepAndSaveInfo(15000);
         //停止mysql进程
         shellMysql.execute("service mysql stop");
-        Thread.sleep(5000);
+       sleepAndSaveInfo(5000);
         assertThat(store.GetApiHealth(),containsString("[walletDB]:ping mgodb err;[addressDB]:ping mysql err;"));
 //        log.info("******************please getapihealth manual with configMongoMysql stop mysql************");
-//        Thread.sleep(15000);
+//       sleepAndSaveInfo(15000);
 
         shellMongo.execute("docker start "+mongoID);
-        Thread.sleep(5000);
+       sleepAndSaveInfo(5000);
         assertThat(store.GetApiHealth(),containsString("[addressDB]:ping mysql err;"));
 //        log.info("******************please getapihealth manual with configMongoMysql restart mongo stop mysql************");
-//        Thread.sleep(15000);
+//       sleepAndSaveInfo(15000);
 
 
         shellMysql.execute("service mysql start");
-        Thread.sleep(6000);
+       sleepAndSaveInfo(6000);
 
         String response= store.GetApiHealth();
         assertThat(response, containsString("success"));
@@ -215,25 +215,29 @@ public class SysTest {
         //停止其中两个节点
         shellExeCmd(PEER1IP,killPeerCmd);
         shellExeCmd(PEER2IP,killPeerCmd);
+        sleepAndSaveInfo(1000);
 
-        assertThat(store.GetApiHealth(),containsString("rpc error"));
+        assertThat(store.GetApiHealth(),containsString("success"));
 
         //停止所有节点
         shellExeCmd(PEER4IP,killPeerCmd);
+        sleepAndSaveInfo(1000);
         assertThat(store.GetApiHealth(),containsString("rpc error"));
 
         //重启所有节点
         shellExeCmd(PEER1IP,startPeerCmd);
-        shellExeCmd(PEER1IP,startPeerCmd);
-        shellExeCmd(PEER1IP,startPeerCmd);
+        shellExeCmd(PEER2IP,startPeerCmd);
+        shellExeCmd(PEER4IP,startPeerCmd);
 
         sleepAndSaveInfo(SLEEPTIME*4);
         assertThat(store.GetApiHealth(),containsString("success"));
     }
 
-
-    @Test
+    //非常规应用场景 暂不测试
+//    @Test
     public void fsetConfigMysqlMongoAndStop() throws Exception {
+        String mongoIP = "10.1.3.246";
+        String mysqlIP = "10.1.3.246";
         bResult=false;
 
         startMongo();
@@ -251,9 +255,9 @@ public class SysTest {
 
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");
-        Thread.sleep(6000);
+       sleepAndSaveInfo(6000);
         shellSDK.execute(startSDKCmd);
-        Thread.sleep(6000);
+       sleepAndSaveInfo(6000);
 
         String response4= store.GetApiHealth();
         assertThat(response4, containsString("success"));
@@ -261,32 +265,32 @@ public class SysTest {
 
         //停止mongo数据库进程
         shellMongo.execute("docker stop "+mongoID);
-        Thread.sleep(5000);
+       sleepAndSaveInfo(5000);
         assertThat(store.GetApiHealth(),containsString("[addressDB]:ping mgodb err;"));
 //        log.info("******************please getapihealth manual with configMysqlMongo stop mongo************");
-//        Thread.sleep(15000);
+//       sleepAndSaveInfo(15000);
         //停止mysql进程
         shellMysql.execute("service mysql stop");
-        Thread.sleep(5000);
+       sleepAndSaveInfo(5000);
         assertThat(store.GetApiHealth(),containsString("[walletDB]:ping mysql err;[addressDB]:ping mgodb err;"));
-//        Thread.sleep(15000);
+//       sleepAndSaveInfo(15000);
 //        log.info("******************please getapihealth manual with configMysqlMongo stop mysql************");
 
         shellMongo.execute("docker start "+mongoID);
-        Thread.sleep(5000);
+       sleepAndSaveInfo(5000);
         assertThat(store.GetApiHealth(),containsString("[walletDB]:ping mysql err;"));
 //        log.info("******************please getapihealth manual with configMysqlMongo restart docker************");
-//        Thread.sleep(15000);
+//       sleepAndSaveInfo(15000);
 
         shellMysql.execute("service mysql start");
-        Thread.sleep(10 * 1000);
+       sleepAndSaveInfo(10 * 1000);
 
 
         assertThat(store.GetApiHealth(),containsString("success"));
 
         shellSDK.execute(killSDKCmd);
         shellSDK.execute(startSDKCmd);
-        Thread.sleep(10 * 1000);
+       sleepAndSaveInfo(10 * 1000);
         assertThat(store.GetApiHealth(),containsString("success"));
         //assertThat(response, containsString("success"));
         //assertThat(response,containsString("200"));
@@ -314,7 +318,7 @@ public class SysTest {
         shellSDK.execute(resetSDKConfig);
 
         shellSDK.execute(startSDKCmd);
-        Thread.sleep(6000);
+       sleepAndSaveInfo(6000);
 
         String response= store.GetApiHealth();
         assertThat(response, containsString("success"));

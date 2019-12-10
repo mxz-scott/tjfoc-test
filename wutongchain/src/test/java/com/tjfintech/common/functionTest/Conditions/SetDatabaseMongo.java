@@ -19,6 +19,7 @@ public class SetDatabaseMongo {
 
        //重启SDK
        setAndRestartSDK();
+       subLedger = "";
 
     }
 

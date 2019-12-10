@@ -257,6 +257,7 @@ public class BlockSyncTest {
         setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,resetPeerBase);
         //同步失败节点异常 停止运行
 
+        sleepAndSaveInfo(40000,"tx sync block waiting......");
         //检查同步异常节点会停止
         ExeToolCmdAndChk(syncPeer,"./toolkit height -p "+ synvPeerPort,"rpc error");
 

@@ -11,6 +11,9 @@ import org.junit.Test;
 import java.util.*;
 
 import static com.java.tar.gz.FileUtil.log;
+import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClass.SDKPATH;
+import static org.hamcrest.CoreMatchers.both;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -202,6 +205,50 @@ public class CommonFunc {
         }
         log.info("matching complete.............");
         return bResult;
+    }
+
+    public static boolean checkWalletEnabled(){
+        boolean bEnabled = true;
+        String sdkIP = getIPFromStr(SDKADD);
+        String resp = shExeAndReturn(sdkIP,"grep -n \"\\[Wallet\\]\" "+ SDKPATH + "conf/config.toml | cut -d \":\" -f 1 ");
+        String checkLineNo = String.valueOf(Integer.parseInt(resp) + 1);//正常配置文件中[Wallet]下面一行就是Enabled=true 如果不是此种情况则设置无效
+        resp = shExeAndReturn(sdkIP,"sed -n \"" + checkLineNo + "p\" " + SDKPATH + "conf/config.toml");
+        if(resp.contains("true")) bEnabled = true;
+        else if(resp.contains("false")) bEnabled = false;
+        return bEnabled;
+    }
+
+
+    public static void setSDKTLSCertECDSA()throws Exception{
+        String sdkIP = getIPFromStr(SDKADD);
+        String resp = shExeAndReturn(sdkIP,"grep -n \"\\[Rpc\\]\" "+ SDKPATH + "conf/config.toml | cut -d \":\" -f 1 ");
+        String TLSCaPathLineNo = String.valueOf(Integer.parseInt(resp) + 1);
+        String TLSCertPathLineNo = String.valueOf(Integer.parseInt(resp) + 2);
+        String TLSKeyPathLineNo = String.valueOf(Integer.parseInt(resp) + 3);
+        shellExeCmd(sdkIP,"sed -i '" + TLSCaPathLineNo + "d' " + SDKPATH + "conf/config.toml");//删除原文件中的TLSCaPath行
+        shellExeCmd(sdkIP,"sed -i '" + TLSCaPathLineNo + "i  TLSCaPath = \"./ecdsa/ca.pem\"' " + SDKPATH + "conf/config.toml");//插入TLSCaPath新配置
+
+        shellExeCmd(sdkIP,"sed -i '" + TLSCertPathLineNo + "d' " + SDKPATH + "conf/config.toml");//删除原文件中的TLSCaPath行
+        shellExeCmd(sdkIP,"sed -i '" + TLSCertPathLineNo + "i  TLSCertPath = \"./ecdsa/cert.pem\"' " + SDKPATH + "conf/config.toml");//插入TLSCertPath新配置
+
+        shellExeCmd(sdkIP,"sed -i '" + TLSKeyPathLineNo + "d' " + SDKPATH + "conf/config.toml");//删除原文件中的TLSCaPath行
+        shellExeCmd(sdkIP,"sed -i '" + TLSKeyPathLineNo + "i TLSKeyPath = \"./ecdsa/key.pem\"' " + SDKPATH + "conf/config.toml");//插入TLSKeyPath新配置
+    }
+
+    public static void setPeerTLSCertECDSA(String PeerIP)throws Exception{
+        String resp = shExeAndReturn(PeerIP,"grep -n \"\\[Rpc\\]\" "+ PeerPATH + "conf/base.toml | cut -d \":\" -f 1 ");
+        String TLSCaPathLineNo = String.valueOf(Integer.parseInt(resp) + 4);
+        String TLSCertPathLineNo = String.valueOf(Integer.parseInt(resp) + 5);
+        String TLSKeyPathLineNo = String.valueOf(Integer.parseInt(resp) + 6);
+        //删除原文件中的Rpc TLS配置后再插入新的配置信息
+        shellExeCmd(PeerIP,"sed -i '" + TLSCaPathLineNo + "d' " + PeerPATH + "conf/base.toml");
+        shellExeCmd(PeerIP,"sed -i '" + TLSCaPathLineNo + "i  TLSCaPath = \"./ecdsa/ca.pem\"' " + PeerPATH + "conf/base.toml");//插入TLSCaPath新配置
+
+        shellExeCmd(PeerIP,"sed -i '" + TLSCertPathLineNo + "d' " + PeerPATH + "conf/base.toml");
+        shellExeCmd(PeerIP,"sed -i '" + TLSCertPathLineNo + "i  TLSCertPath = \"./ecdsa/cert.pem\"' " + PeerPATH + "conf/base.toml");//插入TLSCertPath新配置
+
+        shellExeCmd(PeerIP,"sed -i '" + TLSKeyPathLineNo + "d' " + PeerPATH + "conf/base.toml");
+        shellExeCmd(PeerIP,"sed -i '" + TLSKeyPathLineNo + "i TLSKeyPath = \"./ecdsa/key.pem\"' " + PeerPATH + "conf/base.toml");//插入TLSKeyPath新配置
     }
 
 }
