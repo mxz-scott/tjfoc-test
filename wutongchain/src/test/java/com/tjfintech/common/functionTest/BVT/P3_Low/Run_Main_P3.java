@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.BVT.P3_Low;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
 import com.tjfintech.common.functionTest.Conditions.SetMainLedger;
 import com.tjfintech.common.functionTest.PermissionTest.TestPermission;
 import com.tjfintech.common.functionTest.mixTest.TimeofTxOnChain;
@@ -10,13 +11,14 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+        SetDatabaseMysql.class,
         SetMainLedger.class,
         BeforeCondition.class,
 
-        TestSDKPeerConn.class, // failed
-        TimeofTxOnChain.class,        // failed
-        TestTLSCert.class,     // failed
-        SysTest.class,     // failed
+        TestSDKPeerConn.class,
+        TimeofTxOnChain.class,
+        TestTLSCert.class,
+        SysTest.class,
         TestLicence.class,
 })
 
