@@ -322,6 +322,7 @@ public class StoreTest {
 
     @Test
     public void createStoreDupDataString() throws Exception {
+        boolean bWalletEnabled = checkWalletEnabled();
         String Data = "test11234567";
         String response= store.CreateStore(Data);
         String storeHash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
@@ -333,7 +334,7 @@ public class StoreTest {
                 anyOf(containsString("Duplicate transaction, hash: " + storeHash),
                         containsString("transactionFilter exist")));
         //钱包关闭时sdk配置重复检查时间间隔不生效
-        if(!checkWalletEnabled()) {
+        if(bWalletEnabled) {
             sleepAndSaveInfo(400, "waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
 
             String response13 = store.CreateStore(Data);

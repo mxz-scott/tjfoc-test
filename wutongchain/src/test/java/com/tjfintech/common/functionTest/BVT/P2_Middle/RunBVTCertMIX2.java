@@ -19,7 +19,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        SetDatabaseMysql.class,
+//        SetDatabaseMysql.class,
         SetCertMIX2.class,
         BeforeCondition.class,
 
