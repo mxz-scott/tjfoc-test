@@ -1,6 +1,8 @@
 package com.tjfintech.common.functionTest.BVT.P2_Middle;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.functionTest.Conditions.SetDatabaseMongo;
+import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
 import com.tjfintech.common.functionTest.Conditions.SetMainLedger;
 import com.tjfintech.common.functionTest.PermissionTest.TestPermission;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.BlockSyncTest;
@@ -18,6 +20,8 @@ import org.junit.runners.Suite;
 @Slf4j
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+//        SetDatabaseMysql.class,
+        SetDatabaseMongo.class,
         SetMainLedger.class,
         BeforeCondition.class,
 

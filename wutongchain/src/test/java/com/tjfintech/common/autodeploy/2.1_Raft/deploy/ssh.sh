@@ -2,9 +2,13 @@
 
 set ip [lindex $argv 0]
 set command [lindex $argv 1]
-set passwd root
+set user [lindex $argv 2]
+set passwd [lindex $argv 3]
 
-spawn ssh root@$ip
+#set user root
+#set passwd root
+
+spawn ssh $user@$ip
 expect {
    "(yes/no)" {send "yes\r"; exp_continue}
    "password:" {send "$passwd\r"}

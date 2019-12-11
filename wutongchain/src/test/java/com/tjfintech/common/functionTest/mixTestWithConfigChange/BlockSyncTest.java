@@ -39,7 +39,7 @@ public class BlockSyncTest {
     SoloSign soloSign = testBuilder.getSoloSign();
     DockerContractTest ct =new DockerContractTest();
 
-    public long OnChainSleep = 3000;
+    public long OnChainSleep = 5000;
     ArrayList<String> hashList = new ArrayList<>();
     TestTxType testTxType = new TestTxType();
 
@@ -257,11 +257,12 @@ public class BlockSyncTest {
         setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,resetPeerBase);
         //同步失败节点异常 停止运行
 
+        sleepAndSaveInfo(40000,"tx sync block waiting......");
         //检查同步异常节点会停止
         ExeToolCmdAndChk(syncPeer,"./toolkit height -p "+ synvPeerPort,"rpc error");
 
         //安装合约镜像
-        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,"docker load < /root/ccenv.docker");
+        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,ccenvPull);
 
         //等待同步时间+合约安装
         Thread.sleep(OnChainSleep*3+ContractInstallSleep);
@@ -587,10 +588,10 @@ public class BlockSyncTest {
 
         sleepAndSaveInfo(SLEEPTIME);
         //调用合约内的交易  调用已存在的合约wHash中的交易
-        String response2 = wvm.invokeNew(existHash,"init",wvm.accountA,wvm.amountA);//初始化账户A 账户余额50
+        String response2 = wvm.invokeNew(existHash,"initAccount",wvm.accountA,wvm.amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
 
-        String response3 = wvm.invokeNew(existHash,"init",wvm.accountB,wvm.amountB);//初始化账户B 账户余额60
+        String response3 = wvm.invokeNew(existHash,"initAccount",wvm.accountB,wvm.amountB);//初始化账户B 账户余额60
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
 
         sleepAndSaveInfo(SLEEPTIME);

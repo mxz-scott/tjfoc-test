@@ -20,6 +20,7 @@ public class SetDatabaseMysql {
 
        //重启SDK
        setAndRestartSDK();
+       subLedger = "";
     }
 
 }

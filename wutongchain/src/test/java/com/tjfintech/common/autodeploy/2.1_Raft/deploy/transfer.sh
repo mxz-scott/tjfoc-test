@@ -3,9 +3,14 @@
 set src [lindex $argv 0]
 set ip [lindex $argv 1]
 set dest [lindex $argv 2]
-set passwd root
+set user [lindex $argv 3]
+set passwd [lindex $argv 4]
 
-spawn scp -r $src root@$ip:$dest
+#set user root
+#set passwd root
+
+
+spawn scp -r $src $user@$ip:$dest
 expect {
    "(yes/no)" {send "yes\r"; exp_continue}
    "password:" {send "$passwd\r"}

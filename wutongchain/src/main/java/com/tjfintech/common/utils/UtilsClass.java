@@ -125,17 +125,18 @@ public class UtilsClass {
     public static String startPeerCmd = "sh "+ PeerPATH +"start.sh";
 
     public static String startSDKCmd ="sh "+ SDKPATH +"start.sh";
-    public static String killPeerCmd = "ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9";
-    public static String killSDKCmd = "ps -ef |grep " + SDKTPName +" |grep -v grep |awk '{print $2}'|xargs kill -9";
+    public static String killPeerCmd = "pkill " + PeerTPName;
+    public static String killSDKCmd = "pkill " + SDKTPName;
     public static String clearPeerDB = "rm -rf "+ PeerPATH + "*db ";
     public static String clearPeerWVMsrc = "cd "+ PeerPATH + "contracts/src/;rm -rf *";
     public static String clearPeerWVMbin = "cd "+ PeerPATH + "contracts/bin/;ls |grep -v Sys_StoreEncrypted|xargs rm -rf ";
     public static String resetPeerBase = "cp " + PeerPATH + "conf/baseOK.toml " + PeerPATH + "conf/base.toml";
     public static String resetPeerConfig = "cp "+ PeerPATH + "configOK.toml "+ PeerPATH  + PeerMemConfig+".toml";
-    public static String resetSDKConfig = "cp " + SDKPATH + "conf/configOK.toml " + SDKPATH + "conf/config.toml";
+    public static String resetSDKConfig = "cp " + SDKPATH + "conf/configMysql.toml " + SDKPATH + "conf/config.toml";
     public static String getPeerVerByShell = "cd " + PeerPATH + ";./"+ PeerTPName + " version| grep \"Peer Version\" |cut -d \":\" -f 2";
     public static String getSDKVerByShell = "cd " + SDKPATH + ";./"+ SDKTPName + " version| grep \"SDK Version\" |cut -d \":\" -f 2";
     public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";
+    public static String ccenvPull = "docker pull tjfoc/tjfoc-ccenv:2.1";
 
     public static Date dt=new Date();
     public static SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
@@ -594,13 +595,11 @@ public class UtilsClass {
 
          if (dbInfo.contains("mongo")){
              MongoDBOperation mongo = new MongoDBOperation();
-             mongo.mongoIP = dbInfo.split(",")[1];
-             mongo.delDatabase(dbInfo.split(",")[2]);
+             mongo.delDatabase(dbInfo.split(",")[1],dbInfo.split(",")[2]);
          }
          else{
              MysqlOperation mysql = new MysqlOperation();
-             mysql.mysqlIP = dbInfo.split(",")[1];
-             mysql.delDatabase(dbInfo.split(",")[2]);
+             mysql.delDatabase(dbInfo.split(",")[1],dbInfo.split(",")[2]);
          }
 
         Thread.sleep(3000);

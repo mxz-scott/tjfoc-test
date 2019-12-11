@@ -15,6 +15,7 @@ import static com.tjfintech.common.utils.UtilsClass.subLedger;
 @Slf4j
 public class MgToolCmd implements ManageTool {
     public String toolExePath  = "cd " + ToolPATH + ";./" + ToolTPName;
+    public String licExePath  = "cd " + ToolPATH + ";./license";
     
     public String setPeerPerm(String netPeerIP,String sdkID,String permStr,String...ShowName)throws Exception{
         String rpcPort = netPeerIP.split(":")[1];//9300
@@ -150,13 +151,13 @@ public class MgToolCmd implements ManageTool {
         String NoSetting = maxPeerNo.isEmpty() ? "" : " -n " + maxPeerNo;
         String Version = version.isEmpty() ? "" : " -v " + version;
 
-        String cmd = toolExePath + " create" + macSetting + ipSetting + validSetting + NoSetting + Version;
+        String cmd = licExePath + " create" + macSetting + ipSetting + validSetting + NoSetting + Version;
         return shExeAndReturn(shellIP,cmd);
     }
 
     public String deLicence(String shellIP,String licPath)throws Exception{
         String licPayjSetting = licPath.isEmpty() ? "" : " -p " + licPath;
-        String cmd = toolExePath + " decode" + licPayjSetting;
+        String cmd = licExePath + " decode" + licPayjSetting;
         return shExeAndReturn(shellIP,cmd);
     }
 

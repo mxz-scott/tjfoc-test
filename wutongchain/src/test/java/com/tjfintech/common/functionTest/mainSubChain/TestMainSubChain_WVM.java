@@ -80,10 +80,10 @@ public class TestMainSubChain_WVM {
 
         sleepAndSaveInfo(SLEEPTIME);
         //调用合约内的交易
-        String response2 = wvmContractTest.invokeNew(ctHash,"init",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
+        String response2 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
 
-        String response3 = wvmContractTest.invokeNew(ctHash,"init",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
+        String response3 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
 
         sleepAndSaveInfo(SLEEPTIME);
@@ -122,9 +122,9 @@ public class TestMainSubChain_WVM {
 //        assertEquals(true,res1.contains(subLedgerA));
 
         //调用合约内的交易
-        String response12 = wvmContractTest.invokeNew(ctHash12,"init",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
+        String response12 = wvmContractTest.invokeNew(ctHash12,"initAccount",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
         sleepAndSaveInfo(SLEEPTIME);
-        String response13 = wvmContractTest.invokeNew(ctHash12,"init",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
+        String response13 = wvmContractTest.invokeNew(ctHash12,"initAccount",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
 
         sleepAndSaveInfo(SLEEPTIME);
         //查询余额query接口 交易不上链
@@ -175,10 +175,10 @@ public class TestMainSubChain_WVM {
 
 
         //调用合约内的交易
-        String response2 = wvmContractTest.invokeNew(ctHash,"init",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
+        String response2 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
 
-        String response3 = wvmContractTest.invokeNew(ctHash,"init",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
+        String response3 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
 
         sleepAndSaveInfo(SLEEPTIME);
@@ -214,9 +214,9 @@ public class TestMainSubChain_WVM {
 //        String res1 = shExeAndReturn(PEER1IP,"find " + PeerPATH + " -name " + ctHash);
 //        assertEquals(true,res1.contains(subLedgerA));
         //调用合约内的交易
-        String response12 = wvmContractTest.invokeNew(ctHash12,"init",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
+        String response12 = wvmContractTest.invokeNew(ctHash12,"initAccount",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
         sleepAndSaveInfo(SLEEPTIME);
-        String response13 = wvmContractTest.invokeNew(ctHash12,"init",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
+        String response13 = wvmContractTest.invokeNew(ctHash12,"initAccount",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
 
         sleepAndSaveInfo(SLEEPTIME);
         //查询余额query接口 交易不上链
@@ -265,8 +265,8 @@ public class TestMainSubChain_WVM {
         sleepAndSaveInfo(SLEEPTIME);
 
         //调用合约内的交易
-        String resp2 = wvmContractTest.invokeNew(ctHash,"init",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
-        String resp3 = wvmContractTest.invokeNew(ctHash,"init",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
+        String resp2 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
+        String resp3 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
 
         sleepAndSaveInfo(SLEEPTIME);
 
@@ -314,8 +314,8 @@ public class TestMainSubChain_WVM {
         //进行子链相关交易
         subLedger = subLedgerA;
         //调用合约内的交易
-        String response2 = wvmContractTest.invokeNew(ctHash,"init",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
-        String response3 = wvmContractTest.invokeNew(ctHash,"init",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
+        String response2 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
+        String response3 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
 
         sleepAndSaveInfo(SLEEPTIME);
         String response7 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountA);//子链获取账户A账户余额
@@ -353,8 +353,8 @@ public class TestMainSubChain_WVM {
         sleepAndSaveInfo(SLEEPTIME);
 
         //调用合约内的交易
-        String resp2 = wvmContractTest.invokeNew(ctHash,"init",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
-        String resp3 = wvmContractTest.invokeNew(ctHash,"init",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
+        String resp2 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
+        String resp3 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
 
         sleepAndSaveInfo(SLEEPTIME);
 
@@ -402,8 +402,8 @@ public class TestMainSubChain_WVM {
         //进行主链相关交易
         subLedger = "";
         //调用合约内的交易
-        String response2 = wvmContractTest.invokeNew(ctHash,"init",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
-        String response3 = wvmContractTest.invokeNew(ctHash,"init",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
+        String response2 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
+        String response3 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
 
         sleepAndSaveInfo(SLEEPTIME);
         String response7 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountA);//子链获取账户A账户余额

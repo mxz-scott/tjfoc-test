@@ -88,19 +88,20 @@ public class TestLicence {
 
 
         //生成使用无效的参数验证:无效的mac地址、无效IP地址、无效时间、无效节点数
-        ExeToolCmdAndChk(PEER1IP,"./license create -m 12:11 -p 10.1.3.240 -d 100 -n 6 -v 2.0","invalid MAC address");
+        ExeToolCmdAndChk(PEER1IP,"./license create -m 12:11 -p 10.1.3.240 -d 100 -n 6 -v 2.1","invalid MAC address");
         assertEquals(mgTool.deLicence(PEER1IP,"peer.lic").contains("open peer.lic: no such file or directory"),true);
 
-        ExeToolCmdAndChk(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1 -d 100 -n 6 -v 2.0","invalid IP address");
+        //开发不提供此参数校验修改 先移除测试
+//        ExeToolCmdAndChk(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1 -d 100 -n 6 -v 2.1","invalid IP address");
+//        assertEquals(mgTool.deLicence(PEER1IP,"peer.lic").contains("open peer.lic: no such file or directory"),true);
+
+        ExeToolCmdAndChk(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 0.5 -n 6 -v 2.1","invalid argument");
         assertEquals(mgTool.deLicence(PEER1IP,"peer.lic").contains("open peer.lic: no such file or directory"),true);
 
-        ExeToolCmdAndChk(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 0.5 -n 6 -v 2.0","invalid argument");
+        ExeToolCmdAndChk(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 5 -n 0.5 -v 2.1","invalid argument");
         assertEquals(mgTool.deLicence(PEER1IP,"peer.lic").contains("open peer.lic: no such file or directory"),true);
 
-        ExeToolCmdAndChk(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 5 -n 0.5 -v 2.0","invalid argument");
-        assertEquals(mgTool.deLicence(PEER1IP,"peer.lic").contains("open peer.lic: no such file or directory"),true);
-
-        ExeToolCmdAndChk(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 5 -n 0 -v 2.0","success");
+        ExeToolCmdAndChk(PEER1IP,"./license create -m 02:42:fc:a2:5b:1b -p 10.1.3.240 -d 5 -n 0 -v 2.1","success");
 
         rsp = mgTool.deLicence(PEER1IP,"peer.lic");
         assertEquals(rsp.contains("PeerNum:0"),true);

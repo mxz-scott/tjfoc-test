@@ -17,6 +17,8 @@ import org.junit.runners.MethodSorters;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.tjfintech.common.CommonFunc.setPeerTLSCertECDSA;
+import static com.tjfintech.common.CommonFunc.setSDKTLSCertECDSA;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -37,9 +39,19 @@ public class TestTLSCert {
     public void setConfigECDSACert()throws Exception{
         BeforeCondition bf =new BeforeCondition();
         bf.setPermission999();
+        bf.updatePubPriKey();
         bf.collAddressTest();
-        setAndRestartPeerList("cp "+ PeerPATH + "conf/baseECDSA.toml "+ PeerPATH + "conf/base.toml");
-        setAndRestartSDK("cp "+ SDKPATH + "conf/configECDSAMongo.toml "+ SDKPATH + "conf/config.toml");
+
+        //配置节点TLS证书使用ECDSA
+        setPeerTLSCertECDSA(PEER1IP);
+        setPeerTLSCertECDSA(PEER2IP);
+        setPeerTLSCertECDSA(PEER4IP);
+        //配置SDK TLS证书使用ECDSA
+        setSDKTLSCertECDSA();
+
+        //重启节点和SDK
+        setAndRestartPeerList();
+        setAndRestartSDK();
         Thread.sleep(6000);
 
 
@@ -64,7 +76,6 @@ public class TestTLSCert {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));//确认交易上链
 
     }
-
 
 
     @After

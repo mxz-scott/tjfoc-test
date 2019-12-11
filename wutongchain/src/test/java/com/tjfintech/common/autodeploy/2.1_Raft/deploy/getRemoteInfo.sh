@@ -4,15 +4,17 @@ set ip [lindex $argv 0]
 set key [lindex $argv 1]
 set command1 [lindex $argv 2]
 set command2 [lindex $argv 3]
+set user [lindex $argv 4]
+set passwd [lindex $argv 5]
 
-set passwd root
+#set user root
+#set passwd root
  
 #设置保存的文件名及打开文件
 set ofile "temp/${key}_$ip"
 set output [open $ofile "w"]
 
-
-spawn ssh root@$ip
+spawn ssh $user@$ip
 
 expect {
    "(yes/no)" {send "yes\r"; exp_continue}
