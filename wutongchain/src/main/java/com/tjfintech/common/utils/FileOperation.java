@@ -1,9 +1,20 @@
 package com.tjfintech.common.utils;
 
 
-import org.junit.Test;
-
 import java.io.*;
+
+import static com.java.tar.gz.FileUtil.log;
+import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClass.SDKPATH;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.core.AnyOf.anyOf;
+import static org.junit.Assert.*;
+
+import com.jcraft.jsch.*;
+import com.sun.org.apache.bcel.internal.classfile.ConstantString;
+import org.hamcrest.core.AnyOf;
+import org.hamcrest.core.StringContains;
 
 public class FileOperation {
 
@@ -73,4 +84,68 @@ public class FileOperation {
             e.printStackTrace();
         }
     }
+
+    //----------------------------------------------------------------------------------------------------------//
+    //以下为对配置文件修改 通过shell脚本方式
+    //此部分读写不支持重复section的内容 例如 peer config.toml中会有多个 [[Members.Peers]]
+    //此部分读写不支持重复section的内容 例如 sdk conf/config.toml中会有多个 [[Peers]]
+    //修改节点配置项conf/base.toml信息
+    public static void setPeerBaseByShell(String IP,String Section,String Key,String Value)throws Exception{
+        String info = shExeAndReturn(IP,"sh " + destShellScriptDir + "SetConfig.sh " + PeerBaseConfigPath + " " + Section + " " + Key + " " + Value);
+        log.info(info);
+    }
+    //读取节点配置项信息
+    public static String getPeerBaseValueByShell(String IP,String Section,String Key)throws Exception{
+        return shExeAndReturn(IP,"sh " + destShellScriptDir + "GetConfig.sh " + PeerBaseConfigPath + " " + Section + " " + Key);
+    }
+
+    //修改SDK配置项conf/config.toml信息
+    public static void setSDKConfigByShell(String IP,String Section,String Key,String Value)throws Exception{
+        shExeAndReturn(IP,"sh " + destShellScriptDir + "SetConfig.sh " + SDKConfigPath + " " + Section + " " + Key + " " + Value);
+    }
+    //读取SDK配置项conf/config.toml信息
+    public static String getSDKConfigValueByShell(String IP,String Section,String Key)throws Exception{
+        return shExeAndReturn(IP,"sh " + destShellScriptDir + "GetConfig.sh " + SDKConfigPath + " " + Section + " " + Key);
+    }
+
+    public static void uploadFiletoDestDirByssh(String srcFile,String destIP,String destUser,String destPwd,String destDir){
+
+        //首先确认目标目录必须存在 以下创建仅能创建一层目录即destDir的前一级目录必须存在
+        String mkdirInfo = shExeAndReturn(destIP,"mkdir " + destDir);
+        assertEquals(false,mkdirInfo.contains("No such file or directory"));
+
+        try {
+            Session session = null;
+            JSch jsch = new JSch();
+            session = jsch.getSession(destUser,destIP,22);
+
+            session.setPassword(destPwd);
+            //修改服务器/etc/ssh/sshd_config 中 GSSAPIAuthentication的值yes为no，解决用户不能远程登录
+            session.setConfig("userauth.gssapi-with-mic", "no");
+            //为session对象设置properties,第一次访问服务器时不用输入yes
+
+            session.setConfig("StrictHostKeyChecking", "no");
+            session.connect();
+
+            ChannelSftp channelSftp = (ChannelSftp)session.openChannel("sftp");
+            channelSftp.connect();
+            assertEquals(true,channelSftp.isConnected());
+
+            File file = new File(srcFile);
+            InputStream input = new BufferedInputStream(new FileInputStream(file));
+            channelSftp.cd(destDir);
+            channelSftp.put(input, file.getName());
+            try {
+                if (input != null) input.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error(file.getName() + "关闭文件时.....异常!" + e.getMessage());
+            }
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+    }
+
 }

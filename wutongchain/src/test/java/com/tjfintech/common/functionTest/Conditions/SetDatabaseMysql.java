@@ -12,7 +12,7 @@ public class SetDatabaseMysql {
    @Test
     public void setDBMysql()throws Exception{
        //设置SDK 使用mysql 清空数据库
-       shellExeCmd(getIPFromStr(SDKADD),"cp " + SDKPATH + "conf/configMysql.toml " + SDKPATH + "conf/config.toml");
+       shellExeCmd(getIPFromStr(SDKADD),resetSDKConfig);
        delDataBase();//清空sdk当前使用数据库数据
 
        //设置节点 清空db数据 并重启
@@ -20,6 +20,9 @@ public class SetDatabaseMysql {
 
        //重启SDK
        setAndRestartSDK();
+
+       //设置管理工具sm3
+       shellExeCmd(PEER1IP,"sed -i 's/sha256/sm3/g' " + ToolPATH + "conf/base.toml");
        subLedger = "";
     }
 

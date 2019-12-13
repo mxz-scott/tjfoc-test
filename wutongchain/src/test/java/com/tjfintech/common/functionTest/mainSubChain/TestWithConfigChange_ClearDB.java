@@ -1,7 +1,6 @@
 package com.tjfintech.common.functionTest.mainSubChain;
 
 import com.tjfintech.common.BeforeCondition;
-import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
@@ -17,6 +16,7 @@ import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
 
+import static com.tjfintech.common.CommonFunc.setSDKOnePeer;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 
@@ -61,7 +61,9 @@ public class TestWithConfigChange_ClearDB {
 
     @Test
     public void TC1538_quitMainJoinPeer()throws Exception{
-        setAndRestartSDK("cp "+ SDKPATH + "conf/configOnePeer240.toml "+ SDKPATH + "conf/config.toml");
+        //配置sdk节点集群仅为Peer1并重启sdk
+        setSDKOnePeer(getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
+        setAndRestartSDK();
         //创建子链01 包含节点A、B、C
         String chainName1="tc1538_01";
         String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1,
@@ -145,7 +147,7 @@ public class TestWithConfigChange_ClearDB {
     public void TC1537_2144_createChainWithJoinPeer()throws Exception{
         assertEquals(3,subLedgerCmd.getLedgerMemNo(glbChain01));//动态加入节点前检查节点集群信息
 
-        setAndRestartPeer(PEER3IP,"cp "+ PeerPATH + "configjoin.toml " + PeerPATH + PeerMemConfig + ".toml");
+        setAndRestartPeer(PEER3IP,"cp "+ PeerPATH + "configjoin.toml " + PeerMemConfigPath);
         //动态加入节点168
         String resp2 = mgToolCmd.addPeer("join",PEER1IP+":"+PEER1RPCPort,
                 "/ip4/"+PEER3IP,"/tcp/60011",PEER3RPCPort);
@@ -243,7 +245,7 @@ public class TestWithConfigChange_ClearDB {
 
     @Test
     public void TC1659_1655_createChainWithDataPeer()throws Exception{
-        setAndRestartPeer(PEER3IP,"cp "+ PeerPATH + "configobs.toml "+ PeerPATH + PeerMemConfig + ".toml");
+        setAndRestartPeer(PEER3IP,"cp "+ PeerPATH + "configobs.toml "+ PeerMemConfigPath);
         //动态加入节点168
         String resp2 = mgToolCmd.addPeer("observer",PEER1IP+":"+PEER1RPCPort,
                 "/ip4/"+PEER3IP,"/tcp/60011",PEER3RPCPort);
@@ -278,7 +280,9 @@ public class TestWithConfigChange_ClearDB {
 
     @Test
     public void TC1523_subChainStatus()throws Exception{
-//        setAndRestartSDK("cp "+ SDKPATH + "conf/configOnePeer240.toml "+ SDKPATH + "conf/config.toml");
+        //配置sdk节点集群仅为Peer1并重启sdk
+//        setSDKOnePeer(getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
+//        setAndRestartSDK();
         //创建子链，包含两个节点
         String chainName="tc1523_01";
         String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,

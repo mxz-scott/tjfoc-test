@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 
+import static com.tjfintech.common.CommonFunc.addSDKPeerCluster;
+import static com.tjfintech.common.CommonFunc.setSDKOnePeer;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 
@@ -29,7 +31,9 @@ public class TestSDKPeerConn {
         Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
 
         shellSDK.execute(killSDKCmd);
-        shellSDK.execute("cp "+ SDKPATH + "conf/config2P.toml "+ SDKPATH + "conf/config.toml");
+        //配置sdk节点集群为两个
+        setSDKOnePeer(getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
+        addSDKPeerCluster(getIPFromStr(SDKADD),PEER2IP + ":" + PEER2RPCPort,"true");
         shellSDK.execute(startSDKCmd);
 
         Shell shellPeer1 = new Shell(PEER1IP, USERNAME, PASSWD);

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.tjfintech.common.CommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -530,7 +531,8 @@ public class TestPermission {
         shellCmd(sdkIP,startSDKCmd);
         Thread.sleep(5000);
         shellCmd(peerIP246.split(":")[0],cmd2+"211");//向节点246发送权限变更通知
-        shellCmd(sdkIP,"cd "+ SDKPATH + "conf;cp config2.toml config.toml");//恢复配置文件中的节点配置
+        setSDKOnePeer(sdkIP,PEER1IP + ":" + PEER1RPCPort,"true");
+        addSDKPeerCluster(sdkIP,PEER2IP + ":" + PEER2RPCPort,"true");
         assertThat(pFun1.createStore(), containsString("1"));
 
 

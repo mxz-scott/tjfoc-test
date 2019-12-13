@@ -15,8 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
-import org.junit.AfterClass;
 import org.junit.Before;
+
+import static com.tjfintech.common.CommonFunc.*;
+import static com.tjfintech.common.utils.FileOperation.getPeerBaseValueByShell;
 import static org.hamcrest.Matchers.containsString;
 
 import org.junit.FixMethodOrder;
@@ -85,7 +87,10 @@ public class BlockSyncTest {
     @Test
     public void TC969_SyncNoContractTxDisableCtFlag()throws Exception{
         String syncPeer=PEER2IP;
-        setAndRestartPeerList("cp "+ PeerPATH + "conf/baseContractfalse.toml "+ PeerPATH + "conf/"+PeerInfoConfig+".toml");
+        setPeerContractEnabled(PEER1IP,"false");
+        setPeerContractEnabled(PEER2IP,"false");
+        setPeerContractEnabled(PEER4IP,"false");
+        setAndRestartPeerList();
         //停止节点PEER2
         Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
         shellPeer.execute(killPeerCmd);
@@ -114,7 +119,10 @@ public class BlockSyncTest {
     @Test
     public void TC923_SyncNoContractTxCtFlagChange1()throws Exception{
         String syncPeer=PEER2IP;
-        setAndRestartPeerList("cp "+ PeerPATH + "conf/baseContractfalse.toml "+ PeerPATH + "conf/"+PeerInfoConfig+".toml");
+        setPeerContractEnabled(PEER1IP,"false");
+        setPeerContractEnabled(PEER2IP,"false");
+        setPeerContractEnabled(PEER4IP,"false");
+        setAndRestartPeerList();
         sleepAndSaveInfo(10000,"节点全部重启后，sdk能够成功连接上的时间较长");
 
         StoreUTXO();
@@ -170,7 +178,7 @@ public class BlockSyncTest {
     @Test
     public void TC986_SyncDataPeerWithTxEnableCtFlag()throws Exception{
         setAndRestartPeerList(clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc
-                ,"cp "+ PeerPATH + "conf/configData.toml "+ PeerPATH + "conf/"+PeerMemConfig+".toml");
+                ,"cp "+ PeerPATH + "conf/configData.toml " + PeerMemConfigPath);
         delDataBase();//清空sdk当前使用数据库数据
         setAndRestartSDK();
         testTxType.initSetting();
@@ -217,8 +225,8 @@ public class BlockSyncTest {
         Contract();
 
         //节点清除db数据，并将Contract Enabled设置为false 例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc
-                ,"cp "+ PeerPATH + "conf/baseContractfalse.toml "+ PeerPATH + "conf/"+PeerInfoConfig+".toml");
+        setPeerContractEnabled(PEER2IP,"false");
+        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3);
@@ -388,7 +396,9 @@ public class BlockSyncTest {
         Shell shellPeer4=new Shell(PEER4IP,USERNAME,PASSWD);
         shellPeer4.execute(killPeerCmd);
 
-        setAndRestartSDK("cp "+ SDKPATH + "conf/configOnePeer240.toml "+ SDKPATH + "conf/"+SDKConfig+".toml");
+        //配置sdk节点集群仅为Peer1并重启sdk
+        setSDKOnePeer(getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
+        setAndRestartSDK();
 
         StoreUTXONoCheck();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易

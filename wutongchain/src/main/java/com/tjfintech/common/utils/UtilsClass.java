@@ -5,6 +5,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
@@ -16,15 +17,38 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.tjfintech.common.CommonFunc.uploadFileToPeer;
 import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 
 
 @Slf4j
 public class UtilsClass {
-    public static String SDKADD = "http://10.1.3.246:7777";
-    public static String rSDKADD = "http://10.1.3.246:7777";
-    public static String TOKENADD = "http://10.1.3.246:6666";
-
+    public static String SDKADD = "http://10.1.3.240:7779";
+    public static String rSDKADD = "http://10.1.3.246:8080";
+    public static String TOKENADD = "http://10.1.3.246:9090";
+    //设置测试环境使用的节点端口及部署目录信息
+    public static String PEER1IP = "10.1.3.240";
+    public static String PEER2IP = "10.1.3.246";
+    public static String PEER3IP = "10.1.5.168";
+    public static String PEER4IP = "10.1.3.247";
+    public static String PEER1RPCPort = "9400";
+    public static String PEER2RPCPort = "9500";
+    public static String PEER3RPCPort = "9400";
+    public static String PEER4RPCPort = "9400";
+    public static String PEER1TCPPort = "60011";
+    public static String PEER2TCPPort = "60011";
+    public static String PEER3TCPPort = "60011";
+    public static String PEER4TCPPort = "60012";
+    //节点、SDK、Toolkit对等目录放置于PTPATH目录下
+    public static String PTPATH = "/root/zll/chain2.0.1/";
+    public static String SDKPATH = PTPATH + "sdk/";
+    public static String PeerPATH = PTPATH + "peer/";
+    public static String ToolPATH = PTPATH + "toolkit/";
+    public static String PeerTPName = "Mp";
+    public static String SDKTPName = "sdk";
+    public static String ToolTPName = "toolkit";
+    public static String tmuxSessionPeer = "tmux send -t M2 ";
+    public static String tmuxSessionSDK = "tmux send -t s_M2 ";
 
     public static String certPath = "SM2"; // 设置签名证书类型，可选值SM2(默认值)，ECDSA，MIX1，MIX2，RSA
     public static String subLedger = ""; // 修改接口兼容主子链
@@ -76,29 +100,6 @@ public class UtilsClass {
     public static String userId07 = "tkAc7" + Random(6);
 
    //add parameters for manage tool 环境变更有变更
-    public static String PEER1IP = "10.1.3.240";
-    public static String PEER2IP = "10.1.3.246";
-    public static String PEER3IP = "10.1.5.168";
-    public static String PEER4IP = "10.1.3.247";
-    public static String PEER1RPCPort = "9300";
-    public static String PEER2RPCPort = "9300";
-    public static String PEER3RPCPort = "9300";
-    public static String PEER4RPCPort = "9300";
-    public static String PEER1TCPPort = "60010";
-    public static String PEER2TCPPort = "60010";
-    public static String PEER3TCPPort = "60010";
-    public static String PEER4TCPPort = "60010";
-
-    //节点、SDK、Toolkit对等目录放置于PTPATH目录下 环境变更有变更
-    public static String PTPATH="/root/zll/permission/";
-    public static String SDKPATH = PTPATH + "sdk/";
-    public static String PeerPATH = PTPATH + "peer/";
-    public static String ToolPATH = PTPATH + "toolkit/";
-    public static String PeerTPName="wtchain";
-    public static String SDKTPName="wtsdk";
-    public static String ToolTPName="toolkit";
-    public static String tmuxSession = "tmux send -t M2 ";
-
     public static String PEER1MAC="";
     public static String PEER2MAC="";
     public static String PEER3MAC="";
@@ -113,30 +114,33 @@ public class UtilsClass {
 
     public static String dockerFileName="simple.go";
     public static String fullPerm="[1 2 3 4 5 6 7 8 9 10 21 22 23 24 25 211 212 221 222 223 224 231 232 233 235 236 251 252 253 254 255 256]";
-    public static String PeerMemConfig="config";//全文件名为config.toml 节点集群信息
-    public static String PeerInfoConfig="base";//全文件名为base.toml 节点运行相关配置
-    public static String SDKConfig="config";//全文件名为config.toml SDK配置信息
+    public static String PeerMemConfigPath = PeerPATH + "config.toml";//全文件名为config.toml 节点集群信息
+    public static String PeerBaseConfigPath = PeerPATH + "conf/base.toml";//全文件名为base.toml 节点运行相关配置
+    public static String SDKConfigPath = SDKPATH + "conf/config.toml";//全文件名为config.toml SDK配置信息
 
     public static String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
     public static String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
     public static String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
     public static String ids = " -m "+ id1+","+ id2+","+ id3;
 
-    public static String startPeerCmd = "sh "+ PeerPATH +"start.sh";
+    public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";
+    public static String srcShellScriptDir = resourcePath + "/configFiles/shell/";
+    public static String destShellScriptDir = "/root/tjshell/";
+    public static String ccenvPull = "docker pull tjfoc/tjfoc-ccenv:2.1";
 
-    public static String startSDKCmd ="sh "+ SDKPATH +"start.sh";
+    public static String startPeerCmd = "sh "+ destShellScriptDir +"startWithParam.sh \"" + tmuxSessionPeer + "\" " + PeerPATH + " " + PeerTPName;
+    public static String startSDKCmd = "sh "+ destShellScriptDir +"startWithParam.sh \""+ tmuxSessionSDK + "\" " + SDKPATH + " " + SDKTPName;
     public static String killPeerCmd = "pkill " + PeerTPName;
     public static String killSDKCmd = "pkill " + SDKTPName;
     public static String clearPeerDB = "rm -rf "+ PeerPATH + "*db ";
     public static String clearPeerWVMsrc = "cd "+ PeerPATH + "contracts/src/;rm -rf *";
     public static String clearPeerWVMbin = "cd "+ PeerPATH + "contracts/bin/;ls |grep -v Sys_StoreEncrypted|xargs rm -rf ";
-    public static String resetPeerBase = "cp " + PeerPATH + "conf/baseOK.toml " + PeerPATH + "conf/base.toml";
-    public static String resetPeerConfig = "cp "+ PeerPATH + "configOK.toml "+ PeerPATH  + PeerMemConfig+".toml";
-    public static String resetSDKConfig = "cp " + SDKPATH + "conf/configMysql.toml " + SDKPATH + "conf/config.toml";
+    public static String resetPeerBase = "cp " + PeerPATH + "conf/baseOK.toml " + PeerBaseConfigPath;
+    public static String resetPeerConfig = "cp "+ PeerPATH + "configOK.toml "+ PeerMemConfigPath;
+    public static String resetSDKConfig = "cp " + SDKPATH + "conf/configMysql.toml " + SDKConfigPath;
     public static String getPeerVerByShell = "cd " + PeerPATH + ";./"+ PeerTPName + " version| grep \"Peer Version\" |cut -d \":\" -f 2";
     public static String getSDKVerByShell = "cd " + SDKPATH + ";./"+ SDKTPName + " version| grep \"SDK Version\" |cut -d \":\" -f 2";
-    public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";
-    public static String ccenvPull = "docker pull tjfoc/tjfoc-ccenv:2.1";
+
 
     public static Date dt=new Date();
     public static SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
@@ -151,8 +155,8 @@ public class UtilsClass {
     public static Map<String,String> verMap = new HashMap<>();
 
     public static String provider = "mysql";
-    public static String mongoDBAddr = "\"mongodb://10.1.3.246:27017/ww22\"";
-    public static String mysqlDBAddr = "\"root:root@tcp(10.1.3.246:3306)/wallet0703?charset=utf8\"";
+    public static String mongoDBAddr ="\"\\\"mongodb:\\/\\/10.1.3.246:27017\\/ww22\"\\\"";
+    public static String mysqlDBAddr = "\"\\\"root:root@tcp(10.1.3.246:3306)\\/wallet0703?charset=utf8\"\\\"";
     public static Map<String,String> mapledgerDockerName = new HashMap<>();
 
 
@@ -162,6 +166,48 @@ public class UtilsClass {
 
     public static boolean bUpgradePeer = true;
     public static boolean bUpgradeSDK = true;
+
+    public static boolean bupload = uploadFile();
+    public static boolean bUL = false;
+
+    //增加一个传输文件的操作
+    public static boolean uploadFile(){
+        if(!bUL) {
+            uploadFileToPeer(PEER1IP, "startWithParam.sh", "SetConfig.sh", "GetConfig.sh");
+            uploadFileToPeer(PEER2IP, "startWithParam.sh", "SetConfig.sh", "GetConfig.sh");
+            uploadFileToPeer(PEER3IP, "startWithParam.sh", "SetConfig.sh", "GetConfig.sh");
+            uploadFileToPeer(PEER4IP, "startWithParam.sh", "SetConfig.sh", "GetConfig.sh");
+
+            //确认目标目录中存在被传输文件
+            String resp = shExeAndReturn(PEER1IP, "ls " + destShellScriptDir);
+            assertEquals(true, resp.contains("startWithParam.sh"));
+            assertEquals(true, resp.contains("SetConfig.sh"));
+            assertEquals(true, resp.contains("GetConfig.sh"));
+            shExeAndReturn(PEER1IP, "chmod +x " + destShellScriptDir + "*.sh");
+
+            resp = shExeAndReturn(PEER2IP, "ls " + destShellScriptDir);
+            assertEquals(true, resp.contains("startWithParam.sh"));
+            assertEquals(true, resp.contains("SetConfig.sh"));
+            assertEquals(true, resp.contains("GetConfig.sh"));
+            shExeAndReturn(PEER2IP, "chmod +x " + destShellScriptDir + "*.sh");
+
+            resp = shExeAndReturn(PEER3IP, "ls " + destShellScriptDir);
+            assertEquals(true, resp.contains("startWithParam.sh"));
+            assertEquals(true, resp.contains("SetConfig.sh"));
+            assertEquals(true, resp.contains("GetConfig.sh"));
+            shExeAndReturn(PEER3IP, "chmod +x " + destShellScriptDir + "*.sh");
+
+            resp = shExeAndReturn(PEER4IP, "ls " + destShellScriptDir);
+            assertEquals(true, resp.contains("startWithParam.sh"));
+            assertEquals(true, resp.contains("SetConfig.sh"));
+            assertEquals(true, resp.contains("GetConfig.sh"));
+            shExeAndReturn(PEER4IP, "chmod +x " + destShellScriptDir + "*.sh");
+
+            bUL = true;
+        }
+        return bUL;
+    }
+
 
     /**
      * token平台转账TOKEN数组构建方法
