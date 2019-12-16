@@ -45,7 +45,7 @@ public class PeerCmdTest {
     public void testPeerCheck()throws Exception{
         shExeAndReturn(PEER1IP,killPeerCmd);
         sleepAndSaveInfo(100,"停止节点");
-        String resp1 = shExeAndReturn(PEER1IP,tmuxSession + "'./" + PeerTPName + " check' ENTER");
+        String resp1 = shExeAndReturn(PEER1IP,tmuxSessionPeer + "'./" + PeerTPName + " check' ENTER");
         sleepAndSaveInfo(SLEEPTIME/2);
         String resp2 = shExeAndReturn(PEER1IP,"ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'");
         assertEquals(false,resp2.trim().isEmpty());
@@ -72,12 +72,12 @@ public class PeerCmdTest {
         String resp2 = shExeAndReturn(PEER1IP,"ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'");
         assertEquals(true,resp2.trim().isEmpty()); //确认进程未启动
 
-        String resp1 = shExeAndReturn(PEER1IP,tmuxSession + "'./" + PeerTPName + " start -d' ENTER"); //使用start -d方式启动
+        String resp1 = shExeAndReturn(PEER1IP,tmuxSessionPeer + "'./" + PeerTPName + " start -d' ENTER"); //使用start -d方式启动
         sleepAndSaveInfo(SLEEPTIME,"start -d 启动节点进程");
 
         resp2 = shExeAndReturn(PEER1IP,"ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'");
         assertEquals(false,resp2.trim().isEmpty()); //确认进程启动
-        String resp3 = shExeAndReturn(PEER1IP,tmuxSession + "'./" + PeerTPName + " stop' ENTER");//使用stop命令停止节点（20190909目前仅支持停止采用start -d启动命令）
+        String resp3 = shExeAndReturn(PEER1IP,tmuxSessionPeer + "'./" + PeerTPName + " stop' ENTER");//使用stop命令停止节点（20190909目前仅支持停止采用start -d启动命令）
         sleepAndSaveInfo(100,"stop进程");
 
         resp2 = shExeAndReturn(PEER1IP,"ps -ef |grep " + PeerTPName +" |grep -v grep |awk '{print $2}'");

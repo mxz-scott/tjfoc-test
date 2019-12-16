@@ -31,7 +31,8 @@ public class SetTestEnv_Dirzllchain201 {
        PeerTPName = "Mp";
        SDKTPName = "sdk";
        ToolTPName = "toolkit";
-       tmuxSession = "tmux send -t M2 ";
+       tmuxSessionPeer = "tmux send -t M2 ";
+       tmuxSessionSDK = "tmux send -t s_M2 ";
     }
 
 }

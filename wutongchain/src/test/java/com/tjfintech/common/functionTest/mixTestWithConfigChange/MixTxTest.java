@@ -18,12 +18,10 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
+import static com.tjfintech.common.CommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -65,7 +63,10 @@ public class MixTxTest {
 
         Thread.sleep(6000);
         //设置打包时间为20s 使得各种类型的交易同时打包
-        setAndRestartPeerList("cp "+ PeerPATH + "conf/basePkTm20s.toml "+ PeerPATH + "conf/" + PeerInfoConfig + ".toml");
+        setPeerPackTime(PEER1IP,"20000");
+        setPeerPackTime(PEER2IP,"20000");
+        setPeerPackTime(PEER4IP,"20000");
+        setAndRestartPeerList();
         setAndRestartSDK(resetSDKConfig);
         String resp = store.GetHeight();
 

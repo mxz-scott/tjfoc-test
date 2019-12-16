@@ -1,23 +1,17 @@
 package com.tjfintech.common.functionTest.store;
 
-import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.*;
 
-import static com.tjfintech.common.CommonFunc.checkWalletEnabled;
+import static com.tjfintech.common.CommonFunc.getSDKWalletEnabled;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
@@ -322,7 +316,7 @@ public class StoreTest {
 
     @Test
     public void createStoreDupDataString() throws Exception {
-        boolean bWalletEnabled = checkWalletEnabled();
+        boolean bWalletEnabled = getSDKWalletEnabled();
         String Data = "test11234567";
         String response= store.CreateStore(Data);
         String storeHash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
@@ -360,7 +354,7 @@ public class StoreTest {
             assertThat(response16,
                     anyOf(containsString("Duplicate transaction, hash: " + storeHash),
                             containsString("transactionFilter exist")));
-            sleepAndSaveInfo(400, "waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
+            sleepAndSaveInfo(100, "waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
             String response17 = store.CreateStore(Data);
 //        assertEquals(true,response16.contains("Duplicate transaction, hash: " + storeHash));
             assertThat(response17,

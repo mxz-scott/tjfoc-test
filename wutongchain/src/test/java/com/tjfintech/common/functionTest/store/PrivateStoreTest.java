@@ -31,11 +31,9 @@ public class PrivateStoreTest {
 
     @BeforeClass
     public static void beforeConfig() throws Exception {
-        if (MULITADD1.isEmpty()) {
-            BeforeCondition bf = new BeforeCondition();
-            bf.updatePubPriKey();
-            Thread.sleep(SLEEPTIME);
-        }
+        BeforeCondition bf = new BeforeCondition();
+        bf.updatePubPriKey();
+        Thread.sleep(SLEEPTIME/2);
     }
 
     /**

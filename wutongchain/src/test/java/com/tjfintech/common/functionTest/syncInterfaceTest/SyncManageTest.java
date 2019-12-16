@@ -36,17 +36,10 @@ public class SyncManageTest {
 
     @Test
     public void testTimeoutForAdmin() throws Exception{
-        //设置打包时间为500ms 使得各种类型的交易同时打包
-        setAndRestartPeerList("cp "+ PeerPATH + "conf/basePkTm500ms.toml "+ PeerPATH + "conf/base.toml");
         setAndRestartSDK(resetSDKConfig);
         testSyncAdmin(String.valueOf(UTXOSHORTMEOUT),okCode);
     }
 
-    //@After
-    public void resetEnv()throws Exception{
-        setAndRestartPeerList(resetPeerBase);
-        setAndRestartSDK(resetSDKConfig);
-    }
 
     public void testSyncAdmin(String timeout,String code)throws Exception{
         String tokenType = "FreezeToken-"+ UtilsClass.Random(6);

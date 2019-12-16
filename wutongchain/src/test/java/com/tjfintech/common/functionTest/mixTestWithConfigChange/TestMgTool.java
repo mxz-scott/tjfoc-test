@@ -9,13 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import static com.tjfintech.common.CommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 
@@ -263,7 +261,7 @@ public class TestMgTool {
         //先将待加入节点进程停止
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
         shellPeer3.execute(killPeerCmd);
-        shellPeer3.execute("cp "+ PeerPATH + "configjoin.toml "+ PeerPATH + ""+PeerMemConfig+".toml");
+        shellPeer3.execute("cp "+ PeerPATH + "configjoin.toml "+ PeerMemConfigPath);
         mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
 
         Thread.sleep(2000);
@@ -302,7 +300,7 @@ public class TestMgTool {
         String resp2 = mgToolCmd.addPeer("observer",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort);
         assertEquals(true,resp2.contains("success"));
         queryPeerListNo(peer1IPPort,DynamicPeerNo);//通过共识节点查询集群列表
-        shellPeer3.execute("cp "+ PeerPATH + "configobs.toml "+ PeerPATH + ""+PeerMemConfig+".toml");
+        shellPeer3.execute("cp "+ PeerPATH + "configobs.toml "+ PeerMemConfigPath);
         shellExeCmd(PEER3IP,startPeerCmd);
         Thread.sleep(STARTSLEEPTIME);
         chkPeerSimInfoOK(peer3IPPort,tcpPort,version,dataType);
@@ -510,16 +508,19 @@ public class TestMgTool {
         assertEquals(rsp.contains("Count:\t0"),true);
         //log.info("Current Unconfirmed Tx Count:"+rsp.substring(rsp.lastIndexOf("Count:")+1).trim());
 
-        setAndRestartPeerList("cp "+ PeerPATH + "conf/basePkTm20s.toml "+ PeerPATH + "conf/"+PeerInfoConfig+".toml");
+        setPeerPackTime(PEER1IP,"20000");
+        setPeerPackTime(PEER2IP,"20000");
+        setPeerPackTime(PEER4IP,"20000");
+        setAndRestartPeerList();
         setAndRestartSDK(resetSDKConfig);
 
 //        Shell shellPeer1=new Shell(PEER1IP,USERNAME,PASSWD);
 //        shellPeer1.execute(killPeerCmd);
-//        shellPeer1.execute("sed -i \"s/PackTime = 1000/PackTime = 10000/g\" "+ PeerPATH + "conf/"+PeerInfoConfig+".toml");
+//        shellPeer1.execute("sed -i \"s/PackTime = 1000/PackTime = 10000/g\" " + PeerBaseConfigPath);
 //
 //        Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
 //        shellPeer2.execute(killPeerCmd);
-//        shellPeer2.execute("sed -i \"s/PackTime = 1000/PackTime = 10000/g\" "+ PeerPATH + "conf/"+PeerInfoConfig+".toml");
+//        shellPeer2.execute("sed -i \"s/PackTime = 1000/PackTime = 10000/g\" "+ PeerBaseConfigPath);
 //
 //        startPeer(PEER1IP);
 //        startPeer(PEER2IP);

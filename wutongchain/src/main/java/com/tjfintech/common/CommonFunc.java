@@ -11,9 +11,8 @@ import org.junit.Test;
 import java.util.*;
 
 import static com.java.tar.gz.FileUtil.log;
+import static com.tjfintech.common.utils.FileOperation.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static com.tjfintech.common.utils.UtilsClass.SDKPATH;
-import static org.hamcrest.CoreMatchers.both;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -207,48 +206,259 @@ public class CommonFunc {
         return bResult;
     }
 
-    public static boolean checkWalletEnabled(){
+    //----------------------------------------------------------------------------------------------------------//
+    //以下为对配置文件修改 通过shell脚本方式
+    //此部分读写不支持重复section的内容 例如 peer config.toml中会有多个 [[Members.Peers]]
+    //此部分读写不支持重复section的内容 例如 sdk conf/config.toml中会有多个 [[Peers]]
+
+    //读取sdk配置文件中指定配置项信息
+    public static boolean getSDKWalletEnabled()throws Exception{
         boolean bEnabled = true;
-        String sdkIP = getIPFromStr(SDKADD);
-        String resp = shExeAndReturn(sdkIP,"grep -n \"\\[Wallet\\]\" "+ SDKPATH + "conf/config.toml | cut -d \":\" -f 1 ");
-        String checkLineNo = String.valueOf(Integer.parseInt(resp) + 1);//正常配置文件中[Wallet]下面一行就是Enabled=true 如果不是此种情况则设置无效
-        resp = shExeAndReturn(sdkIP,"sed -n \"" + checkLineNo + "p\" " + SDKPATH + "conf/config.toml");
+        String resp = getSDKConfigValueByShell(getIPFromStr(SDKADD),"Wallet","Enabled");
         if(resp.contains("true")) bEnabled = true;
         else if(resp.contains("false")) bEnabled = false;
         return bEnabled;
     }
 
 
-    public static void setSDKTLSCertECDSA()throws Exception{
-        String sdkIP = getIPFromStr(SDKADD);
-        String resp = shExeAndReturn(sdkIP,"grep -n \"\\[Rpc\\]\" "+ SDKPATH + "conf/config.toml | cut -d \":\" -f 1 ");
-        String TLSCaPathLineNo = String.valueOf(Integer.parseInt(resp) + 1);
-        String TLSCertPathLineNo = String.valueOf(Integer.parseInt(resp) + 2);
-        String TLSKeyPathLineNo = String.valueOf(Integer.parseInt(resp) + 3);
-        shellExeCmd(sdkIP,"sed -i '" + TLSCaPathLineNo + "d' " + SDKPATH + "conf/config.toml");//删除原文件中的TLSCaPath行
-        shellExeCmd(sdkIP,"sed -i '" + TLSCaPathLineNo + "i  TLSCaPath = \"./ecdsa/ca.pem\"' " + SDKPATH + "conf/config.toml");//插入TLSCaPath新配置
+    public static void setSDKTLSCertECDSA(String SDKIP)throws Exception{
+        setSDKConfigByShell(SDKIP,"Rpc","TLSCaPath","\"\\\".\\/ecdsa\\/ca.pem\"\\\"");
+        setSDKConfigByShell(SDKIP,"Rpc","TLSCertPath","\"\\\".\\/ecdsa\\/cert.pem\"\\\"");
+        setSDKConfigByShell(SDKIP,"Rpc","TLSKeyPath","\"\\\".\\/ecdsa\\/key.pem\"\\\"");
 
-        shellExeCmd(sdkIP,"sed -i '" + TLSCertPathLineNo + "d' " + SDKPATH + "conf/config.toml");//删除原文件中的TLSCaPath行
-        shellExeCmd(sdkIP,"sed -i '" + TLSCertPathLineNo + "i  TLSCertPath = \"./ecdsa/cert.pem\"' " + SDKPATH + "conf/config.toml");//插入TLSCertPath新配置
-
-        shellExeCmd(sdkIP,"sed -i '" + TLSKeyPathLineNo + "d' " + SDKPATH + "conf/config.toml");//删除原文件中的TLSCaPath行
-        shellExeCmd(sdkIP,"sed -i '" + TLSKeyPathLineNo + "i TLSKeyPath = \"./ecdsa/key.pem\"' " + SDKPATH + "conf/config.toml");//插入TLSKeyPath新配置
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","TLSCaPath").trim().contains("./ecdsa/ca.pem"));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","TLSCertPath").trim().contains("./ecdsa/cert.pem"));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","TLSKeyPath").trim().contains("./ecdsa/key.pem"));
     }
 
+    public static void setSDKTLSCertExpired(String SDKIP)throws Exception{
+        setSDKConfigByShell(SDKIP,"Rpc","TLSCaPath","\"\\\".\\/expired\\/ca.pem\"\\\"");
+        setSDKConfigByShell(SDKIP,"Rpc","TLSCertPath","\"\\\".\\/expired\\/cert.pem\"\\\"");
+        setSDKConfigByShell(SDKIP,"Rpc","TLSKeyPath","\"\\\".\\/expired\\/key.pem\"\\\"");
+
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","TLSCaPath").trim().contains("./expired/ca.pem"));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","TLSCertPath").trim().contains("./expired/cert.pem"));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","TLSKeyPath").trim().contains("./expired/key.pem"));
+    }
+
+    public static void setSDKTLSCertDiffCa(String SDKIP)throws Exception{
+        setSDKConfigByShell(SDKIP,"Rpc","TLSCaPath","\"\\\".\\/diffca\\/ca.pem\"\\\"");
+        setSDKConfigByShell(SDKIP,"Rpc","TLSCertPath","\"\\\".\\/diffca\\/cert.pem\"\\\"");
+        setSDKConfigByShell(SDKIP,"Rpc","TLSKeyPath","\"\\\".\\/diffca\\/key.pem\"\\\"");
+
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","TLSCaPath").trim().contains("./diffca/ca.pem"));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","TLSCertPath").trim().contains("./diffca/cert.pem"));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","TLSKeyPath").trim().contains("./diffca/key.pem"));
+    }
+
+    public static void setSDKTLSCertDismatch(String SDKIP)throws Exception{
+        setSDKConfigByShell(SDKIP,"Rpc","TLSCaPath","\"\\\".\\/dismatch\\/ca.pem\"\\\"");
+        setSDKConfigByShell(SDKIP,"Rpc","TLSCertPath","\"\\\".\\/dismatch\\/cert.pem\"\\\"");
+        setSDKConfigByShell(SDKIP,"Rpc","TLSKeyPath","\"\\\".\\/dismatch\\/key.pem\"\\\"");
+
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","TLSCaPath").trim().contains("./dismatch/ca.pem"));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","TLSCertPath").trim().contains("./dismatch/cert.pem"));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","TLSKeyPath").trim().contains("./dismatch/key.pem"));
+    }
+
+    public static void setSDKCryptKeyType(String SDKIP,String keytype)throws Exception{
+        setSDKConfigByShell(SDKIP,"Rpc","KeyType","\"\\\"" + keytype + "\"\\\"");
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","KeyType").trim().contains(keytype));
+    }
+
+    public static void setSDKCryptHashType(String SDKIP,String hashtype)throws Exception{
+        setSDKConfigByShell(SDKIP,"Rpc","HashType","\"\\\""+ hashtype + "\"\\\"");
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","HashType").trim().contains(hashtype));
+
+    }
+
+    public static void setSDKWalletEnabled(String SDKIP, String flag)throws Exception{
+        setSDKConfigByShell(SDKIP,"Wallet","Enabled",flag);
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","Enabled").trim().contains(flag));
+    }
+
+    public static void setSDKWalletAddrDBMysql(String SDKIP)throws Exception{
+        setSDKConfigByShell(SDKIP,"Wallet","Provider","\"\\\"mysql\"\\\"");
+        setSDKConfigByShell(SDKIP,"Wallet","DBPath",mysqlDBAddr);
+        setSDKConfigByShell(SDKIP,"AddrService","Provider","\"\\\"mysql\"\\\"");
+        setSDKConfigByShell(SDKIP,"AddrService","DBPath",mysqlDBAddr);
+
+        String checkMyqlDBAddr = mysqlDBAddr.replaceAll("\"","").replaceAll("\\\\","");
+//        log.info(checkMyqlDBAddr);
+
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","Provider").trim().contains("mysql"));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","DBPath").trim().contains(checkMyqlDBAddr));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","Provider").trim().contains("mysql"));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","DBPath").trim().contains(checkMyqlDBAddr));
+    }
+
+    public static void setSDKWalletDBMysqlAddrDBMongo(String SDKIP)throws Exception{
+        setSDKConfigByShell(SDKIP,"Wallet","Provider","\"\\\"mysql\"\\\"");
+        setSDKConfigByShell(SDKIP,"Wallet","DBPath",mysqlDBAddr);
+        setSDKConfigByShell(SDKIP,"AddrService","Provider","\"\\\"mongodb\"\\\"");
+        setSDKConfigByShell(SDKIP,"AddrService","DBPath",mongoDBAddr);
+
+        String checkMongoDBAddr = mongoDBAddr.replaceAll("\"","").replaceAll("\\\\","");
+        String checkMyqlDBAddr = mysqlDBAddr.replaceAll("\"","").replaceAll("\\\\","");
+
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","Provider").trim().contains("mysql"));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","DBPath").trim().contains(checkMyqlDBAddr));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","Provider").trim().contains("mongodb"));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","DBPath").trim().contains(checkMongoDBAddr));
+    }
+
+    public static void setSDKWalletDBMongoAddrDBMysql(String SDKIP)throws Exception{
+        setSDKConfigByShell(SDKIP,"Wallet","Provider","\"\\\"mongodb\"\\\"");
+        setSDKConfigByShell(SDKIP,"Wallet","DBPath",mongoDBAddr);
+        setSDKConfigByShell(SDKIP,"AddrService","Provider","\"\\\"mysql\"\\\"");
+        setSDKConfigByShell(SDKIP,"AddrService","DBPath",mysqlDBAddr);
+
+        String checkMongoDBAddr = mongoDBAddr.replaceAll("\"","").replaceAll("\\\\","");
+        String checkMyqlDBAddr = mysqlDBAddr.replaceAll("\"","").replaceAll("\\\\","");
+
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","Provider").trim().contains("mongodb"));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","DBPath").trim().contains(checkMongoDBAddr));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","Provider").trim().contains("mysql"));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","DBPath").trim().contains(checkMyqlDBAddr));
+    }
+
+    public static void setSDKWalletAddrDBMongo(String SDKIP)throws Exception{
+        setSDKConfigByShell(SDKIP,"Wallet","Provider","\"\\\"mongodb\"\\\"");
+        setSDKConfigByShell(SDKIP,"Wallet","DBPath",mongoDBAddr);
+        setSDKConfigByShell(SDKIP,"AddrService","Provider","\"\\\"mongodb\"\\\"");
+        setSDKConfigByShell(SDKIP,"AddrService","DBPath",mongoDBAddr);
+
+        String checkMongoDBAddr = mongoDBAddr.replaceAll("\"","").replaceAll("\\\\","");
+
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","Provider").trim().contains("mongodb"));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","DBPath").trim().contains(checkMongoDBAddr));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","Provider").trim().contains("mongodb"));
+        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","DBPath").trim().contains(checkMongoDBAddr));
+    }
+
+
+    public static void setSDKOnePeer(String SDKIP,String PeerIPPort,String TLSEnabled)throws Exception{
+        //获取第一个[[Peer]]所在行号 后面加入节点集群信息时插入的行号
+        String lineNo = shExeAndReturn(SDKIP,"grep -n Peer "+ SDKConfigPath + " | cut -d \":\" -f 1 |sed -n '1p'");
+        //先删除conf/config.toml文件中的所有Peers
+        shExeAndReturn(SDKIP,"sed -i '/Peer/d' " + SDKConfigPath);
+        shExeAndReturn(SDKIP,"sed -i '/Address/d' " + SDKConfigPath);
+        shExeAndReturn(SDKIP,"sed -i '/TLSEnabled/d' " + SDKConfigPath);
+
+        shExeAndReturn(SDKIP,"sed -i '" + Integer.parseInt(lineNo) + "i[[Peer]]' " + SDKConfigPath);
+        shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+1) + "iAddress = \"" + PeerIPPort + "\"' " + SDKConfigPath);
+        shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+2) + "iTLSEnabled = " + TLSEnabled + "' " + SDKConfigPath);
+    }
+
+    public static void addSDKPeerCluster(String SDKIP,String PeerIPPort,String TLSEnabled){
+        //获取第一个[[Peer]]所在行号 后面加入节点集群信息时插入的行号
+        String lineNo = shExeAndReturn(SDKIP,"grep -n TLSEnabled "+ SDKConfigPath + " | cut -d \":\" -f 1 |sed -n '$p'");
+
+        shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+1) + "i[[Peer]]' " + SDKConfigPath);
+        shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+2)  + "iAddress = \"" + PeerIPPort + "\"' " + SDKConfigPath);
+        shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+3) + "iTLSEnabled = " + TLSEnabled + "' " + SDKConfigPath);
+    }
+
+
+
+
+    //------------------------------------------------------------------------------------------------------
+    //修改节点conf/base.toml文件中的相关配置项信息
     public static void setPeerTLSCertECDSA(String PeerIP)throws Exception{
-        String resp = shExeAndReturn(PeerIP,"grep -n \"\\[Rpc\\]\" "+ PeerPATH + "conf/base.toml | cut -d \":\" -f 1 ");
-        String TLSCaPathLineNo = String.valueOf(Integer.parseInt(resp) + 4);
-        String TLSCertPathLineNo = String.valueOf(Integer.parseInt(resp) + 5);
-        String TLSKeyPathLineNo = String.valueOf(Integer.parseInt(resp) + 6);
-        //删除原文件中的Rpc TLS配置后再插入新的配置信息
-        shellExeCmd(PeerIP,"sed -i '" + TLSCaPathLineNo + "d' " + PeerPATH + "conf/base.toml");
-        shellExeCmd(PeerIP,"sed -i '" + TLSCaPathLineNo + "i  TLSCaPath = \"./ecdsa/ca.pem\"' " + PeerPATH + "conf/base.toml");//插入TLSCaPath新配置
+        setPeerBaseByShell(PeerIP,"Rpc","TLSCaPath","\"\\\".\\/ecdsa\\/ca.pem\"\\\"");
+        setPeerBaseByShell(PeerIP,"Rpc","TLSCertPath","\"\\\".\\/ecdsa\\/cert.pem\"\\\"");
+        setPeerBaseByShell(PeerIP,"Rpc","TLSKeyPath","\"\\\".\\/ecdsa\\/key.pem\"\\\"");
 
-        shellExeCmd(PeerIP,"sed -i '" + TLSCertPathLineNo + "d' " + PeerPATH + "conf/base.toml");
-        shellExeCmd(PeerIP,"sed -i '" + TLSCertPathLineNo + "i  TLSCertPath = \"./ecdsa/cert.pem\"' " + PeerPATH + "conf/base.toml");//插入TLSCertPath新配置
+        assertEquals(true,getPeerBaseValueByShell(PeerIP,"Rpc","TLSCaPath").trim().contains("./ecdsa/ca.pem"));
+        assertEquals(true,getPeerBaseValueByShell(PeerIP,"Rpc","TLSCertPath").trim().contains("./ecdsa/cert.pem"));
+        assertEquals(true,getPeerBaseValueByShell(PeerIP,"Rpc","TLSKeyPath").trim().contains("./ecdsa/key.pem"));
+    }
 
-        shellExeCmd(PeerIP,"sed -i '" + TLSKeyPathLineNo + "d' " + PeerPATH + "conf/base.toml");
-        shellExeCmd(PeerIP,"sed -i '" + TLSKeyPathLineNo + "i TLSKeyPath = \"./ecdsa/key.pem\"' " + PeerPATH + "conf/base.toml");//插入TLSKeyPath新配置
+    public static void setPeerTLSCertDismatch(String PeerIP)throws Exception{
+        setPeerBaseByShell(PeerIP,"Rpc","TLSCaPath","\"\\\".\\/dismatch\\/ca.pem\"\\\"");
+        setPeerBaseByShell(PeerIP,"Rpc","TLSCertPath","\"\\\".\\/dismatch\\/cert.pem\"\\\"");
+        setPeerBaseByShell(PeerIP,"Rpc","TLSKeyPath","\"\\\".\\/dismatch\\/key.pem\"\\\"");
+
+        assertEquals(true,getPeerBaseValueByShell(PeerIP,"Rpc","TLSCaPath").trim().contains("./dismatch/ca.pem"));
+        assertEquals(true,getPeerBaseValueByShell(PeerIP,"Rpc","TLSCertPath").trim().contains("./dismatch/cert.pem"));
+        assertEquals(true,getPeerBaseValueByShell(PeerIP,"Rpc","TLSKeyPath").trim().contains("./dismatch/key.pem"));
+    }
+    public static void setPeerTLSCertExpired(String PeerIP)throws Exception{
+        setPeerBaseByShell(PeerIP,"Rpc","TLSCaPath","\"\\\".\\/expired\\/ca.pem\"\\\"");
+        setPeerBaseByShell(PeerIP,"Rpc","TLSCertPath","\"\\\".\\/expired\\/cert.pem\"\\\"");
+        setPeerBaseByShell(PeerIP,"Rpc","TLSKeyPath","\"\\\".\\/expired\\/key.pem\"\\\"");
+
+        assertEquals(true,getPeerBaseValueByShell(PeerIP,"Rpc","TLSCaPath").trim().contains("./expired/ca.pem"));
+        assertEquals(true,getPeerBaseValueByShell(PeerIP,"Rpc","TLSCertPath").trim().contains("./expired/cert.pem"));
+        assertEquals(true,getPeerBaseValueByShell(PeerIP,"Rpc","TLSKeyPath").trim().contains("./expired/key.pem"));
+    }
+
+    public static void setPeerLicDismatch(String PeerIP,String value)throws Exception{
+        setPeerBaseByShell(PeerIP,"Rpc","Licence","\"\\\".\\/" + value + "\"\\\"");
+        assertEquals(true,getPeerBaseValueByShell(PeerIP,"Rpc","Licence").trim().contains(value));
+    }
+
+    public static void setPeerContractEnabled(String PeerIP, String flag)throws Exception{
+        setPeerBaseByShell(PeerIP,"Contract","Enabled",flag);
+        assertEquals(true,getPeerBaseValueByShell(PeerIP,"Contract","Enabled").trim().contains(flag));
+    }
+
+    public static void setPeerCryptKeyType(String PeerIP,String keytype)throws Exception{
+        setPeerBaseByShell(PeerIP,"Crypt","KeyType","\"\\\"" + keytype + "\"\\\"");
+        assertEquals(true,getPeerBaseValueByShell(PeerIP,"Crypt","KeyType").trim().contains(keytype));
+    }
+
+    public static void setPeerCryptHashType(String PeerIP,String hashtype)throws Exception{
+        setPeerBaseByShell(PeerIP,"Crypt","HashType","\"\\\"" + hashtype + "\"\\\"");
+        assertEquals(true,getPeerBaseValueByShell(PeerIP,"Crypt","HashType").trim().contains(hashtype));
+    }
+
+    public static void setPeerPackTime(String PeerIP,String PackTime)throws Exception{
+        setPeerBaseByShell(PeerIP,"BlockChain","PackTime",PackTime);
+        assertEquals(true,getPeerBaseValueByShell(PeerIP,"BlockChain","PackTime").trim().contains(PackTime));
+    }
+
+
+    public static void setPeerClusterOnePeer(String PeerIP,String addIP,String Port,String Type,String IPformat,String TcpType)throws Exception{
+        shExeAndReturn(PeerIP,"echo \" \" > " + PeerMemConfigPath); //清空peer config.toml文件
+
+        String peerID = getPeerId(addIP,USERNAME,PASSWD);
+        String showName = "peer" + addIP.substring(addIP.lastIndexOf(".")+1);
+        String addr = "\\/" + IPformat + "\\/" + addIP +"\\/" + TcpType + "\\/" + Port;
+
+        shExeAndReturn(PeerIP,"sed -i '1i[Members]' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '2i[[Members.Peers]]' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '3iId = \"" + peerID + "\"' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '4iShownName = \"" + showName + "\"' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '5iAddr = \"" + addr + "\"' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '6iType = " + Type + "' " + PeerMemConfigPath);
+    }
+
+    public static void addPeerCluster(String PeerIP,String addIP,String Port,String Type,String IPformat,String TcpType){
+        //获取第一个[[Peer]]所在行号 后面加入节点集群信息时插入的行号
+        String lineNo = shExeAndReturn(PeerIP,"grep -n Type "+ PeerMemConfigPath + " | cut -d \":\" -f 1 |sed -n '$p'");
+
+        String peerID = getPeerId(addIP,USERNAME,PASSWD);
+        String showName = "peer" + addIP.substring(addIP.lastIndexOf(".")+1);
+        String addr = "\\/" + IPformat + "\\/" + addIP +"\\/" + TcpType + "\\/" + Port;
+        shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+1) + "i[[Members.Peers]]' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+2) + "iId = \"" + peerID + "\"' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+3) + "iShownName = \"" + showName + "\"' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+4) + "iAddr = \"" + addr + "\"' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+5) + "iType = " + Type + "' " + PeerMemConfigPath);
+    }
+
+    public static void uploadFileToPeer(String PeerIP,String...filelist){
+        for (String file : filelist) {
+            uploadFiletoDestDirByssh(srcShellScriptDir + file,PeerIP,USERNAME,PASSWD,destShellScriptDir);
+        }
+    }
+
+    @Test
+    public void test()throws Exception{
+        uploadFiletoDestDirByssh(srcShellScriptDir + "SetConfig.sh",PEER1IP,USERNAME,PASSWD,destShellScriptDir);
+        uploadFiletoDestDirByssh(srcShellScriptDir + "GetConfig.sh",PEER1IP,USERNAME,PASSWD,destShellScriptDir);
+        uploadFiletoDestDirByssh(srcShellScriptDir + "startWithParam.sh",PEER1IP,USERNAME,PASSWD,destShellScriptDir);
     }
 
 }

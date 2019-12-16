@@ -17,8 +17,7 @@ import org.junit.runners.MethodSorters;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.tjfintech.common.CommonFunc.setPeerTLSCertECDSA;
-import static com.tjfintech.common.CommonFunc.setSDKTLSCertECDSA;
+import static com.tjfintech.common.CommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -47,7 +46,7 @@ public class TestTLSCert {
         setPeerTLSCertECDSA(PEER2IP);
         setPeerTLSCertECDSA(PEER4IP);
         //配置SDK TLS证书使用ECDSA
-        setSDKTLSCertECDSA();
+        setSDKTLSCertECDSA(getIPFromStr(SDKADD));
 
         //重启节点和SDK
         setAndRestartPeerList();
@@ -77,6 +76,23 @@ public class TestTLSCert {
 
     }
 
+    //用例待补充
+//    @Test
+    public void expiredTLSCertTest()throws Exception{
+        //设置节点使用过期tls 证书
+        setPeerTLSCertExpired(PEER1IP);
+        setPeerTLSCertExpired(PEER2IP);
+        setPeerTLSCertExpired(PEER4IP);
+        setAndRestartPeerList();
+        assertEquals(false,true);
+
+
+        //设置sdk使用过期tls证书
+
+        setSDKTLSCertExpired(getIPFromStr(SDKADD));
+        setAndRestartSDK();
+
+    }
 
     @After
     public void recoverConfigSt()throws Exception{

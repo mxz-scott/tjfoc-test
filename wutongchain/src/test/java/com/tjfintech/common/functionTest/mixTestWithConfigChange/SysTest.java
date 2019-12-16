@@ -13,6 +13,7 @@ import org.junit.runners.MethodSorters;
 
 import java.util.*;
 
+import static com.tjfintech.common.CommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -74,7 +75,7 @@ public class SysTest {
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute(killSDKCmd);
-        shellSDK.execute("cp "+ SDKPATH + "conf/configMongo.toml "+ SDKPATH + "conf/config.toml");
+        setSDKWalletAddrDBMongo(getIPFromStr(SDKADD));
         startMongo();
         databaseIP=getSDKWalletDBConfig().split(",")[1];
         Shell shellMongo=new Shell(databaseIP,USERNAME,PASSWD);
@@ -120,7 +121,7 @@ public class SysTest {
 
         //系统配置数据库为mysql时，且数据库正常进行检查
         shellSDK.execute(killSDKCmd);
-        shellSDK.execute("cp "+ SDKPATH + "conf/configMysql.toml "+ SDKPATH + "conf/config.toml");
+        setSDKWalletAddrDBMysql(getIPFromStr(SDKADD));
         databaseIP=getSDKWalletDBConfig().split(",")[1];
         Shell shellMysql=new Shell(databaseIP,USERNAME,PASSWD);
 
@@ -167,7 +168,7 @@ public class SysTest {
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute(killSDKCmd);
-        shellSDK.execute("cp "+ SDKPATH + "conf/configMongoMysql.toml "+ SDKPATH + "conf/config.toml");
+        setSDKWalletDBMongoAddrDBMysql(getIPFromStr(SDKADD));
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");
        sleepAndSaveInfo(5 * 1000);
@@ -251,7 +252,7 @@ public class SysTest {
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute(killSDKCmd);
-        shellSDK.execute("cp "+ SDKPATH + "conf/configMysqlMongo.toml "+ SDKPATH + "conf/config.toml");
+        setSDKWalletDBMysqlAddrDBMongo(getIPFromStr(SDKADD));
 
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");

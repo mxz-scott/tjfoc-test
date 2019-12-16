@@ -15,6 +15,7 @@ import net.sf.json.JSONObject;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
 
+import static com.tjfintech.common.CommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -27,7 +28,6 @@ public class TestDiffHashType {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
     SoloSign soloSign = testBuilder.getSoloSign();
-    CommonFunc commonFunc = new CommonFunc();
     BeforeCondition beforeCondition = new BeforeCondition();
 
     MgToolCmd mgToolCmd =new MgToolCmd();
@@ -56,7 +56,8 @@ public class TestDiffHashType {
 
         //设置主链sm3 sdk使用sha256 （子链sha256）
 //        setAndRestartPeerList("sed -i 's/sm3/sha256/g " + PTPATH + "conf/base.toml");
-        setAndRestartSDK("sed -i 's/sm3/sha256/g' " + SDKPATH + "conf/config.toml");//将sm3替换成sha256
+        setSDKCryptHashType(getIPFromStr(SDKADD),"sha256");//将hashtype设置为sha256
+        setAndRestartSDK();//重启sdk
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链可以成功发送，主链无法成功发送
@@ -86,7 +87,8 @@ public class TestDiffHashType {
 
         //设置主链sm3 sdk使用sm3 （子链sha256）
         //setAndRestartPeerList(resetPeerBase);
-        setAndRestartSDK("sed -i 's/sha256/sm3/g' " + SDKPATH + "conf/config.toml");//将sha256替换成sm3
+        setSDKCryptHashType(getIPFromStr(SDKADD),"sm3");//将hashtype设置为sm3
+        setAndRestartSDK();
 
         //检查主/子链可以成功发送
         subLedger="";
