@@ -29,11 +29,9 @@ public class TimeofTxOnChain {
 
     @Before
     public void beforeConfig() throws Exception {
-        if(MULITADD1.isEmpty()) {
-            BeforeCondition bf = new BeforeCondition();
-            bf.updatePubPriKey();
-            bf.collAddressTest();
-        }
+        BeforeCondition bf = new BeforeCondition();
+        bf.updatePubPriKey();
+        bf.collAddressTest();
     }
     //@Test
     public void searchStoreInlocal()  throws Exception{

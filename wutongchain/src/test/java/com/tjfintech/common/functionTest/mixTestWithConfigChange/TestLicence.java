@@ -11,7 +11,7 @@ import org.junit.Test;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.tjfintech.common.CommonFunc.setPeerLicDismatch;
+import static com.tjfintech.common.CommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 
@@ -22,8 +22,7 @@ public class TestLicence {
     MgToolCmd mgTool = new MgToolCmd();
     TestMgTool testMgTool = new TestMgTool();
 
-    String rpcPort = PEER3RPCPort;
-    String tcpPort = PEER3TCPPort;
+
     int basePeerNo = 3;
     String ipType="/ip4/";
     String tcpType="/tcp/";
@@ -31,6 +30,7 @@ public class TestLicence {
 
     String peer1IPPort=PEER1IP+":"+PEER1RPCPort;
     String peer2IPPort=PEER2IP+":"+PEER2RPCPort;
+
 
     long timeStamp = 0;
 
@@ -48,11 +48,16 @@ public class TestLicence {
         setAndRestartSDK(resetSDKConfig);
 
         mgTool.quitPeer(peer1IPPort,PEER3IP);
-
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting...");
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
         shellPeer3.execute(killPeerCmd);
         shellPeer3.execute(resetPeerBase);
         testMgTool.queryPeerListNo(peer1IPPort,basePeerNo);
+
+        peerList.clear();
+        peerList.add(PEER1IP);
+        peerList.add(PEER2IP);
+        peerList.add(PEER4IP);
     }
 
     @Test
@@ -114,77 +119,95 @@ public class TestLicence {
 
     @Test
     public void testLicValidForPeer()throws Exception{
-
-        //验证已过期证书，此证书需要提前准备 246已有过期证书peer246d1n2.lic
+        String tempStart = "cd " + PeerPATH + ";./" + PeerTPName;
+        String resp;
+        //验证已过期证书，此证书需要提前准备 246已有过期证书peer246expired.lic
         log.info("********************Test for licence timeout********************");
         //ToolIP= PEER2IP;
         Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
         shellPeer2.execute(killPeerCmd);
-        //替换配置licence文件为过期文件
-        shellPeer2.execute("cp "+ PeerPATH + "conf/based1.toml " + PeerBaseConfigPath);
-        shellPeer2.execute(startPeerCmd);
-        Thread.sleep(STARTSLEEPTIME);
-        assertEquals(true,mgTool.checkPeerHealth(PEER2IP+":"+rpcPort).contains("connection error"));
+//        //替换配置licence文件为过期文件
+        setPeerLicence(PEER2IP,"peer246expired.lic");
+        resp = shExeAndReturn(PEER2IP,tempStart);
+        assertEquals(true,resp.contains("expire"));
+        assertEquals(false, checkProgramActive(PEER2IP,PeerTPName));
 
-        log.info("********************Test for dismatch license********************");
-        //ToolIP= PEER2IP;
+        log.info("********************Test for dismatch version license********************");
         shellPeer2.execute(killPeerCmd);
         mgTool.genLicence(PEER2IP,PEER2MAC,PEER2IP,"200","3","test");
+        sleepAndSaveInfo(500,"generate lic waiting...");
         shellPeer2.execute("cp "+ ToolPATH + "peer.lic "+ PeerPATH + "peerLicDisMatch.lic");
+        sleepAndSaveInfo(1500,"copy file waiting...");
         //替换配置licence文件为版本不匹配文件
-        setPeerLicDismatch(PEER2IP,"peerLicDisMatch.lic"); //设置配置文件中licence配置为peerDisMatch.lic
-        shellPeer2.execute(startPeerCmd);
-        Thread.sleep(STARTSLEEPTIME);
-        assertEquals(true,mgTool.checkPeerHealth(PEER2IP+":"+rpcPort).contains("connection error"));
+        setPeerLicence(PEER2IP,"peerLicDisMatch.lic");
+
+        resp = shExeAndReturn(PEER2IP,tempStart);
+        assertEquals(true,resp.contains("Version validation failed"));
+        assertEquals(false, checkProgramActive(PEER2IP,PeerTPName));
 
         log.info("********************Test for invalid peer count********************");
         //验证节点数据小于配置文件中节点数场景
         shellPeer2.execute(killPeerCmd);
         mgTool.genLicence(PEER2IP,PEER2MAC,PEER2IP,"200","1",version.substring(0,3));
+        sleepAndSaveInfo(500,"generate lic waiting...");
         shellPeer2.execute("cp "+ ToolPATH + "peer.lic "+ PeerPATH + "peer246n1.lic");
+        sleepAndSaveInfo(1500,"copy file waiting...");
         //替换配置licence文件为n=1文件
-        shellPeer2.execute("cp "+ PeerPATH + "conf/basen1.toml " + PeerBaseConfigPath);
-        shellPeer2.execute(startPeerCmd);
-        Thread.sleep(STARTSLEEPTIME);
-        assertEquals(true,mgTool.checkPeerHealth(PEER2IP+":"+rpcPort).contains("connection error"));
+        setPeerLicence(PEER2IP,"peer246n1.lic");
+
+        resp = shExeAndReturn(PEER2IP,tempStart);
+        assertEquals(true,resp.contains("members validation failed"));
+        assertEquals(false, checkProgramActive(PEER2IP,PeerTPName));
 
         log.info("********************Test for invalid MAC addr ********************");
         //证书IP正确，MAC不正确 替换配置licence文件为Mac1文件
-        shellPeer2.execute("cp "+ PeerPATH + "conf/baseMac1.toml " + PeerBaseConfigPath);
+        setPeerLicence(PEER2IP,"peerMac1.lic");
+
         shellPeer2.execute(killPeerCmd);
         mgTool.genLicence(PEER2IP,PEER1MAC,PEER2IP,"200","3",version.substring(0,3));
+        sleepAndSaveInfo(500,"generate lic waiting...");
         shellPeer2.execute("cp "+ ToolPATH + "peer.lic "+ PeerPATH + "peerMac1.lic");
-        shellPeer2.execute(startPeerCmd);
-        Thread.sleep(STARTSLEEPTIME);
-        assertEquals(true,mgTool.checkPeerHealth(PEER2IP+":"+rpcPort).contains("connection error"));
+        sleepAndSaveInfo(1500,"copy file waiting...");
+
+        resp = shExeAndReturn(PEER2IP,tempStart);
+        assertEquals(true,resp.contains("Mac validation failed"));
+        assertEquals(false, checkProgramActive(PEER2IP,PeerTPName));
 
         log.info("********************Test for invalid IP addr ********************");
         //证书MAC正确，IP不正确 替换配置licence文件为IP1文件
-        shellPeer2.execute("cp "+ PeerPATH + "conf/baseIP1.toml " + PeerBaseConfigPath);
+        setPeerLicence(PEER2IP,"peerIP1.lic");
+
         shellPeer2.execute(killPeerCmd);
         mgTool.genLicence(PEER2IP,PEER2MAC,PEER1IP,"200","3",version.substring(0,3));
+        sleepAndSaveInfo(500,"generate lic waiting...");
         shellPeer2.execute("cp "+ ToolPATH + "peer.lic "+ PeerPATH + "peerIP1.lic");
-        shellPeer2.execute(startPeerCmd);
-        Thread.sleep(STARTSLEEPTIME);
-        assertEquals(true,mgTool.checkPeerHealth(PEER2IP+":"+rpcPort).contains("connection error"));
+        sleepAndSaveInfo(1500,"copy file waiting...");
+
+        resp = shExeAndReturn(PEER2IP,tempStart);
+        assertEquals(true,resp.contains("IP validation failed"));
+        assertEquals(false, checkProgramActive(PEER2IP,PeerTPName));
 
         log.info("********************Test for invalid IP&MAC addr ********************");
         //使用其他节点licence
-        shellPeer2.execute("cp "+ PeerPATH + "conf/baseIPMac1.toml " + PeerBaseConfigPath);
+        setPeerLicence(PEER2IP,"peerIPMac1.lic");
         shellPeer2.execute(killPeerCmd);
-        mgTool.genLicence(PEER1IP,PEER1MAC,PEER1IP,"200","3",version.substring(0,3));
-        shellPeer2.execute("cp "+ ToolPATH + "peer.lic "+ PeerPATH + "peerIPMac1.lic");
-        shellPeer2.execute(startPeerCmd);
-         Thread.sleep(STARTSLEEPTIME);
-        assertEquals(true,mgTool.checkPeerHealth(PEER3IP+":"+rpcPort).contains("connection error"));
 
-        log.info("********************Test for old license(no version check) ********************");
-        //使用旧版本工具生成的不带version检查的licence 需要提前准备好旧版本的license
-        shellPeer2.execute("cp "+ PeerPATH + "conf/baseNoVer.toml " + PeerBaseConfigPath);
-        shellPeer2.execute(killPeerCmd);
-        shellPeer2.execute(startPeerCmd);
-        Thread.sleep(STARTSLEEPTIME);
-        assertEquals(true,mgTool.checkPeerHealth(PEER3IP+":"+rpcPort).contains("connection error"));
+        mgTool.genLicence(PEER1IP,PEER1MAC,PEER1IP,"200","3",version.substring(0,3));
+        sleepAndSaveInfo(500,"generate lic waiting...");
+        shellPeer2.execute("cp "+ ToolPATH + "peer.lic "+ PeerPATH + "peerIPMac1.lic");
+        sleepAndSaveInfo(1500,"copy file waiting...");
+
+        resp = shExeAndReturn(PEER2IP,tempStart);
+        assertEquals(true,resp.contains("IP validation failed"));
+        assertEquals(false, checkProgramActive(PEER2IP,PeerTPName));
+
+//        log.info("********************Test for old license(no version check) ********************");
+//        //使用旧版本工具生成的不带version检查的licence 需要提前准备好旧版本的license
+//        shellPeer2.execute("cp "+ PeerPATH + "conf/baseNoVer.toml " + PeerBaseConfigPath);
+//        shellPeer2.execute(killPeerCmd);
+//        shellPeer2.execute(startPeerCmd);
+//        Thread.sleep(STARTSLEEPTIME);
+//        assertEquals(true,mgTool.checkPeerHealth(PEER3IP+":"+rpcPort).contains("connection error"));
 
         log.info("********************Test for valid licence********************");
         //恢复配置并重启，使用有效证书验证
@@ -205,7 +228,9 @@ public class TestLicence {
     //此用例需要保证各个节点上都存在管理工具
     //目前规划目录：10.1.3.240/246/247  "+ ToolPATH
 
-    @Test
+    //20191216 测试验证会有问题 可以加入成功并同步数据成功 确认不再测试该场景
+
+//    @Test
     public void testLicForAddPeer()throws Exception{
 
         //重新生成节点个数为3的240证书并拷贝至节点目录
@@ -220,17 +245,21 @@ public class TestLicence {
         //确认系统中无247节点
         mgTool.quitPeer(peer1IPPort,PEER3IP);
         //停止节点，修改配置文件使用节点licence名称为peerTest.lic
-        String peerTestlicConf = "sed -i \"s/peer.lic/peerTest.lic/g\" " + PeerBaseConfigPath;
         String cpLic="cp " + ToolPATH + "peer.lic " + PeerPATH + "peerTest.lic";
+        sendCmdPeerList(peerList,resetPeerBase,cpLic);
 
-        setAndRestartPeerList(resetPeerBase,peerTestlicConf,cpLic);
-        setAndRestartSDK(resetSDKConfig);
+        setPeerLicence(PEER1IP,"peerTest.lic");//配置节点使用lice文件名为peerTest.lic
+        setPeerLicence(PEER2IP,"peerTest.lic");//配置节点使用lice文件名为peerTest.lic
+        setPeerLicence(PEER4IP,"peerTest.lic");//配置节点使用lice文件名为peerTest.lic
+
+//        setAndRestartPeerList();
+//        setAndRestartSDK(resetSDKConfig);
 
 
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
         shellPeer3.execute(killPeerCmd);
         shellPeer3.execute(resetPeerBase);
-        shellPeer3.execute("sed -i \"s/peer.lic/peerTest.lic/g\" " + PeerBaseConfigPath);
+        setPeerLicence(PEER3IP,"peerTest.lic");
 
 //        //重新生成节点个数为2的240证书并拷贝至节点目录
 //        mgTool.genLicence(PEER1IP,PEER1MAC,PEER1IP,"20",String.valueOf(basePeerNo),version.substring(0,3));
@@ -253,7 +282,7 @@ public class TestLicence {
         testMgTool.queryPeerListNo(peer1IPPort,basePeerNo);
 
         //动态加入节点247
-        String resp = mgTool.addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort);
+        String resp = mgTool.addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+PEER3TCPPort,PEER3RPCPort);
         assertEquals(true,resp.contains("update failed"));
         shellExeCmd(PEER3IP,startPeerCmd);
         Thread.sleep(STARTSLEEPTIME);
@@ -269,11 +298,11 @@ public class TestLicence {
         shellPeer3.execute("cp "+ ToolPATH + "peer.lic "+ PeerPATH + "peerTest.lic");
 
         //动态加入节点247
-        String resp2 = mgTool.addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort);
+        String resp2 = mgTool.addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+PEER3TCPPort,PEER3RPCPort);
         assertEquals(true,resp.contains("update failed"));
         shellExeCmd(PEER3IP,startPeerCmd);
         Thread.sleep(STARTSLEEPTIME);
-        assertEquals(true,mgTool.checkPeerHealth(PEER3IP+":"+rpcPort).contains("connection error"));
+        assertEquals(true,mgTool.checkPeerHealth(PEER3IP+":"+PEER3RPCPort).contains("connection error"));
 
         mgTool.quitPeer(peer1IPPort,PEER3IP);
         Thread.sleep(2000);

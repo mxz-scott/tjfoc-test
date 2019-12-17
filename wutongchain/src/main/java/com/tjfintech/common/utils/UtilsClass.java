@@ -17,7 +17,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.tjfintech.common.CommonFunc.uploadFileToPeer;
+import static com.tjfintech.common.CommonFunc.*;
+import static com.tjfintech.common.utils.FileOperation.*;
 import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 
 
@@ -53,10 +54,13 @@ public class UtilsClass {
     public static String certPath = "SM2"; // 设置签名证书类型，可选值SM2(默认值)，ECDSA，MIX1，MIX2，RSA
     public static String subLedger = ""; // 修改接口兼容主子链
 
+    public static String ipv4 = "ip4";
+    public static String tcpProtocol = "tcp";
+
     public static Integer  LONGTIMEOUT = 100000;//毫秒
     public static Integer  SHORTMEOUT = 3000;//毫秒
     public static Integer  UTXOSHORTMEOUT = 4 * 1000;//毫秒
-    public static int  SLEEPTIME = 7*1000;
+    public static int  SLEEPTIME = 6*1000;
 
     //UTXO精度
     public static Integer PRECISION = 6;
@@ -126,7 +130,8 @@ public class UtilsClass {
     public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";
     public static String srcShellScriptDir = resourcePath + "/configFiles/shell/";
     public static String destShellScriptDir = "/root/tjshell/";
-    public static String ccenvPull = "docker pull tjfoc/tjfoc-ccenv:2.1";
+//    public static String ccenvPull = "docker pull tjfoc/tjfoc-ccenv:2.1";
+    public static String ccenvPull = "docker load < /root/dockerimages/ccenv_2.1.tar";//20191217出现网络慢pull需要很长时间 因此改回本地导入
 
     public static String startPeerCmd = "sh "+ destShellScriptDir +"startWithParam.sh \"" + tmuxSessionPeer + "\" " + PeerPATH + " " + PeerTPName;
     public static String startSDKCmd = "sh "+ destShellScriptDir +"startWithParam.sh \""+ tmuxSessionSDK + "\" " + SDKPATH + " " + SDKTPName;
@@ -167,7 +172,8 @@ public class UtilsClass {
     public static boolean bUpgradePeer = true;
     public static boolean bUpgradeSDK = true;
 
-    public static boolean bupload = uploadFile();
+    //如果是已经获取过shell脚本则可以不用执行uploadFile()操作 因此此项默认关闭
+//    public static boolean bupload = uploadFile();
     public static boolean bUL = false;
 
     //增加一个传输文件的操作
@@ -606,20 +612,18 @@ public class UtilsClass {
         return IP;
     }
     
-
-    public static String getSDKWalletDBConfig() {
-//        String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
+@Test
+    public void test(){
+        getSDKWalletDBConfig();
+    }
+    public static String getSDKWalletDBConfig(){
         String sdkIP = getIPFromStr(SDKADD);
-        Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
         String DBType=null;
         String database=null;
-        shellSDK.execute("sh " + SDKPATH + "getDBPath.sh "+ SDKPATH); //即执行~/zll/chain2.0.1/sdk# ./getDBPath.sh /root/zll/chain2.0.1/sdk/
-        ArrayList<String> stdout = shellSDK.getStandardOutput();
-        String resp = StringUtils.join(stdout,"");
-
+        String resp = getSDKConfigValueByShell(sdkIP,"Wallet","DBPath").replaceAll("\"","");
         assertEquals(false,resp.isEmpty());
         //提取IP地址
-        log.info("*****"+resp);
+        log.info("*****" + resp);
         String IPString = getIPFromStr(resp);
         log.info("DB IP:" + IPString);
 
@@ -654,7 +658,7 @@ public class UtilsClass {
     public static void sleepAndSaveInfo(long sleepTime,String...info)throws Exception{
         Thread.sleep(sleepTime);
         if(info.length >0) log.info(info[0] + "(ms): " + sleepTime);
-        else log.info("*************sleep time(ms): " + sleepTime);
+        else log.info("********tx on chain waiting sleep time(ms): " + sleepTime);
     }
 
     public static String shExeAndReturn(String IP,String cmd){

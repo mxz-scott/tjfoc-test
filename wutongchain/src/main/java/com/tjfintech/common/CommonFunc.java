@@ -1,5 +1,6 @@
 package com.tjfintech.common;
 
+import com.sun.org.apache.xpath.internal.operations.Equals;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Token;
@@ -13,6 +14,7 @@ import java.util.*;
 import static com.java.tar.gz.FileUtil.log;
 import static com.tjfintech.common.utils.FileOperation.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -393,9 +395,9 @@ public class CommonFunc {
         assertEquals(true,getPeerBaseValueByShell(PeerIP,"Rpc","TLSKeyPath").trim().contains("./expired/key.pem"));
     }
 
-    public static void setPeerLicDismatch(String PeerIP,String value)throws Exception{
-        setPeerBaseByShell(PeerIP,"Rpc","Licence","\"\\\".\\/" + value + "\"\\\"");
-        assertEquals(true,getPeerBaseValueByShell(PeerIP,"Rpc","Licence").trim().contains(value));
+    public static void setPeerLicence(String PeerIP,String value)throws Exception{
+        setPeerBaseByShell(PeerIP,"Node","Licence","\"\\\".\\/" + value + "\"\\\"");
+        assertEquals(true,getPeerBaseValueByShell(PeerIP,"Node","Licence").trim().contains(value));
     }
 
     public static void setPeerContractEnabled(String PeerIP, String flag)throws Exception{
@@ -427,11 +429,12 @@ public class CommonFunc {
         String addr = "\\/" + IPformat + "\\/" + addIP +"\\/" + TcpType + "\\/" + Port;
 
         shExeAndReturn(PeerIP,"sed -i '1i[Members]' " + PeerMemConfigPath);
-        shExeAndReturn(PeerIP,"sed -i '2i[[Members.Peers]]' " + PeerMemConfigPath);
-        shExeAndReturn(PeerIP,"sed -i '3iId = \"" + peerID + "\"' " + PeerMemConfigPath);
-        shExeAndReturn(PeerIP,"sed -i '4iShownName = \"" + showName + "\"' " + PeerMemConfigPath);
-        shExeAndReturn(PeerIP,"sed -i '5iAddr = \"" + addr + "\"' " + PeerMemConfigPath);
-        shExeAndReturn(PeerIP,"sed -i '6iType = " + Type + "' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '2i\n' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '3i[[Members.Peers]]' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '4iId = \"" + peerID + "\"' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '5iShownName = \"" + showName + "\"' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '6iAddr = \"" + addr + "\"' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '7iType = " + Type + "' " + PeerMemConfigPath);
     }
 
     public static void addPeerCluster(String PeerIP,String addIP,String Port,String Type,String IPformat,String TcpType){
@@ -441,11 +444,40 @@ public class CommonFunc {
         String peerID = getPeerId(addIP,USERNAME,PASSWD);
         String showName = "peer" + addIP.substring(addIP.lastIndexOf(".")+1);
         String addr = "\\/" + IPformat + "\\/" + addIP +"\\/" + TcpType + "\\/" + Port;
-        shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+1) + "i[[Members.Peers]]' " + PeerMemConfigPath);
-        shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+2) + "iId = \"" + peerID + "\"' " + PeerMemConfigPath);
-        shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+3) + "iShownName = \"" + showName + "\"' " + PeerMemConfigPath);
-        shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+4) + "iAddr = \"" + addr + "\"' " + PeerMemConfigPath);
-        shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+5) + "iType = " + Type + "' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+1) + "i\n' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+2) + "i[[Members.Peers]]' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+3) + "iId = \"" + peerID + "\"' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+4) + "iShownName = \"" + showName + "\"' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+5) + "iAddr = \"" + addr + "\"' " + PeerMemConfigPath);
+        shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+6) + "iType = " + Type + "' " + PeerMemConfigPath);
+    }
+
+    public static void setPeerClusterWithOneDataPeer()throws Exception{
+        //设置节点Peer4为数据节点
+        setPeerConfigOneData(PEER1IP);
+        setPeerConfigOneData(PEER2IP);
+        setPeerConfigOneData(PEER4IP);
+    }
+
+    public static void setPeerCluster()throws Exception{
+        //设置所有节点均为共识节点
+        setPeerConfig(PEER1IP);
+        setPeerConfig(PEER2IP);
+        setPeerConfig(PEER4IP);
+    }
+
+    public static void setPeerConfigOneData(String PeerIP)throws Exception{
+        //设置节点Peer1 config 配置文件 节点Peer4为数据节点
+        setPeerClusterOnePeer(PeerIP,PEER1IP,PEER1TCPPort,"0",ipv4,tcpProtocol);
+        addPeerCluster(PeerIP,PEER2IP,PEER2TCPPort,"0",ipv4,tcpProtocol);
+        addPeerCluster(PeerIP,PEER4IP,PEER4TCPPort,"1",ipv4,tcpProtocol);
+    }
+
+    public static void setPeerConfig(String PeerIP)throws Exception{
+        //设置节点Peer1 config 配置文件 均为共识节点
+        setPeerClusterOnePeer(PeerIP,PEER1IP,PEER1TCPPort,"0",ipv4,tcpProtocol);
+        addPeerCluster(PeerIP,PEER2IP,PEER2TCPPort,"0",ipv4,tcpProtocol);
+        addPeerCluster(PeerIP,PEER4IP,PEER4TCPPort,"0",ipv4,tcpProtocol);
     }
 
     public static void uploadFileToPeer(String PeerIP,String...filelist){
@@ -454,11 +486,21 @@ public class CommonFunc {
         }
     }
 
+    public static boolean checkProgramActive(String queryIP, String programName){
+        boolean bRunning = false;
+
+        String resp = shExeAndReturn(queryIP,"ps -ef|grep " + programName + " |grep -v grep");
+
+        //需要保证进程名称的唯一性
+        if (!resp.trim().isEmpty()){
+            bRunning = true;
+        }
+        return bRunning;
+    }
+
     @Test
     public void test()throws Exception{
-        uploadFiletoDestDirByssh(srcShellScriptDir + "SetConfig.sh",PEER1IP,USERNAME,PASSWD,destShellScriptDir);
-        uploadFiletoDestDirByssh(srcShellScriptDir + "GetConfig.sh",PEER1IP,USERNAME,PASSWD,destShellScriptDir);
-        uploadFiletoDestDirByssh(srcShellScriptDir + "startWithParam.sh",PEER1IP,USERNAME,PASSWD,destShellScriptDir);
+        setPeerConfig(PEER1IP);
     }
 
 }

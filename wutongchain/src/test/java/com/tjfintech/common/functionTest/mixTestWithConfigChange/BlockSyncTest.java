@@ -177,8 +177,9 @@ public class BlockSyncTest {
 
     @Test
     public void TC986_SyncDataPeerWithTxEnableCtFlag()throws Exception{
-        setAndRestartPeerList(clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc
-                ,"cp "+ PeerPATH + "conf/configData.toml " + PeerMemConfigPath);
+        //设置PEER4为数据节点
+        setPeerClusterWithOneDataPeer();
+        setAndRestartPeerList(clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
         delDataBase();//清空sdk当前使用数据库数据
         setAndRestartSDK();
         testTxType.initSetting();
@@ -272,8 +273,11 @@ public class BlockSyncTest {
         //安装合约镜像
         setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,ccenvPull);
 
+        //等待镜像安装时间
+        sleepAndSaveInfo(ContractInstallSleep,"docker images installation waiting......");
+
         //等待同步时间+合约安装
-        Thread.sleep(OnChainSleep*3+ContractInstallSleep);
+        Thread.sleep(OnChainSleep*3 + ContractInstallSleep);
         log.info("Check peer height after reloading base images");
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
         assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));

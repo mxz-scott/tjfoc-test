@@ -39,12 +39,10 @@ public class MixTxTest {
     ArrayList<String> txHashNo = new ArrayList<>();
     @Before
     public void beforeConfig() throws Exception {
-        if(MULITADD1.isEmpty()) {
-            BeforeCondition bf = new BeforeCondition();
-            bf.updatePubPriKey();
-            bf.collAddressTest();
-            Thread.sleep(8000);
-        }
+        BeforeCondition bf = new BeforeCondition();
+        bf.updatePubPriKey();
+        bf.collAddressTest();
+        Thread.sleep(8000);
     }
 
     @Test

@@ -16,6 +16,7 @@ import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
 
+import static com.tjfintech.common.CommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -63,7 +64,10 @@ public class DynamicChangePeerCluster {
     @Test
     public void joinConsensusPeer()throws Exception{
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
-        shellPeer3.execute("cp " + PeerPATH + "configjoin.toml " + PeerPATH + "config.toml" );//配置文件中节点共识节点标识为0
+        //设置动态加入节点config.toml文件 不带自己的配置信息
+        setPeerClusterOnePeer(PEER3IP,PEER1IP,PEER1TCPPort,"0",ipv4,tcpProtocol);
+        addPeerCluster(PEER3IP,PEER2IP,PEER2TCPPort,"0",ipv4,tcpProtocol);
+        addPeerCluster(PEER3IP,PEER4IP,PEER4TCPPort,"0",ipv4,tcpProtocol);
 
         //检查动态加入的共识节点，即使用管理工具加入的共识节点信息
         String resp = mgToolCmd.addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort);
@@ -129,7 +133,10 @@ public class DynamicChangePeerCluster {
     @Test
     public void TC2136_2137_joinDataPeer()throws Exception{
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
-        shellPeer3.execute("cp " + PeerPATH + "configobs.toml " + PeerPATH + "config.toml" );//配置文件中节点共识节点标识为0
+        //设置动态加入节点config.toml文件 不带自己的配置信息
+        setPeerClusterOnePeer(PEER3IP,PEER1IP,PEER1TCPPort,"0",ipv4,tcpProtocol);
+        addPeerCluster(PEER3IP,PEER2IP,PEER2TCPPort,"0",ipv4,tcpProtocol);
+        addPeerCluster(PEER3IP,PEER4IP,PEER4TCPPort,"0",ipv4,tcpProtocol);
         //检查动态加入的共识节点，即使用管理工具加入的共识节点信息
         String resp = mgToolCmd.addPeer("observer",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort);
         assertEquals(true,resp.contains("success"));

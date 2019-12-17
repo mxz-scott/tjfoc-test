@@ -104,7 +104,7 @@ public class FileOperation {
         shExeAndReturn(IP,"sh " + destShellScriptDir + "SetConfig.sh " + SDKConfigPath + " " + Section + " " + Key + " " + Value);
     }
     //读取SDK配置项conf/config.toml信息
-    public static String getSDKConfigValueByShell(String IP,String Section,String Key)throws Exception{
+    public static String getSDKConfigValueByShell(String IP,String Section,String Key){
         return shExeAndReturn(IP,"sh " + destShellScriptDir + "GetConfig.sh " + SDKConfigPath + " " + Section + " " + Key);
     }
 

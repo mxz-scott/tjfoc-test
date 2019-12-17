@@ -20,13 +20,11 @@ import org.junit.runners.Suite;
 @Slf4j
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-//        SetDatabaseMysql.class,
-        SetDatabaseMongo.class,
+        SetDatabaseMysql.class,
         SetMainLedger.class,
         BeforeCondition.class,
 
         TestPermission.class,
-//        TestMgTool.class,
         MixTxTest.class,
         BlockSyncTest.class,
 })

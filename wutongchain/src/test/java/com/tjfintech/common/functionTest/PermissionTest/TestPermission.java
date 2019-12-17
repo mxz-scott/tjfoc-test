@@ -49,11 +49,12 @@ public class TestPermission {
     String errMsg="does not found Permission";
     String def="Def:111";
     //"+def+Sys0+Store0+Docker0+Mg0+UTXO0+"
-    String Sys0="Sys:000000000";
+    String Sys0="Sys:00000000"; //移除tx/search接口测试标记
     String Store0="Store:00";
     String Docker0="Docker:00000";
     String Mg0="Mg:000000";
     String UTXO0="UTXO:0000000000";
+    String full = "Sys:11111111Store:11Docker:11111Mg:111111UTXO:1111111111";
 
 
     String glbMultiToken3="";//MULITADD3的全局预设发行token
@@ -159,24 +160,21 @@ public class TestPermission {
         checkAllInterface("0",def+Sys0+Store0+Docker0+Mg0+UTXO0);
 
         Thread.sleep(3000);
-        checkAllInterface("999",def+"Sys:111111111Store:11Docker:11111Mg:111111UTXO:1111111111");
+        checkAllInterface("999",def+full);
         Thread.sleep(3000);
     }
 
     @Test
     public void chkSys1by1()throws Exception{
         String[] mArray={"5","6","7","9","10","11","300"};
-//        checkAllInterface("1",def+"Sys:100000000"+Store0+Docker0+Mg0+UTXO0);//
-//        checkAllInterface("2",def+"Sys:010000000"+Store0+Docker0+Mg0+UTXO0);//
-//        checkAllInterface("3",def+"Sys:001100000"+Store0+Docker0+Mg0+UTXO0);//
-//        checkAllInterface("4",def+"Sys:000011110"+Store0+Docker0+Mg0+UTXO0);
 
-        checkAllInterface("1",def+"Sys:100000000"+Store0+Docker0+Mg0+UTXO0);
-        checkAllInterface("2",def+"Sys:010000000"+Store0+Docker0+Mg0+UTXO0);
-        checkAllInterface("3",def+"Sys:001100000"+Store0+Docker0+Mg0+UTXO0);
-        checkAllInterface("4",def+"Sys:000011110"+Store0+Docker0+Mg0+UTXO0);
+        checkAllInterface("1",def+"Sys:10000000"+Store0+Docker0+Mg0+UTXO0);
+        checkAllInterface("2",def+"Sys:01000000"+Store0+Docker0+Mg0+UTXO0);
+        checkAllInterface("3",def+"Sys:00110000"+Store0+Docker0+Mg0+UTXO0);
+        checkAllInterface("4",def+"Sys:00001111"+Store0+Docker0+Mg0+UTXO0);
         //mysql数据库不支持/tx/search接口 测试时需要使用mongodb 否则需要修改测试预期结果
-        checkAllInterface("8",def+"Sys:000000001"+Store0+Docker0+Mg0+UTXO0);
+        //20191217 后面可能是支持mysql较多 不再测试tx/search接口
+//        checkAllInterface("8",def+"Sys:000000001"+Store0+Docker0+Mg0+UTXO0);
 
         for(int i=0;i<mArray.length;i++)
         {
@@ -339,7 +337,7 @@ public class TestPermission {
         permStr=permStr+pFun1.getTransaction(glbTxHash); //SDK发送查看交易请求
         permStr=permStr+pFun1.getTransactionIndex(glbTxHash); //SDK发送查看交易索引请求
 
-        permStr=permStr+pFun1.txSearch("Global");//复杂查询
+//        permStr=permStr+pFun1.txSearch("Global");//复杂查询 20191217移除tx/search接口测试 for mysql数据库
         return permStr; //should be a string with a length of 9
     }
 
@@ -525,8 +523,8 @@ public class TestPermission {
         assertThat(pFun1.createStore(), containsString("0"));
 
         //权限设置通知的节点与SDK配置的节点不一致，权限设置有效
-        String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
-        shellCmd(sdkIP,"cd "+ SDKPATH + "conf;cp config1.toml config.toml");//配置文件中仅配置246作为发送节点
+        String sdkIP = getIPFromStr(SDKADD);
+        setSDKOnePeer(sdkIP,PEER2IP + ":" + PEER2RPCPort,"true");
         shellCmd(sdkIP,killSDKCmd);
         shellCmd(sdkIP,startSDKCmd);
         Thread.sleep(5000);
