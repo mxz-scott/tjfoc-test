@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import java.util.*;
 
-import static com.java.tar.gz.FileUtil.log;
+//import static com.java.tar.gz.FileUtil.log;
 import static com.tjfintech.common.utils.FileOperation.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.CoreMatchers.anyOf;
@@ -32,27 +32,27 @@ public class CommonFunc {
     public  String tokenModule_IssueToken(String issueAddr,String collAddr,String amount){
         String issueToken = "tokenSo-"+ UtilsClass.Random(8);
         String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + amount;
-        log.info(comments);
+        System.out.print(comments);
         tokenModule.tokenIssue(issueAddr,collAddr,issueToken,amount,comments);
         return issueToken;
     }
 
     public  String tokenModule_TransferToken(String from,String to, String tokenType,String amount){
         String comments = from + "向" + to + " 转账token：" + tokenType + " 数量：" + amount;
-        log.info(comments);
+        System.out.print(comments);
         List<Map> list = utilsClass.tokenConstructToken(to,tokenType,amount);
         return tokenModule.tokenTransfer(from,comments,list);
     }
 
     public  String tokenModule_TransferTokenList(String from, List<Map> tokenList){
         String comments = from + "一转多";
-        log.info(comments);
+        System.out.print(comments);
         return tokenModule.tokenTransfer(from,comments,tokenList);
     }
 
     public String tokenModule_DestoryToken(String addr,String tokenType,String amount){
         String comments = addr + "销毁token：" + tokenType + " 数量：" + amount;
-        log.info(comments);
+        System.out.print(comments);
         List<Map> list = utilsClass.tokenConstructToken(addr,tokenType,amount);
         return tokenModule.tokenDestoryByList(list,comments);
     }
@@ -72,11 +72,11 @@ public class CommonFunc {
                                       ArrayList<String> priKeys, ArrayList<String> pwds){
         String tokenType = "MUCX-" + UtilsClass.Random(8);
         String data = issueAddr + "发行" + tokenType + " token，数量为：" + amount;
-        log.info(data);
+        System.out.print(data);
         String response = multiSign.issueToken(issueAddr,ToAddr,tokenType, amount, data);
         assertThat(response, containsString("200"));
         String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
-        log.info("第一次签名");
+        System.out.print("第一次签名");
         String tx = Tx1;
         for(int i=0;i<priKeys.size();i++) {
             String response2 = "";
@@ -95,7 +95,7 @@ public class CommonFunc {
     public String sdkSoloIssueToken(String Prikey,String amount,String toAddr)throws Exception{
         String tokenType = "SOLOTC-"+UtilsClass.Random(6);
         String data = "Prikey issue token: " + tokenType + "*" + amount + "to " + toAddr;
-        log.info(data);
+        System.out.print(data);
         String isResult= soloSign.issueToken(Prikey,tokenType,amount,data,toAddr);
         assertEquals("200",JSONObject.fromObject(isResult).getString("State"));
         return tokenType;
@@ -192,8 +192,8 @@ public class CommonFunc {
         for(int i= 0;i<list.size();i++){
             String checkStr = list.get(i).toString().replaceAll("=",":").replaceAll(" ","");
             boolean bMatch = false;
-            log.info("+++++++++++++++++" + checkStr);
-            log.info("+++++++++++++++++" + jsonArray.toString());
+            System.out.print("+++++++++++++++++" + checkStr);
+            System.out.print("+++++++++++++++++" + jsonArray.toString());
             for(int j = 0;j < jsonArray.size(); j++){
                 if(checkStr.equals(jsonArray.get(j).toString())){
                     bMatch = true;
@@ -204,7 +204,7 @@ public class CommonFunc {
             bResult = bResult && bMatch;
             assertEquals(true,bMatch);
         }
-        log.info("matching complete.............");
+        System.out.print("matching complete.............");
         return bResult;
     }
 
@@ -286,7 +286,7 @@ public class CommonFunc {
         setSDKConfigByShell(SDKIP,"AddrService","DBPath",mysqlDBAddr);
 
         String checkMyqlDBAddr = mysqlDBAddr.replaceAll("\"","").replaceAll("\\\\","");
-//        log.info(checkMyqlDBAddr);
+//        System.out.print(checkMyqlDBAddr);
 
         assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","Provider").trim().contains("mysql"));
         assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","DBPath").trim().contains(checkMyqlDBAddr));

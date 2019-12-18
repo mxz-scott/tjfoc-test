@@ -3,7 +3,7 @@ package com.tjfintech.common.utils;
 
 import java.io.*;
 
-import static com.java.tar.gz.FileUtil.log;
+//import static com.java.tar.gz.FileUtil.log;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClass.SDKPATH;
 
@@ -92,7 +92,8 @@ public class FileOperation {
     //修改节点配置项conf/base.toml信息
     public static void setPeerBaseByShell(String IP,String Section,String Key,String Value)throws Exception{
         String info = shExeAndReturn(IP,"sh " + destShellScriptDir + "SetConfig.sh " + PeerBaseConfigPath + " " + Section + " " + Key + " " + Value);
-        log.info(info);
+        System.out.print(info);
+        
     }
     //读取节点配置项信息
     public static String getPeerBaseValueByShell(String IP,String Section,String Key)throws Exception{
@@ -139,12 +140,12 @@ public class FileOperation {
                 if (input != null) input.close();
             } catch (Exception e) {
                 e.printStackTrace();
-                log.error(file.getName() + "关闭文件时.....异常!" + e.getMessage());
+                System.out.print(file.getName() + "关闭文件时.....异常!" + e.getMessage());
             }
 
         }catch (Exception e) {
             e.printStackTrace();
-            log.error(e.getMessage());
+            System.out.print(e.getMessage());
         }
     }
 
