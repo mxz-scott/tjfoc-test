@@ -6,24 +6,21 @@ import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.Shell;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
-import org.junit.Before;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.util.ArrayList;
-
-import static com.tjfintech.common.CommonFunc.*;
+import static com.tjfintech.common.CommonFunc.addPeerCluster;
+import static com.tjfintech.common.CommonFunc.setPeerConfig;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class DynamicChangePeerCluster {
+public class AddPeerAndSyncData {
     public static final int STARTSLEEPTIME=40000;
     TestBuilder testBuilder=TestBuilder.getInstance();
     Store store =testBuilder.getStore();
@@ -46,33 +43,36 @@ public class DynamicChangePeerCluster {
     String peer3IPPort=PEER3IP+":"+PEER3RPCPort;
 
 
-    @Before
-    public void resetPeerEnv()throws Exception{
-        BeforeCondition bf = new BeforeCondition();
-        bf.setPermission999();
-
-        mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
-
-        Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
-        shellPeer3.execute(killPeerCmd);
-        shellPeer3.execute(resetPeerBase);
-        testMgTool.queryPeerListNo(peer1IPPort,basePeerNo);
-
+    public void addDataPeerConfigWithSelfInfo(){
+        //设置动态加入节点config.toml文件 不带自己的配置信息
+        setPeerConfig(PEER3IP);
+        addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
+    }
+    public void addConsensusPeerConfigWithSelfInfo(){
+        //设置动态加入节点config.toml文件 不带自己的配置信息
+        setPeerConfig(PEER3IP);
+        addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
     }
 
-    //动态加入共识节点
+    public void addPeerConfigWithoutSelfInfo()throws Exception{
+        //设置动态加入节点config.toml文件 不带自己的配置信息 其他节点数据不同步
+        shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB,resetPeerBase);
+        setPeerConfig(PEER3IP);
+    }
+
+    //该测试用例 在BVT Run_Main_Mysql后进行测试 同步等待时间可能会很长
+    //动态加入共识节点并检查数据同步
     @Test
-    public void joinConsensusPeer()throws Exception{
+    public void joinConsensusPeerAndCheckSyncData()throws Exception{
+        addPeerConfigWithoutSelfInfo();
+
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
-        //设置动态加入节点config.toml文件 不带自己的配置信息
-        setPeerClusterOnePeer(PEER3IP,PEER1IP,PEER1TCPPort,"0",ipv4,tcpProtocol);
-        addPeerCluster(PEER3IP,PEER2IP,PEER2TCPPort,"0",ipv4,tcpProtocol);
-        addPeerCluster(PEER3IP,PEER4IP,PEER4TCPPort,"0",ipv4,tcpProtocol);
 
         //检查动态加入的共识节点，即使用管理工具加入的共识节点信息
         String resp = mgToolCmd.addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort);
         assertEquals(true,resp.contains("success"));
-        //queryPeerListNo(peer1IPPort,DynamicPeerNo);
+        sleepAndSaveInfo(SLEEPTIME,"p2p communication waiting......");
+        testMgTool.queryPeerListNo(peer1IPPort,DynamicPeerNo);
 
         //动态加入共识节点 尚未启动节点时检查节点信息
         while(!mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort).contains(PEER3IP)){
@@ -120,26 +120,24 @@ public class DynamicChangePeerCluster {
         testMgTool.queryPeerListNo(peer1IPPort,DynamicPeerNo);
         testMgTool.queryPeerListNo(PEER3IP+":"+rpcPort,DynamicPeerNo);
 
-        //做简单数据高度大于零判断，因原系统中数据较多时，同步完成时间无法确认，因此不检查是否与其他节点高度一致
-        assertEquals(true,Integer.parseInt(mgToolCmd.queryBlockHeight(peer3IPPort)) > 0);
+        sleepAndSaveInfo(3600*1000,"sync data waiting....");
 
-        shellPeer3.execute(killPeerCmd);
-        mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
-        Thread.sleep(SLEEPTIME);
+        assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER2IP + ":" + PEER2RPCPort));
+        assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER3IP + ":" + PEER3RPCPort));
     }
 
 
     //动态加入数据节点
     @Test
-    public void TC2136_2137_joinDataPeer()throws Exception{
+    public void joinDataPeerAndCheckSyncData()throws Exception{
+        addPeerConfigWithoutSelfInfo();
+
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
-        //设置动态加入节点config.toml文件 不带自己的配置信息
-        setPeerClusterOnePeer(PEER3IP,PEER1IP,PEER1TCPPort,"0",ipv4,tcpProtocol);
-        addPeerCluster(PEER3IP,PEER2IP,PEER2TCPPort,"0",ipv4,tcpProtocol);
-        addPeerCluster(PEER3IP,PEER4IP,PEER4TCPPort,"0",ipv4,tcpProtocol);
+
         //检查动态加入的共识节点，即使用管理工具加入的共识节点信息
         String resp = mgToolCmd.addPeer("observer",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort);
         assertEquals(true,resp.contains("success"));
+        sleepAndSaveInfo(SLEEPTIME,"p2p communication waiting......");
         testMgTool.queryPeerListNo(peer1IPPort,DynamicPeerNo);
 
         while(!mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort).contains(PEER3IP)){
@@ -164,7 +162,7 @@ public class DynamicChangePeerCluster {
         assertEquals("0",testMgTool.parseMemInfo(meminfo,PEER3IP,"height"));
 
         shellExeCmd(PEER3IP,startPeerCmd);//启动节点
-        Thread.sleep(STARTSLEEPTIME);//等待启动时间
+        Thread.sleep(RESTARTTIME*3);//等待启动时间
 
         //节点启动后信息检查
         meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);//查询集群信息
@@ -188,12 +186,10 @@ public class DynamicChangePeerCluster {
         testMgTool.queryPeerListNo(PEER3IP+":"+PEER3RPCPort,DynamicPeerNo);
 
 
-        //做简单数据高度大于零判断，因原系统中数据较多时，同步完成时间无法确认，因此不检查是否与其他节点高度一致
-        assertEquals(true,Integer.parseInt(mgToolCmd.queryBlockHeight(peer3IPPort)) > 0);
+        sleepAndSaveInfo(3600*1000,"sync data waiting....");
 
-        shellPeer3.execute(killPeerCmd);
-        Thread.sleep(3000);
+        assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER2IP + ":" + PEER2RPCPort));
+        assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER3IP + ":" + PEER3RPCPort));
 
-        mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
     }
 }

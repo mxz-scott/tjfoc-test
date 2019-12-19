@@ -5,7 +5,6 @@ import com.tjfintech.common.functionTest.Conditions.*;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest_UpgradeTestOnly;
 import com.tjfintech.common.functionTest.mainSubChain.TestMainSubChain_UpgradeTestOnly;
-import com.tjfintech.common.functionTest.mixTestWithConfigChange.DynamicChangePeerCluster;
 import com.tjfintech.common.functionTest.store.StoreTest_UpgradeTestOnly;
 import com.tjfintech.common.functionTest.upgrade.UpgradeTestHistoryData;
 import com.tjfintech.common.functionTest.utxoMultiSign.MultiTest;

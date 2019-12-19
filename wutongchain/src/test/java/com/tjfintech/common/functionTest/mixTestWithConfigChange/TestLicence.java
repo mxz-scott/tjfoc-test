@@ -129,7 +129,7 @@ public class TestLicence {
 //        //替换配置licence文件为过期文件
         setPeerLicence(PEER2IP,"peer246expired.lic");
         resp = shExeAndReturn(PEER2IP,tempStart);
-        assertEquals(true,resp.contains("expire"));
+        assertEquals(true,resp.contains("validate license: OutTime validation failed"));
         assertEquals(false, checkProgramActive(PEER2IP,PeerTPName));
 
         log.info("********************Test for dismatch version license********************");

@@ -1,6 +1,5 @@
 package com.tjfintech.common.functionTest.mainSubChain;
 
-import com.alibaba.fastjson.JSON;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.SoloSign;

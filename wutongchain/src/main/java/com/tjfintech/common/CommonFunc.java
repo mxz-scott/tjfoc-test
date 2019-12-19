@@ -214,7 +214,7 @@ public class CommonFunc {
     //此部分读写不支持重复section的内容 例如 sdk conf/config.toml中会有多个 [[Peers]]
 
     //读取sdk配置文件中指定配置项信息
-    public static boolean getSDKWalletEnabled()throws Exception{
+    public static boolean getSDKWalletEnabled(){
         boolean bEnabled = true;
         String resp = getSDKConfigValueByShell(getIPFromStr(SDKADD),"Wallet","Enabled");
         if(resp.contains("true")) bEnabled = true;
@@ -339,7 +339,7 @@ public class CommonFunc {
     }
 
 
-    public static void setSDKOnePeer(String SDKIP,String PeerIPPort,String TLSEnabled)throws Exception{
+    public static void setSDKOnePeer(String SDKIP,String PeerIPPort,String TLSEnabled){
         //获取第一个[[Peer]]所在行号 后面加入节点集群信息时插入的行号
         String lineNo = shExeAndReturn(SDKIP,"grep -n Peer "+ SDKConfigPath + " | cut -d \":\" -f 1 |sed -n '1p'");
         //先删除conf/config.toml文件中的所有Peers
@@ -421,7 +421,7 @@ public class CommonFunc {
     }
 
 
-    public static void setPeerClusterOnePeer(String PeerIP,String addIP,String Port,String Type,String IPformat,String TcpType)throws Exception{
+    public static void setPeerClusterOnePeer(String PeerIP,String addIP,String Port,String Type,String IPformat,String TcpType){
         shExeAndReturn(PeerIP,"echo \" \" > " + PeerMemConfigPath); //清空peer config.toml文件
 
         String peerID = getPeerId(addIP,USERNAME,PASSWD);
@@ -452,28 +452,28 @@ public class CommonFunc {
         shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+6) + "iType = " + Type + "' " + PeerMemConfigPath);
     }
 
-    public static void setPeerClusterWithOneDataPeer()throws Exception{
+    public static void setPeerClusterWithOneDataPeer(){
         //设置节点Peer4为数据节点
         setPeerConfigOneData(PEER1IP);
         setPeerConfigOneData(PEER2IP);
         setPeerConfigOneData(PEER4IP);
     }
 
-    public static void setPeerCluster()throws Exception{
+    public static void setPeerCluster(){
         //设置所有节点均为共识节点
         setPeerConfig(PEER1IP);
         setPeerConfig(PEER2IP);
         setPeerConfig(PEER4IP);
     }
 
-    public static void setPeerConfigOneData(String PeerIP)throws Exception{
+    public static void setPeerConfigOneData(String PeerIP){
         //设置节点Peer1 config 配置文件 节点Peer4为数据节点
         setPeerClusterOnePeer(PeerIP,PEER1IP,PEER1TCPPort,"0",ipv4,tcpProtocol);
         addPeerCluster(PeerIP,PEER2IP,PEER2TCPPort,"0",ipv4,tcpProtocol);
         addPeerCluster(PeerIP,PEER4IP,PEER4TCPPort,"1",ipv4,tcpProtocol);
     }
 
-    public static void setPeerConfig(String PeerIP)throws Exception{
+    public static void setPeerConfig(String PeerIP){
         //设置节点Peer1 config 配置文件 均为共识节点
         setPeerClusterOnePeer(PeerIP,PEER1IP,PEER1TCPPort,"0",ipv4,tcpProtocol);
         addPeerCluster(PeerIP,PEER2IP,PEER2TCPPort,"0",ipv4,tcpProtocol);

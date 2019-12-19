@@ -48,6 +48,7 @@ public class TestTxType {
     String subTypePriStore="1";
 
     String versionStore="0";
+    String versionPriStore="0";
     String versionWVM1="1";
     String versionSUTXO="0";
     String versionMUTXO="0";
@@ -299,7 +300,7 @@ public class TestTxType {
         //检查隐私存证信息
         //Thread.sleep(6000);
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
-        checkTXDetailHeaderMsg(txHash2,versionStore,typeStore,subTypePriStore);
+        checkTXDetailHeaderMsg(txHash2,versionPriStore,typeStore,subTypePriStore);
 
 //        JSONObject jsonObjecttran=JSONObject.fromObject(store.GetTransaction(txHash2)).getJSONObject("Data");
         JSONObject jsonObjecttx=JSONObject.fromObject(store.GetTxDetail(txHash2)).getJSONObject("Data");

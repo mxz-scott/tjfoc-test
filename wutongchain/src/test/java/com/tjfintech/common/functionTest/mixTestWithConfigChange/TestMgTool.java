@@ -93,7 +93,7 @@ public class TestMgTool {
         assertEquals(memInfoArr[3],parseMemInfo(chkResp,peerIP,"port"));
         assertEquals(memInfoArr[4],parseMemInfo(chkResp,peerIP,"shownName"));
         assertEquals(memInfoArr[5],parseMemInfo(chkResp,peerIP,"inAddr"));
-        assertEquals(memInfoArr[6],parseMemInfo(chkResp,peerIP,"outAddr"));
+//        assertEquals(memInfoArr[6],parseMemInfo(chkResp,peerIP,"outAddr"));//20191218 测试无此字段
         assertEquals(memInfoArr[7],parseMemInfo(chkResp,peerIP,"typ"));
 //        assertEquals(memInfoArr[8],parseMemInfo(chkResp,peerIP,"height"));
         assertEquals(memInfoArr[8],parseMemInfo(chkResp,peerIP,"TLSEnabled"));
@@ -261,7 +261,8 @@ public class TestMgTool {
         //先将待加入节点进程停止
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
         shellPeer3.execute(killPeerCmd);
-        shellPeer3.execute("cp "+ PeerPATH + "configjoin.toml "+ PeerMemConfigPath);
+        setPeerConfig(PEER3IP);//设置Peer3 config.toml文件为不包含自己节点信息的配置文件 20191219确认不用配置自己的信息
+//        addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
         mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
 
         Thread.sleep(2000);
@@ -300,8 +301,11 @@ public class TestMgTool {
         String resp2 = mgToolCmd.addPeer("observer",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort);
         assertEquals(true,resp2.contains("success"));
         queryPeerListNo(peer1IPPort,DynamicPeerNo);//通过共识节点查询集群列表
-        shellPeer3.execute("cp "+ PeerPATH + "configobs.toml "+ PeerMemConfigPath);
+        setPeerConfig(PEER3IP);//设置Peer3 config.toml文件为不包含自己节点信息的配置文件 20191219确认不用配置自己的信息
+//        addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
+
         shellExeCmd(PEER3IP,startPeerCmd);
+
         Thread.sleep(STARTSLEEPTIME);
         chkPeerSimInfoOK(peer3IPPort,tcpPort,version,dataType);
         queryPeerListNo(PEER3IP+":"+rpcPort,DynamicPeerNo);//通过非共识节点查询集群列表
@@ -361,7 +365,10 @@ public class TestMgTool {
         assertEquals(response.contains(tcpIP), true);
         assertEquals(response.contains(peerID), true);
         assertEquals(response.contains(peerName), true);
-        assertEquals(response.contains(Type), true);
+        if(Type.contains("0"))
+            assertEquals(response.contains(Type), false);
+        else
+            assertEquals(response.contains(Type), true);
         assertEquals(response.contains(rpcPort), true);
     }
 

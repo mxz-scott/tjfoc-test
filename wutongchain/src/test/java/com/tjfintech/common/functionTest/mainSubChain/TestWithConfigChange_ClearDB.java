@@ -16,7 +16,7 @@ import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
 
-import static com.tjfintech.common.CommonFunc.setSDKOnePeer;
+import static com.tjfintech.common.CommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 
@@ -147,7 +147,8 @@ public class TestWithConfigChange_ClearDB {
     public void TC1537_2144_createChainWithJoinPeer()throws Exception{
         assertEquals(3,subLedgerCmd.getLedgerMemNo(glbChain01));//动态加入节点前检查节点集群信息
 
-        setAndRestartPeer(PEER3IP,"cp "+ PeerPATH + "configjoin.toml " + PeerMemConfigPath);
+        setPeerConfig(PEER3IP);//设置Peer3 config.toml文件为不包含自己节点信息的配置文件 20191219确认不用配置自己的信息
+//        addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
         //动态加入节点168
         String resp2 = mgToolCmd.addPeer("join",PEER1IP+":"+PEER1RPCPort,
                 "/ip4/"+PEER3IP,"/tcp/60011",PEER3RPCPort);
@@ -245,7 +246,8 @@ public class TestWithConfigChange_ClearDB {
 
     @Test
     public void TC1659_1655_createChainWithDataPeer()throws Exception{
-        setAndRestartPeer(PEER3IP,"cp "+ PeerPATH + "configobs.toml "+ PeerMemConfigPath);
+        setPeerConfig(PEER3IP);//设置Peer3 config.toml文件为不包含自己节点信息的配置文件 20191219确认不用配置自己的信息
+//        addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
         //动态加入节点168
         String resp2 = mgToolCmd.addPeer("observer",PEER1IP+":"+PEER1RPCPort,
                 "/ip4/"+PEER3IP,"/tcp/60011",PEER3RPCPort);

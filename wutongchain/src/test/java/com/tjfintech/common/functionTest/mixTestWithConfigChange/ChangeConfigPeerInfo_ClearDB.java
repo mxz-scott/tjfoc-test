@@ -7,10 +7,7 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.Shell;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
@@ -42,16 +39,15 @@ public class ChangeConfigPeerInfo_ClearDB {
 
     @Before
     public void resetPeerEnv()throws Exception{
+        RESTARTTIME = 6000;
         BeforeCondition bf = new BeforeCondition();
         bf.clearDataSetPerm999();
 
         mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
 
-        Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
-        shellPeer3.execute(killPeerCmd);
-        shellPeer3.execute(resetPeerBase);
+        shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB,resetPeerBase);
         testMgTool.queryPeerListNo(peer1IPPort,basePeerNo);
-
+        RESTARTTIME = 20000;//恢复原设置
     }
 
 
@@ -86,8 +82,6 @@ public class ChangeConfigPeerInfo_ClearDB {
         testMgTool.chkPeerSimInfoOK(opIP+":"+rpcPort,tcpPort,version,consType);//自己查询节点信息
 
 
-
-
         String respChange= mgToolCmd.addPeer("observer",peer1IPPort,ipType+opIP,tcpType+TpcPort2,String.valueOf(RpcPort2));
         assertEquals(true,respChange.contains("success"));
 
@@ -106,5 +100,26 @@ public class ChangeConfigPeerInfo_ClearDB {
         assertEquals(String.valueOf(rpcPort),testMgTool.parseMemInfo(meminfo,opIP,"port"));
         assertEquals("1",testMgTool.parseMemInfo(meminfo,opIP,"typ"));
         testMgTool.chkPeerSimInfoOK(opIP + ":" + rpcPort,String.valueOf(TpcPort2),version,dataType);//自己查询节点信息 当前存在bug
+
+        //恢复设置
+        String recoverChange= mgToolCmd.addPeer("join",peer1IPPort,ipType+PEER2IP,tcpType+PEER2TCPPort,PEER2RPCPort);
+        assertEquals(true,recoverChange.contains("success"));
+
+        Thread.sleep(SLEEPTIME);//等待P2P更新
+    }
+
+    @After
+    public void resetPeer()throws Exception{
+        BeforeCondition bf = new BeforeCondition();
+        bf.clearDataSetPerm999();
+
+        mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
+
+        Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
+        shellPeer3.execute(killPeerCmd);
+        shellExeCmd(PEER3IP,clearPeerDB,resetPeerBase);
+        shellPeer3.execute(resetPeerBase);
+        testMgTool.queryPeerListNo(peer1IPPort,basePeerNo);
+
     }
 }
