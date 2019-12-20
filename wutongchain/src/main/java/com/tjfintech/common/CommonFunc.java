@@ -282,16 +282,16 @@ public class CommonFunc {
     public static void setSDKWalletAddrDBMysql(String SDKIP)throws Exception{
         setSDKConfigByShell(SDKIP,"Wallet","Provider","\"\\\"mysql\"\\\"");
         setSDKConfigByShell(SDKIP,"Wallet","DBPath",mysqlDBAddr);
-        setSDKConfigByShell(SDKIP,"AddrService","Provider","\"\\\"mysql\"\\\"");
-        setSDKConfigByShell(SDKIP,"AddrService","DBPath",mysqlDBAddr);
+//        setSDKConfigByShell(SDKIP,"AddrService","Provider","\"\\\"mysql\"\\\"");
+//        setSDKConfigByShell(SDKIP,"AddrService","DBPath",mysqlDBAddr);
 
         String checkMyqlDBAddr = mysqlDBAddr.replaceAll("\"","").replaceAll("\\\\","");
 //        System.out.print(checkMyqlDBAddr);
 
         assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","Provider").trim().contains("mysql"));
         assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","DBPath").trim().contains(checkMyqlDBAddr));
-        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","Provider").trim().contains("mysql"));
-        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","DBPath").trim().contains(checkMyqlDBAddr));
+//        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","Provider").trim().contains("mysql"));
+//        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","DBPath").trim().contains(checkMyqlDBAddr));
     }
 
     public static void setSDKWalletDBMysqlAddrDBMongo(String SDKIP)throws Exception{
@@ -327,15 +327,15 @@ public class CommonFunc {
     public static void setSDKWalletAddrDBMongo(String SDKIP)throws Exception{
         setSDKConfigByShell(SDKIP,"Wallet","Provider","\"\\\"mongodb\"\\\"");
         setSDKConfigByShell(SDKIP,"Wallet","DBPath",mongoDBAddr);
-        setSDKConfigByShell(SDKIP,"AddrService","Provider","\"\\\"mongodb\"\\\"");
-        setSDKConfigByShell(SDKIP,"AddrService","DBPath",mongoDBAddr);
+//        setSDKConfigByShell(SDKIP,"AddrService","Provider","\"\\\"mongodb\"\\\"");
+//        setSDKConfigByShell(SDKIP,"AddrService","DBPath",mongoDBAddr);
 
         String checkMongoDBAddr = mongoDBAddr.replaceAll("\"","").replaceAll("\\\\","");
 
         assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","Provider").trim().contains("mongodb"));
         assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","DBPath").trim().contains(checkMongoDBAddr));
-        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","Provider").trim().contains("mongodb"));
-        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","DBPath").trim().contains(checkMongoDBAddr));
+//        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","Provider").trim().contains("mongodb"));
+//        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","DBPath").trim().contains(checkMongoDBAddr));
     }
 
 

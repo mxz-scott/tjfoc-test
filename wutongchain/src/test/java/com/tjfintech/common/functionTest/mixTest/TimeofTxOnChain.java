@@ -42,6 +42,8 @@ public class TimeofTxOnChain {
 
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
 
+        GetTxDetail(nowTime,storeHash);
+        nowTime = new Date().getTime();
         GetLocal(nowTime,storeHash);
         }
 
@@ -50,8 +52,8 @@ public class TimeofTxOnChain {
     public void searchUTXOInlocal()  throws Exception{
         String tokenType1 = "zz1X-" + UtilsClass.Random(10);
         String tokenType2 = "q1qX-" + UtilsClass.Random(10);
-        log.info("*****************************"+tokenType1);
-        log.info("*****************************"+tokenType2);
+//        log.info("*****************************"+tokenType1);
+//        log.info("*****************************"+tokenType2);
         String response = multiSign.issueToken(IMPPUTIONADD, tokenType1, "1000", "issue");
         assertThat(response, containsString("200"));
         String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
@@ -59,52 +61,63 @@ public class TimeofTxOnChain {
         String response3 = multiSign.issueToken(IMPPUTIONADD, tokenType2, "5000", "issue");
         assertThat(response3, containsString("200"));
         String Tx2 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Tx");
-
-        long nowTime = new Date().getTime();
         String response2 = multiSign.Sign(Tx1, PRIKEY5);
         assertThat(response2, containsString("200"));
         String response4 = multiSign.Sign(Tx2, PRIKEY5);
         assertThat(response4, containsString("200"));
 
-        JSONObject jsonObject=JSONObject.fromObject(response2);
-        String storeHash1 = jsonObject.getJSONObject("Data").get("TxId").toString();
-
+        long nowTime = new Date().getTime();
         JSONObject jsonObject1=JSONObject.fromObject(response4);
         String storeHash2 = jsonObject1.getJSONObject("Data").get("TxId").toString();
 
-
+        GetTxDetail(nowTime,storeHash2);
+        nowTime = new Date().getTime();
         GetLocal(nowTime,storeHash2);
     }
-    public void GetLocal(long time ,String hash) throws Exception{
-
-        String response2= store.GetInlocal(hash);
+    public void GetTxDetail(long time ,String hash) throws Exception{
+        String response2= store.GetTxDetail(hash);
+//        String response2= store.GetInlocal(hash);
         if (response2.indexOf("200")!=-1){
             long nowTime = new Date().getTime();
-               log.info(nowTime -time+"ms");
+               log.info(nowTime -time+"ms tx on chain");
+        }else{
+            Thread.sleep(50);
+            GetTxDetail(time,hash);
+        }
 
+
+    }
+
+    public void GetLocal(long time ,String hash) throws Exception{
+        String response2= store.GetInlocal(hash);
+//        String response2= store.GetInlocal(hash);
+        if (response2.indexOf("200")!=-1){
+            long nowTime = new Date().getTime();
+            log.info(nowTime -time+"ms get in local");
 
         }else{
-            Thread.sleep(200);
+            Thread.sleep(50);
             GetLocal(time,hash);
         }
 
 
     }
+
     @Test
     public  void UTXOOnChainTimeTest()throws Exception{
-        for(int i=0;i<50;i++){
+        for(int i=0;i<500;i++){
             searchUTXOInlocal();
         }
     }
 
     @Test
     public  void StoreOnChainTimeTest()throws Exception{
-        for(int i=0;i<50;i++){
+        for(int i=0;i<500;i++){
             searchStoreInlocal();
         }
     }
 
-    @Test
+//    @Test
     public void checkBlockHash()throws Exception{
         BeforeCondition bf =new BeforeCondition();
         bf.setPermission999();

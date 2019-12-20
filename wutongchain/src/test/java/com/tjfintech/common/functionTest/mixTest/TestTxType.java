@@ -48,7 +48,7 @@ public class TestTxType {
     String subTypePriStore="1";
 
     String versionStore="0";
-    String versionPriStore="0";
+    String versionPriStore="1";
     String versionWVM1="1";
     String versionSUTXO="0";
     String versionMUTXO="0";
