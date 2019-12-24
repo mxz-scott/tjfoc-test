@@ -12,16 +12,16 @@ public class SetDatabaseMongo {
    @Test
     public void setDBMongo()throws Exception{
        //设置SDK 使用Mongo 清空数据库
-       shellExeCmd(getIPFromStr(SDKADD),resetSDKConfig);
+       shellExeCmd(getIPFromStr(SDKADD),resetSDKConfig,killSDKCmd);
        setSDKWalletAddrDBMongo(getIPFromStr(SDKADD));
        delDataBase();//清空sdk当前使用数据库数据
 
       //设置节点 清空db数据 并重启
-       setPeerCluster();//设置节点集群默认全部共识节点 1/2/4
+//       setPeerCluster();//设置节点集群默认全部共识节点 1/2/4
        setAndRestartPeerList(clearPeerDB,resetPeerBase);
 
        //重启SDK
-       setAndRestartSDK();
+      shellExeCmd(getIPFromStr(SDKADD),startSDKCmd);
 
        //检查节点及sdk启动无异常
        checkProgramActive(PEER1IP,PeerTPName);

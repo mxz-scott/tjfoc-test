@@ -143,6 +143,7 @@ public class TestWithConfigChange_ClearDB {
     }
 
 
+    //测试动态加入节点后，使用动态加入的节点创建子链
     @Test
     public void TC1537_2144_createChainWithJoinPeer()throws Exception{
         assertEquals(3,subLedgerCmd.getLedgerMemNo(glbChain01));//动态加入节点前检查节点集群信息
@@ -213,6 +214,8 @@ public class TestWithConfigChange_ClearDB {
 
     }
 
+    //测试节点变更与子链的关系
+    //若节点存在与非销毁的子链中时是不允许动态变更
     @Test
     public void TC1771_changePeerInfo()throws Exception{
         //所有信息不变更，重复join，提示变更失败，因节点B参与子链
@@ -244,6 +247,7 @@ public class TestWithConfigChange_ClearDB {
 
     }
 
+    //测试使用数据节点作为子链集群节点时是否能够创建 预期是不能创建
     @Test
     public void TC1659_1655_createChainWithDataPeer()throws Exception{
         setPeerConfig(PEER3IP);//设置Peer3 config.toml文件为不包含自己节点信息的配置文件 20191219确认不用配置自己的信息
@@ -280,6 +284,7 @@ public class TestWithConfigChange_ClearDB {
     }
 
 
+    //检查两个节点的子链停止其中一个节点时能否正常打包交易 预期是不可以 不满足共识条件
     @Test
     public void TC1523_subChainStatus()throws Exception{
         //配置sdk节点集群仅为Peer1并重启sdk
@@ -323,12 +328,15 @@ public class TestWithConfigChange_ClearDB {
         shell.execute(startPeerCmd);
     }
 
+    //重启之后确认主子链是否可以正常发送交易
+    //旨在测试子链是否能够正常启动
     @Test
     public void TC1608_1620_restartPeer()throws Exception{
         setAndRestartPeerList();
         subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"tc1608 data");
     }
 
+    //测试子链包含的节点在子链创建前停止能否正常创建子链
     @Test
     public void TC1726_createWithStopPeer()throws Exception{
         testMgTool.queryPeerListNo(PEER1IP+":"+PEER1RPCPort,3);
