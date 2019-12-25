@@ -51,6 +51,35 @@ public class UtilsClass {
     public static String tmuxSessionPeer = "tmux send -t M2 ";
     public static String tmuxSessionSDK = "tmux send -t s_M2 ";
 
+//    //zhouxianxian env use start -----------
+//    public static String SDKADD = "http://10.1.3.246:7777";
+//    public static String rSDKADD = "http://10.1.3.246:8080";
+//    public static String TOKENADD = "http://10.1.3.246:9090";
+//    //设置测试环境使用的节点端口及部署目录信息
+//    public static String PEER1IP = "10.1.3.240";
+//    public static String PEER2IP = "10.1.3.246";
+//    public static String PEER3IP = "10.1.5.168";
+//    public static String PEER4IP = "10.1.3.247";
+//    public static String PEER1RPCPort = "9300";
+//    public static String PEER2RPCPort = "9300";
+//    public static String PEER3RPCPort = "9300";
+//    public static String PEER4RPCPort = "9300";
+//    public static String PEER1TCPPort = "60030";
+//    public static String PEER2TCPPort = "60030";
+//    public static String PEER3TCPPort = "60030";
+//    public static String PEER4TCPPort = "60030";
+//    //节点、SDK、Toolkit对等目录放置于PTPATH目录下
+//    public static String PTPATH = "/root/zll/permission/";
+//    public static String SDKPATH = PTPATH + "sdk/";
+//    public static String PeerPATH = PTPATH + "peer/";
+//    public static String ToolPATH = PTPATH + "toolkit/";
+//    public static String PeerTPName = "wtchain";
+//    public static String SDKTPName = "wtsdk";
+//    public static String ToolTPName = "wttool";
+//    public static String tmuxSessionPeer = "tmux send -t perm ";
+//    public static String tmuxSessionSDK = "tmux send -t perm_sdk ";
+//    //zhouxianxian env use end -----------
+
     public static String certPath = "SM2"; // 设置签名证书类型，可选值SM2(默认值)，ECDSA，MIX1，MIX2，RSA
     public static String subLedger = ""; // 修改接口兼容主子链
 

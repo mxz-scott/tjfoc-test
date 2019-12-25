@@ -103,12 +103,12 @@ public class StoreTest {
 
     /**
      * 普通存证，内容为json
-     * 数量为1
+     * 数量为5
      */
     @Test
     public void TC_createJsonStore() throws Exception {
 
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 5; i++) {
             JSONObject fileInfo = new JSONObject();
             JSONObject data = new JSONObject();
 

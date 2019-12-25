@@ -298,25 +298,17 @@ public class PrivateStoreTest {
 
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY5);
-        String res2 = store.StoreAuthorize(hash, map, PRIKEY2);
+        String res2 = store.StoreAuthorize(hash, map, PRIKEY2); //只有第一个私钥可以授权
         Thread.sleep(SLEEPTIME);
         assertThat(res2,containsString("500"));
         assertThat(res2,containsString("private key is not tx owner"));
-//        String res5 = store.GetStorePost(hash,PRIKEY5);
-//        assertThat(res5,containsString("200"));
-//        jsonResult=JSONObject.fromObject(res5);
-//        assertThat(jsonResult.get("Data").toString(),containsString(Data));
 
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY6);
         res2 = store.StoreAuthorize(hash, map, PRIKEY3);
         Thread.sleep(SLEEPTIME);
         assertThat(res2,containsString("500"));
-        assertThat(res2,containsString("private key is not tx owner"));
-//        res5 = store.GetStorePostPwd(hash,PRIKEY6,PWD6);
-//        assertThat(res5,containsString("200"));
-//        jsonResult=JSONObject.fromObject(res5);
-//        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+        assertThat(res2,containsString("private key is not tx owner")); //只有第一个私钥可以授权
 
     }
 
@@ -359,10 +351,6 @@ public class PrivateStoreTest {
         Thread.sleep(SLEEPTIME);
         assertThat(res1,containsString("500"));
         assertThat(res1,containsString("private key is not tx owner"));
-//        String res4 = store.GetStorePost(hash,PRIKEY4);
-//        assertThat(res4,containsString("200"));
-//        jsonResult=JSONObject.fromObject(res4);
-//        assertThat(jsonResult.get("Data").toString(),containsString(Data));
 
     }
 
@@ -403,5 +391,95 @@ public class PrivateStoreTest {
 
     }
 
+    @Test
+    public void TC2166_CreatePrivateStore()throws  Exception{
 
+        JSONObject result = new JSONObject();
+        result.put("test1", true);
+        result.put("test2", "30");
+        String Data = result.toString();
+        log.info(Data);
+
+        Map<String,Object>map=new HashMap<>();
+        map.put("pubKeys",PUBKEY6);
+        String response= store.CreatePrivateStore(Data,map);
+        Thread.sleep(SLEEPTIME);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String hash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String res3 = store.GetStorePostPwd(hash,PRIKEY6,PWD6);
+        assertThat(res3,containsString("200"));
+        JSONObject jsonResult=JSONObject.fromObject(res3);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+        map=new HashMap<>();
+        map.put("pubKeys1",PUBKEY1);
+        map.put("pubKeys2",PUBKEY2);
+        map.put("pubKeys3",PUBKEY7);
+        String res1 = store.StoreAuthorize(hash, map, PRIKEY6,PWD6);
+        Thread.sleep(SLEEPTIME);
+        assertThat(res1,containsString("200"));
+        assertThat(res1,containsString("success"));
+
+        String res4 = store.GetStorePost(hash,PRIKEY1);
+        assertThat(res4,containsString("200"));
+        jsonResult=JSONObject.fromObject(res4);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+        res4 = store.GetStorePost(hash,PRIKEY2);
+        assertThat(res4,containsString("200"));
+        jsonResult=JSONObject.fromObject(res4);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+        res4 = store.GetStorePostPwd(hash,PRIKEY7,PWD7);
+        assertThat(res4,containsString("200"));
+        jsonResult=JSONObject.fromObject(res4);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+    }
+
+    @Test
+    public void TC2167_CreatePrivateStore()throws  Exception{
+
+        JSONObject result = new JSONObject();
+        result.put("test3", true);
+        result.put("test4", "30");
+        String Data = result.toString();
+        log.info(Data);
+
+        Map<String,Object>map=new HashMap<>();
+        map.put("pubKeys",PUBKEY1);
+        String response= store.CreatePrivateStore(Data,map);
+        Thread.sleep(SLEEPTIME);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String hash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String res3 = store.GetStorePost(hash,PRIKEY1);
+        assertThat(res3,containsString("200"));
+        JSONObject jsonResult=JSONObject.fromObject(res3);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+        map=new HashMap<>();
+        map.put("pubKeys1",PUBKEY3);
+        map.put("pubKeys2",PUBKEY6);
+        map.put("pubKeys3",PUBKEY7);
+        String res1 = store.StoreAuthorize(hash, map, PRIKEY1);
+        Thread.sleep(SLEEPTIME);
+        assertThat(res1,containsString("200"));
+        assertThat(res1,containsString("success"));
+
+        String res4 = store.GetStorePost(hash,PRIKEY3);
+        assertThat(res4,containsString("200"));
+        jsonResult=JSONObject.fromObject(res4);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+        res4 = store.GetStorePostPwd(hash,PRIKEY6,PWD6);
+        assertThat(res4,containsString("200"));
+        jsonResult=JSONObject.fromObject(res4);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+        res4 = store.GetStorePostPwd(hash,PRIKEY7,PWD7);
+        assertThat(res4,containsString("200"));
+        jsonResult=JSONObject.fromObject(res4);
+        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+
+    }
 }
