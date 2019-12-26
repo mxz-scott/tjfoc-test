@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -292,7 +293,10 @@ public class WVMContractTest {
 
 //        String response7 = query(ctHash,"getBalance",accountA);//获取账户A账户余额
 //        String response7 = query(ctHash,"getBalance",accountA);//获取账户A账户余额
-        chkTxDetailRsp("404",txHash4);
+        //两笔交易可能打在两个区块中
+        assertThat(JSONObject.fromObject(store.GetTxDetail(txHash4)).getString("State"),
+                anyOf(containsString("200"),containsString("404")));
+//        chkTxDetailRsp("404",txHash4);
         chkTxDetailRsp("200",txHash5);
     }
 

@@ -3,6 +3,7 @@ package com.tjfintech.common.functionTest.BVT.P2_Middle;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
 import com.tjfintech.common.functionTest.Conditions.SetMgToolHashTypeSM3;
+import com.tjfintech.common.functionTest.Conditions.SetSubLedgerSleepTime;
 import com.tjfintech.common.functionTest.mainSubChain.TestDiffHashType;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -11,6 +12,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         SetDatabaseMysql.class,
+        SetSubLedgerSleepTime.class,
         SetMgToolHashTypeSM3.class,
         BeforeCondition.class,
         TestDiffHashType.class

@@ -308,7 +308,7 @@ public class TestMainSubChain_Create_02 {
     }
 
     @Test
-    public void TC1611_creatLongName()throws Exception{
+    public void TC1611_createLongName()throws Exception{
         //长度24
         String chainName1="tc1611_12345678901234567";
         //创建子链子链名长度24

@@ -89,7 +89,7 @@ public class UtilsClass {
     public static Integer  LONGTIMEOUT = 100000;//毫秒
     public static Integer  SHORTMEOUT = 3000;//毫秒
     public static Integer  UTXOSHORTMEOUT = 4 * 1000;//毫秒
-    public static int  SLEEPTIME = 6*1000;
+    public static int  SLEEPTIME = 7*1000;
 
     //UTXO精度
     public static Integer PRECISION = 6;
@@ -146,10 +146,10 @@ public class UtilsClass {
     public static long ContractInstallSleep=75000;
 
     public static String dockerFileName="simple.go";
-    public static String fullPerm="[1 2 3 4 5 6 7 8 9 10 11 21 22 23 24 25 26 27 211 212 221 222 223 224 231 232 233 235 236 251 252 253 254 255 256 270 271 272]";
+    public static String fullPerm="[1 2 3 4 5 6 7 8 9 10 11 211 212 221 222 223 224 231 232 233 235 236 251 252 253 254 255 256]";
     public static String PeerMemConfigPath = PeerPATH + "config.toml";//全文件名为config.toml 节点集群信息
     public static String PeerBaseConfigPath = PeerPATH + "conf/base.toml";//全文件名为base.toml 节点运行相关配置
-    public static String SDKConfigPath = SDKPATH + "conf/config.toml";//全文件名为config.toml SDK配置信息
+    public static String SDKConfigPath = SDKPATH + "conf/config.toml";//全文件名为config.toml SDK配置信息[1 2 3 4 5 6 7 8 9 10 11 211 212 221 222 223 224 231 232 233 235 236 251 252 253 254 255 256]
 
     public static String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
     public static String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
@@ -477,6 +477,22 @@ public class UtilsClass {
         }
         log.info("SDK " + sdkIP + " ID:\n" + SDKID);
         return SDKID;
+    }
+
+    public static String getToolID(String IP) {
+        Shell shellSDK=new Shell(IP,USERNAME,PASSWD);
+        String toolID ="";
+        shellSDK.execute("cd "+ ToolPATH+";./" + ToolTPName + " getid -p "+ ToolPATH +"crypt/key.pem");
+        ArrayList<String> stdout3 = shellSDK.getStandardOutput();
+        for (String str1 : stdout3){
+            if(str1.contains("id:"))
+            {
+                toolID=str1.split(":")[1];
+                break;
+            }
+        }
+        log.info("Tool " + IP + " ID:\n" + toolID);
+        return toolID;
     }
 
     public static String getMACAddr(String IP,String userName,String passWd) {

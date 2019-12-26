@@ -5,7 +5,10 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
+import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.functionTest.contract.WVMContractTest;
+import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
@@ -37,24 +40,30 @@ public class TestPermission {
     APermfuncSys pFun1 =new APermfuncSys();
     APermfuncDocker pFunCt =new APermfuncDocker();
     APermfuncUTXO pFunUTXO =new APermfuncUTXO();
+    APermfuncWVM pFunWVM = new APermfuncWVM();
+    APermfuncSubledgerMg pFunLedger = new APermfuncSubledgerMg();
+
+    WVMContractTest wvmContractTest = new WVMContractTest();
+    FileOperation fileOperation = new FileOperation();
+    public String orgName = "TestExample";
+    public String accountA = "A";
+    public int amountA = 50;
+    public String wvmFile = "wvm";
+    String glbWVMHash = "111";
 
     String glbBlockHash ="xP4fUESPobYXi1+ROFjlc32XLAu4GGUg2FfC5ygPpqU=";
     String glbTxHash="wsjmIJhZaXRS5mNGFMC4xiL529XoUpow3bu5N/JWNB8=";
     String glbPriTxHash="wsjmIJhZaXRS5mNGFMC4xiL529XoUpow3bu5N/JWNB8=";
     String glbCtName="t888";
-    String okCode="200";
-    String okMsg="success";
 
-    String errCode="404";
-    String errMsg="does not found Permission";
     String def="Def:111";
     //"+def+Sys0+Store0+Docker0+Mg0+UTXO0+"
     String Sys0="Sys:00000000"; //移除tx/search接口测试标记
     String Store0="Store:00";
-    String Docker0="Docker:00000";
+    String Docker0="Docker:00000000";
     String Mg0="Mg:000000";
     String UTXO0="UTXO:0000000000";
-    String full = "Sys:11111111Store:11Docker:11111Mg:111111UTXO:1111111111";
+    String full = "Sys:11111111Store:11Docker:11111111Mg:111111UTXO:1111111111";
 
 
     String glbMultiToken3="";//MULITADD3的全局预设发行token
@@ -67,19 +76,24 @@ public class TestPermission {
     String exeCmd="./" + ToolTPName + " permission "+ledger;
 
     String peerIP=PEER1RPCPort;
-//    String peerIP="9300";
     String sdkID= UtilsClass.getSDKID();
-    //String sdkID="144166a82d85a96d79388e987a456ba70db683d7105505c38d768829c702eba6717a447c5e858165faefdaa847b3558a4b72db87fd379ac5154ad8fc4f3e13d2";
-    //String sdkID="7d8c8eb266a6a445cde55e086c2ee63e577e3ff8ba5724ff2090a2a691384cbf87a881bc690695836c3e99424756bf3a3726bc0ae6c66795e51d351e6de7c0db";
     String preCmd=toolPath + exeCmd + " -p " + peerIP + " -d " + sdkID + " -m ";
     ArrayList<String> dockerList =new ArrayList();
 
     boolean bExe=false;
 
+//    @Before
+    public void setToolPermFull()throws Exception{
+        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m 999");
+        sleepAndSaveInfo(SLEEPTIME);
+    }
+
     //权限测试需要使用mongodb数据库进行测试 tx/search接口不支持mysql数据库
     @Before
-    //@Test
     public void beforeTest() throws Exception {
+
+        //将管理工具id权限设置为999
+        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m 999");
 
         if(bExe == false) {
             BeforeCondition bf = new BeforeCondition();
@@ -118,10 +132,6 @@ public class TestPermission {
         pFunUTXO.multiGenAddr(3,PUBKEY1,PUBKEY6,PUBKEY7); //SDK发送UTXO生成3/3多签地址交易请求
         pFunUTXO.multiGenAddr(1,PUBKEY1,PUBKEY2);     //SDK发送UTXO生成1/2多签地址交易请求
 
-//        pFunUTXO.addCollAddr(PRIKEY1,ADDRESS1); //SDK发送UTXO添加归集地址-单签地址请求
-//        pFunUTXO.addCollAddr(PRIKEY1,MULITADD3); //SDK发送UTXO添加归集地址-3/3带密码多签地址请求
-//        pFunUTXO.addCollAddr(PRIKEY1,MULITADD4); //SDK发送UTXO添加归集地址-1/2不带密码多签地址请求
-
         glbSoloToken="Glb1So"+UtilsClass.Random(4);
         glbMultiToken4="Glb1Mu4"+UtilsClass.Random(4);
 
@@ -150,6 +160,14 @@ public class TestPermission {
         assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(soloSign.Balance(PRIKEY1,glbSoloToken)).getJSONObject("Data").getString("Total"));
         assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.Balance(MULITADD4,PRIKEY1,glbMultiToken4)).getJSONObject("Data").getString("Total"));
         assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.Balance(MULITADD3,PRIKEY1,glbMultiToken3)).getJSONObject("Data").getString("Total"));
+
+        //预先安装WVM合约
+        String ctName="ok_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
+        fileOperation.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
+
+        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
+        String response4 = wvmContractTest.wvmInstallTest(wvmFile +"_temp.txt",PRIKEY1);
+        glbWVMHash = JSONObject.fromObject(response4).getJSONObject("Data").getString("Name");
 
         bExe=true;
     }
@@ -200,7 +218,7 @@ public class TestPermission {
 
         pFunCt.name="0220"+ RandomUtils.nextInt(100000);
         glbCtName=pFunCt.name;
-        pFunCt.version="2.0";
+        pFunCt.version="2.1";
         pFunCt.installContract();
         Thread.sleep(ContractInstallSleep);
         log.info("Contract install sleep time(ms): "+ContractInstallSleep);
@@ -215,19 +233,19 @@ public class TestPermission {
         checkAllInterface("22",def+Sys0+Store0+Docker0+Mg0+UTXO0);
 //        }
         //合约安装权限
-        checkAllInterface("221",def+Sys0+Store0+"Docker:10000"+Mg0+UTXO0);
+        checkAllInterface("221",def+Sys0+Store0+"Docker:11000000"+Mg0+UTXO0);
 
         //合约交易权限
-        checkAllInterface("223",def+Sys0+Store0+"Docker:01000"+Mg0+UTXO0);
+        checkAllInterface("223",def+Sys0+Store0+"Docker:00110000"+Mg0+UTXO0);
 
         //合约销毁权限
-        checkAllInterface("222",def+Sys0+Store0+"Docker:00100"+Mg0+UTXO0);
+        checkAllInterface("222",def+Sys0+Store0+"Docker:00001100"+Mg0+UTXO0);
 
         //合约搜索
-        checkAllInterface("224",def+Sys0+Store0+"Docker:00011"+Mg0+UTXO0);
+        checkAllInterface("224",def+Sys0+Store0+"Docker:00000011"+Mg0+UTXO0);
 
-        //合约安装及销毁权限
-        checkAllInterface("221,223",def+Sys0+Store0+"Docker:11000"+Mg0+UTXO0);
+        //合约安装及合约交易
+        checkAllInterface("221,223",def+Sys0+Store0+"Docker:11110000"+Mg0+UTXO0);
 
 
         for (String str : dockerList) {
@@ -309,6 +327,44 @@ public class TestPermission {
         checkAllInterface("251,252,253,254,255,256",def+Sys0+Store0+Docker0+"Mg:111111"+UTXO0);
 
     }
+
+//    @Test
+    public void chkSunledgerMg()throws Exception{
+        //将管理工具id权限设置为11
+        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m 10,11");
+
+        sleepAndSaveInfo(SLEEPTIME);
+
+        String permlist = "";
+        //执行创建子链
+        permlist = permlist + pFunLedger.subLedgerCreate();
+        sleepAndSaveInfo(SLEEPTIME);
+
+        permlist = permlist + pFunLedger.subLedgerFreeze(pFunLedger.subLedgerName);
+        sleepAndSaveInfo(SLEEPTIME);
+
+        permlist = permlist + pFunLedger.subLedgerRecover(pFunLedger.subLedgerName);
+        sleepAndSaveInfo(SLEEPTIME);
+
+        permlist = permlist + pFunLedger.subLedgerDestroy(pFunLedger.subLedgerName);
+        sleepAndSaveInfo(SLEEPTIME);
+
+        assertEquals("1111",permlist);
+
+        pFunLedger.subLedgerCreate();//创建一个子链留待后用
+        sleepAndSaveInfo(SLEEPTIME);
+
+        //将管理工具id权限设置为不包含11的权限列表
+        permlist = "";
+        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m 1,2,3");
+        sleepAndSaveInfo(SLEEPTIME);
+        permlist = permlist + pFunLedger.subLedgerCreate();
+        permlist = permlist + pFunLedger.subLedgerFreeze(pFunLedger.subLedgerName);
+        permlist = permlist + pFunLedger.subLedgerRecover(pFunLedger.subLedgerName);
+        permlist = permlist + pFunLedger.subLedgerDestroy(pFunLedger.subLedgerName);
+
+        assertEquals("0000",permlist);
+    }
 //@Test
     public String defaultSup()throws Exception{
         //201904确认不再测试validatekey接口，且
@@ -342,19 +398,29 @@ public class TestPermission {
     }
 
     public String dockerPermCheck()throws Exception{
-        String permStr="";
-        pFunCt.name="0215"+ RandomUtils.nextInt(100000);
+        String permStr= "";
+        pFunCt.name = "0215"+ RandomUtils.nextInt(100000);
         pFunCt.version="2.0";
-        permStr=permStr+pFunCt.installContract();//SDK发送合约安装交易请求
+        permStr = permStr + pFunCt.installContract();//SDK发送合约安装交易请求
         log.info("docker permission:"+permStr);
+
+        //安装wvm合约
+        String ctName = "perm_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
+        fileOperation.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
+        permStr = permStr + pFunWVM.wvmInstallTest(wvmFile +"_temp.txt",PRIKEY2);
+
         //perStr 若为"1"则表示存在合约安装权限，则等待合约安装
         if(permStr.contains("1")) {
             Thread.sleep(ContractInstallSleep);
             log.info("Contract install sleep time(ms): "+ContractInstallSleep);
             dockerList.add(pFunCt.name);
         }
-        permStr=permStr+pFunCt.initMobileTest();//SDK发送合约交易请求
-        permStr=permStr+pFunCt.destroyContract();//SDK发送合约删除交易请求
+        permStr = permStr + pFunCt.initMobileTest();//SDK发送合约交易请求
+        permStr = permStr + pFunWVM.invokeNew(glbWVMHash,"initAccount",accountA,amountA);
+
+        permStr = permStr + pFunCt.destroyContract();//SDK发送合约删除交易请求
+        permStr = permStr + pFunWVM.wvmDestroyTest(glbWVMHash);
+
         log.info(glbCtName);
         permStr=permStr+pFunCt.searchByKey("Mobile0",glbCtName);//SDK发送按key查询请求
         permStr=permStr+pFunCt.searchByPrefix("Mo",glbCtName);//SDK发送按prefix查询请求
@@ -455,7 +521,7 @@ public class TestPermission {
         log.info("+++++++:" + resp);
         if(right=="999")
         {
-            assertEquals(resp.contains("[1 2 3 4 5 6 7 8 9 10 21 22 23 24 25 211 212 221 222 223 224 231 232 233 235 236 251 252 253 254 255 256]"),true);
+            assertEquals(resp.contains(fullPerm),true);
         }else
             assertEquals(resp.contains("["+right.replace(","," ")+"]"),true);
 
@@ -539,5 +605,9 @@ public class TestPermission {
     public void resetPermission() throws Exception{
         BeforeCondition bf=new BeforeCondition();
         bf.setPermission999();
+
+        //将管理工具id权限设置为999
+        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m 999");
+
     }
 }
