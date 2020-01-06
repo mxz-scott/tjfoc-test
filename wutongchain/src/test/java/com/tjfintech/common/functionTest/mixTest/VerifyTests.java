@@ -29,13 +29,16 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class VerifyBlockTxsTimeDiff {
+public class VerifyTests {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
 
+    /**
+        校验区块时间戳与交易时间戳的差值，为了验证之前可能存在的交易几个小时后才打包问题。
+     */
     @Test
-    public void GetBlockTime() throws Exception {
+    public void VerifyBlockAndTxTimeDiff() throws Exception {
 
         int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
 
@@ -72,5 +75,54 @@ public class VerifyBlockTxsTimeDiff {
             }
         }
     }
+
+    /**
+        校验一笔交易打包在多个区块中的问题。
+        测试前提条件，运行自动化脚本，过程中不断的启动一个节点，经过一段时间后，运行本用例校验。
+     */
+    @Test
+    public void VerifyIfSameTxInDiffBlocks() throws Exception {
+
+        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
+
+        log.info("chain height: " + Integer.toString(blockHeight));
+
+        for (int i = 2; i <= blockHeight; i++) {
+
+            //获取交易列表
+            String[] txsPrevious = getTxsArray(i-1);
+            String[] txsCurrent = getTxsArray(i);
+
+            for (String txp : txsPrevious) {
+                for (String txc : txsCurrent) {
+
+                    if (txp.equals(txc)) {
+                        log.error("Same Tx in different blocks. block height: " + i );
+                        log.info("tx : " + txp);
+                    }
+//                    else{
+//                        log.info("tx previous: " + txp);
+//                        log.info("tx current: " + txc);
+//                    }
+                }
+
+            }
+        }
+
+        boolean a = true;
+        assertEquals("请查看输出日志，是否存在异常数据！", true, false);
+    }
+
+    //根据区块高度获取区块中的交易列表
+    public String[] getTxsArray(int i) {
+        String txsList = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getString("txs");
+        txsList = txsList.substring(2);
+        txsList = StringUtils.substringBefore(txsList, "\"]");
+//        log.info(txsList);
+
+        String[] txs = txsList.split("\",\"");
+        return txs;
+    }
+
 
 }
