@@ -45,6 +45,7 @@ public class VerifyTests {
         log.info(Integer.toString(blockHeight));
 
         for (int i = 1; i <= blockHeight; i++) {
+            Thread.sleep(100);
             //打印区块的时间戳
 
             String timestamp = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONObject("header").getString("timestamp");

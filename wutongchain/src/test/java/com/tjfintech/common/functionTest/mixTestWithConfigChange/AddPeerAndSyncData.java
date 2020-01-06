@@ -66,8 +66,6 @@ public class AddPeerAndSyncData {
     public void joinConsensusPeerAndCheckSyncData()throws Exception{
         addPeerConfigWithoutSelfInfo();
 
-        Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
-
         //检查动态加入的共识节点，即使用管理工具加入的共识节点信息
         String resp = mgToolCmd.addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort);
         assertEquals(true,resp.contains("success"));
@@ -116,20 +114,17 @@ public class AddPeerAndSyncData {
         testMgTool.queryPeerListNo(peer1IPPort,DynamicPeerNo);
         testMgTool.queryPeerListNo(PEER3IP+":"+rpcPort,DynamicPeerNo);
 
-        sleepAndSaveInfo(360*1000,"sync data waiting....");
+        sleepAndSaveInfo(1800*1000,"sync data waiting....");
 
-//        assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER2IP + ":" + PEER2RPCPort));
-//        assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER3IP + ":" + PEER3RPCPort));
+        assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER2IP + ":" + PEER2RPCPort));
+        assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER3IP + ":" + PEER3RPCPort));
     }
 
 
     //动态加入数据节点
-//    @Test
+    @Test
     public void joinDataPeerAndCheckSyncData()throws Exception{
         addPeerConfigWithoutSelfInfo();
-
-        Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
-
         //检查动态加入的共识节点，即使用管理工具加入的共识节点信息
         String resp = mgToolCmd.addPeer("observer",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort);
         assertEquals(true,resp.contains("success"));
