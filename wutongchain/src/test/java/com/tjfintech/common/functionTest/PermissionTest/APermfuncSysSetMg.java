@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 //import static org.hamcrest.Matchers.containsString;
 
 @Slf4j
-public class APermfuncSubledgerMg {
+public class APermfuncSysSetMg {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Contract contract=testBuilder.getContract();
     MgToolCmd mgToolCmd = new MgToolCmd();
@@ -60,6 +60,21 @@ public class APermfuncSubledgerMg {
 
     public String subLedgerDestroy(String chainName) throws Exception {
         String res = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z " + chainName);
+        return retAllow(res);
+    }
+
+    public String addPeerJoin(String peerIPPort,String addPeerIP,String addPeerPort)throws Exception{
+        String res = mgToolCmd.addPeer("join",peerIPPort,ipv4+addPeerIP,tcpProtocol+addPeerPort,"");
+        return retAllow(res);
+    }
+
+    public String addPeerObserver(String peerIPPort,String addPeerIP,String addPeerPort)throws Exception{
+        String res = mgToolCmd.addPeer("observer",peerIPPort,ipv4+addPeerIP,tcpProtocol+addPeerPort,"");
+        return retAllow(res);
+    }
+
+    public String quitPeer(String peer1IPPort,String quitPeer)throws Exception{
+        String res = mgToolCmd.quitPeer(peer1IPPort,quitPeer);
         return retAllow(res);
     }
 }
