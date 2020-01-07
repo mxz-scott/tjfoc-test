@@ -101,16 +101,15 @@ public class VerifyTests {
                         log.error("Same Tx in different blocks. block height: " + i );
                         log.info("tx : " + txp);
                     }
-//                    else{
+                    else{
 //                        log.info("tx previous: " + txp);
 //                        log.info("tx current: " + txc);
-//                    }
+                    }
                 }
 
             }
         }
 
-        boolean a = true;
         assertEquals("请查看输出日志，是否存在异常数据！", true, false);
     }
 
