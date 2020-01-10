@@ -89,7 +89,8 @@ public class VerifyTests {
 
         log.info("chain height: " + Integer.toString(blockHeight));
 
-        int count = 0;
+        int count1 = 0;
+        int count2 = 0;
 
         for (int i = 2; i <= blockHeight; i++) {
 
@@ -101,20 +102,30 @@ public class VerifyTests {
                 for (String txc : txsCurrent) {
 
                     if (txp.equals(txc)) {
-                        count++;
+                        count1++;
                         log.error("Same Tx in different blocks. block height: " + i );
                         log.info("tx : " + txp);
                     }
-                    else{
-//                        log.info("tx previous: " + txp);
-//                        log.info("tx current: " + txc);
+                }
+            }
+
+
+            for (int j = 0; j < txsPrevious.length; j++){
+                for (int k = j + 1; k < txsPrevious.length; k++){
+                    if (txsPrevious[j].equals(txsPrevious[k])) {
+                        count2++;
+                        log.error("Same Tx in same blocks. block height: " + (i - 1) );
+                        log.info("tx : " + txsPrevious[j]);
                     }
+
                 }
 
             }
+
         }
 
-        assertEquals("验证链上交易是否重复", 0, count);
+        assertEquals("前后区块中有重复交易", 0, count1);
+        assertEquals("同一区块中有重复交易", 0, count2);
 
     }
 

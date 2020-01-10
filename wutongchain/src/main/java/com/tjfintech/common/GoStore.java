@@ -355,7 +355,7 @@ public  class GoStore implements Store {
         param = GetTest.ParamtoUrl(map);
         if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
         String result = GetTest.SendGetTojson(SDKADD + "/getblockbyheight" + "?" + param);
-        log.info(result);
+//        log.info(result);
         return result;
     }
 
