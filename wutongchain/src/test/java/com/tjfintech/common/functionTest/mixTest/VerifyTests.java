@@ -26,6 +26,7 @@ import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
@@ -88,6 +89,8 @@ public class VerifyTests {
 
         log.info("chain height: " + Integer.toString(blockHeight));
 
+        int count = 0;
+
         for (int i = 2; i <= blockHeight; i++) {
 
             //获取交易列表
@@ -98,6 +101,7 @@ public class VerifyTests {
                 for (String txc : txsCurrent) {
 
                     if (txp.equals(txc)) {
+                        count++;
                         log.error("Same Tx in different blocks. block height: " + i );
                         log.info("tx : " + txp);
                     }
@@ -110,7 +114,8 @@ public class VerifyTests {
             }
         }
 
-        assertEquals("请查看输出日志，是否存在异常数据！", true, false);
+        assertEquals("验证链上交易是否重复", 0, count);
+
     }
 
     //根据区块高度获取区块中的交易列表
