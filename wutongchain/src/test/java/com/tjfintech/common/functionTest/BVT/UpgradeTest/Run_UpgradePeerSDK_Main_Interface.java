@@ -46,9 +46,10 @@ import org.junit.runners.Suite;
 
         //升级比对 设置主链 设置升级节点和sdk
         SetMainLedger.class,
+        SetContractSysUpgradeTrue.class,
         SetPeerUpgradeTrue.class,
         SetSDKUpgradeTrue.class,
-        SetContractSysUpgradeTrue.class,
+
 
         UpgradeTestHistoryData.class,
 
