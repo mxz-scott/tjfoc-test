@@ -48,6 +48,7 @@ import org.junit.runners.Suite;
         SetMainLedger.class,
         SetPeerUpgradeTrue.class,
         SetSDKUpgradeTrue.class,
+        SetContractSysUpgradeTrue.class,
 
         UpgradeTestHistoryData.class,
 

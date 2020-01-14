@@ -59,7 +59,7 @@ public class TestPermission {
     //"+def+Sys0+Store0+Docker0+Mg0+UTXO0+"
     String Sys0="Sys:00000000"; //移除tx/search接口测试标记
     String Store0="Store:00";
-    String Docker0="Docker:00000000";
+    String Docker0="Docker:01010100";
     String Mg0="Mg:000000";
     String UTXO0="UTXO:0000000000";
     String full = "Sys:11111111Store:11Docker:11111111Mg:111111UTXO:1111111111";
@@ -232,19 +232,19 @@ public class TestPermission {
         checkAllInterface("22",def+Sys0+Store0+Docker0+Mg0+UTXO0);
 //        }
         //合约安装权限
-        checkAllInterface("221",def+Sys0+Store0+"Docker:11000000"+Mg0+UTXO0);
+        checkAllInterface("221",def+Sys0+Store0+"Docker:11010100"+Mg0+UTXO0);
 
         //合约交易权限
-        checkAllInterface("223",def+Sys0+Store0+"Docker:00110000"+Mg0+UTXO0);
+        checkAllInterface("223",def+Sys0+Store0+"Docker:01110100"+Mg0+UTXO0);
 
         //合约销毁权限
-        checkAllInterface("222",def+Sys0+Store0+"Docker:00001100"+Mg0+UTXO0);
+        checkAllInterface("222",def+Sys0+Store0+"Docker:01011100"+Mg0+UTXO0);
 
         //合约搜索
-        checkAllInterface("224",def+Sys0+Store0+"Docker:00000011"+Mg0+UTXO0);
+        checkAllInterface("224",def+Sys0+Store0+"Docker:01010111"+Mg0+UTXO0);
 
         //合约安装及合约交易
-        checkAllInterface("221,223",def+Sys0+Store0+"Docker:11110000"+Mg0+UTXO0);
+        checkAllInterface("221,223",def+Sys0+Store0+"Docker:11110100"+Mg0+UTXO0);
 
 
         for (String str : dockerList) {
@@ -425,17 +425,18 @@ public class TestPermission {
         permStr = permStr + pFunCt.installContract();//SDK发送合约安装交易请求
         log.info("docker permission:"+permStr);
 
-        //安装wvm合约
-        String ctName = "perm_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
-        fileOperation.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
-        permStr = permStr + pFunWVM.wvmInstallTest(wvmFile +"_temp.txt",PRIKEY2);
-
         //perStr 若为"1"则表示存在合约安装权限，则等待合约安装
         if(permStr.contains("1")) {
             Thread.sleep(ContractInstallSleep);
             log.info("Contract install sleep time(ms): "+ContractInstallSleep);
             dockerList.add(pFunCt.name);
         }
+
+        //安装wvm合约
+        String ctName = "perm_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
+        fileOperation.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
+        permStr = permStr + pFunWVM.wvmInstallTest(wvmFile +"_temp.txt",PRIKEY2);
+
         permStr = permStr + pFunCt.initMobileTest();//SDK发送合约交易请求
         permStr = permStr + pFunWVM.invokeNew(glbWVMHash,"initAccount",accountA,amountA);
 
