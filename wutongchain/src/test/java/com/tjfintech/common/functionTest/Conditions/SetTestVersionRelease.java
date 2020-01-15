@@ -12,7 +12,9 @@ public class SetTestVersionRelease {
     public void test()throws Exception {
         SetPeerVerRelease setPeerVerRelease = new SetPeerVerRelease();
         SetSDKVerRelease setSDKVerRelease = new SetSDKVerRelease();
+        SetContractSysRelease setContractSysRelease = new SetContractSysRelease();
         setPeerVerRelease.test();
         setSDKVerRelease.test();
+        setContractSysRelease.test();
     }
 }

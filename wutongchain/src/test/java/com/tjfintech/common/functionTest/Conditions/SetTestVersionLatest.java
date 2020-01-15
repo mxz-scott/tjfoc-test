@@ -3,8 +3,7 @@ package com.tjfintech.common.functionTest.Conditions;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
-import static com.tjfintech.common.utils.UtilsClass.bUpgradePeer;
-import static com.tjfintech.common.utils.UtilsClass.bUpgradeSDK;
+import static com.tjfintech.common.utils.UtilsClass.*;
 import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 
 @Slf4j
@@ -20,6 +19,11 @@ public class SetTestVersionLatest {
         if(bUpgradeSDK) {
             SetSDKVerLatest setSDKVerLatest = new SetSDKVerLatest();
             setSDKVerLatest.test();
+        }
+
+        if(bUpgradeContractSys){
+            SetTestVersionLatest setTestVersionLatest = new SetTestVersionLatest();
+            setTestVersionLatest.test();
         }
     }
 }

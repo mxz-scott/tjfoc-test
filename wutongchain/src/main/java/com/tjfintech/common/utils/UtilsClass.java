@@ -182,8 +182,12 @@ public class UtilsClass {
     public static int subTypeNo = 24;
     public static String release = "Release";
     public static String latest = "Latest";
+
+    public static String SysContract = "Sys_StoreEncrypted";
     public static String releasePeer = PeerTPName + release;
     public static String releaseSDK = SDKTPName + release;
+    public static String releaseContractSys = SysContract + release;
+    public static String latestContractSys = SysContract + latest;
     public static String latestPeer = PeerTPName + latest;
     public static String latestSDK = SDKTPName + latest;
     public static Map<String,String> verMap = new HashMap<>();
@@ -200,6 +204,7 @@ public class UtilsClass {
 
     public static boolean bUpgradePeer = true;
     public static boolean bUpgradeSDK = true;
+    public static boolean bUpgradeContractSys = true;
 
     //如果是已经获取过shell脚本则可以不用执行uploadFile()操作 因此此项默认关闭
 //    public static boolean bupload = uploadFile();
