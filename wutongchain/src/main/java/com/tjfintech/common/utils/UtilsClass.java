@@ -52,9 +52,9 @@ public class UtilsClass {
     public static String tmuxSessionSDK = "tmux send -t s_M2 ";
 
 //    //zhouxianxian env use start -----------
-//    public static String SDKADD = "http://10.1.3.246:7777";
-//    public static String rSDKADD = "http://10.1.3.246:8080";
-//    public static String TOKENADD = "http://10.1.3.246:9090";
+//    public static String SDKADD = "http://10.1.3.246:6666";
+//    public static String rSDKADD = "http://10.1.3.246:6666";
+//    public static String TOKENADD = "http://10.1.3.246:6779";
 //    //设置测试环境使用的节点端口及部署目录信息
 //    public static String PEER1IP = "10.1.3.240";
 //    public static String PEER2IP = "10.1.3.246";
