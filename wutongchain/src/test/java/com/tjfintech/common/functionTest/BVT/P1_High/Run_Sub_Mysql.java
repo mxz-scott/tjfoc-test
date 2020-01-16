@@ -10,6 +10,7 @@ import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
 import com.tjfintech.common.functionTest.mixTest.VerifyTests;
+import com.tjfintech.common.functionTest.store.PrivateStoreTest;
 import com.tjfintech.common.functionTest.store.StoreInvalidTest;
 import com.tjfintech.common.functionTest.store.StoreTest;
 import com.tjfintech.common.functionTest.store.StoreWalletRelatedTest;
@@ -30,6 +31,7 @@ import org.junit.runners.Suite;
         BeforeCondition.class,
 
         StoreTest.class,
+        PrivateStoreTest.class,
         StoreInvalidTest.class,
         StoreWalletRelatedTest.class,
 

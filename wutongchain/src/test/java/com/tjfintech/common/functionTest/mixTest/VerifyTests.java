@@ -36,7 +36,7 @@ public class VerifyTests {
     Store store =testBuilder.getStore();
 
     /**
-        校验区块时间戳与交易时间戳的差值，为了验证之前可能存在的交易几个小时后才打包问题。
+     校验区块时间戳与交易时间戳的差值，为了验证之前可能存在的交易几个小时后才打包问题。
      */
     @Test
     public void VerifyBlockAndTxTimeDiff() throws Exception {
@@ -45,42 +45,47 @@ public class VerifyTests {
 
         log.info(Integer.toString(blockHeight));
 
+        int count1 = 0;
+
         for (int i = 1; i <= blockHeight; i++) {
-            Thread.sleep(100);
             //打印区块的时间戳
 
             String timestamp = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONObject("header").getString("timestamp");
             int blkTimeStamp = Integer.parseInt(timestamp);
-            log.info(timestamp);
 
             //获取交易列表
             String txsList = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getString("txs");
             txsList = txsList.substring(2);
             txsList = StringUtils.substringBefore(txsList, "\"]");
-            log.info(txsList);
+//            log.info(txsList);
 
             String[] txs = txsList.split("\",\"");
 
             for (String tx : txs) {
 
                 String txts = JSONObject.fromObject(store.GetTxDetail(tx)).getJSONObject("Data").getJSONObject("Header").getString("Timestamp");
-                log.info(txts);
-                int txTimestamp = Integer.parseInt(txts);
 
+                int txTimestamp = Integer.parseInt(txts);
                 int diff = blkTimeStamp - txTimestamp;
-                log.info("时间差：" + Integer.toString(diff));
-                if (diff > 5) {
+
+                if (diff > 20) {
+                    count1++;
                     log.error("Block time and tx time in big difference, please check!");
-                    log.info("Block height: " + i);
+                    log.info("Block height: " + i + "，时间差：" + Integer.toString(diff));
+                    log.info("区块时间：" + timestamp +  "，交易时间：" + txts);
+
                 }
 
             }
         }
+
+        assertEquals("区块和交易时间差超过5秒", 0, count1);
+
     }
 
     /**
-        校验一笔交易打包在多个区块中的问题。
-        测试前提条件，运行自动化脚本，过程中不断的启动一个节点，经过一段时间后，运行本用例校验。
+     校验一笔交易打包在多个区块中的问题。
+     测试前提条件，运行自动化脚本，过程中不断的启动一个节点，经过一段时间后，运行本用例校验。
      */
     @Test
     public void VerifyIfSameTxInDiffBlocks() throws Exception {

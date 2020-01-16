@@ -26,7 +26,7 @@ public class PostTest {
         log.info(linkUrl);
         JSONObject jsonObject=JSONObject.fromObject(map);
         String jsonString=jsonObject.toString();
-//        log .info(jsonString);
+        log .info(jsonString);
         String resultStr = "";
         try {
             // 创建url资源

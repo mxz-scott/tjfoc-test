@@ -18,9 +18,9 @@ public class SetContractSysRelease {
        String operateDir =  PeerPATH + "contracts/bin/" ;
 
        ArrayList<String> hostList = new ArrayList<>();
-//       hostList.add(PEER1IP);
-//       hostList.add(PEER2IP);
-//       hostList.add(PEER4IP);
+       hostList.add(PEER1IP);
+       hostList.add(PEER2IP);
+       hostList.add(PEER4IP);
        hostList.add(PEER3IP);
 
        //检查所有测试主机是否包含指定的release文件
