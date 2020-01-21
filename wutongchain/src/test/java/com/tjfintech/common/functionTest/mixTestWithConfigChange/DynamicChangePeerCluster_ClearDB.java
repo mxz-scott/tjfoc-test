@@ -177,12 +177,6 @@ public class DynamicChangePeerCluster_ClearDB {
         addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
     }
 
-    public void addPeerConfigWithoutSelfInfo(){
-        //设置动态加入节点config.toml文件 不带自己的配置信息
-        setPeerConfig(PEER3IP);
-    }
-
-
     //动态加入共识节点
     public void joinConsensusPeer()throws Exception{
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
