@@ -44,27 +44,27 @@ public class AddPeerAndSyncData {
 
 
     public void addDataPeerConfigWithSelfInfo(){
-        //设置动态加入节点config.toml文件 不带自己的配置信息
+        //设置动态加入节点config.toml文件 带自己的配置信息
         setPeerConfig(PEER3IP);
         addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
     }
     public void addConsensusPeerConfigWithSelfInfo(){
-        //设置动态加入节点config.toml文件 不带自己的配置信息
+        //设置动态加入节点config.toml文件 带自己的配置信息
         setPeerConfig(PEER3IP);
         addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
     }
 
-    public void addPeerConfigWithoutSelfInfo()throws Exception{
-        //设置动态加入节点config.toml文件 不带自己的配置信息 其他节点数据不同步
-        shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB,resetPeerBase);
-        setPeerConfig(PEER3IP);
-    }
+//    public void addPeerConfigWithoutSelfInfo()throws Exception{
+//        //设置动态加入节点config.toml文件 不带自己的配置信息 其他节点数据不同步
+//        shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB,resetPeerBase);
+//        setPeerConfig(PEER3IP);
+//    }
 
     //该测试用例 在BVT Run_Main_Mysql后进行测试 同步等待时间可能会很长
     //动态加入共识节点并检查数据同步
     @Test
     public void joinConsensusPeerAndCheckSyncData()throws Exception{
-        addPeerConfigWithoutSelfInfo();
+        addConsensusPeerConfigWithSelfInfo();
 
         //检查动态加入的共识节点，即使用管理工具加入的共识节点信息
         String resp = mgToolCmd.addPeer("join",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort);
@@ -124,7 +124,7 @@ public class AddPeerAndSyncData {
     //动态加入数据节点
     @Test
     public void joinDataPeerAndCheckSyncData()throws Exception{
-        addPeerConfigWithoutSelfInfo();
+        addDataPeerConfigWithSelfInfo();
         //检查动态加入的共识节点，即使用管理工具加入的共识节点信息
         String resp = mgToolCmd.addPeer("observer",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort);
         assertEquals(true,resp.contains("success"));

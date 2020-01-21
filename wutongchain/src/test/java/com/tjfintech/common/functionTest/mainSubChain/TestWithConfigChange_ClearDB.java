@@ -149,7 +149,7 @@ public class TestWithConfigChange_ClearDB {
         assertEquals(3,subLedgerCmd.getLedgerMemNo(glbChain01));//动态加入节点前检查节点集群信息
 
         setPeerConfig(PEER3IP);//设置Peer3 config.toml文件为不包含自己节点信息的配置文件 20191219确认不用配置自己的信息
-//        addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
+        addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
         //动态加入节点168
         String resp2 = mgToolCmd.addPeer("join",PEER1IP+":"+PEER1RPCPort,
                 "/ip4/"+PEER3IP,"/tcp/60011",PEER3RPCPort);
@@ -251,7 +251,7 @@ public class TestWithConfigChange_ClearDB {
     @Test
     public void TC1659_1655_createChainWithDataPeer()throws Exception{
         setPeerConfig(PEER3IP);//设置Peer3 config.toml文件为不包含自己节点信息的配置文件 20191219确认不用配置自己的信息
-//        addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
+        addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
         //动态加入节点168
         String resp2 = mgToolCmd.addPeer("observer",PEER1IP+":"+PEER1RPCPort,
                 "/ip4/"+PEER3IP,"/tcp/60011",PEER3RPCPort);
