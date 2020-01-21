@@ -116,6 +116,7 @@ public class PostTest {
         log.info(linkUrl);
         JSONObject jsonObject = JSONObject.fromObject(map);
         String jsonString = jsonObject.toString();
+        log.info(jsonString);
         RequestEntity se=null;
         try {
             se = new StringRequestEntity(jsonString, "application/json", "utf-8");

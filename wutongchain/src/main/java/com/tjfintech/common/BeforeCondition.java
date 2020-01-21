@@ -76,6 +76,8 @@ public class BeforeCondition {
             assertEquals(resp.contains(fullPerm),true);
             Thread.sleep(SLEEPTIME);
         }
+
+        Thread.sleep(SLEEPTIME);
     }
 
     public void clearDataSetPerm999() throws Exception{
