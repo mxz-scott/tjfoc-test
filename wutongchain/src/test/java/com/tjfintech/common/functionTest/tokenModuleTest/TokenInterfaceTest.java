@@ -35,6 +35,7 @@ public class TokenInterfaceTest {
     String errParamMsgDes = "address,amount,tokentype and list should not be empty!";
     String errParamMsgTrf = "address,des address,tokentype and amount should not be empty!";
     String errParamMsgDes2 = "tokentype should not be empty!";
+    String errInvalidAddr = "invalid address";
     @BeforeClass
     public static void init()throws Exception
     {
@@ -83,29 +84,29 @@ public class TokenInterfaceTest {
          //发行地址设置为空
          issueResp = tokenModule.tokenIssue("",collAddr,stokenType13,issAmount,comments);
          //当前panic 无信息返回
-         assertEquals(true, issueResp.contains("invalid address"));
+         assertEquals(true, issueResp.contains(errInvalidAddr));
 
          String stokenType14 = "ng14Token"+ UtilsClass.Random(3);
          //发行地址非法-原归集地址的一部分
          issueResp = tokenModule.tokenIssue(issueAddr.substring(10),collAddr,stokenType14,issAmount,comments);
-         assertEquals(true, issueResp.contains("invalid address"));
+         assertEquals(true, issueResp.contains(errInvalidAddr));
 
          String stokenType15 = "ng15Token"+ UtilsClass.Random(3);
          //发行地址非法-原归集地址*2
          issueResp = tokenModule.tokenIssue(issueAddr + issueAddr,collAddr,stokenType15,issAmount,comments);
-         assertEquals(true, issueResp.contains("invalid address"));
+         assertEquals(true, issueResp.contains(errInvalidAddr));
 
          String stokenType16 = "ng16Token"+ UtilsClass.Random(3);
          //发行地址非法-"456"
          //当前panic 无信息返回
          issueResp = tokenModule.tokenIssue("456",collAddr,stokenType16,issAmount,comments);
-         assertEquals(true, issueResp.contains("invalid address"));
+         assertEquals(true, issueResp.contains(errInvalidAddr));
 
          String stokenType17 = "ng17Token"+ UtilsClass.Random(3);
          //发行地址非法-超长地址-"123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
          //当前panic
          issueResp = tokenModule.tokenIssue("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",collAddr,stokenType17,issAmount,comments);
-         assertEquals(true, issueResp.contains("invalid address"));
+         assertEquals(true, issueResp.contains(errInvalidAddr));
 
          String stokenType18 = "ng18Token"+ UtilsClass.Random(3);
          //发行地址不在数据库中
@@ -124,31 +125,31 @@ public class TokenInterfaceTest {
          //归集地址设置为空
          //sdk无报错 返回交易hash 链上日志报错
          issueResp = tokenModule.tokenIssue(issueAddr,"",stokenType21,issAmount,comments);
-         assertEquals(true, issueResp.contains("invalid address"));
+         assertEquals(true, issueResp.contains(errInvalidAddr));
 
          String stokenType22 = "ng22Token"+ UtilsClass.Random(3);
         //归集地址非法-原归集地址的一部分
          //sdk无报错 返回交易hash 链上日志报错
          issueResp = tokenModule.tokenIssue(issueAddr,collAddr.substring(10),stokenType22,issAmount,comments);
-         assertEquals(true, issueResp.contains("invalid address"));
+         assertEquals(true, issueResp.contains(errInvalidAddr));
 
          String stokenType23 = "ng23Token"+ UtilsClass.Random(3);
         //归集地址非法-原归集地址*2
          //sdk无报错 返回交易hash 链上日志报错
          issueResp = tokenModule.tokenIssue(issueAddr,collAddr + collAddr,stokenType23,issAmount,comments);
-         assertEquals(true, issueResp.contains("invalid address"));
+         assertEquals(true, issueResp.contains(errInvalidAddr));
 
          String stokenType24 = "ng24Token"+ UtilsClass.Random(3);
          //归集地址非法- "123"
          //sdk无报错 返回交易hash 链上日志报错
          issueResp = tokenModule.tokenIssue(issueAddr,"123",stokenType24,issAmount,comments);
-         assertEquals(true, issueResp.contains("invalid address"));
+         assertEquals(true, issueResp.contains(errInvalidAddr));
 
          String stokenType25 = "ng25Token"+ UtilsClass.Random(3);
          //归集地址非法-超长- "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
          //sdk无报错 返回交易hash 链上日志报错
          issueResp = tokenModule.tokenIssue(issueAddr,"123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",stokenType25,issAmount,comments);
-         assertEquals(true, issueResp.contains("invalid address"));
+         assertEquals(true, issueResp.contains(errInvalidAddr));
 
          String stokenType26 = "ng26Token"+ UtilsClass.Random(3);
          //归集地址非法-非数据库中的地址 未注册
@@ -370,15 +371,15 @@ public class TokenInterfaceTest {
 
         //from地址非法-456
         transferResp = tokenModule.tokenTransfer("456",to,transferToken,transferAmount,comments);
-        assertEquals(true,transferResp.contains("invalid address"));
+        assertEquals(true,transferResp.contains(errInvalidAddr));
 
         //from地址非法-from地址的一部分
         transferResp = tokenModule.tokenTransfer(from.substring(10),to,transferToken,transferAmount,comments);
-        assertEquals(true,transferResp.contains("invalid address"));
+        assertEquals(true,transferResp.contains(errInvalidAddr));
 
         //from地址非法-from*2
         transferResp = tokenModule.tokenTransfer(from + from,to,transferToken,transferAmount,comments);
-        assertEquals(true,transferResp.contains("invalid address"));
+        assertEquals(true,transferResp.contains(errInvalidAddr));
 
         //from地址不在地址数据库中
         transferResp = tokenModule.tokenTransfer(AddrNotInDB,to,transferToken,transferAmount,comments);
@@ -387,11 +388,11 @@ public class TokenInterfaceTest {
 
         //from地址使用*
         transferResp = tokenModule.tokenTransfer("*",to,transferToken,transferAmount,comments);
-        assertEquals(true,transferResp.contains("invalid address"));
+        assertEquals(true,transferResp.contains(errInvalidAddr));
 
         //from地址使用#
         transferResp = tokenModule.tokenTransfer("*",to,transferToken,transferAmount,comments);
-        assertEquals(true,transferResp.contains("invalid address"));
+        assertEquals(true,transferResp.contains(errInvalidAddr));
 
         log.info("test to list null");
         transferResp = commonFunc.tokenModule_TransferTokenList(from,null);
@@ -404,15 +405,15 @@ public class TokenInterfaceTest {
 
         //to地址非法-456
         transferResp = tokenModule.tokenTransfer(from,"456",transferToken,transferAmount,comments);
-        assertEquals(true,transferResp.contains("invalid address"));
+        assertEquals(true,transferResp.contains(errInvalidAddr));
 
         //to地址非法-from地址的一部分
         transferResp = tokenModule.tokenTransfer(from,to.substring(10),transferToken,transferAmount,comments);
-        assertEquals(true,transferResp.contains("invalid address"));
+        assertEquals(true,transferResp.contains(errInvalidAddr));
 
         //to地址非法-to*2
         transferResp = tokenModule.tokenTransfer(from,to + to,transferToken,transferAmount,comments);
-        assertEquals(true,transferResp.contains("invalid address"));
+        assertEquals(true,transferResp.contains(errInvalidAddr));
 
         //to地址不在地址数据库中  目前可以转账成功 可以转入 无法转出
         transferResp = tokenModule.tokenTransfer(from,AddrNotInDB,transferToken,transferAmount,comments);
@@ -572,15 +573,15 @@ public class TokenInterfaceTest {
 
         //回收地址非法-456
         destoryResp = tokenModule.tokenDestoryByList("456",issueToken,"100",comments);
-        assertEquals(true,destoryResp.contains("invalid address"));
+        assertEquals(true,destoryResp.contains(errInvalidAddr));
 
         //回收地址非法-collAddr地址的一部分
         destoryResp = tokenModule.tokenDestoryByList(collAddr.substring(10),issueToken,"100",comments);
-        assertEquals(true,destoryResp.contains("invalid address"));
+        assertEquals(true,destoryResp.contains(errInvalidAddr));
 
         //回收地址非法-collAddr*2
         destoryResp = tokenModule.tokenDestoryByList(collAddr + collAddr,issueToken,"100",comments);
-        assertEquals(true,destoryResp.contains("invalid address"));
+        assertEquals(true,destoryResp.contains(errInvalidAddr));
 
         //回收地址不在地址数据库中
         destoryResp = tokenModule.tokenDestoryByList(AddrNotInDB,issueToken,"100",comments);
@@ -588,11 +589,11 @@ public class TokenInterfaceTest {
 
         //回收地址使用*
         destoryResp = tokenModule.tokenDestoryByList("*",issueToken,"100",comments);
-        assertEquals(true,destoryResp.contains("invalid address"));
+        assertEquals(true,destoryResp.contains(errInvalidAddr));
 
         //回收地址使用#
         destoryResp = tokenModule.tokenDestoryByList("#",issueToken,"100",comments);
-        assertEquals(true,destoryResp.contains("invalid address"));
+        assertEquals(true,destoryResp.contains(errInvalidAddr));
 
         //回收地址为无token账户 填写tokentype和amount
         String getOtherBalance = tokenModule.tokenGetBalance(tokenAccount3,"");
@@ -1068,7 +1069,7 @@ public class TokenInterfaceTest {
         //地址非法159
         response3= tokenModule.tokenGetPrivateStore(StoreHashPwd,"159");
         assertThat(JSONObject.fromObject(response3).getString("data"),
-                containsString("invalid address"));
+                containsString(errInvalidAddr));
 
     }
 
@@ -1158,6 +1159,129 @@ public class TokenInterfaceTest {
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
         tokenModule.tokenGetDestroyBalance();
     }
+
+    @Test
+    public void addMintAddrInterfaceTest()throws Exception {
+        String testAddr = "";
+        testAddr = tokenAccount1;
+
+        //添加发行地址
+        tokenModule.tokenAddMintAddr(testAddr);
+
+        sleepAndSaveInfo(SLEEPTIME, "register issue and coll address waiting......");
+        String response = "";
+
+        //address不填写
+        response = tokenModule.tokenAddMintAddr("");
+        assertEquals(true,response.contains("address should not be empty!"));
+
+        //address为空格
+        response = tokenModule.tokenAddMintAddr(" ");
+        assertEquals(true,response.contains(errInvalidAddr));
+
+        //address数据库中不存在的address
+        response = tokenModule.tokenAddMintAddr("31UYzLfbx6DnwbcZR6j2rG2FJabShCbSBx7ZLqDZTCYW7LfTeE");
+        assertEquals(true,response.contains("\"state\":200"));
+
+        //address的一部分
+        response = tokenModule.tokenAddMintAddr(testAddr.substring(3));
+        assertEquals(true,response.contains(errInvalidAddr));
+
+
+        //已添加过的address
+        response = tokenModule.tokenAddMintAddr(testAddr);
+        assertEquals(true,response.contains("\"state\":200"));
+        String hash1 = JSONObject.fromObject(response).getString("data");
+
+        //address前后加空格
+        response = tokenModule.tokenAddMintAddr(" " + testAddr);
+        assertEquals(true,response.contains(errInvalidAddr));
+
+        response = tokenModule.tokenAddMintAddr(testAddr + " ");
+        assertEquals(true,response.contains(errInvalidAddr));
+
+
+        //addr为“#”
+        response = tokenModule.tokenAddMintAddr("#");
+        assertEquals(true,response.contains(errInvalidAddr));
+
+        //addr为“*”
+        response = tokenModule.tokenAddMintAddr("*");
+        assertEquals(true,response.contains(errInvalidAddr));
+
+        //addr为“123”
+        response = tokenModule.tokenAddMintAddr("123");
+        assertEquals(true,response.contains(errInvalidAddr));
+
+        sleepAndSaveInfo(SLEEPTIME);
+        response = tokenModule.tokenGetTxDetail(hash1);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("failed to find transaction"));
+
+    }
+
+    @Test
+    public void addCollAddrInterfaceTest()throws Exception {
+        String testAddr = "";
+        testAddr = tokenAccount1;
+
+        //添加发行地址
+        tokenModule.tokenAddCollAddr(testAddr);
+
+        sleepAndSaveInfo(SLEEPTIME);
+        String response = "";
+
+        //address不填写
+        response = tokenModule.tokenAddCollAddr("");
+        assertEquals(true,response.contains("address should not be empty!"));
+
+        //address为空格
+        response = tokenModule.tokenAddCollAddr(" ");
+        assertEquals(true,response.contains(errInvalidAddr));
+
+        //address数据库中不存在的address
+        response = tokenModule.tokenAddCollAddr("31UYzLfbx6DnwbcZR6j2rG2FJabShCbSBx7ZLqDZTCYW7LfTeE");
+        assertEquals(true,response.contains("\"state\":200"));
+
+        //address的一部分
+        response = tokenModule.tokenAddCollAddr(testAddr.substring(3));
+        assertEquals(true,response.contains(errInvalidAddr));
+
+
+        //已添加过的address
+        response = tokenModule.tokenAddCollAddr(testAddr);
+        assertEquals(true,response.contains("\"state\":200"));
+        String hash1 = JSONObject.fromObject(response).getString("data");
+
+        //address前后加空格
+        response = tokenModule.tokenAddCollAddr(" " + testAddr);
+        assertEquals(true,response.contains(errInvalidAddr));
+
+        response = tokenModule.tokenAddCollAddr(testAddr + " ");
+        assertEquals(true,response.contains(errInvalidAddr));
+
+
+        //addr为“#”
+        response = tokenModule.tokenAddCollAddr("#");
+        assertEquals(true,response.contains(errInvalidAddr));
+
+        //addr为“*”
+        response = tokenModule.tokenAddCollAddr("*");
+        assertEquals(true,response.contains(errInvalidAddr));
+
+        //addr为“123”
+        response = tokenModule.tokenAddCollAddr("123");
+        assertEquals(true,response.contains(errInvalidAddr));
+
+        sleepAndSaveInfo(SLEEPTIME);
+        response = tokenModule.tokenGetTxDetail(hash1);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("failed to find transaction"));
+
+    }
+
+
+
 
     @Test
     public void getpublickeyInterfacetest(){
