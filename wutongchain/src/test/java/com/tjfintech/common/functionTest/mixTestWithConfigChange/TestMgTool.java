@@ -33,7 +33,7 @@ public class TestMgTool {
     int DynamicPeerNo = 4;
     String ipType="/ip4/";
     String tcpType="/tcp/";
-    int memInfoNo = 12;//memberlist中返回节点信息字段个数，目前返回id，state，version，port，shownName，inAddr，outAddr，typ，height
+    int memInfoNo = 14;//memberlist中返回节点信息字段个数，目前返回id，state，version，port，shownName，inAddr，outAddr，typ，height
 
 
     String toolPath="cd " + ToolPATH + ";";
