@@ -35,7 +35,7 @@ public class DockerContractInvalidTest {
     public String category="docker";
 
 
-    //调用不存在的方法
+    //调用不存在的方法 调用不存在的合约
     @Test
     public void testContractErrInvoke() throws Exception{
         BeforeCondition bf=new BeforeCondition();
@@ -74,6 +74,11 @@ public class DockerContractInvalidTest {
         response=destroyTest();
         assertThat(response,containsString("200"));
         sleepAndSaveInfo(3000);
+
+        //调用不存在的合约
+        name="noexisting";
+        response=queryMobileTest("Mobile1");
+//        assertThat(response,containsString("error Category or empty Category!!"));
     }
 
     @Test
