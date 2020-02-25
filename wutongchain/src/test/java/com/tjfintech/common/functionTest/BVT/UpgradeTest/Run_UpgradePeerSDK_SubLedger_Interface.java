@@ -2,6 +2,9 @@ package com.tjfintech.common.functionTest.BVT.UpgradeTest;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.*;
+import com.tjfintech.common.functionTest.Conditions.Upgrade.SetPeerUpgradeTrue;
+import com.tjfintech.common.functionTest.Conditions.Upgrade.SetPeerVerRelease;
+import com.tjfintech.common.functionTest.Conditions.Upgrade.SetSDKUpgradeTrue;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest_UpgradeTestOnly;
 import com.tjfintech.common.functionTest.mainSubChain.TestMainSubChain_UpgradeTestOnly;

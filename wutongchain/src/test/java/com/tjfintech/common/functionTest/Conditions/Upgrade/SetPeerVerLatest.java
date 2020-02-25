@@ -1,10 +1,11 @@
-package com.tjfintech.common.functionTest.Conditions;
+package com.tjfintech.common.functionTest.Conditions.Upgrade;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
+import static com.tjfintech.common.utils.FileOperation.uploadFiletoDestDirByssh;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 
@@ -14,7 +15,7 @@ public class SetPeerVerLatest {
    @Test
     public void test()throws Exception{
 
-       String replacePeer = latestPeer;
+       String replaceTP = latestPeer;
 
        ArrayList<String> hostList = new ArrayList<>();
        hostList.add(PEER1IP);
@@ -24,8 +25,13 @@ public class SetPeerVerLatest {
 
        //检查所有测试主机是否包含指定的release文件
        for(int i =0 ;i<hostList.size();i++){
-           String resp = shExeAndReturn(hostList.get(i),"cd " + PeerPATH + ";find . -name " + replacePeer);
-           if(resp.isEmpty())   log.info("host " + hostList.get(i) + " not found file: " + PeerPATH + replacePeer);
+           //windows本地上传版本文件
+           String fileDir = sLatestLocalDir + sLocalPeer;
+           shellExeCmd(hostList.get(i),killPeerCmd, "rm -f " + PeerPATH + replaceTP);
+           uploadFiletoDestDirByssh(fileDir,hostList.get(i),USERNAME,PASSWD,PeerPATH,replaceTP);
+
+           String resp = shExeAndReturn(hostList.get(i),"cd " + PeerPATH + ";find . -name " + replaceTP);
+           if(resp.isEmpty())   log.info("host " + hostList.get(i) + " not found file: " + PeerPATH + replaceTP);
            assertEquals(false, resp.isEmpty());
 
            shellExeCmd(hostList.get(i),"cd " + PeerPATH + ";find . -name \""+ PeerTPName + "*\" | xargs chmod +x");
@@ -34,7 +40,7 @@ public class SetPeerVerLatest {
        //停止现有进程后替换
 
        for(int i =0 ;i<hostList.size();i++){
-           shellExeCmd(hostList.get(i),killPeerCmd,"rm -f " + PeerPATH + PeerTPName,"cp " + PeerPATH + replacePeer + " " + PeerPATH + PeerTPName);
+           shellExeCmd(hostList.get(i),killPeerCmd,"rm -f " + PeerPATH + PeerTPName,"cp " + PeerPATH + replaceTP + " " + PeerPATH + PeerTPName);
            //确认版本已经更新 版本号不一致
            assertEquals(false,verMap.get("peer_" + hostList.get(i)).equals(shExeAndReturn(hostList.get(i),getPeerVerByShell)));
        }

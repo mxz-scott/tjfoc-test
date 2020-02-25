@@ -482,7 +482,7 @@ public class CommonFunc {
 
     public static void uploadFileToPeer(String PeerIP,String...filelist){
         for (String file : filelist) {
-            uploadFiletoDestDirByssh(srcShellScriptDir + file,PeerIP,USERNAME,PASSWD,destShellScriptDir);
+            uploadFiletoDestDirByssh(srcShellScriptDir + file,PeerIP,USERNAME,PASSWD,destShellScriptDir,"");
         }
     }
 

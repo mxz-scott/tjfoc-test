@@ -1,5 +1,8 @@
-package com.tjfintech.common.functionTest.Conditions;
+package com.tjfintech.common.functionTest.Conditions.Upgrade;
 
+import com.tjfintech.common.functionTest.Conditions.Upgrade.SetContractSysLatest;
+import com.tjfintech.common.functionTest.Conditions.Upgrade.SetPeerVerLatest;
+import com.tjfintech.common.functionTest.Conditions.Upgrade.SetSDKVerLatest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -11,7 +14,9 @@ public class SetTestVersionLatest {
 
     @Test
     public void test()throws Exception {
-        assertEquals("至少需要升级节点或者sdk，当前flag全为false",true,bUpgradePeer || bUpgradeSDK);
+        assertEquals("至少需要升级一种版本，当前flag全为false",
+                true,bUpgradePeer || bUpgradeSDK || bUpgradeTokenApi || bUpgradeContractSys);
+
         if(bUpgradeContractSys){
             SetContractSysLatest setContractSysLatest = new SetContractSysLatest();
             setContractSysLatest.test();
@@ -24,6 +29,11 @@ public class SetTestVersionLatest {
         if(bUpgradeSDK) {
             SetSDKVerLatest setSDKVerLatest = new SetSDKVerLatest();
             setSDKVerLatest.test();
+        }
+
+        if(bUpgradeTokenApi) {
+            SetTokenApiVerLatest setTokenApiVerLatest = new SetTokenApiVerLatest();
+            setTokenApiVerLatest.test();
         }
     }
 }

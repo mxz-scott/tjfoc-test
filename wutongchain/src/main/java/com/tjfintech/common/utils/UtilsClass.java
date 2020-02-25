@@ -45,9 +45,12 @@ public class UtilsClass {
     public static String SDKPATH = PTPATH + "sdk/";
     public static String PeerPATH = PTPATH + "peer/";
     public static String ToolPATH = PTPATH + "toolkit/";
+    public static String TokenApiPATH = PTPATH + "wtfinservice/";
     public static String PeerTPName = "Mp";
     public static String SDKTPName = "sdk";
     public static String ToolTPName = "toolkit";
+    public static String TokenTPName = "fintoken";
+    public static String tmuxSessionTokenApi = "tmux send -t t_M2 ";
     public static String tmuxSessionPeer = "tmux send -t M2 ";
     public static String tmuxSessionSDK = "tmux send -t s_M2 ";
 
@@ -164,8 +167,10 @@ public class UtilsClass {
 
     public static String startPeerCmd = "sh "+ destShellScriptDir +"startWithParam.sh \"" + tmuxSessionPeer + "\" " + PeerPATH + " " + PeerTPName;
     public static String startSDKCmd = "sh "+ destShellScriptDir +"startWithParam.sh \""+ tmuxSessionSDK + "\" " + SDKPATH + " " + SDKTPName;
+    public static String startTokenApiCmd = "sh "+ destShellScriptDir +"startWithParam.sh \""+ tmuxSessionTokenApi + "\" " + TokenApiPATH + " " + TokenTPName;
     public static String killPeerCmd = "pkill " + PeerTPName;
     public static String killSDKCmd = "pkill " + SDKTPName;
+    public static String killTokenApiCmd = "pkill " + TokenTPName;
     public static String clearPeerDB = "rm -rf "+ PeerPATH + "*db ";
     public static String clearPeerWVMsrc = "cd "+ PeerPATH + "contracts/src/;rm -rf *";
     public static String clearPeerWVMbin = "cd "+ PeerPATH + "contracts/bin/;ls |grep -v Sys_StoreEncrypted|xargs rm -rf ";
@@ -174,7 +179,7 @@ public class UtilsClass {
     public static String resetSDKConfig = "cp " + SDKPATH + "conf/configMysql.toml " + SDKConfigPath;
     public static String getPeerVerByShell = "cd " + PeerPATH + ";./"+ PeerTPName + " version| grep \"Peer Version\" |cut -d \":\" -f 2";
     public static String getSDKVerByShell = "cd " + SDKPATH + ";./"+ SDKTPName + " version| grep \"SDK Version\" |cut -d \":\" -f 2";
-
+    public static String getTokenApiVerByShell = "cd " + TokenApiPATH + ";./"+ TokenTPName + " version| grep \"Version\" |cut -d \":\" -f 2";
 
     public static Date dt=new Date();
     public static SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
@@ -190,6 +195,8 @@ public class UtilsClass {
     public static String latestContractSys = SysContract + latest;
     public static String latestPeer = PeerTPName + latest;
     public static String latestSDK = SDKTPName + latest;
+    public static String releaseTokenApi = TokenTPName + release;
+    public static String latestTokenApi = TokenTPName + latest;
     public static Map<String,String> verMap = new HashMap<>();
 
     public static String provider = "mysql";
@@ -205,6 +212,14 @@ public class UtilsClass {
     public static boolean bUpgradePeer = true;
     public static boolean bUpgradeSDK = true;
     public static boolean bUpgradeContractSys = true;
+    public static boolean bUpgradeTokenApi = true;
+
+    public static String sReleaseLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.1\\2.1.3\\";
+    public static String sLatestLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.2\\";
+    public static String sLocalPeer = "wtchain\\wtchain";
+    public static String sLocalSDK = "wtsdk\\wtsdk";
+    public static String sLocalTokenApi = "wtfinservice\\wtfinservice";
+    public static String sLocalStoreContract = "wtchain\\contracts\\bin\\Sys_StoreEncrypted\\";
 
     //如果是已经获取过shell脚本则可以不用执行uploadFile()操作 因此此项默认关闭
 //    public static boolean bupload = uploadFile();

@@ -104,7 +104,7 @@ public class MysqlOperation {
         String mysqlUrl = "jdbc:mysql://" + mysqlIP;
         Connection connection = null;
         Statement sta = null;
-        String count = "";
+        String queryResult = "";
         try {
             //注册JDBC驱动
             Class.forName(driver);
@@ -112,14 +112,14 @@ public class MysqlOperation {
             log.info("连接mysql数据库：" + mysqlUrl);
             connection = (Connection) DriverManager.getConnection(mysqlUrl, mysqlName, mysqlPwd);
             //创建database实例并默认utf-8编码格式
-            String queryKeyValue ="select count(*) from " + database + "." + table + " where " + key + "= '"+ checkValue + "';";
+            String queryKeyValue ="select c" + key + " from " + database + "." + table + ";";
             sta = (Statement) connection.createStatement();
             ResultSet rs  = sta.executeQuery(queryKeyValue);
             while(rs.next()){
-                count = rs.getString(1);
-                log.info("get result :" + count);
+                queryResult = rs.getString(1);
+                log.info("get result :" + queryResult);
             }
-            return count;
+            return queryResult;
         }catch (SQLException e) {
             e.printStackTrace();
             return e.toString();

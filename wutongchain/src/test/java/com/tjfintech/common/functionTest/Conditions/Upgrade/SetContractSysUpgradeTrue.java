@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.Conditions;
+package com.tjfintech.common.functionTest.Conditions.Upgrade;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;

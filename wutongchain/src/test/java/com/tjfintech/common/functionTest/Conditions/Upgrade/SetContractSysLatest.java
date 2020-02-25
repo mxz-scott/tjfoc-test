@@ -1,10 +1,12 @@
-package com.tjfintech.common.functionTest.Conditions;
+package com.tjfintech.common.functionTest.Conditions.Upgrade;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import static com.tjfintech.common.utils.FileOperation.uploadFiletoDestDirByssh;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 
@@ -13,8 +15,6 @@ public class SetContractSysLatest {
 
    @Test
     public void test()throws Exception{
-
-//       String replacePeer = latestPeer;
        String operateDir =  PeerPATH + "contracts/bin/" ;
 
        ArrayList<String> hostList = new ArrayList<>();
@@ -25,6 +25,20 @@ public class SetContractSysLatest {
 
        //检查所有测试主机是否包含指定的release文件
        for(int i =0 ;i<hostList.size();i++){
+           //windows本地上传版本文件
+           String fileDir = sLatestLocalDir + sLocalStoreContract ;
+           shellExeCmd(hostList.get(i),"rm -rf " + operateDir + latestContractSys);
+
+           File file = new File(fileDir);		//获取其file对象
+           File[] fs = file.listFiles();	//遍历path下的文件和目录，放在File数组中
+           for(File filedes : fs){					//遍历File[]数组
+               if(!filedes.isDirectory())		//若非目录(即文件)，则打印
+               {
+                   uploadFiletoDestDirByssh(fileDir,hostList.get(i),USERNAME,PASSWD,
+                           operateDir + latestContractSys,"");
+               }
+           }
+
            String resp = shExeAndReturn(hostList.get(i),"ls " + operateDir);
            if(!resp.contains(latestContractSys))
                log.info("host " + hostList.get(i) + " not found dir: " + operateDir + latestContractSys);

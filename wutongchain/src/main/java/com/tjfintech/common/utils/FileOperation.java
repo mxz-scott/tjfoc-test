@@ -109,7 +109,7 @@ public class FileOperation {
         return shExeAndReturn(IP,"sh " + destShellScriptDir + "GetConfig.sh " + SDKConfigPath + " " + Section + " " + Key);
     }
 
-    public static void uploadFiletoDestDirByssh(String srcFile,String destIP,String destUser,String destPwd,String destDir){
+    public static void uploadFiletoDestDirByssh(String srcFile,String destIP,String destUser,String destPwd,String destDir,String destFileName){
 
         //首先确认目标目录必须存在 以下创建仅能创建一层目录即destDir的前一级目录必须存在
         String mkdirInfo = shExeAndReturn(destIP,"mkdir " + destDir);
@@ -135,7 +135,12 @@ public class FileOperation {
             File file = new File(srcFile);
             InputStream input = new BufferedInputStream(new FileInputStream(file));
             channelSftp.cd(destDir);
-            channelSftp.put(input, file.getName());
+            if(destFileName.isEmpty()) {
+                channelSftp.put(input, file.getName());
+            }
+            else{
+                channelSftp.put(input, destFileName);
+            }
             try {
                 if (input != null) input.close();
             } catch (Exception e) {

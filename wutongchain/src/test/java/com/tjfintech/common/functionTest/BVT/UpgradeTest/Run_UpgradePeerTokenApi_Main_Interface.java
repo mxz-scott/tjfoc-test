@@ -1,15 +1,15 @@
 package com.tjfintech.common.functionTest.BVT.UpgradeTest;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.functionTest.BVT.P1_High.Run_Main_Finservice;
 import com.tjfintech.common.functionTest.Conditions.*;
-import com.tjfintech.common.functionTest.Conditions.Upgrade.SetPeerUpgradeFalse;
-import com.tjfintech.common.functionTest.Conditions.Upgrade.SetSDKUpgradeTrue;
-import com.tjfintech.common.functionTest.Conditions.Upgrade.SetTestVersionRelease;
+import com.tjfintech.common.functionTest.Conditions.Upgrade.*;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest_UpgradeTestOnly;
 import com.tjfintech.common.functionTest.mainSubChain.TestMainSubChain_UpgradeTestOnly;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.DynamicChangePeerCluster_ClearDB;
 import com.tjfintech.common.functionTest.store.StoreTest_UpgradeTestOnly;
+import com.tjfintech.common.functionTest.tokenModuleTest.*;
 import com.tjfintech.common.functionTest.upgrade.UpgradeTestHistoryData;
 import com.tjfintech.common.functionTest.utxoMultiSign.MultiTest;
 import com.tjfintech.common.functionTest.utxoSingleSign.SoloTest;
@@ -32,40 +32,25 @@ import org.junit.runners.Suite;
         SetDatabaseMysql.class,
         SetCertSM2.class,
         SetMainLedger.class,
-
         SetTestVersionRelease.class,
-
         BeforeCondition.class,
 
-        StoreTest_UpgradeTestOnly.class,
-        MultiTest.class,
-        SoloTest.class,
-        DockerContractTest.class,
-        WVMContractTest_UpgradeTestOnly.class,
-
-        DynamicChangePeerCluster_ClearDB.class,
-
-        TestMainSubChain_UpgradeTestOnly.class,
-
+        Run_Main_Finservice.class,
         //升级比对 设置主链 设置升级节点和sdk
         SetMainLedger.class,
-        SetPeerUpgradeFalse.class,
-        SetSDKUpgradeTrue.class,
+        SetPeerUpgradeTrue.class,
+        SetContractSysUpgradeTrue.class,
+        SetSDKUpgradeFalse.class,
+        SetTokenApiUpgradeTrue.class,
 
         UpgradeTestHistoryData.class,
 
         //升级后简单回归测试
-        StoreTest_UpgradeTestOnly.class,
-        MultiTest.class,
-        SoloTest.class,
-        DockerContractTest.class,
-        WVMContractTest_UpgradeTestOnly.class,
-        DynamicChangePeerCluster_ClearDB.class,
-        TestMainSubChain_UpgradeTestOnly.class,
+        Run_Main_Finservice.class,
 })
 
 //Build Validation Test
-public class Run_UpgradeSDK_Main_Interface {
+public class Run_UpgradePeerTokenApi_Main_Interface {
     //执行这个类将执行suiteClass中的测试项
 
 }
