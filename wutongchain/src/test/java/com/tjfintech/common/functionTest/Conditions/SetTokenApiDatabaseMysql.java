@@ -17,18 +17,7 @@ import static com.tjfintech.common.utils.UtilsClass.*;
 public class SetTokenApiDatabaseMysql {
 
     //match just one
-    public String getStrByReg(String src,String regPattern) {
-        String matchStr = "";
-        Pattern p = Pattern.compile(regPattern);
-//        Pattern p = Pattern.compile("(?<=//|)\\/(\\w+)\\?(?<=//|)");
-//        String src = "root:root@tcp(10.1.3.246:3306)/wallet22?charset=utf8";
-        Matcher matcher = p.matcher(src);
-        if (matcher.find()) {
-            matchStr = matcher.group(1);
-            log.info("match info: " + matchStr);
-        }
-        return matchStr;
-    }
+
 
 //    @Test
     public void tet() throws Exception{

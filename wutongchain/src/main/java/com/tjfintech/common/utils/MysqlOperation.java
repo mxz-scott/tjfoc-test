@@ -157,7 +157,7 @@ public class MysqlOperation {
             connection = (Connection) DriverManager.getConnection(mysqlUrl, mysqlName, mysqlPwd);
             sta = (Statement) connection.createStatement();
 
-            sta.executeUpdate("drop database if exists " + database + ";" );
+            sta.execute("drop database if exists " + database + ";" );
 
             String sourcefile = "source " + loadFile + ";";
             sta.execute(sourcefile);
