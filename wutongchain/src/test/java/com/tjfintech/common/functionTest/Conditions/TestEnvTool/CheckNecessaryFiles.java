@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.Conditions;
+package com.tjfintech.common.functionTest.Conditions.TestEnvTool;
 
 import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 import lombok.extern.slf4j.Slf4j;

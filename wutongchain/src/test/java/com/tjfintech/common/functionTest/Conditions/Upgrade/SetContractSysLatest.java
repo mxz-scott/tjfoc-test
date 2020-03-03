@@ -34,7 +34,7 @@ public class SetContractSysLatest {
            for(File filedes : fs){					//遍历File[]数组
                if(!filedes.isDirectory())		//若非目录(即文件)，则打印
                {
-                   uploadFiletoDestDirByssh(fileDir,hostList.get(i),USERNAME,PASSWD,
+                   uploadFiletoDestDirByssh(filedes.getAbsolutePath(),hostList.get(i),USERNAME,PASSWD,
                            operateDir + latestContractSys,"");
                }
            }

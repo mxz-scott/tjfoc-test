@@ -1,32 +1,15 @@
 package com.tjfintech.common.functionTest.mixTest;
 
-import com.tjfintech.common.BeforeCondition;
-import com.tjfintech.common.Interface.Contract;
-import com.tjfintech.common.Interface.MultiSign;
-import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
-import com.tjfintech.common.functionTest.Conditions.SetTestVersionLatest;
-import com.tjfintech.common.utils.FileOperation;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
-import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.io.File;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j

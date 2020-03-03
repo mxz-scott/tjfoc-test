@@ -155,7 +155,8 @@ public class UtilsClass {
     public static String fullPerm="[1 2 3 4 5 6 7 8 9 10 11 211 212 221 222 223 224 231 232 233 235 236 251 252 253 254 255 256 270 271 272 21 22 23 24 25 26 27]";
     public static String PeerMemConfigPath = PeerPATH + "config.toml";//全文件名为config.toml 节点集群信息
     public static String PeerBaseConfigPath = PeerPATH + "conf/base.toml";//全文件名为base.toml 节点运行相关配置
-    public static String SDKConfigPath = SDKPATH + "conf/config.toml";//全文件名为config.toml SDK配置信息[1 2 3 4 5 6 7 8 9 10 11 211 212 221 222 223 224 231 232 233 235 236 251 252 253 254 255 256]
+    public static String SDKConfigPath = SDKPATH + "conf/config.toml";//全文件名为config.toml
+    public static String TokenApiConfigPath = TokenApiPATH + "conf/config.toml";//全文件名为config.toml
 
     public static String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
     public static String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
@@ -165,6 +166,8 @@ public class UtilsClass {
     public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";
     public static String srcShellScriptDir = resourcePath + "/configFiles/shell/";
     public static String destShellScriptDir = "/root/tjshell/";
+    public static String tokenSqlTableFile = "table_schema_mysql.sql";
+    public static String tokenDBTableSql = destShellScriptDir + tokenSqlTableFile;
 //    public static String ccenvPull = "docker pull tjfoc/tjfoc-ccenv:2.1";
     public static String ccenvPull = "docker load < /root/dockerimages/ccenv_2.1.tar";//20191217出现网络慢pull需要很长时间 因此改回本地导入
 
@@ -679,6 +682,19 @@ public class UtilsClass {
         }
         return IP;
     }
+    //仅返回一个匹配
+    public static String getStrByReg(String src,String regPattern) {
+        String matchStr = "";
+        Pattern p = Pattern.compile(regPattern);
+//        Pattern p = Pattern.compile("(?<=//|)\\/(\\w+)\\?(?<=//|)");
+//        String src = "root:root@tcp(10.1.3.246:3306)/wallet22?charset=utf8";
+        Matcher matcher = p.matcher(src);
+        if (matcher.find()) {
+            matchStr = matcher.group(1);
+            log.info("match info: " + matchStr);
+        }
+        return matchStr;
+    }
     
 @Test
     public void test(){
@@ -723,6 +739,19 @@ public class UtilsClass {
         Thread.sleep(3000);
     }
 
+
+    public static void delDataBase(String dbInfo)throws Exception{
+        if (dbInfo.contains("mongo")){
+            MongoDBOperation mongo = new MongoDBOperation();
+            mongo.delDatabase(dbInfo.split(",")[1],dbInfo.split(",")[2]);
+        }
+        else{
+            MysqlOperation mysql = new MysqlOperation();
+            mysql.delDatabase(dbInfo.split(",")[1],dbInfo.split(",")[2]);
+        }
+
+        Thread.sleep(3000);
+    }
     public static void sleepAndSaveInfo(long sleepTime,String...info)throws Exception{
         Thread.sleep(sleepTime);
         if(info.length >0) log.info(info[0] + "(ms): " + sleepTime);
