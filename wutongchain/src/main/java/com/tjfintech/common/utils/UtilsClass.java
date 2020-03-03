@@ -55,9 +55,9 @@ public class UtilsClass {
     public static String tmuxSessionSDK = "tmux send -t s_M2 ";
 
 //    //zhouxianxian env use start -----------
-//    public static String SDKADD = "http://10.1.3.246:6666";
-//    public static String rSDKADD = "http://10.1.3.246:6666";
-//    public static String TOKENADD = "http://10.1.3.246:6779";
+//    public static String SDKADD = "http://10.1.3.246:7777";
+//    public static String rSDKADD = "http://10.1.3.246:7777";
+//    public static String TOKENADD = "http://10.1.3.240:8888";
 //    //设置测试环境使用的节点端口及部署目录信息
 //    public static String PEER1IP = "10.1.3.240";
 //    public static String PEER2IP = "10.1.3.246";
@@ -76,9 +76,12 @@ public class UtilsClass {
 //    public static String SDKPATH = PTPATH + "sdk/";
 //    public static String PeerPATH = PTPATH + "peer/";
 //    public static String ToolPATH = PTPATH + "toolkit/";
+//    public static String TokenApiPATH = PTPATH + "wtfinservice/";
 //    public static String PeerTPName = "wtchain";
 //    public static String SDKTPName = "wtsdk";
 //    public static String ToolTPName = "wttool";
+//    public static String TokenTPName = "wtfinservice";
+//    public static String tmuxSessionTokenApi = "tmux send -t perm_token ";
 //    public static String tmuxSessionPeer = "tmux send -t perm ";
 //    public static String tmuxSessionSDK = "tmux send -t perm_sdk ";
 //    //zhouxianxian env use end -----------
@@ -149,7 +152,7 @@ public class UtilsClass {
     public static long ContractInstallSleep=75000;
 
     public static String dockerFileName="simple.go";
-    public static String fullPerm="[1 2 3 4 5 6 7 8 9 10 11 211 212 221 222 223 224 231 232 233 235 236 251 252 253 254 255 256]";
+    public static String fullPerm="[1 2 3 4 5 6 7 8 9 10 11 211 212 221 222 223 224 231 232 233 235 236 251 252 253 254 255 256 270 271 272 21 22 23 24 25 26 27]";
     public static String PeerMemConfigPath = PeerPATH + "config.toml";//全文件名为config.toml 节点集群信息
     public static String PeerBaseConfigPath = PeerPATH + "conf/base.toml";//全文件名为base.toml 节点运行相关配置
     public static String SDKConfigPath = SDKPATH + "conf/config.toml";//全文件名为config.toml SDK配置信息[1 2 3 4 5 6 7 8 9 10 11 211 212 221 222 223 224 231 232 233 235 236 251 252 253 254 255 256]
