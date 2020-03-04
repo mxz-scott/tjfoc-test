@@ -29,20 +29,22 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        SetDatabaseMysql.class,
-        SetCertSM2.class,
+//        SetDatabaseMysql.class,
+//        SetCertSM2.class,
         SetMainLedger.class,
+
         SetTestVersionRelease.class,
-        BeforeCondition.class,
+//        BeforeCondition.class,
 
         Run_Main_Finservice.class,
-        //升级比对 设置主链 设置升级节点和sdk
-        SetMainLedger.class,
+
+
         SetPeerUpgradeTrue.class,
         SetContractSysUpgradeTrue.class,
         SetSDKUpgradeFalse.class,
         SetTokenApiUpgradeTrue.class,
 
+        SetURLToSDKAddr.class,
         UpgradeTestHistoryData.class,
 
         //升级后简单回归测试

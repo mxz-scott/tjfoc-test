@@ -8,6 +8,7 @@ import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.utils.SubLedgerCmd;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.math.RandomUtils;
+import org.hamcrest.core.AnyOf;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -15,6 +16,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -112,7 +114,9 @@ public class TestMainSubChain_Perm {
         subLedger="";
         mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"999");
         sleepAndSaveInfo(SLEEPTIME);
-        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), fullPerm);
+//        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), fullPerm);
+        assertThat(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()),
+                anyOf(containsString(fullPerm), containsString(fullPerm2)));
         //向子链glbChain01/glbChain02和主链发送交易
         subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"tc1661 with permission 999 tx data2");
     }
@@ -172,7 +176,10 @@ public class TestMainSubChain_Perm {
         subLedger="";
         mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"999");
         sleepAndSaveInfo(SLEEPTIME);
-        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), fullPerm);
+//        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), fullPerm);
+        assertThat(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()),
+                anyOf(containsString(fullPerm), containsString(fullPerm2)));
+
         //向子链glbChain01/glbChain02和主链发送交易
         subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"tc1662 with permission 999 tx data2");
     }
@@ -185,8 +192,9 @@ public class TestMainSubChain_Perm {
         mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"999");
         sleepAndSaveInfo(SLEEPTIME);
         //检查主链权限列表
-        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), fullPerm);
-
+//        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), fullPerm);
+        assertThat(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()),
+                anyOf(containsString(fullPerm), containsString(fullPerm2)));
         assertThat(store.CreateStore("tc1663 ledger with permission3,211 tx data"),containsString("\"State\":200"));
         assertThat(multiSign.QueryZero(""),containsString("\"State\":200"));
         assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),containsString("\"State\":200"));
@@ -227,7 +235,9 @@ public class TestMainSubChain_Perm {
 
         //获取主链权限列表检查无变更
         subLedger="";
-        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), fullPerm);
+//        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), fullPerm);
+        assertThat(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()),
+                anyOf(containsString(fullPerm), containsString(fullPerm2)));
         assertEquals(store.CreateStore("tc1663 main no permission tx data").contains("\"State\":200"),true);
         assertThat(multiSign.QueryZero(""),containsString("\"State\":200"));
         assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),containsString("\"State\":200"));
