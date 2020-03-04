@@ -53,6 +53,8 @@ public class UtilsClass {
     public static String tmuxSessionTokenApi = "tmux send -t t_M2 ";
     public static String tmuxSessionPeer = "tmux send -t M2 ";
     public static String tmuxSessionSDK = "tmux send -t s_M2 ";
+    public static String sReleaseLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.1\\2.1.3\\";
+    public static String sLatestLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.2\\";
 
 //    //zhouxianxian env use start -----------
 //    public static String SDKADD = "http://10.1.3.246:7777";
@@ -84,6 +86,8 @@ public class UtilsClass {
 //    public static String tmuxSessionTokenApi = "tmux send -t perm_token ";
 //    public static String tmuxSessionPeer = "tmux send -t perm ";
 //    public static String tmuxSessionSDK = "tmux send -t perm_sdk ";
+//    public static String sReleaseLocalDir = "E:\\gopath\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.2\\";
+//    public static String sLatestLocalDir = "E:\\test\\2.2.1\\";
 //    //zhouxianxian env use end -----------
 
     public static String certPath = "SM2"; // 设置签名证书类型，可选值SM2(默认值)，ECDSA，MIX1，MIX2，RSA
@@ -220,8 +224,6 @@ public class UtilsClass {
     public static boolean bUpgradeContractSys = true;
     public static boolean bUpgradeTokenApi = true;
 
-    public static String sReleaseLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.1\\2.1.3\\";
-    public static String sLatestLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.2\\";
     public static String sLocalPeer = "wtchain\\wtchain";
     public static String sLocalSDK = "wtsdk\\wtsdk";
     public static String sLocalTokenApi = "wtfinservice\\wtfinservice";
