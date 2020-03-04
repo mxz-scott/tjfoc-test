@@ -3,7 +3,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import java.io.*;
+import java.math.BigDecimal;
+import java.net.URL;
 import java.sql.*;
+import java.util.Calendar;
 import javax.sql.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -145,47 +148,7 @@ public class MysqlOperation {
 
         }
     }
-    public static String createDBAndLoadTableFromFile(String mysqlIP, String database, String loadFile) throws Exception{
-        String mysqlUrl = "jdbc:mysql://" + mysqlIP;
-        Connection connection = null;
-        Statement sta = null;
-        try {
-            //注册JDBC驱动
-            Class.forName(driver);
-            //打开连接
-            log.info("连接mysql数据库：" + mysqlUrl);
-            connection = (Connection) DriverManager.getConnection(mysqlUrl, mysqlName, mysqlPwd);
-            sta = (Statement) connection.createStatement();
 
-            sta.execute("drop database if exists " + database + ";" );
-
-            String sourcefile = "source " + loadFile + ";";
-            sta.execute(sourcefile);
-
-            return "load complete";
-        }catch (SQLException e) {
-            e.printStackTrace();
-            return e.toString();
-        }
-        catch (Exception e1){
-            e1.printStackTrace();
-            return "Class.forName Error";
-        }
-        finally {
-            try {
-                connection.close();
-            }catch (SQLException e2){
-                e2.printStackTrace();
-            }
-            try {
-                if(sta != null) sta.close();
-            }catch (SQLException e3){
-                e3.printStackTrace();
-            }
-
-        }
-
-    }
 
     public String delDatabase(String mysqlIP,String database) throws Exception {
         String mysqlUrl = "jdbc:mysql://" + mysqlIP;
