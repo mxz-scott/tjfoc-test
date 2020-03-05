@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -73,7 +74,7 @@ public class BeforeCondition {
             ArrayList<String> stdout2 = shellPeer1.getStandardOutput();
             resp = StringUtils.join(stdout2,"\n");
             log.info(resp);
-            assertEquals(resp.contains(fullPerm),true);
+            assertEquals(resp.contains("send transaction success"),true);
             Thread.sleep(SLEEPTIME);
         }
 

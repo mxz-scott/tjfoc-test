@@ -11,6 +11,7 @@ import com.tjfintech.common.functionTest.mixTestWithConfigChange.DynamicChangePe
 import com.tjfintech.common.functionTest.store.StoreTest_UpgradeTestOnly;
 import com.tjfintech.common.functionTest.tokenModuleTest.*;
 import com.tjfintech.common.functionTest.upgrade.UpgradeTestHistoryData;
+import com.tjfintech.common.functionTest.upgrade.UpgradeTestHistoryData_TokenApi;
 import com.tjfintech.common.functionTest.utxoMultiSign.MultiTest;
 import com.tjfintech.common.functionTest.utxoSingleSign.SoloTest;
 import org.junit.runner.RunWith;
@@ -29,23 +30,24 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-//        SetDatabaseMysql.class,
-//        SetCertSM2.class,
+        SetDatabaseMysql.class,
+        SetTokenApiDatabaseMysql.class,
+        SetCertSM2.class,
         SetMainLedger.class,
 
         SetTestVersionRelease.class,
-//        BeforeCondition.class,
+        BeforeCondition.class,
 
         Run_Main_Finservice.class,
 
 
         SetPeerUpgradeTrue.class,
         SetContractSysUpgradeTrue.class,
-        SetSDKUpgradeFalse.class,
+        SetSDKUpgradeTrue.class,
         SetTokenApiUpgradeTrue.class,
 
         SetURLToSDKAddr.class,
-        UpgradeTestHistoryData.class,
+        UpgradeTestHistoryData_TokenApi.class,
 
         //升级后简单回归测试
         Run_Main_Finservice.class,
