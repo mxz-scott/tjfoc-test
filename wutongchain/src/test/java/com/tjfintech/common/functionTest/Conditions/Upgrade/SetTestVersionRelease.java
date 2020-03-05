@@ -12,10 +12,12 @@ public class SetTestVersionRelease {
     @Test
     public void test()throws Exception {
         SetPeerVerRelease setPeerVerRelease = new SetPeerVerRelease();
+        SetMgToolVerRelease setMgToolVerRelease = new SetMgToolVerRelease();
         SetSDKVerRelease setSDKVerRelease = new SetSDKVerRelease();
         SetContractSysRelease setContractSysRelease = new SetContractSysRelease();
         SetTokenApiVerRelease setTokenApiVerRelease = new SetTokenApiVerRelease();
         setPeerVerRelease.test();
+        setMgToolVerRelease.test();
         setSDKVerRelease.test();
         setContractSysRelease.test();
         setTokenApiVerRelease.test();

@@ -24,7 +24,9 @@ public class SetTestVersionLatest {
 
         if(bUpgradePeer) {
             SetPeerVerLatest setPeerVerLatest = new SetPeerVerLatest();
+            SetMgToolVerLatest setMgToolVerLatest = new SetMgToolVerLatest();
             setPeerVerLatest.test();
+            setMgToolVerLatest.test();
         }
         if(bUpgradeSDK) {
             SetSDKVerLatest setSDKVerLatest = new SetSDKVerLatest();

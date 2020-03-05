@@ -191,6 +191,7 @@ public class UtilsClass {
     public static String getPeerVerByShell = "cd " + PeerPATH + ";./"+ PeerTPName + " version| grep \"Peer Version\" |cut -d \":\" -f 2";
     public static String getSDKVerByShell = "cd " + SDKPATH + ";./"+ SDKTPName + " version| grep \"SDK Version\" |cut -d \":\" -f 2";
     public static String getTokenApiVerByShell = "cd " + TokenApiPATH + ";./"+ TokenTPName + " version| grep \"Version\" |cut -d \":\" -f 2";
+    public static String getMgToolVerByShell = "cd " + ToolPATH + ";./"+ ToolTPName + " version| grep \"Tool Version\" |cut -d \":\" -f 2";
 
     public static Date dt=new Date();
     public static SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
@@ -208,6 +209,8 @@ public class UtilsClass {
     public static String latestSDK = SDKTPName + latest;
     public static String releaseTokenApi = TokenTPName + release;
     public static String latestTokenApi = TokenTPName + latest;
+    public static String releaseMgTool = ToolTPName + release;
+    public static String latestMgTool = ToolTPName + latest;
     public static Map<String,String> verMap = new HashMap<>();
 
     public static String provider = "mysql";
@@ -229,6 +232,7 @@ public class UtilsClass {
     public static String sLocalSDK = "wtsdk\\wtsdk";
     public static String sLocalTokenApi = "wtfinservice\\wtfinservice";
     public static String sLocalStoreContract = "wtchain\\contracts\\bin\\Sys_StoreEncrypted\\";
+    public static String sLocalMgTool = "wttool\\wttool";
 
     //如果是已经获取过shell脚本则可以不用执行uploadFile()操作 因此此项默认关闭
 //    public static boolean bupload = uploadFile();
