@@ -177,11 +177,11 @@ public class TokenTxTypeTest_Token {
         assertEquals(JSONObject.fromObject(tokenModule.tokenGetBalance(tokenAccount1,"")).getJSONObject("data").getString(tokenTypeS3),amount1);
         String tranferSdata="transfer to "+tokenAccount3 + " with amount 3000";
 
-        List<Map> listTFS = utilsClass.tokenConstructToken(tokenAccount3,tokenTypeS1,"3000");
+        List<Map> listTFS = utilsClass.tokenConstructToken(tokenAccount3,tokenTypeS1,"3000.03");
         List<Map> listTFS2 = utilsClass.tokenConstructToken(tokenAccount3,tokenTypeS3,"3000",listTFS);
 
-        List<Map> listST = commonFunc.constructUTXOTxDetailList(tokenAccount1,tokenAccount3,tokenTypeS1,"3000");
-        List<Map> listST2 = commonFunc.constructUTXOTxDetailList(tokenAccount1,tokenAccount1,tokenTypeS1,"7000",listST);//转回给自己7000
+        List<Map> listST = commonFunc.constructUTXOTxDetailList(tokenAccount1,tokenAccount3,tokenTypeS1,"3000.03");
+        List<Map> listST2 = commonFunc.constructUTXOTxDetailList(tokenAccount1,tokenAccount1,tokenTypeS1,"6999.97",listST);//转回给自己7000
         List<Map> listST3 = commonFunc.constructUTXOTxDetailList(tokenAccount1,tokenAccount3,tokenTypeS3,"3000",listST2);
         List<Map> listST4 = commonFunc.constructUTXOTxDetailList(tokenAccount1,tokenAccount1,tokenTypeS3,"7000",listST3);//转回给自己7000
 
@@ -195,11 +195,11 @@ public class TokenTxTypeTest_Token {
         assertEquals(JSONObject.fromObject( tokenModule.tokenGetBalance(tokenMultiAddr1,"")).getJSONObject("data").getString(tokenTypeM3),amountM1);
         String transferData = tokenMultiAddr1 + " 向 " + tokenMultiAddr3 + " 转账3000";
         log.info(transferData);
-        List<Map> listTFM = utilsClass.tokenConstructToken(tokenMultiAddr3,tokenTypeM1,"3000");
+        List<Map> listTFM = utilsClass.tokenConstructToken(tokenMultiAddr3,tokenTypeM1,"0.05");
         List<Map> listTFM2 = utilsClass.tokenConstructToken(tokenMultiAddr3,tokenTypeM3,"3000",listTFM);
 
-        List<Map> listMT = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenMultiAddr3,tokenTypeM1,"3000");
-        List<Map> listMT2 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenMultiAddr1,tokenTypeM1,"47000",listMT);
+        List<Map> listMT = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenMultiAddr3,tokenTypeM1,"0.05");
+        List<Map> listMT2 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenMultiAddr1,tokenTypeM1,"49999.95",listMT);
         List<Map> listMT3 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenMultiAddr3,tokenTypeM3,"3000",listMT2);
         List<Map> listMT4 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,tokenMultiAddr1,tokenTypeM3,"47000",listMT3);
 
@@ -210,16 +210,16 @@ public class TokenTxTypeTest_Token {
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting");
 
         //单签回收bylist
-        String recySoloAmount="600";
+        String recySoloAmount="600.04";
         log.info("单签回收");
         String desInfo1 = "destory 1111";
         List<Map> list = utilsClass.tokenConstructToken(tokenAccount1, tokenTypeS1, recySoloAmount);
-        List<Map> list2 = utilsClass.tokenConstructToken(tokenAccount3, tokenTypeS3, recySoloAmount,list);
+        List<Map> list2 = utilsClass.tokenConstructToken(tokenAccount3, "0.07", recySoloAmount,list);
 
         List<Map> listSD = commonFunc.constructUTXOTxDetailList(tokenAccount1,zeroAccount,tokenTypeS1,recySoloAmount);
-        List<Map> listSD2 = commonFunc.constructUTXOTxDetailList(tokenAccount3,zeroAccount,tokenTypeS3,recySoloAmount,listSD);
-        List<Map> listSD3 = commonFunc.constructUTXOTxDetailList(tokenAccount1,tokenAccount1,tokenTypeS1,"6400",listSD2);//转回自己6400
-        List<Map> listSD4 = commonFunc.constructUTXOTxDetailList(tokenAccount3,tokenAccount3,tokenTypeS3,"2400",listSD3);//转回自己2400
+        List<Map> listSD2 = commonFunc.constructUTXOTxDetailList(tokenAccount3,zeroAccount,tokenTypeS3,"0.07",listSD);
+        List<Map> listSD3 = commonFunc.constructUTXOTxDetailList(tokenAccount1,tokenAccount1,tokenTypeS1,"6399.93",listSD2);//转回自己6400
+        List<Map> listSD4 = commonFunc.constructUTXOTxDetailList(tokenAccount3,tokenAccount3,tokenTypeS3,"2999.93",listSD3);//转回自己2400
 
         String RecycleSoloInfo = tokenModule.tokenDestoryByList(list2,desInfo1);
         String soDesHash = JSONObject.fromObject(RecycleSoloInfo).getString("data");
@@ -227,8 +227,8 @@ public class TokenTxTypeTest_Token {
         //多签回收 bytokentype
         log.info("多签回收");
         String desInfo2 = "destory 2222";
-        List<Map> listMD = commonFunc.constructUTXOTxDetailList(tokenMultiAddr3,zeroAccount,tokenTypeM1,"3000");
-        List<Map> listMD2 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,zeroAccount,tokenTypeM1,"47000",listMD);
+        List<Map> listMD = commonFunc.constructUTXOTxDetailList(tokenMultiAddr3,zeroAccount,tokenTypeM1,"0.05");
+        List<Map> listMD2 = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,zeroAccount,tokenTypeM1,"49999.95",listMD);
 
         String RecycleMultiInfo = tokenModule.tokenDestoryByTokenType(tokenTypeM1,desInfo2);
         String muDesHash = JSONObject.fromObject(RecycleMultiInfo).getJSONObject("data").getString("hash");
