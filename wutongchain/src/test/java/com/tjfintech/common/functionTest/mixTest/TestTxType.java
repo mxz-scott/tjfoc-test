@@ -355,7 +355,7 @@ public class TestTxType {
         //单签转账
         assertEquals(JSONObject.fromObject(soloSign.Balance(PRIKEY1,tokenTypeS)).getJSONObject("Data").getString("Total"),amount);
         List<Map> list=soloSign.constructToken(ADDRESS3,tokenTypeS,"3000");
-        String amountTransfer="3000";
+        String amountTransfer="0.01";
         String tranferdata="transfer to "+ADDRESS3+" with amount "+amountTransfer;
         String response4= soloSign.Transfer(list,PRIKEY1,"transfer to "+ADDRESS3+" with amount 3000");
 
@@ -385,7 +385,7 @@ public class TestTxType {
         assertEquals(tranferdata,uxtoJson.getString("Data"));
 
         List<Map> listST = constructUTXOTxDetailList(ADDRESS1,ADDRESS3,tokenTypeS,amountTransfer);
-        List<Map> listST2 = constructUTXOTxDetailList(ADDRESS1,ADDRESS1,tokenTypeS,String.valueOf(Integer.parseInt(amount)-Integer.parseInt(amountTransfer)),listST);
+        List<Map> listST2 = constructUTXOTxDetailList(ADDRESS1,ADDRESS1,tokenTypeS,"9999.99",listST);
 
         JSONArray jsonArrayCheck = uxtoJson.getJSONArray("Records");
         checkListArray(listST2,jsonArrayCheck);
