@@ -63,13 +63,13 @@ public class APermfuncSysSetMg {
         return retAllow(res);
     }
 
-    public String addPeerJoin(String peerIPPort,String addPeerIP,String addPeerPort)throws Exception{
-        String res = mgToolCmd.addPeer("join",peerIPPort,ipv4+addPeerIP,tcpProtocol+addPeerPort,"");
+    public String addPeerJoin(String peerIPPort,String addPeerIP,String addPeerPort,String addPeerRpcPort)throws Exception{
+        String res = mgToolCmd.addPeer("join",peerIPPort,"/ip4/"+addPeerIP,"/tcp/" + addPeerPort,addPeerRpcPort);
         return retAllow(res);
     }
 
-    public String addPeerObserver(String peerIPPort,String addPeerIP,String addPeerPort)throws Exception{
-        String res = mgToolCmd.addPeer("observer",peerIPPort,ipv4+addPeerIP,tcpProtocol+addPeerPort,"");
+    public String addPeerObserver(String peerIPPort,String addPeerIP,String addPeerPort,String addPeerRpcPort)throws Exception{
+        String res = mgToolCmd.addPeer("observer",peerIPPort,"/ip4/"+addPeerIP,"/tcp/" + addPeerPort,addPeerRpcPort);
         return retAllow(res);
     }
 
