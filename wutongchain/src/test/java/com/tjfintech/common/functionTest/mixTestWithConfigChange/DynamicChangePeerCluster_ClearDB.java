@@ -51,34 +51,34 @@ public class DynamicChangePeerCluster_ClearDB {
     //20191219确认如果节点3未清数据 在clearDataSetPerm999后执行则会出现节点3无法同步数据的问题
 
     //先关闭、清空待加入节点db 再清空原集群中节点db及sdk数据库
-    public void initSetting1()throws Exception{
-
-        shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB,resetPeerBase);
-        BeforeCondition bf = new BeforeCondition();
-        bf.clearDataSetPerm999();
-        mgToolCmd.quitPeer(peer1IPPort,PEER3IP);//带quit操作 验证错误操作后能够正常加入节点并处理交易
-
-        testMgTool.queryPeerListNo(peer1IPPort,basePeerNo);
-    }
-
-    //先清空原集群中节点db及sdk数据库 再关闭、清空待加入节点db 启动节点
-    public void initSetting2()throws Exception{
-        shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB,resetPeerBase,startPeerCmd);
-        BeforeCondition bf = new BeforeCondition();
-        bf.clearDataSetPerm999();
-        mgToolCmd.quitPeer(peer1IPPort,PEER3IP);//可以不用此步骤
-        shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB);
-        testMgTool.queryPeerListNo(peer1IPPort,basePeerNo);
-    }
+//    public void initSetting1()throws Exception{
+//
+//        shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB,resetPeerBase);
+//        BeforeCondition bf = new BeforeCondition();
+//        bf.clearDataSetPerm999();
+//        mgToolCmd.quitPeer(peer1IPPort,PEER3IP);//带quit操作 验证错误操作后能够正常加入节点并处理交易
+//
+//        testMgTool.queryPeerListNo(peer1IPPort,basePeerNo);
+//    }
 
     //先清空原集群中节点db及sdk数据库 再关闭、清空待加入节点db 启动节点
-    public void initSetting3()throws Exception{
-        shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB,resetPeerBase,startPeerCmd);
-        BeforeCondition bf = new BeforeCondition();
-        bf.clearDataSetPerm999();
-        mgToolCmd.quitPeer(peer1IPPort,PEER3IP);//可以不用此步骤
-        testMgTool.queryPeerListNo(peer1IPPort,basePeerNo);
-    }
+//    public void initSetting2()throws Exception{
+//        shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB,resetPeerBase,startPeerCmd);
+//        BeforeCondition bf = new BeforeCondition();
+//        bf.clearDataSetPerm999();
+//        mgToolCmd.quitPeer(peer1IPPort,PEER3IP);//可以不用此步骤
+//        shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB);
+//        testMgTool.queryPeerListNo(peer1IPPort,basePeerNo);
+//    }
+
+    //先清空原集群中节点db及sdk数据库 再关闭、清空待加入节点db 启动节点
+//    public void initSetting3()throws Exception{
+//        shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB,resetPeerBase,startPeerCmd);
+//        BeforeCondition bf = new BeforeCondition();
+//        bf.clearDataSetPerm999();
+//        mgToolCmd.quitPeer(peer1IPPort,PEER3IP);//可以不用此步骤
+//        testMgTool.queryPeerListNo(peer1IPPort,basePeerNo);
+//    }
 
     public void initSetting1NoQuit()throws Exception{
         shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB,resetPeerBase);
@@ -96,27 +96,27 @@ public class DynamicChangePeerCluster_ClearDB {
     }
 
 
-    @Test
-    public void joinDataPeerWithSetting1()throws Exception{
-        initSetting1();
-        addDataPeerConfigWithSelfInfo();
-        joinDataPeer();
-    }
-
-    @Test
-    public void joinDataPeerWithSetting2()throws Exception{
-        initSetting2();
-        addDataPeerConfigWithSelfInfo();
-        joinDataPeer();
-    }
-
-
-    @Test
-    public void joinDataPeerWithSetting3()throws Exception{
-        initSetting3();
-        addDataPeerConfigWithSelfInfo();
-        joinDataPeer();
-    }
+//    @Test
+//    public void joinDataPeerWithSetting1()throws Exception{
+//        initSetting1();
+//        addDataPeerConfigWithSelfInfo();
+//        joinDataPeer();
+//    }
+//
+//    @Test
+//    public void joinDataPeerWithSetting2()throws Exception{
+//        initSetting2();
+//        addDataPeerConfigWithSelfInfo();
+//        joinDataPeer();
+//    }
+//
+//
+//    @Test
+//    public void joinDataPeerWithSetting3()throws Exception{
+//        initSetting3();
+//        addDataPeerConfigWithSelfInfo();
+//        joinDataPeer();
+//    }
     @Test
     public void joinDataPeerWithSetting1NoQuit()throws Exception{
         initSetting1NoQuit();
@@ -145,25 +145,35 @@ public class DynamicChangePeerCluster_ClearDB {
         joinConsensusPeer();
     }
 
-    @Test
-    public void joinConsensusPeerWithSetting1()throws Exception{
-        initSetting1();
-        addConsensusPeerConfigWithSelfInfo();
-        joinConsensusPeer();
-    }
+//    @Test
+//    public void joinConsensusPeerWithSetting1()throws Exception{
+//        initSetting1();
+//        addConsensusPeerConfigWithSelfInfo();
+//        joinConsensusPeer();
+//    }
+//
+//    @Test
+//    public void joinConsensusPeerWithSetting2()throws Exception{
+//        initSetting2();
+//        addConsensusPeerConfigWithSelfInfo();
+//        joinConsensusPeer();
+//    }
+//
+//    @Test
+//    public void joinConsensusPeerWithSetting3()throws Exception{
+//        initSetting3();
+//        addConsensusPeerConfigWithSelfInfo();
+//        joinConsensusPeer();
+//    }
 
+    //退出节点 节点未在当前的集群列表中 客户端报错
     @Test
-    public void joinConsensusPeerWithSetting2()throws Exception{
-        initSetting2();
-        addConsensusPeerConfigWithSelfInfo();
-        joinConsensusPeer();
-    }
-
-    @Test
-    public void joinConsensusPeerWithSetting3()throws Exception{
-        initSetting3();
-        addConsensusPeerConfigWithSelfInfo();
-        joinConsensusPeer();
+    public void quitWhenNotInMemlist()throws Exception{
+        shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB,resetPeerBase);
+        BeforeCondition bf = new BeforeCondition();
+        bf.clearDataSetPerm999();
+        String resp = mgToolCmd.quitPeer(peer1IPPort,PEER3IP);//带quit操作 验证错误操作后能够正常加入节点并处理交易
+        assertEquals(true,resp.contains("not found peer"));
     }
 
     public void addDataPeerConfigWithSelfInfo(){
