@@ -214,12 +214,12 @@ public class TokenTxTypeTest_Token {
         log.info("单签回收");
         String desInfo1 = "destory 1111";
         List<Map> list = utilsClass.tokenConstructToken(tokenAccount1, tokenTypeS1, recySoloAmount);
-        List<Map> list2 = utilsClass.tokenConstructToken(tokenAccount3, "0.07", recySoloAmount,list);
+        List<Map> list2 = utilsClass.tokenConstructToken(tokenAccount3, tokenTypeS3, "0.07",list);
 
         List<Map> listSD = commonFunc.constructUTXOTxDetailList(tokenAccount1,zeroAccount,tokenTypeS1,recySoloAmount);
         List<Map> listSD2 = commonFunc.constructUTXOTxDetailList(tokenAccount3,zeroAccount,tokenTypeS3,"0.07",listSD);
-        List<Map> listSD3 = commonFunc.constructUTXOTxDetailList(tokenAccount1,tokenAccount1,tokenTypeS1,"6399.93",listSD2);//转回自己6400
-        List<Map> listSD4 = commonFunc.constructUTXOTxDetailList(tokenAccount3,tokenAccount3,tokenTypeS3,"2999.93",listSD3);//转回自己2400
+        List<Map> listSD3 = commonFunc.constructUTXOTxDetailList(tokenAccount1,tokenAccount1,tokenTypeS1,"6399.93",listSD2);//转回自己
+        List<Map> listSD4 = commonFunc.constructUTXOTxDetailList(tokenAccount3,tokenAccount3,tokenTypeS3,"2999.93",listSD3);//转回自己
 
         String RecycleSoloInfo = tokenModule.tokenDestoryByList(list2,desInfo1);
         String soDesHash = JSONObject.fromObject(RecycleSoloInfo).getString("data");
@@ -288,6 +288,7 @@ public class TokenTxTypeTest_Token {
         uxtoJson.clear();
         log.info("****************");
         uxtoJson = jsonObject4.getJSONObject("data").getJSONObject("UTXO");
+        log.info("list array:" + listSD4.toString()) ;
         commonFunc.checkListArray(listSD4,uxtoJson.getJSONArray("Records"));
 
         //检查多签回收交易信息
