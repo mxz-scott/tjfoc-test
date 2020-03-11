@@ -135,7 +135,7 @@ public class TokenTxTypeTest_SDK {
         //单签发行给别人
         String tokenTypeS2 = "TxTypeSOLOTC-"+ UtilsClass.Random(6);
         String siData2 = "单签" + tokenAccount1 +"向" +  tokenAccount2 + " 发行token " + tokenTypeS2;
-        String amount2 ="10000";
+        String amount2 ="0.000001";
         log.info(siData2);
         String response2 = tokenModule.tokenIssue(tokenAccount1,tokenAccount2,tokenTypeS2,amount2,siData2);
         assertEquals("200",JSONObject.fromObject(response2).getString("state"));
@@ -158,7 +158,7 @@ public class TokenTxTypeTest_SDK {
 
         //多签发行给别人
         String tokenTypeM2 = "TxTypeMULTIC" + UtilsClass.Random(8);
-        String amountM2 = "50000";
+        String amountM2 = "0.000001";
         String  mulDataM2 = "多签"+ tokenMultiAddr1 + "发行给" + tokenMultiAddr2 +" "+ tokenTypeM2 + " token，数量为：" + amountM2;
         log.info(mulDataM2);
         String responseM2 = tokenModule.tokenIssue(tokenMultiAddr1,tokenMultiAddr2,tokenTypeM2,amountM2,mulDataM2);

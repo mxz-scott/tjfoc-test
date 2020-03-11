@@ -322,6 +322,15 @@ public class TestTxType {
          * |UTXO转账|11|
          * |UTXO回收|12|
          */
+        //发行0.0* 数量token
+        String minToken = "TxTypeSoMin-" + UtilsClass.Random(6);
+        String minData = "单签" + ADDRESS1 + "发行token " + minToken;
+        String minAmount = "0.001";
+        log.info(minData);
+
+        String minResp = soloSign.issueToken(PRIKEY1,minToken,minAmount,minData,ADDRESS1);
+
+
         //UTXO类交易 Type 1 SubType 10 11 12
         //单签发行
         String tokenTypeS = "TxTypeSOLOTC-"+ UtilsClass.Random(6);
@@ -354,10 +363,10 @@ public class TestTxType {
 
         //单签转账
         assertEquals(JSONObject.fromObject(soloSign.Balance(PRIKEY1,tokenTypeS)).getJSONObject("Data").getString("Total"),amount);
-        List<Map> list=soloSign.constructToken(ADDRESS3,tokenTypeS,"3000");
         String amountTransfer="0.01";
+        List<Map> list=soloSign.constructToken(ADDRESS3,tokenTypeS,amountTransfer);
         String tranferdata="transfer to "+ADDRESS3+" with amount "+amountTransfer;
-        String response4= soloSign.Transfer(list,PRIKEY1,"transfer to "+ADDRESS3+" with amount 3000");
+        String response4= soloSign.Transfer(list,PRIKEY1,tranferdata);
 
         //多签转账
         assertEquals(JSONObject.fromObject( multiSign.Balance(IMPPUTIONADD,PRIKEY4,tokenTypeM)).getJSONObject("Data").getString("Total"),amount1);
@@ -369,6 +378,14 @@ public class TestTxType {
 
 
         Thread.sleep(SLEEPTIME);
+        //检查小数量单签发行交易信息
+        String txHashMin = JSONObject.fromObject(minResp).getString("Data");
+        checkTXDetailHeaderMsg(txHashMin,versionSUTXO,typeUTXO,subTypeIssue);
+        JSONObject uxtoJsonMin= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHashMin)).getJSONObject("Data").getJSONObject("UTXO"));
+        assertEquals(siData,uxtoJsonMin.getString("Data"));
+        assertEquals(1,uxtoJsonMin.getJSONArray("Records").size());
+        checkFromTo(uxtoJsonMin,ADDRESS1,ADDRESS1,minToken,minAmount,0);
+
 
         //检查单签发行交易信息
         String txHash3 = JSONObject.fromObject(response3).getString("Data");
@@ -419,14 +436,16 @@ public class TestTxType {
         checkListArray(listMT2,jsonArrayCheck);
 
         //单签回收
-        String recySoloAmount="600";
+        String recySoloAmount="600.05";
         log.info("单签回收");
+        log.info(soloSign.Balance(PRIKEY1,tokenTypeS));
         String RecycleSoloInfo = multiSign.Recycle( PRIKEY1, tokenTypeS, recySoloAmount);
 
 
         //多签回收
         log.info("多签回收");
-        String recyMultiAmount="70";
+        log.info(multiSign.Balance(IMPPUTIONADD,PRIKEY4,tokenTypeM));
+        String recyMultiAmount="0.07";
         String RecycleMultiInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenTypeM, recyMultiAmount);
 
         Thread.sleep(SLEEPTIME);
@@ -439,7 +458,7 @@ public class TestTxType {
         uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash7)).getJSONObject("Data").getJSONObject("UTXO"));
 
         List<Map> listSD = constructUTXOTxDetailList(ADDRESS1,zeroAddr,tokenTypeS,recySoloAmount);
-        List<Map> listSD2 = constructUTXOTxDetailList(ADDRESS1,ADDRESS1,tokenTypeS,String.valueOf(Integer.parseInt(amount)-Integer.parseInt(amountTransfer)-Integer.parseInt(recySoloAmount)),listSD);
+        List<Map> listSD2 = constructUTXOTxDetailList(ADDRESS1,ADDRESS1,tokenTypeS,"9399.94",listSD);
         jsonArrayCheck = uxtoJson.getJSONArray("Records");
         checkListArray(listSD2,jsonArrayCheck);
 
@@ -448,8 +467,8 @@ public class TestTxType {
         checkTXDetailHeaderMsg(txHash8,versionMUTXO,typeUTXO,subTypeRecycle);
         uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash8)).getJSONObject("Data").getJSONObject("UTXO"));
 
-        List<Map> listMD = constructUTXOTxDetailList(IMPPUTIONADD,zeroAddr,tokenTypeM,recyMultiAmount);
-        List<Map> listMD2 = constructUTXOTxDetailList(IMPPUTIONADD,IMPPUTIONADD,tokenTypeM,String.valueOf(Integer.parseInt(amount1)-Integer.parseInt(tranferAmount)-Integer.parseInt(recyMultiAmount)),listMD);
+        List<Map> listMD = constructUTXOTxDetailList(IMPPUTIONADD,zeroAddr,tokenTypeM,"0.07");
+        List<Map> listMD2 = constructUTXOTxDetailList(IMPPUTIONADD,IMPPUTIONADD,tokenTypeM,"46999.93",listMD);
         jsonArrayCheck = uxtoJson.getJSONArray("Records");
         checkListArray(listMD2,jsonArrayCheck);
    }

@@ -291,6 +291,76 @@ public class SoloTest {
 
     }
 
+    //小数量发行token
+    @Test
+    public void TC_SoloMinIssue() throws Exception{
+        String minToken = "TxTypeSoMin-" + UtilsClass.Random(6);
+        String minData = "单签" + ADDRESS1 + "发行token " + minToken;
+        String minAmount = "";
+
+        if (UtilsClass.PRECISION == 10) {
+            minAmount = "0.0000000001";
+        }else {
+            minAmount = "0.000001";
+        }
+        log.info(minData);
+
+        String minResp = soloSign.issueToken(PRIKEY1,minToken,minAmount,minData,ADDRESS1);
+        sleepAndSaveInfo(SLEEPTIME);
+
+        log.info("查询归集地址中两种token余额");
+        String response1 = soloSign.Balance( PRIKEY1, minToken);
+
+        assertThat(minToken +"查询余额错误",response1, containsString("200"));
+        assertEquals(minAmount,JSONObject.fromObject(response1).getJSONObject("Data").getJSONObject("Detail").getString(minToken));
+
+    }
+    /**
+     * 小数量转账、回收测试
+     *
+     */
+    @Test
+    public void TC_MiniTest() throws Exception {
+        String transferData = "归集地址向" + PUBKEY3 + "转账" + tokenType+",并向"+PUBKEY5+"转账";
+        log.info(transferData);
+        List<Map> listModel = soloSign.constructToken(ADDRESS3,tokenType,"0.003");
+        log.info(ADDRESS3);
+        List<Map> list=soloSign.constructToken(ADDRESS5,tokenType2,"0.8",listModel);
+        String transferInfo= soloSign.Transfer(list,PRIKEY1, transferData);
+        Thread.sleep(SLEEPTIME);
+        assertThat(transferInfo, containsString("200"));
+
+        String amount1, amount2;
+        if (UtilsClass.PRECISION == 10) {
+            amount1 = "10000.1204567891";
+            amount2 = "20000.0735432123";
+        }else {
+            amount1 = "10000.120456";
+            amount2 = "20000.073543";
+        }
+
+        log.info("查询帐号3跟帐号5余额，判断转账是否成功");
+        String queryInfo = soloSign.Balance( PRIKEY3, tokenType);
+        String queryInfo2 = soloSign.Balance( PRIKEY5, tokenType2);
+        assertThat(queryInfo, containsString("200"));
+        assertThat(queryInfo, containsString("0.003"));
+        assertThat(queryInfo2, containsString("200"));
+        assertThat(queryInfo2, containsString("0.8"));
+
+        String Info3 = multiSign.Recycle("", PRIKEY3, tokenType, "0.002");
+        assertThat(Info3, containsString("200"));
+        String Info4 = multiSign.Recycle("", PRIKEY5, tokenType2, "0.5");
+        assertThat(Info4, containsString("200"));
+
+        Thread.sleep(SLEEPTIME);
+        String queryInfo5 = multiSign.QueryZero(tokenType);
+        assertEquals("0.002",JSONObject.fromObject(queryInfo5).getJSONObject("Data").getJSONObject("Detail").getString(tokenType));
+        String queryInfo6 = multiSign.QueryZero(tokenType2);
+        assertEquals("0.5",JSONObject.fromObject(queryInfo6).getJSONObject("Data").getJSONObject("Detail").getString(tokenType2));
+
+
+    }
+
 
     /**
      * Tc024锁定后转账:

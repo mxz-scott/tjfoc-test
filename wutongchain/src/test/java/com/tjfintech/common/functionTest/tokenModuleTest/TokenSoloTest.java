@@ -385,6 +385,76 @@ public class TokenSoloTest {
 
 
     }
+    /**
+    * 发行小数量测试
+    *
+    */
+    @Test
+    public void TC_MinIssue()throws Exception{
+
+        if (UtilsClass.PRECISION == 10) {
+            actualAmount1 = "0.0000000001";
+        }else {
+            actualAmount1 = "0.000001";
+        }
+
+        tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,actualAmount1);
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        log.info("查询归集地址中token余额");
+        String response1 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
+
+        assertEquals("200",JSONObject.fromObject(response1).getString("state"));
+        assertEquals(actualAmount1,JSONObject.fromObject(response1).getJSONObject("data").getString(tokenType));
+    }
+
+
+    /**
+     * 转账小数量测试
+     *
+     */
+    @Test
+    public void TC_MiniTest() throws Exception {
+
+        List<Map> listModel = utilsClass.tokenConstructToken(tokenAccount3,tokenType,"0.03");
+        List<Map> list = utilsClass.tokenConstructToken(tokenAccount5,tokenType2,"10.05",listModel);
+        String transferInfo1 = commonFunc.tokenModule_TransferTokenList(tokenAccount1,list);
+        assertEquals("200",JSONObject.fromObject(transferInfo1).getString("state"));
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+        String amount1, amount2;
+        if (UtilsClass.PRECISION == 10) {
+            amount1 = "10000.1234567891";
+            amount2 = "20000.8765432123";
+        }else {
+            amount1 = "10000.123456";
+            amount2 = "20000.876543";
+        }
+
+        log.info("查询帐号3跟帐号2余额，判断转账是否成功");
+        String queryInfo = tokenModule.tokenGetBalance( tokenAccount3, tokenType);
+        String queryInfo2 = tokenModule.tokenGetBalance( tokenAccount5, tokenType2);
+        assertEquals("0.03",JSONObject.fromObject(queryInfo).getJSONObject("data").getString(tokenType));
+        assertEquals("10.05",JSONObject.fromObject(queryInfo2).getJSONObject("data").getString(tokenType2));
+
+
+        String Info3 = commonFunc.tokenModule_DestoryToken(tokenAccount3,tokenType, "0.03");
+        assertEquals("200",JSONObject.fromObject(Info3).getString("state"));
+        String Info4 = commonFunc.tokenModule_DestoryToken(tokenAccount5, tokenType2, "10.05");
+        assertEquals("200",JSONObject.fromObject(Info4).getString("state"));
+
+        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        String queryInfo11 = tokenModule.tokenGetBalance( tokenAccount3, "");
+        String queryInfo12 = tokenModule.tokenGetBalance( tokenAccount5, "");
+        String queryInfo5 = tokenModule.tokenGetDestroyBalance();
+        String queryInfo6 = tokenModule.tokenGetDestroyBalance();
+
+        assertEquals(false,queryInfo11.contains(tokenType));
+        assertEquals(false,queryInfo12.contains(tokenType2));
+        assertEquals("0.03",JSONObject.fromObject(queryInfo5).getJSONObject("data").getString(tokenType));
+        assertEquals("10.05",JSONObject.fromObject(queryInfo6).getJSONObject("data").getString(tokenType2));
+
+
+    }
 
 
     /**
