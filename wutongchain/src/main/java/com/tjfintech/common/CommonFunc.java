@@ -28,6 +28,23 @@ public class CommonFunc {
 
 
     //-----------------------------------------------------------------------------------------------------------
+    //获取交易hash函数 此处兼容
+
+
+    //-----------------------------------------------------------------------------------------------------------
+    public static void setPermAndCheckResp(String peerIP,String peerPort,String remoteId,String permList)throws Exception{
+        String toolPath = "cd " + ToolPATH + ";";
+        String ledger = (subLedger != "") ? " -z " + subLedger:"";
+        String exeCmd = "./" + ToolTPName + " permission " + ledger;
+        String permSetResp1 = shExeAndReturn(peerIP,toolPath + exeCmd + " -p " + peerPort + " -d " + remoteId + " -m " + permList);
+        assertEquals(true,permSetResp1.contains("send transaction success"));
+        sleepAndSaveInfo(SLEEPTIME);
+    }
+
+
+
+
+    //-----------------------------------------------------------------------------------------------------------
     //token模块相关通用函数
     public  String tokenModule_IssueToken(String issueAddr,String collAddr,String amount){
         String issueToken = "tokenSo-"+ UtilsClass.Random(8);

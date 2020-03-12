@@ -10,6 +10,7 @@ import org.apache.commons.lang.math.RandomUtils;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.tjfintech.common.CommonFunc.setPermAndCheckResp;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 
@@ -22,18 +23,18 @@ public class APermfuncSysSetMg {
     MgToolCmd mgToolCmd = new MgToolCmd();
 
     String okMsg="send transaction success";
-    String errMsg="does not found Permission";
+    String errMsg="does not found permission";
     String category="wvm";
 
-    String subLedgerName = "";
+    public static String subLedgerName = "";
 
 
     public String retAllow(String checkStr)throws Exception{
         String allow="*";
-        if(checkStr.contains(okMsg)) {
+        if(checkStr.toLowerCase().contains(okMsg)) {
             allow = "1";
         }
-        else if(checkStr.contains(errMsg))
+        else if(checkStr.toLowerCase().contains(errMsg))
         {
             allow="0";
         }
@@ -41,9 +42,12 @@ public class APermfuncSysSetMg {
     }
 
     public String subLedgerCreate() throws Exception {
-        subLedgerName = "permO.l_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些
-        String response = mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerName,
+        String tempName ="permO.l_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些
+        String response = mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + tempName,
                 " -t sm3", " -w first", " -c raft", ids);
+
+        if(response.toLowerCase().contains(okMsg))  subLedgerName = tempName;
+
         return retAllow(response);
     }
 

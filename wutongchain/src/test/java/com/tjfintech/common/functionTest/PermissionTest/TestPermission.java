@@ -5,12 +5,14 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
+import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.After;
@@ -22,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.tjfintech.common.CommonFunc.*;
+import static com.tjfintech.common.functionTest.PermissionTest.APermfuncSysSetMg.subLedgerName;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
@@ -42,6 +45,7 @@ public class TestPermission {
     APermfuncUTXO pFunUTXO =new APermfuncUTXO();
     APermfuncWVM pFunWVM = new APermfuncWVM();
     APermfuncSysSetMg pFunSysSet = new APermfuncSysSetMg();
+    MgToolCmd mgToolCmd = new MgToolCmd();
 
     WVMContractTest wvmContractTest = new WVMContractTest();
     FileOperation fileOperation = new FileOperation();
@@ -354,79 +358,86 @@ public class TestPermission {
     }
 
 
-//    @Test
+    @Test
     public void chkSunledgerMg()throws Exception{
-        //281,282,283,284
-        //将管理工具id权限设置为11
-//        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m 281,282,283,284");
-        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m " + subLedgerPerm);
-        sleepAndSaveInfo(SLEEPTIME);
+
+        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),subLedgerPerm);
         checkAllInterface(subLedgerPerm,def + Sys0 + Store0 + Docker0 + WVM0 + Mg0 + UTXO0);
         //执行子链相关操作
         assertEquals("1111",subLedgerCheck());
 
 
-        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m 281");
-        sleepAndSaveInfo(SLEEPTIME);
+        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"1,2,3");
+        //执行子链相关操作
+        assertEquals("0000",subLedgerCheck());
+
+
+        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"281");
         //执行子链相关操作
         assertEquals("1000",subLedgerCheck());
 
-
-        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m 282");
+        subLedgerName = "permO.l_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些
+        String response = mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerName,
+                " -t sm3", " -w first", " -c raft", ids);
         sleepAndSaveInfo(SLEEPTIME);
+
+
+        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"282");
         //执行子链相关操作
         assertEquals("0100",subLedgerCheck());
 
 
-        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m 283");
-        sleepAndSaveInfo(SLEEPTIME);
+        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"283");
         //执行子链相关操作
         assertEquals("0010",subLedgerCheck());
 
 
-        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m 284");
-        sleepAndSaveInfo(SLEEPTIME);
+        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"284");
         //执行子链相关操作
         assertEquals("0001",subLedgerCheck());
 
 
-        //将管理工具id权限设置为不包含11的权限列表
-        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m 1,2,3");
-        sleepAndSaveInfo(SLEEPTIME);
+
+
+
+        //设置为full权限
+        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"999");
         //执行子链相关操作
-        assertEquals("0000",subLedgerCheck());
+        assertEquals("1111",subLedgerCheck());
     }
 
     @Test
     public void chkPeerDynamicChange()throws Exception{
         //将管理工具id权限
-        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m " + dynPeerPerm);
-        sleepAndSaveInfo(SLEEPTIME);
+        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),dynPeerPerm);
         //执行节点变更相关操作
         assertEquals("111",peerChangeCheck());
         checkAllInterface(dynPeerPerm,def + Sys0 + Store0 + Docker0 + WVM0 + Mg0 + UTXO0);
-        sleepAndSaveInfo(SLEEPTIME);
 
 
         //将管理工具id权限 设置为支持节点修改 不支持退出
-        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m 261");
-        sleepAndSaveInfo(SLEEPTIME);
+        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"261");
         //执行节点变更相关操作
         assertEquals("110",peerChangeCheck());
 
 
         //将管理工具id权限 设置为不支持节点修改 支持退出
-        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m 262");
-        sleepAndSaveInfo(SLEEPTIME);
+        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"262");
         //执行节点变更相关操作
         assertEquals("001",peerChangeCheck());
 
 
         //设置无权限
-        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m 1,2,3");
-        sleepAndSaveInfo(SLEEPTIME);
+        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"1,2,3");
         //执行子链相关操作
         assertEquals("000",peerChangeCheck());
+
+
+        //设置权限999
+        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"999");
+        //执行节点变更相关操作
+        assertEquals("111",peerChangeCheck());
+
     }
 
 
@@ -434,9 +445,9 @@ public class TestPermission {
         String permStr="";
         permStr = permStr + pFunSysSet.subLedgerCreate();
         sleepAndSaveInfo(SLEEPTIME);
-        permStr = permStr + pFunSysSet.subLedgerFreeze(pFunSysSet.subLedgerName);
-        permStr = permStr + pFunSysSet.subLedgerRecover(pFunSysSet.subLedgerName);
-        permStr = permStr + pFunSysSet.subLedgerDestroy(pFunSysSet.subLedgerName);
+        permStr = permStr + pFunSysSet.subLedgerFreeze(subLedgerName);
+        permStr = permStr + pFunSysSet.subLedgerRecover(subLedgerName);
+        permStr = permStr + pFunSysSet.subLedgerDestroy(subLedgerName);
 
         return permStr;
     }
@@ -445,6 +456,8 @@ public class TestPermission {
         String permStr="";
         permStr = permStr + pFunSysSet.addPeerJoin(PEER1IP + ":" + PEER1RPCPort,PEER3IP,PEER3TCPPort,PEER3RPCPort);
         permStr = permStr + pFunSysSet.addPeerObserver(PEER1IP + ":" + PEER1RPCPort,PEER3IP,PEER3TCPPort,PEER3RPCPort);
+
+        sleepAndSaveInfo(SLEEPTIME);
         permStr = permStr + pFunSysSet.quitPeer(PEER1IP + ":" + PEER1RPCPort,PEER3IP);
         return permStr;
     }
@@ -685,7 +698,7 @@ public class TestPermission {
 
 
     }
-    @After
+//    @After
     public void resetPermission() throws Exception{
         BeforeCondition bf=new BeforeCondition();
         bf.setPermission999();
