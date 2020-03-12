@@ -171,8 +171,6 @@ public class UtilsClass {
     public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";
     public static String srcShellScriptDir = resourcePath + "/configFiles/shell/";
     public static String destShellScriptDir = "/root/tjshell/";
-    public static String tokenSqlTableFile = "table_schema_mysql.sql";
-    public static String tokenDBTableSql = destShellScriptDir + tokenSqlTableFile;
 //    public static String ccenvPull = "docker pull tjfoc/tjfoc-ccenv:2.1";
     public static String ccenvPull = "docker load < /root/dockerimages/ccenv_2.1.tar";//20191217出现网络慢pull需要很长时间 因此改回本地导入
 
