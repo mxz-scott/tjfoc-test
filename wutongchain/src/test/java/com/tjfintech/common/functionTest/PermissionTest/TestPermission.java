@@ -698,8 +698,9 @@ public class TestPermission {
 
 
     }
-//    @After
+    @After
     public void resetPermission() throws Exception{
+        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"999");
         BeforeCondition bf=new BeforeCondition();
         bf.setPermission999();
 

@@ -27,7 +27,7 @@ public class SetTokenApiVerLatest {
 
        shellExeCmd(getIPFromStr(TOKENADD),killTokenApiCmd, "rm -f " + TokenApiPATH + TokenTPName,
                "cp " + TokenApiPATH + replaceTP + " " + TokenApiPATH + TokenTPName);
-//       assertEquals(false,verMap.get("token_" + getIPFromStr(TOKENADD)).equals(shExeAndReturn(getIPFromStr(TOKENADD),getTokenApiVerByShell)));
+       assertEquals(false,verMap.get("token_" + getIPFromStr(TOKENADD)).equals(shExeAndReturn(getIPFromStr(TOKENADD),getTokenApiVerByShell)));
 
        shellExeCmd(getIPFromStr(TOKENADD),startTokenApiCmd);
     }
