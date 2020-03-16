@@ -42,43 +42,15 @@ public class BeforeCondition {
         String ledger ="";
         ledger=(subLedger!="")?" -z "+subLedger:"";
         String preCmd=toolPath+exeCmd+"-p "+PEER1RPCPort+" -s SDK "+ledger+" -d "+SDKID+" -m ";
-        String getPerm=toolPath+"./" + ToolTPName + " getpermission -p "+PEER1RPCPort+ledger;
+        String getPerm=toolPath+"./" + ToolTPName + " getpermission -p "+PEER1RPCPort + " -d " + SDKID + ledger;
 
-        Shell shellPeer1=new Shell(PEER1IP,USERNAME,PASSWD);
-        int iFlag=0;
-        shellPeer1.execute(getPerm);
-        ArrayList<String> stdout1 = shellPeer1.getStandardOutput();
-        String resp = StringUtils.join(stdout1,"\n");
-        log.info(resp);
-        assertEquals(resp.contains("失败"), false);
-        log.info("SDK ID:"+SDKID);
-        if(resp.contains(SDKID)) {
-            for (String str1 : stdout1){
-                if(str1.contains(SDKID))
-                    break;
-                iFlag++;
-                //assertEquals(str.contains("FuncUpdatePeerPermission success:  true"),true);
-            }
-            log.info("当前SDK 权限："+stdout1.get(iFlag+1));
-            if(stdout1.get(iFlag+1).contains(fullPerm)==false) {
-                shellPeer1.execute(preCmd + "999");
-                ArrayList<String> stdout = shellPeer1.getStandardOutput();
-                resp = StringUtils.join(stdout,"\n");
-                log.info(resp);
-                assertEquals(resp.contains(fullPerm),true);
-                Thread.sleep(SLEEPTIME);
-            }
-        }
-        else {
-            shellPeer1.execute(preCmd + "999");
-            ArrayList<String> stdout2 = shellPeer1.getStandardOutput();
-            resp = StringUtils.join(stdout2,"\n");
-            log.info(resp);
-            assertEquals(resp.contains("send transaction success"),true);
-            Thread.sleep(SLEEPTIME);
-        }
 
-        Thread.sleep(SLEEPTIME);
+        //如果没有权限 则设置权限
+        if(!shExeAndReturn(PEER1IP,getPerm).contains(fullPerm)){
+            assertEquals(true,shExeAndReturn(PEER1IP,preCmd + "999").contains("success"));
+            sleepAndSaveInfo(SLEEPTIME);
+            assertEquals(true,shExeAndReturn(PEER1IP,getPerm).contains(fullPerm));
+        }
     }
 
     public void clearDataSetPerm999() throws Exception{

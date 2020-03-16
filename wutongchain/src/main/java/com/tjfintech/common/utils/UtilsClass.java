@@ -151,6 +151,7 @@ public class UtilsClass {
     public static String USERNAME="root";
     public static String PASSWD="root";
     public static String SDKID=null;
+    public static String TOKENID=null;
     public static ArrayList<String > peerList=new ArrayList<>();
     public static int RESTARTTIME=20000;
     public static long ContractInstallSleep=75000;
@@ -700,11 +701,7 @@ public class UtilsClass {
         }
         return matchStr;
     }
-    
-@Test
-    public void test(){
-        getSDKWalletDBConfig();
-    }
+
     public static String getSDKWalletDBConfig(){
         String sdkIP = getIPFromStr(SDKADD);
         String DBType=null;

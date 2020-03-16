@@ -2,10 +2,8 @@ package com.tjfintech.common.functionTest.BVT.P1_High;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.Token;
-import com.tjfintech.common.functionTest.Conditions.SetCertSM2;
-import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
-import com.tjfintech.common.functionTest.Conditions.SetMainLedger;
-import com.tjfintech.common.functionTest.Conditions.SetURLToSDKAddr;
+import com.tjfintech.common.functionTest.Conditions.*;
+import com.tjfintech.common.functionTest.Conditions.Upgrade.SetTokenApiPerm999;
 import com.tjfintech.common.functionTest.contract.DockerContractInvalidTest;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
@@ -26,7 +24,9 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-
+        SetDatabaseMysql.class,
+        SetTokenApiDatabaseMysql.class,
+        SetTokenApiPerm999.class,
         SDKToTokenMultiTest.class,
         TokenAccurateTest.class,
         TokenInterfaceTest.class,

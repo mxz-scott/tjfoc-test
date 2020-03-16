@@ -4,6 +4,7 @@ import com.sun.org.apache.xpath.internal.operations.Equals;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Token;
+import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -515,9 +516,38 @@ public class CommonFunc {
         return bRunning;
     }
 
-    @Test
-    public void test()throws Exception{
-        setPeerConfig(PEER1IP);
+    //赋值权限999 区分是否主子链
+    public static void setPerm999WithParam(String id)throws Exception{
+        String toolPath="cd "+ ToolPATH +";";
+        String exeCmd="./" + ToolTPName + " permission ";
+
+        String ledger = "";
+        ledger = (subLedger!="") ? " -z " + subLedger : "";
+        String preCmd = toolPath + exeCmd + "-p " + PEER1RPCPort + " -s tokenapi " + ledger + " -d " + id + " -m ";
+        String getCertainPerm = toolPath + "./" + ToolTPName + " getpermission -p " + PEER1RPCPort + " -d " + id + ledger;
+
+        //如果没有权限 则设置权限
+        if(!shExeAndReturn(PEER1IP,getCertainPerm).contains(fullPerm)){
+            assertEquals(true,shExeAndReturn(PEER1IP,preCmd + "999").contains("success"));
+            sleepAndSaveInfo(SLEEPTIME);
+            assertEquals(true,shExeAndReturn(PEER1IP,getCertainPerm).contains(fullPerm));
+        }
+    }
+
+    public static String getIDByMgTool(String remoteIP,String keyPath) {
+        String result = "";
+        Shell shellTest = new Shell(remoteIP,USERNAME,PASSWD);
+        shellTest.execute("cd "+ ToolPATH+";./" + ToolTPName + " getid -p " + keyPath);
+
+        ArrayList<String> stdout3 = shellTest.getStandardOutput();
+        for (String str1 : stdout3){
+            if(str1.contains("id:"))
+            {
+                result = str1.split(":")[1];
+                break;
+            }
+        }
+        return result;
     }
 
 }
