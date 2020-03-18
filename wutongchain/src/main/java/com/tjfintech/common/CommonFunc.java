@@ -1,14 +1,15 @@
 package com.tjfintech.common;
 
-import com.sun.org.apache.xpath.internal.operations.Equals;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Token;
 import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.junit.Test;
+import org.hamcrest.CoreMatchers;
+import org.junit.BeforeClass;
 
 import java.util.*;
 
@@ -19,13 +20,15 @@ import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-
+@Slf4j
 public class CommonFunc {
     TestBuilder testBuilder= TestBuilder.getInstance();
     MultiSign multiSign =testBuilder.getMultiSign();
     SoloSign soloSign= testBuilder.getSoloSign();
     Token tokenModule= testBuilder.getToken();
     UtilsClass utilsClass=new UtilsClass();
+    //获取所有地址账户与私钥密码信息
+    JSONObject jsonObjectAddrPri;
 
 
     //-----------------------------------------------------------------------------------------------------------
@@ -86,6 +89,340 @@ public class CommonFunc {
 
     //-----------------------------------------------------------------------------------------------------------
     //sdk相关函数封装
+
+    /**
+     * 通用余额查询函数 兼容单签、多签，不需传入私钥密码仅需传地址私钥密码的JSONObject、查询账户及tokentype
+     * @param queryAccount 查询的账户地址
+     * @param queryTokenType 查询tokentype
+     * @return
+     */
+    public String  GetBalance(String queryAccount,String queryTokenType){
+        String balanceAmount = "";
+        String response = "";
+        jsonObjectAddrPri = mapAddrInfo();
+
+        String addrInfo = jsonObjectAddrPri.getString(queryAccount);
+        String prikey = JSONObject.fromObject(JSONObject.fromObject(addrInfo).getJSONArray("keyList").get(0)).getString("priKey");
+        String pwd = JSONObject.fromObject(JSONObject.fromObject(addrInfo).getJSONArray("keyList").get(0)).getString("pwd");
+        String sign = JSONObject.fromObject(addrInfo).getString("sign");
+
+        //判断单签还是多签
+        if(sign.equals("0")){
+            //单签账户查询
+            if(pwd.isEmpty()) {
+                //不带密码的私钥查询余额
+                response = soloSign.Balance(prikey,queryTokenType);
+            }
+            else
+            {
+                //带密码的私钥查询余额
+                response = soloSign.Balance(prikey,pwd,queryTokenType);
+            }
+        }
+        else{
+            //多签账户余额查询
+            if(pwd.isEmpty()) {
+                //不带密码查询
+                response = multiSign.Balance(queryAccount, prikey, queryTokenType);
+            }
+            else
+            {
+                //带密码查询
+                response = multiSign.Balance(queryAccount, prikey, pwd, queryTokenType);
+            }
+        }
+        assertEquals("200",JSONObject.fromObject(response).getString("State"));
+        balanceAmount = JSONObject.fromObject(response).getJSONObject("Data").getString("Total");
+        return balanceAmount;
+    }
+
+    /**
+     * 通用转账接口 兼容单签、多签，不需传入私钥密码仅需传地址私钥密码的组合对，账户，及转账信息即可
+     * @param trfAccount 转出账户地址
+     * @param list 转出list 传入list时，需要根据单签还是多签地址传入单签list组合 还是多签list组合
+     */
+    public void  sdkTransfer(String trfAccount,List<Map> list){
+        String response = "";
+        jsonObjectAddrPri = mapAddrInfo();
+
+        JSONObject jsonObjectAddrInfo = JSONObject.fromObject(jsonObjectAddrPri.getString(trfAccount));
+        String prikey = JSONObject.fromObject(jsonObjectAddrInfo.getJSONArray("keyList").get(0)).getString("priKey");
+        String pwd = JSONObject.fromObject(jsonObjectAddrInfo.getJSONArray("keyList").get(0)).getString("pwd");
+        String sign = jsonObjectAddrInfo.getString("sign");
+
+        //判断单签还是多签
+        if(sign.equals("0")){
+            //单签账户查询
+            if(pwd.isEmpty()) {
+                //不带密码转账
+                response = soloSign.Transfer(list,prikey,"transfer solo token tpye");
+            }
+            else
+            {
+                //带密码私钥转账
+                log.info("当前不支持单签账户带密码转账");
+                assertEquals(true,false);
+            }
+        }
+        else{
+            //多签转账
+            if(pwd.isEmpty()) {
+                response = multiSign.Transfer(prikey, "升级后转账", trfAccount, list);
+            }else{
+                response = multiSign.Transfer(prikey, "", "升级后转账", trfAccount, list);
+            }
+            assertThat(response, CoreMatchers.containsString("200"));
+            signUTXOLess1Time(response,jsonObjectAddrInfo);
+        }
+    }
+
+    /**
+     * 通用回收封装函数，兼容单签和多签，不需传入私钥密码仅需传地址私钥密码的JSONObject，账户、回收tokentype、回收数量
+     * @param recAccount  回收账户地址
+     * @param recTokenType  回收tokentype
+     * @param recAmount  回收数量
+     */
+    public void  sdkRecycle(String recAccount,String recTokenType,String recAmount){
+        String response = "";
+        jsonObjectAddrPri = mapAddrInfo();
+
+        JSONObject jsonObjectAddrInfo = JSONObject.fromObject(jsonObjectAddrPri.getString(recAccount));
+        String prikey = JSONObject.fromObject(jsonObjectAddrInfo.getJSONArray("keyList").get(0)).getString("priKey");
+        String pwd = JSONObject.fromObject(jsonObjectAddrInfo.getJSONArray("keyList").get(0)).getString("pwd");
+        String sign = jsonObjectAddrInfo.getString("sign");
+
+        //判断单签还是多签
+        if(sign.equals("0")){
+            //单签账户查询
+            if(pwd.isEmpty()) {
+                //不带密码回收
+                response = multiSign.Recycle("", prikey, recTokenType, recAmount);
+            }
+            else
+            {
+                //带密码私钥回收
+                response = multiSign.Recycle("", prikey,pwd, recTokenType, recAmount);
+            }
+        }
+        else{
+            //多签回收
+            if(pwd.isEmpty()) {
+                response = multiSign.Recycle(recAccount, prikey, recTokenType, recAmount);
+            }else{
+                response = multiSign.Recycle(recAccount, prikey,pwd, recTokenType, recAmount);
+            }
+            assertThat(response, CoreMatchers.containsString("200"));
+            signUTXOLess1Time(response,jsonObjectAddrInfo);
+        }
+    }
+
+    public void  sdkIssue(String issueAccount,String collAccount,String issueToken,String issueAmount){
+        String response = "";
+        jsonObjectAddrPri = mapAddrInfo();
+
+        JSONObject jsonObjectAddrInfo = JSONObject.fromObject(jsonObjectAddrPri.getString(issueAccount));
+        String prikey = JSONObject.fromObject(jsonObjectAddrInfo.getJSONArray("keyList").get(0)).getString("priKey");
+        String pwd = JSONObject.fromObject(jsonObjectAddrInfo.getJSONArray("keyList").get(0)).getString("pwd");
+        String sign = jsonObjectAddrInfo.getString("sign");
+        String data = issueAccount + " issue " + issueToken + " * " + issueAmount;
+
+        //判断单签还是多签
+        if(sign.equals("0")){
+            //单签账户发行
+            if(pwd.isEmpty()) {
+                //不带密码转账
+                response = soloSign.issueToken(prikey,issueToken,issueAmount,data,"");
+            }
+            else {
+                //带密码私钥转账
+                log.info("当前不支持单签账户带密码发行");
+                assertEquals(true,false);
+            }
+        }
+        else{
+            //多签转账
+            response = multiSign.issueToken(issueAccount,collAccount,issueToken,issueAmount,prikey,pwd,data);
+            assertThat(response, CoreMatchers.containsString("200"));
+            signUTXOLess1Time(response,jsonObjectAddrInfo);
+        }
+    }
+
+
+    public void signUTXOLess1Time(String response,JSONObject jsonObjectAddrInfo){
+        String tx = "";
+        String prikey = "";
+        String pwd = "";
+        if(response.contains("need more sign")) {
+            log.info("need more sign");
+            tx = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
+        }
+        if(!tx.isEmpty()) {
+            //第一组私钥密码在转账请求时使用签名
+            for (int i = 1; i < jsonObjectAddrInfo.getJSONArray("keyList").size(); i++) {
+                prikey = JSONObject.fromObject(jsonObjectAddrInfo.getJSONArray("keyList").get(i)).getString("priKey");
+                pwd = JSONObject.fromObject(jsonObjectAddrInfo.getJSONArray("keyList").get(i)).getString("pwd");
+                String response2 = "";
+                if (pwd.isEmpty())
+                    response2 = multiSign.Sign(tx, prikey);
+                else
+                    response2 = multiSign.Sign(tx, prikey, pwd);
+                assertEquals("200", JSONObject.fromObject(response2).getString("State"));
+                if (JSONObject.fromObject(response2).getJSONObject("Data").getString("IsCompleted").contains("true"))
+                    break;
+                else
+                    tx = JSONObject.fromObject(response2).getJSONObject("Data").getString("Tx");
+            }
+        }
+    }
+
+
+    public ArrayList<String> collAddrList(){
+        ArrayList<String> addrList = new ArrayList<>();
+        addrList.add(ADDRESS1);    addrList.add(ADDRESS2);    addrList.add(ADDRESS3);
+        addrList.add(ADDRESS4);    addrList.add(ADDRESS5);    addrList.add(ADDRESS6);
+        addrList.add(ADDRESS7);
+
+        addrList.add(IMPPUTIONADD);
+        addrList.add(MULITADD1);    addrList.add(MULITADD2);    addrList.add(MULITADD3);
+        addrList.add(MULITADD4);    addrList.add(MULITADD5);    addrList.add(MULITADD6);
+        addrList.add(MULITADD7);
+
+        return addrList;
+    }
+    /***
+     * 该函数的作用是将SDK涉及到的单签及多签地址 与签名次数、私钥（带密码）的私钥关联起来
+     * @return
+     */
+    public static JSONObject mapAddrInfo(){
+        assertEquals(false,IMPPUTIONADD.isEmpty());
+
+        Map<String,Object> mapAccInfo =  new HashMap<>();
+
+        CommonFunc commonFunc = new CommonFunc();
+        commonFunc.mapSoloAddrWithPri(mapAccInfo,ADDRESS1,PRIKEY1,"");
+        commonFunc.mapSoloAddrWithPri(mapAccInfo,ADDRESS2,PRIKEY2,"");
+        commonFunc.mapSoloAddrWithPri(mapAccInfo,ADDRESS3,PRIKEY3,"");
+        commonFunc.mapSoloAddrWithPri(mapAccInfo,ADDRESS4,PRIKEY4,"");
+        commonFunc.mapSoloAddrWithPri(mapAccInfo,ADDRESS5,PRIKEY5,"");
+        commonFunc.mapSoloAddrWithPri(mapAccInfo,ADDRESS6,PRIKEY6,PWD6);
+        commonFunc.mapSoloAddrWithPri(mapAccInfo,ADDRESS7,PRIKEY7,PWD7);
+
+        String signNo = "1";
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY4,""));
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY5,""));
+        commonFunc.mapMultiAddrWithPri(mapAccInfo,IMPPUTIONADD,signNo,jsonArray);
+
+        jsonArray.clear();
+        signNo = "3";
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY1,""));
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY2,""));
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY3,""));
+        commonFunc.mapMultiAddrWithPri(mapAccInfo,MULITADD1,signNo,jsonArray);
+
+        jsonArray.clear();
+        signNo = "3";
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY1,""));
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY2,""));
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY6,PWD6));
+        commonFunc.mapMultiAddrWithPri(mapAccInfo,MULITADD2,signNo,jsonArray);
+
+        jsonArray.clear();
+        signNo = "3";
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY1,""));
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY6,PWD6));
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY7,PWD7));
+        commonFunc.mapMultiAddrWithPri(mapAccInfo,MULITADD3,signNo,jsonArray);
+
+        jsonArray.clear();
+        signNo = "1";
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY1,""));
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY2,""));
+        commonFunc.mapMultiAddrWithPri(mapAccInfo,MULITADD4,signNo,jsonArray);
+
+        jsonArray.clear();
+        signNo = "1";
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY1,""));
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY3,""));
+        commonFunc.mapMultiAddrWithPri(mapAccInfo,MULITADD5,signNo,jsonArray);
+
+        jsonArray.clear();
+        signNo = "1";
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY3,""));
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY4,""));
+        commonFunc.mapMultiAddrWithPri(mapAccInfo,MULITADD6,signNo,jsonArray);
+
+        jsonArray.clear();
+        signNo = "1";
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY1,""));
+        jsonArray.add(commonFunc.constructJSONPriPwd(PRIKEY6,PWD6));
+        commonFunc.mapMultiAddrWithPri(mapAccInfo,MULITADD7,signNo,jsonArray);
+
+        System.out.println(JSONObject.fromObject(mapAccInfo).toString());
+        return JSONObject.fromObject(mapAccInfo);
+
+    }
+
+    /**
+     * 作用是将单签地址相关信息（签名次数、私钥及密码）组合塞进map中
+     * @param mapAccInfo 即将被塞进的map
+     * @param Account 单签地址
+     * @param priKey 单签地址对应的私钥
+     * @param pwd 单签地址私钥对应的密码 可以为空，为空则表示为不带密码的私钥
+     */
+    public void mapSoloAddrWithPri(Map<String,Object> mapAccInfo ,String Account,String priKey,String pwd){
+        Map<String,Object> mapOneAccInfo =  new HashMap<>();
+
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.add(constructJSONPriPwd(priKey,pwd));
+
+        mapOneAccInfo.put("keyList",jsonArray);
+        mapOneAccInfo.put("sign","0");
+        JSONObject jsonObject1 = JSONObject.fromObject(mapOneAccInfo);
+
+        mapAccInfo.put(Account,jsonObject1);
+    }
+
+    /**
+     * 作用是将多签地址相关信息（签名次数、私钥及密码）组合塞进map中
+     * @param mapAccInfo 即将被塞进的map
+     * @param Account 多签地址
+     * @param sign 多签地址签名次数
+     * @param jsonPriPwdArray 多签地址私钥密码数组
+     */
+    public void mapMultiAddrWithPri(Map<String,Object> mapAccInfo ,String Account,String sign,JSONArray jsonPriPwdArray){
+        Map<String,Object> mapOneAccInfo =  new HashMap<>();
+
+        mapOneAccInfo.put("keyList",jsonPriPwdArray);
+        mapOneAccInfo.put("sign",sign);
+        JSONObject jsonObject1 = JSONObject.fromObject(mapOneAccInfo);
+
+        mapAccInfo.put(Account,jsonObject1);
+    }
+
+    /**
+     * 将私钥和密码放进map中
+     * @param priKey 私钥
+     * @param pwd 密码 可以不带 不带则表示该私钥不带密码 即未加密
+     * @return
+     */
+    public JSONObject constructJSONPriPwd(String priKey, String pwd){
+        Map<String,Object> mapPrikeyPwd =  new HashMap<>();
+        mapPrikeyPwd.put("priKey",priKey);
+        if(!pwd.isEmpty()) mapPrikeyPwd.put("pwd",pwd);
+        else mapPrikeyPwd.put("pwd","");
+        return JSONObject.fromObject(mapPrikeyPwd);
+    }
+
+    /**
+     * SDK utxo发行封装函数
+     * @param issueAddr  发行地址
+     * @param amount 发行数量
+     * @param ToAddr 发向地址（归集地址）
+     * @param priKeys 发行时进行签名使用的私钥数组
+     * @param pwds 发行私钥对应的密码数组，与私钥数量一致，如果私钥不带密码则pwds中私钥对应的列传入空
+     * @return 返回发行token
+     */
     public  String sdkMultiIssueToken(String issueAddr, String  amount, String ToAddr,
                                       ArrayList<String> priKeys, ArrayList<String> pwds){
         String tokenType = "MUCX-" + UtilsClass.Random(8);
@@ -110,15 +447,86 @@ public class CommonFunc {
         return tokenType;
     }
 
-    public String sdkSoloIssueToken(String Prikey,String amount,String toAddr)throws Exception{
-        String tokenType = "SOLOTC-"+UtilsClass.Random(6);
-        String data = "Prikey issue token: " + tokenType + "*" + amount + "to " + toAddr;
-        System.out.print(data);
-        String isResult= soloSign.issueToken(Prikey,tokenType,amount,data,toAddr);
-        assertEquals("200",JSONObject.fromObject(isResult).getString("State"));
-        return tokenType;
+
+
+
+    /**
+     * 查询各个单签多签账户余额
+     * @throws Exception
+     */
+
+    public Map<String, Object>  getUTXOAccountBalance() {
+        CommonFunc commonFunc = new CommonFunc();
+        String tokenColl = multiSign.tokenstate("");
+        JSONArray tokenArr = JSONObject.fromObject(tokenColl).getJSONArray("Data");
+        ArrayList<String> tokenList = new ArrayList<>();
+
+        for(int i=0;i< tokenArr.size();i++){
+            String tt = tokenArr.getJSONObject(i).getString("TokenType");
+            tokenList.add(tt);
+        }
+        Map<String, Object> mapAccToken = new HashMap<>();
+
+        mapAccToken.put(ADDRESS1, commonFunc.getSDKUTXOAccTotalToken("",PRIKEY1,"",tokenList));
+        mapAccToken.put(ADDRESS2, commonFunc.getSDKUTXOAccTotalToken("",PRIKEY2,"",tokenList));
+        mapAccToken.put(ADDRESS3, commonFunc.getSDKUTXOAccTotalToken("",PRIKEY3,"",tokenList));
+        mapAccToken.put(ADDRESS4, commonFunc.getSDKUTXOAccTotalToken("",PRIKEY4,"",tokenList));
+        mapAccToken.put(ADDRESS5, commonFunc.getSDKUTXOAccTotalToken("",PRIKEY5,"",tokenList));
+        mapAccToken.put(ADDRESS6, commonFunc.getSDKUTXOAccTotalToken("",PRIKEY6,PWD6,tokenList));
+        mapAccToken.put(ADDRESS7, commonFunc.getSDKUTXOAccTotalToken("",PRIKEY7,PWD7,tokenList));
+
+        mapAccToken.put(IMPPUTIONADD, commonFunc.getSDKUTXOAccTotalToken(IMPPUTIONADD,PRIKEY4,"",tokenList));
+        mapAccToken.put(MULITADD1, commonFunc.getSDKUTXOAccTotalToken(MULITADD1,PRIKEY1,"",tokenList));
+        mapAccToken.put(MULITADD2, commonFunc.getSDKUTXOAccTotalToken(MULITADD2,PRIKEY1,"",tokenList));
+        mapAccToken.put(MULITADD3, commonFunc.getSDKUTXOAccTotalToken(MULITADD3,PRIKEY1,"",tokenList));
+        mapAccToken.put(MULITADD4, commonFunc.getSDKUTXOAccTotalToken(MULITADD4,PRIKEY1,"",tokenList));
+        mapAccToken.put(MULITADD5, commonFunc.getSDKUTXOAccTotalToken(MULITADD5,PRIKEY3,"",tokenList));
+        mapAccToken.put(MULITADD6, commonFunc.getSDKUTXOAccTotalToken(MULITADD6,PRIKEY3,"",tokenList));
+        mapAccToken.put(MULITADD7, commonFunc.getSDKUTXOAccTotalToken(MULITADD7,PRIKEY1,"",tokenList));
+
+
+        System.out.print("Collection amount: " + mapAccToken.size() + "\n");
+        System.out.print(mapAccToken.toString());
+
+        return mapAccToken;
+
     }
 
+    public ArrayList<String> getSDKUTXOAccTotalToken(String account, String accountPrikey, String pwd, ArrayList<String> tokenList){
+        ArrayList<String> tokenAmountList = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
+
+        for(String token:tokenList){
+            String tokenTotal = "";
+            if(account.equals("")) {
+                if(pwd.equals("")) {
+                    tokenTotal = JSONObject.fromObject(
+                            soloSign.Balance(accountPrikey, token)).getJSONObject("Data").getString("Total");
+                }else{
+                    tokenTotal = JSONObject.fromObject(
+                            soloSign.Balance(accountPrikey, pwd,token)).getJSONObject("Data").getString("Total");
+                }
+            }
+            else{
+                if(pwd.equals("")) {
+                    tokenTotal = JSONObject.fromObject(
+                            multiSign.Balance(account, accountPrikey, token)).getJSONObject("Data").getString("Total");
+                }else {
+                    tokenTotal = JSONObject.fromObject(
+                            multiSign.Balance(account, accountPrikey,pwd, token)).getJSONObject("Data").getString("Total");
+                }
+            }
+            if(!tokenTotal.equals("0"))
+            {
+                map.put("\"tokenType\"","\"" + token + "\"");
+                map.put("\"value\"","\"" + tokenTotal + "\"");
+                tokenAmountList.add(map.toString());
+                map.clear();
+            }
+        }
+        System.out.print(account + " with token account :" + tokenAmountList.toString() + "\n");
+        return tokenAmountList;
+    }
     //-----------------------------------------------------------------------------------------------------------
     //结果确认辅助函数 回收结果list map for 回收bytoken
     /***

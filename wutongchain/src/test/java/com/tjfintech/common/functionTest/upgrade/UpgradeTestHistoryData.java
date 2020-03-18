@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.upgrade;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
@@ -27,7 +28,6 @@ import static org.junit.Assert.assertThat;
 @Slf4j
 public class UpgradeTestHistoryData {
 
-    public   final static int   SHORTSLEEPTIME=3*1000;
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
     MultiSign multiSign = testBuilder.getMultiSign();
@@ -35,6 +35,7 @@ public class UpgradeTestHistoryData {
     Contract contract = testBuilder.getContract();
     ArrayList<String> txHashList = new ArrayList<>();
     Map<String, String> txTypeSubType = new HashMap<>();
+    CommonFunc commonFunc = new CommonFunc();
     String storeHash = "";
     String priStoreHash = "";
     String contractHash = "";
@@ -43,6 +44,7 @@ public class UpgradeTestHistoryData {
     @BeforeClass
     public static void updateKeyPairs()throws  Exception{
         BeforeCondition beforeCondition = new BeforeCondition();
+        if(IMPPUTIONADD.isEmpty())  beforeCondition.createAddresses();
         beforeCondition.updatePubPriKey();
     }
 
@@ -179,6 +181,7 @@ public class UpgradeTestHistoryData {
         mapTXHashResp.put("get multi utxo balance",multiSign.Balance(IMPPUTIONADD,PRIKEY4, ""));
         mapTXHashResp.put("get solo utxo balance",soloSign.Balance(PRIKEY1,""));
         mapTXHashResp.put("get zero account balance",multiSign.QueryZero(""));
+        mapTXHashResp.put("get all utxo account balance info",commonFunc.getUTXOAccountBalance().toString());
 
         //获取合约交易search/byprefix  search/bykey
         String resp = store.GetTxDetail(contractHash);
