@@ -1303,6 +1303,26 @@ public class TokenSoloTest {
         assertEquals(true,commonFunc.checkListArray(list3R11,jsonArray4));
     }
 
+
+    //发行时大小写敏感性检查
+//    @Test
+    public void issueTokenIgnoreCase()throws Exception{
+        String issueResp = tokenModule.tokenIssue(tokenAccount1,tokenAccount2,tokenType.toLowerCase(),
+                "100","发行已有tokentype字符全部小写的token");
+        assertEquals("200",JSONObject.fromObject(issueResp).getString("state"));
+
+        String issueResp2 = tokenModule.tokenIssue(tokenAccount1,tokenAccount2,tokenType.toUpperCase(),
+                "100","发行已有tokentype字符全部大写的token");
+        assertEquals("200",JSONObject.fromObject(issueResp2).getString("state"));
+
+        sleepAndSaveInfo(SLEEPTIME);
+
+        String query = tokenModule.tokenGetBalance(tokenAccount2,"");
+        assertEquals(true,query.contains(tokenType.toLowerCase()));
+        assertEquals(true,query.contains(tokenType.toUpperCase()));
+    }
+
+
     @AfterClass
     public static void resetAddr()throws Exception{
         SDKADD = TOKENADD;

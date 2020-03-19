@@ -2,6 +2,7 @@ package com.tjfintech.common.functionTest.utxoSingleSign;
 
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
@@ -20,6 +21,7 @@ import java.util.Map;
 //import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @Slf4j
@@ -29,6 +31,7 @@ public class SoloTestInvalid {
     SoloSign soloSign=testBuilder.getSoloSign();
     Store store=testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
     private static String tokenType;
     private static String tokenType2;
@@ -169,8 +172,8 @@ public class SoloTestInvalid {
         assertThat(transferInfo2,containsString("Private key is mandatory"));
 
     }
-
-    @After
+//新增其他异常用例余额可能有变更 暂时先移除after回收token操作 20200319
+//    @After
     public void afterConfig() throws Exception {
         log.info("回收token------------------------------------------------------------------------------");
         String recycleInfo = multiSign.Recycle(PRIKEY1, tokenType, "100.123456789");
@@ -189,5 +192,66 @@ public class SoloTestInvalid {
 
     }
 
+    //发行时大小写敏感性检查
+//    @Test
+    public void issueTokenIgnoreCase()throws Exception{
+        String issueResp = soloSign.issueToken(PRIKEY1,tokenType.toLowerCase(),
+                "100","发行已有tokentype字符全部小写的token","");
+        assertEquals("200",JSONObject.fromObject(issueResp).getString("State"));
 
+        String issueResp2 = soloSign.issueToken(PRIKEY1,tokenType.toUpperCase(),
+                "100","发行已有tokentype字符全部大写的token","");
+        assertEquals("200",JSONObject.fromObject(issueResp2).getString("State"));
+
+        sleepAndSaveInfo(SLEEPTIME);
+
+        assertEquals("100",commonFunc.GetBalance(ADDRESS1,tokenType.toLowerCase()));
+        assertEquals("100",commonFunc.GetBalance(ADDRESS1,tokenType.toUpperCase()));
+
+    }
+
+    //tokenType大小写敏感性检查
+//    @Test
+    public void testMatchCaseQueryBalance()throws Exception{
+
+        //查询余额账户地址大小写敏感性检查  当前不敏感
+        log.info("查询余额tokentype敏感检查");
+        //查询余额tokentype敏感检查
+        assertEquals("0",commonFunc.GetBalance(ADDRESS1,tokenType.toUpperCase()));
+        assertEquals("0",commonFunc.GetBalance(ADDRESS1,tokenType.toLowerCase()));
+
+    }
+
+    //    @Test
+    public void testMatchCaseTransfer()throws Exception{
+
+        //转账检查大小写敏感
+        //检查小写tokentype转账
+        log.info("转账检查大小写敏感");
+        List<Map> list = soloSign.constructToken(ADDRESS3,tokenType.toLowerCase(),"10");
+        String transferInfo = soloSign.Transfer(list,PRIKEY1,"转账全小写tokentype");
+        assertEquals("400",JSONObject.fromObject(transferInfo).getString("State"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo).getString("Data"));
+
+        //检查小写tokentype转账
+        list = soloSign.constructToken(ADDRESS3,tokenType.toUpperCase(),"10");
+        transferInfo = soloSign.Transfer(list,PRIKEY1,"转账全小写tokentype");
+        assertEquals("400",JSONObject.fromObject(transferInfo).getString("State"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo).getString("Data"));
+    }
+
+    //    @Test
+    public void testMatchCaseDestroy()throws Exception{
+        List<Map> list;
+        //回收检查大小写敏感
+        log.info("回收检查大小写敏感");
+
+        String desResp = multiSign.Recycle("",PRIKEY1,tokenType.toLowerCase(),"10");
+        assertEquals("400",JSONObject.fromObject(desResp).getString("State"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(desResp).getString("Data"));
+
+        desResp = multiSign.Recycle("",PRIKEY1,tokenType.toUpperCase(),"10");
+        assertEquals("400",JSONObject.fromObject(desResp).getString("State"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(desResp).getString("Data"));
+    }
 }

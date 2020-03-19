@@ -2,6 +2,7 @@ package com.tjfintech.common.functionTest.utxoMultiSign;
 
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
@@ -35,8 +36,11 @@ public class  MultiTestInvalid {
     MultiTest multiTest = new MultiTest();
     SoloSign soloSign=testBuilder.getSoloSign();
     Store store = testBuilder.getStore();
+    CommonFunc commonFunc = new CommonFunc();
     private static String tokenType;
     private static String tokenType2;
+    String issueAm1 = "100";
+    String issueAm2 = "100.123";
 
 
     @Before
@@ -50,16 +54,16 @@ public class  MultiTestInvalid {
         }
 
         log.info("发行两种token100.123个");
-        tokenType = multiTest.IssueToken(7, "100");
-        tokenType2 = multiTest.IssueToken(5, "100.123");
+        tokenType = multiTest.IssueToken(7, issueAm1);
+        tokenType2 = multiTest.IssueToken(5, issueAm2);
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中两种token余额");
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
         assertThat(response1, containsString("200"));
-        assertThat(response1, containsString("100"));
+        assertThat(response1, containsString(issueAm1));
         assertThat(response2, containsString("200"));
-        assertThat(response2, containsString("100.123"));
+        assertThat(response2, containsString(issueAm2));
 
     }
     @Test
@@ -93,9 +97,9 @@ public class  MultiTestInvalid {
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
         assertThat(response1, containsString("200"));
-        assertThat(response1, containsString("100"));
+        assertThat(response1, containsString(issueAm1));
         assertThat(response2, containsString("200"));
-        assertThat(response2, containsString("100.123"));
+        assertThat(response2, containsString(issueAm2));
 
         String transferData = "归集地址向两个多签地址转账异常测试";
         List<Map> list = utilsClass.constructToken(ADDRESS1, tokenType, "10");//A足
@@ -139,8 +143,8 @@ public class  MultiTestInvalid {
         assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("0"));
 
         log.info("回收Token");
-        String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "100");
-        String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, "100.123");
+        String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, issueAm1);
+        String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, issueAm2);
         Thread.sleep(SLEEPTIME);
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
@@ -169,9 +173,9 @@ public class  MultiTestInvalid {
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
         assertThat(response1, containsString("200"));
-        assertThat(response1, containsString("100"));
+        assertThat(response1, containsString(issueAm1));
         assertThat(response2, containsString("200"));
-        assertThat(response2, containsString("100.123"));
+        assertThat(response2, containsString(issueAm2));
 
         String transferData = "归集地址向单签与多签地址转账异常测试";
         List<Map> list = utilsClass.constructToken(ADDRESS1, tokenType, "10");//A足
@@ -216,8 +220,8 @@ public class  MultiTestInvalid {
         assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("0"));
 
         log.info("回收Token");
-        String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "100");
-        String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, "100.123");
+        String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, issueAm1);
+        String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, issueAm2);
         Thread.sleep(SLEEPTIME);
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
@@ -243,9 +247,9 @@ public class  MultiTestInvalid {
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
         assertThat(response1, containsString("200"));
-        assertThat(response1, containsString("100"));
+        assertThat(response1, containsString(issueAm1));
         assertThat(response2, containsString("200"));
-        assertThat(response2, containsString("100.123"));
+        assertThat(response2, containsString(issueAm2));
 
         String transferData = "归集地址向两个单签地址转账异常测试";
         List<Map> list = utilsClass.constructToken(ADDRESS1, tokenType, "10");//A足
@@ -290,8 +294,8 @@ public class  MultiTestInvalid {
         assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("0"));
 
         log.info("回收Token");
-        String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "100");
-        String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, "100.123");
+        String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, issueAm1);
+        String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, issueAm2);
         Thread.sleep(SLEEPTIME);
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
@@ -318,12 +322,12 @@ public class  MultiTestInvalid {
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
         assertThat(response1, containsString("200"));
-        assertThat(response1, containsString("100"));
+        assertThat(response1, containsString(issueAm1));
         assertThat(response2, containsString("200"));
-        assertThat(response2, containsString("100.123"));
+        assertThat(response2, containsString(issueAm2));
         String transferDataInit = "归集地址向" + "MULITADD6" + "转账100个" + tokenType + "归集地址向" + "MULITADD6" + "转账100.123个" + tokenType;
-        List<Map> listInit = utilsClass.constructToken(MULITADD6, tokenType, "100");
-        List<Map> listInit2 = utilsClass.constructToken(MULITADD6, tokenType2, "100.123", listInit);
+        List<Map> listInit = utilsClass.constructToken(MULITADD6, tokenType, issueAm1);
+        List<Map> listInit2 = utilsClass.constructToken(MULITADD6, tokenType2, issueAm2, listInit);
         log.info(transferDataInit);
         String transferInfoInit = multiSign.Transfer(PRIKEY4, transferDataInit, IMPPUTIONADD, listInit2);//转账给多签地址
         assertThat(transferInfoInit,containsString("200"));
@@ -370,8 +374,8 @@ public class  MultiTestInvalid {
         assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("0"));
 
         log.info("回收Token");
-        String recycleInfo = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType, "100");
-        String recycleInfo2 = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType2, "100.123");
+        String recycleInfo = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType, issueAm1);
+        String recycleInfo2 = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType2, issueAm2);
         Thread.sleep(SLEEPTIME);
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
@@ -398,12 +402,12 @@ public class  MultiTestInvalid {
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
         assertThat(response1, containsString("200"));
-        assertThat(response1, containsString("100"));
+        assertThat(response1, containsString(issueAm1));
         assertThat(response2, containsString("200"));
-        assertThat(response2, containsString("100.123"));
+        assertThat(response2, containsString(issueAm2));
         String transferDataInit = "归集地址向" + "MULITADD6" + "转账100个" + tokenType + "归集地址向" + "MULITADD6" + "转账100.123个" + tokenType;
-        List<Map> listInit = utilsClass.constructToken(MULITADD6, tokenType, "100");
-        List<Map> listInit2 = utilsClass.constructToken(MULITADD6, tokenType2, "100.123", listInit);
+        List<Map> listInit = utilsClass.constructToken(MULITADD6, tokenType, issueAm1);
+        List<Map> listInit2 = utilsClass.constructToken(MULITADD6, tokenType2, issueAm2, listInit);
         log.info(transferDataInit);
         String transferInfoInit = multiSign.Transfer(PRIKEY4, transferDataInit, IMPPUTIONADD, listInit2);//转账给多签地址
         assertThat(transferInfoInit,containsString("200"));
@@ -450,8 +454,8 @@ public class  MultiTestInvalid {
         assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("0"));
 
         log.info("回收Token");
-        String recycleInfo = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType, "100");
-        String recycleInfo2 = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType2, "100.123");
+        String recycleInfo = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType, issueAm1);
+        String recycleInfo2 = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType2, issueAm2);
         Thread.sleep(SLEEPTIME);
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
@@ -478,12 +482,12 @@ public class  MultiTestInvalid {
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
         assertThat(response1, containsString("200"));
-        assertThat(response1, containsString("100"));
+        assertThat(response1, containsString(issueAm1));
         assertThat(response2, containsString("200"));
-        assertThat(response2, containsString("100.123"));
+        assertThat(response2, containsString(issueAm2));
         String transferDataInit = "归集地址向" + "MULITADD6" + "转账100个" + tokenType + "归集地址向" + "MULITADD6" + "转账100.123个" + tokenType;
-        List<Map> listInit = utilsClass.constructToken(MULITADD6, tokenType, "100");
-        List<Map> listInit2 = utilsClass.constructToken(MULITADD6, tokenType2, "100.123", listInit);
+        List<Map> listInit = utilsClass.constructToken(MULITADD6, tokenType, issueAm1);
+        List<Map> listInit2 = utilsClass.constructToken(MULITADD6, tokenType2, issueAm2, listInit);
         log.info(transferDataInit);
         String transferInfoInit = multiSign.Transfer(PRIKEY4, transferDataInit, IMPPUTIONADD, listInit2);//转账给多签地址
         assertThat(transferInfoInit,containsString("200"));
@@ -530,8 +534,8 @@ public class  MultiTestInvalid {
         assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("0"));
 
         log.info("回收Token");
-        String recycleInfo = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType, "100");
-        String recycleInfo2 = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType2, "100.123");
+        String recycleInfo = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType, issueAm1);
+        String recycleInfo2 = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType2, issueAm2);
         Thread.sleep(SLEEPTIME);
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
@@ -783,6 +787,113 @@ public class  MultiTestInvalid {
         String resp1 = multiSign.recoverFrozenToken(tokenType);
         Thread.sleep(SLEEPTIME);
         assertEquals(true,store.GetTxDetail(JSONObject.fromObject(resp1).getString("Data")).contains("failed to find transaction"));
+    }
+
+
+    //发行时大小写敏感性检查
+//    @Test
+    public void issueTokenIgnoreCase()throws Exception{
+        String issueResp = multiSign.issueToken(IMPPUTIONADD,IMPPUTIONADD,tokenType.toLowerCase(),
+                issueAm1,"发行已有tokentype字符全部小写的token");
+        assertEquals("200",JSONObject.fromObject(issueResp).getString("State"));
+
+        String issueResp2 = multiSign.issueToken(IMPPUTIONADD,IMPPUTIONADD,tokenType.toUpperCase(),
+                issueAm1,"发行已有tokentype字符全部大写的token");
+        assertEquals("200",JSONObject.fromObject(issueResp2).getString("State"));
+
+        sleepAndSaveInfo(SLEEPTIME);
+
+        assertEquals(issueAm1,commonFunc.GetBalance(IMPPUTIONADD,tokenType.toLowerCase()));
+        assertEquals(issueAm1,commonFunc.GetBalance(IMPPUTIONADD,tokenType.toUpperCase()));
+
+    }
+
+    //tokenType大小写敏感性检查
+//    @Test
+    public void testMatchCaseQueryBalance()throws Exception{
+
+        //查询余额账户地址大小写敏感性检查  当前不敏感
+        log.info("查询余额账户地址大小写敏感性检查  当前不敏感");
+        assertEquals(issueAm1,commonFunc.GetBalance(IMPPUTIONADD.toLowerCase(),tokenType));
+        assertEquals(issueAm1,commonFunc.GetBalance(IMPPUTIONADD.toUpperCase(),tokenType));
+
+
+        log.info("查询余额tokentype敏感检查");
+        //查询余额tokentype敏感检查
+        assertEquals("0",commonFunc.GetBalance(IMPPUTIONADD,tokenType.toUpperCase()));
+        assertEquals("0",commonFunc.GetBalance(IMPPUTIONADD,tokenType.toLowerCase()));
+
+    }
+
+    //    @Test
+    public void testMatchCaseTransfer()throws Exception{
+
+        //转账检查大小写敏感
+        //检查小写tokentype转账
+        log.info("转账检查大小写敏感");
+        List<Map> list = utilsClass.constructToken(MULITADD1, tokenType.toLowerCase(), issueAm1);
+        String transferInfo = multiSign.Transfer(PRIKEY4,"转账全小写tokentype",IMPPUTIONADD, list);
+        assertEquals("400",JSONObject.fromObject(transferInfo).getString("State"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo).getString("Data"));
+
+        //检查小写tokentype转账
+        list = utilsClass.constructToken(MULITADD1, tokenType.toUpperCase(), issueAm1);
+        transferInfo = multiSign.Transfer(PRIKEY4,"转账全大写tokentype",IMPPUTIONADD, list);
+        assertEquals("400",JSONObject.fromObject(transferInfo).getString("State"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo).getString("Data"));
+    }
+
+    //    @Test
+    public void testMatchCaseDestroy()throws Exception{
+        List<Map> list;
+        //回收检查大小写敏感
+        log.info("回收检查大小写敏感");
+
+        String desResp = multiSign.Recycle(IMPPUTIONADD,PRIKEY4,tokenType.toLowerCase(),"10");
+        assertEquals("400",JSONObject.fromObject(desResp).getString("State"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(desResp).getString("Data"));
+
+        desResp = multiSign.Recycle(IMPPUTIONADD,PRIKEY4,tokenType.toUpperCase(),"10");
+        assertEquals("400",JSONObject.fromObject(desResp).getString("State"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(desResp).getString("Data"));
+    }
+
+    //    @Test
+    public void testMatchCaseFreezeRecover()throws Exception{
+        //冻结检查大小写
+        log.info("冻结检查大小写");
+        String freezeResp = multiSign.freezeToken(tokenType.toLowerCase());
+        assertEquals("200",JSONObject.fromObject(freezeResp).getString("State"));
+        String hash1 = JSONObject.fromObject(freezeResp).getString("Data");
+
+        freezeResp = multiSign.freezeToken(tokenType.toUpperCase());
+        assertEquals("200",JSONObject.fromObject(freezeResp).getString("State"));
+        String hash2 = JSONObject.fromObject(freezeResp).getString("Data");
+        sleepAndSaveInfo(SLEEPTIME);
+
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(hash1)).getString("State"));
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(hash2)).getString("State"));
+
+
+        String recoverResp = multiSign.recoverFrozenToken(tokenType);
+        assertEquals("400",JSONObject.fromObject(recoverResp).getString("State"));
+        assertEquals(true,JSONObject.fromObject(recoverResp).getString("Data").contains("has not been freezed!"));
+
+        //冻结tokentype测试解除
+        String freezeBeforeRecover = multiSign.recoverFrozenToken(tokenType);
+        assertEquals("200",JSONObject.fromObject(freezeBeforeRecover).getString("State"));
+
+        sleepAndSaveInfo(SLEEPTIME);
+        recoverResp = multiSign.recoverFrozenToken(tokenType.toUpperCase());
+        assertEquals("400",JSONObject.fromObject(recoverResp).getString("State"));
+        assertEquals(true,JSONObject.fromObject(recoverResp).getString("Data").contains("has not been freezed!"));
+
+        recoverResp = multiSign.recoverFrozenToken(tokenType.toLowerCase());
+        assertEquals("400",JSONObject.fromObject(recoverResp).getString("State"));
+        assertEquals(true,JSONObject.fromObject(recoverResp).getString("Data").contains("has not been freezed!"));
+
+        String recoverR2 = multiSign.recoverFrozenToken(tokenType);
+        assertEquals("200",JSONObject.fromObject(recoverR2).getString("State"));
     }
 
 }

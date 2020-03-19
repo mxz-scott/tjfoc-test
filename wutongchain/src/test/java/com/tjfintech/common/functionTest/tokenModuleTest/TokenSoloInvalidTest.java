@@ -15,6 +15,8 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.text.DecimalFormat;
+import java.util.List;
+import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
@@ -178,5 +180,68 @@ public class TokenSoloInvalidTest {
         queryBalance = tokenModule.tokenGetDestroyBalance();
         assertEquals(false,queryBalance.contains(desToken));
 
+    }
+
+
+    //tokenType大小写敏感性检查
+//    @Test
+    public void testMatchCaseQueryBalance()throws Exception{
+
+        //查询余额账户地址大小写敏感性检查  当前不敏感
+        log.info("查询余额账户地址大小写敏感性检查  当前不敏感");
+        String query = tokenModule.tokenGetBalance(tokenAccount1.toLowerCase(),tokenType);
+        assertEquals(true,
+                JSONObject.fromObject(query).getString("data").contains(tokenType));
+
+        query = tokenModule.tokenGetBalance(tokenAccount1.toUpperCase(),tokenType);
+        assertEquals(true,
+                JSONObject.fromObject(query).getString("data").contains(tokenType));
+
+
+        log.info("查询余额tokentype敏感检查");
+        //查询余额tokentype敏感检查
+        query = tokenModule.tokenGetBalance(tokenAccount1,tokenType.toUpperCase());
+        assertEquals(false,
+                JSONObject.fromObject(query).getString("data").contains(tokenType.toUpperCase()));
+
+        query = tokenModule.tokenGetBalance(tokenAccount1,tokenType.toLowerCase());
+        assertEquals(false,
+                JSONObject.fromObject(query).getString("data").contains(tokenType.toLowerCase()));
+
+    }
+
+    //    @Test
+    public void testMatchCaseTransfer()throws Exception{
+
+        //转账检查大小写敏感
+        //检查小写tokentype转账
+        log.info("转账检查大小写敏感");
+        List<Map> list = utilsClass.tokenConstructToken(tokenAccount3,tokenType.toLowerCase(),"10");
+        String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount1, list);
+        assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo).getString("data"));
+
+        //检查小写tokentype转账
+        list = utilsClass.tokenConstructToken(tokenAccount3,tokenType.toUpperCase(),"10");
+        transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount1, list);
+        assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo).getString("data"));
+    }
+
+    //    @Test
+    public void testMatchCaseDestroy()throws Exception{
+        List<Map> list;
+        //回收检查大小写敏感
+        log.info("回收检查大小写敏感");
+        list = utilsClass.tokenConstructToken(tokenAccount1,tokenType.toLowerCase(),"10");
+        String desResp = commonFunc.tokenModule_DestoryTokenByList2(list);
+        assertEquals("400",JSONObject.fromObject(desResp).getString("state"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(desResp).getString("data"));
+
+
+        list = utilsClass.tokenConstructToken(tokenAccount1,tokenType.toUpperCase(),"10");
+        desResp = commonFunc.tokenModule_DestoryTokenByList2(list);
+        assertEquals("400",JSONObject.fromObject(desResp).getString("state"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(desResp).getString("data"));
     }
 }

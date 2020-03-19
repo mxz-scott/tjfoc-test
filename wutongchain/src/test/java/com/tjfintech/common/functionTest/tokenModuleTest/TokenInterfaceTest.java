@@ -59,7 +59,7 @@ public class TokenInterfaceTest {
         issueAddr = tokenMultiAddr1;
         collAddr = tokenMultiAddr1;
         issAmount = "18446744073709";
-         String comments = "issue invalid test";
+        String comments = "issue invalid test";
 
          tokenModule.tokenDelMintAddr(issueAddr);
          tokenModule.tokenDelCollAddr(collAddr);
@@ -181,7 +181,7 @@ public class TokenInterfaceTest {
          String stokenTypeOK34 = UtilsClass.Random(64);
          issueResp = tokenModule.tokenIssue(issueAddr,collAddr,stokenTypeOK34,issAmount,comments);
 
-         //tokenType为64位字符 预期可以发行成功
+         //tokenType为63位字符 预期可以发行成功
          String stokenTypeOK35 = UtilsClass.Random(63);
          issueResp = tokenModule.tokenIssue(issueAddr,collAddr,stokenTypeOK35,issAmount,comments);
 
