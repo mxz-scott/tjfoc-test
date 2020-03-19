@@ -51,7 +51,7 @@ public class CommonFunc {
     //-----------------------------------------------------------------------------------------------------------
     //token模块相关通用函数
     public  String tokenModule_IssueToken(String issueAddr,String collAddr,String amount){
-        String issueToken = "tokenSo-"+ UtilsClass.Random(8);
+        String issueToken = "tokenSoMU-"+ UtilsClass.Random(8);
         String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + amount;
         System.out.print(comments);
         tokenModule.tokenIssue(issueAddr,collAddr,issueToken,amount,comments);

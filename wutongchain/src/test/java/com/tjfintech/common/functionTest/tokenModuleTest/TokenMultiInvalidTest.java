@@ -616,4 +616,104 @@ public class TokenMultiInvalidTest {
         assertEquals("200", JSONObject.fromObject(query2).getJSONObject("data").getString(issueToken2));
 
     }
+
+    //tokenType大小写敏感性检查
+//    @Test
+    public void testMatchCaseQueryBalance()throws Exception{
+
+        //查询余额账户地址大小写敏感性检查  当前不敏感
+        log.info("查询余额账户地址大小写敏感性检查  当前不敏感");
+        String query = tokenModule.tokenGetBalance(tokenMultiAddr1.toLowerCase(),tokenType);
+        assertEquals(true,
+                JSONObject.fromObject(query).getString("data").contains(tokenType));
+
+        query = tokenModule.tokenGetBalance(tokenMultiAddr1.toUpperCase(),tokenType);
+        assertEquals(true,
+                JSONObject.fromObject(query).getString("data").contains(tokenType));
+
+
+        log.info("查询余额tokentype敏感检查");
+        //查询余额tokentype敏感检查
+        query = tokenModule.tokenGetBalance(tokenMultiAddr1,tokenType.toUpperCase());
+        assertEquals(false,
+                JSONObject.fromObject(query).getString("data").contains(tokenType.toUpperCase()));
+
+        query = tokenModule.tokenGetBalance(tokenMultiAddr1,tokenType.toLowerCase());
+        assertEquals(false,
+                JSONObject.fromObject(query).getString("data").contains(tokenType.toLowerCase()));
+
+    }
+
+    //    @Test
+    public void testMatchCaseTransfer()throws Exception{
+
+        //转账检查大小写敏感
+        //检查小写tokentype转账
+        log.info("转账检查大小写敏感");
+        List<Map> list = utilsClass.tokenConstructToken(tokenAccount3,tokenType.toLowerCase(),"10");
+        String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1, list);
+        assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo).getString("data"));
+
+        //检查小写tokentype转账
+        list = utilsClass.tokenConstructToken(tokenAccount3,tokenType.toUpperCase(),"10");
+        transferInfo = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1, list);
+        assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo).getString("data"));
+    }
+
+    //    @Test
+    public void testMatchCaseDestroy()throws Exception{
+        List<Map> list;
+        //回收检查大小写敏感
+        log.info("回收检查大小写敏感");
+        list = utilsClass.tokenConstructToken(tokenMultiAddr1,tokenType.toLowerCase(),"10");
+        String desResp = commonFunc.tokenModule_DestoryTokenByList2(list);
+        assertEquals("400",JSONObject.fromObject(desResp).getString("state"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(desResp).getString("data"));
+
+
+        list = utilsClass.tokenConstructToken(tokenMultiAddr1,tokenType.toUpperCase(),"10");
+        desResp = commonFunc.tokenModule_DestoryTokenByList2(list);
+        assertEquals("400",JSONObject.fromObject(desResp).getString("state"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(desResp).getString("data"));
+    }
+
+    //    @Test
+    public void testMatchCaseFreezeRecover()throws Exception{
+        //冻结检查大小写
+        log.info("冻结检查大小写");
+        String freezeResp = tokenModule.tokenFreezeToken(tokenType.toLowerCase());
+        assertEquals("200",JSONObject.fromObject(freezeResp).getString("state"));
+        String hash1 = JSONObject.fromObject(freezeResp).getString("data");
+
+        freezeResp = tokenModule.tokenFreezeToken(tokenType.toUpperCase());
+        assertEquals("200",JSONObject.fromObject(freezeResp).getString("state"));
+        String hash2 = JSONObject.fromObject(freezeResp).getString("data");
+        sleepAndSaveInfo(SLEEPTIME);
+
+        assertEquals("404",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash1)).getString("state"));
+        assertEquals("404",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash2)).getString("state"));
+
+
+        String recoverResp = tokenModule.tokenRecoverToken(tokenType);
+        assertEquals("400",JSONObject.fromObject(recoverResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(recoverResp).getString("data").contains("has not been freezed!"));
+
+        //冻结tokentype测试解除
+        String freezeBeforeRecover = tokenModule.tokenFreezeToken(tokenType);
+        assertEquals("200",JSONObject.fromObject(freezeBeforeRecover).getString("state"));
+
+        sleepAndSaveInfo(SLEEPTIME);
+        recoverResp = tokenModule.tokenRecoverToken(tokenType.toUpperCase());
+        assertEquals("400",JSONObject.fromObject(recoverResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(recoverResp).getString("data").contains("has not been freezed!"));
+
+        recoverResp = tokenModule.tokenRecoverToken(tokenType.toLowerCase());
+        assertEquals("400",JSONObject.fromObject(recoverResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(recoverResp).getString("data").contains("has not been freezed!"));
+
+        String recoverR2 = tokenModule.tokenRecoverToken(tokenType);
+        assertEquals("200",JSONObject.fromObject(recoverR2).getString("state"));
+    }
 }

@@ -163,7 +163,7 @@ public class TestTxType {
         String respAdd = mgToolCmd.addPeer("join", PEER1IP + ":" + PEER1RPCPort,
                 "/ip4/" + PEER2IP, "/tcp/60011", PEER2RPCPort);
         assertEquals(true, respAdd.contains("success"));
-        sleepAndSaveInfo(SLEEPTIME,"等待新增子链交易上链");
+        sleepAndSaveInfo(SLEEPTIME,"等待加入节点交易上链");
         String addPeerHash = respAdd.substring(respAdd.lastIndexOf(":") + 1).trim();
         JSONObject jsonObjectAddPeer = checkTXDetailHeaderMsg(addPeerHash, versionStore, typeSystem, subTypeAddPeer);
         assertEquals(toolID,
@@ -382,7 +382,7 @@ public class TestTxType {
         String txHashMin = JSONObject.fromObject(minResp).getString("Data");
         checkTXDetailHeaderMsg(txHashMin,versionSUTXO,typeUTXO,subTypeIssue);
         JSONObject uxtoJsonMin= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHashMin)).getJSONObject("Data").getJSONObject("UTXO"));
-        assertEquals(siData,uxtoJsonMin.getString("Data"));
+        assertEquals(minData,uxtoJsonMin.getString("Data"));
         assertEquals(1,uxtoJsonMin.getJSONArray("Records").size());
         checkFromTo(uxtoJsonMin,ADDRESS1,ADDRESS1,minToken,minAmount,0);
 
@@ -726,31 +726,6 @@ public class TestTxType {
 
         return objectDetail;
     }
-//    public JSONObject checkTXTransTriMsg(String hash,String version,String type,String subType)throws Exception{
-//        log.info("hash:"+hash);
-////        JSONObject objectTrans = JSONObject.fromObject(store.GetTransaction(hash));
-////        JSONObject jsonObject2 = objectTrans.getJSONObject("Data").getJSONObject("header");
-////        assertEquals(version,jsonObject2.getString("version"));
-////        assertEquals(type,jsonObject2.getString("type"));
-////        assertEquals(subType,jsonObject2.getString("subType"));
-//
-////        return objectTrans;
-//    }
-
-//    public JSONObject checkTriMsg(String hash,String version,String type,String subType)throws Exception{
-//        log.info("hash:"+hash);
-//        JSONObject jsonObject = JSONObject.fromObject(store.GetTxDetail(hash)).getJSONObject("Data").getJSONObject("Header");
-//        assertEquals(version,jsonObject.getString("Version"));
-//        assertEquals(type,jsonObject.getString("Type"));
-//        assertEquals(subType,jsonObject.getString("SubType"));
-//
-////        JSONObject jsonObject2 = JSONObject.fromObject(store.GetTransaction(hash)).getJSONObject("Data").getJSONObject("header");
-////        assertEquals(version,jsonObject2.getString("version"));
-////        assertEquals(type,jsonObject2.getString("type"));
-////        assertEquals(subType,jsonObject2.getString("subType"));
-//
-//        return JSONObject.fromObject(store.GetTxDetail(hash));
-//    }
 
     public void checkContractArgs(String hash,String key,String...checkStr)throws Exception{
         JSONObject jsonObjectOrg =JSONObject.fromObject(store.GetTxDetail(hash)).getJSONObject("Data");
