@@ -6,10 +6,7 @@ import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.Shell;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runners.MethodSorters;
 
 import static com.tjfintech.common.CommonFunc.addPeerCluster;
@@ -21,7 +18,7 @@ import static org.junit.Assert.assertNotEquals;
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AddPeerAndSyncData {
-    public static final int STARTSLEEPTIME=40000;
+    public static final int STARTSLEEPTIME=20000;
     TestBuilder testBuilder=TestBuilder.getInstance();
     Store store =testBuilder.getStore();
     MgToolCmd mgToolCmd = new MgToolCmd();
@@ -43,13 +40,17 @@ public class AddPeerAndSyncData {
     String peer3IPPort=PEER3IP+":"+PEER3RPCPort;
 
 
-    public void addDataPeerConfigWithSelfInfo(){
+    public void addDataPeerConfigWithSelfInfo()throws Exception{
         //设置动态加入节点config.toml文件 带自己的配置信息
+        mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
+        shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB);
         setPeerConfig(PEER3IP);
         addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
     }
-    public void addConsensusPeerConfigWithSelfInfo(){
+    public void addConsensusPeerConfigWithSelfInfo() throws Exception{
         //设置动态加入节点config.toml文件 带自己的配置信息
+        mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
+        shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB);
         setPeerConfig(PEER3IP);
         addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
     }
@@ -114,7 +115,7 @@ public class AddPeerAndSyncData {
         testMgTool.queryPeerListNo(peer1IPPort,DynamicPeerNo);
         testMgTool.queryPeerListNo(PEER3IP+":"+rpcPort,DynamicPeerNo);
 
-        sleepAndSaveInfo(1800*1000,"sync data waiting....");
+        sleepAndSaveInfo(600*1000,"sync data waiting....");
 
         assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER2IP + ":" + PEER2RPCPort));
         assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER3IP + ":" + PEER3RPCPort));
@@ -177,7 +178,7 @@ public class AddPeerAndSyncData {
         testMgTool.queryPeerListNo(PEER3IP+":"+PEER3RPCPort,DynamicPeerNo);
 
 
-        sleepAndSaveInfo(3600*1000,"sync data waiting....");
+        sleepAndSaveInfo(600*1000,"sync data waiting....");
 
         assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER2IP + ":" + PEER2RPCPort));
         assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER3IP + ":" + PEER3RPCPort));

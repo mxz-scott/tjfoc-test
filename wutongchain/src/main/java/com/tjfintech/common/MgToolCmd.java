@@ -57,8 +57,11 @@ public class MgToolCmd implements ManageTool {
         String peerIPlan = joinPeerIP + joinTcpPort;
         String peerIPwan = joinPeerIP + joinTcpPort;
 
+        //20200320 确认移除rpc port传入
+//        String cmd = toolExePath + " " + addPeerType + " -p " + queryRpcPort + " -n " + peerID + " -s " + peerName
+//                + " -l " + peerIPlan + " -w " + peerIPwan + " -r " + joinRpcPort;
         String cmd = toolExePath + " " + addPeerType + " -p " + queryRpcPort + " -n " + peerID + " -s " + peerName
-                + " -l " + peerIPlan + " -w " + peerIPwan + " -r " + joinRpcPort;
+                + " -l " + peerIPlan + " -w " + peerIPwan;
         return shExeAndReturn(queryIP,cmd);
     }
 

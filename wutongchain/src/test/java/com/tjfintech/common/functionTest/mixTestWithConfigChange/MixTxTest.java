@@ -189,7 +189,9 @@ public class MixTxTest {
         txHashList.add(txHash1);
         txHashList.add(txHash9);
 
-        txHashNo.add(txHash2);
+        //20200320 开发确认方案修改为顺序执行 即一般先发请求先上链，不再区分安装销毁优先
+//        txHashNo.add(txHash2);
+        txHashList.add(txHash2);
     }
 
     @After

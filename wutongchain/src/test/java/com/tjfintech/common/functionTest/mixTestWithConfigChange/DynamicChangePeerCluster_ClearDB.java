@@ -173,7 +173,7 @@ public class DynamicChangePeerCluster_ClearDB {
         BeforeCondition bf = new BeforeCondition();
         bf.clearDataSetPerm999();
         String resp = mgToolCmd.quitPeer(peer1IPPort,PEER3IP);//带quit操作 验证错误操作后能够正常加入节点并处理交易
-        assertEquals(true,resp.contains("not found peer"));
+        assertEquals(true,resp.contains("not found"));
     }
 
     public void addDataPeerConfigWithSelfInfo(){
