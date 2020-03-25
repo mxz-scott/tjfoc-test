@@ -51,29 +51,33 @@ public class CommonFunc {
     //-----------------------------------------------------------------------------------------------------------
     //token模块相关通用函数
     public  String tokenModule_IssueToken(String issueAddr,String collAddr,String amount){
-        String issueToken = "tokenSoMU-"+ UtilsClass.Random(8);
-        String comments = issueAddr + "向" + collAddr + " 发行token：" + issueToken + " 数量：" + amount;
-        System.out.print(comments);
+        String issueToken = "tokenSoMU_"+ UtilsClass.Random(8);
+        log.info("发行地址： " + issueAddr);
+        log.info("归集地址： " + collAddr);
+        String comments = collAddr + " 发行token：" + issueToken + " 数量：" + amount;
+        log.info(comments);
         tokenModule.tokenIssue(issueAddr,collAddr,issueToken,amount,comments);
         return issueToken;
     }
 
     public  String tokenModule_TransferToken(String from,String to, String tokenType,String amount){
-        String comments = from + "向" + to + " 转账token：" + tokenType + " 数量：" + amount;
-        System.out.print(comments);
+        log.info("转出地址 ：" + from);
+        log.info("转入地址 ：" + to);
+        String comments = "转账token：" + tokenType + " 数量：" + amount;
+        log.info(comments);
         List<Map> list = utilsClass.tokenConstructToken(to,tokenType,amount);
         return tokenModule.tokenTransfer(from,comments,list);
     }
 
     public  String tokenModule_TransferTokenList(String from, List<Map> tokenList){
         String comments = from + "一转多";
-        System.out.print(comments);
+        log.info(comments);
         return tokenModule.tokenTransfer(from,comments,tokenList);
     }
 
     public String tokenModule_DestoryToken(String addr,String tokenType,String amount){
         String comments = addr + "销毁token：" + tokenType + " 数量：" + amount;
-        System.out.print(comments);
+        log.info(comments);
         List<Map> list = utilsClass.tokenConstructToken(addr,tokenType,amount);
         return tokenModule.tokenDestoryByList(list,comments);
     }
@@ -425,7 +429,7 @@ public class CommonFunc {
      */
     public  String sdkMultiIssueToken(String issueAddr, String  amount, String ToAddr,
                                       ArrayList<String> priKeys, ArrayList<String> pwds){
-        String tokenType = "MUCX-" + UtilsClass.Random(8);
+        String tokenType = "MUCX_" + UtilsClass.Random(8);
         String data = issueAddr + "发行" + tokenType + " token，数量为：" + amount;
         System.out.print(data);
         String response = multiSign.issueToken(issueAddr,ToAddr,tokenType, amount, data);

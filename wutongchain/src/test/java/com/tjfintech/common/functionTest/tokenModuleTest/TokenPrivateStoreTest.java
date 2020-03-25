@@ -12,7 +12,9 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -26,7 +28,7 @@ public class TokenPrivateStoreTest {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     Token tokenModule =testBuilder.getToken();
-
+    Store store = testBuilder.getStore();
 //    Store store =testBuilder.getStore();
 
     @BeforeClass
@@ -181,6 +183,101 @@ public class TokenPrivateStoreTest {
         map.put("address2",tokenAccount1);
         response= tokenModule.tokenCreatePrivateStore(Data,map);
         assertEquals(true,response.contains("address can not be multi address!"));
+
+    }
+
+    //存证大数据
+    @Test
+    public void createBigSizeStore() throws Exception {
+
+        Map<String,Object>map=new HashMap<>();
+        map.put("address1",tokenMultiAddr1);
+
+
+        List<String> listData = new ArrayList<>();
+        ArrayList<String> hashList = new ArrayList<>();
+
+        SDKADD = TOKENADD;
+        String Data = UtilsClass.Random(10) + UtilsClass.readStringFromFile(resourcePath +
+                "bigsize1.txt");
+        String response= tokenModule.tokenCreatePrivateStore(Data,map);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+        hashList.add(JSONObject.fromObject(response).getString("data"));
+        listData.add(Data);
+
+
+
+        String Data2 = UtilsClass.Random(10) + UtilsClass.readStringFromFile(resourcePath
+                +  "bigsize2.txt");
+        String response2 = tokenModule.tokenCreatePrivateStore(Data2,map);
+        assertEquals("200",JSONObject.fromObject(response2).getString("state"));
+        hashList.add(JSONObject.fromObject(response2).getString("data"));
+        listData.add(Data2);
+
+
+        String Data3 = UtilsClass.Random(10) + UtilsClass.readStringFromFile(resourcePath
+                + "bigsize3.txt");
+        String response3 = tokenModule.tokenCreatePrivateStore(Data3,map);
+        assertEquals("400",JSONObject.fromObject(response3).getString("state"));
+        hashList.add(JSONObject.fromObject(response3).getString("data"));
+//        listData.add(Data3);
+
+
+        sleepAndSaveInfo(SLEEPTIME,"multi store on chain waiting......");
+        SDKADD = rSDKADD;
+
+        for(int i=0;i<hashList.size();i++){
+            String hash = hashList.get(i);
+            //确认交易上链
+            assertEquals("200",JSONObject.fromObject(store.GetTxDetail(hash)).getString("State"));
+
+            //确认交易可以成功查询
+            String resp= store.GetStore(hash);
+            assertEquals("200",JSONObject.fromObject(resp).getString("State"));
+            assertEquals(listData.get(i),JSONObject.fromObject(resp).getString("Data"));
+        }
+
+    }
+
+    //存证特殊字符
+    @Test
+    public void createSpecCharStore() throws Exception {
+
+        Map<String,Object>map=new HashMap<>();
+        map.put("address1",tokenMultiAddr1);
+
+        List<String> listData = new ArrayList<>();
+        ArrayList<String> hashList = new ArrayList<>();
+
+        SDKADD = TOKENADD;
+        String Data = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~¥¦§¨©ª«¬®¯°±²³´中“”お⛑";;
+        String response = tokenModule.tokenCreatePrivateStore(Data,map);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+        hashList.add(JSONObject.fromObject(response).getString("data"));
+        listData.add(Data);
+
+
+
+        String Data2 = "<SCRIPT SRC=http://***/XSS/xss.js></SCRIPT>";
+        String response2 = tokenModule.tokenCreatePrivateStore(Data2,map);
+        assertEquals("200",JSONObject.fromObject(response2).getString("state"));
+        hashList.add(JSONObject.fromObject(response2).getString("data"));
+        listData.add(Data2);
+
+
+        sleepAndSaveInfo(SLEEPTIME,"multi store on chain waiting......");
+        SDKADD = rSDKADD;
+
+        for(int i=0;i<hashList.size();i++){
+            String hash = hashList.get(i);
+            //确认交易上链
+            assertEquals("200",JSONObject.fromObject(store.GetTxDetail(hash)).getString("State"));
+
+            //确认交易可以成功查询
+            String resp= store.GetStore(hash);
+            assertEquals("200",JSONObject.fromObject(resp).getString("State"));
+            assertEquals(listData.get(i),JSONObject.fromObject(resp).getString("Data"));
+        }
 
     }
 }

@@ -1,5 +1,6 @@
 package com.tjfintech.common.Interface;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,10 +8,10 @@ public interface Token {
 
     String createGroup(String id, String name, String comments, Map tags);
 
-    String tokenCreateAccount(String entityID, String entityName, String groupID, String comments, Map tags);
+    String tokenCreateAccount(String entityID, String entityName, String groupID, String comments, ArrayList<String> listTag);
 
     String tokenCreateMultiAddr(Map addresses, String name, int minSignatures, String groupID,
-                                  String comments, Map tags);
+                                  String comments,  ArrayList<String> listTag);
 
     String tokenAddMintAddr(String address);
     String tokenAddCollAddr(String address);

@@ -284,9 +284,47 @@ public class TokenStoreTest {
         String Data3 = UtilsClass.Random(10) + UtilsClass.readStringFromFile(resourcePath
                 + "bigsize3.txt");
         String response3 = tokenModule.tokenCreateStore(Data3);
-        assertEquals("200",JSONObject.fromObject(response3).getString("state"));
+        assertEquals("400",JSONObject.fromObject(response3).getString("state"));
         hashList.add(JSONObject.fromObject(response3).getString("data"));
-        listData.add(Data3);
+//        listData.add(Data3);
+
+
+        sleepAndSaveInfo(SLEEPTIME,"multi store on chain waiting......");
+        SDKADD = rSDKADD;
+
+        for(int i=0;i<hashList.size();i++){
+            String hash = hashList.get(i);
+            //确认交易上链
+            assertEquals("200",JSONObject.fromObject(store.GetTxDetail(hash)).getString("State"));
+
+            //确认交易可以成功查询
+            String resp= store.GetStore(hash);
+            assertEquals("200",JSONObject.fromObject(resp).getString("State"));
+            assertEquals(listData.get(i),JSONObject.fromObject(resp).getString("Data"));
+        }
+
+    }
+
+    //存证特殊字符
+    @Test
+    public void createSpecCharStore() throws Exception {
+        List<String> listData = new ArrayList<>();
+        ArrayList<String> hashList = new ArrayList<>();
+
+        SDKADD = TOKENADD;
+        String Data = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~¥¦§¨©ª«¬®¯°±²³´中“”お⛑";;
+        String response = tokenModule.tokenCreateStore(Data);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+        hashList.add(JSONObject.fromObject(response).getString("data"));
+        listData.add(Data);
+
+
+
+        String Data2 = "<SCRIPT SRC=http://***/XSS/xss.js></SCRIPT>";
+        String response2 = tokenModule.tokenCreateStore(Data2);
+        assertEquals("200",JSONObject.fromObject(response2).getString("state"));
+        hashList.add(JSONObject.fromObject(response2).getString("data"));
+        listData.add(Data2);
 
 
         sleepAndSaveInfo(SLEEPTIME,"multi store on chain waiting......");

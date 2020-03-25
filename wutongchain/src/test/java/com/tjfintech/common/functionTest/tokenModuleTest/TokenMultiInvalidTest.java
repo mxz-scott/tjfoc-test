@@ -618,7 +618,7 @@ public class TokenMultiInvalidTest {
     }
 
     //tokenType大小写敏感性检查
-//    @Test
+    @Test
     public void testMatchCaseQueryBalance()throws Exception{
 
         //查询余额账户地址大小写敏感性检查  当前不敏感
@@ -644,7 +644,7 @@ public class TokenMultiInvalidTest {
 
     }
 
-    //    @Test
+    @Test
     public void testMatchCaseTransfer()throws Exception{
 
         //转账检查大小写敏感
@@ -662,7 +662,7 @@ public class TokenMultiInvalidTest {
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo).getString("data"));
     }
 
-    //    @Test
+    @Test
     public void testMatchCaseDestroy()throws Exception{
         List<Map> list;
         //回收检查大小写敏感
@@ -679,7 +679,7 @@ public class TokenMultiInvalidTest {
         assertEquals("Insufficient Balance",JSONObject.fromObject(desResp).getString("data"));
     }
 
-    //    @Test
+    @Test
     public void testMatchCaseFreezeRecover()throws Exception{
         //冻结检查大小写
         log.info("冻结检查大小写");

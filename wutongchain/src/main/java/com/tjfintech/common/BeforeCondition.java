@@ -278,25 +278,27 @@ public class BeforeCondition {
      * @throws Exception
      */
     public void createTokenAccount()throws Exception{
-        Map<String, Object> mapTag = new HashMap<>();
-        mapTag.put("1", "test");
-        mapTag.put("2", "test02");
-        mapTag.put("3", "test03");
+        ArrayList<String> listTag = new ArrayList<>();
+
+
+        listTag.add("test");
+        listTag.add("test02");
+        listTag.add("test03");
 
         tokenAccount1 =JSONObject.fromObject(
-                tokenModule.tokenCreateAccount(userId01,userId01,"","",mapTag)).getString("data");
+                tokenModule.tokenCreateAccount(userId01,userId01,"","",listTag)).getString("data");
         tokenAccount2 =JSONObject.fromObject(
-                tokenModule.tokenCreateAccount(userId02,userId02,"","",mapTag)).getString("data");
+                tokenModule.tokenCreateAccount(userId02,userId02,"","",listTag)).getString("data");
         tokenAccount3 =JSONObject.fromObject(
-                tokenModule.tokenCreateAccount(userId03,userId03,"","",mapTag)).getString("data");
+                tokenModule.tokenCreateAccount(userId03,userId03,"","",listTag)).getString("data");
         tokenAccount4 =JSONObject.fromObject(
-                tokenModule.tokenCreateAccount(userId04,userId04,"","",mapTag)).getString("data");
+                tokenModule.tokenCreateAccount(userId04,userId04,"","",listTag)).getString("data");
         tokenAccount5 =JSONObject.fromObject(
-                tokenModule.tokenCreateAccount(userId05,userId05,"","",mapTag)).getString("data");
+                tokenModule.tokenCreateAccount(userId05,userId05,"","",listTag)).getString("data");
         tokenAccount6 =JSONObject.fromObject(
-                tokenModule.tokenCreateAccount(userId06,userId06,"","",mapTag)).getString("data");
+                tokenModule.tokenCreateAccount(userId06,userId06,"","",listTag)).getString("data");
         tokenAccount7 =JSONObject.fromObject(
-                tokenModule.tokenCreateAccount(userId07,userId07,"","",mapTag)).getString("data");
+                tokenModule.tokenCreateAccount(userId07,userId07,"","",listTag)).getString("data");
 
 
         int M = 3;
@@ -306,33 +308,33 @@ public class BeforeCondition {
         map.put("3", tokenAccount3);
 
         tokenMultiAddr1 = JSONObject.fromObject(
-                tokenModule.tokenCreateMultiAddr(map,"multiaddr1",M,"","",mapTag)).getString("data");
+                tokenModule.tokenCreateMultiAddr(map,"multiaddr1",M,"","",listTag)).getString("data");
 
         M =1;
         map = new HashMap<>();
         map.put("1", tokenAccount1);
         map.put("2", tokenAccount2);
         tokenMultiAddr2 = JSONObject.fromObject(
-                tokenModule.tokenCreateMultiAddr(map,"multiaddr2",M,"","",mapTag)).getString("data");
+                tokenModule.tokenCreateMultiAddr(map,"multiaddr2",M,"","",listTag)).getString("data");
 
         map.clear();
         map.put("1", tokenAccount1);
         map.put("2", tokenAccount2);
         map.put("3", tokenAccount3);
         tokenMultiAddr3 = JSONObject.fromObject(
-                tokenModule.tokenCreateMultiAddr(map,"multiaddr3",M,"","",mapTag)).getString("data");
+                tokenModule.tokenCreateMultiAddr(map,"multiaddr3",M,"","",listTag)).getString("data");
 
         map.clear();
         map.put("1", tokenAccount2);
         map.put("2", tokenAccount3);
         tokenMultiAddr4 = JSONObject.fromObject(
-                tokenModule.tokenCreateMultiAddr(map,"multiaddr4",M,"","",mapTag)).getString("data");
+                tokenModule.tokenCreateMultiAddr(map,"multiaddr4",M,"","",listTag)).getString("data");
 
         map.clear();
         map.put("1", tokenAccount3);
         map.put("2", tokenAccount4);
         tokenMultiAddr5 = JSONObject.fromObject(
-                tokenModule.tokenCreateMultiAddr(map,"multiaddr5",M,"","",mapTag)).getString("data");
+                tokenModule.tokenCreateMultiAddr(map,"multiaddr5",M,"","",listTag)).getString("data");
     }
 
 

@@ -143,12 +143,12 @@ public class TokenMultiTest {
         String issAmount ="";
 
         //单签地址发行token 5000.999999
-        String stokenType = "tokenSo-"+ UtilsClass.Random(8);
+        String stokenType = "tokenSo_"+ UtilsClass.Random(8);
         issueAddr = tokenAccount2;
         collAddr = tokenMultiAddr1;
         issueToken = stokenType;
         issAmount = "1844674";
-        String issueToken2 = "tokenS2o-"+ UtilsClass.Random(8);
+        String issueToken2 = "tokenS2o_"+ UtilsClass.Random(8);
         String issAmount2 = "18022.1";
 
         //添加发行地址和归集地址
@@ -1458,7 +1458,7 @@ public class TokenMultiTest {
         String issAmount ="";
 
         //单签地址发行token 5000.999999
-        String stokenType = "tokenSo-"+ UtilsClass.Random(8);
+        String stokenType = "tokenSo_"+ UtilsClass.Random(8);
         double sAmount = 5000.999999;
         issueAddr = tokenMultiAddr1;
         collAddr = tokenMultiAddr2;
@@ -1618,7 +1618,7 @@ public class TokenMultiTest {
         String issAmount ="";
 
         //单签地址发行token 5000.999999
-        String stokenType = "tokenSo-"+ UtilsClass.Random(8);
+        String stokenType = "tokenSo_"+ UtilsClass.Random(8);
         double sAmount = 5000.999999;
         issueAddr = tokenMultiAddr2;
         collAddr = tokenMultiAddr1;
@@ -1991,21 +1991,38 @@ public class TokenMultiTest {
         assertEquals("700",JSONObject.fromObject(getZeroAc).getJSONObject("data").getString(tokenType2));
     }
     //发行时大小写敏感性检查
-//    @Test
-    public void issueTokenIgnoreCase()throws Exception{
-        String issueResp = tokenModule.tokenIssue(tokenMultiAddr1,tokenMultiAddr2,tokenType.toLowerCase(),
+    @Test
+    public void issueTokenMatchCase()throws Exception{
+        String issueResp = tokenModule.tokenIssue(tokenMultiAddr1,tokenMultiAddr1,tokenType.toLowerCase(),
                 "100","发行已有tokentype字符全部小写的token");
         assertEquals("200",JSONObject.fromObject(issueResp).getString("state"));
 
-        String issueResp2 = tokenModule.tokenIssue(tokenMultiAddr1,tokenMultiAddr2,tokenType.toUpperCase(),
+        String issueResp2 = tokenModule.tokenIssue(tokenMultiAddr1,tokenMultiAddr1,tokenType.toUpperCase(),
                 "100","发行已有tokentype字符全部大写的token");
         assertEquals("200",JSONObject.fromObject(issueResp2).getString("state"));
 
         sleepAndSaveInfo(SLEEPTIME);
 
-        String query = tokenModule.tokenGetBalance(tokenMultiAddr2,"");
+        String query = tokenModule.tokenGetBalance(tokenMultiAddr1,"");
         assertEquals(true,query.contains(tokenType.toLowerCase()));
         assertEquals(true,query.contains(tokenType.toUpperCase()));
+        assertEquals(true,query.contains(tokenType));
+
+        query = tokenModule.tokenGetBalance(tokenMultiAddr1,tokenType);
+        assertEquals(true,query.contains(tokenType));
+        assertEquals(false,query.contains(tokenType.toLowerCase()));
+        assertEquals(false,query.contains(tokenType.toUpperCase()));
+
+        query = tokenModule.tokenGetBalance(tokenMultiAddr1,tokenType.toUpperCase());
+        assertEquals(false,query.contains(tokenType.toLowerCase()));
+        assertEquals(false,query.contains(tokenType));
+        assertEquals(true,query.contains(tokenType.toUpperCase()));
+
+        query = tokenModule.tokenGetBalance(tokenMultiAddr1,tokenType.toLowerCase());
+        assertEquals(false,query.contains(tokenType.toUpperCase()));
+        assertEquals(false,query.contains(tokenType));
+        assertEquals(true,query.contains(tokenType.toLowerCase()));
+
     }
     @AfterClass
     public static void resetAddr()throws Exception{

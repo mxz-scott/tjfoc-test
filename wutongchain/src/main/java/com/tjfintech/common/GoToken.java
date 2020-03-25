@@ -49,21 +49,21 @@ public  class GoToken implements Token {
      * @param entityName
      * @param groupID
      * @param comments
-     * @param tags
+     * @param listTag
      * @return
      */
-    public String tokenCreateAccount(String entityID, String entityName, String groupID, String comments, Map tags){
-        List<Object> tagsArray = new ArrayList<>();
-        for (Object value : tags.values()) {
-            tagsArray.add(value);
-        }
+    public String tokenCreateAccount(String entityID, String entityName, String groupID, String comments,  ArrayList<String> listTag){
+//        List<Object> tagsArray = new ArrayList<>();
+//        for (Object value : tags.values()) {
+//            tagsArray.add(value);
+//        }
 
         Map<String, Object> map = new HashMap<>();
         map.put("entityID", entityID);
         map.put("entityName", entityName);
         map.put("groupID", groupID);
         map.put("comments", comments);
-        map.put("tags", tagsArray);
+        map.put("tags", listTag);
 
         String result = PostTest.postMethod(SDKADD + "/v1/account/create", map);
         log.info(result);
@@ -77,21 +77,21 @@ public  class GoToken implements Token {
      * @param minSignatures
      * @param groupID
      * @param comments
-     * @param tags
+     * @param listTag
      * @return
      */
     public String tokenCreateMultiAddr(Map addresses, String name, int minSignatures,
-                                         String groupID, String comments, Map tags){
+                                         String groupID, String comments, ArrayList<String> listTag){
 
         List<Object> addressesArray = new ArrayList<>();
         for (Object value : addresses.values()) {
             addressesArray.add(value);
         }
 
-        List<Object> tagsArray = new ArrayList<>();
-        for (Object value : tags.values()) {
-            tagsArray.add(value);
-        }
+//        List<Object> tagsArray = new ArrayList<>();
+//        for (Object value : tags.values()) {
+//            tagsArray.add(value);
+//        }
 
         Map<String, Object> map = new HashMap<>();
         map.put("addresses", addressesArray);
@@ -99,7 +99,7 @@ public  class GoToken implements Token {
         map.put("minSignatures", minSignatures);
         map.put("groupID", groupID);
         map.put("comments", comments);
-        map.put("tags", tagsArray);
+        map.put("tags", listTag);
 
         String result = PostTest.postMethod(SDKADD + "/v1/account/multiaddr/create", map);
         log.info(result);
@@ -331,7 +331,7 @@ public  class GoToken implements Token {
         map.put("address",address);
         String param="";
 //        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result =PostTest.sendPostToJson(SDKADD+"/v1/account/getpublickey" + param,map);
+        String result =PostTest.postMethod(SDKADD+"/v1/account/getpublickey" + param,map);
         log.info(result);
         return result;
     }

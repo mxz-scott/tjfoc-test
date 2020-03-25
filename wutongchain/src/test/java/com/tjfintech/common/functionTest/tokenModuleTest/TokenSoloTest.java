@@ -1305,21 +1305,37 @@ public class TokenSoloTest {
 
 
     //发行时大小写敏感性检查
-//    @Test
-    public void issueTokenIgnoreCase()throws Exception{
-        String issueResp = tokenModule.tokenIssue(tokenAccount1,tokenAccount2,tokenType.toLowerCase(),
+    @Test
+    public void issueTokenMatchCase()throws Exception{
+        String issueResp = tokenModule.tokenIssue(tokenAccount1,tokenAccount1,tokenType.toLowerCase(),
                 "100","发行已有tokentype字符全部小写的token");
         assertEquals("200",JSONObject.fromObject(issueResp).getString("state"));
 
-        String issueResp2 = tokenModule.tokenIssue(tokenAccount1,tokenAccount2,tokenType.toUpperCase(),
+        String issueResp2 = tokenModule.tokenIssue(tokenAccount1,tokenAccount1,tokenType.toUpperCase(),
                 "100","发行已有tokentype字符全部大写的token");
         assertEquals("200",JSONObject.fromObject(issueResp2).getString("state"));
 
         sleepAndSaveInfo(SLEEPTIME);
 
-        String query = tokenModule.tokenGetBalance(tokenAccount2,"");
+        String query = tokenModule.tokenGetBalance(tokenAccount1,"");
         assertEquals(true,query.contains(tokenType.toLowerCase()));
         assertEquals(true,query.contains(tokenType.toUpperCase()));
+        assertEquals(true,query.contains(tokenType));
+
+        query = tokenModule.tokenGetBalance(tokenAccount1,tokenType);
+        assertEquals(true,query.contains(tokenType));
+        assertEquals(false,query.contains(tokenType.toLowerCase()));
+        assertEquals(false,query.contains(tokenType.toUpperCase()));
+
+        query = tokenModule.tokenGetBalance(tokenAccount1,tokenType.toUpperCase());
+        assertEquals(false,query.contains(tokenType.toLowerCase()));
+        assertEquals(false,query.contains(tokenType));
+        assertEquals(true,query.contains(tokenType.toUpperCase()));
+
+        query = tokenModule.tokenGetBalance(tokenAccount1,tokenType.toLowerCase());
+        assertEquals(false,query.contains(tokenType.toUpperCase()));
+        assertEquals(false,query.contains(tokenType));
+        assertEquals(true,query.contains(tokenType.toLowerCase()));
     }
 
 

@@ -125,20 +125,20 @@ public class TokenTxTypeTest_Token {
         //UTXO类交易 Type 1 SubType 10 11 12
 
         //单签发行给自己
-        String tokenTypeS1 = "TxTypeSOLOTC-"+ UtilsClass.Random(6);
+        String tokenTypeS1 = "TxTypeSOLOTC_"+ UtilsClass.Random(6);
         String siData1= "单签" + tokenAccount1 + " 发行token " + tokenTypeS1;
         String amount1="10000";
         log.info(siData1);
         String response1 = tokenModule.tokenIssue(tokenAccount1,tokenAccount1,tokenTypeS1,amount1,siData1);
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));
         String singleIssHash1 = JSONObject.fromObject(response1).getString("data");
-        String tokenTypeS3 = "TxTypeSOLOTC-"+ UtilsClass.Random(6);
+        String tokenTypeS3 = "TxTypeSOLOTC_"+ UtilsClass.Random(6);
         String response11 = tokenModule.tokenIssue(tokenAccount1,tokenAccount1,tokenTypeS3,amount1,siData1);
         assertEquals("200",JSONObject.fromObject(response11).getString("state"));
 
 
         //单签发行给别人
-        String tokenTypeS2 = "TxTypeSOLOTC-"+ UtilsClass.Random(6);
+        String tokenTypeS2 = "TxTypeSOLOTC_"+ UtilsClass.Random(6);
         String siData2 = "单签" + tokenAccount1 +"向" +  tokenAccount2 + " 发行token " + tokenTypeS2;
         String amount2 ="10000";
         log.info(siData2);
