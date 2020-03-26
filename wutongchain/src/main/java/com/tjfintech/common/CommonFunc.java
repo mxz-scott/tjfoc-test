@@ -2,6 +2,7 @@ package com.tjfintech.common;
 
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
+import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.Interface.Token;
 import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
@@ -26,6 +27,7 @@ public class CommonFunc {
     MultiSign multiSign =testBuilder.getMultiSign();
     SoloSign soloSign= testBuilder.getSoloSign();
     Token tokenModule= testBuilder.getToken();
+    Store store = testBuilder.getStore();
     UtilsClass utilsClass=new UtilsClass();
     //获取所有地址账户与私钥密码信息
     JSONObject jsonObjectAddrPri;
@@ -960,6 +962,68 @@ public class CommonFunc {
             }
         }
         return result;
+    }
+
+    public void sdkCheckTxOrSleep(String hashData,String type,long sleeptime)throws Exception{
+        Date dtTest = new Date();
+        long nowTime = dtTest.getTime();
+        log.info("开始时间 " + nowTime);
+        Boolean bOK = false;
+        String state ="";
+        while((new Date()).getTime() - nowTime < sleeptime && bOK == false){
+            //当前支持旧版本SDK gettxdetail接口 tokenapi gettxdetail接口
+            if(type.equals("0")) state = JSONObject.fromObject(store.GetTxDetail(hashData)).getString("State");
+            else if(type.equals("1")) state = JSONObject.fromObject(tokenModule.tokenGetTxDetail(hashData)).getString("state");
+            if(state.equals("200"))
+                bOK = true;
+            else
+                sleepAndSaveInfo(1000,"等待再次检查交易是否上链时间");
+        }
+        if(!bOK) log.info("等待时间：" + ((new Date()).getTime() - nowTime) + "当前查询交易仍未上链");
+        else {
+//            log.info("当前时间 " + (new Date()).getTime());
+//            log.info("起始时间 " + nowTime);
+            log.info("等待交易上链时间：" + ((new Date()).getTime() - nowTime));
+        }
+    }
+
+    /***
+     * 次函数用于从交易返回结果response中获取sdk或者token api交易hash
+     * 不适用管理工具hash获取
+     * @param response 交易返回信息 目前应该是一个json字符串
+     * @param type 根据特定类型获取 因sdk不同交易或版本不同解析json所需要获取的json字段不同
+     * @return
+     */
+    public String getSDKTxHash(String response,String type){
+        String hash = "";
+        //0* 为SDK旧版本接口获取type类型起始 *为交易类型 以所有交易类型小序号为主 0表示存证 1表示 utxo
+        //1* 为token api接口获取type类型起始
+        //2* 为SDK新版本接口获取type类型起始
+        switch (type){
+            case "00" :
+                //旧版本sdk接口 存证/隐私存证/docker创建合约/docker合约交易/docker合约销毁/utxo单签回收/WVM合约交易
+                hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+                break;
+            case "01" :
+                //旧版本sdk接口 utxo hash 单签发行/转账 除单签回收
+                hash = JSONObject.fromObject(response).getString("Data");
+                break;
+            case "02" :
+                //旧版本sdk接口 utxo hash 多签发行/转账/回收
+                hash = JSONObject.fromObject(response).getJSONObject("Data").getString("TxId");
+                break;
+            case "10" :
+                //token api v1 接口 hash
+                hash = JSONObject.fromObject(response).getString("data");
+                break;
+            case "20" :
+                //新版本SDK v2接口
+                hash = JSONObject.fromObject(response).getString("data");
+                break;
+            default:
+                log.info("Can not resolve tx hash,please check type 01 02 10 20!");
+        }
+        return hash;
     }
 
 }

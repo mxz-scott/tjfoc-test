@@ -1,14 +1,12 @@
 package com.tjfintech.common.functionTest.tokenModuleTest;
 
-import com.alibaba.fastjson.JSON;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.Interface.Token;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.MatcherAssert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -28,6 +26,8 @@ public class TokenStoreTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
     Token tokenModule = testBuilder.getToken();
+    CommonFunc commonFunc = new CommonFunc();
+    UtilsClass utilsClass = new UtilsClass();
 
     /**
      * TC05-创建存证交易，数据格式为Json
@@ -44,7 +44,10 @@ public class TokenStoreTest {
         String storeHash = JSONObject.fromObject(response).getString("data");
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME,"store on chain waiting");
+//        sleepAndSaveInfo(SLEEPTIME,"store on chain waiting");
+        commonFunc.sdkCheckTxOrSleep(
+                commonFunc.getSDKTxHash(response,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //使用token模块getstore接口查询
         String response3 = tokenModule.tokenGetPrivateStore(storeHash,"");
@@ -112,8 +115,8 @@ public class TokenStoreTest {
                 anyOf(containsString("Duplicate transaction, hash: " + storeHash),
                         containsString("transactionFilter exist")));
 
+        sleepAndSaveInfo(3000); //等待Dup重复检查时间
 
-        sleepAndSaveInfo(SLEEPTIME,"store on chain waiting"); //超过dup检测时间
         String response2 = tokenModule.tokenCreateStore(Data);
         assertEquals("200",JSONObject.fromObject(response2).getString("state"));
 
@@ -144,7 +147,9 @@ public class TokenStoreTest {
         String storeHash = JSONObject.fromObject(response).getString("data");
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME,"store on chain waiting");
+        commonFunc.sdkCheckTxOrSleep(
+                commonFunc.getSDKTxHash(response,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
 //        SDKADD = rSDKADD;
         assertEquals("200",JSONObject.fromObject(tokenModule.tokenGetTxDetail(storeHash)).getString("state"));
@@ -190,7 +195,9 @@ public class TokenStoreTest {
         String storeHash = JSONObject.fromObject(response).getString("data");
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME,"store on chain waiting");
+        commonFunc.sdkCheckTxOrSleep(
+                commonFunc.getSDKTxHash(response,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
 //        SDKADD = rSDKADD;
         assertEquals("200",JSONObject.fromObject(tokenModule.tokenGetTxDetail(storeHash)).getString("state"));
@@ -249,7 +256,8 @@ public class TokenStoreTest {
             hashList.add(storeHash);
         }
 
-        sleepAndSaveInfo(SLEEPTIME,"multi store on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"multi store on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(hashList.get(hashList.size()-1),utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
 //        SDKADD = rSDKADD;
         for(int i = 0;i<hashList.size();i++){
@@ -297,7 +305,9 @@ public class TokenStoreTest {
 //        listData.add(Data3);
 
 
-        sleepAndSaveInfo(SLEEPTIME,"multi store on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"multi store on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(hashList.get(hashList.size()-1),utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+
         SDKADD = rSDKADD;
 
         for(int i=0;i<hashList.size();i++){
@@ -335,7 +345,9 @@ public class TokenStoreTest {
         listData.add("&lt;SCRIPT SRC=http://***/XSS/xss.js&gt;&lt;/SCRIPT&gt;");
 
 
-        sleepAndSaveInfo(SLEEPTIME,"multi store on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"multi store on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(hashList.get(hashList.size()-1),utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+
 //        SDKADD = rSDKADD;
 
         for(int i=0;i<hashList.size();i++){
@@ -373,7 +385,8 @@ public class TokenStoreTest {
            hashList.add(storeHash);
        }
 
-       sleepAndSaveInfo(SLEEPTIME,"multi store onchain waiting......");
+       commonFunc.sdkCheckTxOrSleep(hashList.get(hashList.size()-1),utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+//       sleepAndSaveInfo(SLEEPTIME,"multi store onchain waiting......");
 
        //token模块查询
        for(int i=0;i<hashList.size();i++){

@@ -233,6 +233,14 @@ public class UtilsClass {
     public static String sLocalStoreContract = "wtchain\\contracts\\bin\\Sys_StoreEncrypted\\";
     public static String sLocalMgTool = "wttool\\wttool";
 
+    public String sdkGetTxDetailType = "0";
+    public String sdkGetTxDetailTTypeV2 = "2";
+    public String tokenApiGetTxDetailTType = "1";
+
+    public String sdkGetTxHashType00 = "00";
+    public String sdkGetTxHashType01 = "01";
+    public String sdkGetTxHashType02 = "02";
+    public String tokenApiGetTxHashType = "10";
     //如果是已经获取过shell脚本则可以不用执行uploadFile()操作 因此此项默认关闭
 //    public static boolean bupload = uploadFile();
     public static boolean bUL = false;
