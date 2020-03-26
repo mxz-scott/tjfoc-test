@@ -624,12 +624,14 @@ public class TokenMultiInvalidTest {
         //查询余额账户地址大小写敏感性检查  当前不敏感
         log.info("查询余额账户地址大小写敏感性检查  当前不敏感");
         String query = tokenModule.tokenGetBalance(tokenMultiAddr1.toLowerCase(),tokenType);
-        assertEquals(true,
-                JSONObject.fromObject(query).getString("data").contains(tokenType));
+        assertEquals("invalid address",JSONObject.fromObject(query).getString("data"));
+//        assertEquals(true,
+//                JSONObject.fromObject(query).getString("data").contains(tokenType));
 
         query = tokenModule.tokenGetBalance(tokenMultiAddr1.toUpperCase(),tokenType);
-        assertEquals(true,
-                JSONObject.fromObject(query).getString("data").contains(tokenType));
+        assertEquals("invalid address",JSONObject.fromObject(query).getString("data"));
+//        assertEquals(true,
+//                JSONObject.fromObject(query).getString("data").contains(tokenType));
 
 
         log.info("查询余额tokentype敏感检查");
@@ -692,8 +694,15 @@ public class TokenMultiInvalidTest {
         String hash2 = JSONObject.fromObject(freezeResp).getString("data");
         sleepAndSaveInfo(SLEEPTIME);
 
-        assertEquals("404",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash1)).getString("state"));
-        assertEquals("404",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash2)).getString("state"));
+        assertEquals("400",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash1)).getString("state"));
+        assertEquals("400",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash2)).getString("state"));
+
+        //确认tokenType未被冻结
+        String transferResp = commonFunc.tokenModule_TransferToken(tokenMultiAddr1,tokenMultiAddr2,tokenType,"10");
+        assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
+        sleepAndSaveInfo(SLEEPTIME);
+        assertEquals("10",JSONObject.fromObject(
+                tokenModule.tokenGetBalance(tokenMultiAddr2,tokenType)).getJSONObject("data").getString(tokenType));
 
 
         String recoverResp = tokenModule.tokenRecoverToken(tokenType);
@@ -712,6 +721,14 @@ public class TokenMultiInvalidTest {
         recoverResp = tokenModule.tokenRecoverToken(tokenType.toLowerCase());
         assertEquals("400",JSONObject.fromObject(recoverResp).getString("state"));
         assertEquals(true,JSONObject.fromObject(recoverResp).getString("data").contains("has not been freezed!"));
+
+        //确认tokenType被冻结未被恢复 冻结token无法转账
+        transferResp = commonFunc.tokenModule_TransferToken(tokenMultiAddr1,tokenMultiAddr3,tokenType,"10");
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals("toketype(" + tokenType + ") has been freezed!",JSONObject.fromObject(transferResp).getString("data"));
+
+        sleepAndSaveInfo(SLEEPTIME);
+        assertEquals(false,tokenModule.tokenGetBalance(tokenMultiAddr3,tokenType).contains(tokenType));
 
         String recoverR2 = tokenModule.tokenRecoverToken(tokenType);
         assertEquals("200",JSONObject.fromObject(recoverR2).getString("state"));

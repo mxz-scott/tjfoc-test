@@ -190,12 +190,14 @@ public class TokenSoloInvalidTest {
         //查询余额账户地址大小写敏感性检查  当前不敏感
         log.info("查询余额账户地址大小写敏感性检查  当前不敏感");
         String query = tokenModule.tokenGetBalance(tokenAccount1.toLowerCase(),tokenType);
-        assertEquals(true,
-                JSONObject.fromObject(query).getString("data").contains(tokenType));
-
+        assertEquals("invalid address",JSONObject.fromObject(query).getString("data"));
+//        assertEquals(true,
+//                JSONObject.fromObject(query).getString("data").contains(tokenType));
+//
         query = tokenModule.tokenGetBalance(tokenAccount1.toUpperCase(),tokenType);
-        assertEquals(true,
-                JSONObject.fromObject(query).getString("data").contains(tokenType));
+        assertEquals("invalid address",JSONObject.fromObject(query).getString("data"));
+//        assertEquals(true,
+//                JSONObject.fromObject(query).getString("data").contains(tokenType));
 
 
         log.info("查询余额tokentype敏感检查");

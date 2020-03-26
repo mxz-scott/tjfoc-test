@@ -274,7 +274,7 @@ public  class GoToken implements Token {
         map.put("Data", Data);
         String param = "";
 //        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/v1/store" + param, map);
+        String result = PostTest.postMethod(SDKADD + "/v1/store" + param, map);
         log.info(result);
         return result;
     }
@@ -308,10 +308,10 @@ public  class GoToken implements Token {
 
     public String tokenFreezeToken(String tokenType) {
         Map<String ,Object>map=new HashMap<>();
-        map.put("TokenType",tokenType);
+        map.put("tokenType",tokenType);
         String param="";
 //        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result =PostTest.sendPostToJson(SDKADD+"/v1/token/freeze"+param,map);
+        String result =PostTest.postMethod(SDKADD+"/v1/token/freeze"+param,map);
         log.info(result);
         return result;
     }
@@ -321,7 +321,7 @@ public  class GoToken implements Token {
         map.put("TokenType",tokenType);
         String param="";
 //        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result =PostTest.sendPostToJson(SDKADD+"/v1/token/recover"+param,map);
+        String result =PostTest.postMethod(SDKADD+"/v1/token/recover"+param,map);
         log.info(result);
         return result;
     }

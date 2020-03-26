@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.tokenModuleTest;
 
+import com.alibaba.fastjson.JSON;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.Interface.Token;
 import com.tjfintech.common.TestBuilder;
@@ -145,12 +146,12 @@ public class TokenStoreTest {
 
         sleepAndSaveInfo(SLEEPTIME,"store on chain waiting");
 
-        SDKADD = rSDKADD;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("State"));
+//        SDKADD = rSDKADD;
+        assertEquals("200",JSONObject.fromObject(tokenModule.tokenGetTxDetail(storeHash)).getString("state"));
 
-        String response2= store.GetStore(storeHash);
-        assertEquals("200",JSONObject.fromObject(response2).getString("State"));
-        assertEquals(Data,JSONObject.fromObject(response2).getString("Data"));
+        String response2= tokenModule.tokenGetPrivateStore(storeHash,"");
+        assertEquals("200",JSONObject.fromObject(response2).getString("state"));
+        assertEquals(true,JSONObject.fromObject(response2).getString("data").contains("{&#34;testJson&#34;"));
     }
 
 
@@ -191,14 +192,20 @@ public class TokenStoreTest {
 
         sleepAndSaveInfo(SLEEPTIME,"store on chain waiting");
 
-        SDKADD = rSDKADD;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("State"));
+//        SDKADD = rSDKADD;
+        assertEquals("200",JSONObject.fromObject(tokenModule.tokenGetTxDetail(storeHash)).getString("state"));
 
-        String response2= store.GetStore(storeHash);
-        assertEquals("200",JSONObject.fromObject(response2).getString("State"));
-        assertEquals(Data,JSONObject.fromObject(response2).getString("Data"));
-//        assertEquals("1234",JSONObject.fromObject(response2).getJSONObject("Data").getString("projectId"));
-//        assertEquals("jpg",JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("fileInfo").getString("fileFormat"));
+        String response2= tokenModule.tokenGetPrivateStore(storeHash,"");
+        assertEquals("200",JSONObject.fromObject(response2).getString("state"));
+        assertEquals(true,JSONObject.fromObject(response2).getString("data").contains("&#34;projectCode&#34;"));
+
+
+        //使用sdk查询 20200325 sdk未做xss字符解码
+//        SDKADD = rSDKADD;
+//        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("state"));
+//        response2= store.GetStore(storeHash);
+//        assertEquals("200",JSONObject.fromObject(response2).getString("State"));
+//        assertEquals(Data,JSONObject.fromObject(response2).getString("Data"));
     }
 
     /**
@@ -244,14 +251,14 @@ public class TokenStoreTest {
 
         sleepAndSaveInfo(SLEEPTIME,"multi store on chain waiting......");
 
-        SDKADD = rSDKADD;
+//        SDKADD = rSDKADD;
         for(int i = 0;i<hashList.size();i++){
             String hash = hashList.get(i);
-            assertEquals("200",JSONObject.fromObject(store.GetTxDetail(hash)).getString("State"));
+            assertEquals("200",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash)).getString("state"));
 
-            String response2= store.GetStore(hash);
-            assertEquals("200",JSONObject.fromObject(response2).getString("State"));
-            assertEquals(listData.get(i),JSONObject.fromObject(response2).getString("Data"));
+            String response2= tokenModule.tokenGetPrivateStore(hash,"");
+            assertEquals("200",JSONObject.fromObject(response2).getString("state"));
+            assertEquals(true,JSONObject.fromObject(response2).getString("data").contains("&#34;projectCode&#34;"));
         }
 
     }
@@ -285,7 +292,8 @@ public class TokenStoreTest {
                 + "bigsize3.txt");
         String response3 = tokenModule.tokenCreateStore(Data3);
         assertEquals("400",JSONObject.fromObject(response3).getString("state"));
-        hashList.add(JSONObject.fromObject(response3).getString("data"));
+        assertEquals("The maximum length of the data is 1M",JSONObject.fromObject(response3).getString("data"));
+//        hashList.add(JSONObject.fromObject(response3).getString("data"));
 //        listData.add(Data3);
 
 
@@ -300,7 +308,7 @@ public class TokenStoreTest {
             //确认交易可以成功查询
             String resp= store.GetStore(hash);
             assertEquals("200",JSONObject.fromObject(resp).getString("State"));
-            assertEquals(listData.get(i),JSONObject.fromObject(resp).getString("Data"));
+//            assertEquals(listData.get(i),JSONObject.fromObject(resp).getString("Data"));
         }
 
     }
@@ -316,7 +324,7 @@ public class TokenStoreTest {
         String response = tokenModule.tokenCreateStore(Data);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
         hashList.add(JSONObject.fromObject(response).getString("data"));
-        listData.add(Data);
+        listData.add("!&#34;#$%&amp;&#39;()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~¥¦§¨©ª«¬®¯°±²³´中“”お⛑");
 
 
 
@@ -324,21 +332,23 @@ public class TokenStoreTest {
         String response2 = tokenModule.tokenCreateStore(Data2);
         assertEquals("200",JSONObject.fromObject(response2).getString("state"));
         hashList.add(JSONObject.fromObject(response2).getString("data"));
-        listData.add(Data2);
+        listData.add("&lt;SCRIPT SRC=http://***/XSS/xss.js&gt;&lt;/SCRIPT&gt;");
 
 
         sleepAndSaveInfo(SLEEPTIME,"multi store on chain waiting......");
-        SDKADD = rSDKADD;
+//        SDKADD = rSDKADD;
 
         for(int i=0;i<hashList.size();i++){
             String hash = hashList.get(i);
             //确认交易上链
-            assertEquals("200",JSONObject.fromObject(store.GetTxDetail(hash)).getString("State"));
+            String txDetailInfo = tokenModule.tokenGetTxDetail(hash);
+            assertEquals("200",JSONObject.fromObject(txDetailInfo).getString("state"));
+            assertEquals(listData.get(i), JSONObject.fromObject(txDetailInfo).getJSONObject("data").getJSONObject("Store").getString("StoreData"));
 
             //确认交易可以成功查询
-            String resp= store.GetStore(hash);
-            assertEquals("200",JSONObject.fromObject(resp).getString("State"));
-            assertEquals(listData.get(i),JSONObject.fromObject(resp).getString("Data"));
+            String resp= tokenModule.tokenGetPrivateStore(hash,"");
+            assertEquals("200",JSONObject.fromObject(resp).getString("state"));
+            assertEquals(listData.get(i),JSONObject.fromObject(resp).getString("data"));
         }
 
     }

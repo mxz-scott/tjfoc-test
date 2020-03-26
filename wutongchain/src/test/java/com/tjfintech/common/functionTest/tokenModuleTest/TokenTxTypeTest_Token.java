@@ -126,7 +126,9 @@ public class TokenTxTypeTest_Token {
 
         //单签发行给自己
         String tokenTypeS1 = "TxTypeSOLOTC_"+ UtilsClass.Random(6);
-        String siData1= "单签" + tokenAccount1 + " 发行token " + tokenTypeS1;
+        log.info("发行地址" + tokenAccount1);
+        log.info("归集地址" + tokenAccount1);
+        String siData1= "单签发行token " + tokenTypeS1;
         String amount1="10000";
         log.info(siData1);
         String response1 = tokenModule.tokenIssue(tokenAccount1,tokenAccount1,tokenTypeS1,amount1,siData1);
@@ -139,7 +141,9 @@ public class TokenTxTypeTest_Token {
 
         //单签发行给别人
         String tokenTypeS2 = "TxTypeSOLOTC_"+ UtilsClass.Random(6);
-        String siData2 = "单签" + tokenAccount1 +"向" +  tokenAccount2 + " 发行token " + tokenTypeS2;
+        log.info("发行地址" + tokenAccount1);
+        log.info("归集地址" + tokenAccount2);
+        String siData2 = "单签发行给别人 " + tokenTypeS2;
         String amount2 ="10000";
         log.info(siData2);
         String response2 = tokenModule.tokenIssue(tokenAccount1,tokenAccount2,tokenTypeS2,amount2,siData2);
@@ -150,7 +154,9 @@ public class TokenTxTypeTest_Token {
         //多签发行发行给自己
         String tokenTypeM1 = "TxTypeMULTIC" + UtilsClass.Random(8);
         String amountM1 = "50000";
-        String  mulDataM1= "多签"+ tokenMultiAddr1 + "发行给自己" + tokenTypeM1 + " token，数量为：" + amountM1;
+        log.info("发行地址" + tokenMultiAddr1);
+        log.info("归集地址" + tokenMultiAddr1);
+        String  mulDataM1= "多签发行给自己" + tokenTypeM1 + " token，数量为：" + amountM1;
         log.info(mulDataM1);
         String responseM1 = tokenModule.tokenIssue(tokenMultiAddr1,tokenMultiAddr1,tokenTypeM1, amountM1, mulDataM1);
         assertEquals("200",JSONObject.fromObject(responseM1).getString("state"));
@@ -164,7 +170,9 @@ public class TokenTxTypeTest_Token {
         //多签发行给别人
         String tokenTypeM2 = "TxTypeMULTIC" + UtilsClass.Random(8);
         String amountM2 = "50000";
-        String  mulDataM2 = "多签"+ tokenMultiAddr1 + "发行给" + tokenMultiAddr2 +" "+ tokenTypeM2 + " token，数量为：" + amountM2;
+        log.info("发行地址" + tokenMultiAddr1);
+        log.info("归集地址" + tokenMultiAddr2);
+        String  mulDataM2 = "多签发行给其他 token，数量为：" + amountM2;
         log.info(mulDataM2);
         String responseM2 = tokenModule.tokenIssue(tokenMultiAddr1,tokenMultiAddr2,tokenTypeM2,amountM2,mulDataM2);
         String multiIssHashM2 = JSONObject.fromObject(responseM2).getString("data");
@@ -175,7 +183,9 @@ public class TokenTxTypeTest_Token {
         //单签转账
         assertEquals(JSONObject.fromObject(tokenModule.tokenGetBalance(tokenAccount1,"")).getJSONObject("data").getString(tokenTypeS1),amount1);
         assertEquals(JSONObject.fromObject(tokenModule.tokenGetBalance(tokenAccount1,"")).getJSONObject("data").getString(tokenTypeS3),amount1);
-        String tranferSdata="transfer to "+tokenAccount3 + " with amount 3000";
+        String tranferSdata="transfer with amount 3000";
+        log.info("转出地址 " + tokenAccount1);
+        log.info("转入地址 " + tokenAccount3);
 
         List<Map> listTFS = utilsClass.tokenConstructToken(tokenAccount3,tokenTypeS1,"3000.03");
         List<Map> listTFS2 = utilsClass.tokenConstructToken(tokenAccount3,tokenTypeS3,"3000",listTFS);
@@ -193,7 +203,9 @@ public class TokenTxTypeTest_Token {
         //多签转账
         assertEquals(JSONObject.fromObject( tokenModule.tokenGetBalance(tokenMultiAddr1,"")).getJSONObject("data").getString(tokenTypeM1),amountM1);
         assertEquals(JSONObject.fromObject( tokenModule.tokenGetBalance(tokenMultiAddr1,"")).getJSONObject("data").getString(tokenTypeM3),amountM1);
-        String transferData = tokenMultiAddr1 + " 向 " + tokenMultiAddr3 + " 转账3000";
+        String transferData = "多签转账3000";
+        log.info("转出地址 " + tokenMultiAddr1);
+        log.info("转入地址 " + tokenMultiAddr3);
         log.info(transferData);
         List<Map> listTFM = utilsClass.tokenConstructToken(tokenMultiAddr3,tokenTypeM1,"0.05");
         List<Map> listTFM2 = utilsClass.tokenConstructToken(tokenMultiAddr3,tokenTypeM3,"3000",listTFM);
