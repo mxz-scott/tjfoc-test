@@ -320,7 +320,7 @@ public class TokenStoreTest {
         ArrayList<String> hashList = new ArrayList<>();
 
         SDKADD = TOKENADD;
-        String Data = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~¥¦§¨©ª«¬®¯°±²³´中“”お⛑";;
+        String Data = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~¥¦§¨©ª«¬®¯°±²³´中“”お⛑";
         String response = tokenModule.tokenCreateStore(Data);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
         hashList.add(JSONObject.fromObject(response).getString("data"));
