@@ -29,6 +29,8 @@ public class SetSDKVerLatest {
        assertEquals(false, response.isEmpty());
        shellExeCmd(utilsClass.getIPFromStr(SDKADD),"cd " + SDKPATH + ";find . -name \""+ SDKTPName + "*\" | xargs chmod +x");
 
+       //存储当前 sdk版本 以便后续检查
+       verMap.put("sdk_"+ getIPFromStr(SDKADD),shExeAndReturn(getIPFromStr(SDKADD),getSDKVerByShell));
 
        //SDK
        shellExeCmd(utilsClass.getIPFromStr(SDKADD),killSDKCmd, "rm -f " + SDKPATH + SDKTPName,"cp " + SDKPATH + replaceTP + " " + SDKPATH + SDKTPName);

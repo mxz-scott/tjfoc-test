@@ -33,13 +33,17 @@ public class SetMgToolVerLatest {
            String resp = shExeAndReturn(hostList.get(i),"cd " + ToolPATH + ";find . -name " + replaceTP);
            if(resp.isEmpty())   log.info("host " + hostList.get(i) + " not found file: " + ToolPATH + replaceTP);
            assertEquals(false, resp.isEmpty());
+           //存储当前 tool版本 以便后续检查
+           verMap.put("tool_"+ hostList.get(i),shExeAndReturn(hostList.get(i),getMgToolVerByShell));
 
            shellExeCmd(hostList.get(i),"cd " + ToolPATH + ";find . -name \""+ ToolTPName + "*\" | xargs chmod +x");
        }
 
 
        for(int i =0 ;i<hostList.size();i++){
-           shellExeCmd(hostList.get(i),"rm -f " + ToolPATH + ToolTPName,"cp " + ToolPATH + replaceTP + " " + ToolPATH + ToolTPName);
+           shellExeCmd(hostList.get(i),
+                   "rm -f " + ToolPATH + ToolTPName,
+                   "cp " + ToolPATH + replaceTP + " " + ToolPATH + ToolTPName);
            //确认版本已经更新 版本号不一致
            assertEquals(false,verMap.get("tool_" + hostList.get(i)).equals(shExeAndReturn(hostList.get(i),getMgToolVerByShell)));
        }

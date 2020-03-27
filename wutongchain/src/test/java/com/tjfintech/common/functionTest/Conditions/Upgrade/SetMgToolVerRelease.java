@@ -37,9 +37,9 @@ public class SetMgToolVerRelease {
         }
 
         for(int i =0 ;i<hostList.size();i++){
-            shellExeCmd(hostList.get(i),"rm -f " + ToolPATH + ToolTPName,"cp " + ToolPATH + replaceTP + " " + ToolPATH + ToolTPName);
-            //存储release peer版本 以便后续检查
-            verMap.put("tool_"+ hostList.get(i),shExeAndReturn(hostList.get(i),getMgToolVerByShell));
+            shellExeCmd(hostList.get(i),
+                    "rm -f " + ToolPATH + ToolTPName,
+                    "cp " + ToolPATH + replaceTP + " " + ToolPATH + ToolTPName);
         }
     }
 }

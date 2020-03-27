@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.mixTestWithConfigChange;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
@@ -9,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
 
-import static com.tjfintech.common.CommonFunc.addPeerCluster;
-import static com.tjfintech.common.CommonFunc.setPeerConfig;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -23,6 +22,7 @@ public class AddPeerAndSyncData {
     Store store =testBuilder.getStore();
     MgToolCmd mgToolCmd = new MgToolCmd();
     TestMgTool testMgTool = new TestMgTool();
+    CommonFunc commonFunc = new CommonFunc();
 
     String rpcPort=PEER3RPCPort;
     String tcpPort=PEER3TCPPort;
@@ -44,15 +44,15 @@ public class AddPeerAndSyncData {
         //设置动态加入节点config.toml文件 带自己的配置信息
         mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
         shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB);
-        setPeerConfig(PEER3IP);
-        addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
+        commonFunc.setPeerConfig(PEER3IP);
+        commonFunc.addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
     }
     public void addConsensusPeerConfigWithSelfInfo() throws Exception{
         //设置动态加入节点config.toml文件 带自己的配置信息
         mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
         shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB);
-        setPeerConfig(PEER3IP);
-        addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
+        commonFunc.setPeerConfig(PEER3IP);
+        commonFunc.addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
     }
 
 //    public void addPeerConfigWithoutSelfInfo()throws Exception{

@@ -39,10 +39,11 @@ public class SetPeerVerRelease {
         //存在则停止现有进程后替换
         //节点
         for(int i =0 ;i<hostList.size();i++){
-            shellExeCmd(hostList.get(i),killPeerCmd,"rm -f " + PeerPATH + PeerTPName,"cp " + PeerPATH + replaceTP + " " + PeerPATH + PeerTPName);
+            shellExeCmd(hostList.get(i),
+                    killPeerCmd,
+                    "rm -f " + PeerPATH + PeerTPName,
+                    "cp " + PeerPATH + replaceTP + " " + PeerPATH + PeerTPName);
             sleepAndSaveInfo(500,"shell execute waiting...");
-            //存储release peer版本 以便后续检查
-            verMap.put("peer_"+ hostList.get(i),shExeAndReturn(hostList.get(i),getPeerVerByShell));
         }
 
         //启动替换后的进程

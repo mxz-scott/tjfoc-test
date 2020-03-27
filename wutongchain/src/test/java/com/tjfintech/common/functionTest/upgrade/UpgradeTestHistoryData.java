@@ -44,8 +44,10 @@ public class UpgradeTestHistoryData {
     @BeforeClass
     public static void updateKeyPairs()throws  Exception{
         BeforeCondition beforeCondition = new BeforeCondition();
-        if(IMPPUTIONADD.isEmpty())  beforeCondition.createAddresses();
         beforeCondition.updatePubPriKey();
+        beforeCondition.createAddresses();
+        beforeCondition.collAddressTest();
+
     }
 
     //@Test

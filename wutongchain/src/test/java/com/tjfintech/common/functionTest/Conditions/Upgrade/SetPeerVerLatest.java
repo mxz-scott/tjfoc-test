@@ -35,6 +35,8 @@ public class SetPeerVerLatest {
            assertEquals(false, resp.isEmpty());
 
            shellExeCmd(hostList.get(i),"cd " + PeerPATH + ";find . -name \""+ PeerTPName + "*\" | xargs chmod +x");
+           //存储当前 peer版本 以便后续检查
+           verMap.put("peer_"+ hostList.get(i),shExeAndReturn(hostList.get(i),getPeerVerByShell));
        }
 
        //停止现有进程后替换
