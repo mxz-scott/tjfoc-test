@@ -1,6 +1,8 @@
 package com.tjfintech.common.functionTest.Conditions.TestEnvTool;
 
 import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
+
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -8,6 +10,7 @@ import static com.tjfintech.common.utils.UtilsClass.*;
 
 @Slf4j
 public class CheckNecessaryFiles {
+    UtilsClass utilsClass = new UtilsClass();
 
    @Test
     public void test(){

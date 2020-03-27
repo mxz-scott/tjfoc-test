@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.mainSubChain;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
@@ -34,6 +35,7 @@ public class TestWithConfigChange02_ClearDB {
     TestMgTool testMgTool = new TestMgTool();
     SubLedgerCmd subLedgerCmd = new SubLedgerCmd();
     UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
     public static String glbChain01= "glbCh1";
 
@@ -165,8 +167,8 @@ public class TestWithConfigChange02_ClearDB {
 
     //@AfterClass
     public static void resetPeerAndSDK()throws  Exception {
-        UtilsClass utilsClass = new UtilsClass();
-        utilsClass.setAndRestartPeerList(resetPeerBase);
-        commonFunc.setAndRestartSDK(resetSDKConfig);
+        UtilsClass utilsClassTemp = new UtilsClass();
+        utilsClassTemp.setAndRestartPeerList(resetPeerBase);
+        utilsClassTemp.setAndRestartSDK(resetSDKConfig);
     }
 }

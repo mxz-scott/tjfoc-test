@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.mixTestWithConfigChange;
 
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.functionTest.Conditions.SetSDKWalletDisabled;
@@ -28,6 +29,7 @@ public class SysTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
     String mongoID="e5b4023db787";
     String databaseIP="";
 
@@ -77,7 +79,7 @@ public class SysTest {
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute(killSDKCmd);
-        setSDKWalletAddrDBMongo(utilsClass.getIPFromStr(SDKADD));
+        commonFunc.setSDKWalletAddrDBMongo(utilsClass.getIPFromStr(SDKADD));
         startMongo();
         databaseIP=utilsClass.getSDKWalletDBConfig().split(",")[1];
         Shell shellMongo=new Shell(databaseIP,USERNAME,PASSWD);
@@ -123,7 +125,7 @@ public class SysTest {
 
         //系统配置数据库为mysql时，且数据库正常进行检查
         shellSDK.execute(killSDKCmd);
-        setSDKWalletAddrDBMysql(utilsClass.getIPFromStr(SDKADD));
+        commonFunc.setSDKWalletAddrDBMysql(utilsClass.getIPFromStr(SDKADD));
         databaseIP=utilsClass.getSDKWalletDBConfig().split(",")[1];
         Shell shellMysql=new Shell(databaseIP,USERNAME,PASSWD);
 
@@ -170,7 +172,7 @@ public class SysTest {
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute(killSDKCmd);
-        setSDKWalletDBMongoAddrDBMysql(utilsClass.getIPFromStr(SDKADD));
+        commonFunc.setSDKWalletDBMongoAddrDBMysql(utilsClass.getIPFromStr(SDKADD));
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");
        sleepAndSaveInfo(5 * 1000);
@@ -254,7 +256,7 @@ public class SysTest {
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute(killSDKCmd);
-        setSDKWalletDBMysqlAddrDBMongo(utilsClass.getIPFromStr(SDKADD));
+        commonFunc.setSDKWalletDBMysqlAddrDBMongo(utilsClass.getIPFromStr(SDKADD));
 
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");

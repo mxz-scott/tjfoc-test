@@ -28,6 +28,7 @@ public class StoreTest {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
+    UtilsClass utilsClass = new UtilsClass();
 
     /**
      * 普通存证，内容为text
@@ -53,7 +54,7 @@ public class StoreTest {
     @Test
     public void TC002_createStore() throws Exception {
 
-        String Data = "{\"testJson1\":\"json"+UtilsClass.Random(6)+"\"}";
+        String Data = "{\"testJson1\":\"json"+utilsClass.Random(6)+"\"}";
         String response= store.CreateStore(Data);
         Thread.sleep(SLEEPTIME);
         assertThat(response, containsString("200"));
@@ -69,7 +70,7 @@ public class StoreTest {
     @Test
     public void TC003_createStore() throws Exception {
 
-        String Data = "{\"testJson1\":\"json"+UtilsClass.Random(6)+"\"," +
+        String Data = "{\"testJson1\":\"json"+utilsClass.Random(6)+"\"," +
                 "\"City\":\"Suzhou\"}";
         String response= store.CreateStore(Data);
         Thread.sleep(SLEEPTIME);
@@ -84,7 +85,7 @@ public class StoreTest {
     @Test
     public void TC004_createStore() throws Exception {
 
-        String Data = "{\"testJson2\":\"json"+UtilsClass.Random(6)+"\"," +
+        String Data = "{\"testJson2\":\"json"+utilsClass.Random(6)+"\"," +
                 "\"City\":\"Suzhou\"," +
                 "\"Name\":\"Sam\"}";
         String response= store.CreateStore(Data);
@@ -102,7 +103,7 @@ public class StoreTest {
     public void TC005_createStore() throws Exception {
 
         JSONObject result = new JSONObject();
-        result.put("testJson3", UtilsClass.Random(6));
+        result.put("testJson3", utilsClass.Random(6));
         result.put("City", "Suzhou");
         result.put("Name", "Sam");
         result.put("Address", "Gao tie xin cheng");
@@ -131,13 +132,13 @@ public class StoreTest {
 
             fileInfo.put("fileName", "201911041058.jpg");
             fileInfo.put("fileSize", "298KB");
-            fileInfo.put("fileModel", UtilsClass.Random(6));
+            fileInfo.put("fileModel", utilsClass.Random(6));
             fileInfo.put("fileLongitude", 123.45784545);
             fileInfo.put("fileStartTime", "1571901219");
             fileInfo.put("fileFormat", "jpg");
             fileInfo.put("fileLatitude", 31.25648);
 
-            data.put("projectCode", UtilsClass.Random(10));
+            data.put("projectCode", utilsClass.Random(10));
             data.put("waybillId", "1260");
             data.put("fileInfo", fileInfo);
             data.put("fileUrl", "/var/mobile/containers/data/111");
@@ -168,14 +169,14 @@ public class StoreTest {
     @Test
     public void TC010_createBigSizeStore() throws Exception {
 
-        String Data = UtilsClass.Random(10) + UtilsClass.readStringFromFile(resourcePath +
+        String Data = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath +
                 "bigsize1.txt");
         String response = store.CreateStore(Data);
         assertThat(response, containsString("200"));
         assertThat(response, containsString("Data"));
 
 
-        String Data2 = UtilsClass.Random(10) + UtilsClass.readStringFromFile(resourcePath
+        String Data2 = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
                 +  "bigsize2.txt");
         String response2 = store.CreateStore(Data2);
         assertThat(response2, containsString("200"));

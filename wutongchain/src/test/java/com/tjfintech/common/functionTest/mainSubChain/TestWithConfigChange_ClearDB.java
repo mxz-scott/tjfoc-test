@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.mainSubChain;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
@@ -34,6 +35,7 @@ public class TestWithConfigChange_ClearDB {
     TestMgTool testMgTool = new TestMgTool();
     SubLedgerCmd subLedgerCmd = new SubLedgerCmd();
     UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
     public static String glbChain01= "glbCh1";
     public static String glbChain02= "glbCh2";
@@ -64,7 +66,7 @@ public class TestWithConfigChange_ClearDB {
     @Test
     public void TC1538_quitMainJoinPeer()throws Exception{
         //配置sdk节点集群仅为Peer1并重启sdk
-        setSDKOnePeer(utilsClass.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
+        commonFunc.setSDKOnePeer(utilsClass.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
         utilsClass.setAndRestartSDK();
         //创建子链01 包含节点A、B、C
         String chainName1="tc1538_01";
@@ -150,8 +152,8 @@ public class TestWithConfigChange_ClearDB {
     public void TC1537_2144_createChainWithJoinPeer()throws Exception{
         assertEquals(3,subLedgerCmd.getLedgerMemNo(glbChain01));//动态加入节点前检查节点集群信息
 
-        setPeerConfig(PEER3IP);//设置Peer3 config.toml文件为不包含自己节点信息的配置文件 20191219确认不用配置自己的信息
-        addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
+        commonFunc.setPeerConfig(PEER3IP);//设置Peer3 config.toml文件为不包含自己节点信息的配置文件 20191219确认不用配置自己的信息
+        commonFunc.addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
         //动态加入节点168
         String resp2 = mgToolCmd.addPeer("join",PEER1IP+":"+PEER1RPCPort,
                 "/ip4/"+PEER3IP,"/tcp/60011",PEER3RPCPort);
@@ -252,8 +254,8 @@ public class TestWithConfigChange_ClearDB {
     //测试使用数据节点作为子链集群节点时是否能够创建 预期是不能创建
     @Test
     public void TC1659_1655_createChainWithDataPeer()throws Exception{
-        setPeerConfig(PEER3IP);//设置Peer3 config.toml文件为不包含自己节点信息的配置文件 20191219确认不用配置自己的信息
-        addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
+        commonFunc.setPeerConfig(PEER3IP);//设置Peer3 config.toml文件为不包含自己节点信息的配置文件 20191219确认不用配置自己的信息
+        commonFunc.addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
         //动态加入节点168
         String resp2 = mgToolCmd.addPeer("observer",PEER1IP+":"+PEER1RPCPort,
                 "/ip4/"+PEER3IP,"/tcp/60011",PEER3RPCPort);

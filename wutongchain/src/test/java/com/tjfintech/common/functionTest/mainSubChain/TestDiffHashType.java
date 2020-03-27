@@ -32,6 +32,7 @@ public class TestDiffHashType {
 
     MgToolCmd mgToolCmd =new MgToolCmd();
     UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
     @Test
     public void TC1649_1650_HashChange()throws Exception{
@@ -57,7 +58,7 @@ public class TestDiffHashType {
 
         //设置主链sm3 sdk使用sha256 （子链sha256）
 //        utilsClass.setAndRestartPeerList("sed -i 's/sm3/sha256/g " + PTPATH + "conf/base.toml");
-        setSDKCryptHashType(utilsClass.getIPFromStr(SDKADD),"sha256");//将hashtype设置为sha256
+        commonFunc.setSDKCryptHashType(utilsClass.getIPFromStr(SDKADD),"sha256");//将hashtype设置为sha256
         utilsClass.setAndRestartSDK();//重启sdk
 
         sleepAndSaveInfo(SLEEPTIME);
@@ -88,7 +89,7 @@ public class TestDiffHashType {
 
         //设置主链sm3 sdk使用sm3 （子链sha256）
         //utilsClass.setAndRestartPeerList(resetPeerBase);
-        setSDKCryptHashType(utilsClass.getIPFromStr(SDKADD),"sm3");//将hashtype设置为sm3
+        commonFunc.setSDKCryptHashType(utilsClass.getIPFromStr(SDKADD),"sm3");//将hashtype设置为sm3
         utilsClass.setAndRestartSDK();
 
         //检查主/子链可以成功发送

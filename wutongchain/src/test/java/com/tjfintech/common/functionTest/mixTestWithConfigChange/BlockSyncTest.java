@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.mixTestWithConfigChange;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
@@ -45,6 +46,7 @@ public class BlockSyncTest {
     ArrayList<String> hashList = new ArrayList<>();
     TestTxType testTxType = new TestTxType();
     UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
     String wvmHash = "";
 
@@ -88,9 +90,9 @@ public class BlockSyncTest {
     @Test
     public void TC969_SyncNoContractTxDisableCtFlag()throws Exception{
         String syncPeer=PEER2IP;
-        setPeerContractEnabled(PEER1IP,"false");
-        setPeerContractEnabled(PEER2IP,"false");
-        setPeerContractEnabled(PEER4IP,"false");
+        commonFunc.setPeerContractEnabled(PEER1IP,"false");
+        commonFunc.setPeerContractEnabled(PEER2IP,"false");
+        commonFunc.setPeerContractEnabled(PEER4IP,"false");
         utilsClass.setAndRestartPeerList();
         //停止节点PEER2
         Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
@@ -120,9 +122,9 @@ public class BlockSyncTest {
     @Test
     public void TC923_SyncNoContractTxCtFlagChange1()throws Exception{
         String syncPeer=PEER2IP;
-        setPeerContractEnabled(PEER1IP,"false");
-        setPeerContractEnabled(PEER2IP,"false");
-        setPeerContractEnabled(PEER4IP,"false");
+        commonFunc.setPeerContractEnabled(PEER1IP,"false");
+        commonFunc.setPeerContractEnabled(PEER2IP,"false");
+        commonFunc.setPeerContractEnabled(PEER4IP,"false");
         utilsClass.setAndRestartPeerList();
         sleepAndSaveInfo(10000,"节点全部重启后，sdk能够成功连接上的时间较长");
 
@@ -179,7 +181,7 @@ public class BlockSyncTest {
     @Test
     public void TC986_SyncDataPeerWithTxEnableCtFlag()throws Exception{
         //设置PEER4为数据节点
-        setPeerClusterWithOneDataPeer();
+        commonFunc.setPeerClusterWithOneDataPeer();
         utilsClass.setAndRestartPeerList(clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
         utilsClass.delDataBase();//清空sdk当前使用数据库数据
         utilsClass.setAndRestartSDK();
@@ -227,7 +229,7 @@ public class BlockSyncTest {
         Contract();
 
         //节点清除db数据，并将Contract Enabled设置为false 例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setPeerContractEnabled(PEER2IP,"false");
+        commonFunc.setPeerContractEnabled(PEER2IP,"false");
         utilsClass.setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
@@ -402,7 +404,7 @@ public class BlockSyncTest {
         shellPeer4.execute(killPeerCmd);
 
         //配置sdk节点集群仅为Peer1并重启sdk
-        setSDKOnePeer(utilsClass.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
+        commonFunc.setSDKOnePeer(utilsClass.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
         utilsClass.setAndRestartSDK();
 
         StoreUTXONoCheck();

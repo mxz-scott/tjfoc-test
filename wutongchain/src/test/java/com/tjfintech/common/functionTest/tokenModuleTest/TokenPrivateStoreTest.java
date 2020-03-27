@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.tokenModuleTest;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.Interface.Token;
 import com.tjfintech.common.TestBuilder;
@@ -30,6 +31,8 @@ public class TokenPrivateStoreTest {
     Token tokenModule =testBuilder.getToken();
     Store store = testBuilder.getStore();
 //    Store store =testBuilder.getStore();
+    UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
     @BeforeClass
     public static void init()throws Exception
@@ -198,7 +201,7 @@ public class TokenPrivateStoreTest {
         ArrayList<String> hashList = new ArrayList<>();
 
         SDKADD = TOKENADD;
-        String Data = UtilsClass.Random(10) + UtilsClass.readStringFromFile(resourcePath +
+        String Data = utilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath +
                 "bigsize1.txt");
         String response= tokenModule.tokenCreatePrivateStore(Data,map);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
@@ -207,7 +210,7 @@ public class TokenPrivateStoreTest {
 
 
 
-        String Data2 = UtilsClass.Random(10) + UtilsClass.readStringFromFile(resourcePath
+        String Data2 = utilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
                 +  "bigsize2.txt");
         String response2 = tokenModule.tokenCreatePrivateStore(Data2,map);
         assertEquals("200",JSONObject.fromObject(response2).getString("state"));
@@ -215,7 +218,7 @@ public class TokenPrivateStoreTest {
         listData.add(Data2);
 
 
-        String Data3 = UtilsClass.Random(10) + UtilsClass.readStringFromFile(resourcePath
+        String Data3 = utilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
                 + "bigsize3.txt");
         String response3 = tokenModule.tokenCreatePrivateStore(Data3,map);
         assertEquals("400",JSONObject.fromObject(response3).getString("state"));

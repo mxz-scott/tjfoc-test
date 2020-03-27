@@ -1,4 +1,5 @@
 package com.tjfintech.common.functionTest.syncInterfaceTest;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
@@ -25,7 +26,8 @@ public class SyncManageTest {
     Store store =testBuilder.getStore();
     MultiSign multiSign =testBuilder.getMultiSign();
     SoloSign soloSign =testBuilder.getSoloSign();
-    UtilsClass utilsClass=new UtilsClass();
+    UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
     String okCode ="200";
     String errCode="504";
@@ -36,7 +38,7 @@ public class SyncManageTest {
 
     @Test
     public void testTimeoutForAdmin() throws Exception{
-        commonFunc.setAndRestartSDK(resetSDKConfig);
+        utilsClass.setAndRestartSDK(resetSDKConfig);
         testSyncAdmin(String.valueOf(UTXOSHORTMEOUT),okCode);
     }
 

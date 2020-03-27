@@ -1,16 +1,17 @@
 package com.tjfintech.common.functionTest.Conditions;
 
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
-import static com.tjfintech.common.CommonFunc.checkProgramActive;
 import static com.tjfintech.common.utils.FileOperation.getTokenApiConfigValueByShell;
 import static com.tjfintech.common.utils.FileOperation.uploadFiletoDestDirByssh;
 import static com.tjfintech.common.utils.UtilsClass.*;
 
 @Slf4j
 public class SetTokenApiDatabaseMysql {
+    CommonFunc commonFunc = new CommonFunc();
     UtilsClass utilsClass = new UtilsClass();
 
    @Test
@@ -32,11 +33,11 @@ public class SetTokenApiDatabaseMysql {
        shellExeCmd(utilsClass.getIPFromStr(TOKENADD),startTokenApiCmd);
 
        //检查节点及sdk启动无异常
-       checkProgramActive(PEER1IP,PeerTPName);
-       checkProgramActive(PEER2IP,PeerTPName);
-       checkProgramActive(PEER4IP,PeerTPName);
-       checkProgramActive(utilsClass.getIPFromStr(rSDKADD),SDKTPName);
-       checkProgramActive(utilsClass.getIPFromStr(TOKENADD),TokenTPName);
+       commonFunc.checkProgramActive(PEER1IP,PeerTPName);
+       commonFunc.checkProgramActive(PEER2IP,PeerTPName);
+       commonFunc.checkProgramActive(PEER4IP,PeerTPName);
+       commonFunc.checkProgramActive(utilsClass.getIPFromStr(rSDKADD),SDKTPName);
+       commonFunc.checkProgramActive(utilsClass.getIPFromStr(TOKENADD),TokenTPName);
 
        subLedger = "";
 

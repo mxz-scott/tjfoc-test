@@ -115,7 +115,7 @@ public class TestPermission {
             bExe=true;
         }
 
-        commonFunc.setAndRestartSDK();
+        utilsClass.setAndRestartSDK();
 
 
         pFun1.Data="GlobalStore:" + UtilsClass.Random(4);
@@ -690,13 +690,13 @@ public class TestPermission {
 
         //权限设置通知的节点与SDK配置的节点不一致，权限设置有效
         String sdkIP = utilsClass.getIPFromStr(SDKADD);
-        setSDKOnePeer(sdkIP,PEER2IP + ":" + PEER2RPCPort,"true");
+        commonFunc.setSDKOnePeer(sdkIP,PEER2IP + ":" + PEER2RPCPort,"true");
         shellCmd(sdkIP,killSDKCmd);
         shellCmd(sdkIP,startSDKCmd);
         Thread.sleep(5000);
         shellCmd(peerIP246.split(":")[0],cmd2 + "211");//向节点246发送权限变更通知
-        setSDKOnePeer(sdkIP,PEER1IP + ":" + PEER1RPCPort,"true");
-        addSDKPeerCluster(sdkIP,PEER2IP + ":" + PEER2RPCPort,"true");
+        commonFunc.setSDKOnePeer(sdkIP,PEER1IP + ":" + PEER1RPCPort,"true");
+        commonFunc.addSDKPeerCluster(sdkIP,PEER2IP + ":" + PEER2RPCPort,"true");
         assertThat(pFun1.createStore(), containsString("1"));
 
 

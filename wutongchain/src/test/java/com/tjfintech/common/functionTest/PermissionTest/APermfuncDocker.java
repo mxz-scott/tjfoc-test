@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.PermissionTest;
 
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -12,8 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.lang.*;
 
-import static com.tjfintech.common.utils.UtilsClass.encryptBASE64;
-
 
 @Slf4j
 public class APermfuncDocker {
@@ -21,6 +20,7 @@ public class APermfuncDocker {
     Contract contract=testBuilder.getContract();
     Store store=testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
     String version ="2.0";
     String name ="0111";
 

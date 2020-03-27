@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.mixTestWithConfigChange;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
@@ -26,6 +27,7 @@ public class TestMgTool {
     Store store =testBuilder.getStore();
     MgToolCmd mgToolCmd = new MgToolCmd();
     UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
     String rpcPort=PEER3RPCPort;
     String tcpPort=PEER3TCPPort;
@@ -55,7 +57,7 @@ public class TestMgTool {
         PEER4MAC=utilsClass.getMACAddr(PEER4IP,USERNAME,PASSWD).trim();
 
         utilsClass.setAndRestartPeerList(resetPeerBase);
-        commonFunc.setAndRestartSDK(resetSDKConfig);
+        utilsClass.setAndRestartSDK(resetSDKConfig);
 
         mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
 
@@ -263,7 +265,7 @@ public class TestMgTool {
         //先将待加入节点进程停止
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
         shellPeer3.execute(killPeerCmd);
-        setPeerConfig(PEER3IP);//设置Peer3 config.toml文件为不包含自己节点信息的配置文件 20191219确认不用配置自己的信息
+        commonFunc.setPeerConfig(PEER3IP);//设置Peer3 config.toml文件为不包含自己节点信息的配置文件 20191219确认不用配置自己的信息
 //        addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
         mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
 
@@ -303,7 +305,7 @@ public class TestMgTool {
         String resp2 = mgToolCmd.addPeer("observer",peer1IPPort,ipType+PEER3IP,tcpType+tcpPort,rpcPort);
         assertEquals(true,resp2.contains("success"));
         queryPeerListNo(peer1IPPort,DynamicPeerNo);//通过共识节点查询集群列表
-        setPeerConfig(PEER3IP);//设置Peer3 config.toml文件为不包含自己节点信息的配置文件 20191219确认不用配置自己的信息
+        commonFunc.setPeerConfig(PEER3IP);//设置Peer3 config.toml文件为不包含自己节点信息的配置文件 20191219确认不用配置自己的信息
 //        addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
 
         shellExeCmd(PEER3IP,startPeerCmd);
@@ -517,11 +519,11 @@ public class TestMgTool {
         assertEquals(rsp.contains("Count:\t0"),true);
         //log.info("Current Unconfirmed Tx Count:"+rsp.substring(rsp.lastIndexOf("Count:")+1).trim());
 
-        setPeerPackTime(PEER1IP,"20000");
-        setPeerPackTime(PEER2IP,"20000");
-        setPeerPackTime(PEER4IP,"20000");
+        commonFunc.setPeerPackTime(PEER1IP,"20000");
+        commonFunc.setPeerPackTime(PEER2IP,"20000");
+        commonFunc.setPeerPackTime(PEER4IP,"20000");
         utilsClass.setAndRestartPeerList();
-        commonFunc.setAndRestartSDK(resetSDKConfig);
+        utilsClass.setAndRestartSDK(resetSDKConfig);
 
 //        Shell shellPeer1=new Shell(PEER1IP,USERNAME,PASSWD);
 //        shellPeer1.execute(killPeerCmd);
@@ -554,7 +556,7 @@ public class TestMgTool {
 
         //恢复原始配置
         utilsClass.setAndRestartPeerList(resetPeerBase);
-        commonFunc.setAndRestartSDK(resetSDKConfig);
+        utilsClass.setAndRestartSDK(resetSDKConfig);
 
 
         //需要补充以上交易上链后的交易查询

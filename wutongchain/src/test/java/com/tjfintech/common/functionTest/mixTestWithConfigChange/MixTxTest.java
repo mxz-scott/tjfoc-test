@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.mixTestWithConfigChange;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
@@ -37,6 +38,7 @@ public class MixTxTest {
     FileOperation fileOper = new FileOperation();
     ArrayList<String> txHashList = new ArrayList<>();
     ArrayList<String> txHashNo = new ArrayList<>();
+    CommonFunc commonFunc = new CommonFunc();
     UtilsClass utilsClass = new UtilsClass();
 
     @Before
@@ -63,9 +65,9 @@ public class MixTxTest {
 
         Thread.sleep(6000);
         //设置打包时间为20s 使得各种类型的交易同时打包
-        setPeerPackTime(PEER1IP,"20000");
-        setPeerPackTime(PEER2IP,"20000");
-        setPeerPackTime(PEER4IP,"20000");
+        commonFunc.setPeerPackTime(PEER1IP,"20000");
+        commonFunc.setPeerPackTime(PEER2IP,"20000");
+        commonFunc.setPeerPackTime(PEER4IP,"20000");
         utilsClass.setAndRestartPeerList();
         utilsClass.setAndRestartSDK(resetSDKConfig);
         String resp = store.GetHeight();

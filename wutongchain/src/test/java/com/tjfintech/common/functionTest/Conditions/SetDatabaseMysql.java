@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.Conditions;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import static com.tjfintech.common.utils.UtilsClass.*;
 
 @Slf4j
 public class SetDatabaseMysql {
+   CommonFunc commonFunc = new CommonFunc();
    UtilsClass utilsClass = new UtilsClass();
    @Test
     public void setDBMysql()throws Exception{
@@ -25,10 +27,10 @@ public class SetDatabaseMysql {
        shellExeCmd(utilsClass.getIPFromStr(SDKADD),startSDKCmd);
 
        //检查节点及sdk启动无异常
-       checkProgramActive(PEER1IP,PeerTPName);
-       checkProgramActive(PEER2IP,PeerTPName);
-       checkProgramActive(PEER4IP,PeerTPName);
-       checkProgramActive(PEER1IP,SDKTPName);
+       commonFunc.checkProgramActive(PEER1IP,PeerTPName);
+       commonFunc.checkProgramActive(PEER2IP,PeerTPName);
+       commonFunc.checkProgramActive(PEER4IP,PeerTPName);
+       commonFunc.checkProgramActive(PEER1IP,SDKTPName);
 
        //设置管理工具sm3
        shellExeCmd(PEER1IP,"sed -i 's/sha256/sm3/g' " + ToolPATH + "conf/base.toml");

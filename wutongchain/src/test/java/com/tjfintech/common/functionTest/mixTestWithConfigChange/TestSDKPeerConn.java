@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.mixTestWithConfigChange;
 
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -10,9 +11,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-
-import static com.tjfintech.common.CommonFunc.addSDKPeerCluster;
-import static com.tjfintech.common.CommonFunc.setSDKOnePeer;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 
@@ -25,6 +23,7 @@ public class TestSDKPeerConn {
     Store store =testBuilder.getStore();
     MultiSign multiSign =testBuilder.getMultiSign();
     UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
     @Test
     public void testSDKConnections()throws Exception{
@@ -34,8 +33,8 @@ public class TestSDKPeerConn {
 
         shellSDK.execute(killSDKCmd);
         //配置sdk节点集群为两个
-        setSDKOnePeer(utilsClass.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
-        addSDKPeerCluster(utilsClass.getIPFromStr(SDKADD),PEER2IP + ":" + PEER2RPCPort,"true");
+        commonFunc.setSDKOnePeer(utilsClass.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
+        commonFunc.addSDKPeerCluster(utilsClass.getIPFromStr(SDKADD),PEER2IP + ":" + PEER2RPCPort,"true");
         shellSDK.execute(startSDKCmd);
 
         Shell shellPeer1 = new Shell(PEER1IP, USERNAME, PASSWD);

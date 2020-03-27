@@ -1,10 +1,12 @@
 package com.tjfintech.common.functionTest.mixTestWithConfigChange;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.Shell;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
@@ -22,6 +24,8 @@ public class DynamicChangePeerCluster_ClearDB {
     Store store =testBuilder.getStore();
     MgToolCmd mgToolCmd = new MgToolCmd();
     TestMgTool testMgTool = new TestMgTool();
+    UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
     String rpcPort=PEER3RPCPort;
     String tcpPort=PEER3TCPPort;
@@ -178,13 +182,13 @@ public class DynamicChangePeerCluster_ClearDB {
 
     public void addDataPeerConfigWithSelfInfo(){
         //设置动态加入节点config.toml文件 不带自己的配置信息
-        setPeerConfig(PEER3IP);
-        addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
+        commonFunc.setPeerConfig(PEER3IP);
+        commonFunc.addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
     }
     public void addConsensusPeerConfigWithSelfInfo(){
         //设置动态加入节点config.toml文件 不带自己的配置信息
-        setPeerConfig(PEER3IP);
-        addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
+        commonFunc.setPeerConfig(PEER3IP);
+        commonFunc.addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
     }
 
     //动态加入共识节点
