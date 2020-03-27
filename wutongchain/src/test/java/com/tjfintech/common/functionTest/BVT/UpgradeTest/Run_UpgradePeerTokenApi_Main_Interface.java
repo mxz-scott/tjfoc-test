@@ -1,19 +1,10 @@
 package com.tjfintech.common.functionTest.BVT.UpgradeTest;
 
 import com.tjfintech.common.BeforeCondition;
-import com.tjfintech.common.functionTest.BVT.P1_High.Run_Main_Finservice;
+import com.tjfintech.common.functionTest.upgrade.UpgradeFinserviceTest;
 import com.tjfintech.common.functionTest.Conditions.*;
 import com.tjfintech.common.functionTest.Conditions.Upgrade.*;
-import com.tjfintech.common.functionTest.contract.DockerContractTest;
-import com.tjfintech.common.functionTest.contract.WVMContractTest_UpgradeTestOnly;
-import com.tjfintech.common.functionTest.mainSubChain.TestMainSubChain_UpgradeTestOnly;
-import com.tjfintech.common.functionTest.mixTestWithConfigChange.DynamicChangePeerCluster_ClearDB;
-import com.tjfintech.common.functionTest.store.StoreTest_UpgradeTestOnly;
-import com.tjfintech.common.functionTest.tokenModuleTest.*;
-import com.tjfintech.common.functionTest.upgrade.UpgradeTestHistoryData;
 import com.tjfintech.common.functionTest.upgrade.UpgradeTestHistoryData_TokenApi;
-import com.tjfintech.common.functionTest.utxoMultiSign.MultiTest;
-import com.tjfintech.common.functionTest.utxoSingleSign.SoloTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -38,7 +29,7 @@ import org.junit.runners.Suite;
         SetTestVersionRelease.class,
         BeforeCondition.class,
 
-        Run_Main_Finservice.class,
+        UpgradeFinserviceTest.class,
 
 
         SetPeerUpgradeTrue.class,
@@ -50,7 +41,7 @@ import org.junit.runners.Suite;
         UpgradeTestHistoryData_TokenApi.class,
 
         //升级后简单回归测试
-        Run_Main_Finservice.class,
+        UpgradeFinserviceTest.class,
 })
 
 //Build Validation Test
