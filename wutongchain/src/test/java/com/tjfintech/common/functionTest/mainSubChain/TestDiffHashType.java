@@ -9,6 +9,7 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.functionTest.Conditions.SetHashTypeSHA256;
 import com.tjfintech.common.functionTest.Conditions.SetHashTypeSM3;
 import com.tjfintech.common.utils.SubLedgerCmd;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.*;
@@ -30,6 +31,7 @@ public class TestDiffHashType {
     BeforeCondition beforeCondition = new BeforeCondition();
 
     MgToolCmd mgToolCmd =new MgToolCmd();
+    UtilsClass utilsClass = new UtilsClass();
 
     @Test
     public void TC1649_1650_HashChange()throws Exception{
@@ -54,9 +56,9 @@ public class TestDiffHashType {
 //        assertEquals(resp.contains(glbChain01), true);
 
         //设置主链sm3 sdk使用sha256 （子链sha256）
-//        setAndRestartPeerList("sed -i 's/sm3/sha256/g " + PTPATH + "conf/base.toml");
-        setSDKCryptHashType(getIPFromStr(SDKADD),"sha256");//将hashtype设置为sha256
-        setAndRestartSDK();//重启sdk
+//        utilsClass.setAndRestartPeerList("sed -i 's/sm3/sha256/g " + PTPATH + "conf/base.toml");
+        setSDKCryptHashType(utilsClass.getIPFromStr(SDKADD),"sha256");//将hashtype设置为sha256
+        utilsClass.setAndRestartSDK();//重启sdk
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链可以成功发送，主链无法成功发送
@@ -85,9 +87,9 @@ public class TestDiffHashType {
 
 
         //设置主链sm3 sdk使用sm3 （子链sha256）
-        //setAndRestartPeerList(resetPeerBase);
-        setSDKCryptHashType(getIPFromStr(SDKADD),"sm3");//将hashtype设置为sm3
-        setAndRestartSDK();
+        //utilsClass.setAndRestartPeerList(resetPeerBase);
+        setSDKCryptHashType(utilsClass.getIPFromStr(SDKADD),"sm3");//将hashtype设置为sm3
+        utilsClass.setAndRestartSDK();
 
         //检查主/子链可以成功发送
         subLedger="";
@@ -168,7 +170,7 @@ public class TestDiffHashType {
 
 
         //设置主链sha256 sdk使用sm3 （子链sha256）
-        setAndRestartSDK(resetSDKConfig);
+        utilsClass.setAndRestartSDK(resetSDKConfig);
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链可以成功发送，主链无法成功发送

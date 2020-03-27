@@ -44,14 +44,15 @@ public class BlockSyncTest {
     public long OnChainSleep = 5000;
     ArrayList<String> hashList = new ArrayList<>();
     TestTxType testTxType = new TestTxType();
+    UtilsClass utilsClass = new UtilsClass();
 
     String wvmHash = "";
 
     @Before
     public void beforeConfig() throws Exception {
-        setAndRestartPeerList(clearPeerDB,clearPeerWVMsrc,clearPeerWVMbin,resetPeerBase,resetPeerConfig);
-        delDataBase();//清空sdk当前使用数据库数据
-        setAndRestartSDK();
+        utilsClass.setAndRestartPeerList(clearPeerDB,clearPeerWVMsrc,clearPeerWVMbin,resetPeerBase,resetPeerConfig);
+        utilsClass.delDataBase();//清空sdk当前使用数据库数据
+        utilsClass.setAndRestartSDK();
         hashList.clear();
         testTxType.initSetting();
         log.info("*********************before config end*********************");
@@ -68,7 +69,7 @@ public class BlockSyncTest {
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         WVMTx();
         //停止其中一个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
+        utilsClass.setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3);
@@ -90,7 +91,7 @@ public class BlockSyncTest {
         setPeerContractEnabled(PEER1IP,"false");
         setPeerContractEnabled(PEER2IP,"false");
         setPeerContractEnabled(PEER4IP,"false");
-        setAndRestartPeerList();
+        utilsClass.setAndRestartPeerList();
         //停止节点PEER2
         Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
         shellPeer.execute(killPeerCmd);
@@ -99,7 +100,7 @@ public class BlockSyncTest {
         MgToolStore();  //使用管理工具短时间内发送多笔存证交易
         WVMTx();  //当前Contract下合约Enabled会影响wvm合约安装，按照开发解释是不应该有影响 20190815
         //个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
+        utilsClass.setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3);
@@ -122,7 +123,7 @@ public class BlockSyncTest {
         setPeerContractEnabled(PEER1IP,"false");
         setPeerContractEnabled(PEER2IP,"false");
         setPeerContractEnabled(PEER4IP,"false");
-        setAndRestartPeerList();
+        utilsClass.setAndRestartPeerList();
         sleepAndSaveInfo(10000,"节点全部重启后，sdk能够成功连接上的时间较长");
 
         StoreUTXO();
@@ -130,7 +131,7 @@ public class BlockSyncTest {
         WVMTx();
 
         //节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,resetPeerBase);
+        utilsClass.setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,resetPeerBase);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3);
@@ -159,7 +160,7 @@ public class BlockSyncTest {
         WVMTx();
         Contract();
         //停止其中一个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
+        utilsClass.setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*5+ContractInstallSleep);
@@ -179,9 +180,9 @@ public class BlockSyncTest {
     public void TC986_SyncDataPeerWithTxEnableCtFlag()throws Exception{
         //设置PEER4为数据节点
         setPeerClusterWithOneDataPeer();
-        setAndRestartPeerList(clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
-        delDataBase();//清空sdk当前使用数据库数据
-        setAndRestartSDK();
+        utilsClass.setAndRestartPeerList(clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
+        utilsClass.delDataBase();//清空sdk当前使用数据库数据
+        utilsClass.setAndRestartSDK();
         testTxType.initSetting();
 
         String syncPeer=PEER4IP; //247为非共识节点
@@ -195,7 +196,7 @@ public class BlockSyncTest {
         WVMTx();
         Contract();
         //停止其中一个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
+        utilsClass.setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3+ContractInstallSleep);
@@ -227,7 +228,7 @@ public class BlockSyncTest {
 
         //节点清除db数据，并将Contract Enabled设置为false 例如Peer2 --》10.1.3.246，重启节点 开始同步数据
         setPeerContractEnabled(PEER2IP,"false");
-        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
+        utilsClass.setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3);
@@ -239,7 +240,7 @@ public class BlockSyncTest {
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         //等待交易上链
         //恢复PEER2配置 检查可以正常同步
-        setAndRestartPeer(syncPeer,resetPeerBase);
+        utilsClass.setAndRestartPeer(syncPeer,resetPeerBase);
         Thread.sleep(OnChainSleep*5 +ContractInstallSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
         assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
@@ -263,7 +264,7 @@ public class BlockSyncTest {
         WVMTx();
         Contract();
         //无基础镜像时同步包含合约交易的区块交易
-        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,resetPeerBase);
+        utilsClass.setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,resetPeerBase);
         //同步失败节点异常 停止运行
 
         sleepAndSaveInfo(40000,"tx sync block waiting......");
@@ -271,7 +272,7 @@ public class BlockSyncTest {
         ExeToolCmdAndChk(syncPeer,"./toolkit height -p "+ synvPeerPort,"rpc error");
 
         //安装合约镜像
-        setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,ccenvPull);
+        utilsClass.setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,ccenvPull);
 
         //等待镜像安装时间
         sleepAndSaveInfo(ContractInstallSleep,"docker images installation waiting......");
@@ -330,8 +331,8 @@ public class BlockSyncTest {
         WVMTxNoCheck(wvmHash);
 
         //清空剩下两个节点db数据 并重启
-        setAndRestartPeer(PEER2IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
-        setAndRestartPeer(PEER4IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
+        utilsClass.setAndRestartPeer(PEER2IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
+        utilsClass.setAndRestartPeer(PEER4IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*5);
@@ -365,8 +366,8 @@ public class BlockSyncTest {
 
         ContractNoCheck();
         //清空剩下两个节点db数据 并重启
-        setAndRestartPeer(PEER2IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
-        setAndRestartPeer(PEER4IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
+        utilsClass.setAndRestartPeer(PEER2IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
+        utilsClass.setAndRestartPeer(PEER4IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*3+ContractInstallSleep);
@@ -401,16 +402,16 @@ public class BlockSyncTest {
         shellPeer4.execute(killPeerCmd);
 
         //配置sdk节点集群仅为Peer1并重启sdk
-        setSDKOnePeer(getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
-        setAndRestartSDK();
+        setSDKOnePeer(utilsClass.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
+        utilsClass.setAndRestartSDK();
 
         StoreUTXONoCheck();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         ContractNoCheck();
         WVMTxNoCheck(wvmHash);
         //清空剩下两个节点db数据 并重启
-        setAndRestartPeer(PEER2IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
-        setAndRestartPeer(PEER4IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
+        utilsClass.setAndRestartPeer(PEER2IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
+        utilsClass.setAndRestartPeer(PEER4IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
         Thread.sleep(OnChainSleep*5+ContractInstallSleep);
@@ -714,9 +715,10 @@ public class BlockSyncTest {
 
     //@AfterClass
     public static void resetEnv()throws Exception{
-        setAndRestartPeerList(clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,resetPeerBase,resetPeerConfig);
-        delDataBase();//清空sdk当前使用数据库数据
-        setAndRestartSDK(resetSDKConfig);
+        UtilsClass utilsClassTemp = new UtilsClass();
+        utilsClassTemp.setAndRestartPeerList(clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,resetPeerBase,resetPeerConfig);
+        utilsClassTemp.delDataBase();//清空sdk当前使用数据库数据
+        utilsClassTemp.setAndRestartSDK(resetSDKConfig);
     }
 
 }

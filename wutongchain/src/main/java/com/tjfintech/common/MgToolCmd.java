@@ -1,6 +1,7 @@
 package com.tjfintech.common;
 
 import com.tjfintech.common.utils.Shell;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 
@@ -14,6 +15,7 @@ import static com.tjfintech.common.utils.UtilsClass.subLedger;
 
 @Slf4j
 public class MgToolCmd implements ManageTool {
+    UtilsClass utilsClass = new UtilsClass();
     public String toolExePath  = "cd " + ToolPATH + ";./" + ToolTPName;
     public String licExePath  = "cd " + ToolPATH + ";./license";
     
@@ -176,7 +178,7 @@ public class MgToolCmd implements ManageTool {
             sleepAndSaveInfo(SLEEPTIME*2);
             subLedger = chainNameParam.trim().split(" ")[1];
             log.info("**************  set permission 999 for " + subLedger);
-            String resp1 = setPeerPerm(PEER1IP + ":" + PEER1RPCPort, getSDKID(),"999");
+            String resp1 = setPeerPerm(PEER1IP + ":" + PEER1RPCPort, utilsClass.getSDKID(),"999");
             subLedger = "";
         }
         return resp;

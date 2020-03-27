@@ -17,7 +17,7 @@ public class SetMgToolHashTypeSM3 {
        toolList.add(PEER2IP);
        toolList.add(PEER4IP);
        //设置管理工具hashtype为sm3
-       sendCmdPeerList(toolList,"cp " + ToolPATH + "conf/baseOK.toml " + ToolPATH + "conf/base.toml");
+       utilsClass.sendCmdPeerList(toolList,"cp " + ToolPATH + "conf/baseOK.toml " + ToolPATH + "conf/base.toml");
     }
 
 }

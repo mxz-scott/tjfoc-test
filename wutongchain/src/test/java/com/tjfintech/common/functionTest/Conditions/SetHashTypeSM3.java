@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.Conditions;
 
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -8,19 +9,19 @@ import static com.tjfintech.common.utils.UtilsClass.*;
 
 @Slf4j
 public class SetHashTypeSM3 {
-
+   UtilsClass utilsClass = new UtilsClass();
    @Test
     public void setHashsm3()throws Exception{
        //设置SDK 使用sm3 清空数据库
-       shellExeCmd(getIPFromStr(SDKADD),resetSDKConfig,killSDKCmd);
-       delDataBase();//清空sdk当前使用数据库数据
+       shellExeCmd(utilsClass.getIPFromStr(SDKADD),resetSDKConfig,killSDKCmd);
+       utilsClass.delDataBase();//清空sdk当前使用数据库数据
 
        //设置节点使用sm3 清空db数据 并重启
        setPeerCluster();//设置节点集群默认全部共识节点 1/2/4
-       setAndRestartPeerList(clearPeerDB,resetPeerBase);
+       utilsClass.setAndRestartPeerList(clearPeerDB,resetPeerBase);
 
        //重启SDK
-       setAndRestartSDK();
+       utilsClass.setAndRestartSDK();
 
        //检查节点及sdk启动无异常
        checkProgramActive(PEER1IP,PeerTPName);

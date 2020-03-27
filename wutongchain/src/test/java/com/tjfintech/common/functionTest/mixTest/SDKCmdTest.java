@@ -3,6 +3,7 @@ package com.tjfintech.common.functionTest.mixTest;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.Shell;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.*;
@@ -20,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 public class SDKCmdTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
+    UtilsClass utilsClass = new UtilsClass();
     /**
      * 当前支持命令
      root@ubuntu:~/zll/chain2.0.1/sdk# ./sdk -h
@@ -45,12 +47,12 @@ public class SDKCmdTest {
 
     @Before
     public void setSDKconfig()throws Exception{
-        shellExeCmd(getIPFromStr(SDKADD),killSDKCmd,resetSDKConfig,startSDKCmd);
+        shellExeCmd(utilsClass.getIPFromStr(SDKADD),killSDKCmd,resetSDKConfig,startSDKCmd);
     }
 
 
     String exePre = "cd "+ SDKPATH + ";./" + SDKTPName;
-    String remoteIP = getIPFromStr(SDKADD);
+    String remoteIP = utilsClass.getIPFromStr(SDKADD);
 
     @Test
     public void testencrypt()throws Exception{
@@ -149,6 +151,7 @@ public class SDKCmdTest {
 
 //        @AfterClass
         public static void resetSDKConfig()throws Exception{
-            shellExeCmd(getIPFromStr(SDKADD),killSDKCmd,resetSDKConfig,startSDKCmd);
+            UtilsClass utilsClassTemp = new UtilsClass();
+            shellExeCmd(utilsClassTemp.getIPFromStr(SDKADD),killSDKCmd,resetSDKConfig,startSDKCmd);
         }
 }

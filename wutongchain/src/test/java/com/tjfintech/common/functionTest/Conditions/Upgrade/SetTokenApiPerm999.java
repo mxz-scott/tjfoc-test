@@ -12,7 +12,7 @@ public class SetTokenApiPerm999 {
 
    @Test
     public void test()throws Exception{
-       setPerm999WithParam(getIDByMgTool(getIPFromStr(TOKENADD),TokenApiPATH + "auth/key.pem"));
+       setPerm999WithParam(getIDByMgTool(utilsClass.getIPFromStr(TOKENADD),TokenApiPATH + "auth/key.pem"));
     }
 
 }

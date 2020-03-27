@@ -36,7 +36,7 @@ public class SyncManageTest {
 
     @Test
     public void testTimeoutForAdmin() throws Exception{
-        setAndRestartSDK(resetSDKConfig);
+        commonFunc.setAndRestartSDK(resetSDKConfig);
         testSyncAdmin(String.valueOf(UTXOSHORTMEOUT),okCode);
     }
 

@@ -5,6 +5,7 @@ import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.Shell;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -24,6 +25,7 @@ public class TestMgTool {
     TestBuilder testBuilder=TestBuilder.getInstance();
     Store store =testBuilder.getStore();
     MgToolCmd mgToolCmd = new MgToolCmd();
+    UtilsClass utilsClass = new UtilsClass();
 
     String rpcPort=PEER3RPCPort;
     String tcpPort=PEER3TCPPort;
@@ -47,13 +49,13 @@ public class TestMgTool {
     public void resetPeerEnv()throws Exception{
         BeforeCondition bf =new BeforeCondition();
         bf.setPermission999();
-        PEER1MAC=getMACAddr(PEER1IP,USERNAME,PASSWD).trim();
-        PEER2MAC=getMACAddr(PEER2IP,USERNAME,PASSWD).trim();
-        PEER3MAC=getMACAddr(PEER3IP,USERNAME,PASSWD).trim();
-        PEER4MAC=getMACAddr(PEER4IP,USERNAME,PASSWD).trim();
+        PEER1MAC=utilsClass.getMACAddr(PEER1IP,USERNAME,PASSWD).trim();
+        PEER2MAC=utilsClass.getMACAddr(PEER2IP,USERNAME,PASSWD).trim();
+        PEER3MAC=utilsClass.getMACAddr(PEER3IP,USERNAME,PASSWD).trim();
+        PEER4MAC=utilsClass.getMACAddr(PEER4IP,USERNAME,PASSWD).trim();
 
-        setAndRestartPeerList(resetPeerBase);
-        setAndRestartSDK(resetSDKConfig);
+        utilsClass.setAndRestartPeerList(resetPeerBase);
+        commonFunc.setAndRestartSDK(resetSDKConfig);
 
         mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
 
@@ -518,8 +520,8 @@ public class TestMgTool {
         setPeerPackTime(PEER1IP,"20000");
         setPeerPackTime(PEER2IP,"20000");
         setPeerPackTime(PEER4IP,"20000");
-        setAndRestartPeerList();
-        setAndRestartSDK(resetSDKConfig);
+        utilsClass.setAndRestartPeerList();
+        commonFunc.setAndRestartSDK(resetSDKConfig);
 
 //        Shell shellPeer1=new Shell(PEER1IP,USERNAME,PASSWD);
 //        shellPeer1.execute(killPeerCmd);
@@ -551,8 +553,8 @@ public class TestMgTool {
 
 
         //恢复原始配置
-        setAndRestartPeerList(resetPeerBase);
-        setAndRestartSDK(resetSDKConfig);
+        utilsClass.setAndRestartPeerList(resetPeerBase);
+        commonFunc.setAndRestartSDK(resetSDKConfig);
 
 
         //需要补充以上交易上链后的交易查询

@@ -4,6 +4,7 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.Shell;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +22,7 @@ public class TestLicence {
     TestBuilder testBuilder = TestBuilder.getInstance();
     MgToolCmd mgTool = new MgToolCmd();
     TestMgTool testMgTool = new TestMgTool();
+    UtilsClass utilsClass = new UtilsClass();
 
 
     int basePeerNo = 3;
@@ -39,13 +41,13 @@ public class TestLicence {
     public void resetPeerEnv()throws Exception{
         BeforeCondition bf =new BeforeCondition();
         bf.setPermission999();
-        PEER1MAC=getMACAddr(PEER1IP,USERNAME,PASSWD).trim();
-        PEER2MAC=getMACAddr(PEER2IP,USERNAME,PASSWD).trim();
-        PEER3MAC=getMACAddr(PEER3IP,USERNAME,PASSWD).trim();
-        PEER4MAC=getMACAddr(PEER4IP,USERNAME,PASSWD).trim();
+        PEER1MAC=utilsClass.getMACAddr(PEER1IP,USERNAME,PASSWD).trim();
+        PEER2MAC=utilsClass.getMACAddr(PEER2IP,USERNAME,PASSWD).trim();
+        PEER3MAC=utilsClass.getMACAddr(PEER3IP,USERNAME,PASSWD).trim();
+        PEER4MAC=utilsClass.getMACAddr(PEER4IP,USERNAME,PASSWD).trim();
 
-        setAndRestartPeerList(resetPeerBase);
-        setAndRestartSDK(resetSDKConfig);
+        utilsClass.setAndRestartPeerList(resetPeerBase);
+        commonFunc.setAndRestartSDK(resetSDKConfig);
 
         mgTool.quitPeer(peer1IPPort,PEER3IP);
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting...");
@@ -246,14 +248,14 @@ public class TestLicence {
         mgTool.quitPeer(peer1IPPort,PEER3IP);
         //停止节点，修改配置文件使用节点licence名称为peerTest.lic
         String cpLic="cp " + ToolPATH + "peer.lic " + PeerPATH + "peerTest.lic";
-        sendCmdPeerList(peerList,resetPeerBase,cpLic);
+        utilsClass.sendCmdPeerList(peerList,resetPeerBase,cpLic);
 
         setPeerLicence(PEER1IP,"peerTest.lic");//配置节点使用lice文件名为peerTest.lic
         setPeerLicence(PEER2IP,"peerTest.lic");//配置节点使用lice文件名为peerTest.lic
         setPeerLicence(PEER4IP,"peerTest.lic");//配置节点使用lice文件名为peerTest.lic
 
-//        setAndRestartPeerList();
-//        setAndRestartSDK(resetSDKConfig);
+//        utilsClass.setAndRestartPeerList();
+//        commonFunc.setAndRestartSDK(resetSDKConfig);
 
 
         Shell shellPeer3=new Shell(PEER3IP,USERNAME,PASSWD);
@@ -308,8 +310,8 @@ public class TestLicence {
         Thread.sleep(2000);
 
         //恢复原始配置重新启动节点
-        setAndRestartPeerList(resetPeerBase);
-        setAndRestartSDK(resetSDKConfig);
+        utilsClass.setAndRestartPeerList(resetPeerBase);
+        commonFunc.setAndRestartSDK(resetSDKConfig);
         testMgTool.queryPeerListNo(peer1IPPort,basePeerNo);
     }
 

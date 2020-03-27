@@ -4,6 +4,7 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
@@ -29,6 +30,7 @@ public class DockerContractInvalidTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Contract contract=testBuilder.getContract();
     Store store=testBuilder.getStore();
+    UtilsClass utilsClass = new UtilsClass();
 
     public String name=sdf.format(dt)+ RandomUtils.nextInt(100000);
     public String version="2.1";
@@ -131,8 +133,8 @@ public class DockerContractInvalidTest {
     public String installTest() throws Exception {
         //String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";
         String filePath =resourcePath + dockerFileName;
-        String file=readInput(filePath).toString();
-        String data = encryptBASE64(file.getBytes());//BASE64编码
+        String file=utilsClass.readInput(filePath).toString();
+        String data = utilsClass.encryptBASE64(file.getBytes());//BASE64编码
         String response=contract.Install(name,version,category,data);
         return response;
     }

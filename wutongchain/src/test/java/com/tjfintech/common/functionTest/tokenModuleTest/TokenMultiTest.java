@@ -1137,7 +1137,7 @@ public class TokenMultiTest {
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
-        assertEquals(get6(sAmount - trfAmount1 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+        assertEquals(utilsClass.get6(sAmount - trfAmount1 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
         queryBalance = tokenModule.tokenGetBalance(to1,desToken);
         assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
         queryBalance = tokenModule.tokenGetBalance(to2,desToken);
@@ -1209,7 +1209,7 @@ public class TokenMultiTest {
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
-        assertEquals(get6(sAmount - trfAmount1 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+        assertEquals(utilsClass.get6(sAmount - trfAmount1 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
         queryBalance = tokenModule.tokenGetBalance(to1,desToken);
         assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
         queryBalance = tokenModule.tokenGetBalance(to2,desToken);
@@ -1288,7 +1288,7 @@ public class TokenMultiTest {
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
-        assertEquals(get6(sAmount - trfAmount1 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+        assertEquals(utilsClass.get6(sAmount - trfAmount1 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
         queryBalance = tokenModule.tokenGetBalance(to1,desToken);
         assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
         queryBalance = tokenModule.tokenGetBalance(to2,desToken);
@@ -1439,7 +1439,7 @@ public class TokenMultiTest {
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
-        assertEquals(get6(sAmount - trfAmount1 - trfAmount2 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+        assertEquals(utilsClass.get6(sAmount - trfAmount1 - trfAmount2 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
         queryBalance = tokenModule.tokenGetBalance(to1,desToken);
         assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
         queryBalance = tokenModule.tokenGetBalance(to2,desToken);
@@ -1522,7 +1522,7 @@ public class TokenMultiTest {
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
-        assertEquals(get6(sAmount - trfAmount1 - trfAmount2 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+        assertEquals(utilsClass.get6(sAmount - trfAmount1 - trfAmount2 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
         queryBalance = tokenModule.tokenGetBalance(to1,desToken);
         assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
         queryBalance = tokenModule.tokenGetBalance(to2,desToken);
@@ -1595,7 +1595,7 @@ public class TokenMultiTest {
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
-        assertEquals(get6(sAmount - trfAmount1 - trfAmount2 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+        assertEquals(utilsClass.get6(sAmount - trfAmount1 - trfAmount2 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
         queryBalance = tokenModule.tokenGetBalance(to1,desToken);
         assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
         queryBalance = tokenModule.tokenGetBalance(to2,desToken);
@@ -1667,7 +1667,7 @@ public class TokenMultiTest {
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
-        assertEquals(get6(sAmount - trfAmount1 - trfAmount2), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        assertEquals(utilsClass.get6(sAmount - trfAmount1 - trfAmount2), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
         queryBalance = tokenModule.tokenGetBalance(to1,issueToken);
         assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
         queryBalance = tokenModule.tokenGetBalance(to2,issueToken);
@@ -1684,7 +1684,7 @@ public class TokenMultiTest {
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
-        assertEquals(get6(sAmount - trfAmount1 - trfAmount2 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+        assertEquals(utilsClass.get6(sAmount - trfAmount1 - trfAmount2 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
         queryBalance = tokenModule.tokenGetBalance(to1,desToken);
         assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
         queryBalance = tokenModule.tokenGetBalance(to2,desToken);
@@ -1701,7 +1701,7 @@ public class TokenMultiTest {
         sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
 
         queryBalance = tokenModule.tokenGetBalance(from,desToken);
-        assertEquals(get6(trfAmount1 - trfAmount3), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+        assertEquals(utilsClass.get6(trfAmount1 - trfAmount3), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
         queryBalance = tokenModule.tokenGetBalance(to,desToken);
         assertEquals(String.valueOf(trfAmount3), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
 
@@ -1722,10 +1722,10 @@ public class TokenMultiTest {
         queryBalance = tokenModule.tokenGetDestroyBalance();
         assertEquals(String.valueOf(desAmount + desAmount2 + desAmount3), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
         queryBalance = tokenModule.tokenGetBalance(tokenAccount1,desToken);
-        assertEquals(get6(trfAmount1 - trfAmount3 - desAmount2), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+        assertEquals(utilsClass.get6(trfAmount1 - trfAmount3 - desAmount2), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
 
         queryBalance = tokenModule.tokenGetBalance(tokenAccount3,desToken);
-        assertEquals(get6(trfAmount3 - desAmount3), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+        assertEquals(utilsClass.get6(trfAmount3 - desAmount3), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
 
     }
 

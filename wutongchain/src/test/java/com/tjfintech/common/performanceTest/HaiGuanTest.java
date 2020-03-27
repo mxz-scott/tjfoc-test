@@ -8,6 +8,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.bouncycastle.jce.provider.BrokenPBE;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -24,13 +25,14 @@ import static org.junit.Assert.assertThat;
 public class HaiGuanTest {
      static TestBuilder testBuilder= TestBuilder.getInstance();
      static   Store store =testBuilder.getStore();
+     UtilsClass utilsClass = new UtilsClass();
 
 
 
     @Test
     public void VerifyHaiguanData() throws Exception {
 
-        String HaiGuanPRIKEY = getKeyPairsFromFile(certPath+"/haiguankey.pem");
+        String HaiGuanPRIKEY = utilsClass.getKeyPairsFromFile(certPath+"/haiguankey.pem");
         String HaiGuanPWD = "dcjet";
 
         int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));

@@ -133,14 +133,14 @@ public class TestTxType {
         }
 
         //给链赋权限 权限变更交易检查
-        String permResp = mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"999","sdkName");
+        String permResp = mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,utilsClass.getSDKID(),"999","sdkName");
         sleepAndSaveInfo(SLEEPTIME, "等待设置权限999交易上链");
         String permHash = permResp.substring(permResp.lastIndexOf(":")+1).trim();
         JSONObject jsonObjectPerm = checkTXDetailHeaderMsg(permHash,versionStore,typeSystem,subTypePerm);
 
         assertEquals(toolID,
                 jsonObjectPerm.getJSONObject("Data").getJSONObject("System").getJSONObject("PermissionTransaction").getString("SendID"));
-        assertEquals(getSDKID(),
+        assertEquals(utilsClass.getSDKID(),
                 jsonObjectPerm.getJSONObject("Data").getJSONObject("System").getJSONObject("PermissionTransaction").getString("PeerID"));
         assertEquals("sdkName",
                 jsonObjectPerm.getJSONObject("Data").getJSONObject("System").getJSONObject("PermissionTransaction").getString("ShownName"));
@@ -609,13 +609,13 @@ public class TestTxType {
         JSONObject jsonObjectDestroy = checkTXDetailHeaderMsg(txHash9,versionWVM1,typeWVM,subTypeDeleteWVM);
 
         //检查安装合约交易详情内参数
-        String data = encryptBASE64(readInput(
+        String data = utilsClass.encryptBASE64(utilsClass.readInput(
                 resourcePath + "wvm_temp.txt").toString().trim().getBytes()).replaceAll("\r\n", "");
         assertEquals(ctHash,
                 jsonObjectCreate.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Name"));
         //此处owner对应的是PubKey 因编解码使用的库可能不太一样 因此此处校验原始pubkey
-        String p1 = new String(decryptBASE64(PUBKEY1));
-        String p2 = new String (decryptBASE64(jsonObjectCreate.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Owner")));
+        String p1 = new String(utilsClass.decryptBASE64(PUBKEY1));
+        String p2 = new String (utilsClass.decryptBASE64(jsonObjectCreate.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Owner")));
         assertEquals(p1.replaceAll("\r\n",""),p2.replaceAll("\n",""));
         assertEquals(data,
                 jsonObjectCreate.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Src"));
@@ -627,7 +627,7 @@ public class TestTxType {
                 jsonObjectInvokeInit.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Name"));
         assertEquals("initAccount",
                 jsonObjectInvokeInit.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getString("Method"));
-        assertEquals(wvm.caller,new String(decryptBASE64(
+        assertEquals(wvm.caller,new String(utilsClass.decryptBASE64(
                 jsonObjectInvokeInit.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getString("Caller"))));
 
         String argsinit0= jsonObjectInvokeInit.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getJSONArray("Args").getString(0);
@@ -642,7 +642,7 @@ public class TestTxType {
                 jsonObjectInvokeTransfer.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getString("Name"));
         assertEquals("transfer",
                 jsonObjectInvokeTransfer.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getString("Method"));
-        assertEquals(wvm.caller,new String(decryptBASE64(
+        assertEquals(wvm.caller,new String(utilsClass.decryptBASE64(
                 jsonObjectInvokeTransfer.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getString("Caller"))));
 
         String argstrf0= jsonObjectInvokeTransfer.getJSONObject("Data").getJSONObject("WVM").getJSONObject("WVMContractTx").getJSONObject("Arg").getJSONArray("Args").getString(0);
@@ -734,7 +734,7 @@ public class TestTxType {
         JSONObject jsonObject =jsonObjectOrg.getJSONObject("Contract");
         int i = 0;
         for(String chkStr: checkStr) {
-            String scdecodeArgs = new String(decryptBASE64(jsonObject.getJSONArray(key).getString(i)));
+            String scdecodeArgs = new String(utilsClass.decryptBASE64(jsonObject.getJSONArray(key).getString(i)));
             log.info("org string: "+jsonObject.getJSONArray(key).getString(i));
             log.info("base64 decode string: "+ scdecodeArgs);
             log.info("Check String :"+chkStr);
@@ -746,12 +746,12 @@ public class TestTxType {
     public void checkContractTx(String hash,String method,String cttype,String ctResultStatus,String code,String Msg)throws Exception{
         JSONObject jsonObjectOrg =JSONObject.fromObject(store.GetTxDetail(hash)).getJSONObject("Data");
         JSONObject jsonObject =jsonObjectOrg.getJSONObject("Contract");
-        String sections=new String(decryptBASE64(jsonObject.getString("Src")));
+        String sections=new String(utilsClass.decryptBASE64(jsonObject.getString("Src")));
         log.info(sections);
         assertEquals(ct.name,JSONObject.fromObject(sections).getString("Name"));//检查合约名称
         assertEquals(ct.version,JSONObject.fromObject(sections).getString("Version"));//检查合约Version
 
-        String scArgs= new String(decryptBASE64(jsonObject.getJSONArray("SCArgs").getString(0)));
+        String scArgs= new String(utilsClass.decryptBASE64(jsonObject.getJSONArray("SCArgs").getString(0)));
         log.info(jsonObject.getJSONArray("SCArgs").getString(0));
         assertThat(scArgs, containsString(method));
         //assertEquals(cttype,jsonObject.getString("transactionType"));//检查合约类型scDocker
@@ -772,11 +772,11 @@ public class TestTxType {
 
 
 //        JSONObject jsonObject2 =JSONObject.fromObject(store.GetTransaction(hash)).getJSONObject("Data");
-//        JSONObject jsonObjectSC=JSONObject.fromObject(new String(decryptBASE64(jsonObject2.getString("smartContract"))));
+//        JSONObject jsonObjectSC=JSONObject.fromObject(new String(utilsClass.decryptBASE64(jsonObject2.getString("smartContract"))));
 //        assertEquals(ct.name,jsonObjectSC.getString("Name"));//检查合约名称
 //        assertEquals(ct.version,jsonObjectSC.getString("Version"));//检查合约Version
 
-//        scArgs= new String(decryptBASE64(jsonObject2.getJSONArray("smartContractArgs").getString(0)));
+//        scArgs= new String(utilsClass.decryptBASE64(jsonObject2.getJSONArray("smartContractArgs").getString(0)));
 //        assertThat(scArgs, containsString(method));
         //assertEquals(cttype,jsonObject2.getString("transactionType"));//检查交易类型
 //        assertEquals(ctResultStatus,jsonObject2.getJSONObject("contractResult").getString("status"));//检查合约调用结果code status 200
@@ -835,7 +835,7 @@ public class TestTxType {
         //JSONObject jsonObjectOrg1 =JSONObject.fromObject(store.GetTransaction(hash)).getJSONObject("Data");
         JSONObject jsonObjectOrg2 =JSONObject.fromObject(store.GetTxDetail(hash)).getJSONObject("Data");
 
-       // assertThat(new String(decryptBASE64(jsonObjectOrg1.getString(keyword))),containsString(checkstr));
+       // assertThat(new String(utilsClass.decryptBASE64(jsonObjectOrg1.getString(keyword))),containsString(checkstr));
         //assertEquals(txType,jsonObjectOrg1.getString("transactionType"));
        // assertEquals(true,jsonObjectOrg1.getJSONObject("extra").isNullObject());//检查extra
 

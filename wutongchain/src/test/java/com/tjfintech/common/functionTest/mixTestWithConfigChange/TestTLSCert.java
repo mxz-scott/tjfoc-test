@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.mixTestWithConfigChange;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
@@ -32,7 +33,8 @@ public class TestTLSCert {
     Store store =testBuilder.getStore();
     SoloSign soloSign =testBuilder.getSoloSign();
     MultiSign multiSign =testBuilder.getMultiSign();
-
+    UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
     @Test
     public void setConfigECDSACert()throws Exception{
@@ -42,15 +44,15 @@ public class TestTLSCert {
         bf.collAddressTest();
 
         //配置节点TLS证书使用ECDSA
-        setPeerTLSCertECDSA(PEER1IP);
-        setPeerTLSCertECDSA(PEER2IP);
-        setPeerTLSCertECDSA(PEER4IP);
+        commonFunc.setPeerTLSCertECDSA(PEER1IP);
+        commonFunc.setPeerTLSCertECDSA(PEER2IP);
+        commonFunc.setPeerTLSCertECDSA(PEER4IP);
         //配置SDK TLS证书使用ECDSA
-        setSDKTLSCertECDSA(getIPFromStr(SDKADD));
+        commonFunc.setSDKTLSCertECDSA(utilsClass.getIPFromStr(SDKADD));
 
         //重启节点和SDK
-        setAndRestartPeerList();
-        setAndRestartSDK();
+        utilsClass.setAndRestartPeerList();
+        utilsClass.setAndRestartSDK();
         Thread.sleep(6000);
 
 
@@ -80,24 +82,24 @@ public class TestTLSCert {
 //    @Test
     public void expiredTLSCertTest()throws Exception{
         //设置节点使用过期tls 证书
-        setPeerTLSCertExpired(PEER1IP);
-        setPeerTLSCertExpired(PEER2IP);
-        setPeerTLSCertExpired(PEER4IP);
-        setAndRestartPeerList();
+        commonFunc.setPeerTLSCertExpired(PEER1IP);
+        commonFunc.setPeerTLSCertExpired(PEER2IP);
+        commonFunc.setPeerTLSCertExpired(PEER4IP);
+        utilsClass.setAndRestartPeerList();
         assertEquals(false,true);
 
 
         //设置sdk使用过期tls证书
 
-        setSDKTLSCertExpired(getIPFromStr(SDKADD));
-        setAndRestartSDK();
+        commonFunc.setSDKTLSCertExpired(utilsClass.getIPFromStr(SDKADD));
+        utilsClass.setAndRestartSDK();
 
     }
 
     @After
     public void recoverConfigSt()throws Exception{
-        setAndRestartPeerList(resetPeerBase);
-        setAndRestartSDK(resetSDKConfig);
+        utilsClass.setAndRestartPeerList(resetPeerBase);
+        utilsClass.setAndRestartSDK(resetSDKConfig);
         Thread.sleep(6000);
 
         String response= store.GetApiHealth();

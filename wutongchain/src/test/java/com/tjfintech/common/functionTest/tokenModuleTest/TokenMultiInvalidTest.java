@@ -486,7 +486,7 @@ public class TokenMultiInvalidTest {
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
-        assertEquals(get6(sAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+        assertEquals(utilsClass.get6(sAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
 
         queryBalance = tokenModule.tokenGetDestroyBalance();
         assertEquals(false,queryBalance.contains(desToken));

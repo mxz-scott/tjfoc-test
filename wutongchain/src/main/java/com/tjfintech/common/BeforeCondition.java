@@ -6,6 +6,7 @@ import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Token;
 import com.tjfintech.common.utils.Shell;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Test;
@@ -30,6 +31,7 @@ public class BeforeCondition {
     MultiSign multiSign = testBuilder.getMultiSign();
     SoloSign soloSign = testBuilder.getSoloSign();
     Token tokenModule = testBuilder.getToken();
+    UtilsClass utilsClass = new UtilsClass();
 
 
     //赋值权限999 区分是否主子链
@@ -38,7 +40,7 @@ public class BeforeCondition {
         String toolPath="cd "+ ToolPATH +";";
         String exeCmd="./" + ToolTPName + " permission ";
 
-        SDKID=getSDKID();
+        SDKID=utilsClass.getSDKID();
         String ledger ="";
         ledger=(subLedger!="")?" -z "+subLedger:"";
         String preCmd=toolPath+exeCmd+"-p "+PEER1RPCPort+" -s SDK "+ledger+" -d "+SDKID+" -m ";
@@ -54,11 +56,11 @@ public class BeforeCondition {
     }
 
     public void clearDataSetPerm999() throws Exception{
-        delDataBase();//清空sdk当前使用数据库数据
+        utilsClass.delDataBase();//清空sdk当前使用数据库数据
         //设置节点 清空db数据 并重启
-        setAndRestartPeerList(clearPeerDB,resetPeerBase);
+        utilsClass.setAndRestartPeerList(clearPeerDB,resetPeerBase);
         //重启SDK
-        setAndRestartSDK();
+        utilsClass.setAndRestartSDK();
 
         setPermission999();
     }
@@ -192,21 +194,21 @@ public class BeforeCondition {
             log.info("using default setting key pairs in UtilsClass");
             return;
         }
-        PRIKEY1 = getKeyPairsFromFile(certPath+"/keys1/key.pem");
-        PRIKEY2 = getKeyPairsFromFile(certPath+"/keys2/key.pem");
-        PRIKEY3 = getKeyPairsFromFile(certPath+"/keys3/key.pem");
-        PRIKEY4 = getKeyPairsFromFile(certPath+"/keys4/key.pem");
-        PRIKEY5 = getKeyPairsFromFile(certPath+"/keys5/key.pem");
-        PRIKEY6 = getKeyPairsFromFile(certPath+"/keys6/key.pem");
-        PRIKEY7 = getKeyPairsFromFile(certPath+"/keys7/key.pem");
+        PRIKEY1 = utilsClass.getKeyPairsFromFile(certPath+"/keys1/key.pem");
+        PRIKEY2 = utilsClass.getKeyPairsFromFile(certPath+"/keys2/key.pem");
+        PRIKEY3 = utilsClass.getKeyPairsFromFile(certPath+"/keys3/key.pem");
+        PRIKEY4 = utilsClass.getKeyPairsFromFile(certPath+"/keys4/key.pem");
+        PRIKEY5 = utilsClass.getKeyPairsFromFile(certPath+"/keys5/key.pem");
+        PRIKEY6 = utilsClass.getKeyPairsFromFile(certPath+"/keys6/key.pem");
+        PRIKEY7 = utilsClass.getKeyPairsFromFile(certPath+"/keys7/key.pem");
 
-        PUBKEY1 = getKeyPairsFromFile(certPath+"/keys1/pubkey.pem");
-        PUBKEY2 = getKeyPairsFromFile(certPath+"/keys2/pubkey.pem");
-        PUBKEY3 = getKeyPairsFromFile(certPath+"/keys3/pubkey.pem");
-        PUBKEY4 = getKeyPairsFromFile(certPath+"/keys4/pubkey.pem");
-        PUBKEY5 = getKeyPairsFromFile(certPath+"/keys5/pubkey.pem");
-        PUBKEY6 = getKeyPairsFromFile(certPath+"/keys6/pubkey.pem");
-        PUBKEY7 = getKeyPairsFromFile(certPath+"/keys7/pubkey.pem");
+        PUBKEY1 = utilsClass.getKeyPairsFromFile(certPath+"/keys1/pubkey.pem");
+        PUBKEY2 = utilsClass.getKeyPairsFromFile(certPath+"/keys2/pubkey.pem");
+        PUBKEY3 = utilsClass.getKeyPairsFromFile(certPath+"/keys3/pubkey.pem");
+        PUBKEY4 = utilsClass.getKeyPairsFromFile(certPath+"/keys4/pubkey.pem");
+        PUBKEY5 = utilsClass.getKeyPairsFromFile(certPath+"/keys5/pubkey.pem");
+        PUBKEY6 = utilsClass.getKeyPairsFromFile(certPath+"/keys6/pubkey.pem");
+        PUBKEY7 = utilsClass.getKeyPairsFromFile(certPath+"/keys7/pubkey.pem");
 
 
         log.info("PRIKEY1 :" + PRIKEY1);

@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.Conditions.Upgrade;
 
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -11,6 +12,7 @@ import static org.junit.Assert.assertEquals;
 
 @Slf4j
 public class SetSDKVerRelease {
+    UtilsClass utilsClass = new UtilsClass();
 
     @Test
     public void test() throws Exception{
@@ -18,21 +20,21 @@ public class SetSDKVerRelease {
 
         //windows本地上传版本文件
         String fileDir = sReleaseLocalDir + sLocalSDK;
-        shellExeCmd(getIPFromStr(SDKADD),killSDKCmd, "rm -f " + SDKPATH + replaceTP);
-        uploadFiletoDestDirByssh(fileDir,getIPFromStr(SDKADD),USERNAME,PASSWD,SDKPATH,replaceTP);
+        shellExeCmd(utilsClass.getIPFromStr(SDKADD),killSDKCmd, "rm -f " + SDKPATH + replaceTP);
+        uploadFiletoDestDirByssh(fileDir,utilsClass.getIPFromStr(SDKADD),USERNAME,PASSWD,SDKPATH,replaceTP);
 
         //检查sdk是否包含release文件
-        String response = shExeAndReturn(getIPFromStr(SDKADD),"cd " + SDKPATH + ";find . -name " + replaceTP);
-        if(response.isEmpty())   log.info("host " + getIPFromStr(SDKADD) + " not found file: " + SDKPATH + replaceTP);
+        String response = shExeAndReturn(utilsClass.getIPFromStr(SDKADD),"cd " + SDKPATH + ";find . -name " + replaceTP);
+        if(response.isEmpty())   log.info("host " + utilsClass.getIPFromStr(SDKADD) + " not found file: " + SDKPATH + replaceTP);
         assertEquals(false, response.isEmpty());
-        shellExeCmd(getIPFromStr(SDKADD),"cd " + SDKPATH + ";find . -name \""+ SDKTPName + "*\" | xargs chmod +x");
+        shellExeCmd(utilsClass.getIPFromStr(SDKADD),"cd " + SDKPATH + ";find . -name \""+ SDKTPName + "*\" | xargs chmod +x");
 
         //SDK
-        shellExeCmd(getIPFromStr(SDKADD),killSDKCmd, "rm -f " + SDKPATH + SDKTPName,"cp " + SDKPATH + replaceTP + " " + SDKPATH + SDKTPName);
+        shellExeCmd(utilsClass.getIPFromStr(SDKADD),killSDKCmd, "rm -f " + SDKPATH + SDKTPName,"cp " + SDKPATH + replaceTP + " " + SDKPATH + SDKTPName);
         //从2.1.190826.1版本升级时，需要注释掉下面这行。
-        verMap.put("sdk_"+ getIPFromStr(SDKADD),shExeAndReturn(getIPFromStr(SDKADD),getSDKVerByShell));//存储release sdk版本 以便后续检查
+        verMap.put("sdk_"+ utilsClass.getIPFromStr(SDKADD),shExeAndReturn(utilsClass.getIPFromStr(SDKADD),getSDKVerByShell));//存储release sdk版本 以便后续检查
 
         //SDK
-        shellExeCmd(getIPFromStr(SDKADD),startSDKCmd);
+        shellExeCmd(utilsClass.getIPFromStr(SDKADD),startSDKCmd);
     }
 }

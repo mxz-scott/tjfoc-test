@@ -12,9 +12,9 @@ public class SetSDKWalletDisabled {
 
    @Test
     public void setWalletDisabled()throws Exception{
-       setSDKWalletEnabled(getIPFromStr(SDKADD),"false");
+       setSDKWalletEnabled(utilsClass.getIPFromStr(SDKADD),"false");
 
-       shellExeCmd(getIPFromStr(SDKADD),killSDKCmd,startSDKCmd); //重启sdk
+       shellExeCmd(utilsClass.getIPFromStr(SDKADD),killSDKCmd,startSDKCmd); //重启sdk
        sleepAndSaveInfo(SLEEPTIME/2,"restart sdk after disable wallet");
     }
 

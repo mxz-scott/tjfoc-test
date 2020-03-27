@@ -55,7 +55,7 @@ public class TokenAccurateTest {
         sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
-        assertEquals(get6(amount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        assertEquals(utilsClass.get6(amount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
 
     }
 

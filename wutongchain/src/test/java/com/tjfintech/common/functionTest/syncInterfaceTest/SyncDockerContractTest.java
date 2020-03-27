@@ -43,8 +43,8 @@ public class SyncDockerContractTest {
     public void SynInstall() throws Exception {
         //正常情况下（120000毫秒）
         String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";
-        String file=readInput(filePath).toString();
-        String data = encryptBASE64(file.getBytes());//BASE64编码
+        String file=utilsClass.readInput(filePath).toString();
+        String data = utilsClass.encryptBASE64(file.getBytes());//BASE64编码
         String response=contract.SynInstall(utilsClass.LONGTIMEOUT,name,version,category,data);
         String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         assertThat("200",containsString(JSONObject.fromObject(response).getString("State")));

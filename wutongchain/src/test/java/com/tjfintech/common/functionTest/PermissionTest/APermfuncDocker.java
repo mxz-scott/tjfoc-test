@@ -3,6 +3,7 @@ package com.tjfintech.common.functionTest.PermissionTest;
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Test;
@@ -12,15 +13,14 @@ import java.util.List;
 import java.lang.*;
 
 import static com.tjfintech.common.utils.UtilsClass.encryptBASE64;
-import static com.tjfintech.common.utils.UtilsClass.readInput;
-//import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
+
 
 @Slf4j
 public class APermfuncDocker {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Contract contract=testBuilder.getContract();
     Store store=testBuilder.getStore();
+    UtilsClass utilsClass = new UtilsClass();
     String version ="2.0";
     String name ="0111";
 
@@ -50,8 +50,8 @@ public class APermfuncDocker {
     //@Test
     public  String installContract()throws  Exception{
         String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";
-        String file=readInput(filePath).toString();
-        String data = encryptBASE64(file.getBytes());//BASE64编码
+        String file=utilsClass.readInput(filePath).toString();
+        String data = utilsClass.encryptBASE64(file.getBytes());//BASE64编码
         String response=contract.Install(name,version,category,data);
         return retAllow(response);
     }

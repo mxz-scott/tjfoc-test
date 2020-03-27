@@ -3,6 +3,7 @@ package com.tjfintech.common.functionTest.PermissionTest;
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 
@@ -18,6 +19,7 @@ import static com.tjfintech.common.utils.UtilsClass.version;
 public class APermfuncWVM {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Contract contract=testBuilder.getContract();
+    UtilsClass utilsClass = new UtilsClass();
     String version ="2.0";
     String wvmhash ="0111";
 
@@ -46,8 +48,8 @@ public class APermfuncWVM {
 
         String filePath = resourcePath + wvmfile;
         log.info("filepath "+ filePath);
-        String file = readInput(filePath).toString().trim();
-        String data = encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码
+        String file = utilsClass.readInput(filePath).toString().trim();
+        String data = utilsClass.encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码
         log.info("base64 data: " + data);
         String response=contract.InstallWVM(data,category,Prikey);
         if(response.contains("Name:")) {

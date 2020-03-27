@@ -7,6 +7,7 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.TestMgTool;
 import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.SubLedgerCmd;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -32,6 +33,7 @@ public class TestWithConfigChange02_ClearDB {
     MgToolCmd mgToolCmd = new MgToolCmd();
     TestMgTool testMgTool = new TestMgTool();
     SubLedgerCmd subLedgerCmd = new SubLedgerCmd();
+    UtilsClass utilsClass = new UtilsClass();
 
     public static String glbChain01= "glbCh1";
 
@@ -163,7 +165,8 @@ public class TestWithConfigChange02_ClearDB {
 
     //@AfterClass
     public static void resetPeerAndSDK()throws  Exception {
-        setAndRestartPeerList(resetPeerBase);
-        setAndRestartSDK(resetSDKConfig);
+        UtilsClass utilsClass = new UtilsClass();
+        utilsClass.setAndRestartPeerList(resetPeerBase);
+        commonFunc.setAndRestartSDK(resetSDKConfig);
     }
 }

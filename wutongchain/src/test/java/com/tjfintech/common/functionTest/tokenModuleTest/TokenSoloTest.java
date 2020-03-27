@@ -800,7 +800,7 @@ public class TokenSoloTest {
 //
 //        //余额查询
 //        queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
-//        assertEquals(get6(sAmount - trfAmount1 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+//        assertEquals(utilsClass.get6(sAmount - trfAmount1 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
 //        queryBalance = tokenModule.tokenGetBalance(to1,desToken);
 //        assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
 //        queryBalance = tokenModule.tokenGetBalance(to2,desToken);
@@ -874,7 +874,7 @@ public class TokenSoloTest {
 //
 //        //余额查询
 //        queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
-//        assertEquals(get6(sAmount - trfAmount1 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+//        assertEquals(utilsClass.get6(sAmount - trfAmount1 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
 //        queryBalance = tokenModule.tokenGetBalance(to1,desToken);
 //        assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
 //        queryBalance = tokenModule.tokenGetBalance(to2,desToken);
@@ -948,7 +948,7 @@ public class TokenSoloTest {
 //
 //        //余额查询
 //        queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
-//        assertEquals(get6(sAmount - trfAmount1 - trfAmount2 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+//        assertEquals(utilsClass.get6(sAmount - trfAmount1 - trfAmount2 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
 //        queryBalance = tokenModule.tokenGetBalance(to1,desToken);
 //        assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
 //        queryBalance = tokenModule.tokenGetBalance(to2,desToken);
@@ -1022,7 +1022,7 @@ public class TokenSoloTest {
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
-        assertEquals(get6(sAmount - trfAmount1 - trfAmount2 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
+        assertEquals(utilsClass.get6(sAmount - trfAmount1 - trfAmount2 - desAmount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
         queryBalance = tokenModule.tokenGetBalance(to1,desToken);
         assertEquals(String.valueOf(trfAmount1), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(desToken));
         queryBalance = tokenModule.tokenGetBalance(to2,desToken);

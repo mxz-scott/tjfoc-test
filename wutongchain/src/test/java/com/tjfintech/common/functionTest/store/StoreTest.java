@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.store;
 
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -11,7 +12,6 @@ import org.junit.runners.MethodSorters;
 
 import java.util.*;
 
-import static com.tjfintech.common.CommonFunc.getSDKWalletEnabled;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
@@ -24,6 +24,8 @@ public class StoreTest {
     public   final static int   SHORTSLEEPTIME=3*1000;
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
+    UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
     /**
      * TC05-创建存证交易，数据格式为Json
@@ -178,21 +180,21 @@ public class StoreTest {
     @Test
     public void TC278_createBigSizeStore() throws Exception {
 
-        String Data = UtilsClass.Random(10) + UtilsClass.readStringFromFile(resourcePath +
+        String Data = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath +
                 "bigsize1.txt");
         String response = store.CreateStore(Data);
         assertThat(response, containsString("200"));
         assertThat(response, containsString("Data"));
 
 
-        String Data2 = UtilsClass.Random(10) + UtilsClass.readStringFromFile(resourcePath
+        String Data2 = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
                 +  "bigsize2.txt");
         String response2 = store.CreateStore(Data2);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("Data"));
 
 
-        String Data3 = UtilsClass.Random(10) + UtilsClass.readStringFromFile(resourcePath
+        String Data3 = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
                 + "bigsize3.txt");
         String response3 = store.CreateStore(Data3);
         assertThat(response3, containsString("200"));
@@ -316,7 +318,7 @@ public class StoreTest {
 
     @Test
     public void createStoreDupDataString() throws Exception {
-        boolean bWalletEnabled = getSDKWalletEnabled();
+        boolean bWalletEnabled = commonFunc.getSDKWalletEnabled();
         String Data = "test11234567";
         String response= store.CreateStore(Data);
         String storeHash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");

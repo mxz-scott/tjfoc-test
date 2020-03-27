@@ -6,6 +6,7 @@ import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.utils.SubLedgerCmd;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.math.RandomUtils;
 import org.hamcrest.core.AnyOf;
@@ -29,6 +30,7 @@ public class TestMainSubChain_Perm {
     Store store =testBuilder.getStore();
     MultiSign multiSign =testBuilder.getMultiSign();
     MgToolCmd mgToolCmd= new MgToolCmd();
+    UtilsClass utilsClass = new UtilsClass();
 
     String noPerm="not found";
     SubLedgerCmd subLedgerCmd = new SubLedgerCmd();
@@ -70,9 +72,9 @@ public class TestMainSubChain_Perm {
 
         //设置主链上sdk权限为0
         subLedger="";
-        mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"0");
+        mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,utilsClass.getSDKID(),"0");
         sleepAndSaveInfo(SLEEPTIME);
-        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[0]");
+        assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), "[0]");
         assertEquals(store.CreateStore("tc1660 no permission tx data").toLowerCase().contains(noPerm),true);
 
         //创建子链01 包含节点A、B、C
@@ -89,33 +91,33 @@ public class TestMainSubChain_Perm {
 
         //获取子链权限列表指定sdk为空 测试发送交易无权限
         subLedger=chainName;
-        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[0]");
+        assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), "[0]");
         sleepAndSaveInfo(SLEEPTIME);
         assertEquals(store.CreateStore("tc1661 no permission tx data").toLowerCase().contains(noPerm),true);
 
 
         //设置子链权限为1 即只允许发送存证 不允许其他操作
         subLedger=chainName;
-        mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"211");
+        mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,utilsClass.getSDKID(),"211");
         sleepAndSaveInfo(SLEEPTIME);
         //获取子链权限列表检查是否为211
-        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[211]");
+        assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), "[211]");
 
         //子链发送权限对应的接口以及检查无权限接口
         assertThat(store.CreateStore("tc1661 ledger with permission 211 tx data"),containsString("\"State\":200"));
         assertEquals(store.GetHeight().contains(noPerm),true);
 
         subLedger="";
-        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[0]");
+        assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), "[0]");
         assertEquals(store.CreateStore("tc1661 main no permission tx data").contains(noPerm),true);
 
 
         //设置主链权限为999,确认主链sdk权限恢复
         subLedger="";
-        mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"999");
+        mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,utilsClass.getSDKID(),"999");
         sleepAndSaveInfo(SLEEPTIME);
-//        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), fullPerm);
-        assertThat(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()),
+//        assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), fullPerm);
+        assertThat(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()),
                 anyOf(containsString(fullPerm), containsString(fullPerm2)));
         //向子链glbChain01/glbChain02和主链发送交易
         subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"tc1661 with permission 999 tx data2");
@@ -127,9 +129,9 @@ public class TestMainSubChain_Perm {
 
         //设置主链上sdk权限为236/251;余额查询以及注册归集地址权限
         subLedger="";
-        mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"236,253");
+        mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,utilsClass.getSDKID(),"236,253");
         sleepAndSaveInfo(SLEEPTIME);
-        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[236 253]");
+        assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), "[236 253]");
         assertThat(multiSign.QueryZero(""),containsString("\"State\":200"));
         assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),containsString("\"State\":200"));
 
@@ -147,16 +149,16 @@ public class TestMainSubChain_Perm {
 
         //获取子链权限列表指定sdk为空 测试发送交易无权限
         subLedger=chainName;
-        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[0]");
+        assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), "[0]");
         assertEquals(store.CreateStore("tc1662 no permission tx data").toLowerCase().contains(noPerm),true);
 
 
         //设置子链权限为3,211 即只允许发送存证 不允许其他操作
         subLedger=chainName;
-        mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"3,211");
+        mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,utilsClass.getSDKID(),"3,211");
         sleepAndSaveInfo(SLEEPTIME);
         //获取子链权限列表检查是否为3,211
-        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[3 211]");
+        assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), "[3 211]");
         //子链发送权限对应的接口以及检查无权限接口
         assertThat(store.CreateStore("tc1662 ledger with permission3,211 tx data"),containsString("\"State\":200"));
         assertEquals(store.GetHeight().contains(noPerm),true);
@@ -166,7 +168,7 @@ public class TestMainSubChain_Perm {
         //获取主链权限列表检查无变更
         log.info("Current subledger: "+subLedger);
         subLedger="";
-        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[236 253]");
+        assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), "[236 253]");
         assertEquals(store.CreateStore("tc1662 main no permission tx data").contains(noPerm),true);
         assertThat(multiSign.QueryZero(""),containsString("\"State\":200"));
         assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),containsString("\"State\":200"));
@@ -174,10 +176,10 @@ public class TestMainSubChain_Perm {
 
         //设置主链权限为999,确认主链sdk权限恢复
         subLedger="";
-        mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"999");
+        mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,utilsClass.getSDKID(),"999");
         sleepAndSaveInfo(SLEEPTIME);
-//        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), fullPerm);
-        assertThat(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()),
+//        assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), fullPerm);
+        assertThat(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()),
                 anyOf(containsString(fullPerm), containsString(fullPerm2)));
 
         //向子链glbChain01/glbChain02和主链发送交易
@@ -189,11 +191,11 @@ public class TestMainSubChain_Perm {
 
         //设置主链上sdk权限为236/251;余额查询以及注册归集地址权限
         subLedger="";
-        mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"999");
+        mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,utilsClass.getSDKID(),"999");
         sleepAndSaveInfo(SLEEPTIME);
         //检查主链权限列表
-//        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), fullPerm);
-        assertThat(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()),
+//        assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), fullPerm);
+        assertThat(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()),
                 anyOf(containsString(fullPerm), containsString(fullPerm2)));
         assertThat(store.CreateStore("tc1663 ledger with permission3,211 tx data"),containsString("\"State\":200"));
         assertThat(multiSign.QueryZero(""),containsString("\"State\":200"));
@@ -213,17 +215,17 @@ public class TestMainSubChain_Perm {
 
         //获取子链权限列表指定sdk为空 测试发送交易无权限
         subLedger=chainName;
-        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[0]");
+        assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), "[0]");
         sleepAndSaveInfo(SLEEPTIME);
         assertEquals(store.CreateStore("tc1663 no permission tx data").toLowerCase().contains(noPerm),true);
 
 
         //设置子链权限为3,211
         subLedger=chainName;
-        mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"3,211");
+        mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,utilsClass.getSDKID(),"3,211");
         sleepAndSaveInfo(SLEEPTIME*3/2);
         //获取子链权限列表检查是否为3,211
-        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), "[3 211]");
+        assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), "[3 211]");
         //子链发送权限对应的接口以及检查无权限接口
         assertThat(store.CreateStore("tc1663 ledger with permission3,211 tx data"),containsString("\"State\":200"));
         assertThat(store.GetBlockByHeight(0),containsString("\"State\":200"));
@@ -235,8 +237,8 @@ public class TestMainSubChain_Perm {
 
         //获取主链权限列表检查无变更
         subLedger="";
-//        assertEquals(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()), fullPerm);
-        assertThat(getCertainPermissionList(PEER1IP,PEER1RPCPort,getSDKID()),
+//        assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), fullPerm);
+        assertThat(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()),
                 anyOf(containsString(fullPerm), containsString(fullPerm2)));
         assertEquals(store.CreateStore("tc1663 main no permission tx data").contains("\"State\":200"),true);
         assertThat(multiSign.QueryZero(""),containsString("\"State\":200"));
@@ -245,7 +247,7 @@ public class TestMainSubChain_Perm {
 
         //设置主链权限为999,确认主链sdk权限恢复
         subLedger="";
-        //mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,getSDKID(),"999");
+        //mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,utilsClass.getSDKID(),"999");
         //sleepAndSaveInfo(SLEEPTIME);
         //向子链glbChain01/glbChain02和主链发送交易
         subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"tc1663 with permission 999 tx data2");

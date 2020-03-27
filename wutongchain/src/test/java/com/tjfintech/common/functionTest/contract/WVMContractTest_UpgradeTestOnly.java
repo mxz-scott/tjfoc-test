@@ -5,6 +5,7 @@ import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.FileOperation;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
@@ -31,6 +32,7 @@ public class WVMContractTest_UpgradeTestOnly {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Contract contract=testBuilder.getContract();
     Store store=testBuilder.getStore();
+    UtilsClass utilsClass = new UtilsClass();
 
     public String category="wvm";
     public String caller="test";
@@ -136,8 +138,8 @@ public class WVMContractTest_UpgradeTestOnly {
 
         String filePath = resourcePath + wvmfile;
         log.info("filepath "+ filePath);
-        String file = readInput(filePath).toString().trim();
-        String data = encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码
+        String file = utilsClass.readInput(filePath).toString().trim();
+        String data = utilsClass.encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码
         log.info("base64 data: " + data);
         String response=contract.InstallWVM(data,category,Prikey);
         return response;

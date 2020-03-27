@@ -4,6 +4,7 @@ import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.functionTest.Conditions.SetSDKWalletDisabled;
 import com.tjfintech.common.utils.Shell;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
@@ -26,6 +27,7 @@ public class SysTest {
     public   final static int   SLEEPTIME=10*1000;
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
+    UtilsClass utilsClass = new UtilsClass();
     String mongoID="e5b4023db787";
     String databaseIP="";
 
@@ -33,7 +35,7 @@ public class SysTest {
     int iCount=0;
 
     public void startMongo()throws Exception{
-        databaseIP=getSDKWalletDBConfig().split(",")[1];;
+        databaseIP=utilsClass.getSDKWalletDBConfig().split(",")[1];;
         Shell shellMongo=new Shell(databaseIP,USERNAME,PASSWD);
         shellMongo.execute("docker ps -a");
         ArrayList<String> stdout = shellMongo.getStandardOutput();
@@ -75,9 +77,9 @@ public class SysTest {
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute(killSDKCmd);
-        setSDKWalletAddrDBMongo(getIPFromStr(SDKADD));
+        setSDKWalletAddrDBMongo(utilsClass.getIPFromStr(SDKADD));
         startMongo();
-        databaseIP=getSDKWalletDBConfig().split(",")[1];
+        databaseIP=utilsClass.getSDKWalletDBConfig().split(",")[1];
         Shell shellMongo=new Shell(databaseIP,USERNAME,PASSWD);
         log.info(mongoID);
         shellMongo.execute("docker restart "+mongoID);
@@ -121,8 +123,8 @@ public class SysTest {
 
         //系统配置数据库为mysql时，且数据库正常进行检查
         shellSDK.execute(killSDKCmd);
-        setSDKWalletAddrDBMysql(getIPFromStr(SDKADD));
-        databaseIP=getSDKWalletDBConfig().split(",")[1];
+        setSDKWalletAddrDBMysql(utilsClass.getIPFromStr(SDKADD));
+        databaseIP=utilsClass.getSDKWalletDBConfig().split(",")[1];
         Shell shellMysql=new Shell(databaseIP,USERNAME,PASSWD);
 
         shellMysql.execute("service mysql restart");
@@ -168,7 +170,7 @@ public class SysTest {
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute(killSDKCmd);
-        setSDKWalletDBMongoAddrDBMysql(getIPFromStr(SDKADD));
+        setSDKWalletDBMongoAddrDBMysql(utilsClass.getIPFromStr(SDKADD));
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");
        sleepAndSaveInfo(5 * 1000);
@@ -252,7 +254,7 @@ public class SysTest {
 
         //系统配置数据库为mongodb时，且数据库正常进行检查
         shellSDK.execute(killSDKCmd);
-        setSDKWalletDBMysqlAddrDBMongo(getIPFromStr(SDKADD));
+        setSDKWalletDBMysqlAddrDBMongo(utilsClass.getIPFromStr(SDKADD));
 
         shellMongo.execute("docker restart "+mongoID);
         shellMysql.execute("service mysql restart");

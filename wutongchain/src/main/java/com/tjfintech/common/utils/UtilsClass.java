@@ -241,47 +241,9 @@ public class UtilsClass {
     public String sdkGetTxHashType01 = "01";
     public String sdkGetTxHashType02 = "02";
     public String tokenApiGetTxHashType = "10";
+
     //如果是已经获取过shell脚本则可以不用执行uploadFile()操作 因此此项默认关闭
-//    public static boolean bupload = uploadFile();
-    public static boolean bUL = false;
-
-    //增加一个传输文件的操作
-    public static boolean uploadFile(){
-        if(!bUL) {
-            uploadFileToPeer(PEER1IP, "startWithParam.sh", "SetConfig.sh", "GetConfig.sh");
-            uploadFileToPeer(PEER2IP, "startWithParam.sh", "SetConfig.sh", "GetConfig.sh");
-            uploadFileToPeer(PEER3IP, "startWithParam.sh", "SetConfig.sh", "GetConfig.sh");
-            uploadFileToPeer(PEER4IP, "startWithParam.sh", "SetConfig.sh", "GetConfig.sh");
-
-            //确认目标目录中存在被传输文件
-            String resp = shExeAndReturn(PEER1IP, "ls " + destShellScriptDir);
-            assertEquals(true, resp.contains("startWithParam.sh"));
-            assertEquals(true, resp.contains("SetConfig.sh"));
-            assertEquals(true, resp.contains("GetConfig.sh"));
-            shExeAndReturn(PEER1IP, "chmod +x " + destShellScriptDir + "*.sh");
-
-            resp = shExeAndReturn(PEER2IP, "ls " + destShellScriptDir);
-            assertEquals(true, resp.contains("startWithParam.sh"));
-            assertEquals(true, resp.contains("SetConfig.sh"));
-            assertEquals(true, resp.contains("GetConfig.sh"));
-            shExeAndReturn(PEER2IP, "chmod +x " + destShellScriptDir + "*.sh");
-
-            resp = shExeAndReturn(PEER3IP, "ls " + destShellScriptDir);
-            assertEquals(true, resp.contains("startWithParam.sh"));
-            assertEquals(true, resp.contains("SetConfig.sh"));
-            assertEquals(true, resp.contains("GetConfig.sh"));
-            shExeAndReturn(PEER3IP, "chmod +x " + destShellScriptDir + "*.sh");
-
-            resp = shExeAndReturn(PEER4IP, "ls " + destShellScriptDir);
-            assertEquals(true, resp.contains("startWithParam.sh"));
-            assertEquals(true, resp.contains("SetConfig.sh"));
-            assertEquals(true, resp.contains("GetConfig.sh"));
-            shExeAndReturn(PEER4IP, "chmod +x " + destShellScriptDir + "*.sh");
-
-            bUL = true;
-        }
-        return bUL;
-    }
+//    public boolean bupload = uploadFile();
 
 
     /**
@@ -447,7 +409,7 @@ public class UtilsClass {
      * @param jsonStr
      * @return
      */
-    public static Map< String, Object> parseJSON2Map( String jsonStr){
+    public Map< String, Object> parseJSON2Map( String jsonStr){
         Map<String, Object> map = new HashMap< String, Object>();
         JSONObject json = JSONObject.fromObject(jsonStr);
         for(Object k : json.keySet()){
@@ -466,7 +428,7 @@ public class UtilsClass {
         }
         return map;
     }
-    public static StringBuilder readInput(String filePath) {
+    public StringBuilder readInput(String filePath) {
         StringBuilder abc = new StringBuilder(" ");
         File file = new File(filePath);
         System.out.println(file.getPath());
@@ -493,15 +455,15 @@ public class UtilsClass {
 
     }
 
-    public static String encryptBASE64(byte[] key) throws Exception {
+    public String encryptBASE64(byte[] key) throws Exception {
         return (new BASE64Encoder()).encodeBuffer(key);
     }
 
 
-    public static byte[] decryptBASE64(String key) throws Exception {
+    public byte[] decryptBASE64(String key) throws Exception {
         return (new BASE64Decoder()).decodeBuffer(key);
     }
-    public static String getSDKID() {
+    public String getSDKID() {
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
 
@@ -519,7 +481,7 @@ public class UtilsClass {
         return SDKID;
     }
 
-    public static String getToolID(String IP) {
+    public String getToolID(String IP) {
         Shell shellSDK=new Shell(IP,USERNAME,PASSWD);
         String toolID ="";
         shellSDK.execute("cd "+ ToolPATH+";./" + ToolTPName + " getid -p "+ ToolPATH +"crypt/key.pem");
@@ -535,7 +497,7 @@ public class UtilsClass {
         return toolID;
     }
 
-    public static String getMACAddr(String IP,String userName,String passWd) {
+    public String getMACAddr(String IP,String userName,String passWd) {
         Shell shellSDK=new Shell(IP,userName,passWd);
         String MACAddr=null;
         shellSDK.execute("ifconfig");
@@ -570,7 +532,7 @@ public class UtilsClass {
     }
 
     //该函数会让所有节点先执行同一个命令 再集群执行下一条命令
-    public static void sendCmdPeerList( ArrayList<String > peersList,String...cmdList)throws Exception{
+    public void sendCmdPeerList( ArrayList<String > peersList,String...cmdList)throws Exception{
         for(String cmd:cmdList){
             for (String IP:peersList) {
                 Shell shellPeer = new Shell(IP, USERNAME, PASSWD);
@@ -581,7 +543,7 @@ public class UtilsClass {
     }
 
 
-    public static void setAndRestartPeerList(String...cmdList)throws Exception{
+    public void setAndRestartPeerList(String...cmdList)throws Exception{
 
         peerList.clear();
         peerList.add(PEER1IP);
@@ -595,7 +557,7 @@ public class UtilsClass {
 
         Thread.sleep(RESTARTTIME);
     }
-    public static void setAndRestartPeer(String PeerIP,String...cmdList)throws Exception{
+    public void setAndRestartPeer(String PeerIP,String...cmdList)throws Exception{
 
         Shell shellPeer=new Shell(PeerIP,USERNAME,PASSWD);
         shellPeer.execute(killPeerCmd);
@@ -612,7 +574,7 @@ public class UtilsClass {
     }
 
 
-    public static void setAndRestartSDK(String... cmdList)throws Exception{
+    public void setAndRestartSDK(String... cmdList)throws Exception{
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
 
@@ -646,7 +608,7 @@ public class UtilsClass {
         Assert.assertEquals(response.contains(chkStr),true);
     }
 
-    public static String getKeyPairsFromFile(String pemFileName)throws Exception{
+    public String getKeyPairsFromFile(String pemFileName)throws Exception{
         String filePath =resourcePath+pemFileName;
         InputStream inStream =new FileInputStream(filePath);
         ByteArrayOutputStream out =new ByteArrayOutputStream();
@@ -664,7 +626,7 @@ public class UtilsClass {
         return res.replaceAll("\r\n", "");
     }
 
-    public static String getCertainPermissionList(String netPeerIP,String netRpcPort,String id)throws Exception{
+    public String getCertainPermissionList(String netPeerIP,String netRpcPort,String id)throws Exception{
         //权限更新后查询检查生效与否
         Shell shell1=new Shell(netPeerIP,USERNAME,PASSWD);
         //String cmd1="cd zll;ls";//替换为权限命令
@@ -687,7 +649,7 @@ public class UtilsClass {
         return stdout.get(index+2).substring(stdout.get(index+2).lastIndexOf(":")+1).trim();
     }
 
-    public static String getIPFromStr(String src) {
+    public String getIPFromStr(String src) {
         String IP ="";
         Pattern p = Pattern.compile("(?<=//|)((\\w)+\\.)+\\w+");
         Matcher matcher = p.matcher(src);
@@ -710,7 +672,7 @@ public class UtilsClass {
         return matchStr;
     }
 
-    public static String getSDKWalletDBConfig(){
+    public String getSDKWalletDBConfig(){
         String sdkIP = getIPFromStr(SDKADD);
         String DBType=null;
         String database=null;
@@ -734,7 +696,7 @@ public class UtilsClass {
         return DBType + "," + IPString + "," + database;
     }
 
-    public static void delDataBase()throws Exception{
+    public void delDataBase()throws Exception{
         String dbInfo = getSDKWalletDBConfig();
 
          if (dbInfo.contains("mongo")){
@@ -750,7 +712,7 @@ public class UtilsClass {
     }
 
 
-    public static void delDataBase(String dbInfo)throws Exception{
+    public void delDataBase(String dbInfo)throws Exception{
         if (dbInfo.contains("mongo")){
             MongoDBOperation mongo = new MongoDBOperation();
             mongo.delDatabase(dbInfo.split(",")[1],dbInfo.split(",")[2]);
@@ -783,7 +745,7 @@ public class UtilsClass {
      * @param filepath
      * @return
      */
-    public static String readStringFromFile(String filepath) {
+    public String readStringFromFile(String filepath) {
         String str = "";
         File file = new File(filepath);
         try {
@@ -803,7 +765,7 @@ public class UtilsClass {
         return str;
     }
 
-    public static String get6(double org){
+    public String get6(double org){
         DecimalFormat df = new DecimalFormat("#.000000");
         String str = df.format(org);
         return str;

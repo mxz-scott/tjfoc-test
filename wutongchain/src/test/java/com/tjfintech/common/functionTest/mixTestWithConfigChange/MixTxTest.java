@@ -37,6 +37,8 @@ public class MixTxTest {
     FileOperation fileOper = new FileOperation();
     ArrayList<String> txHashList = new ArrayList<>();
     ArrayList<String> txHashNo = new ArrayList<>();
+    UtilsClass utilsClass = new UtilsClass();
+
     @Before
     public void beforeConfig() throws Exception {
         BeforeCondition bf = new BeforeCondition();
@@ -64,8 +66,8 @@ public class MixTxTest {
         setPeerPackTime(PEER1IP,"20000");
         setPeerPackTime(PEER2IP,"20000");
         setPeerPackTime(PEER4IP,"20000");
-        setAndRestartPeerList();
-        setAndRestartSDK(resetSDKConfig);
+        utilsClass.setAndRestartPeerList();
+        utilsClass.setAndRestartSDK(resetSDKConfig);
         String resp = store.GetHeight();
 
         //发送存证交易
@@ -196,8 +198,9 @@ public class MixTxTest {
 
     @After
     public void  reset()throws Exception{
-        setAndRestartPeerList(resetPeerBase);
-        setAndRestartSDK(resetSDKConfig);
+        UtilsClass utilsClassTemp = new UtilsClass();
+        utilsClassTemp.setAndRestartPeerList(resetPeerBase);
+        utilsClass.setAndRestartSDK(resetSDKConfig);
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
     }
 

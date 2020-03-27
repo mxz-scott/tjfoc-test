@@ -6,6 +6,7 @@ import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.SubLedgerCmd;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -32,6 +33,7 @@ public class TestWithConfigChange_ClearDB {
     MgToolCmd mgToolCmd = new MgToolCmd();
     TestMgTool testMgTool = new TestMgTool();
     SubLedgerCmd subLedgerCmd = new SubLedgerCmd();
+    UtilsClass utilsClass = new UtilsClass();
 
     public static String glbChain01= "glbCh1";
     public static String glbChain02= "glbCh2";
@@ -62,8 +64,8 @@ public class TestWithConfigChange_ClearDB {
     @Test
     public void TC1538_quitMainJoinPeer()throws Exception{
         //配置sdk节点集群仅为Peer1并重启sdk
-        setSDKOnePeer(getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
-        setAndRestartSDK();
+        setSDKOnePeer(utilsClass.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
+        utilsClass.setAndRestartSDK();
         //创建子链01 包含节点A、B、C
         String chainName1="tc1538_01";
         String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1,
@@ -288,8 +290,8 @@ public class TestWithConfigChange_ClearDB {
     @Test
     public void TC1523_subChainStatus()throws Exception{
         //配置sdk节点集群仅为Peer1并重启sdk
-//        setSDKOnePeer(getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
-//        setAndRestartSDK();
+//        setSDKOnePeer(utilsClass.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
+//        commonFunc.setAndRestartSDK();
         //创建子链，包含两个节点
         String chainName="tc1523_01";
         String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,
@@ -332,7 +334,7 @@ public class TestWithConfigChange_ClearDB {
     //旨在测试子链是否能够正常启动
     @Test
     public void TC1608_1620_restartPeer()throws Exception{
-        setAndRestartPeerList();
+        utilsClass.setAndRestartPeerList();
         subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"tc1608 data");
     }
 
@@ -359,7 +361,7 @@ public class TestWithConfigChange_ClearDB {
 
     @After
     public void resetPeerAndSDK()throws  Exception {
-        setAndRestartPeerList(resetPeerBase);
-        setAndRestartSDK(resetSDKConfig);
+        utilsClass.setAndRestartPeerList(resetPeerBase);
+        utilsClass.setAndRestartSDK(resetSDKConfig);
     }
 }

@@ -48,6 +48,7 @@ public class TestPermission {
     APermfuncSysSetMg pFunSysSet = new APermfuncSysSetMg();
     MgToolCmd mgToolCmd = new MgToolCmd();
     CommonFunc commonFunc = new CommonFunc();
+    UtilsClass utilsClass = new UtilsClass();
 
     WVMContractTest wvmContractTest = new WVMContractTest();
     FileOperation fileOperation = new FileOperation();
@@ -85,7 +86,7 @@ public class TestPermission {
     String exeCmd="./" + ToolTPName + " permission " + ledger;
 
     String peerIP=PEER1RPCPort;
-    String sdkID= UtilsClass.getSDKID();
+    String sdkID= utilsClass.getSDKID();
     String preCmd=toolPath + exeCmd + " -p " + peerIP + " -d " + sdkID + " -m ";
     ArrayList<String> dockerList =new ArrayList();
 
@@ -93,7 +94,7 @@ public class TestPermission {
 
 //    @Before
     public void setToolPermFull()throws Exception{
-        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m 999");
+        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + utilsClass.getToolID(PEER1IP) + " -m 999");
         sleepAndSaveInfo(SLEEPTIME);
     }
 
@@ -102,7 +103,7 @@ public class TestPermission {
     public void beforeTest() throws Exception {
 
         //将管理工具id权限设置为999
-        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m 999");
+        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + utilsClass.getToolID(PEER1IP) + " -m 999");
 
         if(bExe == false) {
             BeforeCondition bf = new BeforeCondition();
@@ -114,7 +115,7 @@ public class TestPermission {
             bExe=true;
         }
 
-        setAndRestartSDK();
+        commonFunc.setAndRestartSDK();
 
 
         pFun1.Data="GlobalStore:" + UtilsClass.Random(4);
@@ -363,18 +364,18 @@ public class TestPermission {
     @Test
     public void chkSunledgerMg()throws Exception{
 
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),subLedgerPerm);
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),subLedgerPerm);
         checkAllInterface(subLedgerPerm,def + Sys0 + Store0 + Docker0 + WVM0 + Mg0 + UTXO0);
         //执行子链相关操作
         assertEquals("1111",subLedgerCheck());
 
 
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"1,2,3");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"1,2,3");
         //执行子链相关操作
         assertEquals("0000",subLedgerCheck());
 
 
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"281");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"281");
         //执行子链相关操作
         assertEquals("1000",subLedgerCheck());
 
@@ -384,17 +385,17 @@ public class TestPermission {
         sleepAndSaveInfo(SLEEPTIME);
 
 
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"282");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"282");
         //执行子链相关操作
         assertEquals("0100",subLedgerCheck());
 
 
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"283");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"283");
         //执行子链相关操作
         assertEquals("0010",subLedgerCheck());
 
 
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"284");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"284");
         //执行子链相关操作
         assertEquals("0001",subLedgerCheck());
 
@@ -403,7 +404,7 @@ public class TestPermission {
 
 
         //设置为full权限
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"999");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"999");
         //执行子链相关操作
         assertEquals("1111",subLedgerCheck());
     }
@@ -411,32 +412,32 @@ public class TestPermission {
     @Test
     public void chkPeerDynamicChange()throws Exception{
         //将管理工具id权限
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),dynPeerPerm);
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),dynPeerPerm);
         //执行节点变更相关操作
         assertEquals("111",peerChangeCheck());
         checkAllInterface(dynPeerPerm,def + Sys0 + Store0 + Docker0 + WVM0 + Mg0 + UTXO0);
 
 
         //将管理工具id权限 设置为支持节点修改 不支持退出
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"261");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"261");
         //执行节点变更相关操作
         assertEquals("110",peerChangeCheck());
 
 
         //将管理工具id权限 设置为不支持节点修改 支持退出
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"262");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"262");
         //执行节点变更相关操作
         assertEquals("001",peerChangeCheck());
 
 
         //设置无权限
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"1,2,3");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"1,2,3");
         //执行子链相关操作
         assertEquals("000",peerChangeCheck());
 
 
         //设置权限999
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"999");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"999");
         //执行节点变更相关操作
         assertEquals("111",peerChangeCheck());
 
@@ -688,7 +689,7 @@ public class TestPermission {
         assertThat(pFun1.createStore(), containsString("0"));
 
         //权限设置通知的节点与SDK配置的节点不一致，权限设置有效
-        String sdkIP = getIPFromStr(SDKADD);
+        String sdkIP = utilsClass.getIPFromStr(SDKADD);
         setSDKOnePeer(sdkIP,PEER2IP + ":" + PEER2RPCPort,"true");
         shellCmd(sdkIP,killSDKCmd);
         shellCmd(sdkIP,startSDKCmd);
@@ -702,12 +703,12 @@ public class TestPermission {
     }
     @After
     public void resetPermission() throws Exception{
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"999");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"999");
         BeforeCondition bf=new BeforeCondition();
         bf.setPermission999();
 
         //将管理工具id权限设置为999
-        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + getToolID(PEER1IP) + " -m 999");
+        shellExeCmd(PEER1IP,toolPath + exeCmd + " -p " + peerIP + " -d " + utilsClass.getToolID(PEER1IP) + " -m 999");
 
     }
 }

@@ -580,7 +580,7 @@ public class CommonFunc {
      * @param amount
      * @return
      */
-    public static List<Map> constructUTXOTxDetailList(String from, String to, String tokenType, String amount){
+    public List<Map> constructUTXOTxDetailList(String from, String to, String tokenType, String amount){
         List<Map> tokenList = new ArrayList<>();
         Map<String,Object> amountMap = new LinkedHashMap<>();
 
@@ -646,16 +646,16 @@ public class CommonFunc {
     //此部分读写不支持重复section的内容 例如 sdk conf/config.toml中会有多个 [[Peers]]
 
     //读取sdk配置文件中指定配置项信息
-    public static boolean getSDKWalletEnabled(){
+    public boolean getSDKWalletEnabled(){
         boolean bEnabled = true;
-        String resp = getSDKConfigValueByShell(getIPFromStr(SDKADD),"Wallet","Enabled");
+        String resp = getSDKConfigValueByShell(utilsClass.getIPFromStr(SDKADD),"Wallet","Enabled");
         if(resp.contains("true")) bEnabled = true;
         else if(resp.contains("false")) bEnabled = false;
         return bEnabled;
     }
 
 
-    public static void setSDKTLSCertECDSA(String SDKIP)throws Exception{
+    public void setSDKTLSCertECDSA(String SDKIP)throws Exception{
         setSDKConfigByShell(SDKIP,"Rpc","TLSCaPath","\"\\\".\\/ecdsa\\/ca.pem\"\\\"");
         setSDKConfigByShell(SDKIP,"Rpc","TLSCertPath","\"\\\".\\/ecdsa\\/cert.pem\"\\\"");
         setSDKConfigByShell(SDKIP,"Rpc","TLSKeyPath","\"\\\".\\/ecdsa\\/key.pem\"\\\"");
@@ -665,7 +665,7 @@ public class CommonFunc {
         assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","TLSKeyPath").trim().contains("./ecdsa/key.pem"));
     }
 
-    public static void setSDKTLSCertExpired(String SDKIP)throws Exception{
+    public void setSDKTLSCertExpired(String SDKIP)throws Exception{
         setSDKConfigByShell(SDKIP,"Rpc","TLSCaPath","\"\\\".\\/expired\\/ca.pem\"\\\"");
         setSDKConfigByShell(SDKIP,"Rpc","TLSCertPath","\"\\\".\\/expired\\/cert.pem\"\\\"");
         setSDKConfigByShell(SDKIP,"Rpc","TLSKeyPath","\"\\\".\\/expired\\/key.pem\"\\\"");
@@ -675,7 +675,7 @@ public class CommonFunc {
         assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","TLSKeyPath").trim().contains("./expired/key.pem"));
     }
 
-    public static void setSDKTLSCertDiffCa(String SDKIP)throws Exception{
+    public void setSDKTLSCertDiffCa(String SDKIP)throws Exception{
         setSDKConfigByShell(SDKIP,"Rpc","TLSCaPath","\"\\\".\\/diffca\\/ca.pem\"\\\"");
         setSDKConfigByShell(SDKIP,"Rpc","TLSCertPath","\"\\\".\\/diffca\\/cert.pem\"\\\"");
         setSDKConfigByShell(SDKIP,"Rpc","TLSKeyPath","\"\\\".\\/diffca\\/key.pem\"\\\"");
@@ -685,7 +685,7 @@ public class CommonFunc {
         assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","TLSKeyPath").trim().contains("./diffca/key.pem"));
     }
 
-    public static void setSDKTLSCertDismatch(String SDKIP)throws Exception{
+    public void setSDKTLSCertDismatch(String SDKIP)throws Exception{
         setSDKConfigByShell(SDKIP,"Rpc","TLSCaPath","\"\\\".\\/dismatch\\/ca.pem\"\\\"");
         setSDKConfigByShell(SDKIP,"Rpc","TLSCertPath","\"\\\".\\/dismatch\\/cert.pem\"\\\"");
         setSDKConfigByShell(SDKIP,"Rpc","TLSKeyPath","\"\\\".\\/dismatch\\/key.pem\"\\\"");
@@ -695,23 +695,23 @@ public class CommonFunc {
         assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","TLSKeyPath").trim().contains("./dismatch/key.pem"));
     }
 
-    public static void setSDKCryptKeyType(String SDKIP,String keytype)throws Exception{
+    public void setSDKCryptKeyType(String SDKIP,String keytype)throws Exception{
         setSDKConfigByShell(SDKIP,"Rpc","KeyType","\"\\\"" + keytype + "\"\\\"");
         assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","KeyType").trim().contains(keytype));
     }
 
-    public static void setSDKCryptHashType(String SDKIP,String hashtype)throws Exception{
+    public void setSDKCryptHashType(String SDKIP,String hashtype)throws Exception{
         setSDKConfigByShell(SDKIP,"Rpc","HashType","\"\\\""+ hashtype + "\"\\\"");
         assertEquals(true,getSDKConfigValueByShell(SDKIP,"Rpc","HashType").trim().contains(hashtype));
 
     }
 
-    public static void setSDKWalletEnabled(String SDKIP, String flag)throws Exception{
+    public void setSDKWalletEnabled(String SDKIP, String flag)throws Exception{
         setSDKConfigByShell(SDKIP,"Wallet","Enabled",flag);
         assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","Enabled").trim().contains(flag));
     }
 
-    public static void setSDKWalletAddrDBMysql(String SDKIP)throws Exception{
+    public void setSDKWalletAddrDBMysql(String SDKIP)throws Exception{
         setSDKConfigByShell(SDKIP,"Wallet","Provider","\"\\\"mysql\"\\\"");
         setSDKConfigByShell(SDKIP,"Wallet","DBPath",mysqlDBAddr);
 //        setSDKConfigByShell(SDKIP,"AddrService","Provider","\"\\\"mysql\"\\\"");
@@ -726,7 +726,7 @@ public class CommonFunc {
 //        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","DBPath").trim().contains(checkMyqlDBAddr));
     }
 
-    public static void setSDKWalletDBMysqlAddrDBMongo(String SDKIP)throws Exception{
+    public void setSDKWalletDBMysqlAddrDBMongo(String SDKIP)throws Exception{
         setSDKConfigByShell(SDKIP,"Wallet","Provider","\"\\\"mysql\"\\\"");
         setSDKConfigByShell(SDKIP,"Wallet","DBPath",mysqlDBAddr);
         setSDKConfigByShell(SDKIP,"AddrService","Provider","\"\\\"mongodb\"\\\"");
@@ -741,7 +741,7 @@ public class CommonFunc {
         assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","DBPath").trim().contains(checkMongoDBAddr));
     }
 
-    public static void setSDKWalletDBMongoAddrDBMysql(String SDKIP)throws Exception{
+    public void setSDKWalletDBMongoAddrDBMysql(String SDKIP)throws Exception{
         setSDKConfigByShell(SDKIP,"Wallet","Provider","\"\\\"mongodb\"\\\"");
         setSDKConfigByShell(SDKIP,"Wallet","DBPath",mongoDBAddr);
         setSDKConfigByShell(SDKIP,"AddrService","Provider","\"\\\"mysql\"\\\"");
@@ -756,7 +756,7 @@ public class CommonFunc {
         assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","DBPath").trim().contains(checkMyqlDBAddr));
     }
 
-    public static void setSDKWalletAddrDBMongo(String SDKIP)throws Exception{
+    public void setSDKWalletAddrDBMongo(String SDKIP)throws Exception{
         setSDKConfigByShell(SDKIP,"Wallet","Provider","\"\\\"mongodb\"\\\"");
         setSDKConfigByShell(SDKIP,"Wallet","DBPath",mongoDBAddr);
 //        setSDKConfigByShell(SDKIP,"AddrService","Provider","\"\\\"mongodb\"\\\"");
@@ -771,7 +771,7 @@ public class CommonFunc {
     }
 
 
-    public static void setSDKOnePeer(String SDKIP,String PeerIPPort,String TLSEnabled){
+    public void setSDKOnePeer(String SDKIP,String PeerIPPort,String TLSEnabled){
         //获取第一个[[Peer]]所在行号 后面加入节点集群信息时插入的行号
         String lineNo = shExeAndReturn(SDKIP,"grep -n Peer "+ SDKConfigPath + " | cut -d \":\" -f 1 |sed -n '1p'");
         //先删除conf/config.toml文件中的所有Peers
@@ -784,7 +784,7 @@ public class CommonFunc {
         shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+2) + "iTLSEnabled = " + TLSEnabled + "' " + SDKConfigPath);
     }
 
-    public static void addSDKPeerCluster(String SDKIP,String PeerIPPort,String TLSEnabled){
+    public void addSDKPeerCluster(String SDKIP,String PeerIPPort,String TLSEnabled){
         //获取第一个[[Peer]]所在行号 后面加入节点集群信息时插入的行号
         String lineNo = shExeAndReturn(SDKIP,"grep -n TLSEnabled "+ SDKConfigPath + " | cut -d \":\" -f 1 |sed -n '$p'");
 
@@ -798,7 +798,7 @@ public class CommonFunc {
 
     //------------------------------------------------------------------------------------------------------
     //修改节点conf/base.toml文件中的相关配置项信息
-    public static void setPeerTLSCertECDSA(String PeerIP)throws Exception{
+    public void setPeerTLSCertECDSA(String PeerIP)throws Exception{
         setPeerBaseByShell(PeerIP,"Rpc","TLSCaPath","\"\\\".\\/ecdsa\\/ca.pem\"\\\"");
         setPeerBaseByShell(PeerIP,"Rpc","TLSCertPath","\"\\\".\\/ecdsa\\/cert.pem\"\\\"");
         setPeerBaseByShell(PeerIP,"Rpc","TLSKeyPath","\"\\\".\\/ecdsa\\/key.pem\"\\\"");
@@ -808,7 +808,7 @@ public class CommonFunc {
         assertEquals(true,getPeerBaseValueByShell(PeerIP,"Rpc","TLSKeyPath").trim().contains("./ecdsa/key.pem"));
     }
 
-    public static void setPeerTLSCertDismatch(String PeerIP)throws Exception{
+    public void setPeerTLSCertDismatch(String PeerIP)throws Exception{
         setPeerBaseByShell(PeerIP,"Rpc","TLSCaPath","\"\\\".\\/dismatch\\/ca.pem\"\\\"");
         setPeerBaseByShell(PeerIP,"Rpc","TLSCertPath","\"\\\".\\/dismatch\\/cert.pem\"\\\"");
         setPeerBaseByShell(PeerIP,"Rpc","TLSKeyPath","\"\\\".\\/dismatch\\/key.pem\"\\\"");
@@ -817,7 +817,7 @@ public class CommonFunc {
         assertEquals(true,getPeerBaseValueByShell(PeerIP,"Rpc","TLSCertPath").trim().contains("./dismatch/cert.pem"));
         assertEquals(true,getPeerBaseValueByShell(PeerIP,"Rpc","TLSKeyPath").trim().contains("./dismatch/key.pem"));
     }
-    public static void setPeerTLSCertExpired(String PeerIP)throws Exception{
+    public void setPeerTLSCertExpired(String PeerIP)throws Exception{
         setPeerBaseByShell(PeerIP,"Rpc","TLSCaPath","\"\\\".\\/expired\\/ca.pem\"\\\"");
         setPeerBaseByShell(PeerIP,"Rpc","TLSCertPath","\"\\\".\\/expired\\/cert.pem\"\\\"");
         setPeerBaseByShell(PeerIP,"Rpc","TLSKeyPath","\"\\\".\\/expired\\/key.pem\"\\\"");
@@ -827,33 +827,33 @@ public class CommonFunc {
         assertEquals(true,getPeerBaseValueByShell(PeerIP,"Rpc","TLSKeyPath").trim().contains("./expired/key.pem"));
     }
 
-    public static void setPeerLicence(String PeerIP,String value)throws Exception{
+    public void setPeerLicence(String PeerIP,String value)throws Exception{
         setPeerBaseByShell(PeerIP,"Node","Licence","\"\\\".\\/" + value + "\"\\\"");
         assertEquals(true,getPeerBaseValueByShell(PeerIP,"Node","Licence").trim().contains(value));
     }
 
-    public static void setPeerContractEnabled(String PeerIP, String flag)throws Exception{
+    public void setPeerContractEnabled(String PeerIP, String flag)throws Exception{
         setPeerBaseByShell(PeerIP,"Contract","Enabled",flag);
         assertEquals(true,getPeerBaseValueByShell(PeerIP,"Contract","Enabled").trim().contains(flag));
     }
 
-    public static void setPeerCryptKeyType(String PeerIP,String keytype)throws Exception{
+    public void setPeerCryptKeyType(String PeerIP,String keytype)throws Exception{
         setPeerBaseByShell(PeerIP,"Crypt","KeyType","\"\\\"" + keytype + "\"\\\"");
         assertEquals(true,getPeerBaseValueByShell(PeerIP,"Crypt","KeyType").trim().contains(keytype));
     }
 
-    public static void setPeerCryptHashType(String PeerIP,String hashtype)throws Exception{
+    public void setPeerCryptHashType(String PeerIP,String hashtype)throws Exception{
         setPeerBaseByShell(PeerIP,"Crypt","HashType","\"\\\"" + hashtype + "\"\\\"");
         assertEquals(true,getPeerBaseValueByShell(PeerIP,"Crypt","HashType").trim().contains(hashtype));
     }
 
-    public static void setPeerPackTime(String PeerIP,String PackTime)throws Exception{
+    public void setPeerPackTime(String PeerIP,String PackTime)throws Exception{
         setPeerBaseByShell(PeerIP,"BlockChain","PackTime",PackTime);
         assertEquals(true,getPeerBaseValueByShell(PeerIP,"BlockChain","PackTime").trim().contains(PackTime));
     }
 
 
-    public static void setPeerClusterOnePeer(String PeerIP,String addIP,String Port,String Type,String IPformat,String TcpType){
+    public void setPeerClusterOnePeer(String PeerIP,String addIP,String Port,String Type,String IPformat,String TcpType){
         shExeAndReturn(PeerIP,"echo \" \" > " + PeerMemConfigPath); //清空peer config.toml文件
 
         String peerID = getPeerId(addIP,USERNAME,PASSWD);
@@ -869,7 +869,7 @@ public class CommonFunc {
         shExeAndReturn(PeerIP,"sed -i '7iType = " + Type + "' " + PeerMemConfigPath);
     }
 
-    public static void addPeerCluster(String PeerIP,String addIP,String Port,String Type,String IPformat,String TcpType){
+    public void addPeerCluster(String PeerIP,String addIP,String Port,String Type,String IPformat,String TcpType){
         //获取第一个[[Peer]]所在行号 后面加入节点集群信息时插入的行号
         String lineNo = shExeAndReturn(PeerIP,"grep -n Type "+ PeerMemConfigPath + " | cut -d \":\" -f 1 |sed -n '$p'");
 
@@ -884,41 +884,41 @@ public class CommonFunc {
         shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+6) + "iType = " + Type + "' " + PeerMemConfigPath);
     }
 
-    public static void setPeerClusterWithOneDataPeer(){
+    public void setPeerClusterWithOneDataPeer(){
         //设置节点Peer4为数据节点
         setPeerConfigOneData(PEER1IP);
         setPeerConfigOneData(PEER2IP);
         setPeerConfigOneData(PEER4IP);
     }
 
-    public static void setPeerCluster(){
+    public void setPeerCluster(){
         //设置所有节点均为共识节点
         setPeerConfig(PEER1IP);
         setPeerConfig(PEER2IP);
         setPeerConfig(PEER4IP);
     }
 
-    public static void setPeerConfigOneData(String PeerIP){
+    public void setPeerConfigOneData(String PeerIP){
         //设置节点Peer1 config 配置文件 节点Peer4为数据节点
         setPeerClusterOnePeer(PeerIP,PEER1IP,PEER1TCPPort,"0",ipv4,tcpProtocol);
         addPeerCluster(PeerIP,PEER2IP,PEER2TCPPort,"0",ipv4,tcpProtocol);
         addPeerCluster(PeerIP,PEER4IP,PEER4TCPPort,"1",ipv4,tcpProtocol);
     }
 
-    public static void setPeerConfig(String PeerIP){
+    public void setPeerConfig(String PeerIP){
         //设置节点Peer1 config 配置文件 均为共识节点
         setPeerClusterOnePeer(PeerIP,PEER1IP,PEER1TCPPort,"0",ipv4,tcpProtocol);
         addPeerCluster(PeerIP,PEER2IP,PEER2TCPPort,"0",ipv4,tcpProtocol);
         addPeerCluster(PeerIP,PEER4IP,PEER4TCPPort,"0",ipv4,tcpProtocol);
     }
 
-    public static void uploadFileToPeer(String PeerIP,String...filelist){
+    public void uploadFileToPeer(String PeerIP,String...filelist){
         for (String file : filelist) {
             uploadFiletoDestDirByssh(srcShellScriptDir + file,PeerIP,USERNAME,PASSWD,destShellScriptDir,"");
         }
     }
 
-    public static boolean checkProgramActive(String queryIP, String programName){
+    public boolean checkProgramActive(String queryIP, String programName){
         boolean bRunning = false;
 
         String resp = shExeAndReturn(queryIP,"ps -ef|grep " + programName + " |grep -v grep");
@@ -931,7 +931,7 @@ public class CommonFunc {
     }
 
     //赋值权限999 区分是否主子链
-    public static void setPerm999WithParam(String id)throws Exception{
+    public void setPerm999WithParam(String id)throws Exception{
         String toolPath="cd "+ ToolPATH +";";
         String exeCmd="./" + ToolTPName + " permission ";
 
@@ -948,7 +948,7 @@ public class CommonFunc {
         }
     }
 
-    public static String getIDByMgTool(String remoteIP,String keyPath) {
+    public String getIDByMgTool(String remoteIP,String keyPath) {
         String result = "";
         Shell shellTest = new Shell(remoteIP,USERNAME,PASSWD);
         shellTest.execute("cd "+ ToolPATH+";./" + ToolTPName + " getid -p " + keyPath);
@@ -1024,6 +1024,40 @@ public class CommonFunc {
                 log.info("Can not resolve tx hash,please check type 01 02 10 20!");
         }
         return hash;
+    }
+
+    public Boolean uploadFile(){
+            uploadFileToPeer(PEER1IP, "startWithParam.sh", "SetConfig.sh", "GetConfig.sh");
+            uploadFileToPeer(PEER2IP, "startWithParam.sh", "SetConfig.sh", "GetConfig.sh");
+            uploadFileToPeer(PEER3IP, "startWithParam.sh", "SetConfig.sh", "GetConfig.sh");
+            uploadFileToPeer(PEER4IP, "startWithParam.sh", "SetConfig.sh", "GetConfig.sh");
+
+            //确认目标目录中存在被传输文件
+            String resp = shExeAndReturn(PEER1IP, "ls " + destShellScriptDir);
+            assertEquals(true, resp.contains("startWithParam.sh"));
+            assertEquals(true, resp.contains("SetConfig.sh"));
+            assertEquals(true, resp.contains("GetConfig.sh"));
+            shExeAndReturn(PEER1IP, "chmod +x " + destShellScriptDir + "*.sh");
+
+            resp = shExeAndReturn(PEER2IP, "ls " + destShellScriptDir);
+            assertEquals(true, resp.contains("startWithParam.sh"));
+            assertEquals(true, resp.contains("SetConfig.sh"));
+            assertEquals(true, resp.contains("GetConfig.sh"));
+            shExeAndReturn(PEER2IP, "chmod +x " + destShellScriptDir + "*.sh");
+
+            resp = shExeAndReturn(PEER3IP, "ls " + destShellScriptDir);
+            assertEquals(true, resp.contains("startWithParam.sh"));
+            assertEquals(true, resp.contains("SetConfig.sh"));
+            assertEquals(true, resp.contains("GetConfig.sh"));
+            shExeAndReturn(PEER3IP, "chmod +x " + destShellScriptDir + "*.sh");
+
+            resp = shExeAndReturn(PEER4IP, "ls " + destShellScriptDir);
+            assertEquals(true, resp.contains("startWithParam.sh"));
+            assertEquals(true, resp.contains("SetConfig.sh"));
+            assertEquals(true, resp.contains("GetConfig.sh"));
+            shExeAndReturn(PEER4IP, "chmod +x " + destShellScriptDir + "*.sh");
+
+            return true;
     }
 
 }

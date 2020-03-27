@@ -25,7 +25,7 @@ public class CheckNecessaryFiles {
        assertEquals(true,filelist.contains("baseOK.toml"));
 
        //检查sdk必要配置文件 configMysql.toml
-       filelist = shExeAndReturn(getIPFromStr(SDKADD),"ls " + SDKPATH + "conf/");
+       filelist = shExeAndReturn(utilsClass.getIPFromStr(SDKADD),"ls " + SDKPATH + "conf/");
        assertEquals(true,filelist.contains("configMysql.toml"));
 
        //检查主机shell脚本文件
