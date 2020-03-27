@@ -38,7 +38,7 @@ public class CommonFunc {
 
 
     //-----------------------------------------------------------------------------------------------------------
-    public static void setPermAndCheckResp(String peerIP,String peerPort,String remoteId,String permList)throws Exception{
+    public void setPermAndCheckResp(String peerIP,String peerPort,String remoteId,String permList)throws Exception{
         String toolPath = "cd " + ToolPATH + ";";
         String ledger = (subLedger != "") ? " -z " + subLedger:"";
         String exeCmd = "./" + ToolTPName + " permission " + ledger;

@@ -2,6 +2,7 @@ package com.tjfintech.common.functionTest.PermissionTest;
 
 import com.sun.deploy.util.StringUtils;
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
@@ -46,6 +47,7 @@ public class TestPermission {
     APermfuncWVM pFunWVM = new APermfuncWVM();
     APermfuncSysSetMg pFunSysSet = new APermfuncSysSetMg();
     MgToolCmd mgToolCmd = new MgToolCmd();
+    CommonFunc commonFunc = new CommonFunc();
 
     WVMContractTest wvmContractTest = new WVMContractTest();
     FileOperation fileOperation = new FileOperation();
@@ -361,18 +363,18 @@ public class TestPermission {
     @Test
     public void chkSunledgerMg()throws Exception{
 
-        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),subLedgerPerm);
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),subLedgerPerm);
         checkAllInterface(subLedgerPerm,def + Sys0 + Store0 + Docker0 + WVM0 + Mg0 + UTXO0);
         //执行子链相关操作
         assertEquals("1111",subLedgerCheck());
 
 
-        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"1,2,3");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"1,2,3");
         //执行子链相关操作
         assertEquals("0000",subLedgerCheck());
 
 
-        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"281");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"281");
         //执行子链相关操作
         assertEquals("1000",subLedgerCheck());
 
@@ -382,17 +384,17 @@ public class TestPermission {
         sleepAndSaveInfo(SLEEPTIME);
 
 
-        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"282");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"282");
         //执行子链相关操作
         assertEquals("0100",subLedgerCheck());
 
 
-        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"283");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"283");
         //执行子链相关操作
         assertEquals("0010",subLedgerCheck());
 
 
-        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"284");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"284");
         //执行子链相关操作
         assertEquals("0001",subLedgerCheck());
 
@@ -401,7 +403,7 @@ public class TestPermission {
 
 
         //设置为full权限
-        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"999");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"999");
         //执行子链相关操作
         assertEquals("1111",subLedgerCheck());
     }
@@ -409,32 +411,32 @@ public class TestPermission {
     @Test
     public void chkPeerDynamicChange()throws Exception{
         //将管理工具id权限
-        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),dynPeerPerm);
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),dynPeerPerm);
         //执行节点变更相关操作
         assertEquals("111",peerChangeCheck());
         checkAllInterface(dynPeerPerm,def + Sys0 + Store0 + Docker0 + WVM0 + Mg0 + UTXO0);
 
 
         //将管理工具id权限 设置为支持节点修改 不支持退出
-        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"261");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"261");
         //执行节点变更相关操作
         assertEquals("110",peerChangeCheck());
 
 
         //将管理工具id权限 设置为不支持节点修改 支持退出
-        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"262");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"262");
         //执行节点变更相关操作
         assertEquals("001",peerChangeCheck());
 
 
         //设置无权限
-        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"1,2,3");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"1,2,3");
         //执行子链相关操作
         assertEquals("000",peerChangeCheck());
 
 
         //设置权限999
-        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"999");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"999");
         //执行节点变更相关操作
         assertEquals("111",peerChangeCheck());
 
@@ -700,7 +702,7 @@ public class TestPermission {
     }
     @After
     public void resetPermission() throws Exception{
-        setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"999");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,getToolID(PEER1IP),"999");
         BeforeCondition bf=new BeforeCondition();
         bf.setPermission999();
 
