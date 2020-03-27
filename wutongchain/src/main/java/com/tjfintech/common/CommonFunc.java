@@ -299,7 +299,7 @@ public class CommonFunc {
      * 该函数的作用是将SDK涉及到的单签及多签地址 与签名次数、私钥（带密码）的私钥关联起来
      * @return
      */
-    public static JSONObject mapAddrInfo(){
+    public JSONObject mapAddrInfo(){
         assertEquals(false,IMPPUTIONADD.isEmpty());
 
         Map<String,Object> mapAccInfo =  new HashMap<>();
@@ -618,7 +618,7 @@ public class CommonFunc {
     }
 
 
-    public static boolean checkListArray(List<Map> list, JSONArray jsonArray){
+    public boolean checkListArray(List<Map> list, JSONArray jsonArray){
         boolean bResult = true;
 
         for(int i= 0;i<list.size();i++){

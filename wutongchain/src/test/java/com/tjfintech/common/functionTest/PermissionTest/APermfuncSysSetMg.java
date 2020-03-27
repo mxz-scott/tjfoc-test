@@ -4,17 +4,9 @@ import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
+
 import org.apache.commons.lang.math.RandomUtils;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import static com.tjfintech.common.CommonFunc.setPermAndCheckResp;
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static org.junit.Assert.assertEquals;
-
-//import static org.hamcrest.Matchers.containsString;
 
 @Slf4j
 public class APermfuncSysSetMg {

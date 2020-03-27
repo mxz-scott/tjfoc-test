@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.mixTest;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
@@ -43,6 +44,7 @@ public class TestTxType {
     SoloSign soloSign = testBuilder.getSoloSign();
     DockerContractTest ct =new DockerContractTest();
     UtilsClass utilsClass=new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
     String typeStore="0";
     String subTypeStore="0";
     String subTypePriStore="1";
@@ -405,7 +407,7 @@ public class TestTxType {
         List<Map> listST2 = constructUTXOTxDetailList(ADDRESS1,ADDRESS1,tokenTypeS,"9999.99",listST);
 
         JSONArray jsonArrayCheck = uxtoJson.getJSONArray("Records");
-        checkListArray(listST2,jsonArrayCheck);
+        commonFunc.checkListArray(listST2,jsonArrayCheck);
 
 
         //检查多签发行交易信息
@@ -433,7 +435,7 @@ public class TestTxType {
         List<Map> listMT2 = constructUTXOTxDetailList(IMPPUTIONADD,IMPPUTIONADD,tokenTypeM,String.valueOf(Integer.parseInt(amount1)-Integer.parseInt(tranferAmount)),listMT);
 
         jsonArrayCheck = uxtoJson.getJSONArray("Records");
-        checkListArray(listMT2,jsonArrayCheck);
+        commonFunc.checkListArray(listMT2,jsonArrayCheck);
 
         //单签回收
         String recySoloAmount="600.05";
@@ -460,7 +462,7 @@ public class TestTxType {
         List<Map> listSD = constructUTXOTxDetailList(ADDRESS1,zeroAddr,tokenTypeS,recySoloAmount);
         List<Map> listSD2 = constructUTXOTxDetailList(ADDRESS1,ADDRESS1,tokenTypeS,"9399.94",listSD);
         jsonArrayCheck = uxtoJson.getJSONArray("Records");
-        checkListArray(listSD2,jsonArrayCheck);
+        commonFunc.checkListArray(listSD2,jsonArrayCheck);
 
         //检查多签回收交易信息
         String txHash8 = JSONObject.fromObject(RecycleMultiInfo).getJSONObject("Data").get("TxId").toString();
@@ -470,7 +472,7 @@ public class TestTxType {
         List<Map> listMD = constructUTXOTxDetailList(IMPPUTIONADD,zeroAddr,tokenTypeM,"0.07");
         List<Map> listMD2 = constructUTXOTxDetailList(IMPPUTIONADD,IMPPUTIONADD,tokenTypeM,"46999.93",listMD);
         jsonArrayCheck = uxtoJson.getJSONArray("Records");
-        checkListArray(listMD2,jsonArrayCheck);
+        commonFunc.checkListArray(listMD2,jsonArrayCheck);
    }
 
     public void checkFromTo(JSONObject jsonObject,String from,String to,String TokenType,String amount,int index)throws Exception{
