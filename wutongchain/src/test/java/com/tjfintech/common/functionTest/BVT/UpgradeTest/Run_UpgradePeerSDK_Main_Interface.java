@@ -9,6 +9,7 @@ import com.tjfintech.common.functionTest.Conditions.Upgrade.SetTestVersionReleas
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest_UpgradeTestOnly;
 import com.tjfintech.common.functionTest.mainSubChain.*;
+import com.tjfintech.common.functionTest.mixTestWithConfigChange.AddPeerAndSyncData;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.DynamicChangePeerCluster_ClearDB;
 import com.tjfintech.common.functionTest.store.StoreTest_UpgradeTestOnly;
 import com.tjfintech.common.functionTest.upgrade.UpgradeTestHistoryData;
@@ -44,7 +45,7 @@ import org.junit.runners.Suite;
         DockerContractTest.class,
         WVMContractTest_UpgradeTestOnly.class,
 
-        DynamicChangePeerCluster_ClearDB.class,
+        AddPeerAndSyncData.class,
 
         TestMainSubChain_UpgradeTestOnly.class,
 
@@ -63,7 +64,7 @@ import org.junit.runners.Suite;
         SoloTest.class,
         DockerContractTest.class,
         WVMContractTest_UpgradeTestOnly.class,
-        DynamicChangePeerCluster_ClearDB.class,
+        AddPeerAndSyncData.class,
         TestMainSubChain_UpgradeTestOnly.class,
 })
 
