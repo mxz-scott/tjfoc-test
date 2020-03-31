@@ -690,7 +690,7 @@ public class UtilsClass {
 
         }else{
             DBType="mysql";
-            database = resp.substring(resp.lastIndexOf("/")+1, resp.lastIndexOf("?"));
+            database = resp.substring(resp.lastIndexOf(")/")+2, resp.lastIndexOf("?"));
         }
 
         return DBType + "," + IPString + "," + database;
