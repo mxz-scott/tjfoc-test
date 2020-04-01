@@ -1046,24 +1046,28 @@ public class CommonFunc {
             assertEquals(true, resp.contains("SetConfig.sh"));
             assertEquals(true, resp.contains("GetConfig.sh"));
             shExeAndReturn(PEER1IP, "chmod +x " + destShellScriptDir + "*.sh");
+            shExeAndReturn(PEER1IP,"sed -i 's/\\\r//g' " + destShellScriptDir + "*.sh");
 
             resp = shExeAndReturn(PEER2IP, "ls " + destShellScriptDir);
             assertEquals(true, resp.contains("startWithParam.sh"));
             assertEquals(true, resp.contains("SetConfig.sh"));
             assertEquals(true, resp.contains("GetConfig.sh"));
             shExeAndReturn(PEER2IP, "chmod +x " + destShellScriptDir + "*.sh");
+            shExeAndReturn(PEER2IP,"sed -i 's/\\\r//g' " + destShellScriptDir + "*.sh");
 
             resp = shExeAndReturn(PEER3IP, "ls " + destShellScriptDir);
             assertEquals(true, resp.contains("startWithParam.sh"));
             assertEquals(true, resp.contains("SetConfig.sh"));
             assertEquals(true, resp.contains("GetConfig.sh"));
             shExeAndReturn(PEER3IP, "chmod +x " + destShellScriptDir + "*.sh");
+            shExeAndReturn(PEER3IP,"sed -i 's/\\\r//g' " + destShellScriptDir + "*.sh");
 
             resp = shExeAndReturn(PEER4IP, "ls " + destShellScriptDir);
             assertEquals(true, resp.contains("startWithParam.sh"));
             assertEquals(true, resp.contains("SetConfig.sh"));
             assertEquals(true, resp.contains("GetConfig.sh"));
             shExeAndReturn(PEER4IP, "chmod +x " + destShellScriptDir + "*.sh");
+            shExeAndReturn(PEER4IP,"sed -i 's/\\\r//g' " + destShellScriptDir + "*.sh");
 
             return true;
     }
