@@ -46,7 +46,7 @@ public class TokenStoreTest {
 
 //        sleepAndSaveInfo(SLEEPTIME,"store on chain waiting");
         commonFunc.sdkCheckTxOrSleep(
-                commonFunc.getSDKTxHash(response,utilsClass.tokenApiGetTxHashType),
+                commonFunc.getTxHash(response,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //使用token模块getstore接口查询
@@ -148,7 +148,7 @@ public class TokenStoreTest {
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(
-                commonFunc.getSDKTxHash(response,utilsClass.tokenApiGetTxHashType),
+                commonFunc.getTxHash(response,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
 //        SDKADD = rSDKADD;
@@ -196,7 +196,7 @@ public class TokenStoreTest {
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(
-                commonFunc.getSDKTxHash(response,utilsClass.tokenApiGetTxHashType),
+                commonFunc.getTxHash(response,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
 //        SDKADD = rSDKADD;

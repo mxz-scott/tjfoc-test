@@ -189,7 +189,7 @@ public class GoContract implements Contract {
     public String Invoke(String name,String version,String category,String method,String caller,List<?> args){
         Map<String,Object>map=new HashMap<>();
         map.put("Name",name);
-        map.put("Version",version);
+        if(!version.isEmpty())       map.put("Version",version);
         map.put("Category",category);
         map.put("Method",method);
         map.put("Caller",caller);
