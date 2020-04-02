@@ -115,7 +115,7 @@ public class AddPeerAndSyncData {
         testMgTool.queryPeerListNo(peer1IPPort,DynamicPeerNo);
         testMgTool.queryPeerListNo(PEER3IP+":"+rpcPort,DynamicPeerNo);
 
-        sleepAndSaveInfo(80*1000,"sync data waiting....");
+        mgToolCmd.mgCheckHeightOrSleep(PEER1IP,PEER2IP,100*1000);
 
         assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER2IP + ":" + PEER2RPCPort));
         assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER3IP + ":" + PEER3RPCPort));
@@ -177,8 +177,7 @@ public class AddPeerAndSyncData {
         testMgTool.queryPeerListNo(peer1IPPort,DynamicPeerNo);
         testMgTool.queryPeerListNo(PEER3IP+":"+PEER3RPCPort,DynamicPeerNo);
 
-
-        sleepAndSaveInfo(80*1000,"sync data waiting....");
+        mgToolCmd.mgCheckHeightOrSleep(PEER1IP,PEER2IP,100*1000);
 
         assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER2IP + ":" + PEER2RPCPort));
         assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER3IP + ":" + PEER3RPCPort));
