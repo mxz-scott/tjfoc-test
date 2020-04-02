@@ -964,7 +964,9 @@ public class CommonFunc {
         return result;
     }
 
-    public void sdkCheckTxOrSleep(String hashData,String type,long sleeptime)throws Exception{
+    public String sdkCheckTxOrSleep(String hashData,String type,long sleeptime)throws Exception{
+        String resultDesp = "";
+        long internal = 0;
         Date dtTest = new Date();
         long nowTime = dtTest.getTime();
         log.info("开始时间 " + nowTime);
@@ -979,12 +981,13 @@ public class CommonFunc {
             else
                 sleepAndSaveInfo(1000,"等待再次检查交易是否上链时间");
         }
-        if(!bOK) log.info("等待时间：" + ((new Date()).getTime() - nowTime) + "当前查询交易仍未上链");
-        else {
-//            log.info("当前时间 " + (new Date()).getTime());
-//            log.info("起始时间 " + nowTime);
-            log.info("等待交易上链时间：" + ((new Date()).getTime() - nowTime));
-        }
+        //计算查询时间
+        log.info("当前时间 " + (new Date()).getTime());
+        internal = (new Date()).getTime() - nowTime;
+
+        log.info("查询交易上链 " + bOK + " 等待时间 " + hashData + " " + internal);
+
+        return hashData + " " + internal;
     }
 
     /***
@@ -994,7 +997,7 @@ public class CommonFunc {
      * @param type 根据特定类型获取 因sdk不同交易或版本不同解析json所需要获取的json字段不同
      * @return
      */
-    public String getSDKTxHash(String response,String type){
+    public String getTxHash(String response, String type){
         String hash = "";
         //0* 为SDK旧版本接口获取type类型起始 *为交易类型 以所有交易类型小序号为主 0表示存证 1表示 utxo
         //1* 为token api接口获取type类型起始
@@ -1020,6 +1023,11 @@ public class CommonFunc {
                 //新版本SDK v2接口
                 hash = JSONObject.fromObject(response).getString("data");
                 break;
+            case "mg" :
+                //新版本SDK v2接口
+                assertEquals(true,response.contains("success:"));
+                hash = response.substring(response.lastIndexOf("success:") + 8).trim();
+                break;
             default:
                 log.info("Can not resolve tx hash,please check type 01 02 10 20!");
         }
@@ -1038,24 +1046,28 @@ public class CommonFunc {
             assertEquals(true, resp.contains("SetConfig.sh"));
             assertEquals(true, resp.contains("GetConfig.sh"));
             shExeAndReturn(PEER1IP, "chmod +x " + destShellScriptDir + "*.sh");
+            shExeAndReturn(PEER1IP,"sed -i 's/\\\r//g' " + destShellScriptDir + "*.sh");
 
             resp = shExeAndReturn(PEER2IP, "ls " + destShellScriptDir);
             assertEquals(true, resp.contains("startWithParam.sh"));
             assertEquals(true, resp.contains("SetConfig.sh"));
             assertEquals(true, resp.contains("GetConfig.sh"));
             shExeAndReturn(PEER2IP, "chmod +x " + destShellScriptDir + "*.sh");
+            shExeAndReturn(PEER2IP,"sed -i 's/\\\r//g' " + destShellScriptDir + "*.sh");
 
             resp = shExeAndReturn(PEER3IP, "ls " + destShellScriptDir);
             assertEquals(true, resp.contains("startWithParam.sh"));
             assertEquals(true, resp.contains("SetConfig.sh"));
             assertEquals(true, resp.contains("GetConfig.sh"));
             shExeAndReturn(PEER3IP, "chmod +x " + destShellScriptDir + "*.sh");
+            shExeAndReturn(PEER3IP,"sed -i 's/\\\r//g' " + destShellScriptDir + "*.sh");
 
             resp = shExeAndReturn(PEER4IP, "ls " + destShellScriptDir);
             assertEquals(true, resp.contains("startWithParam.sh"));
             assertEquals(true, resp.contains("SetConfig.sh"));
             assertEquals(true, resp.contains("GetConfig.sh"));
             shExeAndReturn(PEER4IP, "chmod +x " + destShellScriptDir + "*.sh");
+            shExeAndReturn(PEER4IP,"sed -i 's/\\\r//g' " + destShellScriptDir + "*.sh");
 
             return true;
     }

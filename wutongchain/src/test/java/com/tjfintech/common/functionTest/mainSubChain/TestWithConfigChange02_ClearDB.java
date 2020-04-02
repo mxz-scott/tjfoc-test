@@ -93,11 +93,11 @@ public class TestWithConfigChange02_ClearDB {
         sleepAndSaveInfo(sleep,"operation waiting......");
         testMgTool.queryPeerListNo(PEER1IP+":"+PEER1RPCPort,peerNo);
         String respChange = mgToolCmd.addPeer("observer",PEER1IP + ":" + PEER1RPCPort,
-                "/ip4/" + dyIP,"/tcp/" + dyTcpPort,dyRpcPort);
+                "/" + ipv4 + "/" + dyIP,"/" + tcpProtocol + "/" + dyTcpPort,dyRpcPort);
         assertEquals(respChange.contains(checkResp), true);
 
         respChange = mgToolCmd.addPeer("join",PEER1IP + ":" + PEER1RPCPort,
-                "/ip4/" + dyIP,"/tcp/" + dyTcpPort,dyRpcPort);
+                "/" + ipv4 + "/" + dyIP,"/" + tcpProtocol + "/" + dyTcpPort,dyRpcPort);
         assertEquals(respChange.contains(checkResp), true);
     }
 

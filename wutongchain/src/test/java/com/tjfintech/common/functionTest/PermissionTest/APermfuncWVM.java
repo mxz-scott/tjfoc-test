@@ -20,7 +20,7 @@ public class APermfuncWVM {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Contract contract=testBuilder.getContract();
     UtilsClass utilsClass = new UtilsClass();
-    String version ="2.0";
+    String version ="1.0.0";
     String wvmhash ="0111";
 
     String okCode="200";
@@ -71,7 +71,7 @@ public class APermfuncWVM {
         for (Object obj:arg){
             args.add(obj);
         }
-        String response = contract.Invoke(cthash, version, category,method,"", args);
+        String response = contract.Invoke(cthash, "", category,method,"", args);
         return retAllow(response);
     }
 

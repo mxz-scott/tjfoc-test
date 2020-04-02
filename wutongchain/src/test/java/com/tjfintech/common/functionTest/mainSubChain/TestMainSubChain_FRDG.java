@@ -1,7 +1,9 @@
 package com.tjfintech.common.functionTest.mainSubChain;
 
 import com.tjfintech.common.BeforeCondition;
-import com.tjfintech.common.Interface.ManageTool;
+import com.tjfintech.common.CommonFunc;
+import com.tjfintech.common.Interface.MultiSign;
+import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
@@ -29,8 +31,11 @@ public class TestMainSubChain_FRDG {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
+    SoloSign soloSign = testBuilder.getSoloSign();
+    MultiSign multiSign = testBuilder.getMultiSign();
     MgToolCmd mgToolCmd = new MgToolCmd();
     SubLedgerCmd subLedgerCmd = new SubLedgerCmd();
+    CommonFunc commonFunc = new CommonFunc();
 
     String notSupport="not support service";
     String stateDestroyed ="has been destroyed";
@@ -38,12 +43,17 @@ public class TestMainSubChain_FRDG {
 
     String glbChain01= "glbCh1";
     String glbChain02= "glbCh2";
+    String hash = "";
+    String respWithHash = "";
+    String hashTime = "";
 
     @BeforeClass
     public static void clearData()throws Exception{
         BeforeCondition beforeCondition = new BeforeCondition();
         beforeCondition.clearDataSetPerm999();
         beforeCondition.updatePubPriKey();
+        beforeCondition.createAddresses();
+        beforeCondition.collAddressTest();
         sleepAndSaveInfo(SLEEPTIME);
     }
 
@@ -52,14 +62,19 @@ public class TestMainSubChain_FRDG {
     public void beforeConfig() throws Exception {
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         if(! resp.contains("\"name\": \""+glbChain01+"\"")) {
-            mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01, " -t sm3", " -w first", " -c raft", ids);
-            sleepAndSaveInfo(SLEEPTIME*2);
+            respWithHash = mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01, " -t sm3", " -w first", " -c raft", ids);
+            hash = commonFunc.getTxHash(respWithHash,"mg");
+            hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+//            sleepAndSaveInfo(SLEEPTIME*2);
+
             assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01+"\""), true);
         }
 
         if(! resp.contains("\"name\": \""+glbChain02+"\"")) {
-            mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain02, " -t sm3", " -w first", " -c raft", ids);
-            sleepAndSaveInfo(SLEEPTIME*2);
+            respWithHash = mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain02, " -t sm3", " -w first", " -c raft", ids);
+            hash = commonFunc.getTxHash(respWithHash,"mg");
+            hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+//            sleepAndSaveInfo(SLEEPTIME*2);
             assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02+"\""), true);
         }
     }
@@ -74,7 +89,10 @@ public class TestMainSubChain_FRDG {
         String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        sleepAndSaveInfo(SLEEPTIME*2);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+
+//        sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表 存在其他子链
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -84,7 +102,9 @@ public class TestMainSubChain_FRDG {
         //冻结子链
         res = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+        sleepAndSaveInfo(2000,"等待同步时间");
         //检查子链状态正确
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains(ledgerStateFreeze), true);
@@ -93,7 +113,9 @@ public class TestMainSubChain_FRDG {
         //解除子链
         res = mgToolCmd.recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+        sleepAndSaveInfo(2000,"等待同步时间");
         //检查子链状态正确
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains(ledgerStateNormal), true);
@@ -111,7 +133,9 @@ public class TestMainSubChain_FRDG {
         subLedger=chainName;
         String response1 = store.CreateStore(Data);
 
-        sleepAndSaveInfo(SLEEPTIME*2);
+        hash = commonFunc.getTxHash(response1,"0");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
@@ -135,13 +159,15 @@ public class TestMainSubChain_FRDG {
         //解除子链
         String res = mgToolCmd.recoverSubChain(PEER1IP,PEER1RPCPort," -z "+glbChain01);
         assertEquals(res.contains("send transaction success"), true);
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+        sleepAndSaveInfo(2000,"等待同步时间");
         //检查子链状态正确
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+glbChain01);
         assertEquals(resp.contains(ledgerStateNormal), true);
 
 
-        sleepAndSaveInfo(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -163,7 +189,10 @@ public class TestMainSubChain_FRDG {
         String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        sleepAndSaveInfo(SLEEPTIME*2);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+//        sleepAndSaveInfo(SLEEPTIME*2);
+
         //检查可以获取子链列表 存在其他子链
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -173,7 +202,9 @@ public class TestMainSubChain_FRDG {
         //销毁子链
         res = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+        sleepAndSaveInfo(2000,"等待同步时间");
         //检查被销毁子链状态正确
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains(ledgerStateDestroy), true);
@@ -182,7 +213,9 @@ public class TestMainSubChain_FRDG {
         //解除销毁子链
         res = mgToolCmd.recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME);
+        sleepAndSaveInfo(2000,"等待同步时间");
         //检查子链状态正确
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains(ledgerStateDestroy), true);
@@ -215,7 +248,10 @@ public class TestMainSubChain_FRDG {
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        sleepAndSaveInfo(SLEEPTIME*2);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+//        sleepAndSaveInfo(SLEEPTIME*2);
+
         //检查可以获取子链列表 存在其他子链
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -225,7 +261,9 @@ public class TestMainSubChain_FRDG {
         //冻结子链
         res = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+        sleepAndSaveInfo(2000,"等待同步时间");
         //检查被销毁子链状态正确
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains(ledgerStateFreeze), true);
@@ -234,7 +272,9 @@ public class TestMainSubChain_FRDG {
         //解除冻结子链
         res = mgToolCmd.recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+        sleepAndSaveInfo(2000,"等待同步时间");
         //检查子链状态正确
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains(ledgerStateNormal), true);
@@ -243,7 +283,9 @@ public class TestMainSubChain_FRDG {
         res = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME);
+
         //检查被销毁子链状态正确
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains(ledgerStateDestroy), true);
@@ -275,7 +317,10 @@ public class TestMainSubChain_FRDG {
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+//        sleepAndSaveInfo(SLEEPTIME);
+
         //检查可以获取子链列表 存在其他子链
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -285,7 +330,10 @@ public class TestMainSubChain_FRDG {
         //冻结子链
         res = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+        sleepAndSaveInfo(2000,"等待同步时间");
+
         //检查被销毁子链状态正确
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains(ledgerStateFreeze), true);
@@ -294,7 +342,10 @@ public class TestMainSubChain_FRDG {
         res = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+        sleepAndSaveInfo(2000,"等待同步时间");
+
         //检查被销毁子链状态正确
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains(ledgerStateDestroy), true);
@@ -327,7 +378,10 @@ public class TestMainSubChain_FRDG {
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+//        sleepAndSaveInfo(SLEEPTIME);
+
         //检查可以获取子链列表 存在其他子链
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -338,7 +392,9 @@ public class TestMainSubChain_FRDG {
         res = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+        sleepAndSaveInfo(2000,"等待同步时间");
         //检查被销毁子链状态正确
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains(ledgerStateDestroy), true);
@@ -348,7 +404,9 @@ public class TestMainSubChain_FRDG {
         res = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME);
+
         //检查被销毁子链状态正确
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains(ledgerStateDestroy), true);
@@ -367,9 +425,6 @@ public class TestMainSubChain_FRDG {
         String response1 = store.CreateStore(Data);
         assertThat(response1,containsString(stateDestroyed));
 
-
-
-
         //向子链glbChain01/glbChain02和主链发送交易
         subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
     }
@@ -384,7 +439,10 @@ public class TestMainSubChain_FRDG {
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+//        sleepAndSaveInfo(SLEEPTIME);
+
         //检查可以获取子链列表 存在其他子链
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -394,7 +452,9 @@ public class TestMainSubChain_FRDG {
         res = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+        sleepAndSaveInfo(3000,"等待同步时间");
         //检查被销毁子链状态正确
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains(ledgerStateDestroy), true);
@@ -466,10 +526,16 @@ public class TestMainSubChain_FRDG {
         assertEquals(bCheck1,store.CreatePrivateStore("test1",map).contains(notSupport));
 
         assertEquals(bCheck1,store.CreateStore("test2").contains(notSupport));
-//        sleepAndSaveInfo(SLEEPTIME);
-        assertEquals(bCheck1,store.SynCreateStore(SHORTMEOUT,"test3").contains(notSupport));
-        assertEquals(bCheck1,store.SynCreateStore(SHORTMEOUT,"test4",PUBKEY1).contains(notSupport));
+        assertEquals(bCheck1,soloSign.issueToken(
+                PRIKEY1,"freezeSo" + Random(4),
+                "1000","单签发行","").contains(notSupport));
+        assertEquals(bCheck1,multiSign.issueTokenCarryPri(IMPPUTIONADD,"freezeMu" + Random(4),
+                "1000",PRIKEY4,"多签发行").contains(notSupport));
 
+//        sleepAndSaveInfo(SLEEPTIME);
+        //20200401 与先先确认 移除sync接口测试
+//        assertEquals(bCheck1,store.SynCreateStore(SHORTMEOUT,"test3").contains(notSupport));
+//        assertEquals(bCheck1,store.SynCreateStore(SHORTMEOUT,"test4",PUBKEY1).contains(notSupport));
 
     }
 
@@ -479,7 +545,7 @@ public class TestMainSubChain_FRDG {
         //子链
         String chainName="tc1497_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
 
-        sleepAndSaveInfo(SLEEPTIME);
+//        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -517,8 +583,10 @@ public class TestMainSubChain_FRDG {
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+//        sleepAndSaveInfo(SLEEPTIME*2);
 
-        sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表 存在其他子链
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -527,7 +595,9 @@ public class TestMainSubChain_FRDG {
 
         res = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+        sleepAndSaveInfo(2000,"等待同步时间");
 
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains(ledgerStateFreeze), true);
@@ -549,7 +619,9 @@ public class TestMainSubChain_FRDG {
         //查看恢复子链后的子链状态并向子链发送交易
         res = mgToolCmd.recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+        sleepAndSaveInfo(2000,"等待同步时间");
 
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains(ledgerStateNormal), true);
@@ -561,7 +633,9 @@ public class TestMainSubChain_FRDG {
 
         //向子链chainName发送交易
         String txHash2 = JSONObject.fromObject(store.CreateStore(Data)).getJSONObject("Data").get("Figure").toString();
-        sleepAndSaveInfo(SLEEPTIME);
+
+        hashTime = commonFunc.sdkCheckTxOrSleep(txHash2,"0",SLEEPTIME*2);
+//        sleepAndSaveInfo(SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));
         //向子链glbChain01/glbChain02和主链发送交易
         subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
@@ -577,7 +651,9 @@ public class TestMainSubChain_FRDG {
                 " -w first"," -c raft"," -m "+ id1 + "," + id2);
         assertEquals(res.contains("send transaction success"), true);
 
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+//        sleepAndSaveInfo(SLEEPTIME);
 
         //检查可以获取子链列表
         String res2 = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -586,7 +662,9 @@ public class TestMainSubChain_FRDG {
 
         //冻结子链
         String respon = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(respon,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+        sleepAndSaveInfo(2000,"等待同步时间");
 
         //子链信息检查
         String res3 = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
@@ -595,9 +673,14 @@ public class TestMainSubChain_FRDG {
 
         //恢复冻结子链 连续两次恢复
         String respon1 = mgToolCmd.recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(respon1,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+        sleepAndSaveInfo(2000,"等待同步时间");
+
         respon1 = mgToolCmd.recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(respon1,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME);
+
 
         //子链信息检查
         String res4 = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
@@ -605,7 +688,9 @@ public class TestMainSubChain_FRDG {
 
         //确认恢复后再次恢复
         respon1 = mgToolCmd.recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(respon1,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME);
+
         res4 = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res4.contains(ledgerStateNormal), true);
 
@@ -614,7 +699,8 @@ public class TestMainSubChain_FRDG {
         //向子链chainName发送交易
         subLedger=chainName;
         String txHash1 = JSONObject.fromObject(store.CreateStore(Data)).getJSONObject("Data").get("Figure").toString();
-        sleepAndSaveInfo(SLEEPTIME);
+        hashTime = commonFunc.sdkCheckTxOrSleep(txHash1,"0",SLEEPTIME*2);
+//        sleepAndSaveInfo(SLEEPTIME);
 
         //检查可以获取子链列表
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -638,8 +724,9 @@ public class TestMainSubChain_FRDG {
                 " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2);
         assertEquals(res.contains("send transaction success"), true);
 
-
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+//        sleepAndSaveInfo(SLEEPTIME);
 
         //检查可以获取子链列表
         String res2 = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -653,9 +740,10 @@ public class TestMainSubChain_FRDG {
 
         //冻结子链
         String respon = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(respon,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+        sleepAndSaveInfo(2000,"等待同步时间");
 
-        sleepAndSaveInfo(SLEEPTIME,"冻结子链交易上链等待");
         //检查可以获取子链列表
         String res3 = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res3.contains(ledgerStateFreeze), true);
@@ -695,7 +783,9 @@ public class TestMainSubChain_FRDG {
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        sleepAndSaveInfo(SLEEPTIME*2);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+//        sleepAndSaveInfo(SLEEPTIME*2);
 
         //检查可以获取子链列表
         String res2 = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -706,8 +796,9 @@ public class TestMainSubChain_FRDG {
         //冻结两条子链
         String respon = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName2);
         String respon2 = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName3);
-        sleepAndSaveInfo(SLEEPTIME);
-
+        hash = commonFunc.getTxHash(respon2,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+        sleepAndSaveInfo(2000,"等待同步时间");
 
         //检查可以获取子链列表
         String res3 = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName2);
@@ -727,7 +818,6 @@ public class TestMainSubChain_FRDG {
         subLedger=chainName3;
         String response2 = store.CreateStore(Data);
 
-        sleepAndSaveInfo(SLEEPTIME*2);
 
         //检查可以获取子链列表
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -756,7 +846,10 @@ public class TestMainSubChain_FRDG {
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
-        sleepAndSaveInfo(SLEEPTIME*2);
+        hash = commonFunc.getTxHash(res,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+//        sleepAndSaveInfo(SLEEPTIME*2);
+
         //检查可以获取子链列表 存在其他子链
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
@@ -768,7 +861,9 @@ public class TestMainSubChain_FRDG {
         //1.冻结一个子链chainName
         String respon = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertThat(respon, containsString("send transaction success"));
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(respon,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME*2);
+        sleepAndSaveInfo(3000,"等待同步时间");
 
         //2.查询子链状态为冻结
         String resp2 = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
@@ -784,7 +879,9 @@ public class TestMainSubChain_FRDG {
         //5.再次冻结已冻结的子链
         String respon1 = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertThat(respon1, containsString("send transaction success"));
-        sleepAndSaveInfo(SLEEPTIME);
+        hash = commonFunc.getTxHash(respon1,"mg");
+        hashTime = commonFunc.sdkCheckTxOrSleep(hash,"0",SLEEPTIME);
+
         //6.查询子链状态为冻结
         String resp21 = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp21.contains(ledgerStateFreeze), true);

@@ -24,8 +24,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-//        SetDatabaseMysql.class,
-//        SetTokenApiDatabaseMysql.class,
+        SetDatabaseMysql.class,
+        SetTokenApiDatabaseMysql.class,
         SetTokenApiPerm999.class,
         SDKToTokenMultiTest.class,
         TokenAccurateTest.class,

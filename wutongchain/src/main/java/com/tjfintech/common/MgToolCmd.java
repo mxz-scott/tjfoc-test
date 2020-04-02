@@ -228,4 +228,26 @@ public class MgToolCmd implements ManageTool {
         String cmd = toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam;
         return shExeAndReturn(shellIP,cmd);
     }
+
+    public void mgCheckHeightOrSleep(String queryIPRefer,String queryIPTest,long sleeptime)throws Exception{
+
+        long internal = 0;
+        Date dtTest = new Date();
+        long nowTime = dtTest.getTime();
+        log.info("开始时间 " + nowTime);
+        Boolean bOK = false;
+
+        while((new Date()).getTime() - nowTime < sleeptime && bOK == false){
+            if(queryBlockHeight(queryIPRefer).equals(queryBlockHeight(queryIPTest)))
+                bOK = true;
+            else
+                sleepAndSaveInfo(1000,"等待查询高度是否一致时间");
+        }
+        //计算查询时间
+        log.info("当前时间 " + (new Date()).getTime());
+        internal = (new Date()).getTime() - nowTime;
+
+        log.info("检查高度一致 " + bOK + " 等待时间 " + internal);
+
+    }
 }

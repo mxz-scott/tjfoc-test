@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.Conditions;
+package com.tjfintech.common.functionTest.Conditions.PersonalTestEnvironment;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import lombok.extern.slf4j.Slf4j;

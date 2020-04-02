@@ -51,7 +51,7 @@ public class TestTxType {
 
     String versionStore="0";
     String versionPriStore="1";
-    String versionWVM1="1";
+    String versionWVM1="2";
     String versionSUTXO="0";
     String versionMUTXO="0";
 
@@ -163,7 +163,7 @@ public class TestTxType {
 
             //节点加入交易详情检查
         String respAdd = mgToolCmd.addPeer("join", PEER1IP + ":" + PEER1RPCPort,
-                "/ip4/" + PEER2IP, "/tcp/60011", PEER2RPCPort);
+                "/" + ipv4 + "/" + PEER2IP, "/" + tcpProtocol + "/" + PEER2TCPPort, PEER2RPCPort);
         assertEquals(true, respAdd.contains("success"));
         sleepAndSaveInfo(SLEEPTIME,"等待加入节点交易上链");
         String addPeerHash = respAdd.substring(respAdd.lastIndexOf(":") + 1).trim();
@@ -175,9 +175,9 @@ public class TestTxType {
         assertEquals("peer" + PEER2IP.substring(PEER2IP.lastIndexOf(".") + 1).trim(),
                 jsonObjectAddPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("ShownName"));
         assertEquals(true,
-                jsonObjectAddPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("LanAddrs").contains("/ip4/" + PEER2IP + "/tcp/60011"));
+                jsonObjectAddPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("LanAddrs").contains("/" + ipv4 + "/" + PEER2IP + "/" + tcpProtocol + "/" + PEER2TCPPort));
         assertEquals(true,
-                jsonObjectAddPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("WlanAddrs").contains("/ip4/" + PEER2IP + "/tcp/60011"));
+                jsonObjectAddPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("WlanAddrs").contains("/" + ipv4 + "/" + PEER2IP + "/" + tcpProtocol + "/" + PEER2TCPPort));
 //        assertEquals(PEER2RPCPort,
 //                jsonObjectAddPeer.getJSONObject("Data").getJSONObject("System").getJSONObject("PeerTransaction").getString("RpcPort"));
         assertEquals("0",
