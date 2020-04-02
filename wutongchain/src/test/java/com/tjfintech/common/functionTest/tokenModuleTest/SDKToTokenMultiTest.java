@@ -55,6 +55,7 @@ public class SDKToTokenMultiTest {
         if(IMPPUTIONADD.isEmpty()) {
             SDKADD = rSDKADD;
             beforeCondition.updatePubPriKey();
+            beforeCondition.createAddresses();
             beforeCondition.collAddressTest();
         }
         //添加token模块的账户、发行地址归集地址
