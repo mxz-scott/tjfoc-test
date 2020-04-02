@@ -156,7 +156,7 @@ public class TestWithConfigChange_ClearDB {
         commonFunc.addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
         //动态加入节点168
         String resp2 = mgToolCmd.addPeer("join",PEER1IP+":"+PEER1RPCPort,
-                "/ip4/"+PEER3IP,"/tcp/60011",PEER3RPCPort);
+                "/" + ipv4 + "/"+PEER3IP,"/" + tcpProtocol + "/" + PEER3TCPPort,PEER3RPCPort);
         assertEquals(true,resp2.contains("success"));
         sleepAndSaveInfo(SLEEPTIME);
 
@@ -224,28 +224,28 @@ public class TestWithConfigChange_ClearDB {
     public void TC1771_changePeerInfo()throws Exception{
         //所有信息不变更，重复join，提示变更失败，因节点B参与子链
         String resp2 = mgToolCmd.addPeer("join",PEER1IP + ":" + PEER1RPCPort,
-                "/ip4/" + PEER2IP,"/tcp/" + PEER2TCPPort,String.valueOf(Integer.valueOf(PEER2RPCPort) + 1));
+                "/" + ipv4 + "/" + PEER2IP,"/" + tcpProtocol + "/" + PEER2TCPPort,String.valueOf(Integer.valueOf(PEER2RPCPort) + 1));
         assertEquals(true,resp2.contains("join failed:some ledger is using this peer"));
 
         //变更节点B为数据节点，提示变更失败，因节点B参与子链
         resp2 = mgToolCmd.addPeer("observer",PEER1IP + ":" + PEER1RPCPort,
-                "/ip4/" + PEER2IP,"/tcp/" + PEER2TCPPort,PEER2RPCPort);
+                "/" + ipv4 + "/" + PEER2IP,"/" + tcpProtocol + "/" + PEER2TCPPort,PEER2RPCPort);
         assertEquals(true,resp2.contains("join failed:some ledger is using this peer"));
 
         //变更节点B tcp端口信息，提示变更失败，因节点B参与子链
         resp2 = mgToolCmd.addPeer("join",PEER1IP + ":" + PEER1RPCPort,
-                "/ip4/" + PEER2IP,"/tcp/60015",PEER2RPCPort);
+                "/" + ipv4 + "/" + PEER2IP,"/tcp/60015",PEER2RPCPort);
         assertEquals(true,resp2.contains("join failed:some ledger is using this peer"));
 
         //变更节点B rpc端口信息，提示变更失败，因节点B参与子链
         resp2 = mgToolCmd.addPeer("join",PEER1IP + ":" + PEER1RPCPort,
-                "/ip4/" + PEER2IP,"/tcp/" + PEER2TCPPort,String.valueOf(Integer.valueOf(PEER2RPCPort) + 1));
+                "/" + ipv4 + "/" + PEER2IP,"/" + tcpProtocol + "/" + PEER2TCPPort,String.valueOf(Integer.valueOf(PEER2RPCPort) + 1));
         assertEquals(true,resp2.contains("join failed:some ledger is using this peer"));
 
         String meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);
         assertEquals("0",testMgTool.parseMemInfo(meminfo,PEER2IP,"typ"));
         assertEquals(PEER2RPCPort,testMgTool.parseMemInfo(meminfo,PEER2IP,"port"));
-        assertEquals("/ip4/" + PEER2IP + "/tcp/" + PEER2TCPPort,testMgTool.parseMemInfo(meminfo,PEER2IP,"inAddr"));
+        assertEquals("/" + ipv4 + "/" + PEER2IP + "/" + tcpProtocol + "/" + PEER2TCPPort,testMgTool.parseMemInfo(meminfo,PEER2IP,"inAddr"));
 
         subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"1771 data");
 
@@ -258,7 +258,7 @@ public class TestWithConfigChange_ClearDB {
         commonFunc.addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
         //动态加入节点168
         String resp2 = mgToolCmd.addPeer("observer",PEER1IP+":"+PEER1RPCPort,
-                "/ip4/"+PEER3IP,"/tcp/60011",PEER3RPCPort);
+                "/" + ipv4 + "/"+PEER3IP,"/" + tcpProtocol + "/" + PEER3TCPPort,PEER3RPCPort);
         assertEquals(true,resp2.contains("success"));
         sleepAndSaveInfo(SLEEPTIME);
         //创建子链01 包含节点A、B、C

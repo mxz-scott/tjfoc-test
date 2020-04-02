@@ -93,8 +93,8 @@ public class TestMgTool {
     public void checkMemInfoExHeight(String chkResp,String peerIP,String...memInfoArr)throws Exception{
         assertEquals(memInfoArr[0],parseMemInfo(chkResp,peerIP,"id"));
         assertEquals(memInfoArr[1],parseMemInfo(chkResp,peerIP,"state"));
-        assertEquals(memInfoArr[2],parseMemInfo(chkResp,peerIP,"version"));
-        assertEquals(memInfoArr[3],parseMemInfo(chkResp,peerIP,"port"));
+//        assertEquals(memInfoArr[2],parseMemInfo(chkResp,peerIP,"version"));
+//        assertEquals(memInfoArr[3],parseMemInfo(chkResp,peerIP,"port"));
         assertEquals(memInfoArr[4],parseMemInfo(chkResp,peerIP,"shownName"));
         assertEquals(memInfoArr[5],parseMemInfo(chkResp,peerIP,"inAddr"));
 //        assertEquals(memInfoArr[6],parseMemInfo(chkResp,peerIP,"outAddr"));//20191218 测试无此字段
@@ -166,89 +166,89 @@ public class TestMgTool {
     @Test
     public void testFunc() throws Exception{
 
-        ExeToolCmdAndChk(PEER1IP,"./toolkit peer -p","flag needs an argument: 'p' in -p");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit peer","management");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit peer -p "+ PEER1IP,"unknown port");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit peer -p "+ peer1IPPort,"too many colons in address");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " peer -p","flag needs an argument: 'p' in -p");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " peer","management");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " peer -p "+ PEER1IP,"unknown port");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " peer -p "+ peer1IPPort,"too many colons in address");
 
-        ExeToolCmdAndChk(PEER1IP,"./toolkit mem -p","flag needs an argument: 'p' in -p");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit mem","management");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit mem -p "+ PEER1IP,"unknown port");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit mem -p "+ peer1IPPort,"too many colons in address");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " mem -p","flag needs an argument: 'p' in -p");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " mem","management");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " mem -p "+ PEER1IP,"unknown port");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " mem -p "+ peer1IPPort,"too many colons in address");
 
-        ExeToolCmdAndChk(PEER1IP,"./toolkit health -p","flag needs an argument: 'p' in -p");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit health","management");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit health -p "+ PEER1IP,"unknown port");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit health -p "+ peer1IPPort,"too many colons in address");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " health -p","flag needs an argument: 'p' in -p");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " health","management");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " health -p "+ PEER1IP,"unknown port");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " health -p "+ peer1IPPort,"too many colons in address");
 
-        ExeToolCmdAndChk(PEER1IP,"./toolkit newtx -p","flag needs an argument: 'p' in -p");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit newtx","management");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit newtx -p "+ PEER1IP,"unknown port");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit newtx -p "+ peer1IPPort,"too many colons in address");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " newtx -p","flag needs an argument: 'p' in -p");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " newtx","management");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " newtx -p "+ PEER1IP,"unknown port");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " newtx -p "+ peer1IPPort,"too many colons in address");
 
-        ExeToolCmdAndChk(PEER1IP,"./toolkit height -p","flag needs an argument: 'p' in -p");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit height","management");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit height -p "+ PEER1IP,"unknown port");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit height -p "+ peer1IPPort,"too many colons in address");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " height -p","flag needs an argument: 'p' in -p");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " height","management");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " height -p "+ PEER1IP,"unknown port");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " height -p "+ peer1IPPort,"too many colons in address");
 
-        ExeToolCmdAndChk(PEER1IP,"./toolkit query -p","flag needs an argument: 'p' in -p");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit query -v","flag needs an argument: 'v' in -v");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit query","management");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit query -p "+ PEER1IP,"unknown port");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit query -p "+ peer1IPPort,"too many colons in address");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " query -p","flag needs an argument: 'p' in -p");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " query -v","flag needs an argument: 'v' in -v");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " query","management");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " query -p "+ PEER1IP,"unknown port");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " query -p "+ peer1IPPort,"too many colons in address");
 
-//        ExeToolCmdAndChk(PEER1IP,"./toolkit ntx -p","flag needs an argument: 'p' in -p");
-//        ExeToolCmdAndChk(PEER1IP,"./toolkit ntx","management");
-//        ExeToolCmdAndChk(PEER1IP,"./toolkit ntx -p "+ PEER1IP,"unknown port");
-//        ExeToolCmdAndChk(PEER1IP,"./toolkit ntx -p "+ peer1IPPort,"too many colons in address");
+//        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " ntx -p","flag needs an argument: 'p' in -p");
+//        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " ntx","management");
+//        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " ntx -p "+ PEER1IP,"unknown port");
+//        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " ntx -p "+ peer1IPPort,"too many colons in address");
 
         mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
         queryPeerListNo(peer1IPPort,basePeerNo);
-        ExeToolCmdAndChk(PEER1IP,"./toolkit join -p","flag needs an argument: 'p' in -p");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit join -n","flag needs an argument: 'n' in -n");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit join -l","flag needs an argument: 'l' in -l");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit join -w","flag needs an argument: 'w' in -w");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit join -s","flag needs an argument: 's' in -s");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit join","management");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit join -p "+ PEER1IP+" -n 111 -l 10.1.3.168:60030 -w 10.1.3.168:60030 -s peer168","unknown port");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit join -p "+ peer1IPPort+" -n 111 -l 10.1.3.168:60030 -w 10.1.3.168:60030 -s peer168","too many colons in address");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " join -p","flag needs an argument: 'p' in -p");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " join -n","flag needs an argument: 'n' in -n");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " join -l","flag needs an argument: 'l' in -l");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " join -w","flag needs an argument: 'w' in -w");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " join -s","flag needs an argument: 's' in -s");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " join","management");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " join -p "+ PEER1IP+" -n 111 -l 10.1.3.168:60030 -w 10.1.3.168:60030 -s peer168","unknown port");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " join -p "+ peer1IPPort+" -n 111 -l 10.1.3.168:60030 -w 10.1.3.168:60030 -s peer168","too many colons in address");
 
         queryPeerListNo(peer1IPPort,basePeerNo);
 
-        ExeToolCmdAndChk(PEER1IP,"./toolkit observer -p","flag needs an argument: 'p' in -p");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit observer -n","flag needs an argument: 'n' in -n");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit observer -l","flag needs an argument: 'l' in -l");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit observer -w","flag needs an argument: 'w' in -w");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit observer -s","flag needs an argument: 's' in -s");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit observer","management");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit observer -p "+ PEER1IP+" -n 111 -l 10.1.3.168:60030 -w 10.1.3.168:60030 -s peer168","unknown port");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit observer -p "+ peer1IPPort+" -n 111 -l 10.1.3.168:60030 -w 10.1.3.168:60030 -s peer168","too many colons in address");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " observer -p","flag needs an argument: 'p' in -p");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " observer -n","flag needs an argument: 'n' in -n");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " observer -l","flag needs an argument: 'l' in -l");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " observer -w","flag needs an argument: 'w' in -w");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " observer -s","flag needs an argument: 's' in -s");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " observer","management");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " observer -p "+ PEER1IP+" -n 111 -l 10.1.3.168:60030 -w 10.1.3.168:60030 -s peer168","unknown port");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " observer -p "+ peer1IPPort+" -n 111 -l 10.1.3.168:60030 -w 10.1.3.168:60030 -s peer168","too many colons in address");
 
         queryPeerListNo(peer1IPPort,basePeerNo);
 
-        ExeToolCmdAndChk(PEER1IP,"./toolkit quit -p","flag needs an argument: 'p' in -p");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit quit -n","flag needs an argument: 'n' in -n");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit quit","management");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit quit -p "+ PEER1IP+" -n 111","unknown port");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit quit -p "+ peer1IPPort+" -n 111","too many colons in address");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " quit -p","flag needs an argument: 'p' in -p");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " quit -n","flag needs an argument: 'n' in -n");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " quit","management");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " quit -p "+ PEER1IP+" -n 111","unknown port");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " quit -p "+ peer1IPPort+" -n 111","too many colons in address");
         queryPeerListNo(peer1IPPort,basePeerNo);
 
 
-        ExeToolCmdAndChk(PEER1IP,"./toolkit permission -p","flag needs an argument: 'p' in -p");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit permission -d","flag needs an argument: 'd' in -d");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit permission -m","flag needs an argument: 'm' in -m");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit permission","management");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit permission -p "+ PEER1IP,"management");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit permission -p "+ peer1IPPort,"management");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " permission -p","flag needs an argument: 'p' in -p");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " permission -d","flag needs an argument: 'd' in -d");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " permission -m","flag needs an argument: 'm' in -m");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " permission","management");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " permission -p "+ PEER1IP,"management");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " permission -p "+ peer1IPPort,"management");
 
-        ExeToolCmdAndChk(PEER1IP,"./toolkit getpermission -p","flag needs an argument: 'p' in -p");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit getpermission -d","flag needs an argument: 'd' in -d");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit getpermission","management");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit getpermission -p "+ PEER1IP,"unknown port");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit getpermission -p "+ peer1IPPort,"too many colons in address");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " getpermission -p","flag needs an argument: 'p' in -p");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " getpermission -d","flag needs an argument: 'd' in -d");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " getpermission","management");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " getpermission -p "+ PEER1IP,"unknown port");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " getpermission -p "+ peer1IPPort,"too many colons in address");
 
-        ExeToolCmdAndChk(PEER1IP,"./toolkit mgToolCmd.getID -p","flag needs an argument: 'p' in -p");
-        ExeToolCmdAndChk(PEER1IP,"./toolkit mgToolCmd.getID","management");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " mgToolCmd.getID -p","flag needs an argument: 'p' in -p");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " mgToolCmd.getID","management");
 
 
         ExeToolCmdAndChk(PEER1IP,"./license create -p","flag needs an argument: 'p' in -p");
@@ -358,7 +358,7 @@ public class TestMgTool {
         String rpcPort=queryIPPort.split(":")[1];//9300
         String queryIP=queryIPPort.split(":")[0];//10.1.3.240
         String[] temp = queryIP.split("\\.");
-        String tcpIP=queryIP+"/tcp/"+tcpPort; //10.1.3.240:60030
+        String tcpIP=queryIP+"/" + tcpProtocol + "/"+tcpPort; //10.1.3.240:60030
         String peerID=getPeerId(queryIP,USERNAME,PASSWD);  //取IP的最后一位点分十进制作为节点ID,ex. 240
         String peerName="peer"+temp[3];//peer240
 
@@ -404,7 +404,7 @@ public class TestMgTool {
         String rpcPort=queryIPPort.split(":")[1];//9300
         String queryIP=queryIPPort.split(":")[0];//10.1.3.240
         String[] temp = queryIP.split("\\.");
-        String tcpIP=queryIP+"/tcp/"+checkinfo[0]; //10.1.3.240:60030
+        String tcpIP=queryIP+"/" + tcpProtocol + "/"+checkinfo[0]; //10.1.3.240:60030
         String peerID=getPeerId(queryIP,USERNAME,PASSWD);  //根据证书生成
         String peerName="peer"+temp[3];//peer240
 
@@ -436,7 +436,7 @@ public class TestMgTool {
         String rpcPort=queryIPPort.split(":")[1];//9300
         String queryIP=queryIPPort.split(":")[0];//10.1.3.240
 
-        tempCmd=toolPath+"./toolkit mem -p "+rpcPort;
+        tempCmd=toolPath+"./"+ ToolTPName + " mem -p "+rpcPort;
 
         Shell shell1=new Shell(queryIP,USERNAME,PASSWD);
         shell1.execute(tempCmd);
@@ -476,17 +476,17 @@ public class TestMgTool {
 
 
         //-p参数中带IP
-        response = shExeAndReturn(PEER1IP,toolPath+"./toolkit health -p " + queryIPPort);
+        response = shExeAndReturn(PEER1IP,toolPath+"./" + ToolTPName + " health -p " + queryIPPort);
         assertEquals(response.contains("too many colons in address"), true);
 
 
         //无-p参数
-        response = shExeAndReturn(PEER1IP,toolPath+"./toolkit health -p " + queryIPPort);
+        response = shExeAndReturn(PEER1IP,toolPath+"./" + ToolTPName + " health -p " + queryIPPort);
         assertEquals(response.contains("management"), true);
 
 
         //查询不是一个区块链系统中的节点
-        response = shExeAndReturn(PEER1IP,toolPath+"./toolkit health -p " + queryIPPort);
+        response = shExeAndReturn(PEER1IP,toolPath+"./" + ToolTPName + " health -p " + queryIPPort);
         assertEquals(response.contains("connection refused"), true);
     }
 

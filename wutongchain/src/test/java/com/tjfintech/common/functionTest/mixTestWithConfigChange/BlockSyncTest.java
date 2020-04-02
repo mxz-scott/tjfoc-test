@@ -236,7 +236,7 @@ public class BlockSyncTest {
         Thread.sleep(OnChainSleep*3);
 
         //检查Peer2同步异常节点会停止
-        ExeToolCmdAndChk(syncPeer,"./toolkit height -p "+ PEER2RPCPort,"rpc error");
+        ExeToolCmdAndChk(syncPeer,"./" + ToolTPName + " height -p "+ PEER2RPCPort,"rpc error");
 
 
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
@@ -271,7 +271,7 @@ public class BlockSyncTest {
 
         sleepAndSaveInfo(40000,"tx sync block waiting......");
         //检查同步异常节点会停止
-        ExeToolCmdAndChk(syncPeer,"./toolkit height -p "+ synvPeerPort,"rpc error");
+        ExeToolCmdAndChk(syncPeer,"./" + ToolTPName + " height -p "+ synvPeerPort,"rpc error");
 
         //安装合约镜像
         utilsClass.setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,ccenvPull);
@@ -309,7 +309,7 @@ public class BlockSyncTest {
 
             Thread.sleep(SLEEPTIME);
             //检查同步异常节点会停止
-            ExeToolCmdAndChk(syncPeer, "./toolkit height -p " + PEER1RPCPort, "BlockHeight");
+            ExeToolCmdAndChk(syncPeer, "./" + ToolTPName + " height -p " + PEER1RPCPort, "BlockHeight");
         }
     }
 
@@ -581,7 +581,7 @@ public class BlockSyncTest {
     }
 
     public void MgToolStore()throws Exception{
-        ExeToolCmdAndChk(PEER1IP,"./toolkit newtx -p " + PEER1RPCPort + " -n 50 -t 1","HashData");
+        ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " newtx -p " + PEER1RPCPort + " -n 50 -t 1","HashData");
     }
 
     public void WVMTx()throws Exception{
