@@ -24,6 +24,9 @@ public class SetDatabaseMongo {
 //       setPeerCluster();//设置节点集群默认全部共识节点 1/2/4
        utilsClass.setAndRestartPeerList(clearPeerDB,resetPeerBase);
 
+       SetAllPeersDockerImagesClear setAllPeersDockerImagesClear = new SetAllPeersDockerImagesClear();
+       setAllPeersDockerImagesClear.clearAllPeersDockerImages();
+
        //重启SDK
       shellExeCmd(utilsClass.getIPFromStr(SDKADD),startSDKCmd);
 

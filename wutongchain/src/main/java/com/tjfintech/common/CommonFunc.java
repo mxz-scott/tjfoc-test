@@ -1072,4 +1072,9 @@ public class CommonFunc {
             return true;
     }
 
+    public void clearDockerImages(String peerIP,String keyWork)throws Exception{
+        shellExeCmd(peerIP,"docker rm -f `docker ps -aq`");
+        shellExeCmd(peerIP,"docker images|grep " + keyWork + "|awk '{print $1}'|xargs docker rmi");
+    }
+
 }

@@ -44,6 +44,7 @@ public class AddPeerAndSyncData {
         //设置动态加入节点config.toml文件 带自己的配置信息
         mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
         shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB);
+        commonFunc.clearDockerImages(PEER3IP,PEER3RPCPort);//删除docker images镜像
         commonFunc.setPeerConfig(PEER3IP);
         commonFunc.addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
     }
@@ -51,6 +52,7 @@ public class AddPeerAndSyncData {
         //设置动态加入节点config.toml文件 带自己的配置信息
         mgToolCmd.quitPeer(peer1IPPort,PEER3IP);
         shellExeCmd(PEER3IP,killPeerCmd,clearPeerDB);
+        commonFunc.clearDockerImages(PEER3IP,PEER3RPCPort);//删除docker images镜像
         commonFunc.setPeerConfig(PEER3IP);
         commonFunc.addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
     }
@@ -115,7 +117,8 @@ public class AddPeerAndSyncData {
         testMgTool.queryPeerListNo(peer1IPPort,DynamicPeerNo);
         testMgTool.queryPeerListNo(PEER3IP+":"+rpcPort,DynamicPeerNo);
 
-        mgToolCmd.mgCheckHeightOrSleep(PEER1IP,PEER2IP,100*1000);
+        mgToolCmd.mgCheckHeightOrSleep(PEER1IP + ":" + PEER1RPCPort,
+                PEER3IP + ":" + PEER3RPCPort,600*1000);
 
         assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER2IP + ":" + PEER2RPCPort));
         assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER3IP + ":" + PEER3RPCPort));
@@ -177,7 +180,8 @@ public class AddPeerAndSyncData {
         testMgTool.queryPeerListNo(peer1IPPort,DynamicPeerNo);
         testMgTool.queryPeerListNo(PEER3IP+":"+PEER3RPCPort,DynamicPeerNo);
 
-        mgToolCmd.mgCheckHeightOrSleep(PEER1IP,PEER2IP,100*1000);
+        mgToolCmd.mgCheckHeightOrSleep(PEER1IP + ":" + PEER1RPCPort,
+                PEER3IP + ":" + PEER3RPCPort,600*1000);
 
         assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER2IP + ":" + PEER2RPCPort));
         assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER3IP + ":" + PEER3RPCPort));
