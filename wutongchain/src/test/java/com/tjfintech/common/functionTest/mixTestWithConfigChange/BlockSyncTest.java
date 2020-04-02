@@ -317,8 +317,13 @@ public class BlockSyncTest {
     @Test
     public void TC983_OnePeerStoreUTXO()throws Exception{
         WVMContractTest wvmContractTest = new WVMContractTest();
-        wvmHash = JSONObject.fromObject(wvmContractTest.intallUpdateName("testWVM",PRIKEY1)).getJSONObject("Data").getString("Name");
+        String respInstall = wvmContractTest.intallUpdateName("testWVM",PRIKEY1);
+        wvmHash = JSONObject.fromObject(respInstall).getJSONObject("Data").getString("Name");
+        String tempHash = JSONObject.fromObject(respInstall).getJSONObject("Data").getString("Figure");
+
+        commonFunc.sdkCheckTxOrSleep(tempHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
         //SDK配置文件中仅配置PEER1节点
+
 
         //停止节点PEER2 和PEER4
         Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
