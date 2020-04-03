@@ -41,12 +41,20 @@ public class MixTxTest {
     CommonFunc commonFunc = new CommonFunc();
     UtilsClass utilsClass = new UtilsClass();
 
+    String tempWVMHash = "";
+
     @Before
     public void beforeConfig() throws Exception {
         BeforeCondition bf = new BeforeCondition();
         bf.updatePubPriKey();
         bf.collAddressTest();
         Thread.sleep(8000);
+
+        WVMContractTest wvmContractTest = new WVMContractTest();
+        String respInstall = wvmContractTest.intallUpdateName("testWVM",PRIKEY1);
+        tempWVMHash = JSONObject.fromObject(respInstall).getJSONObject("Data").getString("Name");
+        String tempHash = JSONObject.fromObject(respInstall).getJSONObject("Data").getString("Figure");
+        commonFunc.sdkCheckTxOrSleep(tempHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
     }
 
     @Test
@@ -182,7 +190,7 @@ public class MixTxTest {
         String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
 
         //调用合约内的交易
-        String response2 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
+        String response2 = wvmContractTest.invokeNew(tempWVMHash,"initAccount",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
 
 
