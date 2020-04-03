@@ -607,8 +607,9 @@ public class TestPermission {
 
     public void checkAllInterface(String right,String chkStr)throws Exception{
 
-        shellCmd(ToolIP,preCmd + right);
-
+        String tempResp = shExeAndReturn(ToolIP,preCmd + right);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(tempResp,"mg"),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
         //权限更新后查询检查生效与否
         Shell shell1=new Shell(ToolIP,USERNAME,PASSWORD);
         //String cmd1="cd zll;ls";//替换为权限命令
