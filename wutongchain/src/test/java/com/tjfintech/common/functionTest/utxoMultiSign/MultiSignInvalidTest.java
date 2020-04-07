@@ -11,6 +11,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
@@ -86,7 +88,7 @@ public class MultiSignInvalidTest {
      * 创建多签地址
      */
     @Test
-    public void TC1354_genmultiaddress(){
+    public void TC1354_genmultiaddress() throws Exception{
         String multiAddress;
         Map<String, Object> map =  new HashMap<>();
         //传入3个公钥
@@ -109,6 +111,36 @@ public class MultiSignInvalidTest {
         map2.put("PUBKEY1",utilsClass.PUBKEY1);
         multiAddress = multiSign.genMultiAddress(1, map2);
         assertThat(multiAddress, containsString("need more pubkey"));//Args字段只传入一个公钥
+
+    }
+
+    @Test
+    public void testCreateMuliAddr10orMore() throws Exception{
+        Map<String, Object> map =  new HashMap<>();
+        certPath = "RSA";
+        BeforeCondition beforeCondition = new BeforeCondition();
+        beforeCondition.updatePubPriKey();
+        map.clear();
+        map.put("1",PUBKEY1);
+        map.put("2",PUBKEY2);
+        map.put("3",PUBKEY3);
+        map.put("4",PUBKEY4);
+        map.put("5",PUBKEY5);
+        map.put("6",PUBKEY6);
+        map.put("7",PUBKEY7);
+        certPath = "SM2";
+        beforeCondition.updatePubPriKey();
+        map.put("8",PUBKEY1);
+        map.put("9",PUBKEY2);
+        map.put("10",PUBKEY3);
+        String respCreateMultiAddr = multiSign.genMultiAddress(10,map);
+        assertEquals("200",JSONObject.fromObject(respCreateMultiAddr).getString("State"));
+
+        map.put("11",PUBKEY4);
+        respCreateMultiAddr = multiSign.genMultiAddress(10,map);
+        assertEquals("400",JSONObject.fromObject(respCreateMultiAddr).getString("State"));
+        assertEquals("pubkey numbers can't be greater than 10",JSONObject.fromObject(respCreateMultiAddr).getString("Message"));
+
     }
 
     
