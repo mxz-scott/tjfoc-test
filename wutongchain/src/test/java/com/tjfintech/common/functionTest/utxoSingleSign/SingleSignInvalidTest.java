@@ -2,6 +2,7 @@ package com.tjfintech.common.functionTest.utxoSingleSign;
 
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -29,6 +30,7 @@ public class SingleSignInvalidTest {
     private static String tokenType;//设置发行的tokentype
     private static String MaxValue;
     private static String MaxValuePlus1;
+    CommonFunc commonFunc = new CommonFunc();
     /**
      * TC1332-创建单签的账号
      * @throws Exception
@@ -40,7 +42,8 @@ public class SingleSignInvalidTest {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();
-            Thread.sleep(SLEEPTIME);
+            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                    utilsClass.sdkGetTxDetailType,SLEEPTIME);
         }
 
         if (UtilsClass.PRECISION == 10) {
@@ -217,8 +220,6 @@ public class SingleSignInvalidTest {
         String transferInfo3 = soloSign.Transfer(list3, PRIKEY1, transferData);
         String transferInfo4 = soloSign.Transfer(list4, PRIKEY1, transferData);
         String transferInfo5 = soloSign.Transfer(list5, PRIKEY1, transferData);
-
-        Thread.sleep(SLEEPTIME);
 
 //        assertThat(transferInfo1, containsString("400"));
 //        assertThat(transferInfo2, containsString("400"));

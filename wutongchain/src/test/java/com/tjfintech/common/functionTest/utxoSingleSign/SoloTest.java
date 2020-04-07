@@ -332,7 +332,7 @@ public class SoloTest {
         String Info4 = multiSign.Recycle("", PRIKEY5, tokenType2, issueAmount2);
         assertThat(Info4, containsString("200"));
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
         sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
 
@@ -411,7 +411,7 @@ public class SoloTest {
         String Info4 = multiSign.Recycle("", PRIKEY5, tokenType2, "0.5");
         assertThat(Info4, containsString("200"));
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
         sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
 
@@ -669,7 +669,7 @@ public class SoloTest {
         assertEquals("200",JSONObject.fromObject(Info6).getString("State"));
 
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
         sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
 
