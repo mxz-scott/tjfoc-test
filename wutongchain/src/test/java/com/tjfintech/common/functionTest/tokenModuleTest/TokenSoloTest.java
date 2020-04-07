@@ -69,7 +69,11 @@ public class TokenSoloTest {
         tokenType2 = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,issueAmount2);
 
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
+
         log.info("查询归集地址中两种token余额");
         String response1 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
         String response2 = tokenModule.tokenGetBalance( tokenAccount1, tokenType2);
@@ -100,7 +104,11 @@ public class TokenSoloTest {
         tokenType2 = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenMultiAddr2,issueAmount2);
 
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
+
         log.info("查询归集地址中两种token余额");
         String response1 = tokenModule.tokenGetBalance( tokenMultiAddr1, tokenType);
         String response2 = tokenModule.tokenGetBalance( tokenMultiAddr2, tokenType2);
@@ -131,7 +139,11 @@ public class TokenSoloTest {
         issueToken2 = commonFunc.tokenModule_IssueToken(collAddr,issueAddr,issAmount2);
 
 
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
+
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -161,7 +173,12 @@ public class TokenSoloTest {
         }
 
         tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,actualAmount1);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
+
         log.info("查询归集地址中token余额");
         String response1 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
 
@@ -178,7 +195,12 @@ public class TokenSoloTest {
         //Thread.sleep(8000);
         //先前已经注册发行和归集地址tokenAccount1，确认发行无问题
         tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,"1009");
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
+
         String response1 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));
         assertEquals("1009",JSONObject.fromObject(response1).getJSONObject("data").getString(tokenType));
@@ -187,10 +209,17 @@ public class TokenSoloTest {
         //删除发行地址，保留归集地址
         String response3=tokenModule.tokenDelMintAddr(tokenAccount1);
         assertThat(response3, containsString("200"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,"1009");
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
+
         String response2 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
         assertEquals("200",JSONObject.fromObject(response2).getString("state"));
         assertEquals(false,response2.contains(tokenType));
@@ -199,10 +228,17 @@ public class TokenSoloTest {
         log.info("删除发行地址和归集地址");
         String response4=tokenModule.tokenDelCollAddr(tokenAccount1);
         assertThat(response4, containsString("200"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,"1009");
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
+
         String response41 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
         assertEquals("200",JSONObject.fromObject(response41).getString("state"));
         assertEquals(false,response41.contains(tokenType));
@@ -211,10 +247,16 @@ public class TokenSoloTest {
         //重新添加发行地址，保留删除归集地址
         String response51=tokenModule.tokenAddMintAddr(tokenAccount1);
         assertThat(response51, containsString("200"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,"1009");
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         String response52 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
         assertEquals("200",JSONObject.fromObject(response52).getString("state"));
@@ -223,10 +265,16 @@ public class TokenSoloTest {
         //重新添加归集地址
         String response6=tokenModule.tokenAddCollAddr(tokenAccount1);
         assertThat(response6, containsString("200"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,"2356");
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         String response7 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
         assertEquals("2356",JSONObject.fromObject(response7).getJSONObject("data").getString(tokenType));
@@ -244,8 +292,10 @@ public class TokenSoloTest {
 
         String transferInfo= commonFunc.tokenModule_TransferTokenList(tokenAccount1,list);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
-
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         log.info("查询"+ tokenAccount3 + "跟" + tokenAccount5 + "余额，判断转账是否成功");
         String queryInfo = tokenModule.tokenGetBalance( tokenAccount3, "");
@@ -258,15 +308,20 @@ public class TokenSoloTest {
         List<Map> list1 = utilsClass.tokenConstructToken(tokenAccount4,tokenType,"30");
         transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount3,list1);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
-
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         log.info(tokenAccount5 + " --> " + tokenAccount4 + "转账: " + tokenType2);
         List<Map> list2 = utilsClass.tokenConstructToken(tokenAccount4,tokenType2,"80");
         transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount5,list2);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         log.info(tokenAccount4 + " --> " + tokenAccount2 + "转账: " + tokenType2 + " " + tokenType2);
         List<Map> list3 = utilsClass.tokenConstructToken(tokenAccount2,tokenType,"30");
@@ -274,20 +329,29 @@ public class TokenSoloTest {
 
         transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount4,list4);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         log.info(tokenAccount5 + " --> " + tokenAccount2 + "转账: " + tokenType2 );
         List<Map> list5 = utilsClass.tokenConstructToken(tokenAccount2,tokenType2,"20");
         transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount5,list5);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         List<Map> list6 = utilsClass.tokenConstructToken(tokenAccount4,tokenType,"30");
         List<Map> list7 = utilsClass.tokenConstructToken(tokenAccount4,tokenType2,"50",list6);
 
         transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount2,list7);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
 //        String query1 = tokenModule.tokenGetBalance(tokenAccount1, "");
         String query2 = tokenModule.tokenGetBalance(tokenAccount2, "");
@@ -319,7 +383,10 @@ public class TokenSoloTest {
 //        assertEquals("200",JSONObject.fromObject(Info5).getString("state"));
         assertEquals("200",JSONObject.fromObject(Info6).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         String queryBalanceInfo2 = tokenModule.tokenGetBalance(tokenAccount2, "");
         String queryBalanceInfo3 = tokenModule.tokenGetBalance(tokenAccount3, "");
@@ -349,7 +416,10 @@ public class TokenSoloTest {
         List<Map> list = utilsClass.tokenConstructToken(tokenAccount5,tokenType2,issueAmount2,listModel);
         String transferInfo1 = commonFunc.tokenModule_TransferTokenList(tokenAccount1,list);
         assertEquals("200",JSONObject.fromObject(transferInfo1).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         String amount1, amount2;
         if (UtilsClass.PRECISION == 10) {
@@ -372,7 +442,11 @@ public class TokenSoloTest {
         String Info4 = commonFunc.tokenModule_DestoryToken(tokenAccount5, tokenType2, issueAmount2);
         assertEquals("200",JSONObject.fromObject(Info4).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
+
         String queryInfo11 = tokenModule.tokenGetBalance( tokenAccount3, "");
         String queryInfo12 = tokenModule.tokenGetBalance( tokenAccount5, "");
         String queryInfo5 = tokenModule.tokenGetDestroyBalance();
@@ -399,7 +473,11 @@ public class TokenSoloTest {
         }
 
         tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,actualAmount1);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
+
         log.info("查询归集地址中token余额");
         String response1 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
 
@@ -419,7 +497,10 @@ public class TokenSoloTest {
         List<Map> list = utilsClass.tokenConstructToken(tokenAccount5,tokenType2,"10.05",listModel);
         String transferInfo1 = commonFunc.tokenModule_TransferTokenList(tokenAccount1,list);
         assertEquals("200",JSONObject.fromObject(transferInfo1).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         String amount1, amount2;
         if (UtilsClass.PRECISION == 10) {
@@ -442,7 +523,11 @@ public class TokenSoloTest {
         String Info4 = commonFunc.tokenModule_DestoryToken(tokenAccount5, tokenType2, "10.05");
         assertEquals("200",JSONObject.fromObject(Info4).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
+
         String queryInfo11 = tokenModule.tokenGetBalance( tokenAccount3, "");
         String queryInfo12 = tokenModule.tokenGetBalance( tokenAccount5, "");
         String queryInfo5 = tokenModule.tokenGetDestroyBalance();
@@ -467,13 +552,19 @@ public class TokenSoloTest {
         //20190411增加锁定步骤后进行转账
         log.info("锁定待转账Token: "+tokenType);
         String resp = tokenModule.tokenFreezeToken(tokenType);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         List<Map> listModel1 = utilsClass.tokenConstructToken(tokenAccount3,tokenType,"100.25");
         List<Map> list1 = utilsClass.tokenConstructToken(tokenAccount5,tokenType2,"200.555",listModel1);
         String transferInfo= commonFunc.tokenModule_TransferTokenList(tokenAccount1, list1);
         assertEquals(true,transferInfo.contains("toketype(" + tokenType + ") has been freezed!"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         log.info("查询帐号3跟帐号5余额，判断转账是否成功");
         String queryInfo = tokenModule.tokenGetBalance( tokenAccount3, "");
@@ -484,12 +575,19 @@ public class TokenSoloTest {
 
         log.info("解除锁定待转账Token: "+tokenType);
         String resp1 = tokenModule.tokenRecoverToken(tokenType);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         List<Map> listModel = utilsClass.tokenConstructToken(tokenAccount3,tokenType,"100.25");
         List<Map> list = utilsClass.tokenConstructToken(tokenAccount5,tokenType2,"200.555",listModel);
         transferInfo= commonFunc.tokenModule_TransferTokenList(tokenAccount1,list);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
+
         assertThat(transferInfo, containsString("200"));
         log.info("查询帐号3跟帐号5余额，判断转账是否成功");
         queryInfo = tokenModule.tokenGetBalance( tokenAccount3, tokenType);
@@ -511,7 +609,10 @@ public class TokenSoloTest {
 
         String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount1,list1);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         //tokenAccount3 向 tokenAccount4和5 转账4000 tokenType
         List<Map> list2 = utilsClass.tokenConstructToken(tokenAccount4,tokenType,"4000");
@@ -538,7 +639,10 @@ public class TokenSoloTest {
         assertEquals("200",JSONObject.fromObject(Info).getString("state"));
         assertEquals("200",JSONObject.fromObject(Info3).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         String queryInfo11 = tokenModule.tokenGetBalance( tokenAccount4, tokenType);
         String queryInfo12 = tokenModule.tokenGetBalance( tokenAccount5, tokenType2);
@@ -562,7 +666,10 @@ public class TokenSoloTest {
         String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount1, list1);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         List<Map> list2 = utilsClass.tokenConstructToken(tokenAccount2,tokenType,"200");
         List<Map>list3= utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType,"7000",list2);
@@ -583,10 +690,17 @@ public class TokenSoloTest {
         //20190411增加锁定解锁操作步骤后进行回收
         log.info("锁定待回收Token: "+tokenType);
         String resp=tokenModule.tokenFreezeToken(tokenType);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
+
         log.info("解除锁定待回收Token: "+tokenType);
         String resp1= tokenModule.tokenRecoverToken(tokenType);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         log.info("开始回收....");
         String Info = commonFunc.tokenModule_DestoryToken(tokenAccount3, tokenType, "3000");
@@ -594,7 +708,10 @@ public class TokenSoloTest {
 
         assertEquals("200",JSONObject.fromObject(Info).getString("state"));
         assertEquals("200",JSONObject.fromObject(Info2).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         log.info("开始查询余额....");
         String response1 = tokenModule.tokenGetBalance(tokenAccount3, "");
@@ -615,25 +732,37 @@ public class TokenSoloTest {
         List<Map> list=utilsClass.tokenConstructToken(tokenAccount3,tokenType,"3000");
         List<Map> list1=utilsClass.tokenConstructToken(tokenAccount3,tokenType2,"3000",list);
         String transferInfo= commonFunc.tokenModule_TransferTokenList(tokenAccount1,list1);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
+
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 
         List<Map> list2 = utilsClass.tokenConstructToken(tokenAccount4,tokenType,"200");
         List<Map>list3= utilsClass.tokenConstructToken(tokenMultiAddr3,tokenType,"70",list2);
         String recycleInfo2 = commonFunc.tokenModule_TransferTokenList(tokenAccount3, list3);
         assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         List<Map> list4 = utilsClass.tokenConstructToken(tokenAccount4,tokenType,"400");
         List<Map>list5= utilsClass.tokenConstructToken(tokenMultiAddr3,tokenType2,"401",list4);
         String recycleInfo3 = commonFunc.tokenModule_TransferTokenList(tokenAccount3, list5);
         assertEquals("200",JSONObject.fromObject(recycleInfo3).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         //20190411增加锁定操作步骤后进行回收
         log.info("锁定待回收Token: "+tokenType);
         String resp= tokenModule.tokenFreezeToken(tokenType);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         log.info("开始回收....");
         String Info = commonFunc.tokenModule_DestoryToken( tokenAccount3, tokenType, "2330");
@@ -649,8 +778,11 @@ public class TokenSoloTest {
         assertEquals("200",JSONObject.fromObject(Info4).getString("state"));
 
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
-        log.info("开始查询余额....");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        log.info("开始查询余额....");commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
+
         String response1 = tokenModule.tokenGetBalance(tokenAccount3, "");
         String response2 = tokenModule.tokenGetBalance(tokenAccount4, "");
         String response3 = tokenModule.tokenGetBalance(tokenMultiAddr3, "");
@@ -678,7 +810,10 @@ public class TokenSoloTest {
         List<Map> list0 = utilsClass.tokenConstructToken(tokenAccount3,tokenType,"4000",list);
         String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount1, list0);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         String response = tokenModule.tokenGetBalance(tokenAccount1,"");
         assertEquals("17000.876543",JSONObject.fromObject(response).getJSONObject("data").getString(tokenType2));
@@ -689,7 +824,10 @@ public class TokenSoloTest {
         List<Map> list2= utilsClass.tokenConstructToken(tokenAccount4,tokenType,"301");
         String transferInfo1 = commonFunc.tokenModule_TransferTokenList(tokenAccount3, list1);
         String transferInfo2 = commonFunc.tokenModule_TransferTokenList(tokenAccount3, list2);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         String queryInfo = tokenModule.tokenGetBalance(tokenAccount4,"");
         assertThat(JSONObject.fromObject(queryInfo).getJSONObject("data").getString(tokenType),
@@ -704,7 +842,10 @@ public class TokenSoloTest {
         assertEquals("200",JSONObject.fromObject(transferInfo3).getString("state"));
         assertEquals("200",JSONObject.fromObject(transferInfo4).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         String response1 = tokenModule.tokenGetBalance(tokenAccount4,"");
         assertThat(JSONObject.fromObject(response1).getJSONObject("data").getString(tokenType),
@@ -720,7 +861,10 @@ public class TokenSoloTest {
         assertEquals("200",JSONObject.fromObject(transferInfo5).getString("state"));
         assertEquals("200",JSONObject.fromObject(transferInfo6).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         String response2 = tokenModule.tokenGetBalance(tokenAccount4,"");
         assertThat(JSONObject.fromObject(response2).getJSONObject("data").getString(tokenType),
@@ -980,7 +1124,10 @@ public class TokenSoloTest {
         double trfAmount1 = 100.253;
         double trfAmount2 = 689.333;
         issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
 
         //查询余额归集地址 和 发行地址
@@ -995,12 +1142,18 @@ public class TokenSoloTest {
         String transferAmount = String.valueOf(trfAmount1);
         List<Map> list = utilsClass.tokenConstructToken(to1,issueToken,transferAmount);
         String transferResp = commonFunc.tokenModule_TransferTokenList(from,list);
-        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         transferAmount = String.valueOf(trfAmount2);
         List<Map> list2 = utilsClass.tokenConstructToken(to2,issueToken,transferAmount);
         String transferResp2 = commonFunc.tokenModule_TransferTokenList(from,list2);
-        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
@@ -1018,7 +1171,10 @@ public class TokenSoloTest {
         String desAmountStr = String.valueOf(desAmount);
         String destroyResp = commonFunc.tokenModule_DestoryToken (desAddr,desToken,desAmountStr);
 
-        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
@@ -1043,7 +1199,10 @@ public class TokenSoloTest {
         List<Map> list4 = utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType2,"4000",list3);
         String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount1, list4);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         String amount1,amount2;
         if (UtilsClass.PRECISION == 10) {
@@ -1073,7 +1232,10 @@ public class TokenSoloTest {
         assertEquals(3,jsonArray.size());//判断账户数量正确
         assertEquals(true, commonFunc.checkListArray(listR3,jsonArray));//检查detail项目结果正确
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         String getZeroAc = tokenModule.tokenGetDestroyBalance();
         assertEquals(actualAmount1,JSONObject.fromObject(getZeroAc).getJSONObject("data").getString(tokenType));
@@ -1088,7 +1250,10 @@ public class TokenSoloTest {
         assertEquals(3,jsonArray.size());//判断账户数量正确
         assertEquals(true, commonFunc.checkListArray(list1R3,jsonArray));//检查detail项目结果正确
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         getZeroAc = tokenModule.tokenGetDestroyBalance();
         assertEquals(actualAmount2,JSONObject.fromObject(getZeroAc).getJSONObject("data").getString(tokenType2));
@@ -1117,12 +1282,18 @@ public class TokenSoloTest {
         //执行转账
         String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenAccount1, list4);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         String desInfo = commonFunc.tokenModule_DestoryTokenByList2(list4);
         assertEquals("200",JSONObject.fromObject(desInfo).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         String getZeroAc = tokenModule.tokenGetDestroyBalance();
         assertEquals("700",JSONObject.fromObject(getZeroAc).getJSONObject("data").getString(tokenType));
@@ -1144,7 +1315,11 @@ public class TokenSoloTest {
         assertEquals("height mismatch",JSONObject.fromObject(transferInfo).getString("message"));
         assertEquals(false,transferInfo.contains(tokenType));
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
+
         String query1 = tokenModule.tokenGetBalance(tokenMultiAddr2,"");
         String query2 = tokenModule.tokenGetBalance(tokenAccount3,"");
         assertEquals("400",JSONObject.fromObject(query1).getJSONObject("data").getString(tokenType));
@@ -1153,7 +1328,10 @@ public class TokenSoloTest {
         assertEquals("400",JSONObject.fromObject(query2).getJSONObject("data").getString(tokenType2));
 
         String desInfo = commonFunc.tokenModule_DestoryTokenByList2(list4);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         String getZeroAc = tokenModule.tokenGetDestroyBalance();
         assertEquals("700",JSONObject.fromObject(getZeroAc).getJSONObject("data").getString(tokenType));
@@ -1216,7 +1394,10 @@ public class TokenSoloTest {
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
         String transferHash = JSONObject.fromObject(transferInfo).getString("data");
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
 
         String query = tokenModule.tokenGetBalance(tokenAccount1,"");
@@ -1229,7 +1410,10 @@ public class TokenSoloTest {
         destoryInfo = commonFunc.tokenModule_DestoryTokenByList2(list10);
         assertEquals("200",JSONObject.fromObject(destoryInfo).getString("state"));
         String desHash = JSONObject.fromObject(destoryInfo).getString("data");
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         String query2 = tokenModule.tokenGetDestroyBalance();
         assertEquals("50",JSONObject.fromObject(query2).getJSONObject("data").getString(tokenType));
@@ -1254,7 +1438,10 @@ public class TokenSoloTest {
         String transferInfo2 = commonFunc.tokenModule_TransferTokenList(tokenAccount1,list10);
         assertEquals("200",JSONObject.fromObject(transferInfo2).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         if (UtilsClass.PRECISION == 10) {
             amount1 = "9900.1234567891";
@@ -1274,7 +1461,10 @@ public class TokenSoloTest {
         String desInfo3 = commonFunc.tokenModule_DestoryTokenByTokenType(tokenType2);
         String desHash3 = JSONObject.fromObject(desInfo3).getJSONObject("data").getString("hash");
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         //tokenType
         List<Map> list2R = commonFunc.constructUTXOTxDetailList(tokenMultiAddr1,zeroAccount,tokenType,"10");
@@ -1315,7 +1505,10 @@ public class TokenSoloTest {
                 "100","发行已有tokentype字符全部大写的token");
         assertEquals("200",JSONObject.fromObject(issueResp2).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME);
+//        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         String query = tokenModule.tokenGetBalance(tokenAccount1,"");
         assertEquals(true,query.contains(tokenType.toLowerCase()));

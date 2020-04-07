@@ -73,7 +73,11 @@ public class TokenSoloInvalidTest {
         tokenType2 = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,issueAmount2);
 
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
+
         log.info("查询归集地址中两种token余额");
         String response1 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
         String response2 = tokenModule.tokenGetBalance( tokenAccount1, tokenType2);
@@ -158,7 +162,10 @@ public class TokenSoloInvalidTest {
         issAmount = String.valueOf(sAmount);
 
         issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后 拉取数据存数据库等待时间
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -171,7 +178,9 @@ public class TokenSoloInvalidTest {
         String desAmountStr = String.valueOf(desAmount);
         String destroyResp = commonFunc.tokenModule_DestoryToken(desAddr,desToken,desAmountStr);
 
-        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
+//        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
