@@ -229,7 +229,7 @@ public class MgToolCmd implements ManageTool {
         return shExeAndReturn(shellIP,cmd);
     }
 
-    public void mgCheckHeightOrSleep(String queryIPRefer,String queryIPTest,long sleeptime)throws Exception{
+    public void mgCheckHeightOrSleep(String queryIPPortRefer,String queryIPPortTest,long sleeptime)throws Exception{
 
         long internal = 0;
         Date dtTest = new Date();
@@ -238,7 +238,7 @@ public class MgToolCmd implements ManageTool {
         Boolean bOK = false;
 
         while((new Date()).getTime() - nowTime < sleeptime && bOK == false){
-            if(queryBlockHeight(queryIPRefer).equals(queryBlockHeight(queryIPTest)))
+            if(queryBlockHeight(queryIPPortRefer).equals(queryBlockHeight(queryIPPortTest)))
                 bOK = true;
             else
                 sleepAndSaveInfo(1000,"等待查询高度是否一致时间");

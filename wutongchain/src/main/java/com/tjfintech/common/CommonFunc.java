@@ -965,6 +965,7 @@ public class CommonFunc {
     }
 
     public String sdkCheckTxOrSleep(String hashData,String type,long sleeptime)throws Exception{
+        assertEquals(false,hashData.isEmpty());//先检查hash是否为空，为空则不执行
         String resultDesp = "";
         long internal = 0;
         Date dtTest = new Date();
@@ -999,6 +1000,7 @@ public class CommonFunc {
      */
     public String getTxHash(String response, String type){
         String hash = "";
+        assertEquals(false,response.isEmpty()); //检查response是否为空，为空则失败 不向下执行
         //0* 为SDK旧版本接口获取type类型起始 *为交易类型 以所有交易类型小序号为主 0表示存证 1表示 utxo
         //1* 为token api接口获取type类型起始
         //2* 为SDK新版本接口获取type类型起始
@@ -1070,6 +1072,11 @@ public class CommonFunc {
             shExeAndReturn(PEER4IP,"sed -i 's/\\\r//g' " + destShellScriptDir + "*.sh");
 
             return true;
+    }
+
+    public void clearDockerImages(String peerIP,String keyWork)throws Exception{
+        shellExeCmd(peerIP,"docker rm -f `docker ps -aq`");
+        shellExeCmd(peerIP,"docker images|grep " + keyWork + "|awk '{print $1}'|xargs docker rmi");
     }
 
 }
