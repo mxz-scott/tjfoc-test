@@ -92,6 +92,7 @@ public class UtilsClass {
 
     public static String certPath = "SM2"; // 设置签名证书类型，可选值SM2(默认值)，ECDSA，MIX1，MIX2，RSA
     public static String subLedger = ""; // 修改接口兼容主子链
+    public static String globalResponse = "";
 
     public static String ipv4 = "ip4";
     public static String tcpProtocol = "tcp";

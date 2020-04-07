@@ -24,6 +24,7 @@ import java.util.Map;
 public class PostTest {
     public static String sendPostToJson(String linkUrl, Map<String,Object> map) {
         log.info(linkUrl);
+        UtilsClass.globalResponse = ""; //请求执行前重置该变量
         JSONObject jsonObject=JSONObject.fromObject(map);
         String jsonString=jsonObject.toString();
         log .info(jsonString);
@@ -97,6 +98,7 @@ public class PostTest {
         } catch (Exception e) {
             resultStr = e.getMessage();
         }
+        UtilsClass.globalResponse = resultStr;
         return resultStr;
     }
 
@@ -114,6 +116,7 @@ public class PostTest {
 
     public static String postMethod(String linkUrl, Map<String,Object> map) {
         log.info(linkUrl);
+        UtilsClass.globalResponse = ""; //请求执行前重置该变量
         JSONObject jsonObject = JSONObject.fromObject(map);
         String jsonString = jsonObject.toString();
         log.info(jsonString);
@@ -144,6 +147,7 @@ public class PostTest {
         } finally {
             postMethod.releaseConnection();
         }
+        UtilsClass.globalResponse = responseMsg;
         return responseMsg;
     }
 }
