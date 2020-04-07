@@ -2,6 +2,7 @@ package com.tjfintech.common.functionTest.utxoMultiSign;
 
 import com.google.gson.JsonObject;
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.Store;
@@ -31,6 +32,7 @@ public class MultiSignInvalidTest {
     MultiSign multiSign =testBuilder.getMultiSign();
     Contract contract = testBuilder.getContract();
     UtilsClass utilsClass=new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
     //多签地址
     private static String multiaddr1;
     private static String multiaddr2;
@@ -44,7 +46,8 @@ public class MultiSignInvalidTest {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();
-            Thread.sleep(SLEEPTIME);
+            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                    utilsClass.sdkGetTxDetailType,SLEEPTIME);
         }
 
         Map<String, Object> map =  new HashMap<>();

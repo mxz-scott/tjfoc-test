@@ -101,7 +101,7 @@ public class UtilsClass {
     public static Integer  SHORTMEOUT = 3000;//毫秒
     public static Integer  UTXOSHORTMEOUT = 4 * 1000;//毫秒
     public static int  SLEEPTIME = 7*1000;
-    public static int DBSyncTime = 1500;
+    public static int DBSyncTime = 2*1000;
 
     //UTXO精度
     public static Integer PRECISION = 6;

@@ -50,13 +50,18 @@ public class  MultiTestInvalid {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.collAddressTest();
-            Thread.sleep(SLEEPTIME);
+            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                    utilsClass.sdkGetTxDetailType,SLEEPTIME);
         }
 
         log.info("发行两种token100.123个");
         tokenType = multiTest.IssueToken(7, issueAm1);
         tokenType2 = multiTest.IssueToken(5, issueAm2);
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
         log.info("查询归集地址中两种token余额");
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
@@ -78,13 +83,20 @@ public class  MultiTestInvalid {
 //        assertThat(response, containsString("400"));
         assertThat(response, containsString("Invalid multiple address(to addr)"));
         tokenType2 = multiTest.IssueToken(5, "1000",MULITADD4);
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
         String response1 = soloSign.Balance(PRIKEY1, tokenType);
         String response2 = multiSign.Balance(MULITADD4,PRIKEY1, tokenType);
+        String response3 = multiSign.Balance(MULITADD4,PRIKEY1, tokenType2);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("\"Total\":\"0\""));
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("\"Total\":\"0\""));
+        assertThat(response3, containsString("200"));
+        assertThat(response3, containsString("\"Total\":\"1000\""));
     }
 
     /**
@@ -118,7 +130,7 @@ public class  MultiTestInvalid {
         String transferInfo5 = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, list5);
         String transferInfo6 = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, list6);
         String transferInfo7 = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, list7);
-        Thread.sleep(SLEEPTIME); //UTXO关系，两笔交易之间需要休眠
+
 //        assertThat(transferInfo2, containsString("400"));
 //        assertThat(transferInfo3, containsString("400"));
 //        assertThat(transferInfo4, containsString("400"));
@@ -145,7 +157,11 @@ public class  MultiTestInvalid {
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, issueAm1);
         String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, issueAm2);
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
 
@@ -194,7 +210,7 @@ public class  MultiTestInvalid {
         String transferInfo5 = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, list5);
         String transferInfo6 = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, list6);
         String transferInfo7 = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, list7);
-        Thread.sleep(SLEEPTIME); //UTXO关系，两笔交易之间需要休眠
+
 //        assertThat(transferInfo2, containsString("400"));
 //        assertThat(transferInfo3, containsString("400"));
 //        assertThat(transferInfo4, containsString("400"));
@@ -208,7 +224,6 @@ public class  MultiTestInvalid {
         assertThat(JSONObject.fromObject(transferInfo6).getString("Message"),equalTo("insufficient balance"));
         assertThat(JSONObject.fromObject(transferInfo7).getString("Message"),equalTo("insufficient balance"));
 
-        Thread.sleep(SLEEPTIME);
 
 
         log.info("查询余额判断转账是否成功");
@@ -222,7 +237,11 @@ public class  MultiTestInvalid {
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, issueAm1);
         String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, issueAm2);
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
 
@@ -268,7 +287,7 @@ public class  MultiTestInvalid {
         String transferInfo5 = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, list5);
         String transferInfo6 = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, list6);
         String transferInfo7 = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, list7);
-        Thread.sleep(SLEEPTIME); //UTXO关系，两笔交易之间需要休眠
+
 //        assertThat(transferInfo2, containsString("400"));
 //        assertThat(transferInfo3, containsString("400"));
 //        assertThat(transferInfo4, containsString("400"));
@@ -282,7 +301,6 @@ public class  MultiTestInvalid {
         assertThat(JSONObject.fromObject(transferInfo6).getString("Message"),equalTo("insufficient balance"));
         assertThat(JSONObject.fromObject(transferInfo7).getString("Message"),equalTo("insufficient balance"));
 
-        Thread.sleep(SLEEPTIME);
 
 
         log.info("查询余额判断转账是否成功");
@@ -296,7 +314,11 @@ public class  MultiTestInvalid {
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, issueAm1);
         String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, issueAm2);
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
 
@@ -348,7 +370,7 @@ public class  MultiTestInvalid {
         String transferInfo5 = multiSign.Transfer(PRIKEY4, transferData, MULITADD6, list5);
         String transferInfo6 = multiSign.Transfer(PRIKEY4, transferData, MULITADD6, list6);
         String transferInfo7 = multiSign.Transfer(PRIKEY4, transferData, MULITADD6, list7);
-        Thread.sleep(SLEEPTIME); //UTXO关系，两笔交易之间需要休眠
+
 //        assertThat(transferInfo2, containsString("400"));
 //        assertThat(transferInfo3, containsString("400"));
 //        assertThat(transferInfo4, containsString("400"));
@@ -362,8 +384,9 @@ public class  MultiTestInvalid {
         assertThat(JSONObject.fromObject(transferInfo6).getString("Message"),equalTo("insufficient balance"));
         assertThat(JSONObject.fromObject(transferInfo7).getString("Message"),equalTo("insufficient balance"));
 
-        Thread.sleep(SLEEPTIME);
-
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(transferInfoInit,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
 
         log.info("查询余额判断转账是否成功");
         String queryInfo = soloSign.Balance( PRIKEY1, tokenType);
@@ -376,7 +399,11 @@ public class  MultiTestInvalid {
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType, issueAm1);
         String recycleInfo2 = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType2, issueAm2);
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
 
@@ -428,7 +455,7 @@ public class  MultiTestInvalid {
         String transferInfo5 = multiSign.Transfer(PRIKEY4, transferData, MULITADD6, list5);
         String transferInfo6 = multiSign.Transfer(PRIKEY4, transferData, MULITADD6, list6);
         String transferInfo7 = multiSign.Transfer(PRIKEY4, transferData, MULITADD6, list7);
-        Thread.sleep(SLEEPTIME); //UTXO关系，两笔交易之间需要休眠
+
 //        assertThat(transferInfo2, containsString("400"));
 //        assertThat(transferInfo3, containsString("400"));
 //        assertThat(transferInfo4, containsString("400"));
@@ -442,8 +469,9 @@ public class  MultiTestInvalid {
         assertThat(JSONObject.fromObject(transferInfo6).getString("Message"),equalTo("insufficient balance"));
         assertThat(JSONObject.fromObject(transferInfo7).getString("Message"),equalTo("insufficient balance"));
 
-        Thread.sleep(SLEEPTIME);
-
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(transferInfoInit,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
 
         log.info("查询余额判断转账是否成功");
         String queryInfo = multiSign.Balance( MULITADD4,PRIKEY1, tokenType);
@@ -456,7 +484,11 @@ public class  MultiTestInvalid {
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType, issueAm1);
         String recycleInfo2 = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType2, issueAm2);
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
 
@@ -491,6 +523,7 @@ public class  MultiTestInvalid {
         log.info(transferDataInit);
         String transferInfoInit = multiSign.Transfer(PRIKEY4, transferDataInit, IMPPUTIONADD, listInit2);//转账给多签地址
         assertThat(transferInfoInit,containsString("200"));
+
         String transferData = "多签地址向单签和多签地址转账异常测试";
         List<Map> list = utilsClass.constructToken(ADDRESS1, tokenType, "10");//A足
         List<Map> list0 = utilsClass.constructToken(ADDRESS1, tokenType2, "101");//A 不足
@@ -508,7 +541,7 @@ public class  MultiTestInvalid {
         String transferInfo5 = multiSign.Transfer(PRIKEY4, transferData, MULITADD6, list5);
         String transferInfo6 = multiSign.Transfer(PRIKEY4, transferData, MULITADD6, list6);
         String transferInfo7 = multiSign.Transfer(PRIKEY4, transferData, MULITADD6, list7);
-        Thread.sleep(SLEEPTIME); //UTXO关系，两笔交易之间需要休眠
+
 //        assertThat(transferInfo2, containsString("400"));
 //        assertThat(transferInfo3, containsString("400"));
 //        assertThat(transferInfo4, containsString("400"));
@@ -522,7 +555,9 @@ public class  MultiTestInvalid {
         assertThat(JSONObject.fromObject(transferInfo6).getString("Message"),equalTo("insufficient balance"));
         assertThat(JSONObject.fromObject(transferInfo7).getString("Message"),equalTo("insufficient balance"));
 
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(transferInfoInit,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
 
 
         log.info("查询余额判断转账是否成功");
@@ -536,7 +571,11 @@ public class  MultiTestInvalid {
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType, issueAm1);
         String recycleInfo2 = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType2, issueAm2);
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
 
@@ -740,7 +779,11 @@ public class  MultiTestInvalid {
         if(flag){
             BeforeCondition beforeCondition=new BeforeCondition();
             beforeCondition.T284_BeforeCondition(tokenType);
-            Thread.sleep(SLEEPTIME);
+
+            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                    utilsClass.sdkGetTxDetailType,SLEEPTIME);
+            sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
             queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         }
 
@@ -752,7 +795,11 @@ public class  MultiTestInvalid {
         List<Map> list0 = utilsClass.constructToken(MULITADD4, tokenType, "1");
 
         String transferInfo0 = multiSign.Transfer(PRIKEY4, "cx-test", IMPPUTIONADD, list0);//1 归集地址向单签地址转账
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
         assertThat(transferInfo0, containsString("200"));
         String queryInfo1 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
         assertThat(transferInfo0, containsString("200"));

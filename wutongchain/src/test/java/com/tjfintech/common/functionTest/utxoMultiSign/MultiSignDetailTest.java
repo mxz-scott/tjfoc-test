@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.utxoMultiSign;
 
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -31,6 +32,7 @@ public class MultiSignDetailTest {
     TestBuilder testBuilder = TestBuilder.getInstance();
     MultiSign multiSign = testBuilder.getMultiSign();
     UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
 
     /**
@@ -43,7 +45,10 @@ public class MultiSignDetailTest {
         tokenType2  = IssueToken("10000"); //tokentype2发行数量为10000
         tokenType3  = IssueToken("300"); //tokentype2发行数量为10000
 
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
         log.info("查询归集地址(接收地址)中的余额");
         String response1 = multiSign.Balance(IMPPUTIONADD,PRIKEY4, tokenType);
         String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
@@ -56,7 +61,6 @@ public class MultiSignDetailTest {
         assertEquals("300",JSONObject.fromObject(response3).getJSONObject("Data").getString("Total"));
         long timeMillislong = System.currentTimeMillis(); //获取当前时间戳
         log.info("当前的时间戳"+timeMillislong);
-        Thread.sleep(SLEEPTIME);
     }
 
 
@@ -70,7 +74,10 @@ public class MultiSignDetailTest {
         log.info("冻结token前的"+tokenType);
         String freezeToken1 = multiSign.freezeToken(tokenType);
         String freezeToken2 = multiSign.freezeToken(tokenType2);
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
 
 
         log.info("执行转账操作，验证token是否冻结成功");
@@ -78,7 +85,11 @@ public class MultiSignDetailTest {
         log.info(transferData);
         List<Map> list=utilsClass.constructToken(MULITADD4,tokenType,"10");//封装数据
         multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list);//调用转账接口
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
         String queryInfo3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);//返回余额9900
         log.info("返回MULITADD4余额");
         String queryInfo4 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);//返回余额为0
@@ -92,7 +103,10 @@ public class MultiSignDetailTest {
         multiSign.Recycle(IMPPUTIONADD,PRIKEY4,tokenType,"100");
         multiSign.Recycle(IMPPUTIONADD,PRIKEY4,tokenType2,"100");
 
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
         log.info("查询回收后的归集地址的余额");
         String queryInfo1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String queryInfo2= multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
@@ -100,15 +114,17 @@ public class MultiSignDetailTest {
         assertEquals("9900",JSONObject.fromObject(queryInfo1).getJSONObject("Data").getString("Total"));
         assertEquals("200",JSONObject.fromObject(queryInfo2).getString("State"));
         assertEquals("9900",JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"));
-        Thread.sleep(SLEEPTIME);
+
 
         log.info("恢复token");
         String recoverFrozenToken1 = multiSign.recoverFrozenToken(tokenType);
         String recoverFrozenToken2= multiSign.recoverFrozenToken(tokenType2);
         assertEquals("200",JSONObject.fromObject(recoverFrozenToken1).getString("State"));
         assertEquals("200",JSONObject.fromObject(recoverFrozenToken2).getString("State"));
-        Thread.sleep(SLEEPTIME);
 
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
 
     }
 
@@ -280,8 +296,5 @@ public class MultiSignDetailTest {
         return tokenType;
 
     }
-
-
-
 
 }

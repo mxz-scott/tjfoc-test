@@ -47,8 +47,7 @@ public class SoloTest {
         if (MULITADD1.isEmpty()) {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
-            bf.createAddresses();
-            bf.collAddressTest();
+            bf.collAddressTest();//有多签地址创建及添加
             commonFuncTe.sdkCheckTxOrSleep(commonFuncTe.getTxHash(globalResponse,utilsClassTe.sdkGetTxHashType01),
                     utilsClassTe.sdkGetTxDetailType,SLEEPTIME);
         }
