@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.store;
 
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -26,7 +27,8 @@ public class StoreWalletRelatedTest {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
-
+    CommonFunc commonFunc = new CommonFunc();
+    UtilsClass utilsClass = new UtilsClass();
 
     /**
      * TC17创建两笔数据一样的存证
@@ -39,7 +41,6 @@ public class StoreWalletRelatedTest {
         String response= store.CreateStore(data);
         Thread.sleep(1*1000);
         String response2= store.CreateStore(data);
-        Thread.sleep(SLEEPTIME);
         String hash1=JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         String hash2=JSONObject.fromObject(response2).getString("Message");
         assertThat(response, CoreMatchers.containsString("200"));
@@ -60,7 +61,8 @@ public class StoreWalletRelatedTest {
             String response= store.CreateStore(Data);
             JSONObject jsonObject=JSONObject.fromObject(response);
             String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-            Thread.sleep(SLEEPTIME);
+            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                    utilsClass.sdkGetTxDetailType,SLEEPTIME);
             String response2= store.GetInlocal(storeHash);
             assertThat(response2,containsString("200"));
         }
