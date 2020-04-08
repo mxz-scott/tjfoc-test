@@ -670,7 +670,7 @@ public class UtilsClass {
         Matcher matcher = p.matcher(src);
         if (matcher.find()) {
             matchStr = matcher.group(1);
-            log.info("match info: " + matchStr);
+//            log.info("match info: " + matchStr);
         }
         return matchStr;
     }
@@ -738,7 +738,7 @@ public class UtilsClass {
         shell1.execute(cmd);
         ArrayList<String> stdout = shell1.getStandardOutput();
         String response = StringUtils.join(stdout, "\n");
-        log.info("\n" + response);
+//        log.info("\n" + response);
         return response;
     }
 

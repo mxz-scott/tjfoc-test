@@ -1072,7 +1072,6 @@ public class CommonFunc {
         String mysqlIP = utilsClass.getIPFromStr(dbConfig);
         if(!subLedger.isEmpty()) table = table + "_sub_" +subLedger;
         String temp = mysqlOperation.checkDataExist(mysqlIP,database,table,key,checkData);
-        log.info(temp);
         return temp.contains(checkData);
     }
 

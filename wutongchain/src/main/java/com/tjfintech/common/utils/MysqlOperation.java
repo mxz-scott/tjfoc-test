@@ -159,7 +159,7 @@ public class MysqlOperation {
             //注册JDBC驱动
             Class.forName(driver);
             //打开连接
-            log.info("连接mysql数据库：" + mysqlUrl);
+//            log.info("连接mysql数据库：" + mysqlUrl);
             connection = (Connection) DriverManager.getConnection(mysqlUrl, mysqlName, mysqlPwd);
             //创建database实例并默认utf-8编码格式
             String queryKeyValue ="select " + key + " from " + database + "." + table + " where " + key + "=\'" + checkData + "\';";
@@ -168,7 +168,7 @@ public class MysqlOperation {
 
             while(rs.next()){
                 queryResult = rs.getString(1);
-                log.info("get result :" + queryResult);
+//                log.info("get result :" + queryResult);
             }
             return queryResult;
         }catch (SQLException e) {
