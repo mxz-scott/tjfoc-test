@@ -118,9 +118,54 @@ public class MysqlOperation {
             log.info("连接mysql数据库：" + mysqlUrl);
             connection = (Connection) DriverManager.getConnection(mysqlUrl, mysqlName, mysqlPwd);
             //创建database实例并默认utf-8编码格式
-            String queryKeyValue ="select c" + key + " from " + database + "." + table + ";";
+            String queryKeyValue ="select " + key + " from " + database + "." + table + ";";
             sta = (Statement) connection.createStatement();
             ResultSet rs  = sta.executeQuery(queryKeyValue);
+            while(rs.next()){
+                queryResult = rs.getString(1);
+                log.info("get result :" + queryResult);
+            }
+            return queryResult;
+        }catch (SQLException e) {
+            e.printStackTrace();
+            return e.toString();
+        }
+        catch (Exception e1){
+            e1.printStackTrace();
+            return "Class.forName Error";
+        }
+        finally {
+            try {
+                connection.close();
+            }catch (SQLException e2){
+                e2.printStackTrace();
+            }
+            try {
+                if(sta != null) sta.close();
+            }catch (SQLException e3){
+                e3.printStackTrace();
+            }
+
+        }
+    }
+
+    public String checkDataExist(String mysqlIP,String database,String table,String key,String checkData) throws Exception{
+        String mysqlUrl = "jdbc:mysql://" + mysqlIP;
+        Connection connection = null;
+        Statement sta = null;
+        String queryResult = "";
+
+        try {
+            //注册JDBC驱动
+            Class.forName(driver);
+            //打开连接
+            log.info("连接mysql数据库：" + mysqlUrl);
+            connection = (Connection) DriverManager.getConnection(mysqlUrl, mysqlName, mysqlPwd);
+            //创建database实例并默认utf-8编码格式
+            String queryKeyValue ="select " + key + " from " + database + "." + table + " where " + key + "=\'" + checkData + "\';";
+            sta = (Statement) connection.createStatement();
+            ResultSet rs  = sta.executeQuery(queryKeyValue);
+
             while(rs.next()){
                 queryResult = rs.getString(1);
                 log.info("get result :" + queryResult);

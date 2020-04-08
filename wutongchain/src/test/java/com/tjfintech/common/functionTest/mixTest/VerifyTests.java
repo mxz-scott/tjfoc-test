@@ -62,7 +62,7 @@ public class VerifyTests {
             }
         }
 
-        assertEquals("区块和交易时间差超过5秒", 0, count1);
+        assertEquals("区块和交易时间差超过20秒", 0, count1);
 
     }
 

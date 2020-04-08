@@ -23,7 +23,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        SetDatabaseMysql.class,
+//        SetDatabaseMysql.class,
         SetCertSM2.class,
         SetMainLedger.class,
         BeforeCondition.class,
@@ -46,11 +46,11 @@ import org.junit.runners.Suite;
         DockerContractTest.class,
         DockerContractInvalidTest.class,
 
-        VerifyTests.class,
-
         WVMContractTest.class,
 
         TestTxType.class,
+
+        VerifyTests.class,
 
 })
 

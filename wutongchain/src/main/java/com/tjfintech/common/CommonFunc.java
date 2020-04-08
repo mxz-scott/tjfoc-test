@@ -4,6 +4,7 @@ import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.Interface.Token;
+import com.tjfintech.common.utils.MysqlOperation;
 import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
@@ -966,13 +967,20 @@ public class CommonFunc {
 
     public String sdkCheckTxOrSleep(String hashData,String type,long sleeptime)throws Exception{
         assertEquals(false,hashData.isEmpty());//先检查hash是否为空，为空则不执行
-        String resultDesp = "";
+        Boolean bWallet = true;
+        if(type.equals(utilsClass.sdkGetTxDetailType)){
+            bWallet = getSDKWalletEnabled();//获取sdk 钱包是否开启
+        }
+
         long internal = 0;
         Date dtTest = new Date();
         long nowTime = dtTest.getTime();
         log.info("开始时间 " + nowTime);
         Boolean bOK = false;
+        Boolean bInlocal = false;
         String state ="";
+
+        //查询交易是否上链
         while((new Date()).getTime() - nowTime < sleeptime && bOK == false){
             //当前支持旧版本SDK gettxdetail接口 tokenapi gettxdetail接口
             if(type.equals("0")) state = JSONObject.fromObject(store.GetTxDetail(hashData)).getString("State");
@@ -985,9 +993,19 @@ public class CommonFunc {
         //计算查询时间
         log.info("当前时间 " + (new Date()).getTime());
         internal = (new Date()).getTime() - nowTime;
-
         log.info("查询交易上链 " + bOK + " 等待时间 " + hashData + " " + internal);
-        if(bOK)  sleepAndSaveInfo(DBSyncTime,"数据库同步数据时间");//额外增加数据库同步数据时间
+
+
+        //查询数据库中是否已经同步区块
+        long nowTimeDB = (new Date()).getTime();
+        //需要排除sdk 钱包关闭场景
+        if(bOK && bWallet) {
+            while((new Date()).getTime() - nowTimeDB < DBSyncTime && bInlocal == false){
+                bInlocal = checkDataInMysqlDB(SDKADD,"tx_finish","hash",hashData);
+                Thread.sleep(100);
+            }
+            log.info("查询数据库更新 " + bInlocal + " 等待时间 " + hashData + " " + ((new Date()).getTime() - nowTimeDB));
+        }
 
         return hashData + " " + internal;
     }
@@ -1039,6 +1057,23 @@ public class CommonFunc {
                 log.info("Can not resolve tx hash,please check type 01 02 10 20!");
         }
         return hash;
+    }
+
+    public Boolean checkDataInMysqlDB(String sdkIP,String table,String key,String checkData)throws Exception{
+        MysqlOperation mysqlOperation = new MysqlOperation();
+
+        String dbConfig = "";
+        if(sdkIP.equals(rSDKADD)) dbConfig = getSDKConfigValueByShell(utilsClass.getIPFromStr(sdkIP),"Wallet","DBPath");
+        else if(sdkIP.equals(TOKENADD)) dbConfig = getTokenApiConfigValueByShell(utilsClass.getIPFromStr(sdkIP),"DB","Connection");
+        else
+            assertEquals("IP既不是SDK又不是TokenApi地址 请检查配置",true,false);
+
+        String database = getStrByReg(dbConfig,"\\/(.*?)\\?");
+        String mysqlIP = utilsClass.getIPFromStr(dbConfig);
+        if(!subLedger.isEmpty()) table = table + "_sub_" +subLedger;
+        String temp = mysqlOperation.checkDataExist(mysqlIP,database,table,key,checkData);
+        log.info(temp);
+        return temp.contains(checkData);
     }
 
     public Boolean uploadFile(){
