@@ -178,7 +178,8 @@ public class TokenTxTypeTest_Token {
         String responseM2 = tokenModule.tokenIssue(tokenMultiAddr1,tokenMultiAddr2,tokenTypeM2,amountM2,mulDataM2);
         String multiIssHashM2 = JSONObject.fromObject(responseM2).getString("data");
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
 
         //单签转账
@@ -220,7 +221,8 @@ public class TokenTxTypeTest_Token {
         assertEquals("200",JSONObject.fromObject(response6).getString("state"));
         String muTransfHash = JSONObject.fromObject(response6).getString("data");
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //单签回收bylist
         String recySoloAmount="600.04";
@@ -245,7 +247,8 @@ public class TokenTxTypeTest_Token {
 
         String RecycleMultiInfo = tokenModule.tokenDestoryByTokenType(tokenTypeM1,desInfo2);
         String muDesHash = JSONObject.fromObject(RecycleMultiInfo).getJSONObject("data").getString("hash");
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashTypeDesByType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
 
         //检查单签发行交易信息
@@ -326,21 +329,24 @@ public class TokenTxTypeTest_Token {
         SDKADD = TOKENADD;//将地址设置为token模块地址
         //发行token
         String issueToken = commonFunc.tokenModule_IssueToken(tokenMultiAddr1,tokenMultiAddr1,"100");
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         assertEquals("100",
                 JSONObject.fromObject(tokenModule.tokenGetBalance(tokenMultiAddr1,"")).getJSONObject("data").getString(issueToken));
 
         //预先做删除归集地址、删除发行地址操作、解除token锁定，以便后续操作正常进行
         assertThat(tokenModule.tokenDelCollAddr(tokenAccount1),containsString("200"));
         assertThat(tokenModule.tokenDelMintAddr(tokenAccount1),containsString("200"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //Admin类交易 Type 20 SubType 200 201 202 203
         String response10= tokenModule.tokenAddCollAddr(tokenAccount1);
         String response11= tokenModule.tokenAddMintAddr(tokenAccount1);
         //冻结token
         String response14 = tokenModule.tokenFreezeToken(issueToken);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //删除归集地址
         String response12= tokenModule.tokenDelCollAddr(tokenAccount1);
@@ -349,7 +355,8 @@ public class TokenTxTypeTest_Token {
         //解除冻结token
         String response15 = tokenModule.tokenRecoverToken(issueToken);
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //SDKADD = rSDKADD;//将地址设置为SDK地址
         //添加归集地址交易信息检查
