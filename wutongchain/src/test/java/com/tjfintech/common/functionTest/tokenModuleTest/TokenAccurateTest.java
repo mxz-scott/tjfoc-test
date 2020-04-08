@@ -52,7 +52,8 @@ public class TokenAccurateTest {
         double amount = 5869.8989284222222;
         issAmount = String.valueOf(amount);
         issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
         assertEquals(utilsClass.get6(amount), JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -73,7 +74,8 @@ public class TokenAccurateTest {
         issAmount = String.valueOf(amount);
 
         issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -94,7 +96,8 @@ public class TokenAccurateTest {
         issAmount = String.valueOf(amount);
 
         issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -115,7 +118,8 @@ public class TokenAccurateTest {
         issAmount = "856965636";
 
         issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -126,7 +130,8 @@ public class TokenAccurateTest {
     public void transferAccurateInt_IssueSelf()throws Exception{
 
         String issueToken = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,"5000");
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String queryBalance = tokenModule.tokenGetBalance(tokenAccount1,issueToken);
         assertEquals("5000", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -136,7 +141,8 @@ public class TokenAccurateTest {
         String transferResp = commonFunc.tokenModule_TransferTokenList(tokenAccount1,list);
 
 
-        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(tokenAccount1,issueToken);
@@ -148,7 +154,8 @@ public class TokenAccurateTest {
 
         String destroyResp = commonFunc.tokenModule_DestoryToken(tokenAccount1,issueToken,"500");
 
-        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(tokenAccount1,"");
@@ -183,7 +190,8 @@ public class TokenAccurateTest {
         double trfAmount2 = 689.2;
 
         issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -196,7 +204,8 @@ public class TokenAccurateTest {
         List<Map> list = utilsClass.tokenConstructToken(to,transferToken,transferAmount);
         String transferResp = commonFunc.tokenModule_TransferTokenList(from,list);
 
-        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
@@ -213,7 +222,8 @@ public class TokenAccurateTest {
         String desAmountStr = String.valueOf(desAmount);
         String destroyResp = commonFunc.tokenModule_DestoryToken(desAddr,desToken,desAmountStr);
 
-        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);

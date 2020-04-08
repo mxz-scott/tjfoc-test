@@ -63,7 +63,6 @@ public class TokenPrivateStoreTest {
         JSONObject jsonObject=JSONObject.fromObject(response1);
         String StoreHashPwd = jsonObject.getString("data");
 
-//        sleepAndSaveInfo(SLEEPTIME,"private store on chain waiting......");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         
@@ -98,7 +97,6 @@ public class TokenPrivateStoreTest {
         JSONObject jsonObject=JSONObject.fromObject(response1);
         String StoreHashPwd = jsonObject.getString("data");
 
-//        sleepAndSaveInfo(SLEEPTIME,"private store on chain waiting......");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
@@ -135,7 +133,6 @@ public class TokenPrivateStoreTest {
         String storeHash = jsonObject.getString("data");
         String storeHash2 = jsonObject2.getString("data");
 
-//        sleepAndSaveInfo(SLEEPTIME,"private store on chain waiting......");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
@@ -163,7 +160,6 @@ public class TokenPrivateStoreTest {
         map.put("addresses",tokenAccount1);
         String response= tokenModule.tokenCreatePrivateStore(Data,map);
 
-//       sleepAndSaveInfo(SLEEPTIME,"private store on chain waiting......");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
@@ -232,8 +228,6 @@ public class TokenPrivateStoreTest {
 //        hashList.add(JSONObject.fromObject(response3).getString("data"));
 //        listData.add(Data3);
 
-
-//        sleepAndSaveInfo(SLEEPTIME,"multi store on chain waiting......");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(response2,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
@@ -288,7 +282,8 @@ public class TokenPrivateStoreTest {
         listData.add("&lt;SCRIPT SRC=http://***/XSS/xss.js&gt;&lt;/SCRIPT&gt;");
 
 
-        sleepAndSaveInfo(SLEEPTIME,"multi store on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 

@@ -44,7 +44,8 @@ public class TokenMultiInvalidTest {
         log.info("发行两种token100.123个");
         tokenType = commonFunc.tokenModule_IssueToken(tokenMultiAddr1,tokenMultiAddr1,"100");
         tokenType2 = commonFunc.tokenModule_IssueToken(tokenMultiAddr1,tokenMultiAddr1,"100");
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         log.info("查询归集地址中两种token余额");
         String response1 = tokenModule.tokenGetBalance(tokenMultiAddr1,"");
         assertEquals("100",JSONObject.fromObject(response1).getJSONObject("data").getString(tokenType));
@@ -76,7 +77,8 @@ public class TokenMultiInvalidTest {
         String transferInfo5 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1, list5);
         String transferInfo6 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1, list6);
         String transferInfo7 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1, list7);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......"); //UTXO关系，两笔交易之间需要休眠
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME); //UTXO关系，两笔交易之间需要休眠
 
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo2).getString("data"));
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo3).getString("data"));
@@ -103,7 +105,8 @@ public class TokenMultiInvalidTest {
         assertEquals("200",JSONObject.fromObject(recycleInfo).getString("state"));
         assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         log.info("查询余额判断回收成功与否");
         String queryInfo3 = tokenModule.tokenGetBalance(tokenMultiAddr1,"");
@@ -139,7 +142,8 @@ public class TokenMultiInvalidTest {
         String transferInfo5 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1, list5);
         String transferInfo6 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1, list6);
         String transferInfo7 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1, list7);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......"); //UTXO关系，两笔交易之间需要休眠
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME); //UTXO关系，两笔交易之间需要休眠
 
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo2).getString("data"));
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo3).getString("data"));
@@ -162,7 +166,8 @@ public class TokenMultiInvalidTest {
         log.info("回收Token");
         String recycleInfo = commonFunc.tokenModule_DestoryToken(tokenMultiAddr1,tokenType,"100");
         String recycleInfo2 = commonFunc.tokenModule_DestoryToken(tokenMultiAddr1,tokenType2,"100");
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(recycleInfo).getString("state"));
         assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("state"));
 
@@ -196,7 +201,8 @@ public class TokenMultiInvalidTest {
         String transferInfo5 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1, list5);
         String transferInfo6 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1, list6);
         String transferInfo7 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1, list7);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......"); //UTXO关系，两笔交易之间需要休眠
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME); //UTXO关系，两笔交易之间需要休眠
 
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo2).getString("data"));
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo3).getString("data"));
@@ -219,7 +225,8 @@ public class TokenMultiInvalidTest {
         log.info("回收Token");
         String recycleInfo = commonFunc.tokenModule_DestoryToken(tokenMultiAddr1, tokenType, "100");
         String recycleInfo2 = commonFunc.tokenModule_DestoryToken(tokenMultiAddr1, tokenType2, "100");
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(recycleInfo).getString("state"));
         assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("state"));
 
@@ -262,7 +269,6 @@ public class TokenMultiInvalidTest {
         String transferInfo5 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr5, list5);
         String transferInfo6 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr5, list6);
         String transferInfo7 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr5, list7);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......"); //UTXO关系，两笔交易之间需要休眠
 
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo2).getString("data"));
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo3).getString("data"));
@@ -271,7 +277,8 @@ public class TokenMultiInvalidTest {
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo6).getString("data"));
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo7).getString("data"));
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(transferInfoInit,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         log.info("查询余额判断转账是否成功");
         String queryInfo = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
@@ -287,7 +294,8 @@ public class TokenMultiInvalidTest {
         log.info("回收Token");
         String recycleInfo = commonFunc.tokenModule_DestoryToken(tokenMultiAddr5, tokenType, "100");
         String recycleInfo2 = commonFunc.tokenModule_DestoryToken(tokenMultiAddr5, tokenType2, "100");
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(recycleInfo).getString("state"));
         assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("state"));
 
@@ -331,7 +339,6 @@ public class TokenMultiInvalidTest {
         String transferInfo5 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr5, list5);
         String transferInfo6 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr5, list6);
         String transferInfo7 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr5, list7);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......"); //UTXO关系，两笔交易之间需要休眠
 
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo2).getString("data"));
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo3).getString("data"));
@@ -340,7 +347,8 @@ public class TokenMultiInvalidTest {
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo6).getString("data"));
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo7).getString("data"));
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(transferInfoInit,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
 
         log.info("查询余额判断转账是否成功");
@@ -356,7 +364,8 @@ public class TokenMultiInvalidTest {
         log.info("回收Token");
         String recycleInfo = commonFunc.tokenModule_DestoryToken(tokenMultiAddr5, tokenType, "100");
         String recycleInfo2 = commonFunc.tokenModule_DestoryToken(tokenMultiAddr5, tokenType2, "100");
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(recycleInfo).getString("state"));
         assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("state"));
 
@@ -399,7 +408,6 @@ public class TokenMultiInvalidTest {
         String transferInfo5 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr5, list5);
         String transferInfo6 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr5, list6);
         String transferInfo7 = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr5, list7);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......"); //UTXO关系，两笔交易之间需要休眠
 
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo2).getString("data"));
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo3).getString("data"));
@@ -408,7 +416,8 @@ public class TokenMultiInvalidTest {
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo6).getString("data"));
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo7).getString("data"));
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(transferInfoInit,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
 
         log.info("查询余额判断转账是否成功");
@@ -424,7 +433,8 @@ public class TokenMultiInvalidTest {
         log.info("回收Token");
         String recycleInfo = commonFunc.tokenModule_DestoryToken(tokenMultiAddr5, tokenType, "100");
         String recycleInfo2 = commonFunc.tokenModule_DestoryToken(tokenMultiAddr5, tokenType2, "100");
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(recycleInfo).getString("state"));
         assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("state"));
 
@@ -465,10 +475,12 @@ public class TokenMultiInvalidTest {
         tokenModule.tokenAddMintAddr(issueAddr);
         tokenModule.tokenAddCollAddr(collAddr);
 
-        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -482,7 +494,8 @@ public class TokenMultiInvalidTest {
         String destroyResp = commonFunc.tokenModule_DestoryToken(desAddr,desToken,desAmountStr);
         assertEquals("Insufficient Balance",JSONObject.fromObject(destroyResp).getString("data"));
 
-        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
@@ -498,7 +511,8 @@ public class TokenMultiInvalidTest {
     public void destoryByTokenNoDesToken()throws Exception{
 
         String issueToken = commonFunc.tokenModule_IssueToken(tokenMultiAddr1,tokenMultiAddr2,"500");
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String queryBalance = tokenModule.tokenGetBalance(tokenMultiAddr2,issueToken);
         assertEquals("500", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -506,7 +520,8 @@ public class TokenMultiInvalidTest {
         //执行一次回收by tokentype
         String destroyResp = commonFunc.tokenModule_DestoryTokenByTokenType(issueToken);
         assertEquals("200", JSONObject.fromObject(destroyResp).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //余额查询
         String destroyResp2 = commonFunc.tokenModule_DestoryTokenByTokenType(issueToken);
@@ -518,7 +533,8 @@ public class TokenMultiInvalidTest {
     public void destoryByTokenPartDesToken()throws Exception{
         String issueToken = commonFunc.tokenModule_IssueToken(tokenMultiAddr1,tokenMultiAddr1,"500");
         String issueToken2 = commonFunc.tokenModule_IssueToken(tokenMultiAddr1,tokenMultiAddr1,"500");
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String queryBalance = tokenModule.tokenGetBalance(tokenMultiAddr1,"");
         assertEquals("500", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -532,7 +548,8 @@ public class TokenMultiInvalidTest {
         //转账
         String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1, list4);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String query1 = tokenModule.tokenGetBalance(tokenAccount3,"");
         String query2 = tokenModule.tokenGetBalance(tokenMultiAddr2,"");
@@ -546,7 +563,8 @@ public class TokenMultiInvalidTest {
         List<Map> listD2 = utilsClass.tokenConstructToken(tokenMultiAddr2,issueToken,"90",listD);
         String destoryInfo = commonFunc.tokenModule_DestoryTokenByList2(listD2);
         assertEquals("200",JSONObject.fromObject(destoryInfo).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         query1 = tokenModule.tokenGetBalance(tokenAccount3,"");
         query2 = tokenModule.tokenGetBalance(tokenMultiAddr2,"");
@@ -570,7 +588,8 @@ public class TokenMultiInvalidTest {
         //回收tokenAccount3余额 100
         destoryInfo = commonFunc.tokenModule_DestoryTokenByList2(listD);
         assertEquals("200",JSONObject.fromObject(destoryInfo).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         query1 = tokenModule.tokenGetBalance(tokenAccount3,"");
         query2 = tokenModule.tokenGetBalance(tokenMultiAddr2,"");
@@ -582,7 +601,8 @@ public class TokenMultiInvalidTest {
         //回收中存在无余额账户 以及超出余额账户
         destoryInfo = commonFunc.tokenModule_DestoryTokenByList2(listD2);
         assertEquals("Insufficient Balance",JSONObject.fromObject(destoryInfo).getString("data"));
-        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         query1 = tokenModule.tokenGetBalance(tokenAccount3,"");
         query2 = tokenModule.tokenGetBalance(tokenMultiAddr2,"");
@@ -605,7 +625,8 @@ public class TokenMultiInvalidTest {
         //执行一次回收by tokentype
         String destroyResp = commonFunc.tokenModule_DestoryTokenByTokenType(issueToken);
         assertEquals("200", JSONObject.fromObject(destroyResp).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         query1 = tokenModule.tokenGetBalance(tokenAccount3,"");
         query2 = tokenModule.tokenGetBalance(tokenMultiAddr2,"");
@@ -679,7 +700,17 @@ public class TokenMultiInvalidTest {
         desResp = commonFunc.tokenModule_DestoryTokenByList2(list);
         assertEquals("400",JSONObject.fromObject(desResp).getString("state"));
         assertEquals("Insufficient Balance",JSONObject.fromObject(desResp).getString("data"));
+
+
+        desResp = commonFunc.tokenModule_DestoryTokenByTokenType(tokenType.toLowerCase());
+        assertEquals("400",JSONObject.fromObject(desResp).getString("state"));
+        assertEquals("invalid tokenType",JSONObject.fromObject(desResp).getString("data").trim());
+
+        desResp = commonFunc.tokenModule_DestoryTokenByTokenType(tokenType.toUpperCase());
+        assertEquals("400",JSONObject.fromObject(desResp).getString("state"));
+        assertEquals("invalid tokenType",JSONObject.fromObject(desResp).getString("data").trim());
     }
+
 
     @Test
     public void testMatchCaseFreezeRecover()throws Exception{
@@ -692,7 +723,8 @@ public class TokenMultiInvalidTest {
         freezeResp = tokenModule.tokenFreezeToken(tokenType.toUpperCase());
         assertEquals("200",JSONObject.fromObject(freezeResp).getString("state"));
         String hash2 = JSONObject.fromObject(freezeResp).getString("data");
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         assertEquals("400",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash1)).getString("state"));
         assertEquals("400",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash2)).getString("state"));
@@ -700,7 +732,8 @@ public class TokenMultiInvalidTest {
         //确认tokenType未被冻结
         String transferResp = commonFunc.tokenModule_TransferToken(tokenMultiAddr1,tokenMultiAddr2,tokenType,"10");
         assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         assertEquals("10",JSONObject.fromObject(
                 tokenModule.tokenGetBalance(tokenMultiAddr2,tokenType)).getJSONObject("data").getString(tokenType));
 
@@ -713,7 +746,8 @@ public class TokenMultiInvalidTest {
         String freezeBeforeRecover = tokenModule.tokenFreezeToken(tokenType);
         assertEquals("200",JSONObject.fromObject(freezeBeforeRecover).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         recoverResp = tokenModule.tokenRecoverToken(tokenType.toUpperCase());
         assertEquals("400",JSONObject.fromObject(recoverResp).getString("state"));
         assertEquals(true,JSONObject.fromObject(recoverResp).getString("data").contains("has not been freezed!"));
@@ -727,7 +761,8 @@ public class TokenMultiInvalidTest {
         assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
         assertEquals("toketype(" + tokenType + ") has been freezed!",JSONObject.fromObject(transferResp).getString("data"));
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         assertEquals(false,tokenModule.tokenGetBalance(tokenMultiAddr3,tokenType).contains(tokenType));
 
         String recoverR2 = tokenModule.tokenRecoverToken(tokenType);

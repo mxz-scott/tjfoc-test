@@ -243,6 +243,7 @@ public class UtilsClass {
     public String sdkGetTxHashType01 = "01";
     public String sdkGetTxHashType02 = "02";
     public String tokenApiGetTxHashType = "10";
+    public String tokenApiGetTxHashTypeDesByType = "11";
 
     //如果是已经获取过shell脚本则可以不用执行uploadFile()操作 因此此项默认关闭
 //    public boolean bupload = uploadFile();

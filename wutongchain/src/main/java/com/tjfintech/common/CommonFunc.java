@@ -982,12 +982,12 @@ public class CommonFunc {
             else
                 sleepAndSaveInfo(1000,"等待再次检查交易是否上链时间");
         }
-        if(bOK)  sleepAndSaveInfo(DBSyncTime,"数据库同步数据时间");//额外增加数据库同步数据时间
         //计算查询时间
         log.info("当前时间 " + (new Date()).getTime());
         internal = (new Date()).getTime() - nowTime;
 
         log.info("查询交易上链 " + bOK + " 等待时间 " + hashData + " " + internal);
+        if(bOK)  sleepAndSaveInfo(DBSyncTime,"数据库同步数据时间");//额外增加数据库同步数据时间
 
         return hashData + " " + internal;
     }
@@ -1019,8 +1019,12 @@ public class CommonFunc {
                 hash = JSONObject.fromObject(response).getJSONObject("Data").getString("TxId");
                 break;
             case "10" :
-                //token api v1 接口 hash
+                //token api v1 接口 hash 除destroybytype
                 hash = JSONObject.fromObject(response).getString("data");
+                break;
+            case "11" :
+                //token api v1 接口 destroybytype
+                hash = JSONObject.fromObject(response).getJSONObject("data").getString("hash");
                 break;
             case "20" :
                 //新版本SDK v2接口

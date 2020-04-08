@@ -29,6 +29,7 @@ public class TokenInterfaceTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Token tokenModule = testBuilder.getToken();
     CommonFunc commonFunc = new CommonFunc();
+    UtilsClass utilsClass = new UtilsClass();
 
     String AddrNotInDB = "4AEeTzUkL8g2GN2kcK3GXWdv7nPyNjKR4hxJ5J96nFqxAGAHnB";
 //    String errParamCode = "\"state\": 400";
@@ -1087,7 +1088,8 @@ public class TokenInterfaceTest {
 
          tokenModule.tokenDelMintAddr(issueAddr);
          tokenModule.tokenDelCollAddr(collAddr);
-         sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
+         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //使用未注册的发行地址进行发行
          String issueResp = "";
@@ -1103,7 +1105,8 @@ public class TokenInterfaceTest {
         //添加发行地址和归集地址
         tokenModule.tokenAddMintAddr(issueAddr);
         tokenModule.tokenAddCollAddr(collAddr);
-        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
          log.info("test issueAddr parameter...............");
          String stokenType13 = "ng13Token"+ UtilsClass.Random(3);
@@ -1387,7 +1390,8 @@ public class TokenInterfaceTest {
         assertEquals("200",JSONObject.fromObject(issueResp).getString("state"));
 
 
-         sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 //
          String queryBalance = tokenModule.tokenGetBalance(collAddr,"");
          assertEquals(false, queryBalance.contains(stokenType11));
@@ -1460,13 +1464,15 @@ public class TokenInterfaceTest {
         tokenModule.tokenAddMintAddr(issueAddr);
         tokenModule.tokenAddCollAddr(collAddr);
 
-        sleepAndSaveInfo(SLEEPTIME,"register issue and coll address waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         log.info("发行地址：" + issueAddr);
         log.info("归集地址：" + collAddr);
         String comments = "发行token：" + issueToken + " 数量：" + issAmount;
         tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -1599,7 +1605,8 @@ public class TokenInterfaceTest {
         assertEquals(true,transferResp.contains("Insufficient Balance"));
 
 
-        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
 
         log.info("test amount parameter...............");
@@ -1688,7 +1695,8 @@ public class TokenInterfaceTest {
         comments = "";
         transferResp = tokenModule.tokenTransfer(from,to,transferToken,transferAmount,comments);
         assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"transfer waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
 
         log.info("query from address balance ......");
@@ -1718,14 +1726,16 @@ public class TokenInterfaceTest {
         tokenModule.tokenAddMintAddr(issueAddr);
         tokenModule.tokenAddCollAddr(collAddr);
 
-        sleepAndSaveInfo(SLEEPTIME, "register issue and coll address waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         log.info("发行地址：" + issueAddr);
         log.info("归集地址：" + collAddr);
         String comments = "发行token：" + issueToken + " 数量：" + issAmount;
         tokenModule.tokenIssue(issueAddr, collAddr, issueToken, issAmount, comments);
         String issueToken2 = "tokenSo_" + UtilsClass.Random(8);
         tokenModule.tokenIssue(issueAddr, collAddr, issueToken2, issAmount, comments);
-        sleepAndSaveInfo(SLEEPTIME, "issue waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr, "");
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -1735,7 +1745,8 @@ public class TokenInterfaceTest {
         String destoryResp = "";
         destoryResp = tokenModule.tokenDestoryByList(collAddr,issueToken,"100",comments);
         assertEquals("200",JSONObject.fromObject(destoryResp).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");
         assertEquals("200",JSONObject.fromObject(queryBalance).getString("state"));
@@ -1959,13 +1970,15 @@ public class TokenInterfaceTest {
         comments =  "<SCRIPT SRC=http://***/XSS/xss.js></SCRIPT>";
         destoryResp = tokenModule.tokenDestoryByList(collAddr,issueToken,"100",comments);
         assertEquals("200",JSONObject.fromObject(destoryResp).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"destory waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //comments为空
         comments = "";
         destoryResp = tokenModule.tokenDestoryByList(collAddr,issueToken,"100",comments);
         assertEquals("200",JSONObject.fromObject(destoryResp).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"destory waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
 
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");
@@ -1992,7 +2005,8 @@ public class TokenInterfaceTest {
         tokenModule.tokenAddMintAddr(issueAddr);
         tokenModule.tokenAddCollAddr(collAddr);
 
-        sleepAndSaveInfo(SLEEPTIME, "register issue and coll address waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         log.info("发行地址：" + issueAddr);
         log.info("归集地址：" + collAddr);
@@ -2000,7 +2014,8 @@ public class TokenInterfaceTest {
         tokenModule.tokenIssue(issueAddr, collAddr, issueToken, issAmount, comments);
         String issueToken2 = "tokenSo_" + UtilsClass.Random(56);
         tokenModule.tokenIssue(issueAddr, collAddr, issueToken2, issAmount, comments);
-        sleepAndSaveInfo(SLEEPTIME, "issue waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr, "");
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -2141,14 +2156,16 @@ public class TokenInterfaceTest {
         tokenModule.tokenAddMintAddr(issueAddr);
         tokenModule.tokenAddCollAddr(collAddr);
 
-        sleepAndSaveInfo(SLEEPTIME, "register issue and coll address waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         log.info("发行地址：" + issueAddr);
         log.info("归集地址：" + collAddr);
         String comments = "发行token：" + issueToken + " 数量：" + issAmount;
         tokenModule.tokenIssue(issueAddr, collAddr, issueToken, issAmount, comments);
         String issueToken2 = "123_" + UtilsClass.Random(60);
         tokenModule.tokenIssue(issueAddr, collAddr, issueToken2, issAmount, comments);
-        sleepAndSaveInfo(SLEEPTIME, "issue waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr, "");
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -2267,7 +2284,8 @@ public class TokenInterfaceTest {
         JSONObject jsonObject=JSONObject.fromObject(response);
         String StoreHashPwd = jsonObject.getString("data");
 
-        sleepAndSaveInfo(SLEEPTIME,"private store on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String response1= tokenModule.tokenGetPrivateStore(StoreHashPwd,tokenAccount1);
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));
@@ -2365,7 +2383,8 @@ public class TokenInterfaceTest {
         //添加发行地址
         tokenModule.tokenAddMintAddr(testAddr);
 
-        sleepAndSaveInfo(SLEEPTIME, "register issue and coll address waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         String response = "";
 
         //address不填写
@@ -2416,7 +2435,8 @@ public class TokenInterfaceTest {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains(errInvalidAddr));
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         response = tokenModule.tokenGetTxDetail(hash1);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("failed to find transaction"));
@@ -2431,7 +2451,8 @@ public class TokenInterfaceTest {
         //添加发行地址
         tokenModule.tokenAddMintAddr(testAddr);
 
-        sleepAndSaveInfo(SLEEPTIME, "register issue and coll address waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         String response = "";
 
         //address不填写
@@ -2482,7 +2503,8 @@ public class TokenInterfaceTest {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains(errInvalidAddr));
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         response = tokenModule.tokenGetTxDetail(hash1);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
@@ -2491,7 +2513,8 @@ public class TokenInterfaceTest {
         response = tokenModule.tokenDelMintAddr(testAddr);
         hash1 = JSONObject.fromObject(response).getString("data");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         response = tokenModule.tokenGetTxDetail(hash1);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("failed to find transaction"));
@@ -2506,7 +2529,8 @@ public class TokenInterfaceTest {
         //添加发行地址
         tokenModule.tokenAddCollAddr(testAddr);
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         String response = "";
 
         //address不填写
@@ -2557,7 +2581,8 @@ public class TokenInterfaceTest {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains(errInvalidAddr));
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         response = tokenModule.tokenGetTxDetail(hash1);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("failed to find transaction"));
@@ -2572,7 +2597,8 @@ public class TokenInterfaceTest {
         //添加发行地址
         tokenModule.tokenAddCollAddr(testAddr);
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         String response = "";
 
         //address不填写
@@ -2623,7 +2649,8 @@ public class TokenInterfaceTest {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains(errInvalidAddr));
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         response = tokenModule.tokenGetTxDetail(hash1);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
@@ -2633,7 +2660,8 @@ public class TokenInterfaceTest {
         assertEquals(true,response.contains("\"state\":200"));
         hash1 = JSONObject.fromObject(response).getString("data");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         response = tokenModule.tokenGetTxDetail(hash1);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("failed to find transaction"));
@@ -2672,7 +2700,8 @@ public class TokenInterfaceTest {
 //        assertEquals(true,resp.contains("error"));
 
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting .....");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         assertEquals("400",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash5)).getString("state"));
     }
 
@@ -2709,7 +2738,8 @@ public class TokenInterfaceTest {
 
         //恢复一个未冻结的token
         String tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,"100");
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain time waiting...");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         assertEquals("100",
                 JSONObject.fromObject(tokenModule.tokenGetBalance(tokenAccount1,"")).getJSONObject("data").getString(tokenType));
         resp = tokenModule.tokenRecoverToken(tokenType);

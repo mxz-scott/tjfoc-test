@@ -95,7 +95,8 @@ public class TokenTxTypeTest_Token {
         response1= tokenModule.tokenCreatePrivateStore(Data,map);
         String txHash2 = JSONObject.fromObject(response1).getString("data");
 
-        sleepAndSaveInfo(SLEEPTIME,"private store on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //SDKADD = rSDKADD;//查询使用sdk地址
         //检查普通存证信息

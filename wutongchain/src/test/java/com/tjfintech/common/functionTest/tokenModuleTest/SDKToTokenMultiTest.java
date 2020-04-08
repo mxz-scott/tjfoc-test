@@ -103,7 +103,8 @@ public class SDKToTokenMultiTest {
         //sdk多签地址发行给token模块多签地址  sdk多签地址仅可以发行给多签地址
         tokenType = commonFunc.sdkMultiIssueToken(IMPPUTIONADD, issueAmount1,tokenMultiAddr1,prikeyList,pwdList);
         tokenType2 = commonFunc.sdkMultiIssueToken(IMPPUTIONADD, issueAmount2,tokenMultiAddr1,prikeyList,pwdList);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
         log.info("查询归集地址中两种token余额");
 
         //http地址设置为token模块地址 做账户余额查询
@@ -120,7 +121,8 @@ public class SDKToTokenMultiTest {
         String transferInfoInit = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1,list2);//转账给多签地址
         assertEquals("200",JSONObject.fromObject(transferInfoInit).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME,"on chain waiting......");//UTXO关系，两笔交易之间需要休眠
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);//UTXO关系，两笔交易之间需要休眠
 
         log.info("查询余额判断转账是否成功");
         String queryInfo = tokenModule.tokenGetBalance(tokenMultiAddr1, "");
@@ -156,7 +158,8 @@ public class SDKToTokenMultiTest {
         String Info2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "10");
         assertEquals("200",JSONObject.fromObject(Info).getString("State"));
         assertEquals("200",JSONObject.fromObject(Info2).getString("State"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         queryInfo3 = soloSign.Balance(PRIKEY1, tokenType2);
         assertEquals("0",JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"));
@@ -196,7 +199,8 @@ public class SDKToTokenMultiTest {
         tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,issueAmount1);
         tokenType2 = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,issueAmount2);
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         log.info("查询归集地址中两种token余额");
         String response1 = tokenModule.tokenGetBalance(tokenAccount1, "");
@@ -211,7 +215,8 @@ public class SDKToTokenMultiTest {
         String transferInfoInit = commonFunc.tokenModule_TransferTokenList(tokenAccount1,list2);//转账给多签地址
         assertEquals("200",JSONObject.fromObject(transferInfoInit).getString("state"));
 
-        sleepAndSaveInfo(SLEEPTIME,"on chain waiting......");//UTXO关系，两笔交易之间需要休眠
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);//UTXO关系，两笔交易之间需要休眠
 
         log.info("查询余额判断转账是否成功");
         String queryInfo = tokenModule.tokenGetBalance(tokenAccount1, "");
@@ -247,7 +252,8 @@ public class SDKToTokenMultiTest {
         String Info2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "10");
         assertEquals("200",JSONObject.fromObject(Info).getString("State"));
         assertEquals("200",JSONObject.fromObject(Info2).getString("State"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         queryInfo3 = soloSign.Balance(PRIKEY1, tokenType2);
         assertEquals("0",JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"));
@@ -288,7 +294,8 @@ public class SDKToTokenMultiTest {
         //sdk多签地址发行给token模块多签地址  sdk多签地址仅可以发行给多签地址
         tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,IMPPUTIONADD,issueAmount1);
         tokenType2 = commonFunc.tokenModule_IssueToken(tokenMultiAddr1,IMPPUTIONADD,issueAmount2);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         log.info("查询归集地址中两种token余额");
 
         //http地址设置为sdk模块地址 做账户余额查询
@@ -309,7 +316,8 @@ public class SDKToTokenMultiTest {
         String transferInfo= multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list2);//不同币种
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("State"));
 
-        sleepAndSaveInfo(SLEEPTIME,"on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
 
         if (UtilsClass.PRECISION == 10) {
@@ -347,7 +355,8 @@ public class SDKToTokenMultiTest {
         String Info = commonFunc.tokenModule_DestoryTokenByList2(listT2);
 
         assertEquals("200",JSONObject.fromObject(Info).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String queryInfo5 = tokenModule.tokenGetBalance(tokenAccount1,"");
         String queryInfo6 = tokenModule.tokenGetBalance(tokenAccount1,"");
@@ -389,7 +398,8 @@ public class SDKToTokenMultiTest {
         //sdk多签地址发行给token模块多签地址  sdk多签地址仅可以发行给多签地址
         tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,ADDRESS1,issueAmount1);
         tokenType2 = commonFunc.tokenModule_IssueToken(tokenMultiAddr1,ADDRESS1,issueAmount2);
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         log.info("查询归集地址中两种token余额");
 
         //http地址设置为sdk模块地址 做账户余额查询
@@ -411,7 +421,8 @@ public class SDKToTokenMultiTest {
         String transferInfo= soloSign.Transfer(list2,PRIKEY1,transferData);//不同币种
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("State"));
 
-        sleepAndSaveInfo(SLEEPTIME,"on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
 
         if (UtilsClass.PRECISION == 10) {
@@ -449,7 +460,8 @@ public class SDKToTokenMultiTest {
         String Info = commonFunc.tokenModule_DestoryTokenByList2(listT2);
 
         assertEquals("200",JSONObject.fromObject(Info).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String queryInfo5 = tokenModule.tokenGetBalance(tokenAccount1,"");
         String queryInfo6 = tokenModule.tokenGetBalance(tokenAccount1,"");
