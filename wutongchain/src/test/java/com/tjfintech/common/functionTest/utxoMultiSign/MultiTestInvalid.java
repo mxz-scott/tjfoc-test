@@ -60,7 +60,7 @@ public class  MultiTestInvalid {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
         log.info("查询归集地址中两种token余额");
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
@@ -86,7 +86,7 @@ public class  MultiTestInvalid {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
         String response1 = soloSign.Balance(PRIKEY1, tokenType);
         String response2 = multiSign.Balance(MULITADD4,PRIKEY1, tokenType);
@@ -160,7 +160,7 @@ public class  MultiTestInvalid {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
@@ -240,7 +240,7 @@ public class  MultiTestInvalid {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
@@ -317,7 +317,7 @@ public class  MultiTestInvalid {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
@@ -386,7 +386,7 @@ public class  MultiTestInvalid {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(transferInfoInit,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
         log.info("查询余额判断转账是否成功");
         String queryInfo = soloSign.Balance( PRIKEY1, tokenType);
@@ -402,7 +402,7 @@ public class  MultiTestInvalid {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
@@ -471,7 +471,7 @@ public class  MultiTestInvalid {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(transferInfoInit,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
         log.info("查询余额判断转账是否成功");
         String queryInfo = multiSign.Balance( MULITADD4,PRIKEY1, tokenType);
@@ -487,7 +487,7 @@ public class  MultiTestInvalid {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
@@ -557,7 +557,7 @@ public class  MultiTestInvalid {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(transferInfoInit,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
 
         log.info("查询余额判断转账是否成功");
@@ -574,7 +574,7 @@ public class  MultiTestInvalid {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
@@ -782,7 +782,7 @@ public class  MultiTestInvalid {
 
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
                     utilsClass.sdkGetTxDetailType,SLEEPTIME);
-            sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
             queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         }
@@ -798,7 +798,7 @@ public class  MultiTestInvalid {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
         assertThat(transferInfo0, containsString("200"));
         String queryInfo1 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);

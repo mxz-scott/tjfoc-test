@@ -982,6 +982,7 @@ public class CommonFunc {
             else
                 sleepAndSaveInfo(1000,"等待再次检查交易是否上链时间");
         }
+        if(bOK)  sleepAndSaveInfo(DBSyncTime,"数据库同步数据时间");//额外增加数据库同步数据时间
         //计算查询时间
         log.info("当前时间 " + (new Date()).getTime());
         internal = (new Date()).getTime() - nowTime;

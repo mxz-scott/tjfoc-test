@@ -73,7 +73,7 @@ public class SoloTestInvalid {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
         assertThat(issueInfo1,containsString("200"));
         assertThat(issueInfo2,containsString("200"));
@@ -124,7 +124,7 @@ public class SoloTestInvalid {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
          String issueInfo3 = soloSign.issueToken(PRIKEY1, tokenType, "50", "发行token2",ADDRESS1);
 //        assertThat(issueInfo2, containsString("400"));
@@ -190,7 +190,7 @@ public class SoloTestInvalid {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
         log.info("查询余额判断回收成功与否");
         String queryInfo = soloSign.Balance(PRIKEY1, tokenType);
@@ -215,7 +215,7 @@ public class SoloTestInvalid {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
         assertEquals("100",commonFunc.GetBalance(ADDRESS1,tokenType.toLowerCase()));
         assertEquals("100",commonFunc.GetBalance(ADDRESS1,tokenType.toUpperCase()));

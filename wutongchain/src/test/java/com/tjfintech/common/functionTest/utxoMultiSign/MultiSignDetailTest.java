@@ -47,7 +47,7 @@ public class MultiSignDetailTest {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
         log.info("查询归集地址(接收地址)中的余额");
         String response1 = multiSign.Balance(IMPPUTIONADD,PRIKEY4, tokenType);
@@ -77,7 +77,7 @@ public class MultiSignDetailTest {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
 
         log.info("执行转账操作，验证token是否冻结成功");
@@ -88,7 +88,7 @@ public class MultiSignDetailTest {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
         String queryInfo3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);//返回余额9900
         log.info("返回MULITADD4余额");
@@ -105,7 +105,7 @@ public class MultiSignDetailTest {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
         log.info("查询回收后的归集地址的余额");
         String queryInfo1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
@@ -124,7 +124,7 @@ public class MultiSignDetailTest {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(DBSyncTime,"数据库同步时间"); //交易上链后sdk 拉取数据存数据库等待时间
+
 
     }
 
