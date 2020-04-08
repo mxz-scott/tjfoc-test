@@ -1001,9 +1001,10 @@ public class CommonFunc {
         //需要排除sdk 钱包关闭场景
         if(bOK && bWallet) {
             while((new Date()).getTime() - nowTimeDB < DBSyncTime && bInlocal == false){
-                bInlocal = checkDataInMysqlDB(SDKADD,"tx_finish","hash",hashData);
-                Thread.sleep(100);
+                bInlocal = checkDataInMysqlDB(rSDKADD,"tx_finish","hash",hashData);
+                Thread.sleep(500);
             }
+            if(type.equals(utilsClass.tokenApiGetTxDetailTType)) sleepAndSaveInfo(1000,"token api 再等待时间");
             log.info("查询数据库更新 " + bInlocal + " 等待时间 " + hashData + " " + ((new Date()).getTime() - nowTimeDB));
         }
 
@@ -1062,11 +1063,7 @@ public class CommonFunc {
     public Boolean checkDataInMysqlDB(String sdkIP,String table,String key,String checkData)throws Exception{
         MysqlOperation mysqlOperation = new MysqlOperation();
 
-        String dbConfig = "";
-        if(sdkIP.equals(rSDKADD)) dbConfig = getSDKConfigValueByShell(utilsClass.getIPFromStr(sdkIP),"Wallet","DBPath");
-        else if(sdkIP.equals(TOKENADD)) dbConfig = getTokenApiConfigValueByShell(utilsClass.getIPFromStr(sdkIP),"DB","Connection");
-        else
-            assertEquals("IP既不是SDK又不是TokenApi地址 请检查配置",true,false);
+        String dbConfig = getSDKConfigValueByShell(utilsClass.getIPFromStr(sdkIP),"Wallet","DBPath");//token api db无交易hash存储表
 
         String database = getStrByReg(dbConfig,"\\/(.*?)\\?");
         String mysqlIP = utilsClass.getIPFromStr(dbConfig);
