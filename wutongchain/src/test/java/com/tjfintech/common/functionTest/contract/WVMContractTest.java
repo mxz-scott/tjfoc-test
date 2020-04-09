@@ -119,7 +119,7 @@ public class WVMContractTest {
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
         String response10 = query(ctHash,"getBalance",accountB);//获取账户B账户余额 报错
-        assertThat(JSONObject.fromObject(response10).getString("Message"),containsString("Smart contract does not exist")); //销毁后会提示找不到合约文件 500 error code
+        assertThat(JSONObject.fromObject(response10).getString("Message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
 
         chkTxDetailRsp("200",txHash1,txHash2,txHash3,txHash4,txHash5,txHash6,txHash9);
 //        chkTxDetailRsp("404",txHash7);
