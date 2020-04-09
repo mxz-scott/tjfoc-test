@@ -40,7 +40,7 @@ public class StoreTest {
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         assertThat(response, containsString("200"));
@@ -61,7 +61,7 @@ public class StoreTest {
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String  storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         String response2= store.GetStore(storeHash);
@@ -101,7 +101,7 @@ public class StoreTest {
         log.info(Data);
 
         String response= store.CreateStore(Data);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -169,7 +169,7 @@ public class StoreTest {
 //        JSONObject jsonObject2 = JSONObject.fromObject(response2);
 //        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
 //        String storeHash2 = jsonObject2.getJSONObject("Data").get("Figure").toString();
-//        Thread.sleep(SLEEPTIME);
+
 //        String response3 = store.GetTxSearch(0, 1, "cxtest");
 //        String response4 = store.GetTxSearch(0, 5, "cxtest");
 //        JSONObject jsonObject3 = JSONObject.fromObject(response3);
@@ -240,10 +240,6 @@ public class StoreTest {
            //检查交易上链
            assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("State"));
        }
-
-       Thread.sleep(SLEEPTIME);
-
-
    }
 
 
@@ -257,7 +253,7 @@ public class StoreTest {
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         String response2= store.GetTxDetail(storeHash);
@@ -284,12 +280,10 @@ public class StoreTest {
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
 
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-//        Thread.sleep(SLEEPTIME);
-//        Thread.sleep(SLEEPTIME);//通过JAVASDK实现的上链要慢，需要再加一个休眠
 
-       String response2= store.GetTransactionIndex(storeHash);
-       assertThat(response2,containsString("200"));
-       assertThat(response2,containsString("success"));
+        String response2= store.GetTransactionIndex(storeHash);
+        assertThat(response2,containsString("200"));
+        assertThat(response2,containsString("success"));
     }
 
     /**
@@ -338,7 +332,7 @@ public class StoreTest {
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         String response2=store.GetTransactionBlock(storeHash);

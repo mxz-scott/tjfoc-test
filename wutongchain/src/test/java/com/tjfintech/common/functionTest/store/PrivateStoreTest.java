@@ -53,7 +53,7 @@ public class PrivateStoreTest {
         String response1= store.CreatePrivateStore(Data,map);
         JSONObject jsonObject=JSONObject.fromObject(response1);
         String StoreHashPwd = jsonObject.getJSONObject("Data").get("Figure").toString();
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(StoreHashPwd,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         String response2= store.GetStorePost(StoreHashPwd,PRIKEY1);
@@ -85,7 +85,7 @@ public class PrivateStoreTest {
         String response1= store.CreatePrivateStore(Data,map);
         JSONObject jsonObject=JSONObject.fromObject(response1);
         String StoreHashPwd = jsonObject.getJSONObject("Data").get("Figure").toString();
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(StoreHashPwd,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         assertThat(response1, containsString("200"));
@@ -109,7 +109,7 @@ public class PrivateStoreTest {
         JSONObject jsonObject2 = JSONObject.fromObject(response2);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
         String storeHash2 = jsonObject2.getJSONObject("Data").get("Figure").toString();
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(storeHash2,utilsClass.sdkGetTxDetailType,SLEEPTIME);
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -135,7 +135,7 @@ public class PrivateStoreTest {
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
         String response= store.CreatePrivateStore(Data,map);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -150,7 +150,7 @@ public class PrivateStoreTest {
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY2);
         String res1 = store.StoreAuthorize(hash, map, PRIKEY1);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -165,7 +165,7 @@ public class PrivateStoreTest {
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY6);
         String res2 = store.StoreAuthorize(hash, map, PRIKEY1);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -190,7 +190,7 @@ public class PrivateStoreTest {
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY7);
         String response= store.CreatePrivateStore(Data,map);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -205,7 +205,7 @@ public class PrivateStoreTest {
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY2);
         String res1 = store.StoreAuthorize(hash, map, PRIKEY7,PWD7);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -220,7 +220,7 @@ public class PrivateStoreTest {
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY6);
         String res2 = store.StoreAuthorize(hash, map, PRIKEY7,PWD7);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -242,7 +242,7 @@ public class PrivateStoreTest {
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY7);
         String response= store.CreatePrivateStore(Data,map);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -257,7 +257,7 @@ public class PrivateStoreTest {
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY6);
         String res2 = store.StoreAuthorize(hash, map, PRIKEY7,PWD7);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -302,10 +302,10 @@ public class PrivateStoreTest {
         map.put("pubKey2",PUBKEY2);
         map.put("pubKey3",PUBKEY3);
         String response= store.CreatePrivateStore(Data,map);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        sleepAndSaveInfo(2000);
+        sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
         JSONObject jsonObject=JSONObject.fromObject(response);
         String hash = jsonObject.getJSONObject("Data").get("Figure").toString();
@@ -326,7 +326,6 @@ public class PrivateStoreTest {
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY4);
         String res1 = store.StoreAuthorize(hash, map, PRIKEY1);
-//        Thread.sleep(SLEEPTIME);
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -340,7 +339,7 @@ public class PrivateStoreTest {
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY5);
         String res2 = store.StoreAuthorize(hash, map, PRIKEY2); //只有第一个私钥可以授权
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -350,7 +349,7 @@ public class PrivateStoreTest {
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY6);
         res2 = store.StoreAuthorize(hash, map, PRIKEY3);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -368,7 +367,7 @@ public class PrivateStoreTest {
         map.put("pubKey1",PUBKEY6);
         map.put("pubKey2",PUBKEY1);
         String response= store.CreatePrivateStore(Data,map);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -387,7 +386,7 @@ public class PrivateStoreTest {
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY7);
         String res2 = store.StoreAuthorize(hash, map, PRIKEY6, PWD6);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -401,7 +400,7 @@ public class PrivateStoreTest {
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY4);
         String res1 = store.StoreAuthorize(hash, map, PRIKEY1);
-//        Thread.sleep(SLEEPTIME);
+
         assertThat(res1,containsString("500"));
         assertThat(res1,containsString("private key is not tx owner"));
 
@@ -416,7 +415,7 @@ public class PrivateStoreTest {
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY6);
         String response= store.CreatePrivateStore(Data,map);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -430,7 +429,7 @@ public class PrivateStoreTest {
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
         String res2 = store.StoreAuthorize(hash, map, PRIKEY6, PWD6);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -444,7 +443,7 @@ public class PrivateStoreTest {
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY2);
         res2 = store.StoreAuthorize(hash, map, PRIKEY1);
-//        Thread.sleep(SLEEPTIME);
+
         assertThat(res2,containsString("500"));
         assertThat(res2,containsString("private key is not tx owner"));
 
@@ -462,7 +461,7 @@ public class PrivateStoreTest {
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY6);
         String response= store.CreatePrivateStore(Data,map);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -478,7 +477,7 @@ public class PrivateStoreTest {
         map.put("pubKeys2",PUBKEY2);
         map.put("pubKeys3",PUBKEY7);
         String res1 = store.StoreAuthorize(hash, map, PRIKEY6,PWD6);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -514,7 +513,7 @@ public class PrivateStoreTest {
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
         String response= store.CreatePrivateStore(Data,map);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -530,7 +529,7 @@ public class PrivateStoreTest {
         map.put("pubKeys2",PUBKEY6);
         map.put("pubKeys3",PUBKEY7);
         String res1 = store.StoreAuthorize(hash, map, PRIKEY1);
-//        Thread.sleep(SLEEPTIME);
+
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 

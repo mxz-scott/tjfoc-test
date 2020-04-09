@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.contract;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -31,6 +32,7 @@ public class DockerContractInvalidTest {
     Contract contract=testBuilder.getContract();
     Store store=testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
     public String name=sdf.format(dt)+ RandomUtils.nextInt(100000);
     public String version="2.1";
@@ -55,7 +57,10 @@ public class DockerContractInvalidTest {
 
         //安装后恢复dockerFileName为默认好的simple.go
         dockerFileName="simple.go";
-        sleepAndSaveInfo(ContractInstallSleep);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,ContractInstallSleep);
+
         String response1=store.GetTxDetail(hash);
         assertThat(response1,containsString("200"));
         assertThat(response1,containsString("success"));
@@ -75,7 +80,9 @@ public class DockerContractInvalidTest {
         //销毁合约
         response=destroyTest();
         assertThat(response,containsString("200"));
-        sleepAndSaveInfo(3000);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //调用不存在的合约
         name="noexisting";

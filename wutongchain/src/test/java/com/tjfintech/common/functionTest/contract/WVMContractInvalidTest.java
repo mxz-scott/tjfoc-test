@@ -1,10 +1,12 @@
 package com.tjfintech.common.functionTest.contract;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.FileOperation;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
@@ -33,6 +35,8 @@ public class WVMContractInvalidTest {
     Store store=testBuilder.getStore();
 
     WVMContractTest wvmContractTest = new WVMContractTest();
+    CommonFunc commonFunc = new CommonFunc();
+    UtilsClass utilsClass = new UtilsClass();
 
     public String category="wvm";
     public String caller="test";
@@ -66,13 +70,18 @@ public class WVMContractInvalidTest {
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
         String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");//暂时添加
+
         wvmContractTest.chkTxDetailRsp("200",txHash1);
         //调用合约内的方法 init方法
         String response2 = wvmContractTest.invokeNew(ctHash,"inita",accountA,amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         wvmContractTest.chkTxDetailRsp("404",txHash2);
     }
 
@@ -92,7 +101,9 @@ public class WVMContractInvalidTest {
             txHashList.add(JSONObject.fromObject(wvmContractTest.intallUpdateName(name,PRIKEY1)).getJSONObject("Data").getString("Figure"));
         }
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         assertEquals(6,txHashList.size());
         for(String hash : txHashList){
             wvmContractTest.chkTxDetailRsp("200",hash);
@@ -141,7 +152,9 @@ public class WVMContractInvalidTest {
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
         String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         wvmContractTest.chkTxDetailRsp("200",txHash1);
 
 

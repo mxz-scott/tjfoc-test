@@ -102,7 +102,8 @@ public class TestTxType {
         bf.setPermission999();
         bf.updatePubPriKey();
         bf.collAddressTest();
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
     }
 
     @Test
@@ -134,7 +135,10 @@ public class TestTxType {
 
         //给链赋权限 权限变更交易检查
         String permResp = mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,utilsClass.getSDKID(),"999","sdkName");
-        sleepAndSaveInfo(SLEEPTIME, "等待设置权限999交易上链");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(permResp,utilsClass.mgGetTxHashType),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         String permHash = permResp.substring(permResp.lastIndexOf(":")+1).trim();
         JSONObject jsonObjectPerm = checkTXDetailHeaderMsg(permHash,versionStore,typeSystem,subTypePerm);
 
@@ -153,7 +157,10 @@ public class TestTxType {
         //退出节点交易详情检查
         String respQuit = mgToolCmd.quitPeer(PEER1IP + ":" + PEER1RPCPort, PEER2IP);
         assertEquals(true, respQuit.contains("success"));
-        sleepAndSaveInfo(SLEEPTIME,"等待退出节点" + PEER2IP + "交易上链");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(respQuit,utilsClass.mgGetTxHashType),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         String quitPeerHash = respQuit.substring(respQuit.lastIndexOf(":") + 1).trim();
         JSONObject jsonObjectQuitPeer = checkTXDetailHeaderMsg(quitPeerHash, versionStore, typeSystem, subTypeQuitPeer);
         assertEquals(toolID,
@@ -165,7 +172,10 @@ public class TestTxType {
         String respAdd = mgToolCmd.addPeer("join", PEER1IP + ":" + PEER1RPCPort,
                 "/" + ipv4 + "/" + PEER2IP, "/" + tcpProtocol + "/" + PEER2TCPPort, PEER2RPCPort);
         assertEquals(true, respAdd.contains("success"));
-        sleepAndSaveInfo(SLEEPTIME,"等待加入节点交易上链");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(respAdd,utilsClass.mgGetTxHashType),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         String addPeerHash = respAdd.substring(respAdd.lastIndexOf(":") + 1).trim();
         JSONObject jsonObjectAddPeer = checkTXDetailHeaderMsg(addPeerHash, versionStore, typeSystem, subTypeAddPeer);
         assertEquals(toolID,
@@ -188,6 +198,11 @@ public class TestTxType {
         String addLedgerResp = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(addLedgerResp.contains("send transaction success"), true);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(addLedgerResp,utilsClass.mgGetTxHashType),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         String addLedgerHash = addLedgerResp.substring(addLedgerResp.lastIndexOf(":")+1).trim();
         JSONObject jsonObjectAddLedger = checkTXDetailHeaderMsg(addLedgerHash,versionStore,typeSystem,subTypeAddLedger);
 
@@ -209,7 +224,10 @@ public class TestTxType {
         //冻结子链交易
         String freezeLedgerResp = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(freezeLedgerResp.contains("send transaction success"), true);
-        sleepAndSaveInfo(SLEEPTIME,"等待冻结子链交易上链");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(freezeLedgerResp,utilsClass.mgGetTxHashType),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         String freezeLedgerHash = freezeLedgerResp.substring(freezeLedgerResp.lastIndexOf(":")+1).trim();
         JSONObject jsonObjectFreezeLedger = checkTXDetailHeaderMsg(freezeLedgerHash,versionStore,typeSystem,subTypeFreezeLedger);
         assertEquals(toolID,
@@ -231,7 +249,10 @@ public class TestTxType {
 
         String recoverLedgerResp = mgToolCmd.recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(recoverLedgerResp.contains("send transaction success"), true);
-        sleepAndSaveInfo(SLEEPTIME,"等待恢复冻结子链交易上链");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recoverLedgerResp,utilsClass.mgGetTxHashType),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         String recoverLedgerHash = recoverLedgerResp.substring(recoverLedgerResp.lastIndexOf(":")+1).trim();
         JSONObject jsonObjectRecoverLedger = checkTXDetailHeaderMsg(recoverLedgerHash,versionStore,typeSystem,subTypeRecoverLedger);
         assertEquals(toolID,
@@ -252,7 +273,10 @@ public class TestTxType {
         //销毁子链交易
         String destroyLedgerResp = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(destroyLedgerResp.contains("send transaction success"), true);
-        sleepAndSaveInfo(SLEEPTIME,"等待销毁子链交易上链");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(destroyLedgerResp,utilsClass.mgGetTxHashType),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         String destroyLedgerHash = destroyLedgerResp.substring(destroyLedgerResp.lastIndexOf(":")+1).trim();
         JSONObject jsonObjectDestroyLedger = checkTXDetailHeaderMsg(destroyLedgerHash,versionStore,typeSystem,subTypeDestroyLedger);
         assertEquals(toolID,
@@ -293,14 +317,15 @@ public class TestTxType {
         log.info("隐私存证数据："+priData);
         String response2 = store.CreatePrivateStore(priData,map);
 
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
         checkTXDetailHeaderMsg(txHash1,versionStore,typeStore,subTypeStore);
         checkStore(txHash1,Data,"store");
 
 
         //检查隐私存证信息
-        //Thread.sleep(6000);
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
         checkTXDetailHeaderMsg(txHash2,versionPriStore,typeStore,subTypePriStore);
 
@@ -361,7 +386,9 @@ public class TestTxType {
         String Tx13 = JSONObject.fromObject(response53).getJSONObject("Data").getString("Tx");
         log.info("第一次签名");
         String response54 = multiSign.Sign(Tx13, PRIKEY5);
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //单签转账
         assertEquals(JSONObject.fromObject(soloSign.Balance(PRIKEY1,tokenTypeS)).getJSONObject("Data").getString("Total"),amount);
@@ -379,7 +406,9 @@ public class TestTxType {
         String response6 = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, listInit);
 
 
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         //检查小数量单签发行交易信息
         String txHashMin = JSONObject.fromObject(minResp).getString("Data");
         checkTXDetailHeaderMsg(txHashMin,versionSUTXO,typeUTXO,subTypeIssue);
@@ -450,7 +479,8 @@ public class TestTxType {
         String recyMultiAmount="0.07";
         String RecycleMultiInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenTypeM, recyMultiAmount);
 
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //检查单签回收交易信息
         String txHash7 = JSONObject.fromObject(RecycleSoloInfo).getJSONObject("Data").getString("Figure");
@@ -495,30 +525,43 @@ public class TestTxType {
         log.info("创建合约"+ct.name);
         String response7 = ct.installTest();
         String txHash7 = JSONObject.fromObject(response7).getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(ContractInstallSleep);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,ContractInstallSleep);
+        sleepAndSaveInfo(20000,"等待合约同步");
         //发送合约交易initMobile
         log.info("发送合约交易initMobile");
         String response81 = ct.initMobileTest();
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
+
         String txHash81 = JSONObject.fromObject(response81).getJSONObject("Data").get("Figure").toString();
+
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash81)).getString("State"));
         //发送合约交易changeCount 20190813补充测试
         log.info("发送合约交易querymobile");
         String response82 = ct.changeMobileCountTest("50","Mobile2");
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
+
         String txHash82 = JSONObject.fromObject(response82).getJSONObject("Data").get("Figure").toString();
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash82)).getString("State"));
         //检查交易详情中的scargs内容是否能够被base64解码成传入的参数
         checkContractArgs(txHash82,"SCArgs","changeMobileCount","50","Mobile2");
 
         //发送合约交易querymobile
         log.info("发送合约交易querymobile");
         String response8 = ct.queryMobileTest("Mobile1");
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
         String txHash8 = JSONObject.fromObject(response8).getJSONObject("Data").get("Figure").toString();
 
         //销毁合约
         log.info("销毁合约"+ct.name);
         String response9 = ct.destroyTest();
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
         String txHash9 = JSONObject.fromObject(response9).getJSONObject("Data").get("Figure").toString();
 
         //检查合约创建交易信息
@@ -576,7 +619,8 @@ public class TestTxType {
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
         String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
         //调用合约内的交易
         String response2 = wvm.invokeNew(ctHash,"initAccount",wvm.accountA,wvm.amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
@@ -584,23 +628,27 @@ public class TestTxType {
         String response3 = wvm.invokeNew(ctHash,"initAccount",wvm.accountB,wvm.amountB);//初始化账户B 账户余额60
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         String response4 = wvm.invokeNew(ctHash,"transfer",wvm.accountA,wvm.accountB,wvm.transfer);//A向B转30
         String txHash4 = JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //查询余额invoke接口
         String response5 = wvm.invokeNew(ctHash,"getBalance",wvm.accountA);//获取账户A账户余额
         String txHash5 = JSONObject.fromObject(response5).getJSONObject("Data").getString("Figure");
 
-        sleepAndSaveInfo(SLEEPTIME/2);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //销毁wvm合约
         String response9 = wvm.wvmDestroyTest(ctHash);
         String txHash9 = JSONObject.fromObject(response9).getJSONObject("Data").getString("Figure");
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //检查合约创建 检查Type和SubType类型
         JSONObject jsonObjectCreate = checkTXDetailHeaderMsg(txHash1,versionWVM1,typeWVM,subTypeCreateWVM);
@@ -669,13 +717,16 @@ public class TestTxType {
         assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS6),containsString("200"));
         assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS6),containsString("200"));
         assertThat(multiSign.recoverFrozenToken(PRIKEY1,tokenType),containsString("200"));
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //Admin类交易 Type 20 SubType 200 201 202 203
         String response10= multiSign.collAddress(PRIKEY1,ADDRESS6);
         String response11= multiSign.addissueaddress(PRIKEY1,ADDRESS6);
         String response3=multiSign.freezeToken(PRIKEY1,tokenType);
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //添加归集地址交易信息检查
         String txHash10 = JSONObject.fromObject(response10).getString("Data");
@@ -698,7 +749,8 @@ public class TestTxType {
         String response13= multiSign.delissueaddress(PRIKEY1,ADDRESS6);
         //解除冻结token
         String response4=multiSign.recoverFrozenToken(PRIKEY1,tokenType);
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //检查删除归集地址交易信息
         String txHash12 = JSONObject.fromObject(response12).getString("Data");

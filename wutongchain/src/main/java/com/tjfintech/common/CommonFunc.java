@@ -966,16 +966,18 @@ public class CommonFunc {
     }
 
     public String sdkCheckTxOrSleep(String hashData,String type,long sleeptime)throws Exception{
+        Date dtTest = new Date();
+        long nowTime = dtTest.getTime();
+        log.info("开始时间 " + nowTime);
+
         assertEquals(false,hashData.isEmpty());//先检查hash是否为空，为空则不执行
+        log.info("query hash  " + hashData);
         Boolean bWallet = true;
         if(type.equals(utilsClass.sdkGetTxDetailType)){
             bWallet = getSDKWalletEnabled();//获取sdk 钱包是否开启
         }
-
         long internal = 0;
-        Date dtTest = new Date();
-        long nowTime = dtTest.getTime();
-        log.info("开始时间 " + nowTime);
+
         Boolean bOK = false;
         Boolean bInlocal = false;
         String state ="";
@@ -1055,7 +1057,9 @@ public class CommonFunc {
                 hash = response.substring(response.lastIndexOf("success:") + 8).trim();
                 break;
             default:
-                log.info("Can not resolve tx hash,please check type 01 02 10 20!");
+                log.info("test hash " + hash);
+                log.info("resolve hash type " + type);
+                log.info("Can not resolve tx hash,please check type 00 01 02 10 20 or mg!");
         }
         return hash;
     }
