@@ -30,6 +30,7 @@ public class CommonFunc {
     Token tokenModule= testBuilder.getToken();
     Store store = testBuilder.getStore();
     UtilsClass utilsClass=new UtilsClass();
+    MgToolCmd mgToolCmd = new MgToolCmd();
     //获取所有地址账户与私钥密码信息
     JSONObject jsonObjectAddrPri;
 
@@ -992,25 +993,43 @@ public class CommonFunc {
             else
                 sleepAndSaveInfo(1000,"等待再次检查交易是否上链时间");
         }
-        //计算查询时间
-        log.info("当前时间 " + (new Date()).getTime());
-        internal = (new Date()).getTime() - nowTime;
-        log.info("查询交易上链 " + bOK + " 等待时间 " + hashData + " " + internal);
+        log.info("============================= 查询交易上链 " + bOK + " 等待时间 " +
+                hashData + " " + ((new Date()).getTime() - nowTime));
 
-
-        //查询数据库中是否已经同步区块
-        long nowTimeDB = (new Date()).getTime();
-        //需要排除sdk 钱包关闭场景
-        if(bOK && bWallet) {
-            while((new Date()).getTime() - nowTimeDB < DBSyncTime && bInlocal == false){
-                bInlocal = checkDataInMysqlDB(rSDKADD,"tx_finish","hash",hashData);
-                Thread.sleep(500);
+        //如果确认交易上链 则去数据库查询或者确认节点高度是否一致，交易在指定时间内未查询到上链则不进行更多的检查
+        if(bOK) {
+            //需要排除sdk 钱包关闭场景
+            //钱包开启则查询数据库中是否已经同步区块
+            long nowTimeDB = (new Date()).getTime();
+            if(bWallet) {
+                while ((new Date()).getTime() - nowTimeDB < DBSyncTime && bInlocal == false) {
+                    bInlocal = checkDataInMysqlDB(rSDKADD, "tx_finish", "hash", hashData);
+                    Thread.sleep(500);
+                }
+                log.info("============================= 查询数据库更新 " + bInlocal + " 等待时间 "
+                        + hashData + " " + ((new Date()).getTime() - nowTimeDB));
+//                assertEquals("数据库在未同步到已上链交易",true,bInlocal);
             }
-            if(type.equals(utilsClass.tokenApiGetTxDetailTType)) sleepAndSaveInfo(1000,"token api 再等待时间");
-            log.info("查询数据库更新 " + bInlocal + " 等待时间 " + hashData + " " + ((new Date()).getTime() - nowTimeDB));
+            else if(!bWallet || type.equals(utilsClass.tokenApiGetTxDetailTType)){
+                //检查节点高度是否一致
+                //如果是钱包关闭场景 及 token api场景下不支持数据库是否同步到交易的查询
+                Boolean bEqual = false;
+                //确认所有节点均同步
+                long nowTimeSync = (new Date()).getTime();
+                bEqual = mgToolCmd.mgCheckHeightOrSleep(
+                        PEER1IP + ":" + PEER1RPCPort,PEER2IP + ":" + PEER2RPCPort,
+                        30*1000,300);
+//                if(!bEqual) log.info("============================= 等待节点同步区块时间 " + ((new Date()).getTime() - nowTimeSync));
+//                assertEquals("高度检查不一致",true,bEqual);
+                bEqual = mgToolCmd.mgCheckHeightOrSleep(
+                        PEER1IP + ":" + PEER1RPCPort,PEER4IP + ":" + PEER4RPCPort,
+                        30*1000,300);
+                log.info("============================= 等待节点同步区块时间 " + ((new Date()).getTime() - nowTimeSync));
+//                assertEquals("高度检查不一致",true,bEqual);
+            }
         }
 
-        return hashData + " " + internal;
+        return hashData + " " + ((new Date()).getTime() - nowTime);
     }
 
     /***

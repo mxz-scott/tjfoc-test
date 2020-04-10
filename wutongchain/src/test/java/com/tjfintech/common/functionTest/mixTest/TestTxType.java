@@ -45,6 +45,7 @@ public class TestTxType {
     DockerContractTest ct =new DockerContractTest();
     UtilsClass utilsClass=new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
+    MgToolCmd mgToolCmd = new MgToolCmd();
     String typeStore="0";
     String subTypeStore="0";
     String subTypePriStore="1";
@@ -527,7 +528,15 @@ public class TestTxType {
         String txHash7 = JSONObject.fromObject(response7).getJSONObject("Data").get("Figure").toString();
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,ContractInstallSleep);
-        sleepAndSaveInfo(20000,"等待合约同步");
+
+        //确认所有节点均同步
+        long nowTimeSync = (new Date()).getTime();
+        mgToolCmd.mgCheckHeightOrSleep(
+                PEER1IP + ":" + PEER1RPCPort,PEER2IP + ":" + PEER2RPCPort,30*1000);
+        mgToolCmd.mgCheckHeightOrSleep(
+                PEER1IP + ":" + PEER1RPCPort,PEER4IP + ":" + PEER4RPCPort,30*1000);
+        log.info("等待节点同步合约时间 " + ((new Date()).getTime() - nowTimeSync));
+
         //发送合约交易initMobile
         log.info("发送合约交易initMobile");
         String response81 = ct.initMobileTest();

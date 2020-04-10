@@ -4,6 +4,7 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.Store;
+import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +14,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
@@ -33,6 +31,7 @@ public class DockerContractInvalidTest {
     Store store=testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
+    MgToolCmd mgToolCmd = new MgToolCmd();
 
     public String name=sdf.format(dt)+ RandomUtils.nextInt(100000);
     public String version="2.1";
@@ -60,6 +59,14 @@ public class DockerContractInvalidTest {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,ContractInstallSleep);
+
+        //确认所有节点均同步
+        long nowTimeSync = (new Date()).getTime();
+        mgToolCmd.mgCheckHeightOrSleep(
+                PEER1IP + ":" + PEER1RPCPort,PEER2IP + ":" + PEER2RPCPort,30*1000);
+        mgToolCmd.mgCheckHeightOrSleep(
+                PEER1IP + ":" + PEER1RPCPort,PEER4IP + ":" + PEER4RPCPort,30*1000);
+        log.info("等待节点同步合约时间 " + ((new Date()).getTime() - nowTimeSync));
 
         String response1=store.GetTxDetail(hash);
         assertThat(response1,containsString("200"));

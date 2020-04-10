@@ -740,7 +740,7 @@ public class UtilsClass {
         shell1.execute(cmd);
         ArrayList<String> stdout = shell1.getStandardOutput();
         String response = StringUtils.join(stdout, "\n");
-//        log.info("\n" + response);
+        log.info("\n" + response);
         return response;
     }
 

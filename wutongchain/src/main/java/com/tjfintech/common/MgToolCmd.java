@@ -229,25 +229,30 @@ public class MgToolCmd implements ManageTool {
         return shExeAndReturn(shellIP,cmd);
     }
 
-    public void mgCheckHeightOrSleep(String queryIPPortRefer,String queryIPPortTest,long sleeptime)throws Exception{
+    public Boolean mgCheckHeightOrSleep(String queryIPPortRefer,String queryIPPortTest,long... sleeptime)throws Exception{
 
         long internal = 0;
         Date dtTest = new Date();
         long nowTime = dtTest.getTime();
         log.info("开始时间 " + nowTime);
         Boolean bOK = false;
+        long waitTime = sleeptime[0];
+        long stepTime = 3000;
+        if(sleeptime.length == 2){
+            stepTime = sleeptime[1];
+        }
 
-        while((new Date()).getTime() - nowTime < sleeptime && bOK == false){
+        while((new Date()).getTime() - nowTime < waitTime && bOK == false){
             if(queryBlockHeight(queryIPPortRefer).equals(queryBlockHeight(queryIPPortTest)))
                 bOK = true;
             else
-                sleepAndSaveInfo(1000,"等待查询高度是否一致时间");
+                sleepAndSaveInfo(stepTime,"等待查询高度是否一致时间");
         }
         //计算查询时间
         log.info("当前时间 " + (new Date()).getTime());
         internal = (new Date()).getTime() - nowTime;
 
         log.info("检查高度一致 " + bOK + " 等待时间 " + internal);
-
+        return  bOK;
     }
 }
