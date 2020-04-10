@@ -592,6 +592,7 @@ public class UtilsClass {
         }
 
         shellSDK.execute(startSDKCmd);
+        sleepAndSaveInfo(SLEEPTIME,"等待SDK重启");
     }
 
     public static void shellExeCmd(String IP, String... cmdList)throws Exception{

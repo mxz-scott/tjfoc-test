@@ -2132,7 +2132,7 @@ public class TokenInterfaceTest {
 
         //comments为空
         comments = "";
-        destoryResp = tokenModule.tokenDestoryByTokenType(issueToken,comments);
+        destoryResp = tokenModule.tokenDestoryByTokenType(issueToken2,comments);
         assertEquals("200",JSONObject.fromObject(destoryResp).getString("state"));
 
     }

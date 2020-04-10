@@ -1009,8 +1009,13 @@ public class CommonFunc {
                 log.info("============================= 查询数据库更新 " + bInlocal + " 等待时间 "
                         + hashData + " " + ((new Date()).getTime() - nowTimeDB));
 //                assertEquals("数据库在未同步到已上链交易",true,bInlocal);
+
+                if(type.equals(utilsClass.tokenApiGetTxDetailTType)){
+                    sleepAndSaveInfo(1000,"============================= 等待 token api数据库同步数据");
+                }
             }
-            else if(!bWallet || type.equals(utilsClass.tokenApiGetTxDetailTType)){
+//            if(!bWallet || type.equals(utilsClass.tokenApiGetTxDetailTType)){
+            if(!bWallet){
                 //检查节点高度是否一致
                 //如果是钱包关闭场景 及 token api场景下不支持数据库是否同步到交易的查询
                 Boolean bEqual = false;
@@ -1071,7 +1076,7 @@ public class CommonFunc {
                 hash = JSONObject.fromObject(response).getString("data");
                 break;
             case "mg" :
-                //新版本SDK v2接口
+                //管理工具命令执行
                 assertEquals(true,response.contains("success:"));
                 hash = response.substring(response.lastIndexOf("success:") + 8).trim();
                 break;
