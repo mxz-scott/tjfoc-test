@@ -57,14 +57,14 @@ public class UtilsClass {
     public static String sLatestLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.2\\";
 
 //    //zhouxianxian env use start -----------
-//    public static String SDKADD = "http://10.1.3.246:7777";
-//    public static String rSDKADD = "http://10.1.3.246:7777";
-//    public static String TOKENADD = "http://10.1.3.240:8888";
+//    public static String SDKADD = "http://10.1.3.164:8080";
+//    public static String rSDKADD = "http://10.1.3.164:8080";
+//    public static String TOKENADD = "http://10.1.3.164:9090";
 //    //设置测试环境使用的节点端口及部署目录信息
-//    public static String PEER1IP = "10.1.3.240";
-//    public static String PEER2IP = "10.1.3.246";
-//    public static String PEER3IP = "10.1.5.168";
-//    public static String PEER4IP = "10.1.3.247";
+//    public static String PEER1IP = "10.1.3.162";
+//    public static String PEER2IP = "10.1.3.163";
+//    public static String PEER3IP = "10.1.3.161";
+//    public static String PEER4IP = "10.1.3.164";
 //    public static String PEER1RPCPort = "9300";
 //    public static String PEER2RPCPort = "9300";
 //    public static String PEER3RPCPort = "9300";
@@ -74,7 +74,7 @@ public class UtilsClass {
 //    public static String PEER3TCPPort = "60030";
 //    public static String PEER4TCPPort = "60030";
 //    //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-//    public static String PTPATH = "/root/zll/permission/";
+//    public static String PTPATH = "/root/auto/";
 //    public static String SDKPATH = PTPATH + "sdk/";
 //    public static String PeerPATH = PTPATH + "peer/";
 //    public static String ToolPATH = PTPATH + "toolkit/";
@@ -83,11 +83,11 @@ public class UtilsClass {
 //    public static String SDKTPName = "wtsdk";
 //    public static String ToolTPName = "wttool";
 //    public static String TokenTPName = "wtfinservice";
-//    public static String tmuxSessionTokenApi = "tmux send -t perm_token ";
-//    public static String tmuxSessionPeer = "tmux send -t perm ";
-//    public static String tmuxSessionSDK = "tmux send -t perm_sdk ";
-//    public static String sReleaseLocalDir = "E:\\gopath\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.2\\";
-//    public static String sLatestLocalDir = "E:\\test\\2.2.1\\";
+//    public static String tmuxSessionTokenApi = "tmux send -t token ";
+//    public static String tmuxSessionPeer = "tmux send -t peer ";
+//    public static String tmuxSessionSDK = "tmux send -t sdk ";
+//    public static String sReleaseLocalDir = "E:\\gopath\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.3\\";
+//    public static String sLatestLocalDir = "E:\\test\\2.4.2\\";
 //    //zhouxianxian env use end -----------
 
     public static String certPath = "SM2"; // 设置签名证书类型，可选值SM2(默认值)，ECDSA，MIX1，MIX2，RSA
