@@ -98,7 +98,6 @@ public class TestPermission {
         sleepAndSaveInfo(SLEEPTIME);
     }
 
-    //权限测试需要使用mongodb数据库进行测试 tx/search接口不支持mysql数据库
     @Before
     public void beforeTest() throws Exception {
 

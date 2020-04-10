@@ -70,7 +70,11 @@ public class SoloTestInvalid {
         //Thread.sleep(SLEEPTIME);
         tokenType2 = "SOLOTC-" + UtilsClass.Random(6);
         String issueInfo2= soloSign.issueToken(PRIKEY1, tokenType2, issueAmount2, tokenType2,ADDRESS1);
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         assertThat(issueInfo1,containsString("200"));
         assertThat(issueInfo2,containsString("200"));
         log.info("查询归集地址中两种token余额");
@@ -117,8 +121,12 @@ public class SoloTestInvalid {
     public void TC251_issueDoubleInvalid() throws Exception {
 
         String issueInfo2 = soloSign.issueToken(PRIKEY1, tokenType, "1000", "发行token1",ADDRESS1);
-        Thread.sleep(SLEEPTIME);
-    String issueInfo3 = soloSign.issueToken(PRIKEY1, tokenType, "50", "发行token2",ADDRESS1);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
+         String issueInfo3 = soloSign.issueToken(PRIKEY1, tokenType, "50", "发行token2",ADDRESS1);
 //        assertThat(issueInfo2, containsString("400"));
 //        assertThat(issueInfo3, containsString("400"));
         assertThat(issueInfo2,containsString("Token type "+tokenType+" has been issued"));
@@ -165,7 +173,6 @@ public class SoloTestInvalid {
         log.info(transferData);
         String transferInfo1 = soloSign.Transfer(list1, PRIKEY1, transferData);
         String transferInfo2 = soloSign.Transfer(list2, "null", transferData);
-        Thread.sleep(SLEEPTIME);
 //        assertThat(transferInfo1, containsString("400"));
 //        assertThat(transferInfo2, containsString("400"));
         assertThat(transferInfo1,containsString("invalid address"));
@@ -180,7 +187,10 @@ public class SoloTestInvalid {
         String recycleInfo2 = multiSign.Recycle(PRIKEY1, tokenType2, "200.87654321");
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
 
         log.info("查询余额判断回收成功与否");
         String queryInfo = soloSign.Balance(PRIKEY1, tokenType);
@@ -203,7 +213,9 @@ public class SoloTestInvalid {
                 "100","发行已有tokentype字符全部大写的token","");
         assertEquals("200",JSONObject.fromObject(issueResp2).getString("State"));
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
 
         assertEquals("100",commonFunc.GetBalance(ADDRESS1,tokenType.toLowerCase()));
         assertEquals("100",commonFunc.GetBalance(ADDRESS1,tokenType.toUpperCase()));

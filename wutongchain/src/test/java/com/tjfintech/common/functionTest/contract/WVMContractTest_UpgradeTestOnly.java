@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.contract;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -33,6 +34,7 @@ public class WVMContractTest_UpgradeTestOnly {
     Contract contract=testBuilder.getContract();
     Store store=testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
     public String category="wvm";
     public String caller="test";
@@ -65,7 +67,10 @@ public class WVMContractTest_UpgradeTestOnly {
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
         String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
+
         //调用合约内的交易
         String response2 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
@@ -73,12 +78,14 @@ public class WVMContractTest_UpgradeTestOnly {
         String response3 = invokeNew(ctHash,"initAccount",accountB,amountB);//初始化账户B 账户余额60
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         String response4 = invokeNew(ctHash,"transfer",accountA,accountB,transfer);//A向B转30
         String txHash4 = JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //查询余额invoke接口
         String response5 = invokeNew(ctHash,"getBalance",accountA);//获取账户A账户余额
@@ -86,7 +93,10 @@ public class WVMContractTest_UpgradeTestOnly {
 
         String response6 = invokeNew(ctHash,"getBalance",accountB);//获取账户A账户余额
         String txHash6 = JSONObject.fromObject(response6).getJSONObject("Data").getString("Figure");
-        sleepAndSaveInfo(SLEEPTIME/2);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         //查询余额query接口 交易不上链 //query接口不再显示交易hash
         String response7 = query(ctHash,"getBalance",accountA);//获取转账后账户A账户余额
 //        String txHash7 = JSONObject.fromObject(response7).getJSONObject("Data").getString("Figure");
@@ -98,7 +108,10 @@ public class WVMContractTest_UpgradeTestOnly {
         //销毁wvm合约
         String response9 = wvmDestroyTest(ctHash);
         String txHash9 = JSONObject.fromObject(response9).getJSONObject("Data").getString("Figure");
-        sleepAndSaveInfo(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         String response10 = query(ctHash,"getBalance",accountB);//获取账户B账户余额 报错
         assertThat(JSONObject.fromObject(response10).getString("Message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
 
@@ -158,7 +171,7 @@ public class WVMContractTest_UpgradeTestOnly {
         for (Object obj:arg){
             args.add(obj);
         }
-        String response = contract.Invoke(cthash, version, category,method,caller, args);
+        String response = contract.Invoke(cthash, "", category,method,caller, args);
         return response;
     }
 
@@ -167,7 +180,7 @@ public class WVMContractTest_UpgradeTestOnly {
         for (Object obj:arg){
             args.add(obj);
         }
-        String response = contract.QueryWVM(cthash, version, category,method,caller,args);
+        String response = contract.QueryWVM(cthash, "", category,method,caller,args);
         return response;
     }
 

@@ -101,6 +101,8 @@ public class UtilsClass {
     public static Integer  SHORTMEOUT = 3000;//毫秒
     public static Integer  UTXOSHORTMEOUT = 4 * 1000;//毫秒
     public static int  SLEEPTIME = 7*1000;
+    public static int DBSyncTime = 3*1000;
+    public static int worldStateUpdTime = 1500;
 
     //UTXO精度
     public static Integer PRECISION = 6;
@@ -242,6 +244,8 @@ public class UtilsClass {
     public String sdkGetTxHashType01 = "01";
     public String sdkGetTxHashType02 = "02";
     public String tokenApiGetTxHashType = "10";
+    public String tokenApiGetTxHashTypeDesByType = "11";
+    public String mgGetTxHashType = "mg";
 
     //如果是已经获取过shell脚本则可以不用执行uploadFile()操作 因此此项默认关闭
 //    public boolean bupload = uploadFile();
@@ -556,7 +560,7 @@ public class UtilsClass {
         sendCmdPeerList(peerList,cmdList);
         sendCmdPeerList(peerList,startPeerCmd);
 
-        Thread.sleep(RESTARTTIME);
+        Thread.sleep(SLEEPTIME);
     }
     public void setAndRestartPeer(String PeerIP,String...cmdList)throws Exception{
 
@@ -588,6 +592,7 @@ public class UtilsClass {
         }
 
         shellSDK.execute(startSDKCmd);
+        sleepAndSaveInfo(SLEEPTIME,"等待SDK重启");
     }
 
     public static void shellExeCmd(String IP, String... cmdList)throws Exception{
@@ -668,7 +673,7 @@ public class UtilsClass {
         Matcher matcher = p.matcher(src);
         if (matcher.find()) {
             matchStr = matcher.group(1);
-            log.info("match info: " + matchStr);
+//            log.info("match info: " + matchStr);
         }
         return matchStr;
     }

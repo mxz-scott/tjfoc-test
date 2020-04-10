@@ -72,8 +72,10 @@ public class TokenSoloInvalidTest {
         tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,issueAmount1);
         tokenType2 = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,issueAmount2);
 
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
-        sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
+
         log.info("查询归集地址中两种token余额");
         String response1 = tokenModule.tokenGetBalance( tokenAccount1, tokenType);
         String response2 = tokenModule.tokenGetBalance( tokenAccount1, tokenType2);
@@ -133,7 +135,8 @@ public class TokenSoloInvalidTest {
         issAmount = "18446744073709.1";
 
         issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
         assertEquals(false, queryBalance.contains(issueToken));
@@ -158,7 +161,10 @@ public class TokenSoloInvalidTest {
         issAmount = String.valueOf(sAmount);
 
         issueToken = commonFunc.tokenModule_IssueToken(issueAddr,collAddr,issAmount);
-        sleepAndSaveInfo(SLEEPTIME,"issue waiting......");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+
 
         String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
@@ -171,7 +177,8 @@ public class TokenSoloInvalidTest {
         String desAmountStr = String.valueOf(desAmount);
         String destroyResp = commonFunc.tokenModule_DestoryToken(desAddr,desToken,desAmountStr);
 
-        sleepAndSaveInfo(SLEEPTIME,"destroy waiting......");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //余额查询
         queryBalance = tokenModule.tokenGetBalance(collAddr,desToken);
@@ -240,10 +247,18 @@ public class TokenSoloInvalidTest {
         assertEquals("400",JSONObject.fromObject(desResp).getString("state"));
         assertEquals("Insufficient Balance",JSONObject.fromObject(desResp).getString("data"));
 
-
         list = utilsClass.tokenConstructToken(tokenAccount1,tokenType.toUpperCase(),"10");
         desResp = commonFunc.tokenModule_DestoryTokenByList2(list);
         assertEquals("400",JSONObject.fromObject(desResp).getString("state"));
         assertEquals("Insufficient Balance",JSONObject.fromObject(desResp).getString("data"));
+
+
+        desResp = commonFunc.tokenModule_DestoryTokenByTokenType(tokenType.toUpperCase());
+        assertEquals("400",JSONObject.fromObject(desResp).getString("state"));
+        assertEquals("invalid tokenType",JSONObject.fromObject(desResp).getString("data").trim());
+
+        desResp = commonFunc.tokenModule_DestoryTokenByTokenType(tokenType.toLowerCase());
+        assertEquals("400",JSONObject.fromObject(desResp).getString("state"));
+        assertEquals("invalid tokenType",JSONObject.fromObject(desResp).getString("data").trim());
     }
 }

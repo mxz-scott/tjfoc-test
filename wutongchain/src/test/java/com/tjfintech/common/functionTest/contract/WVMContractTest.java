@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.contract;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -34,6 +35,7 @@ public class WVMContractTest {
     Contract contract=testBuilder.getContract();
     Store store=testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
     public String category="wvm";
     public String caller="test";
@@ -70,7 +72,10 @@ public class WVMContractTest {
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
         String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
+
         //调用合约内的交易
         String response2 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
@@ -78,12 +83,14 @@ public class WVMContractTest {
         String response3 = invokeNew(ctHash,"initAccount",accountB,amountB);//初始化账户B 账户余额60
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         String response4 = invokeNew(ctHash,"transfer",accountA,accountB,transfer);//A向B转30
         String txHash4 = JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //查询余额invoke接口
         String response5 = invokeNew(ctHash,"getBalance",accountA);//获取账户A账户余额
@@ -91,7 +98,10 @@ public class WVMContractTest {
 
         String response6 = invokeNew(ctHash,"getBalance",accountB);//获取账户A账户余额
         String txHash6 = JSONObject.fromObject(response6).getJSONObject("Data").getString("Figure");
-        sleepAndSaveInfo(SLEEPTIME/2);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         //查询余额query接口 交易不上链 //query接口不再显示交易hash
         String response7 = query(ctHash,"getBalance",accountA);//获取转账后账户A账户余额
 //        String txHash7 = JSONObject.fromObject(response7).getJSONObject("Data").getString("Figure");
@@ -103,7 +113,11 @@ public class WVMContractTest {
         //销毁wvm合约
         String response9 = wvmDestroyTest(ctHash);
         String txHash9 = JSONObject.fromObject(response9).getJSONObject("Data").getString("Figure");
-        sleepAndSaveInfo(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
+
         String response10 = query(ctHash,"getBalance",accountB);//获取账户B账户余额 报错
         assertThat(JSONObject.fromObject(response10).getString("Message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
 
@@ -184,7 +198,10 @@ public class WVMContractTest {
         String response1 = wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1);
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
         String ctHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
-        sleepAndSaveInfo(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         chkTxDetailRsp("200",txHash1); //确认安装合约交易上链
         //第二次安装
         //使用不同私钥安装相同合约及内容的合约
@@ -206,7 +223,11 @@ public class WVMContractTest {
         String response1 = wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1);
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
         assertEquals(true,ctHash1.equals(JSONObject.fromObject(response1).getJSONObject("Data").getString("Name"))); //确认两个hash相同
-        sleepAndSaveInfo(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
+
         chkTxDetailRsp("200",txHash1); //确认安装合约交易上链
         //调用合约内的方法 getBalance方法查询余额query接口 交易不上链
         String response7 = query(ctHash1,"getBalance",accountA);//获取账户A账户余额
@@ -224,7 +245,10 @@ public class WVMContractTest {
         String response1 = wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1);
         assertEquals(true,ctHash1.equals(JSONObject.fromObject(response1).getJSONObject("Data").getString("Name"))); //确认两个hash相同
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
-        sleepAndSaveInfo(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         chkTxDetailRsp("200",txHash1); //确认安装合约交易上链
         //调用合约内的方法 getBalance方法查询余额query接口 交易不上链
         String response7 = query(ctHash1,"getBalance",accountA);//获取账户A账户余额
@@ -246,7 +270,10 @@ public class WVMContractTest {
         String response1 = wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1);
         assertEquals(true,ctHash1.equals(JSONObject.fromObject(response1).getJSONObject("Data").getString("Name"))); //确认两个hash相同
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
-        sleepAndSaveInfo(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         chkTxDetailRsp("200",txHash1); //确认安装合约交易上链
         //调用合约内的方法 getBalance方法查询余额query接口 交易不上链
         String response7 = query(ctHash1,"getBalance",accountA);//获取账户A账户余额
@@ -258,7 +285,10 @@ public class WVMContractTest {
         String ctHash = "1234567890";
         //销毁不存在的合约
         String response1 = wvmDestroyTest(ctHash);
-        sleepAndSaveInfo(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
         chkTxDetailRsp("404",txHash1);
     }
@@ -275,7 +305,10 @@ public class WVMContractTest {
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
         String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
+
         chkTxDetailRsp("200",txHash1);
         //调用合约内的方法 init方法
         String response2 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
@@ -284,14 +317,17 @@ public class WVMContractTest {
         String response3 = invokeNew(ctHash,"initAccount",accountB,amountB);//初始化账户B 账户余额60
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         //调用transfer和销毁一起
         String response4 = invokeNew(ctHash,"transfer",accountA,accountB,transfer);//A向B转30
         String response5 = wvmDestroyTest(ctHash);//销毁
         String txHash4 = JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
         String txHash5 = JSONObject.fromObject(response5).getJSONObject("Data").getString("Figure");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
 //        String response7 = query(ctHash,"getBalance",accountA);//获取账户A账户余额
 //        String response7 = query(ctHash,"getBalance",accountA);//获取账户A账户余额
@@ -316,11 +352,18 @@ public class WVMContractTest {
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
         String ctHash2 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
         assertEquals(ctHash1,ctHash2);
-        sleepAndSaveInfo(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         chkTxDetailRsp("200",txHash1);
         //调用升级后合约内的方法 transfer方法 A->B转transfer/2
         String response4 = invokeNew(ctHash2,"transfer",accountA,accountB,transfer);//A向B转15
-        sleepAndSaveInfo(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
+
         String response7 = query(ctHash1,"getBalance",accountA);//获取账户A账户余额
         assertEquals(Integer.toString(amountA-transfer-transfer/2),JSONObject.fromObject(response7).getJSONObject("Data").getString("Result"));
 
@@ -340,7 +383,9 @@ public class WVMContractTest {
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
         String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         chkTxDetailRsp("200",txHash1);
         //调用合约内的方法 init方法
         String response2 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
@@ -349,13 +394,17 @@ public class WVMContractTest {
         String response3 = invokeNew(ctHash,"initAccount",accountB,amountB);//初始化账户B 账户余额60
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         //调用合约内的方法 transfer方法
         String response4 = invokeNew(ctHash,"transfer",accountA,accountB,transfer);//A向B转30
-        String response5 = invokeNew(ctHash,"transfer",accountA,accountB,transfer);//A向B转30
+        String response5 = invokeNew(ctHash,"transfer",accountA,accountB,transfer+1);//A向B转30
         String txHash4 = JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         String response7 = query(ctHash,"getBalance",accountA);//获取账户A账户余额
         assertEquals(Integer.toString(amountA-transfer),JSONObject.fromObject(response7).getJSONObject("Data").getString("Result"));
     }
@@ -372,7 +421,9 @@ public class WVMContractTest {
             ctHashList.add(JSONObject.fromObject(wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1)).getJSONObject("Data").getString("Name"));
         }
 
-        sleepAndSaveInfo(SLEEPTIME*2);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         for(String ctHash : ctHashList){
             String response7 = query(ctHash,"getBalance",accountA);//获取账户A账户余额
             assertEquals(Integer.toString(0),JSONObject.fromObject(response7).getJSONObject("Data").getString("Result"));
@@ -381,7 +432,9 @@ public class WVMContractTest {
         for(String ctHash : ctHashList){
             String response8 = wvmDestroyTest(ctHash);//销毁
         }
-        sleepAndSaveInfo(SLEEPTIME*2);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         for(String ctHash : ctHashList){
             String response1 = query(ctHash,"getBalance",accountA);//获取账户A账户余额
@@ -415,7 +468,9 @@ public class WVMContractTest {
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
         String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         //调用合约内的交易
         String response2 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
@@ -423,12 +478,14 @@ public class WVMContractTest {
         String response3 = invokeNew(ctHash,"initAccount",accountB,amountB);//初始化账户B 账户余额60
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         String response4 = invokeNew(ctHash,"transfer",accountA,accountB,transfer);//A向B转30
         String txHash4 = JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //查询余额invoke接口
         String response5 = invokeNew(ctHash,"getBalance",accountA);//获取账户A账户余额
@@ -436,7 +493,10 @@ public class WVMContractTest {
 
         String response6 = invokeNew(ctHash,"getBalance",accountB);//获取账户A账户余额
         String txHash6 = JSONObject.fromObject(response6).getJSONObject("Data").getString("Figure");
-        sleepAndSaveInfo(SLEEPTIME/2);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         //查询余额query接口 交易不上链 //query接口不再显示交易hash
         String response7 = query(ctHash,"getBalance",accountA);//获取转账后账户A账户余额
 //        String txHash7 = JSONObject.fromObject(response7).getJSONObject("Data").getString("Figure");
@@ -470,13 +530,19 @@ public class WVMContractTest {
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
         String ctHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
+
         chkTxDetailRsp("200",txHash1);
 
         //销毁wvm合约
         String response9 = wvmDestroyTest(ctHash1);
         String txHash2 = JSONObject.fromObject(response9).getJSONObject("Data").getString("Figure");
-        sleepAndSaveInfo(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         chkTxDetailRsp("200",txHash2);
 
         String response10 = query(ctHash1,"getBalance",accountB);//获取转账后账户B账户余额 报错
@@ -496,7 +562,10 @@ public class WVMContractTest {
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
         String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
+
         chkTxDetailRsp("200",txHash1);
         //调用合约内的方法 init方法
         String response2 = invokeNew(ctHash,method[0],accountA,amountA);//初始化账户A 账户余额50
@@ -505,12 +574,16 @@ public class WVMContractTest {
         String response3 = invokeNew(ctHash,method[0],accountB,amountB);//初始化账户B 账户余额60
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         //调用合约内的方法 transfer方法
         String response4 = invokeNew(ctHash,method[1],accountA,accountB,transfer);//A向B转30
         String txHash4 = JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
         //调用合约内的方法 getBalance方法查询余额query接口 交易不上链
         String response7 = query(ctHash,method[2],accountA);//获取转账后账户A账户余额
@@ -518,8 +591,6 @@ public class WVMContractTest {
 
         String response8 = query(ctHash,method[2],accountB);//获取转账后账户B账户余额
         assertEquals(Integer.toString(amountB+transfer),JSONObject.fromObject(response8).getJSONObject("Data").getString("Result"));
-
-        sleepAndSaveInfo(SLEEPTIME);
 
         return ctHash;
     }
@@ -536,7 +607,9 @@ public class WVMContractTest {
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
         String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         chkTxDetailRsp("200",txHash1);
         //调用合约内的方法 init方法
         String response2 = invokeNew(ctHash,method[0],accountA,amountA);//初始化账户A 账户余额50
@@ -545,12 +618,15 @@ public class WVMContractTest {
         String response3 = invokeNew(ctHash,method[0],accountB,amountB);//初始化账户B 账户余额60
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         //调用合约内的方法 transfer方法
         String response4 = invokeNew(ctHash,method[1],accountA,accountB,transfer);//A向B转30
         String txHash4 = JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
 
-        sleepAndSaveInfo(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //调用合约内的方法 getBalance方法查询余额query接口 交易不上链
         String response7 = query(ctHash,method[2],accountA);//获取转账后账户A账户余额
@@ -558,8 +634,6 @@ public class WVMContractTest {
 
         String response8 = query(ctHash,method[2],accountB);//获取转账后账户B账户余额
         assertEquals(Integer.toString(amountB+transfer/2),JSONObject.fromObject(response8).getJSONObject("Data").getString("Result"));
-
-        sleepAndSaveInfo(SLEEPTIME);
 
         return ctHash;
     }

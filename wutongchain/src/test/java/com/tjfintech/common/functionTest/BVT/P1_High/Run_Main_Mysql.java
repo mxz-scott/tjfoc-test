@@ -46,11 +46,11 @@ import org.junit.runners.Suite;
         DockerContractTest.class,
         DockerContractInvalidTest.class,
 
-        VerifyTests.class,
-
         WVMContractTest.class,
 
         TestTxType.class,
+
+        VerifyTests.class,
 
 })
 

@@ -40,7 +40,9 @@ public class StoreTest {
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         assertThat(response, containsString("200"));
         assertThat(response,containsString("Data"));
 
@@ -59,7 +61,9 @@ public class StoreTest {
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String  storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         String response2= store.GetStore(storeHash);
         assertThat(response2, containsString("200"));
         assertThat(response2,containsString("json"));
@@ -97,7 +101,10 @@ public class StoreTest {
         log.info(Data);
 
         String response= store.CreateStore(Data);
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         assertThat(response, containsString("200"));
         assertThat(response,containsString("Data"));
         assertThat(response,containsString("Figure"));
@@ -162,7 +169,7 @@ public class StoreTest {
 //        JSONObject jsonObject2 = JSONObject.fromObject(response2);
 //        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
 //        String storeHash2 = jsonObject2.getJSONObject("Data").get("Figure").toString();
-//        Thread.sleep(SLEEPTIME);
+
 //        String response3 = store.GetTxSearch(0, 1, "cxtest");
 //        String response4 = store.GetTxSearch(0, 5, "cxtest");
 //        JSONObject jsonObject3 = JSONObject.fromObject(response3);
@@ -200,6 +207,15 @@ public class StoreTest {
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("Data"));
 
+        assertEquals(response3,globalResponse);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+        //确认交易上链
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(
+                commonFunc.getTxHash(response,utilsClass.sdkGetTxHashType00))).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(
+                commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType00))).getString("State"));
     }
 
      /**
@@ -212,16 +228,18 @@ public class StoreTest {
        for(int i=0;i<50;i++){
            list.add(store.CreateStore("cx"+UtilsClass.Random(4)));
        }
+       //确认最后一个存证上链
+       commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+               utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
        for(int i=0;i<list.size();i++){
            assertThat(list.get(i), containsString("200"));
            JSONObject jsonObject=JSONObject.fromObject(list.get(i));
            String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-          assertEquals(storeHash.isEmpty(),false);
+           assertEquals(storeHash.isEmpty(),false);
+           //检查交易上链
+           assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("State"));
        }
-
-       Thread.sleep(SLEEPTIME);
-
-
    }
 
 
@@ -235,7 +253,9 @@ public class StoreTest {
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         String response2= store.GetTxDetail(storeHash);
         assertThat(response2,containsString("200"));
         final Base64.Decoder decoder = Base64.getDecoder();
@@ -258,11 +278,12 @@ public class StoreTest {
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
-        Thread.sleep(SLEEPTIME);//通过JAVASDK实现的上链要慢，需要再加一个休眠
-       String response2= store.GetTransactionIndex(storeHash);
-       assertThat(response2,containsString("200"));
-       assertThat(response2,containsString("success"));
+
+        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+        String response2= store.GetTransactionIndex(storeHash);
+        assertThat(response2,containsString("200"));
+        assertThat(response2,containsString("success"));
     }
 
     /**
@@ -311,7 +332,9 @@ public class StoreTest {
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
         String response2=store.GetTransactionBlock(storeHash);
         assertThat(response2,containsString("200"));
     }

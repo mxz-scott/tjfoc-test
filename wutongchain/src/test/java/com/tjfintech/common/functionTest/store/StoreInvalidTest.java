@@ -1,4 +1,6 @@
 package com.tjfintech.common.functionTest.store;
+import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -6,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -27,23 +30,32 @@ public class StoreInvalidTest {
     Store store = testBuilder.getStore();
     public String hash;
     public String privacyhash;
+    CommonFunc commonFunc = new CommonFunc();
+    UtilsClass utilsClass = new UtilsClass();
 
+    @BeforeClass
+    public static void BeforeTest()throws Exception{
+        BeforeCondition beforeCondition = new BeforeCondition();
+        beforeCondition.updatePubPriKey();
+    }
 
     /**
      * 创建存证交易
      */
     @Before
-    public void TC1380_store() throws InterruptedException {
+    public void TC1380_store() throws Exception {
         String createstore;
         createstore = store.CreateStore("创建普通存证");
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
         hash = JSONObject.fromObject(createstore).getJSONObject("Data").getString("Figure");
         log.info("获取普通存证交易hash"+hash);
 
         Map<String,Object> map=new HashMap<>();
         map.put("pubKeys",PUBKEY6);
         createstore = store.CreatePrivateStore("创建隐私存证",map);
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
         privacyhash = JSONObject.fromObject(createstore).getJSONObject("Data").getString("Figure");
         log.info("获取隐私存证交易hash"+privacyhash);
     }

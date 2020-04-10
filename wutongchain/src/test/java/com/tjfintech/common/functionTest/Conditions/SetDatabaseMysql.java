@@ -27,7 +27,7 @@ public class SetDatabaseMysql {
       setAllPeersDockerImagesClear.clearAllPeersDockerImages();
 
        //重启SDK
-       shellExeCmd(utilsClass.getIPFromStr(SDKADD),startSDKCmd);
+       utilsClass.setAndRestartSDK();
 
        //检查节点及sdk启动无异常
        commonFunc.checkProgramActive(PEER1IP,PeerTPName);

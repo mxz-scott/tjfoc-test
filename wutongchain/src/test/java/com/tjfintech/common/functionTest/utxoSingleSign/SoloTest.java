@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.utxoSingleSign;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.TestBuilder;
@@ -29,6 +30,7 @@ public class SoloTest {
     MultiSign multiSign =testBuilder.getMultiSign();
     SoloSign soloSign = testBuilder.getSoloSign();
     UtilsClass utilsClass=new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
     private static String tokenType;
     private static String tokenType2;
 
@@ -40,11 +42,14 @@ public class SoloTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
+        CommonFunc commonFuncTe = new CommonFunc();
+        UtilsClass utilsClassTe = new UtilsClass();
         if (MULITADD1.isEmpty()) {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
-            bf.collAddressTest();
-            Thread.sleep(SLEEPTIME);
+            bf.collAddressTest();//有多签地址创建及添加
+            commonFuncTe.sdkCheckTxOrSleep(commonFuncTe.getTxHash(globalResponse,utilsClassTe.sdkGetTxHashType01),
+                    utilsClassTe.sdkGetTxDetailType,SLEEPTIME);
         }
     }
 
@@ -71,7 +76,11 @@ public class SoloTest {
         assertThat(tokenType+"发行token错误",isResult, containsString("200"));
         assertThat(tokenType+"发行token错误",isResult2, containsString("200"));
 
-        Thread.sleep(SLEEPTIME);
+//        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         log.info("查询归集地址中两种token余额");
         String response1 = soloSign.Balance( PRIKEY1, tokenType);
         String response2 = soloSign.Balance( PRIKEY1, tokenType2);
@@ -99,7 +108,10 @@ public class SoloTest {
 
         String isResult = soloSign.issueToken(PRIKEY1,tokenType,actualAmount1,"发行token",ADDRESS1);
         assertThat(isResult, containsString("200"));
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         log.info("查询归集地址中token余额");
         String response1 = soloSign.Balance( PRIKEY1, tokenType);
 
@@ -118,7 +130,10 @@ public class SoloTest {
         tokenType = "SOLOTC-"+UtilsClass.Random(6);
         String isResult= soloSign.issueToken(PRIKEY1,tokenType,"1009","发行token",ADDRESS1);
         assertThat(isResult, containsString("200"));
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         String response1 = soloSign.Balance( PRIKEY1, tokenType);
         assertEquals("200",JSONObject.fromObject(response1).getString("State"));
         assertEquals("1009",JSONObject.fromObject(response1).getJSONObject("Data").getString("Total"));
@@ -127,12 +142,14 @@ public class SoloTest {
         //删除发行地址，保留归集地址
         String response3=multiSign.delissueaddress(PRIKEY1,ADDRESS1);
         assertThat(response3, containsString("200"));
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         tokenType = "SOLOTC-"+UtilsClass.Random(7);
         isResult= soloSign.issueToken(PRIKEY1,tokenType,"1009","发行token",ADDRESS1);
         assertThat(isResult, containsString("200"));
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
         String response2 = soloSign.Balance( PRIKEY1, tokenType);
         assertEquals("200",JSONObject.fromObject(response2).getString("State"));
         assertEquals("0",JSONObject.fromObject(response2).getJSONObject("Data").getString("Total"));
@@ -141,12 +158,14 @@ public class SoloTest {
         log.info("删除发行地址和归集地址");
         String response4=multiSign.delCollAddress(PRIKEY1,ADDRESS1);
         assertThat(response4, containsString("200"));
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         tokenType = "SOLOTC-"+UtilsClass.Random(8);
         isResult= soloSign.issueToken(PRIKEY1,tokenType,"1009","发行token",ADDRESS1);
         assertThat(isResult, containsString("200"));
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
         String response41 = soloSign.Balance( PRIKEY1, tokenType);
         assertEquals("200",JSONObject.fromObject(response41).getString("State"));
         assertEquals("0",JSONObject.fromObject(response41).getJSONObject("Data").getString("Total"));
@@ -154,11 +173,13 @@ public class SoloTest {
         //重新添加发行地址，保留删除归集地址
         String response51=multiSign.addissueaddress(PRIKEY1,ADDRESS1);
         assertThat(response51, containsString("200"));
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
         tokenType = "SOLOTC-"+UtilsClass.Random(9);
         isResult= soloSign.issueToken(PRIKEY1,tokenType,"1009","发行token",ADDRESS1);
         assertThat(isResult, containsString("200"));
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
         String response52 = soloSign.Balance( PRIKEY1, tokenType);
         assertEquals("200",JSONObject.fromObject(response52).getString("State"));
         assertEquals("0",JSONObject.fromObject(response52).getJSONObject("Data").getString("Total"));
@@ -166,7 +187,8 @@ public class SoloTest {
         //重新添加归集地址
         String response6=multiSign.collAddress(PRIKEY1,ADDRESS1);
         assertThat(response6, containsString("200"));
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
     }
 
     /**
@@ -181,7 +203,11 @@ public class SoloTest {
         log.info(ADDRESS3);
         List<Map> list=soloSign.constructToken(ADDRESS5,tokenType2,"200.555",listModel);
         String transferInfo= soloSign.Transfer(list,PRIKEY1, transferData);
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         assertThat(transferInfo, containsString("200"));
         log.info("查询帐号3跟帐号5余额，判断转账是否成功");
         String queryInfo = soloSign.Balance( PRIKEY3, tokenType);
@@ -194,26 +220,46 @@ public class SoloTest {
         List<Map> list1 = soloSign.constructToken(ADDRESS4,tokenType,"30");
         String recycleInfo = soloSign.Transfer(list1, PRIKEY3,"3向4转账token1");
         assertThat(recycleInfo, containsString("200"));
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         List<Map> list2 = soloSign.constructToken(ADDRESS4,tokenType2,"80");
         String recycleInfo1 = soloSign.Transfer(list2, PRIKEY5,"5向4转账token2");
         assertThat(recycleInfo1, containsString("200"));
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         List<Map> list3 = soloSign.constructToken(ADDRESS2,tokenType,"30");
         List<Map>list4= soloSign.constructToken(ADDRESS2,tokenType2,"70",list3);
         String recycleInfo2 = soloSign.Transfer(list4, PRIKEY4, "李四向小六转账30 TT001, 70 TT002");
         assertThat(recycleInfo2, containsString("200"));
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         List<Map> list5 = soloSign.constructToken(ADDRESS2,tokenType2,"20");
         String recycleInfo3 = soloSign.Transfer(list5, PRIKEY5, "王五向小六转账20 TT002");
         assertThat(recycleInfo3, containsString("200"));
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         List<Map> list6 = (soloSign.constructToken(ADDRESS4,tokenType2,"30"));
         List<Map> list7= soloSign.constructToken(ADDRESS4,tokenType2,"50",list6);
         String recycleInfo4 = soloSign.Transfer(list7, PRIKEY2, "小六向李四转账80");
         log.info(recycleInfo4);
         assertThat(recycleInfo4, containsString("200"));
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         String queryInfo3TK1 = soloSign.Balance(PRIKEY3, tokenType);
         assertThat(queryInfo3TK1, containsString("70.25"));
         String Info1 = multiSign.Recycle("", PRIKEY3, tokenType, "70.25");
@@ -257,8 +303,11 @@ public class SoloTest {
         log.info(ADDRESS3);
         List<Map> list=soloSign.constructToken(ADDRESS5,tokenType2,issueAmount2,listModel);
         String transferInfo= soloSign.Transfer(list,PRIKEY1, transferData);
-        Thread.sleep(SLEEPTIME);
         assertThat(transferInfo, containsString("200"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
 
         String amount1, amount2;
         if (UtilsClass.PRECISION == 10) {
@@ -282,7 +331,10 @@ public class SoloTest {
         String Info4 = multiSign.Recycle("", PRIKEY5, tokenType2, issueAmount2);
         assertThat(Info4, containsString("200"));
 
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         String queryInfo5 = multiSign.QueryZero(tokenType);
         assertEquals(amount1,JSONObject.fromObject(queryInfo5).getJSONObject("Data").getJSONObject("Detail").getString(tokenType));
         String queryInfo6 = multiSign.QueryZero(tokenType2);
@@ -306,7 +358,10 @@ public class SoloTest {
         log.info(minData);
 
         String minResp = soloSign.issueToken(PRIKEY1,minToken,minAmount,minData,ADDRESS1);
-        sleepAndSaveInfo(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
 
         log.info("查询归集地址中两种token余额");
         String response1 = soloSign.Balance( PRIKEY1, minToken);
@@ -327,8 +382,11 @@ public class SoloTest {
         log.info(ADDRESS3);
         List<Map> list=soloSign.constructToken(ADDRESS5,tokenType2,"0.8",listModel);
         String transferInfo= soloSign.Transfer(list,PRIKEY1, transferData);
-        Thread.sleep(SLEEPTIME);
         assertThat(transferInfo, containsString("200"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
 
         String amount1, amount2;
         if (UtilsClass.PRECISION == 10) {
@@ -352,7 +410,10 @@ public class SoloTest {
         String Info4 = multiSign.Recycle("", PRIKEY5, tokenType2, "0.5");
         assertThat(Info4, containsString("200"));
 
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         String queryInfo5 = multiSign.QueryZero(tokenType);
         assertEquals("0.002",JSONObject.fromObject(queryInfo5).getJSONObject("Data").getJSONObject("Detail").getString(tokenType));
         String queryInfo6 = multiSign.QueryZero(tokenType2);
@@ -372,7 +433,9 @@ public class SoloTest {
         //20190411增加锁定步骤后进行转账
         log.info("锁定待转账Token: "+tokenType);
         String resp=multiSign.freezeToken(PRIKEY1,tokenType);
-        Thread.sleep(SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
 
         String transferData = "归集地址向" + PUBKEY3 + "转账100.25个" + tokenType+",并向"+PUBKEY4+"转账";
         log.info(transferData);
@@ -380,8 +443,12 @@ public class SoloTest {
         log.info(ADDRESS3);
         List<Map> list1=soloSign.constructToken(ADDRESS5,tokenType2,"200.555",listModel1);
         String transferInfo= soloSign.Transfer(list1,PRIKEY1, transferData);
-        Thread.sleep(SLEEPTIME);
         assertThat(transferInfo, containsString("200"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         log.info("查询帐号3跟帐号5余额，判断转账是否成功");
         String queryInfo = soloSign.Balance( PRIKEY3, tokenType);
         String queryInfo2 = soloSign.Balance( PRIKEY5, tokenType2);
@@ -391,7 +458,10 @@ public class SoloTest {
 
         log.info("解除锁定待转账Token: "+tokenType);
         String resp1=multiSign.recoverFrozenToken(PRIKEY1,tokenType);
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
 
         transferData = "归集地址向" + PUBKEY3 + "转账100.25个" + tokenType+",并向"+PUBKEY4+"转账";
         log.info(transferData);
@@ -399,8 +469,12 @@ public class SoloTest {
         log.info(ADDRESS3);
         List<Map> list=soloSign.constructToken(ADDRESS5,tokenType2,"200.555",listModel);
         transferInfo= soloSign.Transfer(list,PRIKEY1, transferData);
-        Thread.sleep(SLEEPTIME);
         assertThat(transferInfo, containsString("200"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         log.info("查询帐号3跟帐号5余额，判断转账是否成功");
         queryInfo = soloSign.Balance( PRIKEY3, tokenType);
         queryInfo2 = soloSign.Balance( PRIKEY5, tokenType2);
@@ -422,23 +496,26 @@ public class SoloTest {
         List<Map> list=soloSign.constructToken(ADDRESS3,tokenType,"3000");
         List<Map> list1=soloSign.constructToken(ADDRESS3,tokenType2,"3000",list);
         String transferInfo= soloSign.Transfer(list1,PRIKEY1,transferData);
-        Thread.sleep(SLEEPTIME);
         assertThat(transferInfo, containsString("200"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         List<Map> list2 = soloSign.constructToken(ADDRESS4,tokenType,"4000");
         List<Map>list3= soloSign.constructToken(ADDRESS5,tokenType,"70",list2);
         String recycleInfo2 = soloSign.Transfer(list3, PRIKEY3, "李四向小六转账4000 TT001, 70 TT001");
         assertThat(recycleInfo2, containsString("insufficient balance"));
-        Thread.sleep(SLEEPTIME);
+
         List<Map> list4 = soloSign.constructToken(ADDRESS4,tokenType,"4000");
         List<Map>list5= soloSign.constructToken(ADDRESS5,tokenType2,"4001",list4);
         String recycleInfo3 = soloSign.Transfer(list5, PRIKEY3, "李四向小六转账4000 TT001, 4001 TT002");
         assertThat(recycleInfo3, containsString("insufficient balance"));
-        Thread.sleep(SLEEPTIME);
+
         List<Map> list6 = soloSign.constructToken(ADDRESS4,tokenType,"4000");
         List<Map>list7= soloSign.constructToken(ADDRESS5,tokenType2,"60",list6);
         String recycleInfo4 = soloSign.Transfer(list7, PRIKEY3, "李四向小六转账30 TT001, 60 TT002");
         assertThat(recycleInfo4, containsString("insufficient balance"));
-        Thread.sleep(SLEEPTIME);
 
         String Info = multiSign.Recycle("", PRIKEY3, tokenType, "3000");
         String Info3 = multiSign.Recycle("", PRIKEY3, tokenType2, "3000");
@@ -456,31 +533,44 @@ public class SoloTest {
         List<Map> list=soloSign.constructToken(ADDRESS3,tokenType,"3000");
         List<Map> list1=soloSign.constructToken(ADDRESS3,tokenType2,"3000",list);
         String transferInfo= soloSign.Transfer(list1,PRIKEY1, transferData);
-        Thread.sleep(SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("State"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         List<Map> list2 = soloSign.constructToken(ADDRESS4,tokenType,"200");
         List<Map>list3= soloSign.constructToken(MULITADD5,tokenType,"7000",list2);
         String recycleInfo2 = soloSign.Transfer(list3, PRIKEY3, "李四向小六转账4000 TT001, 70 TT001");
         assertThat(recycleInfo2, containsString("insufficient balance"));
-        Thread.sleep(SLEEPTIME);
+
+
         List<Map> list4 = soloSign.constructToken(ADDRESS4,tokenType,"4000");
         List<Map>list5= soloSign.constructToken(MULITADD5,tokenType2,"4001",list4);
         String recycleInfo3 = soloSign.Transfer(list5, PRIKEY3, "李四向小六转账4000 TT001, 4001 TT002");
         assertThat(recycleInfo3, containsString("insufficient balance"));
-        Thread.sleep(SLEEPTIME);
+
+
         List<Map> list6 = soloSign.constructToken(ADDRESS4,tokenType,"4000");
         List<Map>list7= soloSign.constructToken(MULITADD5,tokenType2,"400",list6);
         String recycleInfo4 = soloSign.Transfer(list7, PRIKEY3, "李四向小六转账4000 TT001, 4001 TT002");
         assertThat(recycleInfo3, containsString("insufficient balance"));
-        Thread.sleep(SLEEPTIME);
+
 
         //20190411增加锁定解锁操作步骤后进行回收
         log.info("锁定待回收Token: "+tokenType);
         String resp=multiSign.freezeToken(PRIKEY1,tokenType);
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         log.info("解除锁定待回收Token: "+tokenType);
         String resp1=multiSign.recoverFrozenToken(PRIKEY1,tokenType);
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
 
         log.info("开始回收....");
         String Info = multiSign.Recycle("", PRIKEY3, tokenType, "3000");
@@ -492,6 +582,10 @@ public class SoloTest {
         assertEquals("200",JSONObject.fromObject(Info1).getString("State"));
         assertEquals("200",JSONObject.fromObject(Info2).getString("State"));
         assertEquals("200",JSONObject.fromObject(Info3).getString("State"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
 
         log.info("开始查询余额....");
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
@@ -525,24 +619,36 @@ public class SoloTest {
         List<Map> list=soloSign.constructToken(ADDRESS3,tokenType,"3000");
         List<Map> list1=soloSign.constructToken(ADDRESS3,tokenType2,"3000",list);
         String transferInfo= soloSign.Transfer(list1,PRIKEY1,transferData);
-        Thread.sleep(SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("State"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
 
         List<Map> list2 = soloSign.constructToken(ADDRESS4,tokenType,"200");
         List<Map>list3= soloSign.constructToken(MULITADD5,tokenType,"70",list2);
         String recycleInfo2 = soloSign.Transfer(list3, PRIKEY3, "李四向小六转账4000 TT001, 70 TT001");
-        assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("State"));
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         List<Map> list4 = soloSign.constructToken(ADDRESS4,tokenType,"400");
         List<Map>list5= soloSign.constructToken(MULITADD5,tokenType2,"401",list4);
         String recycleInfo3 = soloSign.Transfer(list5, PRIKEY3, "李四向小六转账4000 TT001, 4001 TT002");
         assertEquals("200",JSONObject.fromObject(recycleInfo3).getString("State"));
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
 
         //20190411增加锁定操作步骤后进行回收
         log.info("锁定待回收Token: "+tokenType);
         String resp=multiSign.freezeToken(PRIKEY1,tokenType);
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
 
         log.info("开始回收....");
         String Info = multiSign.Recycle( PRIKEY3, tokenType, "2330");
@@ -562,7 +668,10 @@ public class SoloTest {
         assertEquals("200",JSONObject.fromObject(Info6).getString("State"));
 
 
-        Thread.sleep(SLEEPTIME*2);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         log.info("开始查询余额....");
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
@@ -600,13 +709,21 @@ public class SoloTest {
         List<Map> list=soloSign.constructToken(ADDRESS3,tokenType2,"3000");
         List<Map> list0=soloSign.constructToken(ADDRESS3,tokenType,"4000",list);
         String transferInfo= soloSign.Transfer(list0,PRIKEY1, transferData);
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         List<Map> list1= soloSign.constructToken(ADDRESS4,tokenType,"300");
         String transferInfo1= soloSign.Transfer(list1, PRIKEY3, "双花验证");
         List<Map> list2= soloSign.constructToken(ADDRESS4,tokenType,"301");
         String transferInfo2= soloSign.Transfer(list2, PRIKEY3, "双花验证");
         assertThat(transferInfo1, containsString("200"));
-        Thread.sleep(SLEEPTIME*2);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         String response=soloSign.Balance(PRIKEY4,tokenType);
         assertThat(response,anyOf(containsString("300"),containsString("301")));
         List<Map> list3= soloSign.constructToken(ADDRESS4,tokenType,"400");
@@ -614,7 +731,11 @@ public class SoloTest {
         String transferInfo3= soloSign.Transfer(list3, PRIKEY3, "双花验证");
         String transferInfo4= soloSign.Transfer(list4, PRIKEY3, "双花验证");
         assertThat(transferInfo3, containsString("200"));
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         String response1=soloSign.Balance(PRIKEY4,tokenType);
         String response2=soloSign.Balance(PRIKEY4,tokenType2);
         assertThat(response1,anyOf(containsString("700"),containsString("701")));
@@ -625,7 +746,11 @@ public class SoloTest {
         String transferInfo5= soloSign.Transfer(list5, PRIKEY3, "双花验证");
         String transferInfo6= soloSign.Transfer(list6, PRIKEY3, "双花验证");
         assertThat(transferInfo5, containsString("200"));
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+
         String response3=soloSign.Balance(PRIKEY4,tokenType);
         String response4=soloSign.Balance(PRIKEY4,tokenType2);
         assertThat(response3,anyOf(containsString("1020"),containsString("1021")));
