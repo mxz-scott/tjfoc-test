@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.BVT.P2_Middle;
+package com.tjfintech.common.functionTest.BVT.P1_High;
 
 import com.tjfintech.common.functionTest.BVT.P1_High.Run_Main_Mysql;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.AddPeerAndSyncData;

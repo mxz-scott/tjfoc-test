@@ -20,6 +20,7 @@ import org.junit.runners.Suite;
         TestMainSubChain_FRDG.class,
         TestMainSubChain_Perm.class,
         TestMainSubChain_UTXO.class,
+        TestMainSubChain_WVM.class,
 
 })
 

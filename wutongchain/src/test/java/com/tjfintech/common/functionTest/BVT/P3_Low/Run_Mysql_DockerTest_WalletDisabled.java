@@ -21,7 +21,7 @@ import org.junit.runners.Suite;
 
         DockerContractTest.class,
         DockerContractInvalidTest.class,
-        
+
         SetSubLedger.class,
         DockerContractTest.class,
         DockerContractInvalidTest.class,
