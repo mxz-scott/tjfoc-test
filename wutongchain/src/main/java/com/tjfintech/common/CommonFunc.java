@@ -1089,6 +1089,7 @@ public class CommonFunc {
     }
 
     public Boolean checkDataInMysqlDB(String sdkIP,String table,String key,String checkData)throws Exception{
+        assertEquals("检查数据不为空",false,checkData.isEmpty());
         MysqlOperation mysqlOperation = new MysqlOperation();
 
         String dbConfig = getSDKConfigValueByShell(utilsClass.getIPFromStr(sdkIP),"Wallet","DBPath");//token api db无交易hash存储表
