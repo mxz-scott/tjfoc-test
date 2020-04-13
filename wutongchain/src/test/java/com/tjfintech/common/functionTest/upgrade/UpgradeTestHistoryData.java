@@ -153,11 +153,12 @@ public class UpgradeTestHistoryData {
 
             txTypeSubType.put(txType + "_" + txSubType,"typecollection");//将所有类型和子类型全部保存到map中
             //仅取首个交易类型hash
-            if(storeHash.isEmpty() || priStoreHash.isEmpty() || contractHash.isEmpty()) {
+//            if(storeHash.isEmpty() || priStoreHash.isEmpty() || contractHash.isEmpty()) {
+            if(storeHash.isEmpty() || priStoreHash.isEmpty()) {
                 //分别获取指定交易类型的交易hash 作为特定交易查看接口参数
                 if (storeHash.isEmpty() && txType.equals("0") && txSubType.equals("0"))             storeHash = txList.get(k);
                 else if (priStoreHash.isEmpty() && txType.equals("0") && txSubType.equals("1"))     priStoreHash = txList.get(k);
-                else if (contractHash.isEmpty() && txType.equals("2") && txSubType.equals("30"))    contractHash = txList.get(k);
+//                else if (contractHash.isEmpty() && txType.equals("2") && txSubType.equals("30"))    contractHash = txList.get(k);
             }
             mapTXHashResp.put(txList.get(k),response);
         }
@@ -185,13 +186,15 @@ public class UpgradeTestHistoryData {
         mapTXHashResp.put("get zero account balance",multiSign.QueryZero(""));
         mapTXHashResp.put("get all utxo account balance info",commonFunc.getUTXOAccountBalance().toString());
 
-        //获取合约交易search/byprefix  search/bykey
-        String resp = store.GetTxDetail(contractHash);
-        log.info("contract hash:" + contractHash);
-        String msg =  JSONObject.fromObject(resp).getJSONObject("Data").getJSONObject("Contract").getString("Message");
-        String contractName = msg.substring(msg.indexOf('[') + 1,msg.lastIndexOf('_'));
-        mapTXHashResp.put("search/byprefix?prefix=Mobile&cn=" + contractName,contract.SearchByPrefix("Mobile",contractName));
-        mapTXHashResp.put("search/bykey?key=Mobile001&cn=" + contractName,contract.SearchByKey("Mobile001",contractName));
+
+        //20200313 移除docker合约测试
+//        //获取合约交易search/byprefix  search/bykey
+//        String resp = store.GetTxDetail(contractHash);
+//        log.info("contract hash:" + contractHash);
+//        String msg =  JSONObject.fromObject(resp).getJSONObject("Data").getJSONObject("Contract").getString("Message");
+//        String contractName = msg.substring(msg.indexOf('[') + 1,msg.lastIndexOf('_'));
+//        mapTXHashResp.put("search/byprefix?prefix=Mobile&cn=" + contractName,contract.SearchByPrefix("Mobile",contractName));
+//        mapTXHashResp.put("search/bykey?key=Mobile001&cn=" + contractName,contract.SearchByKey("Mobile001",contractName));
 
         return mapTXHashResp;
 
