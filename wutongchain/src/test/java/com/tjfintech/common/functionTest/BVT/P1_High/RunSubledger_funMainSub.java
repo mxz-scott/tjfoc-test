@@ -20,7 +20,7 @@ import org.junit.runners.Suite;
         TestMainSubChain_FRDG.class,
         TestMainSubChain_Perm.class,
         TestMainSubChain_UTXO.class,
-        TestMainSubChain_DockerContract.class
+
 })
 
 //Build Validation Test
