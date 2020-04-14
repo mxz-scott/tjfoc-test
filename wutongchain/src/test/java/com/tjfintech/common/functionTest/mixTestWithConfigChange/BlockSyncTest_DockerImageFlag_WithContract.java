@@ -5,6 +5,7 @@ import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
+import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
@@ -17,11 +18,6 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Before;
-
-import static com.tjfintech.common.CommonFunc.*;
-import static com.tjfintech.common.utils.FileOperation.getPeerBaseValueByShell;
-import static org.hamcrest.Matchers.containsString;
-
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -29,13 +25,14 @@ import org.junit.runners.MethodSorters;
 import java.util.ArrayList;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class BlockSyncTest {
+public class BlockSyncTest_DockerImageFlag_WithContract {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
     MultiSign multiSign =testBuilder.getMultiSign();
@@ -47,6 +44,7 @@ public class BlockSyncTest {
     TestTxType testTxType = new TestTxType();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
+    MgToolCmd mgToolCmd = new MgToolCmd();
 
     String wvmHash = "";
 
@@ -59,96 +57,6 @@ public class BlockSyncTest {
         testTxType.initSetting();
         log.info("*********************before config end*********************");
     }
-
-    @Test
-    public void TC992_SyncNoContractTxEnableCtFlag()throws Exception{
-        String syncPeer=PEER2IP;
-        //停止节点PEER2
-        Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
-        shellPeer.execute(killPeerCmd);
-
-        StoreUTXO();
-        MgToolStore();//使用管理工具短时间内发送多笔存证交易
-        WVMTx();
-        //停止其中一个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        utilsClass.setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
-
-        //等待同步时间
-        Thread.sleep(OnChainSleep*3);
-
-        //检查Peer2数据高度是否与其他节点一致
-        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-
-        MgToolStore();//使用管理工具短时间内发送多笔存证交易
-        //等待交易上链
-        Thread.sleep(OnChainSleep);
-        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-    }
-
-    @Test
-    public void TC969_SyncNoContractTxDisableCtFlag()throws Exception{
-        String syncPeer=PEER2IP;
-        commonFunc.setPeerContractEnabled(PEER1IP,"false");
-        commonFunc.setPeerContractEnabled(PEER2IP,"false");
-        commonFunc.setPeerContractEnabled(PEER4IP,"false");
-        utilsClass.setAndRestartPeerList();
-        //停止节点PEER2
-        Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
-        shellPeer.execute(killPeerCmd);
-
-        StoreUTXO();
-        MgToolStore();  //使用管理工具短时间内发送多笔存证交易
-        WVMTx();  //当前Contract下合约Enabled会影响wvm合约安装，按照开发解释是不应该有影响 20190815
-        //个节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        utilsClass.setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
-
-        //等待同步时间
-        Thread.sleep(OnChainSleep*3);
-
-        //检查Peer2数据高度是否与其他节点一致
-        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-
-        MgToolStore();//使用管理工具短时间内发送多笔存证交易
-        //等待交易上链
-        Thread.sleep(OnChainSleep);
-        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-    }
-
-    //test case 923
-    @Test
-    public void TC923_SyncNoContractTxCtFlagChange1()throws Exception{
-        String syncPeer=PEER2IP;
-        commonFunc.setPeerContractEnabled(PEER1IP,"false");
-        commonFunc.setPeerContractEnabled(PEER2IP,"false");
-        commonFunc.setPeerContractEnabled(PEER4IP,"false");
-        utilsClass.setAndRestartPeerList();
-        sleepAndSaveInfo(10000,"节点全部重启后，sdk能够成功连接上的时间较长");
-
-        StoreUTXO();
-        MgToolStore();//使用管理工具短时间内发送多笔存证交易
-        WVMTx();
-
-        //节点清除db数据，例如Peer2 --》10.1.3.246，重启节点 开始同步数据
-        utilsClass.setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,resetPeerBase);
-
-        //等待同步时间
-        Thread.sleep(OnChainSleep*3);
-
-        //检查Peer2数据高度是否与其他节点一致
-        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-
-        MgToolStore();//使用管理工具短时间内发送多笔存证交易
-        //等待交易上链
-        Thread.sleep(OnChainSleep);
-        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-    }
-
 
     @Test
     public void TC832_SyncWithContractTxEnableCtFlag()throws Exception{
@@ -165,7 +73,8 @@ public class BlockSyncTest {
         utilsClass.setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
-        Thread.sleep(OnChainSleep*5+ContractInstallSleep);
+        mgToolCmd.mgCheckHeightOrSleep(PEER1IP + ":" + PEER1RPCPort,
+                PEER2IP + ":" + PEER2RPCPort,80*1000);
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
@@ -173,7 +82,7 @@ public class BlockSyncTest {
 
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         //等待交易上链
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
         assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
     }
@@ -201,7 +110,8 @@ public class BlockSyncTest {
         utilsClass.setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
-        Thread.sleep(OnChainSleep*3+ContractInstallSleep);
+        mgToolCmd.mgCheckHeightOrSleep(PEER1IP + ":" + PEER1RPCPort,
+                PEER2IP + ":" + PEER2RPCPort,80*1000);
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
@@ -209,13 +119,11 @@ public class BlockSyncTest {
 
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         //等待交易上链
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
         assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
     }
 
-
-    //831
     @Test
     public void TC831_SyncWithContractTxDisableCtFlag()throws Exception{
         String syncPeer=PEER2IP;
@@ -233,7 +141,7 @@ public class BlockSyncTest {
         utilsClass.setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
-        Thread.sleep(OnChainSleep*3);
+        sleepAndSaveInfo(10*1000,"等待节点启动");
 
         //检查Peer2同步异常节点会停止
         ExeToolCmdAndChk(syncPeer,"./" + ToolTPName + " height -p "+ PEER2RPCPort,"rpc error");
@@ -243,7 +151,11 @@ public class BlockSyncTest {
         //等待交易上链
         //恢复PEER2配置 检查可以正常同步
         utilsClass.setAndRestartPeer(syncPeer,resetPeerBase);
-        Thread.sleep(OnChainSleep*5 +ContractInstallSleep);
+
+        //等待同步时间
+        mgToolCmd.mgCheckHeightOrSleep(PEER1IP + ":" + PEER1RPCPort,
+                PEER2IP + ":" + PEER2RPCPort,80*1000);
+
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
         assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
     }
@@ -257,9 +169,9 @@ public class BlockSyncTest {
         Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
         shellPeer.execute(killPeerCmd);
         shellPeer.execute("docker rm -f `docker ps -aq`");
-        Thread.sleep(1500);
+        sleepAndSaveInfo(1500);
         shellPeer.execute("docker rmi `docker images`");
-        Thread.sleep(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME);
 
         StoreUTXO();
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
@@ -268,8 +180,7 @@ public class BlockSyncTest {
         //无基础镜像时同步包含合约交易的区块交易
         utilsClass.setAndRestartPeer(syncPeer,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc,resetPeerBase);
         //同步失败节点异常 停止运行
-
-        sleepAndSaveInfo(40000,"tx sync block waiting......");
+        sleepAndSaveInfo(10*1000,"等待节点启动");
         //检查同步异常节点会停止
         ExeToolCmdAndChk(syncPeer,"./" + ToolTPName + " height -p "+ synvPeerPort,"rpc error");
 
@@ -280,7 +191,10 @@ public class BlockSyncTest {
         sleepAndSaveInfo(ContractInstallSleep,"docker images installation waiting......");
 
         //等待同步时间+合约安装
-        Thread.sleep(OnChainSleep*3 + ContractInstallSleep);
+        //等待同步时间
+        mgToolCmd.mgCheckHeightOrSleep(PEER1IP + ":" + PEER1RPCPort,
+                PEER2IP + ":" + PEER2RPCPort,80*1000);
+
         log.info("Check peer height after reloading base images");
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
         assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
@@ -288,77 +202,11 @@ public class BlockSyncTest {
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         //等待交易上链
         //同步成功后检查新交易后是否同步
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
         assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
     }
 
-    //@Test
-    public void test()throws Exception{
-
-        //停止节点PEER4,删除节点4上的基础镜像
-        String syncPeer=PEER1IP;
-        Shell shellPeer=new Shell(syncPeer,USERNAME,PASSWD);
-
-        for(int i = 0; i< 100 ;i++) {
-            log.info("execute time: " + i);
-            shellPeer.execute(killPeerCmd);
-            shellPeer.execute(clearPeerDB);
-            Thread.sleep(500);
-            shellPeer.execute(startPeerCmd);
-
-            Thread.sleep(SLEEPTIME);
-            //检查同步异常节点会停止
-            ExeToolCmdAndChk(syncPeer, "./" + ToolTPName + " height -p " + PEER1RPCPort, "BlockHeight");
-        }
-    }
-
-
-    @Test
-    public void TC983_OnePeerStoreUTXO()throws Exception{
-        WVMContractTest wvmContractTest = new WVMContractTest();
-        String respInstall = wvmContractTest.intallUpdateName("testWVM",PRIKEY1);
-        wvmHash = JSONObject.fromObject(respInstall).getJSONObject("Data").getString("Name");
-        String tempHash = JSONObject.fromObject(respInstall).getJSONObject("Data").getString("Figure");
-
-        commonFunc.sdkCheckTxOrSleep(tempHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        //SDK配置文件中仅配置PEER1节点
-
-
-        //停止节点PEER2 和PEER4
-        Shell shellPeer2=new Shell(PEER2IP,USERNAME,PASSWD);
-        shellPeer2.execute(killPeerCmd);
-
-        Shell shellPeer4=new Shell(PEER4IP,USERNAME,PASSWD);
-        shellPeer4.execute(killPeerCmd);
-
-
-        StoreUTXONoCheck();
-        MgToolStore();//使用管理工具短时间内发送多笔存证交易
-        WVMTxNoCheck(wvmHash);
-
-        //清空剩下两个节点db数据 并重启
-        utilsClass.setAndRestartPeer(PEER2IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
-        utilsClass.setAndRestartPeer(PEER4IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
-
-        //等待同步时间
-        Thread.sleep(OnChainSleep*5);
-
-        //检查Peer2数据高度是否与其他节点一致
-        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-
-        MgToolStore();//使用管理工具短时间内发送多笔存证交易
-        //等待交易上链
-        Thread.sleep(OnChainSleep);
-        assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-        assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
-
-        for(String hash : hashList){
-            assertEquals("200",JSONObject.fromObject(store.GetTxDetail(hash)).getString("State"));
-        }
-
-    }
 
     @Test
     public void TC982_OnePeerContract()throws Exception{
@@ -377,8 +225,8 @@ public class BlockSyncTest {
         utilsClass.setAndRestartPeer(PEER4IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
-        Thread.sleep(OnChainSleep*3+ContractInstallSleep);
-        Thread.sleep(15 * 1000);
+        mgToolCmd.mgCheckHeightOrSleep(PEER1IP + ":" + PEER1RPCPort,
+                PEER2IP + ":" + PEER2RPCPort,100*1000);
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
@@ -386,7 +234,7 @@ public class BlockSyncTest {
 
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         //等待交易上链
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
         assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
@@ -421,7 +269,8 @@ public class BlockSyncTest {
         utilsClass.setAndRestartPeer(PEER4IP,clearPeerDB,clearPeerWVMbin,clearPeerWVMsrc);
 
         //等待同步时间
-        Thread.sleep(OnChainSleep*5+ContractInstallSleep);
+        mgToolCmd.mgCheckHeightOrSleep(PEER1IP + ":" + PEER1RPCPort,
+                PEER2IP + ":" + PEER2RPCPort,100*1000);
 
         //检查Peer2数据高度是否与其他节点一致
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
@@ -429,7 +278,7 @@ public class BlockSyncTest {
 
         MgToolStore();//使用管理工具短时间内发送多笔存证交易
         //等待交易上链
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
         assertEquals(getPeerHeight(PEER1IP,PEER1RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
         assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
@@ -441,7 +290,7 @@ public class BlockSyncTest {
 
         public void StoreUTXO()throws Exception{
 
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
 
         String resp = store.GetHeight();
         //发送存证交易
@@ -450,19 +299,19 @@ public class BlockSyncTest {
         //构造错误交易
         BeforeCondition bf = new BeforeCondition();
         bf.collAddressTest();//添加归集地址和发行地址的注册
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
 
         assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS6), containsString("200"));
         assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS1), containsString("200"));
         assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS6), containsString("200"));
         assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS1), containsString("200"));
 
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
         String response2= multiSign.collAddress(PRIKEY1,ADDRESS6);
         String response3= multiSign.collAddress(PRIKEY1,ADDRESS1);
         String response4= multiSign.addissueaddress(PRIKEY1,ADDRESS6);
         String response5= multiSign.addissueaddress(PRIKEY1,ADDRESS1);
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
 
 
         String tokenTypeS = "MixSOLOTC-"+ UtilsClass.Random(6);
@@ -505,7 +354,7 @@ public class BlockSyncTest {
 
 
         //等待一个打包周期
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
 
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash1)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash2)).getString("State"));
@@ -519,7 +368,7 @@ public class BlockSyncTest {
 
     public void StoreUTXONoCheck()throws Exception{
 
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
 
         String resp = store.GetHeight();
         //发送存证交易
@@ -528,19 +377,19 @@ public class BlockSyncTest {
         //构造错误交易
         BeforeCondition bf = new BeforeCondition();
         bf.collAddressTest();//添加归集地址和发行地址的注册
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
 
         assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS6), containsString("200"));
         assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS1), containsString("200"));
         assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS6), containsString("200"));
         assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS1), containsString("200"));
 
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
         String response2= multiSign.collAddress(PRIKEY1,ADDRESS6);
         String response3= multiSign.collAddress(PRIKEY1,ADDRESS1);
         String response4= multiSign.addissueaddress(PRIKEY1,ADDRESS6);
         String response5= multiSign.addissueaddress(PRIKEY1,ADDRESS1);
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
 
 
         String tokenTypeS = "MixSOLOTC-"+ UtilsClass.Random(6);
@@ -647,28 +496,28 @@ public class BlockSyncTest {
         dockerFileName="simple.go";
         log.info("创建合约"+ct.name);
         String response7 = ct.installTest();
-        Thread.sleep(ContractInstallSleep);
+        sleepAndSaveInfo(ContractInstallSleep);
         String txHash7 = JSONObject.fromObject(response7).getJSONObject("Data").get("Figure").toString();
 
         //发送合约交易initMobile
         log.info("发送合约交易initMobile");
         String response81 = ct.initMobileTest();
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
         String txHash81 = JSONObject.fromObject(response81).getJSONObject("Data").get("Figure").toString();
         //发送合约交易querymobile
         log.info("发送合约交易querymobile");
         String response8 = ct.queryMobileTest("Mobile1");
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
         String txHash8 = JSONObject.fromObject(response8).getJSONObject("Data").get("Figure").toString();
 
         //销毁合约
         log.info("销毁合约"+ct.name);
         String response9 = ct.destroyTest();
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
         String txHash9 = JSONObject.fromObject(response9).getJSONObject("Data").get("Figure").toString();
 
         //等待一个打包周期
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
 
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash7)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash81)).getString("State"));
@@ -682,22 +531,22 @@ public class BlockSyncTest {
         log.info("创建合约"+ct.name);
         String response7 = ct.installTest();
         String txHash7 = JSONObject.fromObject(response7).getJSONObject("Data").get("Figure").toString();
-        Thread.sleep(ContractInstallSleep);
+        sleepAndSaveInfo(ContractInstallSleep);
         //发送合约交易initMobile
         log.info("发送合约交易initMobile");
         String response81 = ct.initMobileTest();
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
         String txHash81 = JSONObject.fromObject(response81).getJSONObject("Data").get("Figure").toString();
         //发送合约交易querymobile
         log.info("发送合约交易querymobile");
         String response8 = ct.queryMobileTest("Mobile1");
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
         String txHash8 = JSONObject.fromObject(response8).getJSONObject("Data").get("Figure").toString();
 
         //销毁合约
         log.info("销毁合约"+ct.name);
         String response9 = ct.destroyTest();
-        Thread.sleep(OnChainSleep);
+        sleepAndSaveInfo(OnChainSleep);
         String txHash9 = JSONObject.fromObject(response9).getJSONObject("Data").get("Figure").toString();
         hashList.add(txHash7);
         hashList.add(txHash81);

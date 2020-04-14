@@ -25,7 +25,7 @@ import org.junit.runners.Suite;
 })
 
 //Build Validation Test
-public class RunSubledger_funMainSub {
+public class Run_MainSub_Isolation {
     //执行这个类将执行suiteClass中的测试项
 
 }

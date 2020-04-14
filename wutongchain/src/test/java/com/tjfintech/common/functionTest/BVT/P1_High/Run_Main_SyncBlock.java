@@ -1,18 +1,11 @@
 package com.tjfintech.common.functionTest.BVT.P1_High;
 
 import com.tjfintech.common.BeforeCondition;
-import com.tjfintech.common.functionTest.Conditions.SetDatabaseMongo;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
 import com.tjfintech.common.functionTest.Conditions.SetMainLedger;
 import com.tjfintech.common.functionTest.PermissionTest.TestPermission;
-import com.tjfintech.common.functionTest.mixTestWithConfigChange.BlockSyncTest;
+import com.tjfintech.common.functionTest.mixTestWithConfigChange.BlockSyncTest_DockerImageFlag;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.MixTxTest;
-import com.tjfintech.common.functionTest.mixTestWithConfigChange.TestMgTool;
-import com.tjfintech.common.functionTest.store.LocalStoreTest;
-import com.tjfintech.common.functionTest.utxoMultiSign.LocalMultiSignInvalidTest;
-import com.tjfintech.common.functionTest.utxoMultiSign.LocalMultiSignTest;
-import com.tjfintech.common.functionTest.utxoSingleSign.LocalSingleSignInvalidTest;
-import com.tjfintech.common.functionTest.utxoSingleSign.LocalSingleSignTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -20,13 +13,7 @@ import org.junit.runners.Suite;
 @Slf4j
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        SetDatabaseMysql.class,
-        SetMainLedger.class,
-        BeforeCondition.class,
-
-        TestPermission.class,
-        MixTxTest.class,
-        BlockSyncTest.class,
+        BlockSyncTest_DockerImageFlag.class,
 })
 
 //Build Validation Test

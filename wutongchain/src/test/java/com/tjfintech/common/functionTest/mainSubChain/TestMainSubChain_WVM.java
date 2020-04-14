@@ -40,6 +40,7 @@ public class TestMainSubChain_WVM {
     public static void clearData() throws Exception{
         BeforeCondition beforeCondition = new BeforeCondition();
         //beforeCondition.clearDataSetPerm999();
+        beforeCondition.setPermission999();
         beforeCondition.updatePubPriKey();
         beforeCondition.collAddressTest();
         sleepAndSaveInfo(SLEEPTIME);
@@ -102,9 +103,6 @@ public class TestMainSubChain_WVM {
         sleepAndSaveInfo(SLEEPTIME/2);
         //查询余额query接口 交易不上链
         String response7 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountA);//获取转账后账户A账户余额
-        String txHash7 = JSONObject.fromObject(response7).getJSONObject("Data").getString("Figure");
-        assertEquals(Integer.toString(wvmContractTest.amountA-wvmContractTest.transfer),JSONObject.fromObject(response7).getJSONObject("Data").getString("Result"));
-
         String response8 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountB);//获取转账后账户B账户余额
         assertEquals(Integer.toString(wvmContractTest.amountB+wvmContractTest.transfer),JSONObject.fromObject(response8).getJSONObject("Data").getString("Result"));
 

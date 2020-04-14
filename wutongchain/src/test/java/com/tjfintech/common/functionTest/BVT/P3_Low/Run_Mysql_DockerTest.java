@@ -9,6 +9,7 @@ import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.functionTest.mainSubChain.TestMainSubChain_DockerContract;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
 import com.tjfintech.common.functionTest.mixTest.TestTxType_Docker;
+import com.tjfintech.common.functionTest.mixTestWithConfigChange.BlockSyncTest_DockerImageFlag_WithContract;
 import com.tjfintech.common.functionTest.store.PrivateStoreTest;
 import com.tjfintech.common.functionTest.store.StoreInvalidTest;
 import com.tjfintech.common.functionTest.store.StoreTest;
@@ -40,6 +41,7 @@ import org.junit.runners.Suite;
         DockerContractTest.class,
         DockerContractInvalidTest.class,
 
+        BlockSyncTest_DockerImageFlag_WithContract.class,
 })
 
 //Build Validation Test

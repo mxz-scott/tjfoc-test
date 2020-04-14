@@ -2055,7 +2055,8 @@ public class TokenInterfaceTest {
         //tokenType为已存在的64位 且comments为空
         destoryResp = tokenModule.tokenDestoryByTokenType(issueToken2,"");
         assertEquals("200",JSONObject.fromObject(destoryResp).getString("state"));
-
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //tokenType为65位
         destoryResp = tokenModule.tokenDestoryByTokenType(Random(65),"__");

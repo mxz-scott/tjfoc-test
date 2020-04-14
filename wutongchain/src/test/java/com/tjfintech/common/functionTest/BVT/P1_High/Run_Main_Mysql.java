@@ -10,6 +10,7 @@ import com.tjfintech.common.functionTest.contract.WVMContractInvalidTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
 import com.tjfintech.common.functionTest.mixTest.VerifyTests;
+import com.tjfintech.common.functionTest.mixTestWithConfigChange.AddPeerAndSyncData;
 import com.tjfintech.common.functionTest.store.PrivateStoreTest;
 import com.tjfintech.common.functionTest.store.StoreInvalidTest;
 import com.tjfintech.common.functionTest.store.StoreTest;
@@ -50,6 +51,8 @@ import org.junit.runners.Suite;
         TestTxType.class,
 
         VerifyTests.class,
+
+        AddPeerAndSyncData.class
 
 })
 
