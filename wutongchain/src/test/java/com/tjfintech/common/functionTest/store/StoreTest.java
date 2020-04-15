@@ -368,17 +368,17 @@ public class StoreTest {
                     anyOf(containsString("Duplicate transaction, hash: " + storeHash),
                             containsString("transactionFilter exist")));
             sleepAndSaveInfo(400, "waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
-            String response15 = store.CreateStore(Data);
-//        assertEquals(true,response15.contains("Duplicate transaction, hash: " + storeHash));
-            assertThat(response15,
-                    anyOf(containsString("Duplicate transaction, hash: " + storeHash),
-                            containsString("transactionFilter exist")));
-            sleepAndSaveInfo(400, "waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
-            String response16 = store.CreateStore(Data);
-//        assertEquals(true,response16.contains("Duplicate transaction, hash: " + storeHash));
-            assertThat(response16,
-                    anyOf(containsString("Duplicate transaction, hash: " + storeHash),
-                            containsString("transactionFilter exist")));
+//            String response15 = store.CreateStore(Data);
+////        assertEquals(true,response15.contains("Duplicate transaction, hash: " + storeHash));
+//            assertThat(response15,
+//                    anyOf(containsString("Duplicate transaction, hash: " + storeHash),
+//                            containsString("transactionFilter exist")));
+//            sleepAndSaveInfo(400, "waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
+//            String response16 = store.CreateStore(Data);
+////        assertEquals(true,response16.contains("Duplicate transaction, hash: " + storeHash));
+//            assertThat(response16,
+//                    anyOf(containsString("Duplicate transaction, hash: " + storeHash),
+//                            containsString("transactionFilter exist")));
             sleepAndSaveInfo(100, "waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
             String response17 = store.CreateStore(Data);
 //        assertEquals(true,response16.contains("Duplicate transaction, hash: " + storeHash));
@@ -387,7 +387,7 @@ public class StoreTest {
                             containsString("transactionFilter exist")));
 
         }
-        sleepAndSaveInfo(SLEEPTIME,"store on chain waiting"); //超过dup检测时间
+        sleepAndSaveInfo(3000,"store on chain waiting"); //超过dup检测时间
         String response2 = store.CreateStore(Data);
         assertEquals("200",JSONObject.fromObject(response2).getString("State"));
 

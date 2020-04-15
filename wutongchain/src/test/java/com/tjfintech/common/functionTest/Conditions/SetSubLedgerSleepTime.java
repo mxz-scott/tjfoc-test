@@ -9,7 +9,7 @@ public class SetSubLedgerSleepTime {
 
    @Test
     public void test(){
-        UtilsClass.SLEEPTIME = 10 * 1000;
+        UtilsClass.SLEEPTIME = 12 * 1000;
     }
 
 }
