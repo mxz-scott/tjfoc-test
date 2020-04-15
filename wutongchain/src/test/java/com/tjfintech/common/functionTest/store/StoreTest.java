@@ -390,7 +390,8 @@ public class StoreTest {
         sleepAndSaveInfo(3000,"store on chain waiting"); //超过dup检测时间
         String response2 = store.CreateStore(Data);
         assertEquals("200",JSONObject.fromObject(response2).getString("State"));
-
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("State"));
 
