@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.mainSubChain;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
@@ -15,6 +16,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import javax.smartcardio.CommandAPDU;
 import java.util.List;
 import java.util.Map;
 
@@ -35,11 +37,12 @@ public class TestMainSubChain_UTXO {
     UtilsClass utilsClass = new UtilsClass();
     MgToolCmd mgToolCmd = new MgToolCmd();
     BeforeCondition beforeCondition = new BeforeCondition();
+    CommonFunc commonFunc = new CommonFunc();
 
     @BeforeClass
     public static void clearData() throws Exception{
         BeforeCondition beforeCondition = new BeforeCondition();
-        beforeCondition.clearDataSetPerm999();
+//        beforeCondition.clearDataSetPerm999();
         beforeCondition.updatePubPriKey();
         beforeCondition.collAddressTest();
         sleepAndSaveInfo(SLEEPTIME);
@@ -51,14 +54,20 @@ public class TestMainSubChain_UTXO {
         String resp = mgToolCmd.getSubChain(PEER1IP, PEER1RPCPort, ""); //获取子链的信息
 
         if (!resp.contains("\"name\": \"" + subLedgerA + "\"")) {//如果子链中不包含subLedgerA就新建一条子链
-            mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerA, " -t sm3", " -w subA", " -c raft", ids);
-            Thread.sleep(SLEEPTIME * 2);
+            String respCreate = mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerA, " -t sm3", " -w subA", " -c raft", ids);
+
+            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(respCreate,utilsClass.mgGetTxHashType),
+                    utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
+
             assertEquals(mgToolCmd.getSubChain(PEER1IP, PEER1RPCPort, "").contains("\"name\": \"" + subLedgerA + "\""), true);
         }
 
         if (!resp.contains("\"name\": \"" + subLedgerB + "\"")) {//如果子链中不包含subLedgerB就新建一条子链
-            mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerB, " -t sm3", " -w subA", " -c raft", ids);
-            Thread.sleep(SLEEPTIME * 2);
+            String respCreate = mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerB, " -t sm3", " -w subA", " -c raft", ids);
+
+            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(respCreate,utilsClass.mgGetTxHashType),
+                    utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
+
             assertEquals(mgToolCmd.getSubChain(PEER1IP, PEER1RPCPort, "").contains("\"name\": \"" + subLedgerB + "\""), true);
         }
     }
@@ -74,7 +83,8 @@ public class TestMainSubChain_UTXO {
         subLedger = subLedgerA;
         log.info(subLedger);
         beforeCondition.collAddressTest();
-        sleepAndSaveInfo(SLEEPTIME,"添加归集地址和发行地址到子链");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
         token_issue();
 
         subLedger = "";
@@ -100,9 +110,56 @@ public class TestMainSubChain_UTXO {
         assertEquals("200", JSONObject.fromObject(queryInfo6).getString("State"));
         assertEquals("0", JSONObject.fromObject(queryInfo6).getJSONObject("Data").getString("Total"));
 
+        log.info("主链上发行与子链A相同tokentype");
+        String issueResp = multiSign.issueTokenCarryPri(IMPPUTIONADD,tokenType,"13",PRIKEY4,"主链上发行" + tokenType);
+        assertEquals("200", JSONObject.fromObject(issueResp).getString("State"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+        String queryInfoM5 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        assertEquals("200", JSONObject.fromObject(queryInfoM5).getString("State"));
+        assertEquals("13", JSONObject.fromObject(queryInfoM5).getJSONObject("Data").getString("Total"));
+
+        log.info("子链上冻结tokentype");
         subLedger = subLedgerA;
         Recovery_query_freeze();
 
+        log.info("主链上进行tokentype转账，测试子链冻结相同tokenType对主链无影响");
+        subLedger = "";
+        List<Map>list=utilsClass.constructToken(MULITADD4,tokenType,"5");
+        String transferInfo= multiSign.Transfer(PRIKEY4, "主链上转账", IMPPUTIONADD,list);//相同币种
+        assertEquals("200", JSONObject.fromObject(transferInfo).getString("State"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+        log.info("主链转账后查询余额");
+
+        String queryInfoM6 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        assertEquals("200", JSONObject.fromObject(queryInfoM6).getString("State"));
+        assertEquals("8", JSONObject.fromObject(queryInfoM6).getJSONObject("Data").getString("Total"));
+
+        String queryInfoM7 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
+        assertEquals("200", JSONObject.fromObject(queryInfoM7).getString("State"));
+        assertEquals("5", JSONObject.fromObject(queryInfoM7).getJSONObject("Data").getString("Total"));
+
+        log.info("查询主链地址账户余额");
+        String zero=  multiSign.QueryZero(tokenType);
+        String zero2= multiSign.QueryZero(tokenType2);
+        assertEquals("200",JSONObject.fromObject(zero).getString("State"));
+        assertEquals("0",JSONObject.fromObject(zero).getJSONObject("Data").getString("Total"));
+        assertEquals("200",JSONObject.fromObject(zero2).getString("State"));
+        assertEquals("0",JSONObject.fromObject(zero2).getJSONObject("Data").getString("Total"));
+
+        log.info("查询子链A上的零地址账户余额");
+        subLedger = subLedgerA;
+        String zeroA=  multiSign.QueryZero(tokenType);
+        String zeroA2= multiSign.QueryZero(tokenType2);
+        assertEquals("200",JSONObject.fromObject(zeroA).getString("State"));
+        assertEquals("1000",JSONObject.fromObject(zeroA).getJSONObject("Data").getJSONObject("Detail").getString(tokenType));
+        assertEquals("200",JSONObject.fromObject(zeroA2).getString("State"));
+        assertEquals("0",JSONObject.fromObject(zero2).getJSONObject("Data").getString("Total"));
     }
 
     /**
@@ -114,7 +171,8 @@ public class TestMainSubChain_UTXO {
         subLedger = "";
         log.info(subLedger);
         beforeCondition.collAddressTest();
-        sleepAndSaveInfo(SLEEPTIME,"添加归集地址和发行地址到子链");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         token_issue();
 
@@ -141,8 +199,62 @@ public class TestMainSubChain_UTXO {
         assertEquals("200", JSONObject.fromObject(queryInfo6).getString("State"));
         assertEquals("0", JSONObject.fromObject(queryInfo6).getJSONObject("Data").getString("Total"));
 
+
+        log.info("子链A上发行与主链相同tokentype");
+        subLedger = subLedgerA;
+        beforeCondition.collAddressTest();
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+        String issueResp = multiSign.issueTokenCarryPri(IMPPUTIONADD,tokenType,"13",PRIKEY4,"主链上发行" + tokenType);
+        assertEquals("200", JSONObject.fromObject(issueResp).getString("State"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+        String queryInfoM5 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        assertEquals("200", JSONObject.fromObject(queryInfoM5).getString("State"));
+        assertEquals("13", JSONObject.fromObject(queryInfoM5).getJSONObject("Data").getString("Total"));
+
         subLedger = "";
         Recovery_query_freeze();
+
+
+        log.info("子链A上进行tokentype转账，测试主链冻结相同tokenType对子链无影响");
+        subLedger = subLedgerA;
+        List<Map>list=utilsClass.constructToken(MULITADD4,tokenType,"5");
+        String transferInfo= multiSign.Transfer(PRIKEY4, "主链上转账", IMPPUTIONADD,list);//相同币种
+        assertEquals("200", JSONObject.fromObject(transferInfo).getString("State"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+        log.info("子链A转账后查询余额");
+
+        String queryInfoM6 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        assertEquals("200", JSONObject.fromObject(queryInfoM6).getString("State"));
+        assertEquals("8", JSONObject.fromObject(queryInfoM6).getJSONObject("Data").getString("Total"));
+
+        String queryInfoM7 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
+        assertEquals("200", JSONObject.fromObject(queryInfoM7).getString("State"));
+        assertEquals("5", JSONObject.fromObject(queryInfoM7).getJSONObject("Data").getString("Total"));
+
+        log.info("查询子链地址账户余额");
+        String zero=  multiSign.QueryZero(tokenType);
+        String zero2= multiSign.QueryZero(tokenType2);
+        assertEquals("200",JSONObject.fromObject(zero).getString("State"));
+        assertEquals("0",JSONObject.fromObject(zero).getJSONObject("Data").getString("Total"));
+        assertEquals("200",JSONObject.fromObject(zero2).getString("State"));
+        assertEquals("0",JSONObject.fromObject(zero2).getJSONObject("Data").getString("Total"));
+
+        log.info("查询主链上的零地址账户余额");
+        subLedger = "";
+        String zeroA=  multiSign.QueryZero(tokenType);
+        String zeroA2= multiSign.QueryZero(tokenType2);
+        assertEquals("200",JSONObject.fromObject(zeroA).getString("State"));
+        assertEquals("1000",JSONObject.fromObject(zeroA).getJSONObject("Data").getJSONObject("Detail").getString(tokenType));
+        assertEquals("200",JSONObject.fromObject(zeroA2).getString("State"));
+        assertEquals("0",JSONObject.fromObject(zero2).getJSONObject("Data").getString("Total"));
 
 
     }
@@ -200,7 +312,8 @@ public class TestMainSubChain_UTXO {
         //两次发行之间不可以有sleep时间
         tokenType = IssueToken(5, "1000");
         tokenType2 = IssueToken(6, "1000");
-        Thread.sleep(SLEEPTIME*2);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
 
         log.info("查询归集地址中两种token余额");
         String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
@@ -221,7 +334,9 @@ public class TestMainSubChain_UTXO {
         String recycleInfo2 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "10");
         assertEquals("200", JSONObject.fromObject(recycleInfo).getString("State"));
         assertEquals("200", JSONObject.fromObject(recycleInfo2).getString("State"));
-        Thread.sleep(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         log.info("查询回收后账户余额是否为0");
         String queryInfo3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
@@ -237,6 +352,9 @@ public class TestMainSubChain_UTXO {
         assertThat(freezeToken, containsString("200"));
         assertThat(freezeToken2, containsString("200"));
 
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
     }
 
     /**
@@ -251,8 +369,10 @@ public class TestMainSubChain_UTXO {
         List<Map> list = utilsClass.constructToken(MULITADD4, tokenType, "10");
         log.info(transferData);
         String transferInfo = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, list);
-        Thread.sleep(SLEEPTIME);
         assertThat(transferInfo, containsString("200"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         log.info("查询归集地址跟MULITADD4余额，判断转账是否成功");
         String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);

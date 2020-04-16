@@ -371,11 +371,12 @@ public class TokenSoloTest {
         assertEquals("200",JSONObject.fromObject(Info3).getString("state"));
         assertEquals("200",JSONObject.fromObject(Info31).getString("state"));
         assertEquals("200",JSONObject.fromObject(Info4).getString("state"));
-        assertEquals("200",JSONObject.fromObject(Info4).getString("state"));
 //        assertEquals("200",JSONObject.fromObject(Info5).getString("state"));
         assertEquals("200",JSONObject.fromObject(Info6).getString("state"));
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(Info2,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(Info6,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
 
@@ -765,9 +766,11 @@ public class TokenSoloTest {
 
 
 
-        log.info("开始查询余额....");commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+        log.info("开始查询余额....");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(Info2,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
-
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(Info4,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         String response1 = tokenModule.tokenGetBalance(tokenAccount3, "");
         String response2 = tokenModule.tokenGetBalance(tokenAccount4, "");
