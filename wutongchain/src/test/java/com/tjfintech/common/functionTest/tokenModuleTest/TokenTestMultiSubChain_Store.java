@@ -47,7 +47,9 @@ public class TokenTestMultiSubChain_Store {
         SDKADD = TOKENADD;
         BeforeCondition beforeCondition = new BeforeCondition();
         beforeCondition.setPermission999();
-        beforeCondition.createTokenAccount();
+        if(tokenAccount1.isEmpty()) {
+            beforeCondition.createTokenAccount();
+        }
     }
 
     @Before
@@ -60,7 +62,7 @@ public class TokenTestMultiSubChain_Store {
             respWithHash = mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01,
                     " -t sm3", " -w first", " -c raft", ids);
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(respWithHash,utilsClass.mgGetTxHashType),
-                    utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
+                    utilsClass.tokenApiGetTxDetailTType,SLEEPTIME*2);
 
             assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01+"\""), true);
         }
@@ -69,7 +71,7 @@ public class TokenTestMultiSubChain_Store {
             respWithHash = mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain02,
                     " -t sm3", " -w first", " -c raft", ids);
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(respWithHash,utilsClass.mgGetTxHashType),
-                    utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
+                    utilsClass.tokenApiGetTxDetailTType,SLEEPTIME*2);
             assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02+"\""), true);
         }
     }

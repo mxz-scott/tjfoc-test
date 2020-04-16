@@ -35,9 +35,6 @@ public class TokenTestMainSubChain_UTXO {
     private static String issueAmount1;
     private static String issueAmount2;
 
-    private static String actualAmount1;
-    private static String actualAmount2;
-
     Token tokenModule = testBuilder.getToken();
     CommonFunc commonFunc = new CommonFunc();
     UtilsClass utilsClass=new UtilsClass();
@@ -71,7 +68,7 @@ public class TokenTestMainSubChain_UTXO {
             respWithHash = mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01,
                     " -t sm3", " -w first", " -c raft", ids);
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(respWithHash,utilsClass.mgGetTxHashType),
-                    utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
+                    utilsClass.tokenApiGetTxDetailTType,SLEEPTIME*2);
 
             assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01+"\""), true);
         }
@@ -80,7 +77,7 @@ public class TokenTestMainSubChain_UTXO {
             respWithHash = mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain02,
                     " -t sm3", " -w first", " -c raft", ids);
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(respWithHash,utilsClass.mgGetTxHashType),
-                    utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
+                    utilsClass.tokenApiGetTxDetailTType,SLEEPTIME*2);
             assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02+"\""), true);
         }
     }
@@ -102,7 +99,7 @@ public class TokenTestMainSubChain_UTXO {
         log.info("子链1发行 tokentype");
         token_issue();
 
-        log.info("主链查询地址中两种token余额");
+        log.info("主链查询地址中两种token余额"+ tokenType + " " + tokenType2);
         subLedger = "";
         String response1 = tokenModule.tokenGetBalance(tokenMultiAddr1, "");
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));
@@ -152,6 +149,7 @@ public class TokenTestMainSubChain_UTXO {
 
         //子链2上发行相同tokentype2
         log.info("子链2发行与子链1相同的tokentype2");
+        subLedger = glbChain02;
         beforeCondition.tokenAddIssueCollAddr();
         log.info("子链添加发行及归集地址");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
@@ -209,7 +207,7 @@ public class TokenTestMainSubChain_UTXO {
         assertEquals("990",JSONObject.fromObject(response6).getJSONObject("data").getString(tokenType));
         assertEquals("990",JSONObject.fromObject(response6).getJSONObject("data").getString(tokenType2));
 
-        String response7 = tokenModule.tokenGetBalance(tokenMultiAddr1, "");
+        String response7 = tokenModule.tokenGetBalance(tokenMultiAddr2, "");
         assertEquals("200",JSONObject.fromObject(response7).getString("state"));
         assertEquals(false,response7.contains(tokenType));
         assertEquals(false,response7.contains(tokenType2));
@@ -300,6 +298,7 @@ public class TokenTestMainSubChain_UTXO {
 
         //子链2上发行相同tokentype2
         log.info("子链2发行与子链1相同的tokentype2");
+        subLedger = glbChain02;
         beforeCondition.tokenAddIssueCollAddr();
         log.info("子链2添加发行及归集地址");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
@@ -357,7 +356,7 @@ public class TokenTestMainSubChain_UTXO {
         assertEquals("990",JSONObject.fromObject(response6).getJSONObject("data").getString(tokenType));
         assertEquals("990",JSONObject.fromObject(response6).getJSONObject("data").getString(tokenType2));
 
-        String response7 = tokenModule.tokenGetBalance(tokenMultiAddr1, "");
+        String response7 = tokenModule.tokenGetBalance(tokenMultiAddr2, "");
         assertEquals("200",JSONObject.fromObject(response7).getString("state"));
         assertEquals(false,response7.contains(tokenType));
         assertEquals(false,response7.contains(tokenType2));
@@ -404,9 +403,9 @@ public class TokenTestMainSubChain_UTXO {
 
         String response1 = tokenModule.tokenGetBalance(tokenMultiAddr1, "");
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));
-        assertEquals(actualAmount1,JSONObject.fromObject(response1).getJSONObject("data").getString(tokenType));
+        assertEquals(issueAmount1,JSONObject.fromObject(response1).getJSONObject("data").getString(tokenType));
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));
-        assertEquals(actualAmount2,JSONObject.fromObject(response1).getJSONObject("data").getString(tokenType2));
+        assertEquals(issueAmount2,JSONObject.fromObject(response1).getJSONObject("data").getString(tokenType2));
 
     }
 
