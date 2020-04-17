@@ -7,6 +7,7 @@ import com.tjfintech.common.functionTest.Conditions.SetSubLedger;
 import com.tjfintech.common.functionTest.Conditions.SetSubLedgerSleepTime;
 import com.tjfintech.common.functionTest.contract.DockerContractInvalidTest;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
+import com.tjfintech.common.functionTest.contract.WVMContractInvalidTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
 import com.tjfintech.common.functionTest.mixTest.VerifyTests;
@@ -45,14 +46,12 @@ import org.junit.runners.Suite;
         SingleSignInvalidTest.class,
         SoloTestInvalid.class,
 
-        DockerContractTest.class,
-        DockerContractInvalidTest.class,
-
-        VerifyTests.class,
-
         WVMContractTest.class,
+        WVMContractInvalidTest.class,
 
         TestTxType.class,
+
+        VerifyTests.class,
 
 })
 

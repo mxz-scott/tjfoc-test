@@ -6,9 +6,11 @@ import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
 import com.tjfintech.common.functionTest.Conditions.SetMainLedger;
 import com.tjfintech.common.functionTest.contract.DockerContractInvalidTest;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
+import com.tjfintech.common.functionTest.contract.WVMContractInvalidTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
 import com.tjfintech.common.functionTest.mixTest.VerifyTests;
+import com.tjfintech.common.functionTest.mixTestWithConfigChange.AddPeerAndSyncData;
 import com.tjfintech.common.functionTest.store.PrivateStoreTest;
 import com.tjfintech.common.functionTest.store.StoreInvalidTest;
 import com.tjfintech.common.functionTest.store.StoreTest;
@@ -43,14 +45,14 @@ import org.junit.runners.Suite;
         SingleSignInvalidTest.class,
         SoloTestInvalid.class,
 
-        DockerContractTest.class,
-        DockerContractInvalidTest.class,
-
         WVMContractTest.class,
+        WVMContractInvalidTest.class,
 
         TestTxType.class,
 
         VerifyTests.class,
+
+        AddPeerAndSyncData.class
 
 })
 

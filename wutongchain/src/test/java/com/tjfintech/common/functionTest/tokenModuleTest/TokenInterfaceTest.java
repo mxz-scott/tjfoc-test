@@ -1697,15 +1697,6 @@ public class TokenInterfaceTest {
         assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
-
-
-        log.info("query from address balance ......");
-        queryBalance = tokenModule.tokenGetBalance(from,transferToken);
-        assertEquals("4890.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(transferToken));
-        log.info("query to address balance ......");
-        queryBalance = tokenModule.tokenGetBalance(to,transferToken);
-        assertEquals("110", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(transferToken));
-
     }
 
     @Test
@@ -1980,11 +1971,6 @@ public class TokenInterfaceTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
-
-        queryBalance = tokenModule.tokenGetBalance(collAddr, "");
-        assertEquals("4700.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
-        assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
-        tokenModule.tokenGetDestroyBalance();
     }
 
     @Test
@@ -2024,11 +2010,14 @@ public class TokenInterfaceTest {
         comments = "回收token";
         String destoryResp = "";
         destoryResp = tokenModule.tokenDestoryByList(collAddr,issueToken,"100",comments);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");
-        assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        assertEquals("4900.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
         tokenModule.tokenGetDestroyBalance();
+
 
         log.info("test tokentype parameter...............");
 
@@ -2040,7 +2029,7 @@ public class TokenInterfaceTest {
                 JSONObject.fromObject(destoryResp).getString("data"));
 
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");
-        assertEquals("5000.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        assertEquals("4900.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
 
 
@@ -2050,7 +2039,7 @@ public class TokenInterfaceTest {
         assertEquals("400",JSONObject.fromObject(destoryResp).getString("state"));
 
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");
-        assertEquals("5000.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        assertEquals("4900.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
 
         //tokenType的一部分
@@ -2059,14 +2048,15 @@ public class TokenInterfaceTest {
         assertEquals("400",JSONObject.fromObject(destoryResp).getString("state"));
 
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");
-        assertEquals("5000.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        assertEquals("4900.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
         assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
         tokenModule.tokenGetDestroyBalance();
 
-        //tokenType为已存在的64位
-        destoryResp = tokenModule.tokenDestoryByTokenType(issueToken2,"100");
+        //tokenType为已存在的64位 且comments为空
+        destoryResp = tokenModule.tokenDestoryByTokenType(issueToken2,"");
         assertEquals("200",JSONObject.fromObject(destoryResp).getString("state"));
-
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //tokenType为65位
         destoryResp = tokenModule.tokenDestoryByTokenType(Random(65),"__");
@@ -2086,7 +2076,7 @@ public class TokenInterfaceTest {
 
 
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");
-        assertEquals("5000.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        assertEquals("4900.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
 //        assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken2));
         tokenModule.tokenGetDestroyBalance();
 
@@ -2130,11 +2120,11 @@ public class TokenInterfaceTest {
         destoryResp = tokenModule.tokenDestoryByTokenType(issueToken,comments);
         assertEquals("200",JSONObject.fromObject(destoryResp).getString("state"));
 
-        //comments为空
+        //comments为空  tokentype为已回收过的类型
         comments = "";
         destoryResp = tokenModule.tokenDestoryByTokenType(issueToken2,comments);
-        assertEquals("200",JSONObject.fromObject(destoryResp).getString("state"));
-
+        assertEquals("400",JSONObject.fromObject(destoryResp).getString("state"));
+        assertEquals("invalid tokenType",JSONObject.fromObject(destoryResp).getString("data").trim());
     }
 
     @Test
