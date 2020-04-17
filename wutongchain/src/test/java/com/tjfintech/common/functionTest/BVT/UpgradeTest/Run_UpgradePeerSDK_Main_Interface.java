@@ -42,7 +42,6 @@ import org.junit.runners.Suite;
         StoreTest_UpgradeTestOnly.class,
         MultiTest.class,
         SoloTest.class,
-        DockerContractTest.class,
         WVMContractTest_UpgradeTestOnly.class,
 
         AddPeerAndSyncData.class,
@@ -62,7 +61,6 @@ import org.junit.runners.Suite;
         StoreTest_UpgradeTestOnly.class,
         MultiTest.class,
         SoloTest.class,
-        DockerContractTest.class,
         WVMContractTest_UpgradeTestOnly.class,
         AddPeerAndSyncData.class,
         TestMainSubChain_UpgradeTestOnly.class,
