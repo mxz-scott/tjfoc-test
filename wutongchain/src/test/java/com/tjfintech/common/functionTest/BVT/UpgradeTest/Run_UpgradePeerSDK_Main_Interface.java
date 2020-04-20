@@ -2,10 +2,7 @@ package com.tjfintech.common.functionTest.BVT.UpgradeTest;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.*;
-import com.tjfintech.common.functionTest.Conditions.Upgrade.SetContractSysUpgradeTrue;
-import com.tjfintech.common.functionTest.Conditions.Upgrade.SetPeerUpgradeTrue;
-import com.tjfintech.common.functionTest.Conditions.Upgrade.SetSDKUpgradeTrue;
-import com.tjfintech.common.functionTest.Conditions.Upgrade.SetTestVersionRelease;
+import com.tjfintech.common.functionTest.Conditions.Upgrade.*;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest_UpgradeTestOnly;
 import com.tjfintech.common.functionTest.mainSubChain.*;
@@ -53,6 +50,7 @@ import org.junit.runners.Suite;
         SetContractSysUpgradeTrue.class,
         SetPeerUpgradeTrue.class,
         SetSDKUpgradeTrue.class,
+        SetTokenApiUpgradeFalse.class,
 
 
         UpgradeTestHistoryData.class,
