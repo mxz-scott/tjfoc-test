@@ -72,7 +72,7 @@ public class TestMainSubChain_UpgradeTestOnly {
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains("\"state\": \"Normal\""), true);
+        assertEquals(resp.contains(ledgerStateFreeze), false);//子链可能默认不显示state
 
 
         sleepAndSaveInfo(SLEEPTIME/2);

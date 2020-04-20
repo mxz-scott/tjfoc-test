@@ -1037,6 +1037,29 @@ public class CommonFunc {
         return hashData + " " + ((new Date()).getTime() - nowTime);
     }
 
+    public void sdkCheckTxOrSleepNoDBQuery(String hashData, String type, long sleeptime)throws Exception{
+        Date dtTest = new Date();
+        long nowTime = dtTest.getTime();
+        log.info("开始时间 " + nowTime);
+
+        Boolean bOK = false;
+        String state ="";
+
+        //查询交易是否上链
+        while((new Date()).getTime() - nowTime < sleeptime && bOK == false){
+            //当前支持旧版本SDK gettxdetail接口 tokenapi gettxdetail接口
+            if(type.equals("0")) state = JSONObject.fromObject(store.GetTxDetail(hashData)).getString("State");
+            else if(type.equals("1")) state = JSONObject.fromObject(tokenModule.tokenGetTxDetail(hashData)).getString("state");
+            if(state.equals("200"))
+                bOK = true;
+            else
+                sleepAndSaveInfo(100,"等待再次检查交易是否上链时间");
+        }
+        long internal = (new Date()).getTime() - nowTime;
+        log.info("============================= 查询交易上链 " + bOK + " 等待时间 " +
+                hashData + " " + internal);
+    }
+
     /***
      * 次函数用于从交易返回结果response中获取sdk或者token api交易hash
      * 不适用管理工具hash获取
