@@ -10,6 +10,7 @@ import com.tjfintech.common.functionTest.contract.WVMContractInvalidTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
 import com.tjfintech.common.functionTest.store.PrivateStoreTest;
+import com.tjfintech.common.functionTest.store.PrivateStoreTestFastGet;
 import com.tjfintech.common.functionTest.store.StoreInvalidTest;
 import com.tjfintech.common.functionTest.store.StoreTest;
 import com.tjfintech.common.functionTest.utxoMultiSign.*;
@@ -31,6 +32,7 @@ import sun.reflect.generics.tree.Wildcard;
 
         StoreTest.class,
         PrivateStoreTest.class,
+        PrivateStoreTestFastGet.class,
         StoreInvalidTest.class,
 
         WVMContractTest.class,

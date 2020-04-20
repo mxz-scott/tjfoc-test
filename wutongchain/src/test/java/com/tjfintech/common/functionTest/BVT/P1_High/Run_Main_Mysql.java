@@ -11,10 +11,7 @@ import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
 import com.tjfintech.common.functionTest.mixTest.VerifyTests;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.AddPeerAndSyncData;
-import com.tjfintech.common.functionTest.store.PrivateStoreTest;
-import com.tjfintech.common.functionTest.store.StoreInvalidTest;
-import com.tjfintech.common.functionTest.store.StoreTest;
-import com.tjfintech.common.functionTest.store.StoreWalletRelatedTest;
+import com.tjfintech.common.functionTest.store.*;
 import com.tjfintech.common.functionTest.utxoMultiSign.*;
 import com.tjfintech.common.functionTest.utxoSingleSign.SingleSignInvalidTest;
 import com.tjfintech.common.functionTest.utxoSingleSign.SoloTest;
@@ -32,6 +29,7 @@ import org.junit.runners.Suite;
 
         StoreTest.class,
         PrivateStoreTest.class,
+        PrivateStoreTestFastGet.class,
         StoreInvalidTest.class,
         StoreWalletRelatedTest.class,
 

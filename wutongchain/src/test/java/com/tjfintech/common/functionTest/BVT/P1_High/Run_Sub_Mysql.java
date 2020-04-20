@@ -5,16 +5,11 @@ import com.tjfintech.common.functionTest.Conditions.SetCertSM2;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
 import com.tjfintech.common.functionTest.Conditions.SetSubLedger;
 import com.tjfintech.common.functionTest.Conditions.SetSubLedgerSleepTime;
-import com.tjfintech.common.functionTest.contract.DockerContractInvalidTest;
-import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractInvalidTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
 import com.tjfintech.common.functionTest.mixTest.VerifyTests;
-import com.tjfintech.common.functionTest.store.PrivateStoreTest;
-import com.tjfintech.common.functionTest.store.StoreInvalidTest;
-import com.tjfintech.common.functionTest.store.StoreTest;
-import com.tjfintech.common.functionTest.store.StoreWalletRelatedTest;
+import com.tjfintech.common.functionTest.store.*;
 import com.tjfintech.common.functionTest.utxoMultiSign.*;
 import com.tjfintech.common.functionTest.utxoSingleSign.SingleSignInvalidTest;
 import com.tjfintech.common.functionTest.utxoSingleSign.SoloTest;
@@ -33,6 +28,7 @@ import org.junit.runners.Suite;
 
         StoreTest.class,
         PrivateStoreTest.class,
+        PrivateStoreTestFastGet.class,
         StoreInvalidTest.class,
         StoreWalletRelatedTest.class,
 
