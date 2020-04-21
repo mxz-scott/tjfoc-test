@@ -1119,7 +1119,7 @@ public class CommonFunc {
 
         String database = getStrByReg(dbConfig,"\\/(.*?)\\?");
         String mysqlIP = utilsClass.getIPFromStr(dbConfig);
-        if(!subLedger.isEmpty()) table = table + "_sub_" +subLedger;
+        if(!subLedger.isEmpty()) table = table + "_sub_" +subLedger.toLowerCase();
         String temp = mysqlOperation.checkDataExist(mysqlIP,database,table,key,checkData);
         return temp.contains(checkData);
     }

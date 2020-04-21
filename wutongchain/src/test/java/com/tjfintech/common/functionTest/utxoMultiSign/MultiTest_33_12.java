@@ -1489,7 +1489,9 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(recycleInfo4).getString("State"));
         assertEquals("200",JSONObject.fromObject(recycleInfo5).getString("State"));
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recycleInfo2,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recycleInfo5,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
 
