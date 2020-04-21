@@ -55,7 +55,7 @@ public class TestMainSubChain_UpgradeTestOnly {
         //检查可以获取子链列表 存在其他子链
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
-        assertEquals(resp.contains(chainName), true);
+        assertEquals(resp.contains(chainName.toLowerCase()), true);
 
         //冻结子链
         res = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);

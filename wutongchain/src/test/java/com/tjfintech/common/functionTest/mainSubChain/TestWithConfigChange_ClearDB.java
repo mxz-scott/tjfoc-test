@@ -48,18 +48,18 @@ public class TestWithConfigChange_ClearDB {
         sleepAndSaveInfo(SLEEPTIME);
         MgToolCmd mgToolCmd = new MgToolCmd();
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
-        if(! resp.contains("\"name\": \""+glbChain01+"\"")) {
+        if(! resp.contains("\"name\": \""+glbChain01.toLowerCase()+"\"")) {
             mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01,
                     " -t sm3", " -w first", " -c raft", ids);
             sleepAndSaveInfo(SLEEPTIME*2);
-            assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01+"\""), true);
+            assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01.toLowerCase()+"\""), true);
         }
 
         if(! resp.contains("\"name\": \""+glbChain02+"\"")) {
             mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain02,
                     " -t sm3", " -w first", " -c raft", ids);
             sleepAndSaveInfo(SLEEPTIME*2);
-            assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02+"\""), true);
+            assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02.toLowerCase()+"\""), true);
         }
     }
 

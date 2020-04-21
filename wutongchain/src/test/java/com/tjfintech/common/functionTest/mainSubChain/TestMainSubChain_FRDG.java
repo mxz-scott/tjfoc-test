@@ -63,21 +63,21 @@ public class TestMainSubChain_FRDG {
     @Before
     public void beforeConfig() throws Exception {
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
-        if(! resp.contains("\"name\": \""+glbChain01+"\"")) {
+        if(! resp.contains("\"name\": \""+glbChain01.toLowerCase()+"\"")) {
             respWithHash = mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01, " -t sm3", " -w first", " -c raft", ids);
             hash = commonFunc.getTxHash(respWithHash,utilsClass.mgGetTxHashType);
             hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
 //            sleepAndSaveInfo(SLEEPTIME*2);
 
-            assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01+"\""), true);
+            assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01.toLowerCase()+"\""), true);
         }
 
-        if(! resp.contains("\"name\": \""+glbChain02+"\"")) {
+        if(! resp.contains("\"name\": \""+glbChain02.toLowerCase()+"\"")) {
             respWithHash = mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain02, " -t sm3", " -w first", " -c raft", ids);
             hash = commonFunc.getTxHash(respWithHash,utilsClass.mgGetTxHashType);
             hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
 //            sleepAndSaveInfo(SLEEPTIME*2);
-            assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02+"\""), true);
+            assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02.toLowerCase()+"\""), true);
         }
     }
 
@@ -99,7 +99,7 @@ public class TestMainSubChain_FRDG {
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), true);
-        assertEquals(resp.contains(glbChain01), true);
+        assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
         //冻结子链
         res = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
@@ -155,7 +155,7 @@ public class TestMainSubChain_FRDG {
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
 //        assertEquals(resp.contains(chainName), true);
-        assertEquals(resp.contains(glbChain01), true);
+        assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
 
         //解除子链
@@ -199,7 +199,7 @@ public class TestMainSubChain_FRDG {
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), true);
-        assertEquals(resp.contains(glbChain01), true);
+        assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
         //销毁子链
         res = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
@@ -258,7 +258,7 @@ public class TestMainSubChain_FRDG {
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), true);
-        assertEquals(resp.contains(glbChain01), true);
+        assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
         //冻结子链
         res = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
@@ -327,7 +327,7 @@ public class TestMainSubChain_FRDG {
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), true);
-        assertEquals(resp.contains(glbChain01), true);
+        assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
         //冻结子链
         res = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
@@ -388,7 +388,7 @@ public class TestMainSubChain_FRDG {
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), true);
-        assertEquals(resp.contains(glbChain01), true);
+        assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
         //第一次销毁一个已存在的活跃子链
         res = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
@@ -552,7 +552,7 @@ public class TestMainSubChain_FRDG {
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), false);
-        assertEquals(resp.contains(glbChain01), true);
+        assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(resp.contains("not exist"), true);
@@ -593,7 +593,7 @@ public class TestMainSubChain_FRDG {
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), true);
-        assertEquals(resp.contains(glbChain01), true);
+        assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
         res = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
         assertEquals(res.contains("send transaction success"), true);
@@ -763,7 +763,7 @@ public class TestMainSubChain_FRDG {
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), true);
-        assertEquals(resp.contains(glbChain01), true);
+        assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
         assertThat(response1, containsString(stateFreezed));
         storeTypeSupportCheck("freeze");
@@ -856,7 +856,7 @@ public class TestMainSubChain_FRDG {
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), true);
-        assertEquals(resp.contains(glbChain01), true);
+        assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
         String Data="1511 ledger2 tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
 
@@ -908,7 +908,7 @@ public class TestMainSubChain_FRDG {
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), false);
-        assertEquals(resp.contains(glbChain01), true);
+        assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
         String Data="1512 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
 
@@ -931,7 +931,7 @@ public class TestMainSubChain_FRDG {
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), false);
-        assertEquals(resp.contains(glbChain01), true);
+        assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
         String Data="1520 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
 
@@ -955,7 +955,7 @@ public class TestMainSubChain_FRDG {
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), false);
-        assertEquals(resp.contains(glbChain01), true);
+        assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
         String Data="1585 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
 

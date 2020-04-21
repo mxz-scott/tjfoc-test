@@ -38,7 +38,7 @@ public class TokenTxTypeTest_SDK {
     String subTypeStore="0";
     String subTypePriStore="1";
 
-    String versionStore="0";
+    String versionStore="1";//20200420 版本进版为1 for
     String versionSUTXO="0";
     String versionMUTXO="0";
 

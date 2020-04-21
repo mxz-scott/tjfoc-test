@@ -41,7 +41,7 @@ public class TokenTxTypeTest_Token {
     String subTypeStore="0";
     String subTypePriStore="1";
 
-    String versionStore="0";
+    String versionStore="1";//20200420 进版本为1
     String versionSUTXO="0";
     String versionMUTXO="0";
 

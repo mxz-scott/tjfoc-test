@@ -44,18 +44,18 @@ public class TestMainSubChain_Create_01 {
     @Before
     public void beforeConfig() throws Exception {
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
-        if(! resp.contains("\"name\": \""+glbChain01+"\"")) {
+        if(! resp.contains("\"name\": \""+glbChain01.toLowerCase()+"\"")) {
             mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01,
                     " -t sm3", " -w first", " -c raft", ids);
             sleepAndSaveInfo(SLEEPTIME*2);
-            assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01+"\""), true);
+            assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01.toLowerCase()+"\""), true);
         }
 
-        if(! resp.contains("\"name\": \""+glbChain02+"\"")) {
+        if(! resp.contains("\"name\": \""+glbChain02.toLowerCase()+"\"")) {
             mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain02,
                     " -t sm3", " -w first", " -c raft", ids);
             sleepAndSaveInfo(SLEEPTIME*2);
-            assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02+"\""), true);
+            assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02.toLowerCase()+"\""), true);
         }
     }
 
@@ -148,6 +148,7 @@ public class TestMainSubChain_Create_01 {
     }
 
    //此用例在执行后进检查可以使用 不检查是否成功创建
+    //移除支持 . 不再支持 . 20200420
    //20191106 规则测试有变更 首字母仅允许数字字母（大小写）
     @Test
     public void TC1472_CreateNameValid()throws Exception{
@@ -170,8 +171,8 @@ public class TestMainSubChain_Create_01 {
                 " -t sm3"," -w first word"," -c raft",ids);
         assertEquals(res2.contains("send transaction success"), true);
 
-        //创建子链，名称为"a_.Q123"
-        String chainName4 = "a_.Q123";
+        //创建子链，名称为"a_Q123"
+        String chainName4 = "a_Q123";
         String res3 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z " + chainName4,
                 " -t sm3"," -w first word"," -c raft",ids);
         assertEquals(res3.contains("send transaction success"), true);
@@ -182,23 +183,23 @@ public class TestMainSubChain_Create_01 {
         String res6 = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res6.contains("name"), true);
         assertEquals(res6.contains("\"name\": \""+chainName1+"\""), true);
-        assertEquals(res6.contains("\"name\": \""+chainName2+"\""), true);
-        assertEquals(res6.contains("\"name\": \""+chainName3+"\""), true);
-        assertEquals(res6.contains("\"name\": \""+chainName4+"\""), true);
+        assertEquals(res6.contains("\"name\": \""+chainName2.toLowerCase()+"\""), true);
+        assertEquals(res6.contains("\"name\": \""+chainName3.toLowerCase()+"\""), true);
+        assertEquals(res6.contains("\"name\": \""+chainName4.toLowerCase()+"\""), true);
     }
 
     @Test
     public void TC1471_CreateAndCheck()throws Exception{
         //获取单个子链信息
         String res1 = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+glbChain01);
-        assertEquals(res1.contains(glbChain01), true);
+        assertEquals(res1.contains(glbChain01.toLowerCase()), true);
         assertEquals(res1.contains(id1), true);
         assertEquals(res1.contains(id2), true);
         assertEquals(res1.contains(id3), true);
 
         //获取系统所有子链信息
         String res2 = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
-        assertEquals(res2.contains(glbChain01), true);
+        assertEquals(res2.contains(glbChain01.toLowerCase()), true);
         assertEquals(res2.contains(id1), true);
         assertEquals(res2.contains(id2), true);
         assertEquals(res2.contains(id3), true);
@@ -217,7 +218,7 @@ public class TestMainSubChain_Create_01 {
         //检查可以获取子链列表
         String res2 = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
-        assertEquals(res2.contains(chainName2), true);
+        assertEquals(res2.contains(chainName2.toLowerCase()), true);
 
         String Data="1621 ledger1 tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
 
@@ -236,7 +237,7 @@ public class TestMainSubChain_Create_01 {
         //检查可以获取子链列表
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
-        assertEquals(resp.contains(chainName2), true);
+        assertEquals(resp.contains(chainName2.toLowerCase()), true);
 
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
