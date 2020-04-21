@@ -363,4 +363,10 @@ public  class GoToken implements Token {
         log.info(result);
         return result;
     }
+
+    public String tokenGetApiHealth(){
+        String result = GetTest.doGet2(SDKADD + "/v1/apihealth" );
+        log.info(result);
+        return result;
+    }
 }

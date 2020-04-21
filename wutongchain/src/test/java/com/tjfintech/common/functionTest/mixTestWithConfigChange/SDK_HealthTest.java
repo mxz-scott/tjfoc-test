@@ -23,7 +23,7 @@ import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class SysTest {
+public class SDK_HealthTest {
 
     public   final static int   SLEEPTIME=10*1000;
     TestBuilder testBuilder= TestBuilder.getInstance();
@@ -70,7 +70,7 @@ public class SysTest {
     }
 
 
-    @Test
+//    @Test
     public void asetConfigMongoAndStop() throws Exception {
         bResult=false;
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
