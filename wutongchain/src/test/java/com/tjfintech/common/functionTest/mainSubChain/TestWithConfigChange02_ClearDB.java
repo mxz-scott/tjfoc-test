@@ -55,7 +55,7 @@ public class TestWithConfigChange02_ClearDB {
         mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01,
                 " -t sm3", " -w first", " -c raft", ids);
         sleepAndSaveInfo(SLEEPTIME*2);
-        assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01+"\""), true);
+        assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01.toLowerCase()+"\""), true);
 
         //动态删除节点B，因已有活跃子链使用 无法成功删除
         String checkStr = "failed:some ledger is using this peer";

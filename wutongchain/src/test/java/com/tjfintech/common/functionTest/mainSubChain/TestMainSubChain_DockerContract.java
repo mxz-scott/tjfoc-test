@@ -47,18 +47,18 @@ public class TestMainSubChain_DockerContract {
         MgToolCmd mgToolCmd = new MgToolCmd();
         String resp = mgToolCmd.getSubChain(PEER1IP, PEER1RPCPort, ""); //获取子链的信息
 
-        if (!resp.contains("\"name\": \"" + subLedgerA + "\"")) {//如果子链中不包含subLedgerA就新建一条子链
+        if (!resp.contains("\"name\": \"" + subLedgerA.toLowerCase() + "\"")) {//如果子链中不包含subLedgerA就新建一条子链
             mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerA, " -t sm3",
                     " -w subA", " -c raft", ids);
             Thread.sleep(SLEEPTIME * 2);
-            assertEquals(mgToolCmd.getSubChain(PEER1IP, PEER1RPCPort, "").contains("\"name\": \"" + subLedgerA + "\""), true);
+            assertEquals(mgToolCmd.getSubChain(PEER1IP, PEER1RPCPort, "").contains("\"name\": \"" + subLedgerA.toLowerCase() + "\""), true);
         }
 
-        if (!resp.contains("\"name\": \"" + subLedgerB + "\"")) {//如果子链中不包含subLedgerB就新建一条子链
+        if (!resp.contains("\"name\": \"" + subLedgerB.toLowerCase() + "\"")) {//如果子链中不包含subLedgerB就新建一条子链
             mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerB, " -t sm3",
                     " -w subA", " -c raft", ids);
             Thread.sleep(SLEEPTIME * 2);
-            assertEquals(mgToolCmd.getSubChain(PEER1IP, PEER1RPCPort, "").contains("\"name\": \"" + subLedgerB + "\""), true);
+            assertEquals(mgToolCmd.getSubChain(PEER1IP, PEER1RPCPort, "").contains("\"name\": \"" + subLedgerB.toLowerCase() + "\""), true);
         }
     }
 

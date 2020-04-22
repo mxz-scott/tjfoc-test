@@ -41,7 +41,8 @@ public class TokenTxTypeTest_Token {
     String subTypeStore="0";
     String subTypePriStore="1";
 
-    String versionStore="0";
+    String versionStore="1";//20200420 进版本为1
+    String versionAdmin="0";
     String versionSUTXO="0";
     String versionMUTXO="0";
 
@@ -361,32 +362,32 @@ public class TokenTxTypeTest_Token {
         //SDKADD = rSDKADD;//将地址设置为SDK地址
         //添加归集地址交易信息检查
         String txHash10 = JSONObject.fromObject(response10).getString("data");
-        JSONObject jsonObject2 = checkDataHeaderMsg(txHash10,versionStore,typeAdmin,subTypeAddColl);
+        JSONObject jsonObject2 = checkDataHeaderMsg(txHash10,versionAdmin,typeAdmin,subTypeAddColl);
         checkAdmin(jsonObject2,"CollAddress",tokenAccount1);
 
         //添加发行地址交易信息检查
         String txHash11 = JSONObject.fromObject(response11).getString("data");
-        JSONObject jsonObject3 = checkDataHeaderMsg(txHash11,versionStore,typeAdmin,subTypeAddIssue);
+        JSONObject jsonObject3 = checkDataHeaderMsg(txHash11,versionAdmin,typeAdmin,subTypeAddIssue);
         checkAdmin(jsonObject3,"IssueAddress",tokenAccount1);
 
         //检查删除归集地址交易信息
         String txHash12 = JSONObject.fromObject(response12).getString("data");
-        JSONObject jsonObject = checkDataHeaderMsg(txHash12,versionStore,typeAdmin,subTypeDelColl);
+        JSONObject jsonObject = checkDataHeaderMsg(txHash12,versionAdmin,typeAdmin,subTypeDelColl);
         checkAdmin(jsonObject,"CollAddress",tokenAccount1);
 
         //检查删除发行地址交易信息
         String txHash13 = JSONObject.fromObject(response13).getString("data");
-        JSONObject jsonObject1 = checkDataHeaderMsg(txHash13,versionStore,typeAdmin,subTypeDelIssue);
+        JSONObject jsonObject1 = checkDataHeaderMsg(txHash13,versionAdmin,typeAdmin,subTypeDelIssue);
         checkAdmin(jsonObject1,"IssueAddress",tokenAccount1);
 
         //冻结token交易信息检查
         String txHash31 = JSONObject.fromObject(response14).getString("data");
-        JSONObject jsonObject4 = checkDataHeaderMsg(txHash31,versionStore,typeAdmin,subTypeFreezeToken);
+        JSONObject jsonObject4 = checkDataHeaderMsg(txHash31,versionAdmin,typeAdmin,subTypeFreezeToken);
         assertEquals(issueToken,jsonObject4.getJSONObject("data").getJSONObject("Admin").getString("FreezeToken"));
 
         //解除冻结token
         String txHash41 = JSONObject.fromObject(response15).getString("data");
-        JSONObject jsonObject5 = checkDataHeaderMsg(txHash41,versionStore,typeAdmin,subTypeRecoverToken);
+        JSONObject jsonObject5 = checkDataHeaderMsg(txHash41,versionAdmin,typeAdmin,subTypeRecoverToken);
         assertEquals(issueToken,jsonObject5.getJSONObject("data").getJSONObject("Admin").getString("RecoverToken"));
 
     }

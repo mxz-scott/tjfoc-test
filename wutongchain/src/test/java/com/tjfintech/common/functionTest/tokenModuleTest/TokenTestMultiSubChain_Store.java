@@ -58,21 +58,21 @@ public class TokenTestMultiSubChain_Store {
         String respWithHash ="";
         mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,utilsClass.getSDKID(),"999");
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
-        if(! resp.contains("\"name\": \""+glbChain01+"\"")) {
+        if(! resp.contains("\"name\": \""+glbChain01.toLowerCase()+"\"")) {
             respWithHash = mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01,
                     " -t sm3", " -w first", " -c raft", ids);
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(respWithHash,utilsClass.mgGetTxHashType),
                     utilsClass.tokenApiGetTxDetailTType,SLEEPTIME*2);
 
-            assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01+"\""), true);
+            assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01.toLowerCase()+"\""), true);
         }
 
-        if(! resp.contains("\"name\": \""+glbChain02+"\"")) {
+        if(! resp.contains("\"name\": \""+glbChain02.toLowerCase()+"\"")) {
             respWithHash = mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain02,
                     " -t sm3", " -w first", " -c raft", ids);
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(respWithHash,utilsClass.mgGetTxHashType),
                     utilsClass.tokenApiGetTxDetailTType,SLEEPTIME*2);
-            assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02+"\""), true);
+            assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02.toLowerCase()+"\""), true);
         }
     }
 
