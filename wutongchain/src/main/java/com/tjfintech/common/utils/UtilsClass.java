@@ -59,7 +59,7 @@ public class UtilsClass {
 //    //zhouxianxian env use start -----------
 //    public static String SDKADD = "http://10.1.3.164:8080";
 //    public static String rSDKADD = "http://10.1.3.164:8080";
-//    public static String TOKENADD = "http://121.229.42.138:59090";
+//    public static String TOKENADD = "http://10.1.3.164:9090";
 //    //设置测试环境使用的节点端口及部署目录信息
 //    public static String PEER1IP = "10.1.3.162";
 //    public static String PEER2IP = "10.1.3.163";
@@ -83,7 +83,7 @@ public class UtilsClass {
 //    public static String SDKTPName = "wtsdk";
 //    public static String ToolTPName = "wttool";
 //    public static String TokenTPName = "wtfinservice";
-//    public static String tmuxSessionTokenApi = "tmux send -t token ";
+//    public static String tmuxSessionTokenApi = "tmux send -t api ";
 //    public static String tmuxSessionPeer = "tmux send -t peer ";
 //    public static String tmuxSessionSDK = "tmux send -t sdk ";
 //    public static String sReleaseLocalDir = "E:\\gopath\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.3\\";
