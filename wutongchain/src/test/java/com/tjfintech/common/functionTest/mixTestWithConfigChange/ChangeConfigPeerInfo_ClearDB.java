@@ -59,7 +59,7 @@ public class ChangeConfigPeerInfo_ClearDB {
         String opIP = PEER2IP;
         tcpPort = PEER2TCPPort;
         rpcPort = PEER2RPCPort;
-        String peerName = "peer246";
+        String peerName = "peer" + opIP.substring(opIP.lastIndexOf(".") + 1) ;
         int TpcPort2 = Integer.parseInt(tcpPort) + 1;
         int RpcPort2 = Integer.parseInt(rpcPort) + 1;
 

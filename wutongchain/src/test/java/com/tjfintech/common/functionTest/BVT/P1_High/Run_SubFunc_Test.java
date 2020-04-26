@@ -20,11 +20,10 @@ import org.junit.runners.Suite;
         TestMultiSubChain.class,
         TestMultiSubChain_02.class,
         TestDiffHashType.class,
-
 })
 
 //Build Validation Test
-public class Run_MainSub_Isolation_SDK {
+public class Run_SubFunc_Test {
     //执行这个类将执行suiteClass中的测试项
 
 }
