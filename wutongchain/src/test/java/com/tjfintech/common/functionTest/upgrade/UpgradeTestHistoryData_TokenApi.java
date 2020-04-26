@@ -60,6 +60,9 @@ public class UpgradeTestHistoryData_TokenApi {
         SetTestVersionLatest setTestVersionLatest = new SetTestVersionLatest();
         setTestVersionLatest.test();//更新版本为最新版本
 
+        //2.4.1版本升级到2.4.2版本需要等待一段时间 因数据库重新建表，没有和之前的表名一致
+        sleepAndSaveInfo(60*000);
+
         if (!subLedger.isEmpty()) sleepAndSaveInfo(SLEEPTIME,"Latest version start waiting...");
         Map<String,String> afterUpgrade = SaveResponseToHashMap(txHashList);
 
