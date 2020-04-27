@@ -10,9 +10,9 @@ public class SetTestEnv_Dirzllauto {
 
    @Test
     public void test(){
-      SDKADD = "http://10.1.3.160:7779";
-      rSDKADD = "http://10.1.3.160:7779";
-      TOKENADD = "http://10.1.3.160:9190";
+      SDKADD = "http://10.1.3.161:7779";
+      rSDKADD = "http://10.1.3.161:7779";
+      TOKENADD = "http://10.1.3.161:9190";
       //设置测试环境使用的节点端口及部署目录信息
       PEER1IP = "10.1.3.160";
       PEER2IP = "10.1.5.240";
