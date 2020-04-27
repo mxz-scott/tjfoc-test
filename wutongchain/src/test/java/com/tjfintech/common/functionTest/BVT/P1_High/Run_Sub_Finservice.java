@@ -12,6 +12,7 @@ import org.junit.runners.Suite;
         SetDatabaseMysql.class,
         SetTokenApiDatabaseMysql.class,
         SetSubLedger.class,
+        SetSubLedgerSleepTime.class,
         SetTokenApiPerm999.class,
         TokenInterfaceTest.class,
         TokenMultiTest.class,

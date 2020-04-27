@@ -27,6 +27,8 @@ public class SetTokenApiVerLatest {
        assertEquals(false, response.isEmpty());
        shellExeCmd(utilsClass.getIPFromStr(TOKENADD),"cd " + TokenApiPATH + ";find . -name \""+ TokenTPName + "*\" | xargs chmod +x");
 
+       verMap.put("token_"+ utilsClass.getIPFromStr(TOKENADD),shExeAndReturn(utilsClass.getIPFromStr(TOKENADD),getTokenApiVerByShell));//存储release sdk版本 以便后续检查
+
        shellExeCmd(utilsClass.getIPFromStr(TOKENADD),killTokenApiCmd, "rm -f " + TokenApiPATH + TokenTPName,
                "cp " + TokenApiPATH + replaceTP + " " + TokenApiPATH + TokenTPName);
        assertEquals(false,verMap.get("token_" + utilsClass.getIPFromStr(TOKENADD)).equals(shExeAndReturn(utilsClass.getIPFromStr(TOKENADD),getTokenApiVerByShell)));

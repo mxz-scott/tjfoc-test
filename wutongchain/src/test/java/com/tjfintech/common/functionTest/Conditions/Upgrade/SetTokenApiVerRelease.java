@@ -27,13 +27,8 @@ public class SetTokenApiVerRelease {
         assertEquals(false, response.isEmpty());
         shellExeCmd(utilsClass.getIPFromStr(TOKENADD),"cd " + TokenApiPATH + ";find . -name \""+ TokenTPName + "*\" | xargs chmod +x");
 
-        //SDK
         shellExeCmd(utilsClass.getIPFromStr(TOKENADD),killTokenApiCmd, "rm -f " + TokenApiPATH + TokenTPName,
                 "cp " + TokenApiPATH + replaceTP + " " + TokenApiPATH + TokenTPName);
-        //从2.1.190826.1版本升级时，需要注释掉下面这行。
-        verMap.put("token_"+ utilsClass.getIPFromStr(TOKENADD),shExeAndReturn(utilsClass.getIPFromStr(TOKENADD),getTokenApiVerByShell));//存储release sdk版本 以便后续检查
-
-        //SDK
         shellExeCmd(utilsClass.getIPFromStr(TOKENADD),startTokenApiCmd);
     }
 }
