@@ -17,9 +17,8 @@ import org.junit.runners.Suite;
         BeforeCondition.class,
         TestMainSubChain_Create_01.class,
         TestMainSubChain_Create_02.class,
-        TestMultiSubChain.class,
-        TestMultiSubChain_02.class,
-        TestDiffHashType.class,
+        TestMainSubChain_FRDG.class,
+
 })
 
 //Build Validation Test

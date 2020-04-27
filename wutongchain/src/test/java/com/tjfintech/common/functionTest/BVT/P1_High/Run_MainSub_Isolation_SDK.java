@@ -15,11 +15,9 @@ import org.junit.runners.Suite;
         SetMainLedger.class,
         SetSubLedgerSleepTime.class,
         BeforeCondition.class,
-        TestMainSubChain_Create_01.class,
-        TestMainSubChain_Create_02.class,
-        TestMultiSubChain.class,
-        TestMultiSubChain_02.class,
-        TestDiffHashType.class,
+        TestMainSubChain_UTXO.class,
+        TestMainSubChain_WVM.class,
+        TestMainSubChain_Perm.class,
 
 })
 
