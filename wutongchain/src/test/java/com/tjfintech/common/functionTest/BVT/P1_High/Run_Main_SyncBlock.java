@@ -13,6 +13,7 @@ import org.junit.runners.Suite;
 @Slf4j
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+        SetMainLedger.class,
         BlockSyncTest_DockerImageFlag.class,
 })
 
