@@ -46,10 +46,8 @@ import org.junit.runners.Suite;
         WVMContractTest.class,
         WVMContractInvalidTest.class,
 
-        TestTxType.class,
-
         VerifyTests.class,
-
+        TestTxType.class,
         AddPeerAndSyncData.class
 
 })

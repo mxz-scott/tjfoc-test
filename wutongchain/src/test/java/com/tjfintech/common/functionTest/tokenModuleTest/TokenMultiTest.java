@@ -387,7 +387,7 @@ public class TokenMultiTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
-
+        Thread.sleep(2000);
         log.info("查询归集地址中两种token余额");
         String response1 = tokenModule.tokenGetBalance(tokenMultiAddr1, tokenType);
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));
@@ -399,8 +399,8 @@ public class TokenMultiTest {
         String transferInfo= commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1,list2); //同时转账锁定和不锁定的两种token
         assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
         assertEquals(true,transferInfo.contains("toketype(" + tokenType + ") has been freezed!"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
-                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+//        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+//                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         log.info("查询余额判断转账是否成功");
         String queryInfo= tokenModule.tokenGetBalance(tokenMultiAddr2,"");
@@ -435,6 +435,7 @@ public class TokenMultiTest {
 
         log.info("解除锁定待转账Token: " + tokenType);
         String resp1 = tokenModule.tokenRecoverToken(tokenType);
+        assertEquals("200",JSONObject.fromObject(resp1).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
@@ -447,6 +448,7 @@ public class TokenMultiTest {
         List<Map>list5 = utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType2,"10",list4);//填写重复的转账内容
         List<Map>list6 = utilsClass.tokenConstructToken(tokenAccount1,tokenType2,"10",list5);
 
+        Thread.sleep(2000);
         //转出tokenType * 30 tokenType2 * 30
         transferInfo= commonFunc.tokenModule_TransferTokenList(tokenMultiAddr1,list6);//不同币种
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));

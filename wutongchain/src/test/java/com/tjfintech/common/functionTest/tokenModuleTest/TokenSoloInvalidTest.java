@@ -109,6 +109,7 @@ public class TokenSoloInvalidTest {
     @Test
     public void TC251_issueDoubleInvalid() throws Exception {
 
+        Thread.sleep(2000);
         String issueInfo2 = tokenModule.tokenIssue(tokenAccount1, tokenAccount3, tokenType, "1000","发行token1");
         String issueInfo3 = tokenModule.tokenIssue(tokenAccount1, tokenAccount2, tokenType, "1000","发行token");
         assertThat(issueInfo2,containsString("tokentype has been used :" + tokenType));
