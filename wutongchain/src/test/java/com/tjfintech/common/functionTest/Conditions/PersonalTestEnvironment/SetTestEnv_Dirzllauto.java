@@ -10,14 +10,14 @@ public class SetTestEnv_Dirzllauto {
 
    @Test
     public void test(){
-      SDKADD = "http://10.1.3.247:7779";
-      rSDKADD = "http://10.1.3.247:7779";
-      TOKENADD = "http://10.1.3.247:9190";
+      SDKADD = "http://10.1.3.160:7779";
+      rSDKADD = "http://10.1.3.160:7779";
+      TOKENADD = "http://10.1.3.160:9190";
       //设置测试环境使用的节点端口及部署目录信息
-      PEER1IP = "10.1.3.240";
-      PEER2IP = "10.1.3.246";
+      PEER1IP = "10.1.3.160";
+      PEER2IP = "10.1.5.240";
       PEER3IP = "10.1.5.168";
-      PEER4IP = "10.1.3.247";
+      PEER4IP = "10.1.3.161";
       PEER1RPCPort = "9800";
       PEER2RPCPort = "9800";
       PEER3RPCPort = "9800";
@@ -35,7 +35,7 @@ public class SetTestEnv_Dirzllauto {
       PeerTPName = "Autop";
       SDKTPName = "Autos";
       ToolTPName = "Autokit";
-      TokenTPName = "Autofin";
+      TokenTPName = "Autot";
       tmuxSessionTokenApi = "tmux send -t auto_t ";
       tmuxSessionPeer = "tmux send -t auto ";
       tmuxSessionSDK = "tmux send -t auto_s ";
