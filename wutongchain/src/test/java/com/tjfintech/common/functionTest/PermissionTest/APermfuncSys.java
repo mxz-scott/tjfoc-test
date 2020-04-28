@@ -32,7 +32,7 @@ public class APermfuncSys {
     String okMsg="success";
 
     String errCode="404";
-    String errMsg="does not found Permission";
+    String errMsg="does not found permission";
 
     public String retAllow(String checkStr)throws Exception{
         String allow="*";

@@ -9,6 +9,7 @@ import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -90,10 +91,12 @@ public class BeforeCondition {
         SDKADD = TOKENADD;
         createTokenAccount();
         tokenAddIssueCollAddr();
-
-        SDKADD = rSDKADD;
     }
 
+    @AfterClass
+    public static void setURLSDK(){
+        SDKADD = rSDKADD;
+    }
 
 
     /**
