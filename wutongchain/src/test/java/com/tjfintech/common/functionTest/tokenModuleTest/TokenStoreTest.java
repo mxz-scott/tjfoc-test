@@ -74,48 +74,21 @@ public class TokenStoreTest {
     public void createStoreDupDataString() throws Exception {
         SDKADD = TOKENADD;
         String Data = "test11234567";
+        long nowTime = (new Date()).getTime();
         String response= tokenModule.tokenCreateStore(Data);
         String storeHash = JSONObject.fromObject(response).getString("data");
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
-        String response12 = tokenModule.tokenCreateStore(Data);
-//        assertEquals(true,response12.contains("Duplicate transaction, hash: " + storeHash));
-        assertThat(response12,
-                anyOf(containsString("Duplicate transaction, hash: " + storeHash),
-                        containsString("transactionFilter exist")));
+        while((new Date()).getTime() - nowTime < 2000 ) {
+            String response12 = tokenModule.tokenCreateStore(Data);
+            assertThat(response12,
+                    anyOf(containsString("Duplicate transaction, hash: " + storeHash),
+                            containsString("transactionFilter exist")));
+            sleepAndSaveInfo(400, "waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
+        }
 
-        sleepAndSaveInfo(400,"waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
-        String response13 = tokenModule.tokenCreateStore(Data);
-//        assertEquals(true,response13.contains("Duplicate transaction, hash: " + storeHash));
-        assertThat(response13,
-                anyOf(containsString("Duplicate transaction, hash: " + storeHash),
-                        containsString("transactionFilter exist")));
-        sleepAndSaveInfo(400,"waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
-        String response14 = tokenModule.tokenCreateStore(Data);
-//        assertEquals(true,response14.contains("Duplicate transaction, hash: " + storeHash));
-        assertThat(response14,
-                anyOf(containsString("Duplicate transaction, hash: " + storeHash),
-                        containsString("transactionFilter exist")));
-        sleepAndSaveInfo(400,"waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
-        String response15 = tokenModule.tokenCreateStore(Data);
-//        assertEquals(true,response15.contains("Duplicate transaction, hash: " + storeHash));
-        assertThat(response15,
-                anyOf(containsString("Duplicate transaction, hash: " + storeHash),
-                        containsString("transactionFilter exist")));
-        sleepAndSaveInfo(400,"waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
-        String response16 = tokenModule.tokenCreateStore(Data);
-//        assertEquals(true,response16.contains("Duplicate transaction, hash: " + storeHash));
-        assertThat(response16,
-                anyOf(containsString("Duplicate transaction, hash: " + storeHash),
-                        containsString("transactionFilter exist")));
-        sleepAndSaveInfo(200,"waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
-        String response17 = tokenModule.tokenCreateStore(Data);
-//        assertEquals(true,response16.contains("Duplicate transaction, hash: " + storeHash));
-        assertThat(response17,
-                anyOf(containsString("Duplicate transaction, hash: " + storeHash),
-                        containsString("transactionFilter exist")));
 
-        sleepAndSaveInfo(3000); //等待Dup重复检查时间
+        sleepAndSaveInfo(1000); //等待Dup重复检查时间
 
         String response2 = tokenModule.tokenCreateStore(Data);
         assertEquals("200",JSONObject.fromObject(response2).getString("state"));

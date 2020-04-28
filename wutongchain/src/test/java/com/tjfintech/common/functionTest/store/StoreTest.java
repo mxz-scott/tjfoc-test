@@ -343,51 +343,28 @@ public class StoreTest {
     public void createStoreDupDataString() throws Exception {
         boolean bWalletEnabled = commonFunc.getSDKWalletEnabled();
         String Data = "test11234567";
+        long nowTime = (new Date()).getTime();
         String response= store.CreateStore(Data);
         String storeHash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         assertEquals("200",JSONObject.fromObject(response).getString("State"));
 
+        //立即发 不管钱包是否开启 连续发送应该都会报错
         String response12 = store.CreateStore(Data);
-//        assertEquals(true,response12.contains("Duplicate transaction body,tx hash: " + storeHash));
         assertThat(response12,
                 anyOf(containsString("Duplicate transaction body,tx hash: " + storeHash),
                         containsString("transactionFilter exist")));
+
         //钱包关闭时sdk配置重复检查时间间隔不生效
         if(bWalletEnabled) {
-            sleepAndSaveInfo(400, "waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
-
-            String response13 = store.CreateStore(Data);
-//        assertEquals(true,response13.contains("Duplicate transaction body,tx hash: " + storeHash));
-            assertThat(response13,
-                    anyOf(containsString("Duplicate transaction body,tx hash: " + storeHash),
-                            containsString("transactionFilter exist")));
-            sleepAndSaveInfo(400, "waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
-            String response14 = store.CreateStore(Data);
-//        assertEquals(true,response14.contains("Duplicate transaction body,tx hash: " + storeHash));
-            assertThat(response14,
-                    anyOf(containsString("Duplicate transaction body,tx hash: " + storeHash),
-                            containsString("transactionFilter exist")));
-            sleepAndSaveInfo(400, "waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
-//            String response15 = store.CreateStore(Data);
-////        assertEquals(true,response15.contains("Duplicate transaction body,tx hash: " + storeHash));
-//            assertThat(response15,
-//                    anyOf(containsString("Duplicate transaction body,tx hash: " + storeHash),
-//                            containsString("transactionFilter exist")));
-//            sleepAndSaveInfo(400, "waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
-//            String response16 = store.CreateStore(Data);
-////        assertEquals(true,response16.contains("Duplicate transaction body,tx hash: " + storeHash));
-//            assertThat(response16,
-//                    anyOf(containsString("Duplicate transaction body,tx hash: " + storeHash),
-//                            containsString("transactionFilter exist")));
-            sleepAndSaveInfo(100, "waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
-            String response17 = store.CreateStore(Data);
-//        assertEquals(true,response16.contains("Duplicate transaction body,tx hash: " + storeHash));
-            assertThat(response17,
-                    anyOf(containsString("Duplicate transaction body,tx hash: " + storeHash),
-                            containsString("transactionFilter exist")));
-
+            while((new Date()).getTime() - nowTime < 2000 ) {
+                String response13 = store.CreateStore(Data);
+                assertThat(response13,
+                        anyOf(containsString("Duplicate transaction body,tx hash: " + storeHash),
+                                containsString("transactionFilter exist")));
+                sleepAndSaveInfo(400, "waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
+            }
         }
-        sleepAndSaveInfo(3000,"store on chain waiting"); //超过dup检测时间
+        sleepAndSaveInfo(1500,"store on chain waiting"); //超过dup检测时间
         String response2 = store.CreateStore(Data);
         assertEquals("200",JSONObject.fromObject(response2).getString("State"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),

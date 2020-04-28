@@ -70,11 +70,30 @@ public class BeforeCondition {
      * 赋予权限和读取公私钥对。
      *
      */
-    @Test
+    //@Test
     public  void givePermission() throws Exception{
         setPermission999();
         updatePubPriKey();//从文件中根据配置certPath读取指定类型的公私钥对
      }
+
+    /**
+     * 赋予权限和读取公私钥对。
+     *
+     */
+    @Test
+    public  void SetPermAndInit() throws Exception{
+        setPermission999();
+        SDKADD = rSDKADD;
+        updatePubPriKey();//从文件中根据配置certPath读取指定类型的公私钥对
+        collAddressTest();//添加归集地址发行地址
+
+        SDKADD = TOKENADD;
+        createTokenAccount();
+        tokenAddIssueCollAddr();
+
+        SDKADD = rSDKADD;
+    }
+
 
 
     /**
@@ -120,7 +139,7 @@ public class BeforeCondition {
     }
 
     /**
-     * 添加发行地址和归集地址
+     * token api添加发行地址和归集地址
      *
      */
     public  void tokenAddIssueCollAddr() throws Exception{

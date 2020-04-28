@@ -4,6 +4,7 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetCertSM2;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
 import com.tjfintech.common.functionTest.Conditions.SetMainLedger;
+import com.tjfintech.common.functionTest.PermissionTest.PeerStartNoPermTest;
 import com.tjfintech.common.functionTest.contract.DockerContractInvalidTest;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractInvalidTest;
@@ -25,6 +26,7 @@ import org.junit.runners.Suite;
         SetDatabaseMysql.class,
         SetCertSM2.class,
         SetMainLedger.class,
+        PeerStartNoPermTest.class,
         BeforeCondition.class,
 
         StoreTest.class,
