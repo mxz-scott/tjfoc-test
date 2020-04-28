@@ -26,6 +26,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         SetDatabaseMysql.class,
         SetTokenApiDatabaseMysql.class,
+        SetAccountEmpty.class,
         SetMainLedger.class,
         SetURLToSDKAddr.class,
         SetTokenApiPerm999.class,
