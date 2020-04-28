@@ -1,10 +1,7 @@
 package com.tjfintech.common.functionTest.BVT.P1_High;
 
 import com.tjfintech.common.BeforeCondition;
-import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
-import com.tjfintech.common.functionTest.Conditions.SetMainLedger;
-import com.tjfintech.common.functionTest.Conditions.SetSubLedgerSleepTime;
-import com.tjfintech.common.functionTest.Conditions.SetTokenApiDatabaseMysql;
+import com.tjfintech.common.functionTest.Conditions.*;
 import com.tjfintech.common.functionTest.mainSubChain.*;
 import com.tjfintech.common.functionTest.tokenModuleTest.TokenTestMainSubChain_UTXO;
 import com.tjfintech.common.functionTest.tokenModuleTest.TokenTestMultiSubChain_Store;
@@ -20,7 +17,7 @@ import org.junit.runners.Suite;
         SetSubLedgerSleepTime.class,
         BeforeCondition.class,
         TokenTestMainSubChain_UTXO.class,
-        TokenTestMultiSubChain_Store.class,
+        TokenTestMultiSubChain_Store.class, SetURLToSDKAddr.class,
 
 })
 

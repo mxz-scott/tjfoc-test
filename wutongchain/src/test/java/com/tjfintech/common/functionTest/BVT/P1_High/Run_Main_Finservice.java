@@ -27,6 +27,7 @@ import org.junit.runners.Suite;
         SetDatabaseMysql.class,
         SetTokenApiDatabaseMysql.class,
         SetMainLedger.class,
+        SetURLToSDKAddr.class,
         SetTokenApiPerm999.class,
         SDKToTokenMultiTest.class,
         TokenAccurateTest.class,

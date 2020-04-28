@@ -4,6 +4,7 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
 import com.tjfintech.common.functionTest.Conditions.SetMainLedger;
 import com.tjfintech.common.functionTest.Conditions.SetSubLedgerSleepTime;
+import com.tjfintech.common.functionTest.Conditions.SetURLToSDKAddr;
 import com.tjfintech.common.functionTest.mainSubChain.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -18,6 +19,7 @@ import org.junit.runners.Suite;
         TestMainSubChain_UTXO.class,
         TestMainSubChain_WVM.class,
         TestMainSubChain_Perm.class,
+        SetURLToSDKAddr.class,
 
 })
 

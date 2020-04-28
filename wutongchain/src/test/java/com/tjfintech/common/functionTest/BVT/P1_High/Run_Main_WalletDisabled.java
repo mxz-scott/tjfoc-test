@@ -1,10 +1,7 @@
 package com.tjfintech.common.functionTest.BVT.P1_High;
 
 import com.tjfintech.common.BeforeCondition;
-import com.tjfintech.common.functionTest.Conditions.SetCertSM2;
-import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
-import com.tjfintech.common.functionTest.Conditions.SetMainLedger;
-import com.tjfintech.common.functionTest.Conditions.SetSDKWalletDisabled;
+import com.tjfintech.common.functionTest.Conditions.*;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractInvalidTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
@@ -26,6 +23,7 @@ import sun.reflect.generics.tree.Wildcard;
 @Suite.SuiteClasses({
         SetCertSM2.class,
         SetMainLedger.class,
+        SetURLToSDKAddr.class,
         BeforeCondition.class,
 
         SetSDKWalletDisabled.class,
