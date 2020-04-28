@@ -29,29 +29,29 @@ import org.junit.runners.Suite;
         PeerStartNoPermTest.class,
         BeforeCondition.class,
 
-//        SetURLToSDKAddr.class,
-//        StoreTest.class,
-//        PrivateStoreTest.class,
-//        PrivateStoreTestFastGet.class,
-//        StoreInvalidTest.class,
-//        StoreWalletRelatedTest.class,
-//
-//        MultiTest.class,
-//        MultiTest_33_12.class,
-//        MultiSignDetailTest.class,
-//        MultiSignInvalidTest.class,
-//        MultiTestInvalid.class,
-//
-//        SoloTest.class,
-//        SingleSignInvalidTest.class,
-//        SoloTestInvalid.class,
-//
-//        WVMContractTest.class,
-//        WVMContractInvalidTest.class,
-//
-//        VerifyTests.class,
-//        TestTxType.class,
-//        AddPeerAndSyncData.class
+        SetURLToSDKAddr.class,
+        StoreTest.class,
+        PrivateStoreTest.class,
+        PrivateStoreTestFastGet.class,
+        StoreInvalidTest.class,
+        StoreWalletRelatedTest.class,
+
+        MultiTest.class,
+        MultiTest_33_12.class,
+        MultiSignDetailTest.class,
+        MultiSignInvalidTest.class,
+        MultiTestInvalid.class,
+
+        SoloTest.class,
+        SingleSignInvalidTest.class,
+        SoloTestInvalid.class,
+
+        WVMContractTest.class,
+        WVMContractInvalidTest.class,
+
+        VerifyTests.class,
+        TestTxType.class,
+        AddPeerAndSyncData.class
 
 })
 
