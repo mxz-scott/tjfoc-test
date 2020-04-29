@@ -16,6 +16,7 @@ public class APermfuncSysSetMg {
 
     String okMsg="send transaction success";
     String errMsg="does not found permission";
+    String errMsg2="no permissions";
     String category="wvm";
 
     public static String subLedgerName = "";
@@ -26,7 +27,7 @@ public class APermfuncSysSetMg {
         if(checkStr.toLowerCase().contains(okMsg)) {
             allow = "1";
         }
-        else if(checkStr.toLowerCase().contains(errMsg))
+        else if(checkStr.toLowerCase().contains(errMsg) || checkStr.toLowerCase().contains(errMsg2))
         {
             allow="0";
         }

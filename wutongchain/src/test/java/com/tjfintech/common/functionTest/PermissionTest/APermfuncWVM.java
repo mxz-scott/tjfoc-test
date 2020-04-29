@@ -27,16 +27,22 @@ public class APermfuncWVM {
     String okMsg="success";
 
     String errCode="404";
+    String errCode2="500";
     String errMsg="does not found Permission";
+    String errMsg2="no permissions";
     String category="wvm";
 
 
     public String retAllow(String checkStr)throws Exception{
         String allow="*";
+        boolean bNoPerm = false;
+        if((checkStr.contains(errCode)&&checkStr.contains(errMsg)) || (checkStr.contains(errCode2)&&checkStr.contains(errMsg2))){
+            bNoPerm = true;
+        }
         if(checkStr.contains(okCode)) {
             allow = "1";
         }
-        else if(checkStr.contains(errCode)&&checkStr.contains(errMsg))
+        else if(bNoPerm)
         {
             allow="0";
         }

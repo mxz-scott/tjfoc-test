@@ -32,18 +32,23 @@ public class APermfuncSys {
     String okMsg="success";
 
     String errCode="404";
-    String errMsg="does not found permission";
+    String errCode2="500";
+    String errMsg="does not found Permission";
+    String errMsg2="no permissions";
 
     public String retAllow(String checkStr)throws Exception{
         String allow="*";
-        if(JSONObject.fromObject(checkStr).getString("State").equals(okCode)) {
+        boolean bNoPerm = false;
+        if((checkStr.contains(errCode)&&checkStr.contains(errMsg)) || (checkStr.contains(errCode2)&&checkStr.contains(errMsg2))){
+            bNoPerm = true;
+        }
+        if(checkStr.contains(okCode)) {
             allow = "1";
         }
-        else if(checkStr.contains(errCode)&&checkStr.contains(errMsg))
+        else if(bNoPerm)
         {
             allow="0";
         }
-        log.info(allow);
         return allow;
     }
 

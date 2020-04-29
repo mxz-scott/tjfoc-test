@@ -50,11 +50,13 @@ public class VerifyTests {
 
                 int txTimestamp = Integer.parseInt(txts);
                 int diff = blkTimeStamp - txTimestamp;
-
-                if (diff > 20) {
+                int checkInterval = 20;
+                //时间戳3.0版本修改为ms级别
+                if (txts.length() ==13)  checkInterval = checkInterval*1000;
+                if (diff > checkInterval) {
                     count1++;
                     log.error("Block time and tx time in big difference, please check!");
-                    log.info("Block height: " + i + "，时间差：" + Integer.toString(diff));
+                    log.info("Block height: " + i + "，时间差：" + diff);
                     log.info("区块时间：" + timestamp +  "，交易时间：" + txts);
 
                 }
