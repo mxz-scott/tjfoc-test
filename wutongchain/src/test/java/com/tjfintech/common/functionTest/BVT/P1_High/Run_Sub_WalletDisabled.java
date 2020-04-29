@@ -20,7 +20,6 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses(value = {
         SetCertSM2.class,
         SetSubLedger.class,
-        BeforeCondition.class,
         SetSubLedgerSleepTime.class,
 
         SetSDKWalletDisabled.class,
