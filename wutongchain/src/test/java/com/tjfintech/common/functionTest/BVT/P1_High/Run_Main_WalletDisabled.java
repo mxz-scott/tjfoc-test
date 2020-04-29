@@ -24,7 +24,6 @@ import sun.reflect.generics.tree.Wildcard;
         SetCertSM2.class,
         SetMainLedger.class,
         SetURLToSDKAddr.class,
-        BeforeCondition.class,
 
         SetSDKWalletDisabled.class,
 
