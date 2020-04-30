@@ -34,7 +34,7 @@ public class VerifyTests {
             //打印区块的时间戳
 
             String timestamp = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONObject("header").getString("timestamp");
-            int blkTimeStamp = Integer.parseInt(timestamp);
+            long blkTimeStamp = Long.parseLong(timestamp);
 
             //获取交易列表
             String txsList = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getString("txs");
@@ -48,9 +48,9 @@ public class VerifyTests {
 
                 String txts = JSONObject.fromObject(store.GetTxDetail(tx)).getJSONObject("Data").getJSONObject("Header").getString("Timestamp");
 
-                int txTimestamp = Integer.parseInt(txts);
-                int diff = blkTimeStamp - txTimestamp;
-                int checkInterval = 20;
+                long txTimestamp = Long.parseLong(txts);
+                long diff = blkTimeStamp - txTimestamp;
+                long checkInterval = 20;
                 //时间戳3.0版本修改为ms级别
                 if (txts.length() ==13)  checkInterval = checkInterval*1000;
                 if (diff > checkInterval) {
