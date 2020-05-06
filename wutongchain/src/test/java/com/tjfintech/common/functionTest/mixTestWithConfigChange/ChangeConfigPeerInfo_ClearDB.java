@@ -67,14 +67,14 @@ public class ChangeConfigPeerInfo_ClearDB {
         String meminfo = mgToolCmd.queryMemberList(peer1IPPort);
         testMgTool.checkMemInfoExHeight(meminfo,opIP,
                 getPeerId(opIP,USERNAME,PASSWD), //id信息
-                "0",  //state 连接状态
+                "",  //state 连接状态
                 shExeAndReturn(opIP,getPeerVerByShell).trim(), //版本信息
                 rpcPort, //节点rpc端口信息
                 peerName,   //节点名称
                 ipType+opIP+tcpType+tcpPort,  //节点inaddr信息
-                ipType+opIP+tcpType+tcpPort,  //节点outaddr信息
-                "0",  //节点类型 共识节点还是数据节点
-                "0",  //tls是否开启
+                "",  //节点outaddr信息
+                "",  //节点类型 共识节点还是数据节点
+                "",  //tls是否开启
                 "sm3", //hash 类型 当前默认sm3
                 "raft" //共识算法
         );
@@ -108,7 +108,67 @@ public class ChangeConfigPeerInfo_ClearDB {
         Thread.sleep(SLEEPTIME);//等待P2P更新
     }
 
-    @After
+    //测试节点首先在集群中 推出 再以另一种共识类型加入
+    //20200506 当前存在bug
+    @Test
+    public void changeClusterPeerInfo_WithQuit()throws Exception{
+        String opIP = PEER2IP;
+        tcpPort = PEER2TCPPort;
+        rpcPort = PEER2RPCPort;
+        String peerName = "peer" + opIP.substring(opIP.lastIndexOf(".") + 1) ;
+        int TpcPort2 = Integer.parseInt(tcpPort) + 1;
+        int RpcPort2 = Integer.parseInt(rpcPort) + 1;
+
+        //检查正常配置共识节点mem信息 在peer1上作查询
+        String meminfo = mgToolCmd.queryMemberList(peer1IPPort);
+        testMgTool.checkMemInfoExHeight(meminfo,opIP,
+                getPeerId(opIP,USERNAME,PASSWD), //id信息
+                "",  //state 连接状态
+                shExeAndReturn(opIP,getPeerVerByShell).trim(), //版本信息
+                rpcPort, //节点rpc端口信息
+                peerName,   //节点名称
+                ipType+opIP+tcpType+tcpPort,  //节点inaddr信息
+                "",  //节点outaddr信息
+                "",  //节点类型 共识节点还是数据节点
+                "",  //tls是否开启
+                "sm3", //hash 类型 当前默认sm3
+                "raft" //共识算法
+        );
+        assertNotEquals("0",testMgTool.parseMemInfo(meminfo,opIP,"height")); //不确定当前区块高度是否有新交易目前自动化仅判断非0
+        testMgTool.chkPeerSimInfoOK(opIP+":"+rpcPort,tcpPort,version,consType);//自己查询节点信息
+
+        //先退出 再以数据节点的方式加入
+        assertEquals(true,mgToolCmd.quitPeer(peer1IPPort,opIP).contains("success"));
+        sleepAndSaveInfo(SLEEPTIME);
+        testMgTool.queryPeerListNo(peer1IPPort,basePeerNo-1);
+
+        String respChange= mgToolCmd.addPeer("observer",peer1IPPort,ipType+opIP,tcpType+TpcPort2,String.valueOf(RpcPort2));
+        assertEquals(true,respChange.contains("success"));
+
+        Thread.sleep(SLEEPTIME);//等待P2P更新
+
+        testMgTool.queryPeerListNo(peer1IPPort,basePeerNo);
+        testMgTool.queryPeerListNo(opIP + ":" + rpcPort,basePeerNo);
+
+        meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);//其他节点查询
+        assertEquals(ipType + opIP + tcpType + TpcPort2,testMgTool.parseMemInfo(meminfo,opIP,"inAddr"));
+        assertEquals(String.valueOf(rpcPort),testMgTool.parseMemInfo(meminfo,opIP,"port"));
+        assertEquals("1",testMgTool.parseMemInfo(meminfo,opIP,"typ"));
+
+        meminfo = mgToolCmd.queryMemberList(opIP + ":" + rpcPort);//自己查询
+        assertEquals(ipType + opIP + tcpType + TpcPort2,testMgTool.parseMemInfo(meminfo,opIP,"inAddr"));
+        assertEquals(String.valueOf(rpcPort),testMgTool.parseMemInfo(meminfo,opIP,"port"));
+        assertEquals("1",testMgTool.parseMemInfo(meminfo,opIP,"typ"));
+        testMgTool.chkPeerSimInfoOK(opIP + ":" + rpcPort,String.valueOf(TpcPort2),version,dataType);//自己查询节点信息 当前存在bug
+
+        //恢复设置
+        String recoverChange= mgToolCmd.addPeer("join",peer1IPPort,ipType+PEER2IP,tcpType+PEER2TCPPort,PEER2RPCPort);
+        assertEquals(true,recoverChange.contains("success"));
+
+        Thread.sleep(SLEEPTIME);//等待P2P更新
+    }
+
+//    @After
     public void resetPeer()throws Exception{
         BeforeCondition bf = new BeforeCondition();
         bf.clearDataSetPerm999();

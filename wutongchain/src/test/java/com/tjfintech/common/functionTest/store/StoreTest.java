@@ -348,11 +348,11 @@ public class StoreTest {
         String storeHash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         assertEquals("200",JSONObject.fromObject(response).getString("State"));
 
-        //立即发 不管钱包是否开启 连续发送应该都会报错
-        String response12 = store.CreateStore(Data);
-        assertThat(response12,
-                anyOf(containsString("Duplicate transaction body,tx hash: " + storeHash),
-                        containsString("transactionFilter exist")));
+//        //立即发 不管钱包是否开启 连续发送应该都会报错
+//        String response12 = store.CreateStore(Data);
+//        assertThat(response12,
+//                anyOf(containsString("Duplicate transaction body,tx hash: " + storeHash),
+//                        containsString("transactionFilter exist")));
 
         //钱包关闭时sdk配置重复检查时间间隔不生效
         if(bWalletEnabled) {

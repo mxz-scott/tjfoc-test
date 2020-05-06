@@ -137,7 +137,7 @@ public class TestMainSubChain_Create_02 {
     public void TC1475_1493_createExistChain()throws Exception{
 
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+ glbChain01);
-        assertEquals(resp.contains(ledgerStateNormal), true);
+        if(resp.contains("state"))  assertEquals(resp.contains(ledgerStateNormal), true);
         assertEquals(resp.contains("\"name\": \""+ glbChain01.toLowerCase() +"\""), true);
         assertEquals(resp.contains("\"hashType\": \"sm3\""), true);
         assertEquals(resp.contains("\"cons\": \"raft\""), true);

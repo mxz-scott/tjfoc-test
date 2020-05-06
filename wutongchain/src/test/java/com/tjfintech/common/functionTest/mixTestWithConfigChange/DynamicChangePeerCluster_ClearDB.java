@@ -13,8 +13,11 @@ import org.junit.runners.MethodSorters;
 
 import static com.tjfintech.common.CommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -45,6 +48,7 @@ public class DynamicChangePeerCluster_ClearDB {
     @BeforeClass
     public static void SetSleepTimeShort(){
         RESTARTTIME = 6000;
+        subLedger = "";
     }
 
     @AfterClass
@@ -208,12 +212,12 @@ public class DynamicChangePeerCluster_ClearDB {
                 getPeerId(PEER3IP,USERNAME,PASSWD), //id信息
                 "1",  //state 连接状态
                 "", //版本信息
-                "0", //节点rpc端口信息
+                "", //节点rpc端口信息
                 "peer168",   //节点名称
                 ipType+PEER3IP+tcpType+tcpPort,  //节点inaddr信息
                 ipType+PEER3IP+tcpType+tcpPort,  //节点outaddr信息
-                "0",  //节点类型 共识节点还是数据节点
-                "0",  //tls是否开启
+                "",  //节点类型 共识节点还是数据节点
+                "",  //tls是否开启
                 "", //hash 类型 当前默认sm3
                 "" //共识算法
         );
@@ -227,14 +231,14 @@ public class DynamicChangePeerCluster_ClearDB {
         meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);//查询集群信息
         testMgTool.checkMemInfoExHeight(meminfo,PEER3IP,
                 getPeerId(PEER3IP,USERNAME,PASSWD), //id信息
-                "0",  //state 连接状态
+                "",  //state 连接状态
                 shExeAndReturn(PEER3IP,getPeerVerByShell).trim(), //版本信息
                 PEER3RPCPort, //节点rpc端口信息
                 "peer168",   //节点名称
                 ipType+PEER3IP+tcpType+tcpPort,  //节点inaddr信息
                 ipType+PEER3IP+tcpType+tcpPort,  //节点outaddr信息
-                "0",  //节点类型 共识节点还是数据节点
-                "0",  //tls是否开启
+                "",  //节点类型 共识节点还是数据节点
+                "",  //tls是否开启
                 "sm3", //hash 类型 当前默认sm3
                 "raft" //共识算法
         );
@@ -277,16 +281,17 @@ public class DynamicChangePeerCluster_ClearDB {
                 getPeerId(PEER3IP,USERNAME,PASSWD), //id信息
                 "1",  //state 连接状态 当前默认值为0 为类型默认值 已提优化ID1002346
                 "", //版本信息
-                "0", //节点rpc端口信息
+                "", //节点rpc端口信息
                 "peer168",   //节点名称
                 ipType+PEER3IP+tcpType+PEER3TCPPort,  //节点inaddr信息
                 ipType+PEER3IP+tcpType+PEER3TCPPort,  //节点outaddr信息
                 "1",  //节点类型 共识节点还是数据节点
-                "0",  //tls是否开启
+                "",  //tls是否开启
                 "", //hash 类型 当前默认sm3
                 "" //共识算法
         );
-        assertEquals("0",testMgTool.parseMemInfo(meminfo,PEER3IP,"height"));
+        String tempHgt = testMgTool.parseMemInfo(meminfo,PEER3IP,"height");
+        if(!tempHgt.isEmpty())   assertEquals("0",testMgTool.parseMemInfo(meminfo,PEER3IP,"height"));
 
         shellExeCmd(PEER3IP,startPeerCmd);//启动节点
         Thread.sleep(RESTARTTIME*2);//等待启动时间
@@ -295,14 +300,14 @@ public class DynamicChangePeerCluster_ClearDB {
         meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);//查询集群信息
         testMgTool.checkMemInfoExHeight(meminfo,PEER3IP,
                 getPeerId(PEER3IP,USERNAME,PASSWD), //id信息
-                "0",  //state 连接状态
+                "",  //state 连接状态
                 shExeAndReturn(PEER3IP,getPeerVerByShell).trim(), //版本信息
                 PEER3RPCPort, //节点rpc端口信息
                 "peer168",   //节点名称
                 ipType+PEER3IP+tcpType+PEER3TCPPort,  //节点inaddr信息
                 ipType+PEER3IP+tcpType+PEER3TCPPort,  //节点outaddr信息
                 "1",  //节点类型 共识节点还是数据节点
-                "0",  //tls是否开启
+                "",  //tls是否开启
                 "sm3", //hash 类型 当前默认sm3
                 "raft" //共识算法
         );
