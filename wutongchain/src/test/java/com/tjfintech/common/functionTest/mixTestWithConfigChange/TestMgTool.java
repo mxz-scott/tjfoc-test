@@ -83,7 +83,7 @@ public class TestMgTool {
             JSONObject eachMem = JSONObject.fromObject(temp);
             //log.info("each mem key no.: " + eachMem.size());
             //log.info(eachMem.toString());
-            assertEquals(memInfoNo,eachMem.size());
+//            assertEquals(memInfoNo,eachMem.size());
             queryValue = eachMem.getString(queryKey);
         }
         //assertEquals(false,queryValue.isEmpty()); //确认查询关键字结果非空
@@ -92,17 +92,17 @@ public class TestMgTool {
 
     public void checkMemInfoExHeight(String chkResp,String peerIP,String...memInfoArr)throws Exception{
         assertEquals(memInfoArr[0],parseMemInfo(chkResp,peerIP,"id"));
-        assertEquals(memInfoArr[1],parseMemInfo(chkResp,peerIP,"state"));
+        if(!memInfoArr[1].isEmpty())   assertEquals(memInfoArr[1],parseMemInfo(chkResp,peerIP,"state"));
 //        assertEquals(memInfoArr[2],parseMemInfo(chkResp,peerIP,"version"));
-//        assertEquals(memInfoArr[3],parseMemInfo(chkResp,peerIP,"port"));
+        if(!memInfoArr[3].isEmpty())   assertEquals(memInfoArr[3],parseMemInfo(chkResp,peerIP,"port"));
         assertEquals(memInfoArr[4],parseMemInfo(chkResp,peerIP,"shownName"));
         assertEquals(memInfoArr[5],parseMemInfo(chkResp,peerIP,"inAddr"));
-//        assertEquals(memInfoArr[6],parseMemInfo(chkResp,peerIP,"outAddr"));//20191218 测试无此字段
-        assertEquals(memInfoArr[7],parseMemInfo(chkResp,peerIP,"typ"));
-//        assertEquals(memInfoArr[8],parseMemInfo(chkResp,peerIP,"height"));
-        assertEquals(memInfoArr[8],parseMemInfo(chkResp,peerIP,"TLSEnabled"));
-        assertEquals(memInfoArr[9],parseMemInfo(chkResp,peerIP,"hashType"));
-        assertEquals(memInfoArr[10],parseMemInfo(chkResp,peerIP,"consensus"));
+        if(!memInfoArr[6].isEmpty())   assertEquals(memInfoArr[6],parseMemInfo(chkResp,peerIP,"outAddr"));//20191218 测试无此字段
+        if(!memInfoArr[7].isEmpty())   assertEquals(memInfoArr[7],parseMemInfo(chkResp,peerIP,"typ"));
+        //assertEquals(memInfoArr[8],parseMemInfo(chkResp,peerIP,"height"));
+        if(!memInfoArr[8].isEmpty())   assertEquals(memInfoArr[8],parseMemInfo(chkResp,peerIP,"TLSEnabled"));
+        if(!memInfoArr[9].isEmpty())   assertEquals(memInfoArr[9],parseMemInfo(chkResp,peerIP,"hashType"));
+        if(!memInfoArr[9].isEmpty())   assertEquals(memInfoArr[10],parseMemInfo(chkResp,peerIP,"consensus"));
 
     }
 

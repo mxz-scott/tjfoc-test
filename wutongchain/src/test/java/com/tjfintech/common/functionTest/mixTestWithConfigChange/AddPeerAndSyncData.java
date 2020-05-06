@@ -75,17 +75,20 @@ public class AddPeerAndSyncData {
         sleepAndSaveInfo(SLEEPTIME,"p2p communication waiting......");
         testMgTool.queryPeerListNo(peer1IPPort,DynamicPeerNo);
 
-        String meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);//查询集群信息
+        String meminfo = "";
+        meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);//查询集群信息
+
+        //传入为空时不检查字段
         testMgTool.checkMemInfoExHeight(meminfo,PEER3IP,
                 getPeerId(PEER3IP,USERNAME,PASSWD), //id信息
                 "1",  //state 连接状态
                 "", //版本信息
-                "0", //节点rpc端口信息
+                "", //节点rpc端口信息
                 "peer168",   //节点名称
                 ipType+PEER3IP+tcpType+tcpPort,  //节点inaddr信息
-                ipType+PEER3IP+tcpType+tcpPort,  //节点outaddr信息
-                "0",  //节点类型 共识节点还是数据节点
-                "0",  //tls是否开启
+                "",  //节点outaddr信息
+                "",  //节点类型 共识节点还是数据节点
+                "",  //tls是否开启
                 "", //hash 类型 当前默认sm3
                 "" //共识算法
         );
@@ -93,20 +96,20 @@ public class AddPeerAndSyncData {
         Thread.sleep(3000);
 
         shellExeCmd(PEER3IP,startPeerCmd);
-        Thread.sleep(STARTSLEEPTIME);
+        Thread.sleep(40*1000);
 
         //节点启动后信息检查
         meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);//查询集群信息
         testMgTool.checkMemInfoExHeight(meminfo,PEER3IP,
                 getPeerId(PEER3IP,USERNAME,PASSWD), //id信息
-                "0",  //state 连接状态
+                "",  //state 连接状态
                 shExeAndReturn(PEER3IP,getPeerVerByShell).trim(), //版本信息
                 PEER3RPCPort, //节点rpc端口信息
                 "peer168",   //节点名称
                 ipType+PEER3IP+tcpType+tcpPort,  //节点inaddr信息
-                ipType+PEER3IP+tcpType+tcpPort,  //节点outaddr信息
-                "0",  //节点类型 共识节点还是数据节点
-                "0",  //tls是否开启
+                "",  //节点outaddr信息
+                "",  //节点类型 共识节点还是数据节点
+                "",  //tls是否开启
                 "sm3", //hash 类型 当前默认sm3
                 "raft" //共识算法
         );
@@ -118,7 +121,7 @@ public class AddPeerAndSyncData {
         testMgTool.queryPeerListNo(PEER3IP+":"+rpcPort,DynamicPeerNo);
 
         mgToolCmd.mgCheckHeightOrSleep(PEER1IP + ":" + PEER1RPCPort,
-                PEER3IP + ":" + PEER3RPCPort,600*1000);
+                PEER3IP + ":" + PEER3RPCPort,300*1000);
 
         assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER2IP + ":" + PEER2RPCPort));
         assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER3IP + ":" + PEER3RPCPort));
@@ -139,38 +142,40 @@ public class AddPeerAndSyncData {
             sleepAndSaveInfo(100,"observer peer waiting......");
         }
 
-        String meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);//查询集群信息
+        String meminfo = "";
+        meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);//查询集群信息
+
         //未启动节点前检查动态加入节点信息
         testMgTool.checkMemInfoExHeight(meminfo,PEER3IP,
                 getPeerId(PEER3IP,USERNAME,PASSWD), //id信息
                 "1",  //state 连接状态 当前默认值为0 为类型默认值 已提优化ID1002346
                 "", //版本信息
-                "0", //节点rpc端口信息
+                "", //节点rpc端口信息
                 "peer168",   //节点名称
                 ipType+PEER3IP+tcpType+PEER3TCPPort,  //节点inaddr信息
-                ipType+PEER3IP+tcpType+PEER3TCPPort,  //节点outaddr信息
+                "",  //节点outaddr信息
                 "1",  //节点类型 共识节点还是数据节点
-                "0",  //tls是否开启
+                "",  //tls是否开启
                 "", //hash 类型 当前默认sm3
                 "" //共识算法
         );
-        assertEquals("0",testMgTool.parseMemInfo(meminfo,PEER3IP,"height"));
+//        assertEquals("0",testMgTool.parseMemInfo(meminfo,PEER3IP,"height"));
 
         shellExeCmd(PEER3IP,startPeerCmd);//启动节点
-        Thread.sleep(RESTARTTIME*3);//等待启动时间
+        Thread.sleep(40*1000);//等待启动时间
 
         //节点启动后信息检查
         meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);//查询集群信息
         testMgTool.checkMemInfoExHeight(meminfo,PEER3IP,
                 getPeerId(PEER3IP,USERNAME,PASSWD), //id信息
-                "0",  //state 连接状态
+                "",  //state 连接状态
                 shExeAndReturn(PEER3IP,getPeerVerByShell).trim(), //版本信息
                 PEER3RPCPort, //节点rpc端口信息
                 "peer168",   //节点名称
                 ipType+PEER3IP+tcpType+PEER3TCPPort,  //节点inaddr信息
-                ipType+PEER3IP+tcpType+PEER3TCPPort,  //节点outaddr信息
+                "",  //节点outaddr信息
                 "1",  //节点类型 共识节点还是数据节点
-                "0",  //tls是否开启
+                "",  //tls是否开启
                 "sm3", //hash 类型 当前默认sm3
                 "raft" //共识算法
         );
@@ -181,7 +186,7 @@ public class AddPeerAndSyncData {
         testMgTool.queryPeerListNo(PEER3IP+":"+PEER3RPCPort,DynamicPeerNo);
 
         mgToolCmd.mgCheckHeightOrSleep(PEER1IP + ":" + PEER1RPCPort,
-                PEER3IP + ":" + PEER3RPCPort,600*1000);
+                PEER3IP + ":" + PEER3RPCPort,300*1000);
 
         assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER2IP + ":" + PEER2RPCPort));
         assertEquals(mgToolCmd.queryBlockHeight(PEER1IP + ":" + PEER1RPCPort),mgToolCmd.queryBlockHeight(PEER3IP + ":" + PEER3RPCPort));
