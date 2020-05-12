@@ -48,12 +48,12 @@ public class BeforeCondition {
         String getPerm=toolPath+"./" + ToolTPName + " getpermission -p "+PEER1RPCPort + " -d " + SDKID + ledger;
 
 
-        //如果没有权限 则设置权限
-        if(!shExeAndReturn(PEER1IP,getPerm).contains(fullPerm)){
+        //如果没有权限 则设置权限  修改为设置 兼容版本升级时 权限列表变更需要重新赋权限的问题
+//        if(!shExeAndReturn(PEER1IP,getPerm).contains(fullPerm)){
             assertEquals(true,shExeAndReturn(PEER1IP,preCmd + "999").contains("success"));
             sleepAndSaveInfo(SLEEPTIME);
             assertEquals(true,shExeAndReturn(PEER1IP,getPerm).contains(fullPerm));
-        }
+//        }
     }
 
     public void clearDataSetPerm999() throws Exception{

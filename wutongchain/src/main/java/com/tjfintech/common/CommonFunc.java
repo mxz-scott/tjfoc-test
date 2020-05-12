@@ -942,12 +942,12 @@ public class CommonFunc {
         String preCmd = toolPath + exeCmd + "-p " + PEER1RPCPort + " -s tokenapi " + ledger + " -d " + id + " -m ";
         String getCertainPerm = toolPath + "./" + ToolTPName + " getpermission -p " + PEER1RPCPort + " -d " + id + ledger;
 
-        //如果没有权限 则设置权限
-        if(!shExeAndReturn(PEER1IP,getCertainPerm).contains(fullPerm)){
+        //如果没有权限 则设置权限  修改为赋权限 兼容升级时权限列表变更需要重新赋予权限问题
+//        if(!shExeAndReturn(PEER1IP,getCertainPerm).contains(fullPerm)){
             assertEquals(true,shExeAndReturn(PEER1IP,preCmd + "999").contains("success"));
             sleepAndSaveInfo(SLEEPTIME);
             assertEquals(true,shExeAndReturn(PEER1IP,getCertainPerm).contains(fullPerm));
-        }
+//        }
     }
 
     public String getIDByMgTool(String remoteIP,String keyPath) {

@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.Conditions.Upgrade;
+package com.tjfintech.common.functionTest.Conditions;
 
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.utils.UtilsClass;

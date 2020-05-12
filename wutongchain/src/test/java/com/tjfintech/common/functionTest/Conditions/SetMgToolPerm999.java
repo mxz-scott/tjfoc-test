@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.Conditions.Upgrade;
+package com.tjfintech.common.functionTest.Conditions;
 
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.utils.UtilsClass;
@@ -8,15 +8,14 @@ import org.junit.Test;
 import static com.tjfintech.common.utils.UtilsClass.*;
 
 @Slf4j
-public class SetTokenApiPerm999 {
+public class SetMgToolPerm999 {
     CommonFunc commonFunc = new CommonFunc();
     UtilsClass utilsClass = new UtilsClass();
 
    @Test
     public void test()throws Exception{
        commonFunc.setPerm999WithParam(
-               commonFunc.getIDByMgTool(
-                       utilsClass.getIPFromStr(TOKENADD),TokenApiPATH + "auth/key.pem"));
+               commonFunc.getIDByMgTool(PEER1IP,ToolPATH + "crypt/key.pem"));
     }
 
 }
