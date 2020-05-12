@@ -159,4 +159,13 @@ public class FileOperation {
         }
     }
 
+    public static int getUTXOLockTime() {
+        UtilsClass utilsClass = new UtilsClass();
+        int uxtoLockTime = 300;
+        String getLockTime = getSDKConfigValueByShell(utilsClass.getIPFromStr(SDKADD), "Wallet", "UtxoLockTime");
+        if (!getLockTime.trim().isEmpty()) {
+            uxtoLockTime = Integer.parseInt(getLockTime);
+        }
+        return uxtoLockTime;
+    }
 }
