@@ -13,6 +13,7 @@ import com.tjfintech.common.functionTest.store.PrivateStoreTest;
 import com.tjfintech.common.functionTest.store.StoreInvalidTest;
 import com.tjfintech.common.functionTest.store.StoreTest;
 import com.tjfintech.common.functionTest.store.StoreWalletRelatedTest;
+import com.tjfintech.common.functionTest.Conditions.SetTokenApiPerm999;
 import com.tjfintech.common.functionTest.tokenModuleTest.*;
 import com.tjfintech.common.functionTest.utxoMultiSign.*;
 import com.tjfintech.common.functionTest.utxoSingleSign.SingleSignInvalidTest;

@@ -448,7 +448,7 @@ public class TestMainSubChain_Create_02 {
         String chainName12="_a";
         String res6 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName12,
                 " -t sm3"," -w first word"," -c raft",ids);
-        assertEquals(res6.contains("Invalid ledger name"), true);
+        assertEquals(res6.contains("success"), true);
 
         //创建子链，名称为"1.a" 不支持包含 .
         String chainName13 = "1.a";

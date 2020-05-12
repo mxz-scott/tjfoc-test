@@ -1,7 +1,7 @@
 package com.tjfintech.common.functionTest.BVT.P1_High;
 
 import com.tjfintech.common.functionTest.Conditions.*;
-import com.tjfintech.common.functionTest.Conditions.Upgrade.SetTokenApiPerm999;
+import com.tjfintech.common.functionTest.Conditions.SetTokenApiPerm999;
 import com.tjfintech.common.functionTest.tokenModuleTest.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

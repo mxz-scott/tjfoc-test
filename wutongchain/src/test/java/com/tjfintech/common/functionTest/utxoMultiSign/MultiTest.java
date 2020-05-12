@@ -95,7 +95,7 @@ public class MultiTest {
     public void TC001_TestMaxValue()throws Exception {
 
         if (UtilsClass.PRECISION == 10) {
-            actualAmount1 = "1844674407";
+            actualAmount1 = "900000000";
         }else {
             actualAmount1 = "18446744073709";
         }
