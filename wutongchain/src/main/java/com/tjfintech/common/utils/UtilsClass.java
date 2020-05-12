@@ -279,10 +279,6 @@ public class UtilsClass {
     public String tokenApiGetTxHashTypeDesByType = "11";
     public String mgGetTxHashType = "mg";
 
-    //如果是已经获取过shell脚本则可以不用执行uploadFile()操作 因此此项默认关闭
-//    public boolean bupload = uploadFile();
-
-
     /**
      * token平台转账TOKEN数组构建方法
      * @param toAddr     发送地址
