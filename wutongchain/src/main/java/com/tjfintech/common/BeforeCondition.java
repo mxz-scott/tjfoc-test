@@ -113,6 +113,7 @@ public class BeforeCondition {
         String response6= multiSign.collAddress(PRIKEY1,MULITADD5);
         String response7= multiSign.collAddress(PRIKEY1,MULITADD7);
         String response8= multiSign.collAddress(PRIKEY1,MULITADD1);
+        String response9=multiSign.collAddress(PRIKEY2,ADDRESS4);
         assertThat(response4,containsString("200"));
         assertThat(response,containsString("200"));
         assertThat(response2,containsString("200"));
@@ -121,6 +122,7 @@ public class BeforeCondition {
         assertThat(response6,containsString("200"));
         assertThat(response7,containsString("200"));
         assertThat(response8,containsString("200"));
+        assertThat(response9,containsString("200"));
         //2.0.1版本需要添加发行地址后才可以发行
         String response11= multiSign.addissueaddress(PRIKEY1,IMPPUTIONADD);
         String response12= multiSign.addissueaddress(PRIKEY1,MULITADD3);
@@ -130,6 +132,7 @@ public class BeforeCondition {
         String response16= multiSign.addissueaddress(PRIKEY1,MULITADD5);
         String response17= multiSign.addissueaddress(PRIKEY1,MULITADD7);
         String response18= multiSign.addissueaddress(PRIKEY1,MULITADD1);
+        String response19=multiSign.addissueaddress(PRIKEY2,ADDRESS4);
         assertThat(response14,containsString("200"));
         assertThat(response11,containsString("200"));
         assertThat(response12,containsString("200"));
@@ -138,6 +141,7 @@ public class BeforeCondition {
         assertThat(response16,containsString("200"));
         assertThat(response17,containsString("200"));
         assertThat(response18,containsString("200"));
+        assertThat(response19,containsString("200"));
 
     }
 

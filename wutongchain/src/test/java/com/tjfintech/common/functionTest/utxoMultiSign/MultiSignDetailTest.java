@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.utxoMultiSign;
 
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.TestBuilder;
@@ -9,6 +10,7 @@ import com.tjfoc.base.MultiSignTransferAccounts;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -34,6 +36,12 @@ public class MultiSignDetailTest {
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
 
+    @BeforeClass
+    public static void Init()throws Exception{
+        BeforeCondition beforeCondition = new BeforeCondition();
+        beforeCondition.updatePubPriKey();
+        beforeCondition.collAddressTest();
+    }
 
     /**
      * 多签的token发行
