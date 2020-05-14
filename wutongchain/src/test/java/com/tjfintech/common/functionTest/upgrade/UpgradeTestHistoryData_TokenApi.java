@@ -95,28 +95,28 @@ public class UpgradeTestHistoryData_TokenApi {
         log.info("upgrade check complete!!");
     }
 
-    //@Test
-    public void test()throws Exception{
-        txHashList = getAllTxHashData();
-        //log.info("hash no:" + txHashList.size());
-        Map<String,String> beforeUpgrade = SaveResponseToHashMap(txHashList);
-        saveToFile(beforeUpgrade,"new.txt");
-    }
-
-    public void saveToFile(Map<String,String> mapHashResp,String fileName)throws Exception{
-        FileOperation fileOperation = new FileOperation();
-        String diffSaveFile = resourcePath + fileName;
-        File saveFile = new File(diffSaveFile);
-        if(saveFile.exists()) saveFile.delete();//如果存在则先删除
-        Iterator iter = mapHashResp.keySet().iterator();
-        while (iter.hasNext()) {
-            Object key = iter.next();
-            Object val = mapHashResp.get(key);
-            fileOperation.appendToFile(key.toString(),diffSaveFile);
-            fileOperation.appendToFile(val.toString(),diffSaveFile);
-        }
-
-    }
+//    //@Test
+//    public void test()throws Exception{
+//        txHashList = getAllTxHashData();
+//        //log.info("hash no:" + txHashList.size());
+//        Map<String,String> beforeUpgrade = SaveResponseToHashMap(txHashList);
+//        saveToFile(beforeUpgrade,"new.txt");
+//    }
+//
+//    public void saveToFile(Map<String,String> mapHashResp,String fileName)throws Exception{
+//        FileOperation fileOperation = new FileOperation();
+//        String diffSaveFile = resourcePath + fileName;
+//        File saveFile = new File(diffSaveFile);
+//        if(saveFile.exists()) saveFile.delete();//如果存在则先删除
+//        Iterator iter = mapHashResp.keySet().iterator();
+//        while (iter.hasNext()) {
+//            Object key = iter.next();
+//            Object val = mapHashResp.get(key);
+//            fileOperation.appendToFile(key.toString(),diffSaveFile);
+//            fileOperation.appendToFile(val.toString(),diffSaveFile);
+//        }
+//
+//    }
 
     public Map<String,String> SaveResponseToHashMap(ArrayList<String> txList) throws Exception{
         Map<String,String> mapTXHashResp = new HashMap<>();

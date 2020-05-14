@@ -12,6 +12,7 @@ import com.tjfintech.common.utils.FileOperation;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -41,13 +42,15 @@ public class UpgradeTestHistoryData {
     String contractHash = "";
 
 
-    @BeforeClass
-    public static void updateKeyPairs()throws  Exception{
-        BeforeCondition beforeCondition = new BeforeCondition();
-        beforeCondition.updatePubPriKey();
-        beforeCondition.createAddresses();
-        beforeCondition.collAddressTest();
-
+    @Before
+    public void updateKeyPairs()throws  Exception{
+        //钱包开启时执行 关闭时不执行
+        if(commonFunc.getSDKWalletEnabled()) {
+            BeforeCondition beforeCondition = new BeforeCondition();
+            beforeCondition.updatePubPriKey();
+            beforeCondition.createAddresses();
+            beforeCondition.collAddressTest();
+        }
     }
 
     //@Test
@@ -113,29 +116,6 @@ public class UpgradeTestHistoryData {
 
     }
 
-    //@Test
-    public void test()throws Exception{
-        txHashList = getAllTxHashData();
-        //log.info("hash no:" + txHashList.size());
-        Map<String,String> beforeUpgrade = SaveResponseToHashMap(txHashList);
-        saveToFile(beforeUpgrade,"new.txt");
-    }
-
-    public void saveToFile(Map<String,String> mapHashResp,String fileName)throws Exception{
-        FileOperation fileOperation = new FileOperation();
-        String diffSaveFile = resourcePath + fileName;
-        File saveFile = new File(diffSaveFile);
-        if(saveFile.exists()) saveFile.delete();//如果存在则先删除
-        Iterator iter = mapHashResp.keySet().iterator();
-        while (iter.hasNext()) {
-            Object key = iter.next();
-            Object val = mapHashResp.get(key);
-            fileOperation.appendToFile(key.toString(),diffSaveFile);
-            fileOperation.appendToFile(val.toString(),diffSaveFile);
-        }
-
-    }
-
     public Map<String,String> SaveResponseToHashMap(ArrayList<String> txList) throws Exception{
         Map<String,String> mapTXHashResp = new HashMap<>();
         mapTXHashResp.clear();
@@ -180,11 +160,14 @@ public class UpgradeTestHistoryData {
         mapTXHashResp.put("get pri store",store.GetStorePost(priStoreHash,PRIKEY1));
         mapTXHashResp.put("getapihealth",store.GetApiHealth());
 
-        //UTXO交易
-        mapTXHashResp.put("get multi utxo balance",multiSign.Balance(IMPPUTIONADD,PRIKEY4, ""));
-        mapTXHashResp.put("get solo utxo balance",soloSign.Balance(PRIKEY1,""));
-        mapTXHashResp.put("get zero account balance",multiSign.QueryZero(""));
-        mapTXHashResp.put("get all utxo account balance info",commonFunc.getUTXOAccountBalance().toString());
+        //钱包开启时执行 否则不执行
+        if(commonFunc.getSDKWalletEnabled()) {
+            //UTXO交易
+            mapTXHashResp.put("get multi utxo balance", multiSign.Balance(IMPPUTIONADD, PRIKEY4, ""));
+            mapTXHashResp.put("get solo utxo balance", soloSign.Balance(PRIKEY1, ""));
+            mapTXHashResp.put("get zero account balance", multiSign.QueryZero(""));
+            mapTXHashResp.put("get all utxo account balance info", commonFunc.getUTXOAccountBalance().toString());
+        }
 
 
         //20200313 移除docker合约测试

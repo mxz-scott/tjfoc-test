@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -29,19 +30,6 @@ public class TestMainSubChain_UpgradeTestOnly {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
     MgToolCmd mgToolCmd = new MgToolCmd();
-
-//    String stateFreezed ="not support service";
-//    String ledgerStateDestroy = "\"state\": \"Destory\"";
-//    String ledgerStateFreeze = "\"state\": \"Freeze\"";
-
-
-    @BeforeClass
-    public static void clearData()throws Exception{
-        BeforeCondition beforeCondition = new BeforeCondition();
-        beforeCondition.updatePubPriKey();
-        beforeCondition.collAddressTest();
-        sleepAndSaveInfo(SLEEPTIME);
-    }
 
     @Test
     public void CreaterecoverFreezeDestoryChain()throws Exception{
@@ -63,7 +51,8 @@ public class TestMainSubChain_UpgradeTestOnly {
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
         resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(resp.contains(ledgerStateFreeze), true);
+//        assertEquals(resp.contains(ledgerStateFreeze), true);
+        assertThat(resp,anyOf(containsString(ledgerStateFreeze),containsString(ledgerStateFreeze2)));
 
 
         //解除子链

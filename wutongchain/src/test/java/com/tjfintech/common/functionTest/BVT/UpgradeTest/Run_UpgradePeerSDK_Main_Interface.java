@@ -3,11 +3,9 @@ package com.tjfintech.common.functionTest.BVT.UpgradeTest;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.*;
 import com.tjfintech.common.functionTest.Conditions.Upgrade.*;
-import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest_UpgradeTestOnly;
 import com.tjfintech.common.functionTest.mainSubChain.*;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.AddPeerAndSyncData;
-import com.tjfintech.common.functionTest.mixTestWithConfigChange.DynamicChangePeerCluster_ClearDB;
 import com.tjfintech.common.functionTest.store.StoreTest_UpgradeTestOnly;
 import com.tjfintech.common.functionTest.upgrade.UpgradeTestHistoryData;
 import com.tjfintech.common.functionTest.utxoMultiSign.*;
@@ -55,6 +53,8 @@ import org.junit.runners.Suite;
 
         UpgradeTestHistoryData.class,
 
+        SetSDKPerm999.class, //2.1向3.0升级后需要给SDK重新赋权限
+        SetMgToolPerm999.class,//2.1向3.0升级后需要给超级管理员或者管理系统重新赋权限
         //升级后简单回归测试
         StoreTest_UpgradeTestOnly.class,
         MultiTest.class,
