@@ -39,12 +39,13 @@ public class StoreTest {
         String Data = "test11234567"+UtilsClass.Random(4);
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String storeHash = jsonObject.getString("data");
 
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         assertThat(response, containsString("200"));
-        assertThat(response,containsString("Data"));
+        assertThat(response, containsString("success"));
+        assertThat(response,containsString("data"));
 
     }
 
@@ -60,7 +61,7 @@ public class StoreTest {
         String Data = "{\"testJson\":\"json"+UtilsClass.Random(3)+"\"}";
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String  storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String  storeHash = jsonObject.getString("data");
 
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -106,8 +107,8 @@ public class StoreTest {
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         assertThat(response, containsString("200"));
-        assertThat(response,containsString("Data"));
-        assertThat(response,containsString("Figure"));
+        assertThat(response,containsString("data"));
+
     }
 
     /**
@@ -144,44 +145,15 @@ public class StoreTest {
             String response= store.CreateStore(Data);
             Thread.sleep(1000);
             assertThat(response, containsString("200"));
-            assertThat(response,containsString("Data"));
-            assertThat(response,containsString("Figure"));
+            assertThat(response,containsString("data"));
+            assertThat(response,containsString("success"));
 
 
         }
 
     }
 
-    /**
-     * TC07复杂查询存证交易，数据格式为String
-     * 创建2笔存证交易，数据格式为string
-     * 使用复杂查询接口查询交易，size设为1
-     * 使用复杂查询接口查询交易，size设为5
-     * 使用步骤1的交易哈希查询tx/search
-     */
-//    @Test
-//    public void TC07_GetTxSearch() throws Exception {
-//        String Data = "cxtest-" + UtilsClass.Random(7);
-//        String Data2 = "cxtest-" + UtilsClass.Random(6);
-//        String response = store.CreateStore(Data);
-//        String response2 = store.CreateStore(Data2);
-//        JSONObject jsonObject = JSONObject.fromObject(response);
-//        JSONObject jsonObject2 = JSONObject.fromObject(response2);
-//        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-//        String storeHash2 = jsonObject2.getJSONObject("Data").get("Figure").toString();
 
-//        String response3 = store.GetTxSearch(0, 1, "cxtest");
-//        String response4 = store.GetTxSearch(0, 5, "cxtest");
-//        JSONObject jsonObject3 = JSONObject.fromObject(response3);
-//        JSONObject jsonObject4 = JSONObject.fromObject(response4);
-//        assertEquals(jsonObject3.getJSONArray("Data").size() == 1, true);
-//        assertEquals(jsonObject4.getJSONArray("Data").size() == 5, true);
-//        String response5 = store.GetStore(storeHash);
-//        String response6 = store.GetStore(storeHash2);
-//        assertThat(response5, containsString("200"));
-//        assertThat(response6, containsString("200"));
-//
-//    }
 
     //存证大数据
     @Test
@@ -191,21 +163,21 @@ public class StoreTest {
                 "bigsize1.txt");
         String response = store.CreateStore(Data);
         assertThat(response, containsString("200"));
-        assertThat(response, containsString("Data"));
+        assertThat(response, containsString("data"));
 
 
         String Data2 = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
                 +  "bigsize2.txt");
         String response2 = store.CreateStore(Data2);
         assertThat(response2, containsString("200"));
-        assertThat(response2, containsString("Data"));
+        assertThat(response2, containsString("data"));
 
 
         String Data3 = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
                 + "bigsize3.txt");
         String response3 = store.CreateStore(Data3);
         assertThat(response3, containsString("200"));
-        assertThat(response3, containsString("Data"));
+        assertThat(response3, containsString("data"));
 
         assertEquals(response3,globalResponse);
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
@@ -213,9 +185,9 @@ public class StoreTest {
 
         //确认交易上链
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(
-                commonFunc.getTxHash(response,utilsClass.sdkGetTxHashType00))).getString("State"));
+                commonFunc.getTxHash(response,utilsClass.sdkGetTxHashType00))).getString("state"));
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(
-                commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType00))).getString("State"));
+                commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType00))).getString("state"));
     }
 
      /**
@@ -235,10 +207,10 @@ public class StoreTest {
        for(int i=0;i<list.size();i++){
            assertThat(list.get(i), containsString("200"));
            JSONObject jsonObject=JSONObject.fromObject(list.get(i));
-           String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+           String storeHash = jsonObject.getString("data");
            assertEquals(storeHash.isEmpty(),false);
            //检查交易上链
-           assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("State"));
+           assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("state"));
        }
    }
 
@@ -252,19 +224,16 @@ public class StoreTest {
         String Data = "{\"test\":\"json"+UtilsClass.Random(4)+"\"}";
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String storeHash = jsonObject.getString("data");
 
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         String response2= store.GetTxDetail(storeHash);
+        log.info(response2);
         assertThat(response2,containsString("200"));
-        final Base64.Decoder decoder = Base64.getDecoder();
-        String args=JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("Header").get("TransactionHash").toString();
-        log.info("123{}",args);
-        //   .getJSONArray("smartContractArgs").get(0).toString();
-        String DataInfo=args;
-        // String DataInfo=new String(decoder.decode(args),"UTF-8");
-        assertEquals(DataInfo.equals(storeHash),true);
+
+        String args=JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("transactionId");
+        assertEquals(args.equals(storeHash),true);
 
     }
 
@@ -277,7 +246,7 @@ public class StoreTest {
         String Data = "{\"test\":\"json"+UtilsClass.Random(4)+"\"}";
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String storeHash = jsonObject.getString("data");
 
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -293,9 +262,8 @@ public class StoreTest {
     public void TC275_getHeight() {
         String response= store.GetHeight();
         JSONObject jsonObject=JSONObject.fromObject(response);
-       Integer  height=jsonObject.getInt("Data");
+       Integer  height = jsonObject.getInt("data");
         assertThat(response,containsString("200"));
-
 
     }
 
@@ -306,7 +274,7 @@ public class StoreTest {
     public void TC274_getBlockByHeight() {
         String response= store.GetHeight();
         JSONObject jsonObject=JSONObject.fromObject(response);
-        Integer  height=jsonObject.getInt("Data");
+        Integer  height=jsonObject.getInt("data");
         assertThat(response,containsString("200"));
         int Height=4;
         String response2= store.GetBlockByHeight(Height-1);
@@ -316,28 +284,29 @@ public class StoreTest {
     public void TC243_getBlockByHash() {
         String response= store.GetHeight();
         JSONObject jsonObject=JSONObject.fromObject(response);
-        Integer  height=jsonObject.getInt("Data");
+        Integer  height=jsonObject.getInt("data");
         assertThat(response,containsString("200"));
         String response2= store.GetBlockByHeight(height-2);
-        String hash=JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("header").getString("blockHash");
+        log.info(response2);
+        String hash=JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("blockId");
         String response3= store.GetBlockByHash(hash);
         assertEquals(response2.equals(response3),true);
     }
 
 
 
-    @Test
-    public void TC254_getTransationBlock()throws  Exception{
-        String Data = "{\"test\":\"json"+UtilsClass.Random(4)+"\"}";
-        String response= store.CreateStore(Data);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-
-        String response2=store.GetTransactionBlock(storeHash);
-        assertThat(response2,containsString("200"));
-    }
+//    @Test
+//    public void TC254_getTransationBlock()throws  Exception{
+//        String Data = "{\"test\":\"json"+UtilsClass.Random(4)+"\"}";
+//        String response= store.CreateStore(Data);
+//        JSONObject jsonObject=JSONObject.fromObject(response);
+//        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+//
+//        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+//
+//        String response2=store.GetTransactionBlock(storeHash);
+//        assertThat(response2,containsString("200"));
+//    }
 
     @Test
     public void createStoreDupDataString() throws Exception {
@@ -345,8 +314,8 @@ public class StoreTest {
         String Data = "test11234567";
         long nowTime = (new Date()).getTime();
         String response= store.CreateStore(Data);
-        String storeHash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
-        assertEquals("200",JSONObject.fromObject(response).getString("State"));
+        String storeHash = JSONObject.fromObject(response).getString("data");
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
 //        //立即发 不管钱包是否开启 连续发送应该都会报错
 //        String response12 = store.CreateStore(Data);
@@ -366,15 +335,15 @@ public class StoreTest {
         }
         sleepAndSaveInfo(1500,"store on chain waiting"); //超过dup检测时间
         String response2 = store.CreateStore(Data);
-        assertEquals("200",JSONObject.fromObject(response2).getString("State"));
+        assertEquals("200",JSONObject.fromObject(response2).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("state"));
 
         String response4= store.GetStore(storeHash);
-        assertEquals("200",JSONObject.fromObject(response4).getString("State"));
-        assertEquals(Data,JSONObject.fromObject(response4).getString("Data"));
+        assertEquals("200",JSONObject.fromObject(response4).getString("state"));
+        assertEquals(Data,JSONObject.fromObject(response4).getString("data"));
     }
 
 }

@@ -41,8 +41,8 @@ public class StoreWalletRelatedTest {
         String response= store.CreateStore(data);
         Thread.sleep(1*1000);
         String response2= store.CreateStore(data);
-        String hash1=JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
-        String hash2=JSONObject.fromObject(response2).getString("Message");
+        String hash1=JSONObject.fromObject(response).getString("data");
+        String hash2=JSONObject.fromObject(response2).getString("message");
         assertThat(response, CoreMatchers.containsString("200"));
         assertThat(response2, CoreMatchers.containsString("500"));
         assertThat(hash2, CoreMatchers.containsString("Duplicate transaction"));
@@ -60,7 +60,7 @@ public class StoreWalletRelatedTest {
             String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
             String response= store.CreateStore(Data);
             JSONObject jsonObject=JSONObject.fromObject(response);
-            String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+            String storeHash = jsonObject.getString("data");
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                     utilsClass.sdkGetTxDetailType,SLEEPTIME);
             String response2= store.GetInlocal(storeHash);

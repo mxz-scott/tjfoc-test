@@ -25,101 +25,71 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 @Slf4j
 public class UtilsClass {
 
-    public static String SDKADD = "http://10.1.5.240:7779";
-    public static String rSDKADD = "http://10.1.5.240:7779";
-    public static String TOKENADD = "http://10.1.5.240:9190";
-    //设置测试环境使用的节点端口及部署目录信息
-    public static String PEER1IP = "10.1.3.240";
-    public static String PEER2IP = "10.1.3.246";
-    public static String PEER3IP = "10.1.5.168";
-    public static String PEER4IP = "10.1.3.240";
-    public static String PEER1RPCPort = "9800";
-    public static String PEER2RPCPort = "9800";
-    public static String PEER3RPCPort = "9800";
-    public static String PEER4RPCPort = "9800";
-    public static String PEER1TCPPort = "60080";
-    public static String PEER2TCPPort = "60080";
-    public static String PEER3TCPPort = "60080";
-    public static String PEER4TCPPort = "60080";
-    //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-    public static String PTPATH = "/root/zll/auto/";
-    public static String SDKPATH = PTPATH + "sdk/";
-    public static String PeerPATH = PTPATH + "peer/";
-    public static String ToolPATH = PTPATH + "toolkit/";
-    public static String TokenApiPATH = PTPATH + "wtfinservice/";
-    public static String PeerTPName = "Autop";
-    public static String SDKTPName = "Autos";
-    public static String ToolTPName = "Autokit";
-    public static String TokenTPName = "Auto";
-    public static String tmuxSessionTokenApi = "tmux send -t auto_t ";
-    public static String tmuxSessionPeer = "tmux send -t auto ";
-    public static String tmuxSessionSDK = "tmux send -t auto_s ";
-    public static String sReleaseLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.1\\2.1.3\\";
-    public static String sLatestLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.2\\";
-//    public static String SDKADD = "http://10.1.3.240:7779";
-//    public static String rSDKADD = "http://10.1.3.246:8080";
-//    public static String TOKENADD = "http://10.1.3.246:9090";
+//    public static String SDKADD = "http://10.1.5.240:7779";
+//    public static String rSDKADD = "http://10.1.5.240:7779";
+//    public static String TOKENADD = "http://10.1.5.240:9190";
 //    //设置测试环境使用的节点端口及部署目录信息
 //    public static String PEER1IP = "10.1.3.240";
 //    public static String PEER2IP = "10.1.3.246";
 //    public static String PEER3IP = "10.1.5.168";
-//    public static String PEER4IP = "10.1.3.247";
-//    public static String PEER1RPCPort = "9400";
-//    public static String PEER2RPCPort = "9500";
-//    public static String PEER3RPCPort = "9400";
-//    public static String PEER4RPCPort = "9400";
-//    public static String PEER1TCPPort = "60011";
-//    public static String PEER2TCPPort = "60011";
-//    public static String PEER3TCPPort = "60011";
-//    public static String PEER4TCPPort = "60012";
+//    public static String PEER4IP = "10.1.3.240";
+//    public static String PEER1RPCPort = "9800";
+//    public static String PEER2RPCPort = "9800";
+//    public static String PEER3RPCPort = "9800";
+//    public static String PEER4RPCPort = "9800";
+//    public static String PEER1TCPPort = "60080";
+//    public static String PEER2TCPPort = "60080";
+//    public static String PEER3TCPPort = "60080";
+//    public static String PEER4TCPPort = "60080";
 //    //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-//    public static String PTPATH = "/root/zll/chain2.0.1/";
+//    public static String PTPATH = "/root/zll/auto/";
 //    public static String SDKPATH = PTPATH + "sdk/";
 //    public static String PeerPATH = PTPATH + "peer/";
 //    public static String ToolPATH = PTPATH + "toolkit/";
 //    public static String TokenApiPATH = PTPATH + "wtfinservice/";
-//    public static String PeerTPName = "Mp";
-//    public static String SDKTPName = "sdk";
-//    public static String ToolTPName = "toolkit";
-//    public static String TokenTPName = "fintoken";
-//    public static String tmuxSessionTokenApi = "tmux send -t t_M2 ";
-//    public static String tmuxSessionPeer = "tmux send -t M2 ";
-//    public static String tmuxSessionSDK = "tmux send -t s_M2 ";
+//    public static String PeerTPName = "Autop";
+//    public static String SDKTPName = "Autos";
+//    public static String ToolTPName = "Autokit";
+//    public static String TokenTPName = "Auto";
+//    public static String tmuxSessionTokenApi = "tmux send -t auto_t ";
+//    public static String tmuxSessionPeer = "tmux send -t auto ";
+//    public static String tmuxSessionSDK = "tmux send -t auto_s ";
 //    public static String sReleaseLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.1\\2.1.3\\";
 //    public static String sLatestLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.2\\";
 
-//    //zhouxianxian env use start -----------
-//    public static String SDKADD = "http://10.1.3.164:8080";
-//    public static String rSDKADD = "http://10.1.3.164:8080";
-//    public static String TOKENADD = "http://10.1.3.164:9090";
-//    //设置测试环境使用的节点端口及部署目录信息
-//    public static String PEER1IP = "10.1.3.162";
-//    public static String PEER2IP = "10.1.3.163";
-//    public static String PEER3IP = "10.1.3.161";
-//    public static String PEER4IP = "10.1.3.164";
-//    public static String PEER1RPCPort = "9300";
-//    public static String PEER2RPCPort = "9300";
-//    public static String PEER3RPCPort = "9300";
-//    public static String PEER4RPCPort = "9300";
-//    public static String PEER1TCPPort = "60030";
-//    public static String PEER2TCPPort = "60030";
-//    public static String PEER3TCPPort = "60030";
-//    public static String PEER4TCPPort = "60030";
-//    //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-//    public static String PTPATH = "/root/auto/";
-//    public static String SDKPATH = PTPATH + "sdk/";
-//    public static String PeerPATH = PTPATH + "peer/";
-//    public static String ToolPATH = PTPATH + "toolkit/";
-//    public static String TokenApiPATH = PTPATH + "wtfinservice/";
-//    public static String PeerTPName = "wtchain";
-//    public static String SDKTPName = "wtsdk";
-//    public static String ToolTPName = "wttool";
-//    public static String TokenTPName = "wtfinservice";
-//    public static String tmuxSessionTokenApi = "tmux send -t api ";
-//    public static String tmuxSessionPeer = "tmux send -t peer ";
-//    public static String tmuxSessionSDK = "tmux send -t sdk ";
-//    public static String sReleaseLocalDir = "E:\\gopath\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.3\\";
-//    public static String sLatestLocalDir = "E:\\test\\2.4.2\\";
+
+    //zhouxianxian env use start -----------
+    public static String SDKADD = "http://10.1.3.164:8081";
+    public static String rSDKADD = "http://10.1.3.164:8081";
+    public static String TOKENADD = "http://10.1.3.164:9090";
+    //设置测试环境使用的节点端口及部署目录信息
+    public static String PEER1IP = "10.1.3.162";
+    public static String PEER2IP = "10.1.3.163";
+    public static String PEER3IP = "10.1.3.161";
+    public static String PEER4IP = "10.1.3.164";
+    public static String PEER1RPCPort = "9300";
+    public static String PEER2RPCPort = "9300";
+    public static String PEER3RPCPort = "9300";
+    public static String PEER4RPCPort = "9300";
+    public static String PEER1TCPPort = "60030";
+    public static String PEER2TCPPort = "60030";
+    public static String PEER3TCPPort = "60030";
+    public static String PEER4TCPPort = "60030";
+    //节点、SDK、Toolkit对等目录放置于PTPATH目录下
+    public static String PTPATH = "/root/auto/";
+    public static String SDKPATH = PTPATH + "sdk/";
+    public static String PeerPATH = PTPATH + "peer/";
+    public static String ToolPATH = PTPATH + "toolkit/";
+    public static String TokenApiPATH = PTPATH + "wtfinservice/";
+    public static String PeerTPName = "wtchain";
+    public static String SDKTPName = "wtsdk";
+    public static String ToolTPName = "wttool";
+    public static String TokenTPName = "wtfinservice";
+    public static String tmuxSessionTokenApi = "tmux send -t api ";
+    public static String tmuxSessionPeer = "tmux send -t peer ";
+    public static String tmuxSessionSDK = "tmux send -t sdk ";
+    public static String sReleaseLocalDir = "E:\\gopath\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.3\\";
+    public static String sLatestLocalDir = "E:\\test\\2.4.2\\";
     //zhouxianxian env use end -----------
 
     public static String certPath = "SM2"; // 设置签名证书类型，可选值SM2(默认值)，ECDSA，MIX1，MIX2，RSA
@@ -135,6 +105,7 @@ public class UtilsClass {
     public static int  SLEEPTIME = 7*1000;
     public static int DBSyncTime = 3*1000;
     public static int worldStateUpdTime = 1500;
+
 
     //UTXO精度
     public static Integer PRECISION = 6;
@@ -256,6 +227,7 @@ public class UtilsClass {
     public static String ledgerStateDestroy = "\"state\": 2";
     public static String ledgerStateFreeze = "\"state\": 1";
     public static String ledgerStateNormal = "\"state\": 0";
+    public static String ledgerStateFreeze2 = "\"state\": Freeze";
 
     public static boolean bUpgradePeer = true;
     public static boolean bUpgradeSDK = true;

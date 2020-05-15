@@ -27,14 +27,14 @@ public  class GoStore implements Store {
     public String GetApiHealth() {
         String param = "";
         if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/apihealth" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/chain/apihealth" + param);
         log.info(result);
         return result;
 
     }
 
     /**
-     * 获取系统健康状态
+     * 根据子链名字获取子链信息。
      *
      * @method GET
      */
@@ -48,34 +48,15 @@ public  class GoStore implements Store {
 
     }
 
-//    /**
-//     * 获取交易详情
-//     *
-//     * @author chenxu
-//     * @version 1.0
-//     * @method GET
-//     */
-//    public String GetTransaction(String hashData) {
-//        String param;
-//        String hashEncode = URLEncoder.encode(hashData);
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("hashData", hashEncode);
-//        param = GetTest.ParamtoUrl(map);
-//        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-//        String result = GetTest.doGet2(SDKADD + "/gettransaction" + "?" + param);
-//        log.info(result);
-//        return result;
-//
-//    }
-
-    public String GetTxDetail(String hashData) {
-        String param;
-        String hashEncode = URLEncoder.encode(hashData);
-        Map<String, Object> map = new HashMap<>();
-        map.put("hashData", hashEncode);
-        param = GetTest.ParamtoUrl(map);
-        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/gettxdetail" + "?" + param);
+    /**
+     * 获取UTXO交易详情。
+     *
+     * @method GET
+     */
+    public String GetTxDetail(String hash) {
+        String param = "";
+        if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
+        String result = GetTest.doGet2(SDKADD + "/v2/tx/utxo/detail/" + hash + param);
         log.info(result);
         return result;
 
@@ -83,7 +64,21 @@ public  class GoStore implements Store {
 
 
     /**
-     * 创建存证交易-带公私钥
+     * 获取合约交易详情。
+     *
+     * @method GET
+     */
+    public String GetSCTxDetail(String hash) {
+        String param = "";
+        if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
+        String result = GetTest.doGet2(SDKADD + "/v2/tx/sc/detail/" + hash + param);
+        log.info(result);
+        return result;
+
+    }
+
+    /**
+     * 创建存证交易
      *
      * @author chenxu
      * @version 1.0
@@ -95,21 +90,38 @@ public  class GoStore implements Store {
         map.put("Data", Data);
         String param = "";
         if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/store" + param, map);
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/store" + param, map);
         log.info(result);
         return result;
     }
 
-
+//    /***
+//     * 同步创建存证交易
+//     * @param timeout
+//     * @param Data
+//     * @return
+//     */
+//    @Override
+//    public String SynCreateStore(Integer timeout, String Data) {
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("Data", Data);
+//        String param = "";
+//        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+//        String result = PostTest.sendPostToJson(SDKADD + "/sync/store?timeout=" + timeout + param, map);
+//        log.info(result);
+//        return result;
+//    }
+//
 //    /**
-//     * 创建存证交易-带公钥
+//     * 同步创建存证交易-带公钥
 //     *
+//     * @param timeout
 //     * @param Data
 //     * @param PubKeys
 //     * @return
 //     */
 //    @Override
-//    public String CreateStore(String Data, String... PubKeys) {
+//    public String SynCreateStore(Integer timeout, String Data, String... PubKeys) {
 //        Map<String, Object> map = new HashMap<>();
 //        List<Object> addrs = new ArrayList<>();
 //        for (int i = 0; i < PubKeys.length; i++) {
@@ -117,100 +129,59 @@ public  class GoStore implements Store {
 //        }
 //        map.put("Addrs", addrs);
 //        map.put("Data", Data);
+//
 //        String param = "";
-//        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-//        String result = PostTest.sendPostToJson(SDKADD + "/store" + param, map);
+//        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+//
+//        String result = PostTest.sendPostToJson(SDKADD + "/sync/store?timeout=" + timeout + param, map);
+//        log.info(result);
+//        return result;
+//    }
+//
+//    /**
+//     * 同步获取隐私存证
+//     *
+//     * @param timeout
+//     * @param Hash
+//     * @param priKey
+//     * @param keyPwd
+//     * @return
+//     */
+//    @Override
+//    public String SynGetStorePost(Integer timeout, String Hash, String priKey, String keyPwd) {
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("Prikey", priKey);
+//        map.put("Hash", Hash);
+//        map.put("KeyPwd", keyPwd);
+//        String result = PostTest.sendPostToJson(SDKADD + "/sync/getstore?timeout=" + timeout, map);
+//        log.info(result);
+//        return result;
+//    }
+//
+//    /**
+//     * 同步创建隐私存证
+//     *
+//     * @param Data
+//     * @param keyMap
+//     * @return
+//     */
+//    @Override
+//    public String SynCreatePrivateStore(Integer timeout, String Data, Map keyMap) {
+//        List<Object> PubkeysObjects = new ArrayList<>();
+//        for (Object value : keyMap.values()) {
+//            PubkeysObjects.add(value);
+//        }
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("Data", Data);
+//        map.put("Pubkeys", PubkeysObjects);
+//        String result = PostTest.sendPostToJson(SDKADD + "/sync/store?timeout=" + timeout, map);
 //        log.info(result);
 //        return result;
 //    }
 
-    /***
-     * 同步创建存证交易
-     * @param timeout
-     * @param Data
-     * @return
-     */
-    @Override
-    public String SynCreateStore(Integer timeout, String Data) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("Data", Data);
-        String param = "";
-        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/store?timeout=" + timeout + param, map);
-        log.info(result);
-        return result;
-    }
 
     /**
-     * 同步创建存证交易-带公钥
-     *
-     * @param timeout
-     * @param Data
-     * @param PubKeys
-     * @return
-     */
-    @Override
-    public String SynCreateStore(Integer timeout, String Data, String... PubKeys) {
-        Map<String, Object> map = new HashMap<>();
-        List<Object> addrs = new ArrayList<>();
-        for (int i = 0; i < PubKeys.length; i++) {
-            addrs.add(PubKeys[i]);
-        }
-        map.put("Addrs", addrs);
-        map.put("Data", Data);
-
-        String param = "";
-        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/store?timeout=" + timeout + param, map);
-        log.info(result);
-        return result;
-    }
-
-    /**
-     * 同步获取隐私存证
-     *
-     * @param timeout
-     * @param Hash
-     * @param priKey
-     * @param keyPwd
-     * @return
-     */
-    @Override
-    public String SynGetStorePost(Integer timeout, String Hash, String priKey, String keyPwd) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("Prikey", priKey);
-        map.put("Hash", Hash);
-        map.put("KeyPwd", keyPwd);
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/getstore?timeout=" + timeout, map);
-        log.info(result);
-        return result;
-    }
-
-    /**
-     * 同步创建隐私存证
-     *
-     * @param Data
-     * @param keyMap
-     * @return
-     */
-    @Override
-    public String SynCreatePrivateStore(Integer timeout, String Data, Map keyMap) {
-        List<Object> PubkeysObjects = new ArrayList<>();
-        for (Object value : keyMap.values()) {
-            PubkeysObjects.add(value);
-        }
-        Map<String, Object> map = new HashMap<>();
-        map.put("Data", Data);
-        map.put("Pubkeys", PubkeysObjects);
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/store?timeout=" + timeout, map);
-        log.info(result);
-        return result;
-    }
-
-
-    /**
-     * 创建带密码存证交易
+     * 创建隐私存证交易
      *
      * @author chenxu
      * @version 1.0
@@ -228,7 +199,7 @@ public  class GoStore implements Store {
         map.put("Pubkeys", PubkeysObjects);
         String param = "";
         if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/store" + param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/store" + param, map);
         log.info(result);
         return result;
     }
@@ -241,31 +212,28 @@ public  class GoStore implements Store {
      * @method GET
      */
     public String GetStore(String hash) {
-        String param;
-        String hashEncode = URLEncoder.encode(hash);
-        //hash需要urlEncode编码
-        Map<String, Object> map = new HashMap<>();
-        map.put("hash", hashEncode);
-        param = GetTest.ParamtoUrl(map);
-        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/getstore" + "?" + param);
+
+        String param = "";
+        if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
+        String result = GetTest.doGet2(SDKADD + "/v2/tx/store/detail/" + hash + param);
         log.info(result);
         return result;
+
     }
 
 
-    public String GetStoreLocal(String hash) {
-        String param;
-        String hashEncode = URLEncoder.encode(hash);
-        //hash需要urlEncode编码
-        Map<String, Object> map = new HashMap<>();
-        map.put("hash", hashEncode);
-        param = GetTest.ParamtoUrl(map);
-        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/getstore2" + "?" + param);
-//        log.info(result);
-        return result;
-    }
+//    public String GetStoreLocal(String hash) {
+//        String param;
+//        String hashEncode = URLEncoder.encode(hash);
+//        //hash需要urlEncode编码
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("hash", hashEncode);
+//        param = GetTest.ParamtoUrl(map);
+//        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+//        String result = GetTest.SendGetTojson(SDKADD + "/getstore2" + "?" + param);
+////        log.info(result);
+//        return result;
+//    }
 
 
     /***
@@ -276,11 +244,11 @@ public  class GoStore implements Store {
      */
     public String GetStorePost(String Hash, String priKey) {
         Map<String, Object> map = new HashMap<>();
-        map.put("Prikey", priKey);
-        map.put("Hash", Hash);
+        map.put("prikey", priKey);
+        map.put("txid", Hash);
         String param = "";
         if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/getstore" + param, map);
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/store/query" + param, map);
         log.info(result);
         return result;
     }
@@ -295,12 +263,12 @@ public  class GoStore implements Store {
     public String GetStorePostPwd(String Hash, String priKey, String keyPwd) {
 
         Map<String, Object> map = new HashMap<>();
-        map.put("Prikey", priKey);
-        map.put("Hash", Hash);
-        map.put("KeyPwd", keyPwd);
+        map.put("prikey", priKey);
+        map.put("txid", Hash);
+        map.put("password", keyPwd);
         String param = "";
         if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/getstore" + param, map);
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/store/query" + param, map);
         log.info(result);
         return result;
 
@@ -313,15 +281,11 @@ public  class GoStore implements Store {
      * @version 1.0
      * @method POST
      */
-    public String GetTransactionIndex(String hashData) {
+    public String GetTransactionIndex(String hash) {
 
-        String param;
-        String hashencode = URLEncoder.encode(hashData);
-        Map<String, Object> map = new HashMap<>();
-        map.put("hashData", hashencode);
-        param = GetTest.ParamtoUrl(map);
-        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/gettransactionindex" + "?" + param);
+        String param = "";
+        if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
+        String result = GetTest.SendGetTojson(SDKADD + "/v2/block/tx/index/" + hash + param);
         log.info(result);
         return result;
 
@@ -336,7 +300,7 @@ public  class GoStore implements Store {
     public String GetHeight() {
         String param = "";
         if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/getheight" + param);
+        String result = GetTest.SendGetTojson(SDKADD + "/v2/block/height" + param);
         log.info(result);
         return result;
     }
@@ -349,13 +313,11 @@ public  class GoStore implements Store {
      * @method GET
      */
     public String GetBlockByHeight(int height) {
-        String param;
-        Map<String, Object> map = new HashMap<>();
-        map.put("number", height);
-        param = GetTest.ParamtoUrl(map);
-        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/getblockbyheight" + "?" + param);
-//        log.info(result);
+        String param = "";
+        String strHeight = Integer.toString(height);
+        if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
+        String result = GetTest.SendGetTojson(SDKADD + "/v2/block/detail/" + strHeight + param);
+        log.info(result);
         return result;
     }
 
@@ -367,42 +329,15 @@ public  class GoStore implements Store {
      * @method GET
      */
     public String GetBlockByHash(String hash) {
-        String param;
-        String hashencode = URLEncoder.encode(hash);
-        Map<String, Object> map = new HashMap<>();
-        map.put("hash", hashencode);
-        param = GetTest.ParamtoUrl(map);
-        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result = (GetTest.SendGetTojson(SDKADD + "/getblockbyhash" + "?" + param));
-        log.info(result);
-        return result;
-    }
-
-
-    /**
-     * 交易复杂查询
-     *
-     * @author chenxu
-     * @version 1.0
-     * @method GET
-     */
-    public String GetTxSearch(int skip, int size, String regex) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("skip", skip);
-        map.put("size", size);
-        Map<String, Object> regexmap = new HashMap<>();
-        regexmap.put("$regex", regex);
-        Map<String, Object> datamap = new HashMap<>();
-        datamap.put("scargs.data", regexmap);
-        map.put("qry", datamap);
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        log.info("应该查询出" + size + "条数据");
-        String result = PostTest.sendPostToJson(SDKADD + "/tx/search" + param, map);
-        log.info(result);
+        if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
+        String result = GetTest.SendGetTojson(SDKADD + "/v2/block/detail/" + hash + param);
+//        log.info(result);
         return result;
-
     }
+
+
+
 
     /**
      * 查询交易是否存在于钱包数据库
@@ -411,46 +346,22 @@ public  class GoStore implements Store {
      * @version 1.0
      * @method Get
      */
-    public String GetInlocal(String hashcode) {
-        String hash = URLEncoder.encode(hashcode);
-        Map<String, Object> map = new HashMap<>();
-        map.put("hash", hash);
-        String param = GetTest.ParamtoUrl(map);
-        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/tx/inlocal" + "?" + param);
-        log.info(result);
+    public String GetInlocal(String hash) {
+        String param = "";
+        if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
+        String result = GetTest.SendGetTojson(SDKADD + "/v2/tx/inlocal/" + hash + param);
+//        log.info(result);
         return result;
     }
 
+
     /**
-     * 统计某种交易类型的数量
+     * 获取节点列表
      *
      * @author chenxu
      * @version 1.0
-     * @method GET
+     * @method Get
      */
-    public String GetStat(String type) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("type", type);
-        String param = GetTest.ParamtoUrl(map);
-        String result = GetTest.SendGetTojson(SDKADD + "/tx/stat" + "?" + param);
-        log.info(result);
-        return result;
-    }
-
-    @Override
-    public String GetTransactionBlock(String hash) {
-        String hashcode = URLEncoder.encode(hash);
-        Map<String, Object> map = new HashMap<>();
-        map.put("hashData", hashcode);
-        String param = GetTest.ParamtoUrl(map);
-        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/gettransactionblock" + "?" + param);
-        log.info(result);
-        return result;
-    }
-
-
     @Override
     public String GetPeerList() {
         String param = "";
@@ -470,12 +381,12 @@ public  class GoStore implements Store {
             PubkeysObjects.add(value);
         }
         Map<String, Object> map = new HashMap<>();
-        map.put("Hash", hash);
+        map.put("txid", hash);
         map.put("Pubkeys", PubkeysObjects);
         map.put("PriKey", toPriKey);
         String param = "";
         if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/storeauthorize" + param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/authorize" + param, map);
         log.info(result);
         return result;
     }
@@ -490,13 +401,13 @@ public  class GoStore implements Store {
             PubkeysObjects.add(value);
         }
         Map<String, Object> map = new HashMap<>();
-        map.put("Hash", hash);
+        map.put("txid", hash);
         map.put("Pubkeys", PubkeysObjects);
         map.put("PriKey", toPriKey);
-        map.put("KeyPwd", pwd);
+        map.put("password", pwd);
         String param = "";
         if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/storeauthorize" + param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/authorize" + param, map);
         log.info(result);
         return result;
     }

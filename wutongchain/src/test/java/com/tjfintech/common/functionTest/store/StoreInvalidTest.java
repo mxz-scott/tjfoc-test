@@ -1,6 +1,5 @@
 package com.tjfintech.common.functionTest.store;
 import com.tjfintech.common.BeforeCondition;
-import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -30,34 +29,30 @@ public class StoreInvalidTest {
     Store store = testBuilder.getStore();
     public String hash;
     public String privacyhash;
-    CommonFunc commonFunc = new CommonFunc();
-    UtilsClass utilsClass = new UtilsClass();
 
     @BeforeClass
-    public static void BeforeTest()throws Exception{
-        BeforeCondition beforeCondition = new BeforeCondition();
-        beforeCondition.updatePubPriKey();
+    public static void beforeConfig() throws Exception {
+        BeforeCondition bf = new BeforeCondition();
+        bf.updatePubPriKey();
+        Thread.sleep(SLEEPTIME/2);
     }
-
     /**
      * 创建存证交易
      */
     @Before
-    public void TC1380_store() throws Exception {
+    public void TC1380_store() throws InterruptedException {
         String createstore;
         createstore = store.CreateStore("创建普通存证");
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        hash = JSONObject.fromObject(createstore).getJSONObject("Data").getString("Figure");
-        log.info("获取普通存证交易hash"+hash);
+        hash = JSONObject.fromObject(createstore).getString("data");
+        log.info("获取普通存证交易hash: "+hash);
 
         Map<String,Object> map=new HashMap<>();
         map.put("pubKeys",PUBKEY6);
         createstore = store.CreatePrivateStore("创建隐私存证",map);
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        privacyhash = JSONObject.fromObject(createstore).getJSONObject("Data").getString("Figure");
-        log.info("获取隐私存证交易hash"+privacyhash);
+        privacyhash = JSONObject.fromObject(createstore).getString("data");
+        log.info("获取隐私存证交易hash: "+privacyhash);
+
+        Thread.sleep(SLEEPTIME);
     }
 
     /**
@@ -65,14 +60,24 @@ public class StoreInvalidTest {
      */
     @Test
     public void TC1370_gettxdetail(){
+
         String gettxdetail;
-        gettxdetail = store.GetTxDetail("");
-        assertThat(gettxdetail,containsString("Invalid parameter"));//hashData字段为空值
-        gettxdetail = store.GetTxDetail("111");
-        assertThat(gettxdetail,containsString("hashData must be url encode string"));//hashData为非法字符
-        log.info("通过hash获取交易详情"+hash);
+
+        log.info("通过hash获取交易详情: " + hash);
         gettxdetail = store.GetTxDetail(hash);
-        assertThat(gettxdetail,containsString("200"));//hashData字段不为URL encode编码
+        assertThat(gettxdetail,containsString("200"));
+
+        gettxdetail = store.GetTxDetail("");//交易id字段为空值
+        assertThat(gettxdetail,containsString("404 page not found"));
+
+        gettxdetail = store.GetTxDetail("04cf125c3d488ceb9baa6aa68973896d7de18658c75f4a2c5309cdea4e4dfb54");//交易id不存在
+        assertThat(gettxdetail,containsString("404"));
+        assertThat(gettxdetail,containsString("BlockchainGetTransaction: failed to find transaction"));
+
+        gettxdetail = store.GetTxDetail("123456");//交易id为非法字符
+        assertThat(gettxdetail,containsString("400"));
+        assertThat(gettxdetail,containsString("Invalid parameter"));
+
     }
 
 
@@ -82,35 +87,57 @@ public class StoreInvalidTest {
     @Test
     public void TC1382_getStore(){
         String getStore;
-        getStore = store.GetStore("");
-        assertThat(getStore,containsString("Invalid parameter"));//hash字段为空值
-        getStore = store.GetStore("Invalid parameter");
-        assertThat(getStore,containsString("Invalid parameter"));//hash字段为非法字符
         getStore = store.GetStore(hash);
-        assertThat(getStore,containsString("200"));//hash字段不为urlEncode编码
+        assertThat(getStore,containsString("200"));
+
+        getStore = store.GetStore("04cf125c3d488ceb9baa6aa68973896d7de18658c75f4a2c5309cdea4e4dfb54");//交易id不存在
+        assertThat(getStore,containsString("404"));
+        assertThat(getStore,containsString("BlockchainGetTransaction: failed to find transaction"));
+
+        getStore = store.GetStore("12345");//交易id为非法字符
+        assertThat(getStore,containsString("400"));
+        assertThat(getStore,containsString("Invalid parameter"));
+
+        getStore = store.GetStore("");//hash字段为空值
+        assertThat(getStore,containsString("404 page not found"));
     }
+
     /**
      * 获取隐私存证
      */
     @Test
-    public void TC1396_getStore(){
+    public void TC1396_getStorePost(){
         String GetStorePostPwd;
         GetStorePostPwd = store.GetStorePostPwd(privacyhash, UtilsClass.PRIKEY6, "111");
         assertThat(GetStorePostPwd,containsString("200"));
-        GetStorePostPwd = store.GetStorePostPwd("", UtilsClass.PRIKEY6, "111");
-        assertThat(GetStorePostPwd,containsString("Invalid parameter"));//Hash字段为空值
-        GetStorePostPwd = store.GetStorePostPwd("111", UtilsClass.PRIKEY6, "111");
-        assertThat(GetStorePostPwd,containsString("Hash must be base64 string"));//Hash字段为非法字符
-        GetStorePostPwd = store.GetStorePostPwd(privacyhash, "", "111");
-        assertThat(GetStorePostPwd,containsString("200"));//Prikey字段为空值
-        GetStorePostPwd = store.GetStorePostPwd(privacyhash, "111", "111");
-        assertThat(GetStorePostPwd,containsString("illegal base64 data at input byte 0"));//Prikey字段为非base64格式的字符
-        GetStorePostPwd = store.GetStorePostPwd(privacyhash, "YWJjeHg=", "111");
-        assertThat(GetStorePostPwd,containsString("Invalid private key or the password is not match the private key"));//Prikey字段为无效的base64格式的字符
-        GetStorePostPwd = store.GetStorePostPwd(privacyhash,  UtilsClass.PRIKEY6, "");
-        assertThat(GetStorePostPwd,containsString("Invalid private key or the password is not match the private key"));//KeyPwd字段为空
-        GetStorePostPwd = store.GetStorePostPwd(privacyhash,  UtilsClass.PRIKEY6, "22333");
-        assertThat(GetStorePostPwd,containsString("Invalid private key or the password is not match the private key"));//KeyPwd字段为非法字符
+
+        GetStorePostPwd = store.GetStorePostPwd("", UtilsClass.PRIKEY6, "111");//Hash字段为空值
+        assertThat(GetStorePostPwd,containsString("400"));
+        assertThat(GetStorePostPwd,containsString("TxId is mandatory"));
+
+        GetStorePostPwd = store.GetStorePostPwd("111", UtilsClass.PRIKEY6, "111");//Hash字段为非法字符
+        assertThat(GetStorePostPwd,containsString("400"));
+        assertThat(GetStorePostPwd,containsString("Invalid parameter"));
+
+        GetStorePostPwd = store.GetStorePostPwd(privacyhash, "", "111");//Prikey字段为空值
+        assertThat(GetStorePostPwd,containsString("400"));
+        assertThat(GetStorePostPwd,containsString("PriKey is mandatory"));
+
+        GetStorePostPwd = store.GetStorePostPwd(privacyhash, "111", "111");//Prikey字段为非base64格式的字符
+        assertThat(GetStorePostPwd,containsString("400"));
+        assertThat(GetStorePostPwd,containsString("illegal base64 data at input byte 0"));
+
+        GetStorePostPwd = store.GetStorePostPwd(privacyhash, "YWJjeHg=", "111");//Prikey字段为无效的base64格式的字符
+        assertThat(GetStorePostPwd,containsString("400"));
+        assertThat(GetStorePostPwd,containsString("Invalid private key or the password is not match the private key"));
+
+        GetStorePostPwd = store.GetStorePostPwd(privacyhash,  UtilsClass.PRIKEY6, "");//KeyPwd字段为空
+        assertThat(GetStorePostPwd,containsString("400"));
+        assertThat(GetStorePostPwd,containsString("Invalid private key or the password is not match the private key"));
+
+        GetStorePostPwd = store.GetStorePostPwd(privacyhash,  UtilsClass.PRIKEY6, "22333");//KeyPwd字段与私钥不匹配
+        assertThat(GetStorePostPwd,containsString("400"));
+        assertThat(GetStorePostPwd,containsString("Invalid private key or the password is not match the private key"));
     }
 
     /**
@@ -121,26 +148,20 @@ public class StoreInvalidTest {
         String gettransactionindex;
         gettransactionindex = store.GetTransactionIndex(privacyhash);
         assertThat(gettransactionindex,containsString("200"));
-        gettransactionindex = store.GetTransactionIndex("");
+
+        gettransactionindex = store.GetTransactionIndex("04cf125c3d488ceb9baa6aa68973896d7de18658c75f4a2c5309cdea4e4dfb54");//交易id不存在
+        assertThat(gettransactionindex,containsString("400"));
+        assertThat(gettransactionindex,containsString("Failed to find transaction"));
+
+        gettransactionindex = store.GetTransactionIndex("12345");
+        assertThat(gettransactionindex,containsString("400"));
         assertThat(gettransactionindex,containsString("Invalid parameter"));
-        gettransactionindex = store.GetTransactionIndex("11");
-        assertThat(gettransactionindex,containsString("hashData must be url encode string"));
 
+//        gettransactionindex = store.GetTransactionIndex("");//hash字段为空值
+//        assertThat(gettransactionindex,containsString("404 page not found"));
     }
-    /**
-     * 获取区块高度
-     */
-    @Test
-    public void TC1406_gettransactionblock(){
-        String gettransactionblock;
-        gettransactionblock = store.GetTransactionBlock(hash);
-        assertThat(gettransactionblock,containsString("200"));
-        gettransactionblock = store.GetTransactionBlock("");
-        assertThat(gettransactionblock,containsString("Invalid parameter"));
-        gettransactionblock = store.GetTransactionBlock("11");
-        assertThat(gettransactionblock,containsString("hashData must be url encode string"));
 
-    }
+
 
     /**
      * 按高度获取区块时
@@ -148,10 +169,15 @@ public class StoreInvalidTest {
     @Test
     public void TC1407_getblockbyheight(){
         String getblockbyheight;
+        getblockbyheight = store.GetBlockByHeight(0);
+        assertThat(getblockbyheight,containsString("200"));
+
         getblockbyheight = store.GetBlockByHeight(4);
         assertThat(getblockbyheight,containsString("200"));
+
         getblockbyheight = store.GetBlockByHeight(-12);
-//        assertThat(getblockbyheight,containsString("rpc error: code = Unknown desc = BlockchainGetBlockByHeight: failed to find block:1234567844"));
+        assertThat(getblockbyheight,containsString("400"));
+        assertThat(getblockbyheight,containsString("Invalid Parameter"));
     }
 
 
@@ -163,7 +189,7 @@ public class StoreInvalidTest {
     public void TC16_CreateStoreNull(){
         String data = "";
         String  response = store.CreateStore(data);
-        String message= JSONObject.fromObject(response).getString("Message");
+        String message= JSONObject.fromObject(response).getString("message");
         assertThat(message,equalTo("Data is mandatory"));
         assertEquals(response.contains("400"),true);
     }

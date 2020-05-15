@@ -107,10 +107,10 @@ public class APermfuncSys {
         return retAllow(response);
     }
 
-    public String getTransationBlock(String storeHash)throws  Exception{
-        String response=store.GetTransactionBlock(storeHash);
-        return retAllow(response);
-    }
+//    public String getTransationBlock(String storeHash)throws  Exception{
+//        String response=store.GetTransactionBlock(storeHash);
+//        return retAllow(response);
+//    }
     /**
      * 获取区块高度
      */
@@ -160,8 +160,8 @@ public class APermfuncSys {
         return retAllow(response);
     }
 
-    public String txSearch(String keyWord)  throws Exception{
-        String response= store.GetTxSearch(0,1,keyWord);
-        return retAllow(response);
-    }
+//    public String txSearch(String keyWord)  throws Exception{
+//        String response= store.GetTxSearch(0,1,keyWord);
+//        return retAllow(response);
+//    }
 }

@@ -51,12 +51,12 @@ public class StoreTest_UpgradeTestOnly {
         String Data = "{\"test\":\"json"+UtilsClass.Random(4)+"\"}";
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String storeHash = jsonObject.getString("data");
         assertEquals(globalResponse,response);
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
         assertThat(response, containsString("200"));
-        assertThat(response,containsString("Data"));
+        assertThat(response,containsString("data"));
 
     }
 
@@ -73,7 +73,7 @@ public class StoreTest_UpgradeTestOnly {
         map.put("pubkeys",PUBKEY6);
         String response1= store.CreatePrivateStore(Data,map);
         JSONObject jsonObject=JSONObject.fromObject(response1);
-        String StoreHashPwd = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String StoreHashPwd = jsonObject.getString("data");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -98,7 +98,7 @@ public class StoreTest_UpgradeTestOnly {
                 "bigsize1.txt");
         String response = store.CreateStore(Data);
         assertThat(response, containsString("200"));
-        assertThat(response, containsString("Data"));
+        assertThat(response, containsString("data"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -106,7 +106,7 @@ public class StoreTest_UpgradeTestOnly {
                 +  "bigsize2.txt");
         String response2 = store.CreateStore(Data2);
         assertThat(response2, containsString("200"));
-        assertThat(response2, containsString("Data"));
+        assertThat(response2, containsString("data"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -114,7 +114,7 @@ public class StoreTest_UpgradeTestOnly {
                 + "bigsize3.txt");
         String response3 = store.CreateStore(Data3);
         assertThat(response3, containsString("200"));
-        assertThat(response3, containsString("Data"));
+        assertThat(response3, containsString("data"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
     }
@@ -133,11 +133,11 @@ public class StoreTest_UpgradeTestOnly {
         map.put("pubKeys",PUBKEY1);
         String response1= store.CreatePrivateStore(Data,map);
         JSONObject jsonObject=JSONObject.fromObject(response1);
-        String StoreHashPwd = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String StoreHashPwd = jsonObject.getString("data");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
         assertThat(response1, containsString("200"));
-        assertThat(response1,containsString("Data"));
+        assertThat(response1,containsString("data"));
 
     }
 
@@ -146,18 +146,15 @@ public class StoreTest_UpgradeTestOnly {
         String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String storeHash = jsonObject.getString("data");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
         String response2= store.GetTxDetail(storeHash);
         assertThat(response2,containsString("200"));
-        final Base64.Decoder decoder = Base64.getDecoder();
-        String args=JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("Header").get("TransactionHash").toString();
-        log.info("123{}",args);
-        //   .getJSONArray("smartContractArgs").get(0).toString();
-        String DataInfo=args;
-        // String DataInfo=new String(decoder.decode(args),"UTF-8");
-        assertEquals(DataInfo.equals(storeHash),true);
+
+        String args=JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("txId");
+
+        assertEquals(args.equals(storeHash),true);
 
     }
 
@@ -170,7 +167,7 @@ public class StoreTest_UpgradeTestOnly {
         String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String storeHash = jsonObject.getString("data");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
        String response2= store.GetTransactionIndex(storeHash);
@@ -185,7 +182,7 @@ public class StoreTest_UpgradeTestOnly {
     public void TC275_getHeight() {
         String response= store.GetHeight();
         JSONObject jsonObject=JSONObject.fromObject(response);
-       Integer  height=jsonObject.getInt("Data");
+        Integer  height=jsonObject.getInt("data");
         assertThat(response,containsString("200"));
 
 
@@ -198,36 +195,25 @@ public class StoreTest_UpgradeTestOnly {
     public void TC274_getBlockByHeight() {
         String response= store.GetHeight();
         JSONObject jsonObject=JSONObject.fromObject(response);
-        Integer  height=jsonObject.getInt("Data");
+        Integer  height=jsonObject.getInt("data");
         assertThat(response,containsString("200"));
         int Height=4;
         String response2= store.GetBlockByHeight(Height-1);
         assertThat(response2,containsString("200"));
     }
+
     @Test
     public void TC243_getBlockByHash() {
         String response= store.GetHeight();
         JSONObject jsonObject=JSONObject.fromObject(response);
-        Integer  height=jsonObject.getInt("Data");
+        Integer  height=jsonObject.getInt("data");
         assertThat(response,containsString("200"));
         String response2= store.GetBlockByHeight(height-2);
-        String hash=JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("header").getString("blockHash");
+        String hash=JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("blockId");
         String response3= store.GetBlockByHash(hash);
         assertEquals(response2.equals(response3),true);
     }
 
-
-     @Test
-    public void TC254_getTransationBlock()throws  Exception{
-        String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
-        String response= store.CreateStore(Data);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        String response2=store.GetTransactionBlock(storeHash);
-        assertThat(response2,containsString("200"));
-    }
 
     // new private store ...
     @Test
@@ -245,11 +231,11 @@ public class StoreTest_UpgradeTestOnly {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String hash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String hash = jsonObject.getString("data");
         String res3 = store.GetStorePost(hash,PRIKEY1);
         assertThat(res3,containsString("200"));
         JSONObject jsonResult=JSONObject.fromObject(res3);
-        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+        assertThat(jsonResult.get("data").toString(),containsString(Data));
 
 
         map=new HashMap<>();
@@ -262,7 +248,7 @@ public class StoreTest_UpgradeTestOnly {
         String res4 = store.GetStorePost(hash,PRIKEY2);
         assertThat(res4,containsString("200"));
         jsonResult=JSONObject.fromObject(res4);
-        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+        assertThat(jsonResult.get("data").toString(),containsString(Data));
 
 
         map=new HashMap<>();
@@ -275,7 +261,7 @@ public class StoreTest_UpgradeTestOnly {
         String res5 = store.GetStorePostPwd(hash,PRIKEY6,PWD6);
         assertThat(res5,containsString("200"));
         jsonResult=JSONObject.fromObject(res5);
-        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+        assertThat(jsonResult.get("data").toString(),containsString(Data));
 
     }
 
@@ -294,11 +280,11 @@ public class StoreTest_UpgradeTestOnly {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String hash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String hash = jsonObject.getString("data");
         String res3 = store.GetStorePostPwd(hash,PRIKEY7,PWD7);
         assertThat(res3,containsString("200"));
         JSONObject jsonResult=JSONObject.fromObject(res3);
-        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+        assertThat(jsonResult.get("data").toString(),containsString(Data));
 
 
         map=new HashMap<>();
@@ -311,7 +297,7 @@ public class StoreTest_UpgradeTestOnly {
         String res4 = store.GetStorePost(hash,PRIKEY2);
         assertThat(res4,containsString("200"));
         jsonResult=JSONObject.fromObject(res4);
-        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+        assertThat(jsonResult.get("data").toString(),containsString(Data));
 
 
         map=new HashMap<>();
@@ -324,7 +310,7 @@ public class StoreTest_UpgradeTestOnly {
         String res5 = store.GetStorePostPwd(hash,PRIKEY6,PWD6);
         assertThat(res5,containsString("200"));
         jsonResult=JSONObject.fromObject(res5);
-        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+        assertThat(jsonResult.get("data").toString(),containsString(Data));
 
     }
 

@@ -151,7 +151,7 @@ public class UpgradeTestHistoryData {
         mapTXHashResp.put("getblockbyhash?hashData=****",store.GetBlockByHash(blockHash));
 
         mapTXHashResp.put("gettransactionindex?hashData=****",store.GetTransactionIndex(txHashList.get(1)));
-        mapTXHashResp.put("gettransactionblock?hashData=****",store.GetTransactionBlock(txHashList.get(1)));
+//        mapTXHashResp.put("gettransactionblock?hashData=****",store.GetTransactionBlock(txHashList.get(1)));
         mapTXHashResp.put("getpeerlist",store.GetPeerList()); //可能会出现节点顺序不一致的情况 无法直接存储比较
 
         mapTXHashResp.put("getledger",store.GetLedger(""));//存在版本号不相同的情况 无法直接存储比较

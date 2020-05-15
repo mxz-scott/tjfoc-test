@@ -430,7 +430,7 @@ public class TestPermission {
     public String sysPermCheck()throws Exception{
         String permStr="";
         permStr=permStr + pFun1.getHeight();  //SDK发送查看链当前高度请求
-        permStr=permStr + pFun1.getTransationBlock(glbTxHash); //SDK发送获取交易所在区块高度请求
+//        permStr=permStr + pFun1.getTransationBlock(glbTxHash); //SDK发送获取交易所在区块高度请求
 
         permStr=permStr + pFun1.getBlockByHeight(1); //SDK发送通过区块高度获取区块信息请求
 

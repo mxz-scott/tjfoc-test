@@ -517,7 +517,7 @@ public class TestMainSubChain_FRDG {
         assertEquals(bCheck2,store.GetHeight().contains(notSupport));
         assertEquals(bCheck2,store.GetStore(txHash1).contains(notSupport));
         assertEquals(bCheck2,store.GetBlockByHeight(1).contains(notSupport));
-        assertEquals(bCheck2,store.GetTransactionBlock(txHash1).contains(notSupport));
+//        assertEquals(bCheck2,store.GetTransactionBlock(txHash1).contains(notSupport));
         assertEquals(bCheck2,store.GetTransactionIndex(txHash1).contains(notSupport));
         assertEquals(false,store.GetInlocal(txHash1).contains(notSupport));//此接口与开发确认不管控
         assertEquals(bCheck2,store.GetStore(txHash1).contains(notSupport));

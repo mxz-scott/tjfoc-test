@@ -986,7 +986,7 @@ public class CommonFunc {
         //查询交易是否上链
         while((new Date()).getTime() - nowTime < sleeptime && bOK == false){
             //当前支持旧版本SDK gettxdetail接口 tokenapi gettxdetail接口
-            if(type.equals("0")) state = JSONObject.fromObject(store.GetTxDetail(hashData)).getString("State");
+            if(type.equals("0")) state = JSONObject.fromObject(store.GetTxDetail(hashData)).getString("state");
             else if(type.equals("1")) state = JSONObject.fromObject(tokenModule.tokenGetTxDetail(hashData)).getString("state");
             if(state.equals("200"))
                 bOK = true;
@@ -1048,7 +1048,7 @@ public class CommonFunc {
         //查询交易是否上链
         while((new Date()).getTime() - nowTime < sleeptime && bOK == false){
             //当前支持旧版本SDK gettxdetail接口 tokenapi gettxdetail接口
-            if(type.equals("0")) state = JSONObject.fromObject(store.GetTxDetail(hashData)).getString("State");
+            if(type.equals("0")) state = JSONObject.fromObject(store.GetTxDetail(hashData)).getString("state");
             else if(type.equals("1")) state = JSONObject.fromObject(tokenModule.tokenGetTxDetail(hashData)).getString("state");
             if(state.equals("200"))
                 bOK = true;
@@ -1076,15 +1076,15 @@ public class CommonFunc {
         switch (type){
             case "00" :
                 //旧版本sdk接口 存证/隐私存证/docker创建合约/docker合约交易/docker合约销毁/utxo单签回收/WVM合约交易
-                hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+                hash = JSONObject.fromObject(response).getString("data");
                 break;
             case "01" :
                 //旧版本sdk接口 utxo hash 单签发行/转账 除单签回收
-                hash = JSONObject.fromObject(response).getString("Data");
+                hash = JSONObject.fromObject(response).getString("data");
                 break;
             case "02" :
                 //旧版本sdk接口 utxo hash 多签发行/转账/回收
-                hash = JSONObject.fromObject(response).getJSONObject("Data").getString("TxId");
+                hash = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
                 break;
             case "10" :
                 //token api v1 接口 hash 除destroybytype
