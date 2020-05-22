@@ -222,18 +222,18 @@ public  class GoStore implements Store {
     }
 
 
-//    public String GetStoreLocal(String hash) {
-//        String param;
-//        String hashEncode = URLEncoder.encode(hash);
-//        //hash需要urlEncode编码
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("hash", hashEncode);
-//        param = GetTest.ParamtoUrl(map);
-//        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-//        String result = GetTest.SendGetTojson(SDKADD + "/getstore2" + "?" + param);
-////        log.info(result);
-//        return result;
-//    }
+    public String GetStoreLocal(String hash) {
+        String param;
+        String hashEncode = URLEncoder.encode(hash);
+        //hash需要urlEncode编码
+        Map<String, Object> map = new HashMap<>();
+        map.put("hash", hashEncode);
+        param = GetTest.ParamtoUrl(map);
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+        String result = GetTest.SendGetTojson(SDKADD + "/getstore2" + "?" + param);
+//        log.info(result);
+        return result;
+    }
 
 
     /***
@@ -337,6 +337,20 @@ public  class GoStore implements Store {
     }
 
 
+    /**
+     * 按哈希获取所在区块高度
+     *
+     * @author chenxu
+     * @version 1.0
+     * @method GET
+     */
+    public String GetTransactionBlock(String hash) {
+        String param = "";
+        if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
+        String result = GetTest.doGet2(SDKADD + "/v2/block/height/" + hash + param);
+//        log.info(result);
+        return result;
+    }
 
 
     /**
