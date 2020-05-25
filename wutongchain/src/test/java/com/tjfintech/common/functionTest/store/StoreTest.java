@@ -295,18 +295,19 @@ public class StoreTest {
 
 
 
-//    @Test
-//    public void TC254_getTransationBlock()throws  Exception{
-//        String Data = "{\"test\":\"json"+UtilsClass.Random(4)+"\"}";
-//        String response= store.CreateStore(Data);
-//        JSONObject jsonObject=JSONObject.fromObject(response);
-//        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
-//
-//        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-//
-//        String response2=store.GetTransactionBlock(storeHash);
-//        assertThat(response2,containsString("200"));
-//    }
+    @Test
+    public void TC254_getTransationBlock()throws  Exception{
+        String Data = "{\"test\":\"json"+UtilsClass.Random(4)+"\"}";
+        String response= store.CreateStore(Data);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String storeHash = jsonObject.getString("data");
+
+        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+        String response2=store.GetTransactionBlock(storeHash);
+        log.info(response2);
+        assertThat(response2,containsString("200"));
+    }
 
     @Test
     public void createStoreDupDataString() throws Exception {

@@ -15,7 +15,7 @@ public interface Store {
     String GetHeight();
     String GetBlockByHeight(int height);
     String GetBlockByHash(String hash);
-//    String GetTransactionBlock(String hash);
+    String GetTransactionBlock(String hash);
     String GetTxDetail(String hash);
     String GetSCTxDetail(String hash);
 
