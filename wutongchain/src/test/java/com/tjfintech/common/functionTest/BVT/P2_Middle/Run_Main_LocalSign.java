@@ -7,7 +7,7 @@ import com.tjfintech.common.BeforeCondition;
         import com.tjfintech.common.functionTest.Conditions.SetMainLedger;
         import com.tjfintech.common.functionTest.PermissionTest.TestPermission;
         import com.tjfintech.common.functionTest.mixTestWithConfigChange.*;
-        import com.tjfintech.common.functionTest.store.LocalStoreTest;
+//        import com.tjfintech.common.functionTest.store.LocalStoreTest;
         import com.tjfintech.common.functionTest.syncInterfaceTest.SyncManageTest;
         import com.tjfintech.common.functionTest.utxoMultiSign.LocalMultiSignInvalidTest;
         import com.tjfintech.common.functionTest.utxoMultiSign.LocalMultiSignTest;

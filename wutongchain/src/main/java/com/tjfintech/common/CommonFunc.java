@@ -1076,7 +1076,7 @@ public class CommonFunc {
         switch (type){
             case "00" :
                 //旧版本sdk接口 存证/隐私存证/docker创建合约/docker合约交易/docker合约销毁/utxo单签回收/WVM合约交易
-                hash = JSONObject.fromObject(response).getString("data");
+                hash = JSONObject.fromObject(response).getString("Data");
                 break;
             case "01" :
                 //旧版本sdk接口 utxo hash 单签发行/转账 除单签回收

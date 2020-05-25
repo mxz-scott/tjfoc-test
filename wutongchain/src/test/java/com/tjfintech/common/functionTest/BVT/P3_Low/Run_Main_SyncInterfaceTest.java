@@ -5,7 +5,7 @@ import com.tjfintech.common.functionTest.Conditions.SetMainLedger;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
 import com.tjfintech.common.functionTest.mixTest.TimeofTxOnChain;
-import com.tjfintech.common.functionTest.store.LocalStoreTest;
+//import com.tjfintech.common.functionTest.store.LocalStoreTest;
 import com.tjfintech.common.functionTest.store.StoreInvalidTest;
 import com.tjfintech.common.functionTest.store.StoreTest;
 import com.tjfintech.common.functionTest.utxoMultiSign.*;
@@ -22,7 +22,7 @@ import org.junit.runners.Suite;
         SyncDockerContractTest.class,
         SyncMultiSignTest.class,
         SyncSingleSignTest.class,
-        SyncStoreTest.class,
+//        SyncStoreTest.class,
         SyncManageTest.class,
 })
 

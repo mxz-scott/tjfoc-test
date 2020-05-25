@@ -5,7 +5,7 @@ import com.tjfintech.common.functionTest.Conditions.*;
 import com.tjfintech.common.functionTest.PermissionTest.TestPermission;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.MixTxTest;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.TestMgTool;
-import com.tjfintech.common.functionTest.store.LocalStoreTest;
+//import com.tjfintech.common.functionTest.store.LocalStoreTest;
 import com.tjfintech.common.functionTest.utxoMultiSign.LocalMultiSignInvalidTest;
 import com.tjfintech.common.functionTest.utxoMultiSign.LocalMultiSignTest;
 import com.tjfintech.common.functionTest.utxoSingleSign.LocalSingleSignInvalidTest;

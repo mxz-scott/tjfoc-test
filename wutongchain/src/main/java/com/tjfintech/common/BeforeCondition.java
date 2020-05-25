@@ -83,7 +83,7 @@ public class BeforeCondition {
      */
     @Test
     public  void SetPermAndInit() throws Exception{
-        setPermission999();
+//        setPermission999();
         SDKADD = rSDKADD;
         updatePubPriKey();//从文件中根据配置certPath读取指定类型的公私钥对
         collAddressTest();//添加归集地址发行地址
@@ -253,51 +253,51 @@ public class BeforeCondition {
      */
     public void createAddresses()throws Exception{
 
-        ADDRESS1 =JSONObject.fromObject(soloSign.genAddress(PUBKEY1)).getJSONObject("Data").getString("Address");
-        ADDRESS2 =JSONObject.fromObject(soloSign.genAddress(PUBKEY2)).getJSONObject("Data").getString("Address");
-        ADDRESS3 =JSONObject.fromObject(soloSign.genAddress(PUBKEY3)).getJSONObject("Data").getString("Address");
-        ADDRESS4 =JSONObject.fromObject(soloSign.genAddress(PUBKEY4)).getJSONObject("Data").getString("Address");
-        ADDRESS5 =JSONObject.fromObject(soloSign.genAddress(PUBKEY5)).getJSONObject("Data").getString("Address");
-        ADDRESS6 =JSONObject.fromObject(soloSign.genAddress(PUBKEY6)).getJSONObject("Data").getString("Address");
-        ADDRESS7 =JSONObject.fromObject(soloSign.genAddress(PUBKEY7)).getJSONObject("Data").getString("Address");
+        ADDRESS1 =JSONObject.fromObject(soloSign.genAddress(PUBKEY1)).getJSONObject("data").getString("address");
+        ADDRESS2 =JSONObject.fromObject(soloSign.genAddress(PUBKEY2)).getJSONObject("data").getString("address");
+        ADDRESS3 =JSONObject.fromObject(soloSign.genAddress(PUBKEY3)).getJSONObject("data").getString("address");
+        ADDRESS4 =JSONObject.fromObject(soloSign.genAddress(PUBKEY4)).getJSONObject("data").getString("address");
+        ADDRESS5 =JSONObject.fromObject(soloSign.genAddress(PUBKEY5)).getJSONObject("data").getString("address");
+        ADDRESS6 =JSONObject.fromObject(soloSign.genAddress(PUBKEY6)).getJSONObject("data").getString("address");
+        ADDRESS7 =JSONObject.fromObject(soloSign.genAddress(PUBKEY7)).getJSONObject("data").getString("address");
 
         int M = 3;
         Map<String, Object> map = new HashMap<>();
         map.put("1", PUBKEY1);
         map.put("2", PUBKEY2);
         map.put("3", PUBKEY3);
-        MULITADD1=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//123
+        MULITADD1=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//123
         map = new HashMap<>();
         map.put("1", PUBKEY1);
         map.put("2", PUBKEY2);
         map.put("3", PUBKEY6);
-        MULITADD2=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//126
+        MULITADD2=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//126
         map = new HashMap<>();
         map.put("1", PUBKEY1);
         map.put("2", PUBKEY6);
         map.put("3", PUBKEY7);
-        MULITADD3=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//167
+        MULITADD3=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//167
         M = 1;
         map = new HashMap<>();
         map.put("1", PUBKEY1);
         map.put("2", PUBKEY2);
-        MULITADD4=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//12
+        MULITADD4=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//12
         map = new HashMap<>();
         map.put("1", PUBKEY1);
         map.put("2", PUBKEY3);
-        MULITADD5=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//13
+        MULITADD5=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//13
         map = new HashMap<>();
         map.put("1", PUBKEY3);
         map.put("2", PUBKEY4);
-        MULITADD6=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//34
+        MULITADD6=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//34
         map = new HashMap<>();
         map.put("1", PUBKEY1);
         map.put("2", PUBKEY6);
-        MULITADD7=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//16
+        MULITADD7=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//16
         map = new HashMap<>();
         map.put("1", PUBKEY4);
         map.put("2", PUBKEY5);
-        IMPPUTIONADD=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("Data").getString("Address");//45
+        IMPPUTIONADD=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//45
     }
 
 

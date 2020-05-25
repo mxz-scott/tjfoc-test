@@ -58,14 +58,14 @@ public class MultiSignInvalidTest {
         map.put("PUBKEY2",utilsClass.PUBKEY2);
         map.put("PUBKEY6",utilsClass.PUBKEY6);
         multiaddr2 = multiSign.genMultiAddress(1, map);
-        log.info("多签地址二"+ JSONObject.fromObject(multiaddr2).getJSONObject("Data").getString("Address"));
+        log.info("多签地址二"+ JSONObject.fromObject(multiaddr2).getJSONObject("data").getString("address"));
         Map<String, Object> map2 =  new HashMap<>();
         //传入3个公钥
         map2.put("PUBKEY1",utilsClass.PUBKEY1);
         map2.put("PUBKEY2",utilsClass.PUBKEY2);
         map2.put("PUBKEY6",utilsClass.PUBKEY3);
         multiaddr1 = multiSign.genMultiAddress(1, map2);
-        log.info("多签地址一"+ JSONObject.fromObject(multiaddr1).getJSONObject("Data").getString("Address"));
+        log.info("多签地址一"+ JSONObject.fromObject(multiaddr1).getJSONObject("data").getString("address"));
 
         //随机生成一个Tokentype
         Tokentype = UtilsClass.Random(4);
