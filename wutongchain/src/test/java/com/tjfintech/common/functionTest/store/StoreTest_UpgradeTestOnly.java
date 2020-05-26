@@ -152,7 +152,7 @@ public class StoreTest_UpgradeTestOnly {
         String response2= store.GetTxDetail(storeHash);
         assertThat(response2,containsString("200"));
 
-        String args=JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("txId");
+        String args=JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("transactionId");
 
         assertEquals(args.equals(storeHash),true);
 

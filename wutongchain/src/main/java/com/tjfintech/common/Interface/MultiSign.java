@@ -33,8 +33,6 @@ public interface MultiSign {
     String Transfer(String PriKey,String Data,String fromAddr ,List<Map>tokenList);
     String Recycle(String multiAddr,String priKey,String Pwd,String tokenType,String amount);
     String Recycle(String multiAddr,String priKey,String tokenType,String amount);
-    String Recycle(String priKey,String tokenType,String amount);
-
 
     String freezeToken(String priKey,String tokenType);
     String freezeToken(String tokenType);
@@ -59,10 +57,7 @@ public interface MultiSign {
     String sendSign(String signData);
     String TransferLocalSign(String PubKey, String Data,String fromAddr ,List<Map>tokenList);
     String RecycleLocalSign(String multiAddr,String pubKey,String tokenType,String amount);
-
     String RecyclesLocalSign(List<Map> tokenList);
-
-
 
     //同步接口
     String SyncIssueToken(Integer timeout,String MultiAddr,String ToAddr,String TokenType,String Amount,String Data);

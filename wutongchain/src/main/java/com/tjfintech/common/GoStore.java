@@ -364,7 +364,7 @@ public  class GoStore implements Store {
         String param = "";
         if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
         String result = GetTest.SendGetTojson(SDKADD + "/v2/tx/inlocal/" + hash + param);
-//        log.info(result);
+        log.info(result);
         return result;
     }
 

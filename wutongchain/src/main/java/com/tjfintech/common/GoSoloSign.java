@@ -201,6 +201,22 @@ public class GoSoloSign implements SoloSign {
     }
 
     /**
+     * 回收数字资产
+     */
+    public String Recycle(String priKey,String tokenType,String amount){
+        Map<String ,Object>map=new HashMap<>();
+        map.put("priKey",priKey);
+        map.put("tokenType",tokenType);
+        map.put("amount",amount);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result =PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/destroy"+param,map);
+        log.info(result);
+        return result;
+
+    }
+
+    /**
      * 同步转账交易
      * @param timeout
      * @param token

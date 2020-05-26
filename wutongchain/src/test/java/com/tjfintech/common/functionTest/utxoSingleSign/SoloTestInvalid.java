@@ -183,8 +183,8 @@ public class SoloTestInvalid {
 //    @After
     public void afterConfig() throws Exception {
         log.info("回收token------------------------------------------------------------------------------");
-        String recycleInfo = multiSign.Recycle(PRIKEY1, tokenType, "100.123456789");
-        String recycleInfo2 = multiSign.Recycle(PRIKEY1, tokenType2, "200.87654321");
+        String recycleInfo = soloSign.Recycle(PRIKEY1, tokenType, "100.123456789");
+        String recycleInfo2 = soloSign.Recycle(PRIKEY1, tokenType2, "200.87654321");
         assertThat(recycleInfo, containsString("200"));
         assertThat(recycleInfo2, containsString("200"));
 

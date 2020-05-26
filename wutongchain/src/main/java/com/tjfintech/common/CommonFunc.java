@@ -1061,7 +1061,7 @@ public class CommonFunc {
     }
 
     /***
-     * 次函数用于从交易返回结果response中获取sdk或者token api交易hash
+     * 此函数用于从交易返回结果response中获取sdk或者token api交易hash
      * 不适用管理工具hash获取
      * @param response 交易返回信息 目前应该是一个json字符串
      * @param type 根据特定类型获取 因sdk不同交易或版本不同解析json所需要获取的json字段不同
@@ -1076,7 +1076,7 @@ public class CommonFunc {
         switch (type){
             case "00" :
                 //旧版本sdk接口 存证/隐私存证/docker创建合约/docker合约交易/docker合约销毁/utxo单签回收/WVM合约交易
-                hash = JSONObject.fromObject(response).getString("Data");
+                hash = JSONObject.fromObject(response).getString("data");
                 break;
             case "01" :
                 //旧版本sdk接口 utxo hash 单签发行/转账 除单签回收

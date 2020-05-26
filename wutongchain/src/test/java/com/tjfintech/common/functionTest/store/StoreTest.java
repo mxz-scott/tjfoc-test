@@ -328,8 +328,10 @@ public class StoreTest {
         if(bWalletEnabled) {
             while((new Date()).getTime() - nowTime < 2000 ) {
                 String response13 = store.CreateStore(Data);
+                log.info(response13);
                 assertThat(response13,
-                        anyOf(containsString("Duplicate transaction body,tx hash: " + storeHash),
+                        anyOf(containsString("Duplicate transaction body,"),
+                                containsString("txId_hex:" + storeHash),
                                 containsString("transactionFilter exist")));
                 sleepAndSaveInfo(400, "waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
             }
@@ -344,7 +346,7 @@ public class StoreTest {
 
         String response4= store.GetStore(storeHash);
         assertEquals("200",JSONObject.fromObject(response4).getString("state"));
-        assertEquals(Data,JSONObject.fromObject(response4).getString("data"));
+        assertEquals(Data,JSONObject.fromObject(response4).getJSONObject("data").getJSONObject("store").getString("storeData"));
     }
 
 }

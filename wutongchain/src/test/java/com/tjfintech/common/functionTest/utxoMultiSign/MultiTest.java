@@ -672,7 +672,7 @@ public class MultiTest {
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "970");
         String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, "990");
-        String recycleInfo3 = multiSign.Recycle(PRIKEY1, tokenType, "20");
+        String recycleInfo3 = soloSign.Recycle(PRIKEY1, tokenType, "20");
         String recycleInfo4 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType2, "10");
         String recycleInfo5 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "10");
 
@@ -734,9 +734,9 @@ public class MultiTest {
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "970");
         String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType2, "990");
-        String recycleInfo3 = multiSign.Recycle(PRIKEY1, tokenType, "20");
-        String recycleInfo4 = multiSign.Recycle( PRIKEY2, tokenType2, "10");
-        String recycleInfo5 = multiSign.Recycle(PRIKEY2, tokenType, "10");
+        String recycleInfo3 = soloSign.Recycle(PRIKEY1, tokenType, "20");
+        String recycleInfo4 = soloSign.Recycle( PRIKEY2, tokenType2, "10");
+        String recycleInfo5 = soloSign.Recycle(PRIKEY2, tokenType, "10");
 
         assertEquals("200",JSONObject.fromObject(recycleInfo).getString("state"));
         assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("state"));
@@ -815,7 +815,7 @@ public class MultiTest {
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "970");
         String recycleInfo2 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType2, "990");
-        String recycleInfo3 = multiSign.Recycle(PRIKEY1, tokenType, "20");
+        String recycleInfo3 = soloSign.Recycle(PRIKEY1, tokenType, "20");
         String recycleInfo4 = multiSign.Recycle(MULITADD5, PRIKEY1, tokenType2, "10");
         String recycleInfo5 = multiSign.Recycle(MULITADD5, PRIKEY1, tokenType, "10");
 
@@ -999,9 +999,9 @@ public class MultiTest {
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, "970");
         String recycleInfo2 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType2, "990");
-        String recycleInfo3 = multiSign.Recycle(PRIKEY1, tokenType, "20");
-        String recycleInfo4 = multiSign.Recycle(PRIKEY2, tokenType2, "10");
-        String recycleInfo5 = multiSign.Recycle(PRIKEY2, tokenType, "10");
+        String recycleInfo3 = soloSign.Recycle(PRIKEY1, tokenType, "20");
+        String recycleInfo4 = soloSign.Recycle(PRIKEY2, tokenType2, "10");
+        String recycleInfo5 = soloSign.Recycle(PRIKEY2, tokenType, "10");
 
         assertEquals("200",JSONObject.fromObject(recycleInfo).getString("state"));
         assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("state"));

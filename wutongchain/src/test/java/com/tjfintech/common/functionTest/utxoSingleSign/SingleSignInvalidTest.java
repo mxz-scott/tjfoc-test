@@ -149,9 +149,9 @@ public class SingleSignInvalidTest {
     public void TC1336_transfer(){
         String transfer;
         Map<String, String> map = new HashMap<>();
-        map.put("ToAddr","3UycKc8qvVWpVcBr3ipNqDC9oZPd86wj3qSJ6GMbLrVPgeqVwY"); //转入的账户地址
-        map.put("TokenType","TestToken"); //Token类型
-        map.put("Amount","20000");    //转出的数量
+        map.put("toAddress","3UycKc8qvVWpVcBr3ipNqDC9oZPd86wj3qSJ6GMbLrVPgeqVwY"); //转入的账户地址
+        map.put("tokenType","TestToken"); //Token类型
+        map.put("amount","20000");    //转出的数量
         List<Map> list =new ArrayList<>();
         list.add(map);
         transfer = soloSign.Transfer(list, "", "111");//PriKey字段传入空值
@@ -160,35 +160,45 @@ public class SingleSignInvalidTest {
         assertThat(transfer,containsString("Private key must be base64 string"));
         transfer = soloSign.Transfer(list, "YWJj", "111");//	PriKey字段传入一些没有意义的字符的base64编码的值
         assertThat(transfer,containsString("unsupport pem file"));
-        map.put("ToAddr",""); //转入的账户地址
+
+        map.put("toAddress",""); //转入的账户地址
+        map.put("tokenType","TestToken"); //Token类型
+        map.put("amount","20000");    //转出的数量
         list =new ArrayList<>();
         list.add(map);
         transfer = soloSign.Transfer(list, utilsClass.PRIKEY2, "111");	//TokenAddr字段传入空值
         assertThat(transfer,containsString("invalid address"));
-        map.put("TokenType",""); //Token类型
+
+        map.put("tokenType",""); //Token类型
+        map.put("toAddress","3UycKc8qvVWpVcBr3ipNqDC9oZPd86wj3qSJ6GMbLrVPgeqVwY");
+        map.put("amount","20000");    //转出的数量
         list =new ArrayList<>();
         list.add(map);
         transfer = soloSign.Transfer(list, utilsClass.PRIKEY2, "111");	//TokenType字段传入空值
         assertThat(transfer,containsString("Token type cannot be empty"));
 
         //Amount字段传入空值
-        map.put("Amount","");    //转出的数量
+        map.put("amount","");    //转出的数量
+        map.put("toAddress","3UycKc8qvVWpVcBr3ipNqDC9oZPd86wj3qSJ6GMbLrVPgeqVwY"); //转入的账户地址
+        map.put("tokenType","TestToken"); //Token类型
         list =new ArrayList<>();
         list.add(map);
         transfer = soloSign.Transfer(list, utilsClass.PRIKEY2, "111");
         assertThat(transfer,containsString("Token amount must be a valid number and less than "+MaxValue));
 
         //Amount字段传入负值
-        map.put("Amount","-1");    //转出的数量
+        map.put("amount","-1");    //转出的数量
+        map.put("toAddress","3UycKc8qvVWpVcBr3ipNqDC9oZPd86wj3qSJ6GMbLrVPgeqVwY"); //转入的账户地址
+        map.put("tokenType","TestToken"); //Token类型
         list =new ArrayList<>();
         list.add(map);
         transfer = soloSign.Transfer(list, utilsClass.PRIKEY2, "111");
         assertThat(transfer,containsString("Token amount must be a valid number and less than "+MaxValue));
 
         //Amount字段传入数量超出余额
-        map.put("ToAddr","3UycKc8qvVWpVcBr3ipNqDC9oZPd86wj3qSJ6GMbLrVPgeqVwY"); //转入的账户地址
-        map.put("TokenType","TestToken11211"); //Token类型
-        map.put("Amount","2222222");    //转出的数量
+        map.put("toAddress","3UycKc8qvVWpVcBr3ipNqDC9oZPd86wj3qSJ6GMbLrVPgeqVwY"); //转入的账户地址
+        map.put("tokenType","TestToken11211"); //Token类型
+        map.put("amount","2222222");    //转出的数量
         list =new ArrayList<>();
         list.add(map);
         transfer = soloSign.Transfer(list, utilsClass.PRIKEY1, "111");//PriKey字段传入空值

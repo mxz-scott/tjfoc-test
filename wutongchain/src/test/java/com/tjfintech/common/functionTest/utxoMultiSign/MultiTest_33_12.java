@@ -215,7 +215,7 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(recResponse).getString("state"));
         assertThat(JSONObject.fromObject(recResponse).getJSONObject("data").getString("isCompleted"), containsString("true"));
 
-        String recycleInfo3 = multiSign.Recycle(PRIKEY1, tokenType, String.valueOf(tf1));
+        String recycleInfo3 = soloSign.Recycle(PRIKEY1, tokenType, String.valueOf(tf1));
         String recycleInfo4 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType2, String.valueOf(tf1));
         String recycleInfo5 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, String.valueOf(tf1));
 
@@ -370,7 +370,7 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(recResponse).getString("state"));
         assertThat(JSONObject.fromObject(recResponse).getJSONObject("data").getString("isCompleted"), containsString("true"));
 
-        String recycleInfo3 = multiSign.Recycle(PRIKEY1, tokenType, String.valueOf(tf1));
+        String recycleInfo3 = soloSign.Recycle(PRIKEY1, tokenType, String.valueOf(tf1));
         String recycleInfo4 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType2, String.valueOf(tf1));
         String recycleInfo5 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, String.valueOf(tf1));
 
@@ -499,7 +499,7 @@ public class MultiTest_33_12 {
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD7, PRIKEY1, tokenType, String.valueOf(amount-tf1-tf1));
         String recycleInfo2 = multiSign.Recycle(MULITADD7, PRIKEY6,PWD6,tokenType2, String.valueOf(amount2-tf1));
-        String recycleInfo3 = multiSign.Recycle(PRIKEY1, tokenType, String.valueOf(tf1));
+        String recycleInfo3 = soloSign.Recycle(PRIKEY1, tokenType, String.valueOf(tf1));
         String recycleInfo4 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType2, String.valueOf(tf1));
         String recycleInfo5 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, String.valueOf(tf1));
 
@@ -626,7 +626,7 @@ public class MultiTest_33_12 {
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD7, PRIKEY1,tokenType, String.valueOf(amount-tf1-tf1));
         String recycleInfo2 = multiSign.Recycle(MULITADD7, PRIKEY6,PWD6,tokenType2, String.valueOf(amount2-tf1));
-        String recycleInfo3 = multiSign.Recycle(PRIKEY1, tokenType, String.valueOf(tf1));
+        String recycleInfo3 = soloSign.Recycle(PRIKEY1, tokenType, String.valueOf(tf1));
         String recycleInfo4 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType2, String.valueOf(tf1));
         String recycleInfo5 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, String.valueOf(tf1));
 
@@ -1354,7 +1354,7 @@ public class MultiTest_33_12 {
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD7, PRIKEY1, tokenType, String.valueOf(amount-tf1-tf1));
         String recycleInfo2 = multiSign.Recycle(MULITADD7, PRIKEY6,PWD6,tokenType2, String.valueOf(amount2-tf1));
-        String recycleInfo3 = multiSign.Recycle(PRIKEY1, tokenType, String.valueOf(tf1));
+        String recycleInfo3 = soloSign.Recycle(PRIKEY1, tokenType, String.valueOf(tf1));
         String recycleInfo4 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType2, String.valueOf(tf1));
         String recycleInfo5 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, String.valueOf(tf1));
 
@@ -1479,7 +1479,7 @@ public class MultiTest_33_12 {
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD7, PRIKEY1, tokenType, String.valueOf(amount-tf1-tf1));
         String recycleInfo2 = multiSign.Recycle(MULITADD7, PRIKEY6, PWD6,tokenType2, String.valueOf(amount2-tf1));
-        String recycleInfo3 = multiSign.Recycle(PRIKEY1, tokenType, String.valueOf(tf1));
+        String recycleInfo3 = soloSign.Recycle(PRIKEY1, tokenType, String.valueOf(tf1));
         String recycleInfo4 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType2, String.valueOf(tf1));
         String recycleInfo5 = multiSign.Recycle(MULITADD4, PRIKEY1, tokenType, String.valueOf(tf1));
 

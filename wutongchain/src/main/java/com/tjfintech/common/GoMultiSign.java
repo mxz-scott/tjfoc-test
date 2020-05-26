@@ -995,18 +995,7 @@ public class GoMultiSign implements MultiSign {
         return result;
 
     }
-    public String Recycle(String priKey,String tokenType,String amount){
-        Map<String ,Object>map=new HashMap<>();
-        map.put("priKey",priKey);
-        map.put("tokenType",tokenType);
-        map.put("amount",amount);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result =PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/multi/destroy"+param,map);
-        log.info(result);
-        return result;
 
-    }
 
 
     /**
@@ -1014,11 +1003,12 @@ public class GoMultiSign implements MultiSign {
      * @param tokenType 数字货币类型
      */
     public String QueryZero(String tokenType){
-        Map<String ,Object>map=new HashMap<>();
-        map.put("tokentype",tokenType);
-        String param= GetTest.ParamtoUrl(map);
+//        Map<String ,Object>map=new HashMap<>();
+//        map.put("tokentype",tokenType);
+
+        String param= "";
         if(subLedger!="") param = param + "&ledger="+subLedger;
-        String result= (GetTest.SendGetTojson(SDKADD+"/v2/tx/utxo/assets/state"+"?"+param));
+        String result= (GetTest.SendGetTojson(SDKADD+"/v2/tx/utxo/zeroaddr/balance/"+ tokenType + param));
         log.info(result);
         return result;
     }

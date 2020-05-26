@@ -262,7 +262,7 @@ public class SoloTest {
 
         String queryInfo3TK1 = soloSign.Balance(PRIKEY3, tokenType);
         assertThat(queryInfo3TK1, containsString("70.25"));
-        String Info1 = multiSign.Recycle("", PRIKEY3, tokenType, "70.25");
+        String Info1 = soloSign.Recycle( PRIKEY3, tokenType, "70.25");
         assertThat(Info1, containsString("200"));
         log.info("帐号3，token1余额正确");
         String queryInfo4TK1 = soloSign.Balance(PRIKEY4, tokenType);
@@ -270,22 +270,22 @@ public class SoloTest {
         log.info("帐号4，token1余额正确");
         String queryInfo4TK2 = soloSign.Balance(PRIKEY4, tokenType2);
         assertThat(queryInfo4TK2, containsString("90"));
-        String Info2 = multiSign.Recycle("", PRIKEY4, tokenType2, "90");
+        String Info2 = soloSign.Recycle( PRIKEY4, tokenType2, "90");
         assertThat(Info2, containsString("200"));
         log.info("帐号4，token2余额正确");
         String queryInfo5TK2 = soloSign.Balance(PRIKEY5, tokenType2);
         assertThat(queryInfo5TK2, containsString("100.555"));
-        String Info3 = multiSign.Recycle("", PRIKEY5, tokenType2, "100.555");
+        String Info3 = soloSign.Recycle( PRIKEY5, tokenType2, "100.555");
         assertThat(Info3, containsString("200"));
         log.info("帐号5，token2余额正确");
         String queryInfo6TK1 = soloSign.Balance(PRIKEY2, tokenType);
         assertThat(queryInfo6TK1, containsString("30"));
-        String Info4 = multiSign.Recycle("", PRIKEY2, tokenType, "30");
+        String Info4 = soloSign.Recycle( PRIKEY2, tokenType, "30");
         assertThat(Info4, containsString("200"));
         log.info("帐号6，token1余额正确");
         String queryInfo6TK2 = soloSign.Balance(PRIKEY2, tokenType2);
         assertThat(queryInfo6TK2, containsString("10"));
-        String Info5 = multiSign.Recycle("", PRIKEY2, tokenType2, "10");
+        String Info5 = soloSign.Recycle(PRIKEY2, tokenType2, "10");
         assertThat(Info5, containsString("200"));
         log.info("帐号6，token2余额正确");
     }
@@ -326,9 +326,9 @@ public class SoloTest {
         assertThat(queryInfo2, containsString("200"));
         assertThat(queryInfo2, containsString(amount2));
 
-        String Info3 = multiSign.Recycle("", PRIKEY3, tokenType, issueAmount1);
+        String Info3 = soloSign.Recycle( PRIKEY3, tokenType, issueAmount1);
         assertThat(Info3, containsString("200"));
-        String Info4 = multiSign.Recycle("", PRIKEY5, tokenType2, issueAmount2);
+        String Info4 = soloSign.Recycle(PRIKEY5, tokenType2, issueAmount2);
         assertThat(Info4, containsString("200"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
@@ -405,9 +405,9 @@ public class SoloTest {
         assertThat(queryInfo2, containsString("200"));
         assertThat(queryInfo2, containsString("0.8"));
 
-        String Info3 = multiSign.Recycle("", PRIKEY3, tokenType, "0.002");
+        String Info3 = soloSign.Recycle(PRIKEY3, tokenType, "0.002");
         assertThat(Info3, containsString("200"));
-        String Info4 = multiSign.Recycle("", PRIKEY5, tokenType2, "0.5");
+        String Info4 = soloSign.Recycle( PRIKEY5, tokenType2, "0.5");
         assertThat(Info4, containsString("200"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
@@ -517,8 +517,8 @@ public class SoloTest {
         String recycleInfo4 = soloSign.Transfer(list7, PRIKEY3, "李四向小六转账30 TT001, 60 TT002");
         assertThat(recycleInfo4, containsString("insufficient balance"));
 
-        String Info = multiSign.Recycle("", PRIKEY3, tokenType, "3000");
-        String Info3 = multiSign.Recycle("", PRIKEY3, tokenType2, "3000");
+        String Info = soloSign.Recycle( PRIKEY3, tokenType, "3000");
+        String Info3 = soloSign.Recycle( PRIKEY3, tokenType2, "3000");
         assertThat(Info, containsString("200"));
         assertThat(Info3, containsString("200"));
     }
@@ -573,10 +573,10 @@ public class SoloTest {
 
 
         log.info("开始回收....");
-        String Info = multiSign.Recycle("", PRIKEY3, tokenType, "3000");
-        String Info1 = multiSign.Recycle("", PRIKEY3, tokenType2, "3000");
-        String Info2 = multiSign.Recycle(PRIKEY1, tokenType, "7000.123456789");
-        String Info3 = multiSign.Recycle(PRIKEY1, tokenType2, "17000.87654321");
+        String Info = soloSign.Recycle(PRIKEY3, tokenType, "3000");
+        String Info1 = soloSign.Recycle(PRIKEY3, tokenType2, "3000");
+        String Info2 = soloSign.Recycle(PRIKEY1, tokenType, "7000.123456789");
+        String Info3 = soloSign.Recycle(PRIKEY1, tokenType2, "17000.87654321");
 
         assertEquals("200",JSONObject.fromObject(Info).getString("state"));
         assertEquals("200",JSONObject.fromObject(Info1).getString("state"));
@@ -651,13 +651,13 @@ public class SoloTest {
 
 
         log.info("开始回收....");
-        String Info = multiSign.Recycle( PRIKEY3, tokenType, "2330");
-        String Info1 = multiSign.Recycle( PRIKEY3, tokenType2, "2599");
-        String Info2 = multiSign.Recycle( PRIKEY4, tokenType, "600");
+        String Info = soloSign.Recycle( PRIKEY3, tokenType, "2330");
+        String Info1 = soloSign.Recycle( PRIKEY3, tokenType2, "2599");
+        String Info2 = soloSign.Recycle( PRIKEY4, tokenType, "600");
         String Info3 = multiSign.Recycle(MULITADD5, PRIKEY1, tokenType, "70");
         String Info4 = multiSign.Recycle(MULITADD5, PRIKEY3, tokenType2, "401");
-        String Info5 = multiSign.Recycle(PRIKEY1, tokenType, "7000.123456789");
-        String Info6 = multiSign.Recycle(PRIKEY1, tokenType2, "17000.87654321");
+        String Info5 = soloSign.Recycle(PRIKEY1, tokenType, "7000.123456789");
+        String Info6 = soloSign.Recycle(PRIKEY1, tokenType2, "17000.87654321");
 
         assertEquals("200",JSONObject.fromObject(Info).getString("state"));
         assertEquals("200",JSONObject.fromObject(Info1).getString("state"));

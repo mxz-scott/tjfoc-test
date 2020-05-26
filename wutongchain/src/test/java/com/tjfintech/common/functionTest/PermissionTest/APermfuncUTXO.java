@@ -128,7 +128,7 @@ public class APermfuncUTXO {
 
         }
         else
-            response = multiSign.Recycle( priKey, tokenType, amount);
+            response = soloSign.Recycle( priKey, tokenType, amount);
 
         return retAllow(response);
     }

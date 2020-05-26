@@ -471,7 +471,7 @@ public class TestTxType {
         String recySoloAmount="600.05";
         log.info("单签回收");
         log.info(soloSign.Balance(PRIKEY1,tokenTypeS));
-        String RecycleSoloInfo = multiSign.Recycle( PRIKEY1, tokenTypeS, recySoloAmount);
+        String RecycleSoloInfo = soloSign.Recycle( PRIKEY1, tokenTypeS, recySoloAmount);
 
 
         //多签回收
