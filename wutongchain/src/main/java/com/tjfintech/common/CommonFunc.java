@@ -1113,6 +1113,10 @@ public class CommonFunc {
                 //新版本SDK v2接口
                 hash = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
                 break;
+            case "21" :
+                //新版本SDK v2接口
+                hash = JSONObject.fromObject(response).getString("data");
+                break;
             case "mg" :
                 //管理工具命令执行
                 assertEquals(true,response.contains("success:"));

@@ -53,20 +53,20 @@ public class MultiSignDetailTest {
         tokenType2  = IssueToken("10000"); //tokentype2发行数量为10000
         tokenType3  = IssueToken("300"); //tokentype2发行数量为10000
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
 
 
         log.info("查询归集地址(接收地址)中的余额");
-        String response1 = multiSign.Balance(IMPPUTIONADD,PRIKEY4, tokenType);
-        String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
-        String response3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType3);
-        assertEquals("200",JSONObject.fromObject(response1).getString("State"));
-        assertEquals("10000",JSONObject.fromObject(response1).getJSONObject("Data").getString("Total"));
-        assertEquals("200",JSONObject.fromObject(response2).getString("State"));
-        assertEquals("10000",JSONObject.fromObject(response2).getJSONObject("Data").getString("Total"));
-        assertEquals("200",JSONObject.fromObject(response3).getString("State"));
-        assertEquals("300",JSONObject.fromObject(response3).getJSONObject("Data").getString("Total"));
+        String response1 = multiSign.BalanceByAddr(IMPPUTIONADD,tokenType);
+        String response2 = multiSign.BalanceByAddr(IMPPUTIONADD,tokenType2);
+        String response3 = multiSign.BalanceByAddr(IMPPUTIONADD,tokenType3);
+        assertEquals("200",JSONObject.fromObject(response1).getString("state"));
+        assertEquals("10000",JSONObject.fromObject(response1).getJSONObject("data").getString("total"));
+        assertEquals("200",JSONObject.fromObject(response2).getString("state"));
+        assertEquals("10000",JSONObject.fromObject(response2).getJSONObject("data").getString("total"));
+        assertEquals("200",JSONObject.fromObject(response3).getString("state"));
+        assertEquals("300",JSONObject.fromObject(response3).getJSONObject("data").getString("total"));
         long timeMillislong = System.currentTimeMillis(); //获取当前时间戳
         log.info("当前的时间戳"+timeMillislong);
     }
@@ -98,13 +98,13 @@ public class MultiSignDetailTest {
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
 
-        String queryInfo3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);//返回余额9900
+        String queryInfo3 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);//返回余额9900
         log.info("返回MULITADD4余额");
-        String queryInfo4 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);//返回余额为0
-        assertEquals("200",JSONObject.fromObject(freezeToken1).getString("State"));
-        assertEquals("10000",JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"));
-        assertEquals("200",JSONObject.fromObject(freezeToken2).getString("State"));
-        assertEquals("0",JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"));
+        String queryInfo4 = multiSign.BalanceByAddr(MULITADD4, tokenType);//返回余额为0
+        assertEquals("200",JSONObject.fromObject(freezeToken1).getString("state"));
+        assertEquals("10000",JSONObject.fromObject(queryInfo3).getJSONObject("data").getString("total"));
+        assertEquals("200",JSONObject.fromObject(freezeToken2).getString("state"));
+        assertEquals("0",JSONObject.fromObject(queryInfo4).getJSONObject("data").getString("total"));
 
 
         log.info("回收token_回收归集地址数量为100（tokenType）");
@@ -118,20 +118,20 @@ public class MultiSignDetailTest {
         log.info("查询回收后的归集地址的余额");
         String queryInfo1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
         String queryInfo2= multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
-        assertEquals("200",JSONObject.fromObject(queryInfo1).getString("State"));
-        assertEquals("9900",JSONObject.fromObject(queryInfo1).getJSONObject("Data").getString("Total"));
-        assertEquals("200",JSONObject.fromObject(queryInfo2).getString("State"));
-        assertEquals("9900",JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"));
+        assertEquals("200",JSONObject.fromObject(queryInfo1).getString("state"));
+        assertEquals("9900",JSONObject.fromObject(queryInfo1).getJSONObject("data").getString("total"));
+        assertEquals("200",JSONObject.fromObject(queryInfo2).getString("state"));
+        assertEquals("9900",JSONObject.fromObject(queryInfo2).getJSONObject("data").getString("total"));
 
 
         log.info("恢复token");
         String recoverFrozenToken1 = multiSign.recoverFrozenToken(tokenType);
         String recoverFrozenToken2= multiSign.recoverFrozenToken(tokenType2);
-        assertEquals("200",JSONObject.fromObject(recoverFrozenToken1).getString("State"));
-        assertEquals("200",JSONObject.fromObject(recoverFrozenToken2).getString("State"));
+        assertEquals("200",JSONObject.fromObject(recoverFrozenToken1).getString("state"));
+        assertEquals("200",JSONObject.fromObject(recoverFrozenToken2).getString("state"));
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
 
 
     }
@@ -146,25 +146,25 @@ public class MultiSignDetailTest {
         log.info("获取utxo交易详情");
         String utxoDetail1 = multiSign.getUTXODetail(0, timeMillislong, tokenType, 10, IMPPUTIONADD, IMPPUTIONADD);
         String utxoDetail2 = multiSign.getUTXODetail(0, timeMillislong, tokenType2, 10, IMPPUTIONADD, IMPPUTIONADD);
-        assertEquals("200",JSONObject.fromObject(utxoDetail1).getString("State"));
-        assertEquals("200",JSONObject.fromObject(utxoDetail2).getString("State"));
+        assertEquals("200",JSONObject.fromObject(utxoDetail1).getString("state"));
+        assertEquals("200",JSONObject.fromObject(utxoDetail2).getString("state"));
 
         log.info("设定ToAddr为不存在交易的转出地址（地址存在）");
         String utxoDetail3 = multiSign.getUTXODetail(0, timeMillislong, tokenType, 10, IMPPUTIONADD, "12");
         String utxoDetail4 = multiSign.getUTXODetail(0, timeMillislong, tokenType2, 10, IMPPUTIONADD, "12");
-        assertEquals("null",JSONObject.fromObject(utxoDetail3).getString("Data"));
-        assertEquals("null",JSONObject.fromObject(utxoDetail4).getString("Data"));
+        assertEquals("null",JSONObject.fromObject(utxoDetail3).getString("data"));
+        assertEquals("null",JSONObject.fromObject(utxoDetail4).getString("data"));
 
         log.info("设定ToAddr非法");
         String utxoDetail5 = multiSign.getUTXODetail(0, timeMillislong, tokenType, 10, IMPPUTIONADD, "SnpepdFA5kKZMjy2XRh7aX4g2ygwcJ7V8AMRhqSqcmWbeC5684k");
         String utxoDetail6 = multiSign.getUTXODetail(0, timeMillislong, tokenType2, 10, IMPPUTIONADD, "SnpepdFA5kKZMjy2XRh7aX4g2ygwcJ7V8AMRhqSqcmWbeC5684k");
-        assertEquals("null",JSONObject.fromObject(utxoDetail5).getString("Data"));
-        assertEquals("null",JSONObject.fromObject(utxoDetail6).getString("Data"));
+        assertEquals("null",JSONObject.fromObject(utxoDetail5).getString("data"));
+        assertEquals("null",JSONObject.fromObject(utxoDetail6).getString("data"));
 
         log.info("设定ToAddr为数值型数据（负数、正数、浮点数）");
         String utxoDetail7 = multiSign.getUTXODetail(0, timeMillislong, tokenType, 10, IMPPUTIONADD, 100.10);
-        assertEquals("400",JSONObject.fromObject(utxoDetail7).getString("State"));
-        assertEquals("Invalid parameter",JSONObject.fromObject(utxoDetail7).getString("Message"));
+        assertEquals("400",JSONObject.fromObject(utxoDetail7).getString("state"));
+        assertEquals("Invalid parameter",JSONObject.fromObject(utxoDetail7).getString("message"));
 
     }
 
@@ -178,21 +178,21 @@ public class MultiSignDetailTest {
         log.info("获取utxo交易详情——将参数UTXOtype修改为363");
         String utxoDetail1 = multiSign.getUTXODetail(0, timeMillislong, tokenType, 363, IMPPUTIONADD, IMPPUTIONADD);
         String utxoDetail2 = multiSign.getUTXODetail(0, timeMillislong, tokenType2, 363, IMPPUTIONADD, IMPPUTIONADD);
-        assertEquals("err:UTXOType is wrong",JSONObject.fromObject(utxoDetail1).getString("Message"));
-        assertEquals("err:UTXOType is wrong",JSONObject.fromObject(utxoDetail2).getString("Message"));
+        assertEquals("err:UTXOType is wrong",JSONObject.fromObject(utxoDetail1).getString("message"));
+        assertEquals("err:UTXOType is wrong",JSONObject.fromObject(utxoDetail2).getString("message"));
 
 
         log.info("获取utxo交易详情——将参数UTXOtype修改为String类型");
         String utxoDetail3 = multiSign.getUTXODetail(0, timeMillislong, tokenType, "126", IMPPUTIONADD, IMPPUTIONADD);
         String utxoDetail4 = multiSign.getUTXODetail(0, timeMillislong, tokenType2, "111", IMPPUTIONADD, IMPPUTIONADD);
-        assertEquals("Invalid parameter",JSONObject.fromObject(utxoDetail3).getString("Message"));
-        assertEquals("Invalid parameter",JSONObject.fromObject(utxoDetail4).getString("Message"));
+        assertEquals("Invalid parameter",JSONObject.fromObject(utxoDetail3).getString("message"));
+        assertEquals("Invalid parameter",JSONObject.fromObject(utxoDetail4).getString("message"));
 
         log.info("获取utxo交易详情——将参数UTXOtype赋值不相关的数值");
         String utxoDetail5 = multiSign.getUTXODetail(0, timeMillislong, tokenType, 13, IMPPUTIONADD, IMPPUTIONADD);
         String utxoDetail6 = multiSign.getUTXODetail(0, timeMillislong, tokenType2, 13, IMPPUTIONADD, IMPPUTIONADD);
-        assertEquals("null",JSONObject.fromObject(utxoDetail5).getString("Data"));
-        assertEquals("null",JSONObject.fromObject(utxoDetail6).getString("Data"));
+        assertEquals("null",JSONObject.fromObject(utxoDetail5).getString("data"));
+        assertEquals("null",JSONObject.fromObject(utxoDetail6).getString("data"));
 
     }
     /**
@@ -204,7 +204,7 @@ public class MultiSignDetailTest {
 
         log.info("获取utxo交易详情——tokentype设置为不存在的字段");
         String utxoDetail1 = multiSign.getUTXODetail(0, timeMillislong, "STTTT", 10, IMPPUTIONADD, IMPPUTIONADD);
-        assertEquals("null",JSONObject.fromObject(utxoDetail1).getString("Data"));
+        assertEquals("null",JSONObject.fromObject(utxoDetail1).getString("data"));
     }
 
     /**
@@ -216,18 +216,18 @@ public class MultiSignDetailTest {
         log.info("获取utxo交易详情——endtime设置早于starttime时间");
         String utxoDetail1 = multiSign.getUTXODetail(1558063234785L, 1558060526691L, tokenType, 10, IMPPUTIONADD, IMPPUTIONADD);
         String utxoDetail2 = multiSign.getUTXODetail(1558063234785L, 1558060526691L, tokenType2, 10, IMPPUTIONADD, IMPPUTIONADD);
-        assertEquals("err:EndTime must be greater than StartTime",JSONObject.fromObject(utxoDetail1).getString("Message"));
-        assertEquals("err:EndTime must be greater than StartTime",JSONObject.fromObject(utxoDetail2).getString("Message"));
+        assertEquals("err:EndTime must be greater than StartTime",JSONObject.fromObject(utxoDetail1).getString("message"));
+        assertEquals("err:EndTime must be greater than StartTime",JSONObject.fromObject(utxoDetail2).getString("message"));
 
         log.info("获取utxo交易详情——endtime设置为负数");
         String utxoDetail3 = multiSign.getUTXODetail(1558063234785L, -1, tokenType, 10, IMPPUTIONADD, IMPPUTIONADD);
         String utxoDetail4 = multiSign.getUTXODetail(1558063234785L, -1, tokenType2, 10, IMPPUTIONADD, IMPPUTIONADD);
-        assertEquals("Invalid parameter",JSONObject.fromObject(utxoDetail3).getString("Message"));
-        assertEquals("Invalid parameter",JSONObject.fromObject(utxoDetail4).getString("Message"));
+        assertEquals("Invalid parameter",JSONObject.fromObject(utxoDetail3).getString("message"));
+        assertEquals("Invalid parameter",JSONObject.fromObject(utxoDetail4).getString("message"));
 
         log.info("获取utxo交易详情——设置body体为空");
         String utxoDetail5 = multiSign.getUTXODetail();
-        assertEquals("200",JSONObject.fromObject(utxoDetail5).getString("State"));
+        assertEquals("200",JSONObject.fromObject(utxoDetail5).getString("state"));
     }
 
     /**
@@ -238,17 +238,17 @@ public class MultiSignDetailTest {
         log.info("正常查看信息");
         String gettotal1 = multiSign.gettotal(0, timeMillislong, tokenType);
         String gettotal2 = multiSign.gettotal(0, timeMillislong, tokenType2);
-        assertEquals("200",JSONObject.fromObject(gettotal1).getString("State"));
-        assertEquals("200",JSONObject.fromObject(gettotal2).getString("State"));
+        assertEquals("200",JSONObject.fromObject(gettotal1).getString("state"));
+        assertEquals("200",JSONObject.fromObject(gettotal2).getString("state"));
 
         log.info("tokentype设置为空或者无此字段");
         String gettotal3 = multiSign.gettotal(0, timeMillislong, "");
-        assertEquals("200",JSONObject.fromObject(gettotal3).getString("State"));
+        assertEquals("200",JSONObject.fromObject(gettotal3).getString("state"));
 
         log.info("tokentype设置为空或者无此字段");
         String gettotal4 = multiSign.gettotal(0, timeMillislong, "SSTT");
-        assertEquals("0",JSONObject.fromObject(gettotal4).getJSONObject("Data").getString("IssueAmount"));
-        assertEquals("0",JSONObject.fromObject(gettotal4).getJSONObject("Data").getString("RecycleAmount"));
+        assertEquals("0",JSONObject.fromObject(gettotal4).getJSONObject("data").getString("issueAmount"));
+        assertEquals("0",JSONObject.fromObject(gettotal4).getJSONObject("data").getString("RecycleAmount"));
 
         log.info("tokentype设置数值型数据");
         String gettotal5 = multiSign.gettotal(0, timeMillislong, 111);
@@ -268,24 +268,24 @@ public class MultiSignDetailTest {
         log.info("endtime设置早于starttime");
         String gettotal1 = multiSign.gettotal(1558063234785L, 1558060526691L,tokenType);
         String gettotal2 = multiSign.gettotal(1558063234785L, 1558060526691L, tokenType2);
-        assertEquals("err:EndTime must be greater than StartTime",JSONObject.fromObject(gettotal1).getString("Message"));
-        assertEquals("err:EndTime must be greater than StartTime",JSONObject.fromObject(gettotal2).getString("Message"));
+        assertEquals("err:EndTime must be greater than StartTime",JSONObject.fromObject(gettotal1).getString("message"));
+        assertEquals("err:EndTime must be greater than StartTime",JSONObject.fromObject(gettotal2).getString("message"));
 
         log.info("endtime设置为负数");
         String gettotal3 = multiSign.gettotal(0, -1,tokenType);
         String gettotal4 = multiSign.gettotal(0, -1, tokenType2);
-        assertEquals("Invalid parameter",JSONObject.fromObject(gettotal3).getString("Message"));
-        assertEquals("Invalid parameter",JSONObject.fromObject(gettotal4).getString("Message"));
+        assertEquals("Invalid parameter",JSONObject.fromObject(gettotal3).getString("message"));
+        assertEquals("Invalid parameter",JSONObject.fromObject(gettotal4).getString("message"));
 
         log.info("starttime设置为负数");
         String gettotal5 = multiSign.gettotal(-1, timeMillislong,tokenType);
         String gettotal6 = multiSign.gettotal(-1, timeMillislong, tokenType2);
-        assertEquals("Invalid parameter",JSONObject.fromObject(gettotal5).getString("Message"));
-        assertEquals("Invalid parameter",JSONObject.fromObject(gettotal6).getString("Message"));
+        assertEquals("Invalid parameter",JSONObject.fromObject(gettotal5).getString("message"));
+        assertEquals("Invalid parameter",JSONObject.fromObject(gettotal6).getString("message"));
 
         log.info("所有字段全部为空数");
         String gettotal = multiSign.gettotal();
-        assertEquals("200",JSONObject.fromObject(gettotal).getString("State"));
+        assertEquals("200",JSONObject.fromObject(gettotal).getString("state"));
     }
 
 
@@ -297,7 +297,7 @@ public class MultiSignDetailTest {
         String data = "MULITADD1" + "发行" + tokenType + "，数量为：" + 10000;
         String response = multiSign.issueToken(IMPPUTIONADD,tokenType,amount,data);//调用方法发行token
         assertThat(response, containsString("200"));
-        String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
+        String Tx1 = JSONObject.fromObject(response).getJSONObject("data").getString("tx");
         log.info("第一次签名");
         String response2 = multiSign.Sign(Tx1, PRIKEY5);
         assertThat(response2, containsString("200"));
