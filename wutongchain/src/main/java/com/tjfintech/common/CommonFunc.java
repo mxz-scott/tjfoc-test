@@ -986,8 +986,23 @@ public class CommonFunc {
         //查询交易是否上链
         while((new Date()).getTime() - nowTime < sleeptime && bOK == false){
             //当前支持旧版本SDK gettxdetail接口 tokenapi gettxdetail接口
-            if(type.equals("0")) state = JSONObject.fromObject(store.GetTxDetail(hashData)).getString("state");
-            else if(type.equals("1")) state = JSONObject.fromObject(tokenModule.tokenGetTxDetail(hashData)).getString("state");
+             switch (type){
+                case "0":
+                    state = JSONObject.fromObject(store.GetTxDetail(hashData)).getString("state");
+                    break;
+                case "1":
+                    state = JSONObject.fromObject(tokenModule.tokenGetTxDetail(hashData)).getString("state");
+                    break;
+                case "2":
+                    state = JSONObject.fromObject(store.GetTxDetail(hashData)).getString("state");
+                    break;
+                 default:
+                     log.info("Wrong type! ");
+
+
+            }
+
+
             if(state.equals("200"))
                 bOK = true;
             else
@@ -1096,7 +1111,7 @@ public class CommonFunc {
                 break;
             case "20" :
                 //新版本SDK v2接口
-                hash = JSONObject.fromObject(response).getString("data");
+                hash = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
                 break;
             case "mg" :
                 //管理工具命令执行
