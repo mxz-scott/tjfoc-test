@@ -247,6 +247,7 @@ public class UtilsClass {
     public String sdkGetTxHashType00 = "00";
     public String sdkGetTxHashType01 = "01";
     public String sdkGetTxHashType02 = "02";
+    public String sdkGetTxHashType20 = "20";
     public String tokenApiGetTxHashType = "10";
     public String tokenApiGetTxHashTypeDesByType = "11";
     public String mgGetTxHashType = "mg";

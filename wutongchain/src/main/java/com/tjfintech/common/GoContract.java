@@ -36,12 +36,12 @@ public class GoContract implements Contract {
      */
     public String InstallWVM(String file,String category,String prikey) throws Exception{
         Map<String,Object>map=new HashMap<>();
-        map.put("Category","wvm");
-        map.put("File",file);
-        map.put("PriKey",prikey);
+        map.put("category","wvm");
+        map.put("file",file);
+        map.put("priKey",prikey);
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.postMethod(SDKADD+"/contract/install"+param,map);
+        String result=PostTest.postMethod(SDKADD+"/v2/tx/sc/install"+param,map);
         log.info(result);
         return result ;
     }
@@ -62,8 +62,7 @@ public class GoContract implements Contract {
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
 
-//        String result=PostTest.sendPostToJson(SDKADD+"/contract/install",map);
-        String result=PostTest.postMethod(SDKADD+"/contract/install"+param,map);
+        String result=PostTest.postMethod(SDKADD+"/v2/tx/sc/install"+param,map);
         log.info(result);
         return result ;
     }
@@ -116,12 +115,12 @@ public class GoContract implements Contract {
      */
     public String DestroyWVM(String name,String category){
         Map<String,Object>map=new HashMap<>();
-        map.put("Name",name);
-        map.put("Category",category);
+        map.put("name",name);
+        map.put("category",category);
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
 
-        String result=PostTest.sendPostToJson(SDKADD+"/contract/destroy"+param,map);
+        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/destroy"+param,map);
         log.info(result);
         return result ;
     }
@@ -181,10 +180,11 @@ public class GoContract implements Contract {
         map.put("Args",args);
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.sendPostToJson(SDKADD+"/contract/invoke"+param,map);
+        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/invoke"+param,map);
         log.info(result);
         return result ;
     }
+
     //此函数兼容wvm和docker两种类型
     public String Invoke(String name,String version,String category,String method,String caller,List<?> args){
         Map<String,Object>map=new HashMap<>();
@@ -196,7 +196,7 @@ public class GoContract implements Contract {
         map.put("Args",args);
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.sendPostToJson(SDKADD+"/contract/invoke"+param,map);
+        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/invoke"+param,map);
         log.info(result);
         return result ;
     }
@@ -245,7 +245,7 @@ public class GoContract implements Contract {
     public String SearchByKey(String key, String contractName) {
         String param="";
         if(subLedger!="") param = param +"&ledger="+subLedger;
-        String result=GetTest.SendGetTojson(SDKADD+"/search/bykey"+"?key="+key+"&cn="+contractName+param);
+        String result=GetTest.SendGetTojson(SDKADD+"/v2/tx/sc/search/bykey"+"?key="+key+"&cn="+contractName+param);
         log.info(result);
         return result;
     }
@@ -254,7 +254,7 @@ public class GoContract implements Contract {
     public String SearchByPrefix(String prefix, String contractName) {
         String param="";
         if(subLedger!="") param = param +"&ledger="+subLedger;
-        String result=GetTest.SendGetTojson(SDKADD+"/search/byprefix"+"?prefix="+prefix+"&cn="+contractName+param);
+        String result=GetTest.SendGetTojson(SDKADD+"/v2/tx/sc/search/byprefix"+"?prefix="+prefix+"&cn="+contractName+param);
         log.info(result);
         return result;
     }
