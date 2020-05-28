@@ -134,12 +134,12 @@ public class MultiSignInvalidTest {
         map.put("9",PUBKEY2);
         map.put("10",PUBKEY3);
         String respCreateMultiAddr = multiSign.genMultiAddress(10,map);
-        assertEquals("200",JSONObject.fromObject(respCreateMultiAddr).getString("State"));
+        assertEquals("200",JSONObject.fromObject(respCreateMultiAddr).getString("state"));
 
         map.put("11",PUBKEY4);
         respCreateMultiAddr = multiSign.genMultiAddress(10,map);
-        assertEquals("400",JSONObject.fromObject(respCreateMultiAddr).getString("State"));
-        assertEquals("pubkey numbers can't be greater than 10",JSONObject.fromObject(respCreateMultiAddr).getString("Message"));
+        assertEquals("400",JSONObject.fromObject(respCreateMultiAddr).getString("state"));
+        assertEquals("pubkey numbers can't be greater than 10",JSONObject.fromObject(respCreateMultiAddr).getString("message"));
 
     }
 
@@ -236,7 +236,7 @@ public class MultiSignInvalidTest {
     @Test
     public void TC21_23recycleInvalid() {
         String tokenType = "cx-8oVNI";
-        String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String queryInfo = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType);
         assertThat(queryInfo, containsString("200"));
         String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, "abc", "1");
         String recycleInfo2 = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, "0");

@@ -63,8 +63,9 @@ public class  MultiTestInvalid {
 
 
         log.info("查询归集地址中两种token余额");
-        String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        String response1 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        String response2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType2);
+        log.info(response1);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString(issueAm1));
         assertThat(response2, containsString("200"));
@@ -88,15 +89,15 @@ public class  MultiTestInvalid {
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
 
-        String response1 = soloSign.Balance(PRIKEY1, tokenType);
-        String response2 = multiSign.Balance(MULITADD4,PRIKEY1, tokenType);
-        String response3 = multiSign.Balance(MULITADD4,PRIKEY1, tokenType2);
+        String response1 = multiSign.BalanceByAddr(ADDRESS1, tokenType);
+        String response2 = multiSign.BalanceByAddr(MULITADD4, tokenType);
+        String response3 = multiSign.BalanceByAddr(MULITADD4, tokenType2);
         assertThat(response1, containsString("200"));
-        assertThat(response1, containsString("\"Total\":\"0\""));
+        assertThat(response1, containsString("\"total\":\"0\""));
         assertThat(response2, containsString("200"));
-        assertThat(response2, containsString("\"Total\":\"0\""));
+        assertThat(response2, containsString("\"total\":\"0\""));
         assertThat(response3, containsString("200"));
-        assertThat(response3, containsString("\"Total\":\"1000\""));
+        assertThat(response3, containsString("\"total\":\"1000\""));
     }
 
     /**
@@ -106,8 +107,8 @@ public class  MultiTestInvalid {
     @Test
     public void TC37_transferMultiInvalid() throws Exception {
         log.info("查询归集地址中两种token余额");
-        String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        String response1 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType);
+        String response2 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType2);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString(issueAm1));
         assertThat(response2, containsString("200"));
@@ -137,22 +138,22 @@ public class  MultiTestInvalid {
 //        assertThat(transferInfo5, containsString("400"));
 //        assertThat(transferInfo6, containsString("400"));
 //        assertThat(transferInfo7, containsString("400"));
-        assertThat(JSONObject.fromObject(transferInfo2).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo3).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo4).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo5).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo6).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo7).getString("Message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo2).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo3).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo4).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo5).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo6).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo7).getString("message"),equalTo("insufficient balance"));
 
 
 
         log.info("查询余额判断转账是否成功");
-        String queryInfo = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
-        String queryInfo2 = multiSign.Balance(MULITADD5, PRIKEY1, tokenType2);
+        String queryInfo = multiSign.BalanceByAddr(MULITADD4,  tokenType);
+        String queryInfo2 = multiSign.BalanceByAddr(MULITADD5, tokenType2);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo2, containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("data").getString("total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("data").getString("total"), containsString("0"));
 
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, issueAm1);
@@ -167,12 +168,12 @@ public class  MultiTestInvalid {
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String queryInfo4 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        String queryInfo3 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType);
+        String queryInfo4 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType2);
         assertThat(queryInfo3, containsString("200"));
         assertThat(queryInfo4, containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("data").getString("total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo4).getJSONObject("data").getString("total"), containsString("0"));
 
 
     }
@@ -186,8 +187,8 @@ public class  MultiTestInvalid {
     @Test
     public  void TC38_transferSoloMultiInvalid() throws  Exception{
         log.info("查询归集地址中两种token余额");
-        String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        String response1 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType);
+        String response2 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType2);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString(issueAm1));
         assertThat(response2, containsString("200"));
@@ -217,22 +218,22 @@ public class  MultiTestInvalid {
 //        assertThat(transferInfo5, containsString("400"));
 //        assertThat(transferInfo6, containsString("400"));
 //        assertThat(transferInfo7, containsString("400"));
-        assertThat(JSONObject.fromObject(transferInfo2).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo3).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo4).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo5).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo6).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo7).getString("Message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo2).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo3).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo4).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo5).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo6).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo7).getString("message"),equalTo("insufficient balance"));
 
 
 
         log.info("查询余额判断转账是否成功");
-        String queryInfo = soloSign.Balance( PRIKEY1, tokenType);
-        String queryInfo2 = multiSign.Balance(MULITADD5, PRIKEY1, tokenType2);
+        String queryInfo = multiSign.BalanceByAddr( ADDRESS1, tokenType);
+        String queryInfo2 = multiSign.BalanceByAddr(MULITADD5,  tokenType2);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo2, containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("data").getString("total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("data").getString("total"), containsString("0"));
 
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, issueAm1);
@@ -247,12 +248,12 @@ public class  MultiTestInvalid {
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String queryInfo4 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        String queryInfo3 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType);
+        String queryInfo4 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType2);
         assertThat(queryInfo3, containsString("200"));
         assertThat(queryInfo4, containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("data").getString("total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo4).getJSONObject("data").getString("total"), containsString("0"));
 
 
     }
@@ -263,8 +264,8 @@ public class  MultiTestInvalid {
 
     @Test
     public void TC39_transferSoloInvalid()throws  Exception{  log.info("查询归集地址中两种token余额");
-        String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        String response1 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType);
+        String response2 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType2);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString(issueAm1));
         assertThat(response2, containsString("200"));
@@ -294,22 +295,22 @@ public class  MultiTestInvalid {
 //        assertThat(transferInfo5, containsString("400"));
 //        assertThat(transferInfo6, containsString("400"));
 //        assertThat(transferInfo7, containsString("400"));
-        assertThat(JSONObject.fromObject(transferInfo2).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo3).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo4).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo5).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo6).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo7).getString("Message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo2).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo3).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo4).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo5).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo6).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo7).getString("message"),equalTo("insufficient balance"));
 
 
 
         log.info("查询余额判断转账是否成功");
-        String queryInfo = soloSign.Balance( PRIKEY1, tokenType);
-        String queryInfo2 = soloSign.Balance( PRIKEY2, tokenType2);
+        String queryInfo = multiSign.BalanceByAddr( ADDRESS1, tokenType);
+        String queryInfo2 = multiSign.BalanceByAddr( ADDRESS2, tokenType2);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo2, containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("data").getString("total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("data").getString("total"), containsString("0"));
 
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenType, issueAm1);
@@ -324,12 +325,12 @@ public class  MultiTestInvalid {
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String queryInfo4 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        String queryInfo3 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType);
+        String queryInfo4 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType2);
         assertThat(queryInfo3, containsString("200"));
         assertThat(queryInfo4, containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("data").getString("total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo4).getJSONObject("data").getString("total"), containsString("0"));
 
     }
 
@@ -341,8 +342,8 @@ public class  MultiTestInvalid {
     @Test
     public void TC238_MultiToSoloInvalid()throws  Exception{
         log.info("查询归集地址中两种token余额");
-        String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        String response1 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType);
+        String response2 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType2);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString(issueAm1));
         assertThat(response2, containsString("200"));
@@ -377,24 +378,24 @@ public class  MultiTestInvalid {
 //        assertThat(transferInfo5, containsString("400"));
 //        assertThat(transferInfo6, containsString("400"));
 //        assertThat(transferInfo7, containsString("400"));
-        assertThat(JSONObject.fromObject(transferInfo2).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo3).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo4).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo5).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo6).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo7).getString("Message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo2).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo3).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo4).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo5).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo6).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo7).getString("message"),equalTo("insufficient balance"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(transferInfoInit,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
 
         log.info("查询余额判断转账是否成功");
-        String queryInfo = soloSign.Balance( PRIKEY1, tokenType);
-        String queryInfo2 = soloSign.Balance( PRIKEY2, tokenType2);
+        String queryInfo = multiSign.BalanceByAddr( ADDRESS1, tokenType);
+        String queryInfo2 = multiSign.BalanceByAddr( ADDRESS2, tokenType2);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo2, containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("data").getString("total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("data").getString("total"), containsString("0"));
 
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType, issueAm1);
@@ -409,12 +410,12 @@ public class  MultiTestInvalid {
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3 = multiSign.Balance(MULITADD6, PRIKEY4, tokenType);
-        String queryInfo4 = multiSign.Balance(MULITADD6, PRIKEY4, tokenType2);
+        String queryInfo3 = multiSign.BalanceByAddr(MULITADD6,  tokenType);
+        String queryInfo4 = multiSign.BalanceByAddr(MULITADD6,  tokenType2);
         assertThat(queryInfo3, containsString("200"));
         assertThat(queryInfo4, containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("data").getString("total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo4).getJSONObject("data").getString("total"), containsString("0"));
 
     }
 
@@ -426,8 +427,8 @@ public class  MultiTestInvalid {
     @Test
     public void TC239_MultiToMulitInvalid()throws  Exception{
         log.info("查询归集地址中两种token余额");
-        String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        String response1 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType);
+        String response2 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType2);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString(issueAm1));
         assertThat(response2, containsString("200"));
@@ -462,24 +463,24 @@ public class  MultiTestInvalid {
 //        assertThat(transferInfo5, containsString("400"));
 //        assertThat(transferInfo6, containsString("400"));
 //        assertThat(transferInfo7, containsString("400"));
-        assertThat(JSONObject.fromObject(transferInfo2).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo3).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo4).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo5).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo6).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo7).getString("Message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo2).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo3).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo4).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo5).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo6).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo7).getString("message"),equalTo("insufficient balance"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(transferInfoInit,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
 
         log.info("查询余额判断转账是否成功");
-        String queryInfo = multiSign.Balance( MULITADD4,PRIKEY1, tokenType);
-        String queryInfo2 = multiSign.Balance( MULITADD5,PRIKEY1, tokenType2);
+        String queryInfo = multiSign.BalanceByAddr( MULITADD4, tokenType);
+        String queryInfo2 = multiSign.BalanceByAddr( MULITADD5, tokenType2);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo2, containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("data").getString("total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("data").getString("total"), containsString("0"));
 
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType, issueAm1);
@@ -494,12 +495,12 @@ public class  MultiTestInvalid {
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3 = multiSign.Balance(MULITADD6, PRIKEY4, tokenType);
-        String queryInfo4 = multiSign.Balance(MULITADD6, PRIKEY4, tokenType2);
+        String queryInfo3 = multiSign.BalanceByAddr(MULITADD6,  tokenType);
+        String queryInfo4 = multiSign.BalanceByAddr(MULITADD6,  tokenType2);
         assertThat(queryInfo3, containsString("200"));
         assertThat(queryInfo4, containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("data").getString("total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo4).getJSONObject("data").getString("total"), containsString("0"));
 
     }
 
@@ -511,8 +512,8 @@ public class  MultiTestInvalid {
     @Test
     public void TC240_MultiToSoloMulitInvalid()throws  Exception{
         log.info("查询归集地址中两种token余额");
-        String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        String response1 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType);
+        String response2 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType2);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString(issueAm1));
         assertThat(response2, containsString("200"));
@@ -548,12 +549,12 @@ public class  MultiTestInvalid {
 //        assertThat(transferInfo5, containsString("400"));
 //        assertThat(transferInfo6, containsString("400"));
 //        assertThat(transferInfo7, containsString("400"));
-        assertThat(JSONObject.fromObject(transferInfo2).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo3).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo4).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo5).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo6).getString("Message"),equalTo("insufficient balance"));
-        assertThat(JSONObject.fromObject(transferInfo7).getString("Message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo2).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo3).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo4).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo5).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo6).getString("message"),equalTo("insufficient balance"));
+        assertThat(JSONObject.fromObject(transferInfo7).getString("message"),equalTo("insufficient balance"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(transferInfoInit,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
@@ -561,12 +562,12 @@ public class  MultiTestInvalid {
 
 
         log.info("查询余额判断转账是否成功");
-        String queryInfo = soloSign.Balance( PRIKEY1, tokenType);
-        String queryInfo2 = multiSign.Balance( MULITADD5,PRIKEY1, tokenType2);
+        String queryInfo = multiSign.BalanceByAddr( ADDRESS1, tokenType);
+        String queryInfo2 = multiSign.BalanceByAddr( MULITADD5, tokenType2);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo2, containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("data").getString("total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("data").getString("total"), containsString("0"));
 
         log.info("回收Token");
         String recycleInfo = multiSign.Recycle(MULITADD6, PRIKEY4, tokenType, issueAm1);
@@ -581,12 +582,12 @@ public class  MultiTestInvalid {
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3 = multiSign.Balance(MULITADD6, PRIKEY4, tokenType);
-        String queryInfo4 = multiSign.Balance(MULITADD6, PRIKEY4, tokenType2);
+        String queryInfo3 = multiSign.BalanceByAddr(MULITADD6,  tokenType);
+        String queryInfo4 = multiSign.BalanceByAddr(MULITADD6,  tokenType2);
         assertThat(queryInfo3, containsString("200"));
         assertThat(queryInfo4, containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo3).getJSONObject("data").getString("total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo4).getJSONObject("data").getString("total"), containsString("0"));
 
     }
 
@@ -644,12 +645,12 @@ public class  MultiTestInvalid {
         map.put("3", PUBKEY3);
         String response = multiSign.genMultiAddress(M, map);
         assertThat(response, containsString("200"));
-        assertThat(JSONObject.fromObject(response).getJSONObject("Data").getString("Address"), equalTo(MULITADD1));
+        assertThat(JSONObject.fromObject(response).getJSONObject("data").getString("address"), equalTo(MULITADD1));
         map.put("1", PUBKEY2);
         map.put("2", PUBKEY1);
         String response2 = multiSign.genMultiAddress(M, map);
         assertThat(response2, containsString("200"));
-        assertThat(JSONObject.fromObject(response2).getJSONObject("Data").getString("Address"), equalTo(MULITADD1));
+        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getString("address"), equalTo(MULITADD1));
 
     }
 
@@ -666,11 +667,11 @@ public class  MultiTestInvalid {
         map.put("3", PUBKEY3);
         String response = multiSign.genMultiAddress(M, map);
         assertThat(response, containsString("200"));
-        assertThat(JSONObject.fromObject(response).getJSONObject("Data").getString("Address"), equalTo(MULITADD1));
+        assertThat(JSONObject.fromObject(response).getJSONObject("data").getString("address"), equalTo(MULITADD1));
         map.remove("3");
         String response2 = multiSign.genMultiAddress(1, map);
         assertThat(response2, containsString("200"));
-        assertThat(JSONObject.fromObject(response2).getJSONObject("Data").getString("Address"), equalTo(MULITADD4));
+        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getString("address"), equalTo(MULITADD4));
     }
 
     /**
@@ -703,14 +704,14 @@ public class  MultiTestInvalid {
         String data = "MULITADD2" + "发行" + tokenType + " token，数量为：" + amount;
         String response = multiSign.issueToken(MULITADD3, tokenType, amount, data);
         assertThat(response, containsString("200"));
-        String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
+        String Tx1 = JSONObject.fromObject(response).getJSONObject("data").getString("tx");
         String response2 = multiSign.Sign(Tx1, PRIKEY6);//不带密码
         String response3 = multiSign.Sign(Tx1, PRIKEY6, PWD7);//密码错误
         String response4 = multiSign.Sign(Tx1, "112");  //非法密钥
         String response5 = multiSign.Sign(Tx1, PRIKEY3);   //无关密钥
         String response6 = multiSign.Sign("123", PRIKEY1);//Tx非法
         String response7 = multiSign.Sign(Tx1, PRIKEY1);
-        String Tx2 = JSONObject.fromObject(response7).getJSONObject("Data").getString("Tx");
+        String Tx2 = JSONObject.fromObject(response7).getJSONObject("data").getString("tx");
         String response8 = multiSign.Sign(Tx2, PRIKEY1);//重复密钥
 //        assertThat(response2, containsString("400"));
 //        assertThat(response3, containsString("400"));
@@ -725,43 +726,43 @@ public class  MultiTestInvalid {
         assertThat(response5, containsString("Multiaddr is not matching for the prikey"));
         assertThat(response6, containsString("Invalid parameter -- Tx"));
         assertThat(response8, containsString("Private key signed already"));
-        String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String queryInfo = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType);
         assertThat(queryInfo, containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("0"));
+        assertThat(JSONObject.fromObject(queryInfo).getJSONObject("data").getString("total"), containsString("0"));
 
     }
 
 
 
-    /**
-     * TC13 14 20 多签查询异常测试
-     * 私钥 地址 tokenType
-     */
-    @Test
-    public void TC13_20balanceInvalid() {
-        String tokenType = "cx-8oVNI";
-        String queryInfo = multiSign.Balance(IMPPUTIONADD, "0", tokenType);
-        String queryInfo1 = multiSign.Balance(IMPPUTIONADD, PRIKEY3, tokenType);
-        String queryInfo2 = multiSign.Balance(IMPPUTIONADD, "1234abc", tokenType);
-        String queryInfo3 = multiSign.Balance("0", PRIKEY4, tokenType);
-        String queryInfo4 = multiSign.Balance("Soirv9ikykFYbBLMExy4zUTUa", PRIKEY4, tokenType);
-        String queryInfo5 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, "0");
-        String queryInfo6 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, "abc123e");
-        assertThat(queryInfo, containsString("400"));
-        assertThat(queryInfo, containsString("Private key must be base64 string"));
-        assertThat(queryInfo1, containsString("400"));
-        assertThat(queryInfo1, containsString("Multiaddr is not matching for the prikey"));
-        assertThat(queryInfo2, containsString("400"));
-        assertThat(queryInfo2, containsString("Private key must be base64 string"));
-        assertThat(queryInfo3, containsString("400"));
-        assertThat(queryInfo4, containsString("400"));
-        assertThat(queryInfo4, containsString("Invalid multiple address"));
-        assertThat(queryInfo5, containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo5).getJSONObject("Data").getString("Total"), containsString("0"));
-        assertThat(queryInfo6, containsString("200"));
-        assertThat(JSONObject.fromObject(queryInfo6).getJSONObject("Data").getString("Total"), containsString("0"));
-
-    }
+//    /**
+//     * TC13 14 20 多签查询异常测试
+//     * 私钥 地址 tokenType
+//     */
+//    @Test
+//    public void TC13_20balanceInvalid() {
+//        String tokenType = "cx-8oVNI";
+//        String queryInfo = multiSign.BalanceByAddr(IMPPUTIONADD, "0", tokenType);
+//        String queryInfo1 = multiSign.BalanceByAddr(IMPPUTIONADD, PRIKEY3, tokenType);
+//        String queryInfo2 = multiSign.BalanceByAddr(IMPPUTIONADD, "1234abc", tokenType);
+//        String queryInfo3 = multiSign.BalanceByAddr("0", PRIKEY4, tokenType);
+//        String queryInfo4 = multiSign.BalanceByAddr("Soirv9ikykFYbBLMExy4zUTUa", PRIKEY4, tokenType);
+//        String queryInfo5 = multiSign.BalanceByAddr(IMPPUTIONADD, PRIKEY4, "0");
+//        String queryInfo6 = multiSign.BalanceByAddr(IMPPUTIONADD, PRIKEY4, "abc123e");
+//        assertThat(queryInfo, containsString("400"));
+//        assertThat(queryInfo, containsString("Private key must be base64 string"));
+//        assertThat(queryInfo1, containsString("400"));
+//        assertThat(queryInfo1, containsString("Multiaddr is not matching for the prikey"));
+//        assertThat(queryInfo2, containsString("400"));
+//        assertThat(queryInfo2, containsString("Private key must be base64 string"));
+//        assertThat(queryInfo3, containsString("400"));
+//        assertThat(queryInfo4, containsString("400"));
+//        assertThat(queryInfo4, containsString("Invalid multiple address"));
+//        assertThat(queryInfo5, containsString("200"));
+//        assertThat(JSONObject.fromObject(queryInfo5).getJSONObject("data").getString("total"), containsString("0"));
+//        assertThat(queryInfo6, containsString("200"));
+//        assertThat(JSONObject.fromObject(queryInfo6).getJSONObject("data").getString("total"), containsString("0"));
+//
+//    }
 
     /**
      * 1/2多签地址向归集地址转账异常测试
@@ -774,8 +775,8 @@ public class  MultiTestInvalid {
     @Test
     public void TC284_transferToImppution() throws Exception {//TODO
         String tokenType = "cx-chenxu"+ RandomUtils.nextInt(10000);
-        String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        Boolean flag=JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total").equals("0");
+        String queryInfo = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType);
+        Boolean flag=JSONObject.fromObject(queryInfo).getJSONObject("data").getString("total").equals("0");
         if(flag){
             BeforeCondition beforeCondition=new BeforeCondition();
             beforeCondition.T284_BeforeCondition(tokenType);
@@ -784,11 +785,11 @@ public class  MultiTestInvalid {
                     utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
 
-            queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+            queryInfo = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType);
         }
 
         assertThat(queryInfo, containsString("200"));
-        assertEquals(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total").equals("0"), false);
+        assertEquals(JSONObject.fromObject(queryInfo).getJSONObject("data").getString("total").equals("0"), false);
         /**
          * 如果测试不通过请执行BeforeConditon类中的第二个方法.发行相应的币种
          */
@@ -801,9 +802,9 @@ public class  MultiTestInvalid {
 
 
         assertThat(transferInfo0, containsString("200"));
-        String queryInfo1 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
+        String queryInfo1 = multiSign.BalanceByAddr(MULITADD4,  tokenType);
         assertThat(transferInfo0, containsString("200"));
-        assertEquals(JSONObject.fromObject(queryInfo1).getJSONObject("Data").getString("Total").equals("0"), false);
+        assertEquals(JSONObject.fromObject(queryInfo1).getJSONObject("data").getString("total").equals("0"), false);
 
         List<Map> list1 = utilsClass.constructToken(MULITADD3, tokenType, "0.5");
         String transferInfo1 = multiSign.Transfer(PRIKEY4, "cx-test", IMPPUTIONADD, list1);//多签地址向归集地址转账
@@ -814,9 +815,9 @@ public class  MultiTestInvalid {
     @Test
     public void TC980_MultiAddrNotInDB() throws Exception{
         String MultiAddr="Ss6iNcwoJFf5EWbuqqU7o96XNVH9izRKk9exj96giAntEFPaWZ6";
-//        assertThat(multiSign.Balance(MultiAddr,PRIKEY1,"test"),
+//        assertThat(multiSign.BalanceByAddr(MultiAddr,PRIKEY1,"test"),
 //                containsString("GetMulBalance : Multiaddr not generated, cannot be used !"));
-        assertThat(multiSign.Balance(MultiAddr,PRIKEY1,"test"),
+        assertThat(multiSign.BalanceByAddr(MultiAddr,"test"),
                 containsString("not found multiaddress"));
     }
 
@@ -825,7 +826,7 @@ public class  MultiTestInvalid {
         String unIssueToken = "unIssueToken";
         String resp1 = multiSign.recoverFrozenToken(unIssueToken);
         Thread.sleep(SLEEPTIME);
-        assertEquals(true,store.GetTxDetail(JSONObject.fromObject(resp1).getString("Data")).contains("failed to find transaction"));
+        assertEquals(true,store.GetTxDetail(JSONObject.fromObject(resp1).getString("data")).contains("failed to find transaction"));
     }
 
 
@@ -833,7 +834,7 @@ public class  MultiTestInvalid {
     public void TC979_recoverUnFreezedToken()throws Exception{
         String resp1 = multiSign.recoverFrozenToken(tokenType);
         Thread.sleep(SLEEPTIME);
-        assertEquals(true,store.GetTxDetail(JSONObject.fromObject(resp1).getString("Data")).contains("failed to find transaction"));
+        assertEquals(true,store.GetTxDetail(JSONObject.fromObject(resp1).getString("data")).contains("failed to find transaction"));
     }
 
 
@@ -842,11 +843,11 @@ public class  MultiTestInvalid {
     public void issueTokenIgnoreCase()throws Exception{
         String issueResp = multiSign.issueToken(IMPPUTIONADD,IMPPUTIONADD,tokenType.toLowerCase(),
                 issueAm1,"发行已有tokentype字符全部小写的token");
-        assertEquals("200",JSONObject.fromObject(issueResp).getString("State"));
+        assertEquals("200",JSONObject.fromObject(issueResp).getString("state"));
 
         String issueResp2 = multiSign.issueToken(IMPPUTIONADD,IMPPUTIONADD,tokenType.toUpperCase(),
                 issueAm1,"发行已有tokentype字符全部大写的token");
-        assertEquals("200",JSONObject.fromObject(issueResp2).getString("State"));
+        assertEquals("200",JSONObject.fromObject(issueResp2).getString("state"));
 
         sleepAndSaveInfo(SLEEPTIME);
 
@@ -880,14 +881,14 @@ public class  MultiTestInvalid {
         log.info("转账检查大小写敏感");
         List<Map> list = utilsClass.constructToken(MULITADD1, tokenType.toLowerCase(), issueAm1);
         String transferInfo = multiSign.Transfer(PRIKEY4,"转账全小写tokentype",IMPPUTIONADD, list);
-        assertEquals("400",JSONObject.fromObject(transferInfo).getString("State"));
-        assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo).getString("Data"));
+        assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo).getString("data"));
 
         //检查小写tokentype转账
         list = utilsClass.constructToken(MULITADD1, tokenType.toUpperCase(), issueAm1);
         transferInfo = multiSign.Transfer(PRIKEY4,"转账全大写tokentype",IMPPUTIONADD, list);
-        assertEquals("400",JSONObject.fromObject(transferInfo).getString("State"));
-        assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo).getString("Data"));
+        assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo).getString("data"));
     }
 
     //    @Test
@@ -897,12 +898,12 @@ public class  MultiTestInvalid {
         log.info("回收检查大小写敏感");
 
         String desResp = multiSign.Recycle(IMPPUTIONADD,PRIKEY4,tokenType.toLowerCase(),"10");
-        assertEquals("400",JSONObject.fromObject(desResp).getString("State"));
-        assertEquals("Insufficient Balance",JSONObject.fromObject(desResp).getString("Data"));
+        assertEquals("400",JSONObject.fromObject(desResp).getString("state"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(desResp).getString("data"));
 
         desResp = multiSign.Recycle(IMPPUTIONADD,PRIKEY4,tokenType.toUpperCase(),"10");
-        assertEquals("400",JSONObject.fromObject(desResp).getString("State"));
-        assertEquals("Insufficient Balance",JSONObject.fromObject(desResp).getString("Data"));
+        assertEquals("400",JSONObject.fromObject(desResp).getString("state"));
+        assertEquals("Insufficient Balance",JSONObject.fromObject(desResp).getString("data"));
     }
 
     //    @Test
@@ -910,37 +911,37 @@ public class  MultiTestInvalid {
         //冻结检查大小写
         log.info("冻结检查大小写");
         String freezeResp = multiSign.freezeToken(tokenType.toLowerCase());
-        assertEquals("200",JSONObject.fromObject(freezeResp).getString("State"));
-        String hash1 = JSONObject.fromObject(freezeResp).getString("Data");
+        assertEquals("200",JSONObject.fromObject(freezeResp).getString("state"));
+        String hash1 = JSONObject.fromObject(freezeResp).getString("data");
 
         freezeResp = multiSign.freezeToken(tokenType.toUpperCase());
-        assertEquals("200",JSONObject.fromObject(freezeResp).getString("State"));
-        String hash2 = JSONObject.fromObject(freezeResp).getString("Data");
+        assertEquals("200",JSONObject.fromObject(freezeResp).getString("state"));
+        String hash2 = JSONObject.fromObject(freezeResp).getString("data");
         sleepAndSaveInfo(SLEEPTIME);
 
-        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(hash1)).getString("State"));
-        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(hash2)).getString("State"));
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(hash1)).getString("state"));
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(hash2)).getString("state"));
 
 
         String recoverResp = multiSign.recoverFrozenToken(tokenType);
-        assertEquals("400",JSONObject.fromObject(recoverResp).getString("State"));
-        assertEquals(true,JSONObject.fromObject(recoverResp).getString("Data").contains("has not been freezed!"));
+        assertEquals("400",JSONObject.fromObject(recoverResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(recoverResp).getString("data").contains("has not been freezed!"));
 
         //冻结tokentype测试解除
         String freezeBeforeRecover = multiSign.recoverFrozenToken(tokenType);
-        assertEquals("200",JSONObject.fromObject(freezeBeforeRecover).getString("State"));
+        assertEquals("200",JSONObject.fromObject(freezeBeforeRecover).getString("state"));
 
         sleepAndSaveInfo(SLEEPTIME);
         recoverResp = multiSign.recoverFrozenToken(tokenType.toUpperCase());
-        assertEquals("400",JSONObject.fromObject(recoverResp).getString("State"));
-        assertEquals(true,JSONObject.fromObject(recoverResp).getString("Data").contains("has not been freezed!"));
+        assertEquals("400",JSONObject.fromObject(recoverResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(recoverResp).getString("data").contains("has not been freezed!"));
 
         recoverResp = multiSign.recoverFrozenToken(tokenType.toLowerCase());
-        assertEquals("400",JSONObject.fromObject(recoverResp).getString("State"));
-        assertEquals(true,JSONObject.fromObject(recoverResp).getString("Data").contains("has not been freezed!"));
+        assertEquals("400",JSONObject.fromObject(recoverResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(recoverResp).getString("data").contains("has not been freezed!"));
 
         String recoverR2 = multiSign.recoverFrozenToken(tokenType);
-        assertEquals("200",JSONObject.fromObject(recoverR2).getString("State"));
+        assertEquals("200",JSONObject.fromObject(recoverR2).getString("state"));
     }
 
 }
