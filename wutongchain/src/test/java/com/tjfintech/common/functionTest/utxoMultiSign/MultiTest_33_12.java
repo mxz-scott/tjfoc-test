@@ -15,7 +15,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +44,7 @@ public class MultiTest_33_12 {
             bf.collAddressTest();//有多签地址创建及添加
 
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
-                    utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                    utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         }
     }
@@ -142,7 +141,7 @@ public class MultiTest_33_12 {
 
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //发行后查询余额不带密码
@@ -173,12 +172,12 @@ public class MultiTest_33_12 {
         assertThat(JSONObject.fromObject(tfResponse24).getJSONObject("data").getString("isCompleted"), containsString("true"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //查询余额时使用带密码私钥和不带密码私钥
         log.info("查询余额判断转账是否成功");
-        String queryInfoA1= soloSign.Balance(PRIKEY1,tokenType);
+        String queryInfoA1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfoM1= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfoM2= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfoCM1= multiSign.BalanceByAddr(MULITADD3,tokenType);
@@ -196,7 +195,7 @@ public class MultiTest_33_12 {
         multiSign.freezeToken(PRIKEY1,tokenType);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         log.info("回收Token");
@@ -226,11 +225,11 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(recycleInfo5).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3= soloSign.Balance(PRIKEY1,tokenType);
+        String queryInfo3= multiSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfo4= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfo5= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfo6= multiSign.BalanceByAddr(MULITADD3,tokenType);
@@ -296,7 +295,7 @@ public class MultiTest_33_12 {
 
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //发行后查询余额不带密码
@@ -327,12 +326,12 @@ public class MultiTest_33_12 {
         assertThat(JSONObject.fromObject(tfResponse24).getJSONObject("data").getString("isCompleted"), containsString("true"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //查询余额时使用带密码私钥和不带密码私钥
         log.info("查询余额判断转账是否成功");
-        String queryInfoA1= soloSign.Balance(PRIKEY1,tokenType);
+        String queryInfoA1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfoM1= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfoM2= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfoCM1= multiSign.BalanceByAddr(MULITADD3,tokenType);
@@ -349,8 +348,8 @@ public class MultiTest_33_12 {
         multiSign.freezeToken(PRIKEY1,tokenType);
         multiSign.freezeToken(PRIKEY1,tokenType2);
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
 
@@ -381,15 +380,15 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(recycleInfo5).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3= soloSign.Balance(PRIKEY1,tokenType);
-        String queryInfo4= multiSign.Balance(MULITADD4,PRIKEY1,tokenType2);
-        String queryInfo5= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
-        String queryInfo6= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
-        String queryInfo7= multiSign.Balance(MULITADD3,PRIKEY6,PWD6,tokenType);
+        String queryInfo3= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String queryInfo4= multiSign.BalanceByAddr(MULITADD4,tokenType2);
+        String queryInfo5= multiSign.BalanceByAddr(MULITADD4,tokenType);
+        String queryInfo6= multiSign.BalanceByAddr(MULITADD3,tokenType);
+        String queryInfo7= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(queryInfo3).getString("state"));
         assertEquals("200",JSONObject.fromObject(queryInfo4).getString("state"));
@@ -401,7 +400,6 @@ public class MultiTest_33_12 {
         assertEquals("0",JSONObject.fromObject(queryInfo5).getJSONObject("data").getString("total"));
         assertEquals("0",JSONObject.fromObject(queryInfo6).getJSONObject("data").getString("total"));
         assertEquals("0",JSONObject.fromObject(queryInfo7).getJSONObject("data").getString("total"));
-
 
         String queryZero1 =multiSign.QueryZero(tokenType);
         String queryZero2 =multiSign.QueryZero(tokenType2);
@@ -452,7 +450,7 @@ public class MultiTest_33_12 {
         assertThat(response24, containsString("200"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //发行后查询余额不带密码
@@ -478,12 +476,12 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //查询余额时使用带密码私钥和不带密码私钥
         log.info("查询余额判断转账是否成功");
-        String queryInfoA1= soloSign.Balance(PRIKEY1,tokenType);
+        String queryInfoA1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfoM1= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfoM2= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfoCM1= multiSign.BalanceByAddr(MULITADD7,tokenType);
@@ -510,15 +508,15 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(recycleInfo5).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3= soloSign.Balance(PRIKEY1,tokenType);
-        String queryInfo4= multiSign.Balance(MULITADD4,PRIKEY1,tokenType2);
-        String queryInfo5= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
-        String queryInfo6= multiSign.Balance(MULITADD7,PRIKEY1,tokenType);
-        String queryInfo7= multiSign.Balance(MULITADD7,PRIKEY6,PWD6,tokenType);
+        String queryInfo3= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String queryInfo4= multiSign.BalanceByAddr(MULITADD4,tokenType2);
+        String queryInfo5= multiSign.BalanceByAddr(MULITADD4,tokenType);
+        String queryInfo6= multiSign.BalanceByAddr(MULITADD7,tokenType);
+        String queryInfo7= multiSign.BalanceByAddr(MULITADD7,tokenType);
 
         assertEquals("200",JSONObject.fromObject(queryInfo3).getString("state"));
         assertEquals("200",JSONObject.fromObject(queryInfo4).getString("state"));
@@ -579,7 +577,7 @@ public class MultiTest_33_12 {
         assertThat(response24, containsString("200"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //发行后查询余额不带密码
@@ -605,12 +603,12 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //查询余额时使用带密码私钥和不带密码私钥
         log.info("查询余额判断转账是否成功");
-        String queryInfoA1= soloSign.Balance(PRIKEY1,tokenType);
+        String queryInfoA1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfoM1= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfoM2= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfoCM1= multiSign.BalanceByAddr(MULITADD7,tokenType);
@@ -637,11 +635,11 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(recycleInfo5).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3= soloSign.Balance(PRIKEY1,tokenType);
+        String queryInfo3= multiSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfo4= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfo5= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfo6= multiSign.BalanceByAddr(MULITADD7,tokenType);
@@ -683,7 +681,7 @@ public class MultiTest_33_12 {
         assertThat(response14, containsString("200"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //发行后查询余额不带密码
@@ -732,16 +730,16 @@ public class MultiTest_33_12 {
         assertEquals("success",JSONObject.fromObject(tfResponse25).getString("Message"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash1)).getString("state"));
         assertEquals("404",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("state"));//因为花费同一笔input
 
         log.info("查询余额判断回收成功与否");
-        String query1= soloSign.Balance(PRIKEY1,tokenType);
-        String query2= soloSign.Balance(PRIKEY2,tokenType);
-        String query3= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        String query1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query2= multiSign.BalanceByAddr(ADDRESS2,tokenType);
+        String query3= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query1).getString("state"));
         assertEquals("200",JSONObject.fromObject(query2).getString("state"));
@@ -771,7 +769,7 @@ public class MultiTest_33_12 {
         assertThat(response14, containsString("200"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //发行后查询余额不带密码
@@ -810,7 +808,7 @@ public class MultiTest_33_12 {
         String tfResponse24 = SignPro4(tfTx21);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         String tfResponse25 = SignPro4(tfTx22);
@@ -830,9 +828,9 @@ public class MultiTest_33_12 {
         //assertEquals("404",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("State"));//因为花费同一笔input，第二笔交易不会上链
 
         log.info("查询余额判断回收成功与否");
-        String query1= soloSign.Balance(PRIKEY1,tokenType);
-        String query2= soloSign.Balance(PRIKEY2,tokenType);
-        String query3= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        String query1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query2= multiSign.BalanceByAddr(ADDRESS2,tokenType);
+        String query3= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query1).getString("state"));
         assertEquals("200",JSONObject.fromObject(query2).getString("state"));
@@ -864,7 +862,7 @@ public class MultiTest_33_12 {
         assertThat(response14, containsString("200"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //发行后查询余额不带密码
@@ -883,7 +881,7 @@ public class MultiTest_33_12 {
         String tfResp = SignPro4(tfTx);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
 
@@ -907,17 +905,17 @@ public class MultiTest_33_12 {
         String transfer2= multiSign.Transfer(PRIKEY1,tfData2, MULITADD4,list02);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
 
         //转账后查询余额不带密码
         log.info("转账后不带密码私钥查询余额: "+tokenType);
-        String query3= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        String query3= multiSign.BalanceByAddr(MULITADD3,tokenType);
         assertEquals("200",JSONObject.fromObject(query3).getString("state"));
         assertEquals(String.valueOf(amount-tf+tfA),JSONObject.fromObject(query3).getJSONObject("data").getString("total"));
 
-        String query4= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
+        String query4= multiSign.BalanceByAddr(MULITADD4,tokenType);
         assertEquals("200",JSONObject.fromObject(query4).getString("state"));
         assertEquals(String.valueOf(tf-tfA),JSONObject.fromObject(query4).getJSONObject("data").getString("total"));
 
@@ -951,7 +949,7 @@ public class MultiTest_33_12 {
         String tfResponse24 = SignPro4(tfTx21);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         String tfResponse25 = SignPro4(tfTx22);
@@ -968,9 +966,9 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash1)).getString("state"));
 
         log.info("查询余额判断回收成功与否");
-        String query6= soloSign.Balance(PRIKEY1,tokenType);
-        String query7= soloSign.Balance(PRIKEY2,tokenType);
-        String query8= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        String query6= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query7= multiSign.BalanceByAddr(ADDRESS2,tokenType);
+        String query8= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("state"));
         assertEquals("200",JSONObject.fromObject(query7).getString("state"));
@@ -1002,7 +1000,7 @@ public class MultiTest_33_12 {
 
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //发行后查询余额不带密码
@@ -1021,7 +1019,7 @@ public class MultiTest_33_12 {
         String tfResp = SignPro4(tfTx);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
 
@@ -1045,17 +1043,17 @@ public class MultiTest_33_12 {
         String transfer2= multiSign.Transfer(PRIKEY1,tfData2, MULITADD4,list02);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
 
         //转账后查询余额不带密码
         log.info("转账后不带密码私钥查询余额: "+tokenType);
-        String query3= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        String query3= multiSign.BalanceByAddr(MULITADD3,tokenType);
         assertEquals("200",JSONObject.fromObject(query3).getString("state"));
         assertEquals(String.valueOf(amount-tf+tfA),JSONObject.fromObject(query3).getJSONObject("data").getString("total"));
 
-        String query4= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
+        String query4= multiSign.BalanceByAddr(MULITADD4,tokenType);
         assertEquals("200",JSONObject.fromObject(query4).getString("state"));
         assertEquals(String.valueOf(tf-tfA),JSONObject.fromObject(query4).getJSONObject("data").getString("total"));
 
@@ -1097,16 +1095,16 @@ public class MultiTest_33_12 {
         assertEquals("success",JSONObject.fromObject(tfResponse25).getString("Message"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash1)).getString("state"));
         //assertEquals("404",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("State"));//因为花费同一笔input，第二笔交易不会上链
 
         log.info("查询余额判断回收成功与否");
-        String query6= soloSign.Balance(PRIKEY1,tokenType);
-        String query7= soloSign.Balance(PRIKEY2,tokenType);
-        String query8= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        String query6= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query7= multiSign.BalanceByAddr(ADDRESS2,tokenType);
+        String query8= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("state"));
         assertEquals("200",JSONObject.fromObject(query7).getString("state"));
@@ -1139,7 +1137,7 @@ public class MultiTest_33_12 {
 
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //发行后查询余额不带密码
@@ -1158,7 +1156,7 @@ public class MultiTest_33_12 {
         String tfResp = SignPro4(tfTx);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
 
@@ -1182,7 +1180,7 @@ public class MultiTest_33_12 {
         String transfer2= multiSign.Transfer(PRIKEY1,transferData, MULITADD4,list02);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
 
@@ -1232,18 +1230,18 @@ public class MultiTest_33_12 {
         assertThat(JSONObject.fromObject(tfResponse24).getJSONObject("data").getString("isCompleted"), containsString("true"));
 
         String tfHash2=JSONObject.fromObject(tfResponse25).getJSONObject("data").getString("txId");
-        assertEquals("success",JSONObject.fromObject(tfResponse25).getString("Message"));
+        assertEquals("success",JSONObject.fromObject(tfResponse25).getString("message"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash1)).getString("state"));
         assertEquals("404",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("state"));
 
         log.info("查询余额判断回收成功与否");
-        String query6= soloSign.Balance(PRIKEY1,tokenType);
-        String query7= soloSign.Balance(PRIKEY2,tokenType);
+        String query6= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query7= multiSign.BalanceByAddr(ADDRESS2,tokenType);
         String query8= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("state"));
@@ -1300,7 +1298,7 @@ public class MultiTest_33_12 {
         assertEquals(MULITADD7,JSONObject.fromObject(response22).getJSONObject("data").getString("collectAddr"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //发行后查询余额
@@ -1326,12 +1324,12 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //查询余额时使用带密码私钥
         log.info("查询余额判断转账是否成功");
-        String queryInfoA1= soloSign.Balance(PRIKEY1,tokenType);
+        String queryInfoA1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfoM1= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfoM2= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfoCM1= multiSign.BalanceByAddr(MULITADD7,tokenType);
@@ -1348,7 +1346,7 @@ public class MultiTest_33_12 {
         multiSign.freezeToken(PRIKEY1,tokenType2);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         log.info("回收Token");
@@ -1365,11 +1363,11 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(recycleInfo5).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3= soloSign.Balance(PRIKEY1,tokenType);
+        String queryInfo3= multiSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfo4= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfo5= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfo6= multiSign.BalanceByAddr(MULITADD7,tokenType);
@@ -1423,7 +1421,7 @@ public class MultiTest_33_12 {
 
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //发行后查询余额
@@ -1449,13 +1447,13 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
 
         //查询余额时使用带密码私钥
         log.info("查询余额判断转账是否成功");
-        String queryInfoA1= soloSign.Balance(PRIKEY1,tokenType);
+        String queryInfoA1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfoM1= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfoM2= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfoCM1= multiSign.BalanceByAddr(MULITADD7,tokenType);
@@ -1473,7 +1471,7 @@ public class MultiTest_33_12 {
         multiSign.freezeToken(PRIKEY1,tokenType2);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         log.info("回收Token");
@@ -1489,14 +1487,14 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(recycleInfo4).getString("state"));
         assertEquals("200",JSONObject.fromObject(recycleInfo5).getString("state"));
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recycleInfo2,utilsClass.sdkGetTxHashType21),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recycleInfo5,utilsClass.sdkGetTxHashType21),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recycleInfo2,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recycleInfo5,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3= soloSign.Balance(PRIKEY1,tokenType);
+        String queryInfo3= multiSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfo4= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfo5= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfo6= multiSign.BalanceByAddr(MULITADD7,tokenType);
@@ -1563,7 +1561,7 @@ public class MultiTest_33_12 {
         assertEquals(MULITADD3,JSONObject.fromObject(response22).getJSONObject("data").getString("collectAddr"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //发行后查询余额
@@ -1606,7 +1604,7 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(response15).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         log.info("查询余额判断回收成功与否");
@@ -1659,7 +1657,7 @@ public class MultiTest_33_12 {
         assertEquals(MULITADD3,JSONObject.fromObject(response21).getJSONObject("data").getString("collectAddr"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //发行后查询余额
@@ -1702,7 +1700,7 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(response15).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         log.info("查询余额判断回收成功与否");
@@ -1754,7 +1752,7 @@ public class MultiTest_33_12 {
         assertEquals(IMPPUTIONADD,JSONObject.fromObject(response21).getJSONObject("data").getString("collectAddr"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         //发行后查询余额
@@ -1783,7 +1781,7 @@ public class MultiTest_33_12 {
         multiSign.freezeToken(PRIKEY1,tokenType2);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         log.info("回收Token");
@@ -1794,7 +1792,7 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         log.info("查询余额判断回收成功与否");

@@ -241,13 +241,14 @@ public class UtilsClass {
     public static String sLocalMgTool = "wttool\\wttool";
 
     public String sdkGetTxDetailType = "0";
-    public String sdkGetTxDetailTTypeV2 = "2";
+    public String sdkGetTxDetailTypeV2 = "2";
     public String tokenApiGetTxDetailTType = "1";
 
     public String sdkGetTxHashType00 = "00";
     public String sdkGetTxHashType01 = "01";
     public String sdkGetTxHashType02 = "02";
     public String sdkGetTxHashType20 = "20";
+    public String sdkGetTxHashType21 = "21";
     public String tokenApiGetTxHashType = "10";
     public String tokenApiGetTxHashTypeDesByType = "11";
     public String mgGetTxHashType = "mg";
@@ -302,14 +303,14 @@ public class UtilsClass {
     public  List<Map>   constructToken(String toAddr, String tokenType, String amount){
 
         Map<String,Object>amountMap=new HashMap<>();
-        amountMap.put("TokenType",tokenType);
-        amountMap.put("Amount",amount);
+        amountMap.put("tokenType",tokenType);
+        amountMap.put("amount",amount);
 
         List<Object>amountList=new ArrayList<>();
         amountList.add(amountMap);
         Map<String,Object>map=new HashMap<>();
-        map.put("ToAddr",toAddr);
-        map.put("AmountList",amountList);
+        map.put("toAddress",toAddr);
+        map.put("amountList",amountList);
         List<Map>tokenList=new ArrayList<>();
         tokenList.add(map);
         return tokenList;
@@ -328,13 +329,13 @@ public class UtilsClass {
             tokenList.add(list.get(i));
         }
         Map<String,Object>amountMap=new HashMap<>();
-        amountMap.put("TokenType",tokenType);
-        amountMap.put("Amount",amount);
+        amountMap.put("tokenType",tokenType);
+        amountMap.put("amount",amount);
         List<Map>amountList=new ArrayList<>();
         amountList.add(amountMap);
         Map<String,Object>map=new HashMap<>();
-        map.put("ToAddr",toAddr);
-        map.put("AmountList",amountList);
+        map.put("toAddress",toAddr);
+        map.put("amountList",amountList);
         tokenList.add(map);
         return tokenList;
     }

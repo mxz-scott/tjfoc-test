@@ -99,18 +99,18 @@ public class MultiSignInvalidTest {
         assertThat(multiAddress, containsString("M can't be 0"));
         map.put("PUBKEY1","");
         multiAddress = multiSign.genMultiAddress(1, map);
-        assertThat(multiAddress, containsString("pubkey can'not be empty"));//公钥字段存在空值
+        assertThat(multiAddress, containsString("Pubkey can't be empty"));//公钥字段存在空值
         map.put("PUBKEY1","YWJjeHg=");
         multiAddress = multiSign.genMultiAddress(1, map);
         assertThat(multiAddress, containsString("unsupport pem file"));//公钥字段存在一些没有意义的base64编码格式的字符
         map.put("PUBKEY1","abc");
         multiAddress = multiSign.genMultiAddress(1, map);
-        assertThat(multiAddress, containsString("PublicKey must be base64 encoding"));//公钥字存在非base64编码的值
+        assertThat(multiAddress, containsString("Public key must be base64 encoding"));//公钥字存在非base64编码的值
         Map<String, Object> map2 =  new HashMap<>();
         //传入3个公钥
         map2.put("PUBKEY1",utilsClass.PUBKEY1);
         multiAddress = multiSign.genMultiAddress(1, map2);
-        assertThat(multiAddress, containsString("need more pubkey"));//Args字段只传入一个公钥
+        assertThat(multiAddress, containsString("Need more pubkey"));//Args字段只传入一个公钥
 
     }
 
@@ -344,11 +344,11 @@ public class MultiSignInvalidTest {
         recycle = multiSign.Recycle(multiaddr2, "YWJjeHg=", Tokentype, "1000");
         assertThat(recycle, containsString("Incorrect private key or password"));  //Prikey传入没有意义的base64编码字符的值
         recycle = multiSign.Recycle("", UtilsClass.PRIKEY6,UtilsClass.PWD6, Tokentype, "1000");
-        assertThat(recycle, containsString("unsupport pem file"));  //MultiAddr字段为空值
+        assertThat(recycle, containsString("MultiAddress is mandatory"));  //MultiAddr字段为空值
         recycle = multiSign.Recycle("abc", UtilsClass.PRIKEY6, UtilsClass.PWD6,Tokentype, "1000");
         assertThat(recycle, containsString("Invalid multiple address")); //MultiAddr字段为非法字符
         recycle = multiSign.Recycle(multiaddr2, UtilsClass.PRIKEY6, UtilsClass.PWD6,"", "1000");
-        assertThat(recycle, containsString("Token type is mandatory")); //TokenType字段为空
+        assertThat(recycle, containsString("TokenType is mandatory")); //TokenType字段为空
         //Amount字段为空值
         recycle = multiSign.Recycle(multiaddr2, UtilsClass.PRIKEY6, UtilsClass.PWD6,Tokentype, "");
         assertThat(recycle, containsString("Token amount must be a valid number and less than "+MaxValue));
@@ -378,7 +378,7 @@ public class MultiSignInvalidTest {
         freeze = multiSign.freezeToken("YWJjeHg=", Tokentype);
         assertThat(freeze, containsString("Duplicate transaction")); //	Prikey传入没有意义的base64编码字符的值
         freeze = multiSign.freezeToken(UtilsClass.PRIKEY1, "");
-        assertThat(freeze, containsString("tokentype is mandatory")); //	Tokentype字段为空值
+        assertThat(freeze, containsString("TokenType is mandatory")); //	Tokentype字段为空值
 
         String recover;
         recover = multiSign.recoverFrozenToken("", Tokentype);
@@ -388,7 +388,7 @@ public class MultiSignInvalidTest {
         recover = multiSign.recoverFrozenToken("YWJjeHg=", Tokentype);
         assertThat(recover, containsString("Duplicate transaction")); //	Prikey传入没有意义的base64编码字符的值
         recover = multiSign.recoverFrozenToken(UtilsClass.PRIKEY1, "");
-        assertThat(recover, containsString("tokentype is mandatory")); //Tokentype字段为空值
+        assertThat(recover, containsString("TokenType is mandatory")); //Tokentype字段为空值
 
 
     }

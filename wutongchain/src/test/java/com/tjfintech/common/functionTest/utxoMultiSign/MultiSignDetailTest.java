@@ -5,8 +5,6 @@ import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
-import com.tjfoc.base.MultiSignIssue;
-import com.tjfoc.base.MultiSignTransferAccounts;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Before;
@@ -54,7 +52,7 @@ public class MultiSignDetailTest {
         tokenType3  = IssueToken("300"); //tokentype2发行数量为10000
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         log.info("查询归集地址(接收地址)中的余额");
@@ -131,7 +129,7 @@ public class MultiSignDetailTest {
         assertEquals("200",JSONObject.fromObject(recoverFrozenToken2).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
     }
@@ -248,15 +246,15 @@ public class MultiSignDetailTest {
         log.info("tokentype设置为空或者无此字段");
         String gettotal4 = multiSign.gettotal(0, timeMillislong, "SSTT");
         assertEquals("0",JSONObject.fromObject(gettotal4).getJSONObject("data").getString("issueAmount"));
-        assertEquals("0",JSONObject.fromObject(gettotal4).getJSONObject("data").getString("RecycleAmount"));
+        assertEquals("0",JSONObject.fromObject(gettotal4).getJSONObject("data").getString("recycleAmount"));
 
         log.info("tokentype设置数值型数据");
         String gettotal5 = multiSign.gettotal(0, timeMillislong, 111);
-        assertEquals("Invalid parameter",JSONObject.fromObject(gettotal5).getString("Message"));
+        assertEquals("Invalid parameter",JSONObject.fromObject(gettotal5).getString("message"));
 
         log.info("tokentype设置为浮点数");
         String gettotal6 = multiSign.gettotal(0, timeMillislong, 11.11);
-        assertEquals("Invalid parameter",JSONObject.fromObject(gettotal6).getString("Message"));
+        assertEquals("Invalid parameter",JSONObject.fromObject(gettotal6).getString("message"));
     }
 
     /**

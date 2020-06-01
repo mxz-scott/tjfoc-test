@@ -436,7 +436,7 @@ public class GoMultiSign implements MultiSign {
         map.put("tokenType", TokenType);
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.postMethod(SDKADD + "/utxo/gettotal"+param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/assets/total"+param, map);
         log.info(result);
         return result;
     }
@@ -463,11 +463,9 @@ public class GoMultiSign implements MultiSign {
      */
     @Override
     public String tokenstate(String TokenType) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("TokenType", TokenType);
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.postMethod(SDKADD + "/utxo/tokenstate"+param, map);
+        String result = GetTest.SendGetTojson(SDKADD + "/v2/tx/utxo/assets/state/" + TokenType + param);
         log.info(result);
         return result;
     }
@@ -537,7 +535,7 @@ public class GoMultiSign implements MultiSign {
         map.put("toAddress",ToAddr);
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/detail"+param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/detail"+param, map);
         log.info(result);
         return result;
     }

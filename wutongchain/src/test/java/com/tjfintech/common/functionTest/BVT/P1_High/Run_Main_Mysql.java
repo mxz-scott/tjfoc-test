@@ -21,37 +21,37 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-//        SetDatabaseMysql.class,
-//        SetTokenApiDatabaseMysql.class,
-//        SetAccountEmpty.class,
-//        SetCertSM2.class,
-//        SetMainLedger.class,
-//        PeerStartNoPermTest.class,
-//        BeforeCondition.class,
-//
-//        SetURLToSDKAddr.class,
-//        StoreTest.class,
-//        PrivateStoreTest.class,
-//        PrivateStoreTestFastGet.class,
-//        StoreInvalidTest.class,
-//        StoreWalletRelatedTest.class,
-//
+        SetDatabaseMysql.class,
+        SetTokenApiDatabaseMysql.class,
+        SetAccountEmpty.class,
+        SetCertSM2.class,
+        SetMainLedger.class,
+        PeerStartNoPermTest.class,
+        BeforeCondition.class,
+
+        SetURLToSDKAddr.class,
+        StoreTest.class,
+        PrivateStoreTest.class,
+        PrivateStoreTestFastGet.class,
+        StoreInvalidTest.class,
+        StoreWalletRelatedTest.class,
+
         MultiTest.class,
         MultiTest_33_12.class,
-//        MultiSignDetailTest.class,
-//        MultiSignInvalidTest.class,
-//        MultiTestInvalid.class,
-//
+        MultiSignDetailTest.class,
+        MultiSignInvalidTest.class,
+        MultiTestInvalid.class,
+
         SoloTest.class,
-//        SingleSignInvalidTest.class,
-//        SoloTestInvalid.class,
-//
-//        WVMContractTest.class,
-//        WVMContractInvalidTest.class,
-//
-//        VerifyTests.class,
-//        TestTxType.class,
-//        AddPeerAndSyncData.class
+        SingleSignInvalidTest.class,
+        SoloTestInvalid.class,
+
+        WVMContractTest.class,
+        WVMContractInvalidTest.class,
+
+        VerifyTests.class,
+        TestTxType.class,
+        AddPeerAndSyncData.class
 
 })
 

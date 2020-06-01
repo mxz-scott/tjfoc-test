@@ -87,7 +87,7 @@ public  class GoStore implements Store {
 
     public String CreateStore(String Data) {
         Map<String, Object> map = new HashMap<>();
-        map.put("Data", Data);
+        map.put("data", Data);
         String param = "";
         if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
         String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/store" + param, map);
@@ -195,8 +195,8 @@ public  class GoStore implements Store {
             PubkeysObjects.add(value);
         }
         Map<String, Object> map = new HashMap<>();
-        map.put("Data", Data);
-        map.put("Pubkeys", PubkeysObjects);
+        map.put("data", Data);
+        map.put("pubKeys", PubkeysObjects);
         String param = "";
         if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
         String result = PostTest.postMethod(SDKADD + "/v2/tx/store" + param, map);
@@ -244,8 +244,8 @@ public  class GoStore implements Store {
      */
     public String GetStorePost(String Hash, String priKey) {
         Map<String, Object> map = new HashMap<>();
-        map.put("prikey", priKey);
-        map.put("txid", Hash);
+        map.put("priKey", priKey);
+        map.put("txId", Hash);
         String param = "";
         if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
         String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/store/query" + param, map);
@@ -263,8 +263,8 @@ public  class GoStore implements Store {
     public String GetStorePostPwd(String Hash, String priKey, String keyPwd) {
 
         Map<String, Object> map = new HashMap<>();
-        map.put("prikey", priKey);
-        map.put("txid", Hash);
+        map.put("priKey", priKey);
+        map.put("txId", Hash);
         map.put("password", keyPwd);
         String param = "";
         if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
@@ -395,9 +395,9 @@ public  class GoStore implements Store {
             PubkeysObjects.add(value);
         }
         Map<String, Object> map = new HashMap<>();
-        map.put("txid", hash);
-        map.put("Pubkeys", PubkeysObjects);
-        map.put("PriKey", toPriKey);
+        map.put("txId", hash);
+        map.put("pubKeys", PubkeysObjects);
+        map.put("priKey", toPriKey);
         String param = "";
         if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
         String result = PostTest.postMethod(SDKADD + "/v2/tx/store/authorize" + param, map);
@@ -415,9 +415,9 @@ public  class GoStore implements Store {
             PubkeysObjects.add(value);
         }
         Map<String, Object> map = new HashMap<>();
-        map.put("txid", hash);
-        map.put("Pubkeys", PubkeysObjects);
-        map.put("PriKey", toPriKey);
+        map.put("txId", hash);
+        map.put("pubKeys", PubkeysObjects);
+        map.put("priKey", toPriKey);
         map.put("password", pwd);
         String param = "";
         if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;

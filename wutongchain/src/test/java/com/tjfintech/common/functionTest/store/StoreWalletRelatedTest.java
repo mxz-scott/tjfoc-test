@@ -61,8 +61,8 @@ public class StoreWalletRelatedTest {
             String response= store.CreateStore(Data);
             JSONObject jsonObject=JSONObject.fromObject(response);
             String storeHash = jsonObject.getString("data");
-            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                    utilsClass.sdkGetTxDetailType,SLEEPTIME);
+            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
+                    utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
             String response2= store.GetInlocal(storeHash);
             assertThat(response2,containsString("200"));
         }

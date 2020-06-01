@@ -629,7 +629,7 @@ public class  MultiTestInvalid {
         assertThat(response, containsString("400"));
         assertThat(response2, containsString("400"));
         assertThat(response3, containsString("400"));
-        assertThat(response3, containsString("duplicate pubkey"));
+        assertThat(response3, containsString("Duplicate pubkey"));
 
     }
 
@@ -781,8 +781,8 @@ public class  MultiTestInvalid {
             BeforeCondition beforeCondition=new BeforeCondition();
             beforeCondition.T284_BeforeCondition(tokenType);
 
-            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
-                    utilsClass.sdkGetTxDetailType,SLEEPTIME);
+            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                    utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
             queryInfo = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType);
@@ -797,8 +797,8 @@ public class  MultiTestInvalid {
 
         String transferInfo0 = multiSign.Transfer(PRIKEY4, "cx-test", IMPPUTIONADD, list0);//1 归集地址向单签地址转账
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         assertThat(transferInfo0, containsString("200"));
