@@ -535,6 +535,7 @@ public class CommonFunc {
         System.out.print(account + " with token account :" + tokenAmountList.toString() + "\n");
         return tokenAmountList;
     }
+
     //-----------------------------------------------------------------------------------------------------------
     //结果确认辅助函数 回收结果list map for 回收bytoken
     /***

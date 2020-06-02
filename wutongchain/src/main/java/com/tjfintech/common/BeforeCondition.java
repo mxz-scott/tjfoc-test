@@ -105,15 +105,15 @@ public class BeforeCondition {
      */
     public  void collAddressTest() throws Exception{
         createAddresses(); //生成多签地址
-        String response= multiSign.collAddress(PRIKEY1,IMPPUTIONADD);
-        String response2= multiSign.collAddress(PRIKEY1,MULITADD3);
-        String response3= multiSign.collAddress(PRIKEY1,ADDRESS1);
-        String response4=multiSign.collAddress(PRIKEY2,ADDRESS2);
-        String response5= multiSign.collAddress(PRIKEY1,MULITADD4);
-        String response6= multiSign.collAddress(PRIKEY1,MULITADD5);
-        String response7= multiSign.collAddress(PRIKEY1,MULITADD7);
-        String response8= multiSign.collAddress(PRIKEY1,MULITADD1);
-        String response9=multiSign.collAddress(PRIKEY2,ADDRESS4);
+        String response= multiSign.collAddressRemovePri(IMPPUTIONADD);
+        String response2= multiSign.collAddressRemovePri(MULITADD3);
+        String response3= multiSign.collAddressRemovePri(ADDRESS1);
+        String response4=multiSign.collAddressRemovePri(ADDRESS2);
+        String response5= multiSign.collAddressRemovePri(MULITADD4);
+        String response6= multiSign.collAddressRemovePri(MULITADD5);
+        String response7= multiSign.collAddressRemovePri(MULITADD7);
+        String response8= multiSign.collAddressRemovePri(MULITADD1);
+        String response9=multiSign.collAddressRemovePri(ADDRESS4);
         assertThat(response4,containsString("200"));
         assertThat(response,containsString("200"));
         assertThat(response2,containsString("200"));
@@ -124,15 +124,15 @@ public class BeforeCondition {
         assertThat(response8,containsString("200"));
         assertThat(response9,containsString("200"));
         //2.0.1版本需要添加发行地址后才可以发行
-        String response11= multiSign.addissueaddress(PRIKEY1,IMPPUTIONADD);
-        String response12= multiSign.addissueaddress(PRIKEY1,MULITADD3);
-        String response13= multiSign.addissueaddress(PRIKEY1,ADDRESS1);
-        String response14=multiSign.addissueaddress(PRIKEY2,ADDRESS2);
-        String response15= multiSign.addissueaddress(PRIKEY1,MULITADD4);
-        String response16= multiSign.addissueaddress(PRIKEY1,MULITADD5);
-        String response17= multiSign.addissueaddress(PRIKEY1,MULITADD7);
-        String response18= multiSign.addissueaddress(PRIKEY1,MULITADD1);
-        String response19=multiSign.addissueaddress(PRIKEY2,ADDRESS4);
+        String response11= multiSign.addissueaddressRemovePri(IMPPUTIONADD);
+        String response12= multiSign.addissueaddressRemovePri(MULITADD3);
+        String response13= multiSign.addissueaddressRemovePri(ADDRESS1);
+        String response14=multiSign.addissueaddressRemovePri(ADDRESS2);
+        String response15= multiSign.addissueaddressRemovePri(MULITADD4);
+        String response16= multiSign.addissueaddressRemovePri(MULITADD5);
+        String response17= multiSign.addissueaddressRemovePri(MULITADD7);
+        String response18= multiSign.addissueaddressRemovePri(MULITADD1);
+        String response19=multiSign.addissueaddressRemovePri(ADDRESS4);
         assertThat(response14,containsString("200"));
         assertThat(response11,containsString("200"));
         assertThat(response12,containsString("200"));
@@ -206,7 +206,7 @@ public class BeforeCondition {
         String data = "IMPPUTIONADD" + "发行" + tokenType + " token，数量为：" + amount;
         String response = multiSign.issueToken(IMPPUTIONADD, tokenType, amount, data);
         assertThat(response, containsString("200"));
-        String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
+        String Tx1 = JSONObject.fromObject(response).getJSONObject("data").getString("tx");
         log.info("第一次签名");
         String response2 = multiSign.Sign(Tx1, PRIKEY4);
     }

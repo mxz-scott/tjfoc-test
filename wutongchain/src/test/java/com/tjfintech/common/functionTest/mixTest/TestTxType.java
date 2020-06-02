@@ -630,17 +630,17 @@ public class TestTxType {
         String respon= soloSign.issueToken(PRIKEY1,tokenType,"100","单签"+ADDRESS1+"发行token "+tokenType,ADDRESS1);
 
         //预先做删除归集地址、删除发行地址操作、解除token锁定，以便后续操作正常进行
-        assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS6),containsString("200"));
-        assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS6),containsString("200"));
-        assertThat(multiSign.recoverFrozenToken(PRIKEY1,tokenType),containsString("200"));
+        assertThat(multiSign.delCollAddressRemovePri(ADDRESS6),containsString("200"));
+        assertThat(multiSign.delissueaddressRemovePri(ADDRESS6),containsString("200"));
+        assertThat(multiSign.recoverFrozenToken(tokenType),containsString("200"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //Admin类交易 Type 20 SubType 200 201 202 203
-        String response10= multiSign.collAddress(PRIKEY1,ADDRESS6);
+        String response10= multiSign.collAddressRemovePri(ADDRESS6);
         String response11= multiSign.addissueaddress(PRIKEY1,ADDRESS6);
-        String response3=multiSign.freezeToken(PRIKEY1,tokenType);
+        String response3=multiSign.freezeToken(tokenType);
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -664,7 +664,7 @@ public class TestTxType {
         //删除发行地址
         String response13= multiSign.delissueaddress(PRIKEY1,ADDRESS6);
         //解除冻结token
-        String response4=multiSign.recoverFrozenToken(PRIKEY1,tokenType);
+        String response4=multiSign.recoverFrozenToken(tokenType);
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 

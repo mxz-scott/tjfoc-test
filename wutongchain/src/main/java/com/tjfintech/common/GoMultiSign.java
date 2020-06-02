@@ -561,7 +561,7 @@ public class GoMultiSign implements MultiSign {
         map.put("toAddress",ToAddr);
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/detail"+param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/detail"+param, map);
         log.info(result);
         return result;
     }
@@ -587,7 +587,7 @@ public class GoMultiSign implements MultiSign {
         map.put("toAddress",ToAddr);
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/detail"+param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/detail"+param, map);
         log.info(result);
         return result;
     }
@@ -601,7 +601,7 @@ public class GoMultiSign implements MultiSign {
         Map<String, Object> map = new HashMap<>();
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/detail"+param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/detail"+param, map);
         log.info(result);
         return result;
     }
@@ -1011,17 +1011,17 @@ public class GoMultiSign implements MultiSign {
         return result;
     }
 
-    @Override
-    public String freezeToken(String priKey, String tokenType) {
-        Map<String ,Object>map=new HashMap<>();
-        map.put("priKey",priKey);
-        map.put("tokenType",tokenType);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result =PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/freeze"+param,map);
-        log.info(result);
-        return result;
-    }
+//    @Override
+//    public String freezeToken(String priKey, String tokenType) {
+//        Map<String ,Object>map=new HashMap<>();
+//        map.put("priKey",priKey);
+//        map.put("tokenType",tokenType);
+//        String param="";
+//        if(subLedger!="") param = param +"?ledger="+subLedger;
+//        String result =PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/freeze"+param,map);
+//        log.info(result);
+//        return result;
+//    }
 
     /**
      * 冻结token（不使用私钥的情况）
@@ -1034,23 +1034,23 @@ public class GoMultiSign implements MultiSign {
         map.put("tokenType",tokenType);
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result =PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/recover"+param,map);
+        String result =PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/freeze"+param,map);
         log.info(result);
         return result;
     }
 
-    @Override
-    public String recoverFrozenToken(String priKey, String tokenType) {
-        Map<String ,Object>map=new HashMap<>();
-        map.put("priKey",priKey);
-        map.put("tokenType",tokenType);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result =PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/recover"+param,map);
-        log.info(result);
-        return result;
-
-    }
+//    @Override
+//    public String recoverFrozenToken(String priKey, String tokenType) {
+//        Map<String ,Object>map=new HashMap<>();
+//        map.put("priKey",priKey);
+//        map.put("tokenType",tokenType);
+//        String param="";
+//        if(subLedger!="") param = param +"?ledger="+subLedger;
+//        String result =PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/freeze"+param,map);
+//        log.info(result);
+//        return result;
+//
+//    }
 
     /**
      * 恢复token(不使用私钥的情况)

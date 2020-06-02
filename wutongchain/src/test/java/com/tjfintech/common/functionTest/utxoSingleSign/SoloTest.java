@@ -432,7 +432,7 @@ public class SoloTest {
 
         //20190411增加锁定步骤后进行转账
         log.info("锁定待转账Token: "+tokenType);
-        String resp=multiSign.freezeToken(PRIKEY1,tokenType);
+        String resp=multiSign.freezeToken(tokenType);
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -443,21 +443,18 @@ public class SoloTest {
         log.info(ADDRESS3);
         List<Map> list1=soloSign.constructToken(ADDRESS5,tokenType2,"200.555",listModel1);
         String transferInfo= soloSign.Transfer(list1,PRIKEY1, transferData);
-        assertThat(transferInfo, containsString("200"));
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+//        assertThat(transferInfo, containsString("400"));
 
 
         log.info("查询帐号3跟帐号5余额，判断转账是否成功");
-        String queryInfo = soloSign.Balance( PRIKEY3, tokenType);
-        String queryInfo2 = soloSign.Balance( PRIKEY5, tokenType2);
+        String queryInfo = multiSign.BalanceByAddr( ADDRESS3, tokenType);
+        String queryInfo2 = multiSign.BalanceByAddr( ADDRESS5, tokenType2);
         assertThat(JSONObject.fromObject(queryInfo).getJSONObject("data").getString("total"), containsString("0"));
         assertThat(JSONObject.fromObject(queryInfo2).getJSONObject("data").getString("total"), containsString("0"));
 
 
         log.info("解除锁定待转账Token: "+tokenType);
-        String resp1=multiSign.recoverFrozenToken(PRIKEY1,tokenType);
+        String resp1=multiSign.recoverFrozenToken(tokenType);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
@@ -476,8 +473,8 @@ public class SoloTest {
 
 
         log.info("查询帐号3跟帐号5余额，判断转账是否成功");
-        queryInfo = soloSign.Balance( PRIKEY3, tokenType);
-        queryInfo2 = soloSign.Balance( PRIKEY5, tokenType2);
+        queryInfo = multiSign.BalanceByAddr( ADDRESS3, tokenType);
+        queryInfo2 = multiSign.BalanceByAddr( ADDRESS5, tokenType2);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo, containsString("100.25"));
         assertThat(queryInfo2, containsString("200"));
@@ -559,14 +556,14 @@ public class SoloTest {
 
         //20190411增加锁定解锁操作步骤后进行回收
         log.info("锁定待回收Token: "+tokenType);
-        String resp=multiSign.freezeToken(PRIKEY1,tokenType);
+        String resp=multiSign.freezeToken(tokenType);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
 
         log.info("解除锁定待回收Token: "+tokenType);
-        String resp1=multiSign.recoverFrozenToken(PRIKEY1,tokenType);
+        String resp1=multiSign.recoverFrozenToken(tokenType);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
@@ -644,7 +641,7 @@ public class SoloTest {
 
         //20190411增加锁定操作步骤后进行回收
         log.info("锁定待回收Token: "+tokenType);
-        String resp=multiSign.freezeToken(PRIKEY1,tokenType);
+        String resp=multiSign.freezeToken(tokenType);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);

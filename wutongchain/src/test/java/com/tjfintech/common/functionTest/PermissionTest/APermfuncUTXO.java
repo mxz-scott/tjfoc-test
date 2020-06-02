@@ -162,13 +162,13 @@ public class APermfuncUTXO {
     //特殊操作例如冻结token、解除token冻结、上链归集地址、注销归集地址、验证私钥密码匹配性
     public String utxoFreeze(String priKey,String tokenType)throws Exception {
         log.info("冻结token");
-        String response = multiSign.freezeToken(priKey, tokenType);
+        String response = multiSign.freezeToken( tokenType);
         return retAllow(response);
     }
 
     public String utxoRecoverToken(String priKey,String tokenType)throws Exception {
         log.info("解除被冻结token");
-        String response = multiSign.recoverFrozenToken(priKey, tokenType);
+        String response = multiSign.recoverFrozenToken( tokenType);
         return retAllow(response);
     }
 

@@ -53,7 +53,7 @@ public class SyncManageTest {
         //预先做删除归集地址、删除发行地址操作、解除token锁定，以便后续操作正常进行
         assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS6),containsString("200"));
         assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS6),containsString("200"));
-        assertThat(multiSign.recoverFrozenToken(PRIKEY1,tokenType),containsString("200"));
+        assertThat(multiSign.recoverFrozenToken(tokenType),containsString("200"));
         Thread.sleep(SLEEPTIME);
         log.info("timeout test for mg interfaces");
 

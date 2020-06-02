@@ -138,7 +138,7 @@ public class MultiTest {
 
         //20190411增加锁定步骤后进行转账
         log.info("锁定待转账Token: "+tokenType);
-        String resp=multiSign.freezeToken(PRIKEY1,tokenType);
+        String resp=multiSign.freezeToken(tokenType);
         Thread.sleep(SLEEPTIME);
 
 
@@ -161,7 +161,7 @@ public class MultiTest {
         assertEquals("0",JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
 
         log.info("解除锁定待转账Token: "+tokenType);
-        String resp1=multiSign.recoverFrozenToken(PRIKEY1,tokenType);
+        String resp1=multiSign.recoverFrozenToken(tokenType);
         Thread.sleep(SLEEPTIME);
 
         log.info("查询归集地址中两种token余额");

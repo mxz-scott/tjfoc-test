@@ -90,13 +90,11 @@ public class MultiSignDetailTest {
         String transferData = "归集地址向" + MULITADD4 + "转账10个" + tokenType;
         log.info(transferData);
         List<Map> list=utilsClass.constructToken(MULITADD4,tokenType,"10");//封装数据
-        multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list);//调用转账接口
+        String transferInfo = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list);//调用转账接口
+        assertThat(transferInfo, containsString("400"));
+//        assertThat(transferInfo, containsString("has been frozen"));
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
-
-
-        String queryInfo3 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);//返回余额9900
+        String queryInfo3 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);//返回余额10000
         log.info("返回MULITADD4余额");
         String queryInfo4 = multiSign.BalanceByAddr(MULITADD4, tokenType);//返回余额为0
         assertEquals("200",JSONObject.fromObject(freezeToken1).getString("state"));
@@ -114,8 +112,8 @@ public class MultiSignDetailTest {
 
 
         log.info("查询回收后的归集地址的余额");
-        String queryInfo1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String queryInfo2= multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        String queryInfo1 = multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType);
+        String queryInfo2= multiSign.BalanceByAddr(IMPPUTIONADD,  tokenType2);
         assertEquals("200",JSONObject.fromObject(queryInfo1).getString("state"));
         assertEquals("9900",JSONObject.fromObject(queryInfo1).getJSONObject("data").getString("total"));
         assertEquals("200",JSONObject.fromObject(queryInfo2).getString("state"));
@@ -127,10 +125,6 @@ public class MultiSignDetailTest {
         String recoverFrozenToken2= multiSign.recoverFrozenToken(tokenType2);
         assertEquals("200",JSONObject.fromObject(recoverFrozenToken1).getString("state"));
         assertEquals("200",JSONObject.fromObject(recoverFrozenToken2).getString("state"));
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
 
     }
 

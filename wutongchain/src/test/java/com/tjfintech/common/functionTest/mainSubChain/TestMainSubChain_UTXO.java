@@ -347,8 +347,8 @@ public class TestMainSubChain_UTXO {
         assertEquals("0", JSONObject.fromObject(queryInfo4).getJSONObject("Data").getString("Total"));
 
         log.info("冻结token");
-        String freezeToken = multiSign.freezeToken(PRIKEY4, tokenType);
-        String freezeToken2 = multiSign.freezeToken(PRIKEY4, tokenType2);
+        String freezeToken = multiSign.freezeToken( tokenType);
+        String freezeToken2 = multiSign.freezeToken( tokenType2);
         assertThat(freezeToken, containsString("200"));
         assertThat(freezeToken2, containsString("200"));
 

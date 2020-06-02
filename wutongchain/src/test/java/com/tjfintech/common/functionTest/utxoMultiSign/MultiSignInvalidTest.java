@@ -371,23 +371,23 @@ public class MultiSignInvalidTest {
     @Test
     public void TC1360_freeze(){
         String freeze;
-        freeze = multiSign.freezeToken("", Tokentype);
-        assertThat(freeze, containsString("200"));//	Prikey字段为空值
-        freeze = multiSign.freezeToken("abc", Tokentype);
-        assertThat(freeze, containsString("Duplicate transaction")); //	Prikey字段为非base64编码格式的字符
-        freeze = multiSign.freezeToken("YWJjeHg=", Tokentype);
-        assertThat(freeze, containsString("Duplicate transaction")); //	Prikey传入没有意义的base64编码字符的值
-        freeze = multiSign.freezeToken(UtilsClass.PRIKEY1, "");
+//        freeze = multiSign.freezeToken("", Tokentype);
+//        assertThat(freeze, containsString("200"));//	Prikey字段为空值
+//        freeze = multiSign.freezeToken("abc", Tokentype);
+//        assertThat(freeze, containsString("Duplicate transaction")); //	Prikey字段为非base64编码格式的字符
+//        freeze = multiSign.freezeToken("YWJjeHg=", Tokentype);
+//        assertThat(freeze, containsString("Duplicate transaction")); //	Prikey传入没有意义的base64编码字符的值
+        freeze = multiSign.freezeToken( "");
         assertThat(freeze, containsString("TokenType is mandatory")); //	Tokentype字段为空值
 
         String recover;
-        recover = multiSign.recoverFrozenToken("", Tokentype);
-        assertThat(recover, containsString("200"));//	Prikey字段为空值
-        recover = multiSign.recoverFrozenToken("abc", Tokentype);
-        assertThat(recover, containsString("Duplicate transaction")); //	Prikey字段为非base64编码格式的字符
-        recover = multiSign.recoverFrozenToken("YWJjeHg=", Tokentype);
-        assertThat(recover, containsString("Duplicate transaction")); //	Prikey传入没有意义的base64编码字符的值
-        recover = multiSign.recoverFrozenToken(UtilsClass.PRIKEY1, "");
+//        recover = multiSign.recoverFrozenToken("", Tokentype);
+//        assertThat(recover, containsString("200"));//	Prikey字段为空值
+//        recover = multiSign.recoverFrozenToken("abc", Tokentype);
+//        assertThat(recover, containsString("Duplicate transaction")); //	Prikey字段为非base64编码格式的字符
+//        recover = multiSign.recoverFrozenToken("YWJjeHg=", Tokentype);
+//        assertThat(recover, containsString("Duplicate transaction")); //	Prikey传入没有意义的base64编码字符的值
+        recover = multiSign.recoverFrozenToken( "");
         assertThat(recover, containsString("TokenType is mandatory")); //Tokentype字段为空值
 
 
@@ -407,10 +407,10 @@ public class MultiSignInvalidTest {
      * 添加发行地址携带私钥
      */
     //@Test
-    public void addissueaddressRemovePri(){
-        String addissueaddress = multiSign.addissueaddress(utilsClass.PUBKEY6,multiaddr2);
-        assertThat(addissueaddress, containsString("200"));
-    }
+//    public void addissueaddressRemovePri(){
+//        String addissueaddress = multiSign.addissueaddress(utilsClass.PUBKEY6,multiaddr2);
+//        assertThat(addissueaddress, containsString("200"));
+//    }
 
     /**
      * 删除归集地址不携带私钥

@@ -192,7 +192,7 @@ public class MultiTest_33_12 {
 
         //锁定后回收3/3账户
         log.info("锁定token后回收3/3账户MULITADD3");
-        multiSign.freezeToken(PRIKEY1,tokenType);
+        multiSign.freezeToken(tokenType);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -345,8 +345,8 @@ public class MultiTest_33_12 {
 
 
         log.info("回收3/3账户MULITADD3前锁定token");
-        multiSign.freezeToken(PRIKEY1,tokenType);
-        multiSign.freezeToken(PRIKEY1,tokenType2);
+        multiSign.freezeToken(tokenType);
+        multiSign.freezeToken(tokenType2);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -1342,8 +1342,8 @@ public class MultiTest_33_12 {
         assertEquals(String.valueOf(amount2-tf1),JSONObject.fromObject(queryInfoCM2).getJSONObject("data").getString("total"));
 
         log.info("回收1/2账户MULITADD7前锁定token");
-        multiSign.freezeToken(PRIKEY1,tokenType);
-        multiSign.freezeToken(PRIKEY1,tokenType2);
+        multiSign.freezeToken(tokenType);
+        multiSign.freezeToken(tokenType2);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -1467,8 +1467,8 @@ public class MultiTest_33_12 {
 
 
         log.info("回收1/2账户MULITADD7前锁定Token");
-        multiSign.freezeToken(PRIKEY1,tokenType);
-        multiSign.freezeToken(PRIKEY1,tokenType2);
+        multiSign.freezeToken(tokenType);
+        multiSign.freezeToken(tokenType2);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -1777,8 +1777,8 @@ public class MultiTest_33_12 {
         assertEquals("0",JSONObject.fromObject(queryInfo4).getJSONObject("data").getString("total"));
 
         log.info("回收1/2账户IMPPUTIONADD前锁定Token");
-        multiSign.freezeToken(PRIKEY1,tokenType);
-        multiSign.freezeToken(PRIKEY1,tokenType2);
+        multiSign.freezeToken(tokenType);
+        multiSign.freezeToken(tokenType2);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);

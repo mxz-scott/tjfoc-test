@@ -133,7 +133,7 @@ public class MultiTest {
         //删除发行地址，保留归集地址
         String response2=multiSign.delissueaddress(PRIKEY1,IMPPUTIONADD);
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         tokenType = IssueToken(6, "1000",MULITADD3);
@@ -149,7 +149,7 @@ public class MultiTest {
         String response41=multiSign.delCollAddress(PRIKEY1,MULITADD3);
         assertEquals("200",JSONObject.fromObject(response41).getString("state"));
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         tokenType = IssueToken(7, "1000",MULITADD3);
@@ -166,7 +166,7 @@ public class MultiTest {
         String response5=multiSign.addissueaddress(PRIKEY1,IMPPUTIONADD);
         assertEquals("200",JSONObject.fromObject(response5).getString("state"));
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         tokenType = IssueToken(7, "1000",MULITADD3);
@@ -183,7 +183,7 @@ public class MultiTest {
         String response6=multiSign.collAddress(PRIKEY1,MULITADD3);
         assertEquals("200",JSONObject.fromObject(response6).getString("state"));
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         tokenType = IssueToken(7, "1000",MULITADD3);
@@ -432,9 +432,9 @@ public class MultiTest {
 
         //20190411增加锁定步骤后进行转账
         log.info("锁定待转账Token: "+tokenType);
-        String resp=multiSign.freezeToken(PRIKEY1,tokenType);
+        String resp=multiSign.freezeToken(tokenType);
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         log.info("查询归集地址中两种token余额");
@@ -460,7 +460,7 @@ public class MultiTest {
         assertEquals("0",JSONObject.fromObject(queryInfo).getJSONObject("data").getString("total"));
 
         log.info("解除锁定待转账Token: "+tokenType);
-        String resp1=multiSign.recoverFrozenToken(PRIKEY1,tokenType);
+        String resp1=multiSign.recoverFrozenToken(tokenType);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -575,8 +575,8 @@ public class MultiTest {
 
 
          String transferInfo2= multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list3);//相同币种
-         assertEquals("200",JSONObject.fromObject(transferInfo).getString("State"));
-         assertEquals("200",JSONObject.fromObject(transferInfo2).getString("State"));
+         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
+         assertEquals("200",JSONObject.fromObject(transferInfo2).getString("state"));
 
          commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                  utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -743,7 +743,7 @@ public class MultiTest {
         assertEquals("200",JSONObject.fromObject(recycleInfo4).getString("state"));
         assertEquals("200",JSONObject.fromObject(recycleInfo5).getString("state"));
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
@@ -806,9 +806,9 @@ public class MultiTest {
         assertEquals("10",JSONObject.fromObject(queryInfo2).getJSONObject("data").getString("total"));
 
         log.info("锁定待回收Token: "+tokenType);
-        String resp2=multiSign.freezeToken(PRIKEY1,tokenType);
+        String resp2=multiSign.freezeToken(tokenType);
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         log.info("回收Token");
@@ -895,15 +895,15 @@ public class MultiTest {
 
         //20190411增加锁定解锁操作步骤后进行回收
         log.info("锁定待回收Token: "+tokenType);
-        String resp=multiSign.freezeToken(PRIKEY1,tokenType);
+        String resp=multiSign.freezeToken(tokenType);
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         log.info("解除锁定待回收Token: "+tokenType);
-        String resp1=multiSign.recoverFrozenToken(PRIKEY1,tokenType);
+        String resp1=multiSign.recoverFrozenToken(tokenType);
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
@@ -922,9 +922,6 @@ public class MultiTest {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recycleInfo2,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recycleInfo5,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
 
         log.info("查询余额判断回收成功与否");
         String queryInfo3 = multiSign.BalanceByAddr(MULITADD6,tokenType);
@@ -990,9 +987,9 @@ public class MultiTest {
         assertEquals("10",JSONObject.fromObject(queryInfo_2).getJSONObject("data").getString("total"));
 
         log.info("锁定待回收Token: "+tokenType);
-        String resp=multiSign.freezeToken(PRIKEY1,tokenType);
+        String resp=multiSign.freezeToken(tokenType);
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         log.info("回收Token");
@@ -1008,7 +1005,7 @@ public class MultiTest {
         assertEquals("200",JSONObject.fromObject(recycleInfo4).getString("state"));
         assertEquals("200",JSONObject.fromObject(recycleInfo5).getString("state"));
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 

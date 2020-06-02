@@ -77,7 +77,7 @@ public class MultiTest_UnspentTxOutput_test {
 
         //发行后查询余额不带密码
         log.info("发行后不带密码私钥查询余额: "+tokenType);
-        String queryInfo= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        String queryInfo= multiSign.BalanceByAddr(MULITADD3,tokenType);
         assertEquals("200",JSONObject.fromObject(queryInfo).getString("State"));
         assertEquals(String.valueOf(amount),JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
 
@@ -119,9 +119,9 @@ public class MultiTest_UnspentTxOutput_test {
         assertEquals("400",JSONObject.fromObject(transferInfo2).getString("State"));
         assertEquals("insufficient balance",JSONObject.fromObject(transferInfo2).getString("Message"));
 
-        String query1= soloSign.Balance(PRIKEY1,tokenType);
-        String query2= soloSign.Balance(PRIKEY2,tokenType);
-        String query3= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        String query1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query2= multiSign.BalanceByAddr(ADDRESS2,tokenType);
+        String query3= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query1).getString("State"));
         assertEquals("200",JSONObject.fromObject(query2).getString("State"));
@@ -171,9 +171,9 @@ public class MultiTest_UnspentTxOutput_test {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("State"));
 
         log.info("查询余额判断转账成功与否");
-        query1= soloSign.Balance(PRIKEY1,tokenType);
-        query2= soloSign.Balance(PRIKEY2,tokenType);
-        query3= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        query1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        query2= multiSign.BalanceByAddr(ADDRESS2,tokenType);
+        query3= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query1).getString("State"));
         assertEquals("200",JSONObject.fromObject(query2).getString("State"));
@@ -213,9 +213,9 @@ public class MultiTest_UnspentTxOutput_test {
         assertEquals("400",JSONObject.fromObject(transferInfo2).getString("State"));
         assertEquals("insufficient balance",JSONObject.fromObject(transferInfo2).getString("Message"));
 
-        String query1= soloSign.Balance(PRIKEY1,tokenType);
-        String query2= soloSign.Balance(PRIKEY2,tokenType);
-        String query3= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        String query1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query2= multiSign.BalanceByAddr(ADDRESS2,tokenType);
+        String query3= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query1).getString("State"));
         assertEquals("200",JSONObject.fromObject(query2).getString("State"));
@@ -255,9 +255,9 @@ public class MultiTest_UnspentTxOutput_test {
         }
 
         log.info("查询余额判断转账成功与否");
-        query1= soloSign.Balance(PRIKEY1,tokenType);
-        query2= soloSign.Balance(PRIKEY2,tokenType);
-        query3= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        query1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        query2= multiSign.BalanceByAddr(ADDRESS2,tokenType);
+        query3= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query1).getString("State"));
         assertEquals("200",JSONObject.fromObject(query2).getString("State"));
@@ -294,11 +294,11 @@ public class MultiTest_UnspentTxOutput_test {
 
         //转账后查询余额不带密码
         log.info("发行后不带密码私钥查询余额: "+tokenType);
-        String query1= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        String query1= multiSign.BalanceByAddr(MULITADD3,tokenType);
         assertEquals("200",JSONObject.fromObject(query1).getString("State"));
         assertEquals(String.valueOf(amount-tf),JSONObject.fromObject(query1).getJSONObject("Data").getString("Total"));
 
-        String query2= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
+        String query2= multiSign.BalanceByAddr(MULITADD4,tokenType);
         assertEquals("200",JSONObject.fromObject(query2).getString("State"));
         assertEquals(String.valueOf(tf),JSONObject.fromObject(query2).getJSONObject("Data").getString("Total"));
 
@@ -318,11 +318,11 @@ public class MultiTest_UnspentTxOutput_test {
 
         //转账后查询余额不带密码
         log.info("转账后不带密码私钥查询余额: "+tokenType);
-        String query3= multiSign.Balance(MULITADD3,PRIKEY1,tokenType);
+        String query3= multiSign.BalanceByAddr(MULITADD3,tokenType);
         assertEquals("200",JSONObject.fromObject(query3).getString("State"));
         assertEquals(String.valueOf(amount-tf+tfA),JSONObject.fromObject(query3).getJSONObject("Data").getString("Total"));
 
-        String query4= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
+        String query4= multiSign.BalanceByAddr(MULITADD4,tokenType);
         assertEquals("200",JSONObject.fromObject(query4).getString("State"));
         assertEquals(String.valueOf(tf-tfA),JSONObject.fromObject(query4).getJSONObject("Data").getString("Total"));
 
