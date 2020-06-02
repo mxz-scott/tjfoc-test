@@ -1001,11 +1001,8 @@ public class GoMultiSign implements MultiSign {
      * @param tokenType 数字货币类型
      */
     public String QueryZero(String tokenType){
-//        Map<String ,Object>map=new HashMap<>();
-//        map.put("tokentype",tokenType);
-
         String param= "";
-        if(subLedger!="") param = param + "&ledger="+subLedger;
+        if(subLedger!="") param = param + "?ledger="+subLedger;
         String result= (GetTest.SendGetTojson(SDKADD+"/v2/tx/utxo/zeroaddr/balance/"+ tokenType + param));
         log.info(result);
         return result;

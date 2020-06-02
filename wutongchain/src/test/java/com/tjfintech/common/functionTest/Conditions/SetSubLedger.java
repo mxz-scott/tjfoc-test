@@ -30,8 +30,8 @@ public class SetSubLedger {
        subLedger = ledger;
        String response = store.CreateStore("test for ok tx");
        Thread.sleep(SLEEPTIME*2);
-       String txHash1 = JSONObject.fromObject(response).getJSONObject("Data").get("Figure").toString();
-       assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
+       String txHash1 = JSONObject.fromObject(response).getString("data");
+       assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
 
     }
 

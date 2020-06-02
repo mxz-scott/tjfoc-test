@@ -53,7 +53,7 @@ public class GoSoloSign implements SoloSign {
         map.put("tokentype",tokenType);
         String param = "";
         if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/prikey/balance/"+param, map);
+        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/prikey/balance"+param, map);
         log.info(result);
         return result ;
     }
