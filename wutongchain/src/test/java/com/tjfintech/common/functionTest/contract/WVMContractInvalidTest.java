@@ -67,20 +67,20 @@ public class WVMContractInvalidTest {
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmContractTest.wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
-        String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+        String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");//暂时添加
 
         wvmContractTest.chkTxDetailRsp("200",txHash1);
         //调用合约内的方法 init方法
         String response2 = wvmContractTest.invokeNew(ctHash,"inita",accountA,amountA);//初始化账户A 账户余额50
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
+        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         wvmContractTest.chkTxDetailRsp("404",txHash2);
     }
@@ -98,11 +98,11 @@ public class WVMContractInvalidTest {
         ctNameList.add("a123");
         ctNameList.add("asdfghjklqwertyuiop1234567833333333333333333333333333333333333333333333333390");
         for(String name : ctNameList) {
-            txHashList.add(JSONObject.fromObject(wvmContractTest.intallUpdateName(name,PRIKEY1)).getJSONObject("Data").getString("Figure"));
+            txHashList.add(JSONObject.fromObject(wvmContractTest.intallUpdateName(name,PRIKEY1)).getJSONObject("data").getString("txId"));
         }
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         assertEquals(6,txHashList.size());
         for(String hash : txHashList){
@@ -115,7 +115,7 @@ public class WVMContractInvalidTest {
         ctNameList.add("1a1_");
         ctNameList.add("1a");
         for(String name : ctNameList) {
-            assertEquals("500",JSONObject.fromObject(wvmContractTest.intallUpdateName(name,PRIKEY1)).getString("State"));
+            assertEquals("500",JSONObject.fromObject(wvmContractTest.intallUpdateName(name,PRIKEY1)).getString("state"));
         }
     }
 
@@ -124,19 +124,19 @@ public class WVMContractInvalidTest {
         //测试私钥为空
         log.info("test file:"+ wvmFile + "_temp.txt");
         String response1 = wvmContractTest.wvmInstallTest(wvmFile + "_temp.txt","");
-//        assertEquals(false,JSONObject.fromObject(response1).getString("State").contains("200"));//当前存在bug sdk panic
+//        assertEquals(false,JSONObject.fromObject(response1).getString("state").contains("200"));//当前存在bug sdk panic
 
         //测试wvm文件为空
         String response2 = wvmContractTest.wvmInstallTest("",PRIKEY1);
-        assertEquals(false,JSONObject.fromObject(response2).getString("State").contains("200"));
+        assertEquals(false,JSONObject.fromObject(response2).getString("state").contains("200"));
 
         //测试wvm及私钥为空
         String response3 = wvmContractTest.wvmInstallTest("","");
-//        assertEquals(false,JSONObject.fromObject(response3).getString("State").contains("200"));//当前存在bug sdk panic
+//        assertEquals(false,JSONObject.fromObject(response3).getString("state").contains("200"));//当前存在bug sdk panic
 
         //测试私钥非法
         String response4 = wvmContractTest.wvmInstallTest(wvmFile + ".txt","88888");
-//        assertEquals(false,JSONObject.fromObject(response4).getString("State").contains("200"));//当前存在bug sdk panic
+//        assertEquals(false,JSONObject.fromObject(response4).getString("state").contains("200"));//当前存在bug sdk panic
 
     }
     @Test
@@ -149,11 +149,11 @@ public class WVMContractInvalidTest {
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmContractTest.wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
-        String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+        String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         wvmContractTest.chkTxDetailRsp("200",txHash1);
 
@@ -162,18 +162,18 @@ public class WVMContractInvalidTest {
         DockerContractTest dockerContractTest = new DockerContractTest();
         dockerContractTest.category = "wvm";
         String response2 = dockerContractTest.installTest();
-//        assertEquals(false,JSONObject.fromObject(response2).getString("State").contains("200"));//当前存在bug sdk panic
+//        assertEquals(false,JSONObject.fromObject(response2).getString("state").contains("200"));//当前存在bug sdk panic
 
         //测试wvma安装、调用、销毁使用category docker
         wvmContractTest.category = "docker";
         String response3 = wvmContractTest.wvmDestroyTest(ctHash);
-        assertEquals(false,JSONObject.fromObject(response3).getString("State").contains("200"));
+        assertEquals(false,JSONObject.fromObject(response3).getString("state").contains("200"));
 
         String response4 = wvmContractTest.invokeNew(ctHash,"initAccount",accountA,amountA);
-//        assertEquals(false,JSONObject.fromObject(response4).getString("State").contains("200"));//当前存在bug sdk panic
+//        assertEquals(false,JSONObject.fromObject(response4).getString("state").contains("200"));//当前存在bug sdk panic
 
         String response5 = wvmContractTest.wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1);
-        assertEquals(false,JSONObject.fromObject(response3).getString("State").contains("200"));
+        assertEquals(false,JSONObject.fromObject(response3).getString("state").contains("200"));
 
 
     }

@@ -24,7 +24,7 @@ public class VerifyTests {
     @Test
     public void VerifyBlockAndTxTimeDiff() throws Exception {
 
-        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
+        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
 
         log.info(Integer.toString(blockHeight));
 
@@ -33,11 +33,11 @@ public class VerifyTests {
         for (int i = 1; i <= blockHeight; i++) {
             //打印区块的时间戳
 
-            String timestamp = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONObject("header").getString("timestamp");
+            String timestamp = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("data").getJSONObject("header").getString("timestamp");
             long blkTimeStamp = Long.parseLong(timestamp);
 
             //获取交易列表
-            String txsList = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getString("txs");
+            String txsList = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("data").getString("txs");
             txsList = txsList.substring(2);
             txsList = StringUtils.substringBefore(txsList, "\"]");
 //            log.info(txsList);
@@ -46,7 +46,7 @@ public class VerifyTests {
 
             for (String tx : txs) {
 
-                String txts = JSONObject.fromObject(store.GetTxDetail(tx)).getJSONObject("Data").getJSONObject("Header").getString("Timestamp");
+                String txts = JSONObject.fromObject(store.GetTxDetail(tx)).getJSONObject("data").getJSONObject("header").getString("timestamp");
 
                 long txTimestamp = Long.parseLong(txts);
                 long diff = blkTimeStamp - txTimestamp;
@@ -75,7 +75,7 @@ public class VerifyTests {
     @Test
     public void VerifyIfSameTxInDiffBlocks() throws Exception {
 
-        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
+        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
 
         log.info("chain height: " + Integer.toString(blockHeight));
 
@@ -121,7 +121,7 @@ public class VerifyTests {
 
     //根据区块高度获取区块中的交易列表
     public String[] getTxsArray(int i) {
-        String txsList = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getString("txs");
+        String txsList = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("data").getString("txs");
         txsList = txsList.substring(2);
         txsList = StringUtils.substringBefore(txsList, "\"]");
 //        log.info(txsList);

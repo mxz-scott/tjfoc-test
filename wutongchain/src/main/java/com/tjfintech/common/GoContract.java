@@ -212,7 +212,7 @@ public class GoContract implements Contract {
         map.put("Args",args);
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.sendPostToJson(SDKADD+"/contract/query"+param,map);
+        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/query"+param,map);
         log.info(result);
         return result ;
     }

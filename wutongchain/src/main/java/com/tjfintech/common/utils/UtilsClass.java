@@ -474,11 +474,12 @@ public class UtilsClass {
         String sdkIP=SDKADD.substring(SDKADD.lastIndexOf("/")+1,SDKADD.lastIndexOf(":"));
         Shell shellSDK=new Shell(sdkIP,USERNAME,PASSWD);
 
-        shellSDK.execute("cd "+ ToolPATH+";./" + ToolTPName + " getid -p "+ SDKPATH +"auth/key.pem");
+//        shellSDK.execute("cd "+ ToolPATH+";./" + ToolTPName + " getid -p "+ SDKPATH +"auth/key.pem");
+        shellSDK.execute("cd "+ SDKPATH+";./" + SDKTPName + " getid");
 
         ArrayList<String> stdout3 = shellSDK.getStandardOutput();
         for (String str1 : stdout3){
-            if(str1.contains("id:"))
+            if(str1.toLowerCase().contains("id:"))
             {
                 SDKID=str1.split(":")[1];
                 break;

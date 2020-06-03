@@ -447,11 +447,11 @@ public class MultiTest {
         log.info(transferData);
 
         String transferInfo= multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list);//相同币种
-        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
+        assertEquals("500",JSONObject.fromObject(transferInfo).getString("state"));
 
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+//        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+//                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         log.info("查询余额判断转账是否成功");
@@ -462,7 +462,7 @@ public class MultiTest {
         log.info("解除锁定待转账Token: "+tokenType);
         String resp1=multiSign.recoverFrozenToken(tokenType);
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
