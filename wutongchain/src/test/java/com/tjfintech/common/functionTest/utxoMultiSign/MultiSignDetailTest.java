@@ -91,8 +91,8 @@ public class MultiSignDetailTest {
         log.info(transferData);
         List<Map> list=utilsClass.constructToken(MULITADD4,tokenType,"10");//封装数据
         String transferInfo = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD,list);//调用转账接口
-        assertThat(transferInfo, containsString("400"));
-//        assertThat(transferInfo, containsString("has been frozen"));
+        assertThat(transferInfo, containsString("500"));
+        assertThat(transferInfo, containsString("has been frozen"));
 
         String queryInfo3 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);//返回余额10000
         log.info("返回MULITADD4余额");

@@ -818,7 +818,7 @@ public class  MultiTestInvalid {
 //        assertThat(multiSign.BalanceByAddr(MultiAddr,PRIKEY1,"test"),
 //                containsString("GetMulBalance : Multiaddr not generated, cannot be used !"));
         assertThat(multiSign.BalanceByAddr(MultiAddr,"test"),
-                containsString("Address doesn't exist"));
+                containsString("\"total\":\"0\""));
     }
 
     @Test
