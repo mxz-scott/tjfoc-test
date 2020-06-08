@@ -78,21 +78,21 @@ public class SubLedgerCmd {
         String response3 = store.CreateStore(data);
 
         sleepAndSaveInfo(SLEEPTIME*2);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
+        String txHash1 = JSONObject.fromObject(response1).getString("data");
+        String txHash2 = JSONObject.fromObject(response2).getString("data");
+        String txHash3 = JSONObject.fromObject(response3).getString("data");
 
         subLedger=glbChain01;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
+        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("state"));
 
         subLedger=glbChain02;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));
+        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("state"));
 
         subLedger="";
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));
+        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("state"));
 
     }
 }

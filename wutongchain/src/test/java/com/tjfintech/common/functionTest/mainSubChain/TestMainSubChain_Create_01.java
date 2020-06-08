@@ -239,11 +239,11 @@ public class TestMainSubChain_Create_01 {
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName2.toLowerCase()), true);
 
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
+        String txHash1 = JSONObject.fromObject(response1).get("data").toString();
+        String txHash3 = JSONObject.fromObject(response3).get("data").toString();
 
         subLedger="";
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));
     }
 
 }

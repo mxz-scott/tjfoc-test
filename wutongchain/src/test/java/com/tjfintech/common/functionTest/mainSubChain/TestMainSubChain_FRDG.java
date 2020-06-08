@@ -41,7 +41,7 @@ public class TestMainSubChain_FRDG {
 
     String notSupport="not support service";
     String stateDestroyed ="has been destroyed";
-    String stateFreezed ="has been freezed";
+    String stateFreezed ="has been frozen";
 
     String glbChain01= "glbCh1";
     String glbChain02= "glbCh2";
@@ -138,9 +138,9 @@ public class TestMainSubChain_FRDG {
         hash = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType00);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
 
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
+        String txHash1 = JSONObject.fromObject(response1).get("data").toString();
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
+        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("state"));
 
         storeTypeSupportCheck("normal");
         //向子链glbChain01/glbChain02和主链发送交易
@@ -477,9 +477,9 @@ public class TestMainSubChain_FRDG {
     }
 
     public void storeTypeSupportCheck(String type)throws Exception{
-        String txHash1 ="HMO5gFTZ2swdDp2BQmIWS/ZBNeEZLo/TakixYhSRy3U=";
-        String txHash2 ="HMO5gFTZ2swdDp2BQmIWS/ZBNeEZLo/TakixYhSRy3U=";
-        String blockHash ="i1XhwBUvL1alXVhd0GH3Z/Uaxe+1wFBw+OZ8yOaBWig=";
+        String txHash1 ="de1600ecb828b8c524a7d650cc9498b35e3b78414fc4ae8677ae165d2ef029a6";
+        String txHash2 ="de1600ecb828b8c524a7d650cc9498b35e3b78414fc4ae8677ae165d2ef029a6";
+        String blockHash ="24bf6ca3cabf7963f356480bf3f3397d21a647a17c18d164a8d6c848ec6f266a";
         //String notSupport=notSupport;
         //String notSupport="doesn't exist";
         boolean bCheck1 = false;//上链类交易返回校验字符串
@@ -490,18 +490,18 @@ public class TestMainSubChain_FRDG {
         //map.put("pubkeys",PUBKEY6);
 
         if(type.toLowerCase()=="normal"){
-            txHash1=JSONObject.fromObject(store.CreateStore("test")).getJSONObject("Data").getString("Figure");
-            txHash2=JSONObject.fromObject(store.CreatePrivateStore("test",map)).getJSONObject("Data").getString("Figure");
+            txHash1=JSONObject.fromObject(store.CreateStore("test")).getString("data");
+            txHash2=JSONObject.fromObject(store.CreatePrivateStore("test",map)).getString("data");
             bCheck1=false;
             bCheck2=false;
-            blockHash=JSONObject.fromObject(store.GetBlockByHeight(1)).getJSONObject("Data").getJSONObject("header").getString("blockHash");
+            blockHash=JSONObject.fromObject(store.GetBlockByHeight(1)).getJSONObject("data").getJSONObject("header").getString("blockId");
             sleepAndSaveInfo(SLEEPTIME);
         }
         else if(type.toLowerCase()=="freeze"){
             notSupport=stateFreezed;
             bCheck1=true;
             bCheck2=false;
-            blockHash=JSONObject.fromObject(store.GetBlockByHeight(1)).getJSONObject("Data").getJSONObject("header").getString("blockHash");
+            blockHash=JSONObject.fromObject(store.GetBlockByHeight(1)).getJSONObject("data").getJSONObject("header").getString("blockId");
         }
         else if(type.toLowerCase()=="destroy"){
             notSupport=stateDestroyed;
@@ -585,6 +585,9 @@ public class TestMainSubChain_FRDG {
                 " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
+
+        log.info("+++++++++++++++: " + res);
+
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
 //        sleepAndSaveInfo(SLEEPTIME*2);
@@ -634,11 +637,11 @@ public class TestMainSubChain_FRDG {
 
 
         //向子链chainName发送交易
-        String txHash2 = JSONObject.fromObject(store.CreateStore(Data)).getJSONObject("Data").get("Figure").toString();
+        String txHash2 = JSONObject.fromObject(store.CreateStore(Data)).get("data").toString();
 
         hashTime = commonFunc.sdkCheckTxOrSleep(txHash2,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
 //        sleepAndSaveInfo(SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));
         //向子链glbChain01/glbChain02和主链发送交易
         subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
     }
@@ -700,7 +703,7 @@ public class TestMainSubChain_FRDG {
 
         //向子链chainName发送交易
         subLedger=chainName;
-        String txHash1 = JSONObject.fromObject(store.CreateStore(Data)).getJSONObject("Data").get("Figure").toString();
+        String txHash1 = JSONObject.fromObject(store.CreateStore(Data)).get("data").toString();
         hashTime = commonFunc.sdkCheckTxOrSleep(txHash1,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
 //        sleepAndSaveInfo(SLEEPTIME);
 
@@ -709,7 +712,7 @@ public class TestMainSubChain_FRDG {
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), true);
 
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
 
 
         //向子链glbChain01/glbChain02和主链发送交易

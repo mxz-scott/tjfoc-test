@@ -445,7 +445,7 @@ public class TestMainSubChain_Create_02 {
                 " -t sm3"," -w first word"," -c raft",ids);
         assertEquals(res5.contains("Invalid ledger name"), true);
 
-        String chainName12="_a";
+        String chainName12="a_";
         String res6 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName12,
                 " -t sm3"," -w first word"," -c raft",ids);
         assertEquals(res6.contains("success"), true);
