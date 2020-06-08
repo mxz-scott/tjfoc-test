@@ -42,7 +42,7 @@ public  class GoStore implements Store {
     public String GetLedger(String ledgerName) {
         Map<String, Object> map = new HashMap<>();
         map.put("ledger", ledgerName);
-        String result = PostTest.sendPostToJson(SDKADD + "/getledger", map);
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/subledger", map);
         log.info(result);
         return result;
 

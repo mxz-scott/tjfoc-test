@@ -1012,24 +1012,25 @@ public class CommonFunc {
         log.info("============================= 查询交易上链 " + bOK + " 等待时间 " +
                 hashData + " " + ((new Date()).getTime() - nowTime));
 
+        sleepAndSaveInfo(2000,"============================= 等待数据库同步数据");
         //如果确认交易上链 则去数据库查询或者确认节点高度是否一致，交易在指定时间内未查询到上链则不进行更多的检查
-        if(bOK) {
-            //需要排除sdk 钱包关闭场景
-            //钱包开启则查询数据库中是否已经同步区块
-            long nowTimeDB = (new Date()).getTime();
-            if(bWallet) {
-                while ((new Date()).getTime() - nowTimeDB < DBSyncTime && bInlocal == false) {
-                    bInlocal = checkDataInMysqlDB(rSDKADD, "tx_finish", "hash", hashData);
-                    Thread.sleep(500);
-                }
-                log.info("============================= 查询数据库更新 " + bInlocal + " 等待时间 "
-                        + hashData + " " + ((new Date()).getTime() - nowTimeDB));
-//                assertEquals("数据库在未同步到已上链交易",true,bInlocal);
-
-                if(type.equals(utilsClass.tokenApiGetTxDetailTType)){
-                    sleepAndSaveInfo(1000,"============================= 等待 token api数据库同步数据");
-                }
-            }
+//        if(bOK) {
+//            //需要排除sdk 钱包关闭场景
+//            //钱包开启则查询数据库中是否已经同步区块
+//            long nowTimeDB = (new Date()).getTime();
+//            if(bWallet) {
+//                while ((new Date()).getTime() - nowTimeDB < DBSyncTime && bInlocal == false) {
+//                    bInlocal = checkDataInMysqlDB(rSDKADD, "tx_finish", "hash", hashData);
+//                    Thread.sleep(500);
+//                }
+//                log.info("============================= 查询数据库更新 " + bInlocal + " 等待时间 "
+//                        + hashData + " " + ((new Date()).getTime() - nowTimeDB));
+////                assertEquals("数据库在未同步到已上链交易",true,bInlocal);
+//
+//                if(type.equals(utilsClass.tokenApiGetTxDetailTType)){
+//                    sleepAndSaveInfo(1000,"============================= 等待 token api数据库同步数据");
+//                }
+//            }
 //            if(!bWallet || type.equals(utilsClass.tokenApiGetTxDetailTType)){
             if(!bWallet){
                 //检查节点高度是否一致
@@ -1048,9 +1049,10 @@ public class CommonFunc {
                 log.info("============================= 等待节点同步区块时间 " + ((new Date()).getTime() - nowTimeSync));
 //                assertEquals("高度检查不一致",true,bEqual);
             }
-        }
+//        }
 
-        return hashData + " " + ((new Date()).getTime() - nowTime);
+//        return hashData + " " + ((new Date()).getTime() - nowTime);
+        return "";
     }
 
     public void sdkCheckTxOrSleepNoDBQuery(String hashData, String type, long sleeptime)throws Exception{
