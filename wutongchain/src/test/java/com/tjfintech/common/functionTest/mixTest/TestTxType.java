@@ -145,9 +145,9 @@ public class TestTxType {
         JSONObject jsonObjectPerm = checkTXDetailHeaderMsg(permHash,versionStore,typeSystem,subTypePerm);
 
         assertEquals(toolID,
-                jsonObjectPerm.getJSONObject("data").getJSONObject("system").getJSONObject("permissionTransaction").getString("sendID"));
+                jsonObjectPerm.getJSONObject("data").getJSONObject("system").getJSONObject("permissionTransaction").getString("sendId"));
         assertEquals(utilsClass.getSDKID(),
-                jsonObjectPerm.getJSONObject("data").getJSONObject("system").getJSONObject("permissionTransaction").getString("peerID"));
+                jsonObjectPerm.getJSONObject("data").getJSONObject("system").getJSONObject("permissionTransaction").getString("peerId"));
         assertEquals("sdkName",
                 jsonObjectPerm.getJSONObject("data").getJSONObject("system").getJSONObject("permissionTransaction").getString("shownName"));
         String permListStr = jsonObjectPerm.getJSONObject("data").getJSONObject("system").getJSONObject("permissionTransaction").getString("permissionList");
@@ -209,7 +209,7 @@ public class TestTxType {
         JSONObject jsonObjectAddLedger = checkTXDetailHeaderMsg(addLedgerHash,versionStore,typeSystem,subTypeAddLedger);
 
         assertEquals(toolID,
-                jsonObjectAddLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("sendID"));
+                jsonObjectAddLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("sendId"));
         assertEquals("0",
                 jsonObjectAddLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("opType"));
         assertEquals(chainName,
@@ -233,7 +233,7 @@ public class TestTxType {
         String freezeLedgerHash = freezeLedgerResp.substring(freezeLedgerResp.lastIndexOf(":")+1).trim();
         JSONObject jsonObjectFreezeLedger = checkTXDetailHeaderMsg(freezeLedgerHash,versionStore,typeSystem,subTypeFreezeLedger);
         assertEquals(toolID,
-                jsonObjectFreezeLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("sendID"));
+                jsonObjectFreezeLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("sendId"));
         assertEquals("1",
                 jsonObjectFreezeLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("opType"));
         assertEquals(chainName,
@@ -258,7 +258,7 @@ public class TestTxType {
         String recoverLedgerHash = recoverLedgerResp.substring(recoverLedgerResp.lastIndexOf(":")+1).trim();
         JSONObject jsonObjectRecoverLedger = checkTXDetailHeaderMsg(recoverLedgerHash,versionStore,typeSystem,subTypeRecoverLedger);
         assertEquals(toolID,
-                jsonObjectRecoverLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("sendID"));
+                jsonObjectRecoverLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("sendId"));
         assertEquals("2",
                 jsonObjectRecoverLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("opType"));
         assertEquals(chainName,
@@ -282,7 +282,7 @@ public class TestTxType {
         String destroyLedgerHash = destroyLedgerResp.substring(destroyLedgerResp.lastIndexOf(":")+1).trim();
         JSONObject jsonObjectDestroyLedger = checkTXDetailHeaderMsg(destroyLedgerHash,versionStore,typeSystem,subTypeDestroyLedger);
         assertEquals(toolID,
-                jsonObjectDestroyLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("sendID"));
+                jsonObjectDestroyLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("sendId"));
         assertEquals("3",
                 jsonObjectDestroyLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("opType"));
         assertEquals(chainName,
@@ -579,9 +579,9 @@ public class TestTxType {
         assertEquals(ctHash,
                 jsonObjectCreate.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("name"));
         //此处owner对应的是PubKey 因编解码使用的库可能不太一样 因此此处校验原始pubkey
-        String p1 = new String(utilsClass.decryptBASE64(PUBKEY1));
+        String p1 = shExeAndReturn(utilsClass.getIPFromStr(SDKADD),"cat " + SDKPATH + "tls/pubkey.pem").trim();
         String p2 = new String (utilsClass.decryptBASE64(jsonObjectCreate.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("owner")));
-        assertEquals(p1.replaceAll("\r\n",""),p2.replaceAll("\n",""));
+        assertEquals(p1.replaceAll("\n",""),p2.replaceAll("\n",""));
         assertEquals(data,
                 jsonObjectCreate.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("src"));
         log.info("Check create wvm tx detail complete");
@@ -591,9 +591,9 @@ public class TestTxType {
         assertEquals(ctHash,
                 jsonObjectInvokeInit.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("name"));
         assertEquals("initAccount",
-                jsonObjectInvokeInit.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("Method"));
+                jsonObjectInvokeInit.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("method"));
         assertEquals(wvm.caller,new String(utilsClass.decryptBASE64(
-                jsonObjectInvokeInit.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("Caller"))));
+                jsonObjectInvokeInit.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("caller"))));
 
         String argsinit0= jsonObjectInvokeInit.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").getString(0);
         String argsinit1= jsonObjectInvokeInit.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").getString(1);
@@ -606,9 +606,9 @@ public class TestTxType {
         assertEquals(ctHash,
                 jsonObjectInvokeTransfer.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("name"));
         assertEquals("transfer",
-                jsonObjectInvokeTransfer.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("Method"));
+                jsonObjectInvokeTransfer.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("method"));
         assertEquals(wvm.caller,new String(utilsClass.decryptBASE64(
-                jsonObjectInvokeTransfer.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("Caller"))));
+                jsonObjectInvokeTransfer.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("caller"))));
 
         String argstrf0= jsonObjectInvokeTransfer.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").getString(0);
         String argstrf1= jsonObjectInvokeTransfer.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").getString(1);

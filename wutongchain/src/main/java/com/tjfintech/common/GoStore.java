@@ -56,26 +56,12 @@ public  class GoStore implements Store {
     public String GetTxDetail(String hash) {
         String param = "";
         if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/tx/utxo/detail/" + hash + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/tx/detail/" + hash + param);
         log.info(result);
         return result;
 
     }
 
-
-    /**
-     * 获取合约交易详情。
-     *
-     * @method GET
-     */
-    public String GetSCTxDetail(String hash) {
-        String param = "";
-        if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/tx/sc/detail/" + hash + param);
-        log.info(result);
-        return result;
-
-    }
 
     /**
      * 创建存证交易
@@ -215,7 +201,7 @@ public  class GoStore implements Store {
 
         String param = "";
         if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/tx/store/detail/" + hash + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/tx/detail/" + hash + param);
         log.info(result);
         return result;
 

@@ -21,7 +21,7 @@ public interface Store {
     String GetPeerList();
     String GetApiHealth();
     String GetLedger(String ledgerName);//查询子链信息
-    String GetSCTxDetail(String hash);
+//    String GetTxDetail(String hash);
 
 //    String GetStoreLocal(String hash);
 //    String SynCreateStore(Integer timeout ,String Data);  //同步创建存证接口
