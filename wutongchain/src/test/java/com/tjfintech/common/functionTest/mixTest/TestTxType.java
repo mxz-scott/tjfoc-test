@@ -139,7 +139,7 @@ public class TestTxType {
         String permResp = mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,utilsClass.getSDKID(),"999","sdkName");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(permResp,utilsClass.mgGetTxHashType),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         String permHash = permResp.substring(permResp.lastIndexOf(":")+1).trim();
         JSONObject jsonObjectPerm = checkTXDetailHeaderMsg(permHash,versionStore,typeSystem,subTypePerm);
@@ -161,7 +161,7 @@ public class TestTxType {
         assertEquals(true, respQuit.contains("success"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(respQuit,utilsClass.mgGetTxHashType),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         String quitPeerHash = respQuit.substring(respQuit.lastIndexOf(":") + 1).trim();
         JSONObject jsonObjectQuitPeer = checkTXDetailHeaderMsg(quitPeerHash, versionStore, typeSystem, subTypeQuitPeer);
@@ -176,7 +176,7 @@ public class TestTxType {
         assertEquals(true, respAdd.contains("success"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(respAdd,utilsClass.mgGetTxHashType),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         String addPeerHash = respAdd.substring(respAdd.lastIndexOf(":") + 1).trim();
         JSONObject jsonObjectAddPeer = checkTXDetailHeaderMsg(addPeerHash, versionStore, typeSystem, subTypeAddPeer);
@@ -202,7 +202,7 @@ public class TestTxType {
         assertEquals(addLedgerResp.contains("send transaction success"), true);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(addLedgerResp,utilsClass.mgGetTxHashType),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         String addLedgerHash = addLedgerResp.substring(addLedgerResp.lastIndexOf(":")+1).trim();
@@ -228,7 +228,7 @@ public class TestTxType {
         assertEquals(freezeLedgerResp.contains("send transaction success"), true);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(freezeLedgerResp,utilsClass.mgGetTxHashType),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         String freezeLedgerHash = freezeLedgerResp.substring(freezeLedgerResp.lastIndexOf(":")+1).trim();
         JSONObject jsonObjectFreezeLedger = checkTXDetailHeaderMsg(freezeLedgerHash,versionStore,typeSystem,subTypeFreezeLedger);
@@ -253,7 +253,7 @@ public class TestTxType {
         assertEquals(recoverLedgerResp.contains("send transaction success"), true);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recoverLedgerResp,utilsClass.mgGetTxHashType),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         String recoverLedgerHash = recoverLedgerResp.substring(recoverLedgerResp.lastIndexOf(":")+1).trim();
         JSONObject jsonObjectRecoverLedger = checkTXDetailHeaderMsg(recoverLedgerHash,versionStore,typeSystem,subTypeRecoverLedger);
@@ -277,7 +277,7 @@ public class TestTxType {
         assertEquals(destroyLedgerResp.contains("send transaction success"), true);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(destroyLedgerResp,utilsClass.mgGetTxHashType),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         String destroyLedgerHash = destroyLedgerResp.substring(destroyLedgerResp.lastIndexOf(":")+1).trim();
         JSONObject jsonObjectDestroyLedger = checkTXDetailHeaderMsg(destroyLedgerHash,versionStore,typeSystem,subTypeDestroyLedger);
@@ -320,7 +320,7 @@ public class TestTxType {
         String response2 = store.CreatePrivateStore(priData,map);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         String txHash1 = JSONObject.fromObject(response1).getString("data");
         checkTXDetailHeaderMsg(txHash1,versionStore,typeStore,subTypeStore);
@@ -390,128 +390,128 @@ public class TestTxType {
         String response54 = multiSign.Sign(Tx13, PRIKEY5);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //单签转账
-//        assertEquals(JSONObject.fromObject(soloSign.Balance(PRIKEY1,tokenTypeS)).getJSONObject("data").getString("total"),amount);
-//        String amountTransfer="0.01";
-//        List<Map> list=soloSign.constructToken(ADDRESS3,tokenTypeS,amountTransfer);
-//        String tranferdata="transfer to "+ADDRESS3+" with amount "+amountTransfer;
-//        String response4= soloSign.Transfer(list,PRIKEY1,tranferdata);
-//
+        assertEquals(JSONObject.fromObject(soloSign.Balance(PRIKEY1,tokenTypeS)).getJSONObject("data").getString("total"),amount);
+        String amountTransfer="0.01";
+        List<Map> list=soloSign.constructToken(ADDRESS3,tokenTypeS,amountTransfer);
+        String tranferdata="transfer to "+ADDRESS3+" with amount "+amountTransfer;
+        String response4= soloSign.Transfer(list,PRIKEY1,tranferdata);
+
         //多签转账
-        assertEquals(JSONObject.fromObject( multiSign.Balance(IMPPUTIONADD,PRIKEY4,tokenTypeM)).getJSONObject("data").getString("total"),amount1);
+        assertEquals(JSONObject.fromObject( multiSign.BalanceByAddr(IMPPUTIONADD,tokenTypeM)).getJSONObject("data").getString("total"),amount1);
         String tranferAmount="3000";
         String transferData = IMPPUTIONADD+" 向 " + ADDRESS5 + " 转账 " + tranferAmount + " " +tokenTypeM;
         List<Map> listInit = utilsClass.constructToken(ADDRESS5, tokenTypeM, "3000");
         log.info(transferData);
         String response6 = multiSign.Transfer(PRIKEY4, transferData, IMPPUTIONADD, listInit);
-//
-//
-//        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
-//                utilsClass.sdkGetTxDetailType,SLEEPTIME);
-//
-//        //检查小数量单签发行交易信息
-//        String txHashMin = JSONObject.fromObject(minResp).getString("data");
-//        checkTXDetailHeaderMsg(txHashMin,versionSUTXO,typeUTXO,subTypeIssue);
-//        JSONObject uxtoJsonMin= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHashMin)).getJSONObject("data").getJSONObject("UTXO"));
-//        assertEquals(minData,uxtoJsonMin.getString("data"));
-//        assertEquals(1,uxtoJsonMin.getJSONArray("Records").size());
-//        checkFromTo(uxtoJsonMin,ADDRESS1,ADDRESS1,minToken,minAmount,0);
-//
-//
-//        //检查单签发行交易信息
-//        String txHash3 = JSONObject.fromObject(response3).getString("data");
-//        checkTXDetailHeaderMsg(txHash3,versionSUTXO,typeUTXO,subTypeIssue);
-//        JSONObject uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash3)).getJSONObject("data").getJSONObject("UTXO"));
-//        assertEquals(siData,uxtoJson.getString("data"));
-//        assertEquals(1,uxtoJson.getJSONArray("Records").size());
-//        checkFromTo(uxtoJson,ADDRESS1,ADDRESS1,tokenTypeS,amount,0);
-//
-//        //检查单签转账交易信息
-//        String txHash4 = JSONObject.fromObject(response4).getString("data");
-//        checkTXDetailHeaderMsg(txHash4,versionSUTXO,typeUTXO,subTypeTransfer);
-//        uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash4)).getJSONObject("data").getJSONObject("UTXO"));
-//        assertEquals(tranferdata,uxtoJson.getString("data"));
-//
-//        List<Map> listST = commonFunc.constructUTXOTxDetailList(ADDRESS1,ADDRESS3,tokenTypeS,amountTransfer);
-//        List<Map> listST2 = commonFunc.constructUTXOTxDetailList(ADDRESS1,ADDRESS1,tokenTypeS,"9999.99",listST);
-//
-//        JSONArray jsonArrayCheck = uxtoJson.getJSONArray("Records");
-//        commonFunc.checkListArray(listST2,jsonArrayCheck);
-//
-//
-//        //检查多签发行交易信息
-//        String txHash5 = JSONObject.fromObject(response52).getJSONObject("data").get("TxId").toString();
-//        checkTXDetailHeaderMsg(txHash5,versionMUTXO,typeUTXO,subTypeIssue);
-//        uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash5)).getJSONObject("data").getJSONObject("UTXO"));
-//        assertEquals(mulData,uxtoJson.getString("data"));
-//        assertEquals(1,uxtoJson.getJSONArray("Records").size());
-//        checkFromTo(uxtoJson,IMPPUTIONADD,IMPPUTIONADD,tokenTypeM,amount1,0);
-//
-//        String txHash51 = JSONObject.fromObject(response54).getJSONObject("data").get("TxId").toString();
-//        checkTXDetailHeaderMsg(txHash51,versionMUTXO,typeUTXO,subTypeIssue);
-//        uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash51)).getJSONObject("data").getJSONObject("UTXO"));
-//        assertEquals(mulData2,uxtoJson.getString("data"));
-//        assertEquals(1,uxtoJson.getJSONArray("Records").size());
-//        checkFromTo(uxtoJson,IMPPUTIONADD,MULITADD7,tokenTypeM2,amount12,0);
-//
-//
-//        //检查多签转账交易信息
-//        String txHash6 = JSONObject.fromObject(response6).getJSONObject("data").get("TxId").toString();
-//        checkTXDetailHeaderMsg(txHash6,versionMUTXO,typeUTXO,subTypeTransfer);
-//        uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash6)).getJSONObject("data").getJSONObject("UTXO"));
-//        assertEquals(transferData,uxtoJson.getString("data"));
-//        List<Map> listMT = commonFunc.constructUTXOTxDetailList(IMPPUTIONADD,ADDRESS5,tokenTypeM,tranferAmount);
-//        List<Map> listMT2 = constructUTXOTxDetailList(IMPPUTIONADD,IMPPUTIONADD,tokenTypeM,String.valueOf(Integer.parseInt(amount1)-Integer.parseInt(tranferAmount)),listMT);
-//
-//        jsonArrayCheck = uxtoJson.getJSONArray("Records");
-//        commonFunc.checkListArray(listMT2,jsonArrayCheck);
-//
-//        //单签回收
-//        String recySoloAmount="600.05";
-//        log.info("单签回收");
-//        log.info(soloSign.Balance(PRIKEY1,tokenTypeS));
-//        String RecycleSoloInfo = soloSign.Recycle( PRIKEY1, tokenTypeS, recySoloAmount);
-//
-//
-//        //多签回收
-//        log.info("多签回收");
-//        log.info(multiSign.Balance(IMPPUTIONADD,PRIKEY4,tokenTypeM));
-//        String recyMultiAmount="0.07";
-//        String RecycleMultiInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenTypeM, recyMultiAmount);
-//
-//        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
-//                utilsClass.sdkGetTxDetailType,SLEEPTIME);
-//
-//        //检查单签回收交易信息
-//        String txHash7 = JSONObject.fromObject(RecycleSoloInfo).getJSONObject("data").getString("Figure");
-//        checkTXDetailHeaderMsg(txHash7,versionMUTXO,typeUTXO,subTypeRecycle);
-//        uxtoJson.clear();
-//        log.info("****************");
-//        uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash7)).getJSONObject("data").getJSONObject("UTXO"));
-//
-//        List<Map> listSD = commonFunc.constructUTXOTxDetailList(ADDRESS1,zeroAddr,tokenTypeS,recySoloAmount);
-//        List<Map> listSD2 = commonFunc.constructUTXOTxDetailList(ADDRESS1,ADDRESS1,tokenTypeS,"9399.94",listSD);
-//        jsonArrayCheck = uxtoJson.getJSONArray("Records");
-//        commonFunc.checkListArray(listSD2,jsonArrayCheck);
-//
-//        //检查多签回收交易信息
-//        String txHash8 = JSONObject.fromObject(RecycleMultiInfo).getJSONObject("data").get("TxId").toString();
-//        checkTXDetailHeaderMsg(txHash8,versionMUTXO,typeUTXO,subTypeRecycle);
-//        uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash8)).getJSONObject("data").getJSONObject("UTXO"));
-//
-//        List<Map> listMD = commonFunc.constructUTXOTxDetailList(IMPPUTIONADD,zeroAddr,tokenTypeM,"0.07");
-//        List<Map> listMD2 = commonFunc.constructUTXOTxDetailList(IMPPUTIONADD,IMPPUTIONADD,tokenTypeM,"46999.93",listMD);
-//        jsonArrayCheck = uxtoJson.getJSONArray("Records");
-//        commonFunc.checkListArray(listMD2,jsonArrayCheck);
+
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        //检查小数量单签发行交易信息
+        String txHashMin = JSONObject.fromObject(minResp).getString("data");
+        checkTXDetailHeaderMsg(txHashMin,versionSUTXO,typeUTXO,subTypeIssue);
+        JSONObject uxtoJsonMin= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHashMin)).getJSONObject("data").getJSONObject("utxo"));
+        assertEquals(minData,uxtoJsonMin.getString("data"));
+        assertEquals(1,uxtoJsonMin.getJSONArray("txRecords").size());
+        checkFromTo(uxtoJsonMin,ADDRESS1,ADDRESS1,minToken,minAmount,0);
+
+
+        //检查单签发行交易信息
+        String txHash3 = JSONObject.fromObject(response3).getString("data");
+        checkTXDetailHeaderMsg(txHash3,versionSUTXO,typeUTXO,subTypeIssue);
+        JSONObject uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash3)).getJSONObject("data").getJSONObject("utxo"));
+        assertEquals(siData,uxtoJson.getString("data"));
+        assertEquals(1,uxtoJson.getJSONArray("txRecords").size());
+        checkFromTo(uxtoJson,ADDRESS1,ADDRESS1,tokenTypeS,amount,0);
+
+        //检查单签转账交易信息
+        String txHash4 = JSONObject.fromObject(response4).getString("data");
+        checkTXDetailHeaderMsg(txHash4,versionSUTXO,typeUTXO,subTypeTransfer);
+        uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash4)).getJSONObject("data").getJSONObject("utxo"));
+        assertEquals(tranferdata,uxtoJson.getString("data"));
+
+        List<Map> listST = commonFunc.constructUTXOTxDetailList(ADDRESS1,ADDRESS3,tokenTypeS,amountTransfer);
+        List<Map> listST2 = commonFunc.constructUTXOTxDetailList(ADDRESS1,ADDRESS1,tokenTypeS,"9999.99",listST);
+
+        JSONArray jsonArrayCheck = uxtoJson.getJSONArray("txRecords");
+        commonFunc.checkListArray(listST2,jsonArrayCheck);
+
+
+        //检查多签发行交易信息
+        String txHash5 = JSONObject.fromObject(response52).getJSONObject("data").get("txId").toString();
+        checkTXDetailHeaderMsg(txHash5,versionMUTXO,typeUTXO,subTypeIssue);
+        uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash5)).getJSONObject("data").getJSONObject("utxo"));
+        assertEquals(mulData,uxtoJson.getString("data"));
+        assertEquals(1,uxtoJson.getJSONArray("txRecords").size());
+        checkFromTo(uxtoJson,IMPPUTIONADD,IMPPUTIONADD,tokenTypeM,amount1,0);
+
+        String txHash51 = JSONObject.fromObject(response54).getJSONObject("data").get("txId").toString();
+        checkTXDetailHeaderMsg(txHash51,versionMUTXO,typeUTXO,subTypeIssue);
+        uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash51)).getJSONObject("data").getJSONObject("utxo"));
+        assertEquals(mulData2,uxtoJson.getString("data"));
+        assertEquals(1,uxtoJson.getJSONArray("txRecords").size());
+        checkFromTo(uxtoJson,IMPPUTIONADD,MULITADD7,tokenTypeM2,amount12,0);
+
+
+        //检查多签转账交易信息
+        String txHash6 = JSONObject.fromObject(response6).getJSONObject("data").get("txId").toString();
+        checkTXDetailHeaderMsg(txHash6,versionMUTXO,typeUTXO,subTypeTransfer);
+        uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash6)).getJSONObject("data").getJSONObject("utxo"));
+        assertEquals(transferData,uxtoJson.getString("data"));
+        List<Map> listMT = commonFunc.constructUTXOTxDetailList(IMPPUTIONADD,ADDRESS5,tokenTypeM,tranferAmount);
+        List<Map> listMT2 = constructUTXOTxDetailList(IMPPUTIONADD,IMPPUTIONADD,tokenTypeM,String.valueOf(Integer.parseInt(amount1)-Integer.parseInt(tranferAmount)),listMT);
+
+        jsonArrayCheck = uxtoJson.getJSONArray("txRecords");
+        commonFunc.checkListArray(listMT2,jsonArrayCheck);
+
+        //单签回收
+        String recySoloAmount="600.05";
+        log.info("单签回收");
+        log.info(soloSign.Balance(PRIKEY1,tokenTypeS));
+        String RecycleSoloInfo = soloSign.Recycle( PRIKEY1, tokenTypeS, recySoloAmount);
+
+
+        //多签回收
+        log.info("多签回收");
+        log.info(multiSign.BalanceByAddr(IMPPUTIONADD,tokenTypeM));
+        String recyMultiAmount="0.07";
+        String RecycleMultiInfo = multiSign.Recycle(IMPPUTIONADD, PRIKEY4, tokenTypeM, recyMultiAmount);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        //检查单签回收交易信息
+        String txHash7 = JSONObject.fromObject(RecycleSoloInfo).getString("data");
+        checkTXDetailHeaderMsg(txHash7,versionMUTXO,typeUTXO,subTypeRecycle);
+        uxtoJson.clear();
+        log.info("****************");
+        uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash7)).getJSONObject("data").getJSONObject("utxo"));
+
+        List<Map> listSD = commonFunc.constructUTXOTxDetailList(ADDRESS1,zeroAddr,tokenTypeS,recySoloAmount);
+        List<Map> listSD2 = commonFunc.constructUTXOTxDetailList(ADDRESS1,ADDRESS1,tokenTypeS,"9399.94",listSD);
+        jsonArrayCheck = uxtoJson.getJSONArray("txRecords");
+        commonFunc.checkListArray(listSD2,jsonArrayCheck);
+
+        //检查多签回收交易信息
+        String txHash8 = JSONObject.fromObject(RecycleMultiInfo).getJSONObject("data").get("txId").toString();
+        checkTXDetailHeaderMsg(txHash8,versionMUTXO,typeUTXO,subTypeRecycle);
+        uxtoJson= JSONObject.fromObject(JSONObject.fromObject(store.GetTxDetail(txHash8)).getJSONObject("data").getJSONObject("utxo"));
+
+        List<Map> listMD = commonFunc.constructUTXOTxDetailList(IMPPUTIONADD,zeroAddr,tokenTypeM,"0.07");
+        List<Map> listMD2 = commonFunc.constructUTXOTxDetailList(IMPPUTIONADD,IMPPUTIONADD,tokenTypeM,"46999.93",listMD);
+        jsonArrayCheck = uxtoJson.getJSONArray("txRecords");
+        commonFunc.checkListArray(listMD2,jsonArrayCheck);
    }
 
     public void checkFromTo(JSONObject jsonObject,String from,String to,String TokenType,String amount,int index)throws Exception{
-        assertEquals(from,jsonObject.getJSONArray("Records").getJSONObject(index).getString("From"));
-        assertEquals(to,jsonObject.getJSONArray("Records").getJSONObject(index).getString("To"));
-        assertEquals(TokenType,jsonObject.getJSONArray("Records").getJSONObject(index).getString("TokenType"));
-        assertEquals(amount,jsonObject.getJSONArray("Records").getJSONObject(index).getString("Amount"));
+        assertEquals(from,jsonObject.getJSONArray("txRecords").getJSONObject(index).getString("from"));
+        assertEquals(to,jsonObject.getJSONArray("txRecords").getJSONObject(index).getString("to"));
+        assertEquals(TokenType,jsonObject.getJSONArray("txRecords").getJSONObject(index).getString("tokenType"));
+        assertEquals(amount,jsonObject.getJSONArray("txRecords").getJSONObject(index).getString("amount"));
     }
 
     //20200413 分离docker合约相关测试
@@ -537,7 +537,7 @@ public class TestTxType {
         String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         //调用合约内的交易
         String response2 = wvm.invokeNew(ctHash,"initAccount",wvm.accountA,wvm.amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
@@ -546,26 +546,26 @@ public class TestTxType {
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         String response4 = wvm.invokeNew(ctHash,"transfer",wvm.accountA,wvm.accountB,wvm.transfer);//A向B转30
         String txHash4 = JSONObject.fromObject(response4).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //查询余额invoke接口
         String response5 = wvm.invokeNew(ctHash,"getBalance",wvm.accountA);//获取账户A账户余额
         String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //销毁wvm合约
         String response9 = wvm.wvmDestroyTest(ctHash);
         String txHash9 = JSONObject.fromObject(response9).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //检查合约创建 检查Type和SubType类型
         JSONObject jsonObjectCreate = checkTXDetailHeaderMsg(txHash1,versionWVM1,typeWVM,subTypeCreateWVM);
@@ -636,14 +636,14 @@ public class TestTxType {
         assertThat(multiSign.recoverFrozenToken(tokenType),containsString("200"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //Admin类交易 Type 20 SubType 200 201 202 203
         String response10= multiSign.collAddressRemovePri(ADDRESS6);
         String response11= multiSign.addissueaddress(PRIKEY1,ADDRESS6);
         String response3=multiSign.freezeToken(tokenType);
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //添加归集地址交易信息检查
         String txHash10 = JSONObject.fromObject(response10).getString("data");
@@ -667,7 +667,7 @@ public class TestTxType {
         //解除冻结token
         String response4=multiSign.recoverFrozenToken(tokenType);
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //检查删除归集地址交易信息
         String txHash12 = JSONObject.fromObject(response12).getString("data");
@@ -710,7 +710,7 @@ public class TestTxType {
 
         assertEquals(true,jsonObjectOrg.getJSONObject("Contract").isNullObject());
         assertEquals(true,jsonObjectOrg.getJSONObject("Store9").isNullObject());
-        assertEquals(true,jsonObjectOrg.getJSONObject("UTXO").isNullObject());
+        assertEquals(true,jsonObjectOrg.getJSONObject("utxo").isNullObject());
         assertEquals(true,jsonObjectOrg.getJSONObject("admin").isNullObject());
         assertEquals(true,jsonObjectOrg.getJSONObject("wvm").isNullObject());
 
@@ -724,7 +724,7 @@ public class TestTxType {
         //检查其他字段为空
         assertEquals(true,jsonObjectOrg2.getJSONObject("Contract").isNullObject());
         assertEquals(true,jsonObjectOrg2.getJSONObject("Store9").isNullObject());
-        assertEquals(true,jsonObjectOrg2.getJSONObject("UTXO").isNullObject());
+        assertEquals(true,jsonObjectOrg2.getJSONObject("utxo").isNullObject());
         assertEquals(true,jsonObjectOrg2.getJSONObject("store").isNullObject());
         assertEquals(true,jsonObjectOrg2.getJSONObject("wvm").isNullObject());
     }

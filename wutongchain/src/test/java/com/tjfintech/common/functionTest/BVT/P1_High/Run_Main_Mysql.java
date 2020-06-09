@@ -27,6 +27,9 @@ import org.junit.runners.Suite;
         SetCertSM2.class,
         SetMainLedger.class,
         PeerStartNoPermTest.class,
+
+        TestTxType.class,
+
         BeforeCondition.class,
 
         SetURLToSDKAddr.class,
@@ -50,7 +53,7 @@ import org.junit.runners.Suite;
         WVMContractInvalidTest.class,
 
         VerifyTests.class,
-        TestTxType.class,
+
         AddPeerAndSyncData.class
 
 })
