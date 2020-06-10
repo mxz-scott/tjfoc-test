@@ -71,20 +71,20 @@ public class TestDiffHashType {
         beforeCondition.collAddressTest();
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
         String response1 = store.CreateStore("tc1649 data");
-        assertEquals("200",JSONObject.fromObject(response1).getString("State"));  //确认可以发送成功
+        assertEquals("200",JSONObject.fromObject(response1).getString("state"));  //确认可以发送成功
 
         //发送一笔utxo发行，并查询，检查数据库无问题
         String tokenType = "subTT" + Random(5);
         String issueInfo = soloSign.issueToken(PRIKEY1,tokenType,"1000","PRIKEY1 发行",PRIKEY1);
-        assertEquals("200",JSONObject.fromObject(issueInfo).getString("State"));
+        assertEquals("200",JSONObject.fromObject(issueInfo).getString("state"));
 
         sleepAndSaveInfo(SLEEPTIME*2);
         //确认交易上链无异常
-        String txHash1 =JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));  //确认可以c查询成功
+        String txHash1 =commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));  //确认可以c查询成功
         //确认数据库同步无异常
         String query = soloSign.Balance(PRIKEY1,tokenType);
-        assertEquals("1000", JSONObject.fromObject(query).getJSONObject("Data").getString("Total"));
+        assertEquals("1000", JSONObject.fromObject(query).getJSONObject("data").getString("total"));
 
 
         //设置主链sm3 sdk使用sm3 （子链sha256）
@@ -95,27 +95,27 @@ public class TestDiffHashType {
         //检查主/子链可以成功发送
         subLedger="";
         String response3 = store.CreateStore("tc1650 data");
-        assertEquals("200",JSONObject.fromObject(response3).getString("State"));  //确认可以发送成功
+        assertEquals("200",JSONObject.fromObject(response3).getString("state"));  //确认可以发送成功
 
         sleepAndSaveInfo(SLEEPTIME*2);
-        String txHash2 =JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));  //确认可以c查询成功
+        String txHash2 =commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));  //确认可以c查询成功
 
         //SDK兼容子链所有类型hashtype
         subLedger=chainName;
         String response4 = store.CreateStore("tc1649 data");
-        assertEquals("200",JSONObject.fromObject(response4).getString("State"));  //确认可以发送成功
+        assertEquals("200",JSONObject.fromObject(response4).getString("state"));  //确认可以发送成功
 
         String tokenType2 = "subTT" + Random(5);
         String issueInfo2 = soloSign.issueToken(PRIKEY1,tokenType2,"1000","PRIKEY1 发行",PRIKEY1);
-        assertEquals("200",JSONObject.fromObject(issueInfo2).getString("State"));
+        assertEquals("200",JSONObject.fromObject(issueInfo2).getString("state"));
 
         sleepAndSaveInfo(SLEEPTIME*2);
-        String txHash3 =JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));  //确认可以c查询成功
+        String txHash3 =commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));  //确认可以c查询成功
         //确认数据库同步无异常
         String query2 = soloSign.Balance(PRIKEY1,tokenType2);
-        assertEquals("1000", JSONObject.fromObject(query2).getJSONObject("Data").getString("Total"));
+        assertEquals("1000", JSONObject.fromObject(query2).getJSONObject("data").getString("total"));
     }
 
     @Test
@@ -147,27 +147,27 @@ public class TestDiffHashType {
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
         String response2 = store.CreateStore("tc1649 data");
-        assertEquals("200",JSONObject.fromObject(response2).getString("State"));  //确认可以发送成功
+        assertEquals("200",JSONObject.fromObject(response2).getString("state"));  //确认可以发送成功
 
         //发送一笔utxo发行，并查询，检查数据库无问题
         String tokenType = "subTT" + Random(5);
         String issueInfo = soloSign.issueToken(PRIKEY1,tokenType,"1000","PRIKEY1 发行",PRIKEY1);
-        assertEquals("200",JSONObject.fromObject(issueInfo).getString("State"));
+        assertEquals("200",JSONObject.fromObject(issueInfo).getString("state"));
 
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
         //确认数据库同步无异常
         String query = soloSign.Balance(PRIKEY1,tokenType);
-        assertEquals("1000", JSONObject.fromObject(query).getJSONObject("Data").getString("Total"));
+        assertEquals("1000", JSONObject.fromObject(query).getJSONObject("data").getString("total"));
 
 
         subLedger="";
         String response1 = store.CreateStore("tc1649 data");
-        assertEquals("200",JSONObject.fromObject(response1).getString("State"));  //确认可以发送成功
+        assertEquals("200",JSONObject.fromObject(response1).getString("state"));  //确认可以发送成功
 
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
-        String txHash1 =JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));  //确认可以c查询成功
+        String txHash1 =commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));  //确认可以c查询成功
 
 
         //设置主链sha256 sdk使用sm3 （子链sha256）
@@ -177,18 +177,18 @@ public class TestDiffHashType {
         //检查子链可以成功发送，主链无法成功发送
         subLedger=chainName;
         String response3 = store.CreateStore("tc1650 data");
-        assertEquals("200",JSONObject.fromObject(response3).getString("State"));  //确认可以发送成功
+        assertEquals("200",JSONObject.fromObject(response3).getString("state"));  //确认可以发送成功
 
         String tokenType2 = "subTT" + Random(5);
         String issueInfo2 = soloSign.issueToken(PRIKEY1,tokenType2,"1000","PRIKEY1 发行",PRIKEY1);
-        assertEquals("200",JSONObject.fromObject(issueInfo2).getString("State"));
+        assertEquals("200",JSONObject.fromObject(issueInfo2).getString("state"));
 
         sleepAndSaveInfo(SLEEPTIME*2);
-        String txHash3 =JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));  //确认可以c查询成功
+        String txHash3 =commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));  //确认可以c查询成功
         //确认数据库同步无异常
         String query2 = soloSign.Balance(PRIKEY1,tokenType2);
-        assertEquals("1000", JSONObject.fromObject(query2).getJSONObject("Data").getString("Total"));
+        assertEquals("1000", JSONObject.fromObject(query2).getJSONObject("data").getString("total"));
 
         subLedger="";
         String response4 = store.CreateStore("tc1651 data");

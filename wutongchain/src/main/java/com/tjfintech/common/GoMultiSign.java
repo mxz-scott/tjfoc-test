@@ -615,6 +615,7 @@ public class GoMultiSign implements MultiSign {
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
         String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/balance"+param, map);
+        log.info(result);
         return result;
     }
 
