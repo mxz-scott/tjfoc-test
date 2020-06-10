@@ -305,7 +305,7 @@ public class TestWithConfigChange_ClearDB {
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), true);
-        assertEquals(resp.contains(glbChain01), true);
+        assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
         subLedger=chainName;
         String response1 = store.CreateStore("tc1523 data");

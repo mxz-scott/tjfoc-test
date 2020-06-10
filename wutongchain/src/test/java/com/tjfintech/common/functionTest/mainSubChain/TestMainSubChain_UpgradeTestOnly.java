@@ -1,13 +1,16 @@
 package com.tjfintech.common.functionTest.mainSubChain;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.SubLedgerCmd;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
+import org.bouncycastle.jce.provider.BrokenPBE;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -30,6 +33,8 @@ public class TestMainSubChain_UpgradeTestOnly {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
     MgToolCmd mgToolCmd = new MgToolCmd();
+    CommonFunc commonFunc = new CommonFunc();
+    UtilsClass utilsClass = new UtilsClass();
 
     @Test
     public void CreaterecoverFreezeDestoryChain()throws Exception{
@@ -77,9 +82,10 @@ public class TestMainSubChain_UpgradeTestOnly {
         String response1 = store.CreateStore(Data);
 
         sleepAndSaveInfo(SLEEPTIME*2);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
+        
+        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
+        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("state"));
 
         //销毁子链
         res = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);

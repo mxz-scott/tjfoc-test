@@ -150,7 +150,7 @@ public class StoreInvalidTest {
         assertThat(gettransactionindex,containsString("200"));
 
         gettransactionindex = store.GetTransactionIndex("04cf125c3d488ceb9baa6aa68973896d7de18658c75f4a2c5309cdea4e4dfb54");//交易id不存在
-        assertThat(gettransactionindex,containsString("400"));
+        assertThat(gettransactionindex,containsString("404"));
         assertThat(gettransactionindex,containsString("Failed to find transaction"));
 
         gettransactionindex = store.GetTransactionIndex("12345");

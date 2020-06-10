@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.mainSubChain;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
@@ -35,6 +36,8 @@ public class TestMainSubChain_WVM {
     BeforeCondition beforeCondition = new BeforeCondition();
     WVMContractTest wvmContractTest = new WVMContractTest();
     FileOperation fileOper = new FileOperation();
+    CommonFunc commonFunc = new CommonFunc();
+    UtilsClass utilsClass = new UtilsClass();
 
     @BeforeClass
     public static void clearData() throws Exception{
@@ -76,43 +79,43 @@ public class TestMainSubChain_WVM {
         subLedger = "";
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmContractTest.wvmInstallTest(wvmContractTest.wvmFile +"_temp.txt",PRIKEY1);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
-        String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
+        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
+        String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
         sleepAndSaveInfo(SLEEPTIME);
         //调用合约内的交易
         String response2 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
+        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType20);
 
         String response3 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
+        String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType20);
 
         sleepAndSaveInfo(SLEEPTIME);
 
         String response4 = wvmContractTest.invokeNew(ctHash,"transfer",wvmContractTest.accountA,wvmContractTest.accountB,wvmContractTest.transfer);//A向B转30
-        String txHash4 = JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
+        String txHash4 = commonFunc.getTxHash(response4,utilsClass.sdkGetTxHashType20);
 
         sleepAndSaveInfo(SLEEPTIME);
 
         //查询余额invoke接口
         String response5 = wvmContractTest.invokeNew(ctHash,"getBalance",wvmContractTest.accountA);//获取账户A账户余额
-        String txHash5 = JSONObject.fromObject(response5).getJSONObject("Data").getString("Figure");
+        String txHash5 = commonFunc.getTxHash(response5,utilsClass.sdkGetTxHashType20);
 
         String response6 = wvmContractTest.invokeNew(ctHash,"getBalance",wvmContractTest.accountB);//获取账户A账户余额
-        String txHash6 = JSONObject.fromObject(response6).getJSONObject("Data").getString("Figure");
+        String txHash6 = commonFunc.getTxHash(response6,utilsClass.sdkGetTxHashType20);
         sleepAndSaveInfo(SLEEPTIME/2);
         //查询余额query接口 交易不上链
         String response7 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountA);//获取转账后账户A账户余额
         String response8 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountB);//获取转账后账户B账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountB+wvmContractTest.transfer),JSONObject.fromObject(response8).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountB+wvmContractTest.transfer),JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
 
 
         //子链上安装合约使用PRIKEY2
         subLedger = subLedgerA;
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response11 = wvmContractTest.wvmInstallTest(wvmContractTest.wvmFile +"_temp.txt",PRIKEY2);
-        String txHash12 = JSONObject.fromObject(response11).getJSONObject("Data").getString("Figure");
-        String ctHash12 = JSONObject.fromObject(response11).getJSONObject("Data").getString("Name");
+        String txHash12 = commonFunc.getTxHash(response11,utilsClass.sdkGetTxHashType20);
+        String ctHash12 = JSONObject.fromObject(response11).getJSONObject("data").getString("name");
 
         sleepAndSaveInfo(SLEEPTIME);
         //目前未加入子链信息，此部分先注释
@@ -127,29 +130,29 @@ public class TestMainSubChain_WVM {
         sleepAndSaveInfo(SLEEPTIME);
         //查询余额query接口 交易不上链
         String response17 = wvmContractTest.query(ctHash12,"getBalance",wvmContractTest.accountA);//子链获取账户A账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountA),JSONObject.fromObject(response17).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountA),JSONObject.fromObject(response17).getJSONObject("data").getString("result"));
 
         String response18 = wvmContractTest.query(ctHash12,"getBalance",wvmContractTest.accountB);//子链获取账户B账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountB),JSONObject.fromObject(response18).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountB),JSONObject.fromObject(response18).getJSONObject("data").getString("result"));
 
         String response14 = wvmContractTest.invokeNew(ctHash12,"transfer",wvmContractTest.accountA,wvmContractTest.accountB,wvmContractTest.transfer/2);//A向B转30
-        String txHash14 = JSONObject.fromObject(response14).getJSONObject("Data").getString("Figure");
+        String txHash14 = commonFunc.getTxHash(response14,utilsClass.sdkGetTxHashType20);
         sleepAndSaveInfo(SLEEPTIME);
         //查询余额query接口 交易不上链
         String response27 = wvmContractTest.query(ctHash12,"getBalance",wvmContractTest.accountA);//子链获取账户A账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountA - wvmContractTest.transfer/2 ),JSONObject.fromObject(response27).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountA - wvmContractTest.transfer/2 ),JSONObject.fromObject(response27).getJSONObject("data").getString("result"));
 
         String response28 = wvmContractTest.query(ctHash12,"getBalance",wvmContractTest.accountB);//子链获取账户B账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountB + wvmContractTest.transfer/2),JSONObject.fromObject(response28).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountB + wvmContractTest.transfer/2),JSONObject.fromObject(response28).getJSONObject("data").getString("result"));
 
         //重新切换回主链查询数据
         subLedger = "";
         //查询余额query接口 交易不上链
         String response37 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountA);//获取转账后账户A账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountA-wvmContractTest.transfer),JSONObject.fromObject(response37).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountA-wvmContractTest.transfer),JSONObject.fromObject(response37).getJSONObject("data").getString("result"));
 
         String response38 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountB);//获取转账后账户B账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountB+wvmContractTest.transfer),JSONObject.fromObject(response38).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountB+wvmContractTest.transfer),JSONObject.fromObject(response38).getJSONObject("data").getString("result"));
 
     }
 
@@ -166,47 +169,47 @@ public class TestMainSubChain_WVM {
         subLedger = "";
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmContractTest.wvmInstallTest(wvmContractTest.wvmFile +"_temp.txt",PRIKEY1);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
-        String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
+        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
+        String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
         sleepAndSaveInfo(SLEEPTIME);
 
 
         //调用合约内的交易
         String response2 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
+        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType20);
 
         String response3 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
+        String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType20);
 
         sleepAndSaveInfo(SLEEPTIME);
 
         String response4 = wvmContractTest.invokeNew(ctHash,"transfer",wvmContractTest.accountA,wvmContractTest.accountB,wvmContractTest.transfer);//A向B转30
-        String txHash4 = JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
+        String txHash4 = commonFunc.getTxHash(response4,utilsClass.sdkGetTxHashType20);
 
         sleepAndSaveInfo(SLEEPTIME);
 
         //查询余额invoke接口
         String response5 = wvmContractTest.invokeNew(ctHash,"getBalance",wvmContractTest.accountA);//获取账户A账户余额
-        String txHash5 = JSONObject.fromObject(response5).getJSONObject("Data").getString("Figure");
+        String txHash5 = commonFunc.getTxHash(response5,utilsClass.sdkGetTxHashType20);
 
         String response6 = wvmContractTest.invokeNew(ctHash,"getBalance",wvmContractTest.accountB);//获取账户A账户余额
-        String txHash6 = JSONObject.fromObject(response6).getJSONObject("Data").getString("Figure");
+        String txHash6 = commonFunc.getTxHash(response6,utilsClass.sdkGetTxHashType20);
         sleepAndSaveInfo(SLEEPTIME/2);
         //查询余额query接口 交易不上链
         String response7 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountA);//获取转账后账户A账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountA-wvmContractTest.transfer),JSONObject.fromObject(response7).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountA-wvmContractTest.transfer),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
 
         String response8 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountB);//获取转账后账户B账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountB+wvmContractTest.transfer),JSONObject.fromObject(response8).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountB+wvmContractTest.transfer),JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
 
 
         //子链上安装合约使用PRIKEY2
         subLedger = subLedgerA;
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response11 = wvmContractTest.wvmInstallTest(wvmContractTest.wvmFile +"_temp.txt",PRIKEY1);
-        String txHash12 = JSONObject.fromObject(response11).getJSONObject("Data").getString("Figure");
-        String ctHash12 = JSONObject.fromObject(response11).getJSONObject("Data").getString("Name");
+        String txHash12 = commonFunc.getTxHash(response11,utilsClass.sdkGetTxHashType20);
+        String ctHash12 = JSONObject.fromObject(response11).getJSONObject("data").getString("name");
 
         sleepAndSaveInfo(SLEEPTIME);
 //        String res1 = shExeAndReturn(PEER1IP,"find " + PeerPATH + " -name " + ctHash);
@@ -219,30 +222,30 @@ public class TestMainSubChain_WVM {
         sleepAndSaveInfo(SLEEPTIME);
         //查询余额query接口 交易不上链
         String response17 = wvmContractTest.query(ctHash12,"getBalance",wvmContractTest.accountA);//子链获取账户A账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountA),JSONObject.fromObject(response17).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountA),JSONObject.fromObject(response17).getJSONObject("data").getString("result"));
 
         String response18 = wvmContractTest.query(ctHash12,"getBalance",wvmContractTest.accountB);//子链获取账户B账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountB),JSONObject.fromObject(response18).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountB),JSONObject.fromObject(response18).getJSONObject("data").getString("result"));
 
         String response14 = wvmContractTest.invokeNew(ctHash12,"transfer",wvmContractTest.accountA,wvmContractTest.accountB,wvmContractTest.transfer/2);//A向B转30
-        String txHash14 = JSONObject.fromObject(response14).getJSONObject("Data").getString("Figure");
+        String txHash14 = commonFunc.getTxHash(response14,utilsClass.sdkGetTxHashType20);
         sleepAndSaveInfo(SLEEPTIME);
         //查询余额query接口 交易不上链
         String response27 = wvmContractTest.query(ctHash12,"getBalance",wvmContractTest.accountA);//子链获取账户A账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountA - wvmContractTest.transfer/2 ),JSONObject.fromObject(response27).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountA - wvmContractTest.transfer/2 ),JSONObject.fromObject(response27).getJSONObject("data").getString("result"));
 
         String response28 = wvmContractTest.query(ctHash12,"getBalance",wvmContractTest.accountB);//子链获取账户B账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountB + wvmContractTest.transfer/2),JSONObject.fromObject(response28).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountB + wvmContractTest.transfer/2),JSONObject.fromObject(response28).getJSONObject("data").getString("result"));
 
 
         //重新切换回主链查询数据
         subLedger = "";
         //查询余额query接口 交易不上链
         String response37 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountA);//获取转账后账户A账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountA-wvmContractTest.transfer),JSONObject.fromObject(response37).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountA-wvmContractTest.transfer),JSONObject.fromObject(response37).getJSONObject("data").getString("result"));
 
         String response38 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountB);//获取转账后账户B账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountB+wvmContractTest.transfer),JSONObject.fromObject(response38).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountB+wvmContractTest.transfer),JSONObject.fromObject(response38).getJSONObject("data").getString("result"));
     }
 
     @Test
@@ -257,8 +260,8 @@ public class TestMainSubChain_WVM {
         subLedger = "";
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String resp1 = wvmContractTest.wvmInstallTest(wvmContractTest.wvmFile +"_temp.txt",PRIKEY1);
-        String txHash1 = JSONObject.fromObject(resp1).getJSONObject("Data").getString("Figure");
-        String ctHash = JSONObject.fromObject(resp1).getJSONObject("Data").getString("Name");
+        String txHash1 = JSONObject.fromObject(resp1).getJSONObject("data").getString("txId");
+        String ctHash = JSONObject.fromObject(resp1).getJSONObject("data").getString("name");
 
         sleepAndSaveInfo(SLEEPTIME);
 
@@ -269,7 +272,7 @@ public class TestMainSubChain_WVM {
         sleepAndSaveInfo(SLEEPTIME);
 
         String resp4 = wvmContractTest.invokeNew(ctHash,"transfer",wvmContractTest.accountA,wvmContractTest.accountB,wvmContractTest.transfer);//A向B转30
-        String txHash4 = JSONObject.fromObject(resp4).getJSONObject("Data").getString("Figure");
+        String txHash4 = JSONObject.fromObject(resp4).getJSONObject("data").getString("txId");
 
         sleepAndSaveInfo(SLEEPTIME);
 
@@ -277,8 +280,8 @@ public class TestMainSubChain_WVM {
         subLedger = subLedgerA;
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmContractTest.wvmInstallTest(wvmContractTest.wvmFile +"_temp.txt",PRIKEY1);
-        String txHash2 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
-        String ctHash2 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
+        String txHash2 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
+        String ctHash2 = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
         sleepAndSaveInfo(SLEEPTIME);
 
@@ -286,28 +289,28 @@ public class TestMainSubChain_WVM {
         subLedger = "";
 
         String resp17 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountA);//子链获取账户A账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountA - wvmContractTest.transfer),JSONObject.fromObject(resp17).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountA - wvmContractTest.transfer),JSONObject.fromObject(resp17).getJSONObject("data").getString("result"));
 
         String resp18 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountB);//子链获取账户B账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountB + wvmContractTest.transfer),JSONObject.fromObject(resp18).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountB + wvmContractTest.transfer),JSONObject.fromObject(resp18).getJSONObject("data").getString("result"));
 
         //查询子链上A、B账户余额 应为0
         subLedger = subLedgerA;
 
         String response17 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountA);//子链获取账户A账户余额
-        assertEquals("0",JSONObject.fromObject(response17).getJSONObject("Data").getString("Result"));
+        assertEquals("0",JSONObject.fromObject(response17).getJSONObject("data").getString("result"));
 
         String response18 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountB);//子链获取账户B账户余额
-        assertEquals("0",JSONObject.fromObject(response18).getJSONObject("Data").getString("Result"));
+        assertEquals("0",JSONObject.fromObject(response18).getJSONObject("data").getString("result"));
 
 
         //主链销毁wvm合约
         subLedger = "";
         String resp9 = wvmContractTest.wvmDestroyTest(ctHash);
-        String txHash9 = JSONObject.fromObject(resp9).getJSONObject("Data").getString("Figure");
+        String txHash9 = JSONObject.fromObject(resp9).getJSONObject("data").getString("txId");
         sleepAndSaveInfo(SLEEPTIME);
         String response10 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountB);//获取账户B账户余额 报错
-        assertThat(JSONObject.fromObject(response10).getString("Message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
+        assertThat(JSONObject.fromObject(response10).getString("message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
 
         //进行子链相关交易
         subLedger = subLedgerA;
@@ -317,19 +320,19 @@ public class TestMainSubChain_WVM {
 
         sleepAndSaveInfo(SLEEPTIME);
         String response7 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountA);//子链获取账户A账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountA),JSONObject.fromObject(response7).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountA),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
 
         String response8 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountB);//子链获取账户B账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountB),JSONObject.fromObject(response8).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountB),JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
 
         String response4 = wvmContractTest.invokeNew(ctHash,"transfer",wvmContractTest.accountA,wvmContractTest.accountB,wvmContractTest.transfer);//A向B转30
         sleepAndSaveInfo(SLEEPTIME);
 
         response7 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountA);//子链获取账户A账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountA - wvmContractTest.transfer),JSONObject.fromObject(response7).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountA - wvmContractTest.transfer),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
 
         response8 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountB);//子链获取账户B账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountB + wvmContractTest.transfer),JSONObject.fromObject(response8).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountB + wvmContractTest.transfer),JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
 
     }
 
@@ -345,8 +348,8 @@ public class TestMainSubChain_WVM {
         subLedger = subLedgerA;
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String resp1 = wvmContractTest.wvmInstallTest(wvmContractTest.wvmFile +"_temp.txt",PRIKEY1);
-        String txHash1 = JSONObject.fromObject(resp1).getJSONObject("Data").getString("Figure");
-        String ctHash = JSONObject.fromObject(resp1).getJSONObject("Data").getString("Name");
+        String txHash1 = JSONObject.fromObject(resp1).getJSONObject("data").getString("txId");
+        String ctHash = JSONObject.fromObject(resp1).getJSONObject("data").getString("name");
 
         sleepAndSaveInfo(SLEEPTIME);
 
@@ -357,7 +360,7 @@ public class TestMainSubChain_WVM {
         sleepAndSaveInfo(SLEEPTIME);
 
         String resp4 = wvmContractTest.invokeNew(ctHash,"transfer",wvmContractTest.accountA,wvmContractTest.accountB,wvmContractTest.transfer);//A向B转30
-        String txHash4 = JSONObject.fromObject(resp4).getJSONObject("Data").getString("Figure");
+        String txHash4 = JSONObject.fromObject(resp4).getJSONObject("data").getString("txId");
 
         sleepAndSaveInfo(SLEEPTIME);
 
@@ -365,8 +368,8 @@ public class TestMainSubChain_WVM {
         subLedger = "";
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmContractTest.wvmInstallTest(wvmContractTest.wvmFile +"_temp.txt",PRIKEY1);
-        String txHash2 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
-        String ctHash2 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
+        String txHash2 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
+        String ctHash2 = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
         sleepAndSaveInfo(SLEEPTIME);
 
@@ -374,28 +377,28 @@ public class TestMainSubChain_WVM {
         subLedger = subLedgerA;
 
         String resp17 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountA);//子链获取账户A账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountA - wvmContractTest.transfer),JSONObject.fromObject(resp17).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountA - wvmContractTest.transfer),JSONObject.fromObject(resp17).getJSONObject("data").getString("result"));
 
         String resp18 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountB);//子链获取账户B账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountB + wvmContractTest.transfer),JSONObject.fromObject(resp18).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountB + wvmContractTest.transfer),JSONObject.fromObject(resp18).getJSONObject("data").getString("result"));
 
         //查询主链上A、B账户余额 应为0
         subLedger = "";
 
         String response17 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountA);//子链获取账户A账户余额
-        assertEquals("0",JSONObject.fromObject(response17).getJSONObject("Data").getString("Result"));
+        assertEquals("0",JSONObject.fromObject(response17).getJSONObject("data").getString("result"));
 
         String response18 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountB);//子链获取账户B账户余额
-        assertEquals("0",JSONObject.fromObject(response18).getJSONObject("Data").getString("Result"));
+        assertEquals("0",JSONObject.fromObject(response18).getJSONObject("data").getString("result"));
 
 
         //子链销毁wvm合约
         subLedger = subLedgerA;
         String resp9 = wvmContractTest.wvmDestroyTest(ctHash);
-        String txHash9 = JSONObject.fromObject(resp9).getJSONObject("Data").getString("Figure");
+        String txHash9 = JSONObject.fromObject(resp9).getJSONObject("data").getString("txId");
         sleepAndSaveInfo(SLEEPTIME);
         String response10 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountB);//获取账户B账户余额 报错
-        assertThat(JSONObject.fromObject(response10).getString("Message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
+        assertThat(JSONObject.fromObject(response10).getString("message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
 
         //进行主链相关交易
         subLedger = "";
@@ -405,19 +408,19 @@ public class TestMainSubChain_WVM {
 
         sleepAndSaveInfo(SLEEPTIME);
         String response7 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountA);//子链获取账户A账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountA),JSONObject.fromObject(response7).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountA),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
 
         String response8 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountB);//子链获取账户B账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountB),JSONObject.fromObject(response8).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountB),JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
 
         String response4 = wvmContractTest.invokeNew(ctHash,"transfer",wvmContractTest.accountA,wvmContractTest.accountB,wvmContractTest.transfer);//A向B转30
         sleepAndSaveInfo(SLEEPTIME);
 
         response7 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountA);//子链获取账户A账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountA - wvmContractTest.transfer),JSONObject.fromObject(response7).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountA - wvmContractTest.transfer),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
 
         response8 = wvmContractTest.query(ctHash,"getBalance",wvmContractTest.accountB);//子链获取账户B账户余额
-        assertEquals(Integer.toString(wvmContractTest.amountB + wvmContractTest.transfer),JSONObject.fromObject(response8).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(wvmContractTest.amountB + wvmContractTest.transfer),JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
 
     }
 

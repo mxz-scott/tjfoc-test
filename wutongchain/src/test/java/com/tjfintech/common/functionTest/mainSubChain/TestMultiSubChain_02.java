@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.mainSubChain;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
@@ -33,6 +34,7 @@ public class TestMultiSubChain_02 {
     SubLedgerCmd subLedgerCmd = new SubLedgerCmd();
     MgToolCmd mgToolCmd = new MgToolCmd();
     UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
 
     String glbChain01= "glbCh1";
@@ -92,14 +94,14 @@ public class TestMultiSubChain_02 {
         {
             subLedger=chainName+i;
             String response = store.CreateStore(Data);
-            String txHash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+            String txHash = commonFunc.getTxHash(response,utilsClass.sdkGetTxHashType20);
             hashList.add(txHash);
         }
 
 
         subLedger="";
         String response10 = store.CreateStore(Data);
-        String txHash10 = JSONObject.fromObject(response10).getJSONObject("Data").getString("Figure");
+        String txHash10 = commonFunc.getTxHash(response10,utilsClass.sdkGetTxHashType20);
 
         sleepAndSaveInfo(SLEEPTIME*3);
 
@@ -218,7 +220,7 @@ public class TestMultiSubChain_02 {
         int height =Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String response1 = store.CreateStore(Data);
         sleepAndSaveInfo(SLEEPTIME);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
+        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
         assertEquals(height+1,Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data")));
@@ -227,7 +229,7 @@ public class TestMultiSubChain_02 {
         subLedger=glbChain01;
         int height1 =Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String response2 = store.CreateStore(Data);
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
+        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType20);
         sleepAndSaveInfo(SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
@@ -237,7 +239,7 @@ public class TestMultiSubChain_02 {
         subLedger=glbChain02;
         int height2 =Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String response3 = store.CreateStore(Data);
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
+        String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType20);
         sleepAndSaveInfo(SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
@@ -259,7 +261,7 @@ public class TestMultiSubChain_02 {
         subLedger=glbChain01;
         int height1 =Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String response2 = store.CreateStore(Data);
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
+        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType20);
         sleepAndSaveInfo(SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
@@ -271,7 +273,7 @@ public class TestMultiSubChain_02 {
         int height =Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String response1 = store.CreateStore(Data);
         sleepAndSaveInfo(SLEEPTIME);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
+        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
         assertEquals(height+1,Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data")));
@@ -281,7 +283,7 @@ public class TestMultiSubChain_02 {
         subLedger=glbChain02;
         int height2 =Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String response3 = store.CreateStore(Data);
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
+        String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType20);
         sleepAndSaveInfo(SLEEPTIME*2);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
@@ -302,7 +304,7 @@ public class TestMultiSubChain_02 {
         subLedger=glbChain01;
         int height1 =Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String response2 = store.CreateStore(Data);
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
+        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType20);
         sleepAndSaveInfo(SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
@@ -313,7 +315,7 @@ public class TestMultiSubChain_02 {
         subLedger=glbChain02;
         int height2 =Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String response3 = store.CreateStore(Data);
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
+        String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType20);
         sleepAndSaveInfo(SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
@@ -324,7 +326,7 @@ public class TestMultiSubChain_02 {
         int height =Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         String response1 = store.CreateStore(Data);
         sleepAndSaveInfo(SLEEPTIME);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
+        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
         assertEquals(height+1,Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data")));
@@ -341,19 +343,19 @@ public class TestMultiSubChain_02 {
         //向主链发送交易
         subLedger="";
         String response1 = store.CreateStore(Data);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
+        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
 
 
         //向子链glbChain01发送交易
         subLedger=glbChain01;
         String response2 = store.CreateStore(Data);
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
+        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType20);
 
 
         //向子链glbChain02发送交易
         subLedger=glbChain02;
         String response3 = store.CreateStore(Data);
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
+        String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType20);
 
         sleepAndSaveInfo(SLEEPTIME);
         //查询主链交易
@@ -386,19 +388,19 @@ public class TestMultiSubChain_02 {
         //向主链发送交易
         subLedger="";
         String response1 = store.CreateStore(Data);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
+        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
 
 
         //向子链glbChain01发送交易
         subLedger=glbChain01;
         String response2 = store.CreateStore(Data);
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
+        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType20);
 
 
         //向子链glbChain02发送交易
         subLedger=glbChain02;
         String response3 = store.CreateStore(Data);
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
+        String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType20);
 
         sleepAndSaveInfo(SLEEPTIME*2);
 
@@ -432,18 +434,18 @@ public class TestMultiSubChain_02 {
         //向子链glbChain01发送交易
         subLedger=glbChain01;
         String response2 = store.CreateStore(Data);
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
+        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType20);
 
 
         //向子链glbChain02发送交易
         subLedger=glbChain02;
         String response3 = store.CreateStore(Data);
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
+        String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType20);
 
         //向主链发送交易
         subLedger="";
         String response1 = store.CreateStore(Data);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
+        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
 
 
         sleepAndSaveInfo(SLEEPTIME);
@@ -478,18 +480,18 @@ public class TestMultiSubChain_02 {
         //向子链glbChain01发送交易
         subLedger=glbChain01;
         String response2 = store.CreateStore(Data);
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
+        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType20);
 
 
         //向子链glbChain02发送交易
         subLedger=glbChain02;
         String response3 = store.CreateStore(Data);
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
+        String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType20);
 
         //向主链发送交易
         subLedger="";
         String response1 = store.CreateStore(Data);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
+        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
 
         sleepAndSaveInfo(SLEEPTIME*2);
 

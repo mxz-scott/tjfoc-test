@@ -107,7 +107,7 @@ public class TestMainSubChain_Perm {
         assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), "[211]");
 
         //子链发送权限对应的接口以及检查无权限接口
-        assertThat(store.CreateStore("tc1661 ledger with permission 211 tx data"),containsString("\"State\":200"));
+        assertThat(store.CreateStore("tc1661 ledger with permission 211 tx data"),containsString("\"state\":200"));
         tempResp = store.GetHeight().toLowerCase();
         assertThat(tempResp,anyOf(containsString(noPerm),containsString(noPerm2)));
 
@@ -137,8 +137,8 @@ public class TestMainSubChain_Perm {
         mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,utilsClass.getSDKID(),"236,253");
         sleepAndSaveInfo(SLEEPTIME);
         assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), "[236 253]");
-        assertThat(multiSign.QueryZero(""),containsString("\"State\":200"));
-        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),containsString("\"State\":200"));
+        assertThat(multiSign.QueryZero(""),containsString("\"state\":200"));
+        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),containsString("\"state\":200"));
 
         //创建子链01 包含节点A、B、C
         String chainName="tc1662_01"+ sdf.format(dt)+ RandomUtils.nextInt(1000);
@@ -165,11 +165,11 @@ public class TestMainSubChain_Perm {
         //获取子链权限列表检查是否为3,211
         assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), "[3 211]");
         //子链发送权限对应的接口以及检查无权限接口
-        assertThat(store.CreateStore("tc1662 ledger with permission3,211 tx data"),containsString("\"State\":200"));
+        assertThat(store.CreateStore("tc1662 ledger with permission3,211 tx data"),containsString("\"state\":200"));
         tempResp = store.GetHeight().toLowerCase();
         assertThat(tempResp,anyOf(containsString(noPerm),containsString(noPerm2)));
 
-        assertThat(store.GetBlockByHeight(0),containsString("\"State\":200"));
+        assertThat(store.GetBlockByHeight(0),containsString("\"state\":200"));
 
         tempResp = multiSign.QueryZero("").toLowerCase();
         assertThat(tempResp,anyOf(containsString(noPerm),containsString(noPerm2)));
@@ -181,8 +181,8 @@ public class TestMainSubChain_Perm {
         assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), "[236 253]");
         tempResp = store.CreateStore("tc1662 main no permission tx data").toLowerCase();
         assertThat(tempResp,anyOf(containsString(noPerm),containsString(noPerm2)));
-        assertThat(multiSign.QueryZero(""),containsString("\"State\":200"));
-        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),containsString("\"State\":200"));
+        assertThat(multiSign.QueryZero(""),containsString("\"state\":200"));
+        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),containsString("\"state\":200"));
 
 
         //设置主链权限为999,确认主链sdk权限恢复
@@ -208,9 +208,9 @@ public class TestMainSubChain_Perm {
 //        assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), fullPerm);
         assertThat(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()),
                 anyOf(containsString(fullPerm), containsString(fullPerm2)));
-        assertThat(store.CreateStore("tc1663 ledger with permission3,211 tx data"),containsString("\"State\":200"));
-        assertThat(multiSign.QueryZero(""),containsString("\"State\":200"));
-        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),containsString("\"State\":200"));
+        assertThat(store.CreateStore("tc1663 ledger with permission3,211 tx data"),containsString("\"state\":200"));
+        assertThat(multiSign.QueryZero(""),containsString("\"state\":200"));
+        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),containsString("\"state\":200"));
 
         //创建子链01 包含节点A、B、C
         String chainName="tc1663_01"+sdf.format(dt)+ RandomUtils.nextInt(1000);
@@ -239,8 +239,8 @@ public class TestMainSubChain_Perm {
         //获取子链权限列表检查是否为3,211
         assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), "[3 211]");
         //子链发送权限对应的接口以及检查无权限接口
-        assertThat(store.CreateStore("tc1663 ledger with permission3,211 tx data"),containsString("\"State\":200"));
-        assertThat(store.GetBlockByHeight(0),containsString("\"State\":200"));
+        assertThat(store.CreateStore("tc1663 ledger with permission3,211 tx data"),containsString("\"state\":200"));
+        assertThat(store.GetBlockByHeight(0),containsString("\"state\":200"));
         tempResp = store.GetHeight().toLowerCase();
         assertThat(tempResp,anyOf(containsString(noPerm),containsString(noPerm2)));
 
@@ -254,9 +254,9 @@ public class TestMainSubChain_Perm {
 //        assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), fullPerm);
         assertThat(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()),
                 anyOf(containsString(fullPerm), containsString(fullPerm2)));
-        assertEquals(store.CreateStore("tc1663 main no permission tx data").contains("\"State\":200"),true);
-        assertThat(multiSign.QueryZero(""),containsString("\"State\":200"));
-        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),containsString("\"State\":200"));
+        assertEquals(store.CreateStore("tc1663 main no permission tx data").contains("\"state\":200"),true);
+        assertThat(multiSign.QueryZero(""),containsString("\"state\":200"));
+        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),containsString("\"state\":200"));
 
 
         //设置主链权限为999,确认主链sdk权限恢复

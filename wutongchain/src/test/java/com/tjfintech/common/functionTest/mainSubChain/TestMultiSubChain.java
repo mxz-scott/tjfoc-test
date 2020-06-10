@@ -111,18 +111,18 @@ public class TestMultiSubChain {
 
         sleepAndSaveInfo(SLEEPTIME*2);
 
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
+        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
+        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType20);
+        String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType20);
 
         subLedger=chainName2;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
 
         subLedger=chainName3;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));
 
         subLedger="";
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));
 
         //检查可以获取子链列表
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -169,18 +169,18 @@ public class TestMultiSubChain {
 
         sleepAndSaveInfo(SLEEPTIME);
 
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
+        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
+        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType20);
+        String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType20);
 
         subLedger=chainName2;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
 
         subLedger=chainName3;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));
 
         subLedger="";
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));
 
         //检查可以获取子链列表
         String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
@@ -246,24 +246,24 @@ public class TestMultiSubChain {
         assertEquals(resp.contains(chainName3), true);
         sleepAndSaveInfo(SLEEPTIME);
 
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").get("Figure").toString();
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").get("Figure").toString();
+        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
+        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType20);
+        String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType20);
 
         subLedger=chainName2;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
-        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));
-        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));
 
         subLedger=chainName3;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));
-        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
-        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));
 
         subLedger="";
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));
-        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));
-        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
 
 
     }

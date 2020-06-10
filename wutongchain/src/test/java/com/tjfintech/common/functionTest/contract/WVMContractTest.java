@@ -488,7 +488,8 @@ public class WVMContractTest {
         String ctHash4 = installInitTransfer(ctName,PRIKEY2,"initBAccount","transferB","getBalanceB");
         assertEquals(false,ctHash1.equals(ctHash4)); //确认两个hash不相同
 
-        shellExeCmd(sdkIP,killSDKCmd,resetSDKConfig,startSDKCmd);
+//        shellExeCmd(sdkIP,killSDKCmd,resetSDKConfig,startSDKCmd);
+//        sleepAndSaveInfo(5000,"等待SDK重新启动");
     }
 
 //    @Test
