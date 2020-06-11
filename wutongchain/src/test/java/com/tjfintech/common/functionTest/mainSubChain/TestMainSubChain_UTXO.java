@@ -68,7 +68,7 @@ public class TestMainSubChain_UTXO {
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(respCreate,utilsClass.mgGetTxHashType),
                     utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
 
-            assertEquals(mgToolCmd.getSubChain(PEER1IP, PEER1RPCPort, "").contains("\"name\": \"" + subLedgerB.toLowerCase() + "\""), true);
+            assertEquals(true,mgToolCmd.getSubChain(PEER1IP, PEER1RPCPort, "").contains("\"name\": \"" + subLedgerB.toLowerCase() + "\""));
         }
     }
 

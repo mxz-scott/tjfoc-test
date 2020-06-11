@@ -83,7 +83,7 @@ public class TestMainSubChain_UpgradeTestOnly {
 
         sleepAndSaveInfo(SLEEPTIME*2);
         
-        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
+        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType21);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("state"));
 
