@@ -68,12 +68,12 @@ public class SDKCmdTest {
 
         shExeAndReturn(remoteIP,startSDKCmd);
         sleepAndSaveInfo(SLEEPTIME/2,"等待sdk启动");
-        assertEquals("200", JSONObject.fromObject(store.CreateStore("test")).getString("State"));
+        assertEquals("200", JSONObject.fromObject(store.CreateStore("test")).getString("state"));
 
         //结束后重新设置回明文配置
         shellExeCmd(remoteIP,killSDKCmd,resetSDKConfig,startSDKCmd);
         sleepAndSaveInfo(SLEEPTIME/2,"等待sdk启动");
-        assertEquals("200", JSONObject.fromObject(store.CreateStore("test")).getString("State"));
+        assertEquals("200", JSONObject.fromObject(store.CreateStore("test")).getString("state"));
     }
 
     @Test
@@ -102,7 +102,7 @@ public class SDKCmdTest {
 
         resp = shExeAndReturn(remoteIP,startSDKCmd);
         sleepAndSaveInfo(SLEEPTIME/2,"等待sdk启动");
-        assertEquals("200", JSONObject.fromObject(store.CreateStore("test")).getString("State"));
+        assertEquals("200", JSONObject.fromObject(store.CreateStore("test")).getString("state"));
     }
 
     //@Test

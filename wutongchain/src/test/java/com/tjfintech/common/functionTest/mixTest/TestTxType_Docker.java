@@ -93,7 +93,7 @@ public class TestTxType_Docker {
         dockerFileName="simple.go";
         log.info("创建合约"+ct.name);
         String response7 = ct.installTest();
-        String txHash7 = JSONObject.fromObject(response7).getJSONObject("Data").get("Figure").toString();
+        String txHash7 = JSONObject.fromObject(response7).getJSONObject("data").get("figure").toString();
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,ContractInstallSleep);
 
@@ -112,9 +112,9 @@ public class TestTxType_Docker {
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
-        String txHash81 = JSONObject.fromObject(response81).getJSONObject("Data").get("Figure").toString();
+        String txHash81 = JSONObject.fromObject(response81).getJSONObject("data").get("figure").toString();
 
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash81)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash81)).getString("state"));
         //发送合约交易changeCount 20190813补充测试
         log.info("发送合约交易querymobile");
         String response82 = ct.changeMobileCountTest("50","Mobile2");
@@ -122,8 +122,8 @@ public class TestTxType_Docker {
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
-        String txHash82 = JSONObject.fromObject(response82).getJSONObject("Data").get("Figure").toString();
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash82)).getString("State"));
+        String txHash82 = JSONObject.fromObject(response82).getJSONObject("data").get("figure").toString();
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash82)).getString("state"));
         //检查交易详情中的scargs内容是否能够被base64解码成传入的参数
         checkContractArgs(txHash82,"SCArgs","changeMobileCount","50","Mobile2");
 
@@ -132,14 +132,14 @@ public class TestTxType_Docker {
         String response8 = ct.queryMobileTest("Mobile1");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        String txHash8 = JSONObject.fromObject(response8).getJSONObject("Data").get("Figure").toString();
+        String txHash8 = JSONObject.fromObject(response8).getJSONObject("data").get("figure").toString();
 
         //销毁合约
         log.info("销毁合约"+ct.name);
         String response9 = ct.destroyTest();
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        String txHash9 = JSONObject.fromObject(response9).getJSONObject("Data").get("Figure").toString();
+        String txHash9 = JSONObject.fromObject(response9).getJSONObject("data").get("figure").toString();
 
         //检查合约创建交易信息
         checkTXDetailHeaderMsg(txHash7,versionStore,typeDocker,subTypeCreateDocker);
@@ -148,9 +148,9 @@ public class TestTxType_Docker {
         if(subLedger.isEmpty()) checkMsg ="Install chaincode [" + ct.name + "_" + ct.version + "] success!";
         else checkMsg = "Install chaincode [" + ct.name + "_" + subLedger.toLowerCase() + "_" + ct.version + "] success!";
         assertEquals(checkMsg,JSONObject.fromObject(
-                store.GetTxDetail(txHash7)).getJSONObject("Data").getJSONObject("Contract").getString("Message"));
+                store.GetTxDetail(txHash7)).getJSONObject("data").getJSONObject("contract").getString("message"));
 //        assertEquals("Install chaincode ["+ct.name+"_"+ct.version+"] success!",JSONObject.fromObject(
-//                store.GetTransaction(txHash7)).getJSONObject("Data").getString("message"));
+//                store.GetTransaction(txHash7)).getJSONObject("data").getString("message"));
 
 
         //检查合约交易信息initMobile
@@ -161,8 +161,8 @@ public class TestTxType_Docker {
         checkTXDetailHeaderMsg(txHash8,versionStore,typeDocker,subTypeDockerTx);
         checkContractTx(txHash8,"queryMobile","scDocker","200","1",
                 "Transaction excute success!");
-//        assertThat(JSONObject.fromObject(store.GetTransaction(txHash8)).getJSONObject("Data").getJSONObject("contractResult").getString("payload"), containsString("Apple"));
-        assertThat(JSONObject.fromObject(store.GetTxDetail(txHash8)).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload"), containsString("Apple"));
+//        assertThat(JSONObject.fromObject(store.GetTransaction(txHash8)).getJSONObject("data").getJSONObject("contractResult").getString("payload"), containsString("Apple"));
+        assertThat(JSONObject.fromObject(store.GetTxDetail(txHash8)).getJSONObject("data").getJSONObject("contract").getJSONObject("contractResult").getString("payload"), containsString("Apple"));
 
         //检查合约销毁交易信息
         checkTXDetailHeaderMsg(txHash9,versionStore,typeDocker,subTypeDeleteDocker);
@@ -171,27 +171,27 @@ public class TestTxType_Docker {
         if(subLedger.isEmpty()) msg = "Delete chaincode ["+ct.name+"_"+ct.version+"] success!";
         else msg = "Delete chaincode [" + ct.name+ "_" + subLedger.toLowerCase() + "_" + ct.version + "] success!";
         assertEquals(msg,JSONObject.fromObject(
-                store.GetTxDetail(txHash9)).getJSONObject("Data").getJSONObject("Contract").getString("Message"));
+                store.GetTxDetail(txHash9)).getJSONObject("data").getJSONObject("contract").getString("message"));
 //        assertEquals("Delete chaincode ["+ct.name+"_"+ct.version+"] success!",JSONObject.fromObject(
-//                store.GetTransaction(txHash9)).getJSONObject("Data").getString("message"));
+//                store.GetTransaction(txHash9)).getJSONObject("data").getString("message"));
     }
 
 
     public JSONObject checkTXDetailHeaderMsg(String hash, String version, String type, String subType)throws Exception{
         log.info("hash:"+hash);
         JSONObject objectDetail = JSONObject.fromObject(store.GetTxDetail(hash));
-        JSONObject jsonObject = objectDetail.getJSONObject("Data").getJSONObject("Header");
-        assertEquals(version,jsonObject.getString("Version"));
-        assertEquals(type,jsonObject.getString("Type"));
-        assertEquals(subType,jsonObject.getString("SubType"));
-        assertEquals(hash,jsonObject.getString("TransactionHash"));
+        JSONObject jsonObject = objectDetail.getJSONObject("data").getJSONObject("header");
+        assertEquals(version,jsonObject.getString("version"));
+        assertEquals(type,jsonObject.getString("type"));
+        assertEquals(subType,jsonObject.getString("subType"));
+        assertEquals(hash,jsonObject.getString("transactionHash"));
 
         return objectDetail;
     }
 
     public void checkContractArgs(String hash,String key,String...checkStr)throws Exception{
-        JSONObject jsonObjectOrg =JSONObject.fromObject(store.GetTxDetail(hash)).getJSONObject("Data");
-        JSONObject jsonObject =jsonObjectOrg.getJSONObject("Contract");
+        JSONObject jsonObjectOrg =JSONObject.fromObject(store.GetTxDetail(hash)).getJSONObject("data");
+        JSONObject jsonObject =jsonObjectOrg.getJSONObject("contract");
         int i = 0;
         for(String chkStr: checkStr) {
             String scdecodeArgs = new String(utilsClass.decryptBASE64(jsonObject.getJSONArray(key).getString(i)));
@@ -204,18 +204,18 @@ public class TestTxType_Docker {
     }
 
     public void checkContractTx(String hash,String method,String cttype,String ctResultStatus,String code,String Msg)throws Exception{
-        JSONObject jsonObjectOrg =JSONObject.fromObject(store.GetTxDetail(hash)).getJSONObject("Data");
-        JSONObject jsonObject =jsonObjectOrg.getJSONObject("Contract");
-        String sections=new String(utilsClass.decryptBASE64(jsonObject.getString("Src")));
+        JSONObject jsonObjectOrg =JSONObject.fromObject(store.GetTxDetail(hash)).getJSONObject("data");
+        JSONObject jsonObject =jsonObjectOrg.getJSONObject("contract");
+        String sections=new String(utilsClass.decryptBASE64(jsonObject.getString("src")));
         log.info(sections);
-        assertEquals(ct.name,JSONObject.fromObject(sections).getString("Name"));//检查合约名称
-        assertEquals(ct.version,JSONObject.fromObject(sections).getString("Version"));//检查合约Version
+        assertEquals(ct.name,JSONObject.fromObject(sections).getString("name"));//检查合约名称
+        assertEquals(ct.version,JSONObject.fromObject(sections).getString("version"));//检查合约Version
 
         String scArgs= new String(utilsClass.decryptBASE64(jsonObject.getJSONArray("SCArgs").getString(0)));
         log.info(jsonObject.getJSONArray("SCArgs").getString(0));
         assertThat(scArgs, containsString(method));
-        assertEquals(code,jsonObject.getString("Code"));//检查合约交易结果code
-        assertEquals(Msg,jsonObject.getString("Message"));//检查合约交易结果message
+        assertEquals(code,jsonObject.getString("code"));//检查合约交易结果code
+        assertEquals(Msg,jsonObject.getString("message"));//检查合约交易结果message
 
     }
 }
