@@ -111,9 +111,9 @@ public class TestMultiSubChain {
 
         sleepAndSaveInfo(SLEEPTIME*2);
 
-        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
-        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType20);
-        String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType20);
+        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType21);
+        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType21);
+        String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType21);
 
         subLedger=chainName2;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
@@ -169,9 +169,9 @@ public class TestMultiSubChain {
 
         sleepAndSaveInfo(SLEEPTIME);
 
-        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
-        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType20);
-        String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType20);
+        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType21);
+        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType21);
+        String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType21);
 
         subLedger=chainName2;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
@@ -246,9 +246,9 @@ public class TestMultiSubChain {
         assertEquals(resp.contains(chainName3), true);
         sleepAndSaveInfo(SLEEPTIME);
 
-        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
-        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType20);
-        String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType20);
+        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType21);
+        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType21);
+        String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType21);
 
         subLedger=chainName2;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));

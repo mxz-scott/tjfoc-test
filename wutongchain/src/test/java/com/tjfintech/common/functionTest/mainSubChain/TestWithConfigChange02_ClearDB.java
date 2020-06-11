@@ -52,9 +52,12 @@ public class TestWithConfigChange02_ClearDB {
         String resp = mgToolCmd.getSubChain(PEER1IP, PEER1RPCPort, "");
         assertEquals(true,resp.contains("{}"));
 
-        mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01,
+        String mgResp = mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01,
                 " -t sm3", " -w first", " -c raft", ids);
-        sleepAndSaveInfo(SLEEPTIME*2);
+//        sleepAndSaveInfo(SLEEPTIME*2);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(mgResp,utilsClass.mgGetTxHashType),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME*2);
+
         assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01.toLowerCase()+"\""), true);
 
         //动态删除节点B，因已有活跃子链使用 无法成功删除
@@ -64,7 +67,11 @@ public class TestWithConfigChange02_ClearDB {
         //冻结子链
         String respFreeze = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z " + glbChain01);
         assertEquals(respFreeze.contains("send transaction success"), true);
-        sleepAndSaveInfo(SLEEPTIME);
+//        sleepAndSaveInfo(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(respFreeze,utilsClass.mgGetTxHashType),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
         //检查子链状态正确
         respFreeze = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z " + glbChain01);
         assertEquals(respFreeze.contains(ledgerStateFreeze), true);
@@ -76,7 +83,11 @@ public class TestWithConfigChange02_ClearDB {
         //销毁子链 可以退出变更节点
         String respDestory = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z " + glbChain01);
         assertEquals(respDestory.contains("send transaction success"), true);
-        sleepAndSaveInfo(SLEEPTIME);
+//        sleepAndSaveInfo(SLEEPTIME);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(respDestory,utilsClass.mgGetTxHashType),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
         //检查子链状态正确
         respDestory = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z " + glbChain01);
         assertEquals(respDestory.contains(ledgerStateDestroy), true);
@@ -89,8 +100,10 @@ public class TestWithConfigChange02_ClearDB {
 
     public void dynamicPeerChk(String checkResp,long sleep,int peerNo,String dyIP,String dyRpcPort,String dyTcpPort)throws Exception{
         String respQuit = mgToolCmd.quitPeer(PEER1IP+":"+PEER1RPCPort,dyIP);
-        assertEquals(respQuit.contains(checkResp), true);
-        sleepAndSaveInfo(sleep,"operation waiting......");
+        if(!respQuit.contains("peer not found")) {
+            assertEquals(respQuit.contains(checkResp), true);
+            sleepAndSaveInfo(sleep, "operation waiting......");
+        }
         testMgTool.queryPeerListNo(PEER1IP+":"+PEER1RPCPort,peerNo);
         String respChange = mgToolCmd.addPeer("observer",PEER1IP + ":" + PEER1RPCPort,
                 "/" + ipv4 + "/" + dyIP,"/" + tcpProtocol + "/" + dyTcpPort,dyRpcPort);
@@ -138,10 +151,10 @@ public class TestWithConfigChange02_ClearDB {
                 " -t sm3", " -w first", " -c raft", " -m " + id2 + "," + id1);
         sleepAndSaveInfo(SLEEPTIME);
         String respGetAllledger = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
-        assertEquals(true,respGetAllledger.contains("\"name\": \""+chain1+"\""));
-        assertEquals(true,respGetAllledger.contains("\"name\": \""+chain2+"\""));
-        assertEquals(true,respGetAllledger.contains("\"name\": \""+chain3+"\""));
-        assertEquals(true,respGetAllledger.contains("\"name\": \""+chain4+"\""));
+        assertEquals(true,respGetAllledger.contains("\"name\": \"" + chain1.toLowerCase() + "\""));
+        assertEquals(true,respGetAllledger.contains("\"name\": \"" + chain2.toLowerCase() + "\""));
+        assertEquals(true,respGetAllledger.contains("\"name\": \"" + chain3.toLowerCase() + "\""));
+        assertEquals(true,respGetAllledger.contains("\"name\": \"" + chain4.toLowerCase() + "\""));
 
         //冻结子链
         String respDestory = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z " + chain1);

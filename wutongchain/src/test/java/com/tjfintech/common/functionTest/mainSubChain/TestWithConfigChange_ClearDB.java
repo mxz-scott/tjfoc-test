@@ -117,33 +117,33 @@ public class TestWithConfigChange_ClearDB {
 
         subLedger=chainName1;
         String response1=store.CreateStore(Data);
-        String txHash1= JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
+        String txHash1= commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType21);
 
         subLedger=chainName2;
         Data = "tc1538 tx2 test";
         String response2=store.CreateStore(Data);
-        String txHash2= JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
+        String txHash2= commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType21);
 
         subLedger=chainName3;
         Data = "tc1538 tx3 test";
         String response3=store.CreateStore(Data);
-        String txHash3= JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
+        String txHash3= commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType21);
 
 
         subLedger="";
         Data = "tc1538 tx4 test";
         String response4=store.CreateStore(Data);
-        String txHash4= JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
+        String txHash4= commonFunc.getTxHash(response4,utilsClass.sdkGetTxHashType21);
 
         sleepAndSaveInfo(SLEEPTIME*2);
         subLedger=chainName1;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));  //确认可以c查询成功
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));  //确认可以c查询成功
         subLedger=chainName2;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));  //确认可以c查询成功
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));  //确认可以c查询成功
         subLedger=chainName3;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("State"));  //确认可以c查询成功
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));  //确认可以c查询成功
         subLedger="";
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash4)).getString("State"));  //确认不可以c查询成功
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash4)).getString("state"));  //确认不可以c查询成功
     }
 
 
@@ -188,19 +188,19 @@ public class TestWithConfigChange_ClearDB {
 
         subLedger=chainName1;
         String response1=store.CreateStore(Data);
-        String txHash1= JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
+        String txHash1= commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType21);
 
 
         subLedger="";
         Data = "tc1538 tx4 test";
         String response4=store.CreateStore(Data);
-        String txHash4= JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
+        String txHash4= commonFunc.getTxHash(response4,utilsClass.sdkGetTxHashType21);
 
         sleepAndSaveInfo(SLEEPTIME*2);
         subLedger=chainName1;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));  //确认可以c查询成功
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));  //确认可以c查询成功
         subLedger="";
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash4)).getString("State"));  //确认不可以c查询成功
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash4)).getString("state"));  //确认不可以c查询成功
 
         //销毁子链 以便恢复集群（退出动态加入的节点）
         mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
@@ -309,11 +309,12 @@ public class TestWithConfigChange_ClearDB {
 
         subLedger=chainName;
         String response1 = store.CreateStore("tc1523 data");
-        assertEquals("200",JSONObject.fromObject(response1).getString("State"));  //确认可以发送成功
+        assertEquals("200",JSONObject.fromObject(response1).getString("state"));  //确认可以发送成功
 
         sleepAndSaveInfo(SLEEPTIME*2);
-        String txHash1 =JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));  //确认可以c查询成功
+        
+        String txHash1 =commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType21);;
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));  //确认可以c查询成功
 
         //停止节点id2
         Shell shell=new Shell(PEER2IP,USERNAME,PASSWD);
@@ -324,10 +325,10 @@ public class TestWithConfigChange_ClearDB {
 
         sleepAndSaveInfo(SLEEPTIME);
         String response2 = store.CreateStore("tc1523 data2");
-        assertEquals("200",JSONObject.fromObject(response2).getString("State"));  //确认可以发送成功
+        assertEquals("200",JSONObject.fromObject(response2).getString("state"));  //确认可以发送成功
         sleepAndSaveInfo(SLEEPTIME);
-        String txHash2 =JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
-        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));  //确认不可以c查询成功
+        String txHash2 =commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType21);
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));  //确认不可以c查询成功
 
         shell.execute(startPeerCmd);
     }

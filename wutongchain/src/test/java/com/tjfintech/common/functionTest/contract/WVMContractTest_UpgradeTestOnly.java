@@ -124,7 +124,7 @@ public class WVMContractTest_UpgradeTestOnly {
     public void chkTxDetailRsp(String retCode,String...hashList){
         for(String hash : hashList) {
             log.info("Check Hash: " + hash);
-            assertEquals(retCode,JSONObject.fromObject(store.GetTxDetail(hash)).getString("State"));
+            assertEquals(retCode,JSONObject.fromObject(store.GetTxDetail(hash)).getString("state"));
         }
     }
 

@@ -189,7 +189,7 @@ public class TestMainSubChain_Create_02 {
         assertEquals(res.contains("has exist"), true);
 //        String txHash = res.substring(res.lastIndexOf(":")+1).trim();
 //        sleepAndSaveInfo(SLEEPTIME);
-//        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash)).getString("State"));
+//        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash)).getString("state"));
 
         String Data="1475 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
 

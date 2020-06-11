@@ -175,7 +175,9 @@ public class MgToolCmd implements ManageTool {
         String resp = shExeAndReturn(shellIP,cmd);
 
         if(resp.contains("transaction success")) {
-            sleepAndSaveInfo(SLEEPTIME*2);
+
+            chkLedgerExist(shellIP,rpcPort,chainNameParam.replaceAll("-z",""),SLEEPTIME*2);
+
             subLedger = chainNameParam.trim().split(" ")[1];
             log.info("**************  set permission 999 for " + subLedger);
             String resp1 = setPeerPerm(PEER1IP + ":" + PEER1RPCPort, utilsClass.getSDKID(),"999");
@@ -254,5 +256,30 @@ public class MgToolCmd implements ManageTool {
 
         log.info("检查高度一致 " + bOK + " 等待时间 " + internal);
         return  bOK;
+    }
+
+    public String chkLedgerExist(String shellIP,String rpcPort,String ledgerName,long sleeptime)throws Exception{
+        Date dtTest = new Date();
+        long nowTime = dtTest.getTime();
+        log.info("开始时间 " + nowTime);
+
+        Boolean bOK = false;
+        //查询子链是否存在
+        while((new Date()).getTime() - nowTime < sleeptime && bOK == false){
+            //管理工具查询子链是否存在
+            log.info("开始时间 " + (new Date()).getTime());
+            String cmd = "cd " + ToolPATH + ";./" + ToolTPName + " getledger -p "+ rpcPort +
+                    " -z " + ledgerName.toLowerCase().trim();
+
+            if(shExeAndReturn(shellIP,cmd).contains(ledgerName.toLowerCase().trim())) bOK = true;
+
+            sleepAndSaveInfo(1000,"等待再次查询子链是否存在");
+        }
+        log.info("============================= 管理工具查询子链存在 " + bOK + " 等待时间 " +
+                ledgerName + " " + ((new Date()).getTime() - nowTime));
+
+        sleepAndSaveInfo(3000,"============================= 等待SDK同步数据");
+
+        return "";
     }
 }

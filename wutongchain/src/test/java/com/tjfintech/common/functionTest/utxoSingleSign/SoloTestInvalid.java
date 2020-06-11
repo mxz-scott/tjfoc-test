@@ -207,11 +207,11 @@ public class SoloTestInvalid {
     public void issueTokenIgnoreCase()throws Exception{
         String issueResp = soloSign.issueToken(PRIKEY1,tokenType.toLowerCase(),
                 "100","发行已有tokentype字符全部小写的token","");
-        assertEquals("200",JSONObject.fromObject(issueResp).getString("State"));
+        assertEquals("200",JSONObject.fromObject(issueResp).getString("state"));
 
         String issueResp2 = soloSign.issueToken(PRIKEY1,tokenType.toUpperCase(),
                 "100","发行已有tokentype字符全部大写的token","");
-        assertEquals("200",JSONObject.fromObject(issueResp2).getString("State"));
+        assertEquals("200",JSONObject.fromObject(issueResp2).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
@@ -242,13 +242,13 @@ public class SoloTestInvalid {
         log.info("转账检查大小写敏感");
         List<Map> list = soloSign.constructToken(ADDRESS3,tokenType.toLowerCase(),"10");
         String transferInfo = soloSign.Transfer(list,PRIKEY1,"转账全小写tokentype");
-        assertEquals("400",JSONObject.fromObject(transferInfo).getString("State"));
+        assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo).getString("Data"));
 
         //检查小写tokentype转账
         list = soloSign.constructToken(ADDRESS3,tokenType.toUpperCase(),"10");
         transferInfo = soloSign.Transfer(list,PRIKEY1,"转账全小写tokentype");
-        assertEquals("400",JSONObject.fromObject(transferInfo).getString("State"));
+        assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
         assertEquals("Insufficient Balance",JSONObject.fromObject(transferInfo).getString("Data"));
     }
 
@@ -259,11 +259,11 @@ public class SoloTestInvalid {
         log.info("回收检查大小写敏感");
 
         String desResp = multiSign.Recycle("",PRIKEY1,tokenType.toLowerCase(),"10");
-        assertEquals("400",JSONObject.fromObject(desResp).getString("State"));
+        assertEquals("400",JSONObject.fromObject(desResp).getString("state"));
         assertEquals("Insufficient Balance",JSONObject.fromObject(desResp).getString("Data"));
 
         desResp = multiSign.Recycle("",PRIKEY1,tokenType.toUpperCase(),"10");
-        assertEquals("400",JSONObject.fromObject(desResp).getString("State"));
+        assertEquals("400",JSONObject.fromObject(desResp).getString("state"));
         assertEquals("Insufficient Balance",JSONObject.fromObject(desResp).getString("Data"));
     }
 }
