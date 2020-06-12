@@ -498,7 +498,7 @@ public class TestMgTool {
 
         //确认管理工具获取的高度与sdk获取高度一致，需要注意sdk是否有权限执行获取高度
         rsp = store.GetHeight();
-        assertEquals(JSONObject.fromObject(rsp).getString("Data"), mgToolCmd.queryBlockHeight((peer1IPPort)));
+        assertEquals(JSONObject.fromObject(rsp).getString("data"), mgToolCmd.queryBlockHeight((peer1IPPort)));
 
         //发送单笔交易
         rsp=mgToolCmd.sendNewTx(peer1IPPort,"","");
@@ -563,7 +563,7 @@ public class TestMgTool {
         for(int i=0;i<txHashList.size();i++){
             log.info(txHashList.get(i));
             String rsp1= store.GetTxDetail(txHashList.get(i));
-            assertEquals(JSONObject.fromObject(rsp1).getString("State"),"200");
+            assertEquals(JSONObject.fromObject(rsp1).getString("state"),"200");
         }
 
     }

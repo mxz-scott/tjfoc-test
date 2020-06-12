@@ -25,6 +25,8 @@ import org.junit.runners.Suite;
         SetSubLedgerSleepTime.class,
         BeforeCondition.class,
 
+        TestTxType.class,
+
         StoreTest.class,
         PrivateStoreTest.class,
         PrivateStoreTestFastGet.class,
@@ -45,7 +47,7 @@ import org.junit.runners.Suite;
         WVMContractInvalidTest.class,
 
         VerifyTests.class,
-        TestTxType.class,
+
 })
 
 //Build Validation Test

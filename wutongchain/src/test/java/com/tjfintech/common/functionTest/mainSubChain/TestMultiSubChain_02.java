@@ -39,7 +39,7 @@ public class TestMultiSubChain_02 {
 
     String glbChain01= "glbCh1";
     String glbChain02= "glbCh2";
-    String noPerm="not found";
+    String noPerm="no permission";
 
     @BeforeClass
     public static void clearData()throws Exception{

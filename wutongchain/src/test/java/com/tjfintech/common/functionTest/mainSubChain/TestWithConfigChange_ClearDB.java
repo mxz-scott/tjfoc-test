@@ -243,7 +243,7 @@ public class TestWithConfigChange_ClearDB {
         assertEquals(true,resp2.contains("join failed:some ledger is using this peer"));
 
         String meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);
-        assertEquals("0",testMgTool.parseMemInfo(meminfo,PEER2IP,"typ"));
+        assertEquals("",testMgTool.parseMemInfo(meminfo,PEER2IP,"typ"));
         assertEquals(PEER2RPCPort,testMgTool.parseMemInfo(meminfo,PEER2IP,"port"));
         assertEquals("/" + ipv4 + "/" + PEER2IP + "/" + tcpProtocol + "/" + PEER2TCPPort,testMgTool.parseMemInfo(meminfo,PEER2IP,"inAddr"));
 

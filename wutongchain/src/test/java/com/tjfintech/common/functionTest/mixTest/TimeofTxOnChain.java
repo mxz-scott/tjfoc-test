@@ -40,7 +40,7 @@ public class TimeofTxOnChain {
         long nowTime = new Date().getTime();
         JSONObject jsonObject=JSONObject.fromObject(response);
 
-        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String storeHash = jsonObject.getJSONObject("data").get("figure").toString();
 
         GetTxDetail(nowTime,storeHash);
         nowTime = new Date().getTime();
@@ -56,11 +56,11 @@ public class TimeofTxOnChain {
 //        log.info("*****************************"+tokenType2);
         String response = multiSign.issueToken(IMPPUTIONADD, tokenType1, "1000", "issue");
         assertThat(response, containsString("200"));
-        String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
+        String Tx1 = JSONObject.fromObject(response).getJSONObject("data").getString("tx");
 
         String response3 = multiSign.issueToken(IMPPUTIONADD, tokenType2, "5000", "issue");
         assertThat(response3, containsString("200"));
-        String Tx2 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Tx");
+        String Tx2 = JSONObject.fromObject(response3).getJSONObject("data").getString("tx");
         String response2 = multiSign.Sign(Tx1, PRIKEY5);
         assertThat(response2, containsString("200"));
         String response4 = multiSign.Sign(Tx2, PRIKEY5);
@@ -68,7 +68,7 @@ public class TimeofTxOnChain {
 
         long nowTime = new Date().getTime();
         JSONObject jsonObject1=JSONObject.fromObject(response4);
-        String storeHash2 = jsonObject1.getJSONObject("Data").get("TxId").toString();
+        String storeHash2 = jsonObject1.getJSONObject("data").get("txId").toString();
 
         GetTxDetail(nowTime,storeHash2);
         nowTime = new Date().getTime();
@@ -121,15 +121,15 @@ public class TimeofTxOnChain {
     public void checkBlockHash()throws Exception{
         BeforeCondition bf =new BeforeCondition();
         bf.setPermission999();
-        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
-        String preBlockHash=JSONObject.fromObject(store.GetBlockByHeight(blockHeight)).getJSONObject("Data").getJSONObject("header").getString("previousHash");
+        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
+        String preBlockHash=JSONObject.fromObject(store.GetBlockByHeight(blockHeight)).getJSONObject("data").getJSONObject("header").getString("previousHash");
         String currentBlockHash="";
         for(int i= blockHeight-1;i>0;i--){
 
             log.info("Block height: " + i);
-            currentBlockHash  = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONObject("header").getString("blockHash");
+            currentBlockHash  = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("data").getJSONObject("header").getString("blockHash");
             assertEquals(currentBlockHash,preBlockHash);
-            preBlockHash=JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONObject("header").getString("previousHash");
+            preBlockHash=JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("data").getJSONObject("header").getString("previousHash");
 
         }
     }

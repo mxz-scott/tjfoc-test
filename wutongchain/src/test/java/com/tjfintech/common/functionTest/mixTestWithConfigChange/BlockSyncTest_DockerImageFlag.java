@@ -282,8 +282,8 @@ public class BlockSyncTest_DockerImageFlag {
     public void TC983_OnePeerNoContract()throws Exception{
         WVMContractTest wvmContractTest = new WVMContractTest();
         String respInstall = wvmContractTest.intallUpdateName("testWVM",PRIKEY1);
-        wvmHash = JSONObject.fromObject(respInstall).getJSONObject("Data").getString("Name");
-        String tempHash = JSONObject.fromObject(respInstall).getJSONObject("Data").getString("Figure");
+        wvmHash = JSONObject.fromObject(respInstall).getJSONObject("data").getString("name");
+        String tempHash = JSONObject.fromObject(respInstall).getJSONObject("data").getString("figure");
 
         commonFunc.sdkCheckTxOrSleep(tempHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
         //SDK配置文件中仅配置PEER1节点
@@ -320,7 +320,7 @@ public class BlockSyncTest_DockerImageFlag {
         assertEquals(getPeerHeight(PEER4IP,PEER4RPCPort),getPeerHeight(PEER2IP,PEER2RPCPort));
 
         for(String hash : hashList){
-            assertEquals("200",JSONObject.fromObject(store.GetTxDetail(hash)).getString("State"));
+            assertEquals("200",JSONObject.fromObject(store.GetTxDetail(hash)).getString("state"));
         }
 
     }
@@ -361,8 +361,8 @@ public class BlockSyncTest_DockerImageFlag {
         log.info(data);
         String response7 = multiSign.issueToken(IMPPUTIONADD, tokenTypeM, amount, data);
         log.info("99999  "+IMPPUTIONADD);
-        assertEquals("200", JSONObject.fromObject(response7).getString("State"));
-        String Tx1 = JSONObject.fromObject(response7).getJSONObject("Data").getString("Tx");
+        assertEquals("200", JSONObject.fromObject(response7).getString("state"));
+        String Tx1 = JSONObject.fromObject(response7).getJSONObject("data").getString("tx");
         log.info("第一次签名");
         String response8 = multiSign.Sign(Tx1, PRIKEY5);
 
@@ -376,31 +376,31 @@ public class BlockSyncTest_DockerImageFlag {
         assertThat(response8, containsString("200"));
 
         JSONObject jsonObject=JSONObject.fromObject(response1);
-        String StoreHash1 = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String StoreHash1 = jsonObject.getJSONObject("data").get("figure").toString();
         jsonObject=JSONObject.fromObject(response2);
-        String StoreHash2 = jsonObject.getString("Data").toString();
+        String StoreHash2 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response3);
-        String StoreHash3 = jsonObject.getString("Data").toString();
+        String StoreHash3 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response4);
-        String StoreHash4 = jsonObject.getString("Data").toString();
+        String StoreHash4 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response5);
-        String StoreHash5 = jsonObject.getString("Data").toString();
+        String StoreHash5 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response6);
-        String StoreHash6 = jsonObject.getString("Data").toString();
+        String StoreHash6 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response8);
-        String StoreHash8 = jsonObject.getJSONObject("Data").get("TxId").toString();
+        String StoreHash8 = jsonObject.getJSONObject("data").get("txId").toString();
 
 
         //等待一个打包周期
         sleepAndSaveInfo(OnChainSleep);
 
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash1)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash2)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash3)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash4)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash5)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash6)).getString("State"));
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash8)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash1)).getString("state"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash2)).getString("state"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash3)).getString("state"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash4)).getString("state"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash5)).getString("state"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash6)).getString("state"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(StoreHash8)).getString("state"));
 
     }
 
@@ -438,8 +438,8 @@ public class BlockSyncTest_DockerImageFlag {
         String data = IMPPUTIONADD + "发行" + tokenTypeM + " token，数量为：" + amount;
         log.info(data);
         String response7 = multiSign.issueToken(IMPPUTIONADD, tokenTypeM, amount, data);
-        assertEquals("200", JSONObject.fromObject(response7).getString("State"));
-        String Tx1 = JSONObject.fromObject(response7).getJSONObject("Data").getString("Tx");
+        assertEquals("200", JSONObject.fromObject(response7).getString("state"));
+        String Tx1 = JSONObject.fromObject(response7).getJSONObject("data").getString("tx");
         log.info("第一次签名");
         String response8 = multiSign.Sign(Tx1, PRIKEY5);
 
@@ -453,19 +453,19 @@ public class BlockSyncTest_DockerImageFlag {
         assertThat(response8, containsString("200"));
 
         JSONObject jsonObject=JSONObject.fromObject(response1);
-        String StoreHash1 = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String StoreHash1 = jsonObject.getJSONObject("data").get("figure").toString();
         jsonObject=JSONObject.fromObject(response2);
-        String StoreHash2 = jsonObject.getString("Data").toString();
+        String StoreHash2 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response3);
-        String StoreHash3 = jsonObject.getString("Data").toString();
+        String StoreHash3 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response4);
-        String StoreHash4 = jsonObject.getString("Data").toString();
+        String StoreHash4 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response5);
-        String StoreHash5 = jsonObject.getString("Data").toString();
+        String StoreHash5 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response6);
-        String StoreHash6 = jsonObject.getString("Data").toString();
+        String StoreHash6 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response8);
-        String StoreHash8 = jsonObject.getJSONObject("Data").get("TxId").toString();
+        String StoreHash8 = jsonObject.getJSONObject("data").get("txId").toString();
         hashList.add(StoreHash1);
         hashList.add(StoreHash2);
         hashList.add(StoreHash6);
@@ -492,33 +492,33 @@ public class BlockSyncTest_DockerImageFlag {
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvm.wvmInstallTest( wvm.wvmFile +"_temp.txt",PRIKEY1);
         log.info("Install Pri:"+PRIKEY1);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
-        String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("figure");
+        String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
         sleepAndSaveInfo(SLEEPTIME);
         //调用合约内的交易  调用已存在的合约wHash中的交易
         String response2 = wvm.invokeNew(existHash,"initAccount",wvm.accountA,wvm.amountA);//初始化账户A 账户余额50
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
+        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("figure");
 
         String response3 = wvm.invokeNew(existHash,"initAccount",wvm.accountB,wvm.amountB);//初始化账户B 账户余额60
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
+        String txHash3 = JSONObject.fromObject(response3).getJSONObject("data").getString("figure");
 
         sleepAndSaveInfo(SLEEPTIME);
 
         String response4 = wvm.invokeNew(existHash,"transfer",wvm.accountA,wvm.accountB,wvm.transfer);//A向B转30
-        String txHash4 = JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
+        String txHash4 = JSONObject.fromObject(response4).getJSONObject("data").getString("figure");
 
         sleepAndSaveInfo(SLEEPTIME);
 
         //查询余额invoke接口
         String response5 = wvm.invokeNew(existHash,"getBalance",wvm.accountA);//获取账户A账户余额
-        String txHash5 = JSONObject.fromObject(response5).getJSONObject("Data").getString("Figure");
+        String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("figure");
 
         sleepAndSaveInfo(SLEEPTIME/2);
 
         //销毁wvm合约
         String response9 = wvm.wvmDestroyTest(ctHash);
-        String txHash9 = JSONObject.fromObject(response9).getJSONObject("Data").getString("Figure");
+        String txHash9 = JSONObject.fromObject(response9).getJSONObject("data").getString("figure");
         sleepAndSaveInfo(SLEEPTIME);
 
         hashList.add(txHash1);

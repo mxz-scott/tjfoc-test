@@ -663,7 +663,7 @@ public class MultiTest_33_12 {
     }
 
 
-    @Test
+//    @Test
     public void TC992_TranferFromOneInput1() throws Exception{
         String tokenType = "CX-" + UtilsClass.Random(9);
         int amount = 222;
@@ -751,7 +751,7 @@ public class MultiTest_33_12 {
     }
 
     //第一笔转账交易签名后有上链等待时间
-    @Test
+//    @Test
     public void TC992_TranferFromOneInput2() throws Exception{
         String tokenType = "CX-" + UtilsClass.Random(9);
         int amount = 222;
@@ -844,7 +844,7 @@ public class MultiTest_33_12 {
 
 
     //3/3多签转账两个并发-总转账超出余额范围 //两笔同时转账签名之间有时间间隔-等待交易上链时间
-    @Test
+//    @Test
     public void TC991_TwoTranferFromDiffInput1() throws Exception{
         String tokenType = "CX-" + UtilsClass.Random(9);
         int amount = 222;
@@ -981,7 +981,7 @@ public class MultiTest_33_12 {
     }
 
     //两笔同时转账签名之间无时间间隔
-    @Test
+//    @Test
     public void TC991_TwoTranferFromDiffInput12() throws Exception{
         String tokenType = "CX-" + UtilsClass.Random(9);
         int amount = 222;
@@ -1118,7 +1118,7 @@ public class MultiTest_33_12 {
 
 
     //3/3多签转账两个并发（转出账户至少有两个input）-总转账在余额范围内 无sleep时间
-    @Test
+//    @Test
     public void TC991_TwoTranferFromDiffInput21() throws Exception{
         String tokenType = "CX-" + UtilsClass.Random(9);
         int amount = 222;

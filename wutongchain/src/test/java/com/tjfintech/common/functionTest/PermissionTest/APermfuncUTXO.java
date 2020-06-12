@@ -67,7 +67,7 @@ public class APermfuncUTXO {
             response = multiSign.issueToken(mulIssAddr, issueToken, issAmount, data);
 
         if(response.contains(okCode)) {
-            txMutli = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
+            txMutli = JSONObject.fromObject(response).getJSONObject("data").getString("tx");
         }
 
         return retAllow(response);
@@ -83,7 +83,7 @@ public class APermfuncUTXO {
         else
             response = multiSign.Sign(txMutli,priKey,passWd);
         if(response.contains("need more")) {
-            txMutli = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
+            txMutli = JSONObject.fromObject(response).getJSONObject("data").getString("tx");
         }
         return retAllow(response);
     }
@@ -107,7 +107,7 @@ public class APermfuncUTXO {
 
         //多签账户转账时需要进行多个签名，此时需要提取tx信息供下一个签名
         if(response.contains("need more")) {
-            txMutli = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
+            txMutli = JSONObject.fromObject(response).getJSONObject("data").getString("tx");
         }
         return retAllow(response);
     }
@@ -152,7 +152,7 @@ public class APermfuncUTXO {
             map.put(String.valueOf(i+1), str[i]);
         }
         String response =multiSign.genMultiAddress(M, map);
-        multiAddr = JSONObject.fromObject(response).getJSONObject("Data").getString("Address");
+        multiAddr = JSONObject.fromObject(response).getJSONObject("data").getString("address");
         //return multiAddr;
         return retAllow(response);
 
@@ -208,7 +208,7 @@ public class APermfuncUTXO {
     public String soloGenAddr(String pubKey)throws Exception  {
         log.info("生成单签地址");
         String response = soloSign.genAddress(pubKey);
-        //return JSONObject.fromObject(response).getJSONObject("Data").getString("Address");
+        //return JSONObject.fromObject(response).getJSONObject("data").getString("address");
         return retAllow(response);
     }
 

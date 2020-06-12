@@ -58,7 +58,7 @@ public class APermfuncSys {
         Thread.sleep(3000);
         if(response.contains("200")) {
             JSONObject jsonObject = JSONObject.fromObject(response);
-            txHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+            txHash = jsonObject.getJSONObject("data").get("figure").toString();
         }
         return retAllow(response);
     }
@@ -128,7 +128,7 @@ public class APermfuncSys {
         String response= store.GetBlockByHeight(Height);
 
         if( response.contains(okCode)) {
-            blockHash = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("header").get("blockHash").toString();
+            blockHash = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").get("blockHash").toString();
         }
         return retAllow(response);
     }
@@ -148,7 +148,7 @@ public class APermfuncSys {
         String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String storeHash = jsonObject.getJSONObject("data").get("figure").toString();
         Thread.sleep(3000);
         String response2= store.GetInlocal(storeHash);
         return retAllow(response2);

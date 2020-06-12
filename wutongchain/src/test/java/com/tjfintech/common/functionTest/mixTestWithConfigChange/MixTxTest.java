@@ -52,8 +52,8 @@ public class MixTxTest {
 
         WVMContractTest wvmContractTest = new WVMContractTest();
         String respInstall = wvmContractTest.intallUpdateName("testWVM",PRIKEY1);
-        tempWVMHash = JSONObject.fromObject(respInstall).getJSONObject("Data").getString("Name");
-        String tempHash = JSONObject.fromObject(respInstall).getJSONObject("Data").getString("Figure");
+        tempWVMHash = JSONObject.fromObject(respInstall).getJSONObject("data").getString("name");
+        String tempHash = JSONObject.fromObject(respInstall).getJSONObject("data").getString("figure");
         commonFunc.sdkCheckTxOrSleep(tempHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
     }
 
@@ -98,8 +98,8 @@ public class MixTxTest {
         String data = IMPPUTIONADD + "发行" + tokenTypeM + " token，数量为：" + amount;
         log.info(data);
         String response7 = multiSign.issueToken(IMPPUTIONADD, tokenTypeM, amount, data);
-        assertEquals("200",JSONObject.fromObject(response7).getString("State"));
-        String Tx1 = JSONObject.fromObject(response7).getJSONObject("Data").getString("Tx");
+        assertEquals("200",JSONObject.fromObject(response7).getString("state"));
+        String Tx1 = JSONObject.fromObject(response7).getJSONObject("data").getString("Tx");
         log.info("第一次签名");
         String response8 = multiSign.Sign(Tx1, PRIKEY5);
 
@@ -119,19 +119,19 @@ public class MixTxTest {
 
 
         JSONObject jsonObject=JSONObject.fromObject(response1);
-        String StoreHash1 = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String StoreHash1 = jsonObject.getJSONObject("data").get("figure").toString();
         jsonObject=JSONObject.fromObject(response2);
-        String StoreHash2 = jsonObject.getString("Data").toString();
+        String StoreHash2 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response3);
-        String StoreHash3 = jsonObject.getString("Data").toString();
+        String StoreHash3 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response4);
-        String StoreHash4 = jsonObject.getString("Data").toString();
+        String StoreHash4 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response5);
-        String StoreHash5 = jsonObject.getString("Data").toString();
+        String StoreHash5 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response6);
-        String StoreHash6 = jsonObject.getString("Data").toString();
+        String StoreHash6 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response8);
-        String StoreHash8 = jsonObject.getJSONObject("Data").get("TxId").toString();
+        String StoreHash8 = jsonObject.getJSONObject("data").get("txId").toString();
 
 
         //等待一个打包周期
@@ -157,8 +157,8 @@ public class MixTxTest {
 
         String resp1 = store.GetHeight();
 
-        int height =Integer.parseInt(JSONObject.fromObject(resp).getString("Data"));
-        int height1=Integer.parseInt(JSONObject.fromObject(resp1).getString("Data"));
+        int height =Integer.parseInt(JSONObject.fromObject(resp).getString("data"));
+        int height1=Integer.parseInt(JSONObject.fromObject(resp1).getString("data"));
 //        assertEquals(height,height1-1);
         boolean bright = height1 > height ? true: false;
         assertEquals(true,bright);
@@ -186,17 +186,17 @@ public class MixTxTest {
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmContractTest.wvmInstallTest(wvmContractTest.wvmFile +"_temp.txt",PRIKEY1);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
-        String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("figure");
+        String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
         //调用合约内的交易
         String response2 = wvmContractTest.invokeNew(tempWVMHash,"initAccount",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
+        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("figure");
 
 
         //销毁wvm合约
         String response9 = wvmContractTest.wvmDestroyTest(ctHash);
-        String txHash9 = JSONObject.fromObject(response9).getJSONObject("Data").getString("Figure");
+        String txHash9 = JSONObject.fromObject(response9).getJSONObject("data").getString("figure");
 
         txHashList.add(txHash1);
         txHashList.add(txHash9);
@@ -211,7 +211,7 @@ public class MixTxTest {
         UtilsClass utilsClassTemp = new UtilsClass();
         utilsClassTemp.setAndRestartPeerList(resetPeerBase);
         utilsClass.setAndRestartSDK(resetSDKConfig);
-        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("State"));
+        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("state"));
     }
 
 }

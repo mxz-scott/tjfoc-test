@@ -60,12 +60,12 @@ public class TestTLSCert {
         //发送存证交易
         String Data="ECDSA store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
         String response1=store.CreateStore(Data);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").get("Figure").toString();
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").get("figure").toString();
 
         String amount="305";
         String tokenTypeS = "ECDSASOLOTC-"+ UtilsClass.Random(6);
         String response2= soloSign.issueToken(PRIKEY1,tokenTypeS,amount,"发行token "+tokenTypeS,ADDRESS1);
-        String txHash2 = JSONObject.fromObject(response2).getString("Data");
+        String txHash2 = JSONObject.fromObject(response2).getString("data");
 
 
         Thread.sleep(SLEEPTIME);
@@ -73,8 +73,8 @@ public class TestTLSCert {
         assertThat(response, containsString("success"));
         assertThat(response,containsString("200"));
 
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("State"));//确认交易上链
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("State"));//确认交易上链
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));//确认交易上链
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));//确认交易上链
 
     }
 

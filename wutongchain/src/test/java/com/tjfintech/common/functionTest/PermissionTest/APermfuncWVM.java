@@ -58,8 +58,8 @@ public class APermfuncWVM {
         String data = utilsClass.encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码
         log.info("base64 data: " + data);
         String response=contract.InstallWVM(data,category,Prikey);
-        if(response.contains("Name:")) {
-            wvmhash = JSONObject.fromObject(response).getJSONObject("Data").getString("Name");
+        if(response.contains("name:")) {
+            wvmhash = JSONObject.fromObject(response).getJSONObject("data").getString("name");
         }
         return retAllow(response);
     }

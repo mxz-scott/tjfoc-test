@@ -124,7 +124,7 @@ public class TestPermission {
         String response1= store.CreatePrivateStore(Data,map);
         log.info(response1);
         JSONObject jsonObject=JSONObject.fromObject(response1);
-        glbPriTxHash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        glbPriTxHash = jsonObject.getJSONObject("data").get("Figure").toString();
 
 
         pFun1.getBlockByHeight(1); //SDK发送通过区块高度获取区块信息请求
@@ -162,9 +162,9 @@ public class TestPermission {
 
         Thread.sleep(SLEEPTIME);
 
-        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(soloSign.Balance(PRIKEY1,glbSoloToken)).getJSONObject("Data").getString("Total"));
-        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.Balance(MULITADD4,PRIKEY1,glbMultiToken4)).getJSONObject("Data").getString("Total"));
-        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.Balance(MULITADD3,PRIKEY1,glbMultiToken3)).getJSONObject("Data").getString("Total"));
+        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(soloSign.Balance(PRIKEY1,glbSoloToken)).getJSONObject("data").getString("Total"));
+        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.Balance(MULITADD4,PRIKEY1,glbMultiToken4)).getJSONObject("data").getString("Total"));
+        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.Balance(MULITADD3,PRIKEY1,glbMultiToken3)).getJSONObject("data").getString("Total"));
 
         //预先安装WVM合约
         String ctName="ok_" + sdf.format(dt) + RandomUtils.nextInt(100000);
@@ -172,7 +172,7 @@ public class TestPermission {
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response4 = wvmContractTest.wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1);
-        glbWVMHash = JSONObject.fromObject(response4).getJSONObject("Data").getString("Name");
+        glbWVMHash = JSONObject.fromObject(response4).getJSONObject("data").getString("name");
 
         bExe=true;
     }
