@@ -6,6 +6,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import static com.tjfintech.common.CommonFunc.*;
+import static com.tjfintech.common.utils.UtilsClass.globalSSHPort;
 
 public class Shell {
     //远程主机的ip地址
@@ -15,7 +17,7 @@ public class Shell {
     //远程主机的登录密码
     private String password;
     //设置ssh连接的远程端口
-    public static final int DEFAULT_SSH_PORT = 22;
+    public static int DEFAULT_SSH_PORT = 22;
     //保存输出内容的容器
     private ArrayList<String> stdout;
 
@@ -37,6 +39,8 @@ public class Shell {
      * @return
      */
     public int execute(final String command) {
+        int sshPort = DEFAULT_SSH_PORT;
+        if(!globalSSHPort.trim().isEmpty()) sshPort = Integer.parseInt(globalSSHPort);
         stdout.clear();
         int returnCode = 0;
         JSch jsch = new JSch();
@@ -44,7 +48,7 @@ public class Shell {
 
         try {
             //创建session并且打开连接，因为创建session之后要主动打开连接
-            Session session = jsch.getSession(username, ip, DEFAULT_SSH_PORT);
+            Session session = jsch.getSession(username, ip, sshPort);
 
             //add 20180121 jj
             java.util.Properties config = new java.util.Properties();

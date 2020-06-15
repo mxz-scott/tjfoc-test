@@ -23,6 +23,10 @@ public class SetDatabaseMysql {
 //       setPeerCluster();//设置节点集群默认全部共识节点 1/2/4
        utilsClass.setAndRestartPeerList(clearPeerDB,resetPeerBase);
 
+<<<<<<< HEAD
+=======
+       //20200615 合约交易不再测试
+>>>>>>> 37019ed... shell脚本支持变更远程ssh端口 脚本支持./wtsdk api启动
 //      SetAllPeersDockerImagesClear setAllPeersDockerImagesClear = new SetAllPeersDockerImagesClear();
 //      setAllPeersDockerImagesClear.clearAllPeersDockerImages();
 

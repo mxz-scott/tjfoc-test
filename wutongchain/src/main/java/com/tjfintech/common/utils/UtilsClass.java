@@ -95,6 +95,7 @@ public class UtilsClass {
     public static String certPath = "SM2"; // 设置签名证书类型，可选值SM2(默认值)，ECDSA，MIX1，MIX2，RSA
     public static String subLedger = ""; // 修改接口兼容主子链
     public static String globalResponse = "";
+    public static String globalSSHPort = "";
 
     public static String ipv4 = "ip4";
     public static String tcpProtocol = "tcp";
@@ -182,7 +183,7 @@ public class UtilsClass {
     public static String ccenvPull = "docker load < /root/dockerimages/ccenv_2.1.tar";//20191217出现网络慢pull需要很长时间 因此改回本地导入
 
     public static String startPeerCmd = "sh "+ destShellScriptDir +"startWithParam.sh \"" + tmuxSessionPeer + "\" " + PeerPATH + " " + PeerTPName;
-    public static String startSDKCmd = "sh "+ destShellScriptDir +"startWithParam.sh \""+ tmuxSessionSDK + "\" " + SDKPATH + " " + SDKTPName;
+    public static String startSDKCmd = "sh "+ destShellScriptDir +"startWithParam.sh \""+ tmuxSessionSDK + "\" " + SDKPATH + " " + SDKTPName + " api";
     public static String startTokenApiCmd = "sh "+ destShellScriptDir +"startWithParam.sh \""+ tmuxSessionTokenApi + "\" " + TokenApiPATH + " " + TokenTPName;
     public static String killPeerCmd = "pkill " + PeerTPName;
     public static String killSDKCmd = "pkill " + SDKTPName;
