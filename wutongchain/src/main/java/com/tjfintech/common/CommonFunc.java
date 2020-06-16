@@ -4,6 +4,7 @@ import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.Interface.Token;
+import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.MysqlOperation;
 import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.UtilsClass;
@@ -13,6 +14,7 @@ import net.sf.json.JSONObject;
 import org.hamcrest.CoreMatchers;
 import org.junit.BeforeClass;
 
+import java.io.File;
 import java.util.*;
 
 //import static com.java.tar.gz.FileUtil.log;
@@ -1187,4 +1189,44 @@ public class CommonFunc {
         shellExeCmd(peerIP,"docker images|grep " + keyWork + "|awk '{print $1}'|xargs docker rmi");
     }
 
+    public String hexToBase64String(String HexStr){
+        String hash = HexStr;
+        //目前现有梧桐链应用hex hash是60位 base64大概是44位 以长度作为判断 后续根据实际情况进行调整
+        if(HexStr.length() > 50){
+            byte[] decodeHex = Hex.decode(HexStr);
+            hash = (new BASE64Encoder()).encodeBuffer(decodeHex);
+        }
+        return hash;
+    }
+
+    public void compareHashMap(Map<String,String> before ,Map<String,String> after)throws Exception{
+        ArrayList<String> diffRespList = new ArrayList<>();
+
+        log.info("升级前检查数据长度： " + before.size() + "\n升级后检查数据长度： " +  after.size());
+
+        Iterator iter = before.keySet().iterator();
+        while (iter.hasNext()) {
+            Object key = iter.next();
+            if(!before.get(key).equals(after.get(key)))
+            {
+                diffRespList.add(key.toString());
+                diffRespList.add(before.get(key));
+                diffRespList.add(after.get(key));
+            }
+        }
+        Date dtTest = new Date();
+        long nowTime = dtTest.getTime();
+        String diffSaveFile = resourcePath + nowTime + "-diff.txt";
+        File diff = new File(diffSaveFile);
+        if(diff.exists()) diff.delete();//如果存在则先删除
+
+        if(diffRespList.size() > 0) {
+            for(int i = 0;i < diffRespList.size();i++){
+                //log.info(diffRespList.get(i));
+                FileOperation fileOperation = new FileOperation();
+                fileOperation.appendToFile(diffRespList.get(i),diffSaveFile);
+            }
+            assertEquals("data not same",false,true);
+        }
+    }
 }

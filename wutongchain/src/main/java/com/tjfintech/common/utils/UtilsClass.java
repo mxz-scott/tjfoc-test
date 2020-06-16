@@ -218,6 +218,11 @@ public class UtilsClass {
     public static String releaseMgTool = ToolTPName + release;
     public static String latestMgTool = ToolTPName + latest;
     public static Map<String,String> verMap = new HashMap<>();
+    public static Map<String,String> beforeUpgrade = new HashMap<>();
+    public static Map<String,String> afterUpgrade = new HashMap<>();
+    public static ArrayList<String> txHashList = new ArrayList<>();
+    public static String priStoreHash = "";
+    public static String contractHash = "";
 
     public static String provider = "mysql";
     public static String mongoDBAddr ="\"\\\"mongodb:\\/\\/10.1.3.246:27017\\/ww22\"\\\"";

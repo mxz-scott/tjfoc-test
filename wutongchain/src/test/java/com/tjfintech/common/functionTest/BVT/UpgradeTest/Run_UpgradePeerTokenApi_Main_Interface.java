@@ -4,7 +4,6 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.upgrade.UpgradeFinserviceTest;
 import com.tjfintech.common.functionTest.Conditions.*;
 import com.tjfintech.common.functionTest.Conditions.Upgrade.*;
-import com.tjfintech.common.functionTest.upgrade.UpgradeTestHistoryData_TokenApi;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -21,27 +20,36 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        SetDatabaseMysql.class,
-        SetTokenApiDatabaseMysql.class,
+        SetSDKStartNoApi.class,             //设置sdk启动不带 "api"命令
+        SetTokenApiAddrSolo.class,          //设置api为单独部署的token api地址
+        SetDatabaseMysql.class,             //清空节点及SDK数据库
+        SetTokenApiDatabaseMysql.class,     //清空Token Api数据库
         SetCertSM2.class,
-        SetMainLedger.class,
+        SetMainLedger.class,                //设置主链测试
 
-        SetTestVersionRelease.class,
-        BeforeCondition.class,
+        SetTestVersionRelease.class,        //设置版本为升级前版本
+        BeforeCondition.class,              //执行预设条件 赋权限 创建UTXO地址 添加地址等
 
-        UpgradeFinserviceTest.class,
+        UpgradeFinserviceTest.class,        //Api简单回归测试
 
+        GetReleaseVersionDataApi.class,     //获取升级前版本数据
 
-        SetPeerUpgradeTrue.class,
-        SetContractSysUpgradeTrue.class,
-        SetSDKUpgradeTrue.class,
-        SetTokenApiUpgradeTrue.class,
+        SetPeerUpgradeTrue.class,           //升级节点 Flag设置为true，即会升级
+        SetContractSysUpgradeTrue.class,    //升级系统合约 Flag设置为true，即会升级
+        SetSDKUpgradeTrue.class,            //升级SDK Flag设置为true，即会升级
+        SetTokenApiUpgradeTrue.class,       //升级Api Flag设置为true，即会升级
 
         SetURLToSDKAddr.class,
-        UpgradeTestHistoryData_TokenApi.class,
 
-        //升级后简单回归测试
-        UpgradeFinserviceTest.class,
+        SetSDKStartWithApi.class,
+        SetTokenApiAddrSDK.class,           //设置升级后Api地址和SDK地址一致 升级后的合并版本 非合并版本则不需要设置
+        SetTestVersionLatest.class,         //升级版本为升级后的指定版本
+
+        GetLatestVersionDataApi.class,      //获取升级后版本数据
+
+        CompareReleaseLatestData.class,     //比较升级前后数据是否存在差异
+
+        UpgradeFinserviceTest.class,//升级后简单回归测试
 })
 
 //Build Validation Test

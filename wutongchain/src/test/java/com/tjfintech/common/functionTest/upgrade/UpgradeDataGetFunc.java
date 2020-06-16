@@ -2,12 +2,8 @@ package com.tjfintech.common.functionTest.upgrade;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.CommonFunc;
-import com.tjfintech.common.Interface.Contract;
-import com.tjfintech.common.Interface.MultiSign;
-import com.tjfintech.common.Interface.SoloSign;
-import com.tjfintech.common.Interface.Store;
+import com.tjfintech.common.Interface.*;
 import com.tjfintech.common.TestBuilder;
-import com.tjfintech.common.functionTest.Conditions.Upgrade.SetSDKStartNoApi;
 import com.tjfintech.common.functionTest.Conditions.Upgrade.SetSDKStartWithApi;
 import com.tjfintech.common.functionTest.Conditions.Upgrade.SetTestVersionLatest;
 import com.tjfintech.common.functionTest.Conditions.Upgrade.SetTokenApiAddrSDK;
@@ -16,21 +12,22 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class UpgradeTestHistoryData {
+public class UpgradeDataGetFunc {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
@@ -40,9 +37,10 @@ public class UpgradeTestHistoryData {
     ArrayList<String> txHashList = new ArrayList<>();
     Map<String, String> txTypeSubType = new HashMap<>();
     CommonFunc commonFunc = new CommonFunc();
+    Token tokenModule = testBuilder.getToken();
     String storeHash = "";
-    String priStoreHash = "";
-    String contractHash = "";
+//    String priStoreHash = "";
+//    String contractHash = "";
 
 
     @Before
@@ -55,78 +53,8 @@ public class UpgradeTestHistoryData {
             beforeCondition.collAddressTest();
         }
     }
-
-    //@Test
-    public void CheckAllBlockHash()throws Exception{
-        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
-        String preBlockHash=JSONObject.fromObject(store.GetBlockByHeight(blockHeight)).getJSONObject("Data").getJSONObject("header").getString("previousHash");
-        String currentBlockHash="";
-        for(int i= blockHeight-1;i>0;i--){
-
-            log.info("Block height: " + i);
-            currentBlockHash  = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONObject("header").getString("blockHash");
-            assertEquals(currentBlockHash,preBlockHash);
-            preBlockHash=JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONObject("header").getString("previousHash");
-
-        }
-    }
-
-    @Test
-    public void CheckUpgradeInteraceResp()throws Exception{
-//        以下三行单独执行时根据需要自行修改
-//        SetTestVersionLatest setTestVersionLatest = new SetTestVersionLatest();
-//        setTestVersionLatest.test();
-//        subLedger="";//切换回主链测试
-        //升级前执行回归测试
-
-        txHashList = getAllTxHashData();
-        log.info("hash no:" + txHashList.size());
-        Map<String,String> beforeUpgrade = SaveResponseToHashMap(txHashList);
-
-        //更新版本文件 远程调用
-        //设置3.0.1 浦发启动sdk时启动api模块
-        SetSDKStartWithApi setSDKStartWithApi = new SetSDKStartWithApi();
-        setSDKStartWithApi.set();
-
-        SetTokenApiAddrSDK setTokenApiAddrSDK = new SetTokenApiAddrSDK();
-        setTokenApiAddrSDK.set();
-
-        SetTestVersionLatest setTestVersionLatest = new SetTestVersionLatest();
-        setTestVersionLatest.test();//更新版本为最新版本
-
-        if (!subLedger.isEmpty()) sleepAndSaveInfo(SLEEPTIME,"Latest version start waiting...");
-        Map<String,String> afterUpgrade = SaveResponseToHashMap(txHashList);
-
-        //比对升级前后hashresp Map内容是否完全一致
-
-        ArrayList<String> diffRespList = new ArrayList<>();
-
-        Iterator iter = beforeUpgrade.keySet().iterator();
-        while (iter.hasNext()) {
-            Object key = iter.next();
-            if(!beforeUpgrade.get(key).equals(afterUpgrade.get(key)))
-            {
-                diffRespList.add(key.toString());
-                diffRespList.add(beforeUpgrade.get(key));
-                diffRespList.add(afterUpgrade.get(key));
-            }
-        }
-        String diffSaveFile = resourcePath + "diff.txt";
-        File diff = new File(diffSaveFile);
-        if(diff.exists()) diff.delete();//如果存在则先删除
-
-        if(diffRespList.size() > 0) {
-            for(int i = 0;i < diffRespList.size();i++){
-                //log.info(diffRespList.get(i));
-                FileOperation fileOperation = new FileOperation();
-                fileOperation.appendToFile(diffRespList.get(i),diffSaveFile);
-            }
-            assertEquals("data not same",false,true);
-        }
-
-    }
-
-    public Map<String,String> SaveResponseToHashMap(ArrayList<String> txList) throws Exception{
+    public Map<String,String> SaveResponseToHashMap_SDK(ArrayList<String> txList) throws Exception{
+        SDKADD = rSDKADD;
         Map<String,String> mapTXHashResp = new HashMap<>();
         mapTXHashResp.clear();
         txTypeSubType.clear();
@@ -161,7 +89,7 @@ public class UpgradeTestHistoryData {
         mapTXHashResp.put("getblockbyhash?hashData=****",store.GetBlockByHash(blockHash));
 
         mapTXHashResp.put("gettransactionindex?hashData=****",store.GetTransactionIndex(txHashList.get(1)));
-//        mapTXHashResp.put("gettransactionblock?hashData=****",store.GetTransactionBlock(txHashList.get(1)));
+        mapTXHashResp.put("gettransactionblock?hashData=****",store.GetTransactionBlock(txHashList.get(1)));
         mapTXHashResp.put("getpeerlist",store.GetPeerList()); //可能会出现节点顺序不一致的情况 无法直接存储比较
 
         mapTXHashResp.put("getledger",store.GetLedger(""));//存在版本号不相同的情况 无法直接存储比较
@@ -178,23 +106,12 @@ public class UpgradeTestHistoryData {
             mapTXHashResp.put("get zero account balance", multiSign.QueryZero(""));
             mapTXHashResp.put("get all utxo account balance info", commonFunc.getUTXOAccountBalance().toString());
         }
-
-
-        //20200313 移除docker合约测试
-//        //获取合约交易search/byprefix  search/bykey
-//        String resp = store.GetTxDetail(contractHash);
-//        log.info("contract hash:" + contractHash);
-//        String msg =  JSONObject.fromObject(resp).getJSONObject("Data").getJSONObject("Contract").getString("Message");
-//        String contractName = msg.substring(msg.indexOf('[') + 1,msg.lastIndexOf('_'));
-//        mapTXHashResp.put("search/byprefix?prefix=Mobile&cn=" + contractName,contract.SearchByPrefix("Mobile",contractName));
-//        mapTXHashResp.put("search/bykey?key=Mobile001&cn=" + contractName,contract.SearchByKey("Mobile001",contractName));
-
         return mapTXHashResp;
-
     }
 
 
     public ArrayList<String> getAllTxHashData()throws Exception{
+        SDKADD = rSDKADD;
         ArrayList<String> txHashList = new ArrayList<>();
         if (!subLedger.isEmpty()) sleepAndSaveInfo(SLEEPTIME,"start waiting...");
         int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
@@ -206,4 +123,43 @@ public class UpgradeTestHistoryData {
         }
         return txHashList;
     }
+
+
+    public Map<String,String> SaveResponseToHashMap_Api(ArrayList<String> txList) throws Exception{
+        Map<String,String> mapTXHashResp = new HashMap<>();
+        mapTXHashResp.clear();
+        txTypeSubType.clear();
+
+        SDKADD = TOKENADD;//使用token api自带gettxdetail获取交易详情
+        //存储所有的交易hash查询结果
+        for(int k = 0; k < txList.size(); k++){
+            String response = tokenModule.tokenGetTxDetail(txList.get(k));
+            mapTXHashResp.put(txList.get(k),response);//将所有交易hash及根据交易hash查询的txdetail存储
+
+            log.info("tx detail ");
+            JSONObject jsonObject = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("Header");
+
+            String txType = jsonObject.getString("Type");
+            String txSubType = jsonObject.getString("SubType");
+
+            //仅取首个交易类型hash
+            if(storeHash.isEmpty() || priStoreHash.isEmpty()) {
+                //分别获取指定交易类型的交易hash 作为特定交易查看接口参数
+                if (storeHash.isEmpty() && txType.equals("0") && txSubType.equals("0"))             storeHash = txList.get(k);
+                else if (priStoreHash.isEmpty() && txType.equals("0") && txSubType.equals("1"))     priStoreHash = txList.get(k);
+            }
+        }
+
+        mapTXHashResp.put("getstore",tokenModule.tokenGetPrivateStore(storeHash,""));
+        mapTXHashResp.put("get pri store",tokenModule.tokenGetPrivateStore(priStoreHash,tokenAccount1));
+
+        //UTXO交易
+        mapTXHashResp.put("get multi utxo balance",tokenModule.tokenGetBalance(tokenAccount1,""));
+        mapTXHashResp.put("get zero account balance",tokenModule.tokenGetDestroyBalance());
+
+        return mapTXHashResp;
+
+    }
+
+
 }

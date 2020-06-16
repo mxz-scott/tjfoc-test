@@ -2,9 +2,7 @@ package com.tjfintech.common.functionTest.BVT.UpgradeTest;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.*;
-import com.tjfintech.common.functionTest.Conditions.Upgrade.SetPeerUpgradeTrue;
-import com.tjfintech.common.functionTest.Conditions.Upgrade.SetSDKUpgradeFalse;
-import com.tjfintech.common.functionTest.Conditions.Upgrade.SetTestVersionRelease;
+import com.tjfintech.common.functionTest.Conditions.Upgrade.*;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest_UpgradeTestOnly;
 import com.tjfintech.common.functionTest.mainSubChain.TestMainSubChain_UpgradeTestOnly;
@@ -30,13 +28,14 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        SetDatabaseMysql.class,
+        SetSDKStartNoApi.class,             //设置SDK启动不带Api
+        SetTokenApiAddrSolo.class,          //设置TokenApi为单独部署地址
+        SetDatabaseMysql.class,             //清空节点、SDK数据库信息
         SetCertSM2.class,
-        SetMainLedger.class,
+        SetMainLedger.class,                //设置主链测试
 
-        SetTestVersionRelease.class,
-
-        BeforeCondition.class,
+        SetTestVersionRelease.class,        //将版本设置为升级前版本进行后续测试
+        BeforeCondition.class,              //执行预设条件 赋权限 创建UTXO地址 添加地址等
 
         StoreTest_UpgradeTestOnly.class,
         MultiTest.class,
@@ -49,11 +48,24 @@ import org.junit.runners.Suite;
 
         //升级比对 设置主链 设置升级节点和sdk
         SetMainLedger.class,
-        SetPeerUpgradeTrue.class,
-        SetSDKUpgradeFalse.class,
+        SetPeerUpgradeTrue.class,           //升级节点 Flag设置为true，即会升级
+        SetContractSysUpgradeTrue.class,    //升级系统合约 Flag设置为true，即会升级
+        SetSDKUpgradeFalse.class,            //升级SDK Flag设置为false，即不会升级
+        SetTokenApiUpgradeFalse.class,      //升级Api Flag设置为false，即不会升级
 
-        UpgradeTestHistoryData.class,
+        GetReleaseVersionDataSDK.class,     //获取升级前版本数据
 
+        SetTokenApiAddrSDK.class,           //设置升级后Api地址和SDK地址一致
+        SetTestVersionLatest.class,         //升级版本为升级后的指定版本
+
+        GetLatestVersionDataSDK.class,      //获取升级后版本数据
+
+        CompareReleaseLatestData.class,     //比较升级前后数据是否存在差异
+
+//        UpgradeTestHistoryData.class,
+
+        SetSDKPerm999.class,                //2.1向3.0升级后需要给SDK重新赋权限
+        SetMgToolPerm999.class,             //2.1向3.0升级后需要给超级管理员或者管理系统重新赋权限
         //升级后简单回归测试
         StoreTest_UpgradeTestOnly.class,
         MultiTest.class,
