@@ -449,12 +449,7 @@ public class WVMContractTest {
 
     @Test
     public void TC1780_1781_1782_DiffPriSameCt() throws Exception{
-        //第一个身份的SDK、
         String sdkIP = utilsClass.getIPFromStr(SDKADD);
-        String ctName = "E_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
-        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","getBalance");
-
-
         //替换SDK证书及auth目录下私钥 重启并给SDK赋权限
         shellExeCmd(sdkIP,killSDKCmd);  //停止sdk进程
 
@@ -467,6 +462,25 @@ public class WVMContractTest {
         //启动sdk 并赋权限
         shellExeCmd(sdkIP,startSDKCmd);
         SetSDKPerm999 setSDKPerm999 = new SetSDKPerm999();
+        setSDKPerm999.test();
+
+        //第一个身份的SDK
+
+        String ctName = "E_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
+        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","getBalance");
+
+
+        //恢复SDK证书及auth目录下私钥 重启并给SDK赋权限
+        shellExeCmd(sdkIP,killSDKCmd);  //停止sdk进程
+
+        //修改SDK配置文件 第二个身份的SDK
+        setSDKConfigByShell(sdkIP,"Rpc","TLSCaPath","\"\\\".\\/tls\\/ca.pem\"\\\"");
+        setSDKConfigByShell(sdkIP,"Rpc","TLSCertPath","\"\\\".\\/tls\\/cert.pem\"\\\"");
+        setSDKConfigByShell(sdkIP,"Rpc","TLSKeyPath","\"\\\".\\/tls\\/key.pem\"\\\"");
+        setSDKConfigByShell(sdkIP,"Auth","KeyPath","\"\\\".\\/tls\\/key.pem\"\\\"");
+        //替换sdk auth及tls目录下的证书 私钥文件
+        //启动sdk 并赋权限
+        shellExeCmd(sdkIP,startSDKCmd);
         setSDKPerm999.test();
 
 
