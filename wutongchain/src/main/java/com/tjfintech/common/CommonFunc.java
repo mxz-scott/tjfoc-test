@@ -11,8 +11,10 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.bouncycastle.util.encoders.Hex;
 import org.hamcrest.CoreMatchers;
 import org.junit.BeforeClass;
+import sun.misc.BASE64Encoder;
 
 import java.io.File;
 import java.util.*;
