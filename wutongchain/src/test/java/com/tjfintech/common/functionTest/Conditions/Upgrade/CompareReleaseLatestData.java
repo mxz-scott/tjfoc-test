@@ -1,7 +1,6 @@
 package com.tjfintech.common.functionTest.Conditions.Upgrade;
 
 import com.tjfintech.common.CommonFunc;
-import com.tjfintech.common.functionTest.upgrade.UpgradeDataGetFunc;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 

@@ -4,14 +4,13 @@ import com.tjfintech.common.functionTest.upgrade.UpgradeDataGetFunc;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
-import java.util.ArrayList;
 
 import static com.tjfintech.common.utils.UtilsClass.beforeUpgrade;
+import static com.tjfintech.common.utils.UtilsClass.txHashList;
 
 @Slf4j
 public class GetReleaseVersionDataApi {
     UpgradeDataGetFunc getChainData = new UpgradeDataGetFunc();
-    ArrayList<String> txHashList = new ArrayList<>();
 
     @Test
     public void test()throws Exception {
