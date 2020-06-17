@@ -34,13 +34,9 @@ public class UpgradeDataGetFunc {
     MultiSign multiSign = testBuilder.getMultiSign();
     SoloSign soloSign = testBuilder.getSoloSign();
     Contract contract = testBuilder.getContract();
-    ArrayList<String> txHashList = new ArrayList<>();
     Map<String, String> txTypeSubType = new HashMap<>();
     CommonFunc commonFunc = new CommonFunc();
     Token tokenModule = testBuilder.getToken();
-    String storeHash = "";
-//    String priStoreHash = "";
-//    String contractHash = "";
 
 
     @Before

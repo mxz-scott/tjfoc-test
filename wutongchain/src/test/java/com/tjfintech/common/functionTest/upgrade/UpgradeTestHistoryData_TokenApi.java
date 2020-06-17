@@ -36,12 +36,6 @@ public class UpgradeTestHistoryData_TokenApi {
 
     ArrayList<String> txHashList = new ArrayList<>();
     Map<String, String> txTypeSubType = new HashMap<>();
-    String storeHash = "";
-    String priStoreHash = "";
-    String contractHash = "";
-
-
-
 
 
     @Test

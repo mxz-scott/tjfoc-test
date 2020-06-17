@@ -40,9 +40,6 @@ public class UpgradeTestHistoryData {
     ArrayList<String> txHashList = new ArrayList<>();
     Map<String, String> txTypeSubType = new HashMap<>();
     CommonFunc commonFunc = new CommonFunc();
-    String storeHash = "";
-    String priStoreHash = "";
-    String contractHash = "";
 
 
     @Before

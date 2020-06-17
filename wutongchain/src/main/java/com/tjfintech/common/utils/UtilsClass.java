@@ -222,7 +222,7 @@ public class UtilsClass {
     public static Map<String,String> afterUpgrade = new HashMap<>();
     public static ArrayList<String> txHashList = new ArrayList<>();
     public static String priStoreHash = "";
-    public static String contractHash = "";
+    public static String storeHash = "";
 
     public static String provider = "mysql";
     public static String mongoDBAddr ="\"\\\"mongodb:\\/\\/10.1.3.246:27017\\/ww22\"\\\"";
