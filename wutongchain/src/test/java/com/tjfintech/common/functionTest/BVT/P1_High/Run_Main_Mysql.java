@@ -3,6 +3,7 @@ package com.tjfintech.common.functionTest.BVT.P1_High;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.*;
 import com.tjfintech.common.functionTest.PermissionTest.PeerStartNoPermTest;
+import com.tjfintech.common.functionTest.PermissionTest.TestPermission;
 import com.tjfintech.common.functionTest.contract.DockerContractInvalidTest;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractInvalidTest;
@@ -22,7 +23,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         SetDatabaseMysql.class,
-        SetTokenApiDatabaseMysql.class,
+//        SetTokenApiDatabaseMysql.class,
         SetAccountEmpty.class,
         SetCertSM2.class,
         SetMainLedger.class,
@@ -54,7 +55,9 @@ import org.junit.runners.Suite;
 
         VerifyTests.class,
 
-        AddPeerAndSyncData.class
+        AddPeerAndSyncData.class,
+
+        TestPermission.class
 
 })
 
