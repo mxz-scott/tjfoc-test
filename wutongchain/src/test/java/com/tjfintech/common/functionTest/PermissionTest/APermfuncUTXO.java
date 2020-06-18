@@ -12,10 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.lang.*;
 
-//import static com.tjfintech.common.functionTest.StoreTest.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClass.MULITADD1;
-//import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
+import static com.tjfintech.common.utils.UtilsClass.*;
+
 
 @Slf4j
 public class APermfuncUTXO {
@@ -35,15 +34,11 @@ public class APermfuncUTXO {
     String okCode="200";
     String okMsg="success";
 
-    String errCode="404";
-    String errCode2="500";
-    String errMsg="does not found Permission";
-    String errMsg2="no permissions";
 
     public String retAllow(String checkStr)throws Exception{
         String allow="*";
         boolean bNoPerm = false;
-        if((checkStr.contains(errCode)&&checkStr.contains(errMsg)) || (checkStr.contains(errCode2)&&checkStr.contains(errMsg2))){
+        if(checkStr.contains(NoPermErrCode)&&checkStr.contains(NoPermErrMsg)){
             bNoPerm = true;
         }
         if(checkStr.contains(okCode)) {

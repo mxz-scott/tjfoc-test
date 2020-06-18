@@ -13,6 +13,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.lang.*;
 
+import static com.tjfintech.common.utils.UtilsClass.*;
+
 
 @Slf4j
 public class APermfuncDocker {
@@ -20,23 +22,18 @@ public class APermfuncDocker {
     Contract contract=testBuilder.getContract();
     Store store=testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
-    CommonFunc commonFunc = new CommonFunc();
     String version ="2.0";
     String name ="0111";
 
     String okCode="200";
     String okMsg="success";
 
-    String errCode="404";
-    String errCode2="500";
-    String errMsg="does not found Permission";
-    String errMsg2="no permissions";
     String category="docker";
 
     public String retAllow(String checkStr)throws Exception{
         String allow="*";
         boolean bNoPerm = false;
-        if((checkStr.contains(errCode)&&checkStr.contains(errMsg)) || (checkStr.contains(errCode2)&&checkStr.contains(errMsg2))){
+        if(checkStr.contains(NoPermErrCode)&&checkStr.contains(NoPermErrMsg)){
             bNoPerm = true;
         }
         if(checkStr.contains(okCode)) {

@@ -23,6 +23,7 @@ public class APermfuncSys {
     //SoloSign soloSign=testBuilder.getSoloSign();
     MultiSign multiSign=testBuilder.getMultiSign();
     Store store =testBuilder.getStore();
+    UtilsClass utilsClass = new UtilsClass();
 
     String blockHash="blockhash111111";
     String txHash="txHash";
@@ -31,15 +32,10 @@ public class APermfuncSys {
     String okCode="200";
     String okMsg="success";
 
-    String errCode="404";
-    String errCode2="500";
-    String errMsg="does not found Permission";
-    String errMsg2="no permissions";
-
     public String retAllow(String checkStr)throws Exception{
         String allow="*";
         boolean bNoPerm = false;
-        if((checkStr.contains(errCode)&&checkStr.contains(errMsg)) || (checkStr.contains(errCode2)&&checkStr.contains(errMsg2))){
+        if(checkStr.contains(NoPermErrCode)&&checkStr.contains(NoPermErrMsg)){
             bNoPerm = true;
         }
         if(checkStr.contains(okCode)) {
@@ -58,7 +54,7 @@ public class APermfuncSys {
         Thread.sleep(3000);
         if(response.contains("200")) {
             JSONObject jsonObject = JSONObject.fromObject(response);
-            txHash = jsonObject.getJSONObject("data").get("figure").toString();
+            txHash = jsonObject.getString("data");
         }
         return retAllow(response);
     }
@@ -107,10 +103,10 @@ public class APermfuncSys {
         return retAllow(response);
     }
 
-//    public String getTransationBlock(String storeHash)throws  Exception{
-//        String response=store.GetTransactionBlock(storeHash);
-//        return retAllow(response);
-//    }
+    public String getTransationBlock(String storeHash)throws  Exception{
+        String response=store.GetTransactionBlock(storeHash);
+        return retAllow(response);
+    }
     /**
      * 获取区块高度
      */
@@ -128,7 +124,7 @@ public class APermfuncSys {
         String response= store.GetBlockByHeight(Height);
 
         if( response.contains(okCode)) {
-            blockHash = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").get("blockHash").toString();
+            blockHash = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").get("blockId").toString();
         }
         return retAllow(response);
     }
@@ -148,7 +144,7 @@ public class APermfuncSys {
         String Data = "\"test\":\"json"+UtilsClass.Random(4)+"\"";
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("data").get("figure").toString();
+        String storeHash = jsonObject.getString("data");
         Thread.sleep(3000);
         String response2= store.GetInlocal(storeHash);
         return retAllow(response2);

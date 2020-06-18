@@ -15,8 +15,7 @@ public class APermfuncSysSetMg {
     MgToolCmd mgToolCmd = new MgToolCmd();
 
     String okMsg="send transaction success";
-    String errMsg="does not found permission";
-    String errMsg2="no permissions";
+
     String category="wvm";
 
     public static String subLedgerName = "";
@@ -27,7 +26,7 @@ public class APermfuncSysSetMg {
         if(checkStr.toLowerCase().contains(okMsg)) {
             allow = "1";
         }
-        else if(checkStr.toLowerCase().contains(errMsg) || checkStr.toLowerCase().contains(errMsg2))
+        else if(checkStr.contains(NoPermErrMsg))
         {
             allow="0";
         }

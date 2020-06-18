@@ -1,7 +1,6 @@
 package com.tjfintech.common.functionTest.PermissionTest;
 
 import com.tjfintech.common.Interface.Contract;
-import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static com.tjfintech.common.utils.UtilsClass.version;
 
-//import static org.hamcrest.Matchers.containsString;
 
 @Slf4j
 public class APermfuncWVM {
@@ -26,17 +23,13 @@ public class APermfuncWVM {
     String okCode="200";
     String okMsg="success";
 
-    String errCode="404";
-    String errCode2="500";
-    String errMsg="does not found Permission";
-    String errMsg2="no permissions";
     String category="wvm";
 
 
     public String retAllow(String checkStr)throws Exception{
         String allow="*";
         boolean bNoPerm = false;
-        if((checkStr.contains(errCode)&&checkStr.contains(errMsg)) || (checkStr.contains(errCode2)&&checkStr.contains(errMsg2))){
+        if(checkStr.contains(NoPermErrCode)&&checkStr.contains(NoPermErrMsg)){
             bNoPerm = true;
         }
         if(checkStr.contains(okCode)) {

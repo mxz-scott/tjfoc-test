@@ -75,8 +75,8 @@ public class TestPermission {
 //    String full = "Sys:11111111Store:11Docker:11111WVM:111Mg:111111UTXO:1111111111";
     String full = "Sys:11111111Store:11WVM:111Mg:111111UTXO:1111111111";
 
-    String dynPeerPerm = "261,262";
-    String subLedgerPerm = "281,282,283,284";
+    String dynPeerPerm = "10,261,262";
+    String subLedgerPerm = "10,281,282,283,284";
 
     String glbMultiToken3="";//MULITADD3的全局预设发行token
     String glbMultiToken4="";//MULITADD4的全局预设发行token
@@ -93,7 +93,6 @@ public class TestPermission {
     ArrayList<String> dockerList =new ArrayList();
 
     boolean bExe=false;
-
 
     @Before
     public void beforeTest() throws Exception {
@@ -124,7 +123,7 @@ public class TestPermission {
         String response1= store.CreatePrivateStore(Data,map);
         log.info(response1);
         JSONObject jsonObject=JSONObject.fromObject(response1);
-        glbPriTxHash = jsonObject.getJSONObject("data").get("Figure").toString();
+        glbPriTxHash = jsonObject.getString("data");
 
 
         pFun1.getBlockByHeight(1); //SDK发送通过区块高度获取区块信息请求
@@ -162,9 +161,9 @@ public class TestPermission {
 
         Thread.sleep(SLEEPTIME);
 
-        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(soloSign.Balance(PRIKEY1,glbSoloToken)).getJSONObject("data").getString("Total"));
-        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.Balance(MULITADD4,PRIKEY1,glbMultiToken4)).getJSONObject("data").getString("Total"));
-        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.Balance(MULITADD3,PRIKEY1,glbMultiToken3)).getJSONObject("data").getString("Total"));
+        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(soloSign.Balance(PRIKEY1,glbSoloToken)).getJSONObject("data").getString("total"));
+        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.BalanceByAddr(MULITADD4,glbMultiToken4)).getJSONObject("data").getString("total"));
+        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.BalanceByAddr(MULITADD3,glbMultiToken3)).getJSONObject("data").getString("total"));
 
         //预先安装WVM合约
         String ctName="ok_" + sdf.format(dt) + RandomUtils.nextInt(100000);
@@ -319,12 +318,12 @@ public class TestPermission {
         assertEquals("1111",subLedgerCheck());
 
 
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"1,2,3");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"1,2,3,10");
         //执行子链相关操作
         assertEquals("0000",subLedgerCheck());
 
 
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"281");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"10,281");
         //执行子链相关操作
         assertEquals("1000",subLedgerCheck());
 
@@ -334,17 +333,17 @@ public class TestPermission {
         sleepAndSaveInfo(SLEEPTIME);
 
 
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"282");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"10,282");
         //执行子链相关操作
         assertEquals("0100",subLedgerCheck());
 
 
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"283");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"10,283");
         //执行子链相关操作
         assertEquals("0010",subLedgerCheck());
 
 
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"284");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"10,284");
         //执行子链相关操作
         assertEquals("0001",subLedgerCheck());
 
@@ -368,19 +367,19 @@ public class TestPermission {
 
 
         //将管理工具id权限 设置为支持节点修改 不支持退出
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"261");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"10,261");
         //执行节点变更相关操作
         assertEquals("110",peerChangeCheck());
 
 
         //将管理工具id权限 设置为不支持节点修改 支持退出
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"262");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"10,262");
         //执行节点变更相关操作
         assertEquals("001",peerChangeCheck());
 
 
         //设置无权限
-        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"1,2,3");
+        commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"1,2,3,10");
         //执行子链相关操作
         assertEquals("000",peerChangeCheck());
 
@@ -430,7 +429,7 @@ public class TestPermission {
     public String sysPermCheck()throws Exception{
         String permStr="";
         permStr=permStr + pFun1.getHeight();  //SDK发送查看链当前高度请求
-//        permStr=permStr + pFun1.getTransationBlock(glbTxHash); //SDK发送获取交易所在区块高度请求
+        permStr=permStr + pFun1.getTransationBlock(glbTxHash); //SDK发送获取交易所在区块高度请求
 
         permStr=permStr + pFun1.getBlockByHeight(1); //SDK发送通过区块高度获取区块信息请求
 
@@ -618,13 +617,13 @@ public class TestPermission {
 
         //权限设置通知的节点与SDK配置的节点不一致，权限设置有效
         String sdkIP = utilsClass.getIPFromStr(SDKADD);
-        commonFunc.setSDKOnePeer(sdkIP,PEER2IP + ":" + PEER2RPCPort,"true");
+        commonFunc.setSDKOnePeer(sdkIP,PEER2IP + ":" + PEER2RPCPort,"true",peerTLSServerName);
         shellCmd(sdkIP,killSDKCmd);
         shellCmd(sdkIP,startSDKCmd);
         Thread.sleep(5000);
         shellCmd(peerIP246.split(":")[0],cmd2 + "211");//向节点246发送权限变更通知
-        commonFunc.setSDKOnePeer(sdkIP,PEER1IP + ":" + PEER1RPCPort,"true");
-        commonFunc.addSDKPeerCluster(sdkIP,PEER2IP + ":" + PEER2RPCPort,"true");
+        commonFunc.setSDKOnePeer(sdkIP,PEER1IP + ":" + PEER1RPCPort,"true",peerTLSServerName);
+        commonFunc.addSDKPeerCluster(sdkIP,PEER2IP + ":" + PEER2RPCPort,"true",peerTLSServerName);
         assertThat(pFun1.createStore(), containsString("1"));
 
 

@@ -260,6 +260,9 @@ public class UtilsClass {
     public String tokenApiGetTxHashTypeDesByType = "11";
     public String mgGetTxHashType = "mg";
 
+    public static String  NoPermErrMsg = "no permission";
+    public static String  NoPermErrCode = "500";
+
     /**
      * token平台转账TOKEN数组构建方法
      * @param toAddr     发送地址
