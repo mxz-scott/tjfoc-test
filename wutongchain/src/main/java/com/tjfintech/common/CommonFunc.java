@@ -778,26 +778,29 @@ public class CommonFunc {
     }
 
 
-    public void setSDKOnePeer(String SDKIP,String PeerIPPort,String TLSEnabled){
+    public void setSDKOnePeer(String SDKIP,String PeerIPPort,String TLSEnabled,String PeerTLSServerName){
         //获取第一个[[Peer]]所在行号 后面加入节点集群信息时插入的行号
         String lineNo = shExeAndReturn(SDKIP,"grep -n Peer "+ SDKConfigPath + " | cut -d \":\" -f 1 |sed -n '1p'");
         //先删除conf/config.toml文件中的所有Peers
         shExeAndReturn(SDKIP,"sed -i '/Peer/d' " + SDKConfigPath);
         shExeAndReturn(SDKIP,"sed -i '/Address/d' " + SDKConfigPath);
         shExeAndReturn(SDKIP,"sed -i '/TLSEnabled/d' " + SDKConfigPath);
+        shExeAndReturn(SDKIP,"sed -i '/TLSServerName/d' " + SDKConfigPath);
 
         shExeAndReturn(SDKIP,"sed -i '" + Integer.parseInt(lineNo) + "i[[Peer]]' " + SDKConfigPath);
         shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+1) + "iAddress = \"" + PeerIPPort + "\"' " + SDKConfigPath);
         shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+2) + "iTLSEnabled = " + TLSEnabled + "' " + SDKConfigPath);
+        shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+3) + "iTLSServerName = \"" + PeerTLSServerName  + "\"' " +  SDKConfigPath);
     }
 
-    public void addSDKPeerCluster(String SDKIP,String PeerIPPort,String TLSEnabled){
-        //获取第一个[[Peer]]所在行号 后面加入节点集群信息时插入的行号
-        String lineNo = shExeAndReturn(SDKIP,"grep -n TLSEnabled "+ SDKConfigPath + " | cut -d \":\" -f 1 |sed -n '$p'");
+    public void addSDKPeerCluster(String SDKIP,String PeerIPPort,String TLSEnabled,String PeerTLSServerName){
+        //获取第一个Rpc所在行号 前一行插入节点集群信息
+        String lineNo = shExeAndReturn(SDKIP,"grep -n Rpc "+ SDKConfigPath + " | cut -d \":\" -f 1 |sed -n '$p'");
 
-        shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+1) + "i[[Peer]]' " + SDKConfigPath);
-        shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+2)  + "iAddress = \"" + PeerIPPort + "\"' " + SDKConfigPath);
-        shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+3) + "iTLSEnabled = " + TLSEnabled + "' " + SDKConfigPath);
+        shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)-1) + "i[[Peer]]' " + SDKConfigPath);
+        shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo))  + "iAddress = \"" + PeerIPPort + "\"' " + SDKConfigPath);
+        shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+1) + "iTLSEnabled = " + TLSEnabled + "' " + SDKConfigPath);
+        shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+2) + "iTLSServerName = \"" + PeerTLSServerName + "\"' " + SDKConfigPath);
     }
 
 

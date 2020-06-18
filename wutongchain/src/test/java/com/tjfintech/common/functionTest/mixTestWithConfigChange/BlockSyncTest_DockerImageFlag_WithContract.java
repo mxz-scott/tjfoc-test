@@ -257,7 +257,7 @@ public class BlockSyncTest_DockerImageFlag_WithContract {
         shellPeer4.execute(killPeerCmd);
 
         //配置sdk节点集群仅为Peer1并重启sdk
-        commonFunc.setSDKOnePeer(utilsClass.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
+        commonFunc.setSDKOnePeer(utilsClass.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true",peerTLSServerName);
         utilsClass.setAndRestartSDK();
 
         StoreUTXONoCheck();

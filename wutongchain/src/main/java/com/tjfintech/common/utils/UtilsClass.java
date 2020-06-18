@@ -96,6 +96,7 @@ public class UtilsClass {
     public static String subLedger = ""; // 修改接口兼容主子链
     public static String globalResponse = "";
     public static String globalSSHPort = "";
+    public static String peerTLSServerName = "tjfoc.com";
 
     public static String ipv4 = "ip4";
     public static String tcpProtocol = "tcp";

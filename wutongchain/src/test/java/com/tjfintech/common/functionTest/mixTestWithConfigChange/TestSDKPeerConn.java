@@ -33,8 +33,8 @@ public class TestSDKPeerConn {
 
         shellSDK.execute(killSDKCmd);
         //配置sdk节点集群为两个
-        commonFunc.setSDKOnePeer(utilsClass.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
-        commonFunc.addSDKPeerCluster(utilsClass.getIPFromStr(SDKADD),PEER2IP + ":" + PEER2RPCPort,"true");
+        commonFunc.setSDKOnePeer(utilsClass.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true",peerTLSServerName);
+        commonFunc.addSDKPeerCluster(utilsClass.getIPFromStr(SDKADD),PEER2IP + ":" + PEER2RPCPort,"true",peerTLSServerName);
         shellSDK.execute(startSDKCmd);
 
         Shell shellPeer1 = new Shell(PEER1IP, USERNAME, PASSWD);

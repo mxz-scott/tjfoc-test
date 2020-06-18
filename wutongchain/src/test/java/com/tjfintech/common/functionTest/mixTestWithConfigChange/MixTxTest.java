@@ -53,7 +53,7 @@ public class MixTxTest {
         WVMContractTest wvmContractTest = new WVMContractTest();
         String respInstall = wvmContractTest.intallUpdateName("testWVM",PRIKEY1);
         tempWVMHash = JSONObject.fromObject(respInstall).getJSONObject("data").getString("name");
-        String tempHash = JSONObject.fromObject(respInstall).getJSONObject("data").getString("figure");
+        String tempHash = JSONObject.fromObject(respInstall).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(tempHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
     }
 

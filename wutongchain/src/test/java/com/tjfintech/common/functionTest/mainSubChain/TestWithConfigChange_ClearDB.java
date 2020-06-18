@@ -66,7 +66,7 @@ public class TestWithConfigChange_ClearDB {
     @Test
     public void TC1538_quitMainJoinPeer()throws Exception{
         //配置sdk节点集群仅为Peer1并重启sdk
-        commonFunc.setSDKOnePeer(utilsClass.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
+        commonFunc.setSDKOnePeer(utilsClass.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true",peerTLSServerName);
         utilsClass.setAndRestartSDK();
         //创建子链01 包含节点A、B、C
         String chainName1="tc1538_01";

@@ -189,7 +189,7 @@ public class TestMultiSubChain_02 {
         mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,utilsClass.getSDKID(),"999");
         sleepAndSaveInfo(SLEEPTIME*2);
         assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), fullPerm);
-        assertThat(store.CreateStore("tc1660 no permission tx data"),containsString("\"State\":200"));
+        assertThat(store.CreateStore("tc1660 no permission tx data"),containsString("\"state\":200"));
 
         //创建子链01 包含节点A、B、C
         String chainName3="tc1660_01"+sdf.format(dt)+ RandomUtils.nextInt(1000);
