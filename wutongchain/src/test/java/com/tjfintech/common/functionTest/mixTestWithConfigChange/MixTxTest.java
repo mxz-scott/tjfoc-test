@@ -99,7 +99,7 @@ public class MixTxTest {
         log.info(data);
         String response7 = multiSign.issueToken(IMPPUTIONADD, tokenTypeM, amount, data);
         assertEquals("200",JSONObject.fromObject(response7).getString("state"));
-        String Tx1 = JSONObject.fromObject(response7).getJSONObject("data").getString("Tx");
+        String Tx1 = JSONObject.fromObject(response7).getJSONObject("data").getString("tx");
         log.info("第一次签名");
         String response8 = multiSign.Sign(Tx1, PRIKEY5);
 
@@ -119,7 +119,7 @@ public class MixTxTest {
 
 
         JSONObject jsonObject=JSONObject.fromObject(response1);
-        String StoreHash1 = jsonObject.getJSONObject("data").get("figure").toString();
+        String StoreHash1 = jsonObject.getString("data");
         jsonObject=JSONObject.fromObject(response2);
         String StoreHash2 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response3);
@@ -186,17 +186,17 @@ public class MixTxTest {
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmContractTest.wvmInstallTest(wvmContractTest.wvmFile +"_temp.txt",PRIKEY1);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("figure");
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
         String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
         //调用合约内的交易
         String response2 = wvmContractTest.invokeNew(tempWVMHash,"initAccount",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("figure");
+        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
 
 
         //销毁wvm合约
         String response9 = wvmContractTest.wvmDestroyTest(ctHash);
-        String txHash9 = JSONObject.fromObject(response9).getJSONObject("data").getString("figure");
+        String txHash9 = JSONObject.fromObject(response9).getJSONObject("data").getString("txId");
 
         txHashList.add(txHash1);
         txHashList.add(txHash9);
