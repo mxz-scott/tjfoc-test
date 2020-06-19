@@ -50,14 +50,52 @@ public class WVMContractTest {
     public int transfer = 30;
     public String wvmFile = "wvm";
 
-    @BeforeClass
-    public  static void setPermFull()throws Exception{
-        BeforeCondition beforeCondition = new BeforeCondition();
-//        beforeCondition.clearDataSetPerm999();
-//        beforeCondition.collAddressTest();
-        beforeCondition.updatePubPriKey();
-//        beforeCondition.createAdd();
-//        sleepAndSaveInfo(SLEEPTIME);
+    /***
+     * 跨合约调用
+     * @throws Exception
+     */
+    @Test
+    public void CrossInvoke() throws Exception{
+        String ctName = "L_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
+        // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
+        // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
+        fileOper.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
+
+        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
+        String response1 = wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1);
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+        String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        chkTxDetailRsp("200",txHash1);
+
+        //安装需要跨合约调用的合约 wvm_cross.txt
+        String response2 = wvmInstallTest("wvm_cross.txt","");
+        String txHash2 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+        String ctHash2 = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
+
+        //调用合约内的正确的方法 initAccount方法
+        String response3 = invokeNew(txHash2,"CrossinitAccount",
+                ctHash,"initAccount","[\"C\",123]");//初始化账户A 账户余额50
+        String txHash3 = JSONObject.fromObject(response3).getJSONObject("data").getString("txId");
+
+
+        commonFunc.sdkCheckTxOrSleep(txHash3,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        chkTxDetailRsp("200",txHash3);
+        String response7 = query(ctHash,"getBalance","C");//获取账户A账户余额
+        assertEquals(123,JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
+
+
+        //调用合约内的不存在的方法 initAccount方法
+        String response4 = invokeNew(txHash2,"CrossinitAccount",
+                ctHash,"initAnt","[\"C\",123]");//初始化账户A 账户余额50
+        String txHash4 = JSONObject.fromObject(response4).getJSONObject("data").getString("txId");
+
+
+        commonFunc.sdkCheckTxOrSleep(txHash3,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        chkTxDetailRsp("404",txHash4);
     }
 
     @Test

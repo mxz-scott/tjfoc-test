@@ -1,0 +1,19 @@
+//跨合约调用示例
+//第三个参数为原合约在sdk中调用的Args后面的完整"[]"内容 需要转义的则要进行转义
+contract TestCrossUse {
+
+public string init(){
+	return "success"
+}
+
+//调用wvm.txt合约中的initAccout方法
+public string CrossinitAccount(string wvmName,string method,string paramArray){
+
+	//string IdentityInfo = invoke("172d67b1293ff8613278e9531f026b679b3cc06b5ee4ba55278ef03bce4528a1","transfer","[\"123\",123,123]")
+	string IdentityInfo = invoke(wvmName,method,paramArray)
+
+	return "success"
+}
+
+
+}
