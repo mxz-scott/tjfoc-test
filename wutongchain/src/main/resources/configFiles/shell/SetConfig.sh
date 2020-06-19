@@ -1,15 +1,14 @@
 #!/bin/sh
     
-   iniFile=$1;
-   section=$2;
+   iniFile=$1
+   section=$2
    option=$3
    value=$4
 
-   #sed -i -e 's/^[ ]*#\[/\[/g' -e '/^[ ]*#/d' ${iniFile}
    sed -i -e '/^[ ]*#/d' ${iniFile}
    exist=$(grep -n ${section} ${iniFile})
    if [ -z "$exist" ]; then
-       sed -i "$a \['$section'\]" ${iniFile}
+       sed -i '$a \['$section'\]' ${iniFile}
        echo "add section " ${section}
    fi
 

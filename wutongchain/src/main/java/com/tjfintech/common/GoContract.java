@@ -38,7 +38,6 @@ public class GoContract implements Contract {
         Map<String,Object>map=new HashMap<>();
         map.put("category","wvm");
         map.put("file",file);
-        map.put("priKey",prikey);
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
         String result=PostTest.postMethod(SDKADD+"/v2/tx/sc/install"+param,map);
