@@ -363,22 +363,6 @@ public class GoMultiSign implements MultiSign {
         return result;
     }
 
-
-    public String delissueaddress(String priKey, String... address) {
-        Map<String, Object> map = new HashMap<>();
-        List<Object> addrs = new ArrayList<>();
-        for (int i = 0; i < address.length; i++) {
-            addrs.add(address[i]);
-        }
-        map.put("prikey", priKey);
-        map.put("addresses", addrs);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/address/delissue"+param, map);
-        log.info(result);
-        return result;
-    }
-
     /**
      * 删除发行地址不携带私钥
      *
@@ -615,44 +599,6 @@ public class GoMultiSign implements MultiSign {
         String param="";
         if(subLedger!="") param = param +"?ledger="+subLedger;
         String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/balance"+param, map);
-        log.info(result);
-        return result;
-    }
-
-    /**
-     * 添加归集地址
-     * @param priKey
-     * @param address
-     * @return
-     */
-    public String collAddress(String priKey, String ...address) {
-        Map<String, Object> map = new HashMap<>();
-        List<Object> addrs = new ArrayList<>();
-        for (int i=0;i<address.length;i++){
-        addrs.add(address[i]);
-        }
-
-        map.put("prikey", priKey);
-        map.put("addresses", addrs);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/address/addcoll"+param, map);
-        log.info(result);
-        return result;
-    }
-
-
-    public String delCollAddress(String priKey, String... address) {
-        Map<String,Object> map = new HashMap<>();
-        List<Object> addrs = new ArrayList<>();
-        for (int i= 0;i<address.length;i++){
-            addrs.add(address[i]);
-        }
-        map.put("priKey", priKey);
-        map.put("addresses", addrs);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/address/delcoll"+param, map);
         log.info(result);
         return result;
     }

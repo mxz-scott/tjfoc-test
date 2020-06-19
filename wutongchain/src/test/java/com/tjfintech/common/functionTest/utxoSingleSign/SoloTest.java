@@ -140,7 +140,7 @@ public class SoloTest {
 
         log.info("删除发行地址，保留归集地址");
         //删除发行地址，保留归集地址
-        String response3=multiSign.delissueaddress(PRIKEY1,ADDRESS1);
+        String response3=multiSign.delissueaddressRemovePri(ADDRESS1);
         assertThat(response3, containsString("200"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
@@ -156,7 +156,7 @@ public class SoloTest {
 
         //删除发行地址和归集地址
         log.info("删除发行地址和归集地址");
-        String response4=multiSign.delCollAddress(PRIKEY1,ADDRESS1);
+        String response4=multiSign.delCollAddressRemovePri(ADDRESS1);
         assertThat(response4, containsString("200"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
@@ -171,7 +171,7 @@ public class SoloTest {
         assertEquals("0",JSONObject.fromObject(response41).getJSONObject("data").getString("total"));
 
         //重新添加发行地址，保留删除归集地址
-        String response51=multiSign.addissueaddress(PRIKEY1,ADDRESS1);
+        String response51=multiSign.addissueaddressRemovePri(ADDRESS1);
         assertThat(response51, containsString("200"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
@@ -185,7 +185,7 @@ public class SoloTest {
         assertEquals("0",JSONObject.fromObject(response52).getJSONObject("data").getString("total"));
 
         //重新添加归集地址
-        String response6=multiSign.collAddress(PRIKEY1,ADDRESS1);
+        String response6=multiSign.collAddressRemovePri(ADDRESS1);
         assertThat(response6, containsString("200"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);

@@ -131,7 +131,7 @@ public class MultiTest {
         assertEquals("1000",JSONObject.fromObject(response1).getJSONObject("data").getString("total"));
 
         //删除发行地址，保留归集地址
-        String response2=multiSign.delissueaddress(PRIKEY1,IMPPUTIONADD);
+        String response2=multiSign.delissueaddressRemovePri(IMPPUTIONADD);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -146,7 +146,7 @@ public class MultiTest {
         assertEquals("0",JSONObject.fromObject(response3).getJSONObject("data").getString("total"));
 
         //删除发行地址和归集地址
-        String response41=multiSign.delCollAddress(PRIKEY1,MULITADD3);
+        String response41=multiSign.delCollAddressRemovePri(MULITADD3);
         assertEquals("200",JSONObject.fromObject(response41).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
@@ -163,7 +163,7 @@ public class MultiTest {
         assertEquals("0",JSONObject.fromObject(response42).getJSONObject("data").getString("total"));
 
         //重新添加发行地址，归集地址已删除
-        String response5=multiSign.addissueaddress(PRIKEY1,IMPPUTIONADD);
+        String response5=multiSign.addissueaddressRemovePri(IMPPUTIONADD);
         assertEquals("200",JSONObject.fromObject(response5).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
@@ -180,7 +180,7 @@ public class MultiTest {
         assertEquals("0",JSONObject.fromObject(response53).getJSONObject("data").getString("total"));
 
         //重新添加发行地址和归集地址
-        String response6=multiSign.collAddress(PRIKEY1,MULITADD3);
+        String response6=multiSign.collAddressRemovePri(MULITADD3);
         assertEquals("200",JSONObject.fromObject(response6).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),

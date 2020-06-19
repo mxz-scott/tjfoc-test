@@ -61,15 +61,15 @@ public class MixTxTest {
     public void TestMultiTypeTx()throws Exception{
         //TC1845
         txHashList.clear();
-        String response12 = multiSign.collAddress(PRIKEY1,ADDRESS6);
-        String response13 = multiSign.collAddress(PRIKEY1,ADDRESS1);
-        String response14 = multiSign.addissueaddress(PRIKEY1,ADDRESS6);
-        String response15 = multiSign.addissueaddress(PRIKEY1,ADDRESS1);
+        String response12 = multiSign.collAddressRemovePri(ADDRESS6);
+        String response13 = multiSign.collAddressRemovePri(ADDRESS1);
+        String response14 = multiSign.addissueaddressRemovePri(ADDRESS6);
+        String response15 = multiSign.addissueaddressRemovePri(ADDRESS1);
 
-        assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS5), CoreMatchers.containsString("200"));
-        assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS2), CoreMatchers.containsString("200"));
-        assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS5), CoreMatchers.containsString("200"));
-        assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS2), CoreMatchers.containsString("200"));
+        assertThat(multiSign.delCollAddressRemovePri(ADDRESS5), CoreMatchers.containsString("200"));
+        assertThat(multiSign.delCollAddressRemovePri(ADDRESS2), CoreMatchers.containsString("200"));
+        assertThat(multiSign.delissueaddressRemovePri(ADDRESS5), CoreMatchers.containsString("200"));
+        assertThat(multiSign.delissueaddressRemovePri(ADDRESS2), CoreMatchers.containsString("200"));
 
         Thread.sleep(6000);
         //设置打包时间为20s 使得各种类型的交易同时打包
@@ -83,10 +83,10 @@ public class MixTxTest {
         //发送存证交易
         String Data="Mix tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
         String response1=store.CreateStore(Data);
-        String response2= multiSign.collAddress(PRIKEY1,ADDRESS5);
-        String response3= multiSign.collAddress(PRIKEY1,ADDRESS2);
-        String response4= multiSign.addissueaddress(PRIKEY1,ADDRESS5);
-        String response5= multiSign.addissueaddress(PRIKEY1,ADDRESS2);
+        String response2= multiSign.collAddressRemovePri(ADDRESS5);
+        String response3= multiSign.collAddressRemovePri(ADDRESS2);
+        String response4= multiSign.addissueaddressRemovePri(ADDRESS5);
+        String response5= multiSign.addissueaddressRemovePri(ADDRESS2);
 
         String tokenTypeS = "MixSOLOTC-"+ UtilsClass.Random(6);
         log.info(ADDRESS1+"发行token "+tokenTypeS);

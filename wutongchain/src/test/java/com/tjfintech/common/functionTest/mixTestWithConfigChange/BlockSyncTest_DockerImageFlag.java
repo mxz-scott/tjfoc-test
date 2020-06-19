@@ -283,7 +283,7 @@ public class BlockSyncTest_DockerImageFlag {
         WVMContractTest wvmContractTest = new WVMContractTest();
         String respInstall = wvmContractTest.intallUpdateName("testWVM",PRIKEY1);
         wvmHash = JSONObject.fromObject(respInstall).getJSONObject("data").getString("name");
-        String tempHash = JSONObject.fromObject(respInstall).getJSONObject("data").getString("figure");
+        String tempHash = JSONObject.fromObject(respInstall).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(tempHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
         //SDK配置文件中仅配置PEER1节点
@@ -341,14 +341,14 @@ public class BlockSyncTest_DockerImageFlag {
 
         assertThat(multiSign.delCollAddressRemovePri(ADDRESS6), containsString("200"));
         assertThat(multiSign.delCollAddressRemovePri(ADDRESS1), containsString("200"));
-        assertThat(multiSign.delCollAddressRemovePri(ADDRESS6), containsString("200"));
-        assertThat(multiSign.delCollAddressRemovePri(ADDRESS1), containsString("200"));
+        assertThat(multiSign.delissueaddressRemovePri(ADDRESS6), containsString("200"));
+        assertThat(multiSign.delissueaddressRemovePri(ADDRESS1), containsString("200"));
 
         sleepAndSaveInfo(OnChainSleep);
-        String response2= multiSign.collAddressRemovePri(PRIKEY1,ADDRESS6);
-        String response3= multiSign.collAddressRemovePri(PRIKEY1,ADDRESS1);
-        String response4= multiSign.addissueaddressRemovePri(PRIKEY1,ADDRESS6);
-        String response5= multiSign.addissueaddressRemovePri(PRIKEY1,ADDRESS1);
+        String response2= multiSign.collAddressRemovePri(ADDRESS6);
+        String response3= multiSign.collAddressRemovePri(ADDRESS1);
+        String response4= multiSign.addissueaddressRemovePri(ADDRESS6);
+        String response5= multiSign.addissueaddressRemovePri(ADDRESS1);
         sleepAndSaveInfo(OnChainSleep);
 
 
@@ -376,7 +376,7 @@ public class BlockSyncTest_DockerImageFlag {
         assertThat(response8, containsString("200"));
 
         JSONObject jsonObject=JSONObject.fromObject(response1);
-        String StoreHash1 = jsonObject.getJSONObject("data").get("figure").toString();
+        String StoreHash1 = jsonObject.getString("data");
         jsonObject=JSONObject.fromObject(response2);
         String StoreHash2 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response3);
@@ -417,16 +417,16 @@ public class BlockSyncTest_DockerImageFlag {
         bf.collAddressTest();//添加归集地址和发行地址的注册
         sleepAndSaveInfo(OnChainSleep);
 
-        assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS6), containsString("200"));
-        assertThat(multiSign.delCollAddress(PRIKEY1,ADDRESS1), containsString("200"));
-        assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS6), containsString("200"));
-        assertThat(multiSign.delissueaddress(PRIKEY1,ADDRESS1), containsString("200"));
+        assertThat(multiSign.delCollAddressRemovePri(ADDRESS6), containsString("200"));
+        assertThat(multiSign.delCollAddressRemovePri(ADDRESS1), containsString("200"));
+        assertThat(multiSign.delissueaddressRemovePri(ADDRESS6), containsString("200"));
+        assertThat(multiSign.delissueaddressRemovePri(ADDRESS1), containsString("200"));
 
         sleepAndSaveInfo(OnChainSleep);
-        String response2= multiSign.collAddress(PRIKEY1,ADDRESS6);
-        String response3= multiSign.collAddress(PRIKEY1,ADDRESS1);
-        String response4= multiSign.addissueaddress(PRIKEY1,ADDRESS6);
-        String response5= multiSign.addissueaddress(PRIKEY1,ADDRESS1);
+        String response2= multiSign.collAddressRemovePri(ADDRESS6);
+        String response3= multiSign.collAddressRemovePri(ADDRESS1);
+        String response4= multiSign.addissueaddressRemovePri(ADDRESS6);
+        String response5= multiSign.addissueaddressRemovePri(ADDRESS1);
         sleepAndSaveInfo(OnChainSleep);
 
 
@@ -453,7 +453,7 @@ public class BlockSyncTest_DockerImageFlag {
         assertThat(response8, containsString("200"));
 
         JSONObject jsonObject=JSONObject.fromObject(response1);
-        String StoreHash1 = jsonObject.getJSONObject("data").get("figure").toString();
+        String StoreHash1 = jsonObject.getString("data");
         jsonObject=JSONObject.fromObject(response2);
         String StoreHash2 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response3);
@@ -492,33 +492,33 @@ public class BlockSyncTest_DockerImageFlag {
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvm.wvmInstallTest( wvm.wvmFile +"_temp.txt",PRIKEY1);
         log.info("Install Pri:"+PRIKEY1);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("figure");
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
         String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
         sleepAndSaveInfo(SLEEPTIME);
         //调用合约内的交易  调用已存在的合约wHash中的交易
         String response2 = wvm.invokeNew(existHash,"initAccount",wvm.accountA,wvm.amountA);//初始化账户A 账户余额50
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("figure");
+        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
 
         String response3 = wvm.invokeNew(existHash,"initAccount",wvm.accountB,wvm.amountB);//初始化账户B 账户余额60
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("data").getString("figure");
+        String txHash3 = JSONObject.fromObject(response3).getJSONObject("data").getString("txId");
 
         sleepAndSaveInfo(SLEEPTIME);
 
         String response4 = wvm.invokeNew(existHash,"transfer",wvm.accountA,wvm.accountB,wvm.transfer);//A向B转30
-        String txHash4 = JSONObject.fromObject(response4).getJSONObject("data").getString("figure");
+        String txHash4 = JSONObject.fromObject(response4).getJSONObject("data").getString("txId");
 
         sleepAndSaveInfo(SLEEPTIME);
 
         //查询余额invoke接口
         String response5 = wvm.invokeNew(existHash,"getBalance",wvm.accountA);//获取账户A账户余额
-        String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("figure");
+        String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("txId");
 
         sleepAndSaveInfo(SLEEPTIME/2);
 
         //销毁wvm合约
         String response9 = wvm.wvmDestroyTest(ctHash);
-        String txHash9 = JSONObject.fromObject(response9).getJSONObject("data").getString("figure");
+        String txHash9 = JSONObject.fromObject(response9).getJSONObject("data").getString("txId");
         sleepAndSaveInfo(SLEEPTIME);
 
         hashList.add(txHash1);

@@ -5,12 +5,8 @@ import java.util.Map;
 
 public interface MultiSign {
     String genMultiAddress(int M, Map keyMap);
-    String addissueaddress(String pubKey,String ...address);
-    String delissueaddress(String priKey,String ...address);
     String addissueaddressRemovePri(String ...address);
     String delissueaddressRemovePri(String ...address);
-    String collAddress(String pubKey,String ...address);
-    String delCollAddress(String priKey,String ...address);
     String collAddressRemovePri(String ...address);
     String delCollAddressRemovePri(String... address);
 
@@ -34,9 +30,7 @@ public interface MultiSign {
     String Recycle(String multiAddr,String priKey,String Pwd,String tokenType,String amount);
     String Recycle(String multiAddr,String priKey,String tokenType,String amount);
 
-//    String freezeToken(String priKey,String tokenType);
     String freezeToken(String tokenType);
-//    String recoverFrozenToken(String priKey,String tokenType);
     String recoverFrozenToken(String tokenType);
 
     String gettotal(long StartTime,long EndTime,String TokenType);

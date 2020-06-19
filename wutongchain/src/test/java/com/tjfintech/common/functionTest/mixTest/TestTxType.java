@@ -640,7 +640,7 @@ public class TestTxType {
 
         //Admin类交易 Type 20 SubType 200 201 202 203
         String response10= multiSign.collAddressRemovePri(ADDRESS6);
-        String response11= multiSign.addissueaddress(PRIKEY1,ADDRESS6);
+        String response11= multiSign.addissueaddressRemovePri(ADDRESS6);
         String response3=multiSign.freezeToken(tokenType);
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -661,9 +661,9 @@ public class TestTxType {
         checkAdmin2(txHash31,"freezeToken",tokenType,"admin");
 
         //删除归集地址
-        String response12= multiSign.delCollAddress(PRIKEY1,ADDRESS6);
+        String response12= multiSign.delCollAddressRemovePri(ADDRESS6);
         //删除发行地址
-        String response13= multiSign.delissueaddress(PRIKEY1,ADDRESS6);
+        String response13= multiSign.delissueaddressRemovePri(ADDRESS6);
         //解除冻结token
         String response4=multiSign.recoverFrozenToken(tokenType);
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
