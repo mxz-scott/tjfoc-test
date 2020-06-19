@@ -281,6 +281,9 @@ public class TestPermission {
         //余额查询权限
         checkAllInterface("236",def + Sys0 + Store0 + DockerNill + WVM0 + Mg0 + "UTXO:0000000111");
 
+        //临时增加权限设置999 为恢复sdk 同步区块
+        SetPermCertainRight("999");
+
         //所有UTXO权限
         checkAllInterface("231,232,233,235,236",def + Sys0 + Store0 + DockerNill + WVM0 + Mg0 + "UTXO:1111111111");
 
@@ -327,7 +330,7 @@ public class TestPermission {
         //执行子链相关操作
         assertEquals("1000",subLedgerCheck());
 
-        subLedgerName = "permO.l_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些
+        subLedgerName = "permOl_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些
         String response = mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerName,
                 " -t sm3", " -w first", " -c raft", ids);
         sleepAndSaveInfo(SLEEPTIME);
@@ -346,9 +349,6 @@ public class TestPermission {
         commonFunc.setPermAndCheckResp(PEER1IP,PEER1RPCPort,utilsClass.getToolID(PEER1IP),"10,284");
         //执行子链相关操作
         assertEquals("0001",subLedgerCheck());
-
-
-
 
 
         //设置为full权限
@@ -531,29 +531,8 @@ public class TestPermission {
 
     public void checkAllInterface(String right,String chkStr)throws Exception{
 
-        String tempResp = shExeAndReturn(ToolIP,preCmd + right);
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(tempResp,"mg"),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        //权限更新后查询检查生效与否
-        Shell shell1=new Shell(ToolIP,USERNAME,PASSWORD);
-        //String cmd1="cd zll;ls";//替换为权限命令
-        shell1.execute(toolPath + "./" + ToolTPName + " getpermission -p " + PEER1RPCPort + ledger);
-        ArrayList<String> stdout = shell1.getStandardOutput();
-        String resp = StringUtils.join(stdout,"\n");
-        log.info(" +  +  +  +  +  +  + :" + resp);
-        if(right=="999")
-        {
-            assertEquals(resp.contains(fullPerm),true);
-//            assertThat(resp,anyOf(containsString(fullPerm),containsString(fullPerm2)));
-        }else
-            assertEquals(resp.contains("[" + right.replace(","," ") + "]"),true);
+        SetPermCertainRight(right);
 
-        if(right.equals("0"))
-        {
-            Thread.sleep(3000);
-        }
-        //确认获取权限无异常后 增加sleep时间 此时间最好大于sdk从链上拉取权限列表时间
-        Thread.sleep(SLEEPTIME*3/2);
         String permList="";
         permList=permList +  "Def:";
         //默认开启接口检查
@@ -588,6 +567,32 @@ public class TestPermission {
         assertThat(permList, containsString(chkStr));
 
 
+    }
+
+    public void SetPermCertainRight(String right)throws Exception{
+        String tempResp = shExeAndReturn(ToolIP,preCmd + right);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(tempResp,"mg"),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        //权限更新后查询检查生效与否
+        Shell shell1=new Shell(ToolIP,USERNAME,PASSWORD);
+        //String cmd1="cd zll;ls";//替换为权限命令
+        shell1.execute(toolPath + "./" + ToolTPName + " getpermission -p " + PEER1RPCPort + ledger);
+        ArrayList<String> stdout = shell1.getStandardOutput();
+        String resp = StringUtils.join(stdout,"\n");
+        log.info(" +  +  +  +  +  +  + :" + resp);
+        if(right=="999")
+        {
+            assertEquals(resp.contains(fullPerm),true);
+//            assertThat(resp,anyOf(containsString(fullPerm),containsString(fullPerm2)));
+        }else
+            assertEquals(resp.contains("[" + right.replace(","," ") + "]"),true);
+
+        if(right.equals("0"))
+        {
+            Thread.sleep(3000);
+        }
+        //确认获取权限无异常后 增加sleep时间 此时间最好大于sdk从链上拉取权限列表时间
+        Thread.sleep(SLEEPTIME*3/2);
     }
 
    // @Test
