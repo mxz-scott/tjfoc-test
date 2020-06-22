@@ -65,7 +65,9 @@ public  class GoToken implements Token {
         map.put("comments", comments);
         map.put("tags", listTag);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/account/create", map);
+        String param = "";
+        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
+        String result = PostTest.postMethod(SDKADD + "/v1/account/create" + param, map);
         log.info(result);
         return result;
     }
@@ -101,7 +103,9 @@ public  class GoToken implements Token {
         map.put("comments", comments);
         map.put("tags", listTag);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/account/multiaddr/create", map);
+        String param = "";
+        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
+        String result = PostTest.postMethod(SDKADD + "/v1/account/multiaddr/create" + param, map);
         log.info(result);
         return result;
     }
