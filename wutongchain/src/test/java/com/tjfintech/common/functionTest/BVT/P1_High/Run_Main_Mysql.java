@@ -57,8 +57,6 @@ import org.junit.runners.Suite;
 
         AddPeerAndSyncData.class,
 
-        TestPermission.class
-
 })
 
 //Build Validation Test
