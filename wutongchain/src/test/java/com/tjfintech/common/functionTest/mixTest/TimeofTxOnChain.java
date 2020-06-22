@@ -4,6 +4,7 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -26,6 +27,7 @@ public class TimeofTxOnChain {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
     MultiSign multiSign =testBuilder.getMultiSign();
+    FileOperation fileOperation = new FileOperation();
 
     @Before
     public void beforeConfig() throws Exception {
@@ -40,7 +42,7 @@ public class TimeofTxOnChain {
         long nowTime = new Date().getTime();
         JSONObject jsonObject=JSONObject.fromObject(response);
 
-        String storeHash = jsonObject.getJSONObject("data").get("figure").toString();
+        String storeHash = jsonObject.getString("data");
 
         GetTxDetail(nowTime,storeHash);
         nowTime = new Date().getTime();
@@ -75,11 +77,13 @@ public class TimeofTxOnChain {
         GetLocal(nowTime,storeHash2);
     }
     public void GetTxDetail(long time ,String hash) throws Exception{
+
         String response2= store.GetTxDetail(hash);
 //        String response2= store.GetInlocal(hash);
         if (response2.indexOf("200")!=-1){
             long nowTime = new Date().getTime();
-               log.info(nowTime -time+"ms tx on chain");
+            fileOperation.appendToFile(hash + " on chain : " + (nowTime -time) + "ms",resourcePath + "onchain.txt");
+//               log.info(nowTime -time + "ms tx on chain");
         }else{
             Thread.sleep(50);
             GetTxDetail(time,hash);
@@ -93,7 +97,7 @@ public class TimeofTxOnChain {
 //        String response2= store.GetInlocal(hash);
         if (response2.indexOf("200")!=-1){
             long nowTime = new Date().getTime();
-            log.info(nowTime -time+"ms get in local");
+            fileOperation.appendToFile(hash + " sync db : " + (nowTime -time) + "ms",resourcePath + "storesyncdb.txt");
 
         }else{
             Thread.sleep(50);
