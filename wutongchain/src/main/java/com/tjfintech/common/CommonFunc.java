@@ -718,19 +718,16 @@ public class CommonFunc {
         assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","Enabled").trim().contains(flag));
     }
 
-    public void setSDKWalletAddrDBMysql(String SDKIP)throws Exception{
+    public void setSDKWalletAddrDBMysql(String SDKIP,String mysqlDBAddr)throws Exception{
         setSDKConfigByShell(SDKIP,"Wallet","Provider","\"\\\"mysql\"\\\"");
         setSDKConfigByShell(SDKIP,"Wallet","DBPath",mysqlDBAddr);
-//        setSDKConfigByShell(SDKIP,"AddrService","Provider","\"\\\"mysql\"\\\"");
-//        setSDKConfigByShell(SDKIP,"AddrService","DBPath",mysqlDBAddr);
 
         String checkMyqlDBAddr = mysqlDBAddr.replaceAll("\"","").replaceAll("\\\\","");
 //        System.out.print(checkMyqlDBAddr);
 
         assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","Provider").trim().contains("mysql"));
         assertEquals(true,getSDKConfigValueByShell(SDKIP,"Wallet","DBPath").trim().contains(checkMyqlDBAddr));
-//        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","Provider").trim().contains("mysql"));
-//        assertEquals(true,getSDKConfigValueByShell(SDKIP,"AddrService","DBPath").trim().contains(checkMyqlDBAddr));
+
     }
 
     public void setSDKWalletDBMysqlAddrDBMongo(String SDKIP)throws Exception{

@@ -14,40 +14,43 @@ public class CheckNecessaryFiles {
 
    @Test
     public void test(){
-       //检查节点必要文件 目前baseOK.toml
+       //检查节点必要文件 目前baseOK.toml 正常的节点配置文件备份
        String filelist = shExeAndReturn(PEER1IP,"ls " + PeerPATH + "conf/");
-       assertEquals(true,filelist.contains("baseOK.toml"));
+       log.info(PeerPATH + "conf/  contains file " + "baseOK.toml :" + filelist.contains("baseOK.toml") );
 
        filelist = shExeAndReturn(PEER2IP,"ls " + PeerPATH + "conf/");
-       assertEquals(true,filelist.contains("baseOK.toml"));
+       log.info(PeerPATH + "conf/  contains file " + "baseOK.toml :" + filelist.contains("baseOK.toml") );
 
        filelist = shExeAndReturn(PEER3IP,"ls " + PeerPATH + "conf/");
-       assertEquals(true,filelist.contains("baseOK.toml"));
+       log.info(PeerPATH + "conf/  contains file " + "baseOK.toml :" + filelist.contains("baseOK.toml") );
 
        filelist = shExeAndReturn(PEER4IP,"ls " + PeerPATH + "conf/");
-       assertEquals(true,filelist.contains("baseOK.toml"));
+       log.info(PeerPATH + "conf/  contains file " + "baseOK.toml :" + filelist.contains("baseOK.toml") );
 
-       //检查sdk必要配置文件 configMysql.toml
+       //检查sdk必要配置文件 configMysql.toml 正常的sdk配置文件备份
        filelist = shExeAndReturn(utilsClass.getIPFromStr(SDKADD),"ls " + SDKPATH + "conf/");
-       assertEquals(true,filelist.contains("configMysql.toml"));
+       log.info(SDKPATH + "conf/  contains file " + "configMysql.toml :" + filelist.contains("configMysql.toml") );
 
        //检查主机shell脚本文件
        filelist = shExeAndReturn(PEER1IP,"ls " + destShellScriptDir);
-       assertEquals(true,filelist.contains("GetConfig.sh"));
-       assertEquals(true,filelist.contains("SetConfig.sh"));
+       log.info(PEER1IP + " " + destShellScriptDir + " contains file " + "GetConfig.sh :" + filelist.contains("GetConfig.sh") );
+       log.info(PEER1IP + " " + destShellScriptDir + " contains file " + "SetConfig.sh :" + filelist.contains("SetConfig.sh") );
+       log.info(PEER1IP + " " + destShellScriptDir + " contains file " + "startWithParam.sh :" + filelist.contains("startWithParam.sh") );
 
       filelist = shExeAndReturn(PEER2IP,"ls " + destShellScriptDir);
-      assertEquals(true,filelist.contains("GetConfig.sh"));
-      assertEquals(true,filelist.contains("SetConfig.sh"));
+       log.info(PEER1IP + " " + destShellScriptDir + " contains file " + "GetConfig.sh :" + filelist.contains("GetConfig.sh") );
+       log.info(PEER1IP + " " + destShellScriptDir + " contains file " + "SetConfig.sh :" + filelist.contains("SetConfig.sh") );
+       log.info(PEER1IP + " " + destShellScriptDir + " contains file " + "startWithParam.sh :" + filelist.contains("startWithParam.sh") );
 
       filelist = shExeAndReturn(PEER4IP,"ls " + destShellScriptDir);
-      assertEquals(true,filelist.contains("GetConfig.sh"));
-      assertEquals(true,filelist.contains("SetConfig.sh"));
+       log.info(PEER1IP + " " + destShellScriptDir + " contains file " + "GetConfig.sh :" + filelist.contains("GetConfig.sh") );
+       log.info(PEER1IP + " " + destShellScriptDir + " contains file " + "SetConfig.sh :" + filelist.contains("SetConfig.sh") );
+       log.info(PEER1IP + " " + destShellScriptDir + " contains file " + "startWithParam.sh :" + filelist.contains("startWithParam.sh") );
 
       filelist = shExeAndReturn(PEER3IP,"ls " + destShellScriptDir);
-      assertEquals(true,filelist.contains("GetConfig.sh"));
-      assertEquals(true,filelist.contains("SetConfig.sh"));
-      assertEquals(true,filelist.contains("startWithParam.sh"));
+       log.info(PEER1IP + " " + destShellScriptDir + " contains file " + "GetConfig.sh :" + filelist.contains("GetConfig.sh") );
+       log.info(PEER1IP + " " + destShellScriptDir + " contains file " + "SetConfig.sh :" + filelist.contains("SetConfig.sh") );
+       log.info(PEER1IP + " " + destShellScriptDir + " contains file " + "startWithParam.sh :" + filelist.contains("startWithParam.sh") );
     }
 
 
