@@ -36,6 +36,12 @@ public class TestTLSCert {
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
 
+
+    /***
+     * 此用例仅为修改配置项为使用ECDSA证书 需要在测试环境中自行备份ECDSA证书文件
+     * 该用例属于半自动化用例
+     * @throws Exception
+     */
     @Test
     public void setConfigECDSACert()throws Exception{
         BeforeCondition bf =new BeforeCondition();
