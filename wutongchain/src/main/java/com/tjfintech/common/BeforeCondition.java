@@ -114,15 +114,17 @@ public class BeforeCondition {
         String response7= multiSign.collAddressRemovePri(MULITADD7);
         String response8= multiSign.collAddressRemovePri(MULITADD1);
         String response9=multiSign.collAddressRemovePri(ADDRESS4);
-        assertThat(response4,containsString("200"));
-        assertThat(response,containsString("200"));
-        assertThat(response2,containsString("200"));
-        assertThat(response3,containsString("200"));
-        assertThat(response5,containsString("200"));
-        assertThat(response6,containsString("200"));
-        assertThat(response7,containsString("200"));
-        assertThat(response8,containsString("200"));
-        assertThat(response9,containsString("200"));
+        //3.0.1版本修改为重复添加时sdk会返回已存在的报错
+        assertThat(response,anyOf(containsString("\"state\":200"),containsString("exist")));
+        assertThat(response2,anyOf(containsString("\"state\":200"),containsString("exist")));
+        assertThat(response3,anyOf(containsString("\"state\":200"),containsString("exist")));
+        assertThat(response4,anyOf(containsString("\"state\":200"),containsString("exist")));
+        assertThat(response5,anyOf(containsString("\"state\":200"),containsString("exist")));
+        assertThat(response6,anyOf(containsString("\"state\":200"),containsString("exist")));
+        assertThat(response7,anyOf(containsString("\"state\":200"),containsString("exist")));
+        assertThat(response8,anyOf(containsString("\"state\":200"),containsString("exist")));
+        assertThat(response9,anyOf(containsString("\"state\":200"),containsString("exist")));
+
         //2.0.1版本需要添加发行地址后才可以发行
         String response11= multiSign.addissueaddressRemovePri(IMPPUTIONADD);
         String response12= multiSign.addissueaddressRemovePri(MULITADD3);
@@ -133,16 +135,16 @@ public class BeforeCondition {
         String response17= multiSign.addissueaddressRemovePri(MULITADD7);
         String response18= multiSign.addissueaddressRemovePri(MULITADD1);
         String response19=multiSign.addissueaddressRemovePri(ADDRESS4);
-        assertThat(response14,containsString("200"));
-        assertThat(response11,containsString("200"));
-        assertThat(response12,containsString("200"));
-        assertThat(response13,containsString("200"));
-        assertThat(response15,containsString("200"));
-        assertThat(response16,containsString("200"));
-        assertThat(response17,containsString("200"));
-        assertThat(response18,containsString("200"));
-        assertThat(response19,containsString("200"));
 
+        assertThat(response11,anyOf(containsString("\"state\":200"),containsString("exist")));
+        assertThat(response12,anyOf(containsString("\"state\":200"),containsString("exist")));
+        assertThat(response13,anyOf(containsString("\"state\":200"),containsString("exist")));
+        assertThat(response14,anyOf(containsString("\"state\":200"),containsString("exist")));
+        assertThat(response15,anyOf(containsString("\"state\":200"),containsString("exist")));
+        assertThat(response16,anyOf(containsString("\"state\":200"),containsString("exist")));
+        assertThat(response17,anyOf(containsString("\"state\":200"),containsString("exist")));
+        assertThat(response18,anyOf(containsString("\"state\":200"),containsString("exist")));
+        assertThat(response19,anyOf(containsString("\"state\":200"),containsString("exist")));
     }
 
     /**

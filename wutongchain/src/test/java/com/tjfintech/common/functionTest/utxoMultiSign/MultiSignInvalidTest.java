@@ -473,5 +473,130 @@ public class MultiSignInvalidTest {
         assertThat(getbalancebytt, containsString("Invalid multiple address"));
     }
 
+    /**
+     * 重复删除/添加发行地址归集地址报错检查
+     */
+    @Test
+    public void DupAddDelIssueCollAddr()throws Exception{
+        int M = 3;
+        Map<String, Object> map = new HashMap<>();
+        map.put("1", PUBKEY3);
+        map.put("2", PUBKEY4);
+        map.put("3", PUBKEY5);
+        String MultiAddr8 =JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//345
+        log.info("生成多签地址： " + MultiAddr8);
+
+        map.clear();
+        map.put("1", PUBKEY6);
+        map.put("2", PUBKEY4);
+        map.put("3", PUBKEY5);
+        String MultiAddr9 =JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//456
+        log.info("生成多签地址： " + MultiAddr9);
+
+        //第一次添加归集地址发行地址
+        log.info("添加发行及归集地址： " + MultiAddr8);
+        String respAddIssue = multiSign.addissueaddressRemovePri(MultiAddr8);
+        String respAddColl = multiSign.collAddressRemovePri(MultiAddr8);
+        if(respAddIssue.contains("exist")){
+            log.info("添加发行地址： " + MultiAddr8 + "曾经已经添加过进行删除");
+            multiSign.delissueaddressRemovePri(MultiAddr9);//测试原因之前可能已经添加过则统一删除
+            multiSign.delissueaddressRemovePri(MultiAddr8);
+            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
+                    utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+            respAddIssue = multiSign.addissueaddressRemovePri(MultiAddr8);
+        }
+        if(respAddColl.contains("exist")){
+            log.info("添加归集地址： " + MultiAddr8 + "曾经已经添加过进行删除");
+            multiSign.delCollAddressRemovePri(MultiAddr9);//测试原因之前可能已经添加过则统一删除
+            multiSign.delCollAddressRemovePri(MultiAddr8);
+            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
+                    utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+            respAddColl = multiSign.collAddressRemovePri(MultiAddr8);
+        }
+
+        assertEquals("200",JSONObject.fromObject(respAddIssue).getString("state"));
+        assertEquals("200",JSONObject.fromObject(respAddColl).getString("state"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        //重复添加归集地址发行地址
+        String respAddIssueErr = multiSign.addissueaddressRemovePri(MultiAddr8);
+        String respAddCollErr = multiSign.collAddressRemovePri(MultiAddr8);
+        String respAddIssueErr2 = multiSign.addissueaddressRemovePri(MultiAddr8);
+        String respAddCollErr2 = multiSign.collAddressRemovePri(MultiAddr8);
+
+        assertEquals("500",JSONObject.fromObject(respAddIssueErr).getString("state"));
+        assertThat(respAddIssueErr,containsString("issue address[" + MultiAddr8 + "] exist!"));
+        assertEquals("500",JSONObject.fromObject(respAddCollErr).getString("state"));
+        assertThat(respAddCollErr,containsString("coll address[" + MultiAddr8 + "] exist!"));
+
+        //检查错误交易不会提示重复交易
+//        assertEquals("500",JSONObject.fromObject(respAddIssueErr2).getString("state"));
+//        assertThat(respAddIssueErr2,containsString("issue address[" + MultiAddr8 + "] exist!"));
+//        assertEquals("500",JSONObject.fromObject(respAddCollErr2).getString("state"));
+//        assertThat(respAddCollErr2,containsString("coll address[" + MultiAddr8 + "] exist!"));
+
+        //添加时有一个存在一个不存在
+        String respAddIssueErr3 = multiSign.addissueaddressRemovePri(MultiAddr8,MultiAddr9);
+        String respAddCollErr3 = multiSign.collAddressRemovePri(MultiAddr8,MultiAddr9);
+        assertEquals("500",JSONObject.fromObject(respAddIssueErr3).getString("state"));
+        assertThat(respAddIssueErr3,containsString("issue address[" + MultiAddr8 + "] exist!"));
+        assertEquals("500",JSONObject.fromObject(respAddCollErr3).getString("state"));
+        assertThat(respAddCollErr3,containsString("coll address[" + MultiAddr8 + "] exist!"));
+
+        //正常添加MultiAddr9
+        String respAddIssue2 = multiSign.addissueaddressRemovePri(MultiAddr9);
+        String respAddColl2 = multiSign.collAddressRemovePri(MultiAddr9);
+        assertEquals("200",JSONObject.fromObject(respAddIssue2).getString("state"));
+        assertEquals("200",JSONObject.fromObject(respAddColl2).getString("state"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        //第一次删除归集地址和发行地址MultiAddr8
+        String respDelIssue = multiSign.delissueaddressRemovePri(MultiAddr8);
+        String respDelColl = multiSign.delCollAddressRemovePri(MultiAddr8);
+        assertEquals("200",JSONObject.fromObject(respDelIssue).getString("state"));
+        assertEquals("200",JSONObject.fromObject(respDelColl).getString("state"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        //重复删除归集地址和发行地址
+        String respDelIssueErr2 = multiSign.delissueaddressRemovePri(MultiAddr8);
+        String respDelCollErr2 = multiSign.delCollAddressRemovePri(MultiAddr8);
+        assertEquals("500",JSONObject.fromObject(respDelIssueErr2).getString("state"));
+        assertThat(respDelIssueErr2,containsString("del issue address[" + MultiAddr8 + "] not exist!"));
+        assertEquals("500",JSONObject.fromObject(respDelCollErr2).getString("state"));
+        assertThat(respDelCollErr2,containsString("del coll address[" + MultiAddr8 + "] not exist!"));
+
+        sleepAndSaveInfo(5000);
+
+        //重复删除归集地址和发行地址 一个已删除 一个未删除
+        String respDelIssueErr3 = multiSign.delissueaddressRemovePri(MultiAddr8,MultiAddr9);
+        String respDelCollErr3 = multiSign.delCollAddressRemovePri(MultiAddr8,MultiAddr9);
+        assertEquals("500",JSONObject.fromObject(respDelIssueErr3).getString("state"));
+        assertThat(respDelIssueErr3,containsString("del issue address[" + MultiAddr8 + "] not exist!"));
+        assertEquals("500",JSONObject.fromObject(respDelCollErr3).getString("state"));
+        assertThat(respDelCollErr3,containsString("del coll address[" + MultiAddr8 + "] not exist!"));
+
+        //第一次删除归集地址和发行地址MultiAddr9
+        String respDelIssue2 = multiSign.delissueaddressRemovePri(MultiAddr9);
+        String respDelColl2 = multiSign.delCollAddressRemovePri(MultiAddr9);
+        assertEquals("200",JSONObject.fromObject(respDelIssue2).getString("state"));
+        assertEquals("200",JSONObject.fromObject(respDelColl2).getString("state"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        String respDelIssueErr4 = multiSign.delissueaddressRemovePri(MultiAddr8,MultiAddr9);
+        String respDelCollErr4 = multiSign.delCollAddressRemovePri(MultiAddr8,MultiAddr9);
+        assertEquals("500",JSONObject.fromObject(respDelIssueErr4).getString("state"));
+        assertThat(respDelIssueErr4,containsString("del issue address[" + MultiAddr9 + "] not exist!"));
+        assertEquals("500",JSONObject.fromObject(respDelCollErr4).getString("state"));
+        assertThat(respDelCollErr4,containsString("del coll address[" + MultiAddr9 + "] not exist!"));
+    }
+
 }
 
