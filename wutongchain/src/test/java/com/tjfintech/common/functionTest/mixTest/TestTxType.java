@@ -29,6 +29,7 @@ import java.util.*;
 
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 
 import static org.junit.Assert.assertEquals;
@@ -631,8 +632,10 @@ public class TestTxType {
         String respon= soloSign.issueToken(PRIKEY1,tokenType,"100","单签"+ADDRESS1+"发行token "+tokenType,ADDRESS1);
 
         //预先做删除归集地址、删除发行地址操作、解除token锁定，以便后续操作正常进行
-        assertThat(multiSign.delCollAddressRemovePri(ADDRESS6),containsString("200"));
-        assertThat(multiSign.delissueaddressRemovePri(ADDRESS6),containsString("200"));
+        assertThat(multiSign.delCollAddressRemovePri(ADDRESS6),
+                anyOf(containsString("\"state\":500"),containsString("not exist")));
+        assertThat(multiSign.delissueaddressRemovePri(ADDRESS6),
+                anyOf(containsString("\"state\":500"),containsString("not exist")));
         assertThat(multiSign.recoverFrozenToken(tokenType),containsString("200"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
