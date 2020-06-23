@@ -97,7 +97,7 @@ public class UpgradeDataGetFunc {
         //钱包开启时执行 否则不执行
         if(commonFunc.getSDKWalletEnabled()) {
             //UTXO交易
-            mapTXHashResp.put("get multi utxo balance", multiSign.Balance(IMPPUTIONADD, PRIKEY4, ""));
+            mapTXHashResp.put("get multi utxo balance", multiSign.BalanceByAddr(IMPPUTIONADD, ""));
             mapTXHashResp.put("get solo utxo balance", soloSign.Balance(PRIKEY1, ""));
             mapTXHashResp.put("get zero account balance", multiSign.QueryZero(""));
             mapTXHashResp.put("get all utxo account balance info", commonFunc.getUTXOAccountBalance().toString());

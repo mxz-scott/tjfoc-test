@@ -530,6 +530,8 @@ public class MultiTest {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recycleInfo2,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         log.info("查询余额判断回收成功与否");
@@ -616,6 +618,8 @@ public class MultiTest {
          assertEquals("200",JSONObject.fromObject(recycleInfo4).getString("state"));
          assertEquals("200",JSONObject.fromObject(recycleInfo5).getString("state"));
 
+         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recycleInfo2,utilsClass.sdkGetTxHashType20),
+                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
          commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                  utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
@@ -745,6 +749,9 @@ public class MultiTest {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recycleInfo2,utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
 
 
         log.info("查询余额判断回收成功与否");
@@ -824,9 +831,10 @@ public class MultiTest {
         assertEquals("200",JSONObject.fromObject(recycleInfo4).getString("state"));
         assertEquals("200",JSONObject.fromObject(recycleInfo5).getString("state"));
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recycleInfo2,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recycleInfo5,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         log.info("查询余额判断回收成功与否");
         String queryInfo3 = soloSign.Balance(PRIKEY1, tokenType);
@@ -922,6 +930,8 @@ public class MultiTest {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recycleInfo2,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recycleInfo5,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         log.info("查询余额判断回收成功与否");
         String queryInfo3 = multiSign.BalanceByAddr(MULITADD6,tokenType);
@@ -1006,6 +1016,8 @@ public class MultiTest {
         assertEquals("200",JSONObject.fromObject(recycleInfo5).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recycleInfo2,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 

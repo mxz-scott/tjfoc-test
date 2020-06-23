@@ -68,8 +68,8 @@ public class MultiTest {
         tokenType2 = IssueToken(6, issueAmount2);
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中两种token余额");
-        String response1 = multiSign.Balance(IMPPUTIONADD,PRIKEY4, tokenType);
-        String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        String response1 = multiSign.BalanceByAddr(IMPPUTIONADD,tokenType);
+        String response2 = multiSign.BalanceByAddr(IMPPUTIONADD,tokenType2);
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));
         assertEquals(actualAmount1,JSONObject.fromObject(response1).getJSONObject("Data").getString("Total"));
         assertEquals("200",JSONObject.fromObject(response2).getString("state"));
@@ -102,8 +102,8 @@ public class MultiTest {
         }
 
         log.info("查询归集地址跟MULITADD4余额，判断转账是否成功");
-        String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String queryInfo2 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
+        String queryInfo = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        String queryInfo2 = multiSign.BalanceByAddr(MULITADD4, tokenType);
         assertEquals("200",JSONObject.fromObject(queryInfo).getString("state"));
         assertEquals(amount1,JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
         assertEquals("200",JSONObject.fromObject(queryInfo2).getString("state"));
@@ -117,8 +117,8 @@ public class MultiTest {
         Thread.sleep(SLEEPTIME);
 
         log.info("查询回收后账户余额是否为0");
-        String queryInfo3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String queryInfo4 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
+        String queryInfo3 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        String queryInfo4 = multiSign.BalanceByAddr(MULITADD4, tokenType);
         assertEquals("200",JSONObject.fromObject(queryInfo3).getString("state"));
         assertEquals("0",JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"));
         assertEquals("200",JSONObject.fromObject(queryInfo4).getString("state"));
@@ -143,7 +143,7 @@ public class MultiTest {
 
 
         log.info("查询归集地址中两种token余额");
-        String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String response1 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));
         assertEquals(actualAmount1,JSONObject.fromObject(response1).getJSONObject("Data").getString("Total"));
 
@@ -156,7 +156,7 @@ public class MultiTest {
         Thread.sleep(SLEEPTIME);
 
         log.info("查询余额判断转账是否成功");
-        String queryInfo= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
+        String queryInfo= multiSign.BalanceByAddr(MULITADD4,tokenType);
         assertEquals("200",JSONObject.fromObject(queryInfo).getString("state"));
         assertEquals("0",JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
 
@@ -165,8 +165,8 @@ public class MultiTest {
         Thread.sleep(SLEEPTIME);
 
         log.info("查询归集地址中两种token余额");
-        response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        response1 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        String response2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType2);
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));
         assertEquals(actualAmount1,JSONObject.fromObject(response1).getJSONObject("Data").getString("Total"));
         assertEquals("200",JSONObject.fromObject(response2).getString("state"));
@@ -185,15 +185,15 @@ public class MultiTest {
         Thread.sleep(SLEEPTIME);
 
         log.info("查询余额判断转账是否成功");
-        queryInfo= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
-        String queryInfo2= multiSign.Balance(MULITADD5,PRIKEY1,tokenType2);
+        queryInfo= multiSign.BalanceByAddr(MULITADD4,tokenType);
+        String queryInfo2= multiSign.BalanceByAddr(MULITADD5,tokenType2);
         assertEquals("200",JSONObject.fromObject(queryInfo).getString("state"));
         assertEquals("200",JSONObject.fromObject(queryInfo2).getString("state"));
         assertEquals("20",JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
         assertEquals("10",JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total"));
 
-        multiSign.Balance(IMPPUTIONADD,PRIKEY4, tokenType);
-        multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        multiSign.BalanceByAddr(IMPPUTIONADD,tokenType);
+        multiSign.BalanceByAddr(IMPPUTIONADD,tokenType2);
 
         String amount1, amount2;
 
@@ -221,9 +221,9 @@ public class MultiTest {
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3= multiSign.Balance(MULITADD4,PRIKEY1,tokenType);
-        String queryInfo4= multiSign.Balance(MULITADD5,PRIKEY1,tokenType2);
-        String queryInfo5= multiSign.Balance(MULITADD5,PRIKEY1,tokenType);
+        String queryInfo3= multiSign.BalanceByAddr(MULITADD4,tokenType);
+        String queryInfo4= multiSign.BalanceByAddr(MULITADD5,tokenType2);
+        String queryInfo5= multiSign.BalanceByAddr(MULITADD5,tokenType);
 
         assertEquals("200",JSONObject.fromObject(queryInfo3).getString("state"));
         assertEquals("200",JSONObject.fromObject(queryInfo4).getString("state"));

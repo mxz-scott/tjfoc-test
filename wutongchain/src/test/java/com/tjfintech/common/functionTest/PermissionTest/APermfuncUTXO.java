@@ -136,7 +136,7 @@ public class APermfuncUTXO {
 
     public String multiPostBalance(String multiAddr,String priKey,String tokenType)throws Exception {
         log.info("查询多签账户余额");
-        String response = multiSign.Balance(multiAddr, priKey, tokenType);
+        String response = multiSign.BalanceByAddr(multiAddr, tokenType);
         return retAllow(response);
     }
     //不受权限管控

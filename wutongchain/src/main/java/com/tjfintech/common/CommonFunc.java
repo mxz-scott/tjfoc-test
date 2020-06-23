@@ -135,16 +135,16 @@ public class CommonFunc {
             //多签账户余额查询
             if(pwd.isEmpty()) {
                 //不带密码查询
-                response = multiSign.Balance(queryAccount, prikey, queryTokenType);
+                response = multiSign.BalanceByAddr(queryAccount,  queryTokenType);
             }
             else
             {
                 //带密码查询
-                response = multiSign.Balance(queryAccount, prikey, pwd, queryTokenType);
+                response = multiSign.BalanceByAddr(queryAccount, queryTokenType);
             }
         }
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
-        balanceAmount = JSONObject.fromObject(response).getJSONObject("data").getString("Total");
+        balanceAmount = JSONObject.fromObject(response).getJSONObject("data").getString("total");
         return balanceAmount;
     }
 
@@ -266,7 +266,7 @@ public class CommonFunc {
         String pwd = "";
         if(response.contains("need more sign")) {
             log.info("need more sign");
-            tx = JSONObject.fromObject(response).getJSONObject("data").getString("Tx");
+            tx = JSONObject.fromObject(response).getJSONObject("data").getString("tx");
         }
         if(!tx.isEmpty()) {
             //第一组私钥密码在转账请求时使用签名
@@ -279,10 +279,10 @@ public class CommonFunc {
                 else
                     response2 = multiSign.Sign(tx, prikey, pwd);
                 assertEquals("200", JSONObject.fromObject(response2).getString("state"));
-                if (JSONObject.fromObject(response2).getJSONObject("data").getString("IsCompleted").contains("true"))
+                if (JSONObject.fromObject(response2).getJSONObject("data").getString("isCompleted").contains("true"))
                     break;
                 else
-                    tx = JSONObject.fromObject(response2).getJSONObject("data").getString("Tx");
+                    tx = JSONObject.fromObject(response2).getJSONObject("data").getString("tx");
             }
         }
     }
@@ -442,7 +442,7 @@ public class CommonFunc {
         System.out.print(data);
         String response = multiSign.issueToken(issueAddr,ToAddr,tokenType, amount, data);
         assertThat(response, containsString("200"));
-        String Tx1 = JSONObject.fromObject(response).getJSONObject("data").getString("Tx");
+        String Tx1 = JSONObject.fromObject(response).getJSONObject("data").getString("tx");
         System.out.print("第一次签名");
         String tx = Tx1;
         for(int i=0;i<priKeys.size();i++) {
@@ -452,9 +452,9 @@ public class CommonFunc {
             else
                 response2 = multiSign.Sign(tx,priKeys.get(i),pwds.get(i));
             assertEquals("200", JSONObject.fromObject(response2).getString("state"));
-            if(JSONObject.fromObject(response2).getJSONObject("data").getString("IsCompleted").contains("true")) break;
+            if(JSONObject.fromObject(response2).getJSONObject("data").getString("isCompleted").contains("true")) break;
             else
-                tx = JSONObject.fromObject(response2).getJSONObject("data").getString("Tx");
+                tx = JSONObject.fromObject(response2).getJSONObject("data").getString("tx");
         }
         return tokenType;
     }
@@ -513,19 +513,19 @@ public class CommonFunc {
             if(account.equals("")) {
                 if(pwd.equals("")) {
                     tokenTotal = JSONObject.fromObject(
-                            soloSign.Balance(accountPrikey, token)).getJSONObject("data").getString("Total");
+                            soloSign.Balance(accountPrikey, token)).getJSONObject("data").getString("total");
                 }else{
                     tokenTotal = JSONObject.fromObject(
-                            soloSign.Balance(accountPrikey, pwd,token)).getJSONObject("data").getString("Total");
+                            soloSign.Balance(accountPrikey, pwd,token)).getJSONObject("data").getString("total");
                 }
             }
             else{
                 if(pwd.equals("")) {
                     tokenTotal = JSONObject.fromObject(
-                            multiSign.Balance(account, accountPrikey, token)).getJSONObject("data").getString("Total");
+                            multiSign.BalanceByAddr(account, token)).getJSONObject("data").getString("total");
                 }else {
                     tokenTotal = JSONObject.fromObject(
-                            multiSign.Balance(account, accountPrikey,pwd, token)).getJSONObject("data").getString("Total");
+                            multiSign.Balance(account, accountPrikey,pwd, token)).getJSONObject("data").getString("total");
                 }
             }
             if(!tokenTotal.equals("0"))
