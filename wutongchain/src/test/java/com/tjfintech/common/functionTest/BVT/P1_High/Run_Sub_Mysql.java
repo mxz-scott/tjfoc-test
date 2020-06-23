@@ -35,6 +35,7 @@ import org.junit.runners.Suite;
 
         MultiTest.class,
         MultiTest_33_12.class,
+        MultiTest_UnspentTxOutput_test.class,
         MultiSignDetailTest.class,
         MultiSignInvalidTest.class,
         MultiTestInvalid.class,

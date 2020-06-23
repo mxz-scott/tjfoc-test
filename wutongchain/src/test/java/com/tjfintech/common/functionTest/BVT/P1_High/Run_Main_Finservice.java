@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.BVT.P1_High;
 
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.*;
 
 import com.tjfintech.common.functionTest.Conditions.SetTokenApiPerm999;
@@ -15,18 +16,25 @@ import org.junit.runners.Suite;
         SetAccountEmpty.class,
         SetMainLedger.class,
         SetURLToSDKAddr.class,
+        
+        BeforeCondition.class,
         SetTokenApiPerm999.class,
-        SDKToTokenMultiTest.class,
-        TokenAccurateTest.class,
+
         TokenInterfaceTest.class,
-        TokenMultiInvalidTest.class,
         TokenMultiTest.class,
-        TokenPrivateStoreTest.class,
-        TokenSoloInvalidTest.class,
         TokenSoloTest.class,
         TokenStoreTest.class,
+        TokenPrivateStoreTest.class,
+        TokenAccurateTest.class,
+
+        SDKToTokenMultiTest.class,
+
         TokenTxTypeTest_SDK.class,
         TokenTxTypeTest_Token.class,
+
+        TokenMultiInvalidTest.class,
+        TokenSoloInvalidTest.class,
+
         SetURLToSDKAddr.class,
 
 })
