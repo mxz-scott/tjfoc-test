@@ -825,8 +825,10 @@ public class  MultiTestInvalid {
     public void TC979_recoverUnIssueToken()throws Exception{
         String unIssueToken = "unIssueToken";
         String resp1 = multiSign.recoverFrozenToken(unIssueToken);
-        Thread.sleep(SLEEPTIME);
-        assertEquals(true,store.GetTxDetail(JSONObject.fromObject(resp1).getString("data")).contains("failed to find transaction"));
+        assertEquals("500",JSONObject.fromObject(resp1).getString("state"));
+        assertThat(resp1,containsString("not exist"));
+//        Thread.sleep(SLEEPTIME);
+//        assertEquals(true,store.GetTxDetail(JSONObject.fromObject(resp1).getString("data")).contains("failed to find transaction"));
     }
 
 
