@@ -21,6 +21,7 @@ import org.junit.Before;
 
 import static com.tjfintech.common.CommonFunc.*;
 import static com.tjfintech.common.utils.FileOperation.getPeerBaseValueByShell;
+import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 
 import org.junit.FixMethodOrder;
@@ -339,10 +340,14 @@ public class BlockSyncTest_DockerImageFlag {
         bf.collAddressTest();//添加归集地址和发行地址的注册
         sleepAndSaveInfo(OnChainSleep);
 
-        assertThat(multiSign.delCollAddressRemovePri(ADDRESS6), containsString("200"));
-        assertThat(multiSign.delCollAddressRemovePri(ADDRESS1), containsString("200"));
-        assertThat(multiSign.delissueaddressRemovePri(ADDRESS6), containsString("200"));
-        assertThat(multiSign.delissueaddressRemovePri(ADDRESS1), containsString("200"));
+        assertThat(multiSign.delCollAddressRemovePri(ADDRESS6),
+                anyOf(containsString("200"),containsString("not exist")));
+        assertThat(multiSign.delCollAddressRemovePri(ADDRESS1),
+                anyOf(containsString("200"),containsString("not exist")));
+        assertThat(multiSign.delissueaddressRemovePri(ADDRESS6),
+                anyOf(containsString("200"),containsString("not exist")));
+        assertThat(multiSign.delissueaddressRemovePri(ADDRESS1),
+                anyOf(containsString("200"),containsString("not exist")));
 
         sleepAndSaveInfo(OnChainSleep);
         String response2= multiSign.collAddressRemovePri(ADDRESS6);
@@ -417,10 +422,15 @@ public class BlockSyncTest_DockerImageFlag {
         bf.collAddressTest();//添加归集地址和发行地址的注册
         sleepAndSaveInfo(OnChainSleep);
 
-        assertThat(multiSign.delCollAddressRemovePri(ADDRESS6), containsString("200"));
-        assertThat(multiSign.delCollAddressRemovePri(ADDRESS1), containsString("200"));
-        assertThat(multiSign.delissueaddressRemovePri(ADDRESS6), containsString("200"));
-        assertThat(multiSign.delissueaddressRemovePri(ADDRESS1), containsString("200"));
+        assertThat(multiSign.delCollAddressRemovePri(ADDRESS6),
+                anyOf(containsString("200"),containsString("not exist")));
+        assertThat(multiSign.delCollAddressRemovePri(ADDRESS1),
+                anyOf(containsString("200"),containsString("not exist")));
+        assertThat(multiSign.delissueaddressRemovePri(ADDRESS6),
+                anyOf(containsString("200"),containsString("not exist")));
+        assertThat(multiSign.delissueaddressRemovePri(ADDRESS1),
+                anyOf(containsString("200"),containsString("not exist")));
+
 
         sleepAndSaveInfo(OnChainSleep);
         String response2= multiSign.collAddressRemovePri(ADDRESS6);

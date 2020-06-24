@@ -636,7 +636,7 @@ public class TestTxType {
                 anyOf(containsString("\"state\":500"),containsString("not exist")));
         assertThat(multiSign.delissueaddressRemovePri(ADDRESS6),
                 anyOf(containsString("\"state\":500"),containsString("not exist")));
-        assertThat(multiSign.recoverFrozenToken(tokenType),containsString("200"));
+//        assertThat(multiSign.recoverFrozenToken(tokenType),containsString("200"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);

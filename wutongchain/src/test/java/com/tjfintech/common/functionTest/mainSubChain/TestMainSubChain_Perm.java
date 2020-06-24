@@ -138,7 +138,8 @@ public class TestMainSubChain_Perm {
         sleepAndSaveInfo(SLEEPTIME);
         assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), "[236 253]");
         assertThat(multiSign.QueryZero(""),containsString("\"state\":200"));
-        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),containsString("\"state\":200"));
+        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),
+                anyOf(containsString("\"state\":200"),containsString("exist")));
 
         //创建子链01 包含节点A、B、C
         String chainName="tc1662_01"+ sdf.format(dt)+ RandomUtils.nextInt(1000);
@@ -182,7 +183,8 @@ public class TestMainSubChain_Perm {
         tempResp = store.CreateStore("tc1662 main no permission tx data").toLowerCase();
         assertThat(tempResp,anyOf(containsString(noPerm),containsString(noPerm2)));
         assertThat(multiSign.QueryZero(""),containsString("\"state\":200"));
-        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),containsString("\"state\":200"));
+        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),
+                anyOf(containsString("\"state\":200"),containsString("exist")));
 
 
         //设置主链权限为999,确认主链sdk权限恢复
@@ -210,7 +212,8 @@ public class TestMainSubChain_Perm {
                 anyOf(containsString(fullPerm), containsString(fullPerm2)));
         assertThat(store.CreateStore("tc1663 ledger with permission3,211 tx data"),containsString("\"state\":200"));
         assertThat(multiSign.QueryZero(""),containsString("\"state\":200"));
-        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),containsString("\"state\":200"));
+        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),
+                anyOf(containsString("\"state\":200"),containsString("exist")));
 
         //创建子链01 包含节点A、B、C
         String chainName="tc1663_01"+sdf.format(dt)+ RandomUtils.nextInt(1000);
@@ -256,7 +259,8 @@ public class TestMainSubChain_Perm {
                 anyOf(containsString(fullPerm), containsString(fullPerm2)));
         assertEquals(store.CreateStore("tc1663 main no permission tx data").contains("\"state\":200"),true);
         assertThat(multiSign.QueryZero(""),containsString("\"state\":200"));
-        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),containsString("\"state\":200"));
+        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),
+                anyOf(containsString("\"state\":200"),containsString("exist")));
 
 
         //设置主链权限为999,确认主链sdk权限恢复
