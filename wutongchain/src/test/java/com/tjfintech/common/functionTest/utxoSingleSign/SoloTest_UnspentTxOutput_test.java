@@ -99,7 +99,7 @@ public class SoloTest_UnspentTxOutput_test {
         assertEquals("insufficient balance",JSONObject.fromObject(transferInfo2).getString("message"));
 
         String query1= soloSign.BalanceByAddr(ADDRESS1,tokenType);
-        String query2= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query2= soloSign.BalanceByAddr(ADDRESS2,tokenType);
         String query3= soloSign.BalanceByAddr(ADDRESS4,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query1).getString("state"));

@@ -244,9 +244,9 @@ public class SingleSignInvalidTest {
     }
 
     /**
-     * 查询余额
+     * 查询余额 v2接口不再支持通过私钥查询账户余额
      */
-    @Test
+//    @Test
     public void TC1337_balance(){
 
         Map<String,String> Data =  new HashMap<>();
