@@ -257,7 +257,7 @@ public class SingleSignInvalidTest {
         Set<String> strings = Data.keySet();
         for(String key: strings){
             String value=Data.get(key);
-            String data = soloSign.Balance(key, "TestToken");
+            String data = soloSign.BalanceByAddr(key, "TestToken");
             assertThat(data,containsString(value));
         }
 

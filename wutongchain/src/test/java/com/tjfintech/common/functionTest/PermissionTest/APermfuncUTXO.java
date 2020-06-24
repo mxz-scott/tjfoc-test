@@ -220,9 +220,9 @@ public class APermfuncUTXO {
         Thread.sleep(3000);
         return retAllow(response);
     }
-    public String soloBalance(String priKey,String tokenType)throws Exception  {
+    public String soloBalance(String Account,String tokenType)throws Exception  {
         log.info("单签余额查询");
-        String response= soloSign.Balance( priKey, tokenType);
+        String response= soloSign.BalanceByAddr( Account, tokenType);
         return retAllow(response);
     }
 
