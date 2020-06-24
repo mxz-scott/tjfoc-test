@@ -44,8 +44,8 @@ public class LocalMultiSignInvalidTest {
 
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中token余额");
-        String balance = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String balance2 = multiSign.Balance(IMPPUTIONADD, PRIKEY5, tokenType2);
+        String balance = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        String balance2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType2);
 
         assertThat(tokenType + "查询余额不正确", balance, containsString("\"Total\":\"100\""));
         assertThat(tokenType2 + "查询余额不正确", balance2, containsString("\"Total\":\"100.123\""));
@@ -111,19 +111,19 @@ public class LocalMultiSignInvalidTest {
         Thread.sleep(SLEEPTIME);
 
         log.info("查询归集地址和MULITADD4余额，判断转账是否成功");
-        String queryInfo = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
+        String queryInfo = multiSign.BalanceByAddr(MULITADD4, tokenType);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo, containsString("\"Total\":\"10\""));
 
-        String queryInfo11 = multiSign.Balance(MULITADD4, PRIKEY2, tokenType2);
+        String queryInfo11 = multiSign.BalanceByAddr(MULITADD4, tokenType2);
         assertThat(queryInfo11, containsString("200"));
         assertThat(queryInfo11, containsString("\"Total\":\"20.123\""));
 
-        String queryInfo2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String queryInfo2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
         assertThat(queryInfo2, containsString("200"));
         assertThat(queryInfo2, containsString("\"Total\":\"90\""));
 
-        String queryInfo22 = multiSign.Balance(IMPPUTIONADD, PRIKEY5, tokenType2);
+        String queryInfo22 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType2);
         assertThat(queryInfo22, containsString("200"));
         assertThat(queryInfo22, containsString("\"Total\":\"80\""));
 

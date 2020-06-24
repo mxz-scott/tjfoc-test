@@ -56,7 +56,7 @@ public class LocalMultiSignTest {
         tokenType = IssueTokenLocalSign(7, "1000", IMPPUTIONADD);
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中token余额");
-        String balance = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String balance = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
         assertThat(tokenType + "查询余额错误", balance, containsString("200"));
         assertThat(tokenType + "查询余额不正确", balance, containsString("\"Total\":\"1000\""));
 
@@ -69,11 +69,11 @@ public class LocalMultiSignTest {
         Thread.sleep(SLEEPTIME);
 
         log.info("查询归集地址和MULITADD4余额，判断转账是否成功");
-        String queryInfo = multiSign.Balance(MULITADD4,PRIKEY1, tokenType);
+        String queryInfo = multiSign.BalanceByAddr(MULITADD4, tokenType);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo, containsString("\"Total\":\"10\""));
 
-        String queryInfo2 = multiSign.Balance(IMPPUTIONADD,PRIKEY4, tokenType);
+        String queryInfo2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
         assertThat(queryInfo2, containsString("200"));
         assertThat(queryInfo2, containsString("\"Total\":\"990\""));
 
@@ -112,7 +112,7 @@ public class LocalMultiSignTest {
         tokenType = IssueTokenLocalSignPwd(7, "1000", IMPPUTIONADD);
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中token余额");
-        String balance = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String balance = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
         assertThat(tokenType + "查询余额错误", balance, containsString("200"));
         assertThat(tokenType + "查询余额不正确", balance, containsString("\"Total\":\"1000\""));
 
@@ -125,11 +125,11 @@ public class LocalMultiSignTest {
         Thread.sleep(SLEEPTIME);
 
         log.info("查询归集地址和MULITADD7余额，判断转账是否成功");
-        String queryInfo = multiSign.Balance(MULITADD7, PRIKEY1, tokenType);
+        String queryInfo = multiSign.BalanceByAddr(MULITADD7, tokenType);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo, containsString("\"Total\":\"10\""));
 
-        String queryInfo2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String queryInfo2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
         assertThat(queryInfo2, containsString("200"));
         assertThat(queryInfo2, containsString("\"Total\":\"990\""));
 
@@ -143,11 +143,11 @@ public class LocalMultiSignTest {
         Thread.sleep(SLEEPTIME);
 
         log.info("查询地址MULITADD7和MULITADD4余额，判断转账是否成功");
-        queryInfo = multiSign.Balance(MULITADD7, PRIKEY1, tokenType);
+        queryInfo = multiSign.BalanceByAddr(MULITADD7, tokenType);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo, containsString("\"Total\":\"7\""));
 
-        queryInfo2 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
+        queryInfo2 = multiSign.BalanceByAddr(MULITADD4, tokenType);
         assertThat(queryInfo2, containsString("200"));
         assertThat(queryInfo2, containsString("\"Total\":\"3\""));
 
@@ -164,9 +164,9 @@ public class LocalMultiSignTest {
         Thread.sleep(SLEEPTIME);
 
         log.info("查询回收后账户余额是否为0");
-        String queryInfo3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String queryInfo4 = multiSign.Balance(MULITADD7, PRIKEY1, tokenType);
-        String queryInfo6 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
+        String queryInfo3 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        String queryInfo4 = multiSign.BalanceByAddr(MULITADD7, tokenType);
+        String queryInfo6 = multiSign.BalanceByAddr(MULITADD4, tokenType);
         assertThat(queryInfo3, containsString("200"));
         assertThat(queryInfo3, containsString("\"Total\":\"0\""));
         assertThat(queryInfo4, containsString("200"));
@@ -193,7 +193,7 @@ public class LocalMultiSignTest {
         tokenType = IssueTokenLocalSignPwd(7, "1000");
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址中token余额");
-        String balance = multiSign.Balance(MULITADD3, PRIKEY6, PWD6, tokenType);
+        String balance = multiSign.BalanceByAddr(MULITADD3, tokenType);
         assertThat(tokenType + "查询余额错误", balance, containsString("200"));
         assertThat(tokenType + "查询余额不正确", balance, containsString("\"Total\":\"1000\""));
 
@@ -206,11 +206,11 @@ public class LocalMultiSignTest {
 //        Thread.sleep(SLEEPTIME);
 //
 //        log.info("查询归集地址和MULITADD7余额，判断转账是否成功");
-//        String queryInfo = multiSign.Balance(MULITADD7, PRIKEY1, tokenType);
+//        String queryInfo = multiSign.BalanceByAddr(MULITADD7, tokenType);
 //        assertThat(queryInfo, containsString("200"));
 //        assertThat(queryInfo, containsString("\"Total\":\"10\""));
 //
-//        String queryInfo2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+//        String queryInfo2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
 //        assertThat(queryInfo2, containsString("200"));
 //        assertThat(queryInfo2, containsString("\"Total\":\"990\""));
 //
@@ -224,11 +224,11 @@ public class LocalMultiSignTest {
 //        Thread.sleep(SLEEPTIME);
 //
 //        log.info("查询地址MULITADD7和MULITADD4余额，判断转账是否成功");
-//        queryInfo = multiSign.Balance(MULITADD7, PRIKEY1, tokenType);
+//        queryInfo = multiSign.BalanceByAddr(MULITADD7, tokenType);
 //        assertThat(queryInfo, containsString("200"));
 //        assertThat(queryInfo, containsString("\"Total\":\"7\""));
 //
-//        queryInfo2 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
+//        queryInfo2 = multiSign.BalanceByAddr(MULITADD4, tokenType);
 //        assertThat(queryInfo2, containsString("200"));
 //        assertThat(queryInfo2, containsString("\"Total\":\"3\""));
 //
@@ -245,9 +245,9 @@ public class LocalMultiSignTest {
 //        Thread.sleep(SLEEPTIME);
 //
 //        log.info("查询回收后账户余额是否为0");
-//        String queryInfo3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-//        String queryInfo4 = multiSign.Balance(MULITADD7, PRIKEY1, tokenType);
-//        String queryInfo6 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
+//        String queryInfo3 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+//        String queryInfo4 = multiSign.BalanceByAddr(MULITADD7, tokenType);
+//        String queryInfo6 = multiSign.BalanceByAddr(MULITADD4, tokenType);
 //        assertThat(queryInfo3, containsString("200"));
 //        assertThat(queryInfo3, containsString("\"Total\":\"0\""));
 //        assertThat(queryInfo4, containsString("200"));
@@ -431,7 +431,7 @@ public class LocalMultiSignTest {
         System.out.println("第三次签名"+signedData3);
         multiSign.sendSign(signedData3); //调用接口把签名后的交易结构发送到链上
         Thread.sleep(SLEEPTIME);  //设置等待时间等待交易上链
-        String queryInfo = multiSign.Balance(MULITADD1,PRIKEY1, tokenType);
+        String queryInfo = multiSign.BalanceByAddr(MULITADD1, tokenType);
         System.out.println("查询余额"+queryInfo);
     }
     /**
@@ -448,7 +448,7 @@ public class LocalMultiSignTest {
         String signedData3 = multiIssue.multiSignIssueMethod(signedData2, PRIKEY6, PWD6);
         multiSign.sendSign(signedData3);
         Thread.sleep(SLEEPTIME);  //设置等待时间等待交易上链
-        String queryInfo = multiSign.Balance(MULITADD1,PRIKEY1, tokenType);
+        String queryInfo = multiSign.BalanceByAddr(MULITADD1, tokenType);
         System.out.println("查询余额"+queryInfo);
     }
 
@@ -496,7 +496,7 @@ public class LocalMultiSignTest {
         String sendSign1 = multiSign.sendSign(signedData);
 
         Thread.sleep(SLEEPTIME);  //设置等待时间等待交易上链
-        String queryInfo = multiSign.Balance(MULITADD1,PRIKEY1, tokenType);
+        String queryInfo = multiSign.BalanceByAddr(MULITADD1, tokenType);
         System.out.println("查询余额"+queryInfo);
 
     }

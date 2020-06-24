@@ -78,8 +78,8 @@ public class SoloTestInvalid {
         assertThat(issueInfo1,containsString("200"));
         assertThat(issueInfo2,containsString("200"));
         log.info("查询归集地址中两种token余额");
-        String response1 = soloSign.Balance(PRIKEY1, tokenType);
-        String response2 = soloSign.Balance(PRIKEY1, tokenType2);
+        String response1 = soloSign.BalanceByAddr(ADDRESS1, tokenType);
+        String response2 = soloSign.BalanceByAddr(ADDRESS1, tokenType2);
         assertThat(tokenType + "查询余额错误", response1, containsString("200"));
         assertThat(tokenType + "查询余额错误", response2, containsString("200"));
         assertThat(tokenType + "查询余额不正确", response1, containsString(actualAmount1));
@@ -133,7 +133,7 @@ public class SoloTestInvalid {
         assertThat(issueInfo3,containsString("Token type "+tokenType+" has been issued"));
 
         log.info("查询归集地址中token余额");
-        String response1 = soloSign.Balance(PRIKEY1, tokenType);
+        String response1 = soloSign.BalanceByAddr(ADDRESS1, tokenType);
         assertThat(response1, containsString("200"));
 
 
@@ -193,8 +193,8 @@ public class SoloTestInvalid {
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo = soloSign.Balance(PRIKEY1, tokenType);
-        String queryInfo2 = soloSign.Balance(PRIKEY1, tokenType2);
+        String queryInfo = soloSign.BalanceByAddr(ADDRESS1, tokenType);
+        String queryInfo2 = soloSign.BalanceByAddr(ADDRESS1, tokenType2);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo2, containsString("200"));
         assertThat(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"), containsString("0"));

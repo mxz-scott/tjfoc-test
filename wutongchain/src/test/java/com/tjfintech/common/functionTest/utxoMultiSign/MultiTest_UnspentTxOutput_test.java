@@ -143,8 +143,8 @@ public class MultiTest_UnspentTxOutput_test {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash1)).getString("state"));
 
         log.info("查询余额判断转账成功与否");
-        query1= soloSign.Balance(PRIKEY1,tokenType);
-        query2= soloSign.Balance(PRIKEY2,tokenType);
+        query1= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        query2= soloSign.BalanceByAddr(ADDRESS1,tokenType);
         query3= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query1).getString("state"));
@@ -371,8 +371,8 @@ public class MultiTest_UnspentTxOutput_test {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("state"));
 
         log.info("查询余额判断回收成功与否");
-        String query6= soloSign.Balance(PRIKEY1,tokenType);
-        String query7= soloSign.Balance(PRIKEY2,tokenType);
+        String query6= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query7= soloSign.BalanceByAddr(ADDRESS1,tokenType);
         String query8= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("state"));
@@ -500,8 +500,8 @@ public class MultiTest_UnspentTxOutput_test {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("state"));
 
         log.info("查询余额判断回收成功与否");
-        String query6= soloSign.Balance(PRIKEY1,tokenType);
-        String query7= soloSign.Balance(PRIKEY2,tokenType);
+        String query6= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query7= soloSign.BalanceByAddr(ADDRESS1,tokenType);
         String query8= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("state"));
@@ -628,8 +628,8 @@ public class MultiTest_UnspentTxOutput_test {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("state"));
 
         log.info("查询余额判断回收成功与否");
-        String query6= soloSign.Balance(PRIKEY1,tokenType);
-        String query7= soloSign.Balance(PRIKEY2,tokenType);
+        String query6= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query7= soloSign.BalanceByAddr(ADDRESS1,tokenType);
         String query8= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("state"));
@@ -770,9 +770,9 @@ public class MultiTest_UnspentTxOutput_test {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash3)).getString("state"));
 
         log.info("查询余额判断回收成功与否");
-        String query6= soloSign.Balance(PRIKEY1,tokenType);
-        String query7= soloSign.Balance(PRIKEY2,tokenType);
-        String query9= soloSign.Balance(PRIKEY3,tokenType);
+        String query6= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query7= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query9= soloSign.BalanceByAddr(ADDRESS3,tokenType);
         String query8= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("state"));
@@ -906,9 +906,9 @@ public class MultiTest_UnspentTxOutput_test {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash3)).getString("state"));
 
         log.info("查询余额判断回收成功与否");
-        String query6= soloSign.Balance(PRIKEY1,tokenType);
-        String query7= soloSign.Balance(PRIKEY2,tokenType);
-        String query9= soloSign.Balance(PRIKEY3,tokenType);
+        String query6= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query7= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query9= soloSign.BalanceByAddr(ADDRESS3,tokenType);
         String query8= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("state"));
@@ -1029,8 +1029,8 @@ public class MultiTest_UnspentTxOutput_test {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("state"));
 
         log.info("查询余额判断回收成功与否");
-        String query6= soloSign.Balance(PRIKEY1,tokenType);
-        String query7= soloSign.Balance(PRIKEY2,tokenType);
+        String query6= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query7= soloSign.BalanceByAddr(ADDRESS1,tokenType);
         String query8= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("state"));

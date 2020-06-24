@@ -82,8 +82,8 @@ public class SoloTest {
 
 
         log.info("查询归集地址中两种token余额");
-        String response1 = soloSign.Balance( PRIKEY1, tokenType);
-        String response2 = soloSign.Balance( PRIKEY1, tokenType2);
+        String response1 = soloSign.BalanceByAddr(ADDRESS1, tokenType);
+        String response2 = soloSign.BalanceByAddr(ADDRESS1, tokenType2);
 
         assertThat(tokenType+"查询余额错误",response1, containsString("200"));
         assertThat(tokenType+"查询余额错误",response2, containsString("200"));
@@ -113,7 +113,7 @@ public class SoloTest {
 
 
         log.info("查询归集地址中token余额");
-        String response1 = soloSign.Balance( PRIKEY1, tokenType);
+        String response1 = soloSign.BalanceByAddr(ADDRESS1, tokenType);
 
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));
         assertEquals(actualAmount1,JSONObject.fromObject(response1).getJSONObject("data").getString("total"));
@@ -134,7 +134,7 @@ public class SoloTest {
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
 
-        String response1 = soloSign.Balance( PRIKEY1, tokenType);
+        String response1 = soloSign.BalanceByAddr(ADDRESS1, tokenType);
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));
         assertEquals("1009",JSONObject.fromObject(response1).getJSONObject("data").getString("total"));
 
@@ -150,7 +150,7 @@ public class SoloTest {
         assertThat(isResult, containsString("200"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        String response2 = soloSign.Balance( PRIKEY1, tokenType);
+        String response2 = soloSign.BalanceByAddr(ADDRESS1, tokenType);
         assertEquals("200",JSONObject.fromObject(response2).getString("state"));
         assertEquals("0",JSONObject.fromObject(response2).getJSONObject("data").getString("total"));
 
@@ -166,7 +166,7 @@ public class SoloTest {
         assertThat(isResult, containsString("200"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        String response41 = soloSign.Balance( PRIKEY1, tokenType);
+        String response41 = soloSign.BalanceByAddr(ADDRESS1, tokenType);
         assertEquals("200",JSONObject.fromObject(response41).getString("state"));
         assertEquals("0",JSONObject.fromObject(response41).getJSONObject("data").getString("total"));
 
@@ -180,7 +180,7 @@ public class SoloTest {
         assertThat(isResult, containsString("200"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        String response52 = soloSign.Balance( PRIKEY1, tokenType);
+        String response52 = soloSign.BalanceByAddr(ADDRESS1, tokenType);
         assertEquals("200",JSONObject.fromObject(response52).getString("state"));
         assertEquals("0",JSONObject.fromObject(response52).getJSONObject("data").getString("total"));
 
@@ -210,8 +210,8 @@ public class SoloTest {
 
         assertThat(transferInfo, containsString("200"));
         log.info("查询帐号3跟帐号5余额，判断转账是否成功");
-        String queryInfo = soloSign.Balance( PRIKEY3, tokenType);
-        String queryInfo2 = soloSign.Balance( PRIKEY5, tokenType2);
+        String queryInfo = soloSign.BalanceByAddr(ADDRESS3, tokenType);
+        String queryInfo2 = soloSign.BalanceByAddr(ADDRESS5, tokenType2);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo, containsString("100.25"));
         assertThat(queryInfo2, containsString("200"));
@@ -260,30 +260,30 @@ public class SoloTest {
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
 
-        String queryInfo3TK1 = soloSign.Balance(PRIKEY3, tokenType);
+        String queryInfo3TK1 = soloSign.BalanceByAddr(ADDRESS3, tokenType);
         assertThat(queryInfo3TK1, containsString("70.25"));
         String Info1 = soloSign.Recycle( PRIKEY3, tokenType, "70.25");
         assertThat(Info1, containsString("200"));
         log.info("帐号3，token1余额正确");
-        String queryInfo4TK1 = soloSign.Balance(PRIKEY4, tokenType);
+        String queryInfo4TK1 = soloSign.BalanceByAddr(ADDRESS4, tokenType);
         assertThat(queryInfo4TK1, containsString("0"));
         log.info("帐号4，token1余额正确");
-        String queryInfo4TK2 = soloSign.Balance(PRIKEY4, tokenType2);
+        String queryInfo4TK2 = soloSign.BalanceByAddr(ADDRESS4, tokenType2);
         assertThat(queryInfo4TK2, containsString("90"));
         String Info2 = soloSign.Recycle( PRIKEY4, tokenType2, "90");
         assertThat(Info2, containsString("200"));
         log.info("帐号4，token2余额正确");
-        String queryInfo5TK2 = soloSign.Balance(PRIKEY5, tokenType2);
+        String queryInfo5TK2 = soloSign.BalanceByAddr(ADDRESS5, tokenType2);
         assertThat(queryInfo5TK2, containsString("100.555"));
         String Info3 = soloSign.Recycle( PRIKEY5, tokenType2, "100.555");
         assertThat(Info3, containsString("200"));
         log.info("帐号5，token2余额正确");
-        String queryInfo6TK1 = soloSign.Balance(PRIKEY2, tokenType);
+        String queryInfo6TK1 = soloSign.BalanceByAddr(ADDRESS2, tokenType);
         assertThat(queryInfo6TK1, containsString("30"));
         String Info4 = soloSign.Recycle( PRIKEY2, tokenType, "30");
         assertThat(Info4, containsString("200"));
         log.info("帐号6，token1余额正确");
-        String queryInfo6TK2 = soloSign.Balance(PRIKEY2, tokenType2);
+        String queryInfo6TK2 = soloSign.BalanceByAddr(ADDRESS2, tokenType2);
         assertThat(queryInfo6TK2, containsString("10"));
         String Info5 = soloSign.Recycle(PRIKEY2, tokenType2, "10");
         assertThat(Info5, containsString("200"));
@@ -319,8 +319,8 @@ public class SoloTest {
         }
 
         log.info("查询帐号3跟帐号5余额，判断转账是否成功");
-        String queryInfo = soloSign.Balance( PRIKEY3, tokenType);
-        String queryInfo2 = soloSign.Balance( PRIKEY5, tokenType2);
+        String queryInfo = soloSign.BalanceByAddr(ADDRESS3, tokenType);
+        String queryInfo2 = soloSign.BalanceByAddr(ADDRESS5, tokenType2);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo, containsString(amount1));
         assertThat(queryInfo2, containsString("200"));
@@ -364,7 +364,7 @@ public class SoloTest {
 
 
         log.info("查询归集地址中两种token余额");
-        String response1 = soloSign.Balance( PRIKEY1, minToken);
+        String response1 = soloSign.BalanceByAddr(ADDRESS1, minToken);
 
         assertThat(minToken +"查询余额错误",response1, containsString("200"));
         assertEquals(minAmount,JSONObject.fromObject(response1).getJSONObject("data").getJSONObject("detail").getString(minToken));
@@ -398,8 +398,8 @@ public class SoloTest {
         }
 
         log.info("查询帐号3跟帐号5余额，判断转账是否成功");
-        String queryInfo = soloSign.Balance( PRIKEY3, tokenType);
-        String queryInfo2 = soloSign.Balance( PRIKEY5, tokenType2);
+        String queryInfo = soloSign.BalanceByAddr(ADDRESS3, tokenType);
+        String queryInfo2 = soloSign.BalanceByAddr(ADDRESS5, tokenType2);
         assertThat(queryInfo, containsString("200"));
         assertThat(queryInfo, containsString("0.003"));
         assertThat(queryInfo2, containsString("200"));
@@ -585,10 +585,10 @@ public class SoloTest {
 
 
         log.info("开始查询余额....");
-        String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
-        String response3 = soloSign.Balance( PRIKEY3, tokenType);
-        String response4 = soloSign.Balance( PRIKEY3, tokenType2);
+        String response1 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        String response2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType2);
+        String response3 = soloSign.BalanceByAddr(ADDRESS3, tokenType);
+        String response4 = soloSign.BalanceByAddr(ADDRESS3, tokenType2);
         assertThat(tokenType+"查询余额错误",response1, containsString("200"));
         assertThat(tokenType+"查询余额错误",response2, containsString("200"));
         assertThat(tokenType+"查询余额错误",response3, containsString("200"));
@@ -670,13 +670,13 @@ public class SoloTest {
 
 
         log.info("开始查询余额....");
-        String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
-        String response3 = multiSign.Balance(MULITADD5, PRIKEY1, tokenType);
-        String response4 = multiSign.Balance(MULITADD5, PRIKEY1, tokenType2);
-        String response5 = soloSign.Balance( PRIKEY3, tokenType);
-        String response6 = soloSign.Balance( PRIKEY3, tokenType2);
-        String response7 = soloSign.Balance( PRIKEY4, tokenType);
+        String response1 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        String response2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType2);
+        String response3 = multiSign.BalanceByAddr(MULITADD5, tokenType);
+        String response4 = multiSign.BalanceByAddr(MULITADD5, tokenType2);
+        String response5 = soloSign.BalanceByAddr(ADDRESS3, tokenType);
+        String response6 = soloSign.BalanceByAddr(ADDRESS3, tokenType2);
+        String response7 = soloSign.BalanceByAddr(ADDRESS4, tokenType);
 
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));
         assertEquals("200",JSONObject.fromObject(response2).getString("state"));
@@ -721,7 +721,7 @@ public class SoloTest {
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
 
-        String response=soloSign.Balance(PRIKEY4,tokenType);
+        String response=soloSign.BalanceByAddr(ADDRESS4,tokenType);
         assertThat(response,anyOf(containsString("300"),containsString("301")));
         List<Map> list3= soloSign.constructToken(ADDRESS4,tokenType,"400");
         List<Map> list4= soloSign.constructToken(ADDRESS4,tokenType2,"411",list3);
@@ -733,8 +733,8 @@ public class SoloTest {
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
 
-        String response1=soloSign.Balance(PRIKEY4,tokenType);
-        String response2=soloSign.Balance(PRIKEY4,tokenType2);
+        String response1=soloSign.BalanceByAddr(ADDRESS4,tokenType);
+        String response2=soloSign.BalanceByAddr(ADDRESS4,tokenType2);
         assertThat(response1,anyOf(containsString("700"),containsString("701")));
         assertThat(response2,anyOf(containsString("411"),containsString("0")));
 
@@ -748,8 +748,8 @@ public class SoloTest {
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
 
-        String response3=soloSign.Balance(PRIKEY4,tokenType);
-        String response4=soloSign.Balance(PRIKEY4,tokenType2);
+        String response3=soloSign.BalanceByAddr(ADDRESS4,tokenType);
+        String response4=soloSign.BalanceByAddr(ADDRESS4,tokenType2);
         assertThat(response3,anyOf(containsString("1020"),containsString("1021")));
         assertThat(response4,anyOf(containsString("731"),containsString("320")));
 
@@ -782,9 +782,9 @@ public class SoloTest {
         assertThat(tokenType+"发行token错误",isResult2, containsString("200"));
         Thread.sleep(SLEEPTIME*3);
         log.info("查询归集地址中两种token余额");
-        String response1 = soloSign.Balance( PRIKEY2, tokenType);
-        String response3 = soloSign.Balance( PRIKEY1, tokenType);
-        String response2 = multiSign.Balance( MULITADD3,PRIKEY1,tokenType2 );
+        String response1 = soloSign.BalanceByAddr(ADDRESS2, tokenType);
+        String response3 = soloSign.BalanceByAddr(ADDRESS1, tokenType);
+        String response2 = multiSign.BalanceByAddr(MULITADD3,tokenType2 );
         assertThat(tokenType+"查询余额错误",response1, containsString("200"));
         assertThat(tokenType+"查询余额错误",response2, containsString("200"));
         assertThat(tokenType+"查询余额不正确",response1, containsString("total\":\"0\""));

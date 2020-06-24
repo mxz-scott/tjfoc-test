@@ -161,7 +161,7 @@ public class TestPermission {
 
         Thread.sleep(SLEEPTIME);
 
-        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(soloSign.Balance(PRIKEY1,glbSoloToken)).getJSONObject("data").getString("total"));
+        assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(soloSign.BalanceByAddr(ADDRESS1,glbSoloToken)).getJSONObject("data").getString("total"));
         assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.BalanceByAddr(MULITADD4,glbMultiToken4)).getJSONObject("data").getString("total"));
         assertEquals(pFunUTXO.issAmount,JSONObject.fromObject(multiSign.BalanceByAddr(MULITADD3,glbMultiToken3)).getJSONObject("data").getString("total"));
 

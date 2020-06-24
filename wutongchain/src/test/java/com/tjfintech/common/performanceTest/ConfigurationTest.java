@@ -153,8 +153,8 @@ public class ConfigurationTest {
 //        assertThat(tokenType+"发行token错误",isResult2, containsString("200"));
 //        Thread.sleep(SLEEPTIME);
 //        log.info("查询归集地址中两种token余额");
-//        String response1 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-//        String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+//        String response1 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+//        String response2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType2);
 //        assertThat(tokenType+"查询余额错误",response1, containsString("200"));
 //        assertThat(tokenType+"查询余额错误",response2, containsString("200"));
 //        assertThat(tokenType+"查询余额不正确",response1, containsString("1000.123456789"));

@@ -34,7 +34,6 @@ public class  MultiTestInvalid {
     MultiSign multiSign =testBuilder.getMultiSign();
     UtilsClass utilsClass = new UtilsClass();
     MultiTest multiTest = new MultiTest();
-    SoloSign soloSign=testBuilder.getSoloSign();
     Store store = testBuilder.getStore();
     CommonFunc commonFunc = new CommonFunc();
     private static String tokenType;

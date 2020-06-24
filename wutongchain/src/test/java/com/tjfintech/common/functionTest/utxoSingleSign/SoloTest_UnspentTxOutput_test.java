@@ -66,7 +66,7 @@ public class SoloTest_UnspentTxOutput_test {
 
         //发行后查询余额
         log.info("发行后查询余额: "+tokenType);
-        String queryInfo= soloSign.Balance( PRIKEY4, tokenType);
+        String queryInfo= soloSign.BalanceByAddr(ADDRESS4, tokenType);
         assertEquals("200",JSONObject.fromObject(queryInfo).getString("state"));
         assertEquals(String.valueOf(amount),JSONObject.fromObject(queryInfo).getJSONObject("data").getString("total"));
     }
@@ -98,9 +98,9 @@ public class SoloTest_UnspentTxOutput_test {
         assertEquals("500",JSONObject.fromObject(transferInfo2).getString("state"));
         assertEquals("insufficient balance",JSONObject.fromObject(transferInfo2).getString("message"));
 
-        String query1= soloSign.Balance(PRIKEY1,tokenType);
-        String query2= soloSign.Balance(PRIKEY2,tokenType);
-        String query3= soloSign.Balance(PRIKEY4,tokenType);
+        String query1= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query2= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query3= soloSign.BalanceByAddr(ADDRESS4,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query1).getString("state"));
         assertEquals("200",JSONObject.fromObject(query2).getString("state"));
@@ -122,9 +122,9 @@ public class SoloTest_UnspentTxOutput_test {
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         log.info("查询余额判断转账成功与否");
-        query1= soloSign.Balance(PRIKEY1,tokenType);
-        query2= soloSign.Balance(PRIKEY2,tokenType);
-        query3= soloSign.Balance(PRIKEY4,tokenType);
+        query1= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        query2= soloSign.BalanceByAddr(ADDRESS2,tokenType);
+        query3= soloSign.BalanceByAddr(ADDRESS4,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query1).getString("state"));
         assertEquals("200",JSONObject.fromObject(query2).getString("state"));
@@ -157,9 +157,9 @@ public class SoloTest_UnspentTxOutput_test {
         assertEquals("500",JSONObject.fromObject(transferInfo2).getString("state"));
         assertEquals("insufficient balance",JSONObject.fromObject(transferInfo2).getString("message"));
 
-        String query1= soloSign.Balance(PRIKEY1,tokenType);
-        String query2= soloSign.Balance(PRIKEY2,tokenType);
-        String query3= soloSign.Balance(PRIKEY4,tokenType);
+        String query1= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query2= soloSign.BalanceByAddr(ADDRESS2,tokenType);
+        String query3= soloSign.BalanceByAddr(ADDRESS4,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query1).getString("state"));
         assertEquals("200",JSONObject.fromObject(query2).getString("state"));
@@ -178,9 +178,9 @@ public class SoloTest_UnspentTxOutput_test {
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         log.info("查询余额判断转账成功与否");
-        query1= soloSign.Balance(PRIKEY1,tokenType);
-        query2= soloSign.Balance(PRIKEY2,tokenType);
-        query3= soloSign.Balance(PRIKEY4,tokenType);
+        query1= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        query2= soloSign.BalanceByAddr(ADDRESS2,tokenType);
+        query3= soloSign.BalanceByAddr(ADDRESS4,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query1).getString("state"));
         assertEquals("200",JSONObject.fromObject(query2).getString("state"));
@@ -211,11 +211,11 @@ public class SoloTest_UnspentTxOutput_test {
 
         //转账后查询余额
         log.info("发行后查询余额: "+tokenType);
-        String query1= soloSign.Balance(PRIKEY4,tokenType);
+        String query1= soloSign.BalanceByAddr(ADDRESS4,tokenType);
         assertEquals("200",JSONObject.fromObject(query1).getString("state"));
         assertEquals(String.valueOf(amount-tf),JSONObject.fromObject(query1).getJSONObject("data").getString("total"));
 
-        String query2= soloSign.Balance(PRIKEY5,tokenType);
+        String query2= soloSign.BalanceByAddr(ADDRESS5,tokenType);
         assertEquals("200",JSONObject.fromObject(query2).getString("state"));
         assertEquals(String.valueOf(tf),JSONObject.fromObject(query2).getJSONObject("data").getString("total"));
 
@@ -233,11 +233,11 @@ public class SoloTest_UnspentTxOutput_test {
 
         //转账后查询余额
         log.info("转账后查询余额: "+tokenType);
-        String query3= soloSign.Balance(PRIKEY4,tokenType);
+        String query3= soloSign.BalanceByAddr(ADDRESS4,tokenType);
         assertEquals("200",JSONObject.fromObject(query3).getString("state"));
         assertEquals(String.valueOf(amount-tf+tfA),JSONObject.fromObject(query3).getJSONObject("data").getString("total"));
 
-        String query4= soloSign.Balance(PRIKEY5,tokenType);
+        String query4= soloSign.BalanceByAddr(ADDRESS5,tokenType);
         assertEquals("200",JSONObject.fromObject(query4).getString("state"));
         assertEquals(String.valueOf(tf-tfA),JSONObject.fromObject(query4).getJSONObject("data").getString("total"));
 
@@ -267,9 +267,9 @@ public class SoloTest_UnspentTxOutput_test {
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         log.info("查询余额判断回收成功与否");
-        String query6= soloSign.Balance(PRIKEY1,tokenType);
-        String query7= soloSign.Balance(PRIKEY2,tokenType);
-        String query8= soloSign.Balance(PRIKEY4,tokenType);
+        String query6= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query7= soloSign.BalanceByAddr(ADDRESS2,tokenType);
+        String query8= soloSign.BalanceByAddr(ADDRESS4,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("state"));
         assertEquals("200",JSONObject.fromObject(query7).getString("state"));
@@ -303,11 +303,11 @@ public class SoloTest_UnspentTxOutput_test {
 
         //转账后查询余额
         log.info("发行后查询余额: "+tokenType);
-        String query1= soloSign.Balance(PRIKEY4,tokenType);
+        String query1= soloSign.BalanceByAddr(ADDRESS4,tokenType);
         assertEquals("200",JSONObject.fromObject(query1).getString("state"));
         assertEquals(String.valueOf(amount-tf),JSONObject.fromObject(query1).getJSONObject("data").getString("total"));
 
-        String query2= soloSign.Balance(PRIKEY5,tokenType);
+        String query2= soloSign.BalanceByAddr(ADDRESS5,tokenType);
         assertEquals("200",JSONObject.fromObject(query2).getString("state"));
         assertEquals(String.valueOf(tf),JSONObject.fromObject(query2).getJSONObject("data").getString("total"));
 
@@ -326,11 +326,11 @@ public class SoloTest_UnspentTxOutput_test {
         //多笔未花费交易转账测试
         //转账后查询余额
         log.info("转账后查询余额: "+tokenType);
-        String query3= soloSign.Balance(PRIKEY4,tokenType);
+        String query3= soloSign.BalanceByAddr(ADDRESS4,tokenType);
         assertEquals("200",JSONObject.fromObject(query3).getString("state"));
         assertEquals(String.valueOf(amount-tf+tfA),JSONObject.fromObject(query3).getJSONObject("data").getString("total"));
 
-        String query4= soloSign.Balance(PRIKEY5,tokenType);
+        String query4= soloSign.BalanceByAddr(ADDRESS5,tokenType);
         assertEquals("200",JSONObject.fromObject(query4).getString("state"));
         assertEquals(String.valueOf(tf-tfA),JSONObject.fromObject(query4).getJSONObject("data").getString("total"));
 
@@ -366,9 +366,9 @@ public class SoloTest_UnspentTxOutput_test {
         
 
         log.info("查询余额判断回收成功与否");
-        String query6= soloSign.Balance(PRIKEY1,tokenType);
-        String query7= soloSign.Balance(PRIKEY2,tokenType);
-        String query8= soloSign.Balance(PRIKEY4,tokenType);
+        String query6= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query7= soloSign.BalanceByAddr(ADDRESS2,tokenType);
+        String query8= soloSign.BalanceByAddr(ADDRESS4,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("state"));
         assertEquals("200",JSONObject.fromObject(query7).getString("state"));
@@ -402,11 +402,11 @@ public class SoloTest_UnspentTxOutput_test {
         
         //转账后查询余额
         log.info("发行后查询余额: "+tokenType);
-        String query1= soloSign.Balance(PRIKEY4,tokenType);
+        String query1= soloSign.BalanceByAddr(ADDRESS4,tokenType);
         assertEquals("200",JSONObject.fromObject(query1).getString("state"));
         assertEquals(String.valueOf(amount-tf),JSONObject.fromObject(query1).getJSONObject("data").getString("total"));
 
-        String query2= soloSign.Balance(PRIKEY5,tokenType);
+        String query2= soloSign.BalanceByAddr(ADDRESS5,tokenType);
         assertEquals("200",JSONObject.fromObject(query2).getString("state"));
         assertEquals(String.valueOf(tf),JSONObject.fromObject(query2).getJSONObject("data").getString("total"));
 
@@ -427,11 +427,11 @@ public class SoloTest_UnspentTxOutput_test {
         //多笔未花费交易转账测试
         //转账后查询余额
         log.info("转账后查询余额: "+tokenType);
-        String query3= soloSign.Balance(PRIKEY4,tokenType);
+        String query3= soloSign.BalanceByAddr(ADDRESS4,tokenType);
         assertEquals("200",JSONObject.fromObject(query3).getString("state"));
         assertEquals(String.valueOf(amount-tf+tfA),JSONObject.fromObject(query3).getJSONObject("data").getString("total"));
 
-        String query4= soloSign.Balance(PRIKEY5,tokenType);
+        String query4= soloSign.BalanceByAddr(ADDRESS5,tokenType);
         assertEquals("200",JSONObject.fromObject(query4).getString("state"));
         assertEquals(String.valueOf(tf-tfA),JSONObject.fromObject(query4).getJSONObject("data").getString("total"));
 
@@ -468,9 +468,9 @@ public class SoloTest_UnspentTxOutput_test {
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         log.info("查询余额判断回收成功与否");
-        String query6= soloSign.Balance(PRIKEY1,tokenType);
-        String query7= soloSign.Balance(PRIKEY2,tokenType);
-        String query8= soloSign.Balance(PRIKEY4,tokenType);
+        String query6= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query7= soloSign.BalanceByAddr(ADDRESS2,tokenType);
+        String query8= soloSign.BalanceByAddr(ADDRESS4,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("state"));
         assertEquals("200",JSONObject.fromObject(query7).getString("state"));
@@ -504,11 +504,11 @@ public class SoloTest_UnspentTxOutput_test {
 
         //转账后查询余额
         log.info("发行后查询余额: "+tokenType);
-        String query1= soloSign.Balance(PRIKEY4,tokenType);
+        String query1= soloSign.BalanceByAddr(ADDRESS4,tokenType);
         assertEquals("200",JSONObject.fromObject(query1).getString("state"));
         assertEquals(String.valueOf(amount-tf),JSONObject.fromObject(query1).getJSONObject("data").getString("total"));
 
-        String query2= soloSign.Balance(PRIKEY5,tokenType);
+        String query2= soloSign.BalanceByAddr(ADDRESS5,tokenType);
         assertEquals("200",JSONObject.fromObject(query2).getString("state"));
         assertEquals(String.valueOf(tf),JSONObject.fromObject(query2).getJSONObject("data").getString("total"));
 
@@ -527,11 +527,11 @@ public class SoloTest_UnspentTxOutput_test {
         //多笔未花费交易转账测试
         //转账后查询余额
         log.info("转账后查询余额: "+tokenType);
-        String query3= soloSign.Balance(PRIKEY4,tokenType);
+        String query3= soloSign.BalanceByAddr(ADDRESS4,tokenType);
         assertEquals("200",JSONObject.fromObject(query3).getString("state"));
         assertEquals(String.valueOf(amount-tf+tfA),JSONObject.fromObject(query3).getJSONObject("data").getString("total"));
 
-        String query4= soloSign.Balance(PRIKEY5,tokenType);
+        String query4= soloSign.BalanceByAddr(ADDRESS5,tokenType);
         assertEquals("200",JSONObject.fromObject(query4).getString("state"));
         assertEquals(String.valueOf(tf-tfA),JSONObject.fromObject(query4).getJSONObject("data").getString("total"));
 
@@ -583,10 +583,10 @@ public class SoloTest_UnspentTxOutput_test {
 
 
         log.info("查询余额判断回收成功与否");
-        String query6= soloSign.Balance(PRIKEY1,tokenType);
-        String query7= soloSign.Balance(PRIKEY2,tokenType);
-        String query9= soloSign.Balance(PRIKEY3,tokenType);
-        String query8= soloSign.Balance(PRIKEY4,tokenType);
+        String query6= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query7= soloSign.BalanceByAddr(ADDRESS2,tokenType);
+        String query9= soloSign.BalanceByAddr(ADDRESS3,tokenType);
+        String query8= soloSign.BalanceByAddr(ADDRESS4,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("state"));
         assertEquals("200",JSONObject.fromObject(query7).getString("state"));
@@ -623,11 +623,11 @@ public class SoloTest_UnspentTxOutput_test {
 
         //转账后查询余额
         log.info("发行后查询余额: "+tokenType);
-        String query1= soloSign.Balance(PRIKEY4,tokenType);
+        String query1= soloSign.BalanceByAddr(ADDRESS4,tokenType);
         assertEquals("200",JSONObject.fromObject(query1).getString("state"));
         assertEquals(String.valueOf(amount-tf),JSONObject.fromObject(query1).getJSONObject("data").getString("total"));
 
-        String query2= soloSign.Balance(PRIKEY5,tokenType);
+        String query2= soloSign.BalanceByAddr(ADDRESS5,tokenType);
         assertEquals("200",JSONObject.fromObject(query2).getString("state"));
         assertEquals(String.valueOf(tf),JSONObject.fromObject(query2).getJSONObject("data").getString("total"));
 
@@ -652,11 +652,11 @@ public class SoloTest_UnspentTxOutput_test {
         //多笔未花费交易转账测试
         //转账后查询余额
         log.info("转账后查询余额: "+tokenType);
-        String query3= soloSign.Balance(PRIKEY4,tokenType);
+        String query3= soloSign.BalanceByAddr(ADDRESS4,tokenType);
         assertEquals("200",JSONObject.fromObject(query3).getString("state"));
         assertEquals(String.valueOf(amount-tf+tfA*2),JSONObject.fromObject(query3).getJSONObject("data").getString("total"));
 
-        String query4= soloSign.Balance(PRIKEY5,tokenType);
+        String query4= soloSign.BalanceByAddr(ADDRESS5,tokenType);
         assertEquals("200",JSONObject.fromObject(query4).getString("state"));
         assertEquals(String.valueOf(tf-tfA*2),JSONObject.fromObject(query4).getJSONObject("data").getString("total"));
 
@@ -695,10 +695,10 @@ public class SoloTest_UnspentTxOutput_test {
 
 
         log.info("查询余额判断回收成功与否");
-        String query6= soloSign.Balance(PRIKEY1,tokenType);
-        String query7= soloSign.Balance(PRIKEY2,tokenType);
-        String query9= soloSign.Balance(PRIKEY3,tokenType);
-        String query8= soloSign.Balance(PRIKEY4,tokenType);
+        String query6= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query7= soloSign.BalanceByAddr(ADDRESS2,tokenType);
+        String query9= soloSign.BalanceByAddr(ADDRESS3,tokenType);
+        String query8= soloSign.BalanceByAddr(ADDRESS4,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("state"));
         assertEquals("200",JSONObject.fromObject(query7).getString("state"));
@@ -733,11 +733,11 @@ public class SoloTest_UnspentTxOutput_test {
 
         //转账后查询余额
         log.info("发行后查询余额: "+tokenType);
-        String query1= soloSign.Balance(PRIKEY4,tokenType);
+        String query1= soloSign.BalanceByAddr(ADDRESS4,tokenType);
         assertEquals("200",JSONObject.fromObject(query1).getString("state"));
         assertEquals(String.valueOf(amount-tf),JSONObject.fromObject(query1).getJSONObject("data").getString("total"));
 
-        String query2= soloSign.Balance(PRIKEY5,tokenType);
+        String query2= soloSign.BalanceByAddr(ADDRESS5,tokenType);
         assertEquals("200",JSONObject.fromObject(query2).getString("state"));
         assertEquals(String.valueOf(tf),JSONObject.fromObject(query2).getJSONObject("data").getString("total"));
 
@@ -764,11 +764,11 @@ public class SoloTest_UnspentTxOutput_test {
         //多笔未花费交易转账测试
         //转账后查询余额
         log.info("转账后查询余额: "+tokenType);
-        String query3= soloSign.Balance(PRIKEY4,tokenType);
+        String query3= soloSign.BalanceByAddr(ADDRESS4,tokenType);
         assertEquals("200",JSONObject.fromObject(query3).getString("state"));
         assertEquals(String.valueOf(amount-tf+tfA*2),JSONObject.fromObject(query3).getJSONObject("data").getString("total"));
 
-        String query4= soloSign.Balance(PRIKEY5,tokenType);
+        String query4= soloSign.BalanceByAddr(ADDRESS5,tokenType);
         assertEquals("200",JSONObject.fromObject(query4).getString("state"));
         assertEquals(String.valueOf(tf-tfA*2),JSONObject.fromObject(query4).getJSONObject("data").getString("total"));
 
@@ -800,9 +800,9 @@ public class SoloTest_UnspentTxOutput_test {
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         log.info("查询余额判断回收成功与否");
-        String query6= soloSign.Balance(PRIKEY1,tokenType);
-        String query7= soloSign.Balance(PRIKEY2,tokenType);
-        String query8= soloSign.Balance(PRIKEY4,tokenType);
+        String query6= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query7= soloSign.BalanceByAddr(ADDRESS2,tokenType);
+        String query8= soloSign.BalanceByAddr(ADDRESS4,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("state"));
         assertEquals("200",JSONObject.fromObject(query7).getString("state"));

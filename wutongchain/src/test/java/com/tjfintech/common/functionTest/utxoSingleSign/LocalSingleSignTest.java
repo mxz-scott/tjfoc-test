@@ -59,8 +59,8 @@ public class LocalSingleSignTest {
         //查询余额
 
         log.info("查询归集地址中token余额");
-        String balance = soloSign.Balance(PRIKEY1, tokenType);
-        String balance2 = soloSign.Balance(PRIKEY1, tokenType2);
+        String balance = soloSign.BalanceByAddr(ADDRESS1, tokenType);
+        String balance2 = soloSign.BalanceByAddr(ADDRESS1, tokenType2);
 
         assertThat(tokenType + "查询余额错误", balance, containsString("200"));
         assertThat(tokenType + "查询余额不正确", balance, containsString("10000.123456"));
@@ -563,11 +563,11 @@ public class LocalSingleSignTest {
         Thread.sleep(SLEEPTIME);
 
         log.info("查询地址7和地址4余额");
-        String queryInfo21 = soloSign.Balance(PRIKEY7, PWD7,tokenType);
+        String queryInfo21 = soloSign.BalanceByAddr(ADDRESS7,tokenType);
         assertThat(queryInfo21, containsString("200"));
         assertThat(queryInfo21, containsString(tokenType + "\":\"95.25\""));
 
-        String queryInfo22 = soloSign.Balance(PRIKEY4, tokenType);
+        String queryInfo22 = soloSign.BalanceByAddr(ADDRESS4, tokenType);
         assertThat(queryInfo22, containsString("200"));
         assertThat(queryInfo22, containsString(tokenType + "\":\"5\""));
 
@@ -577,11 +577,11 @@ public class LocalSingleSignTest {
         Thread.sleep(SLEEPTIME);
 
         log.info("查询地址7和地址4余额");
-        queryInfo21 = soloSign.Balance(PRIKEY7, PWD7,tokenType);
+        queryInfo21 = soloSign.BalanceByAddr(ADDRESS7,tokenType);
         assertThat(queryInfo21, containsString("200"));
         assertThat(queryInfo21, containsString("\"Total\":\"0\""));
 
-        queryInfo22 = soloSign.Balance(PRIKEY4, tokenType);
+        queryInfo22 = soloSign.BalanceByAddr(ADDRESS4, tokenType);
         assertThat(queryInfo22, containsString("200"));
         assertThat(queryInfo22, containsString("\"Total\":\"0\""));
 

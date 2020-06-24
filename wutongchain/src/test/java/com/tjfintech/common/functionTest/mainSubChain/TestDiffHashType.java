@@ -83,7 +83,7 @@ public class TestDiffHashType {
         String txHash1 =commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));  //确认可以c查询成功
         //确认数据库同步无异常
-        String query = soloSign.Balance(PRIKEY1,tokenType);
+        String query = soloSign.BalanceByAddr(ADDRESS1,tokenType);
         assertEquals("1000", JSONObject.fromObject(query).getJSONObject("data").getString("total"));
 
 
@@ -114,7 +114,7 @@ public class TestDiffHashType {
         String txHash3 =commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));  //确认可以c查询成功
         //确认数据库同步无异常
-        String query2 = soloSign.Balance(PRIKEY1,tokenType2);
+        String query2 = soloSign.BalanceByAddr(ADDRESS1,tokenType2);
         assertEquals("1000", JSONObject.fromObject(query2).getJSONObject("data").getString("total"));
     }
 
@@ -157,7 +157,7 @@ public class TestDiffHashType {
         sleepAndSaveInfo(SLEEPTIME,"tx on chain waiting......");
 
         //确认数据库同步无异常
-        String query = soloSign.Balance(PRIKEY1,tokenType);
+        String query = soloSign.BalanceByAddr(ADDRESS1,tokenType);
         assertEquals("1000", JSONObject.fromObject(query).getJSONObject("data").getString("total"));
 
 
@@ -187,7 +187,7 @@ public class TestDiffHashType {
         String txHash3 =commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));  //确认可以c查询成功
         //确认数据库同步无异常
-        String query2 = soloSign.Balance(PRIKEY1,tokenType2);
+        String query2 = soloSign.BalanceByAddr(ADDRESS1,tokenType2);
         assertEquals("1000", JSONObject.fromObject(query2).getJSONObject("data").getString("total"));
 
         subLedger="";

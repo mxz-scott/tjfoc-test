@@ -59,13 +59,13 @@ public class StableAutoTest {
             Thread.sleep(n*1000);//隐私存证 休眠n秒
 
             String tokenType = "cx-8oVNI";
-            String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+            String queryInfo = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
             Boolean flag=JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total").equals("0");
             if(flag){
                 BeforeCondition beforeCondition=new BeforeCondition();
                 beforeCondition.T284_BeforeCondition(tokenType);
                 Thread.sleep(SLEEPTIME);
-                queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+                queryInfo = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
                 assertThat(queryInfo, containsString("200"));
                 log.info(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
                 assertEquals(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total").equals("0"), false);
@@ -82,9 +82,9 @@ public class StableAutoTest {
                 Thread.sleep(SLEEPTIME);
                 assertThat(transferInfo1, containsString("200"));
             }
-            String queryInfo1 = multiSign.Balance(MULITADD4, PRIKEY1, tokenType);
+            String queryInfo1 = multiSign.BalanceByAddr(MULITADD4, tokenType);
             assertEquals(JSONObject.fromObject(queryInfo1).getJSONObject("Data").getString("Total").equals("0"), false);
-            String queryInfo2= soloSign.Balance(PRIKEY1, tokenType);
+            String queryInfo2= soloSign.BalanceByAddr(ADDRESS1, tokenType);
             assertEquals(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total").equals("0"), false);
 
             List<Map> list1 = utilsClass.constructToken(MULITADD5, tokenType, "0.5");

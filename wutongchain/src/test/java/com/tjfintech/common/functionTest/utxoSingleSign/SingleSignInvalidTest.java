@@ -136,7 +136,7 @@ public class SingleSignInvalidTest {
         assertThat(issueInfo4, containsString("Amount must be greater than 0 and less than "+MaxValue));
         assertThat(issueInfo5,containsString("TokenType shouldn't be empty"));
         log.info("查询归集地址中token余额");
-        String response1 = soloSign.Balance(PRIKEY1, tokenTypeInvalid);
+        String response1 = soloSign.BalanceByAddr(ADDRESS1, tokenTypeInvalid);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("0"));
 

@@ -39,7 +39,7 @@ public class SyncMultiSignTest {
         log.info("第一次签名");
         String response2 = multiSign.SyncSign(utilsClass.UTXOSHORTMEOUT, Tx1, PRIKEY1);
         Thread.sleep(SLEEPTIME);
-        String queryInfo = multiSign.Balance(IMPPUTIONADD,PRIKEY4,tokenType);
+        String queryInfo = multiSign.BalanceByAddr(IMPPUTIONADD,tokenType);
         assertThat("100000",containsString(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total")));
         assertThat("200",containsString(JSONObject.fromObject(response).getString("State")));
         assertThat("200",containsString(JSONObject.fromObject(response2).getString("State")));
@@ -66,8 +66,8 @@ public class SyncMultiSignTest {
         String syncTransfer = multiSign.SyncTransfer(utilsClass.UTXOSHORTMEOUT, PRIKEY4, transferData, IMPPUTIONADD, list);//转账操作
         Thread.sleep(SLEEPTIME);
         log.info("查询归集地址跟MULITADD4余额，判断转账是否成功");
-        String queryInfo = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String queryInfo2 = multiSign.Balance(MULITADD1, PRIKEY1, tokenType);
+        String queryInfo = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        String queryInfo2 = multiSign.BalanceByAddr(MULITADD1, tokenType);
         assertThat("9001",containsString(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total")));
         assertThat("999",containsString(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total")));
         assertThat("200",containsString(JSONObject.fromObject(syncTransfer).getString("State")));
@@ -77,7 +77,7 @@ public class SyncMultiSignTest {
         String recycle = multiSign.SyncRecycle(utilsClass.UTXOSHORTMEOUT, IMPPUTIONADD, PRIKEY4, tokenType, "100");
         assertThat("200",containsString(JSONObject.fromObject(recycle).getString("State")));
         assertThat("success",containsString(JSONObject.fromObject(recycle).getString("Message")));
-        String queryInfo3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        String queryInfo3 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
 
     }
 

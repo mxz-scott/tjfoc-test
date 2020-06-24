@@ -394,7 +394,7 @@ public class TestTxType {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //单签转账
-        assertEquals(JSONObject.fromObject(soloSign.Balance(PRIKEY1,tokenTypeS)).getJSONObject("data").getString("total"),amount);
+        assertEquals(JSONObject.fromObject(soloSign.BalanceByAddr(ADDRESS1,tokenTypeS)).getJSONObject("data").getString("total"),amount);
         String amountTransfer="0.01";
         List<Map> list=soloSign.constructToken(ADDRESS3,tokenTypeS,amountTransfer);
         String tranferdata="transfer to "+ADDRESS3+" with amount "+amountTransfer;
@@ -472,7 +472,7 @@ public class TestTxType {
         //单签回收
         String recySoloAmount="600.05";
         log.info("单签回收");
-        log.info(soloSign.Balance(PRIKEY1,tokenTypeS));
+        log.info(soloSign.BalanceByAddr(ADDRESS1,tokenTypeS));
         String RecycleSoloInfo = soloSign.Recycle( PRIKEY1, tokenTypeS, recySoloAmount);
 
 

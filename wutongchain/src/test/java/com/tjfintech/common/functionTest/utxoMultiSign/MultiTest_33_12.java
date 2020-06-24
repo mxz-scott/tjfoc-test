@@ -177,7 +177,7 @@ public class MultiTest_33_12 {
 
         //查询余额时使用带密码私钥和不带密码私钥
         log.info("查询余额判断转账是否成功");
-        String queryInfoA1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String queryInfoA1= soloSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfoM1= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfoM2= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfoCM1= multiSign.BalanceByAddr(MULITADD3,tokenType);
@@ -229,7 +229,7 @@ public class MultiTest_33_12 {
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String queryInfo3= soloSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfo4= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfo5= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfo6= multiSign.BalanceByAddr(MULITADD3,tokenType);
@@ -331,7 +331,7 @@ public class MultiTest_33_12 {
 
         //查询余额时使用带密码私钥和不带密码私钥
         log.info("查询余额判断转账是否成功");
-        String queryInfoA1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String queryInfoA1= soloSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfoM1= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfoM2= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfoCM1= multiSign.BalanceByAddr(MULITADD3,tokenType);
@@ -384,7 +384,7 @@ public class MultiTest_33_12 {
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String queryInfo3= soloSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfo4= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfo5= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfo6= multiSign.BalanceByAddr(MULITADD3,tokenType);
@@ -481,7 +481,7 @@ public class MultiTest_33_12 {
 
         //查询余额时使用带密码私钥和不带密码私钥
         log.info("查询余额判断转账是否成功");
-        String queryInfoA1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String queryInfoA1= soloSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfoM1= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfoM2= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfoCM1= multiSign.BalanceByAddr(MULITADD7,tokenType);
@@ -512,7 +512,7 @@ public class MultiTest_33_12 {
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String queryInfo3= soloSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfo4= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfo5= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfo6= multiSign.BalanceByAddr(MULITADD7,tokenType);
@@ -608,7 +608,7 @@ public class MultiTest_33_12 {
 
         //查询余额时使用带密码私钥和不带密码私钥
         log.info("查询余额判断转账是否成功");
-        String queryInfoA1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String queryInfoA1= soloSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfoM1= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfoM2= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfoCM1= multiSign.BalanceByAddr(MULITADD7,tokenType);
@@ -639,7 +639,7 @@ public class MultiTest_33_12 {
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String queryInfo3= soloSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfo4= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfo5= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfo6= multiSign.BalanceByAddr(MULITADD7,tokenType);
@@ -737,8 +737,8 @@ public class MultiTest_33_12 {
         assertEquals("404",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("state"));//因为花费同一笔input
 
         log.info("查询余额判断回收成功与否");
-        String query1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
-        String query2= multiSign.BalanceByAddr(ADDRESS2,tokenType);
+        String query1= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query2= soloSign.BalanceByAddr(ADDRESS2,tokenType);
         String query3= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query1).getString("state"));
@@ -828,8 +828,8 @@ public class MultiTest_33_12 {
         //assertEquals("404",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("State"));//因为花费同一笔input，第二笔交易不会上链
 
         log.info("查询余额判断回收成功与否");
-        String query1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
-        String query2= multiSign.BalanceByAddr(ADDRESS2,tokenType);
+        String query1= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query2= soloSign.BalanceByAddr(ADDRESS2,tokenType);
         String query3= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query1).getString("state"));
@@ -966,8 +966,8 @@ public class MultiTest_33_12 {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash1)).getString("state"));
 
         log.info("查询余额判断回收成功与否");
-        String query6= multiSign.BalanceByAddr(ADDRESS1,tokenType);
-        String query7= multiSign.BalanceByAddr(ADDRESS2,tokenType);
+        String query6= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query7= soloSign.BalanceByAddr(ADDRESS2,tokenType);
         String query8= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("state"));
@@ -1102,8 +1102,8 @@ public class MultiTest_33_12 {
         //assertEquals("404",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("State"));//因为花费同一笔input，第二笔交易不会上链
 
         log.info("查询余额判断回收成功与否");
-        String query6= multiSign.BalanceByAddr(ADDRESS1,tokenType);
-        String query7= multiSign.BalanceByAddr(ADDRESS2,tokenType);
+        String query6= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query7= soloSign.BalanceByAddr(ADDRESS2,tokenType);
         String query8= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("state"));
@@ -1240,8 +1240,8 @@ public class MultiTest_33_12 {
         assertEquals("404",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("state"));
 
         log.info("查询余额判断回收成功与否");
-        String query6= multiSign.BalanceByAddr(ADDRESS1,tokenType);
-        String query7= multiSign.BalanceByAddr(ADDRESS2,tokenType);
+        String query6= soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String query7= soloSign.BalanceByAddr(ADDRESS2,tokenType);
         String query8= multiSign.BalanceByAddr(MULITADD3,tokenType);
 
         assertEquals("200",JSONObject.fromObject(query6).getString("state"));
@@ -1329,7 +1329,7 @@ public class MultiTest_33_12 {
 
         //查询余额时使用带密码私钥
         log.info("查询余额判断转账是否成功");
-        String queryInfoA1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String queryInfoA1= soloSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfoM1= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfoM2= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfoCM1= multiSign.BalanceByAddr(MULITADD7,tokenType);
@@ -1367,7 +1367,7 @@ public class MultiTest_33_12 {
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String queryInfo3= soloSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfo4= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfo5= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfo6= multiSign.BalanceByAddr(MULITADD7,tokenType);
@@ -1453,7 +1453,7 @@ public class MultiTest_33_12 {
 
         //查询余额时使用带密码私钥
         log.info("查询余额判断转账是否成功");
-        String queryInfoA1= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String queryInfoA1= soloSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfoM1= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfoM2= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfoCM1= multiSign.BalanceByAddr(MULITADD7,tokenType);
@@ -1494,7 +1494,7 @@ public class MultiTest_33_12 {
 
 
         log.info("查询余额判断回收成功与否");
-        String queryInfo3= multiSign.BalanceByAddr(ADDRESS1,tokenType);
+        String queryInfo3= soloSign.BalanceByAddr(ADDRESS1,tokenType);
         String queryInfo4= multiSign.BalanceByAddr(MULITADD4,tokenType2);
         String queryInfo5= multiSign.BalanceByAddr(MULITADD4,tokenType);
         String queryInfo6= multiSign.BalanceByAddr(MULITADD7,tokenType);

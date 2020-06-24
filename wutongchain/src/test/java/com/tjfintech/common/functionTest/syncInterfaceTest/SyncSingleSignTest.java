@@ -65,7 +65,7 @@ public class SyncSingleSignTest {
         List<Map> list=soloSign.constructToken(ADDRESS3,tokenType,"3000");
         String transfer = soloSign.SyncTransfer(utilsClass.SHORTMEOUT, list, PRIKEY1, transferData);
         Thread.sleep(SLEEPTIME);
-        String response1 = soloSign.Balance( PRIKEY1, tokenType);
+        String response1 = soloSign.BalanceByAddr(ADDRESS1, tokenType);
         assertThat(response1, containsString(tokenType + "\":\"7000\""));  //查询余额
         assertThat("200",containsString(JSONObject.fromObject(transfer).getString("State")));
         assertThat("success",containsString(JSONObject.fromObject(transfer).getString("Message")));

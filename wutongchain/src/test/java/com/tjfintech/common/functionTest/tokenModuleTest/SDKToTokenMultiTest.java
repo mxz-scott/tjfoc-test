@@ -134,8 +134,8 @@ public class SDKToTokenMultiTest {
         assertEquals(false,JSONObject.fromObject(desInfo2).getString("state").equals("200"));
 
         SDKADD = rSDKADD;
-        String queryInfo2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String queryInfo3 = soloSign.Balance(PRIKEY1, tokenType2);
+        String queryInfo2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        String queryInfo3 = soloSign.BalanceByAddr(ADDRESS1, tokenType2);
 
         assertEquals("200",JSONObject.fromObject(queryInfo).getString("state"));
         assertEquals("200",JSONObject.fromObject(queryInfo2).getString("State"));
@@ -161,9 +161,9 @@ public class SDKToTokenMultiTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-        queryInfo3 = soloSign.Balance(PRIKEY1, tokenType2);
+        queryInfo3 = soloSign.BalanceByAddr(ADDRESS1, tokenType2);
         assertEquals("0",JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"));
-        queryInfo3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        queryInfo3 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
         assertEquals("0",JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"));
 
     }
@@ -228,8 +228,8 @@ public class SDKToTokenMultiTest {
         assertEquals(false,JSONObject.fromObject(desInfo2).getString("state").equals("200"));
 
         SDKADD = rSDKADD;
-        String queryInfo2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
-        String queryInfo3 = soloSign.Balance(PRIKEY1, tokenType2);
+        String queryInfo2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        String queryInfo3 = soloSign.BalanceByAddr(ADDRESS1, tokenType2);
 
         assertEquals("200",JSONObject.fromObject(queryInfo).getString("state"));
         assertEquals("200",JSONObject.fromObject(queryInfo2).getString("State"));
@@ -255,9 +255,9 @@ public class SDKToTokenMultiTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType02),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-        queryInfo3 = soloSign.Balance(PRIKEY1, tokenType2);
+        queryInfo3 = soloSign.BalanceByAddr(ADDRESS1, tokenType2);
         assertEquals("0",JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"));
-        queryInfo3 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType);
+        queryInfo3 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
         assertEquals("0",JSONObject.fromObject(queryInfo3).getJSONObject("Data").getString("Total"));
 
     }
@@ -301,8 +301,8 @@ public class SDKToTokenMultiTest {
         //http地址设置为sdk模块地址 做账户余额查询
         SDKADD = rSDKADD;
         log.info("查询归集地址中两种token余额");
-        String response1 = multiSign.Balance(IMPPUTIONADD,PRIKEY4, tokenType);
-        String response2 = multiSign.Balance(IMPPUTIONADD, PRIKEY4, tokenType2);
+        String response1 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
+        String response2 = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType2);
         assertEquals("200",JSONObject.fromObject(response1).getString("State"));
         assertEquals(actualAmount1,JSONObject.fromObject(response1).getJSONObject("Data").getString("Total"));
         assertEquals("200",JSONObject.fromObject(response2).getString("State"));
@@ -329,8 +329,8 @@ public class SDKToTokenMultiTest {
         }
 
         log.info("查询余额判断转账是否成功");
-        String queryInfo= multiSign.Balance(IMPPUTIONADD,PRIKEY4,tokenType);
-        String queryInfo2= multiSign.Balance(IMPPUTIONADD,PRIKEY4,tokenType2);
+        String queryInfo= multiSign.BalanceByAddr(IMPPUTIONADD,tokenType);
+        String queryInfo2= multiSign.BalanceByAddr(IMPPUTIONADD,tokenType2);
         assertEquals("200",JSONObject.fromObject(queryInfo).getString("State"));
         assertEquals("200",JSONObject.fromObject(queryInfo2).getString("State"));
         assertEquals(actualAmount1,JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
@@ -405,8 +405,8 @@ public class SDKToTokenMultiTest {
         //http地址设置为sdk模块地址 做账户余额查询
         SDKADD = rSDKADD;
         log.info("查询归集地址中两种token余额");
-        String response1 = soloSign.Balance(PRIKEY1, tokenType);
-        String response2 = soloSign.Balance(PRIKEY1, tokenType2);
+        String response1 = soloSign.BalanceByAddr(ADDRESS1, tokenType);
+        String response2 = soloSign.BalanceByAddr(ADDRESS1, tokenType2);
         assertEquals("200",JSONObject.fromObject(response1).getString("State"));
         assertEquals(actualAmount1,JSONObject.fromObject(response1).getJSONObject("Data").getString("Total"));
         assertEquals("200",JSONObject.fromObject(response2).getString("State"));
@@ -434,8 +434,8 @@ public class SDKToTokenMultiTest {
         }
 
         log.info("查询余额判断转账是否成功");
-        String queryInfo = soloSign.Balance(PRIKEY1,tokenType);
-        String queryInfo2 = soloSign.Balance(PRIKEY1,tokenType2);
+        String queryInfo = soloSign.BalanceByAddr(ADDRESS1,tokenType);
+        String queryInfo2 = soloSign.BalanceByAddr(ADDRESS1,tokenType2);
         assertEquals("200",JSONObject.fromObject(queryInfo).getString("State"));
         assertEquals("200",JSONObject.fromObject(queryInfo2).getString("State"));
         assertEquals(actualAmount1,JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));

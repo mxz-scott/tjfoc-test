@@ -662,42 +662,42 @@ public class GoMultiSign implements MultiSign {
 
     }
 
-    /**
-     *
-     * @param addr 查询的多签地址
-     * @param priKey 多签地址绑定其中一个账户的私钥
-     * @param Pwd  多签地址绑定其中一个账户的私钥的密码
-     * @param tokenType
-     * @return
-     */
-    public String Balance(String addr,String priKey,String Pwd,String tokenType) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("multiAddress", addr);
-        map.put("priKey", priKey);
-        map.put("password", Pwd);
-        map.put("tokenType", tokenType);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/prikey/balance"+param, map);
-        log.info(result);
-        return result;
-    }
-    /**
-     * 查询用户余额
-     * @param addr    用户地址
-     * @param priKey  用户私钥
-     */
-    public String Balance(String addr,String priKey,String tokenType) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("multiAddress", addr);
-        map.put("priKey", priKey);
-        map.put("tokenType", tokenType);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/prikey/balance"+param, map);
-        log.info(result);
-        return result;
-    }
+//    /**
+//     *
+//     * @param addr 查询的多签地址
+//     * @param priKey 多签地址绑定其中一个账户的私钥
+//     * @param Pwd  多签地址绑定其中一个账户的私钥的密码
+//     * @param tokenType
+//     * @return
+//     */
+//    public String Balance(String addr,String priKey,String Pwd,String tokenType) {
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("multiAddress", addr);
+//        map.put("priKey", priKey);
+//        map.put("password", Pwd);
+//        map.put("tokenType", tokenType);
+//        String param="";
+//        if(subLedger!="") param = param +"?ledger="+subLedger;
+//        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/prikey/balance"+param, map);
+//        log.info(result);
+//        return result;
+//    }
+//    /**
+//     * 查询用户余额
+//     * @param addr    用户地址
+//     * @param priKey  用户私钥
+//     */
+//    public String Balance(String addr,String priKey,String tokenType) {
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("multiAddress", addr);
+//        map.put("priKey", priKey);
+//        map.put("tokenType", tokenType);
+//        String param="";
+//        if(subLedger!="") param = param +"?ledger="+subLedger;
+//        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/prikey/balance"+param, map);
+//        log.info(result);
+//        return result;
+//    }
 
 
     /**
