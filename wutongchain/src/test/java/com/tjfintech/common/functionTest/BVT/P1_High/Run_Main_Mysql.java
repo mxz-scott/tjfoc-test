@@ -16,6 +16,7 @@ import com.tjfintech.common.functionTest.utxoMultiSign.*;
 import com.tjfintech.common.functionTest.utxoSingleSign.SingleSignInvalidTest;
 import com.tjfintech.common.functionTest.utxoSingleSign.SoloTest;
 import com.tjfintech.common.functionTest.utxoSingleSign.SoloTestInvalid;
+import com.tjfintech.common.functionTest.utxoSingleSign.SoloTest_UnspentTxOutput_test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -46,6 +47,7 @@ import org.junit.runners.Suite;
         MultiSignDetailTest.class,
 
         SoloTest.class,
+        SoloTest_UnspentTxOutput_test.class,
         WVMContractTest.class,
 
         StoreInvalidTest.class,
@@ -58,6 +60,8 @@ import org.junit.runners.Suite;
         VerifyTests.class,
 
         AddPeerAndSyncData.class,
+
+//        TestPermission.class,
 
 })
 

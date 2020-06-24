@@ -479,8 +479,8 @@ public class TestPermission {
         permStr=permStr + pFunUTXO.multiSign(PRIKEY7,PWD7);//SDK发送UTXO - Token3/3多签第三次签名请求 完成签名即发行，会提示无权限
 
         permStr=permStr + pFunUTXO.getZeroAddrBalance(""); //查询零地址地址
-        permStr=permStr + pFunUTXO.soloBalance(PRIKEY1,"");
-        permStr=permStr + pFunUTXO.multiPostBalance(MULITADD4,PRIKEY1,"");
+        permStr=permStr + pFunUTXO.soloBalance(ADDRESS1,"");
+        permStr=permStr + pFunUTXO.multiPostBalance(MULITADD4,"");
 
         return permStr; //should be a string with a length of 10
     }

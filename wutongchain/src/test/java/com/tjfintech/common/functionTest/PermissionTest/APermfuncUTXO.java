@@ -134,7 +134,7 @@ public class APermfuncUTXO {
         return retAllow(response);
     }
 
-    public String multiPostBalance(String multiAddr,String priKey,String tokenType)throws Exception {
+    public String multiPostBalance(String multiAddr,String tokenType)throws Exception {
         log.info("查询多签账户余额");
         String response = multiSign.BalanceByAddr(multiAddr, tokenType);
         return retAllow(response);
