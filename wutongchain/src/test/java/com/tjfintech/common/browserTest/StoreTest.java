@@ -41,8 +41,8 @@ public class StoreTest {
         String response= store.CreateStore(Data);
         Thread.sleep(SLEEPTIME);
         assertThat(response, containsString("200"));
-        assertThat(response,containsString("Data"));
-        assertThat(response,containsString("Figure"));
+        assertThat(response,containsString("data"));
+        assertThat(response,containsString("figure"));
     }
 
 
@@ -58,8 +58,8 @@ public class StoreTest {
         String response= store.CreateStore(Data);
         Thread.sleep(SLEEPTIME);
         assertThat(response, containsString("200"));
-        assertThat(response,containsString("Data"));
-        assertThat(response,containsString("Figure"));
+        assertThat(response,containsString("data"));
+        assertThat(response,containsString("figure"));
     }
 
 
@@ -75,7 +75,7 @@ public class StoreTest {
         String response= store.CreateStore(Data);
         Thread.sleep(SLEEPTIME);
         assertThat(response, containsString("200"));
-        assertThat(response,containsString("Data"));
+        assertThat(response,containsString("data"));
     }
 
     /**
@@ -91,8 +91,8 @@ public class StoreTest {
         String response= store.CreateStore(Data);
         Thread.sleep(SLEEPTIME);
         assertThat(response, containsString("200"));
-        assertThat(response,containsString("Data"));
-        assertThat(response,containsString("Figure"));
+        assertThat(response,containsString("data"));
+        assertThat(response,containsString("figure"));
     }
 
     /**
@@ -115,8 +115,8 @@ public class StoreTest {
         String response= store.CreateStore(Data);
         Thread.sleep(SLEEPTIME);
         assertThat(response, containsString("200"));
-        assertThat(response,containsString("Data"));
-        assertThat(response,containsString("Figure"));
+        assertThat(response,containsString("data"));
+        assertThat(response,containsString("figure"));
     }
 
     /**
@@ -153,8 +153,8 @@ public class StoreTest {
             String response= store.CreateStore(Data);
             Thread.sleep(1000);
             assertThat(response, containsString("200"));
-            assertThat(response,containsString("Data"));
-            assertThat(response,containsString("Figure"));
+            assertThat(response,containsString("data"));
+            assertThat(response,containsString("figure"));
 
 
         }
@@ -173,14 +173,14 @@ public class StoreTest {
                 "bigsize1.txt");
         String response = store.CreateStore(Data);
         assertThat(response, containsString("200"));
-        assertThat(response, containsString("Data"));
+        assertThat(response, containsString("data"));
 
 
         String Data2 = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
                 +  "bigsize2.txt");
         String response2 = store.CreateStore(Data2);
         assertThat(response2, containsString("200"));
-        assertThat(response2, containsString("Data"));
+        assertThat(response2, containsString("data"));
     }
 
 }

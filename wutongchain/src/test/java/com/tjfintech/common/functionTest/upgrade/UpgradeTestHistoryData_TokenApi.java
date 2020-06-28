@@ -124,10 +124,10 @@ public class UpgradeTestHistoryData_TokenApi {
             mapTXHashResp.put(txList.get(k),response);//将所有交易hash及根据交易hash查询的txdetail存储
 
             log.info("tx detail ");
-            JSONObject jsonObject = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("Header");
+            JSONObject jsonObject = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header");
 
-            String txType = jsonObject.getString("Type");
-            String txSubType = jsonObject.getString("SubType");
+            String txType = jsonObject.getString("type");
+            String txSubType = jsonObject.getString("subType");
 
             //仅取首个交易类型hash
             if(storeHash.isEmpty() || priStoreHash.isEmpty()) {
@@ -153,9 +153,9 @@ public class UpgradeTestHistoryData_TokenApi {
         SDKADD = rSDKADD;//通过sdk获取所有交易hash
         ArrayList<String> txHashList = new ArrayList<>();
         if (!subLedger.isEmpty()) sleepAndSaveInfo(SLEEPTIME,"start waiting...");
-        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
+        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
         for(int i= blockHeight;i>0;i--){
-            JSONArray blockTxArr = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONArray("txs");
+            JSONArray blockTxArr = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("data").getJSONArray("txs");
             for(int k = 0; k < blockTxArr.size(); k++){
                 txHashList.add(blockTxArr.getString(k));
             }

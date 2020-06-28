@@ -54,9 +54,9 @@ public class HaiGuanTest {
             String[] txs = txsList.split("\",\"");
 
             for (String tx : txs) {
-                JSONObject txjson = JSONObject.fromObject(store.GetTxDetail(tx)).getJSONObject("Data").getJSONObject("Header");
-               int type = txjson.getInt("Type");
-               int subType = txjson.getInt("SubType");
+                JSONObject txjson = JSONObject.fromObject(store.GetTxDetail(tx)).getJSONObject("Data").getJSONObject("header");
+               int type = txjson.getInt("type");
+               int subType = txjson.getInt("subType");
 
                if ( type == 0  && subType == 1 ) { //隐私存证
                    a++;

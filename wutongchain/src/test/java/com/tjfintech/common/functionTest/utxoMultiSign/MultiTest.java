@@ -1064,16 +1064,16 @@ public class MultiTest {
         assertThat(response2, containsString("200"));
         /*String response = multiSign.issueToken(MULITADD3, tokenType, amount, data);
         assertThat(response, containsString("200"));
-        String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
+        String Tx1 = JSONObject.fromObject(response).getJSONObject("data").getString("tx");
         log.info("第一次签名");
         String response2 = multiSign.Sign(Tx1, PRIKEY1);
-        String Tx2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Tx");
+        String Tx2 = JSONObject.fromObject(response2).getJSONObject("data").getString("tx");
         log.info("第二次签名");
         String response3 = multiSign.Sign(Tx2, PRIKEY6,PWD6);
-        String Tx3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Tx");
+        String Tx3 = JSONObject.fromObject(response3).getJSONObject("data").getString("tx");
         log.info("第三次签名");
         String response4 = multiSign.Sign(Tx3, PRIKEY7,PWD7);
-        assertThat(JSONObject.fromObject(response4).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
+        assertThat(JSONObject.fromObject(response4).getJSONObject("data").getString("IsCompleted"), containsString("true"));
         assertThat(response4, containsString("200"));*/
         return tokenType;
     }
@@ -1092,16 +1092,16 @@ public class MultiTest {
         assertThat(response2, containsString("200"));
         /*String response = multiSign.issueToken(MULITADD3, tokenType, amount, data);
         assertThat(response, containsString("200"));
-        String Tx1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Tx");
+        String Tx1 = JSONObject.fromObject(response).getJSONObject("data").getString("tx");
         log.info("第一次签名");
         String response2 = multiSign.Sign(Tx1, PRIKEY1);
-        String Tx2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Tx");
+        String Tx2 = JSONObject.fromObject(response2).getJSONObject("data").getString("tx");
         log.info("第二次签名");
         String response3 = multiSign.Sign(Tx2, PRIKEY6,PWD6);
-        String Tx3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Tx");
+        String Tx3 = JSONObject.fromObject(response3).getJSONObject("data").getString("tx");
         log.info("第三次签名");
         String response4 = multiSign.Sign(Tx3, PRIKEY7,PWD7);
-        assertThat(JSONObject.fromObject(response4).getJSONObject("Data").getString("IsCompleted"), containsString("true"));
+        assertThat(JSONObject.fromObject(response4).getJSONObject("data").getString("IsCompleted"), containsString("true"));
         assertThat(response4, containsString("200"));*/
         return tokenType;
 

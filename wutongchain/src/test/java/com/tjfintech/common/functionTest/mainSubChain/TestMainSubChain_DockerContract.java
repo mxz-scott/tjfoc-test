@@ -93,18 +93,18 @@ public class TestMainSubChain_DockerContract {
         String response1 = dockerContractTest.getAllMobileTest();
         assertThat(response1, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME);
-        String hash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
+        String hash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("figure");
         response1 = store.GetTxDetail(hash1);
-        String mainMsg1 = JSONObject.fromObject(response1).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String mainMsg1 = JSONObject.fromObject(response1).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertEquals(testResp2,mainMsg1);
 
         subLedger = subLedgerA;
         String response2 = dockerContractTest.getAllMobileTest();
         assertThat(response2, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME);
-        String hash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
+        String hash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("figure");
         response2 = store.GetTxDetail(hash2);
-        String mainMsg2 = JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String mainMsg2 = JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertEquals(testResp1,mainMsg2);
 
     }
@@ -139,18 +139,18 @@ public class TestMainSubChain_DockerContract {
         String response1 = dockerContractTest.getAllMobileTest();
         assertThat(response1, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME);
-        String hash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
+        String hash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("figure");
         response1 = store.GetTxDetail(hash1);
-        String mainMsg1 = JSONObject.fromObject(response1).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String mainMsg1 = JSONObject.fromObject(response1).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertEquals(testResp2,mainMsg1);
 
         subLedger = "";
         String response2 = dockerContractTest.getAllMobileTest();
         assertThat(response2, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME);
-        String hash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
+        String hash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("figure");
         response2 = store.GetTxDetail(hash2);
-        String mainMsg2 = JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String mainMsg2 = JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertEquals(testResp1,mainMsg2);
 
     }
@@ -186,9 +186,9 @@ public class TestMainSubChain_DockerContract {
         String response1 = dockerContractTest.getAllMobileTest();
         assertThat(response1, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME);
-        String hash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
+        String hash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("figure");
         response1 = store.GetTxDetail(hash1);
-        String mainMsg1 = JSONObject.fromObject(response1).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String mainMsg1 = JSONObject.fromObject(response1).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertEquals(testResp2,mainMsg1);
 
         subLedger = subLedgerA;
@@ -196,9 +196,9 @@ public class TestMainSubChain_DockerContract {
         String response2 = dockerContractTest.getAllMobileTest();
         assertThat(response2, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME);
-        String hash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
+        String hash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("figure");
         response2 = store.GetTxDetail(hash2);
-        String mainMsg2 = JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String mainMsg2 = JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertEquals(testResp1,mainMsg2);
 
     }
@@ -235,9 +235,9 @@ public class TestMainSubChain_DockerContract {
         String response1 = dockerContractTest.getAllMobileTest();
         assertThat(response1, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME);
-        String hash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
+        String hash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("figure");
         response1 = store.GetTxDetail(hash1);
-        String mainMsg1 = JSONObject.fromObject(response1).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String mainMsg1 = JSONObject.fromObject(response1).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertEquals(testResp2,mainMsg1);
 
         subLedger = "";
@@ -245,9 +245,9 @@ public class TestMainSubChain_DockerContract {
         String response2 = dockerContractTest.getAllMobileTest();
         assertThat(response2, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME);
-        String hash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
+        String hash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("figure");
         response2 = store.GetTxDetail(hash2);
-        String mainMsg2 = JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String mainMsg2 = JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertEquals(testResp1,mainMsg2);
 
     }
@@ -294,9 +294,9 @@ public class TestMainSubChain_DockerContract {
         String response1 = dockerContractTest.getAllMobileTest();
         assertThat(response1, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME);
-        String hash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
+        String hash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("figure");
         response1 = store.GetTxDetail(hash1);
-        String mainMsg1 = JSONObject.fromObject(response1).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String mainMsg1 = JSONObject.fromObject(response1).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertEquals(testResp2,mainMsg1);
 
         subLedger = subLedgerA;
@@ -304,9 +304,9 @@ public class TestMainSubChain_DockerContract {
         String response2 = dockerContractTest.getAllMobileTest();
         assertThat(response2, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME);
-        String hash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
+        String hash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("figure");
         response2 = store.GetTxDetail(hash2);
-        String mainMsg2 = JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String mainMsg2 = JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertEquals(testResp1,mainMsg2);
 
     }
@@ -352,9 +352,9 @@ public class TestMainSubChain_DockerContract {
         String response1 = dockerContractTest.getAllMobileTest();
         assertThat(response1, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME);
-        String hash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
+        String hash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("figure");
         response1 = store.GetTxDetail(hash1);
-        String mainMsg1 = JSONObject.fromObject(response1).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String mainMsg1 = JSONObject.fromObject(response1).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertEquals(testResp2,mainMsg1);
 
         subLedger = subLedgerA;
@@ -362,9 +362,9 @@ public class TestMainSubChain_DockerContract {
         String response2 = dockerContractTest.getAllMobileTest();
         assertThat(response2, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME);
-        String hash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
+        String hash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("figure");
         response2 = store.GetTxDetail(hash2);
-        String mainMsg2 = JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String mainMsg2 = JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertEquals(testResp1,mainMsg2);
 
     }
@@ -410,9 +410,9 @@ public class TestMainSubChain_DockerContract {
         String response1 = dockerContractTest.getAllMobileTest();
         assertThat(response1, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME);
-        String hash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
+        String hash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("figure");
         response1 = store.GetTxDetail(hash1);
-        String mainMsg1 = JSONObject.fromObject(response1).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String mainMsg1 = JSONObject.fromObject(response1).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertEquals(testResp2,mainMsg1);
 
         subLedger = "";
@@ -420,9 +420,9 @@ public class TestMainSubChain_DockerContract {
         String response2 = dockerContractTest.getAllMobileTest();
         assertThat(response2, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME);
-        String hash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
+        String hash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("figure");
         response2 = store.GetTxDetail(hash2);
-        String mainMsg2 = JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String mainMsg2 = JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertEquals(testResp1,mainMsg2);
 
     }
@@ -470,9 +470,9 @@ public class TestMainSubChain_DockerContract {
         String response1 = dockerContractTest.getAllMobileTest();
         assertThat(response1, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME);
-        String hash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
+        String hash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("figure");
         response1 = store.GetTxDetail(hash1);
-        String mainMsg1 = JSONObject.fromObject(response1).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String mainMsg1 = JSONObject.fromObject(response1).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertEquals(testResp2,mainMsg1);
 
         subLedger = "";
@@ -480,9 +480,9 @@ public class TestMainSubChain_DockerContract {
         String response2 = dockerContractTest.getAllMobileTest();
         assertThat(response2, containsString("200"));
         sleepAndSaveInfo(SLEEPTIME);
-        String hash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
+        String hash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("figure");
         response2 = store.GetTxDetail(hash2);
-        String mainMsg2 = JSONObject.fromObject(response2).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String mainMsg2 = JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertEquals(testResp1,mainMsg2);
 
     }
@@ -534,10 +534,10 @@ public class TestMainSubChain_DockerContract {
         response=dockerContractTest.addSalesInfoNew("Company01",123456,name2,crossLedger);
         assertThat(response,containsString("200"));
         sleepAndSaveInfo(SLEEPTIME*2);
-        String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        String hash3 = JSONObject.fromObject(response).getJSONObject("data").getString("figure");
 
         response=store.GetTxDetail(hash3);
-        String contractResult = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String contractResult = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertThat(contractResult,containsString("not found "));
     }
 
@@ -586,10 +586,10 @@ public class TestMainSubChain_DockerContract {
         response=dockerContractTest.addSalesInfoNew("Company01",123456,name2,crossLedger);
         assertThat(response,containsString("200"));
         sleepAndSaveInfo(SLEEPTIME*2);
-        String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        String hash3 = JSONObject.fromObject(response).getJSONObject("data").getString("figure");
 
         response=store.GetTxDetail(hash3);
-        String contractResult = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String contractResult = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertThat(contractResult,containsString("not found "));
     }
 
@@ -611,7 +611,7 @@ public class TestMainSubChain_DockerContract {
             mapledgerDockerName.put(subLedger,dockerContractTest.name);//添加到map中以方便后面删除
             assertThat(response, containsString("200"));
             assertThat(response, containsString("success"));
-            String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+            String hash = JSONObject.fromObject(response).getJSONObject("data").getString("figure");
 
             sleepAndSaveInfo(ContractInstallSleep);
             String response1 = store.GetTxDetail(hash);
@@ -627,7 +627,7 @@ public class TestMainSubChain_DockerContract {
             assertThat(response, containsString("200"));
 
             sleepAndSaveInfo(SLEEPTIME);
-            String hash11 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+            String hash11 = JSONObject.fromObject(response).getJSONObject("data").getString("figure");
             assertThat(store.GetTxDetail(hash11), containsString("200"));
 
 
@@ -650,9 +650,9 @@ public class TestMainSubChain_DockerContract {
             response = dockerContractTest.getAllMobileTest();
             assertThat(response, containsString("200"));
             sleepAndSaveInfo(SLEEPTIME);
-            String hash1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+            String hash1 = JSONObject.fromObject(response).getJSONObject("data").getString("figure");
             response = store.GetTxDetail(hash1);
-            retMsg = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+            retMsg = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         }
 
         return retMsg;

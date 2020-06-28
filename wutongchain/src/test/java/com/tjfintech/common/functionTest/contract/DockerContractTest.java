@@ -56,7 +56,7 @@ public class DockerContractTest {
         response=installTest();
         assertThat(response,containsString("200"));
         assertThat(response,containsString("success"));
-        String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        String hash= JSONObject.fromObject(response).getJSONObject("data").getString("figure");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,ContractInstallSleep);
@@ -83,7 +83,7 @@ public class DockerContractTest {
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");//暂时添加 需要确认是否是这个问题
 
-        String hash11 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        String hash11 = JSONObject.fromObject(response).getJSONObject("data").getString("figure");
         assertThat(store.GetTxDetail(hash11),containsString("200"));
 
         String response2 = contract.SearchByKey("Mobile0",name);//SDK发送按key查询请求
@@ -132,7 +132,7 @@ public class DockerContractTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-        String hash1 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        String hash1 = JSONObject.fromObject(response).getJSONObject("data").getString("figure");
         response=store.GetTxDetail(hash1);
         assertThat(response,containsString("Mobile1"));
         assertThat(response,containsString("Mobile2"));
@@ -145,7 +145,7 @@ public class DockerContractTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-        String hash2 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        String hash2 = JSONObject.fromObject(response).getJSONObject("data").getString("figure");
         response=store.GetTxDetail(hash2);
         assertThat(response,containsString("iphoneXS"));
 
@@ -169,7 +169,7 @@ public class DockerContractTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-        String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        String hash3 = JSONObject.fromObject(response).getJSONObject("data").getString("figure");
         log.info(name);
         response=store.GetTxDetail(hash3);
         assertThat(response,containsString("failed to find transaction"));
@@ -226,10 +226,10 @@ public class DockerContractTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-        String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        String hash3 = JSONObject.fromObject(response).getJSONObject("data").getString("figure");
 
         response=store.GetTxDetail(hash3);
-        String contractResult = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String contractResult = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertThat(contractResult,containsString("success"));
 
         //重复添加 则显示已存在信息
@@ -240,10 +240,10 @@ public class DockerContractTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-        String hash4 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        String hash4 = JSONObject.fromObject(response).getJSONObject("data").getString("figure");
 
         response=store.GetTxDetail(hash4);
-        String contractResult1 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Message");
+        String contractResult1 = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Message");
         assertThat(contractResult1,containsString("this data is exist"));
 
         //调用不存在的合约
@@ -254,10 +254,10 @@ public class DockerContractTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-        String hash5 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        String hash5 = JSONObject.fromObject(response).getJSONObject("data").getString("figure");
 
         response=store.GetTxDetail(hash5);
-        String contractResult2 = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Contract").getJSONObject("ContractResult").getString("Payload");
+        String contractResult2 = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("contract").getJSONObject("ContractResult").getString("Payload");
         assertThat(contractResult2,containsString("does not exist"));
 
         name=name1;
@@ -369,7 +369,7 @@ public class DockerContractTest {
 //            args.add(arg[i]);
 //        }
 //        String response = contract.CreateNewTransaction(name, version, method, args);
-//        String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+//        String hash = JSONObject.fromObject(response).getJSONObject("data").getString("figure");
 //        sleepAndSaveInfo(SLEEPTIME);
 //        String result = store.GetTxDetail(hash);
 //        assertThat(result, containsString("200"));

@@ -60,10 +60,10 @@ public class UpgradeDataGetFunc {
             String response = store.GetTxDetail(txList.get(k));
             //if(!response.contains("{")) continue;
             log.info("tx detail ");
-            JSONObject jsonObject = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Header");
+            JSONObject jsonObject = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header");
 
-            String txType = jsonObject.getString("Type");
-            String txSubType = jsonObject.getString("SubType");
+            String txType = jsonObject.getString("type");
+            String txSubType = jsonObject.getString("subType");
 
             txTypeSubType.put(txType + "_" + txSubType,"typecollection");//将所有类型和子类型全部保存到map中
             //仅取首个交易类型hash
@@ -81,7 +81,7 @@ public class UpgradeDataGetFunc {
         mapTXHashResp.put("getheight",store.GetHeight());
         mapTXHashResp.put("getblockbyheight?number=1",store.GetBlockByHeight(1));//增加字段version
 
-        String blockHash = JSONObject.fromObject(store.GetBlockByHeight(1)).getJSONObject("Data").getJSONObject("header").getString("blockHash");
+        String blockHash = JSONObject.fromObject(store.GetBlockByHeight(1)).getJSONObject("data").getJSONObject("header").getString("blockHash");
         mapTXHashResp.put("getblockbyhash?hashData=****",store.GetBlockByHash(blockHash));
 
         mapTXHashResp.put("gettransactionindex?hashData=****",store.GetTransactionIndex(txHashList.get(1)));
@@ -110,9 +110,9 @@ public class UpgradeDataGetFunc {
         SDKADD = rSDKADD;
         ArrayList<String> txHashList = new ArrayList<>();
         if (!subLedger.isEmpty()) sleepAndSaveInfo(SLEEPTIME,"start waiting...");
-        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
+        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
         for(int i= blockHeight;i>0;i--){
-            JSONArray blockTxArr = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONArray("txs");
+            JSONArray blockTxArr = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("data").getJSONArray("txs");
             for(int k = 0; k < blockTxArr.size(); k++){
                 txHashList.add(blockTxArr.getString(k));
             }
@@ -133,10 +133,10 @@ public class UpgradeDataGetFunc {
             mapTXHashResp.put(txList.get(k),response);//将所有交易hash及根据交易hash查询的txdetail存储
 
             log.info("tx detail ");
-            JSONObject jsonObject = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("Header");
+            JSONObject jsonObject = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header");
 
-            String txType = jsonObject.getString("Type");
-            String txSubType = jsonObject.getString("SubType");
+            String txType = jsonObject.getString("type");
+            String txSubType = jsonObject.getString("subType");
 
             //仅取首个交易类型hash
             if(storeHash.isEmpty() || priStoreHash.isEmpty()) {

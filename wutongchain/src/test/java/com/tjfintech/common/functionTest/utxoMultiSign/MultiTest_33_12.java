@@ -727,7 +727,7 @@ public class MultiTest_33_12 {
 
 
         String tfHash2=JSONObject.fromObject(tfResponse25).getJSONObject("data").getString("txId");
-        assertEquals("success",JSONObject.fromObject(tfResponse25).getString("Message"));
+        assertEquals("success",JSONObject.fromObject(tfResponse25).getString("message"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -819,13 +819,13 @@ public class MultiTest_33_12 {
 
 
         //第二笔签名流程4：带密码+带密码 应该会提示fail
-        //String tfHash2=JSONObject.fromObject(tfResponse25).getJSONObject("Data").getString("TxId");
-        assertEquals("mutli transfer failed!",JSONObject.fromObject(tfResponse25).getString("Message"));
+        //String tfHash2=JSONObject.fromObject(tfResponse25).getJSONObject("data").getString("txId");
+        assertEquals("mutli transfer failed!",JSONObject.fromObject(tfResponse25).getString("message"));
 
 
 
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash1)).getString("State"));
-        //assertEquals("404",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("State"));//因为花费同一笔input，第二笔交易不会上链
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash1)).getString("state"));
+        //assertEquals("404",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("state"));//因为花费同一笔input，第二笔交易不会上链
 
         log.info("查询余额判断回收成功与否");
         String query1= soloSign.BalanceByAddr(ADDRESS1,tokenType);
@@ -959,7 +959,7 @@ public class MultiTest_33_12 {
         assertThat(JSONObject.fromObject(tfResponse24).getJSONObject("data").getString("isCompleted"), containsString("true"));
 
 
-        assertEquals("mutli transfer failed!",JSONObject.fromObject(tfResponse25).getString("Message"));
+        assertEquals("mutli transfer failed!",JSONObject.fromObject(tfResponse25).getString("message"));
 
 
 
@@ -1092,14 +1092,14 @@ public class MultiTest_33_12 {
         assertThat(JSONObject.fromObject(tfResponse24).getJSONObject("data").getString("isCompleted"), containsString("true"));
 
 
-        assertEquals("success",JSONObject.fromObject(tfResponse25).getString("Message"));
+        assertEquals("success",JSONObject.fromObject(tfResponse25).getString("message"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
 
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(tfHash1)).getString("state"));
-        //assertEquals("404",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("State"));//因为花费同一笔input，第二笔交易不会上链
+        //assertEquals("404",JSONObject.fromObject(store.GetTxDetail(tfHash2)).getString("state"));//因为花费同一笔input，第二笔交易不会上链
 
         log.info("查询余额判断回收成功与否");
         String query6= soloSign.BalanceByAddr(ADDRESS1,tokenType);

@@ -64,8 +64,8 @@ public class WVMContractTest_UpgradeTestOnly {
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmInstallTest(wvmFile +"_temp.txt",PRIKEY1);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("Data").getString("Figure");
-        String ctHash = JSONObject.fromObject(response1).getJSONObject("Data").getString("Name");
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("figure");
+        String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
@@ -73,47 +73,47 @@ public class WVMContractTest_UpgradeTestOnly {
 
         //调用合约内的交易
         String response2 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("Data").getString("Figure");
+        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("figure");
 
         String response3 = invokeNew(ctHash,"initAccount",accountB,amountB);//初始化账户B 账户余额60
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
+        String txHash3 = JSONObject.fromObject(response3).getJSONObject("data").getString("figure");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         String response4 = invokeNew(ctHash,"transfer",accountA,accountB,transfer);//A向B转30
-        String txHash4 = JSONObject.fromObject(response4).getJSONObject("Data").getString("Figure");
+        String txHash4 = JSONObject.fromObject(response4).getJSONObject("data").getString("figure");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //查询余额invoke接口
         String response5 = invokeNew(ctHash,"getBalance",accountA);//获取账户A账户余额
-        String txHash5 = JSONObject.fromObject(response5).getJSONObject("Data").getString("Figure");
+        String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("figure");
 
         String response6 = invokeNew(ctHash,"getBalance",accountB);//获取账户A账户余额
-        String txHash6 = JSONObject.fromObject(response6).getJSONObject("Data").getString("Figure");
+        String txHash6 = JSONObject.fromObject(response6).getJSONObject("data").getString("figure");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //查询余额query接口 交易不上链 //query接口不再显示交易hash
         String response7 = query(ctHash,"getBalance",accountA);//获取转账后账户A账户余额
-//        String txHash7 = JSONObject.fromObject(response7).getJSONObject("Data").getString("Figure");
-        assertEquals(Integer.toString(amountA-transfer),JSONObject.fromObject(response7).getJSONObject("Data").getString("Result"));
+//        String txHash7 = JSONObject.fromObject(response7).getJSONObject("data").getString("figure");
+        assertEquals(Integer.toString(amountA-transfer),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
 
         String response8 = query(ctHash,"getBalance",accountB);//获取转账后账户B账户余额
-        assertEquals(Integer.toString(amountB+transfer),JSONObject.fromObject(response8).getJSONObject("Data").getString("Result"));
+        assertEquals(Integer.toString(amountB+transfer),JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
 
         //销毁wvm合约
         String response9 = wvmDestroyTest(ctHash);
-        String txHash9 = JSONObject.fromObject(response9).getJSONObject("Data").getString("Figure");
+        String txHash9 = JSONObject.fromObject(response9).getJSONObject("data").getString("figure");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         String response10 = query(ctHash,"getBalance",accountB);//获取账户B账户余额 报错
-        assertThat(JSONObject.fromObject(response10).getString("Message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
+        assertThat(JSONObject.fromObject(response10).getString("message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
 
         chkTxDetailRsp("200",txHash1,txHash2,txHash3,txHash4,txHash5,txHash6,txHash9);
 //        chkTxDetailRsp("404",txHash7);

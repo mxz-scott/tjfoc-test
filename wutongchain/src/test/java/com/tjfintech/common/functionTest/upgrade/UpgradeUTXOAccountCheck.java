@@ -109,7 +109,7 @@ public class UpgradeUTXOAccountCheck {
 
                     //回收前查询回收账户token余额
                     String zeroTokenBalanceBefore = JSONObject.fromObject(
-                            multiSign.QueryZero(operateTokenType)).getJSONObject("Data").getString("Total");
+                            multiSign.QueryZero(operateTokenType)).getJSONObject("data").getString("total");
 
 
                     Double trfAmount =Double.parseDouble(operateAmount);
@@ -142,7 +142,7 @@ public class UpgradeUTXOAccountCheck {
 
                     assertEquals(Double.parseDouble(zeroTokenBalanceBefore) + trfAmount/2 + trfAmount/2,
                             Double.parseDouble(JSONObject.fromObject(
-                                    multiSign.QueryZero(operateTokenType)).getJSONObject("Data").getString("Total")),
+                                    multiSign.QueryZero(operateTokenType)).getJSONObject("data").getString("total")),
                             0.000002 );
                 }
 

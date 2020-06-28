@@ -45,7 +45,7 @@ public class PrivateStoreTest {
         map.put("pubkeys",PUBKEY6);
         String response1= store.CreatePrivateStore(Data,map);
         JSONObject jsonObject=JSONObject.fromObject(response1);
-        String StoreHashPwd = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String StoreHashPwd = jsonObject.getJSONObject("data").get("figure").toString();
         Thread.sleep(SLEEPTIME);
 
         String response2= store.GetStorePost(StoreHashPwd,PRIKEY1);
@@ -76,10 +76,10 @@ public class PrivateStoreTest {
         map.put("pubkeys",PUBKEY6);
         String response1= store.CreatePrivateStore(Data,map);
         JSONObject jsonObject=JSONObject.fromObject(response1);
-        String StoreHashPwd = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String StoreHashPwd = jsonObject.getJSONObject("data").get("figure").toString();
         Thread.sleep(SLEEPTIME);
         assertThat(response1, containsString("200"));
-        assertThat(response1,containsString("Data"));
+        assertThat(response1,containsString("data"));
 
 
     }
@@ -105,11 +105,11 @@ public class PrivateStoreTest {
         String response= store.CreatePrivateStore(Data,map);
         Thread.sleep(SLEEPTIME);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String hash = jsonObject.getJSONObject("Data").get("Figure").toString();
+        String hash = jsonObject.getJSONObject("data").get("figure").toString();
         String res3 = store.GetStorePost(hash,PRIKEY1);
         assertThat(res3,containsString("200"));
         JSONObject jsonResult=JSONObject.fromObject(res3);
-        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+        assertThat(jsonResult.get("data").toString(),containsString(Data));
 
 
         map=new HashMap<>();
@@ -121,7 +121,7 @@ public class PrivateStoreTest {
         String res4 = store.GetStorePost(hash,PRIKEY2);
         assertThat(res4,containsString("200"));
         jsonResult=JSONObject.fromObject(res4);
-        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+        assertThat(jsonResult.get("data").toString(),containsString(Data));
 
 
         map=new HashMap<>();
@@ -133,7 +133,7 @@ public class PrivateStoreTest {
         String res5 = store.GetStorePostPwd(hash,PRIKEY6,PWD6);
         assertThat(res5,containsString("200"));
         jsonResult=JSONObject.fromObject(res5);
-        assertThat(jsonResult.get("Data").toString(),containsString(Data));
+        assertThat(jsonResult.get("data").toString(),containsString(Data));
 
     }
 

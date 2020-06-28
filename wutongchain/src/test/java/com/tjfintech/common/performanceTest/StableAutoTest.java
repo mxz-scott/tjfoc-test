@@ -38,10 +38,10 @@ public class StableAutoTest {
             String Data1 = "\"test\":\"json"+ UtilsClass.Random(4)+"\"";
             String response= store.CreateStore(Data1);
             JSONObject jsonObject1=JSONObject.fromObject(response);
-            String storeHash = jsonObject1.getJSONObject("Data").get("Figure").toString();
+            String storeHash = jsonObject1.getJSONObject("data").get("figure").toString();
             Thread.sleep(SLEEPTIME);
             assertThat(response, containsString("200"));
-            assertThat(response,containsString("Data"));
+            assertThat(response,containsString("data"));
 
             Thread.sleep(n*1000);//普通存证 休眠n秒
 
@@ -51,24 +51,24 @@ public class StableAutoTest {
             map.put("pubkeys",PUBKEY6);
             String response1= store.CreatePrivateStore(Data2,map);
             JSONObject jsonObject2=JSONObject.fromObject(response1);
-            String StoreHashPwd = jsonObject2.getJSONObject("Data").get("Figure").toString();
+            String StoreHashPwd = jsonObject2.getJSONObject("data").get("figure").toString();
             Thread.sleep(SLEEPTIME);
             assertThat(response1, containsString("200"));
-            assertThat(response1,containsString("Data"));
+            assertThat(response1,containsString("data"));
 
             Thread.sleep(n*1000);//隐私存证 休眠n秒
 
             String tokenType = "cx-8oVNI";
             String queryInfo = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
-            Boolean flag=JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total").equals("0");
+            Boolean flag=JSONObject.fromObject(queryInfo).getJSONObject("data").getString("total").equals("0");
             if(flag){
                 BeforeCondition beforeCondition=new BeforeCondition();
                 beforeCondition.T284_BeforeCondition(tokenType);
                 Thread.sleep(SLEEPTIME);
                 queryInfo = multiSign.BalanceByAddr(IMPPUTIONADD, tokenType);
                 assertThat(queryInfo, containsString("200"));
-                log.info(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total"));
-                assertEquals(JSONObject.fromObject(queryInfo).getJSONObject("Data").getString("Total").equals("0"), false);
+                log.info(JSONObject.fromObject(queryInfo).getJSONObject("data").getString("total"));
+                assertEquals(JSONObject.fromObject(queryInfo).getJSONObject("data").getString("total").equals("0"), false);
                 /**
                  * 如果测试不通过请执行BeforeConditon类中的第二个方法.发行相应的币种
                  */
@@ -83,9 +83,9 @@ public class StableAutoTest {
                 assertThat(transferInfo1, containsString("200"));
             }
             String queryInfo1 = multiSign.BalanceByAddr(MULITADD4, tokenType);
-            assertEquals(JSONObject.fromObject(queryInfo1).getJSONObject("Data").getString("Total").equals("0"), false);
+            assertEquals(JSONObject.fromObject(queryInfo1).getJSONObject("data").getString("total").equals("0"), false);
             String queryInfo2= soloSign.BalanceByAddr(ADDRESS1, tokenType);
-            assertEquals(JSONObject.fromObject(queryInfo2).getJSONObject("Data").getString("Total").equals("0"), false);
+            assertEquals(JSONObject.fromObject(queryInfo2).getJSONObject("data").getString("total").equals("0"), false);
 
             List<Map> list1 = utilsClass.constructToken(MULITADD5, tokenType, "0.5");
             String transferInfo1 = multiSign.Transfer(PRIKEY1, "cx-test", MULITADD4, list1);//1-2多签向多签地址转账

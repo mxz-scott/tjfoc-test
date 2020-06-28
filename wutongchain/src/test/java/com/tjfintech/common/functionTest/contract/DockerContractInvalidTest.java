@@ -52,7 +52,7 @@ public class DockerContractInvalidTest {
         response=installTest();
         assertThat(response,containsString("200"));
         assertThat(response,containsString("success"));
-        String hash= JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        String hash= JSONObject.fromObject(response).getJSONObject("data").getString("figure");
 
         //安装后恢复dockerFileName为默认好的simple.go
         dockerFileName="simple.go";
@@ -78,7 +78,7 @@ public class DockerContractInvalidTest {
         assertThat(response,containsString("200"));
 
         sleepAndSaveInfo(36000); //合约timeout时间
-        String hash3 = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+        String hash3 = JSONObject.fromObject(response).getJSONObject("data").getString("figure");
         log.info(name);
         response=store.GetTxDetail(hash3);
         assertThat(response,containsString("Invalid method"));
@@ -231,7 +231,7 @@ public class DockerContractInvalidTest {
 //            args.add(arg[i]);
 //        }
 //        String response = contract.CreateNewTransaction(name, version, method, args);
-//        String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
+//        String hash = JSONObject.fromObject(response).getJSONObject("data").getString("figure");
 //        sleepAndSaveInfo(SLEEPTIME);
 //        String result = store.GetTxDetail(hash);
 //        assertThat(result, containsString("200"));

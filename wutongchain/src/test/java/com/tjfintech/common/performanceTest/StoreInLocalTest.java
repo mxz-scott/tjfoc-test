@@ -27,7 +27,7 @@ public class StoreInLocalTest {
         String data = store.CreateStore("j"+i);
 //        log.info(data);
         JSONObject jsonObject = JSONObject.fromObject(data);
-        String hash=jsonObject.getJSONObject("Data").get("Figure").toString();
+        String hash=jsonObject.getJSONObject("Data").get("figure").toString();
         log.info(hash);
         inLocal(hash,times);
         }

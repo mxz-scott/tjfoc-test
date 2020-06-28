@@ -55,15 +55,15 @@ public class UpgradeTestHistoryData {
 
     //@Test
     public void CheckAllBlockHash()throws Exception{
-        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
-        String preBlockHash=JSONObject.fromObject(store.GetBlockByHeight(blockHeight)).getJSONObject("Data").getJSONObject("header").getString("previousHash");
+        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
+        String preBlockHash=JSONObject.fromObject(store.GetBlockByHeight(blockHeight)).getJSONObject("data").getJSONObject("header").getString("previousHash");
         String currentBlockHash="";
         for(int i= blockHeight-1;i>0;i--){
 
             log.info("Block height: " + i);
-            currentBlockHash  = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONObject("header").getString("blockHash");
+            currentBlockHash  = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("data").getJSONObject("header").getString("blockHash");
             assertEquals(currentBlockHash,preBlockHash);
-            preBlockHash=JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONObject("header").getString("previousHash");
+            preBlockHash=JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("data").getJSONObject("header").getString("previousHash");
 
         }
     }
@@ -133,10 +133,10 @@ public class UpgradeTestHistoryData {
             String response = store.GetTxDetail(txList.get(k));
             //if(!response.contains("{")) continue;
             log.info("tx detail ");
-            JSONObject jsonObject = JSONObject.fromObject(response).getJSONObject("Data").getJSONObject("Header");
+            JSONObject jsonObject = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header");
 
-            String txType = jsonObject.getString("Type");
-            String txSubType = jsonObject.getString("SubType");
+            String txType = jsonObject.getString("type");
+            String txSubType = jsonObject.getString("subType");
 
             txTypeSubType.put(txType + "_" + txSubType,"typecollection");//将所有类型和子类型全部保存到map中
             //仅取首个交易类型hash
@@ -154,7 +154,7 @@ public class UpgradeTestHistoryData {
         mapTXHashResp.put("getheight",store.GetHeight());
         mapTXHashResp.put("getblockbyheight?number=1",store.GetBlockByHeight(1));//增加字段version
 
-        String blockHash = JSONObject.fromObject(store.GetBlockByHeight(1)).getJSONObject("Data").getJSONObject("header").getString("blockHash");
+        String blockHash = JSONObject.fromObject(store.GetBlockByHeight(1)).getJSONObject("data").getJSONObject("header").getString("blockHash");
         mapTXHashResp.put("getblockbyhash?hashData=****",store.GetBlockByHash(blockHash));
 
         mapTXHashResp.put("gettransactionindex?hashData=****",store.GetTransactionIndex(txHashList.get(1)));
@@ -181,7 +181,7 @@ public class UpgradeTestHistoryData {
 //        //获取合约交易search/byprefix  search/bykey
 //        String resp = store.GetTxDetail(contractHash);
 //        log.info("contract hash:" + contractHash);
-//        String msg =  JSONObject.fromObject(resp).getJSONObject("Data").getJSONObject("Contract").getString("Message");
+//        String msg =  JSONObject.fromObject(resp).getJSONObject("data").getJSONObject("contract").getString("Message");
 //        String contractName = msg.substring(msg.indexOf('[') + 1,msg.lastIndexOf('_'));
 //        mapTXHashResp.put("search/byprefix?prefix=Mobile&cn=" + contractName,contract.SearchByPrefix("Mobile",contractName));
 //        mapTXHashResp.put("search/bykey?key=Mobile001&cn=" + contractName,contract.SearchByKey("Mobile001",contractName));
@@ -194,9 +194,9 @@ public class UpgradeTestHistoryData {
     public ArrayList<String> getAllTxHashData()throws Exception{
         ArrayList<String> txHashList = new ArrayList<>();
         if (!subLedger.isEmpty()) sleepAndSaveInfo(SLEEPTIME,"start waiting...");
-        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
+        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
         for(int i= blockHeight;i>0;i--){
-            JSONArray blockTxArr = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONArray("txs");
+            JSONArray blockTxArr = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("data").getJSONArray("txs");
             for(int k = 0; k < blockTxArr.size(); k++){
                 txHashList.add(blockTxArr.getString(k));
             }
