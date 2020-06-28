@@ -51,6 +51,24 @@ public class APermfuncUTXO {
         return allow;
     }
 
+    //管理类交易可能出现已删除/已添加/token不存在的情况 20200628
+    //token冻结和解除冻结 可能出现的场景是 token not exist
+    public String retAllow2(String checkStr){
+        String allow="*";
+        boolean bNoPerm = false;
+        if(checkStr.contains(NoPermErrCode)&&checkStr.contains(NoPermErrMsg) ){
+            bNoPerm = true;
+        }
+        if(checkStr.contains(okCode)|| checkStr.contains(NoPermErrCode)&&checkStr.contains("exist")) {
+            allow = "1";
+        }
+        else if(bNoPerm)
+        {
+            allow="0";
+        }
+        return allow;
+    }
+
     public String multiIssueToken(String mulIssAddr,String issueToken,String ToAddr)throws Exception{
         log.info("多签发行Token");
         String data = mulIssAddr+" 发行" + issueToken + "，数量为："+issAmount;
@@ -158,38 +176,38 @@ public class APermfuncUTXO {
     public String utxoFreeze(String priKey,String tokenType)throws Exception {
         log.info("冻结token");
         String response = multiSign.freezeToken( tokenType);
-        return retAllow(response);
+        return retAllow2(response);
     }
 
     public String utxoRecoverToken(String priKey,String tokenType)throws Exception {
         log.info("解除被冻结token");
         String response = multiSign.recoverFrozenToken( tokenType);
-        return retAllow(response);
+        return retAllow2(response);
     }
 
     public String addCollAddr(String priKey,String...collAddr)throws Exception  {
         log.info("向链上注册归集地址");
         String response = multiSign.collAddressRemovePri(collAddr);
-        return retAllow(response);
+        return retAllow2(response);
     }
 
     public String delCollAddr(String priKey,String...collAddr)throws Exception  {
         log.info("注销链上的归集地址");
         String response = multiSign.delCollAddressRemovePri(collAddr);
-        return retAllow(response);
+        return retAllow2(response);
     }
 
 
     public String addIssAddr(String priKey,String...collAddr)throws Exception  {
         log.info("向链上注册归集地址");
         String response = multiSign.addissueaddressRemovePri(collAddr);
-        return retAllow(response);
+        return retAllow2(response);
     }
 
     public String delIssAddr(String priKey,String...collAddr)throws Exception  {
         log.info("注销链上的归集地址");
         String response = multiSign.delissueaddressRemovePri(collAddr);
-        return retAllow(response);
+        return retAllow2(response);
     }
 
     public String validateKey(String priKey,String pwd)throws Exception  {
