@@ -417,22 +417,21 @@ public class BlockSyncTest_DockerImageFlag {
         //发送存证交易
         String Data="Mix tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
         String response1=store.CreateStore(Data);
-        //构造错误交易
+        //构造错误交易 20200628 新版本会若地址已添加或已删除链上会直接返回错误 不会返回200
         BeforeCondition bf = new BeforeCondition();
         bf.collAddressTest();//添加归集地址和发行地址的注册
         sleepAndSaveInfo(OnChainSleep);
 
-        assertThat(multiSign.delCollAddressRemovePri(ADDRESS6),
-                anyOf(containsString("200"),containsString("not exist")));
-        assertThat(multiSign.delCollAddressRemovePri(ADDRESS1),
-                anyOf(containsString("200"),containsString("not exist")));
-        assertThat(multiSign.delissueaddressRemovePri(ADDRESS6),
-                anyOf(containsString("200"),containsString("not exist")));
-        assertThat(multiSign.delissueaddressRemovePri(ADDRESS1),
-                anyOf(containsString("200"),containsString("not exist")));
+//        assertThat(multiSign.delCollAddressRemovePri(ADDRESS6),
+//                anyOf(containsString("200"),containsString("not exist")));
+//        assertThat(multiSign.delCollAddressRemovePri(ADDRESS1),
+//                anyOf(containsString("200"),containsString("not exist")));
+//        assertThat(multiSign.delissueaddressRemovePri(ADDRESS6),
+//                anyOf(containsString("200"),containsString("not exist")));
+//        assertThat(multiSign.delissueaddressRemovePri(ADDRESS1),
+//                anyOf(containsString("200"),containsString("not exist")));
+//        sleepAndSaveInfo(OnChainSleep);
 
-
-        sleepAndSaveInfo(OnChainSleep);
         String response2= multiSign.collAddressRemovePri(ADDRESS6);
         String response3= multiSign.collAddressRemovePri(ADDRESS1);
         String response4= multiSign.addissueaddressRemovePri(ADDRESS6);
@@ -454,10 +453,10 @@ public class BlockSyncTest_DockerImageFlag {
         String response8 = multiSign.Sign(Tx1, PRIKEY5);
 
         assertThat(response1, containsString("200"));
-        assertThat(response2, containsString("200"));
-        assertThat(response3, containsString("200"));
-        assertThat(response4, containsString("200"));
-        assertThat(response5, containsString("200"));
+//        assertThat(response2, containsString("200"));
+//        assertThat(response3, containsString("200"));
+//        assertThat(response4, containsString("200"));
+//        assertThat(response5, containsString("200"));
         assertThat(response6, containsString("200"));
         assertThat(response7, containsString("200"));
         assertThat(response8, containsString("200"));
@@ -465,19 +464,19 @@ public class BlockSyncTest_DockerImageFlag {
         JSONObject jsonObject=JSONObject.fromObject(response1);
         String StoreHash1 = jsonObject.getString("data");
         jsonObject=JSONObject.fromObject(response2);
-        String StoreHash2 = jsonObject.getString("data").toString();
-        jsonObject=JSONObject.fromObject(response3);
-        String StoreHash3 = jsonObject.getString("data").toString();
-        jsonObject=JSONObject.fromObject(response4);
-        String StoreHash4 = jsonObject.getString("data").toString();
-        jsonObject=JSONObject.fromObject(response5);
-        String StoreHash5 = jsonObject.getString("data").toString();
+//        String StoreHash2 = jsonObject.getString("data").toString();
+//        jsonObject=JSONObject.fromObject(response3);
+//        String StoreHash3 = jsonObject.getString("data").toString();
+//        jsonObject=JSONObject.fromObject(response4);
+//        String StoreHash4 = jsonObject.getString("data").toString();
+//        jsonObject=JSONObject.fromObject(response5);
+//        String StoreHash5 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response6);
         String StoreHash6 = jsonObject.getString("data").toString();
         jsonObject=JSONObject.fromObject(response8);
         String StoreHash8 = jsonObject.getJSONObject("data").get("txId").toString();
         hashList.add(StoreHash1);
-        hashList.add(StoreHash2);
+//        hashList.add(StoreHash2);
         hashList.add(StoreHash6);
         hashList.add(StoreHash8);
     }
