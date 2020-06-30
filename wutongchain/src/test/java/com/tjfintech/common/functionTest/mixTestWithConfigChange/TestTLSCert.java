@@ -66,7 +66,7 @@ public class TestTLSCert {
         //发送存证交易
         String Data="ECDSA store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
         String response1=store.CreateStore(Data);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").get("figure").toString();
+        String txHash1 = JSONObject.fromObject(response1).getString("data");
 
         String amount="305";
         String tokenTypeS = "ECDSASOLOTC-"+ UtilsClass.Random(6);
