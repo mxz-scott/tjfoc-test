@@ -25,8 +25,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        SetSDKStartNoApi.class,             //设置SDK启动不带Api
-        SetTokenApiAddrSolo.class,          //设置TokenApi为单独部署地址
+//        SetSDKStartNoApi.class,             //设置SDK启动不带Api
+//        SetTokenApiAddrSolo.class,          //设置TokenApi为单独部署地址
         SetDatabaseMysql.class,             //清空节点、SDK数据库信息
         SetCertSM2.class,
         SetMainLedger.class,                //设置主链测试
@@ -58,8 +58,6 @@ import org.junit.runners.Suite;
         GetLatestVersionDataSDK.class,      //获取升级后版本数据
 
         CompareReleaseLatestData.class,     //比较升级前后数据是否存在差异
-
-//        UpgradeTestHistoryData.class,
 
         SetSDKPerm999.class, //2.1向3.0升级后需要给SDK重新赋权限
         SetMgToolPerm999.class,//2.1向3.0升级后需要给超级管理员或者管理系统重新赋权限

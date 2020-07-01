@@ -38,6 +38,8 @@ public class SetSDKVerLatest {
 
        //SDK
        shellExeCmd(utilsClass.getIPFromStr(SDKADD),startSDKCmd);
+
+       sleepAndSaveInfo(SLEEPTIME,"等待sdk启动");
     }
 
 }

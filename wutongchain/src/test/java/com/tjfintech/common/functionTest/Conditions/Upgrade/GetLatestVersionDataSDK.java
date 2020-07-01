@@ -12,7 +12,8 @@ public class GetLatestVersionDataSDK {
 
     @Test
     public void test()throws Exception {
-        beforeUpgrade.clear();
+        log.info("start collect before info");
+        afterUpgrade.clear();
         txHashList = getChainData.getAllTxHashData();
         afterUpgrade = getChainData.SaveResponseToHashMap_SDK(txHashList);
     }

@@ -17,10 +17,8 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
@@ -102,9 +100,27 @@ public class UpgradeDataGetFunc {
             mapTXHashResp.put("get zero account balance", multiSign.QueryZero(""));
             mapTXHashResp.put("get all utxo account balance info", commonFunc.getUTXOAccountBalance().toString());
         }
+
+        saveMapInfoToFile(mapTXHashResp);
+
         return mapTXHashResp;
+
+
     }
 
+    public void saveMapInfoToFile(Map<String,String> map)throws Exception{
+        Iterator iter = map.keySet().iterator();
+        FileOperation fopr = new FileOperation();
+        String fileName = resourcePath + System.currentTimeMillis() + ".txt";
+
+        log.info("save map data to file " + fileName);
+        //将map中的hash及获取信息存储文件 备份
+        while (iter.hasNext()) {
+            Object key = iter.next();
+            fopr.appendToFile(key.toString(),fileName);
+            fopr.appendToFile(map.get(key),fileName);
+        }
+    }
 
     public ArrayList<String> getAllTxHashData()throws Exception{
         SDKADD = rSDKADD;
@@ -152,6 +168,8 @@ public class UpgradeDataGetFunc {
         //UTXO交易
         mapTXHashResp.put("get multi utxo balance",tokenModule.tokenGetBalance(tokenAccount1,""));
         mapTXHashResp.put("get zero account balance",tokenModule.tokenGetDestroyBalance());
+
+        saveMapInfoToFile(mapTXHashResp);
 
         return mapTXHashResp;
 

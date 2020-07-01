@@ -13,8 +13,13 @@ public class GetReleaseVersionDataSDK {
 
     @Test
     public void test()throws Exception {
+        log.info("start collect before info");
         beforeUpgrade.clear();
         txHashList = getChainData.getAllTxHashData();
         beforeUpgrade = getChainData.SaveResponseToHashMap_SDK(txHashList);
+        //备份节点db信息
+        shExeAndReturn(PEER1IP,"cp -r " + PeerPATH + "peerdb " +  PeerPATH + "peerdbbefore ");
+        shExeAndReturn(PEER2IP,"cp -r " + PeerPATH + "peerdb " +  PeerPATH + "peerdbbefore ");
+        shExeAndReturn(PEER4IP,"cp -r " + PeerPATH + "peerdb " +  PeerPATH + "peerdbbefore ");
     }
 }

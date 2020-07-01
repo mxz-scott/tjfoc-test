@@ -1160,6 +1160,7 @@ public class CommonFunc {
         ArrayList<String> diffRespList = new ArrayList<>();
 
         log.info("升级前检查数据长度： " + before.size() + "\n升级后检查数据长度： " +  after.size());
+        assertEquals("升级前后存储信息个数不等请确认",before.size(),after.size());
 
         Iterator iter = before.keySet().iterator();
         while (iter.hasNext()) {
