@@ -111,7 +111,7 @@ public class UpgradeDataGetFunc {
     public void saveMapInfoToFile(Map<String,String> map)throws Exception{
         Iterator iter = map.keySet().iterator();
         FileOperation fopr = new FileOperation();
-        String fileName = resourcePath + System.currentTimeMillis() + ".txt";
+        String fileName = resourcePath + System.currentTimeMillis() + "upg.txt";
 
         log.info("save map data to file " + fileName);
         //将map中的hash及获取信息存储文件 备份
