@@ -155,7 +155,7 @@ public class UtilsClass {
     public static String PEER2MAC="";
     public static String PEER3MAC="";
     public static String PEER4MAC="";
-    public static String version="2.1";
+    public static String version="3.0";
     public static String USERNAME="root";
     public static String PASSWD="root";
     public static String SDKID=null;
