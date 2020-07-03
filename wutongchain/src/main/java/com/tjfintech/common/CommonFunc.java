@@ -1013,6 +1013,11 @@ public class CommonFunc {
     }
 
     public void sdkCheckTxOrSleepNoDBQuery(String hashData, String type, long sleeptime)throws Exception{
+        if (hashData.equals(null) || hashData.equals("")) {
+            log.info("hash is null");
+            sleepAndSaveInfo(SLEEPTIME);
+            return;
+        }
         Date dtTest = new Date();
         long nowTime = dtTest.getTime();
         log.info("开始时间 " + nowTime);

@@ -579,10 +579,13 @@ public class TestTxType {
                 resourcePath + "wvm_temp.txt").toString().trim().getBytes()).replaceAll("\r\n", "");
         assertEquals(ctHash,
                 jsonObjectCreate.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("name"));
-        //此处owner对应的是PubKey 因编解码使用的库可能不太一样 因此此处校验原始pubkey
-        String p1 = shExeAndReturn(utilsClass.getIPFromStr(SDKADD),"cat " + SDKPATH + "tls/pubkey.pem").trim();
-        String p2 = new String (utilsClass.decryptBASE64(jsonObjectCreate.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("owner")));
-        assertEquals(p1.replaceAll("\n",""),p2.replaceAll("\n",""));
+        //20200703 开发代码移除owner字段信息显示
+//        //此处owner对应的是PubKey 因编解码使用的库可能不太一样 因此此处校验原始pubkey
+//        String p1 = shExeAndReturn(utilsClass.getIPFromStr(SDKADD),"cat " + SDKPATH + "tls/pubkey.pem").trim();
+//        String p2 = new String (utilsClass.decryptBASE64(jsonObjectCreate.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("owner")));
+//        assertEquals(p1.replaceAll("\n",""),p2.replaceAll("\n",""));
+        assertEquals("",
+                jsonObjectCreate.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("owner"));
         assertEquals(data,
                 jsonObjectCreate.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("src"));
         log.info("Check create wvm tx detail complete");

@@ -239,7 +239,7 @@ public class UtilsClass {
     public static boolean bUpgradePeer = true;
     public static boolean bUpgradeSDK = true;
     public static boolean bUpgradeContractSys = true;
-    public static boolean bUpgradeTokenApi = true;
+    public static boolean bUpgradeTokenApi = false; //3.0开始 合并版本 不单独部署api
 
     public static String sLocalPeer = "wtchain\\wtchain";
     public static String sLocalSDK = "wtsdk\\wtsdk";

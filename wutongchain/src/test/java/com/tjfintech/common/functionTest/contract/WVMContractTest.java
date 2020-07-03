@@ -488,7 +488,7 @@ public class WVMContractTest {
         }
     }
 
-    @Test
+//    @Test
     public void TC1780_1781_1782_DiffPriSameCt() throws Exception{
         String sdkIP = utilsClass.getIPFromStr(SDKADD);
         //替换SDK证书及auth目录下私钥 重启并给SDK赋权限
