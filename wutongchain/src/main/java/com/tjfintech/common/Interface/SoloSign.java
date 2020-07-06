@@ -5,8 +5,6 @@ import java.util.Map;
 
 public interface SoloSign {
     String BalanceByAddr(String Address,String tokenType);
-//    String Balance(String key,String tokenType);
-//    String Balance(String priKey,String pwd,String tokenType);
     String Transfer(List<Map> token, String priKey, String data);
     String issueToken(String priKey,String tokenType,String amount,String data,String address);
     String Recycle(String priKey,String tokenType,String amount);

@@ -955,18 +955,6 @@ public class GoMultiSign implements MultiSign {
         return result;
     }
 
-//    @Override
-//    public String freezeToken(String priKey, String tokenType) {
-//        Map<String ,Object>map=new HashMap<>();
-//        map.put("priKey",priKey);
-//        map.put("tokenType",tokenType);
-//        String param="";
-//        if(subLedger!="") param = param +"?ledger="+subLedger;
-//        String result =PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/freeze"+param,map);
-//        log.info(result);
-//        return result;
-//    }
-
     /**
      * 冻结token（不使用私钥的情况）
      * @param tokenType
@@ -982,19 +970,6 @@ public class GoMultiSign implements MultiSign {
         log.info(result);
         return result;
     }
-
-//    @Override
-//    public String recoverFrozenToken(String priKey, String tokenType) {
-//        Map<String ,Object>map=new HashMap<>();
-//        map.put("priKey",priKey);
-//        map.put("tokenType",tokenType);
-//        String param="";
-//        if(subLedger!="") param = param +"?ledger="+subLedger;
-//        String result =PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/freeze"+param,map);
-//        log.info(result);
-//        return result;
-//
-//    }
 
     /**
      * 恢复token(不使用私钥的情况)

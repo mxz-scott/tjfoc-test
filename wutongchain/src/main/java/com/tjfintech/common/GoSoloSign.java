@@ -58,37 +58,6 @@ public class GoSoloSign implements SoloSign {
         return result ;
     }
 
-//    /**查询单签地址余额
-//     * @param tokenType 币种
-//     */
-//    public String Balance(String key,String tokenType){
-//        Map<String,Object>map=new HashMap<>();
-//        map.put("prikey",key);
-//        map.put("tokentype",tokenType);
-//        String param = "";
-//        if(subLedger!="") param = param +"?ledger="+subLedger;
-//        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/prikey/balance"+param, map);
-//        log.info(result);
-//        return result ;
-//    }
-
-//    /**
-//     * 查询用户余额
-//
-//     * @param priKey  用户私钥
-//     */
-//    public String Balance(String priKey,String pwd,String tokenType) {
-//        Map<String,Object>map=new HashMap<>();
-//        map.put("prikey",priKey);
-//        map.put("password",pwd);
-//        map.put("tokentype",tokenType);
-//        String param = "";
-//        if(subLedger!="") param = param +"?ledger="+subLedger;
-//        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/prikey/balance"+param, map);
-//        log.info(result);
-//        return result ;
-//    }
-
     /**单签账号向其他地址转账
      *
      *
@@ -275,17 +244,5 @@ public class GoSoloSign implements SoloSign {
         log.info(result);
         return result;
     }
-
-
-    @After
-    /**
-     * 每次测试结束后都会执行的测试环境结束内容
-     * 目前为空
-     */
-    public void TestAfter(){
-
-    }
-
-
 
 }

@@ -10,8 +10,6 @@ public interface MultiSign {
     String collAddressRemovePri(String ...address);
     String delCollAddressRemovePri(String... address);
 
-//    String Balance(String addr,String priKey,String tokenType);
-//    String Balance(String addr,String priKey,String Pwd,String tokenType);
     String BalanceByAddr(String addr,String tokenType); //按地址查询余额
     String QueryZero(String tokenType);
     String getSDKBalance(String TokenType,String Address);
