@@ -301,16 +301,16 @@ public class BlockSyncTest_DockerImageFlag_WithContract {
         bf.collAddressTest();//添加归集地址和发行地址的注册
         sleepAndSaveInfo(OnChainSleep);
 
-        assertThat(multiSign.delCollAddressRemovePri(ADDRESS6), containsString("200"));
-        assertThat(multiSign.delCollAddressRemovePri(ADDRESS1), containsString("200"));
-        assertThat(multiSign.delissueaddressRemovePri(ADDRESS6), containsString("200"));
-        assertThat(multiSign.delissueaddressRemovePri(ADDRESS1), containsString("200"));
+        assertThat(multiSign.delCollAddrs(ADDRESS6), containsString("200"));
+        assertThat(multiSign.delCollAddrs(ADDRESS1), containsString("200"));
+        assertThat(multiSign.delIssueaddrs(ADDRESS6), containsString("200"));
+        assertThat(multiSign.delIssueaddrs(ADDRESS1), containsString("200"));
 
         sleepAndSaveInfo(OnChainSleep);
-        String response2= multiSign.collAddressRemovePri(ADDRESS6);
-        String response3= multiSign.collAddressRemovePri(ADDRESS1);
-        String response4= multiSign.addissueaddressRemovePri(ADDRESS6);
-        String response5= multiSign.addissueaddressRemovePri(ADDRESS1);
+        String response2= multiSign.addCollAddrs(ADDRESS6);
+        String response3= multiSign.addCollAddrs(ADDRESS1);
+        String response4= multiSign.addIssueAddrs(ADDRESS6);
+        String response5= multiSign.addIssueAddrs(ADDRESS1);
         sleepAndSaveInfo(OnChainSleep);
 
 
@@ -379,16 +379,16 @@ public class BlockSyncTest_DockerImageFlag_WithContract {
         bf.collAddressTest();//添加归集地址和发行地址的注册
         sleepAndSaveInfo(OnChainSleep);
 
-        assertThat(multiSign.delCollAddressRemovePri(ADDRESS6), containsString("200"));
-        assertThat(multiSign.delCollAddressRemovePri(ADDRESS1), containsString("200"));
-        assertThat(multiSign.delissueaddressRemovePri(ADDRESS6), containsString("200"));
-        assertThat(multiSign.delissueaddressRemovePri(PRIKEY1,ADDRESS1), containsString("200"));
+        assertThat(multiSign.delCollAddrs(ADDRESS6), containsString("200"));
+        assertThat(multiSign.delCollAddrs(ADDRESS1), containsString("200"));
+        assertThat(multiSign.delIssueaddrs(ADDRESS6), containsString("200"));
+        assertThat(multiSign.delIssueaddrs(PRIKEY1,ADDRESS1), containsString("200"));
 
         sleepAndSaveInfo(OnChainSleep);
-        String response2= multiSign.collAddressRemovePri(ADDRESS6);
-        String response3= multiSign.collAddressRemovePri(ADDRESS1);
-        String response4= multiSign.addissueaddressRemovePri(ADDRESS6);
-        String response5= multiSign.addissueaddressRemovePri(ADDRESS1);
+        String response2= multiSign.addCollAddrs(ADDRESS6);
+        String response3= multiSign.addCollAddrs(ADDRESS1);
+        String response4= multiSign.addIssueAddrs(ADDRESS6);
+        String response5= multiSign.addIssueAddrs(ADDRESS1);
         sleepAndSaveInfo(OnChainSleep);
 
 

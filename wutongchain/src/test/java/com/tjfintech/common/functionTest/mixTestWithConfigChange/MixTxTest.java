@@ -21,7 +21,6 @@ import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
 
-import static com.tjfintech.common.CommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -61,15 +60,15 @@ public class MixTxTest {
     public void TestMultiTypeTx()throws Exception{
         //TC1845
         txHashList.clear();
-        String response12 = multiSign.collAddressRemovePri(ADDRESS6);
-        String response13 = multiSign.collAddressRemovePri(ADDRESS1);
-        String response14 = multiSign.addissueaddressRemovePri(ADDRESS6);
-        String response15 = multiSign.addissueaddressRemovePri(ADDRESS1);
+        String response12 = multiSign.addCollAddrs(ADDRESS6);
+        String response13 = multiSign.addCollAddrs(ADDRESS1);
+        String response14 = multiSign.addIssueAddrs(ADDRESS6);
+        String response15 = multiSign.addIssueAddrs(ADDRESS1);
 
-        assertThat(multiSign.delCollAddressRemovePri(ADDRESS5), CoreMatchers.containsString("200"));
-        assertThat(multiSign.delCollAddressRemovePri(ADDRESS2), CoreMatchers.containsString("200"));
-        assertThat(multiSign.delissueaddressRemovePri(ADDRESS5), CoreMatchers.containsString("200"));
-        assertThat(multiSign.delissueaddressRemovePri(ADDRESS2), CoreMatchers.containsString("200"));
+        assertThat(multiSign.delCollAddrs(ADDRESS5), CoreMatchers.containsString("200"));
+        assertThat(multiSign.delCollAddrs(ADDRESS2), CoreMatchers.containsString("200"));
+        assertThat(multiSign.delIssueaddrs(ADDRESS5), CoreMatchers.containsString("200"));
+        assertThat(multiSign.delIssueaddrs(ADDRESS2), CoreMatchers.containsString("200"));
 
         Thread.sleep(6000);
         //设置打包时间为20s 使得各种类型的交易同时打包
@@ -83,10 +82,10 @@ public class MixTxTest {
         //发送存证交易
         String Data="Mix tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
         String response1=store.CreateStore(Data);
-        String response2= multiSign.collAddressRemovePri(ADDRESS5);
-        String response3= multiSign.collAddressRemovePri(ADDRESS2);
-        String response4= multiSign.addissueaddressRemovePri(ADDRESS5);
-        String response5= multiSign.addissueaddressRemovePri(ADDRESS2);
+        String response2= multiSign.addCollAddrs(ADDRESS5);
+        String response3= multiSign.addCollAddrs(ADDRESS2);
+        String response4= multiSign.addIssueAddrs(ADDRESS5);
+        String response5= multiSign.addIssueAddrs(ADDRESS2);
 
         String tokenTypeS = "MixSOLOTC-"+ UtilsClass.Random(6);
         log.info(ADDRESS1+"发行token "+tokenTypeS);

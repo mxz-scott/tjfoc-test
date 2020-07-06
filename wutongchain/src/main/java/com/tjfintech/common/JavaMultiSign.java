@@ -111,7 +111,7 @@
 //    }
 //
 //    @Override
-//    public String collAddressRemovePri(String... address) {
+//    public String addCollAddrs(String... address) {
 //        return null;
 //    }
 //
@@ -126,12 +126,12 @@
 //    }
 //
 //    @Override
-//    public String addissueaddressRemovePri(String... address) {
+//    public String addIssueAddrs(String... address) {
 //        return null;
 //    }
 //
 //    @Override
-//    public String delissueaddressRemovePri(String... address) {
+//    public String delIssueaddrs(String... address) {
 //        return null;
 //    }
 //

@@ -123,7 +123,7 @@ public class GoMultiSign implements MultiSign {
      * @return
      */
     @Override
-    public String addissueaddressRemovePri(String... address) {
+    public String addIssueAddrs(String... address) {
         Map<String, Object> map = new HashMap<>();
         List<Object> addrs = new ArrayList<>();
         for (int i = 0; i < address.length; i++) {
@@ -370,7 +370,7 @@ public class GoMultiSign implements MultiSign {
      * @return
      */
     @Override
-    public String delissueaddressRemovePri(String... address) {
+    public String delIssueaddrs(String... address) {
         Map<String, Object> map = new HashMap<>();
         List<Object> addrs = new ArrayList<>();
         for (int i = 0; i < address.length; i++) {
@@ -604,7 +604,7 @@ public class GoMultiSign implements MultiSign {
     }
 
 
-    public String delCollAddressRemovePri(String... address) {
+    public String delCollAddrs(String... address) {
         Map<String,Object> map = new HashMap<>();
         List<Object> addrs = new ArrayList<>();
         for (int i= 0;i<address.length;i++){
@@ -624,7 +624,7 @@ public class GoMultiSign implements MultiSign {
      * @return
      */
     @Override
-    public String collAddressRemovePri(String... address) {
+    public String addCollAddrs(String... address) {
         Map<String, Object> map = new HashMap<>();
         List<Object> addrs = new ArrayList<>();
         for (int i=0;i<address.length;i++){

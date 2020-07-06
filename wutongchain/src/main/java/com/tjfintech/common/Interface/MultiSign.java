@@ -5,10 +5,10 @@ import java.util.Map;
 
 public interface MultiSign {
     String genMultiAddress(int M, Map keyMap);
-    String addissueaddressRemovePri(String ...address);
-    String delissueaddressRemovePri(String ...address);
-    String collAddressRemovePri(String ...address);
-    String delCollAddressRemovePri(String... address);
+    String addIssueAddrs(String ...address);
+    String delIssueaddrs(String ...address);
+    String addCollAddrs(String ...address);
+    String delCollAddrs(String... address);
 
     String BalanceByAddr(String addr,String tokenType); //按地址查询余额
     String QueryZero(String tokenType);

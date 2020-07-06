@@ -8,7 +8,6 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 
-import org.junit.After;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -51,8 +50,8 @@ public class SyncManageTest {
         Thread.sleep(SLEEPTIME);
 
         //预先做删除归集地址、删除发行地址操作、解除token锁定，以便后续操作正常进行
-        assertThat(multiSign.delCollAddressRemovePri(ADDRESS6),containsString("200"));
-        assertThat(multiSign.delissueaddressRemovePri(ADDRESS6),containsString("200"));
+        assertThat(multiSign.delCollAddrs(ADDRESS6),containsString("200"));
+        assertThat(multiSign.delIssueaddrs(ADDRESS6),containsString("200"));
         assertThat(multiSign.recoverFrozenToken(tokenType),containsString("200"));
         Thread.sleep(SLEEPTIME);
         log.info("timeout test for mg interfaces");

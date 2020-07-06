@@ -9,7 +9,6 @@ import com.tjfintech.common.utils.SubLedgerCmd;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.math.RandomUtils;
-import org.hamcrest.core.AnyOf;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -138,7 +137,7 @@ public class TestMainSubChain_Perm {
         sleepAndSaveInfo(SLEEPTIME);
         assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), "[236 253]");
         assertThat(multiSign.QueryZero(""),containsString("\"state\":200"));
-        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),
+        assertThat(multiSign.addIssueAddrs(ADDRESS1),
                 anyOf(containsString("\"state\":200"),containsString("exist")));
 
         //创建子链01 包含节点A、B、C
@@ -174,7 +173,7 @@ public class TestMainSubChain_Perm {
 
         tempResp = multiSign.QueryZero("").toLowerCase();
         assertThat(tempResp,anyOf(containsString(noPerm),containsString(noPerm2)));
-        tempResp = multiSign.addissueaddressRemovePri(ADDRESS1).toLowerCase();
+        tempResp = multiSign.addIssueAddrs(ADDRESS1).toLowerCase();
         assertThat(tempResp,anyOf(containsString(noPerm),containsString(noPerm2)));
         //获取主链权限列表检查无变更
         log.info("Current subledger: "+subLedger);
@@ -183,7 +182,7 @@ public class TestMainSubChain_Perm {
         tempResp = store.CreateStore("tc1662 main no permission tx data").toLowerCase();
         assertThat(tempResp,anyOf(containsString(noPerm),containsString(noPerm2)));
         assertThat(multiSign.QueryZero(""),containsString("\"state\":200"));
-        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),
+        assertThat(multiSign.addIssueAddrs(ADDRESS1),
                 anyOf(containsString("\"state\":200"),containsString("exist")));
 
 
@@ -212,7 +211,7 @@ public class TestMainSubChain_Perm {
                 anyOf(containsString(fullPerm), containsString(fullPerm2)));
         assertThat(store.CreateStore("tc1663 ledger with permission3,211 tx data"),containsString("\"state\":200"));
         assertThat(multiSign.QueryZero(""),containsString("\"state\":200"));
-        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),
+        assertThat(multiSign.addIssueAddrs(ADDRESS1),
                 anyOf(containsString("\"state\":200"),containsString("exist")));
 
         //创建子链01 包含节点A、B、C
@@ -250,7 +249,7 @@ public class TestMainSubChain_Perm {
         tempResp = multiSign.QueryZero("").toLowerCase();
         assertThat(tempResp,anyOf(containsString(noPerm),containsString(noPerm2)));
 
-        tempResp = multiSign.addissueaddressRemovePri(ADDRESS1).toLowerCase();
+        tempResp = multiSign.addIssueAddrs(ADDRESS1).toLowerCase();
         assertThat(tempResp,anyOf(containsString(noPerm),containsString(noPerm2)));
         //获取主链权限列表检查无变更
         subLedger="";
@@ -259,7 +258,7 @@ public class TestMainSubChain_Perm {
                 anyOf(containsString(fullPerm), containsString(fullPerm2)));
         assertEquals(store.CreateStore("tc1663 main no permission tx data").contains("\"state\":200"),true);
         assertThat(multiSign.QueryZero(""),containsString("\"state\":200"));
-        assertThat(multiSign.addissueaddressRemovePri(ADDRESS1),
+        assertThat(multiSign.addIssueAddrs(ADDRESS1),
                 anyOf(containsString("\"state\":200"),containsString("exist")));
 
 

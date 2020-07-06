@@ -187,26 +187,26 @@ public class APermfuncUTXO {
 
     public String addCollAddr(String priKey,String...collAddr)throws Exception  {
         log.info("向链上注册归集地址");
-        String response = multiSign.collAddressRemovePri(collAddr);
+        String response = multiSign.addCollAddrs(collAddr);
         return retAllow2(response);
     }
 
     public String delCollAddr(String priKey,String...collAddr)throws Exception  {
         log.info("注销链上的归集地址");
-        String response = multiSign.delCollAddressRemovePri(collAddr);
+        String response = multiSign.delCollAddrs(collAddr);
         return retAllow2(response);
     }
 
 
     public String addIssAddr(String priKey,String...collAddr)throws Exception  {
         log.info("向链上注册归集地址");
-        String response = multiSign.addissueaddressRemovePri(collAddr);
+        String response = multiSign.addIssueAddrs(collAddr);
         return retAllow2(response);
     }
 
     public String delIssAddr(String priKey,String...collAddr)throws Exception  {
         log.info("注销链上的归集地址");
-        String response = multiSign.delissueaddressRemovePri(collAddr);
+        String response = multiSign.delIssueaddrs(collAddr);
         return retAllow2(response);
     }
 
