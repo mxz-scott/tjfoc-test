@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.sf.json.JSONObject;
 import org.apache.commons.codec.binary.Hex;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -76,8 +77,7 @@ public class smtSoloTest {
     public void test(){
         log.info(utilsClass.readStringFromFile(resourcePath + "SM2/keys1/pubkey.pem"));
     }
-//    @Before
-    @Test
+    @Before
     public void beforeConfig() throws Exception {
 
         issueAmount1 = "10000.12345678912345";

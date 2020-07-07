@@ -24,7 +24,8 @@ public class GoMultiSign implements MultiSign {
 
 
     //smart token接口
-    public String SmartIssueTokenReq(String userContract, String tokenType, Boolean reissued, BigDecimal expiredDate, double activeDate,
+    public String SmartIssueTokenReq(String userContract, String tokenType, Boolean reissued,
+                                     BigDecimal expiredDate, BigDecimal activeDate,
                                      int maxLevel, List<Map> toList, String extend){
 
         Map<String, Object> map = new HashMap<>();
@@ -56,7 +57,8 @@ public class GoMultiSign implements MultiSign {
         log.info(response);
         return response;
     }
-    public String SmartTransfer(String Address,String prikey,String prikeyPwd,List<Map>tokenList,String data,String extendArgs){
+    public String SmartTransfer(String Address,String prikey,String prikeyPwd,List<Map>tokenList,
+                                String data,String extendArgs){
         Map<String, Object> map = new HashMap<>();
         map.put("multiAddr", Address);
         map.put("prikey", prikey);
@@ -108,11 +110,29 @@ public class GoMultiSign implements MultiSign {
     }
 
 
-    public String SmartGetAssetsTotal(double startTime,double endTime,String tokenType){
-        return "";
+    public String SmartGetAssetsTotal(BigDecimal startTime,BigDecimal endTime,String tokenType){
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("startTime", startTime);
+        map.put("endTime", endTime);
+        map.put("tokenType", tokenType);
+        String param="";
+        if(subLedger!="") param = param + "?ledger=" + subLedger;
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/assets/total" + param, map);
+        log.info(result);
+        return result;
+
     }
     public String SmartGetOwnerAddrs(String tokenType){
-        return "";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenType", tokenType);
+        String param="";
+        if(subLedger!="") param = param + "?ledger=" + subLedger;
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/getowneraddr" + param, map);
+        log.info(result);
+        return result;
+
     }
 
 

@@ -103,46 +103,16 @@ public class BeforeCondition {
      */
     public  void collAddressTest() throws Exception{
         createAddresses(); //生成多签地址
-        String response= multiSign.addCollAddrs(IMPPUTIONADD,MULITADD3,MULITADD4,MULITADD5,MULITADD7,ADDRESS1,ADDRESS2,ADDRESS4);
-//        String response2= multiSign.addCollAddrs(MULITADD3);
-//        String response3= multiSign.addCollAddrs(ADDRESS1);
-//        String response4=multiSign.addCollAddrs(ADDRESS2);
-//        String response5= multiSign.addCollAddrs(MULITADD4);
-//        String response6= multiSign.addCollAddrs(MULITADD5);
-//        String response7= multiSign.addCollAddrs(MULITADD7);
-//        String response8= multiSign.addCollAddrs(MULITADD1);
-//        String response9=multiSign.addCollAddrs(ADDRESS4);
+        String response= multiSign.addCollAddrs(IMPPUTIONADD,MULITADD3,MULITADD4,MULITADD5,MULITADD7,
+                ADDRESS1,ADDRESS2,ADDRESS4);
         //3.0.1版本修改为重复添加时sdk会返回已存在的报错
         assertThat(response,anyOf(containsString("\"state\":200"),containsString("exist")));
-//        assertThat(response2,anyOf(containsString("\"state\":200"),containsString("exist")));
-//        assertThat(response3,anyOf(containsString("\"state\":200"),containsString("exist")));
-//        assertThat(response4,anyOf(containsString("\"state\":200"),containsString("exist")));
-//        assertThat(response5,anyOf(containsString("\"state\":200"),containsString("exist")));
-//        assertThat(response6,anyOf(containsString("\"state\":200"),containsString("exist")));
-//        assertThat(response7,anyOf(containsString("\"state\":200"),containsString("exist")));
-//        assertThat(response8,anyOf(containsString("\"state\":200"),containsString("exist")));
-//        assertThat(response9,anyOf(containsString("\"state\":200"),containsString("exist")));
 
         //2.0.1版本需要添加发行地址后才可以发行
-        String response11= multiSign.addIssueAddrs(IMPPUTIONADD,MULITADD3,MULITADD4,MULITADD5,MULITADD7,ADDRESS1,ADDRESS2,ADDRESS4);
-//        String response12= multiSign.addIssueAddrs(MULITADD3);
-//        String response13= multiSign.addIssueAddrs(ADDRESS1);
-//        String response14=multiSign.addIssueAddrs(ADDRESS2);
-//        String response15= multiSign.addIssueAddrs(MULITADD4);
-//        String response16= multiSign.addIssueAddrs(MULITADD5);
-//        String response17= multiSign.addIssueAddrs(MULITADD7);
-//        String response18= multiSign.addIssueAddrs(MULITADD1);
-//        String response19=multiSign.addIssueAddrs(ADDRESS4);
-
+        String response11= multiSign.addIssueAddrs(IMPPUTIONADD,MULITADD3,MULITADD4,MULITADD5,MULITADD7,
+                ADDRESS1,ADDRESS2,ADDRESS4);
         assertThat(response11,anyOf(containsString("\"state\":200"),containsString("exist")));
-//        assertThat(response12,anyOf(containsString("\"state\":200"),containsString("exist")));
-//        assertThat(response13,anyOf(containsString("\"state\":200"),containsString("exist")));
-//        assertThat(response14,anyOf(containsString("\"state\":200"),containsString("exist")));
-//        assertThat(response15,anyOf(containsString("\"state\":200"),containsString("exist")));
-//        assertThat(response16,anyOf(containsString("\"state\":200"),containsString("exist")));
-//        assertThat(response17,anyOf(containsString("\"state\":200"),containsString("exist")));
-//        assertThat(response18,anyOf(containsString("\"state\":200"),containsString("exist")));
-//        assertThat(response19,anyOf(containsString("\"state\":200"),containsString("exist")));
+
     }
 
     /**

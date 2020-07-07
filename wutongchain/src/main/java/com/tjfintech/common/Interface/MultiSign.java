@@ -75,7 +75,7 @@ public interface MultiSign {
     String SyncRecycle(Integer timeout,String PriKey,String TokenType,String Amount);
 
     //smart token接口
-    String SmartIssueTokenReq(String userContract, String tokenType, Boolean reissued, BigDecimal expiredDate, double activeDate,
+    String SmartIssueTokenReq(String userContract, String tokenType, Boolean reissued, BigDecimal expiredDate, BigDecimal activeDate,
                               int maxLevel, List<Map> toList, String extend);
     String SmartIssueTokenApprove(String sigMsg,String sigCrypt,String pubKey);
     String SmartTransfer(String Address,String prikey,String prikeyPwd,List<Map>tokenList,String data,String extendArgs);
@@ -84,6 +84,6 @@ public interface MultiSign {
 
     String SmartGetBalanceByAddr(String addr,String tokenType); //按地址查询余额
     String SmartGetZeroBalance(String tokenType); //按地址查询余额
-    String SmartGetAssetsTotal(double startTime,double endTime,String tokenType);
+    String SmartGetAssetsTotal(BigDecimal startTime,BigDecimal endTime,String tokenType);
     String SmartGetOwnerAddrs(String tokenType);
 }
