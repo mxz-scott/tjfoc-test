@@ -11,18 +11,14 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.bouncycastle.util.encoders.Hex;
 import org.hamcrest.CoreMatchers;
-import org.junit.BeforeClass;
 import sun.misc.BASE64Encoder;
 
 import java.io.File;
 import java.util.*;
 
-//import static com.java.tar.gz.FileUtil.log;
 import static com.tjfintech.common.utils.FileOperation.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -1151,15 +1147,32 @@ public class CommonFunc {
         shellExeCmd(peerIP,"docker images|grep " + keyWork + "|awk '{print $1}'|xargs docker rmi");
     }
 
-    public String hexToBase64String(String HexStr){
+
+    public String hexToBase64String(String HexStr)throws Exception{
         String hash = HexStr;
         //目前现有梧桐链应用hex hash是60位 base64大概是44位 以长度作为判断 后续根据实际情况进行调整
         if(HexStr.length() > 50){
-            byte[] decodeHex = Hex.decode(HexStr);
+            byte[] decodeHex = hexStr2Bytes(HexStr);
             hash = (new BASE64Encoder()).encodeBuffer(decodeHex);
         }
         return hash;
     }
+    public byte[] hexStr2Bytes(String src){
+        /*对输入值进行规范化整理*/
+        src = src.trim().replace(" ", "").toUpperCase(Locale.US);
+        //处理值初始化
+        int m=0,n=0;
+        int iLen=src.length()/2; //计算长度
+        byte[] ret = new byte[iLen]; //分配存储空间
+
+        for (int i = 0; i < iLen; i++){
+            m=i*2+1;
+            n=m+1;
+            ret[i] = (byte)(Integer.decode("0x"+ src.substring(i*2, m) + src.substring(m,n)) & 0xFF);
+        }
+        return ret;
+    }
+
 
     public void compareHashMap(Map<String,String> before ,Map<String,String> after)throws Exception{
         ArrayList<String> diffRespList = new ArrayList<>();
