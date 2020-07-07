@@ -5,7 +5,9 @@ import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.utils.GetTest;
 import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +20,64 @@ import static com.tjfintech.common.utils.UtilsClass.subLedger;
 @Slf4j
 public class GoMultiSign implements MultiSign {
 
+
+
+
+    //smart token接口
+    public String SmartIssueTokenReq(String userContract, String tokenType, Boolean reissued, BigDecimal expiredDate, double activeDate,
+                                     int maxLevel, List<Map> toList, String extend){
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("userContract",userContract);
+        map.put("tokenType", tokenType);
+        if(!reissued.equals(null)){   map.put("reissued", reissued);  }
+        map.put("expireDate", expiredDate);
+        map.put("activeDate", activeDate);
+        map.put("level", maxLevel);
+        map.put("token",toList);
+        if(!extend.isEmpty()){  map.put("extend",extend);    }
+
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/stoken/reqmsg" + param, map);
+        log.info(response);
+        return response;
+
+    }
+    public String SmartIssueTokenApprove(String sigMsg,String sigCrypt,String pubKey){
+        Map<String, Object> map = new HashMap<>();
+        map.put("sigMsg",sigMsg);
+        map.put("sigCrypt", sigCrypt);
+        map.put("pubKey",pubKey);
+
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/stoken/approve" + param, map);
+        log.info(response);
+        return response;
+    }
+    public String SmartTransfer(String Address,String prikey,String prikeyPwd,List<Map>tokenList,String extendArgs){
+        return "";
+    }
+    public String SmartRecyle(String Address,String prikey,String prikeyPwd,String tokenType ,String amount,String data){
+        return "";
+    }
+    public String SmartSign(String Address,String prikey,String fromAddr ,List<Map>tokenList){
+        return "";
+    }
+
+    public String SmartGetBalanceByAddr(String addr,String tokenType){
+        return "";
+    }
+    public String SmartGetZeroBalance(String tokenType){
+        return "";
+    }
+    public String SmartGetAssetsTotal(double startTime,double endTime,String tokenType){
+        return "";
+    }
+    public String SmartGetOwnerAddrs(String tokenType){
+        return "";
+    }
 
 
     /**
