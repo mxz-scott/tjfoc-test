@@ -56,22 +56,58 @@ public class GoMultiSign implements MultiSign {
         log.info(response);
         return response;
     }
-    public String SmartTransfer(String Address,String prikey,String prikeyPwd,List<Map>tokenList,String extendArgs){
-        return "";
+    public String SmartTransfer(String Address,String prikey,String prikeyPwd,List<Map>tokenList,String data,String extendArgs){
+        Map<String, Object> map = new HashMap<>();
+        map.put("multiAddress", Address);
+        map.put("prikey", prikey);
+        map.put("data", data);
+        if(!prikeyPwd.isEmpty()) {   map.put("password", prikeyPwd);   }
+        map.put("token", tokenList);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result=PostTest.postMethod(SDKADD+"/v2/tx/stoken/transfer"+param, map);
+        log.info(result);
+        return result;
     }
     public String SmartRecyle(String Address,String prikey,String prikeyPwd,String tokenType ,String amount,String data){
-        return "";
+        Map<String, Object> map = new HashMap<>();
+        map.put("multiAddress", Address);
+        map.put("prikey", prikey);
+        if(!prikeyPwd.isEmpty()) {   map.put("password", prikeyPwd);   }
+        map.put("tokenType", tokenType);
+        map.put("amount", amount);
+        map.put("data", data);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/stoken/recycle" + param, map);
+        log.info(result);
+        return result;
     }
     public String SmartSign(String Address,String prikey,String fromAddr ,List<Map>tokenList){
         return "";
     }
 
     public String SmartGetBalanceByAddr(String addr,String tokenType){
-        return "";
+        Map<String,Object> map = new HashMap<>();
+        map.put("tokenType",tokenType);
+        map.put("address",addr);
+        String param="";
+        if(subLedger!="") param = param +"?ledger="+subLedger;
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/balance " + param, map);
+        log.info(result);
+        return result;
     }
+
+
     public String SmartGetZeroBalance(String tokenType){
-        return "";
+    String param= "";
+        if(subLedger!="") param = param + "?ledger="+subLedger;
+    String result= (GetTest.SendGetTojson(SDKADD+"/v2/tx/stoken/zeroaddr/balance/"+ tokenType + param));
+        log.info(result);
+        return result;
     }
+
+
     public String SmartGetAssetsTotal(double startTime,double endTime,String tokenType){
         return "";
     }
