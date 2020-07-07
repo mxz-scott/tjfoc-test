@@ -48,7 +48,7 @@ public class CertTool{
         return SecurityKey;
     }
 
-    public String sign(String peerIP,String prikey,String pwd,String data)throws Exception{
+    public String sign(String peerIP,String prikey,String pwd,String data,String outFormat)throws Exception{
 
         String pwdParam = "";
         if(!pwd.isEmpty()) pwdParam = " -p " + pwd;
@@ -56,7 +56,7 @@ public class CertTool{
         //将key保存至文件key.pem 解密SecretKey
         shellExeCmd(peerIP,"echo " + prikey + " > " + destShellScriptDir + "key.pem");
         String SignStr = shExeAndReturn(peerIP,certExePath +
-                "sign -i key.pem -f base64 -m \"" + data +"\""+ pwdParam +  " -t base64 -o base64");
+                "sign -i key.pem -f base64 -m \"" + data +"\""+ pwdParam +  " -t base64 -o " + outFormat);
         SignStr = SignStr.trim().substring(SignStr.lastIndexOf("sign:") + 6).trim();
 
         return SignStr;
@@ -70,5 +70,13 @@ public class CertTool{
 //        log.info(sig);
         return  sig;
 
+    }
+
+    public String getSm3Hash(String peerIP, String data){
+        String hash = "";
+        String resp = shExeAndReturn(peerIP,certExePath + "hash -m " + data);
+        hash = resp.trim().replaceAll("\r","").replaceAll("\n","");
+        hash = hash.substring(hash.lastIndexOf(":") + 1).trim();
+        return hash;
     }
 }

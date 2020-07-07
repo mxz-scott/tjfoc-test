@@ -58,7 +58,7 @@ public class GoMultiSign implements MultiSign {
     }
     public String SmartTransfer(String Address,String prikey,String prikeyPwd,List<Map>tokenList,String data,String extendArgs){
         Map<String, Object> map = new HashMap<>();
-        map.put("multiAddress", Address);
+        map.put("multiAddr", Address);
         map.put("prikey", prikey);
         map.put("data", data);
         if(!prikeyPwd.isEmpty()) {   map.put("password", prikeyPwd);   }
