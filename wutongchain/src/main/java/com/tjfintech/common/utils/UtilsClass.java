@@ -263,6 +263,8 @@ public class UtilsClass {
     public static String  NoPermErrMsg = "no permission";
     public static String  NoPermErrCode = "500";
 
+    public static String smartAccoutCtHash = "";
+
     /**
      * token平台转账TOKEN数组构建方法
      * @param toAddr     发送地址
