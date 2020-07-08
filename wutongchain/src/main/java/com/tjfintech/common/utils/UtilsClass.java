@@ -269,7 +269,6 @@ public class UtilsClass {
     /**
      * token平台转账TOKEN数组构建方法
      * @param toAddr     发送地址
-     * @param tokenType  币种
      * @param amount      数量
      * @return     返回TOKEN的LIST
      */

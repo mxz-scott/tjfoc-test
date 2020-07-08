@@ -26,7 +26,7 @@ public class GoMultiSign implements MultiSign {
     //smart token接口
     public String SmartIssueTokenReq(String userContract, String tokenType, Boolean reissued,
                                      BigDecimal expiredDate, BigDecimal activeDate,
-                                     int maxLevel, List<Map> toList, String extend){
+                                     double maxLevel, List<Map> toList, String extend){
 
         Map<String, Object> map = new HashMap<>();
         map.put("userContract",userContract);

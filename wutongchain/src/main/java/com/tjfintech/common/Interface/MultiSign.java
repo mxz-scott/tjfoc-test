@@ -76,7 +76,7 @@ public interface MultiSign {
 
     //smart token接口
     String SmartIssueTokenReq(String userContract, String tokenType, Boolean reissued, BigDecimal expiredDate, BigDecimal activeDate,
-                              int maxLevel, List<Map> toList, String extend);
+                              double maxLevel, List<Map> toList, String extend);
     String SmartIssueTokenApprove(String sigMsg,String sigCrypt,String pubKey);
     String SmartTransfer(String Address,String prikey,String prikeyPwd,List<Map>tokenList,String data,String extendArgs);
     String SmartRecyle(String Address,String prikey,String prikeyPwd,String tokenType ,String amount,String data);

@@ -922,6 +922,11 @@ public class CommonFunc {
     }
 
     public String sdkCheckTxOrSleep(String hashData,String type,long sleeptime)throws Exception{
+
+        if(hashData.equals("null") || hashData.equals("") ||hashData.equals(null) ||hashData.isEmpty()){
+            sleepAndSaveInfo(SLEEPTIME/2,"hash is null waiting .....");
+            return "";
+        }
         Date dtTest = new Date();
         long nowTime = dtTest.getTime();
         log.info("开始时间 " + nowTime);

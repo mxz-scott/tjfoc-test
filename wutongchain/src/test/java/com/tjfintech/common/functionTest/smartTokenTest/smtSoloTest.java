@@ -52,33 +52,26 @@ public class smtSoloTest {
     private static String actualAmount1;
     private static String actualAmount2;
 
+    String constFileName = "wvm\\account_simple.wlang";
+    String contractFileName = "wvm\\account_simple.wlang";
+    String HQuotaFileName = "wvm\\account_simple_HQuota.wlang";
+
     @BeforeClass
     public static void beforeClass() throws Exception {
-        CommonFunc commonFuncTe = new CommonFunc();
-        UtilsClass utilsClassTe = new UtilsClass();
-        WVMContractTest wvmContractTest = new WVMContractTest();
         if (MULITADD1.isEmpty()) {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.createAddresses();
         }
-        if(smartAccoutCtHash.equals("")){
-            //安装
-            String response =wvmContractTest.wvmInstallTest("wvm\\account_simple.wlang","");
-            assertEquals("200",JSONObject.fromObject(response).getString("state"));
-            commonFuncTe.sdkCheckTxOrSleep(commonFuncTe.getTxHash(response,utilsClassTe.sdkGetTxHashType20),
-                    utilsClassTe.sdkGetTxDetailTypeV2,SLEEPTIME);
-            smartAccoutCtHash = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-        }
+
     }
 
-
-//    @Test
-    public void test(){
-        log.info(utilsClass.readStringFromFile(resourcePath + "SM2/keys1/pubkey.pem"));
-    }
     @Before
     public void beforeConfig() throws Exception {
+
+        //安装smart token定制化合约
+        installSmartAccountContract(contractFileName);
+
 
         issueAmount1 = "10000.12345678912345";
         issueAmount2 = "20000.876543212345";
@@ -120,57 +113,6 @@ public class smtSoloTest {
 
     }
 
-    //单签账户目前为签名公私钥对为PUBKEY1 PRIKEY1
-    public String smartIssueToken(String tokenType,BigDecimal deadline,List<Map> issueToList)throws Exception{
-        String isResult= multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,true,
-                deadline,0,0,issueToList,"");
-        String sigMsg1 = JSONObject.fromObject(isResult).getJSONObject("data").getString("SigMsg");
-        assertEquals(sigMsg1,String.valueOf(Hex.encodeHex(
-                JSONObject.fromObject(isResult).getJSONObject("data").getString("Msg").getBytes(StandardCharsets.UTF_8))));
-
-        String tempSM3Hash = certTool.getSm3Hash(PEER4IP,sigMsg1);
-        String cryptMsg = certTool.sign(PEER4IP ,PRIKEY1,"",tempSM3Hash,"hex");
-
-        String pubkey = utilsClass.readStringFromFile(resourcePath + "SM2/keys1/pubkey.pem").replaceAll("\r\n","\n");
-//        pubkey = (new BASE64Decoder()).decodeBuffer(PUBKEY1).toString().replaceAll("\r\n","\n");
-
-        String approveResp = multiSign.SmartIssueTokenApprove(sigMsg1,cryptMsg,pubkey);
-        return approveResp;
-    }
-
-    /**
-     *  测试最大发行量
-     *
-     */
-    @Test
-    public void TC001_TestMaxValue()throws Exception {
-
-        if (UtilsClass.PRECISION == 10) {
-            actualAmount1 = "1844674407";
-        }else {
-            actualAmount1 = "18446744073709";
-        }
-
-        double timeStampNow = System.currentTimeMillis();
-        BigDecimal deadline = new BigDecimal(timeStampNow + 12356789);
-
-        List<Map>list = utilsClass.smartConstuctIssueToList(ADDRESS1,actualAmount1);
-
-
-        log.info("测试单次最大发行量");
-        tokenType = "soloMaxAmt-"+UtilsClass.Random(6);
-        String issueResp = smartIssueToken(tokenType,deadline,list);
-        assertEquals("200",JSONObject.fromObject(issueResp).getString("state"));
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(issueResp,utilsClass.sdkGetTxHashType21),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-        log.info("查询归集地址中token余额");
-        String response1 = multiSign.SmartGetBalanceByAddr(ADDRESS1, tokenType);
-
-        assertEquals("200",JSONObject.fromObject(response1).getString("state"));
-        assertEquals(actualAmount1,JSONObject.fromObject(response1).getJSONObject("data").getString("total"));
-    }
 
 
     //smart token 不涉及发行地址和归集地址概念 移除相关用例
@@ -751,31 +693,41 @@ public class smtSoloTest {
 //        String transferInfo= multiSign.SmartTransfer(listModel,PRIKEY1, transferData);
 //        assertEquals(true,transferInfo.contains("can't transfer to self"));
 //    }
-//    /**
-//     * 单签发行token时指定其他地址，不发行token到本身.指定单签地址与多签地址
-//     * 2019-1-10 开发备注单签只能发行给自己 不支持发行给其他账户
-//     * @throws Exception
-//     */
-//    //@Test
-//    public void TC993_issueToOther()throws Exception{
-//        BeforeCondition beforeCondition=new BeforeCondition();
-//        beforeCondition.collAddressTest();
-//        log.info("发行两种token1000个");
-//        tokenType = "SOLOTC-"+UtilsClass.Random(6);
-//        String isResult= soloSign.issueToken(PRIKEY1,tokenType,"10000","发行token",ADDRESS2);
-//        tokenType2 = "SOLOTC-"+UtilsClass.Random(6);
-//        String isResult2= soloSign.issueToken(PRIKEY1,tokenType2,"20000","发行token",MULITADD3);
-//        assertThat(tokenType+"发行token错误",isResult, containsString("200"));
-//        assertThat(tokenType+"发行token错误",isResult2, containsString("200"));
-//        Thread.sleep(SLEEPTIME*3);
-//        log.info("查询归集地址中两种token余额");
-//        String response1 = multiSign.SmartGetBalanceByAddr(ADDRESS2, tokenType);
-//        String response3 = multiSign.SmartGetBalanceByAddr(ADDRESS1, tokenType);
-//        String response2 = multiSign.BalanceByAddr(MULITADD3,tokenType2 );
-//        assertThat(tokenType+"查询余额错误",response1, containsString("200"));
-//        assertThat(tokenType+"查询余额错误",response2, containsString("200"));
-//        assertThat(tokenType+"查询余额不正确",response1, containsString("total\":\"0\""));
-//        assertThat(tokenType+"查询余额不正确",response2, containsString("total\":\"0\""));
-//        assertThat(tokenType+"查询余额不正确",response3, containsString("1000"));
-//    }
+
+
+
+
+    public void installSmartAccountContract(String abfileName)throws Exception{
+        WVMContractTest wvmContractTestSA = new WVMContractTest();
+        UtilsClass utilsClassSA = new UtilsClass();
+        CommonFunc commonFuncTeSA = new CommonFunc();
+
+        //如果smartAccoutCtHash为空或者contractFileName不为constFileName 即"wvm\\account_simple.wlang" 时会重新安装
+        if(smartAccoutCtHash.equals("") || (!contractFileName.equals(constFileName))){
+            //安装
+            String response =wvmContractTestSA.wvmInstallTest(abfileName,"");
+            assertEquals("200",JSONObject.fromObject(response).getString("state"));
+            commonFuncTeSA.sdkCheckTxOrSleep(commonFuncTeSA.getTxHash(response,utilsClassSA.sdkGetTxHashType20),
+                    utilsClassSA.sdkGetTxDetailTypeV2,SLEEPTIME);
+            smartAccoutCtHash = JSONObject.fromObject(response).getJSONObject("data").getString("name");
+        }
+    }
+
+    //单签账户目前为签名公私钥对为PUBKEY1 PRIKEY1
+    public String smartIssueToken(String tokenType,BigDecimal deadline,List<Map> issueToList)throws Exception{
+        String isResult= multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,true,
+                deadline,new BigDecimal(0),0,issueToList,"123456");
+        String sigMsg1 = JSONObject.fromObject(isResult).getJSONObject("data").getString("SigMsg");
+        assertEquals(sigMsg1,String.valueOf(Hex.encodeHex(
+                JSONObject.fromObject(isResult).getJSONObject("data").getString("Msg").getBytes(StandardCharsets.UTF_8))));
+
+        String tempSM3Hash = certTool.getSm3Hash(PEER4IP,sigMsg1);
+        String cryptMsg = certTool.sign(PEER4IP ,PRIKEY1,"",tempSM3Hash,"hex");
+
+        String pubkey = utilsClass.readStringFromFile(resourcePath + "SM2/keys1/pubkey.pem").replaceAll("\r\n","\n");
+//        pubkey = (new BASE64Decoder()).decodeBuffer(PUBKEY1).toString().replaceAll("\r\n","\n");
+
+        String approveResp = multiSign.SmartIssueTokenApprove(sigMsg1,cryptMsg,pubkey);
+        return approveResp;
+    }
 }
