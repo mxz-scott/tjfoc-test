@@ -280,8 +280,7 @@ public class smtInterfaceTest {
         isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
                 new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
         assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
-        assertEquals(true, JSONObject.fromObject(isResp).getString("message").contains("can not"));
-
+        assertEquals("Token amount must be a valid number and less than 18446744073709", JSONObject.fromObject(isResp).getString("message"));
 
         log.info("token list 中address为空");
         issueToList = utilsClass.smartConstuctIssueToList("","123");

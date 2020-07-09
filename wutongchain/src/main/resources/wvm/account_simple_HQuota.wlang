@@ -35,7 +35,7 @@ contract Account {
     public string init(){
         Account account
         account.MinNum = 2
-        account.Quota = 184467440737090
+        account.Quota = 18446744073709
         account.Recycle = true
         string[]memberList = {"SSR"}
         account.MemberList = memberList
