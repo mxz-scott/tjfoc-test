@@ -130,9 +130,9 @@ public class PostTest {
         HttpClient httpClient = new HttpClient();
         PostMethod postMethod = new PostMethod(linkUrl);
 
-        httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(8000);
+        httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(18000);
 
-        postMethod.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, 8000);
+        postMethod.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, 18000);
         postMethod.setRequestEntity(se);
         postMethod.setRequestHeader("Content-Type","application/json");
 
