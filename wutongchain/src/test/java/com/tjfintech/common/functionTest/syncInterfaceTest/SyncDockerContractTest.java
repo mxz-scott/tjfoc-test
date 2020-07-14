@@ -30,8 +30,8 @@ public class SyncDockerContractTest {
     Store store=testBuilder.getStore();
     
     String name=sdf.format(dt)+ RandomUtils.nextInt(100000);
-    String version="1.0";
-    String category="docker";
+    String version="";
+    String category="wvm";
 
 
     /**
@@ -45,7 +45,7 @@ public class SyncDockerContractTest {
         String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";
         String file=utilsClass.readInput(filePath).toString();
         String data = utilsClass.encryptBASE64(file.getBytes());//BASE64编码
-        String response=contract.SynInstall(utilsClass.LONGTIMEOUT,name,version,category,data);
+        String response=contract.InstallWVM(name,category,data);
         String hash = JSONObject.fromObject(response).getJSONObject("Data").getString("Figure");
         assertThat("200",containsString(JSONObject.fromObject(response).getString("State")));
         assertThat("success",containsString(JSONObject.fromObject(response).getString("Message")));
@@ -56,7 +56,7 @@ public class SyncDockerContractTest {
         SynInvoke("InitMobile");
 
         log.info("销毁智能合约");
-        String response3 = contract.SynDestroy(utilsClass.LONGTIMEOUT,name, version,category);
+        String response3 = contract.DestroyWVM(name, category);
         assertThat("200",containsString(JSONObject.fromObject(response3).getString("State")));
         String hash2 = JSONObject.fromObject(response3).getJSONObject("Data").getString("Figure");
         Thread.sleep(1000);
@@ -72,7 +72,7 @@ public class SyncDockerContractTest {
         for (int i = 0; i < arg.length; i++) {
             args.add(arg[i]);
         }
-        String synInvoke = contract.SynInvoke(utilsClass.SHORTMEOUT, name, version, category, method, args);
+        String synInvoke = contract.Invoke( name, "", category, method, args);
         String hash= JSONObject.fromObject(synInvoke).getJSONObject("Data").getString("Figure");//获取hash值
         assertThat("200",containsString(JSONObject.fromObject(synInvoke).getString("State")));
         assertThat("200",containsString(JSONObject.fromObject(store.GetTxDetail(hash)).getString("State")));
