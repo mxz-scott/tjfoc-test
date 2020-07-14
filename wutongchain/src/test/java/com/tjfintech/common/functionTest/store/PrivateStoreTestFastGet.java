@@ -144,7 +144,7 @@ public class PrivateStoreTestFastGet {
 
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY2);
-        String res1 = store.StoreAuthorize(hash, map, PRIKEY1);
+        String res1 = store.StoreAuthorize(hash, map, PRIKEY1,"");
         assertThat(res1,containsString("200"));
         assertThat(res1,containsString("success"));
         commonFunc.sdkCheckTxOrSleepNoDBQuery(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
@@ -159,7 +159,7 @@ public class PrivateStoreTestFastGet {
 
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY6);
-        String res2 = store.StoreAuthorize(hash, map, PRIKEY1);
+        String res2 = store.StoreAuthorize(hash, map, PRIKEY1,"");
         assertThat(res2,containsString("200"));
         assertThat(res2,containsString("success"));
 
@@ -317,7 +317,7 @@ public class PrivateStoreTestFastGet {
 
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY4);
-        String res1 = store.StoreAuthorize(hash, map, PRIKEY1);
+        String res1 = store.StoreAuthorize(hash, map, PRIKEY1,"");
         commonFunc.sdkCheckTxOrSleepNoDBQuery(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
@@ -330,7 +330,7 @@ public class PrivateStoreTestFastGet {
 
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY5);
-        String res2 = store.StoreAuthorize(hash, map, PRIKEY2); //只有第一个私钥可以授权
+        String res2 = store.StoreAuthorize(hash, map, PRIKEY2,""); //只有第一个私钥可以授权
 
         commonFunc.sdkCheckTxOrSleepNoDBQuery(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
@@ -340,7 +340,7 @@ public class PrivateStoreTestFastGet {
 
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY6);
-        res2 = store.StoreAuthorize(hash, map, PRIKEY3);
+        res2 = store.StoreAuthorize(hash, map, PRIKEY3,"");
 
         commonFunc.sdkCheckTxOrSleepNoDBQuery(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
@@ -391,7 +391,7 @@ public class PrivateStoreTestFastGet {
 
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY4);
-        String res1 = store.StoreAuthorize(hash, map, PRIKEY1);
+        String res1 = store.StoreAuthorize(hash, map, PRIKEY1,"");
 
         assertThat(res1,containsString("500"));
         assertThat(res1,containsString("private key is not tx owner"));
@@ -434,7 +434,7 @@ public class PrivateStoreTestFastGet {
 
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY2);
-        res2 = store.StoreAuthorize(hash, map, PRIKEY1);
+        res2 = store.StoreAuthorize(hash, map, PRIKEY1,"");
 
         assertThat(res2,containsString("500"));
         assertThat(res2,containsString("private key is not tx owner"));
@@ -520,7 +520,7 @@ public class PrivateStoreTestFastGet {
         map.put("pubKeys1",PUBKEY3);
         map.put("pubKeys2",PUBKEY6);
         map.put("pubKeys3",PUBKEY7);
-        String res1 = store.StoreAuthorize(hash, map, PRIKEY1);
+        String res1 = store.StoreAuthorize(hash, map, PRIKEY1,"");
 
         commonFunc.sdkCheckTxOrSleepNoDBQuery(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);

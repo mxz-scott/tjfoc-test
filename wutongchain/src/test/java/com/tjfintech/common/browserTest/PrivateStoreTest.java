@@ -114,7 +114,7 @@ public class PrivateStoreTest {
 
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY2);
-        String res1 = store.StoreAuthorize(hash, map, PRIKEY1);
+        String res1 = store.StoreAuthorize(hash, map, PRIKEY1,"");
         Thread.sleep(SLEEPTIME);
         assertThat(res1,containsString("200"));
         assertThat(res1,containsString("success"));
@@ -126,7 +126,7 @@ public class PrivateStoreTest {
 
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY6);
-        String res2 = store.StoreAuthorize(hash, map, PRIKEY1);
+        String res2 = store.StoreAuthorize(hash, map, PRIKEY1,"");
         Thread.sleep(SLEEPTIME);
         assertThat(res2,containsString("200"));
         assertThat(res2,containsString("success"));

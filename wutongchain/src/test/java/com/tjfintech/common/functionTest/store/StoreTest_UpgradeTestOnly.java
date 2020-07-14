@@ -240,7 +240,7 @@ public class StoreTest_UpgradeTestOnly {
 
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY2);
-        String res1 = store.StoreAuthorize(hash, map, PRIKEY1);
+        String res1 = store.StoreAuthorize(hash, map, PRIKEY1,"");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
         assertThat(res1,containsString("200"));
@@ -253,7 +253,7 @@ public class StoreTest_UpgradeTestOnly {
 
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY6);
-        String res2 = store.StoreAuthorize(hash, map, PRIKEY1);
+        String res2 = store.StoreAuthorize(hash, map, PRIKEY1,"");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
         assertThat(res2,containsString("200"));
