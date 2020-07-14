@@ -11,9 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-import static com.tjfintech.common.utils.UtilsClass.SDKADD;
-import static com.tjfintech.common.utils.UtilsClass.subLedger;
+import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClass.syncTimeout;
 
 @Slf4j
 public  class GoStore implements Store {
@@ -26,8 +25,8 @@ public  class GoStore implements Store {
 
     public String GetApiHealth() {
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/chain/apihealth" + param);
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+        String result = GetTest.doGet2(SDKADD + "/v2/chain/apihealth?" + param);
         log.info(result);
         return result;
 
@@ -55,8 +54,8 @@ public  class GoStore implements Store {
      */
     public String GetTxDetail(String hash) {
         String param = "";
-        if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/tx/detail/" + hash + param);
+        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
+        String result = GetTest.doGet2(SDKADD + "/v2/tx/detail/" + hash + "?" + param);
         log.info(result);
         return result;
 
@@ -74,96 +73,15 @@ public  class GoStore implements Store {
     public String CreateStore(String Data) {
         Map<String, Object> map = new HashMap<>();
         map.put("data", Data);
-        String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/store" + param, map);
+
+        String param="";
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/store?" + param, map);
         log.info(result);
         return result;
     }
-
-//    /***
-//     * 同步创建存证交易
-//     * @param timeout
-//     * @param Data
-//     * @return
-//     */
-//    @Override
-//    public String SynCreateStore(Integer timeout, String Data) {
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("Data", Data);
-//        String param = "";
-//        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-//        String result = PostTest.sendPostToJson(SDKADD + "/sync/store?timeout=" + timeout + param, map);
-//        log.info(result);
-//        return result;
-//    }
-//
-//    /**
-//     * 同步创建存证交易-带公钥
-//     *
-//     * @param timeout
-//     * @param Data
-//     * @param PubKeys
-//     * @return
-//     */
-//    @Override
-//    public String SynCreateStore(Integer timeout, String Data, String... PubKeys) {
-//        Map<String, Object> map = new HashMap<>();
-//        List<Object> addrs = new ArrayList<>();
-//        for (int i = 0; i < PubKeys.length; i++) {
-//            addrs.add(PubKeys[i]);
-//        }
-//        map.put("Addrs", addrs);
-//        map.put("Data", Data);
-//
-//        String param = "";
-//        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-//
-//        String result = PostTest.sendPostToJson(SDKADD + "/sync/store?timeout=" + timeout + param, map);
-//        log.info(result);
-//        return result;
-//    }
-//
-//    /**
-//     * 同步获取隐私存证
-//     *
-//     * @param timeout
-//     * @param Hash
-//     * @param priKey
-//     * @param keyPwd
-//     * @return
-//     */
-//    @Override
-//    public String SynGetStorePost(Integer timeout, String Hash, String priKey, String keyPwd) {
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("Prikey", priKey);
-//        map.put("Hash", Hash);
-//        map.put("KeyPwd", keyPwd);
-//        String result = PostTest.sendPostToJson(SDKADD + "/sync/getstore?timeout=" + timeout, map);
-//        log.info(result);
-//        return result;
-//    }
-//
-//    /**
-//     * 同步创建隐私存证
-//     *
-//     * @param Data
-//     * @param keyMap
-//     * @return
-//     */
-//    @Override
-//    public String SynCreatePrivateStore(Integer timeout, String Data, Map keyMap) {
-//        List<Object> PubkeysObjects = new ArrayList<>();
-//        for (Object value : keyMap.values()) {
-//            PubkeysObjects.add(value);
-//        }
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("Data", Data);
-//        map.put("Pubkeys", PubkeysObjects);
-//        String result = PostTest.sendPostToJson(SDKADD + "/sync/store?timeout=" + timeout, map);
-//        log.info(result);
-//        return result;
-//    }
 
 
     /**
@@ -183,9 +101,12 @@ public  class GoStore implements Store {
         Map<String, Object> map = new HashMap<>();
         map.put("data", Data);
         map.put("pubKeys", PubkeysObjects);
-        String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/store" + param, map);
+
+        String param="";
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/store?" + param, map);
         log.info(result);
         return result;
     }
@@ -200,8 +121,8 @@ public  class GoStore implements Store {
     public String GetStore(String hash) {
 
         String param = "";
-        if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/tx/detail/" + hash + param);
+        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
+        String result = GetTest.doGet2(SDKADD + "/v2/tx/detail/" + hash + "?" + param);
         log.info(result);
         return result;
 
@@ -232,9 +153,11 @@ public  class GoStore implements Store {
         Map<String, Object> map = new HashMap<>();
         map.put("priKey", priKey);
         map.put("txId", Hash);
+
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/store/query" + param, map);
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/store/query?" + param, map);
         log.info(result);
         return result;
     }
@@ -252,9 +175,12 @@ public  class GoStore implements Store {
         map.put("priKey", priKey);
         map.put("txId", Hash);
         map.put("password", keyPwd);
-        String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/store/query" + param, map);
+
+        String param="";
+//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/store/query?" + param, map);
         log.info(result);
         return result;
 
@@ -270,8 +196,8 @@ public  class GoStore implements Store {
     public String GetTransactionIndex(String hash) {
 
         String param = "";
-        if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/v2/block/tx/index/" + hash + param);
+        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
+        String result = GetTest.SendGetTojson(SDKADD + "/v2/block/tx/index/" + hash + "?" + param);
         log.info(result);
         return result;
 
@@ -285,8 +211,8 @@ public  class GoStore implements Store {
      */
     public String GetHeight() {
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/v2/block/height" + param);
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+        String result = GetTest.SendGetTojson(SDKADD + "/v2/block/height" + "?" + param);
         log.info(result);
         return result;
     }
@@ -301,8 +227,8 @@ public  class GoStore implements Store {
     public String GetBlockByHeight(int height) {
         String param = "";
         String strHeight = Integer.toString(height);
-        if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/v2/block/detail/" + strHeight + param);
+        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
+        String result = GetTest.SendGetTojson(SDKADD + "/v2/block/detail/" + strHeight + "?" + param);
         log.info(result);
         return result;
     }
@@ -316,8 +242,8 @@ public  class GoStore implements Store {
      */
     public String GetBlockByHash(String hash) {
         String param = "";
-        if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/v2/block/detail/" + hash + param);
+        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
+        String result = GetTest.SendGetTojson(SDKADD + "/v2/block/detail/" + hash + "?" + param);
 //        log.info(result);
         return result;
     }
@@ -332,8 +258,8 @@ public  class GoStore implements Store {
      */
     public String GetTransactionBlock(String hash) {
         String param = "";
-        if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/block/height/" + hash + param);
+        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
+        String result = GetTest.doGet2(SDKADD + "/v2/block/height/" + hash + "?" + param);
         log.info(result);
         return result;
     }
@@ -348,8 +274,8 @@ public  class GoStore implements Store {
      */
     public String GetInlocal(String hash) {
         String param = "";
-        if (!subLedger.isEmpty()) param = "?ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/v2/tx/inlocal/" + hash + param);
+        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
+        String result = GetTest.SendGetTojson(SDKADD + "/v2/tx/inlocal/" + hash + "?" + param);
         log.info(result);
         return result;
     }
@@ -365,31 +291,12 @@ public  class GoStore implements Store {
     @Override
     public String GetPeerList() {
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/getpeerlist" + param);
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+        String result = GetTest.SendGetTojson(SDKADD + "/getpeerlist?" + param);
         log.info(result);
         return result;
     }
 
-    /**
-     * 隐私存证授权
-     */
-    public String StoreAuthorize(String hash, Map toPubKeys, String toPriKey) {
-
-        List<Object> PubkeysObjects = new ArrayList<>();
-        for (Object value : toPubKeys.values()) {
-            PubkeysObjects.add(value);
-        }
-        Map<String, Object> map = new HashMap<>();
-        map.put("txId", hash);
-        map.put("pubKeys", PubkeysObjects);
-        map.put("priKey", toPriKey);
-        String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/authorize" + param, map);
-        log.info(result);
-        return result;
-    }
 
     /**
      * 隐私存证授权-带密码
@@ -404,10 +311,13 @@ public  class GoStore implements Store {
         map.put("txId", hash);
         map.put("pubKeys", PubkeysObjects);
         map.put("priKey", toPriKey);
-        map.put("password", pwd);
-        String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/authorize" + param, map);
+        if(!pwd.isEmpty())  map.put("password", pwd);
+
+        String param="";
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/authorize?" + param, map);
         log.info(result);
         return result;
     }

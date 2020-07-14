@@ -13,123 +13,152 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.utils.UtilsClass.SDKADD;
-import static com.tjfintech.common.utils.UtilsClass.subLedger;
+import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClass.syncTimeout;
 
 
 @Slf4j
 public class GoMultiSign implements MultiSign {
 
 
-
-
     //smart token接口
     public String SmartIssueTokenReq(String userContract, String tokenType, Boolean reissued,
                                      BigDecimal expiredDate, BigDecimal activeDate,
-                                     double maxLevel, List<Map> toList, String extend){
+                                     double maxLevel, List<Map> toList, String extend) {
 
         Map<String, Object> map = new HashMap<>();
-        map.put("userContract",userContract);
+        map.put("userContract", userContract);
         map.put("tokenType", tokenType);
-        if(!reissued.equals(null)){   map.put("reissued", reissued);  }
+        if (!reissued.equals(null)) {
+            map.put("reissued", reissued);
+        }
         map.put("expireDate", expiredDate);
         map.put("activeDate", activeDate);
         map.put("level", maxLevel);
-        map.put("token",toList);
-        if(!extend.isEmpty()){  map.put("extend",extend);    }
+        map.put("token", toList);
+        if (!extend.isEmpty()) {
+            map.put("extend", extend);
+        }
 
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/stoken/reqmsg" + param, map);
+        String param = "";
+//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/stoken/reqmsg?" + param, map);
         log.info(response);
         return response;
 
     }
-    public String SmartIssueTokenApprove(String sigMsg,String sigCrypt,String pubKey){
+
+    public String SmartIssueTokenApprove(String sigMsg, String sigCrypt, String pubKey) {
         Map<String, Object> map = new HashMap<>();
-        map.put("sigMsg",sigMsg);
+        map.put("sigMsg", sigMsg);
         map.put("sigCrypt", sigCrypt);
-        map.put("pubKey",pubKey);
+        map.put("pubKey", pubKey);
 
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/stoken/approve" + param, map);
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/stoken/approve?" + param, map);
         log.info(response);
         return response;
     }
-    public String SmartTransfer(String Address,String prikey,String prikeyPwd,List<Map>tokenList,
-                                String data,String extendArgs){
+
+    public String SmartTransfer(String Address, String prikey, String prikeyPwd, List<Map> tokenList,
+                                String data, String extendArgs) {
         Map<String, Object> map = new HashMap<>();
         map.put("multiAddr", Address);
         map.put("prikey", prikey);
         map.put("data", data);
-        if(!prikeyPwd.isEmpty()) {   map.put("password", prikeyPwd);   }
+        if (!prikeyPwd.isEmpty()) {
+            map.put("password", prikeyPwd);
+        }
         map.put("token", tokenList);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.postMethod(SDKADD+"/v2/tx/stoken/transfer"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/transfer?" + param, map);
         log.info(result);
         return result;
     }
-    public String SmartRecyle(String Address,String prikey,String prikeyPwd,String tokenType ,String amount,String data){
+
+    public String SmartRecyle(String Address, String prikey, String prikeyPwd, String tokenType, String amount, String data) {
         Map<String, Object> map = new HashMap<>();
         map.put("multiAddress", Address);
         map.put("prikey", prikey);
-        if(!prikeyPwd.isEmpty()) {   map.put("password", prikeyPwd);   }
+        if (!prikeyPwd.isEmpty()) {
+            map.put("password", prikeyPwd);
+        }
         map.put("tokenType", tokenType);
         map.put("amount", amount);
         map.put("data", data);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/stoken/recycle" + param, map);
+
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/stoken/recycle?" + param, map);
         log.info(result);
         return result;
     }
-    public String SmartSign(String Address,String prikey,String fromAddr ,List<Map>tokenList){
+
+    public String SmartSign(String Address, String prikey, String fromAddr, List<Map> tokenList) {
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
         return "";
     }
 
-    public String SmartGetBalanceByAddr(String addr,String tokenType){
-        Map<String,Object> map = new HashMap<>();
-        map.put("tokenType",tokenType);
-        map.put("address",addr);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/balance " + param, map);
+    public String SmartGetBalanceByAddr(String addr, String tokenType) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenType", tokenType);
+        map.put("address", addr);
+
+        String param = "";
+//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/balance?" + param, map);
         log.info(result);
         return result;
     }
 
 
-    public String SmartGetZeroBalance(String tokenType){
-    String param= "";
-        if(subLedger!="") param = param + "?ledger="+subLedger;
-    String result= (GetTest.SendGetTojson(SDKADD+"/v2/tx/stoken/zeroaddr/balance/"+ tokenType + param));
+    public String SmartGetZeroBalance(String tokenType) {
+        String param = "";
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+        String result = (GetTest.SendGetTojson(SDKADD + "/v2/tx/stoken/zeroaddr/balance/?" + tokenType + param));
         log.info(result);
         return result;
     }
 
 
-    public String SmartGetAssetsTotal(BigDecimal startTime,BigDecimal endTime,String tokenType){
+    public String SmartGetAssetsTotal(BigDecimal startTime, BigDecimal endTime, String tokenType) {
 
         Map<String, Object> map = new HashMap<>();
         map.put("startTime", startTime);
         map.put("endTime", endTime);
         map.put("tokenType", tokenType);
-        String param="";
-        if(subLedger!="") param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/assets/total" + param, map);
+        String param = "";
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/assets/total?" + param, map);
         log.info(result);
         return result;
 
     }
-    public String SmartGetOwnerAddrs(String tokenType){
+
+    public String SmartGetOwnerAddrs(String tokenType) {
 
         Map<String, Object> map = new HashMap<>();
         map.put("tokenType", tokenType);
-        String param="";
-        if(subLedger!="") param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/getowneraddr" + param, map);
+        String param = "";
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/getowneraddr?" + param, map);
         log.info(result);
         return result;
 
@@ -150,9 +179,12 @@ public class GoMultiSign implements MultiSign {
         map.put("pubkey", pubKey);
         map.put("tokenType", tokenType);
         map.put("amount", amount);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/multi/recycle"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/multi/recycle?" + param, map);
 //        log.info(result);
         return result;
     }
@@ -173,9 +205,12 @@ public class GoMultiSign implements MultiSign {
 
         map.put("prikey", pubKey);
         map.put("addresses", addrs);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/address/addissue"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/address/addissue?" + param, map);
         log.info(result);
         return result;
     }
@@ -198,9 +233,12 @@ public class GoMultiSign implements MultiSign {
         map.put("tokenType", TokenType);
         map.put("amount", Amount);
         map.put("data", Data);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/multi/issue"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/multi/issue?" + param, map);
         log.info(response);
         return response;
     }
@@ -225,9 +263,12 @@ public class GoMultiSign implements MultiSign {
         map.put("tokenType", TokenType);
         map.put("amount", Amount);
         map.put("data", Data);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/multi/issue"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/multi/issue?" + param, map);
         log.info(response);
         return response;
     }
@@ -246,9 +287,12 @@ public class GoMultiSign implements MultiSign {
             addrs.add(address[i]);
         }
         map.put("addresses", addrs);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/address/addissue"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/address/addissue?" + param, map);
         log.info(result);
         return result;
     }
@@ -268,15 +312,16 @@ public class GoMultiSign implements MultiSign {
         map.put("pubKey", PubKey);
         map.put("data", Data);
         map.put("token", tokenList);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/multi/transfer"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/multi/transfer?" + param, map);
 //        log.info(result);
         return result;
 
     }
-
-
 
     /**
      * 多账号同时回收，本地签名
@@ -287,197 +332,16 @@ public class GoMultiSign implements MultiSign {
     public String RecyclesLocalSign(List<Map> tokenList) {
         Map<String, Object> map = new HashMap<>();
         map.put("token", tokenList);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/multi/destory"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/multi/destory?" + param, map);
         log.info(result);
         return result;
     }
 
-    @Override
-    public String SyncIssueToken(Integer timeout, String MultiAddr, String TokenType, String Amount, String Data) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("multiAddress", MultiAddr);
-        map.put("tokenType", TokenType);
-        map.put("amount", Amount);
-        map.put("data", Data);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout+param, map);
-        log.info(response);
-        return response;
-    }
-
-    @Override
-    public String SyncIssueToken(Integer timeout, String MultiAddr, String ToAddr, String TokenType, String Amount, String Data) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("multiAddress", MultiAddr);
-        map.put("toAddress", ToAddr);
-        map.put("tokenType", TokenType);
-        map.put("amount", Amount);
-        map.put("data", Data);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout+param, map);
-        log.info(response);
-        return response;
-    }
-
-    @Override
-    public String SyncIssueToken(Integer timeout, String MultiAddr, String ToAddr, String TokenType, String Amount, String PriKey, String Pwd, String Data) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("MultiAddr", MultiAddr);
-        map.put("ToAddr", ToAddr);
-        map.put("TokenType", TokenType);
-        map.put("Amount", Amount);
-        map.put("Data", Data);
-        map.put("PriKey", PriKey);
-        map.put("Pwd", Pwd);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout+param, map);
-        log.info(response);
-        return response;
-    }
-
-    @Override
-    public String SyncIssueTokenCarryPri(Integer timeout, String MultiAddr, String TokenType, String Amount, String PriKey, String Data) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("MultiAddr", MultiAddr);
-        map.put("PriKey", PriKey);
-        map.put("TokenType", TokenType);
-        map.put("Amount", Amount);
-        map.put("Data", Data);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout+param, map);
-        log.info(response);
-        return response;
-    }
-
-    @Override
-    public String SyncIssueTokenCarryPri(Integer timeout, String MultiAddr, String TokenType, String Amount, String PriKey, String Pwd, String Data) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("MultiAddr", MultiAddr);
-        map.put("PriKey", PriKey);
-        map.put("Pwd", Pwd);
-        map.put("TokenType", TokenType);
-        map.put("Amount", Amount);
-        map.put("Data", Data);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/issuetoken?timeout=" + timeout+param, map);
-        log.info(response);
-        return response;
-    }
-
-    @Override
-    public String SyncSign(Integer timeout, String Tx, String Prikey, String Pwd) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("Tx", Tx);
-        map.put("Prikey", Prikey);
-        map.put("Pwd", Pwd);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/sign?timeout=" + timeout+param, map);
-        log.info(response);
-        return response;
-    }
-
-    @Override
-    public String SyncSign(Integer timeout, String Tx, String Prikey) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("Tx", Tx);
-        map.put("Prikey", Prikey);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String response = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/sign?timeout=" + timeout+param, map);
-        log.info(response);
-        return response;
-    }
-
-    /**
-     * 同步多签转账测试
-     *
-     * @param timeout
-     * @param PriKey
-     * @param Pwd
-     * @param Data
-     * @param fromAddr
-     * @param tokenList
-     * @return
-     */
-    @Override
-    public String SyncTransfer(Integer timeout, String PriKey, String Pwd, String Data, String fromAddr, List<Map> tokenList) {
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("MultiAddr", fromAddr);
-        map.put("Prikey", PriKey);
-        map.put("Data", Data);
-        map.put("Pwd", Pwd);
-        map.put("Token", tokenList);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/transfer?timeout=" + timeout+param, map);
-        log.info(result);
-        return result;
-    }
-
-    @Override
-    public String SyncTransfer(Integer timeout, String PriKey, String Data, String fromAddr, List<Map> tokenList) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("MultiAddr", fromAddr);
-        map.put("Prikey", PriKey);
-        map.put("Data", Data);
-        map.put("Token", tokenList);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/transfer?timeout=" + timeout+param, map);
-        log.info(result);
-        return result;
-    }
-
-    @Override
-    public String SyncRecycle(Integer timeout, String MultiAddr, String PriKey, String Pwd, String TokenType, String Amount) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("MultiAddr", MultiAddr);
-        map.put("Prikey", PriKey);
-        map.put("Pwd", Pwd);
-        map.put("TokenType", TokenType);
-        map.put("Amount", Amount);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/recycle?timeout=" + timeout+param, map);
-        log.info(result);
-        return result;
-    }
-
-    @Override
-    public String SyncRecycle(Integer timeout, String MultiAddr, String PriKey, String TokenType, String Amount) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("MultiAddr", MultiAddr);
-        map.put("Prikey", PriKey);
-        map.put("TokenType", TokenType);
-        map.put("Amount", Amount);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/recycle?timeout=" + timeout+param, map);
-        log.info(result);
-        return result;
-    }
-
-    @Override
-    public String SyncRecycle(Integer timeout, String PriKey, String TokenType, String Amount) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("Prikey", PriKey);
-        map.put("TokenType", TokenType);
-        map.put("Amount", Amount);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/multi/recycle?timeout=" + timeout+param, map);
-        log.info(result);
-        return result;
-    }
 
     /**
      * 删除发行地址不携带私钥
@@ -493,9 +357,12 @@ public class GoMultiSign implements MultiSign {
             addrs.add(address[i]);
         }
         map.put("addresses", addrs);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/address/delissue"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/address/delissue?" + param, map);
         log.info(result);
         return result;
     }
@@ -514,12 +381,16 @@ public class GoMultiSign implements MultiSign {
         map.put("startTime", StartTime);
         map.put("endTime", EndTime);
         map.put("tokenType", TokenType);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/assets/total"+param, map);
+
+        String param = "";
+//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/assets/total?" + param, map);
         log.info(result);
         return result;
     }
+
     /**
      * 获取总发行量,总回收量,总冻结量(将tokentype类型设置为double类型)
      *
@@ -534,23 +405,30 @@ public class GoMultiSign implements MultiSign {
         map.put("startTime", StartTime);
         map.put("endTime", EndTime);
         map.put("tokenType", TokenType);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/assets/total"+param, map);
+
+        String param = "";
+//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/assets/total?" + param, map);
         log.info(result);
         return result;
     }
 
-    /** 获取总发行量,总回收量,总冻结量（将参数体设置为空）
+    /**
+     * 获取总发行量,总回收量,总冻结量（将参数体设置为空）
      *
      * @return
      */
     @Override
     public String gettotal() {
         Map<String, Object> map = new HashMap<>();
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/assets/total"+param, map);
+
+        String param = "";
+//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/assets/total?" + param, map);
         log.info(result);
         return result;
     }
@@ -563,27 +441,33 @@ public class GoMultiSign implements MultiSign {
      */
     @Override
     public String tokenstate(String TokenType) {
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/v2/tx/utxo/assets/state/" + TokenType + param);
+        String param = "";
+//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = GetTest.SendGetTojson(SDKADD + "/v2/tx/utxo/assets/state/" + TokenType + "?" + param);
         log.info(result);
         return result;
     }
 
     /**
      * 根据tokentype获取账户余额
+     *
      * @param TokenType
      * @param Address
      * @return
      */
     @Override
     public String getSDKBalance(String TokenType, String Address) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("TokenType",TokenType);
-        map.put("Addr",Address);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.postMethod(SDKADD + "/utxo/getsdkbalance"+param, map);
+        Map<String, Object> map = new HashMap<>();
+        map.put("TokenType", TokenType);
+        map.put("Addr", Address);
+
+        String param = "";
+//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/utxo/getsdkbalance?" + param, map);
         log.info(result);
         return result;
     }
@@ -592,11 +476,14 @@ public class GoMultiSign implements MultiSign {
     public String getTotalbyDay(int starttime, int endtime) {
 
         Map<String, Object> map = new HashMap<>();
-        map.put("StartTime",starttime);
-        map.put("EndTime",endtime);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.postMethod(SDKADD + "/utxo/totalbyday"+param, map);
+        map.put("StartTime", starttime);
+        map.put("EndTime", endtime);
+
+        String param = "";
+//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/utxo/totalbyday?" + param, map);
         log.info(result);
         return result;
 
@@ -605,17 +492,21 @@ public class GoMultiSign implements MultiSign {
     @Override
     public String getChainBalance(String addr, String tokenType) {
         Map<String, Object> map = new HashMap<>();
-        map.put("Addr",addr);
-        map.put("TokenType",tokenType);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.postMethod(SDKADD + "/utxo/getchainbalance"+param, map);
+        map.put("Addr", addr);
+        map.put("TokenType", tokenType);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/utxo/getchainbalance?" + param, map);
         log.info(result);
         return result;
     }
 
     /**
      * 获取utxo交易详情
+     *
      * @param StartTime
      * @param EndTime
      * @param tokenType
@@ -627,21 +518,25 @@ public class GoMultiSign implements MultiSign {
     @Override
     public String getUTXODetail(long StartTime, long EndTime, String tokenType, int UTXOtype, String FromAddr, String ToAddr) {
         Map<String, Object> map = new HashMap<>();
-        map.put("startTime",StartTime);
-        map.put("endTime",EndTime);
-        map.put("tokenType",tokenType);
-        map.put("UTXOType",UTXOtype);
-        map.put("fromAddress",FromAddr);
-        map.put("toAddress",ToAddr);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/detail"+param, map);
+        map.put("startTime", StartTime);
+        map.put("endTime", EndTime);
+        map.put("tokenType", tokenType);
+        map.put("UTXOType", UTXOtype);
+        map.put("fromAddress", FromAddr);
+        map.put("toAddress", ToAddr);
+
+        String param = "";
+//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/detail?" + param, map);
         log.info(result);
         return result;
     }
 
     /**
-     *获取utxo交易详情（设定ToAddr为数值型数据（负数、正数、浮点数））
+     * 获取utxo交易详情（设定ToAddr为数值型数据（负数、正数、浮点数））
+     *
      * @param StartTime
      * @param EndTime
      * @param tokenType
@@ -653,21 +548,25 @@ public class GoMultiSign implements MultiSign {
     @Override
     public String getUTXODetail(long StartTime, long EndTime, String tokenType, int UTXOtype, String FromAddr, double ToAddr) {
         Map<String, Object> map = new HashMap<>();
-        map.put("startTime",StartTime);
-        map.put("endTime",EndTime);
-        map.put("tokenType",tokenType);
-        map.put("UTXOType",UTXOtype);
-        map.put("fromAddress",FromAddr);
-        map.put("toAddress",ToAddr);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/detail"+param, map);
+        map.put("startTime", StartTime);
+        map.put("endTime", EndTime);
+        map.put("tokenType", tokenType);
+        map.put("UTXOType", UTXOtype);
+        map.put("fromAddress", FromAddr);
+        map.put("toAddress", ToAddr);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/detail?" + param, map);
         log.info(result);
         return result;
     }
 
     /**
      * 获取utxo交易详情（验证UTXOtype）将类型转换为String类型
+     *
      * @param StartTime
      * @param EndTime
      * @param tokenType
@@ -679,29 +578,36 @@ public class GoMultiSign implements MultiSign {
     @Override
     public String getUTXODetail(long StartTime, long EndTime, String tokenType, String UTXOtype, String FromAddr, String ToAddr) {
         Map<String, Object> map = new HashMap<>();
-        map.put("startTime",StartTime);
-        map.put("endTime",EndTime);
-        map.put("tokenType",tokenType);
-        map.put("UTXOType",UTXOtype);
-        map.put("fromAddress",FromAddr);
-        map.put("toAddress",ToAddr);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/detail"+param, map);
+        map.put("startTime", StartTime);
+        map.put("endTime", EndTime);
+        map.put("tokenType", tokenType);
+        map.put("UTXOType", UTXOtype);
+        map.put("fromAddress", FromAddr);
+        map.put("toAddress", ToAddr);
+
+        String param = "";
+//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/detail?" + param, map);
         log.info(result);
         return result;
     }
 
     /**
      * 获取utxo交易详情(body体为空的情况下)
+     *
      * @return
      */
     @Override
     public String getUTXODetail() {
         Map<String, Object> map = new HashMap<>();
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/detail"+param, map);
+
+        String param = "";
+//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/detail?" + param, map);
         log.info(result);
         return result;
     }
@@ -709,33 +615,40 @@ public class GoMultiSign implements MultiSign {
 
     @Override
     public String BalanceByAddr(String addr, String tokenType) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("tokenType",tokenType);
-        map.put("address",addr);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/balance"+param, map);
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenType", tokenType);
+        map.put("address", addr);
+
+        String param = "";
+//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/balance?" + param, map);
         log.info(result);
         return result;
     }
 
 
     public String delCollAddrs(String... address) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         List<Object> addrs = new ArrayList<>();
-        for (int i= 0;i<address.length;i++){
+        for (int i = 0; i < address.length; i++) {
             addrs.add(address[i]);
         }
         map.put("addresses", addrs);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/address/delcoll"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/address/delcoll?" + param, map);
         log.info(result);
         return result;
     }
 
     /**
      * 添加归集地址不携带私钥
+     *
      * @param address
      * @return
      */
@@ -743,13 +656,16 @@ public class GoMultiSign implements MultiSign {
     public String addCollAddrs(String... address) {
         Map<String, Object> map = new HashMap<>();
         List<Object> addrs = new ArrayList<>();
-        for (int i=0;i<address.length;i++){
+        for (int i = 0; i < address.length; i++) {
             addrs.add(address[i]);
         }
         map.put("addresses", addrs);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/address/addcoll"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/address/addcoll?" + param, map);
         log.info(result);
         return result;
     }
@@ -757,112 +673,88 @@ public class GoMultiSign implements MultiSign {
 
     /**
      * 创建多签地址
+     *
      * @author chenxu
      * @version 1.0
      */
 
-    public String genMultiAddress(int M,Map keyMap){
+    public String genMultiAddress(int M, Map keyMap) {
 
         Map<String, Object> map = new HashMap<>();
-        List<Object>PubkeysObjects=new ArrayList<>();
+        List<Object> PubkeysObjects = new ArrayList<>();
         for (Object value : keyMap.values()) {
             PubkeysObjects.add(value);
         }
         map.put("pubkeys", PubkeysObjects);
         map.put("m", M);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.sendPostToJson(SDKADD+"/v2/multiaddress/gen"+param, map);
+
+        String param = "";
+//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/multiaddress/gen?" + param, map);
         log.info(result);
         return result;
 
     }
 
-//    /**
-//     *
-//     * @param addr 查询的多签地址
-//     * @param priKey 多签地址绑定其中一个账户的私钥
-//     * @param Pwd  多签地址绑定其中一个账户的私钥的密码
-//     * @param tokenType
-//     * @return
-//     */
-//    public String Balance(String addr,String priKey,String Pwd,String tokenType) {
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("multiAddress", addr);
-//        map.put("priKey", priKey);
-//        map.put("password", Pwd);
-//        map.put("tokenType", tokenType);
-//        String param="";
-//        if(subLedger!="") param = param +"?ledger="+subLedger;
-//        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/prikey/balance"+param, map);
-//        log.info(result);
-//        return result;
-//    }
-//    /**
-//     * 查询用户余额
-//     * @param addr    用户地址
-//     * @param priKey  用户私钥
-//     */
-//    public String Balance(String addr,String priKey,String tokenType) {
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("multiAddress", addr);
-//        map.put("priKey", priKey);
-//        map.put("tokenType", tokenType);
-//        String param="";
-//        if(subLedger!="") param = param +"?ledger="+subLedger;
-//        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/prikey/balance"+param, map);
-//        log.info(result);
-//        return result;
-//    }
-
-
     /**
      * 使用3/3账户发行Token申请
-     * @param MultiAddr   多签地址
-     * @param TokenType   币种类型
-     * @param Amount      货币数量
-     * @param Data        额外数据
      *
+     * @param MultiAddr 多签地址
+     * @param TokenType 币种类型
+     * @param Amount    货币数量
+     * @param Data      额外数据
      * @return
      */
-    public String issueToken(String MultiAddr,String TokenType,String Amount,String Data) {
+    public String issueToken(String MultiAddr, String TokenType, String Amount, String Data) {
         Map<String, Object> map = new HashMap<>();
         map.put("multiAddress", MultiAddr);
         map.put("tokenType", TokenType);
         map.put("amount", Amount);
         map.put("data", Data);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String response = PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/multi/issue"+param, map);
-        log.info(response);
-        return response;
-    }
-    public String issueToken(String MultiAddr,String ToAddr,String TokenType,String Amount,String Data) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("multiAddress", MultiAddr);
-        map.put("toAddress",ToAddr);
-        map.put("tokenType", TokenType);
-        map.put("amount", Amount);
-        map.put("data", Data);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String response = PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/multi/issue"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/multi/issue?" + param, map);
         log.info(response);
         return response;
     }
 
-    public String issueToken(String MultiAddr,String ToAddr,String TokenType,String Amount,String priKey,String Pwd,String Data) {
+    public String issueToken(String MultiAddr, String ToAddr, String TokenType, String Amount, String Data) {
         Map<String, Object> map = new HashMap<>();
         map.put("multiAddress", MultiAddr);
-        if(!ToAddr.isEmpty()) map.put("toAddress",ToAddr);
+        map.put("toAddress", ToAddr);
         map.put("tokenType", TokenType);
         map.put("amount", Amount);
-        if(!priKey.isEmpty()) map.put("priKey",priKey);
-        if(!Pwd.isEmpty()) map.put("password",Pwd);
         map.put("data", Data);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String response = PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/multi/issue"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/multi/issue?" + param, map);
+        log.info(response);
+        return response;
+    }
+
+    public String issueToken(String MultiAddr, String ToAddr, String TokenType, String Amount, String priKey, String Pwd, String Data) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("multiAddress", MultiAddr);
+        if (!ToAddr.isEmpty()) map.put("toAddress", ToAddr);
+        map.put("tokenType", TokenType);
+        map.put("amount", Amount);
+        if (!priKey.isEmpty()) map.put("priKey", priKey);
+        if (!Pwd.isEmpty()) map.put("password", Pwd);
+        map.put("data", Data);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/multi/issue?" + param, map);
         log.info(response);
         return response;
     }
@@ -870,38 +762,44 @@ public class GoMultiSign implements MultiSign {
 
     /**
      * 使用3/3账户发行Token申请，使用本地签名
-     * @param MultiAddr   多签地址
-     * @param TokenType   币种类型
-     * @param Amount      货币数量
-     * @param Data        额外数据
      *
+     * @param MultiAddr 多签地址
+     * @param TokenType 币种类型
+     * @param Amount    货币数量
+     * @param Data      额外数据
      * @return
      */
-    public String issueTokenLocalSign(String MultiAddr, String TokenType,String Amount,String Data) {
+    public String issueTokenLocalSign(String MultiAddr, String TokenType, String Amount, String Data) {
         Map<String, Object> map = new HashMap<>();
         map.put("multiAddress", MultiAddr);
         map.put("tokenType", TokenType);
         map.put("amount", Amount);
         map.put("data", Data);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String response = PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/issue"+param, map);
+
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/issue?" + param, map);
         //log.info("发行token："+response);
         return response;
     }
 
 
-
-    public String issueTokenLocalSign(String MultiAddr, String toAddr, String TokenType,String Amount,String Data) {
+    public String issueTokenLocalSign(String MultiAddr, String toAddr, String TokenType, String Amount, String Data) {
         Map<String, Object> map = new HashMap<>();
         map.put("multiAddress", MultiAddr);
         map.put("toAddress", toAddr);
         map.put("tokenType", TokenType);
         map.put("amount", Amount);
         map.put("data", Data);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String response = PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/multi/issue"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/multi/issue?" + param, map);
         //log.info("发行token："+response);
         return response;
     }
@@ -909,28 +807,32 @@ public class GoMultiSign implements MultiSign {
 
     /**
      * 发送签名
-     * @param signedData   本地签名后的数据
      *
+     * @param signedData 本地签名后的数据
      * @return
      */
     public String sendSign(String signedData) {
 
         Map<String, Object> map = new HashMap<>();
         map.put("data", signedData);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String response = PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/multi/send_multisign"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/multi/send_multisign?" + param, map);
         log.info(response);
         return response;
     }
 
 
     /**
-     签名多签发行Token交易-带密码
+     * 签名多签发行Token交易-带密码
+     *
      * @param Tx     交易ID
-     * @param Prikey  签名所用私钥
-     * @param Pwd  签名所用私钥密码
-     * @return    返回未经过处理内容
+     * @param Prikey 签名所用私钥
+     * @param Pwd    签名所用私钥密码
+     * @return 返回未经过处理内容
      */
 
     public String Sign(String Tx, String Prikey, String Pwd) {
@@ -940,253 +842,199 @@ public class GoMultiSign implements MultiSign {
         map.put("password", Pwd);
         map.put("tx", Tx);
         //String response = PostTest.sendPostToJson(SDKADD+"/utxo/multi/sign", map);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String response = PostTest.postMethod(SDKADD+"/v2/tx/utxo/multi/sign"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String response = PostTest.postMethod(SDKADD + "/v2/tx/utxo/multi/sign?" + param, map);
         log.info(response);
         return response;
 
     }
+
     public String Sign(String Tx, String Prikey) {
 
         Map<String, Object> map = new HashMap<>();
         map.put("prikey", Prikey);
         map.put("tx", Tx);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String response = PostTest.postMethod(SDKADD+"/v2/tx/utxo/multi/sign"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String response = PostTest.postMethod(SDKADD + "/v2/tx/utxo/multi/sign?" + param, map);
         log.info(response);
         return response;
     }
 
     /**
      * 转账
-     * @param PriKey 私钥
-     * @param Pwd     密码
+     *
+     * @param PriKey   私钥
+     * @param Pwd      密码
      * @param Data     详情内容
-     * @param fromAddr  发起地址
+     * @param fromAddr 发起地址
      * @return
      */
-    public String Transfer(String PriKey,String Pwd,String Data ,String fromAddr,List<Map>tokenList) {
+    public String Transfer(String PriKey, String Pwd, String Data, String fromAddr, List<Map> tokenList) {
 
         Map<String, Object> map = new HashMap<>();
         map.put("multiAddress", fromAddr);
         map.put("prikey", PriKey);
         map.put("data", Data);
-        map.put("password",Pwd);
+        map.put("password", Pwd);
         map.put("token", tokenList);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.postMethod(SDKADD+"/v2/tx/utxo/multi/transfer"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/multi/transfer?" + param, map);
         log.info(result);
         return result;
 
     }
-    public String Transfer(String PriKey,String Data,String fromAddr ,List<Map>tokenList) {
+
+    public String Transfer(String PriKey, String Data, String fromAddr, List<Map> tokenList) {
 
         Map<String, Object> map = new HashMap<>();
         map.put("multiAddress", fromAddr);
         map.put("prikey", PriKey);
         map.put("data", Data);
         map.put("token", tokenList);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.postMethod(SDKADD+"/v2/tx/utxo/multi/transfer"+param, map);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/multi/transfer?" + param, map);
         log.info(result);
         return result;
 
     }
-
 
 
     /**
      * 核对私钥接口测试
-     * @param PriKey  私钥
+     *
+     * @param PriKey 私钥
      * @param Pwd    密码
      */
-    public String CheckPriKey(String PriKey,String Pwd){
-          Map<String,Object>map = new HashMap<>();
-          map.put("priKey",PriKey);
-          map.put("password",Pwd);
-          System.out.println(map.get("password"));
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-          String result=PostTest.sendPostToJson(SDKADD+"/utxo/validatekey"+param,map);
-          log.info(result);
+    public String CheckPriKey(String PriKey, String Pwd) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("priKey", PriKey);
+        map.put("password", Pwd);
+        System.out.println(map.get("password"));
+        String param = "";
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+        String result = PostTest.sendPostToJson(SDKADD + "/utxo/validatekey?" + param, map);
+        log.info(result);
 
-          return result;
+        return result;
     }
-
 
 
     /**
      * 回收token测试
+     *
      * @param multiAddr 多签地址
-     * @param priKey 私钥
-     * @param Pwd 私钥密码
+     * @param priKey    私钥
+     * @param Pwd       私钥密码
      * @param tokenType 数字货币类型
-     * @param amount 货币数量
+     * @param amount    货币数量
      */
-    public String Recycle(String multiAddr,String priKey,String Pwd,String tokenType,String amount){
+    public String Recycle(String multiAddr, String priKey, String Pwd, String tokenType, String amount) {
 
-        Map<String ,Object>map=new HashMap<>();
-        map.put("multiAddress",multiAddr);
-        map.put("priKey",priKey);
-        map.put("password",Pwd);
-        map.put("tokenType",tokenType);
-        map.put("amount",amount);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String response =PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/multi/destroy"+param,map);
+        Map<String, Object> map = new HashMap<>();
+        map.put("multiAddress", multiAddr);
+        map.put("priKey", priKey);
+        map.put("password", Pwd);
+        map.put("tokenType", tokenType);
+        map.put("amount", amount);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/multi/destroy?" + param, map);
         log.info(response);
         return response;
 
     }
-    public String Recycle(String multiAddr,String priKey,String tokenType,String amount){
 
-        Map<String ,Object>map=new HashMap<>();
-        map.put("multiAddress",multiAddr);
-        map.put("priKey",priKey);
-        map.put("tokenType",tokenType);
-        map.put("amount",amount);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result =PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/multi/destroy"+param,map);
+    public String Recycle(String multiAddr, String priKey, String tokenType, String amount) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("multiAddress", multiAddr);
+        map.put("priKey", priKey);
+        map.put("tokenType", tokenType);
+        map.put("amount", amount);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/multi/destroy?" + param, map);
         log.info(result);
         return result;
 
     }
 
 
-
     /**
      * 查询回收账户余额
+     *
      * @param tokenType 数字货币类型
      */
-    public String QueryZero(String tokenType){
-        String param= "";
-        if(subLedger!="") param = param + "?ledger="+subLedger;
-        String result= (GetTest.SendGetTojson(SDKADD+"/v2/tx/utxo/zeroaddr/balance/"+ tokenType + param));
+    public String QueryZero(String tokenType) {
+        String param = "";
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = (GetTest.SendGetTojson(SDKADD + "/v2/tx/utxo/zeroaddr/balance/" + tokenType + "?" + param));
         log.info(result);
         return result;
     }
 
     /**
      * 冻结token（不使用私钥的情况）
+     *
      * @param tokenType
      * @return
      */
     @Override
     public String freezeToken(String tokenType) {
-        Map<String ,Object>map=new HashMap<>();
-        map.put("tokenType",tokenType);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result =PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/freeze"+param,map);
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenType", tokenType);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/freeze?" + param, map);
         log.info(result);
         return result;
     }
 
     /**
      * 恢复token(不使用私钥的情况)
+     *
      * @param tokenType
      * @return
      */
     @Override
     public String recoverFrozenToken(String tokenType) {
-        Map<String ,Object>map=new HashMap<>();
-        map.put("tokenType",tokenType);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result =PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/recover"+param,map);
-        log.info(result);
-        return result;
-    }
-
-
-    //同步接口实现
-    @Override
-    public String SyncFreezeToken(String timeout, String tokenType) {
-        Map<String ,Object>map=new HashMap<>();
-        //map.put("PriKey",priKey);
-        map.put("TokenType",tokenType);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String result =PostTest.sendPostToJson(SDKADD+"/sync/utxo/freeze?timeout="+timeout+param,map);
-        log.info(result);
-        return result;
-    }
-
-    @Override
-    public String SyncRecoverFrozenToken(String timeout, String tokenType) {
-        Map<String ,Object>map=new HashMap<>();
-        //map.put("PriKey",priKey);
-        map.put("TokenType",tokenType);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String result =PostTest.sendPostToJson(SDKADD+"/sync/utxo/recover?timeout="+timeout+param,map);
-        log.info(result);
-        return result;
-    }
-
-    @Override
-    public String SyncCollAddress(String timeout,String... address) {
         Map<String, Object> map = new HashMap<>();
-        List<Object> addrs = new ArrayList<>();
-        for (int i=0;i<address.length;i++){
-            addrs.add(address[i]);
-        }
-        map.put("Addrs", addrs);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/colladdress?timeout="+timeout+param, map);
-        log.info(result);
-        return result;
-    }
+        map.put("tokenType", tokenType);
 
-    @Override
-    public String SyncDelCollAddress(String timeout,String... address) {
-        Map<String,Object> map = new HashMap<>();
-        List<Object> addrs = new ArrayList<>();
-        for (int i= 0;i<address.length;i++){
-            addrs.add(address[i]);
-        }
-        map.put("Addrs", addrs);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/deladdress?timeout="+timeout+param, map);
-        log.info(result);
-        return result;
-    }
-    @Override
-    public String SyncAddissueaddress(String timeout,String ...address) {
-        Map<String, Object> map = new HashMap<>();
-        List<Object> addrs = new ArrayList<>();
-        for (int i=0;i<address.length;i++){
-            addrs.add(address[i]);
-        }
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
 
-        map.put("Addrs", addrs);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/addissueaddress?timeout="+timeout+param, map);
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/recover?" + param, map);
         log.info(result);
         return result;
     }
-    @Override
-    public String SyncDelissueaddress(String timeout,String... address) {
-        Map<String,Object> map = new HashMap<>();
-        List<Object> addrs = new ArrayList<>();
-        for (int i= 0;i<address.length;i++){
-            addrs.add(address[i]);
-        }
-        map.put("Addrs", addrs);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/sync/utxo/delissueaddress?timeout="+timeout+param, map);
-        log.info(result);
-        return result;
-    }
-
 }
+
 

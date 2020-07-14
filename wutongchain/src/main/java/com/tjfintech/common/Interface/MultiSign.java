@@ -52,27 +52,6 @@ public interface MultiSign {
     String RecycleLocalSign(String multiAddr,String pubKey,String tokenType,String amount);
     String RecyclesLocalSign(List<Map> tokenList);
 
-    //同步接口
-    String SyncIssueToken(Integer timeout,String MultiAddr,String ToAddr,String TokenType,String Amount,String Data);
-    String SyncSign(Integer timeout,String Tx, String Prikey);
-    String SyncTransfer(Integer timeout,String PriKey,String Data,String fromAddr ,List<Map>tokenList);
-    String SyncRecycle(Integer timeout,String MultiAddr,String PriKey,String TokenType,String Amount);
-    String SyncCollAddress(String timeout,String ...address);
-    String SyncDelCollAddress(String timeout,String ...address);
-    String SyncFreezeToken(String timeout,String tokenType);
-    String SyncRecoverFrozenToken(String timeout,String tokenType);
-    String SyncAddissueaddress(String timeout,String ...address);
-    String SyncDelissueaddress(String timeout,String ...address);
-
-
-    String SyncIssueToken(Integer timeout,String MultiAddr,String TokenType,String Amount,String Data);
-    String SyncIssueToken(Integer timeout,String MultiAddr,String ToAddr,String TokenType,String Amount,String PriKey,String Pwd,String Data);
-    String SyncIssueTokenCarryPri(Integer timeout,String MultiAddr,String TokenType, String Amount,String PriKey,String  Data);
-    String SyncIssueTokenCarryPri(Integer timeout,String MultiAddr,String TokenType, String Amount,String PriKey,String Pwd,String  Data);
-    String SyncSign(Integer timeout,String Tx, String Prikey, String Pwd);
-    String SyncTransfer(Integer timeout,String PriKey, String Pwd, String Data , String fromAddr, List<Map> tokenList);
-    String SyncRecycle(Integer timeout,String MultiAddr,String PriKey,String Pwd,String TokenType,String Amount);
-    String SyncRecycle(Integer timeout,String PriKey,String TokenType,String Amount);
 
     //smart token接口
     String SmartIssueTokenReq(String userContract, String tokenType, Boolean reissued, BigDecimal expiredDate, BigDecimal activeDate,

@@ -17,8 +17,4 @@ public interface SoloSign {
     String TransferLocalSign(List<Map> token, String pubKey, String data);
     String RecycleLocalSign(String pubKey,String tokenType,String amount);
     String sendSign(String signData);
-
-    //同步接口
-    String SyncTransfer(Integer timeout ,List<Map> token, String priKey, String data);
-    String SyncIssueToken(Integer timeout ,String priKey,String tokenType,String amount,String data,String address);
 }

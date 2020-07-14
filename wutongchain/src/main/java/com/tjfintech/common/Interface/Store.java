@@ -29,7 +29,7 @@ public interface Store {
 //    String SynCreatePrivateStore(Integer timeout , String Data, Map keymap);//同步创建隐私存证
 //    String SynGetStorePost(Integer timeout ,String Hash,String priKey,String keyPwd);  //同步获取隐私存证
 
-    String StoreAuthorize(String hash, Map toPubKeys, String toPriKey);
+//    String StoreAuthorize(String hash, Map toPubKeys, String toPriKey);
     String StoreAuthorize(String hash, Map toPubKeys, String toPriKey, String pwd);
 
 }

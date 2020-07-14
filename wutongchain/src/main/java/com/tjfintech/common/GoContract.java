@@ -12,8 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.utils.UtilsClass.SDKADD;
-import static com.tjfintech.common.utils.UtilsClass.subLedger;
+import static com.tjfintech.common.utils.UtilsClass.*;
 
 @Slf4j
 public class GoContract implements Contract {
@@ -38,9 +37,12 @@ public class GoContract implements Contract {
         Map<String,Object>map=new HashMap<>();
         map.put("category","wvm");
         map.put("file",file);
+
         String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.postMethod(SDKADD+"/v2/tx/sc/install"+param,map);
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result=PostTest.postMethod(SDKADD+"/v2/tx/sc/install?"+param,map);
         log.info(result);
         return result ;
     }
@@ -58,34 +60,36 @@ public class GoContract implements Contract {
         map.put("Version",version);
         map.put("Category",category);
         map.put("File",file);
+
         String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
 
-        String result=PostTest.postMethod(SDKADD+"/v2/tx/sc/install"+param,map);
+        String result=PostTest.postMethod(SDKADD+"/v2/tx/sc/install?"+param,map);
         log.info(result);
         return result ;
     }
 
-    /**
-     * 同步安装智能合约
-     * @param timeout 设置时间
-     * @param name
-     * @param version
-     * @param category
-     * @param file
-     * @return
-     */
-    @Override
-    public String SynInstall(Integer timeout, String name, String version, String category, String file) {
-        Map<String,Object>map=new HashMap<>();
-        map.put("Name",name);
-        map.put("Version",version);
-        map.put("Category",category);
-        map.put("File",file);
-        String result=PostTest.sendPostToJson(SDKADD+"/sync/contract/install?timeout="+timeout,map);
-        log.info(result);
-        return result ;
-    }
+//    /**
+//     * 同步安装智能合约
+//     * @param timeout 设置时间
+//     * @param name
+//     * @param version
+//     * @param category
+//     * @param file
+//     * @return
+//     */
+//    @Override
+//    public String SynInstall(Integer timeout, String name, String version, String category, String file) {
+//        Map<String,Object>map=new HashMap<>();
+//        map.put("Name",name);
+//        map.put("Version",version);
+//        map.put("Category",category);
+//        map.put("File",file);
+//        String result=PostTest.sendPostToJson(SDKADD+"/sync/contract/install?timeout="+timeout,map);
+//        log.info(result);
+//        return result ;
+//    }
 
     /**
      * 销毁docker智能合约
@@ -99,10 +103,12 @@ public class GoContract implements Contract {
         map.put("Name",name);
         map.put("Version",version);
         map.put("Category",category);
-        String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
 
-        String result=PostTest.sendPostToJson(SDKADD+"/contract/destroy"+param,map);
+        String param="";
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result=PostTest.sendPostToJson(SDKADD+"/contract/destroy?"+param,map);
         log.info(result);
         return result ;
     }
@@ -116,32 +122,34 @@ public class GoContract implements Contract {
         Map<String,Object>map=new HashMap<>();
         map.put("name",name);
         map.put("category",category);
+
         String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
 
-        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/destroy"+param,map);
+        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/destroy?"+param,map);
         log.info(result);
         return result ;
     }
 
-    /**
-     * 同步销毁合约
-     * @param name
-     * @param version
-     * @param category
-     * @return
-     */
-    @Override
-    public String SynDestroy(Integer timeout,String name, String version, String category) {
-
-        Map<String,Object>map=new HashMap<>();
-        map.put("Name",name);
-        map.put("Version",version);
-        map.put("Category",category);
-        String result=PostTest.sendPostToJson(SDKADD+"/sync/contract/destroy?timeout="+timeout,map);
-        log.info(result);
-        return result ;
-    }
+//    /**
+//     * 同步销毁合约
+//     * @param name
+//     * @param version
+//     * @param category
+//     * @return
+//     */
+//    @Override
+//    public String SynDestroy(Integer timeout,String name, String version, String category) {
+//
+//        Map<String,Object>map=new HashMap<>();
+//        map.put("Name",name);
+//        map.put("Version",version);
+//        map.put("Category",category);
+//        String result=PostTest.sendPostToJson(SDKADD+"/sync/contract/destroy?timeout="+timeout,map);
+//        log.info(result);
+//        return result ;
+//    }
 
     /**安装智能合约
      *
@@ -156,9 +164,12 @@ public class GoContract implements Contract {
         map.put("Version",version);
         map.put("Method",method);
         map.put("Args",args);
+
         String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.sendPostToJson(SDKADD+"/createnewtransaction"+param,map);
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result=PostTest.sendPostToJson(SDKADD+"/createnewtransaction?"+param,map);
         log.info(result);
         return result ;
     }
@@ -177,9 +188,12 @@ public class GoContract implements Contract {
         map.put("Category",category);
         map.put("Method",method);
         map.put("Args",args);
+
         String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/invoke"+param,map);
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/invoke?"+param,map);
         log.info(result);
         return result ;
     }
@@ -193,9 +207,12 @@ public class GoContract implements Contract {
         map.put("Method",method);
         map.put("Caller",caller);
         map.put("Args",args);
+
         String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/invoke"+param,map);
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/invoke?"+param,map);
         log.info(result);
         return result ;
     }
@@ -209,35 +226,38 @@ public class GoContract implements Contract {
         map.put("Method",method);
         map.put("Caller",caller);
         map.put("Args",args);
+
         String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/query"+param,map);
+//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/query?"+param,map);
         log.info(result);
         return result ;
     }
 
-    /**
-     * 同步调用智能合约
-     * @param timeout
-     * @param name
-     * @param version
-     * @param category
-     * @param method
-     * @param args
-     * @return
-     */
-    @Override
-    public String SynInvoke(Integer timeout, String name, String version, String category, String method, List<?> args) {
-        Map<String,Object>map=new HashMap<>();
-        map.put("Name",name);
-        map.put("Version",version);
-        map.put("Category",category);
-        map.put("Method",method);
-        map.put("Args",args);
-        String result=PostTest.sendPostToJson(SDKADD+"/sync/contract/invoke?timeout="+timeout,map);
-        log.info(result);
-        return result ;
-    }
+//    /**
+//     * 同步调用智能合约
+//     * @param timeout
+//     * @param name
+//     * @param version
+//     * @param category
+//     * @param method
+//     * @param args
+//     * @return
+//     */
+//    @Override
+//    public String SynInvoke(Integer timeout, String name, String version, String category, String method, List<?> args) {
+//        Map<String,Object>map=new HashMap<>();
+//        map.put("Name",name);
+//        map.put("Version",version);
+//        map.put("Category",category);
+//        map.put("Method",method);
+//        map.put("Args",args);
+//        String result=PostTest.sendPostToJson(SDKADD+"/sync/contract/invoke?timeout="+timeout,map);
+//        log.info(result);
+//        return result ;
+//    }
 
 
     @Override
@@ -258,14 +278,14 @@ public class GoContract implements Contract {
         return result;
     }
 
-    @After
-    /**
-     * 每次测试结束后都会执行的测试环境结束内容
-     * 目前为空
-     */
-    public void TestAfter(){
-
-    }
+//    @After
+//    /**
+//     * 每次测试结束后都会执行的测试环境结束内容
+//     * 目前为空
+//     */
+//    public void TestAfter(){
+//
+//    }
 
 
 

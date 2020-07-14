@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.utils.UtilsClass.SDKADD;
-import static com.tjfintech.common.utils.UtilsClass.subLedger;
+import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClass.syncTimeout;
 
 @Slf4j
 public class GoSoloSign implements SoloSign {
@@ -37,9 +37,12 @@ public class GoSoloSign implements SoloSign {
         map.put("pubKey", pubKey);
         map.put("data", data);
         map.put("token", token);
+
         String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/transfer/sign"+param, map);
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/utxo/transfer/sign?" + param, map);
 //        log.info(result);
         return result;
     }
@@ -51,9 +54,12 @@ public class GoSoloSign implements SoloSign {
         Map<String,Object>map=new HashMap<>();
         map.put("address",address);
         map.put("tokenType",tokenType);
-        String param = "";
-        if(subLedger!="") param = param +"?ledger=" + subLedger;
-        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/balance" + param, map);
+
+        String param="";
+//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/balance?" + param, map);
         log.info(result);
         return result ;
     }
@@ -67,9 +73,12 @@ public class GoSoloSign implements SoloSign {
         map.put("prikey", priKey);
         map.put("data", data);
         map.put("token", token);
+
         String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-       String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/transfer"+param, map);
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+       String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/transfer?" + param, map);
        log.info(result);
         return result ;
 
@@ -85,9 +94,12 @@ public class GoSoloSign implements SoloSign {
         map.put("amount", amount);
         map.put("data",data);
         map.put("addresses",address);
+
         String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/issue"+param, map);
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/issue?" + param, map);
         log.info(result);
         return result;
     }
@@ -101,9 +113,12 @@ public class GoSoloSign implements SoloSign {
     public String genAddress(String publicKey){
         Map<String, Object> map = new HashMap<>();
         map.put("pubkey", publicKey);
+
         String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.postMethod(SDKADD+"/v2/address/gen"+param, map);
+//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result=PostTest.postMethod(SDKADD+"/v2/address/gen?" + param, map);
         log.info(result);
         return result;
     }
@@ -147,9 +162,12 @@ public class GoSoloSign implements SoloSign {
         map.put("TokenType", tokenType);
         map.put("Amount", amount);
         map.put("Data",data);
+
         String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/issue"+param, map);
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/issue?" + param, map);
         log.info(result);
         return result;
     }
@@ -162,9 +180,12 @@ public class GoSoloSign implements SoloSign {
         map.put("PubKey",pubKey);
         map.put("TokenType",tokenType);
         map.put("Amount",amount);
+
         String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result =PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/destroy"+param,map);
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result =PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/destroy?" + param,map);
         log.info(result);
         return result;
     }
@@ -176,9 +197,12 @@ public class GoSoloSign implements SoloSign {
     public String sendSign(String signData){
         Map<String, Object> map = new HashMap<>();
         map.put("Data", signData);
+
         String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.sendPostToJson(SDKADD+"/utxo/send_sign"+param, map);
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result=PostTest.sendPostToJson(SDKADD+"/utxo/send_sign?" + param, map);
 //        log.info(result);
         return result;
     }
@@ -191,58 +215,16 @@ public class GoSoloSign implements SoloSign {
         map.put("priKey",priKey);
         map.put("tokenType",tokenType);
         map.put("amount",amount);
+
         String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result =PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/destroy"+param,map);
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result =PostTest.sendPostToJson(SDKADD+"/v2/tx/utxo/destroy?" + param,map);
         log.info(result);
         return result;
 
     }
 
-    /**
-     * 同步转账交易
-     * @param timeout
-     * @param token
-     * @param priKey
-     * @param data
-     * @return
-     */
-    @Override
-    public String SyncTransfer(Integer timeout, List<Map> token, String priKey, String data) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("Prikey", priKey);
-        map.put("Data", data);
-        map.put("Token", token);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String result=PostTest.sendPostToJson(SDKADD+"/sync/utxo/transfer?timeout="+timeout+param, map);
-        log.info(result);
-        return result ;
-    }
-
-    /**
-     * 同步单签发行token
-     * @param timeout
-     * @param priKey
-     * @param tokenType
-     * @param amount
-     * @param data
-     * @param address
-     * @return
-     */
-    @Override
-    public String SyncIssueToken(Integer timeout, String priKey, String tokenType, String amount, String data, String address) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("PriKey", priKey);
-        map.put("TokenType", tokenType);
-        map.put("Amount", amount);
-        map.put("Data",data);
-        map.put("Addr",address);
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String result=PostTest.sendPostToJson(SDKADD+"/sync/utxo/issuetoken?timeout="+timeout+param, map);
-        log.info(result);
-        return result;
-    }
 
 }
