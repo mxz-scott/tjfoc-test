@@ -210,12 +210,13 @@ public class BeforeCondition {
         log.info("PRIKEY1 :" + PRIKEY1);
         log.info("PUBKEY1 :" + PUBKEY1);
 
-        log.info("PRIKEY2 :" + PRIKEY2);
-        log.info("PUBKEY2 :" + PUBKEY2);
+        log.info("PRIKEY2 :" + PRIKEY4);
+        log.info("PUBKEY2 :" + PUBKEY4);
 
         log.info("PRIKEY6 :" + PRIKEY6);
         log.info("PUBKEY6 :" + PUBKEY6);
-     }
+
+    }
 
      /**
      * 创建多签地址 保存在数据库中
