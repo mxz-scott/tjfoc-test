@@ -35,7 +35,7 @@ public class GoMultiSign implements MultiSign {
         map.put("expireDate", expiredDate);
         map.put("activeDate", activeDate);
         map.put("level", maxLevel);
-        map.put("token", toList);
+        map.put("tokenList", toList);
         if (!extend.isEmpty()) {
             map.put("extend", extend);
         }
@@ -44,7 +44,7 @@ public class GoMultiSign implements MultiSign {
 //        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
         if (subLedger != "") param = param + "&ledger=" + subLedger;
 
-        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/stoken/reqmsg?" + param, map);
+        String response = PostTest.postMethod(SDKADD + "/v2/tx/stoken/reqmsg?" + param, map);
         log.info(response);
         return response;
 
@@ -60,7 +60,7 @@ public class GoMultiSign implements MultiSign {
         if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
         if (subLedger != "") param = param + "&ledger=" + subLedger;
 
-        String response = PostTest.sendPostToJson(SDKADD + "/v2/tx/stoken/approve?" + param, map);
+        String response = PostTest.postMethod(SDKADD + "/v2/tx/stoken/approve?" + param, map);
         log.info(response);
         return response;
     }

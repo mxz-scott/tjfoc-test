@@ -961,7 +961,7 @@ public class smtMultiTest {
                 deadline,new BigDecimal(0),0,issueToList,"123456");
         String sigMsg1 = JSONObject.fromObject(isResult).getJSONObject("data").getString("sigMsg");
 //        assertEquals(sigMsg1,String.valueOf(Hex.encodeHex(
-//                JSONObject.fromObject(isResult).getJSONObject("data").getString("Msg").getBytes(StandardCharsets.UTF_8))));
+//                JSONObject.fromObject(isResult).getJSONObject("data").getString("msg").getBytes(StandardCharsets.UTF_8))));
 
         String tempSM3Hash = certTool.getSm3Hash(PEER4IP,sigMsg1);
         String cryptMsg = certTool.sign(PEER4IP ,PRIKEY1,"",tempSM3Hash,"hex");
