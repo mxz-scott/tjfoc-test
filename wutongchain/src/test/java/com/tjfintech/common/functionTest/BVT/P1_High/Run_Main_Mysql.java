@@ -24,7 +24,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         SetDatabaseMysql.class,
-//        SetTokenApiDatabaseMysql.class,
+        SetTokenApiDatabaseMysql.class,
         SetAccountEmpty.class,
         SetCertSM2.class,
         SetMainLedger.class,
@@ -38,28 +38,26 @@ import org.junit.runners.Suite;
         StoreTest.class,
         PrivateStoreTest.class,
         PrivateStoreTestFastGet.class,
-
-        StoreWalletRelatedTest.class,
-
-        MultiTest.class,
-        MultiTest_33_12.class,
-        MultiTest_UnspentTxOutput_test.class,
-        MultiSignDetailTest.class,
-
-        SoloTest.class,
-        SoloTest_UnspentTxOutput_test.class,
         WVMContractTest.class,
-
-        StoreInvalidTest.class,
-        MultiSignInvalidTest.class,
-        MultiTestInvalid.class,
-        SingleSignInvalidTest.class,
-        SoloTestInvalid.class,
-        WVMContractInvalidTest.class,
-
         VerifyTests.class,
 
+        StoreInvalidTest.class,
+        WVMContractInvalidTest.class,
+
         AddPeerAndSyncData.class,
+
+        // 注释掉将被移除的测试类
+//        StoreWalletRelatedTest.class,
+//        MultiSignInvalidTest.class,
+//        MultiTestInvalid.class,
+//        SingleSignInvalidTest.class,
+//        SoloTestInvalid.class,
+//        MultiTest.class,
+//        MultiTest_33_12.class,
+//        MultiTest_UnspentTxOutput_test.class,
+//        MultiSignDetailTest.class,
+//        SoloTest.class,
+//        SoloTest_UnspentTxOutput_test.class,
 
 //        TestPermission.class,
 

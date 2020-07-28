@@ -50,7 +50,7 @@ public class VerifyTests {
 
                 long txTimestamp = Long.parseLong(txts);
                 long diff = blkTimeStamp - txTimestamp;
-                long checkInterval = 20;
+                long checkInterval = 5;
                 //时间戳3.0版本修改为ms级别
                 if (txts.length() ==13)  checkInterval = checkInterval*1000;
                 if (diff > checkInterval) {

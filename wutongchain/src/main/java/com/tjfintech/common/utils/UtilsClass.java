@@ -59,9 +59,9 @@ public class UtilsClass {
 
 
     //zhouxianxian env use start -----------
-    public static String SDKADD = "http://10.1.3.164:8081";
-    public static String rSDKADD = "http://10.1.3.164:8081";
-    public static String TOKENADD = "http://10.1.3.164:9090";
+    public static String SDKADD = "http://10.1.3.164:7001";
+    public static String rSDKADD = "http://10.1.3.164:7001";
+    public static String TOKENADD = "http://10.1.3.164:7001";
     //设置测试环境使用的节点端口及部署目录信息
     public static String PEER1IP = "10.1.3.162";
     public static String PEER2IP = "10.1.3.163";
