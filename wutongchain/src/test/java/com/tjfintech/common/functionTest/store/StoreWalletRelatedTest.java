@@ -35,7 +35,8 @@ public class StoreWalletRelatedTest {
      * 预期：两者返回相同哈希，返回500 提示重复存证
      * @throws Exception
      */
-    @Test
+    //20200728 重复交易检查移除
+//    @Test
     public void TC17_CreateStoreDouble()throws Exception{
         String data="cxTest-"+ UtilsClass.Random(2);
         String response= store.CreateStore(data);

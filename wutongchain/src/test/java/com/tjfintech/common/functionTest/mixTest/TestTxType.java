@@ -556,7 +556,7 @@ public class TestTxType {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //查询余额invoke接口
-        String response5 = wvm.invokeNew(ctHash,"getBalance",wvm.accountA);//获取账户A账户余额
+        String response5 = wvm.invokeNew(ctHash,"BalanceTest",wvm.accountA);//获取账户A账户余额
         String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
@@ -596,8 +596,9 @@ public class TestTxType {
                 jsonObjectInvokeInit.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("name"));
         assertEquals("initAccount",
                 jsonObjectInvokeInit.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("method"));
-        assertEquals(wvm.caller,new String(utilsClass.decryptBASE64(
-                jsonObjectInvokeInit.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("caller"))));
+        //20200728 变更字段含义为sdk调用者id
+//        assertEquals(wvm.caller,new String(utilsClass.decryptBASE64(
+//                jsonObjectInvokeInit.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("caller"))));
 
         String argsinit0= jsonObjectInvokeInit.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").getString(0);
         String argsinit1= jsonObjectInvokeInit.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").getString(1);

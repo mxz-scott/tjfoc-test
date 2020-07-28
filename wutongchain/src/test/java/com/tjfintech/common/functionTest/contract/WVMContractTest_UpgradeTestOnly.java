@@ -88,21 +88,21 @@ public class WVMContractTest_UpgradeTestOnly {
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //查询余额invoke接口
-        String response5 = invokeNew(ctHash,"getBalance",accountA);//获取账户A账户余额
+        String response5 = invokeNew(ctHash,"BalanceTest",accountA);//获取账户A账户余额
         String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("figure");
 
-        String response6 = invokeNew(ctHash,"getBalance",accountB);//获取账户A账户余额
+        String response6 = invokeNew(ctHash,"BalanceTest",accountB);//获取账户A账户余额
         String txHash6 = JSONObject.fromObject(response6).getJSONObject("data").getString("figure");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //查询余额query接口 交易不上链 //query接口不再显示交易hash
-        String response7 = query(ctHash,"getBalance",accountA);//获取转账后账户A账户余额
+        String response7 = query(ctHash,"BalanceTest",accountA);//获取转账后账户A账户余额
 //        String txHash7 = JSONObject.fromObject(response7).getJSONObject("data").getString("figure");
         assertEquals(Integer.toString(amountA-transfer),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
 
-        String response8 = query(ctHash,"getBalance",accountB);//获取转账后账户B账户余额
+        String response8 = query(ctHash,"BalanceTest",accountB);//获取转账后账户B账户余额
         assertEquals(Integer.toString(amountB+transfer),JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
 
         //销毁wvm合约
@@ -112,7 +112,7 @@ public class WVMContractTest_UpgradeTestOnly {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-        String response10 = query(ctHash,"getBalance",accountB);//获取账户B账户余额 报错
+        String response10 = query(ctHash,"BalanceTest",accountB);//获取账户B账户余额 报错
         assertThat(JSONObject.fromObject(response10).getString("message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
 
         chkTxDetailRsp("200",txHash1,txHash2,txHash3,txHash4,txHash5,txHash6,txHash9);

@@ -25,7 +25,7 @@ return "failed"
 return "success"
 }
 //查询账户余额
-public int getBalance(string account){
+public int BalanceTest(string account){
    return db_get<int>(account)
 }
 }
