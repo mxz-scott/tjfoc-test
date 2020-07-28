@@ -87,7 +87,7 @@ public class WVMContractTest {
 
         commonFunc.sdkCheckTxOrSleep(txHash3,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         chkTxDetailRsp("200",txHash3);
-        String response7 = query(ctHash,"getBalance","C");//获取账户A账户余额
+        String response7 = query(ctHash,"BalanceTest","C");//获取账户A账户余额
         assertEquals("123",JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
 
 
@@ -136,21 +136,21 @@ public class WVMContractTest {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //查询余额invoke接口
-        String response5 = invokeNew(ctHash,"getBalance",accountA);//获取账户A账户余额
+        String response5 = invokeNew(ctHash,"BalanceTest",accountA);//获取账户A账户余额
         String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("txId");
 
-        String response6 = invokeNew(ctHash,"getBalance",accountB);//获取账户A账户余额
+        String response6 = invokeNew(ctHash,"BalanceTest",accountB);//获取账户A账户余额
         String txHash6 = JSONObject.fromObject(response6).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //查询余额query接口 交易不上链 //query接口不再显示交易hash
-        String response7 = query(ctHash,"getBalance",accountA);//获取转账后账户A账户余额
+        String response7 = query(ctHash,"BalanceTest",accountA);//获取转账后账户A账户余额
 //        String txHash7 = JSONObject.fromObject(response7).getJSONObject("data").getString("txId");
         assertEquals(Integer.toString(amountA-transfer),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
 
-        String response8 = query(ctHash,"getBalance",accountB);//获取转账后账户B账户余额
+        String response8 = query(ctHash,"BalanceTest",accountB);//获取转账后账户B账户余额
         assertEquals(Integer.toString(amountB+transfer),JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
 
         //销毁wvm合约
@@ -161,7 +161,7 @@ public class WVMContractTest {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
-        String response10 = query(ctHash,"getBalance",accountB);//获取账户B账户余额 报错
+        String response10 = query(ctHash,"BalanceTest",accountB);//获取账户B账户余额 报错
         assertThat(JSONObject.fromObject(response10).getString("message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
 
         chkTxDetailRsp("200",txHash1,txHash2,txHash3,txHash4,txHash5,txHash6,txHash9);
@@ -172,11 +172,11 @@ public class WVMContractTest {
     public void TC1779_SamePriDiffCt() throws Exception{
         String ctName = "B_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
 
-        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","getBalance");
+        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","BalanceTest");
 
         //再安装一个不同合约名 相同合约内容的合约
         ctName = "B_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
-        String ctHash2 =installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","getBalance");
+        String ctHash2 =installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","BalanceTest");
 
         assertEquals(false,ctHash1.equals(ctHash2)); //确认两个hash不相同
     }
@@ -185,13 +185,13 @@ public class WVMContractTest {
 //    public void TC1780_DiffPriDiffCt() throws Exception{
 //        String ctName = "C_" +sdf.format(dt)+ RandomUtils.nextInt(100000);
 //
-//        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","getBalance");
+//        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","BalanceTest");
 //
 //        //再安装一个不同合约名 相同合约内容的合约
 //        ctName = "C_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
 //        wvmFile = "wvm2";
 //        orgName = "Test";
-//        String ctHash2 =installInitTransfer(ctName,PRIKEY2,"initBAccount","transferB","getBalanceB");
+//        String ctHash2 =installInitTransfer(ctName,PRIKEY2,"initBAccount","transferB","BalanceTestB");
 //        assertEquals(false,ctHash1.equals(ctHash2)); //确认两个hash不相同
 //
 //    }
@@ -202,19 +202,19 @@ public class WVMContractTest {
 //        String ctName = "D_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
 //        String priKey = utilsClass.getKeyPairsFromFile("SM2/keys1/key.pem");
 //        //使用SM2类型私钥
-//        String ctName1 = installInitTransfer(ctName,priKey,"initAccount","transfer","getBalance");
+//        String ctName1 = installInitTransfer(ctName,priKey,"initAccount","transfer","BalanceTest");
 //        log.info("ctName1:" + ctName1);
 //
 //        //使用ECDSA私钥
 //        String priKey2 = utilsClass.getKeyPairsFromFile("ECDSA/keys1/key.pem");
-//        String ctName2 =installInitTransfer(ctName,priKey2,"initAccount","transfer","getBalance");
+//        String ctName2 =installInitTransfer(ctName,priKey2,"initAccount","transfer","BalanceTest");
 //        log.info("ctName2:" + ctName2);
 //        assertEquals(false,ctName1.equals(ctName2));
 //
 //
 //        //使用RSA私钥
 //        String priKey3 = utilsClass.getKeyPairsFromFile("RSA/keys1/key.pem");
-//        String ctName3 =installInitTransfer(ctName,priKey3,"initAccount","transfer","getBalance");
+//        String ctName3 =installInitTransfer(ctName,priKey3,"initAccount","transfer","BalanceTest");
 //        log.info("ctName3:" + ctName3);
 //        assertEquals(false,ctName1.equals(ctName3));
 //        assertEquals(false,ctName2.equals(ctName3));
@@ -224,10 +224,10 @@ public class WVMContractTest {
 //    public void TC1781_DiffPriSameCt() throws Exception{
 //        String ctName = "E_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
 //
-//        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","getBalance");
+//        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","BalanceTest");
 //
 //        //使用不同私钥安装相同合约及内容的合约
-//        String ctHash2 =installInitTransfer(ctName,PRIKEY2,"initAccount","transfer","getBalance");
+//        String ctHash2 =installInitTransfer(ctName,PRIKEY2,"initAccount","transfer","BalanceTest");
 //
 //        assertEquals(false,ctHash1.equals(ctHash2)); //确认两个hash不相同
 //    }
@@ -255,7 +255,7 @@ public class WVMContractTest {
         String response2 = wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1);
         assertEquals(true,ctHash1.equals(JSONObject.fromObject(response2).getJSONObject("data").getString("name"))); //确认两个hash不相同
         //调用合约内的方法 getBalance方法查询余额query接口 交易不上链
-        String response7 = query(ctHash1,"getBalance",accountA);//获取账户A账户余额
+        String response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
         assertEquals(Integer.toString(0),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
     }
 
@@ -263,7 +263,7 @@ public class WVMContractTest {
     public void TC1776_InstallSame() throws Exception{
         String ctName = "G_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         //第一次安装 并调用init transfer接口
-        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","getBalance");
+        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","BalanceTest");
 
         //再次安装合约
         String response1 = wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1);
@@ -276,7 +276,7 @@ public class WVMContractTest {
 
         chkTxDetailRsp("200",txHash1); //确认安装合约交易上链
         //调用合约内的方法 getBalance方法查询余额query接口 交易不上链
-        String response7 = query(ctHash1,"getBalance",accountA);//获取账户A账户余额
+        String response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
         assertEquals(Integer.toString(amountA-transfer),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
     }
 
@@ -297,7 +297,7 @@ public class WVMContractTest {
 
         chkTxDetailRsp("200",txHash1); //确认安装合约交易上链
         //调用合约内的方法 getBalance方法查询余额query接口 交易不上链
-        String response7 = query(ctHash1,"getBalance",accountA);//获取账户A账户余额
+        String response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
         assertEquals(Integer.toString(0),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
     }
 
@@ -322,7 +322,7 @@ public class WVMContractTest {
 
         chkTxDetailRsp("200",txHash1); //确认安装合约交易上链
         //调用合约内的方法 getBalance方法查询余额query接口 交易不上链
-        String response7 = query(ctHash1,"getBalance",accountA);//获取账户A账户余额
+        String response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
         assertEquals(Integer.toString(0),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
     }
 
@@ -375,8 +375,8 @@ public class WVMContractTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
-//        String response7 = query(ctHash,"getBalance",accountA);//获取账户A账户余额
-//        String response7 = query(ctHash,"getBalance",accountA);//获取账户A账户余额
+//        String response7 = query(ctHash,"BalanceTest",accountA);//获取账户A账户余额
+//        String response7 = query(ctHash,"BalanceTest",accountA);//获取账户A账户余额
         //两笔交易可能打在两个区块中
         assertThat(JSONObject.fromObject(store.GetTxDetail(txHash4)).getString("state"),
                 anyOf(containsString("200"),containsString("404")));
@@ -387,7 +387,7 @@ public class WVMContractTest {
     @Test
     public void upgradeWVMContract()throws Exception{
         String ctName = "K_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
-        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","getBalance");
+        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","BalanceTest");
 
         //升级合约
         wvmFile ="wvm_update";
@@ -410,10 +410,10 @@ public class WVMContractTest {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
-        String response7 = query(ctHash1,"getBalance",accountA);//获取账户A账户余额
+        String response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
         assertEquals(Integer.toString(amountA-transfer-transfer/2),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
 
-        String response8 = query(ctHash1,"getBalance",accountB);//获取账户A账户余额
+        String response8 = query(ctHash1,"BalanceTest",accountB);//获取账户A账户余额
         assertEquals(Integer.toString(amountB+transfer+transfer/2),JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
 
     }
@@ -451,7 +451,7 @@ public class WVMContractTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
-        String response7 = query(ctHash,"getBalance",accountA);//获取账户A账户余额
+        String response7 = query(ctHash,"BalanceTest",accountA);//获取账户A账户余额
         assertEquals(Integer.toString(amountA-transfer),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
     }
 
@@ -471,7 +471,7 @@ public class WVMContractTest {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         for(String ctHash : ctHashList){
-            String response7 = query(ctHash,"getBalance",accountA);//获取账户A账户余额
+            String response7 = query(ctHash,"BalanceTest",accountA);//获取账户A账户余额
             assertEquals(Integer.toString(0),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
         }
 
@@ -483,7 +483,7 @@ public class WVMContractTest {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         for(String ctHash : ctHashList){
-            String response1 = query(ctHash,"getBalance",accountA);//获取账户A账户余额
+            String response1 = query(ctHash,"BalanceTest",accountA);//获取账户A账户余额
             assertThat(JSONObject.fromObject(response1).getString("message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
         }
     }
@@ -508,7 +508,7 @@ public class WVMContractTest {
         //第一个身份的SDK
 
         String ctName = "E_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
-        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","getBalance");
+        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","BalanceTest");
 
 
         //恢复SDK证书及auth目录下私钥 重启并给SDK赋权限
@@ -526,13 +526,13 @@ public class WVMContractTest {
 
 
         //使用不同私钥安装相同合约及内容的合约
-        String ctHash2 = installInitTransfer(ctName,PRIKEY2,"initAccount","transfer","getBalance");
+        String ctHash2 = installInitTransfer(ctName,PRIKEY2,"initAccount","transfer","BalanceTest");
 
         assertEquals(false,ctHash1.equals(ctHash2)); //确认两个hash不相同
 
         //再安装不同私钥 相同合约名 不同合约内容的合约
         wvmFile = "wvm_update";
-        String ctHash3 = installInitTransferUpdate(ctName,PRIKEY2,"initAccount","transfer","getBalance");
+        String ctHash3 = installInitTransferUpdate(ctName,PRIKEY2,"initAccount","transfer","BalanceTest");
         assertEquals(false,ctHash1.equals(ctHash3)); //确认两个hash不相同
 
 
@@ -540,7 +540,7 @@ public class WVMContractTest {
         ctName = "C_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         wvmFile = "wvm2";
         orgName = "Test";
-        String ctHash4 = installInitTransfer(ctName,PRIKEY2,"initBAccount","transferB","getBalanceB");
+        String ctHash4 = installInitTransfer(ctName,PRIKEY2,"initBAccount","transferB","BalanceTestB");
         assertEquals(false,ctHash1.equals(ctHash4)); //确认两个hash不相同
 
 //        shellExeCmd(sdkIP,killSDKCmd,resetSDKConfig,startSDKCmd);
@@ -551,11 +551,11 @@ public class WVMContractTest {
 //    public void TC1782_DiffPriSameCtDiffContent() throws Exception{
 //        String ctName = "N_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
 //
-//        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","getBalance");
+//        String ctHash1 = installInitTransfer(ctName,PRIKEY1,"initAccount","transfer","BalanceTest");
 //
 //        //再安装不同私钥 相同合约名 不同合约内容的合约
 //        wvmFile = "wvm_update";
-//        String ctHash2 =installInitTransferUpdate(ctName,PRIKEY2,"initAccount","transfer","getBalance");
+//        String ctHash2 =installInitTransferUpdate(ctName,PRIKEY2,"initAccount","transfer","BalanceTest");
 //        assertEquals(false,ctHash1.equals(ctHash2)); //确认两个hash不相同
 //    }
 
@@ -593,21 +593,21 @@ public class WVMContractTest {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //查询余额invoke接口
-        String response5 = invokeNew(ctHash,"getBalance",accountA);//获取账户A账户余额
+        String response5 = invokeNew(ctHash,"BalanceTest",accountA);//获取账户A账户余额
         String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("txId");
 
-        String response6 = invokeNew(ctHash,"getBalance",accountB);//获取账户A账户余额
+        String response6 = invokeNew(ctHash,"BalanceTest",accountB);//获取账户A账户余额
         String txHash6 = JSONObject.fromObject(response6).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //查询余额query接口 交易不上链 //query接口不再显示交易hash
-        String response7 = query(ctHash,"getBalance",accountA);//获取转账后账户A账户余额
+        String response7 = query(ctHash,"BalanceTest",accountA);//获取转账后账户A账户余额
 //        String txHash7 = JSONObject.fromObject(response7).getJSONObject("data").getString("txId");
         assertEquals(Integer.toString(amountA-transfer),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
 
-        String response8 = query(ctHash,"getBalance",accountB);//获取转账后账户B账户余额
+        String response8 = query(ctHash,"BalanceTest",accountB);//获取转账后账户B账户余额
         assertEquals(Integer.toString(amountB+transfer),JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
 
         //使用不匹配的私钥进行合约升级
@@ -616,10 +616,10 @@ public class WVMContractTest {
         assertEquals(true,response1.contains("invalid prikey"));
 
         //非法操作后 不影响现有数据
-        response7 = query(ctHash,"getBalance",accountA);//获取转账后账户A账户余额
+        response7 = query(ctHash,"BalanceTest",accountA);//获取转账后账户A账户余额
         assertEquals(Integer.toString(amountA-transfer),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
 
-        response8 = query(ctHash,"getBalance",accountB);//获取转账后账户B账户余额
+        response8 = query(ctHash,"BalanceTest",accountB);//获取转账后账户B账户余额
         assertEquals(Integer.toString(amountB+transfer),JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
 
     }
@@ -650,7 +650,7 @@ public class WVMContractTest {
 
         chkTxDetailRsp("200",txHash2);
 
-        String response10 = query(ctHash1,"getBalance",accountB);//获取转账后账户B账户余额 报错
+        String response10 = query(ctHash1,"BalanceTest",accountB);//获取转账后账户B账户余额 报错
         assertThat(JSONObject.fromObject(response10).getString("message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
 
         return ctHash1;

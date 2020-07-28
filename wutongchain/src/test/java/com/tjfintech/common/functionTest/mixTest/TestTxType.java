@@ -556,7 +556,7 @@ public class TestTxType {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //查询余额invoke接口
-        String response5 = wvm.invokeNew(ctHash,"getBalance",wvm.accountA);//获取账户A账户余额
+        String response5 = wvm.invokeNew(ctHash,"BalanceTest",wvm.accountA);//获取账户A账户余额
         String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),

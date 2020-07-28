@@ -473,7 +473,7 @@ public class BlockSyncTest_DockerImageFlag_WithContract {
         sleepAndSaveInfo(SLEEPTIME);
 
         //查询余额invoke接口
-        String response5 = wvm.invokeNew(existHash,"getBalance",wvm.accountA);//获取账户A账户余额
+        String response5 = wvm.invokeNew(existHash,"BalanceTest",wvm.accountA);//获取账户A账户余额
         String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("figure");
 
         sleepAndSaveInfo(SLEEPTIME/2);

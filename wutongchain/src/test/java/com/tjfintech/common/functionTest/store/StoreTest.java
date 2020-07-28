@@ -309,7 +309,8 @@ public class StoreTest {
         assertThat(response2,containsString("200"));
     }
 
-    @Test
+    //20200728 代码不再检查重复交易
+//    @Test
     public void createStoreDupDataString() throws Exception {
         boolean bWalletEnabled = commonFunc.getSDKWalletEnabled();
         String Data = "test11234567";
