@@ -42,7 +42,7 @@ public class WVMContractTest {
     public String category="wvm";
     public String caller="test";
     FileOperation fileOper = new FileOperation();
-    public String orgName = "contract Account";
+    public String orgName = "TestExample";
     public String accountA = "A";
     public String accountB = "B";
     public int amountA = 50;
