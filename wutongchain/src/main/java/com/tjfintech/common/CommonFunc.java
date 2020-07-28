@@ -927,6 +927,11 @@ public class CommonFunc {
             sleepAndSaveInfo(SLEEPTIME/2,"hash is null waiting .....");
             return "";
         }
+        if(hashData.contains(" ")){
+            sleepAndSaveInfo(SLEEPTIME/2,"hash is invalid waiting .....");
+            return "";
+        }
+
         Date dtTest = new Date();
         long nowTime = dtTest.getTime();
         log.info("开始时间 " + nowTime);
