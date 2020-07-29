@@ -61,7 +61,7 @@ public class VerifyTests {
                 if (diff > checkInterval) {
 //                    count1++;
                     errBlock.add(subLedger + " Block height " + i + "，区块与交易时间差：" + diff
-                            + " 区块时间：" + timestamp +  "，交易时间：" + txts);
+                            + " 区块时间：" + timestamp +  "，交易时间：" + txts + " 交易hash " + tx);
 //                    log.error("Block time and tx time in big difference, please check!");
 //                    log.info("Block height: " + i + "，时间差：" + diff);
 //                    log.info("区块时间：" + timestamp +  "，交易时间：" + txts);
@@ -72,7 +72,7 @@ public class VerifyTests {
         for(int i=0;i<errBlock.size();i++){
             log.info(errBlock.get(i));
         }
-        assertEquals("区块和交易时间差超过指定时间的区块个数", 0, errBlock.size());
+        assertEquals("区块和交易时间差超过指定时间的区块与交易个数", 0, errBlock.size());
 
     }
 
