@@ -55,7 +55,7 @@ public class VerifyTests {
                 long txTimestamp = Long.parseLong(txts);
                 long diff = blkTimeStamp - txTimestamp;
                 long checkInterval = 5;
-//                if(!subLedger.isEmpty()) checkInterval = 10;//子链检查间隔时间加长 因为子链交易上链平均6s左右 较慢
+                if(!subLedger.isEmpty()) checkInterval = 10;//子链检查间隔时间加长 因为子链交易上链平均6s左右 较慢
                 //时间戳3.0版本修改为ms级别
                 if (txts.length() ==13)  checkInterval = checkInterval*1000;
                 if (diff > checkInterval) {
