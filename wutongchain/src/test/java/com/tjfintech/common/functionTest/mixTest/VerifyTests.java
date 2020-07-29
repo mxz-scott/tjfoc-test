@@ -9,6 +9,9 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import java.util.ArrayList;
+
+import static com.tjfintech.common.utils.UtilsClass.subLedger;
 import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -27,8 +30,9 @@ public class VerifyTests {
         int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
 
         log.info(Integer.toString(blockHeight));
+        ArrayList<String> errBlock = new ArrayList<>();
 
-        int count1 = 0;
+//        int count1 = 0;
 
         for (int i = 1; i <= blockHeight; i++) {
             //打印区块的时间戳
@@ -51,20 +55,24 @@ public class VerifyTests {
                 long txTimestamp = Long.parseLong(txts);
                 long diff = blkTimeStamp - txTimestamp;
                 long checkInterval = 5;
+                if(!subLedger.isEmpty()) checkInterval = 10;//子链检查间隔时间加长 因为子链交易上链平均6s左右 较慢
                 //时间戳3.0版本修改为ms级别
                 if (txts.length() ==13)  checkInterval = checkInterval*1000;
                 if (diff > checkInterval) {
-                    count1++;
-                    log.error("Block time and tx time in big difference, please check!");
-                    log.info("Block height: " + i + "，时间差：" + diff);
-                    log.info("区块时间：" + timestamp +  "，交易时间：" + txts);
-
+//                    count1++;
+                    errBlock.add(subLedger + " Block height " + i + "，区块与交易时间差：" + diff
+                            + " 区块时间：" + timestamp +  "，交易时间：" + txts + " 交易hash " + tx);
+//                    log.error("Block time and tx time in big difference, please check!");
+//                    log.info("Block height: " + i + "，时间差：" + diff);
+//                    log.info("区块时间：" + timestamp +  "，交易时间：" + txts);
                 }
 
             }
         }
-
-        assertEquals("区块和交易时间差超过20秒", 0, count1);
+        for(int i=0;i<errBlock.size();i++){
+            log.info(errBlock.get(i));
+        }
+        assertEquals("区块和交易时间差超过指定时间的区块与交易个数", 0, errBlock.size());
 
     }
 
