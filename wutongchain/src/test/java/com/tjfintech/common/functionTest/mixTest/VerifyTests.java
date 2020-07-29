@@ -9,6 +9,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import static com.tjfintech.common.utils.UtilsClass.subLedger;
 import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -51,6 +52,7 @@ public class VerifyTests {
                 long txTimestamp = Long.parseLong(txts);
                 long diff = blkTimeStamp - txTimestamp;
                 long checkInterval = 5;
+                if(!subLedger.isEmpty()) checkInterval = 10;//子链检查间隔时间加长 因为子链交易上链平均6s左右 较慢
                 //时间戳3.0版本修改为ms级别
                 if (txts.length() ==13)  checkInterval = checkInterval*1000;
                 if (diff > checkInterval) {
@@ -58,6 +60,8 @@ public class VerifyTests {
                     log.error("Block time and tx time in big difference, please check!");
                     log.info("Block height: " + i + "，时间差：" + diff);
                     log.info("区块时间：" + timestamp +  "，交易时间：" + txts);
+
+                    assertEquals(true, false);
 
                 }
 
