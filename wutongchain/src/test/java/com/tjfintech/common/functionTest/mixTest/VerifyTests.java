@@ -21,6 +21,37 @@ public class VerifyTests {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
 
+
+    /**
+     计算链上TPS
+     */
+    @Test
+    public void CalculateAverageTPS() throws Exception {
+
+        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
+
+        int startBlockHeight = 2300;        //手动修改起始高度
+        int endBlockHeight = blockHeight;   //手动修改结束高度
+
+        int diff = endBlockHeight - startBlockHeight + 1;
+        int count = 0, total = 0;
+
+        for (int i = startBlockHeight; i <= endBlockHeight; i++) {
+            //获取区块中的交易个数
+            String[] txs = getTxsArray(i);
+            count = txs.length;
+
+            total = total + count;
+
+        }
+
+        log.info("区块数：" + diff);
+        log.info("交易总数：" + total);
+        log.info("链上TPS：" + total / diff);
+
+    }
+
+
     /**
      校验区块时间戳与交易时间戳的差值，为了验证之前可能存在的交易几个小时后才打包问题。
      */
