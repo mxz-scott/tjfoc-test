@@ -30,13 +30,15 @@ public class VerifyTests {
 
         int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
 
-        int startBlockHeight = 2300;        //手动修改起始高度
+        int startBlockHeight = 1;        //手动修改起始高度
         int endBlockHeight = blockHeight;   //手动修改结束高度
 
         int diff = endBlockHeight - startBlockHeight + 1;
         int count = 0, total = 0;
 
         for (int i = startBlockHeight; i <= endBlockHeight; i++) {
+
+
             //获取区块中的交易个数
             String[] txs = getTxsArray(i);
             count = txs.length;
@@ -45,9 +47,18 @@ public class VerifyTests {
 
         }
 
+
+            String timestamp = JSONObject.fromObject(store.GetBlockByHeight(startBlockHeight)).getJSONObject("data").getJSONObject("header").getString("timestamp");
+            long blkTimeStamp1 = Long.parseLong(timestamp);
+            timestamp = JSONObject.fromObject(store.GetBlockByHeight(endBlockHeight)).getJSONObject("data").getJSONObject("header").getString("timestamp");
+            long blkTimeStamp2 = Long.parseLong(timestamp);
+
+            long timeDiff = (blkTimeStamp2 - blkTimeStamp1) / 1000;
+
         log.info("区块数：" + diff);
         log.info("交易总数：" + total);
-        log.info("链上TPS：" + total / diff);
+        log.info("测试时长：" + timeDiff + "秒");
+        log.info("链上TPS：" + total / timeDiff);
 
     }
 
