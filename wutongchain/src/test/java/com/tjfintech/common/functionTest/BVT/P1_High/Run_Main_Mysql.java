@@ -21,7 +21,6 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         SetDatabaseMysql.class,
-        SetTokenApiDatabaseMysql.class,
         SetAccountEmpty.class,
         SetCertSM2.class,
         SetMainLedger.class,
