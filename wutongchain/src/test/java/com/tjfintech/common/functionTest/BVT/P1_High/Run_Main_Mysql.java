@@ -4,10 +4,7 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.*;
 import com.tjfintech.common.functionTest.PermissionTest.PeerStartNoPermTest;
 import com.tjfintech.common.functionTest.PermissionTest.TestPermission;
-import com.tjfintech.common.functionTest.contract.DockerContractInvalidTest;
-import com.tjfintech.common.functionTest.contract.DockerContractTest;
-import com.tjfintech.common.functionTest.contract.WVMContractInvalidTest;
-import com.tjfintech.common.functionTest.contract.WVMContractTest;
+import com.tjfintech.common.functionTest.contract.*;
 import com.tjfintech.common.functionTest.mixTest.TestTxType;
 import com.tjfintech.common.functionTest.mixTest.VerifyTests;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.AddPeerAndSyncData;
@@ -38,14 +35,21 @@ import org.junit.runners.Suite;
         StoreTest.class,
         PrivateStoreTest.class,
         PrivateStoreTestFastGet.class,
+        SetWVMversion1.class,
         WVMContractTest.class,
-        VerifyTests.class,
+
+        WVMContractInvalidTest.class,
+
+        SetWVMversionEmpty.class,
+        WVMContractTest.class,
+        WVMContractInvalidTest.class,
+        WVMContractTest_withVersionUpgradeTest.class,
 
         StoreInvalidTest.class,
-        WVMContractInvalidTest.class,
 
         AddPeerAndSyncData.class,
 
+        VerifyTests.class,
 //        TestPermission.class,
 
 })
