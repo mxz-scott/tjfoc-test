@@ -28,8 +28,6 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        SetSDKStartNoApi.class,             //设置SDK启动不带Api
-        SetTokenApiAddrSolo.class,          //设置TokenApi为单独部署地址
         SetDatabaseMysql.class,             //清空节点、SDK数据库信息
         SetCertSM2.class,
         SetMainLedger.class,                //设置主链测试
@@ -38,8 +36,6 @@ import org.junit.runners.Suite;
         BeforeCondition.class,              //执行预设条件 赋权限 创建UTXO地址 添加地址等
 
         StoreTest_UpgradeTestOnly.class,
-        MultiTest.class,
-        SoloTest.class,
         WVMContractTest_UpgradeTestOnly.class,
 
         AddPeerAndSyncData.class,
@@ -62,14 +58,10 @@ import org.junit.runners.Suite;
 
         CompareReleaseLatestData.class,     //比较升级前后数据是否存在差异
 
-//        UpgradeTestHistoryData.class,
-
         SetSDKPerm999.class,                //2.1向3.0升级后需要给SDK重新赋权限
         SetMgToolPerm999.class,             //2.1向3.0升级后需要给超级管理员或者管理系统重新赋权限
         //升级后简单回归测试
         StoreTest_UpgradeTestOnly.class,
-        MultiTest.class,
-        SoloTest.class,
         WVMContractTest_UpgradeTestOnly.class,
         AddPeerAndSyncData.class,
         TestMainSubChain_UpgradeTestOnly.class,

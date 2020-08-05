@@ -46,19 +46,6 @@ import org.junit.runners.Suite;
 
         AddPeerAndSyncData.class,
 
-        // 注释掉将被移除的测试类
-//        StoreWalletRelatedTest.class,
-//        MultiSignInvalidTest.class,
-//        MultiTestInvalid.class,
-//        SingleSignInvalidTest.class,
-//        SoloTestInvalid.class,
-//        MultiTest.class,
-//        MultiTest_33_12.class,
-//        MultiTest_UnspentTxOutput_test.class,
-//        MultiSignDetailTest.class,
-//        SoloTest.class,
-//        SoloTest_UnspentTxOutput_test.class,
-
 //        TestPermission.class,
 
 })

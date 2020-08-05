@@ -10,12 +10,11 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         SetDatabaseMysql.class,
-//        SetTokenApiDatabaseMysql.class,
         SetAccountEmpty.class,
         SetMainLedger.class,
         SetSubLedgerSleepTime.class,
         BeforeCondition.class,
-        TestMainSubChain_UTXO.class,
+//        TestMainSubChain_UTXO.class,
         TestMainSubChain_WVM.class,
         TestMainSubChain_Perm.class,
         SetURLToSDKAddr.class,

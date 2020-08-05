@@ -18,7 +18,6 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses(value = {
         SetDatabaseMysql.class,
-//        SetTokenApiDatabaseMysql.class,
         SetAccountEmpty.class,
         SetCertSM2.class,
         SetSubLedger.class,
@@ -35,19 +34,6 @@ import org.junit.runners.Suite;
 
         StoreInvalidTest.class,
         WVMContractInvalidTest.class,
-
-        // 注释掉将被移除的测试类
-//        StoreWalletRelatedTest.class,
-//        MultiTest.class,
-//        MultiTest_33_12.class,
-//        MultiTest_UnspentTxOutput_test.class,
-//        MultiSignDetailTest.class,
-//        SoloTest.class,
-//        MultiSignInvalidTest.class,
-//        MultiTestInvalid.class,
-//        SingleSignInvalidTest.class,
-//        SoloTestInvalid.class,
-
 })
 
 //Build Validation Test
