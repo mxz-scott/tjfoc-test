@@ -102,6 +102,7 @@ public class UtilsClass {
     public static String peerTLSServerName = "tjfoc.com";
     public static Boolean syncFlag = false;
     public static int syncTimeout = 7;
+    public static String wvmVersion = "3.0.1";
 
     public static String ipv4 = "ip4";
     public static String tcpProtocol = "tcp";

@@ -63,43 +63,43 @@ public class WVMContractTest_UpgradeTestOnly {
         fileOper.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-        String response1 = wvmInstallTest(wvmFile +"_temp.txt",PRIKEY1);
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("figure");
+        String response1 = wvmInstallTest(wvmFile +"_temp.txt","");
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
         String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
         //调用合约内的交易
         String response2 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("figure");
+        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
 
         String response3 = invokeNew(ctHash,"initAccount",accountB,amountB);//初始化账户B 账户余额60
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("data").getString("figure");
+        String txHash3 = JSONObject.fromObject(response3).getJSONObject("data").getString("txId");
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         String response4 = invokeNew(ctHash,"transfer",accountA,accountB,transfer);//A向B转30
-        String txHash4 = JSONObject.fromObject(response4).getJSONObject("data").getString("figure");
+        String txHash4 = JSONObject.fromObject(response4).getJSONObject("data").getString("txId");
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //查询余额invoke接口
         String response5 = invokeNew(ctHash,"BalanceTest",accountA);//获取账户A账户余额
-        String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("figure");
+        String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("txId");
 
         String response6 = invokeNew(ctHash,"BalanceTest",accountB);//获取账户A账户余额
-        String txHash6 = JSONObject.fromObject(response6).getJSONObject("data").getString("figure");
+        String txHash6 = JSONObject.fromObject(response6).getJSONObject("data").getString("txId");
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //查询余额query接口 交易不上链 //query接口不再显示交易hash
         String response7 = query(ctHash,"BalanceTest",accountA);//获取转账后账户A账户余额
-//        String txHash7 = JSONObject.fromObject(response7).getJSONObject("data").getString("figure");
+//        String txHash7 = JSONObject.fromObject(response7).getJSONObject("data").getString("txId");
         assertEquals(Integer.toString(amountA-transfer),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
 
         String response8 = query(ctHash,"BalanceTest",accountB);//获取转账后账户B账户余额
@@ -107,9 +107,9 @@ public class WVMContractTest_UpgradeTestOnly {
 
         //销毁wvm合约
         String response9 = wvmDestroyTest(ctHash);
-        String txHash9 = JSONObject.fromObject(response9).getJSONObject("data").getString("figure");
+        String txHash9 = JSONObject.fromObject(response9).getJSONObject("data").getString("txId");
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         String response10 = query(ctHash,"BalanceTest",accountB);//获取账户B账户余额 报错
@@ -171,7 +171,7 @@ public class WVMContractTest_UpgradeTestOnly {
         for (Object obj:arg){
             args.add(obj);
         }
-        String response = contract.Invoke(cthash, "", category,method,caller, args);
+        String response = contract.Invoke(cthash, wvmVersion, category,method,caller, args);
         return response;
     }
 
@@ -180,7 +180,7 @@ public class WVMContractTest_UpgradeTestOnly {
         for (Object obj:arg){
             args.add(obj);
         }
-        String response = contract.QueryWVM(cthash, "", category,method,caller,args);
+        String response = contract.QueryWVM(cthash, wvmVersion, category,method,caller,args);
         return response;
     }
 

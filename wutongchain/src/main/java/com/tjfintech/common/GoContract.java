@@ -36,6 +36,7 @@ public class GoContract implements Contract {
     public String InstallWVM(String file,String category,String prikey) throws Exception{
         Map<String,Object>map=new HashMap<>();
         map.put("category","wvm");
+        if(!wvmVersion.isEmpty())       map.put("Version",wvmVersion);
         map.put("file",file);
 
         String param="";
@@ -123,7 +124,7 @@ public class GoContract implements Contract {
         map.put("name",name);
         map.put("category",category);
 
-        String param="";
+        String param = "";
         if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
         if(subLedger!="") param = param +"&ledger="+subLedger;
 
@@ -144,7 +145,7 @@ public class GoContract implements Contract {
 //
 //        Map<String,Object>map=new HashMap<>();
 //        map.put("Name",name);
-//        map.put("Version",version);
+//        if(!version.isEmpty())       map.put("Version",version);
 //        map.put("Category",category);
 //        String result=PostTest.sendPostToJson(SDKADD+"/sync/contract/destroy?timeout="+timeout,map);
 //        log.info(result);
@@ -161,7 +162,7 @@ public class GoContract implements Contract {
     public String CreateNewTransaction(String name,String version,String method,List<?> args){
         Map<String,Object>map=new HashMap<>();
         map.put("Name",name);
-        map.put("Version",version);
+        if(!version.isEmpty())       map.put("Version",version);
         map.put("Method",method);
         map.put("Args",args);
 
@@ -184,7 +185,7 @@ public class GoContract implements Contract {
     public String Invoke(String name,String version,String category,String method,List<?> args){
         Map<String,Object>map=new HashMap<>();
         map.put("Name",name);
-        map.put("Version",version);
+        if(!version.isEmpty())       map.put("Version",version);
         map.put("Category",category);
         map.put("Method",method);
         map.put("Args",args);

@@ -793,7 +793,7 @@ public class WVMContractTest {
         for (Object obj:arg){
             args.add(obj);
         }
-        String response = contract.Invoke(cthash, "", category,method,caller, args);
+        String response = contract.Invoke(cthash, wvmVersion, category,method,caller, args);
         return response;
     }
 
@@ -802,7 +802,7 @@ public class WVMContractTest {
         for (Object obj:arg){
             args.add(obj);
         }
-        String response = contract.QueryWVM(cthash, "", category,method,caller,args);
+        String response = contract.QueryWVM(cthash, wvmVersion, category,method,caller,args);
         return response;
     }
 
