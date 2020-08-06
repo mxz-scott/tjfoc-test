@@ -20,6 +20,10 @@ public class SetSubLedger {
 
    @Test
     public void createSubledger()throws Exception{
+       String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
+       String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
+       String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
+       String ids = " -m "+ id1+","+ id2+","+ id3;
        MgToolCmd mgToolCmd = new MgToolCmd();
        //20200415 子链不支持包含.
 //       String ledger = "sO.l_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些

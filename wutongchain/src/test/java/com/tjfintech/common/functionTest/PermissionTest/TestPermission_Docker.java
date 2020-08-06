@@ -17,6 +17,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClass.USERNAME;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -55,6 +56,11 @@ public class TestPermission_Docker {
     String preCmd=toolPath + exeCmd + " -p " + peerIP + " -d " + sdkID + " -m ";
     ArrayList<String> dockerList =new ArrayList();
 
+
+    String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
+    String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
+    String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
+    String ids = " -m "+ id1+","+ id2+","+ id3;
 
     @Before
     public void beforeTest() throws Exception {

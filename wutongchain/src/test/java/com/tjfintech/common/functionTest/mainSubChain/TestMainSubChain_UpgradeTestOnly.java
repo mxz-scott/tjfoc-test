@@ -36,6 +36,11 @@ public class TestMainSubChain_UpgradeTestOnly {
     CommonFunc commonFunc = new CommonFunc();
     UtilsClass utilsClass = new UtilsClass();
 
+    String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
+    String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
+    String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
+    String ids = " -m "+ id1+","+ id2+","+ id3;
+
     @Test
     public void CreaterecoverFreezeDestoryChain()throws Exception{
 

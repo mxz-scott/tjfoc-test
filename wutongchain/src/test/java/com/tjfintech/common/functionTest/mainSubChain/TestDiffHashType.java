@@ -34,6 +34,11 @@ public class TestDiffHashType {
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
 
+    String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
+    String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
+    String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
+    String ids = " -m "+ id1+","+ id2+","+ id3;
+
     @Test
     public void TC1649_1650_HashChange()throws Exception{
         //设置主链sm3 sdk使用sm3 （子链sha256） 设置前清空节点及sdk数据

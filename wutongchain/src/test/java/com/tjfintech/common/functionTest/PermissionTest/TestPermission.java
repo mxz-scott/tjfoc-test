@@ -27,6 +27,7 @@ import java.util.Map;
 import static com.tjfintech.common.CommonFunc.*;
 import static com.tjfintech.common.functionTest.PermissionTest.APermfuncSysSetMg.subLedgerName;
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClass.USERNAME;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -93,6 +94,11 @@ public class TestPermission {
     ArrayList<String> dockerList =new ArrayList();
 
     boolean bExe=false;
+
+    String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
+    String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
+    String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
+    String ids = " -m "+ id1+","+ id2+","+ id3;
 
     @Before
     public void beforeTest() throws Exception {

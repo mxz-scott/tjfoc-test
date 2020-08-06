@@ -49,6 +49,11 @@ public class TestMainSubChain_FRDG {
     String respWithHash = "";
     String hashTime = "";
 
+    String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
+    String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
+    String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
+    String ids = " -m "+ id1+","+ id2+","+ id3;
+
     @BeforeClass
     public static void clearData()throws Exception{
         BeforeCondition beforeCondition = new BeforeCondition();

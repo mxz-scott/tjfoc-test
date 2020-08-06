@@ -177,12 +177,7 @@ public class UtilsClass {
     public static String PeerBaseConfigPath = PeerPATH + "conf/base.toml";//全文件名为base.toml 节点运行相关配置
     public static String SDKConfigPath = SDKPATH + "conf/config.toml";//全文件名为config.toml
     public static String TokenApiConfigPath = TokenApiPATH + "conf/config.toml";//全文件名为config.toml
-
-    public static String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
-    public static String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
-    public static String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
-    public static String ids = " -m "+ id1+","+ id2+","+ id3;
-
+    
     public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";
     public static String srcShellScriptDir = resourcePath + "/configFiles/shell/";
     public static String destShellScriptDir = "/root/tjshell/";

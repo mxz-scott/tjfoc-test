@@ -39,6 +39,11 @@ public class TestWithConfigChange02_ClearDB {
 
     public static String glbChain01= "glbCh1";
 
+    String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
+    String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
+    String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
+    String ids = " -m "+ id1+","+ id2+","+ id3;
+
 
     @Before
     public void clearData()throws Exception{

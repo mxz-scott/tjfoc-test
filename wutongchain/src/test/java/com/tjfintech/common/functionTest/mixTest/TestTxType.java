@@ -92,6 +92,11 @@ public class TestTxType {
     String zeroAddr="0000000000000000";
     SetSubLedger setSubLedger = new SetSubLedger();
 
+    String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
+    String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
+    String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
+    String ids = " -m "+ id1+","+ id2+","+ id3;
+
    @Before
     public void beforeConfig() throws Exception {
        initSetting();
