@@ -529,7 +529,7 @@ public class TestMainSubChain_FRDG {
         assertEquals(bCheck2,store.GetApiHealth().contains(notSupport));
         assertEquals(bCheck2,store.GetStorePost(txHash2,PRIKEY1).contains(notSupport));
         assertEquals(bCheck2,store.GetBlockByHash(blockHash).contains(notSupport));
-        assertEquals(false,store.GetPeerList().contains(notSupport));
+//        assertEquals(false,store.GetPeerList().contains(notSupport));
         assertEquals(bCheck1,store.CreatePrivateStore("test1",map).contains(notSupport));
 
         assertEquals(bCheck1,store.CreateStore("test2").contains(notSupport));
