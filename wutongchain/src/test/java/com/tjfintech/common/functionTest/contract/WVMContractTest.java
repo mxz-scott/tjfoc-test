@@ -40,7 +40,7 @@ public class WVMContractTest {
     CommonFunc commonFunc = new CommonFunc();
 
     public String category="wvm";
-    public String caller="test";
+    public String caller=""; // 这个字段旧版本中不能为空
     FileOperation fileOper = new FileOperation();
     public String orgName = "TestExample";
     public String accountA = "A";
@@ -94,14 +94,23 @@ public class WVMContractTest {
         assertEquals("123",JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
 
 
-        //跨合约调用合约内的不存在的方法
-        String response4 = invokeNew(ctHash2,"CrossAccount",
-                ctHash,"initAnt","[\"C\",123]");//初始化账户A 账户余额50
+        //跨合约调用，被调用合约内的不存在的方法，正确的参数格式
+        String response4 = invokeNew(ctHash2,"CrossInitAccount",
+                ctHash,"initAnt","\"[\"C\",123]\"");//初始化账户A 账户余额50
         String txHash4 = JSONObject.fromObject(response4).getJSONObject("data").getString("txId");
 
 
-        commonFunc.sdkCheckTxOrSleep(txHash3,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(txHash4,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         chkTxDetailRsp("404",txHash4);
+
+        //跨合约调用合约内的存在的方法，错误的参数格式
+        String response5 = invokeNew(ctHash2,"CrossInitAccount",
+                ctHash,"initAccount","[\"C\",123]");//初始化账户A 账户余额50
+        String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("txId");
+
+
+        commonFunc.sdkCheckTxOrSleep(txHash5,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        chkTxDetailRsp("404",txHash5);
     }
 
     @Test
