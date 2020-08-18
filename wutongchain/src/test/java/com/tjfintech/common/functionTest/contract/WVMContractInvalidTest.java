@@ -77,12 +77,18 @@ public class WVMContractInvalidTest {
         wvmContractTest.chkTxDetailRsp("200",txHash1);
         //调用合约内的方法 init方法
         String response2 = wvmContractTest.invokeNew(ctHash,"inita",accountA,amountA);//初始化账户A 账户余额50
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        //3.0.1版本检查点
+//        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
+//        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+//                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+//        wvmContractTest.chkTxDetailRsp("404",txHash2);
 
-        wvmContractTest.chkTxDetailRsp("404",txHash2);
+        //3.0.2版本检查点
+        assertEquals("500",JSONObject.fromObject(response2).getString("state"));
+        assertEquals("rpc error: code = InvalidArgument desc = This method does not exist in this contract",
+                JSONObject.fromObject(response2).getString("message"));
+
     }
 
 
