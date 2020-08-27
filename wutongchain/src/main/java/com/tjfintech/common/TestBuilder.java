@@ -8,6 +8,7 @@ public class TestBuilder {
     private MultiSign multiSign;
     private Contract contract;
     private Token token;
+    private GuDeng gudeng;
     TestBuilder() {
         setGoTest();
     // SetJavaTest();
@@ -36,6 +37,8 @@ public class TestBuilder {
         multiSign = new GoMultiSign();
         contract=new GoContract();
         token = new GoToken();
+        gudeng = new GoGuDeng();
+
     }
 
 //    public void SetJavaTest() {
@@ -58,4 +61,8 @@ public class TestBuilder {
     public Token getToken() {
         return token;
     }
+    public GuDeng getGuDeng() {
+        return gudeng;
+    }
+
 }
