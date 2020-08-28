@@ -13,6 +13,7 @@ public interface GuDeng {
 
     String GDShareIssue(String contractAddress,String platformKeyId,String equityCode,List<Map> shareList);
     String GDShareChangeProperty(String platformKeyId, String address, String equityCode, double amount, int oldShareProperty, int newShareProperty);
+    String GDShareChangeProperty(Map change);
 
     String GDShareChangeBoard(String platformKeyId,String companyId,String oldEquityCode,String newEquityCode);
 

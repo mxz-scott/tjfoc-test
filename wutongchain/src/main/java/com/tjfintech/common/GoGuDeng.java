@@ -84,6 +84,12 @@ public  class GoGuDeng implements GuDeng {
         return result;
     }
 
+    public String GDShareChangeProperty(Map change){
+        String result = PostTest.postMethod(SDKADD + "/equity/share/change", change);
+        log.info(result);
+        return result;
+    }
+
     public String GDShareChangeBoard(String platformKeyId,String companyId,String oldEquityCode,String newEquityCode){
         Map<String, Object> map = new HashMap<>();
         map.put("platformKeyId", platformKeyId);
