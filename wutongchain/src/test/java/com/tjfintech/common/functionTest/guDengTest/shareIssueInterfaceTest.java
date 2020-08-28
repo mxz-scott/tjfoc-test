@@ -39,7 +39,7 @@ public class shareIssueInterfaceTest {
 
 
     @Test
-    public void TC03_shareIssueInterfaceMustParamTest() throws Exception {
+    public void shareIssueInterfaceMustParamTest() throws Exception {
         String eqCode = "ecI1600001";
 
         List<Map> shareList = gdConstructShareList("SnxqVBW7K7L8bRykHKttVjG81phwUYu7ZzZMB1bs1qYaA2GBbJM",5000,0);

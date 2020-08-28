@@ -36,7 +36,7 @@ public class shareChangePropertyInterfaceTest {
     String clientNo = "cI1100001";
     String equityCode = "SZI1100001";
 
-//    @Before
+    @Before
     public void beforeIssue()throws Exception{
         String eqCode = "ECI07100001";
 

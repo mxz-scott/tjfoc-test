@@ -124,6 +124,12 @@ public  class GoGuDeng implements GuDeng {
         return result;
     }
 
+    public String GDShareTransfer(Map mapTransfer){
+        String result = PostTest.postMethod(SDKADD + "/equity/share/transfer", mapTransfer);
+        log.info(result);
+        return result;
+    }
+
     public String GDShareIncrease(String contractAddress,String platformKeyId,String equityCode,List<Map>shareList,String reason){
         Map<String, Object> map = new HashMap<>();
         map.put("platformKeyId", platformKeyId);

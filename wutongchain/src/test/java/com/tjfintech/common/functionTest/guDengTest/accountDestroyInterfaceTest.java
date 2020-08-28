@@ -38,7 +38,7 @@ public class accountDestroyInterfaceTest {
 
 
     @Test
-    public void TC03_accoutDestroyInterfaceMustParamTest() throws Exception {
+    public void accoutDestroyInterfaceMustParamTest() throws Exception {
 
         log.info(" ************************ test contractAddress must ************************ ");
 

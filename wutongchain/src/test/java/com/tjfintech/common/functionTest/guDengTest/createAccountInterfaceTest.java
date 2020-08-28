@@ -38,7 +38,7 @@ public class createAccountInterfaceTest {
 
 
     @Test
-    public void TC03_createAccoutInterfaceMustParamTest() throws Exception {
+    public void createAccoutInterfaceMustParamTest() throws Exception {
 
         String cltNo = clientNo;
         String shareHolderNo = "sI1100002";
