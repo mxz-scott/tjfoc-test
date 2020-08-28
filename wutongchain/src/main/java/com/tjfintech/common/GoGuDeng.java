@@ -70,12 +70,12 @@ public  class GoGuDeng implements GuDeng {
         return result;
     }
 
-    public String GDShareChangeProperty(String platformKeyId, String address, String equityCode, double amout, int oldShareProperty, int newShareProperty){
+    public String GDShareChangeProperty(String platformKeyId, String address, String equityCode, double amount, int oldShareProperty, int newShareProperty){
         Map<String, Object> map = new HashMap<>();
         map.put("platformkeyId", platformKeyId);
         map.put("address", address);
         map.put("equityCode", equityCode);
-        map.put("amount", amout);
+        map.put("amount", amount);
         map.put("oldShareProperty", oldShareProperty);
         map.put("newShareProperty", newShareProperty);
 
@@ -110,7 +110,7 @@ public  class GoGuDeng implements GuDeng {
         map.put("orderWay", orderWay);
         map.put("orderType", orderType);
         map.put("price", price);
-        map.put("tradeTime", time);
+        map.put("time", time);
         map.put("remark", remark);
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/transfer", map);
@@ -131,12 +131,73 @@ public  class GoGuDeng implements GuDeng {
         return result;
     }
 
+    public String GDShareLock(String bizNo, String address, String equityCode, double amount, int shareProperty, String reason,String cutoffDate){
+        Map<String, Object> map = new HashMap<>();
+        map.put("bizNo", bizNo);
+        map.put("address", address);
+        map.put("equityCode", equityCode);
+        map.put("amount", amount);
+        map.put("shareProperty", shareProperty);
+        map.put("reason", reason);
+        map.put("cutoffDate", cutoffDate);
+
+        String result = PostTest.postMethod(SDKADD + "/equity/share/lock", map);
+        log.info(result);
+        return result;
+    }
+
+    public String GDShareUnlock(String bizNo, String equityCode, double amount){
+        Map<String, Object> map = new HashMap<>();
+        map.put("bizNo", bizNo);
+        map.put("equityCode", equityCode);
+        map.put("amount", amount);
+
+        String result = PostTest.postMethod(SDKADD + "/equity/share/unlock", map);
+        log.info(result);
+        return result;
+    }
+
+    public String GDShareRecycle(String platformKeyId,String equityCode,List<Map> addressList,String remark){
+        Map<String, Object> map = new HashMap<>();
+        map.put("platformKeyId", platformKeyId);
+        map.put("equityCode", equityCode);
+        map.put("addressList", addressList);
+        map.put("remark", remark);
+
+        String result = PostTest.postMethod(SDKADD + "/equity/share/recycle", map);
+        log.info(result);
+        return result;
+    }
+
     public String GDAccountDestroy(String contractAddress,String clientNo){
         Map<String, Object> map = new HashMap<>();
         map.put("contractAddress", contractAddress);
         map.put("clientNo", clientNo);
 
         String result = PostTest.postMethod(SDKADD + "/equity/account/destroy", map);
+        log.info(result);
+        return result;
+    }
+
+    public String GDInfoPublish(String type,String subType,String title,String fileHash,String fileURL,
+                                String hashAlgo,String publisher,String publishTime,String enterprise){
+        Map<String, Object> map = new HashMap<>();
+        map.put("type", type);
+        map.put("subType", subType);
+        map.put("title", title);
+        map.put("fileHash", fileHash);
+        map.put("fileURL", fileURL);
+        map.put("hashAlgo", hashAlgo);
+        map.put("publisher", publisher);
+        map.put("publishTime", publishTime);
+        map.put("enterprise", enterprise);
+
+        String result = PostTest.postMethod(SDKADD + "/equity/infodisclosure/publish", map);
+        log.info(result);
+        return result;
+    }
+    public String GDInfoPublishGet(String txId){
+        String result = GetTest.doGet2(SDKADD + "/equity/infodisclosure/query/" + txId );
         log.info(result);
         return result;
     }

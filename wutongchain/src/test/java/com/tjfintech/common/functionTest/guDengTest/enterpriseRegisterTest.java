@@ -86,10 +86,10 @@ public class enterpriseRegisterTest {
 
         String response= gd.GDEnterpriseResister(contractAddr,mapBaseInfo,mapBzInfo,maplegalPersonInfo,extend);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("data").getString("txId");
+        String txId = jsonObject.getJSONObject("data").getString("txId");
 
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
     }
 
@@ -146,14 +146,14 @@ public class enterpriseRegisterTest {
 
         String response= gd.GDCreateAccout(contractAddr,mapInvestorInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("data").getString("txId");
+        String txId = jsonObject.getJSONObject("data").getString("txId");
         assertEquals(clientNo,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("clientNo"));
         assertEquals(shareHolderNo,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("shareholderNo"));
         String keyId = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("keyId");
         String address = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("address");
 
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
     }
 
     @Test
@@ -168,10 +168,10 @@ public class enterpriseRegisterTest {
 
         String response= gd.GDShareIssue(contractAddr,platformKeyID,eqCode,shareList4);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("data").getString("txId");
+        String txId = jsonObject.getJSONObject("data").getString("txId");
 
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
     }
 
     @Test
@@ -185,19 +185,19 @@ public class enterpriseRegisterTest {
 
         String response= gd.GDShareChangeProperty(platformKeyID,address,eqCode,changeAmount,oldProperty,newProperty);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("data").getString("txId");
+        String txId = jsonObject.getJSONObject("data").getString("txId");
 
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
     }
 
     @Test
     public void TC08_shareTransfer()throws Exception{
-        String keyId = platformKeyID;
-        String fromAddr = "";
+        String keyId = "bt3hd3ppgfltc7nnqlt0";
+        String fromAddr = "SnxqVBW7K7L8bRykHKttVjG81phwUYu7ZzZMB1bs1qYaA2GBbJM";
         double amount = 100;
-        String toAddr = "";
+        String toAddr = "SnxqVBW7K7L8bRykHKttVjG81phwUYu7ZzZMB1bs1qYaA2GBbJM";
         int shareProperty = 0;
         String eqCode = equityCode;
         int txType = 0;
@@ -211,10 +211,10 @@ public class enterpriseRegisterTest {
                 orderNo,orderWay,orderType,price,time,remark);
 
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("data").getString("txId");
+        String txId = jsonObject.getJSONObject("data").getString("txId");
 
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
     }
 
     @Test
@@ -230,10 +230,66 @@ public class enterpriseRegisterTest {
 
         String response= gd.GDShareIncrease(contractAddr,platformKeyID,eqCode,shareList4,reason);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("data").getString("txId");
+        String txId = jsonObject.getJSONObject("data").getString("txId");
 
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+    }
+
+
+    @Test
+    public void TC10_shareLock() throws Exception {
+
+        String bizNo = "test20200828001";
+        String eqCode = equityCode;
+        String address = "SnxqVBW7K7L8bRykHKttVjG81phwUYu7ZzZMB1bs1qYaA2GBbJM";
+        double lockAmount = 500;
+        int shareProperty = 0;
+        String reason = "司法冻结";
+        String cutoffDate = "20200930";
+
+        String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String txId = jsonObject.getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+    }
+
+    @Test
+    public void TC11_shareUnlock() throws Exception {
+
+        String bizNo = "test20200828001";
+        String eqCode = equityCode;
+        double amount = 100;
+
+        String response= gd.GDShareUnlock(bizNo,eqCode,amount);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String txId = jsonObject.getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+    }
+
+    @Test
+    public void TC12_shareIncrease() throws Exception {
+
+        String eqCode = equityCode;
+        String remark = "777777";
+
+        List<Map> shareList = gdConstructShareList("SnxqVBW7K7L8bRykHKttVjG81phwUYu7ZzZMB1bs1qYaA2GBbJM",1000,0);
+        List<Map> shareList2 = gdConstructShareList("So6uaUagSbBcDEt935v8sdA52cQ2QFRnVx9nBoaNmzKxomxSRkn",1000,0, shareList);
+        List<Map> shareList3 = gdConstructShareList("Sn6KRMf6heVv55V2AWzyE4mF9n8isgshAeZJVMhuW1bG2ARsd15",1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList("SnnswixfQNaJd9v19LPEFY4UoAmxGtmEivHn6GBnYDD8aPtyjpY",1000,0, shareList3);
+
+        String response= gd.GDShareRecycle(platformKeyID,eqCode,shareList4,remark);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String txId = jsonObject.getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
     }
 
     @Test
@@ -245,10 +301,10 @@ public class enterpriseRegisterTest {
 
         String response= gd.GDShareChangeBoard(platformKeyID,cpnyId,oldEquityCode,newEquityCode);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("data").getString("txId");
+        String txId = jsonObject.getJSONObject("data").getString("txId");
 
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
     }
 
@@ -259,10 +315,43 @@ public class enterpriseRegisterTest {
 
         String response= gd.GDAccountDestroy(contractAddr,clntNo);
         JSONObject jsonObject=JSONObject.fromObject(response);
-        String storeHash = jsonObject.getJSONObject("data").getString("txId");
+        String txId = jsonObject.getJSONObject("data").getString("txId");
 
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+    }
+
+
+    @Test
+    public void TC15_infodisclosurePublishAndGet() throws Exception {
+        String type = "公告";
+        String subType = "企业公告";
+        String title = "挂牌企业登记信息";
+        String fileHash = "dfhafdd1111111651575452";
+        String fileURL = "test/publish/company0001info";
+        String hashAlgo = "sha256";
+        String publisher = "上海股权托管登记交易所";
+        String publishTime = "20200828 10:43";
+        String enterprise = "201804152125222515";
+
+        String response= gd.GDInfoPublish(type,subType,title,fileHash,fileURL,hashAlgo,publisher,publishTime,enterprise);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String txId = jsonObject.getString("data");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        
+        String responseGet = gd.GDInfoPublishGet(txId);
+        assertEquals(type,JSONObject.fromObject(responseGet).getJSONObject("data").getString("type"));
+        assertEquals(subType,JSONObject.fromObject(responseGet).getJSONObject("data").getString("subtype"));
+        assertEquals(title,JSONObject.fromObject(responseGet).getJSONObject("data").getString("title"));
+        assertEquals(fileHash,JSONObject.fromObject(responseGet).getJSONObject("data").getString("fileHash"));
+        assertEquals(fileURL,JSONObject.fromObject(responseGet).getJSONObject("data").getString("fileURL"));
+        assertEquals(hashAlgo,JSONObject.fromObject(responseGet).getJSONObject("data").getString("hashAlgo"));
+        assertEquals(publisher,JSONObject.fromObject(responseGet).getJSONObject("data").getString("publisher"));
+        assertEquals(publishTime,JSONObject.fromObject(responseGet).getJSONObject("data").getString("publishTime"));
+        assertEquals(enterprise,JSONObject.fromObject(responseGet).getJSONObject("data").getString("enterprise"));
 
     }
 

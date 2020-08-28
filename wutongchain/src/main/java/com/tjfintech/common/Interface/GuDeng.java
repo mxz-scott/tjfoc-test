@@ -11,15 +11,23 @@ public interface GuDeng {
     String GDEnterpriseResister(String contractAddress,Map basicInfo, Map businessInfo, Map legalPersonInfo, String extend);
     String GDCreateAccout(String contractAddress,Map investorInfo);
 
-    String GDShareIssue(String contractAddress,String platformKeyId,String equityCode,List<Map>shareList);
-    String GDShareChangeProperty(String platformKeyId, String address, String equityCode, double amout, int oldShareProperty, int newShareProperty);
+    String GDShareIssue(String contractAddress,String platformKeyId,String equityCode,List<Map> shareList);
+    String GDShareChangeProperty(String platformKeyId, String address, String equityCode, double amount, int oldShareProperty, int newShareProperty);
 
     String GDShareChangeBoard(String platformKeyId,String companyId,String oldEquityCode,String newEquityCode);
 
     String GDShareTransfer(String keyId,String fromAddr,double amount,String toAddr, int shareProperty,String equityCode,int txType,
                            String orderNo,int orderWay,int orderType,String price,String time,String remark);
-    String GDShareIncrease(String contractAddress,String platformKeyId,String equityCode,List<Map>shareList,String reason);
+    String GDShareIncrease(String contractAddress,String platformKeyId,String equityCode,List<Map> shareList,String reason);
+
+    String GDShareLock(String bizNo, String address, String equityCode, double amount, int shareProperty, String reason,String cutoffDate);
+    String GDShareUnlock(String bizNo, String equityCode, double amount);
+
+    String GDShareRecycle(String platformKeyId,String equityCode,List<Map> addressList,String remark);
 
     String GDAccountDestroy(String contractAddress,String clientNo);
+
+    String GDInfoPublish(String type,String subType,String title,String fileHash,String fileURL,String hashAlgo,String publisher,String publishTime,String enterprise);
+    String GDInfoPublishGet(String txId);
 
 }
