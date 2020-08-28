@@ -274,7 +274,7 @@ public class enterpriseRegisterTest {
     }
 
     @Test
-    public void TC12_shareIncrease() throws Exception {
+    public void TC12_shareRecycle() throws Exception {
 
         String eqCode = equityCode;
         String remark = "777777";
@@ -297,7 +297,7 @@ public class enterpriseRegisterTest {
 
         String oldEquityCode = equityCode;
         String newEquityCode = "SZ100003";
-        String cpnyId = companyId;
+        String cpnyId = "XXXX";
 
         String response= gd.GDShareChangeBoard(platformKeyID,cpnyId,oldEquityCode,newEquityCode);
         JSONObject jsonObject=JSONObject.fromObject(response);
