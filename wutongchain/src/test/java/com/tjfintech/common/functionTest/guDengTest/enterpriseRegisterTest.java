@@ -13,6 +13,7 @@ import org.junit.runners.MethodSorters;
 
 import java.util.*;
 
+import static com.tjfintech.common.CommonFunc.gdConstructShareList;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.junit.Assert.assertEquals;
@@ -127,8 +128,8 @@ public class enterpriseRegisterTest {
         mapinvestor.put("accountType",0);
         mapinvestor.put("accountStatus",0);
         mapinvestor.put("registrationDate","621552");
-        mapinvestor.put("lastTradingDate","www.wutongchain.com");
-        mapinvestor.put("closingDate","test@wutongchain.com");
+        mapinvestor.put("lastTradingDate","20200828");
+        mapinvestor.put("closingDate","20200828");
         mapinvestor.put("shareholderAmount",3);
 
         String extend = "";
@@ -359,31 +360,6 @@ public class enterpriseRegisterTest {
 
 
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public  List<Map>   gdConstructShareList(String address, double amount, int shareProperty){
 
-        Map<String,Object> shares = new HashMap<>();
-        shares.put("address",address);
-        shares.put("amount",amount);
-        shares.put("shareProperty",shareProperty);
-
-        List<Map> shareList = new ArrayList<>();
-        shareList.add(shares);
-        return shareList;
-    }
-
-    public  List<Map>   gdConstructShareList(String address, double amount, int shareProperty, List<Map> list){
-        List<Map> shareList = new ArrayList<>();
-        for(int i = 0 ; i < list.size() ; i++) {
-            shareList.add(list.get(i));
-        }
-        Map<String,Object> shares = new HashMap<>();
-        shares.put("address",address);
-        shares.put("amount",amount);
-        shares.put("shareProperty",shareProperty);
-
-        shareList.add(shares);
-        return shareList;
-    }
 
 }

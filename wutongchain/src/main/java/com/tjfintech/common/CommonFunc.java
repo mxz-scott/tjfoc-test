@@ -1215,4 +1215,31 @@ public class CommonFunc {
             assertEquals("data not same",false,true);
         }
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static List<Map>   gdConstructShareList(String address, double amount, int shareProperty){
+
+        Map<String,Object> shares = new HashMap<>();
+        shares.put("address",address);
+        shares.put("amount",amount);
+        shares.put("shareProperty",shareProperty);
+
+        List<Map> shareList = new ArrayList<>();
+        shareList.add(shares);
+        return shareList;
+    }
+
+    public static List<Map>   gdConstructShareList(String address, double amount, int shareProperty, List<Map> list){
+        List<Map> shareList = new ArrayList<>();
+        for(int i = 0 ; i < list.size() ; i++) {
+            shareList.add(list.get(i));
+        }
+        Map<String,Object> shares = new HashMap<>();
+        shares.put("address",address);
+        shares.put("amount",amount);
+        shares.put("shareProperty",shareProperty);
+
+        shareList.add(shares);
+        return shareList;
+    }
 }
