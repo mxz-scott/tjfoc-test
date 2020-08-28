@@ -108,8 +108,8 @@ public class createAccountInterfaceTest {
         log.info(" ************************ test mapInvestorInfo must ************************ ");
         response = gd.GDCreateAccout(contractAddr,null);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        int count = StringUtils.countOccurrencesOf(response,"required");
-        log.info("required count: " + count);
+
+        log.info("required count: " + StringUtils.countOccurrencesOf(response,"required"));
 
 
         log.info(" ************************ test investorInfo.clientName must ************************ ");
@@ -158,8 +158,7 @@ public class createAccountInterfaceTest {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
 //        assertEquals("无效的参数:Key: 'InvestorsAndContractAddress.ContractAddress' Error:Field validation for 'ContractAddress' failed on the 'required' tag",
 //                JSONObject.fromObject(response).getString("message"));
-        count = StringUtils.countOccurrencesOf(response,"required");
-        log.info("required count: " + count);
+        log.info("required count: " + StringUtils.countOccurrencesOf(response,"required"));
 
 
         log.info(" ************************ test investorInfo.personalInfo.clientFullName must ************************ ");
@@ -326,8 +325,7 @@ public class createAccountInterfaceTest {
 //        assertEquals("无效的参数:Key: 'InvestorsAndContractAddress.ContractAddress' Error:Field validation for 'ContractAddress' failed on the 'required' tag",
 //                JSONObject.fromObject(response).getString("message"));
 
-        count = StringUtils.countOccurrencesOf(response,"required");
-        log.info("required count: " + count);
+        log.info("required count: " + StringUtils.countOccurrencesOf(response,"required"));
 
 
         log.info(" ************************ test investorInfo.investor.currency must ************************ ");
