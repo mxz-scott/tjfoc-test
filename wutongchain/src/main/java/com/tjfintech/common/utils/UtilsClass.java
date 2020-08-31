@@ -115,6 +115,28 @@ public class UtilsClass {
     public static int worldStateUpdTime = 1500;
 
 
+    //gudeng 信息
+    public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
+    public static String gdPlatfromKeyID = "bt64tfppgfltc7nnqogg";
+    public static String gdEquityCode = "gdECSZ00" + Random(6);
+    public static String gdCompanyID = "gdCmpyId0001";
+
+    public static String gdAccClientNo1 = "No000001";
+    public static String gdAccClientNo2 = "No000002";
+    public static String gdAccClientNo3 = "No000003";
+    public static String gdAccClientNo4 = "No000004";
+    public static String gdAccClientNo5 = "No000005";
+    public static String gdAccClientNo6 = "No000006";
+    public static String gdAccClientNo7 = "No000007";
+    public static String gdAccClientNo8 = "No000008";
+    public static String gdAccClientNo9 = "No000009";
+    public static String gdAccClientNo10 = "No0000010";
+
+    public static String gdAccount1,gdAccount2,gdAccount3,gdAccount4,gdAccount5,
+                         gdAccount6,gdAccount7,gdAccount8,gdAccount9,gdAccount10;
+    public static String gdAccountKeyID1,gdAccountKeyID2,gdAccountKeyID3,gdAccountKeyID4,gdAccountKeyID5,
+                         gdAccountKeyID6,gdAccountKeyID7,gdAccountKeyID8,gdAccountKeyID9,gdAccountKeyID10;
+
     //UTXO精度
     public static Integer PRECISION = 6;
 

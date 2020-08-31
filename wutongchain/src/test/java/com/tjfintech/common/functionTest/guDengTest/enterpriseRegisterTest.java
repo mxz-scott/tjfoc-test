@@ -1,12 +1,14 @@
 package com.tjfintech.common.functionTest.guDengTest;
 
 import com.tjfintech.common.CommonFunc;
+import com.tjfintech.common.GDBeforeCondition;
 import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -28,20 +30,19 @@ public class enterpriseRegisterTest {
     Store store =testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
-    String contractAddr = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
-    String platformKeyID = "bt45k19pgfltc7nnqn50";
-    String companyId = "company100001";
-    String clientNo = "c0000001";
-    String equityCode = "SZ100001";
+    String bizNoTest = "test" + Random(12);
 
+    @BeforeClass
+    public static void Before()throws Exception{
+        GDBeforeCondition gdBefore = new GDBeforeCondition();
+        gdBefore.gdCreateAccout();
+    }
 
     @Test
     public void TC01_enterpriseRegister() throws Exception {
-        String compId = companyId;
-        String eqCode = equityCode;
 
         Map mapBaseInfo = new HashMap();
-        mapBaseInfo.put("equityCode",eqCode);
+        mapBaseInfo.put("equityCode",gdEquityCode);
         mapBaseInfo.put("equitySimpleName","苏州股权代码");
         mapBaseInfo.put("equityType",0);
         mapBaseInfo.put("totalShares",1000000);
@@ -50,7 +51,7 @@ public class enterpriseRegisterTest {
         mapBaseInfo.put("certificateType",0);
         mapBaseInfo.put("certificateNo","1585685245666821236");
         mapBaseInfo.put("currency","人民币");
-        mapBaseInfo.put("companyId",compId);
+        mapBaseInfo.put("companyId",gdCompanyID);
         mapBaseInfo.put("companyLogo","苏州同济区块链研究");
         mapBaseInfo.put("companySimpleName","苏同院");
         mapBaseInfo.put("companyENName","tjfoc");
@@ -85,7 +86,7 @@ public class enterpriseRegisterTest {
 
         String extend = "{\"city\":\"苏州\"}";
 
-        String response= gd.GDEnterpriseResister(contractAddr,mapBaseInfo,mapBzInfo,maplegalPersonInfo,extend);
+        String response= gd.GDEnterpriseResister(gdContractAddress,mapBaseInfo,mapBzInfo,maplegalPersonInfo,extend);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -98,12 +99,12 @@ public class enterpriseRegisterTest {
     @Test
     public void TC03_createAccout() throws Exception {
 
-        String cltNo = clientNo;
-        String shareHolderNo = "s0000001";
-        String eqCode = equityCode;
+        String cltNo = "testclientNo" + Random(6);
+        String shareHolderNo = "SH" + cltNo;
+        String eqCode = gdEquityCode;
 
         Map mapPersonInfo = new HashMap();
-        mapPersonInfo.put("clientFullName",eqCode);
+        mapPersonInfo.put("clientFullName","fullname" + cltNo);
         mapPersonInfo.put("organizationType","苏州股权代码");
         mapPersonInfo.put("certificateType",0);
         mapPersonInfo.put("certificateNo","123456468123153");
@@ -136,19 +137,19 @@ public class enterpriseRegisterTest {
 
         Map mapInvestorInfo = new HashMap();
 
-        mapInvestorInfo.put("clientName","034654");
+        mapInvestorInfo.put("clientName","name" + cltNo);
         mapInvestorInfo.put("shareholderNo",shareHolderNo);
-        mapInvestorInfo.put("fundNo","f0000001");
+        mapInvestorInfo.put("fundNo","fund" + cltNo);
         mapInvestorInfo.put("clientNo",cltNo);
         mapInvestorInfo.put("extend",extend);
         mapInvestorInfo.put("personalInfo",mapPersonInfo);
         mapInvestorInfo.put("investor",mapinvestor);
 
 
-        String response= gd.GDCreateAccout(contractAddr,mapInvestorInfo);
+        String response= gd.GDCreateAccout(gdContractAddress,mapInvestorInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
-        assertEquals(clientNo,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("clientNo"));
+        assertEquals(cltNo,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("clientNo"));
         assertEquals(shareHolderNo,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("shareholderNo"));
         String keyId = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("keyId");
         String address = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("address");
@@ -160,14 +161,12 @@ public class enterpriseRegisterTest {
     @Test
     public void TC06_shareIssue() throws Exception {
 
-        String eqCode = equityCode;
+        List<Map> shareList = gdConstructShareList(gdAccount1,5000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,5000,0, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,5000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,5000,0, shareList3);
 
-        List<Map> shareList = gdConstructShareList("SnxqVBW7K7L8bRykHKttVjG81phwUYu7ZzZMB1bs1qYaA2GBbJM",5000,0);
-        List<Map> shareList2 = gdConstructShareList("So6uaUagSbBcDEt935v8sdA52cQ2QFRnVx9nBoaNmzKxomxSRkn",5000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList("Sn6KRMf6heVv55V2AWzyE4mF9n8isgshAeZJVMhuW1bG2ARsd15",5000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList("SnnswixfQNaJd9v19LPEFY4UoAmxGtmEivHn6GBnYDD8aPtyjpY",5000,0, shareList3);
-
-        String response= gd.GDShareIssue(contractAddr,platformKeyID,eqCode,shareList4);
+        String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -178,13 +177,13 @@ public class enterpriseRegisterTest {
     @Test
     public void TC07_shareChangeProperty() throws Exception {
 
-        String eqCode = equityCode;
-        String address = "SnxqVBW7K7L8bRykHKttVjG81phwUYu7ZzZMB1bs1qYaA2GBbJM";
+        String eqCode = gdEquityCode;
+        String address = gdAccount1;
         double changeAmount = 500;
         int oldProperty = 0;
         int newProperty = 1;
 
-        String response= gd.GDShareChangeProperty(platformKeyID,address,eqCode,changeAmount,oldProperty,newProperty);
+        String response= gd.GDShareChangeProperty(gdPlatfromKeyID,address,eqCode,changeAmount,oldProperty,newProperty);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -195,12 +194,12 @@ public class enterpriseRegisterTest {
 
     @Test
     public void TC08_shareTransfer()throws Exception{
-        String keyId = "bt3hd3ppgfltc7nnqlt0";
-        String fromAddr = "SnxqVBW7K7L8bRykHKttVjG81phwUYu7ZzZMB1bs1qYaA2GBbJM";
+        String keyId = gdAccountKeyID1;
+        String fromAddr = gdAccount1;
         double amount = 100;
-        String toAddr = "SnxqVBW7K7L8bRykHKttVjG81phwUYu7ZzZMB1bs1qYaA2GBbJM";
+        String toAddr = gdAccount5;
         int shareProperty = 0;
-        String eqCode = equityCode;
+        String eqCode = gdEquityCode;
         int txType = 0;
         String orderNo = "test202008280952";
         int orderWay = 0;
@@ -221,15 +220,15 @@ public class enterpriseRegisterTest {
     @Test
     public void TC09_shareIncrease() throws Exception {
 
-        String eqCode = equityCode;
+        String eqCode = gdEquityCode;
         String reason = "股份分红";
 
-        List<Map> shareList = gdConstructShareList("SnxqVBW7K7L8bRykHKttVjG81phwUYu7ZzZMB1bs1qYaA2GBbJM",1000,0);
-        List<Map> shareList2 = gdConstructShareList("So6uaUagSbBcDEt935v8sdA52cQ2QFRnVx9nBoaNmzKxomxSRkn",1000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList("Sn6KRMf6heVv55V2AWzyE4mF9n8isgshAeZJVMhuW1bG2ARsd15",1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList("SnnswixfQNaJd9v19LPEFY4UoAmxGtmEivHn6GBnYDD8aPtyjpY",1000,0, shareList3);
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        String response= gd.GDShareIncrease(contractAddr,platformKeyID,eqCode,shareList4,reason);
+        String response= gd.GDShareIncrease(gdContractAddress,gdPlatfromKeyID,eqCode,shareList4,reason);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -241,10 +240,10 @@ public class enterpriseRegisterTest {
     @Test
     public void TC10_shareLock() throws Exception {
 
-        String bizNo = "test20200828001";
-        String eqCode = equityCode;
-        String address = "SnxqVBW7K7L8bRykHKttVjG81phwUYu7ZzZMB1bs1qYaA2GBbJM";
-        double lockAmount = 500;
+        String bizNo = bizNoTest;
+        String eqCode = gdEquityCode;
+        String address = gdAccount1;
+        double lockAmount = 50;
         int shareProperty = 0;
         String reason = "司法冻结";
         String cutoffDate = "20200930";
@@ -261,8 +260,8 @@ public class enterpriseRegisterTest {
     @Test
     public void TC11_shareUnlock() throws Exception {
 
-        String bizNo = "test20200828001";
-        String eqCode = equityCode;
+        String bizNo = bizNoTest;
+        String eqCode = gdEquityCode;
         double amount = 100;
 
         String response= gd.GDShareUnlock(bizNo,eqCode,amount);
@@ -277,15 +276,15 @@ public class enterpriseRegisterTest {
     @Test
     public void TC12_shareRecycle() throws Exception {
 
-        String eqCode = equityCode;
+        String eqCode = gdEquityCode;
         String remark = "777777";
 
-        List<Map> shareList = gdConstructShareList("SnxqVBW7K7L8bRykHKttVjG81phwUYu7ZzZMB1bs1qYaA2GBbJM",1000,0);
-        List<Map> shareList2 = gdConstructShareList("So6uaUagSbBcDEt935v8sdA52cQ2QFRnVx9nBoaNmzKxomxSRkn",1000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList("Sn6KRMf6heVv55V2AWzyE4mF9n8isgshAeZJVMhuW1bG2ARsd15",1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList("SnnswixfQNaJd9v19LPEFY4UoAmxGtmEivHn6GBnYDD8aPtyjpY",1000,0, shareList3);
+        List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,100,0, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,100,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,100,0, shareList3);
 
-        String response= gd.GDShareRecycle(platformKeyID,eqCode,shareList4,remark);
+        String response= gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList4,remark);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -296,11 +295,11 @@ public class enterpriseRegisterTest {
     @Test
     public void TC13_shareChangeBoard() throws Exception {
 
-        String oldEquityCode = equityCode;
-        String newEquityCode = "SZ100003";
-        String cpnyId = "XXXX";
+        String oldEquityCode = gdEquityCode;
+        String newEquityCode = gdEquityCode + Random(5);
+        String cpnyId = gdCompanyID;
 
-        String response= gd.GDShareChangeBoard(platformKeyID,cpnyId,oldEquityCode,newEquityCode);
+        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -312,9 +311,10 @@ public class enterpriseRegisterTest {
 
     @Test
     public void TC205_accountDestroy() throws Exception {
-        String clntNo = clientNo;
 
-        String response= gd.GDAccountDestroy(contractAddr,clntNo);
+        String clntNo = gdAccClientNo10;
+
+        String response= gd.GDAccountDestroy(gdContractAddress,clntNo);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
