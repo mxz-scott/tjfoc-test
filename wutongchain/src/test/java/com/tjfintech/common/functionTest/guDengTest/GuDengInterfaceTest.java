@@ -471,6 +471,11 @@ public class GuDengInterfaceTest {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("Error:Field validation for 'EquityCode' failed on the 'required"));
 
+        //remark为空
+        response= gd.GDShareRecycle(platformKeyID,eqCode,shareList4,"");
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("Error:Field validation for 'Remark' failed on the 'required"));
+
     }
 
 
