@@ -274,7 +274,23 @@ public class enterpriseRegisterTest {
     }
 
     @Test
-    public void TC12_shareRecycle() throws Exception {
+    public void TC1201_shareRecycleOneAcc() throws Exception {
+
+        String eqCode = gdEquityCode;
+        String remark = "777777";
+
+        List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
+
+        String response= gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList,remark);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String txId = jsonObject.getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+    }
+
+    @Test
+    public void TC12_shareRecycleMultiAcc() throws Exception {
 
         String eqCode = gdEquityCode;
         String remark = "777777";
