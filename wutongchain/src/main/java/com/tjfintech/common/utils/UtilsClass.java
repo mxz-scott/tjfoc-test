@@ -117,20 +117,20 @@ public class UtilsClass {
 
     //gudeng 信息
     public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
-    public static String gdPlatfromKeyID = "bt64tfppgfltc7nnqogg";
+    public static String gdPlatfromKeyID = "bt6pvn1pgfltc7nnrer0";
     public static String gdEquityCode = "gdECSZ00" + Random(6);
     public static String gdCompanyID = "gdCmpyId0001";
 
-    public static String gdAccClientNo1 = "No000001";
-    public static String gdAccClientNo2 = "No000002";
-    public static String gdAccClientNo3 = "No000003";
-    public static String gdAccClientNo4 = "No000004";
-    public static String gdAccClientNo5 = "No000005";
-    public static String gdAccClientNo6 = "No000006";
-    public static String gdAccClientNo7 = "No000007";
-    public static String gdAccClientNo8 = "No000008";
-    public static String gdAccClientNo9 = "No000009";
-    public static String gdAccClientNo10 = "No0000010";
+    public static String gdAccClientNo1 = "No000" + Random(10);
+    public static String gdAccClientNo2 = "No100" + Random(10);
+    public static String gdAccClientNo3 = "No200" + Random(10);
+    public static String gdAccClientNo4 = "No300" + Random(10);
+    public static String gdAccClientNo5 = "No400" + Random(10);
+    public static String gdAccClientNo6 = "No500" + Random(10);
+    public static String gdAccClientNo7 = "No600" + Random(10);
+    public static String gdAccClientNo8 = "No700" + Random(10);
+    public static String gdAccClientNo9 = "No800" + Random(10);
+    public static String gdAccClientNo10 = "No900" + Random(10);
 
     public static String gdAccount1,gdAccount2,gdAccount3,gdAccount4,gdAccount5,
                          gdAccount6,gdAccount7,gdAccount8,gdAccount9,gdAccount10;
