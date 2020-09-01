@@ -72,7 +72,7 @@ public class GDBeforeCondition {
         mapPersonInfo.put("certificateType",0);
         mapPersonInfo.put("certificateNo","123456468123153");
         mapPersonInfo.put("certificateAddress","certificateAddress");
-        mapPersonInfo.put("gender","苏州同济区块链研究");
+        mapPersonInfo.put("gender",0);
         mapPersonInfo.put("telephone","051266616688");
         mapPersonInfo.put("phone","1598222555555");
         mapPersonInfo.put("postalCode","200120");

@@ -332,7 +332,7 @@ public class GuDengInterfaceTest {
         mapPersonInfo.put("certificateType",0);
         mapPersonInfo.put("certificateNo","123456468123153");
         mapPersonInfo.put("certificateAddress","certificateAddress");
-        mapPersonInfo.put("gender","苏州同济区块链研究");
+        mapPersonInfo.put("gender",0);
         mapPersonInfo.put("telephone","1598222555555");
         mapPersonInfo.put("phone","1598222555555");
         mapPersonInfo.put("postalCode","1585685245666821236");
@@ -371,14 +371,14 @@ public class GuDengInterfaceTest {
 
         String response= gd.GDCreateAccout(gdContractAddress,mapInvestorInfo);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
-//        String txId = jsonObject.getJSONObject("data").getString("txId");
-//        assertEquals(clientNo,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("clientNo"));
-//        assertEquals(shareHolderNo,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("shareholderNo"));
-//        String keyId = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("keyId");
-//        String address = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("address");
-//
-//        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-//        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        assertEquals(cltNo,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("clientNo"));
+        assertEquals(shareHolderNo,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("shareholderNo"));
+        String keyId = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("keyId");
+        String address = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("address");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
         log.info(" ************************ test gdContractAddressess must ************************ ");
         response = gd.GDCreateAccout("",mapInvestorInfo);
@@ -438,8 +438,6 @@ public class GuDengInterfaceTest {
 
         response = gd.GDCreateAccout(gdContractAddress,mapInvestorInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-//        assertEquals("无效的参数:Key: 'InvestorsAndContractAddress.ContractAddress' Error:Field validation for 'ContractAddress' failed on the 'required' tag",
-//                JSONObject.fromObject(response).getString("message"));
         log.info("required count: " + StringUtils.countOccurrencesOf(response,"required"));
 
 
@@ -453,32 +451,8 @@ public class GuDengInterfaceTest {
                 JSONObject.fromObject(response).getString("message"));
 
 
-        log.info(" ************************ test investorInfo.personalInfo.certificateType must ************************ ");
-        mapPersonInfo.clear();
-        mapPersonInfo.put("clientFullName",eqCode);
-        mapPersonInfo.put("organizationType","苏州股权代码");
-//        mapPersonInfo.put("certificateType",0);//不传入该参数
-        mapPersonInfo.put("certificateNo","123456468123153");
-        mapPersonInfo.put("certificateAddress","certificateAddress");
-        mapPersonInfo.put("gender","苏州同济区块链研究");
-        mapPersonInfo.put("telephone","1598222555555");
-        mapPersonInfo.put("phone","1598222555555");
-        mapPersonInfo.put("postalCode","1585685245666821236");
-        mapPersonInfo.put("contactAddress","人民币");
-        mapPersonInfo.put("mailBox","1598222555555");
-        mapPersonInfo.put("fax","苏州同济区块链研究");
-        mapPersonInfo.put("equityCode","苏同院");
-        mapPersonInfo.put("equityAmount",5000);
-        mapPersonInfo.put("shareProperty",0);
-
-        mapInvestorInfo.put("personalInfo",mapPersonInfo);
-
-        response = gd.GDCreateAccout(gdContractAddress,mapInvestorInfo);
-//        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-//        assertEquals("无效的参数:Key: 'InvestorsAndContractAddress.ContractAddress' Error:Field validation for 'ContractAddress' failed on the 'required' tag",
-//                JSONObject.fromObject(response).getString("message"));
-
         log.info(" ************************ test investorInfo.personalInfo.certificateNo must ************************ ");
+        mapPersonInfo.put("clientFullName","test111");
         mapPersonInfo.put("certificateNo","");
         mapInvestorInfo.put("personalInfo",mapPersonInfo);
 
@@ -495,31 +469,20 @@ public class GuDengInterfaceTest {
 
         response = gd.GDCreateAccout(gdContractAddress,mapInvestorInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-//        assertEquals("无效的参数:Key: 'InvestorsAndContractAddress.ContractAddress' Error:Field validation for 'ContractAddress' failed on the 'required' tag",
-//                JSONObject.fromObject(response).getString("message"));
-
-
-        log.info(" ************************ test investorInfo.personalInfo.telephone must ************************ ");
-        mapPersonInfo.put("certificateAddress","testcertAddr00001");
-        mapPersonInfo.put("telephone","");
-        mapInvestorInfo.put("personalInfo",mapPersonInfo);
-
-        response = gd.GDCreateAccout(gdContractAddress,mapInvestorInfo);
-//        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-//        assertEquals("无效的参数:Key: 'InvestorsAndContractAddress.ContractAddress' Error:Field validation for 'ContractAddress' failed on the 'required' tag",
-//                JSONObject.fromObject(response).getString("message"));
+        assertEquals("无效的参数:Key: 'InvestorsAndContractAddress.InvestorInfo.PersonalInfo.CertificateAddress' Error:Field validation for 'CertificateAddress' failed on the 'required' tag",
+                JSONObject.fromObject(response).getString("message"));
 
 
         log.info(" ************************ test investorInfo.personalInfo.phone must ************************ ");
+        mapPersonInfo.put("certificateAddress","1112223333");
         mapPersonInfo.put("telephone","testtelephoneNo00001");
         mapPersonInfo.put("phone","");
         mapInvestorInfo.put("personalInfo",mapPersonInfo);
 
         response = gd.GDCreateAccout(gdContractAddress,mapInvestorInfo);
-//        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-//        assertEquals("无效的参数:Key: 'InvestorsAndContractAddress.ContractAddress' Error:Field validation for 'ContractAddress' failed on the 'required' tag",
-//                JSONObject.fromObject(response).getString("message"));
-
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("无效的参数:Key: 'InvestorsAndContractAddress.InvestorInfo.PersonalInfo.Phone' Error:Field validation for 'Phone' failed on the 'required' tag",
+                JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test investorInfo.personalInfo.equityCode must ************************ ");
         mapPersonInfo.put("phone","testphoneNo00001");
@@ -540,7 +503,7 @@ public class GuDengInterfaceTest {
         mapPersonInfo.put("certificateType",0);
         mapPersonInfo.put("certificateNo","123456468123153");
         mapPersonInfo.put("certificateAddress","certificateAddress");
-        mapPersonInfo.put("gender","苏州同济区块链研究");
+        mapPersonInfo.put("gender",0);
         mapPersonInfo.put("telephone","1598222555555");
         mapPersonInfo.put("phone","1598222555555");
         mapPersonInfo.put("postalCode","1585685245666821236");
@@ -571,32 +534,6 @@ public class GuDengInterfaceTest {
                 JSONObject.fromObject(response).getString("message"));
 
 
-        log.info(" ************************ test investorInfo.personalInfo.shareProperty must ************************ ");
-        mapPersonInfo.clear();
-        mapPersonInfo.put("clientFullName",eqCode);
-        mapPersonInfo.put("organizationType","苏州股权代码");
-        mapPersonInfo.put("certificateType",0);
-        mapPersonInfo.put("certificateNo","123456468123153");
-        mapPersonInfo.put("certificateAddress","certificateAddress");
-        mapPersonInfo.put("gender","苏州同济区块链研究");
-        mapPersonInfo.put("telephone","1598222555555");
-        mapPersonInfo.put("phone","1598222555555");
-        mapPersonInfo.put("postalCode","1585685245666821236");
-        mapPersonInfo.put("contactAddress","人民币");
-        mapPersonInfo.put("mailBox","1598222555555");
-        mapPersonInfo.put("fax","苏州同济区块链研究");
-        mapPersonInfo.put("equityCode","苏同院");
-        mapPersonInfo.put("equityAmount",5000);
-//        mapPersonInfo.put("shareProperty",0);//不传该参数
-
-        mapInvestorInfo.put("personalInfo",mapPersonInfo);
-
-        response = gd.GDCreateAccout(gdContractAddress,mapInvestorInfo);
-//        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-//        assertEquals("无效的参数:Key: 'InvestorsAndContractAddress.ContractAddress' Error:Field validation for 'ContractAddress' failed on the 'required' tag",
-//                JSONObject.fromObject(response).getString("message"));
-
-
         log.info(" ************************ test investorInfo.investor must ************************ ");
         mapPersonInfo.put("shareProperty",0);
         mapInvestorInfo.put("personalInfo",mapPersonInfo);
@@ -604,8 +541,6 @@ public class GuDengInterfaceTest {
 
         response = gd.GDCreateAccout(gdContractAddress,mapInvestorInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-//        assertEquals("无效的参数:Key: 'InvestorsAndContractAddress.ContractAddress' Error:Field validation for 'ContractAddress' failed on the 'required' tag",
-//                JSONObject.fromObject(response).getString("message"));
 
         log.info("required count: " + StringUtils.countOccurrencesOf(response,"required"));
 
@@ -620,51 +555,8 @@ public class GuDengInterfaceTest {
                 JSONObject.fromObject(response).getString("message"));
 
 
-        log.info(" ************************ test investorInfo.investor.accountType must ************************ ");
-        mapinvestor.clear();
-        mapinvestor.put("salesDepartment","业务一部");
-        mapinvestor.put("clientGroups","群组");
-        mapinvestor.put("equityAccountNo","111111");
-        mapinvestor.put("currency","人民币");
-        mapinvestor.put("board","E板");
-//        mapinvestor.put("accountType",0);//不传入该字段
-        mapinvestor.put("accountStatus",0);
-        mapinvestor.put("registrationDate","621552");
-        mapinvestor.put("lastTradingDate","20200828");
-        mapinvestor.put("closingDate","20200828");
-        mapinvestor.put("shareholderAmount",3);
-
-        mapInvestorInfo.put("investor",mapinvestor);
-
-        response = gd.GDCreateAccout(gdContractAddress,mapInvestorInfo);
-//        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-//        assertEquals("无效的参数:Key: 'InvestorsAndContractAddress.ContractAddress' Error:Field validation for 'ContractAddress' failed on the 'required' tag",
-//                JSONObject.fromObject(response).getString("message"));
-
-
-        log.info(" ************************ test investorInfo.investor.accountStatus must ************************ ");
-        mapinvestor.clear();
-        mapinvestor.put("salesDepartment","业务一部");
-        mapinvestor.put("clientGroups","群组");
-        mapinvestor.put("equityAccountNo","111111");
-        mapinvestor.put("currency","人民币");
-        mapinvestor.put("board","E板");
-        mapinvestor.put("accountType",0);
-//        mapinvestor.put("accountStatus",0);//不传入该字段
-        mapinvestor.put("registrationDate","621552");
-        mapinvestor.put("lastTradingDate","20200828");
-        mapinvestor.put("closingDate","20200828");
-        mapinvestor.put("shareholderAmount",3);
-
-        mapInvestorInfo.put("investor",mapinvestor);
-
-        response = gd.GDCreateAccout(gdContractAddress,mapInvestorInfo);
-//        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-//        assertEquals("无效的参数:Key: 'InvestorsAndContractAddress.ContractAddress' Error:Field validation for 'ContractAddress' failed on the 'required' tag",
-//                JSONObject.fromObject(response).getString("message"));
-
-
         log.info(" ************************ test investorInfo.investor.registrationDate must ************************ ");
+        mapinvestor.put("currency","人民币");
         mapinvestor.put("accountStatus",0);
         mapinvestor.put("registrationDate","");
         mapInvestorInfo.put("investor",mapinvestor);
@@ -721,11 +613,11 @@ public class GuDengInterfaceTest {
         Map mapPersonInfo = new HashMap();
         mapPersonInfo.put("clientFullName", eqCode);
 //        mapPersonInfo.put("organizationType", "苏州股权代码");
-        mapPersonInfo.put("certificateType", 0);
+//        mapPersonInfo.put("certificateType", 0);
         mapPersonInfo.put("certificateNo", "123456468123153");
         mapPersonInfo.put("certificateAddress", "certificateAddress");
-//        mapPersonInfo.put("gender", "苏州同济区块链研究");
-        mapPersonInfo.put("telephone", "1598222555555");
+//        mapPersonInfo.put("gender", 0);
+//        mapPersonInfo.put("telephone", "1598222555555");
         mapPersonInfo.put("phone", "1598222555555");
 //        mapPersonInfo.put("postalCode", "221005");
 //        mapPersonInfo.put("contactAddress", "苏州市相城区");
@@ -733,7 +625,7 @@ public class GuDengInterfaceTest {
 //        mapPersonInfo.put("fax", "苏州同济区块链研究");
         mapPersonInfo.put("equityCode", "苏同院");
         mapPersonInfo.put("equityAmount", 5000);
-        mapPersonInfo.put("shareProperty", 0);
+//        mapPersonInfo.put("shareProperty", 0);
 
         Map mapinvestor = new HashMap();
 //        mapinvestor.put("salesDepartment", "业务一部");
@@ -741,11 +633,11 @@ public class GuDengInterfaceTest {
 //        mapinvestor.put("equityAccountNo", "111111");
         mapinvestor.put("currency", "人民币");
 //        mapinvestor.put("board", "E板");
-        mapinvestor.put("accountType", 0);
-        mapinvestor.put("accountStatus", 0);
-        mapinvestor.put("registrationDate", "621552");
-        mapinvestor.put("lastTradingDate", "20200828");
-//        mapinvestor.put("closingDate", "20200828");
+//        mapinvestor.put("accountType", 0);
+//        mapinvestor.put("accountStatus", 0);
+        mapinvestor.put("registrationDate", "2018-11-12");
+        mapinvestor.put("lastTradingDate", "2019-11-12");
+//        mapinvestor.put("closingDate", "2023-11-12");
         mapinvestor.put("shareholderAmount", 3);
 
         String extend = "";
