@@ -34,7 +34,6 @@ public class GuDengInterfaceTest {
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
     Store store =testBuilder.getStore();
-    String equityCode = "SZ100001";
 
     @BeforeClass
     public static void Before()throws Exception{
@@ -178,30 +177,6 @@ public class GuDengInterfaceTest {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("Error:Field validation for 'ContractAddress' failed on the 'required"));
 
-        //BasicInfo.equityType不传参
-        mapBaseInfo.clear();
-        mapBaseInfo.put("equityCode","SZ100001");
-        mapBaseInfo.put("equitySimpleName","苏州股权代码");
-
-        mapBaseInfo.put("totalShares",1000000);
-        mapBaseInfo.put("companyFullName","苏州同济区块链研究");
-        mapBaseInfo.put("eNName","Suzhou Tongji Blockchain Research Institute");
-        mapBaseInfo.put("certificateType",0);
-        mapBaseInfo.put("certificateNo","1585685245666821236");
-        mapBaseInfo.put("currency","人民币");
-        mapBaseInfo.put("companyId","1598222555555");
-        mapBaseInfo.put("companyLogo","苏州同济区块链研究");
-        mapBaseInfo.put("companySimpleName","苏同院");
-        mapBaseInfo.put("companyENName","tjfoc");
-        mapBaseInfo.put("pinyinCode","suzhoutongjiqukuailianyanjiuyuan");
-        mapBaseInfo.put("txStatus",0);
-        mapBaseInfo.put("listingDate","2018-09-01 18:56:56");
-        mapBaseInfo.put("delistingDate","2018-09-01 18:56:56");
-        mapBaseInfo.put("industry","互联网");
-        mapBaseInfo.put("enterpriseStatus",0);
-        response= gd.GDEnterpriseResister(gdContractAddress,mapBaseInfo,mapBzInfo,maplegalPersonInfo,extend);
-//        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-//        assertEquals(true,response.contains("Error:Field validation for 'EquityType' failed on the 'required"));
 
         //BasicInfo.totalShares不传参
         mapBaseInfo.clear();
@@ -228,94 +203,60 @@ public class GuDengInterfaceTest {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("Error:Field validation for 'TotalShares' failed on the 'required"));
 
-        //BasicInfo.certificateType不传参
-        mapBaseInfo.clear();
+    }
+
+    @Test
+    public void enterpriseIssueInterfaceNotNecessaryTest() throws Exception {
+
+        Map mapBaseInfo = new HashMap();
         mapBaseInfo.put("equityCode","SZ100001");
         mapBaseInfo.put("equitySimpleName","苏州股权代码");
-        mapBaseInfo.put("equityType",0);
+//        mapBaseInfo.put("equityType",0);
         mapBaseInfo.put("totalShares",1000000);
         mapBaseInfo.put("companyFullName","苏州同济区块链研究");
         mapBaseInfo.put("eNName","Suzhou Tongji Blockchain Research Institute");
-
+//        mapBaseInfo.put("certificateType",0);
         mapBaseInfo.put("certificateNo","1585685245666821236");
         mapBaseInfo.put("currency","人民币");
         mapBaseInfo.put("companyId","1598222555555");
-        mapBaseInfo.put("companyLogo","苏州同济区块链研究");
-        mapBaseInfo.put("companySimpleName","苏同院");
-        mapBaseInfo.put("companyENName","tjfoc");
-        mapBaseInfo.put("pinyinCode","suzhoutongjiqukuailianyanjiuyuan");
-        mapBaseInfo.put("txStatus",0);
+//        mapBaseInfo.put("companyLogo","苏州同济区块链研究");
+//        mapBaseInfo.put("companySimpleName","苏同院");
+//        mapBaseInfo.put("companyENName","tjfoc");
+//        mapBaseInfo.put("pinyinCode","suzhoutongjiqukuailianyanjiuyuan");
+//        mapBaseInfo.put("txStatus",0);
         mapBaseInfo.put("listingDate","2018-09-01 18:56:56");
         mapBaseInfo.put("delistingDate","2018-09-01 18:56:56");
-        mapBaseInfo.put("industry","互联网");
-        mapBaseInfo.put("enterpriseStatus",0);
-        response= gd.GDEnterpriseResister(gdContractAddress,mapBaseInfo,mapBzInfo,maplegalPersonInfo,extend);
-//        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-//        assertEquals(true,response.contains("Error:Field validation for 'CertificateType' failed on the 'required"));
+//        mapBaseInfo.put("industry","互联网");
+//        mapBaseInfo.put("enterpriseStatus",0);
 
-        //BasicInfo.txStatus不传参
-        mapBaseInfo.clear();
-        mapBaseInfo.put("equityCode","SZ100001");
-        mapBaseInfo.put("equitySimpleName","苏州股权代码");
-        mapBaseInfo.put("equityType",0);
-        mapBaseInfo.put("totalShares",1000000);
-        mapBaseInfo.put("companyFullName","苏州同济区块链研究");
-        mapBaseInfo.put("eNName","Suzhou Tongji Blockchain Research Institute");
-        mapBaseInfo.put("certificateType",0);
-        mapBaseInfo.put("certificateNo","1585685245666821236");
-        mapBaseInfo.put("currency","人民币");
-        mapBaseInfo.put("companyId","1598222555555");
-        mapBaseInfo.put("companyLogo","苏州同济区块链研究");
-        mapBaseInfo.put("companySimpleName","苏同院");
-        mapBaseInfo.put("companyENName","tjfoc");
-        mapBaseInfo.put("pinyinCode","suzhoutongjiqukuailianyanjiuyuan");
+        Map mapBzInfo = new HashMap();
+//        mapBzInfo.put("province","江苏省");
+//        mapBzInfo.put("city","苏州");
+//        mapBzInfo.put("registeredAddress","相城区");
+//        mapBzInfo.put("officeAddress","领寓商务");
+//        mapBzInfo.put("contactAddress","相城区领寓商务广场12楼");
+//        mapBzInfo.put("phone","051261116444");
+//        mapBzInfo.put("fax","051261116444");
+//        mapBzInfo.put("postalCode","621552");
+//        mapBzInfo.put("internetAddress","www.wutongchain.com");
+//        mapBzInfo.put("mailBox","test@wutongchain.com");
+//        mapBzInfo.put("registeredCapital","1000000");
 
-        mapBaseInfo.put("listingDate","2018-09-01 18:56:56");
-        mapBaseInfo.put("delistingDate","2018-09-01 18:56:56");
-        mapBaseInfo.put("industry","互联网");
-        mapBaseInfo.put("enterpriseStatus",0);
-        response= gd.GDEnterpriseResister(gdContractAddress,mapBaseInfo,mapBzInfo,maplegalPersonInfo,extend);
-//        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-//        assertEquals(true,response.contains("Error:Field validation for 'TxStatus' failed on the 'required"));
-
-
-        //BasicInfo.enterpriseStatus不传参
-        mapBaseInfo.clear();
-        mapBaseInfo.put("equityCode","SZ100001");
-        mapBaseInfo.put("equitySimpleName","苏州股权代码");
-        mapBaseInfo.put("equityType",0);
-        mapBaseInfo.put("totalShares",1000000);
-        mapBaseInfo.put("companyFullName","苏州同济区块链研究");
-        mapBaseInfo.put("eNName","Suzhou Tongji Blockchain Research Institute");
-        mapBaseInfo.put("certificateType",0);
-        mapBaseInfo.put("certificateNo","1585685245666821236");
-        mapBaseInfo.put("currency","人民币");
-        mapBaseInfo.put("companyId","1598222555555");
-        mapBaseInfo.put("companyLogo","苏州同济区块链研究");
-        mapBaseInfo.put("companySimpleName","苏同院");
-        mapBaseInfo.put("companyENName","tjfoc");
-        mapBaseInfo.put("pinyinCode","suzhoutongjiqukuailianyanjiuyuan");
-        mapBaseInfo.put("txStatus",0);
-        mapBaseInfo.put("listingDate","2018-09-01 18:56:56");
-        mapBaseInfo.put("delistingDate","2018-09-01 18:56:56");
-        mapBaseInfo.put("industry","互联网");
-//        mapBaseInfo.put("enterpriseStatus",0);//不传入参数
-        response= gd.GDEnterpriseResister(gdContractAddress,mapBaseInfo,mapBzInfo,maplegalPersonInfo,extend);
-//        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-//        assertEquals(true,response.contains("Error:Field validation for 'TxStatus' failed on the 'required"));
-
-        //LegalPersonPhone.CertificateType
-        mapBaseInfo.put("txStatus",0);
-        maplegalPersonInfo.clear();
+        Map maplegalPersonInfo = new HashMap();
         maplegalPersonInfo.put("name","苏同院");
 //        maplegalPersonInfo.put("certificateType",0);
-        maplegalPersonInfo.put("certificateNo","371526198802156548");
-        maplegalPersonInfo.put("job","test");
-        maplegalPersonInfo.put("legalPersonPhone","15685297828");
-        response= gd.GDEnterpriseResister(gdContractAddress,mapBaseInfo,mapBzInfo,maplegalPersonInfo,extend);
-//        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-//        assertEquals(true,response.contains("Error:Field validation for 'CertificateType' failed on the 'required"));
+        maplegalPersonInfo.put("certificateNo","123456789684984");
+//        maplegalPersonInfo.put("job","test");
+//        maplegalPersonInfo.put("legalPersonPhone","15685297828");
 
+        String extend = "{\"city\":\"苏州\"}";
+
+        //验证接口正常
+        String response= gd.GDEnterpriseResister(gdContractAddress,mapBaseInfo,mapBzInfo,maplegalPersonInfo,"");
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String txId = jsonObject.getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
     }
 
@@ -684,14 +625,14 @@ public class GuDengInterfaceTest {
 
         response = gd.GDShareIssue(gdContractAddress,"",eqCode,shareList2);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("无效的参数",
+        assertEquals("无效的参数:Key: 'SharesRegister.PlatformKeyId' Error:Field validation for 'PlatformKeyId' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test equityCode must ************************ ");
 
         response = gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,"",shareList2);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("无效的参数",
+        assertEquals("无效的参数:Key: 'SharesRegister.EquityCode' Error:Field validation for 'EquityCode' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
 
 
@@ -699,7 +640,7 @@ public class GuDengInterfaceTest {
 
         response = gd.GDShareIssue("",gdPlatfromKeyID,eqCode,shareList2);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("无效的参数",
+        assertEquals("无效的参数:Key: 'SharesRegister.ContractAddress' Error:Field validation for 'ContractAddress' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
 
 
@@ -713,14 +654,14 @@ public class GuDengInterfaceTest {
         List<Map> shareListErr1 = gdConstructShareList("",5000,0);
         response = gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,eqCode,shareListErr1);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("无效的参数",
+        assertEquals("无效的参数:Key: 'SharesRegister.ShareList[0].Address' Error:Field validation for 'Address' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test shareList.amount 0 ************************ ");
         List<Map> shareListErr2 = gdConstructShareList(gdAccount1,0,0);
         response = gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,eqCode,shareListErr2);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("无效的参数",
+        assertEquals("无效的参数:Key: 'SharesRegister.ShareList[0].Amount' Error:Field validation for 'Amount' failed on the 'gt' tag",
                 JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test shareList.amount must ************************ ");
@@ -732,7 +673,7 @@ public class GuDengInterfaceTest {
         shareList22.add(shares2);
         response = gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,eqCode,shareList22);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("无效的参数",
+        assertEquals("无效的参数:Key: 'SharesRegister.ShareList[0].Amount' Error:Field validation for 'Amount' failed on the 'gt' tag",
                 JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test shareList.shareProperty must ************************ ");
@@ -834,7 +775,7 @@ public class GuDengInterfaceTest {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
 
-        String bizNo = "test20200828001";
+        String bizNo = "test20200828001" + Random(10);
         String address = gdAccount1;
         double lockAmount = 500;
         int shareProperty = 0;
@@ -1281,7 +1222,7 @@ public class GuDengInterfaceTest {
         //platformKeyId为空
         response= gd.GDShareRecycle("",eqCode,shareList4,remark);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("Error:Field validation for 'EquityCode' failed on the 'required"));
+        assertEquals(true,response.contains("无效的参数:Key: 'SharesRecycle.PlatformKeyId' Error:Field validation for 'PlatformKeyId' failed on the 'required' tag"));
 
         //equityCode为空
         response= gd.GDShareRecycle(gdPlatfromKeyID,"",shareList4,remark);
@@ -1293,7 +1234,7 @@ public class GuDengInterfaceTest {
         shareList4 = gdConstructShareList("",1000,0,shareList3);
         response= gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList4,remark);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("Error:Field validation for 'EquityCode' failed on the 'required"));
+        assertEquals(true,response.contains("无效的参数:Key: 'SharesRecycle.AddressList[3].Address' Error:Field validation for 'Address' failed on the 'required' tag"));
 
 //        //AddressList.amount不传参
 //        response= gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList4,remark);
@@ -1306,6 +1247,7 @@ public class GuDengInterfaceTest {
 //        assertEquals(true,response.contains("Error:Field validation for 'EquityCode' failed on the 'required"));
 
         //equityCode为空
+        shareList4 = gdConstructShareList(gdAccount4,1000,0,shareList3);
         response= gd.GDShareRecycle(gdPlatfromKeyID,"",shareList4,remark);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("Error:Field validation for 'EquityCode' failed on the 'required"));
@@ -1368,14 +1310,14 @@ public class GuDengInterfaceTest {
 
         log.info(" ************************ test platformKeyId must ************************ ");
 
-        response = gd.GDShareChangeBoard("","testcompanyId",equityCode,"testnew001");
+        response = gd.GDShareChangeBoard("","testcompanyId",eqCode,"testnew001");
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("无效的参数:Key: 'TransferPlate.PlatformKeyId' Error:Field validation for 'PlatformKeyId' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test companyId must ************************ ");
 
-        response = gd.GDShareChangeBoard(gdPlatfromKeyID,"",equityCode,"testnew001");
+        response = gd.GDShareChangeBoard(gdPlatfromKeyID,"",eqCode,"testnew001");
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("无效的参数:Key: 'TransferPlate.CompanyId' Error:Field validation for 'CompanyId' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
@@ -1392,7 +1334,7 @@ public class GuDengInterfaceTest {
 
         log.info(" ************************ test newEquityCode must ************************ ");
 
-        response = gd.GDShareChangeBoard(gdPlatfromKeyID,"testcompanyId",equityCode,"");
+        response = gd.GDShareChangeBoard(gdPlatfromKeyID,"testcompanyId",eqCode,"");
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("无效的参数:Key: 'TransferPlate.NewEquityCode' Error:Field validation for 'NewEquityCode' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));

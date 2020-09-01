@@ -8,6 +8,7 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -30,12 +31,28 @@ public class enterpriseRegisterTest {
     Store store =testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
-    String bizNoTest = "test" + Random(12);
+    public static String bizNoTest = "test" + Random(12);
 
     @BeforeClass
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
+    }
+//    @Before
+    public void IssueEquity()throws Exception{
+        gdEquityCode = "gdEC" + Random(12);
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+
+        //发行
+        String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String txId = jsonObject.getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
     }
 
     @Test
@@ -243,7 +260,7 @@ public class enterpriseRegisterTest {
         String bizNo = bizNoTest;
         String eqCode = gdEquityCode;
         String address = gdAccount1;
-        double lockAmount = 50;
+        double lockAmount = 500;
         int shareProperty = 0;
         String reason = "司法冻结";
         String cutoffDate = "20200930";
@@ -259,6 +276,7 @@ public class enterpriseRegisterTest {
 
     @Test
     public void TC11_shareUnlock() throws Exception {
+        sleepAndSaveInfo(3000);
 
         String bizNo = bizNoTest;
         String eqCode = gdEquityCode;
