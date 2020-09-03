@@ -7,11 +7,9 @@ import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runners.MethodSorters;
 
 import java.util.*;
@@ -73,7 +71,7 @@ public class enterpriseRegisterTest {
         mapBaseInfo.put("companySimpleName","苏同院");
         mapBaseInfo.put("companyENName","tjfoc");
         mapBaseInfo.put("pinyinCode","suzhoutongjiqukuailianyanjiuyuan");
-        mapBaseInfo.put("txStatus",0);
+        mapBaseInfo.put("txStatus",1);
         mapBaseInfo.put("listingDate","2018-09-01 18:56:56");
         mapBaseInfo.put("delistingDate","2018-09-01 18:56:56");
         mapBaseInfo.put("industry","互联网");
@@ -109,6 +107,32 @@ public class enterpriseRegisterTest {
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+        //查询挂牌企业数据
+        //查询投资者信息
+        //查询企业股东信息
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+        assertEquals("400",JSONObject.fromObject(query).getString("state"));
+        assertEquals("股权代码还未发行",JSONObject.fromObject(query).getString("message"));
+
+        //查询股东持股情况 无当前股权代码信息
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
 
     }
 
@@ -173,6 +197,36 @@ public class enterpriseRegisterTest {
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+        //查询挂牌企业数据
+        //查询投资者信息
+        //查询企业股东信息
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+        assertEquals("400",JSONObject.fromObject(query).getString("state"));
+        assertEquals("股权代码还未发行",JSONObject.fromObject(query).getString("message"));
+
+        //查询股东持股情况 无当前股权代码信息
+        query = gd.GDGetShareHolderInfo(gdContractAddress,cltNo);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
     }
 
     @Test
@@ -189,6 +243,36 @@ public class enterpriseRegisterTest {
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+
+        //查询挂牌企业数据
+        //查询投资者信息
+        //查询企业股东信息
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+        assertEquals("200",JSONObject.fromObject(query).getString("state"));
+
+        JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
+        //检查存在余额的股东列表为4个
+        assertEquals(4,dataShareList.size());
+
+        //查询股东持股情况 无当前股权代码信息
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
     }
 
     @Test
@@ -308,7 +392,7 @@ public class enterpriseRegisterTest {
     }
 
     @Test
-    public void TC12_shareRecycleMultiAcc() throws Exception {
+    public void TC1202_shareRecycleMultiAcc() throws Exception {
 
         String eqCode = gdEquityCode;
         String remark = "777777";
@@ -340,6 +424,7 @@ public class enterpriseRegisterTest {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
+        gdEquityCode = newEquityCode;
     }
 
 
@@ -374,8 +459,9 @@ public class enterpriseRegisterTest {
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getString("data");
 
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        sleepAndSaveInfo(5000);
+//        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+//        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
         
         String responseGet = gd.GDInfoPublishGet(txId);
         assertEquals(type,JSONObject.fromObject(responseGet).getJSONObject("data").getString("type"));
@@ -391,7 +477,28 @@ public class enterpriseRegisterTest {
     }
 
 
+    @After
+    public void DestroyEquityAndAcc()throws Exception{
+        //查询企业所有股东持股情况
+        String response = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+        String response10 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        String response11 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        String response12 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
+        String response13 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
+        String response14 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
+        String response15 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
+        String response16 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo7);
+        String response17 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo8);
+        String response18 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo9);
+        String response19 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo10);
 
+
+
+        //依次回收
+
+        //依次销户
+
+    }
 
 
 

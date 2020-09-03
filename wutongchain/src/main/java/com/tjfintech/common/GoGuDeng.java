@@ -214,4 +214,23 @@ public  class GoGuDeng implements GuDeng {
         return result;
     }
 
+    public String GDGetEnterpriseShareInfo(String equityCode){
+        Map<String, Object> map = new HashMap<>();
+        map.put("equityCode", equityCode);
+
+        String result = PostTest.postMethod(SDKADD + "/equity/share/shareholder/list", map);
+        log.info(result);
+        return result;
+    }
+
+    public String GDGetShareHolderInfo(String contractAddress,String clientNo){
+        Map<String, Object> map = new HashMap<>();
+        map.put("contractAddress", contractAddress);
+        map.put("clientNo", clientNo);
+
+        String result = PostTest.postMethod(SDKADD + "/equity/share/query", map);
+        log.info(result);
+        return result;
+    }
+
 }

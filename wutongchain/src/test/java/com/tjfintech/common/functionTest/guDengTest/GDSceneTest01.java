@@ -7,10 +7,12 @@ import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDNormalSceneTest {
+public class GDSceneTest01 {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
@@ -29,6 +31,8 @@ public class GDNormalSceneTest {
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
     public static String bizNoTest = "test" + Random(12);
+    GDUnitFunc uf = new GDUnitFunc();
+    public Boolean bCreateAccOnce = false;
 
     @BeforeClass
     public static void Before()throws Exception{
@@ -40,22 +44,24 @@ public class GDNormalSceneTest {
     public void IssueEquity()throws Exception{
         bizNoTest = "test" + Random(12);
 
-        //重新创建账户
-//        gdAccClientNo1 = "No000" + Random(10);
-//        gdAccClientNo2 = "No100" + Random(10);
-//        gdAccClientNo3 = "No200" + Random(10);
-//        gdAccClientNo4 = "No300" + Random(10);
-//        gdAccClientNo5 = "No400" + Random(10);
-//        gdAccClientNo6 = "No500" + Random(10);
-//        gdAccClientNo7 = "No600" + Random(10);
-//        gdAccClientNo8 = "No700" + Random(10);
-//        gdAccClientNo9 = "No800" + Random(10);
-//       gdAccClientNo10 = "No900" + Random(10);
-//
-//       GDBeforeCondition gdBC = new GDBeforeCondition();
-//       gdBC.gdCreateAccout();
+        if(!bCreateAccOnce) {
+            //重新创建账户
+            gdAccClientNo1 = "No000" + Random(10);
+            gdAccClientNo2 = "No100" + Random(10);
+            gdAccClientNo3 = "No200" + Random(10);
+            gdAccClientNo4 = "No300" + Random(10);
+            gdAccClientNo5 = "No400" + Random(10);
+            gdAccClientNo6 = "No500" + Random(10);
+            gdAccClientNo7 = "No600" + Random(10);
+            gdAccClientNo8 = "No700" + Random(10);
+            gdAccClientNo9 = "No800" + Random(10);
+            gdAccClientNo10 = "No900" + Random(10);
 
-//       sleepAndSaveInfo(3000);
+            GDBeforeCondition gdBC = new GDBeforeCondition();
+            gdBC.gdCreateAccout();
+
+            sleepAndSaveInfo(3000);
+        }
 
         //发行
         gdEquityCode = "gdEC" + Random(12);
@@ -73,16 +79,61 @@ public class GDNormalSceneTest {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
     }
 
-//    @After
+    @After
     public void DestroyEquityAndAcc()throws Exception{
+        List<Map> shareList = new ArrayList<>();
+        Boolean bOnlyZero = false;
+
         //查询企业所有股东持股情况
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+        JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
 
-        //依次回收
+        //判断股权代码股东列表中是否只有回收地址存在额度
+        //若有其他账户存在余额 则信息存入shareList中准备全部回收
+        if(dataShareList.size() == 1 &&
+                (JSONObject.fromObject(dataShareList.get(0)).getString("address").equals(zeroAccount)
+                ||JSONObject.fromObject(dataShareList.get(0)).getString("address").equals(zeroAccount2))){
+            log.info(gdEquityCode + " all recycle!!");
+            bOnlyZero = true;
+        }
+        else{
+            for(int i=0;i<dataShareList.size();i++){
+                if(JSONObject.fromObject(dataShareList.get(0)).getString("address").equals(zeroAccount)
+                        ||JSONObject.fromObject(dataShareList.get(0)).getString("address").equals(zeroAccount2))
+                    continue;
+                else {
+                    double amount = JSONObject.fromObject(dataShareList.get(i)).getDouble("amount");
+                    String address = JSONObject.fromObject(dataShareList.get(i)).getString("address");
+                    int shareProperty = JSONObject.fromObject(dataShareList.get(i)).getInt("shareProperty");
+                    shareList = gdConstructShareList(address, amount, shareProperty, shareList);
+                }
+            }
+        }
 
-        //依次销户
+        //全部回收
+        if(!bOnlyZero)
+            uf.shareRecycle(gdEquityCode,shareList,true);
 
+        //每个测试用例都会重新创建账户时则用例执行完成后则全部销户
+        if(!bCreateAccOnce){
+            uf.destroyAcc(gdAccClientNo1,true);
+            uf.destroyAcc(gdAccClientNo2,true);
+            uf.destroyAcc(gdAccClientNo3,true);
+            uf.destroyAcc(gdAccClientNo4,true);
+            uf.destroyAcc(gdAccClientNo5,true);
+            uf.destroyAcc(gdAccClientNo6,true);
+            uf.destroyAcc(gdAccClientNo7,true);
+            uf.destroyAcc(gdAccClientNo8,true);
+            uf.destroyAcc(gdAccClientNo9,true);
+            uf.destroyAcc(gdAccClientNo10,true);
+        }
     }
 
+
+    @AfterClass
+    public static void destroyAccAfterComplete(){
+
+    }
 
     /***
      * 发行A
@@ -93,7 +144,7 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test1()throws Exception{
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
     }
 
 
@@ -106,8 +157,8 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test2_1()throws Exception{
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,1,"test202008280952");
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,1,"test202008280952",true);
     }
 
     /***
@@ -119,8 +170,8 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test2_2()throws Exception{
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,0,"test202008280952");
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,0,"test202008280952",true);
     }
 
     /***
@@ -137,7 +188,7 @@ public class GDNormalSceneTest {
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
 
     }
 
@@ -151,7 +202,7 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test4()throws Exception{
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
     }
 
 
@@ -164,7 +215,7 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test5()throws Exception{
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
     }
 
 
@@ -178,10 +229,10 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test12()throws Exception{
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
 
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,1,"test202008280952");
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,1,"test202008280952",true);
     }
 
     /***
@@ -194,10 +245,10 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test21()throws Exception{
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,1,"test202008280952");
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,1,"test202008280952",true);
 
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
     }
 
     /***
@@ -209,13 +260,13 @@ public class GDNormalSceneTest {
      */
     @Test
     public void Test13()throws Exception{
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
     }
 
     /***
@@ -232,9 +283,9 @@ public class GDNormalSceneTest {
         List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
 
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
     }
 
     /***
@@ -247,8 +298,8 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test14()throws Exception{
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
     }
 
     /***
@@ -261,8 +312,8 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test41()throws Exception{
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
     }
 
 
@@ -276,8 +327,8 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test15()throws Exception{
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
     }
 
 
@@ -291,8 +342,8 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test51()throws Exception{
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
     }
 
     /***
@@ -305,15 +356,15 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test23()throws Exception{
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,0,"test202008280952");
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,0,"test202008280952",true);
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
     }
 
     /***
@@ -331,10 +382,10 @@ public class GDNormalSceneTest {
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
 
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,1,"test202008280952");
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,1,"test202008280952",true);
 
     }
 
@@ -350,9 +401,9 @@ public class GDNormalSceneTest {
     @Test
     public void Test24()throws Exception{
 
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,1,"test202008280952");
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,1,"test202008280952",true);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
     }
 
     /***
@@ -365,9 +416,9 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test42()throws Exception{
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,0,"test202008280952");
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,0,"test202008280952",true);
     }
 
     /***
@@ -380,9 +431,9 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test25()throws Exception{
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,1,"test202008280952");
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,1,"test202008280952",true);
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
     }
 
     /***
@@ -395,9 +446,9 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test52()throws Exception{
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,0,"test202008280952");
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,0,"test202008280952",true);
     }
 
 
@@ -416,9 +467,9 @@ public class GDNormalSceneTest {
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
 
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
     }
 
     /***
@@ -431,14 +482,14 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test43()throws Exception{
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
     }
 
 
@@ -456,9 +507,9 @@ public class GDNormalSceneTest {
         List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
 
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
 
     }
 
@@ -472,13 +523,13 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test53()throws Exception{
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
     }
 
 
@@ -492,9 +543,9 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test45()throws Exception{
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
 
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
     }
 
     /***
@@ -507,9 +558,9 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test54()throws Exception{
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
 
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
     }
 
     /***
@@ -523,10 +574,10 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test123()throws Exception{
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
 
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,1,"test202008280952");
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,1,"test202008280952",true);
 
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
@@ -534,7 +585,7 @@ public class GDNormalSceneTest {
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
     }
 
     /***
@@ -548,10 +599,10 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test124()throws Exception{
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
 
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,1,"test202008280952");
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,1,"test202008280952",true);
 
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
@@ -559,7 +610,7 @@ public class GDNormalSceneTest {
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
     }
 
     /***
@@ -574,12 +625,12 @@ public class GDNormalSceneTest {
     @Test
     public void Test125()throws Exception{
 
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
 
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,0,"test202008280952");
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,0,"test202008280952",true);
 
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
 
     }
 
@@ -595,16 +646,16 @@ public class GDNormalSceneTest {
     @Test
     public void Test134()throws Exception{
 
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
 
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
     }
 
     /***
@@ -619,16 +670,16 @@ public class GDNormalSceneTest {
     @Test
     public void Test135()throws Exception{
 
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
 
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
     }
 
 
@@ -644,11 +695,11 @@ public class GDNormalSceneTest {
     @Test
     public void Test145()throws Exception{
 
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
 
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
 
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
     }
 
     /***
@@ -663,8 +714,8 @@ public class GDNormalSceneTest {
     @Test
     public void Test234()throws Exception{
 
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,1,"test202008280952");
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,1,"test202008280952",true);
 
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
@@ -672,9 +723,9 @@ public class GDNormalSceneTest {
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
 
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
     }
 
     /***
@@ -688,17 +739,17 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test235()throws Exception{
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,1,"test202008280952");
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,1,"test202008280952",true);
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
 
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
     }
 
     /***
@@ -717,11 +768,11 @@ public class GDNormalSceneTest {
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
 
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
 
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
     }
 
 
@@ -738,10 +789,10 @@ public class GDNormalSceneTest {
     @Test
     public void Test1234()throws Exception{
 
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
 
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,1,"test202008280952");
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,1,"test202008280952",true);
 
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
@@ -749,9 +800,9 @@ public class GDNormalSceneTest {
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
 
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
     }
 
     /***
@@ -766,10 +817,10 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test1235()throws Exception{
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
 
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,1,"test202008280952");
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,1,"test202008280952",true);
 
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
@@ -777,9 +828,9 @@ public class GDNormalSceneTest {
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
 
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
 
     }
 
@@ -797,18 +848,18 @@ public class GDNormalSceneTest {
     @Test
     public void Test1345()throws Exception{
 
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
 
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
 
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
     }
 
 
@@ -825,10 +876,10 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test12345()throws Exception{
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
 
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,1,"test202008280952");
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,1,"test202008280952",true);
 
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
@@ -836,11 +887,11 @@ public class GDNormalSceneTest {
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
 
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
 
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
     }
 
 
@@ -858,14 +909,14 @@ public class GDNormalSceneTest {
     @Test
     public void Test15423()throws Exception{
 
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
 
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
 
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
 
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,1,"test202008280952");
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,1,"test202008280952",true);
 
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
@@ -873,7 +924,7 @@ public class GDNormalSceneTest {
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
     }
 
 
@@ -891,9 +942,9 @@ public class GDNormalSceneTest {
 
     @Test
     public void Test54321()throws Exception{
-        changeBoard(gdEquityCode,gdEquityCode + Random(5));
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
 
-        lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
 
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
@@ -901,161 +952,40 @@ public class GDNormalSceneTest {
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        shareIncrease(gdEquityCode,shareList4);
+        uf.shareIncrease(gdEquityCode,shareList4,true);
 
-        shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
-                gdEquityCode,1,"test202008280952");
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,1,"test202008280952",true);
 
-        changeSHProperty(gdAccount1,gdEquityCode,500,0,1);
-    }
-
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /***
-     * 股份性质变更
-     * @param eqCode    股权代码
-     * @param address    变更账户
-     * @param changeAmount  变更数量
-     * @param oldProperty  变更前股权性质
-     * @param newProperty  变更后股权性质
-     * @throws Exception
-     */
-    public void changeSHProperty(String address,String eqCode,double changeAmount,int oldProperty,int newProperty)throws Exception{
-
-        String response= gd.GDShareChangeProperty(gdPlatfromKeyID,address,eqCode,changeAmount,oldProperty,newProperty);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String txId = jsonObject.getJSONObject("data").getString("txId");
-
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
     }
 
 
     /***
-     * 过户转让
-     * @param keyID  转出账户地址的keyID
-     * @param fromAddr   转出地址
-     * @param amount    转出数量
-     * @param toAddr    转入地址
-     * @param shareProperty  股权代码性质
-     * @param eqCode  股权代码
-     * @param txType  交易类型 （0：非交易过户，1：交易过户）
-     * @param orderNo 委托编号
-     * @throws Exception
+     * 存在各种交易后场内转板
      */
-    public void shareTransfer(String keyID,String fromAddr,double amount,String toAddr,int shareProperty,String eqCode,int txType,String orderNo)throws Exception{
-        int orderWay = 0;
-        int orderType = 0;
-        String price = "10000";
-        String time = "20200828";
-        String remark = "转账";
-        String response= gd.GDShareTransfer(keyID,fromAddr,amount,toAddr,shareProperty,eqCode,txType,
-                orderNo,orderWay,orderType,price,time,remark);
 
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String txId = jsonObject.getJSONObject("data").getString("txId");
+    @Test
+    public void changeBoard_AfterAllPro()throws Exception{
+        uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
 
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-    }
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,1,"test202008280952",true);
 
-    /***
-     * 股份增发
-     * @param eqCode  待增发股权代码
-     * @param shareList  增发列表
-     * @throws Exception
-     */
-    public void shareIncrease(String eqCode,List<Map> shareList)throws Exception{
 
-        String reason = "股份分红";
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        String response= gd.GDShareIncrease(gdContractAddress,gdPlatfromKeyID,eqCode,shareList,reason);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String txId = jsonObject.getJSONObject("data").getString("txId");
+        uf.shareIncrease(gdEquityCode,shareList4,true);
 
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        uf.shareRecycle(gdEquityCode,shareList2,true);
+
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0,true);
+
+        uf.changeBoard(gdEquityCode,gdEquityCode + Random(5),true);
     }
 
 
-    /***
-     * 冻结解冻
-     * @param bizNo  商务编号 唯一
-     * @param eqCode  股权代码
-     * @param address  待冻结账户
-     * @param lockAmount    冻结数量
-     * @param shareProperty     冻结股权性质
-     * @throws Exception
-     */
-    public void lockAndUnlock(String bizNo,String eqCode,String address,double lockAmount,int shareProperty)throws Exception{
-
-        String reason = "司法冻结";
-        String cutoffDate = "20220930";
-
-        String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String txId = jsonObject.getJSONObject("data").getString("txId");
-
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
-        //解除冻结
-        response= gd.GDShareUnlock(bizNo,eqCode,lockAmount);
-        txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
-
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
-    }
-
-    /***
-     * 场内转板接口
-     * @param oldEquityCode  转前股权代码
-     * @param newEquityCode  转后股权代码
-     * @throws Exception
-     */
-    public void changeBoard(String oldEquityCode,String newEquityCode)throws Exception{
-
-        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,gdCompanyID,oldEquityCode,newEquityCode);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String txId = jsonObject.getJSONObject("data").getString("txId");
-
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
-        gdEquityCode = newEquityCode;
-    }
-
-    /***
-     * 回收/减资
-     * @param eqCode   回收的股权代码
-     * @param shareList  回收地址账户列表
-     * @throws Exception
-     */
-    public void recycleAcc(String eqCode ,List<Map> shareList) throws Exception {
-        String remark = "777777";
-        String response= gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList,remark);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String txId = jsonObject.getJSONObject("data").getString("txId");
-
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-    }
-
-
-    /***
-     * 销户接口
-     * @param clntNo   客户号
-     * @throws Exception
-     */
-    public void destroyAcc(String clntNo) throws Exception {
-        String response= gd.GDAccountDestroy(gdContractAddress,clntNo);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String txId = jsonObject.getJSONObject("data").getString("txId");
-
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
-    }
 }

@@ -117,7 +117,7 @@ public class UtilsClass {
 
     //gudeng 信息
     public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
-    public static String gdPlatfromKeyID = "bt6pvn1pgfltc7nnrer0";
+    public static String gdPlatfromKeyID = "bt85ed9pgfltc7nnrv10";
     public static String gdEquityCode = "gdECSZ00" + Random(6);
     public static String gdCompanyID = "gdCmpyId0001";
 

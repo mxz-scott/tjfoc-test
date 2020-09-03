@@ -171,7 +171,7 @@ public class GuDengInterfaceTest {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("Error:Field validation for 'CertificateNo' failed on the 'required"));
 
-        //gdContractAddressess为空
+        //gdContractAddress为空
         maplegalPersonInfo.put("certificateNo","1585685245666821236");
         response= gd.GDEnterpriseResister("",mapBaseInfo,mapBzInfo,maplegalPersonInfo,extend);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
@@ -201,7 +201,7 @@ public class GuDengInterfaceTest {
         mapBaseInfo.put("enterpriseStatus",0);
         response= gd.GDEnterpriseResister(gdContractAddress,mapBaseInfo,mapBzInfo,maplegalPersonInfo,extend);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("Error:Field validation for 'TotalShares' failed on the 'required"));
+        assertEquals(true,response.contains("Error:Field validation for 'TotalShares' failed on the 'gt' tag"));
 
     }
 
@@ -425,8 +425,20 @@ public class GuDengInterfaceTest {
         assertEquals("无效的参数:Key: 'InvestorsAndContractAddress.InvestorInfo.PersonalInfo.Phone' Error:Field validation for 'Phone' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
 
+
+        log.info(" ************************ test investorInfo.personalInfo.contactAddress must ************************ ");
+        mapPersonInfo.put("phone","051261616161");
+        mapPersonInfo.put("contactAddress","");
+        mapInvestorInfo.put("personalInfo",mapPersonInfo);
+
+        response = gd.GDCreateAccout(gdContractAddress,mapInvestorInfo);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("无效的参数:Key: 'InvestorsAndContractAddress.InvestorInfo.PersonalInfo.ContactAddress' Error:Field validation for 'ContactAddress' failed on the 'required' tag",
+                JSONObject.fromObject(response).getString("message"));
+
+
         log.info(" ************************ test investorInfo.personalInfo.equityCode must ************************ ");
-        mapPersonInfo.put("phone","testphoneNo00001");
+        mapPersonInfo.put("contactAddress","苏州");
         mapPersonInfo.put("equityCode","");
         mapInvestorInfo.put("personalInfo",mapPersonInfo);
 
@@ -547,7 +559,7 @@ public class GuDengInterfaceTest {
     @Test
     public void createAccoutInterfaceNotNecessaryParamTest() throws Exception {
 
-        String cltNo = "cI12000" + Random(3);
+        String cltNo = "cI12000" + Random(7);
         String shareHolderNo = "sh" + cltNo;
         String eqCode = "createAcc" + Random(6);
 
@@ -561,7 +573,7 @@ public class GuDengInterfaceTest {
 //        mapPersonInfo.put("telephone", "1598222555555");
         mapPersonInfo.put("phone", "1598222555555");
 //        mapPersonInfo.put("postalCode", "221005");
-//        mapPersonInfo.put("contactAddress", "苏州市相城区");
+        mapPersonInfo.put("contactAddress", "苏州市相城区");
 //        mapPersonInfo.put("mailBox", "1598222555555");
 //        mapPersonInfo.put("fax", "苏州同济区块链研究");
         mapPersonInfo.put("equityCode", "苏同院");
@@ -596,14 +608,14 @@ public class GuDengInterfaceTest {
 
         String response = gd.GDCreateAccout(gdContractAddress, mapInvestorInfo);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
-//        String txId = jsonObject.getJSONObject("data").getString("txId");
-//        assertEquals(clientNo,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("clientNo"));
-//        assertEquals(shareHolderNo,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("shareholderNo"));
-//        String keyId = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("keyId");
-//        String address = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("address");
-//
-//        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-//        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        assertEquals(cltNo,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("clientNo"));
+        assertEquals(shareHolderNo,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("shareholderNo"));
+        String keyId = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("keyId");
+        String address = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("address");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
     }
 
     @Test
@@ -645,7 +657,7 @@ public class GuDengInterfaceTest {
 
 
         log.info(" ************************ test shareList must ************************ ");
-
+        eqCode = "must" + Random(12);
         response = gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,eqCode,null);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("至少传入一个股权账号信息",JSONObject.fromObject(response).getString("message"));

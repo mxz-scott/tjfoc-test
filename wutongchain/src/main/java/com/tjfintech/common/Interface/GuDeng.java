@@ -33,4 +33,8 @@ public interface GuDeng {
     String GDInfoPublish(String type,String subType,String title,String fileHash,String fileURL,String hashAlgo,String publisher,String publishTime,String enterprise);
     String GDInfoPublishGet(String txId);
 
+
+    String GDGetEnterpriseShareInfo(String equityCode);
+    String GDGetShareHolderInfo(String contractAddress,String clientNo);
+
 }
