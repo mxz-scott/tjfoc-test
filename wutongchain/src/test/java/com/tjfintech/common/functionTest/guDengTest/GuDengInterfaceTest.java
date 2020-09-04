@@ -857,7 +857,7 @@ public class GuDengInterfaceTest {
 
 
         //冻结
-        response= gd.GDShareLock(bizNo,gdAccount1,eqCode,3000,0,"司法冻结","20211001");
+        response= gd.GDShareLock(bizNo,gdAccount1,eqCode,3000,0,"司法冻结","2021-10-01");
         txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));

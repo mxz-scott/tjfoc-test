@@ -1242,4 +1242,39 @@ public class CommonFunc {
         shareList.add(shares);
         return shareList;
     }
+
+    public static List<Map> getShareListFromQueryNoZeroAcc(JSONArray dataShareList)throws Exception {
+        List<Map> getShareList = new ArrayList<>();
+        for (int i = 0; i < dataShareList.size(); i++) {
+
+            if (JSONObject.fromObject(dataShareList.get(i)).getString("address").equals(zeroAccount)
+                    || JSONObject.fromObject(dataShareList.get(i)).getString("address").equals(zeroAccount2))
+                continue;
+            else {
+                double amount = JSONObject.fromObject(dataShareList.get(i)).getDouble("amount");
+                double lockAmount = JSONObject.fromObject(dataShareList.get(i)).getDouble("lockAmount");
+                String address = JSONObject.fromObject(dataShareList.get(i)).getString("address");
+                int shareProperty = JSONObject.fromObject(dataShareList.get(i)).getInt("shareProperty");
+                String sharePropertyCN = JSONObject.fromObject(dataShareList.get(i)).getString("sharePropertyCN");
+                getShareList = gdConstructQueryShareList(address, amount, shareProperty, lockAmount,sharePropertyCN,getShareList);
+            }
+        }
+        return getShareList;
+    }
+
+    public static List<Map>   gdConstructQueryShareList(String address, double amount, int shareProperty,double lockAmount,String sharePropertyCN, List<Map> list){
+        List<Map> shareList = new ArrayList<>();
+        for(int i = 0 ; i < list.size() ; i++) {
+            shareList.add(list.get(i));
+        }
+        Map<String,Object> shares = new HashMap<>();
+        shares.put("address",address);
+        shares.put("amount",amount);
+        shares.put("lockAmount",lockAmount);
+        shares.put("shareProperty",shareProperty);
+        shares.put("sharePropertyCN",sharePropertyCN);
+
+        shareList.add(shares);
+        return shareList;
+    }
 }

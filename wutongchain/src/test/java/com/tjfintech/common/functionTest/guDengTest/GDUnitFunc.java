@@ -129,8 +129,10 @@ public class GDUnitFunc {
             commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
             assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
+            gd.GDGetEnterpriseShareInfo(eqCode);
             return result;
         }
+        gd.GDGetEnterpriseShareInfo(eqCode);
         return response;
     }
 
@@ -164,8 +166,10 @@ public class GDUnitFunc {
             commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
             assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
+            gd.GDGetEnterpriseShareInfo(eqCode);
             return result;
         }
+        gd.GDGetEnterpriseShareInfo(eqCode);
         return response;
     }
 
@@ -187,8 +191,10 @@ public class GDUnitFunc {
             commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
             assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
+            gd.GDGetEnterpriseShareInfo(eqCode);
             return result;
         }
+        gd.GDGetEnterpriseShareInfo(eqCode);
         return response;
     }
 
@@ -204,7 +210,7 @@ public class GDUnitFunc {
      */
     public void lockAndUnlock(String bizNo,String eqCode,String address,double lockAmount,int shareProperty,boolean bCheckOnchain) throws Exception{
 
-        String cutoffDate = "20220930";
+        String cutoffDate = "2022-09-30";
         //冻结
         lock(bizNo,address,eqCode,lockAmount,shareProperty,cutoffDate,bCheckOnchain);
 
@@ -234,8 +240,10 @@ public class GDUnitFunc {
             commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
             assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
+            gd.GDGetEnterpriseShareInfo(eqCode);
             return result;
         }
+        gd.GDGetEnterpriseShareInfo(eqCode);
         return response;
 
     }
@@ -259,8 +267,10 @@ public class GDUnitFunc {
             commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
             assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
+            gd.GDGetEnterpriseShareInfo(eqCode);
             return result;
         }
+        gd.GDGetEnterpriseShareInfo(eqCode);
         return response;
 
     }
@@ -282,8 +292,14 @@ public class GDUnitFunc {
             commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
             assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
             gdEquityCode = newEquityCode;
+
+            gd.GDGetEnterpriseShareInfo(oldEquityCode);
+            gd.GDGetEnterpriseShareInfo(newEquityCode);
             return result;
         }
+
+        gd.GDGetEnterpriseShareInfo(oldEquityCode);
+        gd.GDGetEnterpriseShareInfo(newEquityCode);
 
         return response;
     }
@@ -305,8 +321,10 @@ public class GDUnitFunc {
             commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
             assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
+            gd.GDGetEnterpriseShareInfo(eqCode);
             return result;
         }
+        gd.GDGetEnterpriseShareInfo(eqCode);
         return response;
     }
 

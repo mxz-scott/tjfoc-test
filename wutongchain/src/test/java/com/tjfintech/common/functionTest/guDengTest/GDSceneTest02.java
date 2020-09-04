@@ -72,6 +72,8 @@ public class GDSceneTest02 {
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
     }
 
     @After
@@ -565,12 +567,23 @@ public class GDSceneTest02 {
         //冻结高管股 * 100 流通股*100
         String bizNoTemp = "2000" + Random(12);
         uf.lock(bizNoTemp,gdAccount1,gdEquityCode,100,0,"2022-09-03",true);
+
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+
         bizNoTemp = "2000" + Random(12);
         uf.lock(bizNoTemp,gdAccount2,gdEquityCode,100,1,"2022-09-03",true);
+
+        query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+
         bizNoTemp = "2000" + Random(12);
         uf.lock(bizNoTemp,gdAccount3,gdEquityCode,100,0,"2022-09-03",true);
+
+        query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+
         bizNoTemp = "2000" + Random(12);
         uf.lock(bizNoTemp,gdAccount4,gdEquityCode,100,1,"2022-09-03",true);
+
+        query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
@@ -578,6 +591,8 @@ public class GDSceneTest02 {
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
         String response = uf.shareIncrease(gdEquityCode ,shareList4,true);
+
+        query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
 
     }
 
@@ -1014,9 +1029,9 @@ public class GDSceneTest02 {
         String response = "";
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
 
         uf.shareRecycle(gdEquityCode,shareList4,true);
 
@@ -1043,9 +1058,9 @@ public class GDSceneTest02 {
         String response = "";
         //回收一半数额
         List<Map> shareList = gdConstructShareList(gdAccount1,500,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,500,0, shareList);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,500,1, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,500,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,500,0, shareList3);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,500,1, shareList3);
 
         uf.shareRecycle(gdEquityCode,shareList4,true);
 
@@ -1072,9 +1087,9 @@ public class GDSceneTest02 {
         String response = "";
         //回收一半数额
         List<Map> shareList = gdConstructShareList(gdAccount1,500,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,500,0, shareList);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,500,1, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,500,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,500,0, shareList3);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,500,1, shareList3);
 
         uf.shareRecycle(gdEquityCode,shareList4,true);
 
