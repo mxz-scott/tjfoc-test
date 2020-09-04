@@ -792,7 +792,7 @@ public class GuDengInterfaceTest {
         double lockAmount = 500;
         int shareProperty = 0;
         String reason = "司法冻结";
-        String cutoffDate = "20200930";
+        String cutoffDate = "2020-09-30";
 
         //验证接口正常
         response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate);

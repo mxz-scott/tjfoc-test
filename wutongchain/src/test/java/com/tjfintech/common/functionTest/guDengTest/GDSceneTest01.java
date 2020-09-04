@@ -13,11 +13,11 @@ import org.junit.*;
 import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.CommonFunc.gdConstructShareList;
+import static com.tjfintech.common.CommonFunc.getShareListFromQueryNoZeroAcc;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 
@@ -97,17 +97,8 @@ public class GDSceneTest01 {
             bOnlyZero = true;
         }
         else{
-            for(int i=0;i<dataShareList.size();i++){
-                if(JSONObject.fromObject(dataShareList.get(0)).getString("address").equals(zeroAccount)
-                        ||JSONObject.fromObject(dataShareList.get(0)).getString("address").equals(zeroAccount2))
-                    continue;
-                else {
-                    double amount = JSONObject.fromObject(dataShareList.get(i)).getDouble("amount");
-                    String address = JSONObject.fromObject(dataShareList.get(i)).getString("address");
-                    int shareProperty = JSONObject.fromObject(dataShareList.get(i)).getInt("shareProperty");
-                    shareList = gdConstructShareList(address, amount, shareProperty, shareList);
-                }
-            }
+            //获取排除零地址外的所有账户列表
+            shareList = getShareListFromQueryNoZeroAcc(dataShareList);
         }
 
         //全部回收
