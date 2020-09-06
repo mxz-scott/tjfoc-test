@@ -7,15 +7,18 @@ import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.CommonFunc.gdConstructShareList;
+import static com.tjfintech.common.CommonFunc.getTotalAmountFromShareList;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 
@@ -923,22 +926,18 @@ public class GDSceneTest02 {
 
         String newEquityCode = gdEquityCode + Random(5);
         response = uf.changeBoard(gdEquityCode,newEquityCode,false);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("账户地址[" + gdAccount1 + "]还存证冻结的资产，不可以转场",JSONObject.fromObject(response).getString("message"));
 
-        if(JSONObject.fromObject(response).getString("state").equals("200")) {
-            sleepAndSaveInfo(SLEEPTIME);
-            assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
-                    JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
-        }
-        else{
-            assertEquals("501",JSONObject.fromObject(response).getString("state"));
-        }
 
         String query  = gd.GDGetEnterpriseShareInfo(newEquityCode);
-        assertEquals("400",JSONObject.fromObject(query).getString("state"));
-        assertEquals("股权代码还未发行",JSONObject.fromObject(query).getString("data"));
+        assertEquals("501",JSONObject.fromObject(query).getString("state"));
+        assertEquals("该股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
 
         query  = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
     }
 
 
@@ -1037,7 +1036,7 @@ public class GDSceneTest02 {
 
         String query  = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
-        assertEquals(1,JSONObject.fromObject(query).getJSONArray("data").size());
+        assertEquals(2,JSONObject.fromObject(query).getJSONArray("data").size());
 //        assertEquals(zeroAccount,JSONObject.fromObject(JSONObject.fromObject(query).getJSONArray("data").get(0)).getString("address"));
 
         String newEquityCode = gdEquityCode + Random(5);
@@ -1066,7 +1065,7 @@ public class GDSceneTest02 {
 
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
-        assertEquals(5,JSONObject.fromObject(query).getJSONArray("data").size());
+        assertEquals(6,JSONObject.fromObject(query).getJSONArray("data").size());
 
         String newEquityCode = gdEquityCode + Random(5);
         response = uf.changeBoard(gdEquityCode,newEquityCode,true);
@@ -1114,6 +1113,39 @@ public class GDSceneTest02 {
         response = uf.destroyAcc(gdAccClientNo1,false);
         assertEquals("501",JSONObject.fromObject(response).getString("state"));
         assertEquals("账户还有余额，不可以销户",JSONObject.fromObject(response).getString("message"));
+
+    }
+
+    /***
+     * 全部冻结后销户
+     */
+
+    @Test
+    public void multChangeProperty()throws Exception{
+
+        String response = "";
+        //发行
+        gdEquityCode = "gdEC" + Random(12);
+        List<Map> shareList = gdConstructShareList(gdAccount3,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount3,3000,0, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,2000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,3000,0, shareList3);
+
+        //发行
+        response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String txId = jsonObject.getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+        JSONArray jsonArrayGet = JSONObject.fromObject(query).getJSONArray("data");
+        for(int i = 0;i < 30; i++){
+            uf.changeSHProperty(gdAccount3,gdEquityCode,300,0,1,true);
+            query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+            assertEquals(9000,getTotalAmountFromShareList(jsonArrayGet));
+        }
 
     }
 

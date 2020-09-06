@@ -1277,4 +1277,14 @@ public class CommonFunc {
         shareList.add(shares);
         return shareList;
     }
+
+
+    public static double getTotalAmountFromShareList(JSONArray dataShareList)throws Exception {
+        List<Map> getShareList = new ArrayList<>();
+        double total = 0;
+        for (int i = 0; i < dataShareList.size(); i++) {
+            total = JSONObject.fromObject(dataShareList.get(i)).getDouble("amount") + total;
+        }
+        return total;
+    }
 }

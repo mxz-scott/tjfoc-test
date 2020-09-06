@@ -9,7 +9,7 @@ import static com.tjfintech.common.utils.UtilsClass.wvmVersion;
 public class SetWVMversion1 {
 
    @Test
-    public void setMainledger()throws Exception{
+    public void setwvmVersion1()throws Exception{
        wvmVersion = "1.0.0";
     }
 
