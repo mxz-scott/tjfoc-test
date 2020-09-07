@@ -176,8 +176,8 @@ public class WVMContractTest {
         String response10 = query(ctHash,"BalanceTest",accountB);//获取账户B账户余额 报错
         assertThat(JSONObject.fromObject(response10).getString("message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
 
-        chkTxDetailRsp("200",txHash1,txHash2,txHash3,txHash4,txHash5,txHash6,txHash9);
-//        chkTxDetailRsp("404",txHash7);
+        chkTxDetailRsp("200",txHash1,txHash2,txHash3,txHash4,txHash9);
+        chkTxDetailRsp("404",txHash5,txHash6);  //因合约实际实现并未返回success 20200907 开发确认针对此规则交易不再上链，故做此检查
     }
 
     @Test

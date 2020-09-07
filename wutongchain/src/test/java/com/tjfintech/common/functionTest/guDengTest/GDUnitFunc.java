@@ -8,10 +8,8 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.apache.commons.collections.map.HashedMap;
+import org.junit.*;
 import org.junit.runners.MethodSorters;
 
 import java.util.HashMap;

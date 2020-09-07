@@ -278,28 +278,28 @@ public class enterpriseRegisterTest {
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":5000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
         assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo2 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount2 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":5000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
         assertEquals(gdAccClientNo3,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo3 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount3 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":5000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
         assertEquals(gdAccClientNo4,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo4 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount4 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":5000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
         assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
@@ -359,30 +359,30 @@ public class enterpriseRegisterTest {
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":4500,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":4500,\"lockAmount\":0}"));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":1,\"sharePropertyCN\":\"\",\"totalAmount\":500,\"lockAmount\":0}"));
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
         assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo2 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount2 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":5000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
         assertEquals(gdAccClientNo3,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo3 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount3 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":5000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
         assertEquals(gdAccClientNo4,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo4 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount4 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":5000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
         assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
@@ -452,37 +452,37 @@ public class enterpriseRegisterTest {
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":3500,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":3500,\"lockAmount\":0}"));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":1,\"sharePropertyCN\":\"\",\"totalAmount\":500,\"lockAmount\":0}"));
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
         assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo2 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount2 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":5000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
         assertEquals(gdAccClientNo3,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo3 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount3 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":5000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
         assertEquals(gdAccClientNo4,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo4 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount4 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":5000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
         assertEquals(gdAccClientNo5,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo5 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount5 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":1000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
         assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
@@ -545,37 +545,37 @@ public class enterpriseRegisterTest {
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":4500,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":4500,\"lockAmount\":0}"));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":1,\"sharePropertyCN\":\"\",\"totalAmount\":500,\"lockAmount\":0}"));
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
         assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo2 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount2 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":6000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":6000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
         assertEquals(gdAccClientNo3,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo3 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount3 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":6000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":6000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
         assertEquals(gdAccClientNo4,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo4 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount4 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":6000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":6000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
         assertEquals(gdAccClientNo5,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo5 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount5 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":1000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
         assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
@@ -639,37 +639,37 @@ public class enterpriseRegisterTest {
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":4500,\"lockAmount\":500}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":4500,\"lockAmount\":500}"));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":1,\"sharePropertyCN\":\"\",\"totalAmount\":500,\"lockAmount\":0}"));
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
         assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo2 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount2 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":6000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":6000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
         assertEquals(gdAccClientNo3,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo3 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount3 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":6000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":6000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
         assertEquals(gdAccClientNo4,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo4 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount4 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":6000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":6000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
         assertEquals(gdAccClientNo5,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo5 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount5 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":1000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
         assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
@@ -730,37 +730,37 @@ public class enterpriseRegisterTest {
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":4500,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":4500,\"lockAmount\":0}"));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":1,\"sharePropertyCN\":\"\",\"totalAmount\":500,\"lockAmount\":0}"));
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
         assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo2 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount2 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":6000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":6000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
         assertEquals(gdAccClientNo3,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo3 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount3 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":6000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":6000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
         assertEquals(gdAccClientNo4,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo4 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount4 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":6000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":6000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
         assertEquals(gdAccClientNo5,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo5 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount5 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":1000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
         assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
@@ -821,37 +821,37 @@ public class enterpriseRegisterTest {
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":4400,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":4400,\"lockAmount\":0}"));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":1,\"sharePropertyCN\":\"\",\"totalAmount\":500,\"lockAmount\":0}"));
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
         assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo2 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount2 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":6000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":6000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
         assertEquals(gdAccClientNo3,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo3 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount3 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":6000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":6000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
         assertEquals(gdAccClientNo4,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo4 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount4 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":6000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":6000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
         assertEquals(gdAccClientNo5,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo5 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount5 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":1000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
         assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
@@ -914,37 +914,37 @@ public class enterpriseRegisterTest {
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":4300,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":4300,\"lockAmount\":0}"));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":1,\"sharePropertyCN\":\"\",\"totalAmount\":500,\"lockAmount\":0}"));
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
         assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo2 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount2 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":5900,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5900,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
         assertEquals(gdAccClientNo3,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo3 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount3 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":5900,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5900,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
         assertEquals(gdAccClientNo4,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo4 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount4 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":5900,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5900,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
         assertEquals(gdAccClientNo5,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo5 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount5 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":1000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
         assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
@@ -1005,37 +1005,37 @@ public class enterpriseRegisterTest {
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":4300,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":4300,\"lockAmount\":0}"));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":1,\"sharePropertyCN\":\"\",\"totalAmount\":500,\"lockAmount\":0}"));
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
         assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo2 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount2 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":5900,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5900,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
         assertEquals(gdAccClientNo3,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo3 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount3 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":5900,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5900,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
         assertEquals(gdAccClientNo4,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo4 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount4 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":5900,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5900,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
         assertEquals(gdAccClientNo5,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo5 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount5 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"\",\"totalAmount\":1000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
         assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));

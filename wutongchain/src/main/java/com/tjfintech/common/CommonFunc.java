@@ -1247,8 +1247,7 @@ public class CommonFunc {
         List<Map> getShareList = new ArrayList<>();
         for (int i = 0; i < dataShareList.size(); i++) {
 
-            if (JSONObject.fromObject(dataShareList.get(i)).getString("address").equals(zeroAccount)
-                    || JSONObject.fromObject(dataShareList.get(i)).getString("address").equals(zeroAccount2))
+            if (dataShareList.get(i).toString().contains(zeroAccount))
                 continue;
             else {
                 double amount = JSONObject.fromObject(dataShareList.get(i)).getDouble("amount");
@@ -1286,5 +1285,15 @@ public class CommonFunc {
             total = JSONObject.fromObject(dataShareList.get(i)).getDouble("amount") + total;
         }
         return total;
+    }
+
+    public static Map<String,String> mapShareENCN()throws Exception{
+        Map<String,String> mapShareTypeCN = new HashMap<>();
+        mapShareTypeCN.put("0","");
+        mapShareTypeCN.put("1","");
+        mapShareTypeCN.put("2","");
+        mapShareTypeCN.put("3","");
+
+        return mapShareTypeCN;
     }
 }
