@@ -90,7 +90,7 @@ public class GDBeforeCondition {
         mapinvestor.put("currency","人民币");
         mapinvestor.put("board","E板");
         mapinvestor.put("accountType",0);
-        mapinvestor.put("accountStatus",1);
+        mapinvestor.put("accountStatus",0);
         mapinvestor.put("registrationDate","20200828");
         mapinvestor.put("lastTradingDate","20200828");
         mapinvestor.put("closingDate","20200828");

@@ -1293,6 +1293,10 @@ public class CommonFunc {
         mapShareTypeCN.put("1","");
         mapShareTypeCN.put("2","");
         mapShareTypeCN.put("3","");
+        mapShareTypeCN.put("4","");
+        mapShareTypeCN.put("5","");
+        mapShareTypeCN.put("6","");
+        mapShareTypeCN.put("7","");
 
         return mapShareTypeCN;
     }
