@@ -114,33 +114,52 @@ public class GDSceneTest_Issue {
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
 
         //发行已经发行过的股权代码
-        String response = gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
-        String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        String response = uf.shareIssue(gdEquityCode,shareList4,false);
 
         sleepAndSaveInfo(SLEEPTIME);
-
 
         assertEquals("400",JSONObject.fromObject(store).getString("state"));
         assertEquals("账户还有余额，不可以销户",JSONObject.fromObject(response).getString("message"));
 
     }
 
+
+
     /***
-     * 全部冻结后销户
+     * 股权代码大小写敏感性检查
      */
 
     @Test
-    public void destroyAccWithAllLock()throws Exception{
+    public void issue_MatchCase()throws Exception{
 
-        String response = "";
-        //全部冻结
-        String bizNoTemp = "2000" + Random(12);
-        uf.lock(bizNoTemp,gdAccount1,gdEquityCode,1000,0,"2020-09-03",true);
+        String query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(false,query.contains(gdEquityCode.toLowerCase()));
+        assertEquals(false,query.contains(gdEquityCode.toUpperCase()));
 
-        response = uf.destroyAcc(gdAccClientNo1,false);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("账户还有余额，不可以销户",JSONObject.fromObject(response).getString("message"));
+        query = gd.GDGetEnterpriseShareInfo(gdEquityCode.toLowerCase());
+        assertEquals("400",JSONObject.fromObject(query).getString("state"));
+
+        query = gd.GDGetEnterpriseShareInfo(gdEquityCode.toUpperCase());
+        assertEquals("400",JSONObject.fromObject(query).getString("state"));
+
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+
+        //大小写匹配检查
+        uf.shareIssue(gdEquityCode.toLowerCase(),shareList4,true);
+        uf.shareIssue(gdEquityCode.toUpperCase(),shareList4,true);
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(true,query.contains(gdEquityCode.toLowerCase()));
+        assertEquals(true,query.contains(gdEquityCode.toUpperCase()));
+
+        query = gd.GDGetEnterpriseShareInfo(gdEquityCode.toLowerCase());
+        assertEquals("200",JSONObject.fromObject(query).getString("state"));
+
+        query = gd.GDGetEnterpriseShareInfo(gdEquityCode.toUpperCase());
+        assertEquals("200",JSONObject.fromObject(query).getString("state"));
 
     }
-
 }

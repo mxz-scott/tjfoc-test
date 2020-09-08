@@ -148,5 +148,103 @@ public class GDSceneTest_LockUnLock {
         uf.shareTransfer(gdAccountKeyID1,gdAccount1,500,gdAccount6,0,gdEquityCode,0,"test123456",true);
 
     }
+
+    /***
+     * 同一账户持有不同股权代码时 其中一个股权代码存在冻结，不影响其他股权代码状态
+     */
+
+    @Test
+    public void lockMatchEqcode()throws Exception{
+        String EqCode1 = gdEquityCode;
+        String EqCode2 = gdEquityCode + Random(8);
+        String EqCode3 = gdEquityCode + Random(8);
+
+        String response = "";
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+        List<Map> shareList5 = gdConstructShareList(gdAccount5,1000,0);
+
+        uf.shareIssue(EqCode2,shareList4,true);
+        uf.shareIssue(EqCode3,shareList5,true);
+
+        //冻结账户4 EqCode2 * 股权性质1 *100
+        uf.lock(bizNoTest,gdAccount4,EqCode2,100,1,"2032-09-30",true);
+
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode3 + "\",\"shareProperty\":0"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode1 +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode2 +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode3 + "\",\"shareProperty\":0"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode1 +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode2 +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
+        assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode3 + "\",\"shareProperty\":0"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode1 +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode2 +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
+        assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode3 + "\",\"shareProperty\":0"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode1 +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode2 +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":100}"));
+
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
+        assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode1 + "\",\"shareProperty\":0"));
+        assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode2 + "\",\"shareProperty\":0"));
+        assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode1 + "\",\"shareProperty\":1"));
+        assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode2 + "\",\"shareProperty\":1"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode3 +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+    }
+
+    /***
+     * 冻结不存在的股权性质 股份列表无变更
+     */
+
+    @Test
+    public void lock_NotExist()throws Exception{
+        String response = "";
+        //查询账户余额  总余额 1000
+
+        //冻结流通股 *500
+        String bizNoTemp = "2000" + Random(12);
+        uf.lock(bizNoTemp,gdAccount2,gdEquityCode,500,0,"2022-09-03",true);
+
+        //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+    }
+
+    /***
+     * 股权代码大小写敏感性检查
+     */
+
+    @Test
+    public void lock_MatchCase()throws Exception{
+
+        //转板 大小写匹配检查
+        String bizNoTemp = "2000" + Random(12);
+        String response = uf.lock(bizNoTemp,gdAccount2,gdEquityCode.toLowerCase(),500,0,"2022-09-03",false);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("股权代码还未发行",JSONObject.fromObject(response).getString("message"));
+
+        bizNoTemp = "2000" + Random(12);
+        response = uf.lock(bizNoTemp,gdAccount2,gdEquityCode.toUpperCase(),500,0,"2022-09-03",false);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("股权代码还未发行",JSONObject.fromObject(response).getString("message"));
+    }
     
 }

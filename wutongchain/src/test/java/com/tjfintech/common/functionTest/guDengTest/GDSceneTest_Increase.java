@@ -186,5 +186,24 @@ public class GDSceneTest_Increase {
 
         assertEquals(12000,getTotalAmountFromShareList(jsonArrayGet),0.0001);
     }
+
+
+    /***
+     * 股权代码大小写敏感性检查
+     */
+
+    @Test
+    public void recycle_MatchCase()throws Exception{
+        List<Map> shareListIn = gdConstructShareList(gdAccount1,1000,0);
+
+        //大小写匹配检查
+        String response = uf.shareIncrease(gdEquityCode.toLowerCase(),shareListIn,false);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("该合约不存在",JSONObject.fromObject(response).getString("message"));
+
+        response = uf.shareIncrease(gdEquityCode.toUpperCase(),shareListIn,false);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("该合约不存在",JSONObject.fromObject(response).getString("message"));
+    }
     
 }

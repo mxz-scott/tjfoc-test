@@ -105,6 +105,7 @@ public class GDSceneTest_ChangeProperty {
 
     /***
      * 存在冻结的流通股 可用部分全部变更
+     * 多次变更-全部变更
      */
 
     @Test
@@ -117,58 +118,112 @@ public class GDSceneTest_ChangeProperty {
         uf.lock(bizNoTemp,gdAccount1,gdEquityCode,500,0,"2022-09-03",true);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":500}"));
 
         //可用部分部分变更
         uf.changeSHProperty(gdAccount1,gdEquityCode,400,0,1,true);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":600,\"lockAmount\":500}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":400,\"lockAmount\":0}"));
 
         //变更部分超过可用余额
         response = uf.changeSHProperty(gdAccount1,gdEquityCode,200,0,1,false);
         sleepAndSaveInfo(5000);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":600,\"lockAmount\":500}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":400,\"lockAmount\":0}"));
 
         //变更剩下所有可用余额
         uf.changeSHProperty(gdAccount1,gdEquityCode,100,0,1,true);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":500}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 
         //无可用变更
         response = uf.changeSHProperty(gdAccount1,gdEquityCode,100,0,1,false);
+        sleepAndSaveInfo(5000);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":500}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 
         //解除冻结部分 Part1
         uf.unlock(bizNoTemp,gdEquityCode,400,true);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":100}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+
 
         //可用部分部分变更
         uf.changeSHProperty(gdAccount1,gdEquityCode,100,0,1,true);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":400,\"lockAmount\":100}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":600,\"lockAmount\":0}"));
 
         //变更部分超过可用余额
         response = uf.changeSHProperty(gdAccount1,gdEquityCode,400,0,1,false);
         sleepAndSaveInfo(5000);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":400,\"lockAmount\":100}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":600,\"lockAmount\":0}"));
 
         //变更剩下所有可用余额
         uf.changeSHProperty(gdAccount1,gdEquityCode,300,0,1,true);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":100,\"lockAmount\":100}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":900,\"lockAmount\":0}"));
 
         //解除所有冻结部分 Part1
         uf.unlock(bizNoTemp,gdEquityCode,100,true);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":100,\"lockAmount\":0}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":900,\"lockAmount\":0}"));
 
         //变更剩下所有可用余额
         uf.changeSHProperty(gdAccount1,gdEquityCode,100,0,1,true);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(false,response.contains("{\"equityCode\":\"" + gdEquityCode + "\",\"shareProperty\":0"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
     }
 
     /***
@@ -185,58 +240,112 @@ public class GDSceneTest_ChangeProperty {
         uf.lock(bizNoTemp,gdAccount2,gdEquityCode,500,1,"2022-09-03",true);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":500}"));
 
         //可用部分部分变更
         uf.changeSHProperty(gdAccount2,gdEquityCode,400,1,0,true);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":600,\"lockAmount\":500}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":400,\"lockAmount\":0}"));
 
         //变更部分超过可用余额
         response = uf.changeSHProperty(gdAccount2,gdEquityCode,200,1,0,false);
         sleepAndSaveInfo(5000);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":600,\"lockAmount\":500}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":400,\"lockAmount\":0}"));
 
         //变更剩下所有可用余额
         uf.changeSHProperty(gdAccount2,gdEquityCode,100,1,0,true);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":500}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 
         //无可用变更
         response = uf.changeSHProperty(gdAccount2,gdEquityCode,100,1,0,false);
+        sleepAndSaveInfo(5000);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":500}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 
         //解除冻结部分 Part1
         uf.unlock(bizNoTemp,gdEquityCode,400,true);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":100}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+
 
         //可用部分部分变更
         uf.changeSHProperty(gdAccount2,gdEquityCode,100,1,0,true);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":400,\"lockAmount\":100}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":600,\"lockAmount\":0}"));
 
         //变更部分超过可用余额
         response = uf.changeSHProperty(gdAccount2,gdEquityCode,400,1,0,false);
         sleepAndSaveInfo(5000);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":400,\"lockAmount\":100}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":600,\"lockAmount\":0}"));
 
         //变更剩下所有可用余额
         uf.changeSHProperty(gdAccount2,gdEquityCode,300,1,0,true);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":100,\"lockAmount\":100}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":900,\"lockAmount\":0}"));
 
         //解除所有冻结部分 Part1
         uf.unlock(bizNoTemp,gdEquityCode,100,true);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":100,\"lockAmount\":0}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":900,\"lockAmount\":0}"));
 
         //变更剩下所有可用余额
         uf.changeSHProperty(gdAccount2,gdEquityCode,100,1,0,true);
 
         //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(false,response.contains("{\"equityCode\":\"" + gdEquityCode + "\",\"shareProperty\":1"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
     }
 
 
@@ -269,12 +378,14 @@ public class GDSceneTest_ChangeProperty {
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
                 "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":900,\"lockAmount\":0}"));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":900,\"lockAmount\":0}"));
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":100,\"lockAmount\":0}"));
     }
 
 
     /***
      * 多次变更股权性质
+     * 支持部分变更
+     * 所有权及持股总数不变更  P17对应的需求点
      */
 
     @Test
@@ -298,13 +409,153 @@ public class GDSceneTest_ChangeProperty {
 
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         JSONArray jsonArrayGet = JSONObject.fromObject(query).getJSONArray("data");
-        for(int i = 0;i < 30; i++){
+        for(int i = 0;i < 15; i++){
             log.info("change time " + i);
-            uf.changeSHProperty(gdAccount3,gdEquityCode,300,0,1,true);
+            uf.changeSHProperty(gdAccount3,gdEquityCode,600,0,1,true);
             query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+            //测试股权性质变更 所有权及持股总数不变更
             assertEquals(9000,getTotalAmountFromShareList(jsonArrayGet),0.0001);
         }
 
     }
-    
+
+    /***
+     * 冻结日期为当前之前的日期 对变更性质无影响
+     */
+
+    @Test
+    public void changeProperty_ExceedCutOffDate()throws Exception{
+        String response = "";
+        //查询账户余额  总余额 1000
+
+        //冻结流通股 *500
+        String bizNoTemp = "2000" + Random(12);
+        uf.lock(bizNoTemp,gdAccount1,gdEquityCode,500,0,"2020-09-03",true);
+
+        //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(false,response.contains("{\"equityCode\":\"" + gdEquityCode + "\",\"shareProperty\":1"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+
+
+        response = uf.changeSHProperty(gdAccount1,gdEquityCode,1000,0,1,true);
+
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(false,response.contains("{\"equityCode\":\"" + gdEquityCode + "\",\"shareProperty\":0"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+    }
+
+
+    /***
+     * 同一账户持有不同股权代码时 其中一个股权代码存在冻结，不影响其他股权代码变更股权性质
+     */
+
+    @Test
+    public void changeProperty_lockMatchEqcode()throws Exception{
+        String EqCode1 = gdEquityCode;
+        String EqCode2 = gdEquityCode + Random(8);
+        String EqCode3 = gdEquityCode + Random(8);
+
+        String response = "";
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+        List<Map> shareList5 = gdConstructShareList(gdAccount5,1000,0);
+
+        uf.shareIssue(EqCode2,shareList4,true);
+        uf.shareIssue(EqCode3,shareList5,true);
+
+        //冻结账户4 EqCode2 * 股权性质1 *100
+        uf.lock(bizNoTest,gdAccount4,EqCode2,100,1,"2032-09-30",true);
+
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode3 + "\",\"shareProperty\":0"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode1 +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode2 +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode3 + "\",\"shareProperty\":0"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode1 +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode2 +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
+        assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode3 + "\",\"shareProperty\":0"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode1 +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode2 +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
+        assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode3 + "\",\"shareProperty\":0"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode1 +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode2 +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":100}"));
+
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
+        assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode1 + "\",\"shareProperty\":0"));
+        assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode2 + "\",\"shareProperty\":0"));
+        assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode1 + "\",\"shareProperty\":1"));
+        assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode2 + "\",\"shareProperty\":1"));
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode3 +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+
+        //变更4 5股权性质
+        uf.changeSHProperty(gdAccount4,EqCode1,1000,1,0,true);
+        uf.changeSHProperty(gdAccount5,EqCode3,1000,0,1,true);
+
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode1 +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode3 +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+    }
+
+
+    /***
+     * 变更不存在的股权性质 股份列表无变更
+     */
+
+    @Test
+    public void changeProperty_NotExistProperty()throws Exception{
+        //账户3只有股份性质 1 的股权代码
+        String response = uf.changeSHProperty(gdAccount2,gdEquityCode,400,0,1,false);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("余额不足",JSONObject.fromObject(response).getString("message"));
+
+        //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+        assertEquals(false,response.contains("\"shareProperty\":0"));
+
+
+    }
+
+    /***
+     * 股权代码大小写敏感性检查
+     */
+
+    @Test
+    public void changeProperty_MatchCase()throws Exception{
+
+        //变更股权性质 大小写匹配检查
+        String response = uf.changeSHProperty(gdAccount4,gdEquityCode.toLowerCase(),1000,1,0,false);
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals("获取平台的公钥以及合约地址出错",JSONObject.fromObject(response).getString("message").trim());
+
+        response = uf.changeSHProperty(gdAccount3,gdEquityCode.toUpperCase(),1000,0,1,false);
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals("获取平台的公钥以及合约地址出错",JSONObject.fromObject(response).getString("message").trim());
+    }
+
 }

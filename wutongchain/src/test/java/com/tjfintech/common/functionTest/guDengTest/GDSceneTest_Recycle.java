@@ -360,5 +360,23 @@ public class GDSceneTest_Recycle {
         uf.shareRecycle(gdEquityCode,shareList,true);
 
     }
+
+    /***
+     * 股权代码大小写敏感性检查
+     */
+
+    @Test
+    public void recycle_MatchCase()throws Exception{
+        List<Map> shareList = gdConstructShareList(gdAccount4,100,1);
+
+        //大小写匹配检查
+        String response = uf.shareRecycle(gdEquityCode.toLowerCase(),shareList,false);
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals("获取平台的公钥以及合约地址出错 ",JSONObject.fromObject(response).getString("message"));
+
+        response = uf.shareRecycle(gdEquityCode.toUpperCase(),shareList,false);
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals("获取平台的公钥以及合约地址出错 ",JSONObject.fromObject(response).getString("message"));
+    }
     
 }

@@ -308,6 +308,11 @@ public class enterpriseRegisterTest {
         assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
     }
 
+    /***
+     * 股权性质变更 部分变更
+     * 变更后 未变更部分保持原有股权性质不变 P17对应的需求点
+     * @throws Exception
+     */
     @Test
     public void TC07_shareChangeProperty() throws Exception {
 
