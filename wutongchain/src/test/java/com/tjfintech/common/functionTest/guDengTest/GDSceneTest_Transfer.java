@@ -272,14 +272,10 @@ public class GDSceneTest_Transfer {
         response = uf.shareTransfer(gdAccountKeyID1,gdAccount1,500,gdAccount5,0,
                 gdEquityCode,1,"test202008280952",false);
 
-        if(JSONObject.fromObject(response).getString("state").equals("200")) {
-            sleepAndSaveInfo(SLEEPTIME);
-            assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
-                    JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
-        }
-        else{
-            assertEquals("501",JSONObject.fromObject(response).getString("state"));
-        }
+        sleepAndSaveInfo(SLEEPTIME);
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
+                JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
+
 
         //当前可用余额500 转出等于可用余额
         uf.shareTransfer(gdAccountKeyID1,gdAccount1,400,gdAccount5,0,
@@ -303,14 +299,9 @@ public class GDSceneTest_Transfer {
         response = uf.shareTransfer(gdAccountKeyID1,gdAccount1,1,gdAccount5,0,
                 gdEquityCode,1,"test202008280952",false);
 
-        if(JSONObject.fromObject(response).getString("state").equals("200")) {
-            sleepAndSaveInfo(SLEEPTIME);
-            assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
+        sleepAndSaveInfo(SLEEPTIME);
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
                     JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
-        }
-        else{
-            assertEquals("501",JSONObject.fromObject(response).getString("state"));
-        }
 
     }
 
@@ -347,11 +338,11 @@ public class GDSceneTest_Transfer {
 
     /***
      * 冻结后 转让非流通股 交易过户
-     * 交易过户不支持非流通股转让
+     * 交易过户不支持非流通股转让 P18需求
      */
 
     @Test
-    public void shareTransferInvalid01()throws Exception{
+    public void shareTransfer_txTypeTest()throws Exception{
         String response = "";
 
         //当前可用余额500 转出小于可用余额
@@ -382,14 +373,9 @@ public class GDSceneTest_Transfer {
         response = uf.shareTransfer(gdAccountKeyID1,gdAccount1,500,gdAccount5,0,
                 gdEquityCode,0,"test202008280952",false);
 
-        if(JSONObject.fromObject(response).getString("state").equals("200")) {
-            sleepAndSaveInfo(SLEEPTIME);
-            assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
+        sleepAndSaveInfo(SLEEPTIME);
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
                     JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
-        }
-        else{
-            assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        }
 
         //当前可用余额500 转出等于可用余额
         uf.shareTransfer(gdAccountKeyID1,gdAccount1,400,gdAccount5,0,
@@ -416,7 +402,9 @@ public class GDSceneTest_Transfer {
         //转出大于可用余额
         response = uf.shareTransfer(gdAccountKeyID2,gdAccount2,1000,gdAccount5,1,
                 gdEquityCode,0,"test202008280952",false);
-        assertEquals("501",JSONObject.fromObject(response).getString("state"));
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals("查询余额出错",JSONObject.fromObject(response).getString("message"));
+
 
         //转出等于可用余额
         response = uf.shareTransfer(gdAccountKeyID2,gdAccount2,899,gdAccount5,1,
@@ -466,7 +454,8 @@ public class GDSceneTest_Transfer {
         //高管股转出转出大于可用余额
         response = uf.shareTransfer(gdAccountKeyID5,gdAccount5,1000,gdAccount6,0,
                 gdEquityCode,0,"test202008280952",false);
-        assertEquals("501",JSONObject.fromObject(response).getString("state"));
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals("查询余额出错",JSONObject.fromObject(response).getString("message"));
 
         //高管股转出转等大于可用余额
         uf.shareTransfer(gdAccountKeyID5,gdAccount5,800,gdAccount6,0,
@@ -500,13 +489,14 @@ public class GDSceneTest_Transfer {
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         JSONArray jsonArrayGet = JSONObject.fromObject(query).getJSONArray("data");
         for(int i = 0;i < 15; i++){
-            log.info("change time " + i);
-            uf.shareTransfer(gdAccountKeyID1,gdAccount3,600,gdAccount5,0,gdEquityCode,1,"test0212352",true);
+            log.info("tx time " + i);
+            uf.shareTransfer(gdAccountKeyID3,gdAccount3,600,gdAccount5,0,gdEquityCode,
+                    1,"test0212352",true);
             query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
             assertEquals(9000,getTotalAmountFromShareList(jsonArrayGet),0.0001);
         }
 
-        gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
         assertEquals(gdAccClientNo5,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo5 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount5 + "\""));
