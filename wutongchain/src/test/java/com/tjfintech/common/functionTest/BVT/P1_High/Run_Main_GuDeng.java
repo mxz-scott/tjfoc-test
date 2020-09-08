@@ -11,7 +11,8 @@ import org.junit.runners.Suite;
 
         GuDengInterfaceTest.class,
 
-        GDSceneTest01.class,
+        GDSceneTest_01.class,
+        GDSceneTest_02.class,
 
         GDSceneTest_Issue.class,
         GDSceneTest_ChangeProperty.class,
