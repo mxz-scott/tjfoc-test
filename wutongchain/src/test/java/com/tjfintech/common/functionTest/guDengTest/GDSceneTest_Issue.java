@@ -103,11 +103,11 @@ public class GDSceneTest_Issue {
 
 
     /***
-     * 重复发行
+     * 重复发行同一个股权代码
      */
 
     @Test
-    public void destroyAccWithBalance()throws Exception{
+    public void issueSameEquityCode()throws Exception{
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
@@ -119,7 +119,7 @@ public class GDSceneTest_Issue {
         sleepAndSaveInfo(SLEEPTIME);
 
         assertEquals("400",JSONObject.fromObject(store).getString("state"));
-        assertEquals("账户还有余额，不可以销户",JSONObject.fromObject(response).getString("message"));
+        assertEquals("该股权代码已经初始登记过，不可以再次调用",JSONObject.fromObject(response).getString("message"));
 
     }
 
@@ -162,4 +162,5 @@ public class GDSceneTest_Issue {
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
 
     }
+
 }
