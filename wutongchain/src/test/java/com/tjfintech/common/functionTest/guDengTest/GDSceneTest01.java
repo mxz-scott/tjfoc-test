@@ -5281,21 +5281,21 @@ public class GDSceneTest01 {
         //查询企业股东信息
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
-        assertEquals(true,query.contains(
+        assertEquals(false,query.contains(
                 "{\"amount\":2500,\"lockAmount\":0,\"shareProperty\":0,\"sharePropertyCN\":\"\",\"address\":\"" + zeroAccount + "\"}"));
 
         JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();
-        respShareList = gdConstructQueryShareList(gdAccount1,500,0,500,"",respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount1,500,0,0,"",respShareList);
         List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,500,0,0,"", respShareList);
 //        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,500,0,0,"", respShareList2);
         List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,500,0,0,"", respShareList2);
 
         log.info(respShareList4.toString());
         //检查存在余额的股东列表
-        assertEquals(respShareList4.size(),dataShareList.size() - 1);
+        assertEquals(respShareList4.size(),dataShareList.size());
 
         List<Map> getShareList = getShareListFromQueryNoZeroAcc(dataShareList);
 
@@ -5310,7 +5310,7 @@ public class GDSceneTest01 {
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":500}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
         assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
