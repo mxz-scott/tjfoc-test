@@ -17,8 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.CommonFunc.gdConstructShareList;
-import static com.tjfintech.common.CommonFunc.getTotalAmountFromShareList;
+import static com.tjfintech.common.CommonFunc.*;
+import static com.tjfintech.common.CommonFunc.mapShareENCN;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 
@@ -79,7 +79,7 @@ public class GDSceneTest02 {
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
     }
 
-    @After
+//    @After
     public void DestroyEquityAndAcc()throws Exception{
         //查询企业所有股东持股情况
         String response = gd.GDGetEnterpriseShareInfo(gdEquityCode);
@@ -257,8 +257,12 @@ public class GDSceneTest02 {
         //开户
         uf.createAcc(clientNo,gdEquityCode,true);
 
-        //销户
-        uf.destroyAcc(clientNo,true);
+        //销户 重复开户不会变更账户状态 因此仍是销户的状态
+        String resp = uf.destroyAcc(clientNo,false);
+        sleepAndSaveInfo(SLEEPTIME);
+        assertEquals("404",JSONObject.fromObject(
+                store.GetTxDetail(JSONObject.fromObject(resp).getJSONObject("data").getString("txId"))).getString("state"));
+
 
     }
 
@@ -637,6 +641,90 @@ public class GDSceneTest02 {
     }
 
     /***
+     * 股份性质变更 双花测试
+     */
+
+    @Test
+    public void changePropertyDoubleSend()throws Exception{
+
+        String response1 = uf.changeSHProperty(gdAccount1,gdEquityCode,100,0,1,false);
+        String response2 = uf.changeSHProperty(gdAccount1,gdEquityCode,100,0,1,false);
+        String txId1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+        String txId2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
+
+        sleepAndSaveInfo(SLEEPTIME);
+
+        //异或判断两种其中只有一个上链
+        assertEquals(true,JSONObject.fromObject(store.GetTxDetail(txId1)).getString("state").equals("200")
+                ^JSONObject.fromObject(store.GetTxDetail(txId2)).getString("state").equals("200"));
+
+        gd.GDGetEnterpriseShareInfo(gdEquityCode);
+
+        //查询股东持股情况 无当前股权代码信息
+        String query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(gdAccClientNo1,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":900,\"lockAmount\":0}"));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":900,\"lockAmount\":0}"));
+    }
+
+
+    /***
+     * 连续两次增发
+     */
+
+    @Test
+    public void increaseDouble_01()throws Exception{
+        List<Map> shareListIn = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareListIn2 = gdConstructShareList(gdAccount2,1000,1, shareListIn);
+        List<Map> shareListIn3 = gdConstructShareList(gdAccount3,1000,0, shareListIn2);
+        List<Map> shareListIn4 = gdConstructShareList(gdAccount4,1000,1, shareListIn3);
+
+        String response1 = uf.shareIncrease(gdEquityCode,shareListIn4,false);
+        String response2 = uf.shareIncrease(gdEquityCode,shareListIn4,false);
+        String txId1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+        String txId2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
+
+        sleepAndSaveInfo(SLEEPTIME);
+
+        //判断两笔交易均上链
+        assertEquals(true,JSONObject.fromObject(store.GetTxDetail(txId1)).getString("state").equals("200"));
+        assertEquals(true,JSONObject.fromObject(store.GetTxDetail(txId2)).getString("state").equals("200"));
+
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+        JSONArray jsonArrayGet = JSONObject.fromObject(query).getJSONArray("data");
+
+        assertEquals(12000,getTotalAmountFromShareList(jsonArrayGet),0.0001);
+    }
+
+    /***
+     * 场内转板 双花测试
+     */
+
+    @Test
+    public void changeBoardDoubleSpend_01()throws Exception{
+        String newEqCode1 = gdEquityCode + Random(7);
+        String newEqCode2 = gdEquityCode + Random(7);
+
+        String response1 = uf.changeBoard(gdEquityCode,newEqCode1,false);
+        String response2 = uf.changeBoard(gdEquityCode,newEqCode2,false);
+        String txId1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+        String txId2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
+
+        sleepAndSaveInfo(SLEEPTIME);
+
+        //异或判断两种其中只有一个上链
+        assertEquals(true,JSONObject.fromObject(store.GetTxDetail(txId1)).getString("state").equals("200")
+                ^JSONObject.fromObject(store.GetTxDetail(txId2)).getString("state").equals("200"));
+
+        gd.GDGetEnterpriseShareInfo(gdEquityCode);
+    }
+
+    /***
      * 回收高管股 双花测试
      */
 
@@ -756,14 +844,8 @@ public class GDSceneTest02 {
         List<Map> shareList = gdConstructShareList(gdAccount1,100,1);
         uf.shareRecycle(gdEquityCode,shareList,false);
 
-        if(JSONObject.fromObject(response).getString("state").equals("200")) {
-            sleepAndSaveInfo(SLEEPTIME);
-            assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
-                    JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
-        }
-        else{
-            assertEquals("501",JSONObject.fromObject(response).getString("state"));
-        }
+//        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("余额不足",JSONObject.fromObject(response).getString("message"));
 
     }
 
@@ -927,11 +1009,11 @@ public class GDSceneTest02 {
         String newEquityCode = gdEquityCode + Random(5);
         response = uf.changeBoard(gdEquityCode,newEquityCode,false);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("账户地址[" + gdAccount1 + "]还存证冻结的资产，不可以转场",JSONObject.fromObject(response).getString("message"));
+        assertEquals("账户地址[" + gdAccount1 + "]还存在冻结的资产，不可以转场",JSONObject.fromObject(response).getString("message"));
 
 
         String query  = gd.GDGetEnterpriseShareInfo(newEquityCode);
-        assertEquals("501",JSONObject.fromObject(query).getString("state"));
+        assertEquals("400",JSONObject.fromObject(query).getString("state"));
         assertEquals("该股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
 
         query  = gd.GDGetEnterpriseShareInfo(gdEquityCode);
@@ -1093,7 +1175,7 @@ public class GDSceneTest02 {
         uf.shareRecycle(gdEquityCode,shareList4,true);
 
         response = uf.destroyAcc(gdAccClientNo1,false);
-        assertEquals("501",JSONObject.fromObject(response).getString("state"));
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("账户还有余额，不可以销户",JSONObject.fromObject(response).getString("message"));
 
     }
@@ -1111,13 +1193,13 @@ public class GDSceneTest02 {
         uf.lock(bizNoTemp,gdAccount1,gdEquityCode,1000,0,"2020-09-03",true);
 
         response = uf.destroyAcc(gdAccClientNo1,false);
-        assertEquals("501",JSONObject.fromObject(response).getString("state"));
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("账户还有余额，不可以销户",JSONObject.fromObject(response).getString("message"));
 
     }
 
     /***
-     * 全部冻结后销户
+     * 多次变更股权性质
      */
 
     @Test
@@ -1129,7 +1211,7 @@ public class GDSceneTest02 {
         List<Map> shareList = gdConstructShareList(gdAccount3,1000,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount3,3000,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,2000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,3000,0, shareList3);
+        List<Map> shareList4 = gdConstructShareList(gdAccount3,3000,0, shareList3);
 
         //发行
         response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
@@ -1142,9 +1224,10 @@ public class GDSceneTest02 {
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         JSONArray jsonArrayGet = JSONObject.fromObject(query).getJSONArray("data");
         for(int i = 0;i < 30; i++){
+            log.info("change time " + i);
             uf.changeSHProperty(gdAccount3,gdEquityCode,300,0,1,true);
             query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
-            assertEquals(9000,getTotalAmountFromShareList(jsonArrayGet));
+            assertEquals(9000,getTotalAmountFromShareList(jsonArrayGet),0.0001);
         }
 
     }
@@ -1160,6 +1243,24 @@ public class GDSceneTest02 {
         //全部冻结
         String bizNoTemp = "2000" + Random(12);
         uf.lock(bizNoTemp,gdAccount1,gdEquityCode,1000,0,"2020-09-02",true);
+
+        uf.shareTransfer(gdAccountKeyID1,gdAccount1,500,gdAccount6,0,gdEquityCode,0,"test123456",true);
+
+    }
+
+    /***
+     * 多次冻结
+     */
+
+    @Test
+    public void multiLock()throws Exception{
+
+        String response = "";
+        for(int i =0 ;i<20;i++) {
+            //全部冻结
+            String bizNoTemp = "2000" + Random(12);
+            uf.lock(bizNoTemp, gdAccount1, gdEquityCode, 50, 0, "2020-09-02", true);
+        }
 
         uf.shareTransfer(gdAccountKeyID1,gdAccount1,500,gdAccount6,0,gdEquityCode,0,"test123456",true);
 
