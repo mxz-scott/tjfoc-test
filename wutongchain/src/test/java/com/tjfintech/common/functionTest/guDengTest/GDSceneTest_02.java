@@ -81,7 +81,7 @@ public class GDSceneTest_02 {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
     }
 
-//    @After
+    @After
     public void DestroyEquityAndAcc()throws Exception{
         List<Map> shareList = new ArrayList<>();
         Boolean bOnlyZero = false;
@@ -106,7 +106,7 @@ public class GDSceneTest_02 {
         if(!bOnlyZero)
             uf.shareRecycle(gdEquityCode,shareList,true);
 
-        //每个测试用例都会重新创建账户时则用例执行完成后则全部销户
+        //每个测试用例若每次均重新创建账户则用例执行完成后则全部销户
         if(!bCreateAccOnce){
             uf.destroyAcc(gdAccClientNo1,true);
             uf.destroyAcc(gdAccClientNo2,true);
@@ -1260,6 +1260,7 @@ public class GDSceneTest_02 {
 
 
     /***
+     * TC2522
      * 发行A
      * 股份性质变更 1
      * 场内转板 5
@@ -1270,6 +1271,8 @@ public class GDSceneTest_02 {
     @Test
     public void Test15()throws Exception{
         uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
+        uf.changeSHProperty(gdAccount2,gdEquityCode,500,0,1,true);
+        uf.changeSHProperty(gdAccount3,gdEquityCode,500,0,1,true);
 
         String newEqCode = gdEquityCode + Random(5);
         uf.changeBoard(gdEquityCode,newEqCode,true);
@@ -1288,8 +1291,10 @@ public class GDSceneTest_02 {
         List<Map> respShareList = new ArrayList<>();
         respShareList = gdConstructQueryShareList(gdAccount1,500,0,0,"",respShareList);
         respShareList = gdConstructQueryShareList(gdAccount1,500,1,0,"",respShareList);
-        List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,1000,0,0,"", respShareList);
-        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,1000,0,0,"", respShareList2);
+        List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,500,0,0,"", respShareList);
+        respShareList2 = gdConstructQueryShareList(gdAccount2,500,1,0,"", respShareList2);
+        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,500,0,0,"", respShareList2);
+        respShareList3 = gdConstructQueryShareList(gdAccount3,500,1,0,"", respShareList3);
         List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,1000,0,0,"", respShareList3);
 
         log.info(respShareList4.toString());
@@ -1318,14 +1323,18 @@ public class GDSceneTest_02 {
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo2 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount2 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
         assertEquals(gdAccClientNo3,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo3 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount3 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
         assertEquals(gdAccClientNo4,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
@@ -3558,6 +3567,7 @@ public class GDSceneTest_02 {
     }
 
     /***
+     * TC2523
      * 发行A
      * 股份性质变更 1
      * 增发 3

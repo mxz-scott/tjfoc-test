@@ -169,18 +169,15 @@ public class GDSceneTest_Recycle {
         shareList = gdConstructShareList(gdAccount1,500,0);
         response = uf.shareRecycle(gdEquityCode,shareList,false);
 
-
-        if(JSONObject.fromObject(response).getString("state").equals("200")) {
-            sleepAndSaveInfo(SLEEPTIME);
-            assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
+        //链上校验
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+        sleepAndSaveInfo(SLEEPTIME);
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
                     JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
-        }
-        else{
-            assertEquals("501",JSONObject.fromObject(response).getString("state"));
-        }
 
-        //当前可用余额500 回收等于可用余额
-        shareList = gdConstructShareList(gdAccount1,500,0);
+
+        //当前可用余额400 回收等于可用余额
+        shareList = gdConstructShareList(gdAccount1,400,0);
         uf.shareRecycle(gdEquityCode,shareList,true);
 
     }
@@ -223,14 +220,8 @@ public class GDSceneTest_Recycle {
         List<Map> shareList = gdConstructShareList(gdAccount1,10000,0);
         response = uf.shareRecycle(gdEquityCode,shareList,false);
 
-        if(JSONObject.fromObject(response).getString("state").equals("200")) {
-            sleepAndSaveInfo(SLEEPTIME);
-            assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
-                    JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
-        }
-        else{
-            assertEquals("501",JSONObject.fromObject(response).getString("state"));
-        }
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("余额不足",JSONObject.fromObject(response).getString("message"));
 
     }
 
@@ -267,7 +258,7 @@ public class GDSceneTest_Recycle {
 
         //当前可用余额500 回收大于可用余额
         shareList = gdConstructShareList(gdAccount1,500,0);
-        response = uf.shareRecycle(gdEquityCode,shareList,true);
+        response = uf.shareRecycle(gdEquityCode,shareList,false);
 
         if(JSONObject.fromObject(response).getString("state").equals("200")) {
             sleepAndSaveInfo(SLEEPTIME);
@@ -301,9 +292,10 @@ public class GDSceneTest_Recycle {
         uf.shareRecycle(gdEquityCode,shareList,true);
 
         //回收大于可用余额
-        shareList = gdConstructShareList(gdAccount2,100,1);
+        shareList = gdConstructShareList(gdAccount2,1000,1);
         response = uf.shareRecycle(gdEquityCode,shareList,false);
-        assertEquals("501",JSONObject.fromObject(response).getString("state"));
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("余额不足",JSONObject.fromObject(response).getString("message"));
 
         //回收等于可用余额
         shareList = gdConstructShareList(gdAccount2,899,1);
@@ -353,7 +345,8 @@ public class GDSceneTest_Recycle {
         //高管股回收回收大于可用余额
         shareList = gdConstructShareList(gdAccount5,1000,0);
         response = uf.shareRecycle(gdEquityCode,shareList,false);
-        assertEquals("501",JSONObject.fromObject(response).getString("state"));
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("余额不足",JSONObject.fromObject(response).getString("message"));
 
         //高管股回收转等于可用余额
         shareList = gdConstructShareList(gdAccount5,800,0);
