@@ -143,4 +143,200 @@ public class GDSceneTest_DestroyAccount {
 
     }
 
+    /***
+     * 销户一个不存在的客户号 2472
+     */
+
+    @Test
+    public void destroyNotExist()throws Exception{
+
+        String response = uf.destroyAcc("testNotExist" + Random(6),false);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("客户号不存在",JSONObject.fromObject(response).getString("message"));
+    }
+
+    /***
+     * TC2479 TC2480 TC2481 TC2482 TC2483 TC2475
+     * 销户前存在发行交易流水，销户后恢复
+     * 进行冻结、回收、转让、增发
+     */
+
+    @Test
+    public void repeatCreateDestroy()throws Exception{
+        String clientNo = "test000DA" + Random(10);
+
+
+        //创建账户
+        String response = uf.createAcc(clientNo,true);
+        String keyID = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("keyId");
+        String addr= JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("address");
+        List<Map> shareList = gdConstructShareList(addr,500,0);
+
+        //发行
+        String eqCode = "Da00" + Random(10);
+        uf.shareIssue(eqCode,shareList,true);
+        uf.shareRecycle(eqCode,shareList,true);
+
+        //销户
+        uf.destroyAcc(clientNo,true);
+
+        //再次使用相同的clientNo创建账户
+        response = uf.createAcc(clientNo,true);
+        keyID = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("keyId");
+        addr= JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("address");
+
+        //变更账户状态为正常
+
+
+        eqCode = "Da00" + Random(10);
+
+        //发行
+        uf.shareIssue(eqCode,shareList,true);
+
+        String query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
+        assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + clientNo + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + addr + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + eqCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+
+        uf.lockAndUnlock("r"+Random(15),eqCode,addr,500,0,true);
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
+        assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + clientNo + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + addr + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + eqCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+
+        String newEqCode = "new" + Random(10);
+        uf.changeBoard(eqCode,newEqCode,true);
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
+        assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + clientNo + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + addr + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + newEqCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+
+        uf.shareIncrease(newEqCode,shareList,true);
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
+        assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + clientNo + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + addr + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + newEqCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+
+        uf.shareTransfer(keyID,addr,200,gdAccount1,0,newEqCode,1,"testodr"+Random(10),true);
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
+        assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + clientNo + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + addr + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + newEqCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":800,\"lockAmount\":0}"));
+
+        shareList = gdConstructShareList(addr,800,0);
+        shareList = gdConstructShareList(gdAccount1,200,0,shareList);
+        uf.shareRecycle(newEqCode,shareList,true);
+
+        response = uf.destroyAcc(clientNo,false);
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
+
+        response = uf.destroyAcc(clientNo,false);
+        sleepAndSaveInfo(SLEEPTIME);
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
+                JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
+    }
+
+    /***
+     * TC2479 TC2480 TC2481 TC2482 TC2483 TC2475
+     * 销户前不存在任何交易流水，销户后恢复  目前会失败
+     * 进行冻结、回收、转让、增发
+     */
+
+    @Test
+    public void repeatCreateDestroy02()throws Exception{
+        String clientNo = "test000DA" + Random(10);
+
+
+        //创建账户
+        String response = uf.createAcc(clientNo,true);
+
+        //销户
+        uf.destroyAcc(clientNo,true);
+
+        //再次使用相同的clientNo创建账户
+        response = uf.createAcc(clientNo,true);
+        String keyID = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("keyId");
+        String addr= JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("address");
+
+        //变更账户状态为正常
+
+
+        String eqCode = "Da00" + Random(10);
+        List<Map> shareList = gdConstructShareList(addr,500,0);
+        //发行
+        uf.shareIssue(eqCode,shareList,true);
+
+        String query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
+        assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + clientNo + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + addr + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + eqCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+
+        uf.lockAndUnlock("r"+Random(15),eqCode,addr,500,0,true);
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
+        assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + clientNo + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + addr + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + eqCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+
+        String newEqCode = "new" + Random(10);
+        uf.changeBoard(eqCode,newEqCode,true);
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
+        assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + clientNo + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + addr + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + newEqCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+
+        uf.shareIncrease(newEqCode,shareList,true);
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
+        assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + clientNo + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + addr + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + newEqCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+
+        uf.shareTransfer(keyID,addr,200,gdAccount1,0,newEqCode,1,"testodr"+Random(10),true);
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
+        assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + clientNo + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + addr + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + newEqCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":800,\"lockAmount\":0}"));
+
+        shareList = gdConstructShareList(addr,800,0);
+        shareList = gdConstructShareList(gdAccount1,200,0,shareList);
+        uf.shareRecycle(newEqCode,shareList,true);
+
+        response = uf.destroyAcc(clientNo,false);
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
+
+        response = uf.destroyAcc(clientNo,false);
+        sleepAndSaveInfo(SLEEPTIME);
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
+                JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
+    }
+
 }

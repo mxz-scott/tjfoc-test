@@ -379,4 +379,75 @@ public class GDUnitFunc {
         return response;
 
     }
+
+    /***
+     * 创建账户接口
+     * @param clntNo   客户号
+     * @throws Exception
+     */
+    public String createAcc(String clntNo,boolean bCheckOnchain) throws Exception {
+        log.info("开户 " + clntNo);
+
+        String response = "";
+
+        String shareHolderNo = "SH" + clntNo;
+        String clientName = "name" + clntNo;
+        String fundNo = "fund" + clntNo;
+
+        Map mapPersonInfo = new HashMap();
+        mapPersonInfo.put("clientFullName",clientName);
+        mapPersonInfo.put("organizationType","苏州股权代码");
+        mapPersonInfo.put("certificateType",0);
+        mapPersonInfo.put("certificateNo","123456468123153");
+        mapPersonInfo.put("certificateAddress","certificateAddress");
+        mapPersonInfo.put("gender",0);
+        mapPersonInfo.put("telephone","051266616688");
+        mapPersonInfo.put("phone","1598222555555");
+        mapPersonInfo.put("postalCode","200120");
+        mapPersonInfo.put("contactAddress","人民币");
+        mapPersonInfo.put("mailBox","www@163.com");
+        mapPersonInfo.put("fax","051266616688");
+        mapPersonInfo.put("equityCode",gdEquityCode);
+        mapPersonInfo.put("equityAmount",5000000);
+        mapPersonInfo.put("shareProperty",0);
+
+        Map mapinvestor = new HashMap();
+        mapinvestor.put("salesDepartment","业务一部");
+        mapinvestor.put("clientGroups","群组");
+        mapinvestor.put("equityAccountNo","111111");
+        mapinvestor.put("currency","人民币");
+        mapinvestor.put("board","E板");
+        mapinvestor.put("accountType",0);
+        mapinvestor.put("accountStatus",0);
+        mapinvestor.put("registrationDate","20200828");
+        mapinvestor.put("lastTradingDate","20200828");
+        mapinvestor.put("closingDate","20200828");
+        mapinvestor.put("shareholderAmount",3);
+
+        String extend = "";
+
+        Map mapInvestorInfo = new HashMap();
+
+        mapInvestorInfo.put("clientName",clientName);
+        mapInvestorInfo.put("shareholderNo",shareHolderNo);
+        mapInvestorInfo.put("fundNo",fundNo);
+        mapInvestorInfo.put("clientNo",clntNo);
+        mapInvestorInfo.put("extend",extend);
+        mapInvestorInfo.put("personalInfo",mapPersonInfo);
+        mapInvestorInfo.put("investor",mapinvestor);
+
+        response = gd.GDCreateAccout(gdContractAddress,mapInvestorInfo);
+
+        if(bCheckOnchain) {
+            JSONObject jsonObject = JSONObject.fromObject(response);
+            String txId = jsonObject.getJSONObject("data").getString("txId");
+
+            commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+            assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+            return response;
+        }
+        return response;
+
+    }
 }
