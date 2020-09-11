@@ -40,7 +40,7 @@ public class GDSceneTest_DestroyAccount {
         gdBefore.gdCreateAccout();
     }
 
-    @Before
+//    @Before
     public void IssueEquity()throws Exception{
         bizNoTest = "test" + Random(12);
 
@@ -126,6 +126,36 @@ public class GDSceneTest_DestroyAccount {
     }
 
     /***
+     * 合约传入特殊字符
+     */
+
+    @Test
+    public void destroyAccWitContractAddrSpecChar()throws Exception{
+        String clientNo = "spec" + Random(10);
+        uf.createAcc(clientNo,true);
+        String response = gd.GDAccountDestroy("@",clientNo);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("查询账号信息失败",JSONObject.fromObject(response).getString("message"));
+
+        response = gd.GDAccountDestroy("#",clientNo);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("查询账号信息失败",JSONObject.fromObject(response).getString("message"));
+
+        response = gd.GDAccountDestroy("%",clientNo);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("查询账号信息失败",JSONObject.fromObject(response).getString("message"));
+
+        response = gd.GDAccountDestroy("_",clientNo);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("查询账号信息失败",JSONObject.fromObject(response).getString("message"));
+
+        response = gd.GDAccountDestroy("|",clientNo);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("查询账号信息失败",JSONObject.fromObject(response).getString("message"));
+
+    }
+
+    /***
      * 全部冻结后销户
      */
 
@@ -179,6 +209,9 @@ public class GDSceneTest_DestroyAccount {
 
         //销户
         uf.destroyAcc(clientNo,true);
+        String query = gd.GDGetEnterpriseShareInfo(eqCode);
+        assertEquals(1,JSONObject.fromObject(query).getJSONArray("data").size());
+        assertEquals(true,query.contains("{\"amount\":500,\"lockAmount\":0,\"shareProperty\":0,\"sharePropertyCN\":\"\",\"address\":\"" + zeroAccount + "\"}"));
 
         //再次使用相同的clientNo创建账户
         response = uf.createAcc(clientNo,true);
@@ -193,7 +226,7 @@ public class GDSceneTest_DestroyAccount {
         //发行
         uf.shareIssue(eqCode,shareList,true);
 
-        String query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
+        query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
         assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + clientNo + "\""));
         assertEquals(true,query.contains("\"address\":\"" + addr + "\""));
