@@ -1,9 +1,8 @@
 package com.tjfintech.common.functionTest.guDengTest;
 
-import com.alibaba.fastjson.JSON;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.GDBeforeCondition;
-import com.tjfintech.common.Interface.GuDeng;
+import com.tjfintech.common.Interface.GuDengV1;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -29,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 public class GDSceneTest_Increase {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
-    GuDeng gd =testBuilder.getGuDeng();
+    GuDengV1 gd =testBuilder.getGuDengV1();
     Store store =testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
@@ -119,6 +118,34 @@ public class GDSceneTest_Increase {
         String response = uf.shareIncrease(gdEquityCode + Random(12),shareList4,false);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
         assertEquals("该股份从未发行过，不可以增发", JSONObject.fromObject(response).getString("message"));
+
+    }
+
+
+    /***
+     * 增发 shareList异常测试
+     */
+
+    @Test
+    public void Increase_TC2391()throws Exception{
+        List<Map> shareList = gdConstructShareList(gdAccount1,-100,0);
+        List<Map> shareList2 = gdConstructShareList("",1000,0);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0,shareList);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList2);
+
+        String response = uf.shareIncrease(gdEquityCode,shareList3,false);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        assertEquals("无效的参数:json: cannot unmarshal number -100 into Go struct field Shares.ShareList.Amount of type uint64", JSONObject.fromObject(response).getString("message"));
+
+
+        response = uf.shareIncrease(gdEquityCode,shareList4,false);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, JSONObject.fromObject(response).getString("message").contains("Error:Field validation for 'Address' failed on the 'required' tag"));
+
+        shareList.clear();
+        response = uf.shareIncrease(gdEquityCode,shareList,false);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        assertEquals("至少传入一个股权账号信息", JSONObject.fromObject(response).getString("message"));
 
     }
 

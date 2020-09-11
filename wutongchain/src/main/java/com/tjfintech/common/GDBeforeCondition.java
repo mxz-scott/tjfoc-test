@@ -1,7 +1,7 @@
 package com.tjfintech.common;
 
 
-import com.tjfintech.common.Interface.GuDeng;
+import com.tjfintech.common.Interface.GuDengV1;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,6 @@ import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.CoreMatchers.anyOf;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -22,7 +21,7 @@ import static org.junit.Assert.assertThat;
 
 public class GDBeforeCondition {
     TestBuilder testBuilder = TestBuilder.getInstance();
-    GuDeng gd = testBuilder.getGuDeng();
+    GuDengV1 gd = testBuilder.getGuDengV1();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
     Store store = testBuilder.getStore();

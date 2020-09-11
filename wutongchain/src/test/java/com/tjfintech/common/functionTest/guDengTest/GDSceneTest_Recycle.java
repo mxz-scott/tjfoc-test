@@ -2,12 +2,11 @@ package com.tjfintech.common.functionTest.guDengTest;
 
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.GDBeforeCondition;
-import com.tjfintech.common.Interface.GuDeng;
+import com.tjfintech.common.Interface.GuDengV1;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -27,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 public class GDSceneTest_Recycle {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
-    GuDeng gd =testBuilder.getGuDeng();
+    GuDengV1 gd =testBuilder.getGuDengV1();
     Store store =testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
@@ -232,7 +231,7 @@ public class GDSceneTest_Recycle {
     @Test
     public void shareRecycle_NotEnough_02()throws Exception{
         String response = "";
-        //尝试回收超过余额
+        //
         List<Map> shareList = gdConstructShareList(gdAccount6,100,1);
         response = uf.shareRecycle(gdEquityCode,shareList,false);
 
@@ -371,5 +370,91 @@ public class GDSceneTest_Recycle {
         assertEquals("500",JSONObject.fromObject(response).getString("state"));
         assertEquals("获取平台的公钥以及合约地址出错 ",JSONObject.fromObject(response).getString("message"));
     }
-    
+
+
+    /***
+     * 回收 shareList异常测试
+     */
+
+    @Test
+    public void recycle_TC2403()throws Exception{
+        List<Map> shareList = gdConstructShareList(gdAccount1,-100,0);
+        List<Map> shareList2 = gdConstructShareList("",1000,0);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0,shareList);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList2);
+
+        String response = uf.shareRecycle(gdEquityCode,shareList3,false);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        assertEquals("无效的参数:json: cannot unmarshal number -100 into Go struct field AddressInfo.AddressList.Amount of type uint64", JSONObject.fromObject(response).getString("message"));
+
+
+        response = uf.shareIncrease(gdEquityCode,shareList4,false);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, JSONObject.fromObject(response).getString("message").contains("Error:Field validation for 'Address' failed on the 'required"));
+
+        shareList.clear();
+        response = uf.shareIncrease(gdEquityCode,shareList,false);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        assertEquals("至少传入一个股权账号信息", JSONObject.fromObject(response).getString("message"));
+
+    }
+
+
+    /***
+     * 异常测试
+     * 回收使用错误的地址
+     */
+
+    @Test
+    public void recycle_TC2401()throws Exception{
+        //错误的地址信息
+        List<Map> shareList = gdConstructShareList("11111111",100,0);
+
+        String response = uf.shareRecycle(gdEquityCode,shareList,false);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        assertEquals("余额不足", JSONObject.fromObject(response).getString("message"));
+
+
+
+    }
+
+    /***
+     * 异常测试
+     * 回收使用错误的股权代码
+     */
+
+    @Test
+    public void recycle_TC2400()throws Exception{
+        //错误的 或者不存在的股权代码
+        List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
+
+        String response = uf.shareRecycle(gdEquityCode + Random(5),shareList,false);
+
+        //以下暂为错误的提示信息 提bug优化后测试再修改 20200911
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals("获取平台的公钥以及合约地址出错 ", JSONObject.fromObject(response).getString("message"));
+
+
+
+    }
+
+
+    /***
+     * 异常测试
+     * 回收使用客户的keyID
+     */
+
+    @Test
+    public void recycle_TC2399()throws Exception{
+        //错误的 或者不存在的股权代码
+        List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
+
+        String response = gd.GDShareRecycle(gdAccountKeyID1,gdEquityCode,shareList,"111");
+
+        assertEquals("505", JSONObject.fromObject(response).getString("state"));
+        assertEquals("数字签名出错", JSONObject.fromObject(response).getString("message"));
+
+
+
+    }
 }

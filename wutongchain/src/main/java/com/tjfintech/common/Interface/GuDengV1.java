@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public interface GuDeng {
+public interface GuDengV1 {
 
     String GDEnterpriseResister(String contractAddress,Map basicInfo, Map businessInfo, Map legalPersonInfo, String extend);
     String GDCreateAccout(String contractAddress,Map investorInfo);

@@ -1,14 +1,12 @@
 package com.tjfintech.common.functionTest.guDengTest;
 
 import com.tjfintech.common.CommonFunc;
-import com.tjfintech.common.GDBeforeCondition;
-import com.tjfintech.common.Interface.GuDeng;
+import com.tjfintech.common.Interface.GuDengV1;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.apache.commons.collections.map.HashedMap;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
 
@@ -25,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 public class GDUnitFunc {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
-    GuDeng gd =testBuilder.getGuDeng();
+    GuDengV1 gd =testBuilder.getGuDengV1();
     Store store =testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();

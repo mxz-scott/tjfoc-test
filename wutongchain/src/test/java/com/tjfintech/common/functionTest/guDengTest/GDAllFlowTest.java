@@ -2,7 +2,7 @@ package com.tjfintech.common.functionTest.guDengTest;
 
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.GDBeforeCondition;
-import com.tjfintech.common.Interface.GuDeng;
+import com.tjfintech.common.Interface.GuDengV1;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertThat;
 public class GDAllFlowTest {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
-    GuDeng gd =testBuilder.getGuDeng();
+    GuDengV1 gd =testBuilder.getGuDengV1();
     Store store =testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
