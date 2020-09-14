@@ -33,7 +33,7 @@ public class GDSceneTest_ChangeBoard {
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
     public static String bizNoTest = "test" + Random(12);
-    GDUnitFunc uf = new GDUnitFunc();
+    GDUnitFuncV1 uf = new GDUnitFuncV1();
 
     @BeforeClass
     public static void Before()throws Exception{

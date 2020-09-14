@@ -35,7 +35,7 @@ public class GDSceneTest_01 {
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
     public static String bizNoTest = "test" + Random(12);
-    GDUnitFunc uf = new GDUnitFunc();
+    GDUnitFuncV1 uf = new GDUnitFuncV1();
     public Boolean bCreateAccOnce = true;
 
     @BeforeClass

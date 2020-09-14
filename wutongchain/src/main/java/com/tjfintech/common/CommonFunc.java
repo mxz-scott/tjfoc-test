@@ -1229,6 +1229,7 @@ public class CommonFunc {
         return shareList;
     }
 
+
     public static List<Map>   gdConstructShareList(String address, double amount, int shareProperty, List<Map> list){
         List<Map> shareList = new ArrayList<>();
         for(int i = 0 ; i < list.size() ; i++) {
@@ -1238,6 +1239,34 @@ public class CommonFunc {
         shares.put("address",address);
         shares.put("amount",amount);
         shares.put("shareProperty",shareProperty);
+
+        shareList.add(shares);
+        return shareList;
+    }
+
+    public static List<Map>   gdConstructShareList(String address, double amount, int shareProperty,Map regInfo){
+
+        Map<String,Object> shares = new HashMap<>();
+        shares.put("address",address);
+        shares.put("amount",amount);
+        shares.put("shareProperty",shareProperty);
+        shares.put("registerInformation",regInfo);
+
+        List<Map> shareList = new ArrayList<>();
+        shareList.add(shares);
+        return shareList;
+    }
+
+    public static List<Map>   gdConstructShareList(String address, double amount, int shareProperty,Map regInfo, List<Map> list){
+        List<Map> shareList = new ArrayList<>();
+        for(int i = 0 ; i < list.size() ; i++) {
+            shareList.add(list.get(i));
+        }
+        Map<String,Object> shares = new HashMap<>();
+        shares.put("address",address);
+        shares.put("amount",amount);
+        shares.put("shareProperty",shareProperty);
+        shares.put("registerInformation",regInfo);
 
         shareList.add(shares);
         return shareList;
@@ -1289,8 +1318,8 @@ public class CommonFunc {
 
     public static Map<String,String> mapShareENCN()throws Exception{
         Map<String,String> mapShareTypeCN = new HashMap<>();
-        mapShareTypeCN.put("0","");
-        mapShareTypeCN.put("1","");
+        mapShareTypeCN.put("0","流通股");
+        mapShareTypeCN.put("1","优先股");
         mapShareTypeCN.put("2","");
         mapShareTypeCN.put("3","");
         mapShareTypeCN.put("4","");

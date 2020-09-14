@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDUnitFunc {
+public class GDUnitFuncV1 {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDengV1 gd =testBuilder.getGuDengV1();
