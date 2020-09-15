@@ -201,107 +201,108 @@ public class TestTxType {
         assertEquals("0",
                 jsonObjectAddPeer.getJSONObject("data").getJSONObject("system").getJSONObject("peerTransaction").getString("peerType"));
 
-        //创建子链交易
-        String chainName="tx_"+sdf.format(dt)+ RandomUtils.nextInt(10000);
-        String addLedgerResp = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,
-                " -t sm3"," -w first"," -c raft",ids);
-        assertEquals(addLedgerResp.contains("send transaction success"), true);
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(addLedgerResp,utilsClass.mgGetTxHashType),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-
-        String addLedgerHash = addLedgerResp.substring(addLedgerResp.lastIndexOf(":")+1).trim();
-        JSONObject jsonObjectAddLedger = checkTXDetailHeaderMsg(addLedgerHash,versionStore,typeSystem,subTypeAddLedger);
-
-        assertEquals(toolID,
-                jsonObjectAddLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("sendId"));
-        assertEquals("0",
-                jsonObjectAddLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("opType"));
-        assertEquals(chainName,
-                jsonObjectAddLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("name"));
-        assertEquals("sm3",
-                jsonObjectAddLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("hashType"));
-        assertEquals("first",
-                jsonObjectAddLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("word"));
-        assertEquals("raft",
-                jsonObjectAddLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("consensus"));
-        assertEquals("["+ids.replaceAll("-m","").replaceAll(" ","")+"]",
-                jsonObjectAddLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("member").replaceAll("\"",""));
-
-        //冻结子链交易
-        String freezeLedgerResp = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(freezeLedgerResp.contains("send transaction success"), true);
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(freezeLedgerResp,utilsClass.mgGetTxHashType),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-        String freezeLedgerHash = freezeLedgerResp.substring(freezeLedgerResp.lastIndexOf(":")+1).trim();
-        JSONObject jsonObjectFreezeLedger = checkTXDetailHeaderMsg(freezeLedgerHash,versionStore,typeSystem,subTypeFreezeLedger);
-        assertEquals(toolID,
-                jsonObjectFreezeLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("sendId"));
-        assertEquals("1",
-                jsonObjectFreezeLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("opType"));
-        assertEquals(chainName,
-                jsonObjectFreezeLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("name"));
-        assertEquals("sm3",
-                jsonObjectFreezeLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("hashType"));
-        assertEquals("first",
-                jsonObjectFreezeLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("word"));
-        assertEquals("raft",
-                jsonObjectFreezeLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("consensus"));
-        assertEquals("["+ids.replaceAll("-m","").replaceAll(" ","")+"]",
-                jsonObjectFreezeLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("member").replaceAll("\"",""));
-
-        //恢复冻结子链交易
-
-        String recoverLedgerResp = mgToolCmd.recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(recoverLedgerResp.contains("send transaction success"), true);
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recoverLedgerResp,utilsClass.mgGetTxHashType),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-        String recoverLedgerHash = recoverLedgerResp.substring(recoverLedgerResp.lastIndexOf(":")+1).trim();
-        JSONObject jsonObjectRecoverLedger = checkTXDetailHeaderMsg(recoverLedgerHash,versionStore,typeSystem,subTypeRecoverLedger);
-        assertEquals(toolID,
-                jsonObjectRecoverLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("sendId"));
-        assertEquals("2",
-                jsonObjectRecoverLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("opType"));
-        assertEquals(chainName,
-                jsonObjectRecoverLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("name"));
-        assertEquals("sm3",
-                jsonObjectRecoverLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("hashType"));
-        assertEquals("first",
-                jsonObjectRecoverLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("word"));
-        assertEquals("raft",
-                jsonObjectRecoverLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("consensus"));
-        assertEquals("["+ids.replaceAll("-m","").replaceAll(" ","")+"]",
-                jsonObjectRecoverLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("member").replaceAll("\"",""));
-
-        //销毁子链交易
-        String destroyLedgerResp = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
-        assertEquals(destroyLedgerResp.contains("send transaction success"), true);
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(destroyLedgerResp,utilsClass.mgGetTxHashType),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-        String destroyLedgerHash = destroyLedgerResp.substring(destroyLedgerResp.lastIndexOf(":")+1).trim();
-        JSONObject jsonObjectDestroyLedger = checkTXDetailHeaderMsg(destroyLedgerHash,versionStore,typeSystem,subTypeDestroyLedger);
-        assertEquals(toolID,
-                jsonObjectDestroyLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("sendId"));
-        assertEquals("3",
-                jsonObjectDestroyLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("opType"));
-        assertEquals(chainName,
-                jsonObjectDestroyLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("name"));
-        assertEquals("sm3",
-                jsonObjectDestroyLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("hashType"));
-        assertEquals("first",
-                jsonObjectDestroyLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("word"));
-        assertEquals("raft",
-                jsonObjectDestroyLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("consensus"));
-        assertEquals("["+ids.replaceAll("-m","").replaceAll(" ","")+"]",
-                jsonObjectDestroyLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("member").replaceAll("\"",""));
-
+        //注释旧版本子链创建相关交易测试 修改为应用链 数据结构变更 20200915
+//        //创建子链交易
+//        String chainName="tx_"+sdf.format(dt)+ RandomUtils.nextInt(10000);
+//        String addLedgerResp = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,
+//                " -t sm3"," -w first"," -c raft",ids);
+//        assertEquals(addLedgerResp.contains("send transaction success"), true);
+//
+//        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(addLedgerResp,utilsClass.mgGetTxHashType),
+//                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+//
+//
+//        String addLedgerHash = addLedgerResp.substring(addLedgerResp.lastIndexOf(":")+1).trim();
+//        JSONObject jsonObjectAddLedger = checkTXDetailHeaderMsg(addLedgerHash,versionStore,typeSystem,subTypeAddLedger);
+//
+//        assertEquals(toolID,
+//                jsonObjectAddLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("sendId"));
+//        assertEquals("0",
+//                jsonObjectAddLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("opType"));
+//        assertEquals(chainName,
+//                jsonObjectAddLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("name"));
+//        assertEquals("sm3",
+//                jsonObjectAddLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("hashType"));
+//        assertEquals("first",
+//                jsonObjectAddLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("word"));
+//        assertEquals("raft",
+//                jsonObjectAddLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("consensus"));
+//        assertEquals("["+ids.replaceAll("-m","").replaceAll(" ","")+"]",
+//                jsonObjectAddLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("member").replaceAll("\"",""));
+//
+//        //冻结子链交易
+//        String freezeLedgerResp = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+//        assertEquals(freezeLedgerResp.contains("send transaction success"), true);
+//
+//        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(freezeLedgerResp,utilsClass.mgGetTxHashType),
+//                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+//
+//        String freezeLedgerHash = freezeLedgerResp.substring(freezeLedgerResp.lastIndexOf(":")+1).trim();
+//        JSONObject jsonObjectFreezeLedger = checkTXDetailHeaderMsg(freezeLedgerHash,versionStore,typeSystem,subTypeFreezeLedger);
+//        assertEquals(toolID,
+//                jsonObjectFreezeLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("sendId"));
+//        assertEquals("1",
+//                jsonObjectFreezeLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("opType"));
+//        assertEquals(chainName,
+//                jsonObjectFreezeLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("name"));
+//        assertEquals("sm3",
+//                jsonObjectFreezeLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("hashType"));
+//        assertEquals("first",
+//                jsonObjectFreezeLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("word"));
+//        assertEquals("raft",
+//                jsonObjectFreezeLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("consensus"));
+//        assertEquals("["+ids.replaceAll("-m","").replaceAll(" ","")+"]",
+//                jsonObjectFreezeLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("member").replaceAll("\"",""));
+//
+//        //恢复冻结子链交易
+//
+//        String recoverLedgerResp = mgToolCmd.recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+//        assertEquals(recoverLedgerResp.contains("send transaction success"), true);
+//
+//        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recoverLedgerResp,utilsClass.mgGetTxHashType),
+//                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+//
+//        String recoverLedgerHash = recoverLedgerResp.substring(recoverLedgerResp.lastIndexOf(":")+1).trim();
+//        JSONObject jsonObjectRecoverLedger = checkTXDetailHeaderMsg(recoverLedgerHash,versionStore,typeSystem,subTypeRecoverLedger);
+//        assertEquals(toolID,
+//                jsonObjectRecoverLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("sendId"));
+//        assertEquals("2",
+//                jsonObjectRecoverLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("opType"));
+//        assertEquals(chainName,
+//                jsonObjectRecoverLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("name"));
+//        assertEquals("sm3",
+//                jsonObjectRecoverLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("hashType"));
+//        assertEquals("first",
+//                jsonObjectRecoverLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("word"));
+//        assertEquals("raft",
+//                jsonObjectRecoverLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("consensus"));
+//        assertEquals("["+ids.replaceAll("-m","").replaceAll(" ","")+"]",
+//                jsonObjectRecoverLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("member").replaceAll("\"",""));
+//
+//        //销毁子链交易
+//        String destroyLedgerResp = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+//        assertEquals(destroyLedgerResp.contains("send transaction success"), true);
+//
+//        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(destroyLedgerResp,utilsClass.mgGetTxHashType),
+//                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+//
+//        String destroyLedgerHash = destroyLedgerResp.substring(destroyLedgerResp.lastIndexOf(":")+1).trim();
+//        JSONObject jsonObjectDestroyLedger = checkTXDetailHeaderMsg(destroyLedgerHash,versionStore,typeSystem,subTypeDestroyLedger);
+//        assertEquals(toolID,
+//                jsonObjectDestroyLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("sendId"));
+//        assertEquals("3",
+//                jsonObjectDestroyLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("opType"));
+//        assertEquals(chainName,
+//                jsonObjectDestroyLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("name"));
+//        assertEquals("sm3",
+//                jsonObjectDestroyLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("hashType"));
+//        assertEquals("first",
+//                jsonObjectDestroyLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("word"));
+//        assertEquals("raft",
+//                jsonObjectDestroyLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("consensus"));
+//        assertEquals("["+ids.replaceAll("-m","").replaceAll(" ","")+"]",
+//                jsonObjectDestroyLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("member").replaceAll("\"",""));
+//
     }
 
     @Test
