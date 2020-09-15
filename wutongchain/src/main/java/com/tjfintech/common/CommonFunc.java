@@ -1217,7 +1217,7 @@ public class CommonFunc {
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static List<Map>   gdConstructShareList(String address, double amount, int shareProperty){
+    public static List<Map> gdConstructShareListV1(String address, double amount, int shareProperty){
 
         Map<String,Object> shares = new HashMap<>();
         shares.put("address",address);
@@ -1230,7 +1230,7 @@ public class CommonFunc {
     }
 
 
-    public static List<Map>   gdConstructShareList(String address, double amount, int shareProperty, List<Map> list){
+    public static List<Map> gdConstructShareListV1(String address, double amount, int shareProperty, List<Map> list){
         List<Map> shareList = new ArrayList<>();
         for(int i = 0 ; i < list.size() ; i++) {
             shareList.add(list.get(i));
@@ -1244,20 +1244,20 @@ public class CommonFunc {
         return shareList;
     }
 
-    public static List<Map>   gdConstructShareList(String address, double amount, int shareProperty,Map regInfo){
+    public static List<Map> gdConstructShareList(String address, double amount, int shareProperty){
 
         Map<String,Object> shares = new HashMap<>();
         shares.put("address",address);
         shares.put("amount",amount);
         shares.put("shareProperty",shareProperty);
-        shares.put("registerInformation",regInfo);
+        shares.put("registerInformation",registerInfo);
 
         List<Map> shareList = new ArrayList<>();
         shareList.add(shares);
         return shareList;
     }
 
-    public static List<Map>   gdConstructShareList(String address, double amount, int shareProperty,Map regInfo, List<Map> list){
+    public static List<Map> gdConstructShareList(String address, double amount, int shareProperty,List<Map> list){
         List<Map> shareList = new ArrayList<>();
         for(int i = 0 ; i < list.size() ; i++) {
             shareList.add(list.get(i));
@@ -1266,7 +1266,7 @@ public class CommonFunc {
         shares.put("address",address);
         shares.put("amount",amount);
         shares.put("shareProperty",shareProperty);
-        shares.put("registerInformation",regInfo);
+        shares.put("registerInformation",registerInfo);
 
         shareList.add(shares);
         return shareList;
@@ -1320,13 +1320,23 @@ public class CommonFunc {
         Map<String,String> mapShareTypeCN = new HashMap<>();
         mapShareTypeCN.put("0","流通股");
         mapShareTypeCN.put("1","优先股");
-        mapShareTypeCN.put("2","");
-        mapShareTypeCN.put("3","");
-        mapShareTypeCN.put("4","");
-        mapShareTypeCN.put("5","");
-        mapShareTypeCN.put("6","");
-        mapShareTypeCN.put("7","");
+        mapShareTypeCN.put("2","资格股");
+        mapShareTypeCN.put("3","定增股");
+        mapShareTypeCN.put("4","特限股");
+        mapShareTypeCN.put("5","托管股");
+        mapShareTypeCN.put("6","有限公司股");
 
         return mapShareTypeCN;
+    }
+    public boolean mapCompare(Map<String, Object> map1,Map<String, Object> map2) {
+        boolean isChange = false;
+        for (Map.Entry<String, Object> entry1 : map1.entrySet()) {
+            Object m1value = entry1.getValue() == null ? "" : entry1.getValue();
+            Object m2value = map2.get(entry1.getKey()) == null ? "" : map2.get(entry1.getKey());
+            if (!m1value.equals(m2value)) {
+                isChange = true;
+            }
+        }
+        return isChange;
     }
 }

@@ -37,7 +37,7 @@ public interface GuDeng {
     String GDGetShareHolderInfo(String contractAddress, String clientNo);
 
     String GDCapitalSettlement(Map balanceAccount);
-    String GDAccountQuery(String accountObjectId);
-    String GDMainSubjectQuery(String subjectObjectId);
+    String GDAccountQuery(String contractAddress,String clientNo);
+    String GDMainSubjectQuery(String contractAddress,String subjectObjectId);
 
 }

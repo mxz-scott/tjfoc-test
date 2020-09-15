@@ -62,10 +62,10 @@ public class GDSceneTest_Recycle {
 
         //发行
         gdEquityCode = "gdEC" + Random(12);
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,1, shareList3);
 
         //发行
         String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
@@ -107,8 +107,8 @@ public class GDSceneTest_Recycle {
 
     @Test
     public void shareRecycleDoubleSpend_01()throws Exception{
-        List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount1,200,0);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,100,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount1,200,0);
 
         String response1 = uf.shareRecycle(gdEquityCode,shareList,false);
         String txId1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
@@ -131,8 +131,8 @@ public class GDSceneTest_Recycle {
     @Test
     public void shareRecycleDoubleSpend_02()throws Exception{
 
-        List<Map> shareList = gdConstructShareList(gdAccount2,100,1);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,200,1);
+        List<Map> shareList = gdConstructShareListV1(gdAccount2,100,1);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,200,1);
 
         String response1 = uf.shareRecycle(gdEquityCode,shareList,false);
         String txId1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
@@ -161,11 +161,11 @@ public class GDSceneTest_Recycle {
         uf.lock(bizNoTemp,gdAccount1,gdEquityCode,500,0,"2022-09-03",true);
 
         //当前可用余额500 回收小于可用余额
-        List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,100,0);
         uf.shareRecycle(gdEquityCode,shareList,true);
 
         //当前可用余额500 回收大于可用余额
-        shareList = gdConstructShareList(gdAccount1,500,0);
+        shareList = gdConstructShareListV1(gdAccount1,500,0);
         response = uf.shareRecycle(gdEquityCode,shareList,false);
 
         //链上校验
@@ -176,7 +176,7 @@ public class GDSceneTest_Recycle {
 
 
         //当前可用余额400 回收等于可用余额
-        shareList = gdConstructShareList(gdAccount1,400,0);
+        shareList = gdConstructShareListV1(gdAccount1,400,0);
         uf.shareRecycle(gdEquityCode,shareList,true);
 
     }
@@ -194,7 +194,7 @@ public class GDSceneTest_Recycle {
 
 
         //尝试回收
-        List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,100,0);
         response = uf.shareRecycle(gdEquityCode,shareList,false);
 
         if(JSONObject.fromObject(response).getString("state").equals("200")) {
@@ -216,7 +216,7 @@ public class GDSceneTest_Recycle {
     public void shareRecycle_NotEnough()throws Exception{
         String response = "";
         //尝试回收超过余额
-        List<Map> shareList = gdConstructShareList(gdAccount1,10000,0);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,10000,0);
         response = uf.shareRecycle(gdEquityCode,shareList,false);
 
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
@@ -232,7 +232,7 @@ public class GDSceneTest_Recycle {
     public void shareRecycle_NotEnough_02()throws Exception{
         String response = "";
         //
-        List<Map> shareList = gdConstructShareList(gdAccount6,100,1);
+        List<Map> shareList = gdConstructShareListV1(gdAccount6,100,1);
         response = uf.shareRecycle(gdEquityCode,shareList,false);
 
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
@@ -252,11 +252,11 @@ public class GDSceneTest_Recycle {
         uf.lock(bizNoTemp,gdAccount1,gdEquityCode,500,0,"2022-09-03",true);
 
         //当前可用余额500 回收小于可用余额
-        List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,100,0);
         uf.shareRecycle(gdEquityCode,shareList,true);
 
         //当前可用余额500 回收大于可用余额
-        shareList = gdConstructShareList(gdAccount1,500,0);
+        shareList = gdConstructShareListV1(gdAccount1,500,0);
         response = uf.shareRecycle(gdEquityCode,shareList,false);
 
         if(JSONObject.fromObject(response).getString("state").equals("200")) {
@@ -269,7 +269,7 @@ public class GDSceneTest_Recycle {
         }
 
         //当前可用余额500 回收等于可用余额
-        shareList = gdConstructShareList(gdAccount1,100,0);
+        shareList = gdConstructShareListV1(gdAccount1,100,0);
         uf.shareRecycle(gdEquityCode,shareList,true);
     }
 
@@ -287,17 +287,17 @@ public class GDSceneTest_Recycle {
         uf.lock(bizNoTemp,gdAccount2,gdEquityCode,1,1,"2022-09-03",true);
 
         //回收小于可用余额
-        List<Map> shareList = gdConstructShareList(gdAccount2,100,1);
+        List<Map> shareList = gdConstructShareListV1(gdAccount2,100,1);
         uf.shareRecycle(gdEquityCode,shareList,true);
 
         //回收大于可用余额
-        shareList = gdConstructShareList(gdAccount2,1000,1);
+        shareList = gdConstructShareListV1(gdAccount2,1000,1);
         response = uf.shareRecycle(gdEquityCode,shareList,false);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("余额不足",JSONObject.fromObject(response).getString("message"));
 
         //回收等于可用余额
-        shareList = gdConstructShareList(gdAccount2,899,1);
+        shareList = gdConstructShareListV1(gdAccount2,899,1);
         uf.shareRecycle(gdEquityCode,shareList,true);
     }
 
@@ -328,27 +328,27 @@ public class GDSceneTest_Recycle {
 
 
         //高管股回收小于可用余额
-        List<Map> shareList = gdConstructShareList(gdAccount5,100,1);
+        List<Map> shareList = gdConstructShareListV1(gdAccount5,100,1);
         uf.shareRecycle(gdEquityCode,shareList,true);
 
 
         //高管股回收回收等于可用余额
-        shareList = gdConstructShareList(gdAccount5,800,1);
+        shareList = gdConstructShareListV1(gdAccount5,800,1);
         uf.shareRecycle(gdEquityCode,shareList,true);
 
 
         //流通股回收小于可用余额
-        shareList = gdConstructShareList(gdAccount5,100,0);
+        shareList = gdConstructShareListV1(gdAccount5,100,0);
         uf.shareRecycle(gdEquityCode,shareList,true);
 
         //高管股回收回收大于可用余额
-        shareList = gdConstructShareList(gdAccount5,1000,0);
+        shareList = gdConstructShareListV1(gdAccount5,1000,0);
         response = uf.shareRecycle(gdEquityCode,shareList,false);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("余额不足",JSONObject.fromObject(response).getString("message"));
 
         //高管股回收转等于可用余额
-        shareList = gdConstructShareList(gdAccount5,800,0);
+        shareList = gdConstructShareListV1(gdAccount5,800,0);
         uf.shareRecycle(gdEquityCode,shareList,true);
 
     }
@@ -359,7 +359,7 @@ public class GDSceneTest_Recycle {
 
     @Test
     public void recycle_MatchCase()throws Exception{
-        List<Map> shareList = gdConstructShareList(gdAccount4,100,1);
+        List<Map> shareList = gdConstructShareListV1(gdAccount4,100,1);
 
         //大小写匹配检查
         String response = uf.shareRecycle(gdEquityCode.toLowerCase(),shareList,false);
@@ -378,10 +378,10 @@ public class GDSceneTest_Recycle {
 
     @Test
     public void recycle_TC2403()throws Exception{
-        List<Map> shareList = gdConstructShareList(gdAccount1,-100,0);
-        List<Map> shareList2 = gdConstructShareList("",1000,0);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0,shareList);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList2);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,-100,0);
+        List<Map> shareList2 = gdConstructShareListV1("",1000,0);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0,shareList);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,0, shareList2);
 
         String response = uf.shareRecycle(gdEquityCode,shareList3,false);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
@@ -408,7 +408,7 @@ public class GDSceneTest_Recycle {
     @Test
     public void recycle_TC2401()throws Exception{
         //错误的地址信息
-        List<Map> shareList = gdConstructShareList("11111111",100,0);
+        List<Map> shareList = gdConstructShareListV1("11111111",100,0);
 
         String response = uf.shareRecycle(gdEquityCode,shareList,false);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
@@ -426,7 +426,7 @@ public class GDSceneTest_Recycle {
     @Test
     public void recycle_TC2400()throws Exception{
         //错误的 或者不存在的股权代码
-        List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,100,0);
 
         String response = uf.shareRecycle(gdEquityCode + Random(5),shareList,false);
 
@@ -447,7 +447,7 @@ public class GDSceneTest_Recycle {
     @Test
     public void recycle_TC2399()throws Exception{
         //错误的 或者不存在的股权代码
-        List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,100,0);
 
         String response = gd.GDShareRecycle(gdAccountKeyID1,gdEquityCode,shareList,"111");
 

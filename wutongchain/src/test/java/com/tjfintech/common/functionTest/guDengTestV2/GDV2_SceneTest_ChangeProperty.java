@@ -1,10 +1,11 @@
-package com.tjfintech.common.functionTest.guDengTest;
+package com.tjfintech.common.functionTest.guDengTestV2;
 
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.GDBeforeCondition;
 import com.tjfintech.common.Interface.GuDengV1;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.functionTest.guDengTest.GDUnitFuncV1;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
@@ -25,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDSceneTest_ChangeProperty {
+public class GDV2_SceneTest_ChangeProperty {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDengV1 gd =testBuilder.getGuDengV1();
@@ -33,7 +34,7 @@ public class GDSceneTest_ChangeProperty {
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
     public static String bizNoTest = "test" + Random(12);
-    GDUnitFuncV1 uf = new GDUnitFuncV1();
+    GDUnitFunc uf = new GDUnitFunc();
 
     @BeforeClass
     public static void Before()throws Exception{
@@ -59,30 +60,21 @@ public class GDSceneTest_ChangeProperty {
 //
 //       GDBeforeCondition gdBC = new GDBeforeCondition();
 //       gdBC.gdCreateAccout();
-
 //       sleepAndSaveInfo(3000);
+
+        //构造发行list
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
 
         //发行
         gdEquityCode = "gdEC" + Random(12);
-        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,1, shareList3);
-        shareList4 = gdConstructShareListV1(gdAccount4,1000,2, shareList4);
-        shareList4 = gdConstructShareListV1(gdAccount4,1000,99, shareList4);
-
-        //发行
-        String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String txId = jsonObject.getJSONObject("data").getString("txId");
-
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
+        uf.shareIssue(gdEquityCode,shareList4,true);
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
     }
 
-//    @After
+    //    @After
     public void DestroyEquityAndAcc()throws Exception{
         //查询企业所有股东持股情况
         String response = gd.GDGetEnterpriseShareInfo(gdEquityCode);
@@ -124,6 +116,7 @@ public class GDSceneTest_ChangeProperty {
         response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
         assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
                 "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":500}"));
+
 
         //可用部分部分变更
         uf.changeSHProperty(gdAccount1,gdEquityCode,400,0,1,true);
@@ -587,15 +580,15 @@ public class GDSceneTest_ChangeProperty {
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();
-        respShareList = gdConstructQueryShareList(gdAccount1,1000,0,0,"",respShareList);
-        respShareList = gdConstructQueryShareList(gdAccount2,1000,1,0,"",respShareList);
-        respShareList = gdConstructQueryShareList(gdAccount3,1000,0,0,"",respShareList);
-        List<Map> respShareList2 = gdConstructQueryShareList(gdAccount4,500,3,0,"", respShareList);
-        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount4,500,12,0,"", respShareList2);
-        List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,500,0,0,"", respShareList3);
-        respShareList4 = gdConstructQueryShareList(gdAccount4,500,1,0,"", respShareList4);
-        respShareList4 = gdConstructQueryShareList(gdAccount4,500,2,0,"", respShareList4);
-        respShareList4 = gdConstructQueryShareList(gdAccount4,500,99,0,"", respShareList4);
+        respShareList = gdConstructQueryShareList(gdAccount1,1000,0,0,mapShareENCN().get("0"),respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount2,1000,1,0,mapShareENCN().get("1"),respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount3,1000,0,0,mapShareENCN().get("0"),respShareList);
+        List<Map> respShareList2 = gdConstructQueryShareList(gdAccount4,500,3,0,mapShareENCN().get("3"), respShareList);
+        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount4,500,12,0,mapShareENCN().get("12"), respShareList2);
+        List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,500,0,0,mapShareENCN().get("0"), respShareList3);
+        respShareList4 = gdConstructQueryShareList(gdAccount4,500,1,0,mapShareENCN().get("1"), respShareList4);
+        respShareList4 = gdConstructQueryShareList(gdAccount4,500,2,0,mapShareENCN().get("2"), respShareList4);
+        respShareList4 = gdConstructQueryShareList(gdAccount4,500,99,0,mapShareENCN().get("99"), respShareList4);
 
         log.info(respShareList4.toString());
         //检查存在余额的股东列表

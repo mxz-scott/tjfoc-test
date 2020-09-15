@@ -29,61 +29,9 @@ public class GDUnitFunc {
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
     String result = "check on chain success";
-//    public static Map registerInfo = new HashMap();//05登记 //发行 股份性质变更 过户转让 股份增发
-//    public static Map txInformatio = new HashMap();//04交易报告  //过户转让
-//    public static Map enterpriseSubjectInfo = new HashMap();//01主体  //挂牌企业登记
-//    public static Map productInfo = new HashMap();//03产品 //挂牌企业登记  股份增发
-//    public static Map accountInfo = new HashMap();//02账户  //投资者开户
-//    public static Map investorInfo = new HashMap();//01主体  //投资者开户
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    public Map<String,String> createAcc(String clientNo,String equityCode,boolean bCheckOnchain)throws Exception{
-        log.info("创建账户 " + clientNo);
-
-        Map<String,String> addrInfo = new HashMap<>();
-
-        String cltNo = clientNo;
-        String shareHolderNo = "SH" + cltNo;
-        String fundNo = "fund" + cltNo;
-        String eqCode = equityCode;
-
-        Map mapFundInfo = new HashMap();
-        accountInfo.put("test","1");
-        mapFundInfo.put("fundNo",fundNo);
-        mapFundInfo.put("accountInfo",accountInfo);
-
-        Map mapShareHodlInfo = new HashMap();
-        accountInfo.clear();
-        accountInfo.put("test","2");
-        mapShareHodlInfo.put("shareholderNo",shareHolderNo);
-        mapFundInfo.put("accountInfo",accountInfo);
-
-        investorInfo.put("test","3");
-
-        String response= gd.GDCreateAccout(gdContractAddress,cltNo,mapFundInfo,mapShareHodlInfo,investorInfo);
-        addrInfo.put("response",response);
-
-        if(bCheckOnchain) {
-            JSONObject jsonObject = JSONObject.fromObject(response);
-            String txId = jsonObject.getJSONObject("data").getString("txId");
-            assertEquals(cltNo, JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("clientNo"));
-            assertEquals(shareHolderNo, JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("shareholderNo"));
-            String keyId = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("keyId");
-            String address = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("address");
-            String shareHdNo = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("shareholderNo");
-            commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-            assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
-            addrInfo.put("clientNo", cltNo);
-            addrInfo.put("keyId", keyId);
-            addrInfo.put("address", address);
-            addrInfo.put("holderNo", shareHdNo);
-        }
-        return addrInfo;
-    }
 
     /***
      * 股份性质变更
@@ -95,10 +43,10 @@ public class GDUnitFunc {
      * @throws Exception
      */
     public String changeSHProperty(String address,String eqCode,long changeAmount,
-                                 int oldProperty,int newProperty,List<Map> regInfoList,boolean bCheckOnchain) throws Exception{
+                                 int oldProperty,int newProperty,boolean bCheckOnchain) throws Exception{
         log.info("股权性质变更");
 
-        String response= gd.GDShareChangeProperty(gdPlatfromKeyID,address,eqCode,changeAmount,oldProperty,newProperty,regInfoList);
+        String response= gd.GDShareChangeProperty(gdPlatfromKeyID,address,eqCode,changeAmount,oldProperty,newProperty,listRegInfo);
 
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);
@@ -123,15 +71,13 @@ public class GDUnitFunc {
      * @param toAddr    转入地址
      * @param shareProperty  股权代码性质
      * @param eqCode  股权代码
-     * @param txInfo  交易信息 对应监管数据04交易部分
-     * @param regInfo 主体信息
      * @throws Exception
      */
     public String shareTransfer(String keyID,String fromAddr,long amount,String toAddr,int shareProperty,String eqCode,
-                                Map txInfo,List<Map> regInfo,boolean bCheckOnchain) throws Exception{
+            boolean bCheckOnchain) throws Exception{
         log.info("股权代码过户转让");
 
-        String response= gd.GDShareTransfer(keyID,fromAddr,amount,toAddr,shareProperty,eqCode,txInfo, regInfo);
+        String response= gd.GDShareTransfer(keyID,fromAddr,amount,toAddr,shareProperty,eqCode,txInformation, listRegInfo);
 
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);
@@ -154,8 +100,10 @@ public class GDUnitFunc {
      * @throws Exception
      */
     public String shareIssue(String eqCode,List<Map> shareList,boolean bCheckOnchain) throws Exception{
-        log.info("发行");
+        log.info("挂牌登记");
+        enterpriseReg(eqCode,true);
 
+        log.info("发行");
         String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,eqCode,shareList);
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);
@@ -177,11 +125,11 @@ public class GDUnitFunc {
      * @param shareList  增发列表
      * @throws Exception
      */
-    public String shareIncrease(String eqCode,List<Map> shareList,Map pdtInfo,boolean bCheckOnchain) throws Exception{
+    public String shareIncrease(String eqCode,List<Map> shareList,boolean bCheckOnchain) throws Exception{
 
         String reason = "股份分红";
 
-        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList,reason,pdtInfo);
+        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList,reason,productInfo);
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);
             String txId = jsonObject.getJSONObject("data").getString("txId");
@@ -206,11 +154,11 @@ public class GDUnitFunc {
      * @throws Exception
      */
     public String lock(String bizNo,String address,String eqCode,long lockAmount,int shareProperty,
-                       String cutoffDate,Map regInfo,boolean bCheckOnchain) throws Exception{
+                       String cutoffDate,boolean bCheckOnchain) throws Exception{
         log.info("股份冻结");
         String reason = "司法冻结";
 
-        String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,regInfo);
+        String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,registerInfo);
 
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);
@@ -235,9 +183,9 @@ public class GDUnitFunc {
      * @param unlockAmount    解除冻结数量
      * @throws Exception
      */
-    public String unlock(String bizNo,String eqCode,long unlockAmount,Map regInfo,boolean bCheckOnchain) throws Exception{
+    public String unlock(String bizNo,String eqCode,long unlockAmount,boolean bCheckOnchain) throws Exception{
         log.info("股份解除冻结");
-        String response= gd.GDShareUnlock(bizNo,eqCode,unlockAmount,regInfo);
+        String response= gd.GDShareUnlock(bizNo,eqCode,unlockAmount,registerInfo);
 
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);
@@ -260,9 +208,9 @@ public class GDUnitFunc {
      * @param newEquityCode  转后股权代码
      * @throws Exception
      */
-    public String changeBoard(String oldEquityCode,String newEquityCode,Map regInfo,Map productInfo,boolean bCheckOnchain) throws Exception{
+    public String changeBoard(String oldEquityCode,String newEquityCode,boolean bCheckOnchain) throws Exception{
         log.info("场内转板");
-        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,gdCompanyID,oldEquityCode,newEquityCode,regInfo,productInfo);
+        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,gdCompanyID,oldEquityCode,newEquityCode,registerInfo,productInfo);
 
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);
@@ -331,6 +279,22 @@ public class GDUnitFunc {
         }
         return response;
 
+    }
+
+    public String enterpriseReg(String eqCode,Boolean bCheckOnchain)throws Exception{
+        long shareTotals = 1000000;
+        String response= gd.GDEnterpriseResister(gdContractAddress,eqCode,shareTotals,enterpriseSubjectInfo,productInfo);
+
+        if(bCheckOnchain) {
+            JSONObject jsonObject = JSONObject.fromObject(response);
+            String txId = jsonObject.getJSONObject("data").getString("txId");
+
+            commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+            assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+            return result;
+        }
+        return response;
     }
 
 }

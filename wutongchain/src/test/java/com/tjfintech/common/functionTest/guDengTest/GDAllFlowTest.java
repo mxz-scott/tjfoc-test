@@ -39,10 +39,10 @@ public class GDAllFlowTest {
 //    @Before
     public void IssueEquity()throws Exception{
         gdEquityCode = "gdEC" + Random(12);
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,0, shareList3);
 
         //发行
         String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
@@ -232,10 +232,10 @@ public class GDAllFlowTest {
     @Test
     public void TC06_shareIssue() throws Exception {
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,5000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,5000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,5000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,5000,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,5000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,5000,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,5000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,5000,0, shareList3);
 
         String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -499,10 +499,10 @@ public class GDAllFlowTest {
         String eqCode = gdEquityCode;
         String reason = "股份分红";
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,0, shareList3);
 
         String response= gd.GDShareIncrease(gdContractAddress,gdPlatfromKeyID,eqCode,shareList4,reason);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -778,7 +778,7 @@ public class GDAllFlowTest {
         String eqCode = gdEquityCode;
         String remark = "777777";
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,100,0);
 
         String response= gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList,remark);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -869,10 +869,10 @@ public class GDAllFlowTest {
         String eqCode = gdEquityCode;
         String remark = "777777";
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,100,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,100,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,100,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,100,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,100,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,100,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,100,0, shareList3);
 
         String response= gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList4,remark);
         JSONObject jsonObject=JSONObject.fromObject(response);

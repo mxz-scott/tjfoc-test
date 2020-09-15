@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.CommonFunc.gdConstructShareList;
+import static com.tjfintech.common.CommonFunc.gdConstructShareListV1;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 

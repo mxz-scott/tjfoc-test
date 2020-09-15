@@ -64,10 +64,10 @@ public class GDSceneTest_Transfer {
 
         //发行
         gdEquityCode = "gdEC" + Random(12);
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,1, shareList3);
 
         //发行
         String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
@@ -162,7 +162,7 @@ public class GDSceneTest_Transfer {
 
 
         gdEquityCode = "gdEC" + Random(12);
-        List<Map> shareList = gdConstructShareList(gdAccount1,6000,0);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,6000,0);
         uf.shareIssue(gdEquityCode,shareList,true);
 
         uf.changeSHProperty(gdAccount1,gdEquityCode,1000,0,1,true);
@@ -473,10 +473,10 @@ public class GDSceneTest_Transfer {
         String response = "";
         //发行
         gdEquityCode = "gdEC" + Random(12);
-        List<Map> shareList = gdConstructShareList(gdAccount3,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount3,3000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,2000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount3,3000,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount3,1000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount3,3000,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,2000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount3,3000,0, shareList3);
 
         //发行
         response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
@@ -516,11 +516,11 @@ public class GDSceneTest_Transfer {
         String EqCode3 = gdEquityCode + Random(8);
 
         String response = "";
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
-        List<Map> shareList5 = gdConstructShareList(gdAccount5,1000,0);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,1, shareList3);
+        List<Map> shareList5 = gdConstructShareListV1(gdAccount5,1000,0);
 
         uf.shareIssue(EqCode2,shareList4,true);
         uf.shareIssue(EqCode3,shareList5,true);

@@ -65,10 +65,10 @@ public class GDSceneTest_Issue {
 
         //发行
         gdEquityCode = "gdEC" + Random(12);
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,1, shareList3);
 
         //发行
         String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
@@ -111,10 +111,10 @@ public class GDSceneTest_Issue {
 
     @Test
     public void issueSameEquityCode()throws Exception{
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,1, shareList3);
 
         //发行已经发行过的股权代码
         String response = uf.shareIssue(gdEquityCode,shareList4,false);
@@ -130,27 +130,27 @@ public class GDSceneTest_Issue {
     @Test
     public void issueDiffPropertyEquityCode()throws Exception{
         gdEquityCode = "gdEC" + Random(13);
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        shareList = gdConstructShareList(gdAccount2,1000,1,shareList);
-        shareList = gdConstructShareList(gdAccount3,1000,2,shareList);
-        shareList = gdConstructShareList(gdAccount4,1000,3,shareList);
-        shareList = gdConstructShareList(gdAccount5,1000,4,shareList);
-        shareList = gdConstructShareList(gdAccount6,1000,5,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,6,shareList);
-        shareList = gdConstructShareList(gdAccount2,1000,7,shareList);
-        shareList = gdConstructShareList(gdAccount3,1000,8,shareList);
-        shareList = gdConstructShareList(gdAccount4,1000,10,shareList);
-        shareList = gdConstructShareList(gdAccount5,1000,21,shareList);
-        shareList = gdConstructShareList(gdAccount6,1000,32,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,43,shareList);
-        shareList = gdConstructShareList(gdAccount2,1000,54,shareList);
-        shareList = gdConstructShareList(gdAccount3,1000,65,shareList);
-        shareList = gdConstructShareList(gdAccount4,1000,76,shareList);
-        shareList = gdConstructShareList(gdAccount5,1000,88,shareList);
-        shareList = gdConstructShareList(gdAccount6,1000,99,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,100,shareList);
-        shareList = gdConstructShareList(gdAccount2,1000,101,shareList);
-        shareList = gdConstructShareList(gdAccount3,1000,156,shareList);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        shareList = gdConstructShareListV1(gdAccount2,1000,1,shareList);
+        shareList = gdConstructShareListV1(gdAccount3,1000,2,shareList);
+        shareList = gdConstructShareListV1(gdAccount4,1000,3,shareList);
+        shareList = gdConstructShareListV1(gdAccount5,1000,4,shareList);
+        shareList = gdConstructShareListV1(gdAccount6,1000,5,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,6,shareList);
+        shareList = gdConstructShareListV1(gdAccount2,1000,7,shareList);
+        shareList = gdConstructShareListV1(gdAccount3,1000,8,shareList);
+        shareList = gdConstructShareListV1(gdAccount4,1000,10,shareList);
+        shareList = gdConstructShareListV1(gdAccount5,1000,21,shareList);
+        shareList = gdConstructShareListV1(gdAccount6,1000,32,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,43,shareList);
+        shareList = gdConstructShareListV1(gdAccount2,1000,54,shareList);
+        shareList = gdConstructShareListV1(gdAccount3,1000,65,shareList);
+        shareList = gdConstructShareListV1(gdAccount4,1000,76,shareList);
+        shareList = gdConstructShareListV1(gdAccount5,1000,88,shareList);
+        shareList = gdConstructShareListV1(gdAccount6,1000,99,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,100,shareList);
+        shareList = gdConstructShareListV1(gdAccount2,1000,101,shareList);
+        shareList = gdConstructShareListV1(gdAccount3,1000,156,shareList);
 
         //发行已经发行过的股权代码
         String response = uf.shareIssue(gdEquityCode,shareList,true);
@@ -240,27 +240,27 @@ public class GDSceneTest_Issue {
     @Test
     public void issueOneHolderDiffPropertyEquityCode()throws Exception{
         gdEquityCode = "gdEC" + Random(13);
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        shareList = gdConstructShareList(gdAccount1,1000,1,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,2,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,3,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,4,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,5,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,6,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,7,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,8,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,10,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,21,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,32,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,43,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,54,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,65,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,76,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,88,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,99,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,100,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,101,shareList);
-        shareList = gdConstructShareList(gdAccount1,1000,156,shareList);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        shareList = gdConstructShareListV1(gdAccount1,1000,1,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,2,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,3,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,4,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,5,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,6,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,7,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,8,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,10,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,21,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,32,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,43,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,54,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,65,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,76,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,88,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,99,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,100,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,101,shareList);
+        shareList = gdConstructShareListV1(gdAccount1,1000,156,shareList);
 
         //发行已经发行过的股权代码
         String response = uf.shareIssue(gdEquityCode,shareList,true);
@@ -349,10 +349,10 @@ public class GDSceneTest_Issue {
         query = gd.GDGetEnterpriseShareInfo(gdEquityCode.toUpperCase());
         assertEquals("400",JSONObject.fromObject(query).getString("state"));
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,1, shareList3);
 
         //大小写匹配检查
         uf.shareIssue(gdEquityCode.toLowerCase(),shareList4,true);
@@ -379,7 +379,7 @@ public class GDSceneTest_Issue {
     public void issueWithSpecialChar_TC2519()throws Exception{
 
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
 
         //股权代码为特殊字符
         String EC1 = "@" + Random(6);
@@ -422,8 +422,8 @@ public class GDSceneTest_Issue {
     @Test
     public void issueMin_TC2492()throws Exception{
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1,0);
-        shareList = gdConstructShareList(gdAccount1,1,1,shareList);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1,0);
+        shareList = gdConstructShareListV1(gdAccount1,1,1,shareList);
 
         //股权代码为特殊字符
         String EC1 = "gdEC" + Random(6);

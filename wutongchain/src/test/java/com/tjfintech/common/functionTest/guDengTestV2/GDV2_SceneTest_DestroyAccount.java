@@ -1,10 +1,11 @@
-package com.tjfintech.common.functionTest.guDengTest;
+package com.tjfintech.common.functionTest.guDengTestV2;
 
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.GDBeforeCondition;
 import com.tjfintech.common.Interface.GuDengV1;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.functionTest.guDengTest.GDUnitFuncV1;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -17,13 +18,14 @@ import org.junit.runners.MethodSorters;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.CommonFunc.*;
+import static com.tjfintech.common.CommonFunc.gdConstructShareListV1;
+import static com.tjfintech.common.CommonFunc.mapShareENCN;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDSceneTest_DestroyAccount {
+public class GDV2_SceneTest_DestroyAccount {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDengV1 gd =testBuilder.getGuDengV1();

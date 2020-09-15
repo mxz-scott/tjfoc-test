@@ -211,13 +211,17 @@ public class GDBeforeCondition {
         init05RegInfo();                    //初始化登记数据信息  涉及接口 发行 股份性质变更 过户转让 增发 冻结 解除冻结
         init06SettleInfo();                 //初始化资金结算数据信息  涉及接口 资金清算
         init07PublishInfo();                //初始化信息数据信息  涉及接口 写入公告
+
+        //初始化listRegInfo
+        listRegInfo.add(registerInfo);
+        listRegInfo.add(registerInfo);
     }
 
     public void init01EnterpriseSubjectInfo() {
         List<String> fileList = new ArrayList<>();
         fileList.add("file.txt");
         enterpriseSubjectInfo.clear();
-        enterpriseSubjectInfo.put("对象标识",gdCompanyID);
+        enterpriseSubjectInfo.put("对象标识",gdCompanyID);  //对象标识使用公司ID
         enterpriseSubjectInfo.put("主体标识",gdCompanyID + "sub");
         enterpriseSubjectInfo.put("行业主体代号","123");
         enterpriseSubjectInfo.put("主体类型",0);

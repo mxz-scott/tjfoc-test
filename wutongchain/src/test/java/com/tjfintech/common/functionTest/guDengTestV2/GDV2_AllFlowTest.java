@@ -9,7 +9,6 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -26,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class V2_GDAllFlowTest {
+public class GDV2_AllFlowTest {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
@@ -40,6 +39,7 @@ public class V2_GDAllFlowTest {
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
+//        gdBefore.initRegulationData();
     }
 //    @Before
     public void IssueEquity()throws Exception{
@@ -61,8 +61,6 @@ public class V2_GDAllFlowTest {
     @Test
     public void TC01_enterpriseRegister() throws Exception {
         long shareTotals = 1000000;
-
-
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo,productInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
@@ -70,7 +68,19 @@ public class V2_GDAllFlowTest {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
-        //查询挂牌企业数据
+        //查询挂牌企业主体数据
+        response = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+
+        Map jsonMap = JSONObject.fromObject(response).getJSONObject("data");
+        jsonMap.put("对象标识",gdCompanyID);
+
+        log.info("判断获取的主体信息是否与传入的一致");
+        assertEquals(49,enterpriseSubjectInfo.size());
+        assertEquals(enterpriseSubjectInfo.size(),jsonMap.size());
+
+
+
         //查询投资者信息
         //查询企业股东信息
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
@@ -114,6 +124,8 @@ public class V2_GDAllFlowTest {
         commonFunc.sdkCheckTxOrSleep(mapAcc.get("txId").toString(),utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(mapAcc.get("txId").toString())).getString("state"));
 
+        String query2 = gd.GDAccountQuery(gdContractAddress,cltNo);
+
         //查询挂牌企业数据
         //查询投资者信息
         //查询企业股东信息
@@ -148,10 +160,10 @@ public class V2_GDAllFlowTest {
     @Test
     public void TC06_shareIssue() throws Exception {
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,5000,0,registerInfo);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,5000,0,registerInfo, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,5000,0,registerInfo, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,5000,0,registerInfo, shareList3);
+        List<Map> shareList = gdConstructShareList(gdAccount1,5000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,5000,0, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,5000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,5000,0,shareList3);
 
         String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -416,10 +428,10 @@ public class V2_GDAllFlowTest {
         String eqCode = gdEquityCode;
         String reason = "股份分红";
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0,registerInfo);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0,registerInfo, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0,registerInfo, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0,registerInfo, shareList3);
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
         String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason,registerInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -697,7 +709,7 @@ public class V2_GDAllFlowTest {
         String eqCode = gdEquityCode;
         String remark = "777777";
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,100,0,registerInfo);
+        List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
 
         String response= gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList,remark);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -788,10 +800,10 @@ public class V2_GDAllFlowTest {
         String eqCode = gdEquityCode;
         String remark = "777777";
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,100,0,registerInfo);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,100,0, registerInfo,shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,100,0, registerInfo, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,100,0, registerInfo, shareList3);
+        List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,100,0,shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,100,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,100,0, shareList3);
 
         String response= gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList4,remark);
         JSONObject jsonObject=JSONObject.fromObject(response);

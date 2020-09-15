@@ -67,10 +67,10 @@ public class GDSceneTest_02 {
 
         //发行
         gdEquityCode = "gdEC" + Random(12);
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,0, shareList3);
 
         //发行
         String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
@@ -372,10 +372,10 @@ public class GDSceneTest_02 {
 
     @Test
     public void Test3()throws Exception{
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,0, shareList3);
 
         uf.shareIncrease(gdEquityCode,shareList4,true);
 
@@ -843,10 +843,10 @@ public class GDSceneTest_02 {
     public void Test13()throws Exception{
         uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,1);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,1, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,1);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,1, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,1, shareList3);
         uf.shareIncrease(gdEquityCode,shareList4,true);
 
 
@@ -935,10 +935,10 @@ public class GDSceneTest_02 {
 
     @Test
     public void Test31()throws Exception{
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,1);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,1, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,1);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,1, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,1, shareList3);
 
         uf.shareIncrease(gdEquityCode,shareList4,true);
 
@@ -1447,10 +1447,10 @@ public class GDSceneTest_02 {
         uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
                 gdEquityCode,0,"test202008280952",true);
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,1, shareList3);
 
         uf.shareIncrease(gdEquityCode,shareList4,true);
 
@@ -1538,10 +1538,10 @@ public class GDSceneTest_02 {
 
     @Test
     public void Test32()throws Exception{
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,1, shareList3);
 
         uf.shareIncrease(gdEquityCode,shareList4,true);
 
@@ -2252,10 +2252,10 @@ public class GDSceneTest_02 {
 
     @Test
     public void Test34()throws Exception{
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,1);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,1, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,1);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,1, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,0, shareList3);
 
         uf.shareIncrease(gdEquityCode,shareList4,true);
 
@@ -2619,10 +2619,10 @@ public class GDSceneTest_02 {
 
 
         //增发
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,1);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,1, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,1);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,1, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,0, shareList3);
 
         uf.shareIncrease(gdEquityCode,shareList4,true);
 
@@ -2708,10 +2708,10 @@ public class GDSceneTest_02 {
 
     @Test
     public void Test35()throws Exception{
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,1);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,1, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,1);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,1, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,1, shareList3);
         uf.shareIncrease(gdEquityCode,shareList4,true);
 
         String newEqCode = gdEquityCode + Random(5);
@@ -2808,10 +2808,10 @@ public class GDSceneTest_02 {
         uf.changeBoard(gdEquityCode,newEqCode,true);
         gdEquityCode = newEqCode;
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,1);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,1, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,1);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,1, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,1, shareList3);
         uf.shareIncrease(gdEquityCode,shareList4,true);
 
         //查询挂牌企业数据
@@ -3063,10 +3063,10 @@ public class GDSceneTest_02 {
                 gdEquityCode,1,"test202008280952",true);
 
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,1);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,1, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,1);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,1, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,1, shareList3);
 
         uf.shareIncrease(gdEquityCode,shareList4,true);
 
@@ -3423,10 +3423,10 @@ public class GDSceneTest_02 {
 
         uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,0, shareList3);
 
         uf.shareIncrease(gdEquityCode,shareList4,true);
 
@@ -3581,10 +3581,10 @@ public class GDSceneTest_02 {
 
         uf.changeSHProperty(gdAccount1,gdEquityCode,500,0,1,true);
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,0, shareList3);
 
         uf.shareIncrease(gdEquityCode,shareList4,true);
 
@@ -3759,10 +3759,10 @@ public class GDSceneTest_02 {
                 gdEquityCode,1,"test202008280952",true);
 
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,0, shareList3);
 
         uf.shareIncrease(gdEquityCode,shareList4,true);
 
@@ -3918,10 +3918,10 @@ public class GDSceneTest_02 {
         uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
                 gdEquityCode,1,"test202008280952",true);
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,0, shareList3);
 
         uf.shareIncrease(gdEquityCode,shareList4,true);
 
@@ -4007,10 +4007,10 @@ public class GDSceneTest_02 {
 
     @Test
     public void Test345()throws Exception{
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,0, shareList3);
 
         uf.shareIncrease(gdEquityCode,shareList4,true);
 
@@ -4098,10 +4098,10 @@ public class GDSceneTest_02 {
     @Test
     public void TestB1()throws Exception{
         //回收部分
-        List<Map> shareList = gdConstructShareList(gdAccount1,500,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,500,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,500,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,500,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,500,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,500,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,500,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,500,0, shareList3);
 
         uf.shareRecycle(gdEquityCode,shareList4,true);
 
@@ -4187,10 +4187,10 @@ public class GDSceneTest_02 {
     public void TestB2()throws Exception{
 
         //回收部分
-        List<Map> shareList = gdConstructShareList(gdAccount1,500,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,500,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,500,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,500,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,500,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,500,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,500,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,500,0, shareList3);
 
         uf.shareRecycle(gdEquityCode,shareList4,true);
 
@@ -4278,17 +4278,17 @@ public class GDSceneTest_02 {
     public void TestB3()throws Exception{
 
         //回收部分
-        List<Map> shareList = gdConstructShareList(gdAccount1,500,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,500,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,500,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,500,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,500,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,500,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,500,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,500,0, shareList3);
 
         uf.shareRecycle(gdEquityCode,shareList4,true);
 
-        List<Map> shareListIn1 = gdConstructShareList(gdAccount1,500,1);
-        List<Map> shareListIn2 = gdConstructShareList(gdAccount2,500,1, shareListIn1);
-        List<Map> shareListIn3 = gdConstructShareList(gdAccount3,500,1, shareListIn2);
-        List<Map> shareListIn4 = gdConstructShareList(gdAccount4,500,1, shareListIn3);
+        List<Map> shareListIn1 = gdConstructShareListV1(gdAccount1,500,1);
+        List<Map> shareListIn2 = gdConstructShareListV1(gdAccount2,500,1, shareListIn1);
+        List<Map> shareListIn3 = gdConstructShareListV1(gdAccount3,500,1, shareListIn2);
+        List<Map> shareListIn4 = gdConstructShareListV1(gdAccount4,500,1, shareListIn3);
         uf.shareIncrease(gdEquityCode,shareListIn4,true);
 
         //查询挂牌企业数据
@@ -4382,10 +4382,10 @@ public class GDSceneTest_02 {
     public void TestB4()throws Exception{
 
         //回收部分
-        List<Map> shareList = gdConstructShareList(gdAccount1,500,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,500,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,500,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,500,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,500,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,500,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,500,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,500,0, shareList3);
 
         uf.shareRecycle(gdEquityCode,shareList4,true);
 
@@ -4468,10 +4468,10 @@ public class GDSceneTest_02 {
     @Test
     public void TestB5()throws Exception{
         //回收部分 其中存在部分账户回收全部
-        List<Map> shareList = gdConstructShareList(gdAccount1,500,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,500,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,500,0, shareList3);
+        List<Map> shareList = gdConstructShareListV1(gdAccount1,500,0);
+        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,500,0, shareList);
+        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,500,0, shareList3);
 
         uf.shareRecycle(gdEquityCode,shareList4,true);
 

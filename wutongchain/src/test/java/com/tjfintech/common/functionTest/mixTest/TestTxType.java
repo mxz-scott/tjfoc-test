@@ -560,6 +560,7 @@ public class TestTxType {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
+        //余额查询当前合约未返回success不做上链交易
         //查询余额invoke接口
         String response5 = wvm.invokeNew(ctHash,"BalanceTest",wvm.accountA);//获取账户A账户余额
         String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("txId");
@@ -582,8 +583,9 @@ public class TestTxType {
         //检查安装合约交易详情内参数
         String data = utilsClass.encryptBASE64(utilsClass.readInput(
                 resourcePath + "wvm_temp.txt").toString().trim().getBytes()).replaceAll("\r\n", "");
-        assertEquals(ctHash,
-                jsonObjectCreate.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("name"));
+        //合约安装交易详情不再返回合约地址
+//        assertEquals(ctHash,
+//                jsonObjectCreate.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("name"));
         //20200703 开发代码移除owner字段信息显示
 //        //此处owner对应的是PubKey 因编解码使用的库可能不太一样 因此此处校验原始pubkey
 //        String p1 = shExeAndReturn(utilsClass.getIPFromStr(SDKADD),"cat " + SDKPATH + "tls/pubkey.pem").trim();

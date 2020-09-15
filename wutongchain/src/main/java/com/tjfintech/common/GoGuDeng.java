@@ -352,22 +352,30 @@ public  class GoGuDeng implements GuDeng {
 
     /***
      * 投资者账号查询接口
-     * @param accountObjectId
+     * @param contractAddress  合约地址
+     * @param clientNo  客户号
      * @return
      */
-    public String GDAccountQuery(String accountObjectId){
-        String result = GetTest.doGet2(SDKADD + "/equity/investor/account/query/" + accountObjectId );
+    public String GDAccountQuery(String contractAddress,String clientNo){
+        Map<String, Object> map = new HashMap<>();
+        map.put("contractAddress", contractAddress);
+        map.put("clientNo", clientNo);
+        String result = PostTest.postMethod(SDKADD + "/equity/investor/account/query", map);
         log.info(result);
         return result;
     }
 
     /***
      * 主体信息查询接口
-     * @param subjectObjectId
+     * @param contractAddress  合约地址
+     * @param subjectObjectId 主体数据中的对象标识
      * @return
      */
-    public String GDMainSubjectQuery(String subjectObjectId){
-        String result = GetTest.doGet2(SDKADD + "/equity/subject/query" + subjectObjectId );
+    public String GDMainSubjectQuery(String contractAddress,String subjectObjectId){
+        Map<String, Object> map = new HashMap<>();
+        map.put("contractAddress", contractAddress);
+        map.put("subjectObjectId", subjectObjectId);
+        String result = PostTest.postMethod(SDKADD + "/equity/subject/query", map);
         log.info(result);
         return result;
     }

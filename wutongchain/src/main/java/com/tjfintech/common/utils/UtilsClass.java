@@ -145,6 +145,7 @@ public class UtilsClass {
     public static Map investorInfo = new HashMap();//01主体  //投资者开户
     public static Map disclosureInfo = new HashMap();//07信披  //写入公告 信息披露
     public static Map settleInfo = new HashMap();//06资金结算  //资金结算
+    public static List<Map> listRegInfo = new ArrayList<>();//主体信息列表
 
 
     //UTXO精度
@@ -222,7 +223,7 @@ public class UtilsClass {
     public static String killPeerCmd = "pkill " + PeerTPName;
     public static String killSDKCmd = "pkill " + SDKTPName;
     public static String killTokenApiCmd = "pkill " + TokenTPName;
-    public static String clearPeerDB = "rm -rf "+ PeerPATH + "*db ";
+    public static String clearPeerDB = "rm -rf "+ PeerPATH + "*db;rm -rf " + PeerPATH + "contracts";
     public static String clearPeerWVMsrc = "cd "+ PeerPATH + "contracts/src/;rm -rf *";
     public static String clearPeerWVMbin = "cd "+ PeerPATH + "contracts/bin/;ls |grep -v Sys_StoreEncrypted|xargs rm -rf ";
     public static String resetPeerBase = "cp " + PeerPATH + "conf/baseOK.toml " + PeerBaseConfigPath;

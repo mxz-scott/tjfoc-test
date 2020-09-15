@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.CommonFunc.gdConstructShareList;
+import static com.tjfintech.common.CommonFunc.gdConstructShareListV1;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClass.gdPlatfromKeyID;
 import static org.junit.Assert.assertEquals;
@@ -621,8 +621,8 @@ public class GuDengInterfaceTest {
     public void shareIssueInterfaceMustParamTest() throws Exception {
         String eqCode = "issue" + Random(6);
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,5000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,5000,0, shareList);
+        List<Map> shareList = CommonFunc.gdConstructShareListV1(gdAccount1,5000,0);
+        List<Map> shareList2 = CommonFunc.gdConstructShareListV1(gdAccount2,5000,0, shareList);
 
         String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,eqCode,shareList2);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -662,14 +662,14 @@ public class GuDengInterfaceTest {
         assertEquals("至少传入一个股权账号信息",JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test shareList.address must ************************ ");
-        List<Map> shareListErr1 = gdConstructShareList("",5000,0);
+        List<Map> shareListErr1 = CommonFunc.gdConstructShareListV1("",5000,0);
         response = gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,eqCode,shareListErr1);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("无效的参数:Key: 'SharesRegister.ShareList[0].Address' Error:Field validation for 'Address' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test shareList.amount 0 ************************ ");
-        List<Map> shareListErr2 = gdConstructShareList(gdAccount1,0,0);
+        List<Map> shareListErr2 = CommonFunc.gdConstructShareListV1(gdAccount1,0,0);
         response = gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,eqCode,shareListErr2);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("无效的参数:Key: 'SharesRegister.ShareList[0].Amount' Error:Field validation for 'Amount' failed on the 'gt' tag",
@@ -714,10 +714,10 @@ public class GuDengInterfaceTest {
         String eqCode = "increaseEC" + Random(6);
         String reason = "股份分红";
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+        List<Map> shareList = CommonFunc.gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = CommonFunc.gdConstructShareListV1(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = CommonFunc.gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = CommonFunc.gdConstructShareListV1(gdAccount4,1000,0, shareList3);
 
         //发行股权代码
         String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,eqCode,shareList4);
@@ -747,21 +747,21 @@ public class GuDengInterfaceTest {
 
         //shareList.address为空
         shareList4.clear();
-        shareList4 = gdConstructShareList("",1000,0, shareList3);
+        shareList4 = CommonFunc.gdConstructShareListV1("",1000,0, shareList3);
         response= gd.GDShareIncrease(gdContractAddress,gdPlatfromKeyID,"",shareList4,reason);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("无效的参数"));
 
 //        //shareList.amount不传参
 //        shareList4.clear();
-//        shareList4 = gdConstructShareList("",1000,0, shareList3);
+//        shareList4 = gdConstructShareListV1("",1000,0, shareList3);
 //        response= gd.GDShareIncrease(gdContractAddress,gdPlatfromKeyID,"",shareList4,reason);
 //        assertEquals("400",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("Error:Field validation for 'EquityCode' failed on the 'required"));
 //
 //        //shareList.shareProperty不传参
 //        shareList4.clear();
-//        shareList4 = gdConstructShareList("",1000,0, shareList3);
+//        shareList4 = gdConstructShareListV1("",1000,0, shareList3);
 //        response= gd.GDShareIncrease(gdContractAddress,gdPlatfromKeyID,"",shareList4,reason);
 //        assertEquals("400",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("Error:Field validation for 'EquityCode' failed on the 'required"));
@@ -773,10 +773,10 @@ public class GuDengInterfaceTest {
     public void shareLockInterfaceTest() throws Exception {
         String eqCode = "lockEC" + Random(6);
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+        List<Map> shareList = CommonFunc.gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = CommonFunc.gdConstructShareListV1(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = CommonFunc.gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = CommonFunc.gdConstructShareListV1(gdAccount4,1000,0, shareList3);
 
         String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,eqCode,shareList4);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -842,10 +842,10 @@ public class GuDengInterfaceTest {
         double amount = 100;
 
         //发行
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+        List<Map> shareList = CommonFunc.gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = CommonFunc.gdConstructShareListV1(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = CommonFunc.gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = CommonFunc.gdConstructShareListV1(gdAccount4,1000,0, shareList3);
 
         String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,eqCode,shareList4);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -893,10 +893,10 @@ public class GuDengInterfaceTest {
 
         String eqCode = "transfer" + Random(6);
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,5000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,5000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,5000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,5000,0, shareList3);
+        List<Map> shareList = CommonFunc.gdConstructShareListV1(gdAccount1,5000,0);
+        List<Map> shareList2 = CommonFunc.gdConstructShareListV1(gdAccount2,5000,0, shareList);
+        List<Map> shareList3 = CommonFunc.gdConstructShareListV1(gdAccount3,5000,0, shareList2);
+        List<Map> shareList4 = CommonFunc.gdConstructShareListV1(gdAccount4,5000,0, shareList3);
 
         String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,eqCode,shareList4);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -1210,10 +1210,10 @@ public class GuDengInterfaceTest {
         String eqCode = "recycle" + Random(6);
         String remark = "777777";
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+        List<Map> shareList = CommonFunc.gdConstructShareListV1(gdAccount1,1000,0);
+        List<Map> shareList2 = CommonFunc.gdConstructShareListV1(gdAccount2,1000,0, shareList);
+        List<Map> shareList3 = CommonFunc.gdConstructShareListV1(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = CommonFunc.gdConstructShareListV1(gdAccount4,1000,0, shareList3);
 
         //发行
         String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,eqCode,shareList4);
@@ -1242,7 +1242,7 @@ public class GuDengInterfaceTest {
 
         //AddressList.address为空
         shareList4.clear();
-        shareList4 = gdConstructShareList("",1000,0,shareList3);
+        shareList4 = CommonFunc.gdConstructShareListV1("",1000,0,shareList3);
         response= gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList4,remark);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("无效的参数:Key: 'SharesRecycle.AddressList[3].Address' Error:Field validation for 'Address' failed on the 'required' tag"));
@@ -1258,7 +1258,7 @@ public class GuDengInterfaceTest {
 //        assertEquals(true,response.contains("Error:Field validation for 'EquityCode' failed on the 'required"));
 
         //equityCode为空
-        shareList4 = gdConstructShareList(gdAccount4,1000,0,shareList3);
+        shareList4 = CommonFunc.gdConstructShareListV1(gdAccount4,1000,0,shareList3);
         response= gd.GDShareRecycle(gdPlatfromKeyID,"",shareList4,remark);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("Error:Field validation for 'EquityCode' failed on the 'required"));
@@ -1305,10 +1305,10 @@ public class GuDengInterfaceTest {
 
         String eqCode = "changeBoard" + Random(6);
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,5000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,5000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,5000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,5000,0, shareList3);
+        List<Map> shareList = CommonFunc.gdConstructShareListV1(gdAccount1,5000,0);
+        List<Map> shareList2 = CommonFunc.gdConstructShareListV1(gdAccount2,5000,0, shareList);
+        List<Map> shareList3 = CommonFunc.gdConstructShareListV1(gdAccount3,5000,0, shareList2);
+        List<Map> shareList4 = CommonFunc.gdConstructShareListV1(gdAccount4,5000,0, shareList3);
 
         //发行
         String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,eqCode,shareList4);
@@ -1366,10 +1366,10 @@ public class GuDengInterfaceTest {
 
         String eqCode = "changePro" + Random(6);
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,5000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,5000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,5000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,5000,0, shareList3);
+        List<Map> shareList = CommonFunc.gdConstructShareListV1(gdAccount1,5000,0);
+        List<Map> shareList2 = CommonFunc.gdConstructShareListV1(gdAccount2,5000,0, shareList);
+        List<Map> shareList3 = CommonFunc.gdConstructShareListV1(gdAccount3,5000,0, shareList2);
+        List<Map> shareList4 = CommonFunc.gdConstructShareListV1(gdAccount4,5000,0, shareList3);
 
         //发行
         String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,eqCode,shareList4);
