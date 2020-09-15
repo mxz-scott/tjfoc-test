@@ -15,8 +15,8 @@ public class SetDatabaseMysql {
    UtilsClass utilsClass = new UtilsClass();
    @Test
     public void setDBMysql()throws Exception{
-       //设置SDK 使用mysql 清空数据库
-       shellExeCmd(utilsClass.getIPFromStr(SDKADD),resetSDKConfig,killSDKCmd);
+       //设置SDK 使用mysql 清空数据库  20200915 不再cp config.toml文件
+       shellExeCmd(utilsClass.getIPFromStr(SDKADD),killSDKCmd);
        utilsClass.delDataBase();//清空sdk当前使用数据库数据
 
        //设置节点 清空db数据 并重启

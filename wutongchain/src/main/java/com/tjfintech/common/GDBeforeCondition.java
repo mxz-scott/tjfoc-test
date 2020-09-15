@@ -201,8 +201,9 @@ public class GDBeforeCondition {
         return mapAccInfo;
     }
 
-    @Test
+//    @Test
     public void initRegulationData() {
+        log.info("初始化监管相关数据结构");
         init01EnterpriseSubjectInfo();      //初始化企业主体数据信息  涉及接口 企业挂牌登记
         init01PersonalSubjectInfo();        //初始化个人主体数据信息  涉及接口 开户
         init02AccountInfo();                //初始化账户数据信息 默认股权账户  涉及接口 开户
@@ -218,6 +219,7 @@ public class GDBeforeCondition {
     }
 
     public void init01EnterpriseSubjectInfo() {
+        log.info("初始化01主体企业数据结构");
         List<String> fileList = new ArrayList<>();
         fileList.add("file.txt");
         enterpriseSubjectInfo.clear();
@@ -273,6 +275,7 @@ public class GDBeforeCondition {
     }
 
     public void init01PersonalSubjectInfo() {
+        log.info("初始化01主体个人数据结构");
         List<String> fileList1 = new ArrayList<>();
         fileList1.add("test1.pdf");
         fileList1.add("test2.pdf");
@@ -306,6 +309,7 @@ public class GDBeforeCondition {
     }
 
     public void init02AccountInfo() {
+        log.info("初始化02账户数据结构");
         //默认股权账户
         List<String> fileList1 = new ArrayList<>();
         fileList1.add("test1.pdf");
@@ -345,6 +349,7 @@ public class GDBeforeCondition {
     }
 
     public void init03ProductInfo() {
+        log.info("初始化03产品数据结构");
         productInfo.clear();
         productInfo.put("产品对象标识",gdEquityCode + "01");
         productInfo.put("发行主体引用","tea111");
@@ -405,7 +410,7 @@ public class GDBeforeCondition {
 
 
     public void init04TxInfo() {
-
+        log.info("初始化04交易数据结构");
         //04交易报告
         txInformation.put("交易对象标识","txoid00001");
         txInformation.put("交易产品引用","erq");
@@ -437,7 +442,7 @@ public class GDBeforeCondition {
     }
 
     public void init05RegInfo() {
-
+        log.info("初始化05登记数据结构");
         //05登记
         List<String> listRegFile = new ArrayList<>();
         listRegFile.add("verify.crt");
@@ -484,6 +489,7 @@ public class GDBeforeCondition {
     }
 
     public void init06SettleInfo() {
+        log.info("初始化06资金清算数据结构");
         settleInfo.clear();
         settleInfo.put("资金结算对象标识","stoid00001");
         settleInfo.put("结算机构主体引用","fdaf");
@@ -514,6 +520,7 @@ public class GDBeforeCondition {
     }
 
     public void init07PublishInfo() {
+        log.info("初始化07信披数据结构");
 
         //07信披监管数据
         List<String> listPubFile = new ArrayList<>();

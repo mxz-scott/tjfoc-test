@@ -2,6 +2,7 @@ package com.tjfintech.common.functionTest.guDengTestV2;
 
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.GDBeforeCondition;
+import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.GuDengV1;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -29,7 +30,7 @@ import static org.junit.Assert.assertEquals;
 public class GDV2_SceneTest_ChangeProperty {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
-    GuDengV1 gd =testBuilder.getGuDengV1();
+    GuDeng gd =testBuilder.getGuDeng();
     Store store =testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
@@ -390,18 +391,14 @@ public class GDV2_SceneTest_ChangeProperty {
         String response = "";
         //发行
         gdEquityCode = "gdEC" + Random(12);
-        List<Map> shareList = gdConstructShareListV1(gdAccount3,1000,0);
-        List<Map> shareList2 = gdConstructShareListV1(gdAccount3,3000,0, shareList);
-        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,2000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareListV1(gdAccount3,3000,0, shareList3);
+        List<Map> shareList = gdConstructShareList(gdAccount3,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount3,3000,0, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,2000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount3,3000,0, shareList3);
 
         //发行
-        response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String txId = jsonObject.getJSONObject("data").getString("txId");
-
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        gdEquityCode = "gdEC" + Random(12);
+        uf.shareIssue(gdEquityCode,shareList4,true);
 
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         JSONArray jsonArrayGet = JSONObject.fromObject(query).getJSONArray("data");
@@ -455,11 +452,11 @@ public class GDV2_SceneTest_ChangeProperty {
         String EqCode3 = gdEquityCode + Random(8);
 
         String response = "";
-        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,1, shareList3);
-        List<Map> shareList5 = gdConstructShareListV1(gdAccount5,1000,0);
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+        List<Map> shareList5 = gdConstructShareList(gdAccount5,1000,0);
 
         uf.shareIssue(EqCode2,shareList4,true);
         uf.shareIssue(EqCode3,shareList5,true);
@@ -546,12 +543,12 @@ public class GDV2_SceneTest_ChangeProperty {
 
         //变更股权性质 大小写匹配检查
         String response = uf.changeSHProperty(gdAccount4,gdEquityCode.toLowerCase(),1000,1,0,false);
-        assertEquals("500",JSONObject.fromObject(response).getString("state"));
-        assertEquals("获取平台的公钥以及合约地址出错",JSONObject.fromObject(response).getString("message").trim());
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(response).getString("message").trim());
 
         response = uf.changeSHProperty(gdAccount3,gdEquityCode.toUpperCase(),1000,0,1,false);
-        assertEquals("500",JSONObject.fromObject(response).getString("state"));
-        assertEquals("获取平台的公钥以及合约地址出错",JSONObject.fromObject(response).getString("message").trim());
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(response).getString("message").trim());
     }
 
 
@@ -687,18 +684,18 @@ public class GDV2_SceneTest_ChangeProperty {
     public void changeProperty_Ex(){
 
         //数量使用负值
-        String response= gd.GDShareChangeProperty(gdPlatfromKeyID,gdAccount1,gdEquityCode,-10,0,2);
+        String response= gd.GDShareChangeProperty(gdPlatfromKeyID,gdAccount1,gdEquityCode,-10,0,2,listRegInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("无效的参数:json: cannot unmarshal number -10 into Go struct field SharesChange.Amount of type uint64",
                 JSONObject.fromObject(response).getString("message"));
 
         //使用客户的keyId
-        response= gd.GDShareChangeProperty(gdAccountKeyID1,gdAccount1,gdEquityCode,10,0,2);
+        response= gd.GDShareChangeProperty(gdAccountKeyID1,gdAccount1,gdEquityCode,10,0,2,listRegInfo);
         assertEquals("505",JSONObject.fromObject(response).getString("state"));
         assertEquals("数字签名出错",JSONObject.fromObject(response).getString("message"));
 
         //使用其他客户的keyId
-        response= gd.GDShareChangeProperty(gdAccountKeyID2,gdAccount1,gdEquityCode,10,0,2);
+        response= gd.GDShareChangeProperty(gdAccountKeyID2,gdAccount1,gdEquityCode,10,0,2,listRegInfo);
         assertEquals("505",JSONObject.fromObject(response).getString("state"));
         assertEquals("数字签名出错",JSONObject.fromObject(response).getString("message"));
 
