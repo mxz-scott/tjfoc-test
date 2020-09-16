@@ -467,9 +467,9 @@ public class GDV2_SceneTest_ChangeProperty {
         response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
         assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode3 + "\",\"shareProperty\":0"));
         assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode1 +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
         assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode2 +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
 
         response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
         assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode3 + "\",\"shareProperty\":0"));
@@ -481,9 +481,9 @@ public class GDV2_SceneTest_ChangeProperty {
         response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
         assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode3 + "\",\"shareProperty\":0"));
         assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode1 +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
         assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode2 +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
 
         response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
         assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode3 + "\",\"shareProperty\":0"));
@@ -553,17 +553,31 @@ public class GDV2_SceneTest_ChangeProperty {
 
 
     /***
-     * 变更不同性质的股权代码 部分变更
+     * 股权性质变更 同一个账户不同性质的股权代码
      */
 
     @Test
     public void changeProperty_MultiProperty()throws Exception{
 
-        //变更股权性质 大小写匹配检查
+        String EqCode2 = gdEquityCode + Random(8);
         String response = "";
-        uf.changeSHProperty(gdAccount4,gdEquityCode,500,1,3,true);
-        uf.changeSHProperty(gdAccount4,gdEquityCode,500,2,12,true);
-        uf.changeSHProperty(gdAccount4,gdEquityCode,500,99,0,true);
+        List<Map> shareList = gdConstructShareList(gdAccount4,1000,1);
+        List<Map> shareList2 = gdConstructShareList(gdAccount4,1000,2, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount4,1000,3, shareList2);
+
+        uf.shareIssue(EqCode2,shareList3,true);
+
+        gdEquityCode = EqCode2;
+
+        //变更股权性质 变更多个
+        uf.changeSHProperty(gdAccount4,gdEquityCode,500,1,4,false);
+        uf.changeSHProperty(gdAccount4,gdEquityCode,500,2,5,false);
+        response = uf.changeSHProperty(gdAccount4,gdEquityCode,500,3,6,false);
+
+        commonFunc.sdkCheckTxOrSleep(
+                JSONObject.fromObject(response).getJSONObject("data").getString("txId"), utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        assertEquals("200", JSONObject.fromObject(
+                store.GetTxDetail(JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
 
         String query = "";
 
@@ -577,15 +591,12 @@ public class GDV2_SceneTest_ChangeProperty {
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();
-        respShareList = gdConstructQueryShareList(gdAccount1,1000,0,0,mapShareENCN().get("0"),respShareList);
-        respShareList = gdConstructQueryShareList(gdAccount2,1000,1,0,mapShareENCN().get("1"),respShareList);
-        respShareList = gdConstructQueryShareList(gdAccount3,1000,0,0,mapShareENCN().get("0"),respShareList);
-        List<Map> respShareList2 = gdConstructQueryShareList(gdAccount4,500,3,0,mapShareENCN().get("3"), respShareList);
-        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount4,500,12,0,mapShareENCN().get("12"), respShareList2);
-        List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,500,0,0,mapShareENCN().get("0"), respShareList3);
-        respShareList4 = gdConstructQueryShareList(gdAccount4,500,1,0,mapShareENCN().get("1"), respShareList4);
-        respShareList4 = gdConstructQueryShareList(gdAccount4,500,2,0,mapShareENCN().get("2"), respShareList4);
-        respShareList4 = gdConstructQueryShareList(gdAccount4,500,99,0,mapShareENCN().get("99"), respShareList4);
+        List<Map> respShareList2 = gdConstructQueryShareList(gdAccount4,500,1,0,mapShareENCN().get("1"), respShareList);
+        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount4,500,2,0,mapShareENCN().get("2"), respShareList2);
+        List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,500,3,0,mapShareENCN().get("3"), respShareList3);
+        respShareList4 = gdConstructQueryShareList(gdAccount4,500,4,0,mapShareENCN().get("4"), respShareList4);
+        respShareList4 = gdConstructQueryShareList(gdAccount4,500,5,0,mapShareENCN().get("5"), respShareList4);
+        respShareList4 = gdConstructQueryShareList(gdAccount4,500,6,0,mapShareENCN().get("6"), respShareList4);
 
         log.info(respShareList4.toString());
         //检查存在余额的股东列表
@@ -603,34 +614,49 @@ public class GDV2_SceneTest_ChangeProperty {
 
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo4 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount4 + "\""));
-        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
                 "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
                 "\",\"shareProperty\":2,\"sharePropertyCN\":\"" + mapShareENCN().get("2") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
                 "\",\"shareProperty\":3,\"sharePropertyCN\":\"" + mapShareENCN().get("3") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":12,\"sharePropertyCN\":\"" + "" + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+                "\",\"shareProperty\":4,\"sharePropertyCN\":\"" + mapShareENCN().get("4") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":99,\"sharePropertyCN\":\"" + "" + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+                "\",\"shareProperty\":5,\"sharePropertyCN\":\"" + mapShareENCN().get("5") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":6,\"sharePropertyCN\":\"" + mapShareENCN().get("6") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 
     }
 
 
     /***
-     * 变更不同性质的股权代码 全部变更
+     * 股权性质变更 不同账户不同性质的股权代码 全部变更
      */
 
     @Test
     public void changeProperty_MultiProperty02()throws Exception{
+        String EqCode2 = gdEquityCode + Random(8);
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,1);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,2, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,3, shareList2);
+
+        uf.shareIssue(EqCode2,shareList3,true);
+
+        gdEquityCode = EqCode2;
 
         //变更股权性质 大小写匹配检查
         String response = "";
-        uf.changeSHProperty(gdAccount4,gdEquityCode,1000,1,3,true);
-        uf.changeSHProperty(gdAccount4,gdEquityCode,1000,2,12,true);
-        uf.changeSHProperty(gdAccount4,gdEquityCode,1000,99,0,true);
+        uf.changeSHProperty(gdAccount1,gdEquityCode,1000,1,4,false);
+        uf.changeSHProperty(gdAccount2,gdEquityCode,1000,2,5,false);
+        response = uf.changeSHProperty(gdAccount3,gdEquityCode,1000,3,6,false);
+
+
+        commonFunc.sdkCheckTxOrSleep(
+                JSONObject.fromObject(response).getJSONObject("data").getString("txId"), utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        assertEquals("200", JSONObject.fromObject(
+                store.GetTxDetail(JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
 
         String query = "";
 
@@ -644,35 +670,45 @@ public class GDV2_SceneTest_ChangeProperty {
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();
-        respShareList = gdConstructQueryShareList(gdAccount1,1000,0,0,"",respShareList);
-        respShareList = gdConstructQueryShareList(gdAccount2,1000,1,0,"",respShareList);
-        respShareList = gdConstructQueryShareList(gdAccount3,1000,0,0,"",respShareList);
-        List<Map> respShareList2 = gdConstructQueryShareList(gdAccount4,1000,3,0,"", respShareList);
-        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount4,1000,12,0,"", respShareList2);
-        List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,1000,0,0,"", respShareList3);
+        respShareList = gdConstructQueryShareList(gdAccount1,1000,4,0,mapShareENCN().get("4"),respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount2,1000,5,0,mapShareENCN().get("5"),respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount3,1000,6,0,mapShareENCN().get("6"),respShareList);
 
-        log.info(respShareList4.toString());
+        log.info(respShareList.toString());
         //检查存在余额的股东列表
-        assertEquals(respShareList4.size(),dataShareList.size());
+        assertEquals(respShareList.size(),dataShareList.size());
 
         List<Map> getShareList = getShareListFromQueryNoZeroAcc(dataShareList);
 
-        assertEquals(respShareList4.size(),getShareList.size());
-        assertEquals(true,respShareList4.containsAll(getShareList) && getShareList.containsAll(respShareList4));
+        assertEquals(respShareList.size(),getShareList.size());
+        assertEquals(true,respShareList.containsAll(getShareList) && getShareList.containsAll(respShareList));
 
 
         //查询股东持股情况 无当前股权代码信息
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
-        assertEquals(gdAccClientNo4,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(gdAccClientNo1,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
 
-        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo4 + "\""));
-        assertEquals(true,query.contains("\"address\":\"" + gdAccount4 + "\""));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":4,\"sharePropertyCN\":\"" + mapShareENCN().get("4") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo2 + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + gdAccount2 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":3,\"sharePropertyCN\":\"" + mapShareENCN().get("3") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":5,\"sharePropertyCN\":\"" + mapShareENCN().get("5") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
+        assertEquals(gdAccClientNo3,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo3 + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + gdAccount3 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":12,\"sharePropertyCN\":\"" + "" + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+                "\",\"shareProperty\":6,\"sharePropertyCN\":\"" + mapShareENCN().get("6") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
 
     }
 
