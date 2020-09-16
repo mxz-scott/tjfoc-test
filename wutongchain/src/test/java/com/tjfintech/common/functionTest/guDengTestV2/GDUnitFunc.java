@@ -2,17 +2,14 @@ package com.tjfintech.common.functionTest.guDengTestV2;
 
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.GuDeng;
-import com.tjfintech.common.Interface.GuDengV1;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -129,7 +126,7 @@ public class GDUnitFunc {
 
         String reason = "股份分红";
 
-        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList,reason,productInfo);
+        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList,reason, equityProductInfo,bondProductInfo);
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);
             String txId = jsonObject.getJSONObject("data").getString("txId");
@@ -210,7 +207,7 @@ public class GDUnitFunc {
      */
     public String changeBoard(String oldEquityCode,String newEquityCode,boolean bCheckOnchain) throws Exception{
         log.info("场内转板");
-        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,gdCompanyID,oldEquityCode,newEquityCode,registerInfo,productInfo);
+        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,gdCompanyID,oldEquityCode,newEquityCode,registerInfo, equityProductInfo,bondProductInfo);
 
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);
@@ -283,7 +280,7 @@ public class GDUnitFunc {
 
     public String enterpriseReg(String eqCode,Boolean bCheckOnchain)throws Exception{
         long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,eqCode,shareTotals,enterpriseSubjectInfo,productInfo);
+        String response= gd.GDEnterpriseResister(gdContractAddress,eqCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,bondProductInfo);
 
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);

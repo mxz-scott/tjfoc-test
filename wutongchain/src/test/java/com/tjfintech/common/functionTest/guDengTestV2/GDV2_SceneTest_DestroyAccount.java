@@ -70,13 +70,8 @@ public class GDV2_SceneTest_DestroyAccount {
         List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,1, shareList3);
 
         //发行
-        String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String txId = jsonObject.getJSONObject("data").getString("txId");
-
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
+        gdEquityCode = "gdEC" + Random(12);
+        uf.shareIssue(gdEquityCode,shareList4,true);
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
     }
 
