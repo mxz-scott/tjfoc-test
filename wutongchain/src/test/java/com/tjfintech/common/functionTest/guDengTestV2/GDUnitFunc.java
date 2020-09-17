@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.guDengTestV2;
 
 import com.tjfintech.common.CommonFunc;
+import com.tjfintech.common.GDBeforeCondition;
 import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -29,6 +30,21 @@ public class GDUnitFunc {
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public String createAcc(String clientNo,Boolean bCheckOnchain)throws Exception{
+        GDBeforeCondition gdBC = new GDBeforeCondition();
+        Map<String,String> mapAcc = gdBC.gdCreateAccParam(clientNo);
+        String response = mapAcc.get("response");
+        if(bCheckOnchain) {
+            JSONObject jsonObject = JSONObject.fromObject(mapAcc.get("response"));
+            String txId = jsonObject.getJSONObject("data").getString("txId");
+
+            commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+            assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        }
+        return response;
+    }
+
 
     /***
      * 股份性质变更
@@ -197,6 +213,11 @@ public class GDUnitFunc {
         gd.GDGetEnterpriseShareInfo(eqCode);
         return response;
 
+    }
+
+    public void lockAndUnlock(String bizNo,String eqCode,String addr,long amount,int shareProperty)throws Exception{
+        lock(bizNo,addr,eqCode,amount,shareProperty,"2025-09-13",true);
+        unlock(bizNo,eqCode,amount,true);
     }
 
     /***

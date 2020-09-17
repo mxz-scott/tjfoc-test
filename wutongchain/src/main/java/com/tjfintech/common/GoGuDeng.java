@@ -21,17 +21,19 @@ public  class GoGuDeng implements GuDeng {
      * @param equityCode
      * @param totalShares
      * @param enterpriseSubjectInfo
-     * @param productInfo
+     * @param equityProductInfo
+     * @param bondProductInfo
      * @return
      */
-    public String GDEnterpriseResister(String contractAddress, String equityCode, long totalShares, Map enterpriseSubjectInfo, Map productInfo){
+    public String GDEnterpriseResister(String contractAddress, String equityCode, long totalShares, Map enterpriseSubjectInfo, Map equityProductInfo,Map bondProductInfo){
 
         Map<String, Object> map = new HashMap<>();
         map.put("contractAddress", contractAddress);
         map.put("equityCode", equityCode);
         map.put("totalShares", totalShares);
         map.put("enterpriseSubjectInfo", enterpriseSubjectInfo);
-        map.put("productInfo", productInfo);
+        map.put("equityProductInfo", equityProductInfo);
+        map.put("bondProductInfo", bondProductInfo);
 
         String result = PostTest.postMethod(SDKADD + "/equity/enterprise/issue", map);
         log.info(result);
@@ -160,13 +162,14 @@ public  class GoGuDeng implements GuDeng {
      * @param productInformation
      * @return
      */
-    public String GDShareIncrease(String platformKeyId, String equityCode, List<Map> shareList, String reason,Map productInformation){
+    public String GDShareIncrease(String platformKeyId, String equityCode, List<Map> shareList, String reason,Map equityProductInfo,Map bondProductInfo){
         Map<String, Object> map = new HashMap<>();
         map.put("platformKeyId", platformKeyId);
         map.put("equityCode", equityCode);
         map.put("shareList", shareList);
         map.put("reason", reason);
-        map.put("productInformation", productInformation);
+        map.put("equityProductInfo", equityProductInfo);
+        map.put("bondProductInfo", bondProductInfo);
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/increase", map);
         log.info(result);
@@ -322,14 +325,15 @@ public  class GoGuDeng implements GuDeng {
      * @param registerInformation
      * @return
      */
-    public String GDShareChangeBoard(String platformKeyId, String companyId, String oldEquityCode, String newEquityCode,Map registerInformation,Map productInfo){
+    public String GDShareChangeBoard(String platformKeyId, String companyId, String oldEquityCode, String newEquityCode,Map registerInformation, Map equityProductInfo,Map bondProductInfo){
         Map<String, Object> map = new HashMap<>();
         map.put("platformKeyId", platformKeyId);
         map.put("companyId", companyId);
         map.put("oldEquityCode", oldEquityCode);
         map.put("newEquityCode", newEquityCode);
         map.put("registerInformation", registerInformation);
-        map.put("productInfo",productInfo);
+        map.put("equityProductInfo", equityProductInfo);
+        map.put("bondProductInfo", bondProductInfo);
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/changeboard", map);
         log.info(result);

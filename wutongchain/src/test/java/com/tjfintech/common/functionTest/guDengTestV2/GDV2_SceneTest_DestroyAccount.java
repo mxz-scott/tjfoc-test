@@ -2,6 +2,7 @@ package com.tjfintech.common.functionTest.guDengTestV2;
 
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.GDBeforeCondition;
+import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.GuDengV1;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -18,7 +19,7 @@ import org.junit.runners.MethodSorters;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.CommonFunc.gdConstructShareListV1;
+import static com.tjfintech.common.CommonFunc.gdConstructShareList;
 import static com.tjfintech.common.CommonFunc.mapShareENCN;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
@@ -28,12 +29,12 @@ import static org.junit.Assert.assertEquals;
 public class GDV2_SceneTest_DestroyAccount {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
-    GuDengV1 gd =testBuilder.getGuDengV1();
+    GuDeng gd =testBuilder.getGuDeng();
     Store store =testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
     public static String bizNoTest = "test" + Random(12);
-    GDUnitFuncV1 uf = new GDUnitFuncV1();
+    GDUnitFunc uf = new GDUnitFunc();
 
     @BeforeClass
     public static void Before()throws Exception{
@@ -64,10 +65,10 @@ public class GDV2_SceneTest_DestroyAccount {
 
         //发行
         gdEquityCode = "gdEC" + Random(12);
-        List<Map> shareList = gdConstructShareListV1(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,1000,1, shareList3);
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
 
         //发行
         gdEquityCode = "gdEC" + Random(12);
@@ -108,10 +109,10 @@ public class GDV2_SceneTest_DestroyAccount {
 
         String response = "";
         //回收一半数额
-        List<Map> shareList = gdConstructShareListV1(gdAccount1,500,0);
-        List<Map> shareList2 = gdConstructShareListV1(gdAccount2,500,1, shareList);
-        List<Map> shareList3 = gdConstructShareListV1(gdAccount3,500,0, shareList2);
-        List<Map> shareList4 = gdConstructShareListV1(gdAccount4,500,1, shareList3);
+        List<Map> shareList = gdConstructShareList(gdAccount1,500,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,500,1, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,500,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,500,1, shareList3);
 
         uf.shareRecycle(gdEquityCode,shareList4,true);
 
@@ -194,9 +195,9 @@ public class GDV2_SceneTest_DestroyAccount {
 
         //创建账户
         String response = uf.createAcc(clientNo,true);
-        String keyID = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("keyId");
+        log.info(response);
         String addr= JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("address");
-        List<Map> shareList = gdConstructShareListV1(addr,500,0);
+        List<Map> shareList = gdConstructShareList(addr,500,0);
 
         //发行
         String eqCode = "Da00" + Random(10);
@@ -207,15 +208,14 @@ public class GDV2_SceneTest_DestroyAccount {
         uf.destroyAcc(clientNo,true);
         String query = gd.GDGetEnterpriseShareInfo(eqCode);
         assertEquals(1,JSONObject.fromObject(query).getJSONArray("data").size());
-        assertEquals(true,query.contains("{\"amount\":500,\"lockAmount\":0,\"shareProperty\":0,\"sharePropertyCN\":\"\",\"address\":\"" + zeroAccount + "\"}"));
+        assertEquals(true,query.contains("{\"amount\":500,\"lockAmount\":0,\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"address\":\"" + zeroAccount + "\"}"));
 
         //再次使用相同的clientNo创建账户
         response = uf.createAcc(clientNo,true);
-        keyID = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("keyId");
+        String keyID = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("keyId");
         addr= JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("address");
 
         //变更账户状态为正常
-
 
         eqCode = "Da00" + Random(10);
 
@@ -229,35 +229,38 @@ public class GDV2_SceneTest_DestroyAccount {
         assertEquals(true,query.contains("{\"equityCode\":\"" + eqCode +
                 "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 
-        uf.lockAndUnlock("r"+Random(15),eqCode,addr,500,0,true);
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
-        assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
-        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + clientNo + "\""));
-        assertEquals(true,query.contains("\"address\":\"" + addr + "\""));
-        assertEquals(true,query.contains("{\"equityCode\":\"" + eqCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
-
-        String newEqCode = "new" + Random(10);
-        uf.changeBoard(eqCode,newEqCode,true);
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
-        assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
-        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + clientNo + "\""));
-        assertEquals(true,query.contains("\"address\":\"" + addr + "\""));
-        assertEquals(true,query.contains("{\"equityCode\":\"" + newEqCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
-
-        uf.shareIncrease(newEqCode,shareList,true);
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
-        assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
-        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + clientNo + "\""));
-        assertEquals(true,query.contains("\"address\":\"" + addr + "\""));
-        assertEquals(true,query.contains("{\"equityCode\":\"" + newEqCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
-
-        uf.shareTransfer(keyID,addr,200,gdAccount1,0,newEqCode,1,"testodr"+Random(10),true);
+//        //冻结 解冻
+//        String bizNo = "test" + Random(12);
+//        uf.lock(bizNo,addr,eqCode,1000,0,"2025-09-13",true);
+//        uf.unlock(bizNo,eqCode,1000,true);
+//
+//        query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
+//        assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+//        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + clientNo + "\""));
+//        assertEquals(true,query.contains("\"address\":\"" + addr + "\""));
+//        assertEquals(true,query.contains("{\"equityCode\":\"" + eqCode +
+//                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+//
+//        String newEqCode = "new" + Random(10);
+//        uf.changeBoard(eqCode,newEqCode,true);
+//
+//        query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
+//        assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+//        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + clientNo + "\""));
+//        assertEquals(true,query.contains("\"address\":\"" + addr + "\""));
+//        assertEquals(true,query.contains("{\"equityCode\":\"" + newEqCode +
+//                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+//
+//        uf.shareIncrease(newEqCode,shareList,true);
+//
+//        query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
+//        assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+//        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + clientNo + "\""));
+//        assertEquals(true,query.contains("\"address\":\"" + addr + "\""));
+//        assertEquals(true,query.contains("{\"equityCode\":\"" + newEqCode +
+//                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+        String newEqCode = eqCode;
+        uf.shareTransfer(keyID,addr,200,gdAccount1,0,newEqCode,true);
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
         assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
@@ -266,8 +269,8 @@ public class GDV2_SceneTest_DestroyAccount {
         assertEquals(true,query.contains("{\"equityCode\":\"" + newEqCode +
                 "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":800,\"lockAmount\":0}"));
 
-        shareList = gdConstructShareListV1(addr,800,0);
-        shareList = gdConstructShareListV1(gdAccount1,200,0,shareList);
+        shareList = gdConstructShareList(addr,800,0);
+        shareList = gdConstructShareList(gdAccount1,200,0,shareList);
         uf.shareRecycle(newEqCode,shareList,true);
 
         response = uf.destroyAcc(clientNo,false);
@@ -290,15 +293,14 @@ public class GDV2_SceneTest_DestroyAccount {
     public void repeatCreateDestroy02()throws Exception{
         String clientNo = "test000DA" + Random(10);
 
-
         //创建账户
-        String response = uf.createAcc(clientNo,true);
+        uf.createAcc(clientNo,true);
 
         //销户
         uf.destroyAcc(clientNo,true);
 
         //再次使用相同的clientNo创建账户
-        response = uf.createAcc(clientNo,true);
+        String response = uf.createAcc(clientNo,true);
         String keyID = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("keyId");
         String addr= JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("address");
 
@@ -306,7 +308,7 @@ public class GDV2_SceneTest_DestroyAccount {
 
 
         String eqCode = "Da00" + Random(10);
-        List<Map> shareList = gdConstructShareListV1(addr,500,0);
+        List<Map> shareList = gdConstructShareList(addr,500,0);
         //发行
         uf.shareIssue(eqCode,shareList,true);
 
@@ -317,7 +319,7 @@ public class GDV2_SceneTest_DestroyAccount {
         assertEquals(true,query.contains("{\"equityCode\":\"" + eqCode +
                 "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 
-        uf.lockAndUnlock("r"+Random(15),eqCode,addr,500,0,true);
+        uf.lockAndUnlock("r"+Random(15),eqCode,addr,500,0);
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
         assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
@@ -345,7 +347,7 @@ public class GDV2_SceneTest_DestroyAccount {
         assertEquals(true,query.contains("{\"equityCode\":\"" + newEqCode +
                 "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
 
-        uf.shareTransfer(keyID,addr,200,gdAccount1,0,newEqCode,1,"testodr"+Random(10),true);
+        uf.shareTransfer(keyID,addr,200,gdAccount1,0,newEqCode,true);
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,clientNo);
         assertEquals(clientNo,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
@@ -354,8 +356,8 @@ public class GDV2_SceneTest_DestroyAccount {
         assertEquals(true,query.contains("{\"equityCode\":\"" + newEqCode +
                 "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":800,\"lockAmount\":0}"));
 
-        shareList = gdConstructShareListV1(addr,800,0);
-        shareList = gdConstructShareListV1(gdAccount1,200,0,shareList);
+        shareList = gdConstructShareList(addr,800,0);
+        shareList = gdConstructShareList(gdAccount1,200,0,shareList);
         uf.shareRecycle(newEqCode,shareList,true);
 
         response = uf.destroyAcc(clientNo,false);
@@ -364,7 +366,7 @@ public class GDV2_SceneTest_DestroyAccount {
 
         response = uf.destroyAcc(clientNo,false);
         sleepAndSaveInfo(SLEEPTIME);
-        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(
                 JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
     }
 

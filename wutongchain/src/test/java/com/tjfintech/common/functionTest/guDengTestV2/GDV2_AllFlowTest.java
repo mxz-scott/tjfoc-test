@@ -41,6 +41,7 @@ public class GDV2_AllFlowTest {
         gdBefore.gdCreateAccout();
 //        gdBefore.initRegulationData();
     }
+
 //    @Before
     public void IssueEquity()throws Exception{
         gdEquityCode = "gdEC" + Random(12);
@@ -76,7 +77,7 @@ public class GDV2_AllFlowTest {
         jsonMap.put("对象标识",gdCompanyID);
 
         log.info("判断获取的主体信息是否与传入的一致");
-        assertEquals(49,enterpriseSubjectInfo.size());
+        assertEquals(44,enterpriseSubjectInfo.size());
         assertEquals(enterpriseSubjectInfo.size(),jsonMap.size());
 
 
@@ -125,6 +126,8 @@ public class GDV2_AllFlowTest {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(mapAcc.get("txId").toString())).getString("state"));
 
         String query2 = gd.GDAccountQuery(gdContractAddress,cltNo);
+        assertEquals("200",JSONObject.fromObject(query2).getString("state"));
+        assertEquals(true,query2.contains(cltNo));
 
         //查询挂牌企业数据
         //查询投资者信息
@@ -1033,7 +1036,29 @@ public class GDV2_AllFlowTest {
 
     }
 
+    @Test
+    public void cycleTest()throws Exception{
+        for(int i =0;i<100000;i++) {
+            gdEquityCode = Random(20);
+            bizNoTest = Random(32);
+            log.info("**********************************************************************************************************************************");
+            log.info("test count: " + i);
+            TC01_enterpriseRegister();
+            TC03_createAccout();
+            TC06_shareIssue();
+            TC07_shareChangeProperty();
+            TC08_shareTransfer();
+            TC09_shareIncrease();
+            TC10_shareLock();
+            TC11_shareUnlock();
+            TC1201_shareRecycleOneAcc();
+            TC1202_shareRecycleMultiAcc();
+            TC13_shareChangeBoard();
+            TC15_infodisclosurePublishAndGet();
+            TC205_accountDestroy();
 
+        }
+    }
 
 
 }

@@ -9,6 +9,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -42,6 +43,10 @@ public class GDV2_EnterpriseRegister {
 //        gdBefore.initRegulationData();
     }
 
+    @Before
+    public void BeforeTest()throws Exception{
+        gdEquityCode = Random(20);
+    }
 
     //企业 股权类 登记
     @Test
@@ -62,7 +67,7 @@ public class GDV2_EnterpriseRegister {
         jsonMap.put("对象标识",gdCompanyID);
 
         log.info("判断获取的主体信息是否与传入的一致");
-        assertEquals(49,enterpriseSubjectInfo.size());
+        assertEquals(44,enterpriseSubjectInfo.size());
         assertEquals(enterpriseSubjectInfo.size(),jsonMap.size());
 
 
@@ -114,7 +119,7 @@ public class GDV2_EnterpriseRegister {
         jsonMap.put("对象标识",gdCompanyID);
 
         log.info("判断获取的主体信息是否与传入的一致");
-        assertEquals(49,enterpriseSubjectInfo.size());
+        assertEquals(44,enterpriseSubjectInfo.size());
         assertEquals(enterpriseSubjectInfo.size(),jsonMap.size());
 
 
@@ -146,6 +151,55 @@ public class GDV2_EnterpriseRegister {
 
     }
 
+    //会员登记
+    @Test
+    public void TC03_enterpriseRegister() throws Exception {
+        long shareTotals = 1000000;
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo, null,null);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String txId = jsonObject.getJSONObject("data").getString("txId");
 
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+        //查询挂牌企业主体数据
+        response = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+
+        Map jsonMap = JSONObject.fromObject(response).getJSONObject("data");
+        jsonMap.put("对象标识",gdCompanyID);
+
+        log.info("判断获取的主体信息是否与传入的一致");
+        assertEquals(44,enterpriseSubjectInfo.size());
+        assertEquals(enterpriseSubjectInfo.size(),jsonMap.size());
+
+
+
+        //查询投资者信息
+        //查询企业股东信息
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+        assertEquals("400",JSONObject.fromObject(query).getString("state"));
+        assertEquals("该股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
+
+        //查询股东持股情况 无当前股权代码信息
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+    }
 
 }

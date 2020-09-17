@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface GuDeng {
 
-    String GDEnterpriseResister(String contractAddress, String equityCode, long totalShares, Map enterpriseSubjectInfo, Map productInfo);
+    String GDEnterpriseResister(String contractAddress, String equityCode, long totalShares, Map enterpriseSubjectInfo, Map equityProductInfo,Map bondProductInfo);
     String GDCreateAccout(String contractAddress, String clientNo,Map fundInfo,Map shareholderInfo,Map investorInfo);
 
     String GDShareIssue(String contractAddress, String platformKeyId, String equityCode, List<Map> shareList);
@@ -17,7 +17,7 @@ public interface GuDeng {
                            String equityCode, Map txInformation, List<Map> registerInformationList);
     String GDShareTransfer(Map mapTransfer);
 
-    String GDShareIncrease(String platformKeyId, String equityCode, List<Map> shareList, String reason,Map productInformation);
+    String GDShareIncrease(String platformKeyId, String equityCode, List<Map> shareList, String reason,Map equityProductInfo,Map bondProductInfo);
 
     String GDShareLock(String bizNo, String address, String equityCode, long amount, int shareProperty, String reason,
                        String cutoffDate,Map registerInformation);
@@ -25,7 +25,7 @@ public interface GuDeng {
 
     String GDShareRecycle(String platformKeyId, String equityCode, List<Map> addressList, String remark);
 
-    String GDShareChangeBoard(String platformKeyId, String companyId, String oldEquityCode, String newEquityCode,Map registerInformation,Map productInfo);
+    String GDShareChangeBoard(String platformKeyId, String companyId, String oldEquityCode, String newEquityCode,Map registerInformation,Map equityProductInfo,Map bondProductInfo);
 
     String GDAccountDestroy(String contractAddress, String clientNo);
 
