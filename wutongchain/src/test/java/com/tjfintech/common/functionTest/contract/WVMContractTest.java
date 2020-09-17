@@ -106,11 +106,14 @@ public class WVMContractTest {
         //跨合约调用合约内的存在的方法，错误的参数格式
         String response5 = invokeNew(ctHash2,"CrossInitAccount",
                 ctHash,"initAccount","[\"C\",123]");//初始化账户A 账户余额50
-        String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("txId");
 
-
-        commonFunc.sdkCheckTxOrSleep(txHash5,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        chkTxDetailRsp("404",txHash5);
+        //pp分支 v2 会直接返回错误提示
+        assertEquals(true,response5.contains("不支持的合约参数格式"));
+//        String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("txId");
+//
+//
+//        commonFunc.sdkCheckTxOrSleep(txHash5,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+//        chkTxDetailRsp("404",txHash5);
     }
 
     @Test
