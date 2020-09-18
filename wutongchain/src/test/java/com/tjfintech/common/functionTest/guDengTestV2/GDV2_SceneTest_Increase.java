@@ -142,7 +142,7 @@ public class GDV2_SceneTest_Increase {
         shareList.clear();
         response = uf.shareIncrease(gdEquityCode,shareList,false);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
-        assertEquals("至少传入一个股权账号信息", JSONObject.fromObject(response).getString("message"));
+        assertEquals("请填写股权账号信息", JSONObject.fromObject(response).getString("message"));
 
     }
 

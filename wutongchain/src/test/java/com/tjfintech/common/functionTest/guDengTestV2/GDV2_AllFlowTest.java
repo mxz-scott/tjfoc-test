@@ -1036,7 +1036,7 @@ public class GDV2_AllFlowTest {
 
     }
 
-    @Test
+//    @Test
     public void cycleTest()throws Exception{
         for(int i =0;i<100000;i++) {
             gdEquityCode = Random(20);
