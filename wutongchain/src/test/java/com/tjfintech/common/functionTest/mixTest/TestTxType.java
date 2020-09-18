@@ -592,8 +592,8 @@ public class TestTxType {
 //        String p1 = shExeAndReturn(utilsClass.getIPFromStr(SDKADD),"cat " + SDKPATH + "tls/pubkey.pem").trim();
 //        String p2 = new String (utilsClass.decryptBASE64(jsonObjectCreate.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("owner")));
 //        assertEquals(p1.replaceAll("\n",""),p2.replaceAll("\n",""));
-        assertEquals("",
-                jsonObjectCreate.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("owner"));
+//        assertEquals("",
+//                jsonObjectCreate.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("owner"));
         assertEquals(data,
                 jsonObjectCreate.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("src"));
         log.info("Check create wvm tx detail complete");
