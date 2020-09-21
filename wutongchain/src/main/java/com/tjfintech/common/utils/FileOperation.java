@@ -33,6 +33,34 @@ public class FileOperation {
 
     }
 
+    public void replaceKeyword(String fulPathFile,String keyWord,String destStr) throws Exception{
+
+        File file = new File(fulPathFile);
+        StringBuffer res = new StringBuffer();
+        String line = null;
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            while ((line = reader.readLine()) != null) {
+                if(line.contains(keyWord))
+                {
+                    res.append(destStr + "\n");
+                    continue;
+                }
+                res.append(line + "\n");
+            }
+            reader.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //System.out.println(cont);
+        //更新源文件
+        write(res.toString(), file);
+        Thread.sleep(2000);
+    }
+
     public static String read(String path) {
         File file = new File(path);
         StringBuffer res = new StringBuffer();
