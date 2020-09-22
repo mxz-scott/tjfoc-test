@@ -346,7 +346,7 @@ public class GDBeforeCondition {
         accountInfo.put("账户对象标识","testacc00001");
         accountInfo.put("账户所属主体引用","hrefid00001");
         accountInfo.put("开户机构主体引用","drefid00001");
-        accountInfo.put("账号","h0123555");
+        accountInfo.put("账户","h0123555");
         accountInfo.put("账户类型",0);  //默认股权账户
         accountInfo.put("账户用途",0);
         accountInfo.put("账号状态",0);
