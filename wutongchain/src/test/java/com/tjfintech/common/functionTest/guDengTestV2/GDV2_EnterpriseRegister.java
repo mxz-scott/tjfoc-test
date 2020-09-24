@@ -70,33 +70,6 @@ public class GDV2_EnterpriseRegister {
         assertEquals(44,enterpriseSubjectInfo.size());
         assertEquals(enterpriseSubjectInfo.size(),jsonMap.size());
 
-
-
-        //查询投资者信息
-        //查询企业股东信息
-        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
-        assertEquals("400",JSONObject.fromObject(query).getString("state"));
-        assertEquals("该股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
-
-        //查询股东持股情况 无当前股权代码信息
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
     }
 
 
@@ -122,33 +95,6 @@ public class GDV2_EnterpriseRegister {
         assertEquals(44,enterpriseSubjectInfo.size());
         assertEquals(enterpriseSubjectInfo.size(),jsonMap.size());
 
-
-
-        //查询投资者信息
-        //查询企业股东信息
-        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
-        assertEquals("400",JSONObject.fromObject(query).getString("state"));
-        assertEquals("该股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
-
-        //查询股东持股情况 无当前股权代码信息
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
     }
 
     //会员登记
@@ -172,33 +118,6 @@ public class GDV2_EnterpriseRegister {
         log.info("判断获取的主体信息是否与传入的一致");
         assertEquals(44,enterpriseSubjectInfo.size());
         assertEquals(enterpriseSubjectInfo.size(),jsonMap.size());
-
-
-
-        //查询投资者信息
-        //查询企业股东信息
-        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
-        assertEquals("400",JSONObject.fromObject(query).getString("state"));
-        assertEquals("该股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
-
-        //查询股东持股情况 无当前股权代码信息
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
 
     }
 

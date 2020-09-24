@@ -167,17 +167,19 @@ public class GDBeforeCondition {
 
         //构造股权账户信息
         Map shareHolderInfo = new HashMap();
-        init02AccountInfo();
-        accountInfo.put("账户对象标识",cltNo);  //更新账户对象标识字段
+        init02EquityAccountInfo();
+        equityaccountInfo.put("账户对象标识",cltNo);  //更新账户对象标识字段
+        log.info(equityaccountInfo.toString());
         shareHolderInfo.put("shareholderNo",shareHolderNo);
-        shareHolderInfo.put("accountInfo",accountInfo);
+        shareHolderInfo.put("accountInfo", equityaccountInfo);
+        log.info(shareHolderInfo.toString());
 
-        //构造资金账户信息
-        Map accountFundInfo = accountInfo;
-        accountFundInfo.put("账户类型",1);
+        //资金账户信息
+        init02FundAccountInfo();
+        fundaccountInfo.put("账户对象标识",cltNo);  //更新账户对象标识字段
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("fundNo",fundNo);
-        mapFundInfo.put("accountInfo",accountFundInfo);
+        mapFundInfo.put("accountInfo",fundaccountInfo);
 
         //构造个人/投资者主体信息
         init01PersonalSubjectInfo();
@@ -206,7 +208,8 @@ public class GDBeforeCondition {
         log.info("初始化监管相关数据结构");
         init01EnterpriseSubjectInfo();      //初始化企业主体数据信息  涉及接口 企业挂牌登记
         init01PersonalSubjectInfo();        //初始化个人主体数据信息  涉及接口 开户
-        init02AccountInfo();                //初始化账户数据信息 默认股权账户  涉及接口 开户
+        init02EquityAccountInfo();          //初始化账户数据信息 股权账户  涉及接口 开户
+        init02FundAccountInfo();            //初始化账户数据信息 资金账户  涉及接口 开户
         init03EquityProductInfo();          //初始化股权类产品数据信息  涉及接口 挂牌企业登记 股份增发 场内转板
         init03BondProductInfo();            //初始化债券类产品数据信息  涉及接口 挂牌企业登记 股份增发 场内转板
         init04TxInfo();                     //初始化交易数据信息  涉及接口 过户转让
@@ -233,6 +236,8 @@ public class GDBeforeCondition {
         List<Map> listQual = new ArrayList<>();
         Map qualification1 = new HashMap();
         Map qualification2 = new HashMap();
+        listQual.add(qualification1);
+        listQual.add(qualification2);
 
         qualification1.put("资质认证类型",0);
         qualification1.put("资质认证文件",fileList);
@@ -294,6 +299,8 @@ public class GDBeforeCondition {
         List<String> fileList1 = new ArrayList<>();
         fileList1.add("test1.pdf");
         fileList1.add("test2.pdf");
+        List<Map> mapQuali = new ArrayList<>();
+        Map qual = new HashMap();
 
         investorSubjectInfo.clear();
         String cltNo = "test00001";
@@ -302,12 +309,16 @@ public class GDBeforeCondition {
         investorSubjectInfo.put("行业主体代号","JR");
         investorSubjectInfo.put("主体类型",0);
         investorSubjectInfo.put("主体信息创建时间","2020/09/12 12:01:12");
-        investorSubjectInfo.put("资质认证类型",0);
-        investorSubjectInfo.put("资质认证文件",fileList1);
-        investorSubjectInfo.put("资质认证方","苏州市监管局");
-        investorSubjectInfo.put("资质审核方","苏州市监管局");
-        investorSubjectInfo.put("认证时间","2020/09/12 12:01:12");
-        investorSubjectInfo.put("审核时间","2020/09/12 12:01:12");
+
+        qual.put("资质认证类型",0);
+        qual.put("资质认证文件",fileList1);
+        qual.put("资质认证方","苏州市监管局");
+        qual.put("资质审核方","苏州市监管局");
+        qual.put("认证时间","2020/09/12 12:01:12");
+        qual.put("审核时间","2020/09/12 12:01:12");
+
+        mapQuali.add(qual);
+        investorSubjectInfo.put("主体资质信息",mapQuali);
         investorSubjectInfo.put("个人姓名","zhangsan");
         investorSubjectInfo.put("个人身份证类型",0);
         investorSubjectInfo.put("个人身份证件号","325689199512230001");
@@ -323,7 +334,7 @@ public class GDBeforeCondition {
         investorSubjectInfo.put("评级原始记录","记录");
     }
 
-    public void init02AccountInfo() {
+    public void init02EquityAccountInfo() {
         log.info("初始化02账户数据结构");
         //默认股权账户
         List<String> fileList1 = new ArrayList<>();
@@ -342,32 +353,72 @@ public class GDBeforeCondition {
         List<String> fileList5 = new ArrayList<>();
         fileList5.add("test51.pdf");
         fileList5.add("test52.pdf");
-        accountInfo.clear();
-        accountInfo.put("账户对象标识","testacc00001");
-        accountInfo.put("账户所属主体引用","hrefid00001");
-        accountInfo.put("开户机构主体引用","drefid00001");
-        accountInfo.put("账户","h0123555");
-        accountInfo.put("账户类型",0);  //默认股权账户
-        accountInfo.put("账户用途",0);
-        accountInfo.put("账号状态",0);
-        accountInfo.put("账户开户时间","2012/6/25");
-        accountInfo.put("账户开户核验凭证",fileList4);
-        accountInfo.put("账户销户时间","2022/6/25");
-        accountInfo.put("账户销户核验凭证",fileList2);
-        accountInfo.put("账户冻结时间","2020/6/25");
-        accountInfo.put("账户冻结核验凭证",fileList3);
-        accountInfo.put("账户解冻时间","2020/6/25");
-        accountInfo.put("账户解冻核验凭证",fileList4);
-        accountInfo.put("关联关系",0);
-        accountInfo.put("关联账户对象引用","t5pdf");
-        accountInfo.put("关联账户开户文件",fileList5);
+        equityaccountInfo.clear();
+        equityaccountInfo.put("账户对象标识","testacc00001");
+        equityaccountInfo.put("账户所属主体引用","hrefid00001");
+        equityaccountInfo.put("开户机构主体引用","drefid00001");
+        equityaccountInfo.put("账号","h0123555");
+        equityaccountInfo.put("账户类型",0);  //默认股权账户
+        equityaccountInfo.put("账户用途",0);
+        equityaccountInfo.put("账号状态",0);
+        equityaccountInfo.put("账户开户时间","2012/6/25");
+        equityaccountInfo.put("账户开户核验凭证",fileList4);
+        equityaccountInfo.put("账户销户时间","2022/6/25");
+        equityaccountInfo.put("账户销户核验凭证",fileList2);
+        equityaccountInfo.put("账户冻结时间","2020/6/25");
+        equityaccountInfo.put("账户冻结核验凭证",fileList3);
+        equityaccountInfo.put("账户解冻时间","2020/6/25");
+        equityaccountInfo.put("账户解冻核验凭证",fileList4);
+        equityaccountInfo.put("关联关系",0);
+        equityaccountInfo.put("关联账户对象引用","t5pdf");
+        equityaccountInfo.put("关联账户开户文件",fileList5);
+    }
+
+    public void init02FundAccountInfo() {
+        log.info("初始化02账户数据结构");
+        //默认股权账户
+        List<String> fileList1 = new ArrayList<>();
+        fileList1.add("test1.pdf");
+        fileList1.add("test2.pdf");
+
+        List<String> fileList2 = new ArrayList<>();
+        fileList2.add("test21.pdf");
+        fileList2.add("test22.pdf");
+        List<String> fileList3 = new ArrayList<>();
+        fileList3.add("test31.pdf");
+        fileList3.add("test32.pdf");
+        List<String> fileList4 = new ArrayList<>();
+        fileList4.add("test41.pdf");
+        fileList4.add("test42.pdf");
+        List<String> fileList5 = new ArrayList<>();
+        fileList5.add("test51.pdf");
+        fileList5.add("test52.pdf");
+        fundaccountInfo.clear();
+        fundaccountInfo.put("账户对象标识","testacc00001");
+        fundaccountInfo.put("账户所属主体引用","hrefid00001");
+        fundaccountInfo.put("开户机构主体引用","drefid00001");
+        fundaccountInfo.put("账号","h0123555");
+        fundaccountInfo.put("账户类型",1);  //资金账户
+        fundaccountInfo.put("账户用途",0);
+        fundaccountInfo.put("账号状态",0);
+        fundaccountInfo.put("账户开户时间","2012/6/25");
+        fundaccountInfo.put("账户开户核验凭证",fileList4);
+        fundaccountInfo.put("账户销户时间","2022/6/25");
+        fundaccountInfo.put("账户销户核验凭证",fileList2);
+        fundaccountInfo.put("账户冻结时间","2020/6/25");
+        fundaccountInfo.put("账户冻结核验凭证",fileList3);
+        fundaccountInfo.put("账户解冻时间","2020/6/25");
+        fundaccountInfo.put("账户解冻核验凭证",fileList4);
+        fundaccountInfo.put("关联关系",0);
+        fundaccountInfo.put("关联账户对象引用","t5pdf");
+        fundaccountInfo.put("关联账户开户文件",fileList5);
     }
 
     public void init03EquityProductInfo() {
         log.info("初始化03产品数据结构");
         equityProductInfo.clear();
         equityProductInfo.put("产品对象标识",gdEquityCode + "01");
-        equityProductInfo.put("发行主体引用","issueobj001");
+        equityProductInfo.put("发行主体引用",gdCompanyID);
         equityProductInfo.put("发行主体名称","suzhou");
         equityProductInfo.put("登记机构主体引用","regobj001");
         equityProductInfo.put("托管机构主体引用","tuoguanobj001");
@@ -390,44 +441,43 @@ public class GDBeforeCondition {
         equityProductInfo.put("会计事务所名称","accoutcorp");
         equityProductInfo.put("发行方联系人","李四");
         equityProductInfo.put("发行方联系信息","acccorp");
-        equityProductInfo.put("发行代码","sh00001");
-        equityProductInfo.put("存续期限","2022/10/25");
-        equityProductInfo.put("最小账户数量",0);
-        equityProductInfo.put("产品面值",100);
-        equityProductInfo.put("票面利率",10);
-        equityProductInfo.put("利率形式","12");
-        equityProductInfo.put("付息频率","1");
-        equityProductInfo.put("非闰年计息天数",0);
-        equityProductInfo.put("闰年计息天数",0);
-        equityProductInfo.put("发行价格",10);
-        equityProductInfo.put("选择权条款",0);
-        equityProductInfo.put("（本期）发行规模上限",10000);
-        equityProductInfo.put("（本期）发行规模下限",10000);
-        equityProductInfo.put("发行开始日期","2020/10/25");
-        equityProductInfo.put("发行结束日期","2022/12/25");
-        equityProductInfo.put("登记日期","2020/10/25");
-        equityProductInfo.put("起息日期","2020/10/25");
-        equityProductInfo.put("到期日期","2022/12/25");
-        equityProductInfo.put("首次付息日期","2021/10/25");
-        equityProductInfo.put("发行文件编号","issue000001");
-        equityProductInfo.put("发行文件列表","1.txt");
-        equityProductInfo.put("发行方主体信用评级",0);
-        equityProductInfo.put("增信机构主体引用","tea111");
-        equityProductInfo.put("增信机构名称","tea111");
-        equityProductInfo.put("增信机构主体评级",0);
-        equityProductInfo.put("信用评级机构主体引用","credobj0001");
-        equityProductInfo.put("信用评级机构名称","cred");
-        equityProductInfo.put("担保机构主体引用","guaranteeobj");
-        equityProductInfo.put("担保机构名称","GSDZSZ");
-        equityProductInfo.put("担保安排","第五项");
-        equityProductInfo.put("产品终止条件","摘牌");
+
+        List<String> listFile = new ArrayList<>();
+        listFile.add("dd.pdf");
+        List<Map> mapList1 = new ArrayList<>();
+        Map equityMap = new HashMap();
+
+        equityMap.put("发行代码","tea111");
+        equityMap.put("发行股数",0);
+        equityMap.put("发行价格",10000);
+        equityMap.put("募集金额",10000);
+        equityMap.put("发起前股数",0);
+        equityMap.put("发行后股数",0);
+        equityMap.put("发行后总市值",10000);
+        equityMap.put("半年净利润",10000);
+        equityMap.put("全年净利润",10000);
+        equityMap.put("定向发行人数",0);
+        equityMap.put("发行开始日期","2020/10/25");
+        equityMap.put("发行结束日期","2020/10/25");
+        equityMap.put("登记日期","2020/10/25");
+        equityMap.put("发行文件编号","tea111");
+        equityMap.put("发行文件列表",listFile);
+        equityMap.put("挂牌代码","tea111");
+        equityMap.put("挂牌日期","2020/10/25");
+        equityMap.put("挂牌状态",0);
+        equityMap.put("挂牌备注信息","tea111");
+        equityMap.put("摘牌日期","2020/10/25");
+        equityMap.put("摘牌原因",0);
+
+        mapList1.add(equityMap);
+        equityProductInfo.put("股权类-发行增资信息",mapList1);
     }
 
     public void init03BondProductInfo() {
         log.info("初始化03产品数据结构");
         bondProductInfo.clear();
         bondProductInfo.put("产品对象标识","poid00001");
-        bondProductInfo.put("发行主体引用","issueobj0001");
+        bondProductInfo.put("发行主体引用",gdCompanyID);
         bondProductInfo.put("发行主体名称","issuetestor");
         bondProductInfo.put("登记机构主体引用","regobj0001");
         bondProductInfo.put("托管机构主体引用","tuoguanobj001");
@@ -491,7 +541,7 @@ public class GDBeforeCondition {
         txInformation.put("成交数量",1000);
         txInformation.put("成交时间","2020/10/8");
         txInformation.put("交易成交描述信息","过户交易成功");
-        txInformation.put("发行方主体引用","issueobj0001");
+        txInformation.put("发行方主体引用",gdCompanyID);
         txInformation.put("发行方名称","issue001");
         txInformation.put("投资方主体引用","accobj0001");
         txInformation.put("投资方名称","联合");
@@ -501,9 +551,15 @@ public class GDBeforeCondition {
         txInformation.put("对手方名称","李四");
         txInformation.put("委托核验凭证","ddd.pdf");
         txInformation.put("成交核验凭证","erq.pdf");
-        txInformation.put("中介类型",0);
-        txInformation.put("中介机构主体引用","obj001");
-        txInformation.put("中介机构名称","中介");
+
+        List<Map> mapList1 = new ArrayList<>();
+        Map equityMap = new HashMap();
+        equityMap.put("中介类型",0);
+        equityMap.put("中介机构主体引用","obj001");
+        equityMap.put("中介机构名称","中介");
+        mapList1.add(equityMap);
+        txInformation.put("交易中介信息",mapList1);
+
 
     }
 
@@ -517,7 +573,7 @@ public class GDBeforeCondition {
         registerInfo.put("登记类型",0);
         registerInfo.put("登记流水号","regsno00001");
         registerInfo.put("登记时间","2020/7/8");
-        registerInfo.put("登记主体引用","regobj0001");
+        registerInfo.put("登记主体引用",gdCompanyID);
         registerInfo.put("登记主体类型",0);
         registerInfo.put("权利登记单位",0);
         registerInfo.put("登记币种","156");

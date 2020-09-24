@@ -1251,6 +1251,7 @@ public class CommonFunc {
         shares.put("amount",amount);
         shares.put("shareProperty",shareProperty);
         shares.put("registerInformation",registerInfo);
+        shares.put("transactionReport",txInformation);
 
         List<Map> shareList = new ArrayList<>();
         shareList.add(shares);
@@ -1267,6 +1268,7 @@ public class CommonFunc {
         shares.put("amount",amount);
         shares.put("shareProperty",shareProperty);
         shares.put("registerInformation",registerInfo);
+        shares.put("transactionReport",txInformation);
 
         shareList.add(shares);
         return shareList;
