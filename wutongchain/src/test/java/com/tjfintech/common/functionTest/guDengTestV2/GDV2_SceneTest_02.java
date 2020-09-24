@@ -465,7 +465,7 @@ public class GDV2_SceneTest_02 {
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();
-        respShareList = gdConstructQueryShareList(gdAccount1,1000,0,200,"",respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount1,1000,0,200,mapShareENCN().get("0"),respShareList);
         List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,1000,0,0,mapShareENCN().get("0"), respShareList);
         List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,1000,0,0,mapShareENCN().get("0"), respShareList2);
         List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,1000,0,0,mapShareENCN().get("0"), respShareList3);
@@ -1042,7 +1042,7 @@ public class GDV2_SceneTest_02 {
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();
-        respShareList = gdConstructQueryShareList(gdAccount1,500,0,500,"",respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount1,500,0,500,mapShareENCN().get("0"),respShareList);
         respShareList = gdConstructQueryShareList(gdAccount1,500,1,0,mapShareENCN().get("1"),respShareList);
         List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,1000,0,0,mapShareENCN().get("0"), respShareList);
         List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,1000,0,0,mapShareENCN().get("0"), respShareList2);
@@ -1109,7 +1109,7 @@ public class GDV2_SceneTest_02 {
 
         //实际应该持股情况信息
         List<Map> respShareList21 = new ArrayList<>();
-        respShareList21 = gdConstructQueryShareList(gdAccount1,500,0,100,"",respShareList21);
+        respShareList21 = gdConstructQueryShareList(gdAccount1,500,0,100,mapShareENCN().get("0"),respShareList21);
         respShareList21 = gdConstructQueryShareList(gdAccount1,500,1,0,mapShareENCN().get("1"),respShareList21);
         List<Map> respShareList22 = gdConstructQueryShareList(gdAccount2,1000,0,0,mapShareENCN().get("0"), respShareList21);
         List<Map> respShareList23 = gdConstructQueryShareList(gdAccount3,1000,0,0,mapShareENCN().get("0"), respShareList22);
@@ -1197,7 +1197,7 @@ public class GDV2_SceneTest_02 {
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();
-        respShareList = gdConstructQueryShareList(gdAccount1,500,0,100,"",respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount1,500,0,100,mapShareENCN().get("0"),respShareList);
         respShareList = gdConstructQueryShareList(gdAccount1,500,1,0,mapShareENCN().get("1"),respShareList);
         List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,1000,0,0,mapShareENCN().get("0"), respShareList);
         List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,1000,0,0,mapShareENCN().get("0"), respShareList2);
@@ -1650,7 +1650,7 @@ public class GDV2_SceneTest_02 {
         List<Map> respShareList = new ArrayList<>();
         respShareList = gdConstructQueryShareList(gdAccount1,900,0,0,mapShareENCN().get("0"),respShareList);
         respShareList = gdConstructQueryShareList(gdAccount5,100,0,0,mapShareENCN().get("0"),respShareList);
-        List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,1000,0,1000,"", respShareList);
+        List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,1000,0,1000,mapShareENCN().get("0"), respShareList);
         List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,1000,0,0,mapShareENCN().get("0"), respShareList2);
         List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,1000,0,0,mapShareENCN().get("0"), respShareList3);
 
@@ -1721,7 +1721,7 @@ public class GDV2_SceneTest_02 {
         List<Map> respShareList21 = new ArrayList<>();
         respShareList21 = gdConstructQueryShareList(gdAccount1,900,0,0,mapShareENCN().get("0"),respShareList21);
         respShareList21 = gdConstructQueryShareList(gdAccount5,100,0,0,mapShareENCN().get("0"),respShareList21);
-        List<Map> respShareList22 = gdConstructQueryShareList(gdAccount2,1000,0,600,"", respShareList21);
+        List<Map> respShareList22 = gdConstructQueryShareList(gdAccount2,1000,0,600,mapShareENCN().get("0"), respShareList21);
         List<Map> respShareList23 = gdConstructQueryShareList(gdAccount3,1000,0,0,mapShareENCN().get("0"), respShareList22);
         List<Map> respShareList24 = gdConstructQueryShareList(gdAccount4,1000,0,0,mapShareENCN().get("0"), respShareList23);
 
@@ -1876,7 +1876,7 @@ public class GDV2_SceneTest_02 {
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();
         respShareList = gdConstructQueryShareList(gdAccount1,1000,0,0,mapShareENCN().get("0"),respShareList);
-        List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,1000,0,1000,"", respShareList);
+        List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,1000,0,1000,mapShareENCN().get("0"), respShareList);
         List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,1000,0,0,mapShareENCN().get("0"), respShareList2);
         List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,1000,0,0,mapShareENCN().get("0"), respShareList3);
 
@@ -1942,7 +1942,7 @@ public class GDV2_SceneTest_02 {
         //实际应该持股情况信息
         List<Map> respShareList21 = new ArrayList<>();
         respShareList21 = gdConstructQueryShareList(gdAccount1,1000,0,0,mapShareENCN().get("0"),respShareList21);
-        List<Map> respShareList22 = gdConstructQueryShareList(gdAccount2,1000,0,600,"", respShareList21);
+        List<Map> respShareList22 = gdConstructQueryShareList(gdAccount2,1000,0,600,mapShareENCN().get("0"), respShareList21);
         List<Map> respShareList23 = gdConstructQueryShareList(gdAccount3,1000,0,0,mapShareENCN().get("0"), respShareList22);
         List<Map> respShareList24 = gdConstructQueryShareList(gdAccount4,1000,0,0,mapShareENCN().get("0"), respShareList23);
 
@@ -2273,7 +2273,7 @@ public class GDV2_SceneTest_02 {
         respShareList = gdConstructQueryShareList(gdAccount1,1000,0,0,mapShareENCN().get("0"),respShareList);
         respShareList = gdConstructQueryShareList(gdAccount1,1000,1,0,mapShareENCN().get("1"),respShareList);
         List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,2000,0,0,mapShareENCN().get("0"), respShareList);
-        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,1000,0,500,"", respShareList2);
+        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,1000,0,500,mapShareENCN().get("0"), respShareList2);
         respShareList3 = gdConstructQueryShareList(gdAccount3,1000,1,0,mapShareENCN().get("1"), respShareList3);
         List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,2000,0,0,mapShareENCN().get("0"), respShareList3);
 
@@ -2345,7 +2345,7 @@ public class GDV2_SceneTest_02 {
         respShareList21 = gdConstructQueryShareList(gdAccount1,1000,0,0,mapShareENCN().get("0"),respShareList21);
         respShareList21 = gdConstructQueryShareList(gdAccount1,1000,1,0,mapShareENCN().get("1"),respShareList21);
         List<Map> respShareList22 = gdConstructQueryShareList(gdAccount2,2000,0,0,mapShareENCN().get("0"), respShareList21);
-        List<Map> respShareList23 = gdConstructQueryShareList(gdAccount3,1000,0,100,"", respShareList22);
+        List<Map> respShareList23 = gdConstructQueryShareList(gdAccount3,1000,0,100,mapShareENCN().get("0"), respShareList22);
         respShareList23 = gdConstructQueryShareList(gdAccount3,1000,1,0,mapShareENCN().get("1"), respShareList23);
         List<Map> respShareList24 = gdConstructQueryShareList(gdAccount4,2000,0,0,mapShareENCN().get("0"), respShareList23);
 
@@ -2499,7 +2499,7 @@ public class GDV2_SceneTest_02 {
         List<Map> respShareList = new ArrayList<>();
         respShareList = gdConstructQueryShareList(gdAccount1,1000,0,0,mapShareENCN().get("0"),respShareList);
         List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,1000,0,0,mapShareENCN().get("0"), respShareList);
-        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,1000,0,500,"", respShareList2);
+        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,1000,0,500,mapShareENCN().get("0"), respShareList2);
         List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,1000,0,0,mapShareENCN().get("0"), respShareList3);
 
         log.info(respShareList4.toString());
@@ -2565,7 +2565,7 @@ public class GDV2_SceneTest_02 {
         List<Map> respShareList21 = new ArrayList<>();
         respShareList21 = gdConstructQueryShareList(gdAccount1,1000,0,0,mapShareENCN().get("0"),respShareList21);
         List<Map> respShareList22 = gdConstructQueryShareList(gdAccount2,1000,0,0,mapShareENCN().get("0"), respShareList21);
-        List<Map> respShareList23 = gdConstructQueryShareList(gdAccount3,1000,0,100,"", respShareList22);
+        List<Map> respShareList23 = gdConstructQueryShareList(gdAccount3,1000,0,100,mapShareENCN().get("0"), respShareList22);
         List<Map> respShareList24 = gdConstructQueryShareList(gdAccount4,1000,0,0,mapShareENCN().get("0"), respShareList23);
 
         log.info(respShareList24.toString());
@@ -3176,7 +3176,7 @@ public class GDV2_SceneTest_02 {
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();
-        respShareList = gdConstructQueryShareList(gdAccount1,400,0,1500,"",respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount1,400,0,1500,mapShareENCN().get("0"),respShareList);
         respShareList = gdConstructQueryShareList(gdAccount1,500,1,0,mapShareENCN().get("1"),respShareList);
         respShareList = gdConstructQueryShareList(gdAccount5,100,0,0,mapShareENCN().get("0"),respShareList);
         List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,1000,0,0,mapShareENCN().get("0"), respShareList);
@@ -3248,7 +3248,7 @@ public class GDV2_SceneTest_02 {
 
         //实际应该持股情况信息
         List<Map> respShareList21 = new ArrayList<>();
-        respShareList21 = gdConstructQueryShareList(gdAccount1,400,0,1000,"",respShareList21);
+        respShareList21 = gdConstructQueryShareList(gdAccount1,400,0,1000,mapShareENCN().get("0"),respShareList21);
         respShareList21 = gdConstructQueryShareList(gdAccount1,500,1,0,mapShareENCN().get("1"),respShareList21);
         respShareList21 = gdConstructQueryShareList(gdAccount5,100,0,0,mapShareENCN().get("0"),respShareList21);
         List<Map> respShareList22 = gdConstructQueryShareList(gdAccount2,1000,0,0,mapShareENCN().get("0"), respShareList21);
@@ -3440,7 +3440,7 @@ public class GDV2_SceneTest_02 {
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();
-        respShareList = gdConstructQueryShareList(gdAccount1,1500,0,500,"",respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount1,1500,0,500,mapShareENCN().get("0"),respShareList);
         respShareList = gdConstructQueryShareList(gdAccount1,500,1,0,mapShareENCN().get("1"),respShareList);
         List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,2000,0,0,mapShareENCN().get("0"), respShareList);
         List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,2000,0,0,mapShareENCN().get("0"), respShareList2);
@@ -3775,7 +3775,7 @@ public class GDV2_SceneTest_02 {
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();
-        respShareList = gdConstructQueryShareList(gdAccount1,1900,0,500,"",respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount1,1900,0,500,mapShareENCN().get("0"),respShareList);
         respShareList = gdConstructQueryShareList(gdAccount5,100,0,0,mapShareENCN().get("0"),respShareList);
         List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,2000,0,0,mapShareENCN().get("0"), respShareList);
         List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,2000,0,0,mapShareENCN().get("0"), respShareList2);
@@ -4110,7 +4110,7 @@ public class GDV2_SceneTest_02 {
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
 
-        assertEquals(true,query.contains("{\"amount\":2000,\"lockAmount\":0,\"shareProperty\":0,\"sharePropertyCN\":\"\",\"address\":\"" + zeroAccount + "\"}"));
+        assertEquals(true,query.contains("{\"amount\":2000,\"lockAmount\":0,\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"address\":\"" + zeroAccount + "\"}"));
 
         JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
 
@@ -4202,7 +4202,7 @@ public class GDV2_SceneTest_02 {
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
         assertEquals(true,query.contains(
-                "{\"amount\":2000,\"lockAmount\":0,\"shareProperty\":0,\"sharePropertyCN\":\"\",\"address\":\"" + zeroAccount + "\"}"));
+                "{\"amount\":2000,\"lockAmount\":0,\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"address\":\"" + zeroAccount + "\"}"));
 
 
         JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
@@ -4231,7 +4231,7 @@ public class GDV2_SceneTest_02 {
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":400,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":400,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
         assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
@@ -4294,7 +4294,7 @@ public class GDV2_SceneTest_02 {
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
         assertEquals(true,query.contains(
-                "{\"amount\":2000,\"lockAmount\":0,\"shareProperty\":0,\"sharePropertyCN\":\"\",\"address\":\"" + zeroAccount + "\"}"));
+                "{\"amount\":2000,\"lockAmount\":0,\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"address\":\"" + zeroAccount + "\"}"));
 
         JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
 
@@ -4394,7 +4394,7 @@ public class GDV2_SceneTest_02 {
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
         assertEquals(true,query.contains(
-                "{\"amount\":2000,\"lockAmount\":0,\"shareProperty\":0,\"sharePropertyCN\":\"\",\"address\":\"" + zeroAccount + "\"}"));
+                "{\"amount\":2000,\"lockAmount\":0,\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"address\":\"" + zeroAccount + "\"}"));
 
         JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
 

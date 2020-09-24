@@ -129,7 +129,7 @@ public class GDV2_SceneTest_ChangeProperty {
 
         //变更部分超过可用余额
         response = uf.changeSHProperty(gdAccount1,gdEquityCode,200,0,1,false);
-        sleepAndSaveInfo(5000);
+        sleepAndSaveInfo(8000);
 
         //检查账户余额 总股权无变更
         response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);

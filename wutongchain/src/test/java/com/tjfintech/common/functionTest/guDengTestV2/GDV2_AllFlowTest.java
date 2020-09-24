@@ -731,6 +731,10 @@ public class GDV2_AllFlowTest {
         String eqCode = gdEquityCode;
         String remark = "777777";
 
+        log.info("回收前查询机构主体信息");
+        String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
+        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getDouble("股本总数(股)"));
+
         registerInfo.put("登记流水号","recylce000001");
 
         List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
@@ -816,6 +820,14 @@ public class GDV2_AllFlowTest {
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
         assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
 
+
+        log.info("回收后查询机构主体信息");
+        String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
+        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getDouble("股本总数(股)"));
+
+        log.info("判断增发前后机构主体查询总股本数增加数正确");
+        assertEquals(totalShares.subtract(new BigDecimal("100")),totalShares2);
+
     }
 
     @Test
@@ -823,6 +835,10 @@ public class GDV2_AllFlowTest {
 
         String eqCode = gdEquityCode;
         String remark = "777777";
+
+        log.info("多个回收前查询机构主体信息");
+        String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
+        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getDouble("股本总数(股)"));
 
         registerInfo.put("登记流水号","recycle000002");
 
@@ -910,6 +926,13 @@ public class GDV2_AllFlowTest {
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
         assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        log.info("多个回收后查询机构主体信息");
+        String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
+        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getDouble("股本总数(股)"));
+
+        log.info("判断增发前后机构主体查询总股本数增加数正确");
+        assertEquals(totalShares.subtract(new BigDecimal("400")),totalShares2);
     }
 
     @Test
