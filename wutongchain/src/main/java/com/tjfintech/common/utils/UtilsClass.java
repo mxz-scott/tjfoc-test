@@ -142,7 +142,8 @@ public class UtilsClass {
     public static Map enterpriseSubjectInfo = new HashMap();//01主体  //挂牌企业登记
     public static Map equityProductInfo = new HashMap();//03产品 股权类 //挂牌企业登记  股份增发 场内转板
     public static Map bondProductInfo = new HashMap();//03产品 债券类 //挂牌企业登记  股份增发 场内转板
-    public static Map accountInfo = new HashMap();//02账户  //投资者开户
+    public static Map equityaccountInfo = new HashMap();//02账户 股权账户 //投资者开户
+    public static Map fundaccountInfo = new HashMap();//02账户 资金账户 //投资者开户
     public static Map investorSubjectInfo = new HashMap();//01主体  //投资者开户
     public static Map disclosureInfo = new HashMap();//07信披  //写入公告 信息披露
     public static Map settleInfo = new HashMap();//06资金结算  //资金结算
