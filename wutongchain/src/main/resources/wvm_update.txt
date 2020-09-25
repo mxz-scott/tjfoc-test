@@ -21,7 +21,7 @@ db_set(to, balB)
 }else{
 return "not enough failed"
 }
-return "transfer success"
+return "success"
 }
 
 //查询账户余额

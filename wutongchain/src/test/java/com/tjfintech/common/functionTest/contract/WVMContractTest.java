@@ -79,7 +79,7 @@ public class WVMContractTest {
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
         String ctHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("name");
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //跨合约调用合约内的正确的方法 initAccount方法
@@ -177,7 +177,9 @@ public class WVMContractTest {
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
         String response10 = query(ctHash,"BalanceTest",accountB);//获取账户B账户余额 报错
-        assertThat(JSONObject.fromObject(response10).getString("message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
+        //assertThat(JSONObject.fromObject(response10).getString("message"),containsString("no such file or directory"));
+        assertThat(JSONObject.fromObject(response10).getString("message"),containsString("This smart contract is destroyed"));
+        // 销毁后会提示找不到合约文件 500 error code
 
         chkTxDetailRsp("200",txHash1,txHash2,txHash3,txHash4,txHash9);
         chkTxDetailRsp("404",txHash5,txHash6);  //因合约实际实现并未返回success 20200907 开发确认针对此规则交易不再上链，故做此检查
@@ -499,7 +501,9 @@ public class WVMContractTest {
 
         for(String ctHash : ctHashList){
             String response1 = query(ctHash,"BalanceTest",accountA);//获取账户A账户余额
-            assertThat(JSONObject.fromObject(response1).getString("message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
+//            assertThat(JSONObject.fromObject(response1).getString("message"),containsString("no such file or directory"));
+            assertThat(JSONObject.fromObject(response1).getString("message"),containsString("This smart contract is destroyed"));
+        //销毁后会提示找不到合约文件 500 error code
         }
     }
 
@@ -666,7 +670,9 @@ public class WVMContractTest {
         chkTxDetailRsp("200",txHash2);
 
         String response10 = query(ctHash1,"BalanceTest",accountB);//获取转账后账户B账户余额 报错
-        assertThat(JSONObject.fromObject(response10).getString("message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
+//        assertThat(JSONObject.fromObject(response10).getString("message"),containsString("no such file or directory"));
+        assertThat(JSONObject.fromObject(response10).getString("message"),containsString("This smart contract is destroyed"));
+// 销毁后会提示找不到合约文件 500 error code
 
         return ctHash1;
     }
