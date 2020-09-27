@@ -1,38 +1,28 @@
 contract IdentityContract {
-    //平台管理员公钥
-    string AdminPubKey = "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEd1vKthhHJl7IfElsV7p9BfUXKXIg\ntabo3xFr5N5wlxVtBm01T10B9PHV39kaaqMi/WqDO3Mnq+C2bznjRkN00g==\n-----END PUBLIC KEY-----\n"
 
     //身份信息结构体
     struct Identity {
-        string  Name         //公司名称
-        string  Code         //公司Code
-        string  Type         //类型
-        string  PubKey       //身份公钥(pem)
-        string  Address      //地址
-        string  PubKeyEnc    //加密公钥
-        string  Description  //额外备注或者描述
-        string  Sender       //上链者公钥
-        int64   TxTime       //上链时间
-        string  TxHash       //上链的交易hash
-        int64   BlockNo      //区块链信息
+        string  Name                //公司名称
+        string  Code                //公司Code
+        string  Type                //类型
+        string  PubKey              //身份公钥(pem)
+        string  Address             //地址
+        string  ContractAddress     //合约地址
+        string  Description         //额外备注或者描述
+        int64   TxTime              //上链时间
+        string  TxHash              //上链的交易hash
+        int64   BlockNo             //区块链信息
     }
 
     //添加身份信息
-    public string AddIdentity(string json,string sign){
-        if(verify("sm2", AdminPubKey, json, sign) != true){
-            string tempErr = "Verify fail, please check sign info"
-            print(tempErr)
-            return tempErr
-        }
+    public string AddIdentity(string json){
         int64 timeNow = getBlockTime()
         string txid = getTxID()
-        string pubkey = getTxSender()
         int64 height = getBlockHeight()
         Identity id = json_to_obj<Identity>(json)
         string key = "id_"+id.Code
         id.TxTime = timeNow
         id.TxHash = txid
-        id.Sender = pubkey
         id.BlockNo = height
         json = obj_to_json(id)
         db_set(key,json)
@@ -52,6 +42,21 @@ contract IdentityContract {
         return pubkey
     }
 
+    public string GetAllIdentity(){
+        string prefix = "id_"
+        map<string,string> res
+		//获取想要查看的前缀数据，交由过滤器过滤
+		db_search(prefix,filter,res)
+        string json = ""
+		json = obj_to_json(res)
+        // print("Query Result：\n" + json)
+		return json
+    }
+    //过滤器
+	public bool filter(string val){
+		return true
+	}
+
     //根据公司Code获取身份信息
     public string GetIdentity(string code){
         string json = db_get<string>("id_"+code)
@@ -60,10 +65,5 @@ contract IdentityContract {
             return "error"
         }
         return json
-    }
-	
-	public string init(){
-
-        return "success"
     }
 }

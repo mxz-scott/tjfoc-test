@@ -1,43 +1,25 @@
 contract AuthorizationContract {
-string identityContractAddr  = "a4b2d9d61b9504541de92cc0f47b44b88a0d2332cf85dad469ea2a9e5da94650"
     struct Authorization {
-        string EnterpriseName   //授权公司名称
-        string EnterpriseCode   //授权公司Code
-        string BankName         //被授权银行/机构名称
-        string BankCode         //被授权银行/机构Code
-        string CreditName       //征信公司名称
-        string CreditCode       //征信公司ID
-        string RemoteCreditName //异地征信公司名称          
-        string RemoteCreditCode //异地征信公司ID      
-        string LocalRemote      //本地授权/异地授权区分       
-        string AuthorizedUrl    //授权证照Url
-        string AuthorizedHash   //授权证照摘要
-        string AuthType         //授权类型
-        int64  AuthStartTime    //授权开始时间戳
-        int64  AuthDays         //授权有效天数  
-        string Sender           //上链者公钥
-        int64  TxTime           //上链时间
-        string TxHash           //上链交易hash
-        int64 BlockNo          //交易区块链信息
+        string Ciphertext                   //数据密文
+        PermissionPair[] PermissionPairList //权限列表
+        string Key                          //上链唯一标识符
+        int64  TxTime                       //上链时间
+        string TxHash                       //上链交易hash
+        int64  BlockNo                      //交易区块链信息
+    }
+
+    struct PermissionPair{
+        string SecretCipher //解密密文密钥的密文
+        string Code         //加密上面字段的公钥的公司code
     }
 
     struct AuthorizationList{
         Authorization[] AuthorizationList
     }
 
-    public string AddAuthorizationList(string json,string sign,string code){
-         string args = "[\""+code+"\"]"
-        //根据征信企业code获取pubkey
-        string AdminPubKey = invoke(identityContractAddr,"GetPubKeyByCode",args)
-		AdminPubKey = base64ToString(AdminPubKey)
-        if(verify("sm2", AdminPubKey, json, sign) != true){
-            string tempErr = "Verify fail, please check sign info"
-            print(tempErr)
-            return tempErr
-        }
+    public string AddAuthorizationList(string json){
         int64 timeNow = getBlockTime()
         string txid = getTxID()
-        string pubkey = getTxSender()
         int64 height = getBlockHeight()
         AuthorizationList authList = json_to_obj<AuthorizationList>(json)
         Authorization[] authorizationList = authList.AuthorizationList
@@ -46,12 +28,9 @@ string identityContractAddr  = "a4b2d9d61b9504541de92cc0f47b44b88a0d2332cf85dad4
             Authorization auth = authorizationList[i]
             auth.TxTime = timeNow
             auth.TxHash = txid
-            auth.Sender = pubkey
             auth.BlockNo = height
-            int64 stime = auth.AuthStartTime
-            string time = itoa(stime)
             string tmpJson = obj_to_json(auth)
-            string key = "auth_"+auth.EnterpriseCode+auth.BankName+auth.CreditCode+auth.RemoteCreditCode+auth.AuthType+time
+            string key = "auth_"+auth.Key
             db_set(key,tmpJson)
         }
         json = obj_to_json(authorizationList)
@@ -60,28 +39,10 @@ string identityContractAddr  = "a4b2d9d61b9504541de92cc0f47b44b88a0d2332cf85dad4
     }
 
     //获取授权信息
-    public string GetAuthorization(string enterpriseCode,string bankName,string creditCode,string remoteCreditCode,string authType,int64 timestamp){
-        string time = itoa(timestamp)
-        if(timestamp==0){
-            time = ""
-        }
-        string prefix = "auth_"+enterpriseCode+bankName+creditCode+remoteCreditCode+authType+time
-        
-        map<string,string> res
-		//获取想要查看的前缀数据，交由过滤器过滤
-		db_search(prefix,filter,res)
+    public string GetAuthorization(string key){
         string json = ""
-		json = obj_to_json(res)
-        print("Query Result：\n" + json)
+        key = "auth_"+key
+		json = db_get<string>(key)
 		return json
-    }
-    //过滤器
-	public bool filter(string val){
-		return true
-	}
-	
-    public string init(){
-
-    return "success"
     }
 }
