@@ -200,6 +200,8 @@ public class GDBeforeCondition {
         mapAccInfo.put("txId",txId);
         mapAccInfo.put("response",response);
 
+        mapAccAddr.put(addr,clientNo);
+
         return mapAccInfo;
     }
 
@@ -305,7 +307,7 @@ public class GDBeforeCondition {
         investorSubjectInfo.clear();
         String cltNo = "test00001";
         investorSubjectInfo.put("对象标识",cltNo);
-        investorSubjectInfo.put("主体标识","sid" + cltNo);
+        investorSubjectInfo.put("主体标识",cltNo);
         investorSubjectInfo.put("行业主体代号","JR");
         investorSubjectInfo.put("主体类型",0);
         investorSubjectInfo.put("主体信息创建时间","2020/09/12 12:01:12");

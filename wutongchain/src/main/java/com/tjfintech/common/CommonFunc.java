@@ -1217,35 +1217,13 @@ public class CommonFunc {
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static List<Map> gdConstructShareListV1(String address, double amount, int shareProperty){
-
-        Map<String,Object> shares = new HashMap<>();
-        shares.put("address",address);
-        shares.put("amount",amount);
-        shares.put("shareProperty",shareProperty);
-
-        List<Map> shareList = new ArrayList<>();
-        shareList.add(shares);
-        return shareList;
-    }
-
-
-    public static List<Map> gdConstructShareListV1(String address, double amount, int shareProperty, List<Map> list){
-        List<Map> shareList = new ArrayList<>();
-        for(int i = 0 ; i < list.size() ; i++) {
-            shareList.add(list.get(i));
-        }
-        Map<String,Object> shares = new HashMap<>();
-        shares.put("address",address);
-        shares.put("amount",amount);
-        shares.put("shareProperty",shareProperty);
-
-        shareList.add(shares);
-        return shareList;
-    }
 
     public static List<Map> gdConstructShareList(String address, double amount, int shareProperty){
 
+        //处理登记
+        registerInfo.put("权利人账户引用",mapAccAddr.get(address));
+        //处理交易
+        txInformation.put("原持有方主体引用",address);
         Map<String,Object> shares = new HashMap<>();
         shares.put("address",address);
         shares.put("amount",amount);
@@ -1259,6 +1237,10 @@ public class CommonFunc {
     }
 
     public static List<Map> gdConstructShareList(String address, double amount, int shareProperty,List<Map> list){
+        //处理登记
+        registerInfo.put("权利人账户引用",mapAccAddr.get(address));
+        //处理交易
+        txInformation.put("原持有方主体引用",address);
         List<Map> shareList = new ArrayList<>();
         for(int i = 0 ; i < list.size() ; i++) {
             shareList.add(list.get(i));
@@ -1293,6 +1275,10 @@ public class CommonFunc {
     }
 
     public static List<Map>   gdConstructQueryShareList(String address, double amount, int shareProperty,double lockAmount,String sharePropertyCN, List<Map> list){
+        //处理登记
+        registerInfo.put("权利人账户引用",mapAccAddr.get(address));
+        //处理交易
+        txInformation.put("原持有方主体引用",address);
         List<Map> shareList = new ArrayList<>();
         for(int i = 0 ; i < list.size() ; i++) {
             shareList.add(list.get(i));
@@ -1303,6 +1289,8 @@ public class CommonFunc {
         shares.put("lockAmount",lockAmount);
         shares.put("shareProperty",shareProperty);
         shares.put("sharePropertyCN",sharePropertyCN);
+        shares.put("registerInformation",registerInfo);
+        shares.put("transactionReport",txInformation);
 
         shareList.add(shares);
         return shareList;
@@ -1318,6 +1306,11 @@ public class CommonFunc {
         return total;
     }
 
+    /***
+     * 构造股权性质编码表
+     * @return
+     * @throws Exception
+     */
     public static Map<String,String> mapShareENCN()throws Exception{
         Map<String,String> mapShareTypeCN = new HashMap<>();
         mapShareTypeCN.put("0","流通股");
@@ -1396,7 +1389,8 @@ public class CommonFunc {
     }
 
 
-    //构造检查数据
+    //构造监管数据格式检查
+    //企业主体信息
     public Map contructRegisterInfo(String TxId,int checkSize){
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(TxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
@@ -1465,7 +1459,7 @@ public class CommonFunc {
         return getSubjectInfo;
     }
 
-    //构造检查数据
+    //一个登记信息
     public Map contructOneRegisterInfo(String TxId){
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(TxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
@@ -1522,7 +1516,7 @@ public class CommonFunc {
         return getSubjectInfo;
     }
 
-
+    //交易信息
     public Map contructTxInfo(String TxId,int checkSize){
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(TxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");

@@ -137,6 +137,8 @@ public class UtilsClass {
     public static String gdAccountKeyID1,gdAccountKeyID2,gdAccountKeyID3,gdAccountKeyID4,gdAccountKeyID5,
                          gdAccountKeyID6,gdAccountKeyID7,gdAccountKeyID8,gdAccountKeyID9,gdAccountKeyID10;
 
+    public static Map mapAccAddr = new HashMap<>(); //存放地址和客户号（账户对象标识 主体标识）
+
     public static Map registerInfo = new HashMap();//05登记 //发行 股份性质变更 过户转让 股份增发
     public static Map txInformation = new HashMap();//04交易报告  //过户转让
     public static Map enterpriseSubjectInfo = new HashMap();//01主体  //挂牌企业登记
