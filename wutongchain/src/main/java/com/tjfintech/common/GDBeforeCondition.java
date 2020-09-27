@@ -545,14 +545,14 @@ public class GDBeforeCondition {
         txInformation.put("产品名称","联合股权");
         txInformation.put("交易类型",0);
         txInformation.put("交易场所","上海");
-        txInformation.put("交易描述信息","张三将股份过户转让给李四");
+        txInformation.put("交易描述信息","交易");
         txInformation.put("交易成交流水号","00000000001");
         txInformation.put("成交方式",0);
         txInformation.put("成交币种","156");
         txInformation.put("成交价格",1000);
         txInformation.put("成交数量",1000);
         txInformation.put("成交时间","2020/10/8");
-        txInformation.put("交易成交描述信息","过户交易成功");
+        txInformation.put("交易成交描述信息","交易成功");
         txInformation.put("发行方主体引用",gdCompanyID);
         txInformation.put("发行方名称","issue001");
         txInformation.put("投资方主体引用","accobj0001");
