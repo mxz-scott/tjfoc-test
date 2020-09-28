@@ -1,7 +1,6 @@
 package com.tjfintech.common;
 
 import com.tjfintech.common.Interface.GuDeng;
-import com.tjfintech.common.Interface.GuDengV1;
 import com.tjfintech.common.utils.GetTest;
 import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
