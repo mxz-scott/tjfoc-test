@@ -150,6 +150,7 @@ public class UtilsClass {
     public static Map disclosureInfo = new HashMap();//07信披  //写入公告 信息披露
     public static Map settleInfo = new HashMap();//06资金结算  //资金结算
     public static List<Map> listRegInfo = new ArrayList<>();//主体信息列表
+    public static String regNo = "regNo000000";
 
 
     //UTXO精度

@@ -2,6 +2,7 @@ package com.tjfintech.common.functionTest.guDengTestV2;
 
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.GDBeforeCondition;
+import com.tjfintech.common.GDCommonFunc;
 import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -30,6 +31,7 @@ public class GDV2_EnterpriseRegisterSpecial {
     Store store =testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
+    GDCommonFunc gdCF = new GDCommonFunc();
     GDUnitFunc uf = new GDUnitFunc();
     public static String bizNoTest = "test" + Random(12);
 
@@ -188,16 +190,16 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         //检查账户存证信息内容与传入一致
         log.info("检查资金账户存证信息内容与传入一致");
-        log.info(commonFunc.contructFundAccountInfo(AccountInfoListTxId).toString().replaceAll("\"",""));
+        log.info(commonFunc.contructFundAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll("\"",""));
         log.info(fundaccountInfo.toString());
         assertEquals(fundaccountInfo.toString().replaceAll(" ","").replaceAll("\"",""),
-                commonFunc.contructFundAccountInfo(AccountInfoListTxId).toString().replaceAll(" ","").replaceAll("\"",""));
+                commonFunc.contructFundAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
 
         log.info("检查资金账户存证信息内容与传入一致");
-        log.info(commonFunc.contructEquityAccountInfo(AccountInfoListTxId).toString().replaceAll("\"",""));
+        log.info(commonFunc.contructEquityAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll("\"",""));
         log.info(equityaccountInfo.toString());
         assertEquals(equityaccountInfo.toString().replaceAll(" ","").replaceAll("\"",""),
-                commonFunc.contructEquityAccountInfo(AccountInfoListTxId).toString().replaceAll(" ","").replaceAll("\"",""));
+                commonFunc.contructEquityAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
 
 
     }
