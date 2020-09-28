@@ -72,6 +72,32 @@ public class GDCommonFunc {
     }
 
 
+    public String getJGStoreHash2(JSONArray txArr,String Height,int offset) {
+        String storeId = "";
+        for (int i = 0; i < txArr.size(); i++) {
+            log.info("区块交易数 " + txArr.size());
+            //判断是存证则存储
+            if (JSONObject.fromObject(store.GetTxDetail(txArr.get(i).toString())).getJSONObject("data").getJSONObject("header").getInt("type") == 0) {
+                storeId = txArr.get(i).toString();
+                break;
+            }
+        }
+        if(storeId.equals("")) {
+            log.info("存证与交易并未打在同一个区块中，尝试在下一个区块中查找报送数据存证");
+            txArr = JSONObject.fromObject(store.GetBlockByHeight(Integer.parseInt(Height) + offset)).getJSONObject("data").getJSONArray("txs");
+            for (int j = 0; j < txArr.size(); j++) {
+                //判断是存证则存储
+                if (JSONObject.fromObject(store.GetTxDetail(txArr.get(j).toString())).getJSONObject("data").getJSONObject("header").getInt("type") == 0) {
+                    storeId = txArr.get(j).toString();
+                    break;
+                }
+            }
+        }
+
+        assertEquals(false, storeId.equals(""));
+        return storeId;
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static List<Map> gdConstructShareList(String address, double amount, int shareProperty){
@@ -538,16 +564,23 @@ public class GDCommonFunc {
     }
 
     public Map contructEnterpriseSubInfo(String subTxId){
+        log.info("检查的交易id " + subTxId);
+        com.alibaba.fastjson.JSONObject jobj2 = null;
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(subTxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
-        com.alibaba.fastjson.JSONArray jsonArray2 = com.alibaba.fastjson.JSONArray.parseArray(storeData2);
-        com.alibaba.fastjson.JSONObject jobj2 = null;
+        //如果是单独的一个则直接使用JSONObject进行解析
+        if(storeData2.startsWith("{")){
+            jobj2 = com.alibaba.fastjson.JSONObject.parseObject(storeData2);
+        }else {
+        //storedata是个list时
+            com.alibaba.fastjson.JSONArray jsonArray2 = com.alibaba.fastjson.JSONArray.parseArray(storeData2);
 
-        for(int i=0;i<jsonArray2.size();i++){
-            com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
-            if( objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals("主体")){
-                jobj2 = objTemp;
-                break;
+            for (int i = 0; i < jsonArray2.size(); i++) {
+                com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
+                if (objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals("主体")) {
+                    jobj2 = objTemp;
+                    break;
+                }
             }
         }
 
@@ -606,6 +639,7 @@ public class GDCommonFunc {
     }
 
     public Map contructPersonalSubInfo(String personalTxId){
+        log.info("检查的交易id " + personalTxId);
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(personalTxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
         com.alibaba.fastjson.JSONArray jsonArray2 = com.alibaba.fastjson.JSONArray.parseArray(storeData2);
@@ -659,6 +693,7 @@ public class GDCommonFunc {
      * @return
      */
     public Map contructFundAccountInfo(String TxId,String objId){
+        log.info("检查的交易id " + TxId);
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(TxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
         com.alibaba.fastjson.JSONArray jsonArray2 = com.alibaba.fastjson.JSONArray.parseArray(storeData2);
@@ -675,7 +710,7 @@ public class GDCommonFunc {
             com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
             if( objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals("账户") &&
                     (objTemp.getJSONObject("body").getJSONObject("账户信息").getJSONObject("账户基本信息").getIntValue("账户类型") == 1) &&
-                    jobjOK.getJSONObject("body").getJSONObject("对象信息").getString("账户对象标识").equals(objId)){
+                    objTemp.getJSONObject("body").getJSONObject("对象信息").getString("账户对象标识").equals(objId)){
                 jobjOK = objTemp;
                 break;
             }
@@ -721,12 +756,13 @@ public class GDCommonFunc {
     }
 
     /***
-     * 构造资金账户
+     * 构造股权账户
      * @param TxId  交易id
      * @param objId  账户对象标识
      * @return
      */
     public Map contructEquityAccountInfo(String TxId,String objId){
+        log.info("检查的交易id " + TxId);
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(TxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
         com.alibaba.fastjson.JSONArray jsonArray2 = com.alibaba.fastjson.JSONArray.parseArray(storeData2);
@@ -742,8 +778,8 @@ public class GDCommonFunc {
         for(int i=0;i<jsonArray2.size();i++){
             com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
             if( objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals("账户") &&
-                    (objTemp.getJSONObject("body").getJSONObject("账户信息").getJSONObject("账户基本信息").getIntValue("账户类型") == 1) &&
-                    jobjOK.getJSONObject("body").getJSONObject("对象信息").getString("账户对象标识").equals(objId)){
+                    (objTemp.getJSONObject("body").getJSONObject("账户信息").getJSONObject("账户基本信息").getIntValue("账户类型") == 0) &&
+                    objTemp.getJSONObject("body").getJSONObject("对象信息").getString("账户对象标识").equals(objId)){
                 jobjOK = objTemp;
                 break;
             }
@@ -790,16 +826,23 @@ public class GDCommonFunc {
 
 
     public Map contructEquityProdInfo(String prodTxId){
+        log.info("检查的交易id " + prodTxId);
+        com.alibaba.fastjson.JSONObject jobj2 = null;
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(prodTxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
-        com.alibaba.fastjson.JSONArray jsonArray2 = com.alibaba.fastjson.JSONArray.parseArray(storeData2);
 
-        com.alibaba.fastjson.JSONObject jobj2 = null;
-        for(int i=0;i<jsonArray2.size();i++){
-            com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
-            if( objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals("产品")){
-                jobj2 = objTemp;
-                break;
+        //如果是单独的一个则直接使用JSONObject进行解析
+        if(storeData2.startsWith("{")){
+            jobj2 = com.alibaba.fastjson.JSONObject.parseObject(storeData2);
+        }else {
+            //storedata是个list时
+            com.alibaba.fastjson.JSONArray jsonArray2 = com.alibaba.fastjson.JSONArray.parseArray(storeData2);
+            for (int i = 0; i < jsonArray2.size(); i++) {
+                com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
+                if (objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals("产品")) {
+                    jobj2 = objTemp;
+                    break;
+                }
             }
         }
 
@@ -841,16 +884,22 @@ public class GDCommonFunc {
     }
 
     public Map contructBondProdInfo(String prodTxId){
+        com.alibaba.fastjson.JSONObject jobj2 = null;
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(prodTxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
-        com.alibaba.fastjson.JSONArray jsonArray2 = com.alibaba.fastjson.JSONArray.parseArray(storeData2);
 
-        com.alibaba.fastjson.JSONObject jobj2 = null;
-        for(int i=0;i<jsonArray2.size();i++){
-            com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
-            if( objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals("产品")){
-                jobj2 = objTemp;
-                break;
+        //如果是单独的一个则直接使用JSONObject进行解析
+        if(storeData2.startsWith("{")){
+            jobj2 = com.alibaba.fastjson.JSONObject.parseObject(storeData2);
+        }else {
+            //storedata是个list时
+            com.alibaba.fastjson.JSONArray jsonArray2 = com.alibaba.fastjson.JSONArray.parseArray(storeData2);
+            for (int i = 0; i < jsonArray2.size(); i++) {
+                com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
+                if (objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals("产品")) {
+                    jobj2 = objTemp;
+                    break;
+                }
             }
         }
         com.alibaba.fastjson.JSONObject objProdBase = jobj2.getJSONObject("body").getJSONObject("产品信息").getJSONObject("产品基本信息");
