@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.SDKADD;
-import static com.tjfintech.common.utils.UtilsClass.subLedger;
-import static org.bouncycastle.asn1.x500.style.RFC4519Style.description;
 
 @Slf4j
 public class GoCredit implements Credit {

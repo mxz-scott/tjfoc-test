@@ -19,6 +19,7 @@ import java.util.*;
 
 import static com.tjfintech.common.utils.FileOperation.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClassGD.*;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -71,19 +72,22 @@ public class GDCommonFunc {
     }
 
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static List<Map> gdConstructShareList(String address, double amount, int shareProperty){
+        GDBeforeCondition gdbf = new GDBeforeCondition();
+        Map tempReg = gdbf.init05RegInfo();
+        tempReg.put("权利人账户引用",mapAccAddr.get(address));
 
-        //处理登记
-        registerInfo.put("权利人账户引用",mapAccAddr.get(address));
-        //处理交易
-        txInformation.put("原持有方主体引用",address);
+        Map tempTxInfo = gdbf.init04TxInfo();
+        tempTxInfo.put("原持有方主体引用",mapAccAddr.get(address));
+
         Map<String,Object> shares = new HashMap<>();
         shares.put("address",address);
         shares.put("amount",amount);
         shares.put("shareProperty",shareProperty);
-        shares.put("registerInformation",registerInfo);
-        shares.put("transactionReport",txInformation);
+        shares.put("registerInformation",tempReg);
+        shares.put("transactionReport",tempTxInfo);
 
         List<Map> shareList = new ArrayList<>();
         shareList.add(shares);
@@ -91,10 +95,13 @@ public class GDCommonFunc {
     }
 
     public static List<Map> gdConstructShareList(String address, double amount, int shareProperty,List<Map> list){
-        //处理登记
-        registerInfo.put("权利人账户引用",mapAccAddr.get(address));
-        //处理交易
-        txInformation.put("原持有方主体引用",address);
+        GDBeforeCondition gdbf = new GDBeforeCondition();
+        Map tempReg = gdbf.init05RegInfo();
+        tempReg.put("权利人账户引用",mapAccAddr.get(address));
+
+        Map tempTxInfo = gdbf.init04TxInfo();
+        tempTxInfo.put("原持有方主体引用",mapAccAddr.get(address));
+
         List<Map> shareList = new ArrayList<>();
         for(int i = 0 ; i < list.size() ; i++) {
             shareList.add(list.get(i));
@@ -103,8 +110,8 @@ public class GDCommonFunc {
         shares.put("address",address);
         shares.put("amount",amount);
         shares.put("shareProperty",shareProperty);
-        shares.put("registerInformation",registerInfo);
-        shares.put("transactionReport",txInformation);
+        shares.put("registerInformation",tempReg);
+        shares.put("transactionReport",tempTxInfo);
 
         shareList.add(shares);
         return shareList;
@@ -128,11 +135,11 @@ public class GDCommonFunc {
         return getShareList;
     }
 
-    public static List<Map>   gdConstructQueryShareList(String address, double amount, int shareProperty,double lockAmount,String sharePropertyCN, List<Map> list){
+    public static List<Map> gdConstructQueryShareList(String address, double amount, int shareProperty,double lockAmount,String sharePropertyCN, List<Map> list){
         //处理登记
         registerInfo.put("权利人账户引用",mapAccAddr.get(address));
         //处理交易
-        txInformation.put("原持有方主体引用",address);
+        txInformation.put("原持有方主体引用",mapAccAddr.get(address));
         List<Map> shareList = new ArrayList<>();
         for(int i = 0 ; i < list.size() ; i++) {
             shareList.add(list.get(i));
@@ -246,25 +253,34 @@ public class GDCommonFunc {
     //构造监管数据格式检查
     //登记信息
     public Map contructRegisterInfo(String TxId,int checkSize,String objId){
+
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(TxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
         com.alibaba.fastjson.JSONArray jsonArray2 = com.alibaba.fastjson.JSONArray.parseArray(storeData2);
 
+        if(!storeData2.contains(objId)){
+            assertEquals("未包含检查objID：" + objId,false,true);
+            return null;
+        }
+
         com.alibaba.fastjson.JSONObject jobjOK = null;
 
-        //检查交易及登记array size
+        log.info("检查交易及登记array size:" + jsonArray2.size());
         assertEquals(checkSize,jsonArray2.size());
 
+        log.info("获取指定存证信息");
         //获取登记存证信息 且权利人账户引用为指定的对象标识
         for(int i=0;i<jsonArray2.size();i++){
+//            log.info("check index " + i);
             com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
+//            log.info(objTemp.toString());
             if( objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals("登记") &&
                     objTemp.getJSONObject("body").getJSONObject("登记信息").getJSONObject("权利登记").getJSONObject("产品登记").getString("权利人账户引用").equals(objId)){
                 jobjOK = objTemp;
                 break;
             }
         }
-
+        log.info(jobjOK.toString());
         com.alibaba.fastjson.JSONObject objRefList = jobjOK.getJSONObject("body").getJSONObject("登记信息").getJSONObject("名册登记");
         com.alibaba.fastjson.JSONObject objRegRig = jobjOK.getJSONObject("body").getJSONObject("登记信息").getJSONObject("权利登记");
 
@@ -379,21 +395,27 @@ public class GDCommonFunc {
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
         com.alibaba.fastjson.JSONArray jsonArray2 = com.alibaba.fastjson.JSONArray.parseArray(storeData2);
 
+        if(!storeData2.contains(objId)){
+            assertEquals("未包含检查objID：" + objId,false,true);
+            return null;
+        }
         com.alibaba.fastjson.JSONObject jobjOK = null;
 
-        //检查交易及登记array size
+        log.info("检查交易及登记array size:" + jsonArray2.size()) ;
         assertEquals(checkSize,jsonArray2.size());
 
-        //获取交易存证数据 且交易的原持有方主体引用为指定对象标识
+        log.info("获取交易存证数据 且交易的原持有方主体引用为指定对象标识");
         for(int i=0;i<jsonArray2.size();i++){
+//            log.info("index " + i);
             com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
+//            log.info(objTemp.toString());
             if( objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals("交易报告") &&
                     objTemp.getJSONObject("body").getJSONObject("交易报告信息").getJSONObject("交易成交信息").getJSONObject("交易成交方信息").getString("原持有方主体引用").equals(objId)){
                 jobjOK = objTemp;
                 break;
             }
         }
-
+        log.info(jobjOK.toString());
         com.alibaba.fastjson.JSONObject objBase = jobjOK.getJSONObject("body").getJSONObject("交易报告信息").getJSONObject("交易基本信息");
         com.alibaba.fastjson.JSONObject objDeal = jobjOK.getJSONObject("body").getJSONObject("交易报告信息").getJSONObject("交易成交信息");
 
@@ -641,6 +663,11 @@ public class GDCommonFunc {
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
         com.alibaba.fastjson.JSONArray jsonArray2 = com.alibaba.fastjson.JSONArray.parseArray(storeData2);
 
+        if(!storeData2.contains(objId)){
+            assertEquals("未包含检查objID：" + objId,false,true);
+            return null;
+        }
+
         com.alibaba.fastjson.JSONObject jobjOK = null;
 
         //获取账户类型  资金账户 指定账户对象标识的存证信息
@@ -703,6 +730,11 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(TxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
         com.alibaba.fastjson.JSONArray jsonArray2 = com.alibaba.fastjson.JSONArray.parseArray(storeData2);
+
+        if(!storeData2.contains(objId)){
+            assertEquals("未包含检查objID：" + objId,false,true);
+            return null;
+        }
 
         com.alibaba.fastjson.JSONObject jobjOK = null;
 

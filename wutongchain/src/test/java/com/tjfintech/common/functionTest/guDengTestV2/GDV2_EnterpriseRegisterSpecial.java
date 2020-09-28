@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClassGD.*;
 import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -72,15 +73,15 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         //检查主体存证信息内容与传入一致
         log.info("检查主体存证信息内容与传入一致");
-        log.info(commonFunc.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
         log.info(enterpriseSubjectInfo.toString());
-        assertEquals(enterpriseSubjectInfo.toString(), commonFunc.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
+        assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
 
         //检查产品存证信息内容与传入一致
         log.info("检查产品存证信息内容与传入一致");
-        log.info(commonFunc.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
         log.info(equityProductInfo.toString());
-        assertEquals(equityProductInfo.toString(), commonFunc.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
+        assertEquals(equityProductInfo.toString(), gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
     }
 
 
@@ -108,15 +109,15 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         //检查主体存证信息内容与传入一致
         log.info("检查主体存证信息内容与传入一致");
-        log.info(commonFunc.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
         log.info(enterpriseSubjectInfo.toString());
-        assertEquals(enterpriseSubjectInfo.toString(), commonFunc.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
+        assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
 
         //检查产品存证信息内容与传入一致
         log.info("检查产品存证信息内容与传入一致");
-        log.info(commonFunc.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
         log.info(bondProductInfo.toString());
-        assertEquals(bondProductInfo.toString(), commonFunc.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
+        assertEquals(bondProductInfo.toString(), gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
 
 
     }
@@ -148,9 +149,9 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         //检查主体存证信息内容与传入一致
         log.info("检查主体存证信息内容与传入一致");
-        log.info(commonFunc.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
         log.info(enterpriseSubjectInfo.toString());
-        assertEquals(enterpriseSubjectInfo.toString(), commonFunc.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
+        assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
 
     }
 
@@ -183,23 +184,23 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         //检查主体存证信息内容与传入一致
         log.info("检查主体存证信息内容与传入一致");
-        log.info(commonFunc.contructPersonalSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructPersonalSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
         log.info(investorSubjectInfo.toString());
         assertEquals(investorSubjectInfo.toString().replaceAll(" ","").replaceAll("\"",""),
-                commonFunc.contructPersonalSubInfo(SubjectObjectTxId).toString().replaceAll(" ","").replaceAll("\"",""));
+                gdCF.contructPersonalSubInfo(SubjectObjectTxId).toString().replaceAll(" ","").replaceAll("\"",""));
 
         //检查账户存证信息内容与传入一致
         log.info("检查资金账户存证信息内容与传入一致");
-        log.info(commonFunc.contructFundAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll("\"",""));
+        log.info(gdCF.contructFundAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll("\"",""));
         log.info(fundaccountInfo.toString());
         assertEquals(fundaccountInfo.toString().replaceAll(" ","").replaceAll("\"",""),
-                commonFunc.contructFundAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
+                gdCF.contructFundAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
 
         log.info("检查资金账户存证信息内容与传入一致");
-        log.info(commonFunc.contructEquityAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll("\"",""));
+        log.info(gdCF.contructEquityAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll("\"",""));
         log.info(equityaccountInfo.toString());
         assertEquals(equityaccountInfo.toString().replaceAll(" ","").replaceAll("\"",""),
-                commonFunc.contructEquityAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
+                gdCF.contructEquityAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
 
 
     }

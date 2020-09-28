@@ -20,8 +20,9 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.tjfintech.common.CommonFunc.*;
+import static com.tjfintech.common.GDCommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClassGD.*;
 import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -107,15 +108,15 @@ public class GDV2_CheckJGFormat_AllFlow {
             registerInfo.put("当前可用余额", issueAmount);   //当前当前可用余额修改为当前实际可用余额
             registerInfo.put("认购数量", issueAmount);   //当前认购数量修改为当前实际余额
             registerInfo.put("冻结变动额", 0);   //冻结变动额修改为当前实际冻结变更额
-            log.info(commonFunc.contructRegisterInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
+            log.info(gdCF.contructRegisterInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
             log.info(registerInfo.toString());
-            assertEquals(registerInfo.toString(), commonFunc.contructRegisterInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
+            assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
 
             log.info("检查发行存证交易格式化及信息内容与传入一致:" + tempObjId);
             txInformation.put("原持有方主体引用",tempObjId);
-            log.info(commonFunc.contructTxInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
+            log.info(gdCF.contructTxInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
             log.info(txInformation.toString());
-            assertEquals(txInformation.toString(), commonFunc.contructTxInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
+            assertEquals(txInformation.toString(), gdCF.contructTxInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
         }
         log.info("================================检查存证数据格式化《结束》================================");
 
@@ -222,9 +223,9 @@ public class GDV2_CheckJGFormat_AllFlow {
 
             log.info("检查股权性质变更存证登记格式化及信息内容与传入一致");
             registerInfo.put("权利人账户引用",tempObjId);
-            log.info(commonFunc.contructRegisterInfo(storeId,2,tempObjId).toString().replaceAll("\"",""));
+            log.info(gdCF.contructRegisterInfo(storeId,2,tempObjId).toString().replaceAll("\"",""));
             log.info(registerInfo.toString());
-            assertEquals(registerInfo.toString(), commonFunc.contructRegisterInfo(storeId,2,tempObjId).toString().replaceAll("\"",""));
+            assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId,2,tempObjId).toString().replaceAll("\"",""));
         }
         log.info("================================检查存证数据格式化《结束》================================");
 
@@ -329,28 +330,28 @@ public class GDV2_CheckJGFormat_AllFlow {
 
         log.info("检查过户转让存证登记格式化及信息内容与传入一致:" + tempObjIdFrom);
         registerInfo.put("权利人账户引用",tempObjIdFrom);
-        log.info(commonFunc.contructRegisterInfo(storeId, 3, tempObjIdFrom).toString().replaceAll("\"", ""));
+        log.info(gdCF.contructRegisterInfo(storeId, 3, tempObjIdFrom).toString().replaceAll("\"", ""));
         log.info(registerInfo.toString());
-        assertEquals(registerInfo.toString(), commonFunc.contructRegisterInfo(storeId,3,tempObjIdFrom).toString().replaceAll("\"",""));
+        assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId,3,tempObjIdFrom).toString().replaceAll("\"",""));
 
         log.info("检查过户转让存证交易格式化及信息内容与传入一致:" + tempObjIdFrom);
         txInformation.put("原持有方主体引用",tempObjIdFrom);
-        log.info(commonFunc.contructTxInfo(storeId, 3, tempObjIdFrom).toString().replaceAll("\"", ""));
+        log.info(gdCF.contructTxInfo(storeId, 3, tempObjIdFrom).toString().replaceAll("\"", ""));
         log.info(txInformation.toString());
-        assertEquals(txInformation.toString(), commonFunc.contructTxInfo(storeId, 3, tempObjIdFrom).toString().replaceAll("\"", ""));
+        assertEquals(txInformation.toString(), gdCF.contructTxInfo(storeId, 3, tempObjIdFrom).toString().replaceAll("\"", ""));
 
 
         log.info("检查过户转让存证登记格式化及信息内容与传入一致:" + tempObjIdTo);
         registerInfo.put("权利人账户引用",tempObjIdTo);
-        log.info(commonFunc.contructRegisterInfo(storeId, 3, tempObjIdTo).toString().replaceAll("\"", ""));
+        log.info(gdCF.contructRegisterInfo(storeId, 3, tempObjIdTo).toString().replaceAll("\"", ""));
         log.info(registerInfo.toString());
-        assertEquals(registerInfo.toString(), commonFunc.contructRegisterInfo(storeId,3,tempObjIdTo).toString().replaceAll("\"",""));
+        assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId,3,tempObjIdTo).toString().replaceAll("\"",""));
 
         log.info("检查过户转让存证交易格式化及信息内容与传入一致:" + tempObjIdTo);
         txInformation.put("原持有方主体引用",tempObjIdTo);
-        log.info(commonFunc.contructTxInfo(storeId, 3, tempObjIdTo).toString().replaceAll("\"", ""));
+        log.info(gdCF.contructTxInfo(storeId, 3, tempObjIdTo).toString().replaceAll("\"", ""));
         log.info(txInformation.toString());
-        assertEquals(txInformation.toString(), commonFunc.contructTxInfo(storeId, 3, tempObjIdTo).toString().replaceAll("\"", ""));
+        assertEquals(txInformation.toString(), gdCF.contructTxInfo(storeId, 3, tempObjIdTo).toString().replaceAll("\"", ""));
 
 
         log.info("================================检查存证数据格式化《结束》================================");
@@ -464,15 +465,15 @@ public class GDV2_CheckJGFormat_AllFlow {
             log.info("检查增发存证登记格式化及信息内容与传入一致");
             registerInfo.put("权利人账户引用",tempObjId);
             registerInfo.put("变动额",increaseAmount);     //变动额修改为单个账户发行数量
-            log.info(commonFunc.contructRegisterInfo(storeId,5,tempObjId).toString().replaceAll("\"",""));
+            log.info(gdCF.contructRegisterInfo(storeId,5,tempObjId).toString().replaceAll("\"",""));
             log.info(registerInfo.toString());
-            assertEquals(registerInfo.toString(), commonFunc.contructRegisterInfo(storeId,5,tempObjId).toString().replaceAll("\"",""));
+            assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId,5,tempObjId).toString().replaceAll("\"",""));
 
             log.info("检查增发存证产品格式化及信息内容与传入一致");
 
-            log.info(commonFunc.contructBondProdInfo(storeId).toString().replaceAll("\"",""));
+            log.info(gdCF.contructBondProdInfo(storeId).toString().replaceAll("\"",""));
             log.info(bondProductInfo.toString());
-            assertEquals(bondProductInfo.toString(), commonFunc.contructBondProdInfo(storeId).toString().replaceAll("\"",""));
+            assertEquals(bondProductInfo.toString(), gdCF.contructBondProdInfo(storeId).toString().replaceAll("\"",""));
         }
 
         log.info("检查增发存证主体格式化及信息内容与传入一致");
@@ -480,9 +481,9 @@ public class GDV2_CheckJGFormat_AllFlow {
         String getTotal = enterpriseSubjectInfo.get("股本总数(股)").toString();
         BigDecimal oldTotal = new BigDecimal(getTotal);
         enterpriseSubjectInfo.put("股本总数(股)",oldTotal.add(new BigDecimal(increaseAmount*3)));     //变更总股本数为增发量 + 原始股本总数
-        log.info(commonFunc.contructEnterpriseSubInfo(storeId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructEnterpriseSubInfo(storeId).toString().replaceAll("\"",""));
         log.info(enterpriseSubjectInfo.toString());
-        assertEquals(enterpriseSubjectInfo.toString(), commonFunc.contructEnterpriseSubInfo(storeId).toString().replaceAll("\"",""));
+        assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(storeId).toString().replaceAll("\"",""));
 
         log.info("================================检查存证数据格式化《结束》================================");
 
@@ -587,9 +588,9 @@ public class GDV2_CheckJGFormat_AllFlow {
 
         log.info("检查冻结存证登记格式化及信息内容与传入一致");
         registerInfo.put("冻结变动额",lockAmount);   //冻结变动额修改为当前实际冻结变更额
-        log.info(commonFunc.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
         log.info(registerInfo.toString());
-        assertEquals(registerInfo.toString(), commonFunc.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        assertEquals(registerInfo.toString(), gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
 
         log.info("================================检查存证数据格式化《结束》================================");
 
@@ -691,9 +692,9 @@ public class GDV2_CheckJGFormat_AllFlow {
         String storeId = gdCF.getJGStoreHash(txId,1);
 
         log.info("检查解除冻结存证登记格式化及信息内容与传入一致");
-        log.info(commonFunc.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
         log.info(registerInfo.toString());
-        assertEquals(registerInfo.toString(), commonFunc.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        assertEquals(registerInfo.toString(), gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
 
         log.info("================================检查存证数据格式化《结束》================================");
 
@@ -809,9 +810,9 @@ public class GDV2_CheckJGFormat_AllFlow {
         String tempObjId = mapAccAddr.get(gdAccount4).toString();
         log.info("检查回收存证登记格式化及信息内容与传入一致");
         registerInfo.put("变动额",(-1) * recycleAmount);     //变动额修改为单个账户发行数量
-        log.info(commonFunc.contructRegisterInfo(storeId,2,tempObjId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructRegisterInfo(storeId,2,tempObjId).toString().replaceAll("\"",""));
         log.info(registerInfo.toString());
-        assertEquals(registerInfo.toString(), commonFunc.contructRegisterInfo(storeId,2,tempObjId).toString().replaceAll("\"",""));
+        assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId,2,tempObjId).toString().replaceAll("\"",""));
 
 
         log.info("检查回收存证主体格式化及信息内容与传入一致");
@@ -819,9 +820,9 @@ public class GDV2_CheckJGFormat_AllFlow {
         String getTotal = enterpriseSubjectInfo.get("股本总数(股)").toString();
         BigDecimal oldTotal = new BigDecimal(getTotal);
         enterpriseSubjectInfo.put("股本总数(股)",oldTotal.subtract(new BigDecimal(recycleAmount)));     //变更总股本数为增发量 + 原始股本总数
-        log.info(commonFunc.contructEnterpriseSubInfo(storeId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructEnterpriseSubInfo(storeId).toString().replaceAll("\"",""));
         log.info(enterpriseSubjectInfo.toString());
-        assertEquals(enterpriseSubjectInfo.toString(), commonFunc.contructEnterpriseSubInfo(storeId).toString().replaceAll("\"",""));
+        assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(storeId).toString().replaceAll("\"",""));
 
         log.info("================================检查存证数据格式化《结束》================================");
 
@@ -938,9 +939,9 @@ public class GDV2_CheckJGFormat_AllFlow {
 
             log.info("检查回收存证登记格式化及信息内容与传入一致");
             registerInfo.put("变动额", (-1) * Double.parseDouble(tempAmount));     //变动额修改为单个账户发行数量
-            log.info(commonFunc.contructRegisterInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
+            log.info(gdCF.contructRegisterInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
             log.info(registerInfo.toString());
-            //assertEquals(registerInfo.toString(), commonFunc.contructRegisterInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
+            //assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
 
         }
         log.info("检查回收存证主体格式化及信息内容与传入一致");
@@ -948,9 +949,9 @@ public class GDV2_CheckJGFormat_AllFlow {
         String getTotal = enterpriseSubjectInfo.get("股本总数(股)").toString();
         BigDecimal oldTotal = new BigDecimal(getTotal);
         enterpriseSubjectInfo.put("股本总数(股)",oldTotal.subtract(new BigDecimal(recycleAmount * 4)));     //变更总股本数为增发量 + 原始股本总数
-        log.info(commonFunc.contructEnterpriseSubInfo(storeId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructEnterpriseSubInfo(storeId).toString().replaceAll("\"",""));
         log.info(enterpriseSubjectInfo.toString());
-        assertEquals(enterpriseSubjectInfo.toString(), commonFunc.contructEnterpriseSubInfo(storeId).toString().replaceAll("\"",""));
+        assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(storeId).toString().replaceAll("\"",""));
 
         log.info("================================检查存证数据格式化《结束》================================");
 
@@ -1091,16 +1092,16 @@ public class GDV2_CheckJGFormat_AllFlow {
             registerInfo.put("变动额", tempAmount);
             registerInfo.put("当前可用余额", tempAmount);
             registerInfo.put("登记时间", sd);
-            log.info(commonFunc.contructRegisterInfo(storeId, 9,tempObjId).toString().replaceAll("\"", ""));
+            log.info(gdCF.contructRegisterInfo(storeId, 9,tempObjId).toString().replaceAll("\"", ""));
             log.info(registerInfo.toString());
-            assertEquals(registerInfo.toString(), commonFunc.contructRegisterInfo(storeId, 9,tempObjId).toString().replaceAll("\"", ""));
+            assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId, 9,tempObjId).toString().replaceAll("\"", ""));
 
         }
         log.info("检查场内转板存证产品格式化及信息内容与传入一致");
 
-        log.info(commonFunc.contructBondProdInfo(storeId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructBondProdInfo(storeId).toString().replaceAll("\"",""));
         log.info(bondProductInfo.toString());
-        assertEquals(bondProductInfo.toString(), commonFunc.contructBondProdInfo(storeId).toString().replaceAll("\"",""));
+        assertEquals(bondProductInfo.toString(), gdCF.contructBondProdInfo(storeId).toString().replaceAll("\"",""));
 
         log.info("================================检查存证数据格式化《结束》================================");
 
@@ -1191,15 +1192,15 @@ public class GDV2_CheckJGFormat_AllFlow {
 
         log.info("检查销户存证登记格式化及信息内容与传入一致");
         fundaccountInfo.put("账号状态",1);  //变更账号状态为1
-        log.info(commonFunc.contructFundAccountInfo(storeId,clntNo).toString().replaceAll("\"",""));
+        log.info(gdCF.contructFundAccountInfo(storeId,clntNo).toString().replaceAll("\"",""));
         log.info(fundaccountInfo.toString());
-        assertEquals(fundaccountInfo.toString(), commonFunc.contructFundAccountInfo(storeId,clntNo).toString().replaceAll("\"",""));
+        assertEquals(fundaccountInfo.toString(), gdCF.contructFundAccountInfo(storeId,clntNo).toString().replaceAll("\"",""));
 
         log.info("检查销户存证产品格式化及信息内容与传入一致");
         equityaccountInfo.put("账号状态",1);  //变更账号状态为1
-        log.info(commonFunc.contructEquityAccountInfo(storeId,clntNo).toString().replaceAll("\"",""));
+        log.info(gdCF.contructEquityAccountInfo(storeId,clntNo).toString().replaceAll("\"",""));
         log.info(equityaccountInfo.toString());
-        assertEquals(equityaccountInfo.toString(), commonFunc.contructEquityAccountInfo(storeId,clntNo).toString().replaceAll("\"",""));
+        assertEquals(equityaccountInfo.toString(), gdCF.contructEquityAccountInfo(storeId,clntNo).toString().replaceAll("\"",""));
         log.info("================================检查存证数据格式化《结束》================================");
 
     }
@@ -1221,9 +1222,9 @@ public class GDV2_CheckJGFormat_AllFlow {
 
 
         log.info("检查信批存证格式化及信息内容与传入一致");
-        log.info(commonFunc.contructPublishInfo(txId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructPublishInfo(txId).toString().replaceAll("\"",""));
         log.info(disclosureInfo.toString());
-        assertEquals(disclosureInfo.toString(), commonFunc.contructPublishInfo(txId).toString().replaceAll("\"",""));
+        assertEquals(disclosureInfo.toString(), gdCF.contructPublishInfo(txId).toString().replaceAll("\"",""));
 
 
     }
@@ -1239,9 +1240,9 @@ public class GDV2_CheckJGFormat_AllFlow {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
         log.info("检查资金结算存证格式化及信息内容与传入一致");
-        log.info(commonFunc.contructSettleInfo(txId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructSettleInfo(txId).toString().replaceAll("\"",""));
         log.info(settleInfo.toString());
-        assertEquals(settleInfo.toString(), commonFunc.contructSettleInfo(txId).toString().replaceAll("\"",""));
+        assertEquals(settleInfo.toString(), gdCF.contructSettleInfo(txId).toString().replaceAll("\"",""));
     }
 
 

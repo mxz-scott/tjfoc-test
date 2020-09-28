@@ -21,8 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.CommonFunc.*;
+import static com.tjfintech.common.GDCommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClassGD.*;
 import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
