@@ -543,7 +543,8 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         log.info("增发前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getDouble("股本总数(股)"));
+        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";
@@ -678,7 +679,8 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         log.info("增发后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getDouble("股本总数(股)"));
+        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
 
         log.info("判断增发前后机构主体查询总股本数增加数正确");
         assertEquals(totalShares.add(new BigDecimal("3000")),totalShares2);
@@ -915,7 +917,8 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         log.info("回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getDouble("股本总数(股)"));
+        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
         int totalHolderAccount = JSONObject.fromObject(query2).getJSONObject("data").getInt("股东总数（个）");
 
         regNo = "recylce" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
@@ -1029,7 +1032,8 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         log.info("判断回收一个完全账户后机构主体查询总股本数增加数正确");
         query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getDouble("股本总数(股)"));
+        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
         int totalHolderAccount2 = JSONObject.fromObject(query2).getJSONObject("data").getInt("股东总数（个）");
         assertEquals(totalShares.subtract(new BigDecimal(recycleAmount)),totalShares2);
 //        assertEquals(totalHolderAccount2 + 1,totalHolderAccount);//判断股东总数减一
@@ -1147,7 +1151,8 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         log.info("多个回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getDouble("股本总数(股)"));
+        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
 
         regNo = "recycle2" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
         registerInfo.put("登记流水号",regNo);       //更新对比的登记流水号
@@ -1253,7 +1258,8 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         log.info("多个回收后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getDouble("股本总数(股)"));
+        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
 
         log.info("判断增发前后机构主体查询总股本数增加数正确");
         assertEquals(0,totalShares2);

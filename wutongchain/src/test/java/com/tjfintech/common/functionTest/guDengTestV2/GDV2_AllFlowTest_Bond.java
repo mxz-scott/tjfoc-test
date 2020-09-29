@@ -62,11 +62,6 @@ public class GDV2_AllFlowTest_Bond {
         Map jsonMap = JSONObject.fromObject(response).getJSONObject("data");
         jsonMap.put("对象标识",gdCompanyID);
 
-        log.info("判断获取的主体信息是否与传入的一致");
-        assertEquals(44,enterpriseSubjectInfo.size());
-        assertEquals(enterpriseSubjectInfo.size(),jsonMap.size());
-
-
 
         //查询投资者信息
         //查询企业股东信息
@@ -370,8 +365,6 @@ public class GDV2_AllFlowTest_Bond {
         //查询股东持股情况 无当前股权代码信息
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
         assertEquals(gdAccClientNo1,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
-//        String get = JSONObject.fromObject(JSONObject.fromObject(query).getJSONObject("data").getJSONArray("accountList").get(0)).getString("shareholderNo");
-//        assertEquals("SH"+gdAccClientNo1,get);
 
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
@@ -417,7 +410,8 @@ public class GDV2_AllFlowTest_Bond {
 
         log.info("增发前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getDouble("股本总数(股)"));
+        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";
@@ -468,8 +462,6 @@ public class GDV2_AllFlowTest_Bond {
         //查询股东持股情况 无当前股权代码信息
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
         assertEquals(gdAccClientNo1,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
-//        String get = JSONObject.fromObject(JSONObject.fromObject(query).getJSONObject("data").getJSONArray("accountList").get(0)).getString("shareholderNo");
-//        assertEquals("SH"+gdAccClientNo1,get);
 
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
@@ -512,7 +504,8 @@ public class GDV2_AllFlowTest_Bond {
 
         log.info("增发后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getDouble("股本总数(股)"));
+        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
 
         log.info("判断增发前后机构主体查询总股本数增加数正确");
         assertEquals(totalShares.add(new BigDecimal("4000")),totalShares2);
@@ -573,9 +566,6 @@ public class GDV2_AllFlowTest_Bond {
         //查询股东持股情况 无当前股权代码信息
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
         assertEquals(gdAccClientNo1,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
-//        String get = JSONObject.fromObject(JSONObject.fromObject(query).getJSONObject("data").getJSONArray("accountList").get(0)).getString("shareholderNo");
-//        assertEquals("SH"+gdAccClientNo1,get);
-
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
@@ -717,7 +707,8 @@ public class GDV2_AllFlowTest_Bond {
 
         log.info("回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getDouble("股本总数(股)"));
+        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
 
         registerInfo.put("登记流水号","recylce000001");
 
@@ -807,7 +798,8 @@ public class GDV2_AllFlowTest_Bond {
 
         log.info("回收后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getDouble("股本总数(股)"));
+        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
 
         log.info("判断增发前后机构主体查询总股本数增加数正确");
         assertEquals(totalShares.subtract(new BigDecimal("100")),totalShares2);
@@ -822,7 +814,8 @@ public class GDV2_AllFlowTest_Bond {
 
         log.info("多个回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getDouble("股本总数(股)"));
+        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
 
         registerInfo.put("登记流水号","recycle000002");
 
@@ -913,7 +906,8 @@ public class GDV2_AllFlowTest_Bond {
 
         log.info("多个回收后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getDouble("股本总数(股)"));
+        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
 
         log.info("判断增发前后机构主体查询总股本数增加数正确");
         assertEquals(totalShares.subtract(new BigDecimal("400")),totalShares2);

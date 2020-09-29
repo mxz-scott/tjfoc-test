@@ -184,10 +184,8 @@ public class GDV2_AllFlowTest_Equity {
 
 
         //查询股东持股情况 无当前股权代码信息
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        query = gd.GDGetShareHolderInfo(gdContractAddress, gdAccClientNo1);
         assertEquals(gdAccClientNo1,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
-//        String get = JSONObject.fromObject(JSONObject.fromObject(query).getJSONObject("data").getJSONArray("accountList").get(0)).getString("shareholderNo");
-//        assertEquals("SH"+gdAccClientNo1,get);
 
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
