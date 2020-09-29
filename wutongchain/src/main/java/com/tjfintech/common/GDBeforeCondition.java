@@ -208,6 +208,9 @@ public class GDBeforeCondition {
 
 //    @Test
     public void initRegulationData() {
+        //更新系统合约
+        gd.GDEquitySystemInit(gdContractAddress,gdPlatfromKeyID);
+
         log.info("初始化监管相关数据结构");
         enterpriseSubjectInfo = init01EnterpriseSubjectInfo();      //初始化企业主体数据信息  涉及接口 企业挂牌登记
         investorSubjectInfo = init01PersonalSubjectInfo();        //初始化个人主体数据信息  涉及接口 开户

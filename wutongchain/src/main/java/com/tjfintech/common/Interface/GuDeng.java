@@ -39,5 +39,6 @@ public interface GuDeng {
     String GDCapitalSettlement(Map balanceAccount);
     String GDAccountQuery(String contractAddress,String clientNo);
     String GDMainSubjectQuery(String contractAddress,String subjectObjectId);
+    String GDEquitySystemInit(String contractAddress,String platformKeyId);
 
 }

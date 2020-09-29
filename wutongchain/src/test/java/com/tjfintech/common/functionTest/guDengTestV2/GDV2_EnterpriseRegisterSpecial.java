@@ -194,7 +194,7 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         //查询个人主体信息  交易上链后 数据可能还未写入合约 在此做2s内数据查询
         for(int i = 0;i<20;i++) {
-            response = gd.GDMainSubjectQuery(gdContractAddress, gdCompanyID);
+            response = gd.GDMainSubjectQuery(gdContractAddress, cltNo);
             if(net.sf.json.JSONObject.fromObject(response).getString("state").equals("200"))
                 break;
             sleepAndSaveInfo(100);

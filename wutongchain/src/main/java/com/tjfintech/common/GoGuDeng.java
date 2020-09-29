@@ -158,7 +158,7 @@ public  class GoGuDeng implements GuDeng {
      * @param equityCode
      * @param shareList
      * @param reason
-     * @param productInformation
+     * @param equityProductInfo bondProductInfos
      * @return
      */
     public String GDShareIncrease(String platformKeyId, String equityCode, List<Map> shareList, String reason,Map equityProductInfo,Map bondProductInfo){
@@ -379,6 +379,15 @@ public  class GoGuDeng implements GuDeng {
         map.put("contractAddress", contractAddress);
         map.put("subjectObjectId", subjectObjectId);
         String result = PostTest.postMethod(SDKADD + "/equity/subject/query", map);
+        log.info(result);
+        return result;
+    }
+
+    public String GDEquitySystemInit(String contractAddress,String platformKeyId){
+        Map<String, Object> map = new HashMap<>();
+        map.put("contractAddress", contractAddress);
+        map.put("platformKeyId", platformKeyId);
+        String result = PostTest.postMethod(SDKADD + "/equity/system/init", map);
         log.info(result);
         return result;
     }
