@@ -51,7 +51,7 @@ public class GDV2_EnterpriseRegisterSpecial {
 
     //企业 股权类 登记
     @Test
-    public void TC011_enterpriseRegisterCheckFormat() throws Exception {
+    public void TC011_enterpriseRegisterEquityCheckFormat() throws Exception {
         long shareTotals = 1000000;
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -59,9 +59,15 @@ public class GDV2_EnterpriseRegisterSpecial {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
-        //查询挂牌企业主体数据
-        response = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
+        //查询挂牌企业主体数据  交易上链后 数据可能还未写入合约 在此做2s内数据查询
+        for(int i = 0;i<20;i++) {
+            response = gd.GDMainSubjectQuery(gdContractAddress, gdCompanyID);
+            if(net.sf.json.JSONObject.fromObject(response).getString("state").equals("200"))
+                break;
+            sleepAndSaveInfo(100);
+        }
         assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
+
 
 
         //获取主体/产品存证hash
@@ -88,7 +94,7 @@ public class GDV2_EnterpriseRegisterSpecial {
 
     //企业 债券类 登记
     @Test
-    public void TC012_enterpriseRegisterCheckFormat() throws Exception {
+    public void TC012_enterpriseRegisterBondCheckFormat() throws Exception {
         long shareTotals = 1000000;
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo, null,bondProductInfo);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -96,8 +102,13 @@ public class GDV2_EnterpriseRegisterSpecial {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
-        //查询挂牌企业主体数据
-        response = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
+        //查询挂牌企业主体数据  交易上链后 数据可能还未写入合约 在此做2s内数据查询
+        for(int i = 0;i<20;i++) {
+            response = gd.GDMainSubjectQuery(gdContractAddress, gdCompanyID);
+            if(net.sf.json.JSONObject.fromObject(response).getString("state").equals("200"))
+                break;
+            sleepAndSaveInfo(100);
+        }
         assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
 
         //获取主体/产品存证hash
@@ -125,7 +136,7 @@ public class GDV2_EnterpriseRegisterSpecial {
 
     //会员登记
     @Test
-    public void TC013_enterpriseRegisterCheckFormat() throws Exception {
+    public void TC013_enterpriseRegisterMemberCheckFormat() throws Exception {
         long shareTotals = 1000000;
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo, null,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -133,9 +144,15 @@ public class GDV2_EnterpriseRegisterSpecial {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
-        //查询挂牌企业主体数据
-        response = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
+        //查询挂牌企业主体数据  交易上链后 数据可能还未写入合约 在此做2s内数据查询
+        for(int i = 0;i<20;i++) {
+            response = gd.GDMainSubjectQuery(gdContractAddress, gdCompanyID);
+            if(net.sf.json.JSONObject.fromObject(response).getString("state").equals("200"))
+                break;
+            sleepAndSaveInfo(100);
+        }
         assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
+
 
         //获取主体/产品存证hash
         String query = store.GetTxDetail(txId);
@@ -167,20 +184,40 @@ public class GDV2_EnterpriseRegisterSpecial {
         assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
         //查询投资者账户信息
-        String response = gd.GDGetShareHolderInfo(gdContractAddress,cltNo);
+        String response = "";
+        for(int i=0;i<50;i++){
+            response = gd.GDGetShareHolderInfo(gdContractAddress,cltNo);
+            if(net.sf.json.JSONObject.fromObject(response).getString("state").equals("200")) break;
+            sleepAndSaveInfo(100);
+        }
         assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
 
-        //查询个人主体信息
-        response = gd.GDMainSubjectQuery(gdContractAddress,cltNo);
+        //查询个人主体信息  交易上链后 数据可能还未写入合约 在此做2s内数据查询
+        for(int i = 0;i<20;i++) {
+            response = gd.GDMainSubjectQuery(gdContractAddress, gdCompanyID);
+            if(net.sf.json.JSONObject.fromObject(response).getString("state").equals("200"))
+                break;
+            sleepAndSaveInfo(100);
+        }
         assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
 
-        //获取主体/产品存证hash
+
+        //获取存证hash
         String query = store.GetTxDetail(txId);
         String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
-
         String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
-        String AccountInfoListTxId = jsonObject.getString("AccountInfoListTxId");
+
+        //获取交易所在区块
+        String height = net.sf.json.JSONObject.fromObject(store.GetTransactionBlock(txId)).getString("data");
+
+        //获取区块交易列表
+        JSONArray txArr = net.sf.json.JSONObject.fromObject(store.GetBlockByHeight(Integer.parseInt(height))).getJSONObject("data").getJSONArray("txs");
+        txArr.remove(txId);
+        txArr.remove(SubjectObjectTxId);
+
+        //获取账户存证hash
+        String AccountInfoListTxId = gdCF.getJGStoreHash2(txArr,height,1);
 
 
         //检查主体存证信息内容与传入一致
@@ -210,7 +247,7 @@ public class GDV2_EnterpriseRegisterSpecial {
     //企业 股权类 登记
     //产品主体引用置为空
     @Test
-    public void TC021_enterpriseRegisterEmpty() throws Exception {
+    public void TC021_enterpriseRegisterEquityEmpty() throws Exception {
 
         bondProductInfo.put("发行主体引用","");
         long shareTotals = 1000000;
@@ -242,7 +279,7 @@ public class GDV2_EnterpriseRegisterSpecial {
     //企业 债券类 登记
     //产品主体引用置为空
     @Test
-    public void TC022_enterpriseRegisterEmpty() throws Exception {
+    public void TC022_enterpriseRegisterBondEmpty() throws Exception {
         Map mapEqOk = equityProductInfo;
         String obj = equityProductInfo.get("发行主体引用").toString();
         equityProductInfo.put("发行主体引用","");
@@ -313,7 +350,6 @@ public class GDV2_EnterpriseRegisterSpecial {
         String query = store.GetTxDetail(txId);
         String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
-
         String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
 
         //获取交易所在区块
@@ -329,7 +365,7 @@ public class GDV2_EnterpriseRegisterSpecial {
 
 
         equityaccountInfo.put("账户所属主体引用",investorSubjectInfo.get("对象标识"));
-        equityaccountInfo.put("关联账户对象引用",investorSubjectInfo.get("对象标识"));
+//        equityaccountInfo.put("关联账户对象引用",investorSubjectInfo.get("对象标识"));//当前未自动填入
 
         fundaccountInfo.put("账户所属主体引用",investorSubjectInfo.get("对象标识"));
         fundaccountInfo.put("关联账户对象引用",investorSubjectInfo.get("对象标识"));
@@ -348,7 +384,7 @@ public class GDV2_EnterpriseRegisterSpecial {
         assertEquals(fundaccountInfo.toString().replaceAll(" ","").replaceAll("\"",""),
                 gdCF.contructFundAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
 
-        log.info("检查资金账户存证信息内容与传入一致");
+        log.info("检查股权账户存证信息内容与传入一致");
         log.info(gdCF.contructEquityAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll("\"",""));
         log.info(equityaccountInfo.toString());
         assertEquals(equityaccountInfo.toString().replaceAll(" ","").replaceAll("\"",""),
