@@ -322,4 +322,27 @@ public  class GoStore implements Store {
         return result;
     }
 
+    /**
+     * 隐私存证授权-不带密码
+     */
+    public String StoreAuthorize(String hash, Map toPubKeys, String toPriKey) {
+
+        List<Object> PubkeysObjects = new ArrayList<>();
+        for (Object value : toPubKeys.values()) {
+            PubkeysObjects.add(value);
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("txId", hash);
+        map.put("pubKeys", PubkeysObjects);
+        map.put("priKey", toPriKey);
+
+        String param="";
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/authorize?" + param, map);
+        log.info(result);
+        return result;
+    }
+
 }
