@@ -115,44 +115,6 @@ public class UtilsClass {
     public static int worldStateUpdTime = 1500;
 
 
-    //gudeng 信息
-    public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
-    public static String gdPlatfromKeyID = "bt85ed9pgfltc7nnrv10";
-    public static String gdEquityCode = "gdECSZ00" + Random(6);
-    public static String gdCompanyID = "gdCmpyId0001";
-
-    public static String gdAccClientNo1 = "No000" + Random(10);
-    public static String gdAccClientNo2 = "No100" + Random(10);
-    public static String gdAccClientNo3 = "No200" + Random(10);
-    public static String gdAccClientNo4 = "No300" + Random(10);
-    public static String gdAccClientNo5 = "No400" + Random(10);
-    public static String gdAccClientNo6 = "No500" + Random(10);
-    public static String gdAccClientNo7 = "No600" + Random(10);
-    public static String gdAccClientNo8 = "No700" + Random(10);
-    public static String gdAccClientNo9 = "No800" + Random(10);
-    public static String gdAccClientNo10 = "No900" + Random(10);
-
-    public static String gdAccount1,gdAccount2,gdAccount3,gdAccount4,gdAccount5,
-                         gdAccount6,gdAccount7,gdAccount8,gdAccount9,gdAccount10;
-    public static String gdAccountKeyID1,gdAccountKeyID2,gdAccountKeyID3,gdAccountKeyID4,gdAccountKeyID5,
-                         gdAccountKeyID6,gdAccountKeyID7,gdAccountKeyID8,gdAccountKeyID9,gdAccountKeyID10;
-
-    public static Map mapAccAddr = new HashMap<>(); //存放地址和客户号（账户对象标识 主体标识）
-
-    public static Map registerInfo = new HashMap();//05登记 //发行 股份性质变更 过户转让 股份增发
-    public static Map txInformation = new HashMap();//04交易报告  //过户转让
-    public static Map enterpriseSubjectInfo = new HashMap();//01主体  //挂牌企业登记
-    public static Map equityProductInfo = new HashMap();//03产品 股权类 //挂牌企业登记  股份增发 场内转板
-    public static Map bondProductInfo = new HashMap();//03产品 债券类 //挂牌企业登记  股份增发 场内转板
-    public static Map equityaccountInfo = new HashMap();//02账户 股权账户 //投资者开户
-    public static Map fundaccountInfo = new HashMap();//02账户 资金账户 //投资者开户
-    public static Map investorSubjectInfo = new HashMap();//01主体  //投资者开户
-    public static Map disclosureInfo = new HashMap();//07信披  //写入公告 信息披露
-    public static Map settleInfo = new HashMap();//06资金结算  //资金结算
-    public static List<Map> listRegInfo = new ArrayList<>();//主体信息列表
-    public static String regNo = "regNo000000";
-
-
     //UTXO精度
     public static Integer PRECISION = 6;
 
