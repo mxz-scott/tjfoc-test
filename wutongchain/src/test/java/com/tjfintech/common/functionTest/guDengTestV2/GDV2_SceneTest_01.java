@@ -2,6 +2,7 @@ package com.tjfintech.common.functionTest.guDengTestV2;
 
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.GDBeforeCondition;
+import com.tjfintech.common.GDCommonFunc;
 import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -19,8 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.CommonFunc.*;
+import static com.tjfintech.common.GDCommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClassGD.*;
 import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -36,6 +38,7 @@ public class GDV2_SceneTest_01 {
     Store store =testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
+    GDCommonFunc gdCF = new GDCommonFunc();
     public static String bizNoTest = "test" + Random(12);
     GDUnitFunc uf = new GDUnitFunc();
     public Boolean bCreateAccOnce = true;
