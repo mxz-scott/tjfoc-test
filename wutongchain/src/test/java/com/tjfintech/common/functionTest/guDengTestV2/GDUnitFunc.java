@@ -91,7 +91,7 @@ public class GDUnitFunc {
             boolean bCheckOnchain) throws Exception{
         log.info("股权代码过户转让");
 
-        String response= gd.GDShareTransfer(keyID,fromAddr,amount,toAddr,shareProperty,eqCode,txInformation, listRegInfo);
+        String response= gd.GDShareTransfer(keyID,fromAddr,amount,toAddr,shareProperty,eqCode,txInformation, registerInfo,registerInfo);
 
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);
@@ -284,8 +284,9 @@ public class GDUnitFunc {
      */
     public String destroyAcc(String clntNo,boolean bCheckOnchain) throws Exception {
         log.info("销户 " + clntNo);
-
-        String response= gd.GDAccountDestroy(gdContractAddress,clntNo);
+        String cert1 = "2.txt";
+        String cert2 = "22.txt";
+        String response= gd.GDAccountDestroy(gdContractAddress,clntNo,cert1,cert2);
 
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);

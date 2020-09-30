@@ -15,7 +15,7 @@ public class UtilsClassGD {
 //    public static String gdPlatfromKeyID = "btibbj1pgfltc7no17kg";
     //股登164环境
     public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
-    public static String gdPlatfromKeyID = "btojfo1pgfltc7no2acg";
+    public static String gdPlatfromKeyID = "btq1un9pgfltc7no30a0";
     //外网对接
 //    public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
 //    public static String gdPlatfromKeyID = "btli1l9hdkef95op7f00";

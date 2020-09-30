@@ -3,6 +3,7 @@ package com.tjfintech.common.functionTest.guDengTestV2;
 import com.alibaba.fastjson.JSON;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.GDBeforeCondition;
+import com.tjfintech.common.GDCommonFunc;
 import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -16,10 +17,8 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static com.tjfintech.common.GDCommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -35,8 +34,11 @@ public class GDV2_AllFlowTest_Equity {
     Store store =testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
+    GDBeforeCondition gdBF = new GDBeforeCondition();
+    GDCommonFunc gdCF = new GDCommonFunc();
     GDUnitFunc uf = new GDUnitFunc();
     public static String bizNoTest = "test" + Random(12);
+    Boolean bNotCheck = false;
 
     @BeforeClass
     public static void Before()throws Exception{
@@ -44,6 +46,7 @@ public class GDV2_AllFlowTest_Equity {
         gdBefore.gdCreateAccout();
 //        gdBefore.initRegulationData();
         bondProductInfo = null;
+        gdEquityCode = "fondTest" + Random(12);
     }
 
     @Test
@@ -57,7 +60,12 @@ public class GDV2_AllFlowTest_Equity {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
         //查询挂牌企业主体数据
-        response = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
+        for(int i = 0;i<20;i++) {
+            response = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
+            if(net.sf.json.JSONObject.fromObject(response).getString("state").equals("200"))
+                break;
+            sleepAndSaveInfo(100);
+        }
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
         Map jsonMap = JSONObject.fromObject(response).getJSONObject("data");
@@ -158,11 +166,18 @@ public class GDV2_AllFlowTest_Equity {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
+        String testReturn = "";
+        if(testReturn == "" && bNotCheck) return;
 
         //查询挂牌企业数据
         //查询投资者信息
         //查询企业股东信息
-        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+        String query = "";
+        for(int i =0 ;i < 20;i++) {
+            query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+            if(JSONObject.fromObject(query).getString("state").equals("200")) break;
+            sleepAndSaveInfo(100,"等待数据更新");
+        }
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
 
         JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
@@ -246,6 +261,9 @@ public class GDV2_AllFlowTest_Equity {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
 
+        String testReturn = "";
+        if(testReturn == "" && bNotCheck) return;
+
         //查询挂牌企业数据
         //查询投资者信息
         //查询企业股东信息
@@ -325,7 +343,7 @@ public class GDV2_AllFlowTest_Equity {
         List<Map> regInfoList = new ArrayList<>();
         regInfoList.add(registerInfo);
         regInfoList.add(registerInfo);
-        String response= gd.GDShareTransfer(keyId,fromAddr,amount,toAddr,shareProperty,eqCode,txInformation,regInfoList);
+        String response= gd.GDShareTransfer(keyId,fromAddr,amount,toAddr,shareProperty,eqCode,txInformation,registerInfo,registerInfo);
 
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
@@ -333,6 +351,9 @@ public class GDV2_AllFlowTest_Equity {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
+
+        String testReturn = "";
+        if(testReturn == "" && bNotCheck) return;
 
         //查询挂牌企业数据
         //查询投资者信息
@@ -430,7 +451,8 @@ public class GDV2_AllFlowTest_Equity {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
-
+        String testReturn = "";
+        if(testReturn == "" && bNotCheck) return;
         //查询挂牌企业数据
         //查询投资者信息
         //查询企业股东信息
@@ -507,7 +529,8 @@ public class GDV2_AllFlowTest_Equity {
 
         log.info("增发后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getDouble("股本总数(股)"));
+        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
 
         log.info("判断增发前后机构主体查询总股本数增加数正确");
         assertEquals(totalShares.add(new BigDecimal("4000")),totalShares2);
@@ -535,7 +558,8 @@ public class GDV2_AllFlowTest_Equity {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
-
+        String testReturn = "";
+        if(testReturn == "" && bNotCheck) return;
         //查询挂牌企业数据
         //查询投资者信息
         //查询企业股东信息
@@ -627,7 +651,8 @@ public class GDV2_AllFlowTest_Equity {
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
+        String testReturn = "";
+        if(testReturn == "" && bNotCheck) return;
 
         //查询挂牌企业数据
         //查询投资者信息
@@ -725,7 +750,8 @@ public class GDV2_AllFlowTest_Equity {
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
+        String testReturn = "";
+        if(testReturn == "" && bNotCheck) return;
         //查询挂牌企业数据
         //查询投资者信息
         //查询企业股东信息
@@ -835,7 +861,8 @@ public class GDV2_AllFlowTest_Equity {
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
+        String testReturn = "";
+        if(testReturn == "" && bNotCheck) return;
         //查询挂牌企业数据
         //查询投资者信息
         //查询企业股东信息
@@ -911,7 +938,8 @@ public class GDV2_AllFlowTest_Equity {
 
         log.info("多个回收后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getDouble("股本总数(股)"));
+        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
 
         log.info("判断增发前后机构主体查询总股本数增加数正确");
         assertEquals(totalShares.subtract(new BigDecimal("400")),totalShares2);
@@ -934,7 +962,8 @@ public class GDV2_AllFlowTest_Equity {
 
         gdEquityCode = newEquityCode;
 
-
+        String testReturn = "";
+        if(testReturn == "" && bNotCheck) return;
         //查询挂牌企业数据
         //查询投资者信息
         //查询企业股东信息
@@ -1016,7 +1045,7 @@ public class GDV2_AllFlowTest_Equity {
 
         String clntNo = gdAccClientNo10;
 
-        String response= gd.GDAccountDestroy(gdContractAddress,clntNo);
+        String response= gd.GDAccountDestroy(gdContractAddress,clntNo,"test.txt","close.txt");
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -1080,4 +1109,210 @@ public class GDV2_AllFlowTest_Equity {
 
     }
 
+    @Test
+    public void TC20_UpdateSubjectInfo_Enterprise()throws Exception{
+        gdEquityCode = "update" + Random(12);
+        //挂牌企业登记
+        long shareTotals = 1000000;
+        Map testSub = gdBF.init01EnterpriseSubjectInfo();
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,testSub, equityProductInfo,bondProductInfo);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String txId = jsonObject.getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+        //查询挂牌企业主体数据
+        for(int i = 0;i<20;i++) {
+            response = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
+            if(net.sf.json.JSONObject.fromObject(response).getString("state").equals("200"))
+                break;
+            sleepAndSaveInfo(100);
+        }
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+
+        assertEquals(testSub.toString(), gdCF.getEnterpriseSubInfo(response).toString().replaceAll("\"", ""));
+
+        //更新主体信息数据
+
+        List<String> fileList = new ArrayList<>();
+        fileList.add("file02.txt");
+        testSub.clear();
+        testSub.put("对象标识",gdCompanyID);  //对象标识使用公司ID
+        testSub.put("主体标识",gdCompanyID + "sub02");
+        testSub.put("行业主体代号","12302");
+        testSub.put("主体类型",1);
+        testSub.put("主体信息创建时间","2020/09/30 12:01:12");
+
+        List<Map> listQual = new ArrayList<>();
+        Map qualification2 = new HashMap();
+        qualification2.put("资质认证类型",2);
+        qualification2.put("资质认证文件",fileList);
+        qualification2.put("资质认证方","苏州市监管局02");
+        qualification2.put("资质审核方","苏州市监管局02");
+        qualification2.put("认证时间","2010/09/30 12:01:13");
+        qualification2.put("审核时间","2010/09/30 12:01:14");
+
+        listQual.add(qualification2);
+        testSub.put("主体资质信息",listQual);
+        testSub.put("机构类型",1);
+        testSub.put("机构性质",1);
+        testSub.put("公司全称","苏州同济区块链研究院02");
+        testSub.put("英文名称","tongji02");
+        testSub.put("公司简称","苏同院02");
+        testSub.put("英文简称","sztj02");
+        testSub.put("企业类型",1);
+        testSub.put("企业成分",2);
+        testSub.put("统一社会信用代码","91370105MA3N4THQ5402");
+        testSub.put("组织机构代码","91370105MA3N4THQ5402");
+        testSub.put("设立日期","2010/09/30");
+        testSub.put("营业执照","营业执行02.pdf");
+        testSub.put("经营范围","all02");
+        testSub.put("企业所属行业",1);
+        testSub.put("主营业务","软件02");
+        testSub.put("公司简介","提供区块链技术与应用研发测评人才培养以及产业孵化等综合性服务平台02");
+        testSub.put("注册资本",20000000);
+        testSub.put("注册资本币种",840);
+        testSub.put("实收资本",12222);
+        testSub.put("实收资本币种",840);
+        testSub.put("注册地址","苏州02");
+        testSub.put("办公地址","苏州相城02");
+        testSub.put("联系地址","苏州相城02");
+        testSub.put("联系电话","051266188602");
+        testSub.put("传真","051266188602");
+        testSub.put("邮政编码","215102");
+        testSub.put("互联网地址","http://www.tj-fintech02.com/");
+        testSub.put("电子邮箱","zz@wutongchain02.com");
+        testSub.put("公司章程","stli02.pdf");
+        testSub.put("主管单位","相城区人民政府02");
+        testSub.put("股东总数（个）",20);
+        testSub.put("股本总数(股)",20000000);
+        testSub.put("法定代表人姓名","任山东02");
+        testSub.put("法人性质",1);
+        testSub.put("法定代表人身份证件类型",1);
+        testSub.put("法定代表人身份证件号码","123111111111102");
+        testSub.put("法定代表人职务",1);
+        testSub.put("法定代表人手机号","15865487802");
+
+        //执行update操作
+        String resp2 = gd.GDUpdateSubjectInfo(gdContractAddress,0,testSub);
+        txId = JSONObject.fromObject(resp2).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+        sleepAndSaveInfo(2000);
+
+        response = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
+        assertEquals(testSub.toString(), gdCF.getEnterpriseSubInfo(response).toString().replaceAll("\"", ""));
+    }
+
+    @Test
+    public void TC20_UpdateSubjectInfo_Personal()throws Exception{
+        //开户
+        String cltNo = "updateCLI" + Random(12);
+        String shareHolderNo = "SH" + cltNo;
+        String fundNo = "fund" + cltNo;
+
+        //构造股权账户信息
+        Map shareHolderInfo = new HashMap();
+
+        equityaccountInfo.put("账户对象标识",cltNo);  //更新账户对象标识字段
+        log.info(equityaccountInfo.toString());
+        shareHolderInfo.put("shareholderNo",shareHolderNo);
+        shareHolderInfo.put("accountInfo", equityaccountInfo);
+        log.info(shareHolderInfo.toString());
+
+        //资金账户信息
+        fundaccountInfo.put("账户对象标识",cltNo);  //更新账户对象标识字段
+        Map mapFundInfo = new HashMap();
+        mapFundInfo.put("fundNo",fundNo);
+        mapFundInfo.put("accountInfo",fundaccountInfo);
+
+        //构造个人/投资者主体信息
+        Map testSub = gdBF.init01PersonalSubjectInfo();
+        testSub.put("对象标识",cltNo);  //更新对象标识字段
+        testSub.put("主体标识","sid" + cltNo);  //更新主体标识字段
+
+        String response = gd.GDCreateAccout(gdContractAddress,cltNo,mapFundInfo,shareHolderInfo, testSub);
+        String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+        //查询个人主体数据
+        for(int i = 0;i < 20; i++) {
+            response = gd.GDMainSubjectQuery(gdContractAddress,cltNo);
+            if(net.sf.json.JSONObject.fromObject(response).getString("state").equals("200"))
+                break;
+            sleepAndSaveInfo(100);
+        }
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+
+        assertEquals(testSub.toString().replaceAll(" ",""),
+                gdCF.getPersonalSubInfo(response).toString().replaceAll(" ","").replaceAll("\"", ""));
+
+        //更新主体信息数据
+        List<String> fileList1 = new ArrayList<>();
+        fileList1.add("test1.pdf");
+        fileList1.add("test2.pdf");
+        List<Map> mapQuali = new ArrayList<>();
+        Map qual = new HashMap();
+
+        testSub.clear();
+//        String cltNo = "test00001";
+        testSub.put("对象标识",cltNo);
+        testSub.put("主体标识",cltNo);
+        testSub.put("行业主体代号","JR03");
+        testSub.put("主体类型",2);
+        testSub.put("主体信息创建时间","2020/09/30 12:01:12");
+
+        qual.put("资质认证类型",1);
+        qual.put("资质认证文件",fileList1);
+        qual.put("资质认证方","苏州市监管局03");
+        qual.put("资质审核方","苏州市监管局03");
+        qual.put("认证时间","2020/09/12 12:01:12");
+        qual.put("审核时间","2020/09/12 12:01:12");
+
+        mapQuali.add(qual);
+        testSub.put("主体资质信息",mapQuali);
+        testSub.put("个人姓名","zhangsan03");
+        testSub.put("个人身份证类型",1);
+        testSub.put("个人身份证件号","325689199512230003");
+        testSub.put("个人联系地址","相城03");
+        testSub.put("个人联系电话","15865487803");
+        testSub.put("个人手机号","15865487803");
+        testSub.put("学历",5);
+        testSub.put("个人所属行业",2);
+        testSub.put("出生日期","1985/09/30");
+        testSub.put("性别",1);
+        testSub.put("评级结果","通过03");
+        testSub.put("评级时间","2020/09/30 12:13:14");
+        testSub.put("评级原始记录","记录03");
+
+        //执行update操作 更新个人主体信息
+        String resp2 = gd.GDUpdateSubjectInfo(gdContractAddress,1,testSub);
+        txId = JSONObject.fromObject(resp2).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+        sleepAndSaveInfo(2000);
+
+        //查询个人主体信息
+        response = gd.GDMainSubjectQuery(gdContractAddress,cltNo);
+        assertEquals(testSub.toString().replaceAll(" ",""),
+                gdCF.getPersonalSubInfo(response).toString().replaceAll(" ","").replaceAll("\"", ""));
+    }
+
+
+    @Test
+    public void TC19_TxReportQueryTest()throws Exception{
+//        Date dateNow = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+//        String sd = sdf.format(new Date(dateNow.getTime())); // 时间戳转换日期
+//        String type = "1";
+//        String value = gdAccClientNo1;
+//        String begin = "";
+//        String end = "";
+//        String response = gd.GDGetTxReportInfo()
+    }
 }

@@ -41,6 +41,60 @@ public class GDCommonFunc {
     //获取交易hash函数 此处兼容
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public String getJGStoreHash2(String txId,String type,int offset) {
+        //获取交易所在区块
+        String height = JSONObject.fromObject(store.GetTransactionBlock(txId)).getString("data");
+        //获取区块交易列表
+        JSONArray txArr = JSONObject.fromObject(store.GetBlockByHeight(Integer.parseInt(height))).getJSONObject("data").getJSONArray("txs");
+        String storeId = "";
+        for (int i = 0; i < txArr.size(); i++) {
+            log.info("区块交易数 " + txArr.size());
+            String txdetail = store.GetTxDetail(txArr.get(i).toString());
+
+            com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(txdetail);
+            String storeData2 = "";
+
+            //判断是存证则存储
+            if (JSONObject.fromObject(txdetail).getJSONObject("data").getJSONObject("header").getInt("type") == 0){
+                storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
+                com.alibaba.fastjson.JSONObject jobj2 = null;
+                if(storeData2.startsWith("{")){
+                    jobj2 = com.alibaba.fastjson.JSONObject.parseObject(storeData2);
+                    if (jobj2.getJSONObject("header").getJSONObject("content").getString("type").equals(type)) {
+                        storeId = txArr.get(i).toString();
+                        break;
+                    }
+                }else {
+                    //storedata是个list时
+                    com.alibaba.fastjson.JSONArray jsonArray2 = com.alibaba.fastjson.JSONArray.parseArray(storeData2);
+                    for (int k = 0; k < jsonArray2.size(); k++) {
+                        com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(k).toString());
+                        if (objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals(type)) {
+                            storeId = txArr.get(i).toString();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        if(storeId.equals("")) {
+            log.info("存证与交易并未打在同一个区块中，尝试在下一个区块中查找报送数据存证");
+            txArr = JSONObject.fromObject(store.GetBlockByHeight(Integer.parseInt(height) + offset)).getJSONObject("data").getJSONArray("txs");
+            for (int j = 0; j < txArr.size(); j++) {
+                String txdetail = store.GetTxDetail(txArr.get(j).toString());
+                //判断是存证则存储
+                if (JSONObject.fromObject(txdetail).getJSONObject("data").getJSONObject("header").getInt("type") == 0
+                        && txdetail.contains("\\\"type\\\":\\\"" + type + "\\\"")) {
+                    storeId = txArr.get(j).toString();
+                    break;
+                }
+            }
+        }
+
+        assertEquals(false, storeId.equals(""));
+        return storeId;
+    }
+
     public String getJGStoreHash(String txId,int offset) {
         //获取交易所在区块
         String height = JSONObject.fromObject(store.GetTransactionBlock(txId)).getString("data");
@@ -659,6 +713,101 @@ public class GDCommonFunc {
 
         Map getSubjectInfo = new HashMap();
         getSubjectInfo.put("对象标识",jobj2.getJSONObject("body").getJSONObject("对象信息").getString("对象标识"));
+
+        getSubjectInfo.put("主体标识",objSubBase.getJSONObject("主体通用信息").getString("主体标识"));
+        getSubjectInfo.put("行业主体代号",objSubBase.getJSONObject("主体通用信息").getString("行业主体代号"));
+        getSubjectInfo.put("主体类型",objSubBase.getJSONObject("主体通用信息").getIntValue("主体类型"));
+        getSubjectInfo.put("主体信息创建时间",objSubBase.getJSONObject("主体通用信息").getString("主体信息创建时间"));
+
+        getSubjectInfo.put("主体资质信息", com.alibaba.fastjson.JSONObject.parseArray(objSubBase.getJSONArray("主体资质信息").toJSONString(), Map.class));
+
+        getSubjectInfo.put("个人姓名",objPersonalSub.getJSONObject("个人主体基本信息").get("个人姓名"));
+        getSubjectInfo.put("个人身份证类型",objPersonalSub.getJSONObject("个人主体基本信息").get("个人身份证类型"));
+        getSubjectInfo.put("个人身份证件号",objPersonalSub.getJSONObject("个人主体基本信息").get("个人身份证件号"));
+        getSubjectInfo.put("个人联系地址",objPersonalSub.getJSONObject("个人主体基本信息").get("个人联系地址"));
+        getSubjectInfo.put("个人联系电话",objPersonalSub.getJSONObject("个人主体基本信息").get("个人联系电话"));
+        getSubjectInfo.put("个人手机号",objPersonalSub.getJSONObject("个人主体基本信息").get("个人手机号"));
+        getSubjectInfo.put("学历",objPersonalSub.getJSONObject("个人主体基本信息").get("学历"));
+        getSubjectInfo.put("个人所属行业",objPersonalSub.getJSONObject("个人主体基本信息").get("个人所属行业"));
+        getSubjectInfo.put("出生日期",objPersonalSub.getJSONObject("个人主体基本信息").get("出生日期"));
+        getSubjectInfo.put("性别",objPersonalSub.getJSONObject("个人主体基本信息").get("性别"));
+
+        getSubjectInfo.put("评级结果",objPersonalSub.getJSONObject("个人主体风险评级").get("评级结果"));
+        getSubjectInfo.put("评级时间",objPersonalSub.getJSONObject("个人主体风险评级").get("评级时间"));
+        getSubjectInfo.put("评级原始记录",objPersonalSub.getJSONObject("个人主体风险评级").get("评级原始记录"));
+
+        return getSubjectInfo;
+    }
+
+
+    public Map getEnterpriseSubInfo(String response){
+        com.alibaba.fastjson.JSONObject jobj2 = null;
+        com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(response);
+
+        jobj2 = object2.getJSONObject("data");
+        com.alibaba.fastjson.JSONObject objSubBase = jobj2.getJSONObject("body").getJSONObject("主体信息").getJSONObject("主体基本信息");
+        com.alibaba.fastjson.JSONObject objEnterpriseSub = jobj2.getJSONObject("body").getJSONObject("主体信息").getJSONObject("机构主体信息");
+
+        Map getSubjectInfo = new HashMap();
+        getSubjectInfo.put("对象标识",jobj2.getJSONObject("body").getJSONObject("对象信息").getString("对象标识"));
+        getSubjectInfo.put("主体标识",objSubBase.getJSONObject("主体通用信息").getString("主体标识"));
+        getSubjectInfo.put("行业主体代号",objSubBase.getJSONObject("主体通用信息").getString("行业主体代号"));
+        getSubjectInfo.put("主体类型",objSubBase.getJSONObject("主体通用信息").getIntValue("主体类型"));
+        getSubjectInfo.put("主体信息创建时间",objSubBase.getJSONObject("主体通用信息").getString("主体信息创建时间"));
+        getSubjectInfo.put("主体资质信息", com.alibaba.fastjson.JSONObject.parseArray(objSubBase.getJSONArray("主体资质信息").toJSONString(), Map.class));
+
+        getSubjectInfo.put("机构类型",objEnterpriseSub.getJSONObject("机构分类信息").getIntValue("机构类型"));
+        getSubjectInfo.put("机构性质",objEnterpriseSub.getJSONObject("机构分类信息").getIntValue("机构性质"));
+
+        getSubjectInfo.put("公司全称",objEnterpriseSub.getJSONObject("企业基本信息").getString("公司全称"));
+        getSubjectInfo.put("英文名称",objEnterpriseSub.getJSONObject("企业基本信息").getString("英文名称"));
+        getSubjectInfo.put("公司简称",objEnterpriseSub.getJSONObject("企业基本信息").getString("公司简称"));
+        getSubjectInfo.put("英文简称",objEnterpriseSub.getJSONObject("企业基本信息").getString("英文简称"));
+        getSubjectInfo.put("企业类型",objEnterpriseSub.getJSONObject("企业基本信息").getIntValue("企业类型"));
+        getSubjectInfo.put("企业成分",objEnterpriseSub.getJSONObject("企业基本信息").getIntValue("企业成分"));
+        getSubjectInfo.put("统一社会信用代码",objEnterpriseSub.getJSONObject("企业基本信息").getString("统一社会信用代码"));
+        getSubjectInfo.put("组织机构代码",objEnterpriseSub.getJSONObject("企业基本信息").getString("组织机构代码"));
+        getSubjectInfo.put("设立日期",objEnterpriseSub.getJSONObject("企业基本信息").getString("设立日期"));
+        getSubjectInfo.put("营业执照",objEnterpriseSub.getJSONObject("企业基本信息").getString("营业执照"));
+        getSubjectInfo.put("经营范围",objEnterpriseSub.getJSONObject("企业基本信息").getString("经营范围"));
+        getSubjectInfo.put("企业所属行业",objEnterpriseSub.getJSONObject("企业基本信息").getIntValue("企业所属行业"));
+        getSubjectInfo.put("主营业务",objEnterpriseSub.getJSONObject("企业基本信息").getString("主营业务"));
+        getSubjectInfo.put("公司简介",objEnterpriseSub.getJSONObject("企业基本信息").getString("公司简介"));
+        getSubjectInfo.put("注册资本",objEnterpriseSub.getJSONObject("企业基本信息").getString("注册资本"));
+        getSubjectInfo.put("注册资本币种",objEnterpriseSub.getJSONObject("企业基本信息").getIntValue("注册资本币种"));
+        getSubjectInfo.put("实收资本",objEnterpriseSub.getJSONObject("企业基本信息").getString("实收资本"));
+        getSubjectInfo.put("实收资本币种",objEnterpriseSub.getJSONObject("企业基本信息").getIntValue("实收资本币种"));
+        getSubjectInfo.put("注册地址",objEnterpriseSub.getJSONObject("企业基本信息").getString("注册地址"));
+        getSubjectInfo.put("办公地址",objEnterpriseSub.getJSONObject("企业基本信息").getString("办公地址"));
+        getSubjectInfo.put("联系地址",objEnterpriseSub.getJSONObject("企业基本信息").getString("联系地址"));
+        getSubjectInfo.put("联系电话",objEnterpriseSub.getJSONObject("企业基本信息").getString("联系电话"));
+        getSubjectInfo.put("传真",objEnterpriseSub.getJSONObject("企业基本信息").getString("传真"));
+        getSubjectInfo.put("邮政编码",objEnterpriseSub.getJSONObject("企业基本信息").getString("邮政编码"));
+        getSubjectInfo.put("互联网地址",objEnterpriseSub.getJSONObject("企业基本信息").getString("互联网地址"));
+        getSubjectInfo.put("电子邮箱",objEnterpriseSub.getJSONObject("企业基本信息").getString("电子邮箱"));
+        getSubjectInfo.put("公司章程",objEnterpriseSub.getJSONObject("企业基本信息").getString("公司章程"));
+        getSubjectInfo.put("主管单位",objEnterpriseSub.getJSONObject("企业基本信息").getString("主管单位"));
+        getSubjectInfo.put("股东总数（个）",objEnterpriseSub.getJSONObject("企业基本信息").getIntValue("股东总数（个）"));
+        getSubjectInfo.put("股本总数(股)",objEnterpriseSub.getJSONObject("企业基本信息").getString("股本总数(股)"));
+        getSubjectInfo.put("法定代表人姓名",objEnterpriseSub.getJSONObject("法人信息").getString("法定代表人姓名"));
+        getSubjectInfo.put("法人性质",objEnterpriseSub.getJSONObject("法人信息").getIntValue("法人性质"));
+        getSubjectInfo.put("法定代表人身份证件类型",objEnterpriseSub.getJSONObject("法人信息").getIntValue("法定代表人身份证件类型"));
+        getSubjectInfo.put("法定代表人身份证件号码",objEnterpriseSub.getJSONObject("法人信息").getString("法定代表人身份证件号码"));
+        getSubjectInfo.put("法定代表人职务",objEnterpriseSub.getJSONObject("法人信息").getIntValue("法定代表人职务"));
+        getSubjectInfo.put("法定代表人手机号",objEnterpriseSub.getJSONObject("法人信息").getString("法定代表人手机号"));
+
+        return getSubjectInfo;
+    }
+
+    public Map getPersonalSubInfo(String response){
+
+        com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(response);
+
+        com.alibaba.fastjson.JSONObject objSubBase = object2.getJSONObject("data").getJSONObject("body").getJSONObject("主体信息").getJSONObject("主体基本信息");
+        com.alibaba.fastjson.JSONObject objPersonalSub = object2.getJSONObject("data").getJSONObject("body").getJSONObject("主体信息").getJSONObject("个人主体信息");
+
+        Map getSubjectInfo = new HashMap();
+        getSubjectInfo.put("对象标识",object2.getJSONObject("data").getJSONObject("body").getJSONObject("对象信息").getString("对象标识"));
 
         getSubjectInfo.put("主体标识",objSubBase.getJSONObject("主体通用信息").getString("主体标识"));
         getSubjectInfo.put("行业主体代号",objSubBase.getJSONObject("主体通用信息").getString("行业主体代号"));

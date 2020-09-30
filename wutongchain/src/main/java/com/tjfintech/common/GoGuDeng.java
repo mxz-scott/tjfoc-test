@@ -121,11 +121,12 @@ public  class GoGuDeng implements GuDeng {
      * @param shareProperty
      * @param equityCode
      * @param txInformation
-     * @param registerInformationList
+     * @param fromRegisterInfo  转出账户登记信息
+     * @param toRegisterInfo  转入账户登记信息
      * @return
      */
     public String GDShareTransfer(String keyId, String fromAddr, long amount, String toAddr, int shareProperty,
-                                  String equityCode, Map txInformation, List<Map> registerInformationList){
+                                  String equityCode, Map txInformation, Map fromRegisterInfo,Map toRegisterInfo){
         Map<String, Object> map = new HashMap<>();
         map.put("keyId", keyId);
         map.put("fromAddress", fromAddr);
@@ -134,7 +135,8 @@ public  class GoGuDeng implements GuDeng {
         map.put("shareProperty", shareProperty);
         map.put("equityCode", equityCode);
         map.put("txInformation", txInformation);
-        map.put("registerInformationList", registerInformationList);
+        map.put("fromRegisterInformation", fromRegisterInfo);
+        map.put("toRegisterInformation", toRegisterInfo);
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/transfer", map);
         log.info(result);
@@ -250,10 +252,12 @@ public  class GoGuDeng implements GuDeng {
      * @param clientNo
      * @return
      */
-    public String GDAccountDestroy(String contractAddress,String clientNo){
+    public String GDAccountDestroy(String contractAddress, String clientNo,String shareholderClosingCertificate,String fundClosingCertificate){
         Map<String, Object> map = new HashMap<>();
         map.put("contractAddress", contractAddress);
         map.put("clientNo", clientNo);
+        map.put("shareholderClosingCertificate", shareholderClosingCertificate);
+        map.put("fundClosingCertificate", fundClosingCertificate);
 
         String result = PostTest.postMethod(SDKADD + "/equity/account/destroy", map);
         log.info(result);
@@ -391,4 +395,25 @@ public  class GoGuDeng implements GuDeng {
         log.info(result);
         return result;
     }
+
+    public String GDUpdateSubjectInfo(String contractAddress,int type,Map subjectInfo){
+        Map<String, Object> map = new HashMap<>();
+        map.put("contractAddress", contractAddress);
+        map.put("type", type);
+        map.put("subjectInfo", subjectInfo);
+        String result = PostTest.postMethod(SDKADD + "/equity/subject/update", map);
+        log.info(result);
+        return result;
+    }
+    public String GDGetTxReportInfo(String type, String value,String beginTime,String endTime){
+        Map<String, Object> map = new HashMap<>();
+        map.put("type", type);
+        map.put("value", value);
+        map.put("begin", beginTime);
+        map.put("end", endTime);
+        String result = PostTest.postMethod(SDKADD + "/equity/txreport/query", map);
+        log.info(result);
+        return result;
+    }
+
 }

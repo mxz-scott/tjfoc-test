@@ -39,6 +39,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
     CommonFunc commonFunc = new CommonFunc();
     GDCommonFunc gdCF = new GDCommonFunc();
     GDUnitFunc uf = new GDUnitFunc();
+    GDBeforeCondition gdBF = new GDBeforeCondition();
     public static String bizNoTest = "test" + Random(12);
 
     long issueAmount = 5000;
@@ -46,6 +47,8 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
     long lockAmount = issueAmount;
     long unlockAmount = 1000;
     long recycleAmount = issueAmount;
+    long changeAmount = 500;
+    long transferAmount = 1000;
 
     /***
      * 测试说明
@@ -66,6 +69,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         gdBefore.gdCreateAccout();
 //        gdBefore.initRegulationData();
         equityProductInfo = null;//本测试类执行测试为债券产品
+        gdEquityCode = "fondTest" + Random(12);
     }
 
     @Test
@@ -121,6 +125,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
             log.info("检查发行存证交易格式化及信息内容与传入一致:" + tempObjId);
             txInformation.put("原持有方主体引用",tempObjId);
+            txInformation.put("交易产品引用",gdEquityCode + "01");
             log.info(gdCF.contructTxInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
             log.info(txInformation.toString());
             assertEquals(txInformation.toString(), gdCF.contructTxInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
@@ -194,6 +199,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         int oldProperty = 0;
         int newProperty = 1;
 
+        registerInfo.put("权利人账户引用",mapAccAddr.get(address));
         regNo = "ChangeProperty" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
         registerInfo.put("登记流水号",regNo);       //更新对比的登记流水号
 
@@ -412,21 +418,28 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
     @Test
     public void TC08_shareTransfer()throws Exception {
+        sleepAndSaveInfo(5000);
 
         String keyId = gdAccountKeyID1;
         String fromAddr = gdAccount1;
-        long amount = 1000;
         String toAddr = gdAccount3;
         int shareProperty = 1;
         String eqCode = gdEquityCode;
 
-        regNo = "transfer" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("登记流水号",regNo);       //更新对比的登记流水号
+        String tempObjIdFrom = mapAccAddr.get(gdAccount1).toString();
+        String tempObjIdTo = mapAccAddr.get(gdAccount3).toString();
 
-        List<Map> regInfoList = new ArrayList<>();
-        regInfoList.add(registerInfo);
-        regInfoList.add(registerInfo);
-        String response = gd.GDShareTransfer(keyId, fromAddr, amount, toAddr, shareProperty, eqCode, txInformation, regInfoList);
+        Map fromNow = gdBF.init05RegInfo();
+        Map toNow = gdBF.init05RegInfo();
+
+        regNo = "Eq" + "transfer" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
+        fromNow.put("登记流水号", regNo);       //更新对比的登记流水号
+        toNow.put("登记流水号", regNo);       //更新对比的登记流水号
+        fromNow.put("权利人账户引用", tempObjIdFrom);       //更新对比的权利人账户引用
+        toNow.put("权利人账户引用", tempObjIdTo);       //更新对比的权利人账户引用
+
+        txInformation.put("原持有方主体引用", tempObjIdFrom);
+        String response = gd.GDShareTransfer(keyId, fromAddr, transferAmount, toAddr, shareProperty, eqCode, txInformation, fromNow, toNow);
 
         JSONObject jsonObject = JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
@@ -434,6 +447,9 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
+
+        //获取上链交易时间戳
+        long onChainTS = JSONObject.fromObject(store.GetTxDetail(txId)).getJSONObject("data").getJSONObject("header").getLong("timestamp");
 
         //查询挂牌企业数据
         //查询投资者信息
@@ -447,35 +463,32 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         //获取监管数据存证hash
         String storeId = gdCF.getJGStoreHash(txId, 1);
 
-
-        String tempObjIdFrom = mapAccAddr.get(gdAccount3).toString();
-        String tempObjIdTo = mapAccAddr.get(gdAccount3).toString();
-
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        String sd = sdf.format(new Date(onChainTS)); // 时间戳转换日期
         log.info("检查过户转让存证登记格式化及信息内容与传入一致:" + tempObjIdFrom);
-        registerInfo.put("权利人账户引用",tempObjIdFrom);
+        fromNow.put("变动额", 0);
+        fromNow.put("登记时间", txInformation.get("成交时间").toString());
+        fromNow.put("当前可用余额", issueAmount - transferAmount);
+        fromNow.put("当前冻结余额", 0);   //当前冻结余额修改为实际冻结数
+
+        toNow.put("变动额", 0);
+        toNow.put("当前冻结余额", 0);   //当前冻结余额修改为实际冻结数
+        toNow.put("登记时间", txInformation.get("成交时间").toString());
+        toNow.put("当前可用余额", transferAmount);
         log.info(gdCF.contructRegisterInfo(storeId, 3, tempObjIdFrom).toString().replaceAll("\"", ""));
-        log.info(registerInfo.toString());
-        assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId,3,tempObjIdFrom).toString().replaceAll("\"",""));
+        log.info(fromNow.toString());
+        assertEquals(fromNow.toString(), gdCF.contructRegisterInfo(storeId, 3, tempObjIdFrom).toString().replaceAll("\"", ""));
 
         log.info("检查过户转让存证交易格式化及信息内容与传入一致:" + tempObjIdFrom);
-        txInformation.put("原持有方主体引用",tempObjIdFrom);
+
         log.info(gdCF.contructTxInfo(storeId, 3, tempObjIdFrom).toString().replaceAll("\"", ""));
         log.info(txInformation.toString());
         assertEquals(txInformation.toString(), gdCF.contructTxInfo(storeId, 3, tempObjIdFrom).toString().replaceAll("\"", ""));
 
-
         log.info("检查过户转让存证登记格式化及信息内容与传入一致:" + tempObjIdTo);
-        registerInfo.put("权利人账户引用",tempObjIdTo);
         log.info(gdCF.contructRegisterInfo(storeId, 3, tempObjIdTo).toString().replaceAll("\"", ""));
-        log.info(registerInfo.toString());
-        assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId,3,tempObjIdTo).toString().replaceAll("\"",""));
-
-        log.info("检查过户转让存证交易格式化及信息内容与传入一致:" + tempObjIdTo);
-        txInformation.put("原持有方主体引用",tempObjIdTo);
-        log.info(gdCF.contructTxInfo(storeId, 3, tempObjIdTo).toString().replaceAll("\"", ""));
-        log.info(txInformation.toString());
-        assertEquals(txInformation.toString(), gdCF.contructTxInfo(storeId, 3, tempObjIdTo).toString().replaceAll("\"", ""));
-
+        log.info(toNow.toString());
+        assertEquals(toNow.toString(), gdCF.contructRegisterInfo(storeId, 3, tempObjIdTo).toString().replaceAll("\"", ""));
 
         log.info("================================检查存证数据格式化《结束》================================");
 
@@ -691,6 +704,8 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
     @Test
     public void TC10_shareLock() throws Exception {
 
+        sleepAndSaveInfo(5000);
+
         String bizNo = bizNoTest;
         String eqCode = gdEquityCode;
         String address = gdAccount2;
@@ -698,6 +713,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         String reason = "司法冻结";
         String cutoffDate = "2022-09-30";
 
+        registerInfo.put("权利人账户引用",mapAccAddr.get(address));
         regNo = "lock" + bizNo + (new Date()).getTime();   //区分不同类型的交易登记以流水号
         registerInfo.put("登记流水号",regNo);       //更新对比的登记流水号
 
@@ -1275,7 +1291,10 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         String clntNo = gdAccClientNo10;
 
-        String response= gd.GDAccountDestroy(gdContractAddress,clntNo);
+        String cert1 = "2.txt";
+        String cert2 = "22.txt";
+        String response= gd.GDAccountDestroy(gdContractAddress,clntNo,cert1,cert2);
+
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 

@@ -14,7 +14,7 @@ public interface GuDeng {
     String GDShareChangeProperty(Map change);
 
     String GDShareTransfer(String keyId, String fromAddr, long amount, String toAddr, int shareProperty,
-                           String equityCode, Map txInformation, List<Map> registerInformationList);
+                           String equityCode, Map txInformation, Map fromRegisterInfo,Map toRegisterInfo);
     String GDShareTransfer(Map mapTransfer);
 
     String GDShareIncrease(String platformKeyId, String equityCode, List<Map> shareList, String reason,Map equityProductInfo,Map bondProductInfo);
@@ -27,7 +27,7 @@ public interface GuDeng {
 
     String GDShareChangeBoard(String platformKeyId, String companyId, String oldEquityCode, String newEquityCode,Map registerInformation,Map equityProductInfo,Map bondProductInfo);
 
-    String GDAccountDestroy(String contractAddress, String clientNo);
+    String GDAccountDestroy(String contractAddress, String clientNo,String shareholderClosingCertificate,String fundClosingCertificate);
 
     String GDInfoPublish(Map infoDisclosure);
     String GDInfoPublishGet(String txId);
@@ -40,5 +40,8 @@ public interface GuDeng {
     String GDAccountQuery(String contractAddress,String clientNo);
     String GDMainSubjectQuery(String contractAddress,String subjectObjectId);
     String GDEquitySystemInit(String contractAddress,String platformKeyId);
+
+    String GDUpdateSubjectInfo(String contractAddress,int type,Map subjectInfo);
+    String GDGetTxReportInfo(String type, String value,String beginTime,String endTime);
 
 }

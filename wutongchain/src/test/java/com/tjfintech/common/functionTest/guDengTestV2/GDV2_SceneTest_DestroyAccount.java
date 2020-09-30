@@ -128,23 +128,25 @@ public class GDV2_SceneTest_DestroyAccount {
     public void destroyAccWitContractAddrSpecChar()throws Exception{
         String clientNo = "spec" + Random(10);
         uf.createAcc(clientNo,true);
-        String response = gd.GDAccountDestroy("@",clientNo);
+        String cert1 = "2.txt";
+        String cert2 = "22.txt";
+        String response = gd.GDAccountDestroy("@",clientNo,cert1,cert2);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("查询账号信息失败",JSONObject.fromObject(response).getString("message"));
 
-        response = gd.GDAccountDestroy("#",clientNo);
+        response = gd.GDAccountDestroy("#",clientNo,cert1,cert2);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("查询账号信息失败",JSONObject.fromObject(response).getString("message"));
 
-        response = gd.GDAccountDestroy("%",clientNo);
+        response = gd.GDAccountDestroy("%",clientNo,cert1,cert2);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("查询账号信息失败",JSONObject.fromObject(response).getString("message"));
 
-        response = gd.GDAccountDestroy("_",clientNo);
+        response = gd.GDAccountDestroy("_",clientNo,cert1,cert2);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("查询账号信息失败",JSONObject.fromObject(response).getString("message"));
 
-        response = gd.GDAccountDestroy("|",clientNo);
+        response = gd.GDAccountDestroy("|",clientNo,cert1,cert2);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("查询账号信息失败",JSONObject.fromObject(response).getString("message"));
 
