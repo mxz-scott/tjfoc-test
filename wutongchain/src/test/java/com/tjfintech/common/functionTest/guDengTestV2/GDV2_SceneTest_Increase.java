@@ -209,7 +209,7 @@ public class GDV2_SceneTest_Increase {
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         JSONArray jsonArrayGet = JSONObject.fromObject(query).getJSONArray("data");
 
-        assertEquals(12000,getTotalAmountFromShareList(jsonArrayGet),0.0001);
+        assertEquals("12000",getTotalAmountFromShareList(jsonArrayGet));
     }
 
 
@@ -261,7 +261,7 @@ public class GDV2_SceneTest_Increase {
         JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
 
         JSONArray jsonArrayGet = JSONObject.fromObject(query).getJSONArray("data");
-        assertEquals(84000,getTotalAmountFromShareList(jsonArrayGet),0.0001);
+        assertEquals("84000",getTotalAmountFromShareList(jsonArrayGet));
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();

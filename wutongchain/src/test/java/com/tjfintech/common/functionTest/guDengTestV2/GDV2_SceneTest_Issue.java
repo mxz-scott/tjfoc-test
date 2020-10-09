@@ -160,7 +160,7 @@ public class GDV2_SceneTest_Issue {
         JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
 
         JSONArray jsonArrayGet = JSONObject.fromObject(query).getJSONArray("data");
-        assertEquals(12000,getTotalAmountFromShareList(jsonArrayGet),0.0001);
+        assertEquals("12000",getTotalAmountFromShareList(jsonArrayGet));
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();
@@ -264,7 +264,7 @@ public class GDV2_SceneTest_Issue {
         JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
 
         JSONArray jsonArrayGet = JSONObject.fromObject(query).getJSONArray("data");
-        assertEquals(15000,getTotalAmountFromShareList(jsonArrayGet),0.0001);
+        assertEquals("15000",getTotalAmountFromShareList(jsonArrayGet));
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();

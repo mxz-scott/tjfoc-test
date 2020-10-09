@@ -484,7 +484,7 @@ public class GDV2_SceneTest_Transfer {
             uf.shareTransfer(gdAccountKeyID3,gdAccount3,600,gdAccount5,0,gdEquityCode,
                     true);
             query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
-            assertEquals(9000,getTotalAmountFromShareList(jsonArrayGet),0.0001);
+            assertEquals("9000",getTotalAmountFromShareList(jsonArrayGet));
         }
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);

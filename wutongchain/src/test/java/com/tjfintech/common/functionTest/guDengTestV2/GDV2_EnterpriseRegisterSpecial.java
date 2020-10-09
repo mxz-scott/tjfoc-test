@@ -138,7 +138,7 @@ public class GDV2_EnterpriseRegisterSpecial {
     @Test
     public void TC013_enterpriseRegisterMemberCheckFormat() throws Exception {
         long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo, null,null);
+        String response= gd.GDEnterpriseResister(gdContractAddress,"",0,enterpriseSubjectInfo, null,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -201,44 +201,32 @@ public class GDV2_EnterpriseRegisterSpecial {
         }
         assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
 
-
-        //获取存证hash
-        String query = store.GetTxDetail(txId);
-        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
-        JSONObject jsonObject = JSONObject.parseObject(questInfo);
-        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
-
-        //获取交易所在区块
-        String height = net.sf.json.JSONObject.fromObject(store.GetTransactionBlock(txId)).getString("data");
-
-        //获取区块交易列表
-        JSONArray txArr = net.sf.json.JSONObject.fromObject(store.GetBlockByHeight(Integer.parseInt(height))).getJSONObject("data").getJSONArray("txs");
-        txArr.remove(txId);
-        txArr.remove(SubjectObjectTxId);
-
-        //获取账户存证hash
-        String AccountInfoListTxId = gdCF.getJGStoreHash2(txArr,height,1);
+        //获取监管数据存证hash
+        String jgType = "账户";
+        String accStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
+        jgType = "主体";
+        String subStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
 
 
         //检查主体存证信息内容与传入一致
         log.info("检查主体存证信息内容与传入一致");
-        log.info(gdCF.contructPersonalSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructPersonalSubInfo(subStoreId).toString().replaceAll("\"",""));
         log.info(investorSubjectInfo.toString());
         assertEquals(investorSubjectInfo.toString().replaceAll(" ","").replaceAll("\"",""),
-                gdCF.contructPersonalSubInfo(SubjectObjectTxId).toString().replaceAll(" ","").replaceAll("\"",""));
+                gdCF.contructPersonalSubInfo(subStoreId).toString().replaceAll(" ","").replaceAll("\"",""));
 
         //检查账户存证信息内容与传入一致
         log.info("检查资金账户存证信息内容与传入一致");
-        log.info(gdCF.contructFundAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll("\"",""));
+        log.info(gdCF.contructFundAccountInfo(accStoreId,cltNo).toString().replaceAll("\"",""));
         log.info(fundaccountInfo.toString());
-        assertEquals(fundaccountInfo.toString().replaceAll(" ","").replaceAll("\"",""),
-                gdCF.contructFundAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
+        assertEquals(fundaccountInfo.toString().replaceAll(" ","").replaceAll("\"","").replaceAll("\\[","").replaceAll("]",""),
+                gdCF.contructFundAccountInfo(accStoreId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
 
         log.info("检查资金账户存证信息内容与传入一致");
-        log.info(gdCF.contructEquityAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll("\"",""));
+        log.info(gdCF.contructEquityAccountInfo(accStoreId,cltNo).toString().replaceAll("\"",""));
         log.info(equityaccountInfo.toString());
-        assertEquals(equityaccountInfo.toString().replaceAll(" ","").replaceAll("\"",""),
-                gdCF.contructEquityAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
+        assertEquals(equityaccountInfo.toString().replaceAll(" ","").replaceAll("\"","").replaceAll("\\[","").replaceAll("]",""),
+                gdCF.contructEquityAccountInfo(accStoreId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
 
 
     }
@@ -346,22 +334,11 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
-        //获取存证hash
-        String query = store.GetTxDetail(txId);
-        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
-        JSONObject jsonObject = JSONObject.parseObject(questInfo);
-        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
-
-        //获取交易所在区块
-        String height = net.sf.json.JSONObject.fromObject(store.GetTransactionBlock(txId)).getString("data");
-
-        //获取区块交易列表
-        JSONArray txArr = net.sf.json.JSONObject.fromObject(store.GetBlockByHeight(Integer.parseInt(height))).getJSONObject("data").getJSONArray("txs");
-        txArr.remove(txId);
-        txArr.remove(SubjectObjectTxId);
-
-        //获取账户存证hash
-        String AccountInfoListTxId = gdCF.getJGStoreHash2(txArr,height,1);
+        //获取监管数据存证hash
+        String jgType = "账户";
+        String accStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
+        jgType = "主体";
+        String subStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
 
 
         equityaccountInfo.put("账户所属主体引用",investorSubjectInfo.get("对象标识"));
@@ -372,23 +349,23 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         //检查主体存证信息内容与传入一致
         log.info("检查主体存证信息内容与传入一致");
-        log.info(gdCF.contructPersonalSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructPersonalSubInfo(subStoreId).toString().replaceAll("\"",""));
         log.info(investorSubjectInfo.toString());
         assertEquals(investorSubjectInfo.toString().replaceAll(" ","").replaceAll("\"",""),
-                gdCF.contructPersonalSubInfo(SubjectObjectTxId).toString().replaceAll(" ","").replaceAll("\"",""));
+                gdCF.contructPersonalSubInfo(subStoreId).toString().replaceAll(" ","").replaceAll("\"",""));
 
         //检查账户存证信息内容与传入一致
         log.info("检查资金账户存证信息内容与传入一致");
-        log.info(gdCF.contructFundAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll("\"",""));
+        log.info(gdCF.contructFundAccountInfo(accStoreId,cltNo).toString().replaceAll("\"",""));
         log.info(fundaccountInfo.toString());
-        assertEquals(fundaccountInfo.toString().replaceAll(" ","").replaceAll("\"",""),
-                gdCF.contructFundAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
+        assertEquals(fundaccountInfo.toString().replaceAll(" ","").replaceAll("\"","").replaceAll("\\[","").replaceAll("]",""),
+                gdCF.contructFundAccountInfo(accStoreId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
 
         log.info("检查股权账户存证信息内容与传入一致");
-        log.info(gdCF.contructEquityAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll("\"",""));
+        log.info(gdCF.contructEquityAccountInfo(accStoreId,cltNo).toString().replaceAll("\"",""));
         log.info(equityaccountInfo.toString());
-        assertEquals(equityaccountInfo.toString().replaceAll(" ","").replaceAll("\"",""),
-                gdCF.contructEquityAccountInfo(AccountInfoListTxId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
+        assertEquals(equityaccountInfo.toString().replaceAll(" ","").replaceAll("\"","").replaceAll("\\[","").replaceAll("]",""),
+                gdCF.contructEquityAccountInfo(accStoreId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
 
 
 

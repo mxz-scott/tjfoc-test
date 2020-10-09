@@ -473,7 +473,6 @@ public class GDV2_CheckJGFormat_AllFlow {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
-
         //查询挂牌企业数据
         //查询投资者信息
         //查询企业股东信息
@@ -487,7 +486,7 @@ public class GDV2_CheckJGFormat_AllFlow {
         String jgType = "登记";
         String regStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
         jgType = "产品";
-        String prodStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
+        String prodStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
         jgType = "主体";
         String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
@@ -511,6 +510,9 @@ public class GDV2_CheckJGFormat_AllFlow {
         }
 
         log.info("检查增发存证主体格式化及信息内容与传入一致");
+//        String getTotalMem = enterpriseSubjectInfo.get("股东总数（个）").toString();
+//        int oldTotalMem = Integer.parseInt(getTotalMem);
+//        enterpriseSubjectInfo.put("股东总数（个）",oldTotalMem + 1);     //变更总股本数为增发量 + 原始股本总数
 
         String getTotal = enterpriseSubjectInfo.get("股本总数(股)").toString();
         BigDecimal oldTotal = new BigDecimal(getTotal);
@@ -853,6 +855,8 @@ public class GDV2_CheckJGFormat_AllFlow {
         String tempObjId = mapAccAddr.get(address).toString();
         log.info("检查回收存证登记格式化及信息内容与传入一致");
         registerInfo.put("变动额",(-1) * recycleAmount);     //变动额修改为单个账户发行数量
+        registerInfo.put("权利人账户引用",mapAccAddr.get(address).toString());     //变动额修改为单个账户发行数量
+        registerInfo.put("冻结变动额",10000);     //变动额修改为单个账户发行数量
         log.info(gdCF.contructRegisterInfo(regStoreId,1,tempObjId).toString().replaceAll("\"",""));
         log.info(registerInfo.toString());
         assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(regStoreId,1,tempObjId).toString().replaceAll("\"",""));
@@ -987,6 +991,8 @@ public class GDV2_CheckJGFormat_AllFlow {
 
             log.info("检查回收存证登记格式化及信息内容与传入一致");
             registerInfo.put("变动额", "-100");     //变动额修改为单个账户发行数量
+            registerInfo.put("权利人账户引用",tempObjId);     //变动额修改为单个账户发行数量
+            registerInfo.put("冻结变动额",10000);     //变动额修改为单个账户发行数量
             log.info(gdCF.contructRegisterInfo(regStoreId, 4,tempObjId).toString().replaceAll("\"", ""));
             log.info(registerInfo.toString());
             assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(regStoreId, 4,tempObjId).toString().replaceAll("\"", ""));
@@ -1116,7 +1122,7 @@ public class GDV2_CheckJGFormat_AllFlow {
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
 
         JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
-
+        String totalAmount = getTotalAmountFromShareList(dataShareList);
 
         log.info("================================检查存证数据格式化《开始》================================");
         //获取监管数据存证hash
@@ -1138,9 +1144,10 @@ public class GDV2_CheckJGFormat_AllFlow {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             String sd = sdf.format(new Date(onChainTS)); // 时间戳转换日期
 
-            registerInfo.put("变动额", tempAmount);
-            registerInfo.put("当前可用余额", tempAmount);
+            registerInfo.put("变动额", tempAmount);//有问题 数据不对
+            registerInfo.put("当前可用余额", tempAmount);//有问题 数据不对
             registerInfo.put("登记时间", sd);
+//            registerInfo.put("认购数量", 0);
             log.info(gdCF.contructRegisterInfo(storeId, 9,tempObjId).toString().replaceAll("\"", ""));
             log.info(registerInfo.toString());
             assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId, 9,tempObjId).toString().replaceAll("\"", ""));

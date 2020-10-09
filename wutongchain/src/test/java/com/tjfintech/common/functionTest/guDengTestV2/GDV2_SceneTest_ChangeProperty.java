@@ -406,7 +406,7 @@ public class GDV2_SceneTest_ChangeProperty {
             uf.changeSHProperty(gdAccount3,gdEquityCode,600,0,1,true);
             query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
             //测试股权性质变更 所有权及持股总数不变更
-            assertEquals(9000,getTotalAmountFromShareList(jsonArrayGet),0.0001);
+            assertEquals("9000",getTotalAmountFromShareList(jsonArrayGet));
         }
 
     }

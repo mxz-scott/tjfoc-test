@@ -41,7 +41,7 @@ public class GDCommonFunc {
     //获取交易hash函数 此处兼容
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public String getJGStoreHash2(String txId,String type,int offset) {
+    public String getJGStoreHash2(String txId,String type,int offset) throws Exception{
         //获取交易所在区块
         String height = JSONObject.fromObject(store.GetTransactionBlock(txId)).getString("data");
         //获取区块交易列表
@@ -79,6 +79,7 @@ public class GDCommonFunc {
         }
         if(storeId.equals("")) {
             log.info("存证与交易并未打在同一个区块中，尝试在下一个区块中查找报送数据存证");
+            sleepAndSaveInfo(4000,"等待下一个块交易打块");
             txArr = JSONObject.fromObject(store.GetBlockByHeight(Integer.parseInt(height) + offset)).getJSONObject("data").getJSONArray("txs");
             for (int j = 0; j < txArr.size(); j++) {
                 String txdetail = store.GetTxDetail(txArr.get(j).toString());
@@ -238,13 +239,13 @@ public class GDCommonFunc {
     }
 
 
-    public static double getTotalAmountFromShareList(JSONArray dataShareList)throws Exception {
+    public static String getTotalAmountFromShareList(JSONArray dataShareList)throws Exception {
         List<Map> getShareList = new ArrayList<>();
-        double total = 0;
+        long total = 0;
         for (int i = 0; i < dataShareList.size(); i++) {
-            total = JSONObject.fromObject(dataShareList.get(i)).getDouble("amount") + total;
+            total = JSONObject.fromObject(dataShareList.get(i)).getLong("amount") + total;
         }
-        return total;
+        return String.valueOf(total);
     }
 
     /***
@@ -696,15 +697,22 @@ public class GDCommonFunc {
         log.info("检查的交易id " + personalTxId);
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(personalTxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
-        com.alibaba.fastjson.JSONArray jsonArray2 = com.alibaba.fastjson.JSONArray.parseArray(storeData2);
 
         com.alibaba.fastjson.JSONObject jobj2 = null;
 
-        for(int i=0;i<jsonArray2.size();i++){
-            com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
-            if( objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals("主体")){
-                jobj2 = objTemp;
-                break;
+        //如果是单独的一个则直接使用JSONObject进行解析
+        if(storeData2.startsWith("{")){
+            jobj2 = com.alibaba.fastjson.JSONObject.parseObject(storeData2);
+        }else {
+            //storedata是个list时
+            com.alibaba.fastjson.JSONArray jsonArray2 = com.alibaba.fastjson.JSONArray.parseArray(storeData2);
+
+            for (int i = 0; i < jsonArray2.size(); i++) {
+                com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
+                if (objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals("主体")) {
+                    jobj2 = objTemp;
+                    break;
+                }
             }
         }
 
@@ -880,26 +888,43 @@ public class GDCommonFunc {
         getSubjectInfo.put("账号状态",objAccbase.getString("账号状态"));
 
         getSubjectInfo.put("账户开户时间",objAccLife.getJSONObject("开户信息").getString("账户开户时间"));
-        getSubjectInfo.put("账户开户核验凭证", com.alibaba.fastjson.JSONObject.parseArray(
-                objAccLife.getJSONObject("开户信息").getJSONArray("账户开户核验凭证").toJSONString(), String.class));
+        getSubjectInfo.put("账户开户核验凭证", objAccLife.getJSONObject("开户信息").getString("账户开户核验凭证"));
 
         getSubjectInfo.put("账户销户时间",objAccLife.getJSONObject("销户信息").getString("账户销户时间"));
-        getSubjectInfo.put("账户销户核验凭证", com.alibaba.fastjson.JSONObject.parseArray(
-                objAccLife.getJSONObject("销户信息").getJSONArray("账户销户核验凭证").toJSONString(), String.class));
+        getSubjectInfo.put("账户销户核验凭证", objAccLife.getJSONObject("销户信息").getString("账户销户核验凭证"));
 
         getSubjectInfo.put("账户冻结时间",objAccLife.getJSONObject("冻结信息").getString("账户冻结时间"));
-        getSubjectInfo.put("账户冻结核验凭证", com.alibaba.fastjson.JSONObject.parseArray(
-                objAccLife.getJSONObject("冻结信息").getJSONArray("账户冻结核验凭证").toJSONString(), String.class));
+        getSubjectInfo.put("账户冻结核验凭证", objAccLife.getJSONObject("冻结信息").getString("账户冻结核验凭证"));
 
         getSubjectInfo.put("账户解冻时间",objAccLife.getJSONObject("解冻信息").getString("账户解冻时间"));
-        getSubjectInfo.put("账户解冻核验凭证", com.alibaba.fastjson.JSONObject.parseArray(
-                objAccLife.getJSONObject("解冻信息").getJSONArray("账户解冻核验凭证").toJSONString(), String.class));
+        getSubjectInfo.put("账户解冻核验凭证", objAccLife.getJSONObject("解冻信息").getString("账户解冻核验凭证"));
 
 
         getSubjectInfo.put("关联关系",objAccRela.getString("关联关系"));
         getSubjectInfo.put("关联账户对象引用",objAccRela.getString("关联账户对象引用"));
-        getSubjectInfo.put("关联账户开户文件", com.alibaba.fastjson.JSONObject.parseArray(
-                objAccRela.getJSONArray("关联账户开户文件").toJSONString(), String.class));
+        getSubjectInfo.put("关联账户开户文件", objAccRela.getString("关联账户开户文件"));
+//
+//        getSubjectInfo.put("账户开户时间",objAccLife.getJSONObject("开户信息").getString("账户开户时间"));
+//        getSubjectInfo.put("账户开户核验凭证", com.alibaba.fastjson.JSONObject.parseArray(
+//                objAccLife.getJSONObject("开户信息").getJSONArray("账户开户核验凭证").toJSONString(), String.class));
+//
+//        getSubjectInfo.put("账户销户时间",objAccLife.getJSONObject("销户信息").getString("账户销户时间"));
+//        getSubjectInfo.put("账户销户核验凭证", com.alibaba.fastjson.JSONObject.parseArray(
+//                objAccLife.getJSONObject("销户信息").getJSONArray("账户销户核验凭证").toJSONString(), String.class));
+//
+//        getSubjectInfo.put("账户冻结时间",objAccLife.getJSONObject("冻结信息").getString("账户冻结时间"));
+//        getSubjectInfo.put("账户冻结核验凭证", com.alibaba.fastjson.JSONObject.parseArray(
+//                objAccLife.getJSONObject("冻结信息").getJSONArray("账户冻结核验凭证").toJSONString(), String.class));
+//
+//        getSubjectInfo.put("账户解冻时间",objAccLife.getJSONObject("解冻信息").getString("账户解冻时间"));
+//        getSubjectInfo.put("账户解冻核验凭证", com.alibaba.fastjson.JSONObject.parseArray(
+//                objAccLife.getJSONObject("解冻信息").getJSONArray("账户解冻核验凭证").toJSONString(), String.class));
+//
+//
+//        getSubjectInfo.put("关联关系",objAccRela.getString("关联关系"));
+//        getSubjectInfo.put("关联账户对象引用",objAccRela.getString("关联账户对象引用"));
+//        getSubjectInfo.put("关联账户开户文件", com.alibaba.fastjson.JSONObject.parseArray(
+//                objAccRela.getJSONArray("关联账户开户文件").toJSONString(), String.class));
 
         return getSubjectInfo;
     }
@@ -949,26 +974,44 @@ public class GDCommonFunc {
         getSubjectInfo.put("账号状态",objAccbase.getString("账号状态"));
 
         getSubjectInfo.put("账户开户时间",objAccLife.getJSONObject("开户信息").getString("账户开户时间"));
-        getSubjectInfo.put("账户开户核验凭证", com.alibaba.fastjson.JSONObject.parseArray(
-                objAccLife.getJSONObject("开户信息").getJSONArray("账户开户核验凭证").toJSONString(), String.class));
+        getSubjectInfo.put("账户开户核验凭证", objAccLife.getJSONObject("开户信息").getString("账户开户核验凭证"));
 
         getSubjectInfo.put("账户销户时间",objAccLife.getJSONObject("销户信息").getString("账户销户时间"));
-        getSubjectInfo.put("账户销户核验凭证", com.alibaba.fastjson.JSONObject.parseArray(
-                objAccLife.getJSONObject("销户信息").getJSONArray("账户销户核验凭证").toJSONString(), String.class));
+        getSubjectInfo.put("账户销户核验凭证", objAccLife.getJSONObject("销户信息").getString("账户销户核验凭证"));
 
         getSubjectInfo.put("账户冻结时间",objAccLife.getJSONObject("冻结信息").getString("账户冻结时间"));
-        getSubjectInfo.put("账户冻结核验凭证", com.alibaba.fastjson.JSONObject.parseArray(
-                objAccLife.getJSONObject("冻结信息").getJSONArray("账户冻结核验凭证").toJSONString(), String.class));
+        getSubjectInfo.put("账户冻结核验凭证", objAccLife.getJSONObject("冻结信息").getString("账户冻结核验凭证"));
 
         getSubjectInfo.put("账户解冻时间",objAccLife.getJSONObject("解冻信息").getString("账户解冻时间"));
-        getSubjectInfo.put("账户解冻核验凭证", com.alibaba.fastjson.JSONObject.parseArray(
-                objAccLife.getJSONObject("解冻信息").getJSONArray("账户解冻核验凭证").toJSONString(), String.class));
+        getSubjectInfo.put("账户解冻核验凭证", objAccLife.getJSONObject("解冻信息").getString("账户解冻核验凭证"));
 
 
         getSubjectInfo.put("关联关系",objAccRela.getString("关联关系"));
         getSubjectInfo.put("关联账户对象引用",objAccRela.getString("关联账户对象引用"));
-        getSubjectInfo.put("关联账户开户文件", com.alibaba.fastjson.JSONObject.parseArray(
-                objAccRela.getJSONArray("关联账户开户文件").toJSONString(), String.class));
+        getSubjectInfo.put("关联账户开户文件", objAccRela.getString("关联账户开户文件"));
+
+
+//        getSubjectInfo.put("账户开户时间",objAccLife.getJSONObject("开户信息").getString("账户开户时间"));
+//        getSubjectInfo.put("账户开户核验凭证", com.alibaba.fastjson.JSONObject.parseArray(
+//                objAccLife.getJSONObject("开户信息").getJSONArray("账户开户核验凭证").toJSONString(), String.class));
+//
+//        getSubjectInfo.put("账户销户时间",objAccLife.getJSONObject("销户信息").getString("账户销户时间"));
+//        getSubjectInfo.put("账户销户核验凭证", com.alibaba.fastjson.JSONObject.parseArray(
+//                objAccLife.getJSONObject("销户信息").getJSONArray("账户销户核验凭证").toJSONString(), String.class));
+//
+//        getSubjectInfo.put("账户冻结时间",objAccLife.getJSONObject("冻结信息").getString("账户冻结时间"));
+//        getSubjectInfo.put("账户冻结核验凭证", com.alibaba.fastjson.JSONObject.parseArray(
+//                objAccLife.getJSONObject("冻结信息").getJSONArray("账户冻结核验凭证").toJSONString(), String.class));
+//
+//        getSubjectInfo.put("账户解冻时间",objAccLife.getJSONObject("解冻信息").getString("账户解冻时间"));
+//        getSubjectInfo.put("账户解冻核验凭证", com.alibaba.fastjson.JSONObject.parseArray(
+//                objAccLife.getJSONObject("解冻信息").getJSONArray("账户解冻核验凭证").toJSONString(), String.class));
+//
+//
+//        getSubjectInfo.put("关联关系",objAccRela.getString("关联关系"));
+//        getSubjectInfo.put("关联账户对象引用",objAccRela.getString("关联账户对象引用"));
+//        getSubjectInfo.put("关联账户开户文件", com.alibaba.fastjson.JSONObject.parseArray(
+//                objAccRela.getJSONArray("关联账户开户文件").toJSONString(), String.class));
 
         return getSubjectInfo;
     }
