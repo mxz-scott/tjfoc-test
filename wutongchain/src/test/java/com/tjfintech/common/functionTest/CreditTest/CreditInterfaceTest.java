@@ -10,11 +10,14 @@ import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.mockito.internal.matchers.Null;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,391 +34,397 @@ public class CreditInterfaceTest {
     CommonFunc commonFunc = new CommonFunc();
     CreditCommonFunc creditCommonFunc = new CreditCommonFunc();
     UtilsClass utilsClass = new UtilsClass();
-    String creditfilePath = "credit/";
-    String identity = "identity.wlang";
-    String authorization = "authorization.wlang";
-    String creditdata = "creditdata.wlang";
-    String viewhistory = "viewhistory.wlang";
-
     WVMContractTest wvm = new WVMContractTest();
+
+    String enterprisecode = "enterprise" + utilsClass.Random(8);
 
     @BeforeClass
     public static void init() throws Exception {
-        BeforeCondition beforeCondition = new BeforeCondition();
-        beforeCondition.updatePubPriKey();
-    }
-
-    /**
-     * 安装合约
-     * 机构私有合约 creditdata.wlang
-     * 公共合约3个
-     * authorization.wlang
-     * creditdata.wlang
-     * viewhistory.wlang
-     */
-    @Test
-    public void creditProcessTest() throws Exception {
-
-        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-        //安装3个公共合约和1个机构合约
-        //安装authorization.wlang
-        String response = wvm.wvmInstallTest(creditfilePath + authorization, "");
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-        String authname = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-
-        //安装viewhistory.wlang
-        response = wvm.wvmInstallTest(creditfilePath + viewhistory, "");
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-        String viewname = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-
-        //安装identity.wlang
-        response = wvm.wvmInstallTest(creditfilePath + identity, "");
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-        String identityname = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-
-        //安装creditdata.wlang
-        response = wvm.wvmInstallTest(creditfilePath + "creditdata" , "");
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-        String creditname = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-
-    }
-
-
-    /**
-     * 安装多个机构合约
-     * 机构私有合约 creditdata.wlang
-     */
-    @Test
-    public void multiInstallCreditdataContractTest() throws Exception {
-
-        //安装多个creditdata合约
-        int i = 200;
-        String oldStr = "CreditDataContract";
-        for (int g = 100; g < i; g++) {
-            String repStr = "CreditDataContract" + String.valueOf(g);
-            FileOperation fileOper = new FileOperation();
-            //安装creditdata.wlang
-            fileOper.replace(resourcePath + creditfilePath + creditdata, "CreditDataContract", repStr);
-            sleepAndSaveInfo(2000, "等待合约更新");
-            String response = wvm.wvmInstallTest(creditfilePath + "creditdata" + "_temp.wlang", "");
-            String contractname = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-            log.info(contractname + "****" + repStr);
-            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                    utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-            sleepAndSaveInfo(2000, "等待worldstate更新");
-
-            credit.creditIdentityAdd
-                    (repStr, repStr, "征信机构", contractname, PUBKEY1, "aa", "bb");
-            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                    utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-
-            List<Map> list = creditCommonFunc.constructCreditData("A", "2020092506", oldStr, oldStr, "hash1",
-                    "a", "2020-09-24-15-00-00", "a", "A");
-            credit.creditCreditdataAdd(list, contractname);
-            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                    utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-
+        CreditCommonFunc creditCommonFunc = new CreditCommonFunc();
+        UtilsClass utilsClass = new UtilsClass();
+        if (authContractName.isEmpty()) {
+            BeforeCondition beforeCondition = new BeforeCondition();
+            beforeCondition.updatePubPriKey();
+            beforeCondition.installZXContract();
         }
-
+        //更新zxconfig配置文件Code和CreditdataPath
+        creditCommonFunc.setZXConfig(utilsClass.getIPFromStr(SDKADD), "Common", "Code", zxCode);
+        creditCommonFunc.setZXConfig(utilsClass.getIPFromStr(SDKADD), "SmartContract", "CreditdataPath", creditContractName);
+        shellExeCmd(utilsClass.getIPFromStr(SDKADD), killSDKCmd, startSDKCmd); //重启sdk api
+        sleepAndSaveInfo(SLEEPTIME, "等待SDK重启");
     }
 
     @Test
     public void creditIdentityAddTest() throws Exception {
-        String code = "ZX" + utilsClass.Random(8);
-        credit.creditIdentityAdd
-                (code, code, "征信机构", "", PUBKEY1, "aa", "bb");
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+
+        //公司名称为空
+        String response = credit.creditIdentityAdd
+                ("", zxCode, "征信机构", creditContractName, PUBKEY1, "aa", "bb");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //公司Code为空
+        response = credit.creditIdentityAdd
+                (zxCode, "", "征信机构", creditContractName, PUBKEY1, "aa", "bb");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //类型为空
+        response = credit.creditIdentityAdd
+                (zxCode, zxCode, "", creditContractName, PUBKEY1, "aa", "bb");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //征信数据合约地址为空
+        response = credit.creditIdentityAdd
+                (zxCode, zxCode, "征信机构", "", PUBKEY1, "aa", "bb");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //身份公钥为空
+        response = credit.creditIdentityAdd
+                (zxCode, zxCode, "征信机构", creditContractName, "", "aa", "bb");
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+
+        //地址为空
+        response = credit.creditIdentityAdd
+                (zxCode, zxCode, "征信机构", creditContractName, PUBKEY1, "", "bb");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //额外备注或者描述
+        response = credit.creditIdentityAdd
+                (zxCode, zxCode, "征信机构", creditContractName, PUBKEY1, "aa", "");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
     }
 
     @Test
     public void creditIdentityQueryTest() throws Exception {
 
-//        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-//        //安装3个公共合约
-//        //安装authorization.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + authorization, "");
-//        String ctHashAuth = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-//        //安装viewhistory.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + viewhistory, "");
-//        String ctHashHist = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-//        //安装identity.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + identity, "");
-//        String ctHashHist = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-        //安装多个creditdata合约
-        int i = 300;
-        for (int g = 1; g < i; g++) {
-            String oldStr = "CreditDataContract";
-            String repStr = "CreditDataContract" + String.valueOf(g);
-            FileOperation fileOper = new FileOperation();
-            //安装creditdata.wlang
-            fileOper.replace(resourcePath + creditfilePath + creditdata, oldStr, repStr);
-            String response = wvm.wvmInstallTest(creditfilePath + creditdata, "");
-            String ctHashCredit = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-            log.info(ctHashCredit + "****" + repStr);
-            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                    utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-            sleepAndSaveInfo(2000, "等待worldstate更新");
-            oldStr = repStr;
-        }
-
-    }
-
-    @Test
-    public void creditIdentityQueryAllTest() throws Exception {
-
-//        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-//        //安装3个公共合约
-//        //安装authorization.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + authorization, "");
-//        String ctHashAuth = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-//        //安装viewhistory.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + viewhistory, "");
-//        String ctHashHist = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-//        //安装identity.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + identity, "");
-//        String ctHashHist = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-        //安装多个creditdata合约
-        int i = 300;
-        for (int g = 1; g < i; g++) {
-            String oldStr = "CreditDataContract";
-            String repStr = "CreditDataContract" + String.valueOf(g);
-            FileOperation fileOper = new FileOperation();
-            //安装creditdata.wlang
-            fileOper.replace(resourcePath + creditfilePath + creditdata, oldStr, repStr);
-            String response = wvm.wvmInstallTest(creditfilePath + creditdata, "");
-            String ctHashCredit = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-            log.info(ctHashCredit + "****" + repStr);
-            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                    utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-            sleepAndSaveInfo(2000, "等待worldstate更新");
-            oldStr = repStr;
-        }
+        //公司code为空
+        String response = credit.creditIdentityQuery("");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
     }
 
     @Test
     public void creditCreditdataAddTest() throws Exception {
 
-//        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-//        //安装3个公共合约
-//        //安装authorization.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + authorization, "");
-//        String ctHashAuth = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
+        //征信数据列表为空
+        List<Map> creditlist = null;
+        String response = credit.creditCreditdataAdd(creditlist, "");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
-//        //安装viewhistory.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + viewhistory, "");
-//        String ctHashHist = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
+        //授权公司名称为空
+        creditlist = creditCommonFunc.constructCreditData("", enterprisecode, zxCode, zxCode, "hash1",
+                "a", "2020-09-24-15-00-00", "a", "A");
+        response = credit.creditCreditdataAdd(creditlist, "");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
-//        //安装identity.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + identity, "");
-//        String ctHashHist = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
+        //授权公司Code为空
+        creditlist = creditCommonFunc.constructCreditData(enterprisecode, "", zxCode, zxCode, "hash1",
+                "a", "2020-09-24-15-00-00", "a", "A");
+        response = credit.creditCreditdataAdd(creditlist, "");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
-        //安装多个creditdata合约
-        int i = 300;
-        for (int g = 1; g < i; g++) {
-            String oldStr = "CreditDataContract";
-            String repStr = "CreditDataContract" + String.valueOf(g);
-            FileOperation fileOper = new FileOperation();
-            //安装creditdata.wlang
-            fileOper.replace(resourcePath + creditfilePath + creditdata, oldStr, repStr);
-            String response = wvm.wvmInstallTest(creditfilePath + creditdata, "");
-            String ctHashCredit = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-            log.info(ctHashCredit + "****" + repStr);
-            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                    utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-            sleepAndSaveInfo(2000, "等待worldstate更新");
-            oldStr = repStr;
-        }
+        //征信公司名称为空
+        creditlist = creditCommonFunc.constructCreditData(enterprisecode, enterprisecode, "", zxCode, "hash1",
+                "a", "2020-09-24-15-00-00", "a", "A");
+        response = credit.creditCreditdataAdd(creditlist, "");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //征信公司ID为空
+        creditlist = creditCommonFunc.constructCreditData(enterprisecode, enterprisecode, zxCode, "", "hash1",
+                "a", "2020-09-24-15-00-00", "a", "A");
+        response = credit.creditCreditdataAdd(creditlist, "");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //原始征信数据摘要为空
+        creditlist = creditCommonFunc.constructCreditData(enterprisecode, enterprisecode, zxCode, zxCode, "",
+                "a", "2020-09-24-15-00-00", "a", "A");
+        response = credit.creditCreditdataAdd(creditlist, "");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //征信数据大分类信息为空
+        creditlist = creditCommonFunc.constructCreditData(enterprisecode, enterprisecode, zxCode, zxCode, "hash1",
+                "", "2020-09-24-15-00-00", "a", "A");
+        response = credit.creditCreditdataAdd(creditlist, "");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //授权开始时间为空
+        creditlist = creditCommonFunc.constructCreditData(enterprisecode, enterprisecode, zxCode, zxCode, "hash1",
+                "a", "", "a", "A");
+        response = credit.creditCreditdataAdd(creditlist, "");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //原始征信数据URL为空
+        creditlist = creditCommonFunc.constructCreditData(enterprisecode, enterprisecode, zxCode, zxCode, "hash1",
+                "a", "2020-09-24-15-00-00", "", "A");
+        response = credit.creditCreditdataAdd(creditlist, "");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //额外备注或者描述为空
+        creditlist = creditCommonFunc.constructCreditData(enterprisecode, enterprisecode, zxCode, zxCode, "hash1",
+                "a", "2020-09-24-15-00-00", "a", "");
+        response = credit.creditCreditdataAdd(creditlist, "");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
 
     }
 
     @Test
     public void creditCreditdataQueryTest() throws Exception {
 
-//        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-//        //安装3个公共合约
-//        //安装authorization.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + authorization, "");
-//        String ctHashAuth = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-//        //安装viewhistory.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + viewhistory, "");
-//        String ctHashHist = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-//        //安装identity.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + identity, "");
-//        String ctHashHist = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-        //安装多个creditdata合约
-        int i = 300;
-        for (int g = 1; g < i; g++) {
-            String oldStr = "CreditDataContract";
-            String repStr = "CreditDataContract" + String.valueOf(g);
-            FileOperation fileOper = new FileOperation();
-            //安装creditdata.wlang
-            fileOper.replace(resourcePath + creditfilePath + creditdata, oldStr, repStr);
-            String response = wvm.wvmInstallTest(creditfilePath + creditdata, "");
-            String ctHashCredit = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-            log.info(ctHashCredit + "****" + repStr);
-            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                    utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-            sleepAndSaveInfo(2000, "等待worldstate更新");
-            oldStr = repStr;
-        }
+        //授权公司Code
+        String response = credit.creditCreditdataQuery("");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
     }
 
     @Test
     public void creditAuthorizationAddTest() throws Exception {
 
-//        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-//        //安装3个公共合约
-//        //安装authorization.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + authorization, "");
-//        String ctHashAuth = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
+        //节点机构列表为空
+        ArrayList<String> orgid = new ArrayList<>();
+        List<Map> authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+                zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
+                "2020-09-24-15-00-00", 10);
+        String response = credit.creditAuthorizationAdd(orgid, authlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
-//        //安装viewhistory.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + viewhistory, "");
-//        String ctHashHist = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
+        //授权记录列表为空
+        orgid.add(zxCode);
+        authlist.clear();
+        response = credit.creditAuthorizationAdd(orgid, authlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
-//        //安装identity.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + identity, "");
-//        String ctHashHist = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
+        //授权公司名称为空
+        authlist = creditCommonFunc.constructAuthorizationData("", enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+                zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
+                "2020-09-24-15-00-00", 10);
+        response = credit.creditAuthorizationAdd(orgid, authlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
-        //安装多个creditdata合约
-        int i = 300;
-        for (int g = 1; g < i; g++) {
-            String oldStr = "CreditDataContract";
-            String repStr = "CreditDataContract" + String.valueOf(g);
-            FileOperation fileOper = new FileOperation();
-            //安装creditdata.wlang
-            fileOper.replace(resourcePath + creditfilePath + creditdata, oldStr, repStr);
-            String response = wvm.wvmInstallTest(creditfilePath + creditdata, "");
-            String ctHashCredit = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-            log.info(ctHashCredit + "****" + repStr);
-            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                    utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-            sleepAndSaveInfo(2000, "等待worldstate更新");
-            oldStr = repStr;
-        }
+        //授权公司code为空
+        authlist.clear();
+        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, "", zxCode, zxCode, "ICBC", "ICBC",
+                zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
+                "2020-09-24-15-00-00", 10);
+        response = credit.creditAuthorizationAdd(orgid, authlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //被授权银行/机构名称为空
+        authlist.clear();
+        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "", "ICBC",
+                zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
+                "2020-09-24-15-00-00", 10);
+        response = credit.creditAuthorizationAdd(orgid, authlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //被授权银行/机构code为空
+        authlist.clear();
+        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "",
+                zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
+                "2020-09-24-15-00-00", 10);
+        response = credit.creditAuthorizationAdd(orgid, authlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //征信公司名称为空
+        authlist.clear();
+        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, "", zxCode, "ICBC", "ICBC",
+                zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
+                "2020-09-24-15-00-00", 10);
+        response = credit.creditAuthorizationAdd(orgid, authlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //征信公司ID为空
+        authlist.clear();
+        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, "", "ICBC", "ICBC",
+                zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
+                "2020-09-24-15-00-00", 10);
+        response = credit.creditAuthorizationAdd(orgid, authlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //异地征信公司名称为空
+        authlist.clear();
+        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+                "", zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
+                "2020-09-24-15-00-00", 10);
+        response = credit.creditAuthorizationAdd(orgid, authlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //异地征信公司ID为空
+        authlist.clear();
+        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+                zxCode, "", "aa", "https://www.baidu.com/", "hash1", "aa",
+                "2020-09-24-15-00-00", 10);
+        response = credit.creditAuthorizationAdd(orgid, authlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //本地/异地授权区分为空
+        authlist.clear();
+        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+                zxCode, zxCode, "", "https://www.baidu.com/", "hash1", "aa",
+                "2020-09-24-15-00-00", 10);
+        response = credit.creditAuthorizationAdd(orgid, authlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //授权证照url为空
+        authlist.clear();
+        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+                zxCode, zxCode, "aa", "", "hash1", "aa",
+                "2020-09-24-15-00-00", 10);
+        response = credit.creditAuthorizationAdd(orgid, authlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //授权证照摘要为空
+        authlist.clear();
+        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+                zxCode, zxCode, "aa", "https://www.baidu.com/", "", "aa",
+                "2020-09-24-15-00-00", 10);
+        response = credit.creditAuthorizationAdd(orgid, authlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //授权类型为空
+        authlist.clear();
+        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+                zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "",
+                "2020-09-24-15-00-00", 10);
+        response = credit.creditAuthorizationAdd(orgid, authlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //授权开始时间为空
+        authlist.clear();
+        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+                zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
+                "", 10);
+        response = credit.creditAuthorizationAdd(orgid, authlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //授权有效天数为空
+        authlist.clear();
+        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+                zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
+                "2020-09-24-15-00-00", 0);
+        response = credit.creditAuthorizationAdd(orgid, authlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
 
     }
 
     @Test
     public void creditAuthorizationQueryTest() throws Exception {
 
-//        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-//        //安装3个公共合约
-//        //安装authorization.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + authorization, "");
-//        String ctHashAuth = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-//        //安装viewhistory.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + viewhistory, "");
-//        String ctHashHist = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-//        //安装identity.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + identity, "");
-//        String ctHashHist = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-        //安装多个creditdata合约
-        int i = 300;
-        for (int g = 1; g < i; g++) {
-            String oldStr = "CreditDataContract";
-            String repStr = "CreditDataContract" + String.valueOf(g);
-            FileOperation fileOper = new FileOperation();
-            //安装creditdata.wlang
-            fileOper.replace(resourcePath + creditfilePath + creditdata, oldStr, repStr);
-            String response = wvm.wvmInstallTest(creditfilePath + creditdata, "");
-            String ctHashCredit = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-            log.info(ctHashCredit + "****" + repStr);
-            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                    utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-            sleepAndSaveInfo(2000, "等待worldstate更新");
-            oldStr = repStr;
-        }
+        //添加授权返回的唯一标识符key为空
+        String response = credit.creditAuthorizationQuery("");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
     }
 
     @Test
     public void creditViewhistoryAddTest() throws Exception {
 
-//        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-//        //安装3个公共合约
-//        //安装authorization.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + authorization, "");
-//        String ctHashAuth = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
+        //节点机构列表为空
+        ArrayList<String> orgid = new ArrayList<>();
+        List<Map> viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+                zxCode, zxCode, "aa", "aa", "aa", "2020-09-24-15-00-00");
+        String response = credit.creditViewhistoryAdd(orgid, viewlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
-//        //安装viewhistory.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + viewhistory, "");
-//        String ctHashHist = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
+        //查询记录列表为空
+        orgid.add(zxCode);
+        viewlist.clear();
+        response = credit.creditViewhistoryAdd(orgid, viewlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
-//        //安装identity.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + identity, "");
-//        String ctHashHist = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
+        //授权公司名称为空
+        viewlist = creditCommonFunc.constructViewData("", enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+                zxCode, zxCode, "aa", "aa", "aa", "2020-09-24-15-00-00");
+        response = credit.creditViewhistoryAdd(orgid, viewlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
-        //安装多个creditdata合约
-        int i = 300;
-        for (int g = 1; g < i; g++) {
-            String oldStr = "CreditDataContract";
-            String repStr = "CreditDataContract" + String.valueOf(g);
-            FileOperation fileOper = new FileOperation();
-            //安装creditdata.wlang
-            fileOper.replace(resourcePath + creditfilePath + creditdata, oldStr, repStr);
-            String response = wvm.wvmInstallTest(creditfilePath + creditdata, "");
-            String ctHashCredit = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-            log.info(ctHashCredit + "****" + repStr);
-            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                    utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-            sleepAndSaveInfo(2000, "等待worldstate更新");
-            oldStr = repStr;
-        }
+        //授权公司code为空
+        viewlist.clear();
+        viewlist = creditCommonFunc.constructViewData(enterprisecode, "", zxCode, zxCode, "ICBC", "ICBC",
+                zxCode, zxCode, "aa", "aa", "aa", "2020-09-24-15-00-00");
+        response = credit.creditViewhistoryAdd(orgid, viewlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //征信机构名称为空
+        viewlist.clear();
+        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, "", zxCode, "ICBC", "ICBC",
+                zxCode, zxCode, "aa", "aa", "aa", "2020-09-24-15-00-00");
+        response = credit.creditViewhistoryAdd(orgid, viewlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //征信机构code为空
+        viewlist.clear();
+        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, "", "ICBC", "ICBC",
+                zxCode, zxCode, "aa", "aa", "aa", "2020-09-24-15-00-00");
+        response = credit.creditViewhistoryAdd(orgid, viewlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //银行机构名称为空
+        viewlist.clear();
+        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "", "ICBC",
+                zxCode, zxCode, "aa", "aa", "aa", "2020-09-24-15-00-00");
+        response = credit.creditViewhistoryAdd(orgid, viewlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //银行机构code为空
+        viewlist.clear();
+        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "",
+                zxCode, zxCode, "aa", "aa", "aa", "2020-09-24-15-00-00");
+        response = credit.creditViewhistoryAdd(orgid, viewlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //异地征信公司名称为空
+        viewlist.clear();
+        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+                "", zxCode, "aa", "aa", "aa", "2020-09-24-15-00-00");
+        response = credit.creditViewhistoryAdd(orgid, viewlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //异地征信公司code为空
+        viewlist.clear();
+        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+                zxCode, "", "aa", "aa", "aa", "2020-09-24-15-00-00");
+        response = credit.creditViewhistoryAdd(orgid, viewlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //本地/异地授权区分信息为空
+        viewlist.clear();
+        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+                zxCode, zxCode, "", "aa", "aa", "2020-09-24-15-00-00");
+        response = credit.creditViewhistoryAdd(orgid, viewlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //查询操作人员为空
+        viewlist.clear();
+        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+                zxCode, zxCode, "aa", "", "aa", "2020-09-24-15-00-00");
+        response = credit.creditViewhistoryAdd(orgid, viewlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //查询原因为空
+        viewlist.clear();
+        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+                zxCode, zxCode, "aa", "aa", "", "2020-09-24-15-00-00");
+        response = credit.creditViewhistoryAdd(orgid, viewlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //查询时间为空
+        viewlist.clear();
+        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+                zxCode, zxCode, "aa", "aa", "aa", "");
+        response = credit.creditViewhistoryAdd(orgid, viewlist);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
 
     }
 
     @Test
     public void creditViewhistoryQueryTest() throws Exception {
 
-//        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-//        //安装3个公共合约
-//        //安装authorization.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + authorization, "");
-//        String ctHashAuth = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-//        //安装viewhistory.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + viewhistory, "");
-//        String ctHashHist = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-//        //安装identity.wlang
-//        response1 = wvm.wvmInstallTest(creditfilePath + identity, "");
-//        String ctHashHist = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-        //安装多个creditdata合约
-        int i = 300;
-        for (int g = 1; g < i; g++) {
-            String oldStr = "CreditDataContract";
-            String repStr = "CreditDataContract" + String.valueOf(g);
-            FileOperation fileOper = new FileOperation();
-            //安装creditdata.wlang
-            fileOper.replace(resourcePath + creditfilePath + creditdata, oldStr, repStr);
-            String response = wvm.wvmInstallTest(creditfilePath + creditdata, "");
-            String ctHashCredit = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-            log.info(ctHashCredit + "****" + repStr);
-            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                    utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-            sleepAndSaveInfo(2000, "等待worldstate更新");
-            oldStr = repStr;
-        }
+        //添加查询记录返回的唯一标识符key为空
+        String response = credit.creditViewhistoryQuery("");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
     }
 

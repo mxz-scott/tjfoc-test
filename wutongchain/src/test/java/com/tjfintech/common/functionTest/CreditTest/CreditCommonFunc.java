@@ -37,8 +37,8 @@ public class CreditCommonFunc {
     //获取所有地址账户与私钥密码信息
     JSONObject jsonObjectAddrPri;
 
-    //征信模块相关通用函数
-    //-----------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------征信模块相关通用函数start----------------------------------------------------------
+
     //组装征信数据
     public List<Map> constructCreditData(String enterpriseName, String enterpriseCode, String creditName,
                                          String creditCode, String hash, String catalogue, String makeTime, String accessInterface, String description) {
@@ -61,9 +61,9 @@ public class CreditCommonFunc {
 
     //组装授权数据
     public List<Map> constructAuthorizationData(String enterpriseName, String enterpriseCode, String creditName,
-                                         String creditCode, String bankName, String bankCode, String remoteCreditName, String remoteCreditCode,
+                                                String creditCode, String bankName, String bankCode, String remoteCreditName, String remoteCreditCode,
                                                 String localRemote, String authorizedUrl, String authorizedHash, String authType,
-                                                String authStartTime,int authDays) {
+                                                String authStartTime, int authDays) {
 
         Map<String, Object> map = new HashMap<>();
         map.put("enterpriseName", enterpriseName);
@@ -88,8 +88,8 @@ public class CreditCommonFunc {
 
     //组装查询记录数据
     public List<Map> constructViewData(String enterpriseName, String enterpriseCode, String creditName,
-                                                String creditCode, String bankName, String bankCode, String remoteCreditName, String remoteCreditCode,
-                                                String localRemote, String queryOperator, String queryReason, String queryTime) {
+                                       String creditCode, String bankName, String bankCode, String remoteCreditName, String remoteCreditCode,
+                                       String localRemote, String queryOperator, String queryReason, String queryTime) {
 
         Map<String, Object> map = new HashMap<>();
         map.put("enterpriseName", enterpriseName);
@@ -110,7 +110,19 @@ public class CreditCommonFunc {
         return viewDataList;
     }
 
-    //-----------------------------------------------------------------------------------------------------------
+    //------------------------------------------------征信模块相关通用函数end-----------------------------------------------------------
+
+    //------------------------------------------------修改zxconfig配置文件通用函数start-------------------------------------------------
+
+    //更新SDK配置文件zxconfig中Code和CreditdataPath参数
+    public void setZXConfig(String SDKIP, String section, String key, String value) throws Exception {
+        setSDKZXConfigByShell(SDKIP, section, key, "\"\\\"" + value + "\"\\\"");
+        assertEquals(true, getSDKZXConfigValueByShell(SDKIP, section, key).trim().contains(value));
+
+    }
+
+    //------------------------------------------------修改zxconfig配置文件通用函数end--------------------------------------------------
+
 
     public boolean mapCompare(Map<String, Object> map1, Map<String, Object> map2) {
         boolean isChange = false;

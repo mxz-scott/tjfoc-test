@@ -1,6 +1,7 @@
 package com.tjfintech.common;
 
 
+import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Token;
@@ -22,7 +23,6 @@ import static org.junit.Assert.assertThat;
 import static com.tjfintech.common.utils.UtilsClass.subLedger;
 
 
-
 @Slf4j
 //该类实现权限赋值999；更新证书类型，根据新的证书类型生成多签地址；注册发行地址和归集地址
 public class BeforeCondition {
@@ -30,34 +30,36 @@ public class BeforeCondition {
     MultiSign multiSign = testBuilder.getMultiSign();
     SoloSign soloSign = testBuilder.getSoloSign();
     Token tokenModule = testBuilder.getToken();
+    Contract contract = testBuilder.getContract();
     UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
 
 
     //赋值权限999 区分是否主子链
-    public void setPermission999()throws Exception{
+    public void setPermission999() throws Exception {
 
-        String toolPath="cd "+ ToolPATH +";";
-        String exeCmd="./" + ToolTPName + " permission ";
+        String toolPath = "cd " + ToolPATH + ";";
+        String exeCmd = "./" + ToolTPName + " permission ";
 
-        SDKID=utilsClass.getSDKID();
-        String ledger ="";
-        ledger=(subLedger!="")?" -z "+subLedger:"";
-        String preCmd=toolPath+exeCmd+"-p "+PEER1RPCPort+" -s SDK "+ledger+" -d "+SDKID+" -m ";
-        String getPerm=toolPath+"./" + ToolTPName + " getpermission -p "+PEER1RPCPort + " -d " + SDKID + ledger;
+        SDKID = utilsClass.getSDKID();
+        String ledger = "";
+        ledger = (subLedger != "") ? " -z " + subLedger : "";
+        String preCmd = toolPath + exeCmd + "-p " + PEER1RPCPort + " -s SDK " + ledger + " -d " + SDKID + " -m ";
+        String getPerm = toolPath + "./" + ToolTPName + " getpermission -p " + PEER1RPCPort + " -d " + SDKID + ledger;
 
 
         //如果没有权限 则设置权限  修改为设置 兼容版本升级时 权限列表变更需要重新赋权限的问题
 //        if(!shExeAndReturn(PEER1IP,getPerm).contains(fullPerm)){
-            assertEquals(true,shExeAndReturn(PEER1IP,preCmd + "999").contains("success"));
-            sleepAndSaveInfo(SLEEPTIME);
-            assertEquals(true,shExeAndReturn(PEER1IP,getPerm).contains(fullPerm));
+        assertEquals(true, shExeAndReturn(PEER1IP, preCmd + "999").contains("success"));
+        sleepAndSaveInfo(SLEEPTIME);
+        assertEquals(true, shExeAndReturn(PEER1IP, getPerm).contains(fullPerm));
 //        }
     }
 
-    public void clearDataSetPerm999() throws Exception{
+    public void clearDataSetPerm999() throws Exception {
         utilsClass.delDataBase();//清空sdk当前使用数据库数据
         //设置节点 清空db数据 并重启
-        utilsClass.setAndRestartPeerList(clearPeerDB,resetPeerBase);
+        utilsClass.setAndRestartPeerList(clearPeerDB, resetPeerBase);
         //重启SDK
         utilsClass.setAndRestartSDK();
 
@@ -66,21 +68,19 @@ public class BeforeCondition {
 
 
     /**
-     * 赋予权限和读取公私钥对。
-     *
+     * 赋予权限和读取公私钥对
      */
     //@Test
-    public  void givePermission() throws Exception{
+    public void givePermission() throws Exception {
         setPermission999();
         updatePubPriKey();//从文件中根据配置certPath读取指定类型的公私钥对
-     }
+    }
 
     /**
      * 赋予权限和读取公私钥对。
-     *
      */
     @Test
-    public  void SetPermAndInit() throws Exception{
+    public void SetPermAndInit() throws Exception {
         setPermission999();
         SDKADD = rSDKADD;
         updatePubPriKey();//从文件中根据配置certPath读取指定类型的公私钥对
@@ -92,34 +92,32 @@ public class BeforeCondition {
     }
 
     @AfterClass
-    public static void setURLSDK(){
+    public static void setURLSDK() {
         SDKADD = rSDKADD;
     }
 
 
     /**
      * 添加发行地址和归集地址
-     *
      */
-    public  void collAddressTest() throws Exception{
+    public void collAddressTest() throws Exception {
         createAddresses(); //生成多签地址
-        String response= multiSign.addCollAddrs(IMPPUTIONADD,MULITADD3,MULITADD4,MULITADD5,MULITADD7,
-                ADDRESS1,ADDRESS2,ADDRESS4);
+        String response = multiSign.addCollAddrs(IMPPUTIONADD, MULITADD3, MULITADD4, MULITADD5, MULITADD7,
+                ADDRESS1, ADDRESS2, ADDRESS4);
         //3.0.1版本修改为重复添加时sdk会返回已存在的报错
-        assertThat(response,anyOf(containsString("\"state\":200"),containsString("exist")));
+        assertThat(response, anyOf(containsString("\"state\":200"), containsString("exist")));
 
         //2.0.1版本需要添加发行地址后才可以发行
-        String response11= multiSign.addIssueAddrs(IMPPUTIONADD,MULITADD3,MULITADD4,MULITADD5,MULITADD7,
-                ADDRESS1,ADDRESS2,ADDRESS4);
-        assertThat(response11,anyOf(containsString("\"state\":200"),containsString("exist")));
+        String response11 = multiSign.addIssueAddrs(IMPPUTIONADD, MULITADD3, MULITADD4, MULITADD5, MULITADD7,
+                ADDRESS1, ADDRESS2, ADDRESS4);
+        assertThat(response11, anyOf(containsString("\"state\":200"), containsString("exist")));
 
     }
 
     /**
      * token api添加发行地址和归集地址
-     *
      */
-    public  void tokenAddIssueCollAddr() throws Exception{
+    public void tokenAddIssueCollAddr() throws Exception {
         String response11 = tokenModule.tokenAddMintAddr(tokenAccount1);
         String response12 = tokenModule.tokenAddMintAddr(tokenAccount2);
         String response13 = tokenModule.tokenAddMintAddr(tokenAccount3);
@@ -140,26 +138,26 @@ public class BeforeCondition {
         String response43 = tokenModule.tokenAddCollAddr(tokenMultiAddr3);
         String response44 = tokenModule.tokenAddCollAddr(tokenMultiAddr4);
 
-        assertThat(response11,containsString("200"));
-        assertThat(response12,containsString("200"));
-        assertThat(response13,containsString("200"));
-        assertThat(response14,containsString("200"));
-        assertThat(response15,containsString("200"));
-        assertThat(response21,containsString("200"));
-        assertThat(response22,containsString("200"));
-        assertThat(response23,containsString("200"));
-        assertThat(response24,containsString("200"));
+        assertThat(response11, containsString("200"));
+        assertThat(response12, containsString("200"));
+        assertThat(response13, containsString("200"));
+        assertThat(response14, containsString("200"));
+        assertThat(response15, containsString("200"));
+        assertThat(response21, containsString("200"));
+        assertThat(response22, containsString("200"));
+        assertThat(response23, containsString("200"));
+        assertThat(response24, containsString("200"));
 
-        assertThat(response31,containsString("200"));
-        assertThat(response32,containsString("200"));
-        assertThat(response33,containsString("200"));
-        assertThat(response34,containsString("200"));
-        assertThat(response35,containsString("200"));
-        assertThat(response41,containsString("200"));
-        assertThat(response42,containsString("200"));
-        assertThat(response43,containsString("200"));
-        assertThat(response44,containsString("200"));
-        sleepAndSaveInfo(SLEEPTIME,"add issue and collect addr waiting......");
+        assertThat(response31, containsString("200"));
+        assertThat(response32, containsString("200"));
+        assertThat(response33, containsString("200"));
+        assertThat(response34, containsString("200"));
+        assertThat(response35, containsString("200"));
+        assertThat(response41, containsString("200"));
+        assertThat(response42, containsString("200"));
+        assertThat(response43, containsString("200"));
+        assertThat(response44, containsString("200"));
+        sleepAndSaveInfo(SLEEPTIME, "add issue and collect addr waiting......");
 
     }
 
@@ -168,11 +166,11 @@ public class BeforeCondition {
      * 测试用例T284的前提条件。发行对应token
      */
 
-    public  void  T284_BeforeCondition(String tokenType){
+    public void T284_BeforeCondition(String tokenType) {
         //String tokenType = "cx-chenxu"+certPath;
-        String amount="1000";
+        String amount = "1000";
         //String amount = "1000";
-        log.info(IMPPUTIONADD+ "发行" + tokenType + " token，数量为：" + amount);
+        log.info(IMPPUTIONADD + "发行" + tokenType + " token，数量为：" + amount);
         String data = "IMPPUTIONADD" + "发行" + tokenType + " token，数量为：" + amount;
         String response = multiSign.issueToken(IMPPUTIONADD, tokenType, amount, data);
         assertThat(response, containsString("200"));
@@ -183,28 +181,27 @@ public class BeforeCondition {
 
     /**
      * 创建公私钥对
-     *
      */
-    public void updatePubPriKey()throws Exception{
-        if(certPath == "") {
+    public void updatePubPriKey() throws Exception {
+        if (certPath == "") {
             log.info("using default setting key pairs in UtilsClass");
             return;
         }
-        PRIKEY1 = utilsClass.getKeyPairsFromFile(certPath+"/keys1/key.pem");
-        PRIKEY2 = utilsClass.getKeyPairsFromFile(certPath+"/keys2/key.pem");
-        PRIKEY3 = utilsClass.getKeyPairsFromFile(certPath+"/keys3/key.pem");
-        PRIKEY4 = utilsClass.getKeyPairsFromFile(certPath+"/keys4/key.pem");
-        PRIKEY5 = utilsClass.getKeyPairsFromFile(certPath+"/keys5/key.pem");
-        PRIKEY6 = utilsClass.getKeyPairsFromFile(certPath+"/keys6/key.pem");
-        PRIKEY7 = utilsClass.getKeyPairsFromFile(certPath+"/keys7/key.pem");
+        PRIKEY1 = utilsClass.getKeyPairsFromFile(certPath + "/keys1/key.pem");
+        PRIKEY2 = utilsClass.getKeyPairsFromFile(certPath + "/keys2/key.pem");
+        PRIKEY3 = utilsClass.getKeyPairsFromFile(certPath + "/keys3/key.pem");
+        PRIKEY4 = utilsClass.getKeyPairsFromFile(certPath + "/keys4/key.pem");
+        PRIKEY5 = utilsClass.getKeyPairsFromFile(certPath + "/keys5/key.pem");
+        PRIKEY6 = utilsClass.getKeyPairsFromFile(certPath + "/keys6/key.pem");
+        PRIKEY7 = utilsClass.getKeyPairsFromFile(certPath + "/keys7/key.pem");
 
-        PUBKEY1 = utilsClass.getKeyPairsFromFile(certPath+"/keys1/pubkey.pem");
-        PUBKEY2 = utilsClass.getKeyPairsFromFile(certPath+"/keys2/pubkey.pem");
-        PUBKEY3 = utilsClass.getKeyPairsFromFile(certPath+"/keys3/pubkey.pem");
-        PUBKEY4 = utilsClass.getKeyPairsFromFile(certPath+"/keys4/pubkey.pem");
-        PUBKEY5 = utilsClass.getKeyPairsFromFile(certPath+"/keys5/pubkey.pem");
-        PUBKEY6 = utilsClass.getKeyPairsFromFile(certPath+"/keys6/pubkey.pem");
-        PUBKEY7 = utilsClass.getKeyPairsFromFile(certPath+"/keys7/pubkey.pem");
+        PUBKEY1 = utilsClass.getKeyPairsFromFile(certPath + "/keys1/pubkey.pem");
+        PUBKEY2 = utilsClass.getKeyPairsFromFile(certPath + "/keys2/pubkey.pem");
+        PUBKEY3 = utilsClass.getKeyPairsFromFile(certPath + "/keys3/pubkey.pem");
+        PUBKEY4 = utilsClass.getKeyPairsFromFile(certPath + "/keys4/pubkey.pem");
+        PUBKEY5 = utilsClass.getKeyPairsFromFile(certPath + "/keys5/pubkey.pem");
+        PUBKEY6 = utilsClass.getKeyPairsFromFile(certPath + "/keys6/pubkey.pem");
+        PUBKEY7 = utilsClass.getKeyPairsFromFile(certPath + "/keys7/pubkey.pem");
 
 
         log.info("PRIKEY1 :" + PRIKEY1);
@@ -218,65 +215,66 @@ public class BeforeCondition {
 
     }
 
-     /**
+    /**
      * 创建多签地址 保存在数据库中
      * 当数据库被清，库中没多签地址信息时候调用。
      */
-    public void createAddresses()throws Exception{
+    public void createAddresses() throws Exception {
 
-        ADDRESS1 =JSONObject.fromObject(soloSign.genAddress(PUBKEY1)).getJSONObject("data").getString("address");
-        ADDRESS2 =JSONObject.fromObject(soloSign.genAddress(PUBKEY2)).getJSONObject("data").getString("address");
-        ADDRESS3 =JSONObject.fromObject(soloSign.genAddress(PUBKEY3)).getJSONObject("data").getString("address");
-        ADDRESS4 =JSONObject.fromObject(soloSign.genAddress(PUBKEY4)).getJSONObject("data").getString("address");
-        ADDRESS5 =JSONObject.fromObject(soloSign.genAddress(PUBKEY5)).getJSONObject("data").getString("address");
-        ADDRESS6 =JSONObject.fromObject(soloSign.genAddress(PUBKEY6)).getJSONObject("data").getString("address");
-        ADDRESS7 =JSONObject.fromObject(soloSign.genAddress(PUBKEY7)).getJSONObject("data").getString("address");
+        ADDRESS1 = JSONObject.fromObject(soloSign.genAddress(PUBKEY1)).getJSONObject("data").getString("address");
+        ADDRESS2 = JSONObject.fromObject(soloSign.genAddress(PUBKEY2)).getJSONObject("data").getString("address");
+        ADDRESS3 = JSONObject.fromObject(soloSign.genAddress(PUBKEY3)).getJSONObject("data").getString("address");
+        ADDRESS4 = JSONObject.fromObject(soloSign.genAddress(PUBKEY4)).getJSONObject("data").getString("address");
+        ADDRESS5 = JSONObject.fromObject(soloSign.genAddress(PUBKEY5)).getJSONObject("data").getString("address");
+        ADDRESS6 = JSONObject.fromObject(soloSign.genAddress(PUBKEY6)).getJSONObject("data").getString("address");
+        ADDRESS7 = JSONObject.fromObject(soloSign.genAddress(PUBKEY7)).getJSONObject("data").getString("address");
 
         int M = 3;
         Map<String, Object> map = new HashMap<>();
         map.put("1", PUBKEY1);
         map.put("2", PUBKEY2);
         map.put("3", PUBKEY3);
-        MULITADD1=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//123
+        MULITADD1 = JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//123
         map = new HashMap<>();
         map.put("1", PUBKEY1);
         map.put("2", PUBKEY2);
         map.put("3", PUBKEY6);
-        MULITADD2=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//126
+        MULITADD2 = JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//126
         map = new HashMap<>();
         map.put("1", PUBKEY1);
         map.put("2", PUBKEY6);
         map.put("3", PUBKEY7);
-        MULITADD3=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//167
+        MULITADD3 = JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//167
         M = 1;
         map = new HashMap<>();
         map.put("1", PUBKEY1);
         map.put("2", PUBKEY2);
-        MULITADD4=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//12
+        MULITADD4 = JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//12
         map = new HashMap<>();
         map.put("1", PUBKEY1);
         map.put("2", PUBKEY3);
-        MULITADD5=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//13
+        MULITADD5 = JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//13
         map = new HashMap<>();
         map.put("1", PUBKEY3);
         map.put("2", PUBKEY4);
-        MULITADD6=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//34
+        MULITADD6 = JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//34
         map = new HashMap<>();
         map.put("1", PUBKEY1);
         map.put("2", PUBKEY6);
-        MULITADD7=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//16
+        MULITADD7 = JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//16
         map = new HashMap<>();
         map.put("1", PUBKEY4);
         map.put("2", PUBKEY5);
-        IMPPUTIONADD=JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//45
+        IMPPUTIONADD = JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//45
     }
 
 
     /**
      * 创建token 模块使用的单签以及多签地址
+     *
      * @throws Exception
      */
-    public void createTokenAccount()throws Exception{
+    public void createTokenAccount() throws Exception {
         ArrayList<String> listTag = new ArrayList<>();
 
 
@@ -284,20 +282,20 @@ public class BeforeCondition {
         listTag.add("test02");
         listTag.add("test03");
 
-        tokenAccount1 =JSONObject.fromObject(
-                tokenModule.tokenCreateAccount(userId01,userId01,"","",listTag)).getString("data");
-        tokenAccount2 =JSONObject.fromObject(
-                tokenModule.tokenCreateAccount(userId02,userId02,"","",listTag)).getString("data");
-        tokenAccount3 =JSONObject.fromObject(
-                tokenModule.tokenCreateAccount(userId03,userId03,"","",listTag)).getString("data");
-        tokenAccount4 =JSONObject.fromObject(
-                tokenModule.tokenCreateAccount(userId04,userId04,"","",listTag)).getString("data");
-        tokenAccount5 =JSONObject.fromObject(
-                tokenModule.tokenCreateAccount(userId05,userId05,"","",listTag)).getString("data");
-        tokenAccount6 =JSONObject.fromObject(
-                tokenModule.tokenCreateAccount(userId06,userId06,"","",listTag)).getString("data");
-        tokenAccount7 =JSONObject.fromObject(
-                tokenModule.tokenCreateAccount(userId07,userId07,"","",listTag)).getString("data");
+        tokenAccount1 = JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(userId01, userId01, "", "", listTag)).getString("data");
+        tokenAccount2 = JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(userId02, userId02, "", "", listTag)).getString("data");
+        tokenAccount3 = JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(userId03, userId03, "", "", listTag)).getString("data");
+        tokenAccount4 = JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(userId04, userId04, "", "", listTag)).getString("data");
+        tokenAccount5 = JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(userId05, userId05, "", "", listTag)).getString("data");
+        tokenAccount6 = JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(userId06, userId06, "", "", listTag)).getString("data");
+        tokenAccount7 = JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(userId07, userId07, "", "", listTag)).getString("data");
 
 
         int M = 3;
@@ -307,33 +305,85 @@ public class BeforeCondition {
         map.put("3", tokenAccount3);
 
         tokenMultiAddr1 = JSONObject.fromObject(
-                tokenModule.tokenCreateMultiAddr(map,"multiaddr1",M,"","",listTag)).getString("data");
+                tokenModule.tokenCreateMultiAddr(map, "multiaddr1", M, "", "", listTag)).getString("data");
 
-        M =1;
+        M = 1;
         map = new HashMap<>();
         map.put("1", tokenAccount1);
         map.put("2", tokenAccount2);
         tokenMultiAddr2 = JSONObject.fromObject(
-                tokenModule.tokenCreateMultiAddr(map,"multiaddr2",M,"","",listTag)).getString("data");
+                tokenModule.tokenCreateMultiAddr(map, "multiaddr2", M, "", "", listTag)).getString("data");
 
         map.clear();
         map.put("1", tokenAccount1);
         map.put("2", tokenAccount2);
         map.put("3", tokenAccount3);
         tokenMultiAddr3 = JSONObject.fromObject(
-                tokenModule.tokenCreateMultiAddr(map,"multiaddr3",M,"","",listTag)).getString("data");
+                tokenModule.tokenCreateMultiAddr(map, "multiaddr3", M, "", "", listTag)).getString("data");
 
         map.clear();
         map.put("1", tokenAccount2);
         map.put("2", tokenAccount3);
         tokenMultiAddr4 = JSONObject.fromObject(
-                tokenModule.tokenCreateMultiAddr(map,"multiaddr4",M,"","",listTag)).getString("data");
+                tokenModule.tokenCreateMultiAddr(map, "multiaddr4", M, "", "", listTag)).getString("data");
 
         map.clear();
         map.put("1", tokenAccount3);
         map.put("2", tokenAccount4);
         tokenMultiAddr5 = JSONObject.fromObject(
-                tokenModule.tokenCreateMultiAddr(map,"multiaddr5",M,"","",listTag)).getString("data");
+                tokenModule.tokenCreateMultiAddr(map, "multiaddr5", M, "", "", listTag)).getString("data");
+    }
+
+    /**
+     * 征信项目安装合约
+     */
+    public void installZXContract() throws Exception {
+
+        String creditfilePath = resourcePath + "credit/";
+        String identity = "identity.wlang";
+        String authorization = "authorization.wlang";
+        String creditdata = "creditdata.wlang";
+        String viewhistory = "viewhistory.wlang";
+        String category = "WVM";
+
+        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
+        //安装3个公共合约和1个机构合约
+        //安装authorization.wlang
+        String filePath = creditfilePath + authorization;
+        String file = utilsClass.readInput(filePath).toString().trim();
+        String data = utilsClass.encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码
+        String response = contract.InstallWVM(data, category, "");
+        authContractName = JSONObject.fromObject(response).getJSONObject("data").getString("name");
+
+        //安装viewhistory.wlang
+        filePath = creditfilePath + viewhistory;
+        file = utilsClass.readInput(filePath).toString().trim();
+        data = utilsClass.encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码
+        response = contract.InstallWVM(data, category, "");
+        viewContractName = JSONObject.fromObject(response).getJSONObject("data").getString("name");
+
+        //安装identity.wlang
+        filePath = creditfilePath + identity;
+        file = utilsClass.readInput(filePath).toString().trim();
+        data = utilsClass.encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码
+        response = contract.InstallWVM(data, category, "");
+        identityContractName = JSONObject.fromObject(response).getJSONObject("data").getString("name");
+
+        //安装creditdata.wlang
+        filePath = creditfilePath + creditdata;
+        file = utilsClass.readInput(filePath).toString().trim();
+        data = utilsClass.encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码
+        response = contract.InstallWVM(data, category, "");
+        creditContractName = JSONObject.fromObject(response).getJSONObject("data").getString("name");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+
+        log.info("authContractName :" + authContractName);
+        log.info("viewContractName :" + viewContractName);
+        log.info("identityContractName :" + identityContractName);
+        log.info("creditContractName :" + creditContractName);
+
     }
 
 
