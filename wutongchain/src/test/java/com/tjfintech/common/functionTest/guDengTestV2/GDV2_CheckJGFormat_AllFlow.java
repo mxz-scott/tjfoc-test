@@ -1269,19 +1269,23 @@ public class GDV2_CheckJGFormat_AllFlow {
         log.info("检查销户存证登记格式化及信息内容与传入一致");
         fundaccountInfo.put("账号状态",1);  //变更账号状态为1
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:MM:SS");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         String sd = sdf.format(new Date(onChainTS)); // 时间戳转换日期
-        fundaccountInfo.put("登记时间",txInformation.get("成交时间").toString());
-
+        fundaccountInfo.put("账户销户时间",sd);
+        fundaccountInfo.put("账户销户核验凭证","2.txt");
         log.info(gdCF.contructFundAccountInfo(storeId,clntNo).toString().replaceAll("\"",""));
         log.info(fundaccountInfo.toString());
-        assertEquals(fundaccountInfo.toString(), gdCF.contructFundAccountInfo(storeId,clntNo).toString().replaceAll("\"",""));
+        assertEquals(fundaccountInfo.toString().replaceAll(" ","").replaceAll("\\[","").replaceAll("]",""),
+                gdCF.contructFundAccountInfo(storeId,clntNo).toString().replaceAll("\"","").replaceAll(" ",""));
 
         log.info("检查销户存证产品格式化及信息内容与传入一致");
         equityaccountInfo.put("账号状态",1);  //变更账号状态为1
+        equityaccountInfo.put("账户销户时间",sd);
+        equityaccountInfo.put("账户销户核验凭证","1.txt");
         log.info(gdCF.contructEquityAccountInfo(storeId,clntNo).toString().replaceAll("\"",""));
         log.info(equityaccountInfo.toString());
-        assertEquals(equityaccountInfo.toString(), gdCF.contructEquityAccountInfo(storeId,clntNo).toString().replaceAll("\"",""));
+        assertEquals(equityaccountInfo.toString().replaceAll(" ","").replaceAll("\\[","").replaceAll("]",""),
+                gdCF.contructEquityAccountInfo(storeId,clntNo).toString().replaceAll("\"","").replaceAll(" ",""));
         log.info("================================检查存证数据格式化《结束》================================");
 
     }
