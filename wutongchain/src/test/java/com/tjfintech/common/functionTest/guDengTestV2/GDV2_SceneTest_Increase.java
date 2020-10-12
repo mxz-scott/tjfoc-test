@@ -317,5 +317,28 @@ public class GDV2_SceneTest_Increase {
         assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
 
     }
-    
+
+    /***
+     * 增发不支持债券类
+     * @throws Exception
+     */
+    @Test
+    public void TC09_shareIncrease() throws Exception {
+
+        String eqCode = gdEquityCode;
+        String reason = "股份分红";
+
+
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount5,1000,0, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount6,1000,0, shareList2);
+
+        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList3,reason, equityProductInfo,bondProductInfo);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("产品主体信息中发行主体引用不可以为空",JSONObject.fromObject(response).getString("message"));
+
+
+    }
+
+
 }

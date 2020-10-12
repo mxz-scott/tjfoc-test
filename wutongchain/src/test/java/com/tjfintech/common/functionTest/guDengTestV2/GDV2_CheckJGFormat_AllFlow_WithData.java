@@ -10,7 +10,6 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -27,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDV2_CheckJGFormat_AllFlow {
+public class GDV2_CheckJGFormat_AllFlow_WithData {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
@@ -221,6 +220,8 @@ public class GDV2_CheckJGFormat_AllFlow {
         commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
+        String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
+
         //查询挂牌企业数据
         //查询投资者信息
         //查询企业股东信息
@@ -339,12 +340,11 @@ public class GDV2_CheckJGFormat_AllFlow {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
+        sleepAndSaveInfo(SLEEPTIME);
+        String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
+
         //获取上链交易时间戳
         long onChainTS = JSONObject.fromObject(store.GetTxDetail(txId)).getJSONObject("data").getJSONObject("header").getLong("timestamp");
-
-        String getTotal = enterpriseSubjectInfo.get("股东总数（个）").toString();
-        int oldTotal = Integer.parseInt(getTotal);
-        enterpriseSubjectInfo.put("股东总数（个）",oldTotal + 1);     //变更总股本数为增发量 + 原始股本总数
 
         //查询挂牌企业数据
         //查询投资者信息
@@ -393,7 +393,9 @@ public class GDV2_CheckJGFormat_AllFlow {
         String jgType = "主体";
         String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
-
+        String getTotal = enterpriseSubjectInfo.get("股东总数（个）").toString();
+        int oldTotal = Integer.parseInt(getTotal);
+        enterpriseSubjectInfo.put("股东总数（个）",oldTotal + 1);     //变更总股本数为增发量 + 原始股本总数
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
         log.info(enterpriseSubjectInfo.toString());
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
@@ -1257,9 +1259,6 @@ public class GDV2_CheckJGFormat_AllFlow {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
-        //获取上链交易时间戳
-        long onChainTS = JSONObject.fromObject(store.GetTxDetail(txId)).getJSONObject("data").getJSONObject("header").getLong("timestamp");
-
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdAccClientNo10);
 
         log.info("================================检查存证数据格式化《开始》================================");
@@ -1268,11 +1267,6 @@ public class GDV2_CheckJGFormat_AllFlow {
 
         log.info("检查销户存证登记格式化及信息内容与传入一致");
         fundaccountInfo.put("账号状态",1);  //变更账号状态为1
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:MM:SS");
-        String sd = sdf.format(new Date(onChainTS)); // 时间戳转换日期
-        fundaccountInfo.put("登记时间",txInformation.get("成交时间").toString());
-
         log.info(gdCF.contructFundAccountInfo(storeId,clntNo).toString().replaceAll("\"",""));
         log.info(fundaccountInfo.toString());
         assertEquals(fundaccountInfo.toString(), gdCF.contructFundAccountInfo(storeId,clntNo).toString().replaceAll("\"",""));

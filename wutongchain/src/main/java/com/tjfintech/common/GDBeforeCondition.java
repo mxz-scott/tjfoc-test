@@ -62,6 +62,7 @@ public class GDBeforeCondition {
     @Test
     public void gdCreateAccout()throws Exception{
         initRegulationData();//初始化监管对接数据
+        sleepAndSaveInfo(5000);
 
         String cltNo = gdAccClientNo1;
 

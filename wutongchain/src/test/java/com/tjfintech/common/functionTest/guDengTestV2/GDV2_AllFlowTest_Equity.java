@@ -39,6 +39,8 @@ public class GDV2_AllFlowTest_Equity {
     GDUnitFunc uf = new GDUnitFunc();
     public static String bizNoTest = "test" + Random(12);
     Boolean bNotCheck = false;
+    long start = (new Date()).getTime();
+    long end = 0;
 
     @BeforeClass
     public static void Before()throws Exception{
@@ -1301,18 +1303,20 @@ public class GDV2_AllFlowTest_Equity {
         response = gd.GDMainSubjectQuery(gdContractAddress,cltNo);
         assertEquals(testSub.toString().replaceAll(" ",""),
                 gdCF.getPersonalSubInfo(response).toString().replaceAll(" ","").replaceAll("\"", ""));
+
+        end = (new Date()).getTime();
     }
 
 
     @Test
-    public void TC19_TxReportQueryTest()throws Exception{
-//        Date dateNow = new Date();
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-//        String sd = sdf.format(new Date(dateNow.getTime())); // 时间戳转换日期
-//        String type = "1";
-//        String value = gdAccClientNo1;
-//        String begin = "";
-//        String end = "";
-//        String response = gd.GDGetTxReportInfo()
+    public void TC30_TxReportQueryTest()throws Exception{
+        Date dateNow = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        String sd = sdf.format(new Date(dateNow.getTime())); // 时间戳转换日期
+        String type = "1";
+        String value = gdAccClientNo1;
+        String begin = "";
+        String end = "";
+        String response = gd.GDGetTxReportInfo(type,value,begin,end);
     }
 }

@@ -117,6 +117,8 @@ public class GDUnitFunc {
         log.info("挂牌登记");
         enterpriseReg(eqCode,true);
 
+        String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
+
         log.info("发行");
         String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,eqCode,shareList);
         if(bCheckOnchain) {
