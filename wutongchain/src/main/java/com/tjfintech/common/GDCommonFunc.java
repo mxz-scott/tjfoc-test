@@ -346,6 +346,7 @@ public class GDCommonFunc {
         if(objIdArr.length == 2){
             shareProperty = Integer.parseInt(objIdArr[1]);
         }
+        log.info("test obj " + objId + " share property " + shareProperty);
 
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(TxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");

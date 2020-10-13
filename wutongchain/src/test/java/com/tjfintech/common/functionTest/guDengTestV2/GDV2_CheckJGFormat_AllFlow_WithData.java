@@ -114,12 +114,12 @@ public class GDV2_CheckJGFormat_AllFlow_WithData {
             log.info(registerInfo.toString());
             assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
 
-            log.info("检查发行存证交易格式化及信息内容与传入一致:" + tempObjId);
-            txInformation.put("原持有方主体引用",tempObjId);
-            txInformation.put("交易产品引用",gdEquityCode + "01");
-            log.info(gdCF.contructTxInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
-            log.info(txInformation.toString());
-            assertEquals(txInformation.toString(), gdCF.contructTxInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
+//            log.info("检查发行存证交易格式化及信息内容与传入一致:" + tempObjId);
+//            txInformation.put("原持有方主体引用",tempObjId);
+//            txInformation.put("交易产品引用",gdEquityCode + "01");
+//            log.info(gdCF.contructTxInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
+//            log.info(txInformation.toString());
+//            assertEquals(txInformation.toString(), gdCF.contructTxInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
         }
         log.info("================================检查存证数据格式化《结束》================================");
 

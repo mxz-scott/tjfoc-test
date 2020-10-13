@@ -111,16 +111,19 @@ public class GDV2_CheckJGFormat_AllFlow {
             registerInfo.put("当前可用余额", issueAmount);   //当前当前可用余额修改为当前实际可用余额
             registerInfo.put("认购数量", issueAmount);   //当前认购数量修改为当前实际余额
             registerInfo.put("冻结变动额", 0);   //冻结变动额修改为当前实际冻结变更额
-            log.info(gdCF.contructRegisterInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
+            log.info(gdCF.contructRegisterInfo(storeId, 4,tempObjId).toString().replaceAll("\"", ""));
             log.info(registerInfo.toString());
-            assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
+            assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId, 4,tempObjId).toString().replaceAll("\"", ""));
 
-            log.info("检查发行存证交易格式化及信息内容与传入一致:" + tempObjId);
-            txInformation.put("原持有方主体引用",tempObjId);
-            txInformation.put("交易产品引用",gdEquityCode + "01");
-            log.info(gdCF.contructTxInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
-            log.info(txInformation.toString());
-            assertEquals(txInformation.toString(), gdCF.contructTxInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
+//            log.info("检查发行不包送交易报告数据");
+            assertEquals("检查发行不包送交易报告数据",false,store.GetTxDetail(storeId).contains("\"type\":\"交易报告\""));
+
+//            log.info("检查发行存证交易格式化及信息内容与传入一致:" + tempObjId);
+//            txInformation.put("原持有方主体引用",tempObjId);
+//            txInformation.put("交易产品引用",gdEquityCode + "01");
+//            log.info(gdCF.contructTxInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
+//            log.info(txInformation.toString());
+//            assertEquals(txInformation.toString(), gdCF.contructTxInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
         }
         log.info("================================检查存证数据格式化《结束》================================");
 
@@ -649,7 +652,7 @@ public class GDV2_CheckJGFormat_AllFlow {
         assertEquals(registerInfo.toString(), gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
 
         log.info("================================检查存证数据格式化《结束》================================");
-
+        assertEquals("检查非质押冻结不报送交易报告数据",false,store.GetTxDetail(storeId).contains("\"type\":\"交易报告\""));
 
         //查询挂牌企业数据
         //查询投资者信息
