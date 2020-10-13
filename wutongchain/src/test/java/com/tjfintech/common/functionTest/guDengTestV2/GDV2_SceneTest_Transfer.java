@@ -99,6 +99,17 @@ public class GDV2_SceneTest_Transfer {
 
     }
 
+    /***
+     * 转让流通股 交易过户 双花测试
+     */
+
+    @Test
+    public void shareTransferWithErrorKeyId()throws Exception{
+
+        String response1 = uf.shareTransfer(gdAccountKeyID4,gdAccount1,100,gdAccount5,0,
+                gdEquityCode,false);
+        assertEquals(true,JSONObject.fromObject(response1).getString("message").contains("signature verify failed"));
+    }
 
     /***
      * 转让流通股 交易过户 双花测试
@@ -112,13 +123,14 @@ public class GDV2_SceneTest_Transfer {
         String txId1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
         String response2 = uf.shareTransfer(gdAccountKeyID1,gdAccount1,200,gdAccount6,0,
                 gdEquityCode,false);
-        String txId2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
-
+//        String txId2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
+        assertEquals(true,response2.contains("Err:double spend"));
         sleepAndSaveInfo(SLEEPTIME);
 
         //异或判断两种其中只有一个上链
-        assertEquals(true,JSONObject.fromObject(store.GetTxDetail(txId1)).getString("state").equals("200")
-                ^JSONObject.fromObject(store.GetTxDetail(txId2)).getString("state").equals("200"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId1)).getString("state"));
+//        assertEquals(true,JSONObject.fromObject(store.GetTxDetail(txId1)).getString("state").equals("200")
+//                ^JSONObject.fromObject(store.GetTxDetail(txId2)).getString("state").equals("200"));
 
         gd.GDGetEnterpriseShareInfo(gdEquityCode);
     }
@@ -135,13 +147,14 @@ public class GDV2_SceneTest_Transfer {
         String txId1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
         String response2 = uf.shareTransfer(gdAccountKeyID2,gdAccount2,200,gdAccount6,1,
                 gdEquityCode,false);
-        String txId2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
-
+        //        String txId2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
+        assertEquals(true,response2.contains("Err:double spend"));
         sleepAndSaveInfo(SLEEPTIME);
 
         //异或判断两种其中只有一个上链
-        assertEquals(true,JSONObject.fromObject(store.GetTxDetail(txId1)).getString("state").equals("200")
-                ^JSONObject.fromObject(store.GetTxDetail(txId2)).getString("state").equals("200"));
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId1)).getString("state"));
+//        assertEquals(true,JSONObject.fromObject(store.GetTxDetail(txId1)).getString("state").equals("200")
+//                ^JSONObject.fromObject(store.GetTxDetail(txId2)).getString("state").equals("200"));
 
         gd.GDGetEnterpriseShareInfo(gdEquityCode);
     }
@@ -341,13 +354,20 @@ public class GDV2_SceneTest_Transfer {
     public void shareTransfer_txTypeTest()throws Exception{
         String response = "";
 
-        //当前可用余额500 转出小于可用余额
-        response = uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,1,
-                gdEquityCode,false);
+        log.info("股权代码过户转让非流通股");
+        txInformation.put("交易类型",2);//配置为交易过户类型
+        response= gd.GDShareTransfer(gdAccountKeyID1,gdAccount2,100,gdAccount5,1,gdEquityCode,txInformation, registerInfo,registerInfo);
 
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("交易过户非流通股不可以转让",JSONObject.fromObject(response).getString("message"));
 
+        txInformation.put("交易类型",1);//配置为交易过户类型1
+        response= gd.GDShareTransfer(gdAccountKeyID2,gdAccount2,100,gdAccount5,1,gdEquityCode,txInformation, registerInfo,registerInfo);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+
+        txInformation.put("交易类型",4);//配置为交易过户类型1
+        response= gd.GDShareTransfer(gdAccountKeyID4,gdAccount4,100,gdAccount5,1,gdEquityCode,txInformation, registerInfo,registerInfo);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
     }
 
     /***

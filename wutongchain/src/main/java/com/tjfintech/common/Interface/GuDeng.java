@@ -21,7 +21,10 @@ public interface GuDeng {
 
     String GDShareLock(String bizNo, String address, String equityCode, long amount, int shareProperty, String reason,
                        String cutoffDate,Map registerInformation);
+    String GDShareLock(String bizNo, String address, String equityCode, long amount, int shareProperty, String reason,
+                       String cutoffDate,Map registerInformation,Map txInfo);
     String GDShareUnlock(String bizNo, String equityCode, long amount,Map registerInformation);
+    String GDShareUnlock(String bizNo, String equityCode, long amount,Map registerInformation,Map txInfo);
 
     String GDShareRecycle(String platformKeyId, String equityCode, List<Map> addressList, String remark);
 

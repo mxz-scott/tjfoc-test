@@ -44,6 +44,7 @@ public class GDV2_CheckJGFormat_Part3 {
     long recycleAmount = 100;
     long changeAmount = 500;
     long transferAmount = issueAmount;
+    String lockAddress = gdAccount1;
 
     /***
      * 测试说明
@@ -94,9 +95,7 @@ public class GDV2_CheckJGFormat_Part3 {
 
         //检查存在余额的股东列表
         assertEquals(respShareList4.size(),dataShareList.size());
-
         List<Map> getShareList = getShareListFromQueryNoZeroAcc(dataShareList);
-
         assertEquals(respShareList4.size(),getShareList.size());
         assertEquals(true,respShareList4.containsAll(getShareList) && getShareList.containsAll(respShareList4));
 
@@ -204,43 +203,10 @@ public class GDV2_CheckJGFormat_Part3 {
         log.info(respShareList4.toString());
         //检查存在余额的股东列表
         assertEquals(respShareList4.size(),dataShareList.size());
-
         List<Map> getShareList = getShareListFromQueryNoZeroAcc(dataShareList);
-
         assertEquals(respShareList4.size(),getShareList.size());
         assertEquals(true,respShareList4.containsAll(getShareList) && getShareList.containsAll(respShareList4));
 
-
-        //查询股东持股情况 无当前股权代码信息
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
-        assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
-        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo2 + "\""));
-        assertEquals(true,query.contains("\"address\":\"" + gdAccount2 + "\""));
-        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":10000,\"lockAmount\":0}"));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
-        assertEquals(gdAccClientNo3,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
-        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo3 + "\""));
-        assertEquals(true,query.contains("\"address\":\"" + gdAccount3 + "\""));
-        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5000,\"lockAmount\":0}"));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
-        assertEquals(gdAccClientNo4,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
-        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo4 + "\""));
-        assertEquals(true,query.contains("\"address\":\"" + gdAccount4 + "\""));
-        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5000,\"lockAmount\":0}"));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
     }
 
     /***
@@ -335,57 +301,12 @@ public class GDV2_CheckJGFormat_Part3 {
         List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,5000,0,0,mapShareENCN().get("0"), respShareList2);
         List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,5000,0,0,mapShareENCN().get("0"), respShareList3);
 
-
-
         //检查存在余额的股东列表
         assertEquals(respShareList4.size(),dataShareList.size());
-
         List<Map> getShareList = getShareListFromQueryNoZeroAcc(dataShareList);
-
         assertEquals(respShareList4.size(),getShareList.size());
         assertEquals(true,respShareList4.containsAll(getShareList) && getShareList.containsAll(respShareList4));
 
-
-        //查询股东持股情况 无当前股权代码信息
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
-        assertEquals(gdAccClientNo1,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
-
-        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
-        assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
-        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5000,\"lockAmount\":0}"));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
-        assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
-        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo2 + "\""));
-        assertEquals(true,query.contains("\"address\":\"" + gdAccount2 + "\""));
-        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5000,\"lockAmount\":0}"));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
-        assertEquals(gdAccClientNo3,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
-        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo3 + "\""));
-        assertEquals(true,query.contains("\"address\":\"" + gdAccount3 + "\""));
-        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5000,\"lockAmount\":0}"));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
-        assertEquals(gdAccClientNo4,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
-        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo4 + "\""));
-        assertEquals(true,query.contains("\"address\":\"" + gdAccount4 + "\""));
-        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5000,\"lockAmount\":0}"));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
-        assertEquals(gdAccClientNo5,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
-        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo5 + "\""));
-        assertEquals(true,query.contains("\"address\":\"" + gdAccount5 + "\""));
-        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5000,\"lockAmount\":0}"));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
-        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5000,\"lockAmount\":0}"));
 
         log.info("增发后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
@@ -399,6 +320,369 @@ public class GDV2_CheckJGFormat_Part3 {
                 "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getInt("股东总数（个）");
 
         assertEquals(totalHolderAccountAft,totalHolderAccount + 2);
+
+    }
+
+    /***
+     * 质押融资方式冻结 需带交易报告 交易类型为质押融资 即5
+     * @throws Exception
+     */
+    @Test
+    public void TC10_shareLock_Type5() throws Exception {
+
+        sleepAndSaveInfo(5000);
+        String bizNo = bizNoTest;
+        String eqCode = gdEquityCode;
+        String address = lockAddress;
+        int shareProperty = 0;
+        String reason = "司法冻结";
+        String cutoffDate = "2022-09-30";
+        String tempObjId = mapAccAddr.get(address).toString();
+
+        registerInfo.put("权利人账户引用",mapAccAddr.get(address));
+        regNo = "Eq" + "lock" + bizNo + (new Date()).getTime();   //区分不同类型的交易登记以流水号
+        registerInfo.put("登记流水号",regNo);       //更新对比的登记流水号
+
+        txInformation.put("交易类型",5);//将交易类型设置为质押融资类型
+        txInformation.put("原持有方主体引用",tempObjId);
+
+        String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,registerInfo,txInformation);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String txId = jsonObject.getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+        log.info("================================检查存证数据格式化《开始》================================");
+
+        //获取监管数据存证hash
+        String storeId = gdCF.getJGStoreHash(txId,1);
+
+        log.info("检查冻结存证登记格式化及信息内容与传入一致");
+        registerInfo.put("冻结变动额",lockAmount);   //冻结变动额修改为当前实际冻结变更额
+        log.info(gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        log.info(registerInfo.toString());
+        assertEquals(registerInfo.toString(), gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+
+        log.info("检查质押融资存证交易格式化及信息内容与传入一致:" + tempObjId);
+        log.info(gdCF.contructTxInfo(storeId, 2,tempObjId).toString().replaceAll("\"", ""));
+        log.info(txInformation.toString());
+        assertEquals(txInformation.toString(), gdCF.contructTxInfo(storeId, 2,tempObjId).toString().replaceAll("\"", ""));
+
+        log.info("================================检查存证数据格式化《结束》================================");
+
+
+        //查询企业股东信息
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+        assertEquals("200",JSONObject.fromObject(query).getString("state"));
+        JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
+
+        //实际应该持股情况信息
+        List<Map> respShareList = new ArrayList<>();
+        respShareList = gdConstructQueryShareList(gdAccount1,5000,0,lockAmount,mapShareENCN().get("0"),respShareList);
+        List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,5000,0,0,mapShareENCN().get("0"), respShareList);
+        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,5000,0,0,mapShareENCN().get("0"), respShareList2);
+        List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,5000,0,0,mapShareENCN().get("0"), respShareList3);
+
+        //检查存在余额的股东列表
+        assertEquals(respShareList4.size(),dataShareList.size());
+        List<Map> getShareList = getShareListFromQueryNoZeroAcc(dataShareList);
+        assertEquals(respShareList4.size(),getShareList.size());
+        assertEquals(true,respShareList4.containsAll(getShareList) && getShareList.containsAll(respShareList4));
+
+    }
+
+    /***
+     * 质押融资方式冻结 需带交易报告 交易类型非质押融资 非5 不报送交易报告
+     * @throws Exception
+     */
+    @Test
+    public void TC11_shareLock_Type12346() throws Exception {
+
+        sleepAndSaveInfo(5000);
+        String bizNo = bizNoTest;
+        String eqCode = gdEquityCode;
+        String address = lockAddress;
+        int shareProperty = 0;
+        String reason = "司法冻结";
+        String cutoffDate = "2022-09-30";
+        String tempObjId = mapAccAddr.get(address).toString();
+
+        registerInfo.put("权利人账户引用",mapAccAddr.get(address));
+        regNo = "Eq" + "lock" + bizNo + (new Date()).getTime();   //区分不同类型的交易登记以流水号
+        registerInfo.put("登记流水号",regNo);       //更新对比的登记流水号
+
+
+        txInformation.put("交易类型",1);//将交易类型设置为质押融资类型
+        txInformation.put("原持有方主体引用",tempObjId);
+        String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,registerInfo,txInformation);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String txId = jsonObject.getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        log.info("================================检查存证数据格式化《开始》================================");
+        //获取监管数据存证hash
+        String storeId = gdCF.getJGStoreHash(txId,1);
+        log.info("检查冻结存证登记格式化及信息内容与传入一致");
+        registerInfo.put("冻结变动额",lockAmount);   //冻结变动额修改为当前实际冻结变更额
+        log.info(gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        log.info(registerInfo.toString());
+        assertEquals(registerInfo.toString(), gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        assertEquals("检查冻结1不包送交易报告数据",false,store.GetTxDetail(storeId).contains("\"type\":\"交易报告\""));
+        log.info("================================检查存证数据格式化《结束》================================");
+
+
+        bizNo = "lockTxReport" + Random(12);
+        txInformation.put("交易类型",2);//将交易类型设置为非质押融资类型
+        response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,registerInfo,txInformation);
+        jsonObject=JSONObject.fromObject(response);
+        txId = jsonObject.getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        log.info("================================检查存证数据格式化《开始》================================");
+        //获取监管数据存证hash
+        storeId = gdCF.getJGStoreHash(txId,1);
+        assertEquals("检查冻结2不包送交易报告数据",false,store.GetTxDetail(storeId).contains("\"type\":\"交易报告\""));
+        log.info("================================检查存证数据格式化《结束》================================");
+
+
+        bizNo = "lockTxReport" + Random(12);
+        txInformation.put("交易类型",3);//将交易类型设置为非质押融资类型
+        response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,registerInfo,txInformation);
+        jsonObject=JSONObject.fromObject(response);
+        txId = jsonObject.getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        log.info("================================检查存证数据格式化《开始》================================");
+        //获取监管数据存证hash
+        storeId = gdCF.getJGStoreHash(txId,1);
+        assertEquals("检查冻结3不包送交易报告数据",false,store.GetTxDetail(storeId).contains("\"type\":\"交易报告\""));
+        log.info("================================检查存证数据格式化《结束》================================");
+
+
+        bizNo = "lockTxReport" + Random(12);
+        txInformation.put("交易类型",4);//将交易类型设置为非质押融资类型
+        response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,registerInfo,txInformation);
+        jsonObject=JSONObject.fromObject(response);
+        txId = jsonObject.getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        log.info("================================检查存证数据格式化《开始》================================");
+        //获取监管数据存证hash
+        storeId = gdCF.getJGStoreHash(txId,1);
+        assertEquals("检查冻结4不包送交易报告数据",false,store.GetTxDetail(storeId).contains("\"type\":\"交易报告\""));
+        log.info("================================检查存证数据格式化《结束》================================");
+
+
+        bizNo = "lockTxReport" + Random(12);
+        txInformation.put("交易类型",6);//将交易类型设置为非质押融资类型
+        response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,registerInfo,txInformation);
+        jsonObject=JSONObject.fromObject(response);
+        txId = jsonObject.getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        log.info("================================检查存证数据格式化《开始》================================");
+        //获取监管数据存证hash
+        storeId = gdCF.getJGStoreHash(txId,1);
+        assertEquals("检查冻结6不包送交易报告数据",false,store.GetTxDetail(storeId).contains("\"type\":\"交易报告\""));
+        log.info("================================检查存证数据格式化《结束》================================");
+    }
+
+    /***
+     * 解除冻结还款解质押方式 需带交易报告 会报送交易报告
+     * @throws Exception
+     */
+    @Test
+    public void TC11_shareUnlock_Type6() throws Exception {
+        bizNoTest = "unlockReport" + Random(13);
+        TC10_shareLock_Type5();//做冻结
+
+        sleepAndSaveInfo(3000);
+
+        String bizNo = bizNoTest;
+        String eqCode = gdEquityCode;
+        long amount = 500;
+        String tempObjId = mapAccAddr.get(lockAddress).toString();
+
+        regNo = "Eq" + "unlock" + bizNo + (new Date()).getTime();   //区分不同类型的交易登记以流水号
+        registerInfo.put("登记流水号",regNo);       //更新对比的登记流水号
+
+        txInformation.put("交易类型",6);//将交易类型设置为还款解质押
+        txInformation.put("原持有方主体引用",tempObjId);
+
+        String response= gd.GDShareUnlock(bizNo,eqCode,amount,registerInfo,txInformation);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String txId = jsonObject.getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+
+        log.info("================================检查存证数据格式化《开始》================================");
+        //获取监管数据存证hash
+        String storeId = gdCF.getJGStoreHash(txId,1);
+
+        log.info("检查解除冻结存证登记格式化及信息内容与传入一致");
+        log.info(gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        log.info(registerInfo.toString());
+        assertEquals(registerInfo.toString(), gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+
+        log.info("检查质押融资存证交易格式化及信息内容与传入一致:" + tempObjId);
+        log.info(gdCF.contructTxInfo(storeId, 2,tempObjId).toString().replaceAll("\"", ""));
+        log.info(txInformation.toString());
+        assertEquals(txInformation.toString(), gdCF.contructTxInfo(storeId, 2,tempObjId).toString().replaceAll("\"", ""));
+
+        log.info("================================检查存证数据格式化《结束》================================");
+
+
+        //查询挂牌企业数据
+        //查询投资者信息
+        //查询企业股东信息
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+        assertEquals("200",JSONObject.fromObject(query).getString("state"));
+
+        JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
+
+
+        //实际应该持股情况信息
+        List<Map> respShareList = new ArrayList<>();
+        respShareList = gdConstructQueryShareList(gdAccount1,5000,0,0,mapShareENCN().get("0"),respShareList);
+        List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,5000,0,0,mapShareENCN().get("0"), respShareList);
+        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,5000,0,0,mapShareENCN().get("0"), respShareList2);
+        List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,5000,0,0,mapShareENCN().get("0"), respShareList3);
+
+        //检查存在余额的股东列表
+        assertEquals(respShareList4.size(),dataShareList.size());
+        List<Map> getShareList = getShareListFromQueryNoZeroAcc(dataShareList);
+
+        assertEquals(respShareList4.size(),getShareList.size());
+        assertEquals(true,respShareList4.containsAll(getShareList) && getShareList.containsAll(respShareList4));
+
+    }
+
+    /***
+     * 解除冻结 非还款解质押方式 带交易报告 但不会报送交易报告数据
+     * @throws Exception
+     */
+    @Test
+    public void TC11_shareUnlock_Type123457() throws Exception {
+        bizNoTest = "unlockReport" + Random(13);
+        TC10_shareLock_Type5();//做冻结
+
+        sleepAndSaveInfo(3000);
+
+        String bizNo = bizNoTest;
+        String eqCode = gdEquityCode;
+        long amount = 50;
+        String tempObjId = mapAccAddr.get(lockAddress).toString();
+
+        regNo = "Eq" + "unlock" + bizNo + (new Date()).getTime();   //区分不同类型的交易登记以流水号
+        registerInfo.put("登记流水号",regNo);       //更新对比的登记流水号
+
+        txInformation.put("交易类型",1);//将交易类型设置为还款解质押
+        txInformation.put("原持有方主体引用",tempObjId);
+
+
+        String response= gd.GDShareUnlock(bizNo,eqCode,amount,registerInfo,txInformation);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String txId = jsonObject.getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        log.info("================================检查存证数据格式化《开始》================================");
+        //获取监管数据存证hash
+        String storeId = gdCF.getJGStoreHash(txId,1);
+        log.info("检查解除冻结存证登记格式化及信息内容与传入一致");
+        log.info(gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        log.info(registerInfo.toString());
+        assertEquals(registerInfo.toString(), gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        assertEquals("检查解除冻结1不包送交易报告数据",false,store.GetTxDetail(storeId).contains("\"type\":\"交易报告\""));
+        log.info("================================检查存证数据格式化《结束》================================");
+
+
+        txInformation.put("交易类型",2);//将交易类型设置为2
+        response= gd.GDShareUnlock(bizNo,eqCode,amount,registerInfo,txInformation);
+        jsonObject=JSONObject.fromObject(response);
+        txId = jsonObject.getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        log.info("================================检查存证数据格式化《开始》================================");
+        //获取监管数据存证hash
+        storeId = gdCF.getJGStoreHash(txId,1);
+        log.info("检查解除冻结存证登记格式化及信息内容与传入一致");
+        log.info(gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        log.info(registerInfo.toString());
+        assertEquals(registerInfo.toString(), gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        assertEquals("检查解除冻结2不包送交易报告数据",false,store.GetTxDetail(storeId).contains("\"type\":\"交易报告\""));
+        log.info("================================检查存证数据格式化《结束》================================");
+
+
+        txInformation.put("交易类型",3);//将交易类型设置为3
+        response= gd.GDShareUnlock(bizNo,eqCode,amount,registerInfo,txInformation);
+        jsonObject=JSONObject.fromObject(response);
+        txId = jsonObject.getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        log.info("================================检查存证数据格式化《开始》================================");
+        //获取监管数据存证hash
+        storeId = gdCF.getJGStoreHash(txId,1);
+        log.info("检查解除冻结存证登记格式化及信息内容与传入一致");
+        log.info(gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        log.info(registerInfo.toString());
+        assertEquals(registerInfo.toString(), gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        assertEquals("检查解除冻结3不包送交易报告数据",false,store.GetTxDetail(storeId).contains("\"type\":\"交易报告\""));
+        log.info("================================检查存证数据格式化《结束》================================");
+
+
+        txInformation.put("交易类型",4);//将交易类型设置为4
+        response= gd.GDShareUnlock(bizNo,eqCode,amount,registerInfo,txInformation);
+        jsonObject=JSONObject.fromObject(response);
+        txId = jsonObject.getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        log.info("================================检查存证数据格式化《开始》================================");
+        //获取监管数据存证hash
+        storeId = gdCF.getJGStoreHash(txId,1);
+        log.info("检查解除冻结存证登记格式化及信息内容与传入一致");
+        log.info(gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        log.info(registerInfo.toString());
+        assertEquals(registerInfo.toString(), gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        assertEquals("检查解除冻结4不包送交易报告数据",false,store.GetTxDetail(storeId).contains("\"type\":\"交易报告\""));
+        log.info("================================检查存证数据格式化《结束》================================");
+
+
+        txInformation.put("交易类型",5);//将交易类型设置为5
+        response= gd.GDShareUnlock(bizNo,eqCode,amount,registerInfo,txInformation);
+        jsonObject=JSONObject.fromObject(response);
+        txId = jsonObject.getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        log.info("================================检查存证数据格式化《开始》================================");
+        //获取监管数据存证hash
+        storeId = gdCF.getJGStoreHash(txId,1);
+        log.info("检查解除冻结存证登记格式化及信息内容与传入一致");
+        log.info(gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        log.info(registerInfo.toString());
+        assertEquals(registerInfo.toString(), gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        assertEquals("检查解除冻结5不包送交易报告数据",false,store.GetTxDetail(storeId).contains("\"type\":\"交易报告\""));
+        log.info("================================检查存证数据格式化《结束》================================");
+
+
+        txInformation.put("交易类型",7);//将交易类型设置为不支持的类型
+        response= gd.GDShareUnlock(bizNo,eqCode,amount,registerInfo,txInformation);
+        jsonObject=JSONObject.fromObject(response);
+        txId = jsonObject.getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        log.info("================================检查存证数据格式化《开始》================================");
+        //获取监管数据存证hash
+        storeId = gdCF.getJGStoreHash(txId,1);
+        log.info("检查解除冻结存证登记格式化及信息内容与传入一致");
+        log.info(gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        log.info(registerInfo.toString());
+        assertEquals(registerInfo.toString(), gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
+        assertEquals("检查解除冻结7不包送交易报告数据",false,store.GetTxDetail(storeId).contains("\"type\":\"交易报告\""));
+        log.info("================================检查存证数据格式化《结束》================================");
 
     }
 

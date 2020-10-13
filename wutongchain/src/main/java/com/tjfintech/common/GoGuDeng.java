@@ -178,7 +178,37 @@ public  class GoGuDeng implements GuDeng {
     }
 
     /***
-     * 股份冻结
+     * 股份冻结 带交易报告
+     * @param bizNo
+     * @param address
+     * @param equityCode
+     * @param amount
+     * @param shareProperty
+     * @param reason
+     * @param cutoffDate
+     * @param registerInformation
+     * @return
+     */
+    public String GDShareLock(String bizNo, String address, String equityCode, long amount, int shareProperty, String reason,
+                              String cutoffDate,Map registerInformation,Map txInfo){
+        Map<String, Object> map = new HashMap<>();
+        map.put("bizNo", bizNo);
+        map.put("address", address);
+        map.put("equityCode", equityCode);
+        map.put("amount", amount);
+        map.put("shareProperty", shareProperty);
+        map.put("reason", reason);
+        map.put("cutoffDate", cutoffDate);
+        map.put("registerInformation", registerInformation);
+        map.put("transactionReport", txInfo);
+
+        String result = PostTest.postMethod(SDKADD + "/equity/share/lock", map);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 股份冻结 不带交易报告
      * @param bizNo
      * @param address
      * @param equityCode
@@ -207,7 +237,28 @@ public  class GoGuDeng implements GuDeng {
     }
 
     /***
-     * 股份解除冻结
+     * 股份解除冻结 带交易报告
+     * @param bizNo
+     * @param equityCode
+     * @param amount
+     * @param registerInformation
+     * @return
+     */
+    public String GDShareUnlock(String bizNo, String equityCode, long amount,Map registerInformation,Map txInfo){
+        Map<String, Object> map = new HashMap<>();
+        map.put("bizNo", bizNo);
+        map.put("equityCode", equityCode);
+        map.put("amount", amount);
+        map.put("registerInformation", registerInformation);
+        map.put("transactionReport", txInfo);
+
+        String result = PostTest.postMethod(SDKADD + "/equity/share/unlock", map);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 股份解除冻结 不带交易报告
      * @param bizNo
      * @param equityCode
      * @param amount
