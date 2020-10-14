@@ -816,7 +816,7 @@ public class GDCommonFunc {
     public Map getEnterpriseSubInfo(String response){
         com.alibaba.fastjson.JSONObject jobj2 = null;
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(response);
-        String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
+        String storeData2 = object2.getString("data");//.getJSONObject("store").getString("storeData");
 
         //如果是单独的一个则直接使用JSONObject进行解析
         if(storeData2.startsWith("{")){

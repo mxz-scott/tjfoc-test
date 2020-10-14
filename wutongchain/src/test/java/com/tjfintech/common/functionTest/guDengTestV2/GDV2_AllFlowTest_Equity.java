@@ -1311,7 +1311,7 @@ public class GDV2_AllFlowTest_Equity {
     @Test
     public void TC30_TxReportQueryTest()throws Exception{
         Date dateNow = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         String sd = sdf.format(new Date(dateNow.getTime())); // 时间戳转换日期
         String type = "1";
         String value = gdAccClientNo1;
