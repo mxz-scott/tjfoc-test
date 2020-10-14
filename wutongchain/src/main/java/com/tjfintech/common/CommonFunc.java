@@ -13,6 +13,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.hamcrest.CoreMatchers;
 import sun.misc.BASE64Encoder;
 
@@ -1216,6 +1217,49 @@ public class CommonFunc {
             }
             assertEquals("data not same",false,true);
         }
+    }
+
+    public ArrayList<String> getTxFromBlock(int start,int end) {
+        log.info(start + "  " + end);
+        ArrayList <String> txList = new ArrayList<>();
+        for(int i = start; i <= end ;i++){
+            String[] temp = getTxsArray(i);
+            log.info("temp size " + temp.length);
+            for(int j=0;j<temp.length;j++){
+                log.info("11 " + temp[j]);
+                txList.add(temp[j]);
+            }
+        }
+        log.info("返回交易个数 " + txList.size());
+        return txList;
+    }
+
+    //获取除指定类型外的交易hash
+    public ArrayList<String> getTxArrayExceptKeyWord(ArrayList<String> srcArr,String... keyWord){
+        ArrayList<String> txSpecArr = new ArrayList<>();
+        for(int i =0 ;i<srcArr.size();i++){
+            Boolean bContain = false;
+            String resp = store.GetTxDetail(srcArr.get(i));
+            for(int k =0;k<keyWord.length;k++){
+                if(resp.contains(keyWord[k])) {
+                    bContain = true;
+                    break;
+                }
+            }
+            if(!bContain)  txSpecArr.add(srcArr.get(i));
+        }
+        log.info("返回交易个数 " + txSpecArr.size());
+        return txSpecArr;
+    }
+
+
+    //根据区块高度获取区块中的交易列表
+    public String[] getTxsArray(int i) {
+        String txsList = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("data").getString("txs");
+        txsList = txsList.substring(2);
+        txsList = StringUtils.substringBefore(txsList, "\"]");
+        String[] txs = txsList.split("\",\"");
+        return txs;
     }
 
 }

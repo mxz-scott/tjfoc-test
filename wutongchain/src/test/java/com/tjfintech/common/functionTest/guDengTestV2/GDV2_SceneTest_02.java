@@ -79,7 +79,7 @@ public class GDV2_SceneTest_02 {
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
     }
 
-//    @After
+    @After
     public void DestroyEquityAndAcc()throws Exception{
         List<Map> shareList = new ArrayList<>();
         Boolean bOnlyZero = false;
@@ -3165,7 +3165,8 @@ public class GDV2_SceneTest_02 {
                 gdEquityCode,true);
 
         String cutoffdate = "2022-09-30";
-        uf.lock(bizNoTest,gdAccount1,gdEquityCode,1500,0,cutoffdate,true);
+//        uf.lock(bizNoTest,gdAccount1,gdEquityCode,1500,0,cutoffdate,true);//不考虑冻结超出余额的场景
+        uf.lock(bizNoTest,gdAccount1,gdEquityCode,500,0,cutoffdate,true);
 
         //查询挂牌企业数据
         //查询投资者信息
@@ -3177,7 +3178,7 @@ public class GDV2_SceneTest_02 {
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();
-        respShareList = gdConstructQueryShareList(gdAccount1,400,0,1500,mapShareENCN().get("0"),respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount1,400,0,500,mapShareENCN().get("0"),respShareList);
         respShareList = gdConstructQueryShareList(gdAccount1,500,1,0,mapShareENCN().get("1"),respShareList);
         respShareList = gdConstructQueryShareList(gdAccount5,100,0,0,mapShareENCN().get("0"),respShareList);
         List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,1000,0,0,mapShareENCN().get("0"), respShareList);
@@ -3249,7 +3250,7 @@ public class GDV2_SceneTest_02 {
 
         //实际应该持股情况信息
         List<Map> respShareList21 = new ArrayList<>();
-        respShareList21 = gdConstructQueryShareList(gdAccount1,400,0,1000,mapShareENCN().get("0"),respShareList21);
+        respShareList21 = gdConstructQueryShareList(gdAccount1,400,0,0,mapShareENCN().get("0"),respShareList21);
         respShareList21 = gdConstructQueryShareList(gdAccount1,500,1,0,mapShareENCN().get("1"),respShareList21);
         respShareList21 = gdConstructQueryShareList(gdAccount5,100,0,0,mapShareENCN().get("0"),respShareList21);
         List<Map> respShareList22 = gdConstructQueryShareList(gdAccount2,1000,0,0,mapShareENCN().get("0"), respShareList21);
@@ -3273,7 +3274,7 @@ public class GDV2_SceneTest_02 {
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":400,\"lockAmount\":1000}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":400,\"lockAmount\":0}"));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
                 "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 

@@ -1,6 +1,8 @@
 package com.tjfintech.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
+
 import java.util.*;
 
 
@@ -11,11 +13,15 @@ public class UtilsClassGD {
     //gudeng 信息
 //    public static String gdContractAddress = "faa54ef5e71e8f69cb30af684ae9f145b5c099ed4253a49fc1b144db1fe27f3c";
 //    public static String gdPlatfromKeyID = "btguv5bsnk7r259qh85g";
-//    public static String gdContractAddress = "018a976954474678a3a100d33200b7f9fd1b34a60118c4cb13cfd79f6f324b5d";
-//    public static String gdPlatfromKeyID = "btibbj1pgfltc7no17kg";
+    //10.1.3.161:7779
+    public static String gdContractAddress = "018a976954474678a3a100d33200b7f9fd1b34a60118c4cb13cfd79f6f324b5d";
+    public static String gdPlatfromKeyID = "bu35v2ppgfltc7no40d0";
     //股登164环境
-    public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
-    public static String gdPlatfromKeyID = "bu1qdg1pgfltc7no3hp0";
+//    public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
+//    public static String gdPlatfromKeyID = "bu1qdg1pgfltc7no3hp0";
+    //股登性能测试环境
+//    public static String gdContractAddress = "e0618bd8a18d799e18d6716824e4b767e381d2ce58a49be20c89b48b53cff900";
+//    public static String gdPlatfromKeyID = "bu2n8f52vf0as7lne720";
     //外网对接
 //    public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
 //    public static String gdPlatfromKeyID = "btli1l9hdkef95op7f00";
@@ -53,5 +59,11 @@ public class UtilsClassGD {
     public static Map settleInfo = new HashMap();//06资金结算  //资金结算
     public static List<Map> listRegInfo = new ArrayList<>();//主体信息列表
     public static String regNo = "regNo000000";
+
+
+    public static long start = (new Date()).getTime();
+    public static long end = 0;
+    public static int beginHeigh = 0;
+    public static int endHeight = 0;
 
 }

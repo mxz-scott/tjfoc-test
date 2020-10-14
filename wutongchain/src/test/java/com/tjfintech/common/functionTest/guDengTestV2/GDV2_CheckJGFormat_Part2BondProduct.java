@@ -1061,9 +1061,10 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
             log.info("检查回收存证登记格式化及信息内容与传入一致");
             registerInfo.put("变动额", "-" + tempAmount);     //变动额修改为单个账户发行数量
             registerInfo.put("权利人账户引用", mapAccAddr.get(tempAddr));
-            log.info(gdCF.contructRegisterInfo(regStoreId, 4,tempObjId,tempPP).toString().replaceAll("\"", ""));
+            log.info(gdCF.contructRegisterInfo(regStoreId, shareList.size(),tempObjId,tempPP).toString().replaceAll("\"", ""));
             log.info(registerInfo.toString());
-            assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(regStoreId, 4,tempObjId,tempPP).toString().replaceAll("\"", ""));
+            registerInfo.put("股份性质",tempPP);
+            assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(regStoreId, shareList.size(),tempObjId,tempPP).toString().replaceAll("\"", ""));
 
         }
         log.info("检查回收存证主体格式化及信息内容与传入一致");

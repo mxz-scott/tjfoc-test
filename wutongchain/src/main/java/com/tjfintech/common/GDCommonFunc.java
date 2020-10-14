@@ -160,6 +160,7 @@ public class GDCommonFunc {
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
         tempReg.put("权利人账户引用",mapAccAddr.get(address));
+        tempReg.put("股份性质",shareProperty);
 
         Map tempTxInfo = gdbf.init04TxInfo();
         tempTxInfo.put("原持有方主体引用",mapAccAddr.get(address));
@@ -180,6 +181,7 @@ public class GDCommonFunc {
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
         tempReg.put("权利人账户引用",mapAccAddr.get(address));
+        tempReg.put("股份性质",shareProperty);
 
         Map tempTxInfo = gdbf.init04TxInfo();
         tempTxInfo.put("原持有方主体引用",mapAccAddr.get(address));
@@ -222,6 +224,7 @@ public class GDCommonFunc {
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
         tempReg.put("权利人账户引用",mapAccAddr.get(address));
+        tempReg.put("股份性质",shareProperty);
 
         //处理交易
         Map tempTxInfo = gdbf.init04TxInfo();
@@ -369,6 +372,7 @@ public class GDCommonFunc {
             com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
 //            log.info(objTemp.toString());
             String type = objTemp.getJSONObject("header").getJSONObject("content").getString("type");
+            log.info(type + "123");
 
             if( type.equals("登记") ){
                 String memRef = objTemp.getJSONObject("body").getJSONObject("登记信息").getJSONObject("权利登记").getJSONObject("产品登记").getString("权利人账户引用");

@@ -39,11 +39,17 @@ public class GDV2_AllFlowTest_Equity {
     GDUnitFunc uf = new GDUnitFunc();
     public static String bizNoTest = "test" + Random(12);
     Boolean bNotCheck = false;
-    long start = (new Date()).getTime();
-    long end = 0;
+//    long start = (new Date()).getTime();
+//    long end = 0;
+//    int beginHeigh = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
+//    int endHeight = 0;
 
     @BeforeClass
     public static void Before()throws Exception{
+        TestBuilder tbTemp = TestBuilder.getInstance();
+        Store storeTemp =tbTemp.getStore();
+        beginHeigh = Integer.parseInt(JSONObject.fromObject(storeTemp.GetHeight()).getString("data"));
+
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
 //        gdBefore.initRegulationData();
@@ -1112,7 +1118,7 @@ public class GDV2_AllFlowTest_Equity {
     }
 
     @Test
-    public void TC20_UpdateSubjectInfo_Enterprise()throws Exception{
+    public void TC20_updateSubjectInfo_Enterprise()throws Exception{
         gdEquityCode = "update" + Random(12);
         //挂牌企业登记
         long shareTotals = 1000000;
@@ -1209,7 +1215,7 @@ public class GDV2_AllFlowTest_Equity {
     }
 
     @Test
-    public void TC20_UpdateSubjectInfo_Personal()throws Exception{
+    public void TC20_updateSubjectInfo_Personal()throws Exception{
         //开户
         String cltNo = "updateCLI" + Random(12);
         String shareHolderNo = "SH" + cltNo;
@@ -1309,14 +1315,45 @@ public class GDV2_AllFlowTest_Equity {
 
 
     @Test
-    public void TC30_TxReportQueryTest()throws Exception{
-        Date dateNow = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        String sd = sdf.format(new Date(dateNow.getTime())); // 时间戳转换日期
-        String type = "1";
+    public void TC30_txReportQueryTest()throws Exception{
+
+        //获取最开始的区块高度
+        endHeight = Integer.valueOf(JSONObject.fromObject(store.GetHeight()).getString("data"));
+
+//        beginHeigh = 136;
+//        endHeight = 163;
+
+        log.info("起始高度 " + beginHeigh + " 结束高度 " + endHeight);
+        //排除存证、合约安装、更新主体信息、销户等交易
+        ArrayList<String> txList = commonFunc.getTxArrayExceptKeyWord(commonFunc.getTxFromBlock(beginHeigh+1,endHeight),
+                "\"type\":0","\"method\":\"DestroyInvestor\"","\"method\":\"UpdateSubject\"","\"subType\":40");//排除存证
+
+//        Date dateNow = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String sdStart = sdf.format(start); // 时间戳转换日期
+        String sdEnd = sdf.format(end); // 时间戳转换日期
+//        sdStart = "2020-10-14 11:23:49";
+//        sdEnd = "2020-10-14 11:30:17";
+        String type = "5";
         String value = gdAccClientNo1;
-        String begin = "";
-        String end = "";
-        String response = gd.GDGetTxReportInfo(type,value,begin,end);
+        String value2 = "zhangsan";
+        String value3 = "SH" + gdAccClientNo1;
+        String value4 = gdEquityCode;
+
+        String response = gd.GDGetTxReportInfo(type,value,sdStart,sdEnd);
+        log.info(txList.toString());
+//        for(int i = 0;i< txList.size();i++){
+//            store.GetTxDetail(txList.get(i));
+//        }
+        //
+//        assertEquals("检查数量是否正确",txList.size(),JSONObject.fromObject(response).getJSONArray("data").size());
+        Boolean bContain = true;
+        for(int i =0;i< txList.size();i++){
+            if(!response.contains(txList.get(i))){
+                bContain = false;
+                log.info("not contain " + txList.get(i));
+            }
+        }
+        assertEquals("存在与链上不一致的交易",true,bContain);
     }
 }

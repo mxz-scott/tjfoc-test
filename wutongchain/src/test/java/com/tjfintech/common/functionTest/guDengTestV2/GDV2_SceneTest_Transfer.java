@@ -189,10 +189,12 @@ public class GDV2_SceneTest_Transfer {
         //交易过户 流通股股*3500
         response = uf.shareTransfer(gdAccountKeyID1,gdAccount1,3500,gdAccount5,0,
                 gdEquityCode,false);
-        sleepAndSaveInfo(SLEEPTIME);
-        assertEquals("404",JSONObject.fromObject(
-                store.GetTxDetail(JSONObject.fromObject(response).getJSONObject("data").getString("txId"))
-                                                                ).getString("state"));
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,JSONObject.fromObject(response).getString("message").contains(" Err:error"));
+//        sleepAndSaveInfo(SLEEPTIME);
+//        assertEquals("404",JSONObject.fromObject(
+//                store.GetTxDetail(JSONObject.fromObject(response).getJSONObject("data").getString("txId"))
+//                                                                ).getString("state"));
 
         //非交易过户 高管股*500
         uf.shareTransfer(gdAccountKeyID1,gdAccount1,500,gdAccount5,1,

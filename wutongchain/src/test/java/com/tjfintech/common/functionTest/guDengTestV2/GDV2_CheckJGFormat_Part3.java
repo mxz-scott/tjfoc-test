@@ -288,7 +288,7 @@ public class GDV2_CheckJGFormat_Part3 {
         log.info("检查增发存证主体格式化及信息内容与传入一致");
         String getTotalMem = enterpriseSubjectInfo.get("股东总数（个）").toString();
         int oldTotalMem = Integer.parseInt(getTotalMem);
-//        enterpriseSubjectInfo.put("股东总数（个）",oldTotalMem + 2);     //变更总股本数为增发量 + 原始股本总数
+        enterpriseSubjectInfo.put("股东总数（个）",oldTotalMem + 2);     //变更总股本数为增发量 + 原始股本总数
 
         String getTotal = enterpriseSubjectInfo.get("股本总数(股)").toString();
         BigDecimal oldTotal = new BigDecimal(getTotal);
@@ -324,7 +324,7 @@ public class GDV2_CheckJGFormat_Part3 {
         log.info("判断增发前后机构主体查询总股本数增加数正确");
         assertEquals(totalShares.add(new BigDecimal("2000")),totalShares2);
 
-        int totalHolderAccountAft = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
+        int totalHolderAccountAft = JSONObject.fromObject(query3).getJSONObject("data").getJSONObject(
                 "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getInt("股东总数（个）");
 
         assertEquals(totalHolderAccount + 2,totalHolderAccountAft);
