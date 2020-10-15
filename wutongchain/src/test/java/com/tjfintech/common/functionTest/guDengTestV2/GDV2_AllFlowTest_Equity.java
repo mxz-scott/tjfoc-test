@@ -1,6 +1,5 @@
 package com.tjfintech.common.functionTest.guDengTestV2;
 
-import com.alibaba.fastjson.JSON;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.GDBeforeCondition;
 import com.tjfintech.common.GDCommonFunc;
@@ -15,6 +14,7 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -39,6 +39,7 @@ public class GDV2_AllFlowTest_Equity {
     GDUnitFunc uf = new GDUnitFunc();
     public static String bizNoTest = "test" + Random(12);
     Boolean bNotCheck = false;
+
 //    long start = (new Date()).getTime();
 //    long end = 0;
 //    int beginHeigh = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
@@ -452,7 +453,7 @@ public class GDV2_AllFlowTest_Equity {
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, equityProductInfo,bondProductInfo);
+        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, equityProductInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -991,7 +992,6 @@ public class GDV2_AllFlowTest_Equity {
         List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,5900,0,0,mapShareENCN().get("0"), respShareList3);
 
 
-
         //检查存在余额的股东列表
         assertEquals(respShareList4.size(),dataShareList.size());
 
@@ -1315,7 +1315,7 @@ public class GDV2_AllFlowTest_Equity {
 
 
     @Test
-    public void TC30_txReportQueryTest()throws Exception{
+    public void TC30_txReportQueryTest_ByTime()throws Exception{
 
         //获取最开始的区块高度
         endHeight = Integer.valueOf(JSONObject.fromObject(store.GetHeight()).getString("data"));
@@ -1354,6 +1354,56 @@ public class GDV2_AllFlowTest_Equity {
                 log.info("not contain " + txList.get(i));
             }
         }
+        assertEquals("确认投资者开户交易存在",true,response.contains("\"txType\":\"投资者开户\""));
+        assertEquals("确认挂牌企业登记交易存在",true,response.contains("\"txType\":\"挂牌企业登记\""));
+        assertEquals("确认股份发行交易存在",true,response.contains("\"txType\":\"股份发行\""));
+        assertEquals("确认过户转让交易存在",true,response.contains("\"txType\":\"过户转让\""));
+        assertEquals("确认股份性质变更交易存在",true,response.contains("\"txType\":\"股份性质变更\""));
+        assertEquals("确认增发交易存在",true,response.contains("\"txType\":\"股份发行\""));
+        assertEquals("确认股份冻结交易存在",true,response.contains("\"txType\":\"股份冻结\""));
+        assertEquals("确认股份解冻交易存在",true,response.contains("\"txType\":\"股份解冻\""));
+        assertEquals("确认股份回收交易存在",true,response.contains("\"txType\":\"股份回收\""));
+        assertEquals("确认场内转板交易存在",true,response.contains("\"txType\":\"场内转板\""));
+
+        assertEquals(12, StringUtils.countOccurrencesOf(response,"投资者开户"));
+        assertEquals(2, StringUtils.countOccurrencesOf(response,"挂牌企业登记"));
+        assertEquals(2, StringUtils.countOccurrencesOf(response,"股份发行"));//初始登记和增发 目前都是股份发行
+        assertEquals(1, StringUtils.countOccurrencesOf(response,"过户转让"));
+        assertEquals(1, StringUtils.countOccurrencesOf(response,"股份性质变更"));
+        assertEquals(1, StringUtils.countOccurrencesOf(response,"股份冻结"));
+        assertEquals(1, StringUtils.countOccurrencesOf(response,"股份解冻"));
+        assertEquals(5, StringUtils.countOccurrencesOf(response,"股份回收"));
+        assertEquals(6, StringUtils.countOccurrencesOf(response,"场内转板"));
+
         assertEquals("存在与链上不一致的交易",true,bContain);
+
+
+
+        log.info("通过客户号查询");
+        response = gd.GDGetTxReportInfo("1",value,"","");
+        assertEquals("确认投资者开户交易存在",true,response.contains("\"txType\":\"投资者开户\""));
+        assertEquals(1,JSONObject.fromObject(response).getJSONArray("data").size());
+
+
+        log.info("通过客户姓名查询");
+        response = gd.GDGetTxReportInfo("2",value2,"","");
+        assertEquals("确认投资者开户交易存在",true,response.contains("\"txType\":\"投资者开户\""));
+//        assertEquals(12, StringUtils.countOccurrencesOf(response,"投资者开户"));
+//        assertEquals(12,JSONObject.fromObject(response).getJSONArray("data").size());
+
+        log.info("通过股东号查询");
+        response = gd.GDGetTxReportInfo("3",value3,"","");
+//        assertEquals("确认投资者开户交易存在",true,response.contains("\"txType\":\"投资者开户\""));
+//        assertEquals(12, StringUtils.countOccurrencesOf(response,"投资者开户"));
+//        assertEquals(12,JSONObject.fromObject(response).getJSONArray("data").size());
+
+        log.info("通过股权代码查询");
+        response = gd.GDGetTxReportInfo("4",value4,"","");
+//        assertEquals("确认投资者开户交易存在",true,response.contains("\"txType\":\"投资者开户\""));
+//        assertEquals(12, StringUtils.countOccurrencesOf(response,"投资者开户"));
+//        assertEquals(12,JSONObject.fromObject(response).getJSONArray("data").size());
+
     }
+
+
 }

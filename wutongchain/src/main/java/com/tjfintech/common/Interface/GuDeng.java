@@ -17,7 +17,8 @@ public interface GuDeng {
                            String equityCode, Map txInformation, Map fromRegisterInfo,Map toRegisterInfo);
     String GDShareTransfer(Map mapTransfer);
 
-    String GDShareIncrease(String platformKeyId, String equityCode, List<Map> shareList, String reason,Map equityProductInfo,Map bondProductInfo);
+    String GDShareIncrease(String platformKeyId, String equityCode, List<Map> shareList, String reason,Map equityProductInfo);
+    String GDShareIncrease(String platformKeyId, String equityCode, List<Map> shareList, String reason,Map equityProductInfo,Map txInfo);
 
     String GDShareLock(String bizNo, String address, String equityCode, long amount, int shareProperty, String reason,
                        String cutoffDate,Map registerInformation);

@@ -104,7 +104,7 @@ public class GDV2_CheckJGFormat_Part3 {
 
     //转让全部转出转给已存在的股东
     @Test
-    public void TC08_shareTransfer()throws Exception{
+    public void shareTransfer_AllOut()throws Exception{
 
         String keyId = gdAccountKeyID1;
         String fromAddr = gdAccount1;
@@ -173,7 +173,7 @@ public class GDV2_CheckJGFormat_Part3 {
         toNow.put("当前可用余额",issueAmount + transferAmount);
         log.info(gdCF.contructRegisterInfo(storeId, 3, tempObjIdFrom).toString().replaceAll("\"", ""));
         log.info(fromNow.toString());
-//        assertEquals(fromNow.toString(), gdCF.contructRegisterInfo(storeId,3,tempObjIdFrom).toString().replaceAll("\"",""));
+        assertEquals(fromNow.toString(), gdCF.contructRegisterInfo(storeId,3,tempObjIdFrom).toString().replaceAll("\"",""));
 
         log.info("检查过户转让存证交易格式化及信息内容与传入一致:" + tempObjIdFrom);
 
@@ -241,7 +241,7 @@ public class GDV2_CheckJGFormat_Part3 {
         List<Map> shareList = gdConstructShareList(gdAccount5,increaseAmount,0);
         List<Map> shareList4 = gdConstructShareList(gdAccount6,increaseAmount,0, shareList);
 
-        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, equityProductInfo,null);
+        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, equityProductInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 

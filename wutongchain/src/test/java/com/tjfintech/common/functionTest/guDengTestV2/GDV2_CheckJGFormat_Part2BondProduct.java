@@ -834,7 +834,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         String getTotal = enterpriseSubjectInfo.get("股本总数(股)").toString();
         BigDecimal oldTotal = new BigDecimal(getTotal);
         enterpriseSubjectInfo.put("股本总数(股)",oldTotal.subtract(new BigDecimal(recycleAmount)));     //变更总股本数为增发量 + 原始股本总数
-//        enterpriseSubjectInfo.put("股东总数（个）",totalHolderAccount - 1);     //股东个数为原个数减1
+        enterpriseSubjectInfo.put("股东总数（个）",totalHolderAccount - 1);     //股东个数为原个数减1
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
         log.info(enterpriseSubjectInfo.toString());
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
@@ -902,7 +902,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         int totalHolderAccount2 = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
                 "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getInt("股东总数（个）");
         assertEquals(totalShares.subtract(new BigDecimal(recycleAmount)),totalShares2);
-        assertEquals(totalHolderAccount2,totalHolderAccount);//判断股东总数减一
+        assertEquals(totalHolderAccount2 + 1,totalHolderAccount);//判断股东总数减一
     }
 
 //    @Test

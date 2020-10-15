@@ -145,7 +145,7 @@ public class GDUnitFunc {
 
         String reason = "股份分红";
 
-        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList,reason, equityProductInfo,bondProductInfo);
+        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList,reason, equityProductInfo);
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);
             String txId = jsonObject.getJSONObject("data").getString("txId");

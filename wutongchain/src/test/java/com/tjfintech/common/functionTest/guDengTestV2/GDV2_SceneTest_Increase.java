@@ -333,7 +333,7 @@ public class GDV2_SceneTest_Increase {
         List<Map> shareList2 = gdConstructShareList(gdAccount5,1000,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount6,1000,0, shareList2);
 
-        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList3,reason, equityProductInfo,bondProductInfo);
+        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList3,reason, equityProductInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
 //        assertEquals("产品主体信息中发行主体引用不可以为空",JSONObject.fromObject(response).getString("message"));
         assertEquals("债券类产品不可以增发",JSONObject.fromObject(response).getString("message"));

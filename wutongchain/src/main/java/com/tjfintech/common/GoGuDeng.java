@@ -163,14 +163,36 @@ public  class GoGuDeng implements GuDeng {
      * @param equityProductInfo bondProductInfos
      * @return
      */
-    public String GDShareIncrease(String platformKeyId, String equityCode, List<Map> shareList, String reason,Map equityProductInfo,Map bondProductInfo){
+    public String GDShareIncrease(String platformKeyId, String equityCode, List<Map> shareList, String reason,Map equityProductInfo){
         Map<String, Object> map = new HashMap<>();
         map.put("platformKeyId", platformKeyId);
         map.put("equityCode", equityCode);
         map.put("shareList", shareList);
         map.put("reason", reason);
         map.put("equityProductInfo", equityProductInfo);
-        map.put("bondProductInfo", bondProductInfo);
+
+        String result = PostTest.postMethod(SDKADD + "/equity/share/increase", map);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 股份增发
+     * @param platformKeyId
+     * @param equityCode
+     * @param shareList
+     * @param reason
+     * @param equityProductInfo bondProductInfos
+     * @return
+     */
+    public String GDShareIncrease(String platformKeyId, String equityCode, List<Map> shareList, String reason,Map equityProductInfo,Map txInfo){
+        Map<String, Object> map = new HashMap<>();
+        map.put("platformKeyId", platformKeyId);
+        map.put("equityCode", equityCode);
+        map.put("shareList", shareList);
+        map.put("reason", reason);
+        map.put("equityProductInfo", equityProductInfo);
+        map.put("transactionReport", txInfo);
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/increase", map);
         log.info(result);

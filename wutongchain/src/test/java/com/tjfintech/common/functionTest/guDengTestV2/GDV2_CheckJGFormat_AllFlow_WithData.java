@@ -483,7 +483,7 @@ public class GDV2_CheckJGFormat_AllFlow_WithData {
         List<Map> shareList3 = gdConstructShareList(gdAccount3,increaseAmount,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,increaseAmount,0, shareList3);
 
-        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, equityProductInfo,null);
+        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, equityProductInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
