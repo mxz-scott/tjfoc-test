@@ -17,7 +17,7 @@ public class GoPrivateStore {
     public String GetPrivacyStore(String hash, String PubKey){
         Map<String, Object> map = new HashMap<>();
         map.put("txId", hash);
-        map.put("PubKey", PubKey);
+        map.put("pubKey", PubKey);
         String param = "";
         if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
         String result = PostTest.postMethod(SDKADD + "/v2/tx/store/querybypubkey" + param, map);
@@ -27,9 +27,9 @@ public class GoPrivateStore {
     public String PrivacyStoreAuthorize(String hash, List<Map> Secrets,String OwnerPubKey,String Sign){
         Map<String, Object> map = new HashMap<>();
         map.put("txId", hash);
-        map.put("Secrets", Secrets);
-        map.put("OwnerPubKey", OwnerPubKey);
-        map.put("Sign", Sign);
+        map.put("secrets", Secrets);
+        map.put("ownerPubKey", OwnerPubKey);
+        map.put("sign", Sign);
         String param = "";
         if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
         String result = PostTest.postMethod(SDKADD + "/v2/tx/store/authorizebypubkey" + param, map);

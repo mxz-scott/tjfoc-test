@@ -118,7 +118,7 @@ public class StoreTest {
     @Test
     public void TC_createJsonStore() throws Exception {
 
-        for (int i = 0; i < 500000000; i++) {
+        for (int i = 0; i < 5; i++) {
             JSONObject fileInfo = new JSONObject();
             JSONObject data = new JSONObject();
 

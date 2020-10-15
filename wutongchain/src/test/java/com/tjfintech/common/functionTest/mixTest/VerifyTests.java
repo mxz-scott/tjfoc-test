@@ -29,8 +29,14 @@ public class VerifyTests {
     public void CalculateAverageTPS() throws Exception {
 
         int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
+        int startBlockHeight;
 
-        int startBlockHeight = 1;        //手动修改起始高度
+        if (blockHeight > 100) {
+            startBlockHeight = blockHeight - 99;
+        }else {
+            startBlockHeight = 1;
+        }
+        //手动修改起始高度
         int endBlockHeight = blockHeight;   //手动修改结束高度
 
         int diff = endBlockHeight - startBlockHeight + 1;
