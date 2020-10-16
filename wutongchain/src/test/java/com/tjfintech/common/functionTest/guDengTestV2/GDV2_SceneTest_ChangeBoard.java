@@ -35,6 +35,7 @@ public class GDV2_SceneTest_ChangeBoard {
     CommonFunc commonFunc = new CommonFunc();
     public static String bizNoTest = "test" + Random(12);
     GDUnitFunc uf = new GDUnitFunc();
+    List<Map> regList = new ArrayList<>();
 
     @BeforeClass
     public static void Before()throws Exception{
@@ -98,7 +99,10 @@ public class GDV2_SceneTest_ChangeBoard {
         String newEqCode1 = gdEquityCode + Random(7);
         String newEqCode2 = gdEquityCode + Random(7);
 
+        regList = uf.getAllHolderListReg(gdEquityCode,"cbSpec" + Random(10));
         String response1 = uf.changeBoard(gdEquityCode,newEqCode1,false);
+
+        regList = uf.getAllHolderListReg(gdEquityCode,"cbSpec" + Random(10));
         String response2 = uf.changeBoard(gdEquityCode,newEqCode2,false);
         String txId1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
         String txId2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
@@ -158,6 +162,7 @@ public class GDV2_SceneTest_ChangeBoard {
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
                 "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":1}"));
 
+        regList = uf.getAllHolderListReg(gdEquityCode,"cbSpec" + Random(10));
         //冻结后转板
         String newEquityCode = gdEquityCode + Random(5);
         response = uf.changeBoard(gdEquityCode,newEquityCode,false);
@@ -654,8 +659,9 @@ public class GDV2_SceneTest_ChangeBoard {
     public void changeBoard_TC2521_2515() throws Exception{
 
         String newEqCode1 = "gdEC" + Random(12);
-
-        String response = gd.GDShareChangeBoard(gdAccountKeyID1,gdCompanyID,gdEquityCode,"gdEC" + Random(12),registerInfo, equityProductInfo,bondProductInfo);
+        List<Map> regList = uf.getAllHolderListReg(gdEquityCode,"testErr" + Random(12));
+        String response = gd.GDShareChangeBoard(gdAccountKeyID1,gdCompanyID,gdEquityCode,
+                "gdEC" + Random(12),regList, equityProductInfo,bondProductInfo);
         assertEquals("505",JSONObject.fromObject(response).getString("state"));
         assertEquals("数字签名出错",JSONObject.fromObject(response).getString("message"));
 
@@ -669,8 +675,9 @@ public class GDV2_SceneTest_ChangeBoard {
     public void changeBoard_TC2520() throws Exception{
 
         String newEqCode1 = "gdEC" + Random(12);
-
-        String response = gd.GDShareChangeBoard(gdPlatfromKeyID.substring(3),gdCompanyID,gdEquityCode,"gdEC" + Random(12),registerInfo, equityProductInfo,bondProductInfo);
+        List<Map> regList = uf.getAllHolderListReg(gdEquityCode,"testErr" + Random(12));
+        String response = gd.GDShareChangeBoard(gdPlatfromKeyID.substring(3),gdCompanyID,gdEquityCode,
+                "gdEC" + Random(12),regList, equityProductInfo,bondProductInfo);
         assertEquals("505",JSONObject.fromObject(response).getString("state"));
         assertEquals("数字签名出错",JSONObject.fromObject(response).getString("message"));
 
@@ -684,8 +691,9 @@ public class GDV2_SceneTest_ChangeBoard {
     public void changeBoard_TC2514() throws Exception{
 
         String newEqCode1 = "gdEC" + Random(12);
-
-        String response = gd.GDShareChangeBoard("bta47g1pgfltc7nntfb0",gdCompanyID,gdEquityCode,"gdEC" + Random(12),registerInfo, equityProductInfo,bondProductInfo);
+        List<Map> regList = uf.getAllHolderListReg(gdEquityCode,"testErr" + Random(12));
+        String response = gd.GDShareChangeBoard("bta47g1pgfltc7nntfb0",gdCompanyID,gdEquityCode,
+                "gdEC" + Random(12),regList, equityProductInfo,bondProductInfo);
         //链上报错
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
         sleepAndSaveInfo(SLEEPTIME);
@@ -703,19 +711,25 @@ public class GDV2_SceneTest_ChangeBoard {
     public void changeBoard_TC2516() throws Exception{
 
         String newEqCode1 = "gdEC" + Random(12);
-
-        String response = gd.GDShareChangeBoard("@",gdCompanyID,gdEquityCode,"gdEC" + Random(12),registerInfo, equityProductInfo,bondProductInfo);
+        List<Map> regList = uf.getAllHolderListReg(gdEquityCode,"test" + Random(15));
+        String response = gd.GDShareChangeBoard("@",gdCompanyID,gdEquityCode,
+                "gdEC" + Random(12),regList, equityProductInfo,bondProductInfo);
         assertEquals("505",JSONObject.fromObject(response).getString("state"));
         assertEquals("数字签名出错",JSONObject.fromObject(response).getString("message"));
-        response = gd.GDShareChangeBoard("#",gdCompanyID,gdEquityCode,"gdEC" + Random(12),registerInfo, equityProductInfo,bondProductInfo);
+        response = gd.GDShareChangeBoard("#",gdCompanyID,gdEquityCode,
+                "gdEC" + Random(12),regList, equityProductInfo,bondProductInfo);
         assertEquals("505",JSONObject.fromObject(response).getString("state"));
-        response = gd.GDShareChangeBoard("%",gdCompanyID,gdEquityCode,"gdEC" + Random(12),registerInfo, equityProductInfo,bondProductInfo);
+        response = gd.GDShareChangeBoard("%",gdCompanyID,gdEquityCode,
+                "gdEC" + Random(12),regList, equityProductInfo,bondProductInfo);
         assertEquals("505",JSONObject.fromObject(response).getString("state"));
-        response = gd.GDShareChangeBoard("^",gdCompanyID,gdEquityCode,"gdEC" + Random(12),registerInfo, equityProductInfo,bondProductInfo);
+        response = gd.GDShareChangeBoard("^",gdCompanyID,gdEquityCode,
+                "gdEC" + Random(12),regList, equityProductInfo,bondProductInfo);
         assertEquals("505",JSONObject.fromObject(response).getString("state"));
-        response = gd.GDShareChangeBoard("|",gdCompanyID,gdEquityCode,"gdEC" + Random(12),registerInfo, equityProductInfo,bondProductInfo);
+        response = gd.GDShareChangeBoard("|",gdCompanyID,gdEquityCode,
+                "gdEC" + Random(12),regList, equityProductInfo,bondProductInfo);
         assertEquals("505",JSONObject.fromObject(response).getString("state"));
-        response = gd.GDShareChangeBoard("_",gdCompanyID,gdEquityCode,"gdEC" + Random(12),registerInfo, equityProductInfo,bondProductInfo);
+        response = gd.GDShareChangeBoard("_",gdCompanyID,gdEquityCode,
+                "gdEC" + Random(12),regList, equityProductInfo,bondProductInfo);
         assertEquals("505",JSONObject.fromObject(response).getString("state"));
 
     }

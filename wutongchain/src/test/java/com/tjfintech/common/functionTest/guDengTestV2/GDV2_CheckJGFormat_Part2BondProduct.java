@@ -307,7 +307,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
     }
 
-    @Test
+//    @Test
     public void TC072_shareChangeBoard() throws Exception {
 
         String oldEquityCode = gdEquityCode;
@@ -315,9 +315,9 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         String cpnyId = gdCompanyID;
 
         regNo = "changeboard" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("登记流水号",regNo);       //更新对比的登记流水号
+        List<Map> regList = uf.getAllHolderListReg(gdEquityCode,regNo);
 
-        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,registerInfo, equityProductInfo,bondProductInfo);
+        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,regList,equityProductInfo,bondProductInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -814,9 +814,9 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         log.info("================================检查存证数据格式化《开始》================================");
         //获取监管数据存证hash
         String jgType = "登记";
-        String regStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
+        String regStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
         jgType = "主体";
-        String subStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
+        String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
         String tempObjId = mapAccAddr.get(gdAccount4).toString();
         log.info("检查回收存证登记格式化及信息内容与传入一致");
@@ -1012,6 +1012,10 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
         BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
                 "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
+        int totalHolderAccount = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getInt("股东总数（个）");
+
+        log.info("before recycle 股本总数(股) " + totalShares + " 股东总数（个） " + totalHolderAccount);
 
         regNo = "recycle2" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
         registerInfo.put("登记流水号",regNo);       //更新对比的登记流水号
@@ -1044,6 +1048,8 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
             assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
         }
 
+        String total = getTotalAmountFromShareList(shareList);
+
 
         log.info("================================检查存证数据格式化《开始》================================");
         //获取监管数据存证hash
@@ -1071,7 +1077,8 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         String getTotal = enterpriseSubjectInfo.get("股本总数(股)").toString();
         BigDecimal oldTotal = new BigDecimal(getTotal);
-        enterpriseSubjectInfo.put("股本总数(股)",oldTotal.subtract(new BigDecimal(recycleAmount * 4)));     //变更总股本数为增发量 + 原始股本总数
+        enterpriseSubjectInfo.put("股本总数(股)",oldTotal.subtract(new BigDecimal(total)));     //变更总股本数为增发量 + 原始股本总数
+        enterpriseSubjectInfo.put("股东总数（个）",totalHolderAccount - 3);     //股东个数为原个数减1
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
         log.info(enterpriseSubjectInfo.toString());
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
@@ -1089,17 +1096,13 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();
-        respShareList = gdConstructQueryShareList(zeroAccount,18000,0,0,mapShareENCN().get("0"),respShareList);
+        respShareList = gdConstructQueryShareList(zeroAccount,15000,0,0,mapShareENCN().get("0"),respShareList);
         respShareList = gdConstructQueryShareList(zeroAccount,5000,1,0,mapShareENCN().get("1"),respShareList);
 
 
         //检查存在余额的股东列表
-        assertEquals(respShareList.size()+1,dataShareList.size());
-
-        List<Map> getShareList = getShareListFromQueryNoZeroAcc(dataShareList);
-        log.info(getShareList.toString());
-        assertEquals(respShareList.size(),getShareList.size());
-        assertEquals(true,respShareList.containsAll(getShareList) && getShareList.containsAll(respShareList));
+        assertEquals(respShareList.size(),dataShareList.size());
+        assertEquals(true,respShareList.containsAll(dataShareList) && dataShareList.containsAll(respShareList));
 
 
         //查询股东持股情况 无当前股权代码信息
@@ -1128,6 +1131,11 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         log.info("判断增发前后机构主体查询总股本数增加数正确");
         assertEquals(0,totalShares2);
+
+
+        int totalHolderAccount2 = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getInt("股东总数（个）");
+        assertEquals(totalHolderAccount2 + 3,totalHolderAccount);//判断股东总数减3
     }
 
 }

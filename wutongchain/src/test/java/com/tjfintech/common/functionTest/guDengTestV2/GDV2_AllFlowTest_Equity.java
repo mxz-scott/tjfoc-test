@@ -960,9 +960,11 @@ public class GDV2_AllFlowTest_Equity {
         String oldEquityCode = gdEquityCode;
         String newEquityCode = gdEquityCode + Random(5);
         String cpnyId = gdCompanyID;
-        registerInfo.put("登记流水号","changeboard000001");
 
-        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,registerInfo, equityProductInfo,bondProductInfo);
+        String flowNo = "changeboard000001";
+        List<Map> regList = uf.getAllHolderListReg(gdEquityCode,flowNo);
+
+        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,regList,equityProductInfo,bondProductInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -973,14 +975,12 @@ public class GDV2_AllFlowTest_Equity {
 
         String testReturn = "";
         if(testReturn == "" && bNotCheck) return;
-        //查询挂牌企业数据
-        //查询投资者信息
+
         //查询企业股东信息
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
 
         JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
-
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();

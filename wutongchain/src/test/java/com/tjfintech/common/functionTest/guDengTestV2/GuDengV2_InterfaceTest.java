@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.guDengTestV2;
 
+import com.sun.nio.sctp.PeerAddressChangeNotification;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.GDBeforeCondition;
 import com.tjfintech.common.GDCommonFunc;
@@ -568,27 +569,27 @@ public class GuDengV2_InterfaceTest {
         String cpnyId = gdCompanyID;
 //        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,registerInfo, equityProductInfo,null);
 
-
+        List<Map> regList = uf.getAllHolderListReg(gdEquityCode,"interface" + Random(6));
         log.info(" ************************ test platformKeyId must ************************ ");
-        String response = gd.GDShareChangeBoard("",cpnyId,oldEquityCode,newEquityCode,registerInfo, equityProductInfo,null);
+        String response = gd.GDShareChangeBoard("",cpnyId,oldEquityCode,newEquityCode,regList, equityProductInfo,null);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("无效的参数:Key: 'TransferPlate.PlatformKeyId' Error:Field validation for 'PlatformKeyId' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test companyId must ************************ ");
-        response = gd.GDShareChangeBoard(gdPlatfromKeyID,"",oldEquityCode,newEquityCode,registerInfo, equityProductInfo,null);
+        response = gd.GDShareChangeBoard(gdPlatfromKeyID,"",oldEquityCode,newEquityCode,regList, equityProductInfo,null);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("无效的参数:Key: 'TransferPlate.CompanyId' Error:Field validation for 'CompanyId' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test oldEquityCode must ************************ ");
-        response = gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,"",newEquityCode,registerInfo, equityProductInfo,null);
+        response = gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,"",newEquityCode,regList, equityProductInfo,null);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("无效的参数:Key: 'TransferPlate.OldEquityCode' Error:Field validation for 'OldEquityCode' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test newEquityCode must ************************ ");
-        response = gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,"",registerInfo, equityProductInfo,null);
+        response = gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,"",regList, equityProductInfo,null);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("无效的参数:Key: 'TransferPlate.NewEquityCode' Error:Field validation for 'NewEquityCode' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
@@ -596,11 +597,11 @@ public class GuDengV2_InterfaceTest {
         log.info(" ************************ test registerInformation must ************************ ");
         response = gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,null, equityProductInfo,null);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("无效的参数:Key: 'TransferPlate.RegisterInformation' Error:Field validation for 'RegisterInformation' failed on the 'required' tag",
+        assertEquals("无效的参数:Key: 'TransferPlate.RegisterInformationList' Error:Field validation for 'RegisterInformationList' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test equityProductInfo must ************************ ");
-        response = gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,registerInfo, null,null);
+        response = gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,regList, null,null);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("产品对象标识不可以为空"));
 
@@ -666,16 +667,16 @@ public class GuDengV2_InterfaceTest {
         log.info(" ************************ test registerInformationList must ************************ ");
         response = gd.GDShareChangeProperty(gdPlatfromKeyID, address, eqCode, 100, oldProperty, newProperty, null);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-//        assertEquals("无效的参数:Key: 'SharesChange.Amount' Error:Field validation for 'Amount' failed on the 'gt' tag",
-//                JSONObject.fromObject(response).getString("message"));
+        assertEquals("无效的参数:Key: 'SharesChange.RegisterInformationList' Error:Field validation for 'RegisterInformationList' failed on the 'required' tag",
+                JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test registerInformationList 只有一个************************ ");
         regListInfo = new ArrayList<>();
         regListInfo.add(tempReg1);
         response = gd.GDShareChangeProperty(gdPlatfromKeyID, address, eqCode, 100, oldProperty, newProperty, regListInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-//        assertEquals("无效的参数:Key: 'SharesChange.Amount' Error:Field validation for 'Amount' failed on the 'gt' tag",
-//                JSONObject.fromObject(response).getString("message"));
+        assertEquals("此处登记信息应为两条",
+                JSONObject.fromObject(response).getString("message"));
 
 
 //        log.info(" ************************ test oldShareProperty must ************************ ");

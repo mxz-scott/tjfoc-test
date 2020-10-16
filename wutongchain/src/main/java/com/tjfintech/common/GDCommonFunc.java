@@ -318,6 +318,15 @@ public class GDCommonFunc {
         return String.valueOf(total);
     }
 
+    public static String getTotalAmountFromShareList(List dataShareList)throws Exception {
+        List<Map> getShareList = new ArrayList<>();
+        long total = 0;
+        for (int i = 0; i < dataShareList.size(); i++) {
+            total = JSONObject.fromObject(dataShareList.get(i)).getLong("amount") + total;
+        }
+        return String.valueOf(total);
+    }
+
     /***
      * 构造股权性质编码表
      * @return

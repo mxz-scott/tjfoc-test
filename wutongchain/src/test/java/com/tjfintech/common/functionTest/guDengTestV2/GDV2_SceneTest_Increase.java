@@ -234,12 +234,16 @@ public class GDV2_SceneTest_Increase {
         List<Map> shareListIn3 = gdConstructShareList(gdAccount3,1000,0, shareListIn2);
         List<Map> shareListIn4 = gdConstructShareList(gdAccount4,1000,1, shareListIn3);
 
+        List<String> txList = new ArrayList<>();
         for(int i =0 ;i< 20;i++) {
-            uf.shareIncrease(gdEquityCode, shareListIn4, false);
+            String response = uf.shareIncrease(gdEquityCode, shareListIn4, false);
+            assertEquals("200",JSONObject.fromObject(response).getString("state"));
+            txList.add(JSONObject.fromObject(response).getJSONObject("data").getString("txId"));
         }
 
-
         sleepAndSaveInfo(SLEEPTIME*2);
+
+
 
         String query = "";
 
@@ -248,6 +252,11 @@ public class GDV2_SceneTest_Increase {
         //查询企业股东信息
         query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
+
+        for(int i=0;i<txList.size();i++)
+        {
+            assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txList.get(i))).getString("state"));
+        }
 
         JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
 
@@ -313,7 +322,7 @@ public class GDV2_SceneTest_Increase {
      * 增发不支持债券类
      * @throws Exception
      */
-    @Test
+//    @Test
     public void TC09_shareIncrease() throws Exception {
 
         String eqCode = gdEquityCode;

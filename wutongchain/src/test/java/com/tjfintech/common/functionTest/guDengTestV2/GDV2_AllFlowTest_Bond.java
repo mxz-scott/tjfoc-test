@@ -796,15 +796,18 @@ public class GDV2_AllFlowTest_Bond {
         assertEquals(totalShares.subtract(new BigDecimal("400")),totalShares2);
     }
 
+    //不支持债权类转板
     @Test
     public void TC13_shareChangeBoard() throws Exception {
 
         String oldEquityCode = gdEquityCode;
         String newEquityCode = gdEquityCode + Random(5);
         String cpnyId = gdCompanyID;
-        registerInfo.put("登记流水号","changeboard000001");
 
-        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,registerInfo, equityProductInfo,bondProductInfo);
+        String flowNo = "changeboard000001";
+        List<Map> regList = uf.getAllHolderListReg(gdEquityCode,flowNo);
+
+        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,regList, equityProductInfo,bondProductInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 

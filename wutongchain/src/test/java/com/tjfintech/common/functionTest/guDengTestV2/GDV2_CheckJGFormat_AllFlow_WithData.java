@@ -1119,9 +1119,9 @@ public class GDV2_CheckJGFormat_AllFlow_WithData {
         String cpnyId = gdCompanyID;
 
         regNo = "Eq" + "changeboard" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("登记流水号",regNo);       //更新对比的登记流水号
+        List<Map> regList = uf.getAllHolderListReg(gdEquityCode,regNo);
 
-        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,registerInfo, equityProductInfo,null);
+        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,regList,equityProductInfo,null);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 

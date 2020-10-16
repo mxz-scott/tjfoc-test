@@ -7,10 +7,12 @@ import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -255,7 +257,8 @@ public class GDUnitFunc {
      */
     public String changeBoard(String oldEquityCode,String newEquityCode,boolean bCheckOnchain) throws Exception{
         log.info("场内转板");
-        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,gdCompanyID,oldEquityCode,newEquityCode,registerInfo, equityProductInfo,bondProductInfo);
+        List<Map> regListTemp = getAllHolderListReg(oldEquityCode,"cbSpec" + Random(10));
+        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,gdCompanyID,oldEquityCode,newEquityCode,regListTemp, equityProductInfo,bondProductInfo);
 
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);
@@ -343,4 +346,30 @@ public class GDUnitFunc {
         return response;
     }
 
+    public List<Map> getAllHolderListReg(String equityCode ,String flowNo){
+        List<Map> regList = new ArrayList<>();
+        GDBeforeCondition gdBF = new GDBeforeCondition();
+
+        //获取股东列表
+        String Qry = gd.GDGetEnterpriseShareInfo(equityCode);
+        assertEquals("200",JSONObject.fromObject(Qry).getString("state"));
+
+        JSONArray holderList = JSONObject.fromObject(Qry).getJSONArray("data");
+
+        for(int i = 0;i < holderList.size(); i ++){
+            String tempAddr = JSONObject.fromObject(holderList.get(i)).getString("address");
+            if(tempAddr.equals(zeroAccount)) continue;
+            String tempPP = JSONObject.fromObject(holderList.get(i)).getString("shareProperty");
+            log.info("temp index " + i);
+            String tempObjId = mapAccAddr.get(tempAddr).toString();
+            log.info("检查发行存证登记格式化及信息内容与传入一致:" + tempObjId);
+            Map tempReg =  gdBF.init05RegInfo();
+            tempReg.put("权利人账户引用",tempObjId);
+            tempReg.put("登记流水号",flowNo);
+            tempReg.put("股份性质",tempPP);
+            regList.add(tempReg);
+        }
+
+        return regList;
+    }
 }
