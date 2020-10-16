@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static org.junit.Assert.assertEquals;
 
 @Slf4j
 public class CompareReleaseLatestData {
@@ -13,6 +14,6 @@ public class CompareReleaseLatestData {
     @Test
     public void test()throws Exception {
         log.info("start compare release data and latest data");
-        commonFunc.compareHashMap(beforeUpgrade,afterUpgrade);
+        assertEquals("判断升级前后内容是否一致",true,commonFunc.compareHashMap(beforeUpgrade,afterUpgrade));
     }
 }

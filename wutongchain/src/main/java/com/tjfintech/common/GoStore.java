@@ -48,14 +48,24 @@ public  class GoStore implements Store {
     }
 
     /**
-     * 获取UTXO交易详情。
-     *
-     * @method GET
+     * 获取交易详情。
      */
     public String GetTxDetail(String hash) {
         String param = "";
         if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
         String result = GetTest.doGet2(SDKADD + "/v2/tx/detail/" + hash + "?" + param);
+        log.info(result);
+        return result;
+
+    }
+
+    /**
+     * 获取交易raw data
+     */
+    public String GetTxRaw(String hash) {
+        String param = "";
+        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
+        String result = GetTest.doGet2(SDKADD + "/v2/tx/raw/" + hash + "?" + param);
         log.info(result);
         return result;
 

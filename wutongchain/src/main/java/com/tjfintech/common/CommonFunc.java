@@ -1187,11 +1187,12 @@ public class CommonFunc {
     }
 
 
-    public void compareHashMap(Map<String,String> before ,Map<String,String> after)throws Exception{
+    public Boolean compareHashMap(Map<String,String> before ,Map<String,String> after)throws Exception{
         ArrayList<String> diffRespList = new ArrayList<>();
+        Boolean bSame = true;
 
-        log.info("升级前检查数据长度： " + before.size() + "\n升级后检查数据长度： " +  after.size());
-        assertEquals("升级前后存储信息个数不等请确认",before.size(),after.size());
+        log.info("前Map检查数据长度： " + before.size() + "\n后Map检查数据长度： " +  after.size());
+        assertEquals("前后Map存储信息个数不等请确认",before.size(),after.size());
 
         Iterator iter = before.keySet().iterator();
         while (iter.hasNext()) {
@@ -1215,8 +1216,10 @@ public class CommonFunc {
                 FileOperation fileOperation = new FileOperation();
                 fileOperation.appendToFile(diffRespList.get(i),diffSaveFile);
             }
-            assertEquals("data not same",false,true);
+            log.info("data not same");
+            bSame = false;
         }
+        return  bSame;
     }
 
     public ArrayList<String> getTxFromBlock(int start,int end) {

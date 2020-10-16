@@ -16,6 +16,7 @@ public interface Store {
     String GetBlockByHash(String hash);
     String GetTransactionBlock(String hash);
     String GetTxDetail(String hash);
+    String GetTxRaw(String hash);
 
     String GetInlocal(String hash);
     String GetPeerList();
