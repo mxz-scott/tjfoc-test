@@ -283,9 +283,12 @@ public class GDV2_SceneTest_Transfer {
         response = uf.shareTransfer(gdAccountKeyID1,gdAccount1,500,gdAccount5,0,
                 gdEquityCode,false);
 
-        sleepAndSaveInfo(SLEEPTIME);
-        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
-                JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("Err:error"));
+
+//        sleepAndSaveInfo(SLEEPTIME);
+//        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
+//                JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
 
 
         //当前可用余额500 转出等于可用余额
@@ -310,9 +313,12 @@ public class GDV2_SceneTest_Transfer {
         response = uf.shareTransfer(gdAccountKeyID1,gdAccount1,1,gdAccount5,0,
                 gdEquityCode,false);
 
-        sleepAndSaveInfo(SLEEPTIME);
-        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
-                    JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("Err:error"));
+
+//        sleepAndSaveInfo(SLEEPTIME);
+//        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
+//                JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
 
     }
 
@@ -391,9 +397,12 @@ public class GDV2_SceneTest_Transfer {
         response = uf.shareTransfer(gdAccountKeyID1,gdAccount1,500,gdAccount5,0,
                 gdEquityCode,false);
 
-        sleepAndSaveInfo(SLEEPTIME);
-        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
-                    JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("Err:error"));
+
+//        sleepAndSaveInfo(SLEEPTIME);
+//        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
+//                JSONObject.fromObject(response).getJSONObject("data").getString("txId"))).getString("state"));
 
         //当前可用余额500 转出等于可用余额
         uf.shareTransfer(gdAccountKeyID1,gdAccount1,400,gdAccount5,0,
@@ -599,11 +608,11 @@ public class GDV2_SceneTest_Transfer {
         String response = uf.shareTransfer(gdAccountKeyID1,gdAccount1,1000,gdAccount5,0,
                 gdEquityCode.toLowerCase(),false);
         assertEquals("500",JSONObject.fromObject(response).getString("state"));
-        assertEquals("查询余额出错",JSONObject.fromObject(response).getString("message"));
+        assertEquals(true,JSONObject.fromObject(response).getString("message").contains("查询余额出错"));
 
         response = uf.shareTransfer(gdAccountKeyID1,gdAccount1,1000,gdAccount5,0,
                 gdEquityCode.toUpperCase(),false);
         assertEquals("500",JSONObject.fromObject(response).getString("state"));
-        assertEquals("查询余额出错",JSONObject.fromObject(response).getString("message"));
+        assertEquals(true,JSONObject.fromObject(response).getString("message").contains("查询余额出错"));
     }
 }
