@@ -62,16 +62,7 @@ public class GDV2_SceneTest_Recycle {
 //       sleepAndSaveInfo(3000);
 
         //发行
-        gdEquityCode = "gdEC" + Random(12);
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
-
-        //发行
-        gdEquityCode = "gdEC" + Random(12);
-        uf.shareIssue(gdEquityCode, shareList4, true);
-        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+        uf.commonIssuePP01(1000);//发行给账户1~4 股权性质对应 0 1 0 1
     }
 
 //    @After

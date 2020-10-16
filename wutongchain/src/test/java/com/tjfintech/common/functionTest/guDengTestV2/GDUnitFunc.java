@@ -14,6 +14,7 @@ import org.junit.runners.MethodSorters;
 import java.util.List;
 import java.util.Map;
 
+import static com.tjfintech.common.GDCommonFunc.gdConstructShareListNoTxReport;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassGD.*;
 import static org.junit.Assert.assertEquals;
@@ -107,6 +108,30 @@ public class GDUnitFunc {
         return response;
     }
 
+    public void commonIssuePP0(long amount)throws Exception{
+        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,amount,0);
+        List<Map> shareList2 = gdConstructShareListNoTxReport(gdAccount2,amount,0, shareList);
+        List<Map> shareList3 = gdConstructShareListNoTxReport(gdAccount3,amount,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListNoTxReport(gdAccount4,amount,0, shareList3);
+
+        //发行
+        gdEquityCode = "gdEC" + Random(12);
+        shareIssue(gdEquityCode, shareList4, true);
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+    }
+
+    public void commonIssuePP01(long amount)throws Exception{
+        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,amount,0);
+        List<Map> shareList2 = gdConstructShareListNoTxReport(gdAccount2,amount,1, shareList);
+        List<Map> shareList3 = gdConstructShareListNoTxReport(gdAccount3,amount,0, shareList2);
+        List<Map> shareList4 = gdConstructShareListNoTxReport(gdAccount4,amount,1, shareList3);
+
+        //发行
+        gdEquityCode = "gdEC" + Random(12);
+        shareIssue(gdEquityCode, shareList4, true);
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+    }
+
     /***
      * 股份初始登记
      * @param eqCode  待发股权代码
@@ -116,7 +141,6 @@ public class GDUnitFunc {
     public String shareIssue(String eqCode,List<Map> shareList,boolean bCheckOnchain) throws Exception{
         log.info("挂牌登记");
         enterpriseReg(eqCode,true);
-
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
 
         log.info("发行");

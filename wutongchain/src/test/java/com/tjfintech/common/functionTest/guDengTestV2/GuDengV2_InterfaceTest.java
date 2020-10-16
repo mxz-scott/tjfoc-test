@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 
 import static com.tjfintech.common.GDCommonFunc.gdConstructShareList;
+import static com.tjfintech.common.GDCommonFunc.gdConstructShareListNoTxReport;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassGD.*;
 import static org.junit.Assert.assertEquals;
@@ -133,7 +134,7 @@ public class GuDengV2_InterfaceTest {
         String response= gd.GDEnterpriseResister(gdContractAddress,eqCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,bondProductInfo);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
         sleepAndSaveInfo(5000);
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,1000,0);
 
         log.info(" ************************ test platformKeyId must ************************ ");
         response= gd.GDShareIssue(gdContractAddress,"",eqCode,shareList);
@@ -201,7 +202,7 @@ public class GuDengV2_InterfaceTest {
         String eqCode = gdEquityCode;
         String reason = "股份分红";
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,1000,0);
         uf.shareIssue(gdEquityCode,shareList,true); //执行发行
 
         sleepAndSaveInfo(3000);
@@ -241,7 +242,7 @@ public class GuDengV2_InterfaceTest {
 
         gdEquityCode = "lockEC" + Random(6);
         String eqCode = gdEquityCode;
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,1000,0);
         uf.shareIssue(gdEquityCode,shareList,true); //执行发行
 
         sleepAndSaveInfo(3000);
@@ -305,7 +306,7 @@ public class GuDengV2_InterfaceTest {
     public void shareUnlockInterfaceTest() throws Exception {
         gdEquityCode = "unlockEC" + Random(6);
         String eqCode = gdEquityCode;
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,1000,0);
         uf.shareIssue(gdEquityCode,shareList,true); //执行发行
 
         sleepAndSaveInfo(3000);
@@ -361,7 +362,7 @@ public class GuDengV2_InterfaceTest {
 
         gdEquityCode = "unlockEC" + Random(6);
         String eqCode = gdEquityCode;
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,1000,0);
         uf.shareIssue(gdEquityCode,shareList,true); //执行发行
 
         sleepAndSaveInfo(3000);
@@ -440,7 +441,7 @@ public class GuDengV2_InterfaceTest {
 
         gdEquityCode = "unlockEC" + Random(6);
         String eqCode = gdEquityCode;
-        List<Map> shareListIssue = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareListIssue = gdConstructShareListNoTxReport(gdAccount1,1000,0);
         uf.shareIssue(gdEquityCode,shareListIssue,true); //执行发行
 
         sleepAndSaveInfo(3000);
@@ -557,7 +558,7 @@ public class GuDengV2_InterfaceTest {
 
         gdEquityCode = "unlockEC" + Random(6);
         String eqCode = gdEquityCode;
-        List<Map> shareListIssue = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareListIssue = gdConstructShareListNoTxReport(gdAccount1,1000,0);
         uf.shareIssue(gdEquityCode,shareListIssue,true); //执行发行
 
         sleepAndSaveInfo(3000);
@@ -617,7 +618,7 @@ public class GuDengV2_InterfaceTest {
 
         gdEquityCode = "unlockEC" + Random(6);
         String eqCode = gdEquityCode;
-        List<Map> shareListIssue = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareListIssue = gdConstructShareListNoTxReport(gdAccount1,1000,0);
         uf.shareIssue(gdEquityCode,shareListIssue,true); //执行发行
 
         sleepAndSaveInfo(3000);

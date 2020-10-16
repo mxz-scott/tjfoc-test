@@ -177,6 +177,23 @@ public class GDCommonFunc {
         return shareList;
     }
 
+    public static List<Map> gdConstructShareListNoTxReport(String address, double amount, int shareProperty){
+        GDBeforeCondition gdbf = new GDBeforeCondition();
+        Map tempReg = gdbf.init05RegInfo();
+        tempReg.put("权利人账户引用",mapAccAddr.get(address));
+        tempReg.put("股份性质",shareProperty);
+
+        Map<String,Object> shares = new HashMap<>();
+        shares.put("address",address);
+        shares.put("amount",amount);
+        shares.put("shareProperty",shareProperty);
+        shares.put("registerInformation",tempReg);
+
+        List<Map> shareList = new ArrayList<>();
+        shareList.add(shares);
+        return shareList;
+    }
+
     public static List<Map> gdConstructShareList(String address, double amount, int shareProperty,List<Map> list){
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
@@ -196,6 +213,26 @@ public class GDCommonFunc {
         shares.put("shareProperty",shareProperty);
         shares.put("registerInformation",tempReg);
         shares.put("transactionReport",tempTxInfo);
+
+        shareList.add(shares);
+        return shareList;
+    }
+
+    public static List<Map> gdConstructShareListNoTxReport(String address, double amount, int shareProperty,List<Map> list){
+        GDBeforeCondition gdbf = new GDBeforeCondition();
+        Map tempReg = gdbf.init05RegInfo();
+        tempReg.put("权利人账户引用",mapAccAddr.get(address));
+        tempReg.put("股份性质",shareProperty);
+
+        List<Map> shareList = new ArrayList<>();
+        for(int i = 0 ; i < list.size() ; i++) {
+            shareList.add(list.get(i));
+        }
+        Map<String,Object> shares = new HashMap<>();
+        shares.put("address",address);
+        shares.put("amount",amount);
+        shares.put("shareProperty",shareProperty);
+        shares.put("registerInformation",tempReg);
 
         shareList.add(shares);
         return shareList;
@@ -242,6 +279,30 @@ public class GDCommonFunc {
         shares.put("sharePropertyCN",sharePropertyCN);
         shares.put("registerInformation",tempReg);
         shares.put("transactionReport",tempTxInfo);
+
+        shareList.add(shares);
+        return shareList;
+    }
+
+    public static List<Map> gdConstructQueryShareListNoTxReport(String address, double amount, int shareProperty,
+                                                                double lockAmount,String sharePropertyCN, List<Map> list){
+        //处理登记
+        GDBeforeCondition gdbf = new GDBeforeCondition();
+        Map tempReg = gdbf.init05RegInfo();
+        tempReg.put("权利人账户引用",mapAccAddr.get(address));
+        tempReg.put("股份性质",shareProperty);
+
+        List<Map> shareList = new ArrayList<>();
+        for(int i = 0 ; i < list.size() ; i++) {
+            shareList.add(list.get(i));
+        }
+        Map<String,Object> shares = new HashMap<>();
+        shares.put("address",address);
+        shares.put("amount",amount);
+        shares.put("lockAmount",lockAmount);
+        shares.put("shareProperty",shareProperty);
+        shares.put("sharePropertyCN",sharePropertyCN);
+        shares.put("registerInformation",tempReg);
 
         shareList.add(shares);
         return shareList;
