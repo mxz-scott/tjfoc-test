@@ -2799,10 +2799,10 @@ public class GDV2_SceneTest_02 {
 
         sleepAndSaveInfo(SLEEPTIME,"等待转板交易及相关交易全部上链");
 
-        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,1000,1);
-        List<Map> shareList2 = gdConstructShareListNoTxReport(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareListNoTxReport(gdAccount3,1000,1, shareList2);
-        List<Map> shareList4 = gdConstructShareListNoTxReport(gdAccount4,1000,1, shareList3);
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,1);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,1, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
         uf.shareIncrease(gdEquityCode,shareList4,true);
 
         //查询挂牌企业数据

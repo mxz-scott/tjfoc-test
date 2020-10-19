@@ -439,11 +439,11 @@ public class GDV2_SceneTest_ChangeBoard {
         String EqCode4 = gdEquityCode + Random(8);
 
         String response = "";
-        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareListNoTxReport(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareListNoTxReport(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareListNoTxReport(gdAccount4,1000,1, shareList3);
-        List<Map> shareList5 = gdConstructShareListNoTxReport(gdAccount5,1000,0);
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+        List<Map> shareList5 = gdConstructShareList(gdAccount5,1000,0);
 
         uf.shareIssue(EqCode2,shareList4,true);
         uf.shareIssue(EqCode3,shareList5,true);
@@ -502,10 +502,10 @@ public class GDV2_SceneTest_ChangeBoard {
     public void changeBoard_TC2505()throws Exception{
         String EqCode1 = gdEquityCode + Random(8);
         String response = "";
-        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,1,0);
-        List<Map> shareList2 = gdConstructShareListNoTxReport(gdAccount2,1,1, shareList);
-        List<Map> shareList3 = gdConstructShareListNoTxReport(gdAccount3,1,0, shareList2);
-        List<Map> shareList4 = gdConstructShareListNoTxReport(gdAccount4,1,1, shareList3);
+        List<Map> shareList = gdConstructShareList(gdAccount1,1,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1,1, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1,1, shareList3);
 
         uf.shareIssue(EqCode1,shareList4,true);
 
@@ -610,7 +610,7 @@ public class GDV2_SceneTest_ChangeBoard {
         assertEquals(false,query.contains(gdAccount4));
 
         String newEqCode1 = "gdEC" + Random(12);
-        List<Map> shareList21 = gdConstructShareListNoTxReport(gdAccount1,1000,0);
+        List<Map> shareList21 = gdConstructShareList(gdAccount1,1000,0);
         uf.shareIssue(newEqCode1,shareList21,true);
 
         String response = uf.changeBoard(newEqCode1,gdEquityCode,false);
@@ -628,7 +628,7 @@ public class GDV2_SceneTest_ChangeBoard {
     public void changeBoard_TC2529() throws Exception{
 
         String newEqCode1 = "gdEC" + Random(12);
-        List<Map> shareList21 = gdConstructShareListNoTxReport(gdAccount1,1000,0);
+        List<Map> shareList21 = gdConstructShareList(gdAccount1,1000,0);
         uf.shareIssue(newEqCode1,shareList21,true);
 
         String response = uf.changeBoard(newEqCode1,gdEquityCode,false);

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.GDCommonFunc.gdConstructShareListNoTxReport;
+import static com.tjfintech.common.GDCommonFunc.gdConstructShareList;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassGD.*;
 import static org.junit.Assert.assertEquals;
@@ -114,10 +114,10 @@ public class GDUnitFunc {
     }
 
     public void commonIssuePP0(long amount)throws Exception{
-        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,amount,0);
-        List<Map> shareList2 = gdConstructShareListNoTxReport(gdAccount2,amount,0, shareList);
-        List<Map> shareList3 = gdConstructShareListNoTxReport(gdAccount3,amount,0, shareList2);
-        List<Map> shareList4 = gdConstructShareListNoTxReport(gdAccount4,amount,0, shareList3);
+        List<Map> shareList = gdConstructShareList(gdAccount1,amount,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,amount,0, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,amount,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,amount,0, shareList3);
 
         //发行
         gdEquityCode = "gdEC" + Random(12);
@@ -126,10 +126,10 @@ public class GDUnitFunc {
     }
 
     public void commonIssuePP01(long amount)throws Exception{
-        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,amount,0);
-        List<Map> shareList2 = gdConstructShareListNoTxReport(gdAccount2,amount,1, shareList);
-        List<Map> shareList3 = gdConstructShareListNoTxReport(gdAccount3,amount,0, shareList2);
-        List<Map> shareList4 = gdConstructShareListNoTxReport(gdAccount4,amount,1, shareList3);
+        List<Map> shareList = gdConstructShareList(gdAccount1,amount,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,amount,1, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,amount,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,amount,1, shareList3);
 
         //发行
         gdEquityCode = "gdEC" + Random(12);

@@ -189,7 +189,7 @@ public class GDV2_SceneTest_DestroyAccount {
         String response = uf.createAcc(clientNo,true);
         log.info(response);
         String addr= JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("address");
-        List<Map> shareList = gdConstructShareListNoTxReport(addr,500,0);
+        List<Map> shareList = gdConstructShareList(addr,500,0);
 
         //发行
         String eqCode = "Da00" + Random(10);
@@ -299,7 +299,7 @@ public class GDV2_SceneTest_DestroyAccount {
 
 
         String eqCode = "Da00" + Random(10);
-        List<Map> shareList = gdConstructShareListNoTxReport(addr,500,0);
+        List<Map> shareList = gdConstructShareList(addr,500,0);
         //发行
         uf.shareIssue(eqCode,shareList,true);
 

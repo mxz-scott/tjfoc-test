@@ -162,37 +162,37 @@ public class GDCommonFunc {
         tempReg.put("权利人账户引用",mapAccAddr.get(address));
         tempReg.put("股份性质",shareProperty);
 
-        Map tempTxInfo = gdbf.init04TxInfo();
-        tempTxInfo.put("原持有方主体引用",mapAccAddr.get(address));
+//        Map tempTxInfo = gdbf.init04TxInfo();
+//        tempTxInfo.put("原持有方主体引用",mapAccAddr.get(address));
 
         Map<String,Object> shares = new HashMap<>();
         shares.put("address",address);
         shares.put("amount",amount);
         shares.put("shareProperty",shareProperty);
         shares.put("registerInformation",tempReg);
-        shares.put("transactionReport",tempTxInfo);
+//        shares.put("transactionReport",tempTxInfo);
 
         List<Map> shareList = new ArrayList<>();
         shareList.add(shares);
         return shareList;
     }
 
-    public static List<Map> gdConstructShareListNoTxReport(String address, double amount, int shareProperty){
-        GDBeforeCondition gdbf = new GDBeforeCondition();
-        Map tempReg = gdbf.init05RegInfo();
-        tempReg.put("权利人账户引用",mapAccAddr.get(address));
-        tempReg.put("股份性质",shareProperty);
-
-        Map<String,Object> shares = new HashMap<>();
-        shares.put("address",address);
-        shares.put("amount",amount);
-        shares.put("shareProperty",shareProperty);
-        shares.put("registerInformation",tempReg);
-
-        List<Map> shareList = new ArrayList<>();
-        shareList.add(shares);
-        return shareList;
-    }
+//    public static List<Map> gdConstructShareListNoTxReport(String address, double amount, int shareProperty){
+//        GDBeforeCondition gdbf = new GDBeforeCondition();
+//        Map tempReg = gdbf.init05RegInfo();
+//        tempReg.put("权利人账户引用",mapAccAddr.get(address));
+//        tempReg.put("股份性质",shareProperty);
+//
+//        Map<String,Object> shares = new HashMap<>();
+//        shares.put("address",address);
+//        shares.put("amount",amount);
+//        shares.put("shareProperty",shareProperty);
+//        shares.put("registerInformation",tempReg);
+//
+//        List<Map> shareList = new ArrayList<>();
+//        shareList.add(shares);
+//        return shareList;
+//    }
 
     public static List<Map> gdConstructShareList(String address, double amount, int shareProperty,List<Map> list){
         GDBeforeCondition gdbf = new GDBeforeCondition();
@@ -200,8 +200,8 @@ public class GDCommonFunc {
         tempReg.put("权利人账户引用",mapAccAddr.get(address));
         tempReg.put("股份性质",shareProperty);
 
-        Map tempTxInfo = gdbf.init04TxInfo();
-        tempTxInfo.put("原持有方主体引用",mapAccAddr.get(address));
+//        Map tempTxInfo = gdbf.init04TxInfo();
+//        tempTxInfo.put("原持有方主体引用",mapAccAddr.get(address));
 
         List<Map> shareList = new ArrayList<>();
         for(int i = 0 ; i < list.size() ; i++) {
@@ -212,31 +212,31 @@ public class GDCommonFunc {
         shares.put("amount",amount);
         shares.put("shareProperty",shareProperty);
         shares.put("registerInformation",tempReg);
-        shares.put("transactionReport",tempTxInfo);
+//        shares.put("transactionReport",tempTxInfo);
 
         shareList.add(shares);
         return shareList;
     }
 
-    public static List<Map> gdConstructShareListNoTxReport(String address, double amount, int shareProperty,List<Map> list){
-        GDBeforeCondition gdbf = new GDBeforeCondition();
-        Map tempReg = gdbf.init05RegInfo();
-        tempReg.put("权利人账户引用",mapAccAddr.get(address));
-        tempReg.put("股份性质",shareProperty);
-
-        List<Map> shareList = new ArrayList<>();
-        for(int i = 0 ; i < list.size() ; i++) {
-            shareList.add(list.get(i));
-        }
-        Map<String,Object> shares = new HashMap<>();
-        shares.put("address",address);
-        shares.put("amount",amount);
-        shares.put("shareProperty",shareProperty);
-        shares.put("registerInformation",tempReg);
-
-        shareList.add(shares);
-        return shareList;
-    }
+//    public static List<Map> gdConstructShareListNoTxReport(String address, double amount, int shareProperty,List<Map> list){
+//        GDBeforeCondition gdbf = new GDBeforeCondition();
+//        Map tempReg = gdbf.init05RegInfo();
+//        tempReg.put("权利人账户引用",mapAccAddr.get(address));
+//        tempReg.put("股份性质",shareProperty);
+//
+//        List<Map> shareList = new ArrayList<>();
+//        for(int i = 0 ; i < list.size() ; i++) {
+//            shareList.add(list.get(i));
+//        }
+//        Map<String,Object> shares = new HashMap<>();
+//        shares.put("address",address);
+//        shares.put("amount",amount);
+//        shares.put("shareProperty",shareProperty);
+//        shares.put("registerInformation",tempReg);
+//
+//        shareList.add(shares);
+//        return shareList;
+//    }
 
     public static List<Map> getShareListFromQueryNoZeroAcc(JSONArray dataShareList)throws Exception {
         List<Map> getShareList = new ArrayList<>();

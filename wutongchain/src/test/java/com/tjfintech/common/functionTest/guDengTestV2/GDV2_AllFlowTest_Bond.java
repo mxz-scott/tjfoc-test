@@ -145,10 +145,10 @@ public class GDV2_AllFlowTest_Bond {
     public void TC06_shareIssue() throws Exception {
 
         registerInfo.put("登记流水号","issue000001");
-        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,5000,0);
-        List<Map> shareList2 = gdConstructShareListNoTxReport(gdAccount2,5000,0, shareList);
-        List<Map> shareList3 = gdConstructShareListNoTxReport(gdAccount3,5000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareListNoTxReport(gdAccount4,5000,0,shareList3);
+        List<Map> shareList = gdConstructShareList(gdAccount1,5000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,5000,0, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,5000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,5000,0,shareList3);
 
         String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
         JSONObject jsonObject=JSONObject.fromObject(response);

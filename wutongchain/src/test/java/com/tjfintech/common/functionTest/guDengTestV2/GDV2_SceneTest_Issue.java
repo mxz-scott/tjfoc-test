@@ -97,10 +97,10 @@ public class GDV2_SceneTest_Issue {
 
     @Test
     public void issueSameEquityCode()throws Exception{
-        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareListNoTxReport(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareListNoTxReport(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareListNoTxReport(gdAccount4,1000,1, shareList3);
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
 
         //发行已经发行过的股权代码
         String response = uf.shareIssue(gdEquityCode,shareList4,false);
@@ -116,18 +116,18 @@ public class GDV2_SceneTest_Issue {
     @Test
     public void issueDiffPropertyEquityCode()throws Exception{
         gdEquityCode = "gdEC" + Random(13);
-        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,1000,0);
-        shareList = gdConstructShareListNoTxReport(gdAccount2,1000,1,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount3,1000,2,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount4,1000,3,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount5,1000,4,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount6,1000,5,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount1,1000,6,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount5,1000,21,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount6,1000,32,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount1,1000,43,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount5,1000,88,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount6,1000,99,shareList);
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        shareList = gdConstructShareList(gdAccount2,1000,1,shareList);
+        shareList = gdConstructShareList(gdAccount3,1000,2,shareList);
+        shareList = gdConstructShareList(gdAccount4,1000,3,shareList);
+        shareList = gdConstructShareList(gdAccount5,1000,4,shareList);
+        shareList = gdConstructShareList(gdAccount6,1000,5,shareList);
+        shareList = gdConstructShareList(gdAccount1,1000,6,shareList);
+        shareList = gdConstructShareList(gdAccount5,1000,21,shareList);
+        shareList = gdConstructShareList(gdAccount6,1000,32,shareList);
+        shareList = gdConstructShareList(gdAccount1,1000,43,shareList);
+        shareList = gdConstructShareList(gdAccount5,1000,88,shareList);
+        shareList = gdConstructShareList(gdAccount6,1000,99,shareList);
 
 
         //发行已经发行过的股权代码
@@ -219,20 +219,20 @@ public class GDV2_SceneTest_Issue {
     public void issueOneHolderDiffPropertyEquityCode()throws Exception{
         gdEquityCode = "gdEC" + Random(13);
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        shareList = gdConstructShareListNoTxReport(gdAccount1,1000,1,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount1,1000,2,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount1,1000,3,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount1,1000,4,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount1,1000,5,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount1,1000,6,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount1,1000,7,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount1,1000,8,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount1,1000,10,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount1,1000,21,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount1,1000,32,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount1,1000,43,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount1,1000,54,shareList);
-        shareList = gdConstructShareListNoTxReport(gdAccount1,1000,65,shareList);
+        shareList = gdConstructShareList(gdAccount1,1000,1,shareList);
+        shareList = gdConstructShareList(gdAccount1,1000,2,shareList);
+        shareList = gdConstructShareList(gdAccount1,1000,3,shareList);
+        shareList = gdConstructShareList(gdAccount1,1000,4,shareList);
+        shareList = gdConstructShareList(gdAccount1,1000,5,shareList);
+        shareList = gdConstructShareList(gdAccount1,1000,6,shareList);
+        shareList = gdConstructShareList(gdAccount1,1000,7,shareList);
+        shareList = gdConstructShareList(gdAccount1,1000,8,shareList);
+        shareList = gdConstructShareList(gdAccount1,1000,10,shareList);
+        shareList = gdConstructShareList(gdAccount1,1000,21,shareList);
+        shareList = gdConstructShareList(gdAccount1,1000,32,shareList);
+        shareList = gdConstructShareList(gdAccount1,1000,43,shareList);
+        shareList = gdConstructShareList(gdAccount1,1000,54,shareList);
+        shareList = gdConstructShareList(gdAccount1,1000,65,shareList);
 
         //发行已经发行过的股权代码
         String response = uf.shareIssue(gdEquityCode,shareList,true);
@@ -315,10 +315,10 @@ public class GDV2_SceneTest_Issue {
         query = gd.GDGetEnterpriseShareInfo(gdEquityCode.toUpperCase());
         assertEquals("400",JSONObject.fromObject(query).getString("state"));
 
-        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareListNoTxReport(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareListNoTxReport(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareListNoTxReport(gdAccount4,1000,1, shareList3);
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
 
         //大小写匹配检查
         uf.shareIssue(gdEquityCode.toLowerCase(),shareList4,true);
@@ -344,7 +344,7 @@ public class GDV2_SceneTest_Issue {
     @Test
     public void issueWithSpecialChar_TC2519()throws Exception{
 
-        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,1000,0);
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
 
         //股权代码为特殊字符
         String EC1 = "@" + Random(6);
@@ -387,8 +387,8 @@ public class GDV2_SceneTest_Issue {
     @Test
     public void issueMin_TC2492()throws Exception{
 
-        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,1,0);
-        shareList = gdConstructShareListNoTxReport(gdAccount1,1,1,shareList);
+        List<Map> shareList = gdConstructShareList(gdAccount1,1,0);
+        shareList = gdConstructShareList(gdAccount1,1,1,shareList);
 
         //股权代码为特殊字符
         String EC1 = "gdEC" + Random(6);

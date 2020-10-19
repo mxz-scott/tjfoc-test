@@ -382,10 +382,10 @@ public class GDV2_SceneTest_ChangeProperty {
         String response = "";
         //发行
         gdEquityCode = "gdEC" + Random(12);
-        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount3,1000,0);
-        List<Map> shareList2 = gdConstructShareListNoTxReport(gdAccount3,3000,0, shareList);
-        List<Map> shareList3 = gdConstructShareListNoTxReport(gdAccount3,2000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareListNoTxReport(gdAccount3,3000,0, shareList3);
+        List<Map> shareList = gdConstructShareList(gdAccount3,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount3,3000,0, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,2000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount3,3000,0, shareList3);
 
         //发行
         gdEquityCode = "gdEC" + Random(12);
@@ -443,11 +443,11 @@ public class GDV2_SceneTest_ChangeProperty {
         String EqCode3 = gdEquityCode + Random(8);
 
         String response = "";
-        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareListNoTxReport(gdAccount2,1000,1, shareList);
-        List<Map> shareList3 = gdConstructShareListNoTxReport(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareListNoTxReport(gdAccount4,1000,1, shareList3);
-        List<Map> shareList5 = gdConstructShareListNoTxReport(gdAccount5,1000,0);
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+        List<Map> shareList5 = gdConstructShareList(gdAccount5,1000,0);
 
         uf.shareIssue(EqCode2,shareList4,true);
         uf.shareIssue(EqCode3,shareList5,true);
@@ -552,9 +552,9 @@ public class GDV2_SceneTest_ChangeProperty {
 
         String EqCode2 = gdEquityCode + Random(8);
         String response = "";
-        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount4,1000,1);
-        List<Map> shareList2 = gdConstructShareListNoTxReport(gdAccount4,1000,2, shareList);
-        List<Map> shareList3 = gdConstructShareListNoTxReport(gdAccount4,1000,3, shareList2);
+        List<Map> shareList = gdConstructShareList(gdAccount4,1000,1);
+        List<Map> shareList2 = gdConstructShareList(gdAccount4,1000,2, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount4,1000,3, shareList2);
 
         uf.shareIssue(EqCode2,shareList3,true);
 
@@ -629,9 +629,9 @@ public class GDV2_SceneTest_ChangeProperty {
     @Test
     public void changeProperty_MultiProperty02()throws Exception{
         String EqCode2 = gdEquityCode + Random(8);
-        List<Map> shareList = gdConstructShareListNoTxReport(gdAccount1,1000,1);
-        List<Map> shareList2 = gdConstructShareListNoTxReport(gdAccount2,1000,2, shareList);
-        List<Map> shareList3 = gdConstructShareListNoTxReport(gdAccount3,1000,3, shareList2);
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,1);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,2, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,3, shareList2);
 
         uf.shareIssue(EqCode2,shareList3,true);
 
