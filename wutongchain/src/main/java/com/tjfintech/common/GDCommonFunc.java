@@ -79,16 +79,21 @@ public class GDCommonFunc {
         }
         if(storeId.equals("")) {
             log.info("存证与交易并未打在同一个区块中，尝试在下一个区块中查找报送数据存证");
-            sleepAndSaveInfo(4000,"等待下一个块交易打块");
-            txArr = JSONObject.fromObject(store.GetBlockByHeight(Integer.parseInt(height) + offset)).getJSONObject("data").getJSONArray("txs");
-            for (int j = 0; j < txArr.size(); j++) {
-                String txdetail = store.GetTxDetail(txArr.get(j).toString());
-                //判断是存证则存储
-                if (JSONObject.fromObject(txdetail).getJSONObject("data").getJSONObject("header").getInt("type") == 0
-                        && txdetail.contains("\\\"type\\\":\\\"" + type + "\\\"")) {
-                    storeId = txArr.get(j).toString();
-                    break;
+            sleepAndSaveInfo(6000,"等待下一个块交易打块");
+            //如果没有新的区块则不处理
+            if(JSONObject.fromObject(store.GetHeight()).getInt("data") >= Integer.parseInt(height) + offset) {
+                txArr = JSONObject.fromObject(store.GetBlockByHeight(Integer.parseInt(height) + offset)).getJSONObject("data").getJSONArray("txs");
+                for (int j = 0; j < txArr.size(); j++) {
+                    String txdetail = store.GetTxDetail(txArr.get(j).toString());
+                    //判断是存证则存储
+                    if (JSONObject.fromObject(txdetail).getJSONObject("data").getJSONObject("header").getInt("type") == 0
+                            && txdetail.contains("\\\"type\\\":\\\"" + type + "\\\"")) {
+                        storeId = txArr.get(j).toString();
+                        break;
+                    }
                 }
+            }else{
+                log.info("无新的区块产生");
             }
         }
 
