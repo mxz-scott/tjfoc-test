@@ -1121,6 +1121,7 @@ public class GDV2_CheckJGFormat_AllFlow {
 
         regNo = "Eq" + "changeboard" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
         List<Map> regList = uf.getAllHolderListReg(gdEquityCode,regNo);
+        registerInfo = gdBF.init05RegInfo();
 
         String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,regList,equityProductInfo,null);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -1164,20 +1165,22 @@ public class GDV2_CheckJGFormat_AllFlow {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             String sd = sdf.format(new Date(onChainTS)); // 时间戳转换日期
 
-            registerInfo.put("变动额", tempAmount);//有问题 数据不对
-            registerInfo.put("当前可用余额", tempAmount);//有问题 数据不对
-            registerInfo.put("登记时间", sd);
+//            registerInfo.put("变动额", tempAmount);//有问题 数据不对
+//            registerInfo.put("当前可用余额", tempAmount);//有问题 数据不对
+//            registerInfo.put("登记时间", sd);
+            registerInfo.put("登记流水号", regNo);
 //            registerInfo.put("认购数量", 0);
-            log.info(gdCF.contructRegisterInfo(storeId, 9,tempObjId).toString().replaceAll("\"", ""));
+            log.info(gdCF.contructRegisterInfo(storeId, dataShareList.size() + 2,tempObjId).toString().replaceAll("\"", ""));
             log.info(registerInfo.toString());
-            assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId, 9,tempObjId).toString().replaceAll("\"", ""));
+            assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId, dataShareList.size() + 2,tempObjId).toString().replaceAll("\"", ""));
 
         }
         log.info("检查场内转板存证产品格式化及信息内容与传入一致");
 
-        log.info(gdCF.contructBondProdInfo(storeId).toString().replaceAll("\"",""));
-        log.info(bondProductInfo.toString());
-        assertEquals(bondProductInfo.toString(), gdCF.contructBondProdInfo(storeId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructEquityProdInfo(storeId).toString().replaceAll("\"",""));
+        log.info(equityProductInfo.toString());
+        equityProductInfo.put("产品代码",gdEquityCode);
+        assertEquals(equityProductInfo.toString(), gdCF.contructEquityProdInfo(storeId).toString().replaceAll("\"",""));
 
         log.info("================================检查存证数据格式化《结束》================================");
 

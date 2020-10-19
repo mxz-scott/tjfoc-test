@@ -225,6 +225,7 @@ public class GDBeforeCondition {
         disclosureInfo = init07PublishInfo();                //初始化信息数据信息  涉及接口 写入公告
 
         //初始化listRegInfo
+        listRegInfo.clear();
         listRegInfo.add(registerInfo);
         listRegInfo.add(registerInfo);
     }

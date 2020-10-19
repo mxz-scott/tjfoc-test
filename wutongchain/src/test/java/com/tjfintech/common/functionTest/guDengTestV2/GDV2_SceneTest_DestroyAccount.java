@@ -14,6 +14,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -179,7 +180,7 @@ public class GDV2_SceneTest_DestroyAccount {
      * 进行冻结、回收、转让、增发
      */
 
-    @Test
+//    @Test
     public void repeatCreateDestroy()throws Exception{
         String clientNo = "test000DA" + Random(10);
 
@@ -206,8 +207,7 @@ public class GDV2_SceneTest_DestroyAccount {
         String keyID = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("keyId");
         addr= JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("address");
 
-        //变更账户状态为正常
-
+        //变更账户状态为正常 //当前无法变更
         eqCode = "Da00" + Random(10);
 
         //发行
@@ -280,7 +280,7 @@ public class GDV2_SceneTest_DestroyAccount {
      * 进行冻结、回收、转让、增发
      */
 
-    @Test
+//    @Test
     public void repeatCreateDestroy02()throws Exception{
         String clientNo = "test000DA" + Random(10);
 

@@ -1064,6 +1064,8 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
             String tempAmount = JSONObject.fromObject(shareList.get(k)).getString("amount").replaceAll("\\.0","");
             String tempPP = JSONObject.fromObject(shareList.get(k)).getString("shareProperty");
 
+            registerInfo = gdBF.init05RegInfo();
+
             log.info("检查回收存证登记格式化及信息内容与传入一致");
             registerInfo.put("变动额", "-" + tempAmount);     //变动额修改为单个账户发行数量
             registerInfo.put("权利人账户引用", mapAccAddr.get(tempAddr));
@@ -1094,16 +1096,8 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         dataShareList = JSONObject.fromObject(query).getJSONArray("data");
 
-        //实际应该持股情况信息
-        List<Map> respShareList = new ArrayList<>();
-        respShareList = gdConstructQueryShareList(zeroAccount,15000,0,0,mapShareENCN().get("0"),respShareList);
-        respShareList = gdConstructQueryShareList(zeroAccount,5000,1,0,mapShareENCN().get("1"),respShareList);
-
-
-        //检查存在余额的股东列表
-        assertEquals(respShareList.size(),dataShareList.size());
-        assertEquals(true,respShareList.containsAll(dataShareList) && dataShareList.containsAll(respShareList));
-
+        assertEquals(true,query.contains("{\"amount\":15000,\"lockAmount\":0,\"shareProperty\":0,\"sharePropertyCN\":\"流通股\",\"address\":\"0000000000000000\"}"));
+        assertEquals(true,query.contains("{\"amount\":5000,\"lockAmount\":0,\"shareProperty\":1,\"sharePropertyCN\":\"优先股\",\"address\":\"0000000000000000\"}"));
 
         //查询股东持股情况 无当前股权代码信息
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
@@ -1129,13 +1123,13 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getJSONObject(
                 "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
 
-        log.info("判断增发前后机构主体查询总股本数增加数正确");
-        assertEquals(0,totalShares2);
+        log.info("判断回收后机构主体查询总股本数变更正确");
+        assertEquals(oldTotal.subtract(new BigDecimal(total)),totalShares2);
 
 
-        int totalHolderAccount2 = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
+        int totalHolderAccount2 = JSONObject.fromObject(query3).getJSONObject("data").getJSONObject(
                 "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getInt("股东总数（个）");
-        assertEquals(totalHolderAccount2 + 3,totalHolderAccount);//判断股东总数减3
+        assertEquals(totalHolderAccount - 3,totalHolderAccount2);//判断股东总数减3
     }
 
 }

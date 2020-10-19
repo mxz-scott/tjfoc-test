@@ -794,22 +794,22 @@ public class GuDengV2_InterfaceTest {
         log.info(" ************************ test type 1 value must ************************ ");
         response= gd.GDGetTxReportInfo("1","","","");
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("Invalid parameter",JSONObject.fromObject(response).getString("message"));
+        assertEquals("query value cannot empty",JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test type 2 value must ************************ ");
         response= gd.GDGetTxReportInfo("2","","","");
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("Invalid parameter",JSONObject.fromObject(response).getString("message"));
+        assertEquals("query value cannot empty",JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test type 3 value must ************************ ");
         response= gd.GDGetTxReportInfo("3","","","");
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("Invalid parameter",JSONObject.fromObject(response).getString("message"));
+        assertEquals("query value cannot empty",JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test type 4 value must ************************ ");
         response= gd.GDGetTxReportInfo("4","","","");
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("Invalid parameter",JSONObject.fromObject(response).getString("message"));
+        assertEquals("query value cannot empty",JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test type 5 value must ************************ ");
         response= gd.GDGetTxReportInfo("5",gdCompanyID,"","");

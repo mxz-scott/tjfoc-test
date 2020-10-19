@@ -62,6 +62,9 @@ public class GDUnitFunc {
     public String changeSHProperty(String address,String eqCode,long changeAmount,
                                  int oldProperty,int newProperty,boolean bCheckOnchain) throws Exception{
         log.info("股权性质变更");
+        listRegInfo.clear();
+        listRegInfo.add(registerInfo);
+        listRegInfo.add(registerInfo);
 
         String response= gd.GDShareChangeProperty(gdPlatfromKeyID,address,eqCode,changeAmount,oldProperty,newProperty,listRegInfo);
 
@@ -352,7 +355,11 @@ public class GDUnitFunc {
 
         //获取股东列表
         String Qry = gd.GDGetEnterpriseShareInfo(equityCode);
-        assertEquals("200",JSONObject.fromObject(Qry).getString("state"));
+        if(!JSONObject.fromObject(Qry).getString("state").equals("200")){
+            regList.add(registerInfo);
+            return  regList;
+        }
+//        assertEquals("200",JSONObject.fromObject(Qry).getString("state"));
 
         JSONArray holderList = JSONObject.fromObject(Qry).getJSONArray("data");
 

@@ -1354,28 +1354,71 @@ public class GDV2_AllFlowTest_Equity {
                 log.info("not contain " + txList.get(i));
             }
         }
-        assertEquals("确认投资者开户交易存在",true,response.contains("\"txType\":\"投资者开户\""));
-        assertEquals("确认挂牌企业登记交易存在",true,response.contains("\"txType\":\"挂牌企业登记\""));
-        assertEquals("确认股份发行交易存在",true,response.contains("\"txType\":\"股份发行\""));
-        assertEquals("确认过户转让交易存在",true,response.contains("\"txType\":\"过户转让\""));
-        assertEquals("确认股份性质变更交易存在",true,response.contains("\"txType\":\"股份性质变更\""));
-        assertEquals("确认增发交易存在",true,response.contains("\"txType\":\"股份发行\""));
-        assertEquals("确认股份冻结交易存在",true,response.contains("\"txType\":\"股份冻结\""));
-        assertEquals("确认股份解冻交易存在",true,response.contains("\"txType\":\"股份解冻\""));
-        assertEquals("确认股份回收交易存在",true,response.contains("\"txType\":\"股份回收\""));
-        assertEquals("确认场内转板交易存在",true,response.contains("\"txType\":\"场内转板\""));
 
-        assertEquals(12, StringUtils.countOccurrencesOf(response,"投资者开户"));
-        assertEquals(2, StringUtils.countOccurrencesOf(response,"挂牌企业登记"));
-        assertEquals(2, StringUtils.countOccurrencesOf(response,"股份发行"));//初始登记和增发 目前都是股份发行
-        assertEquals(1, StringUtils.countOccurrencesOf(response,"过户转让"));
-        assertEquals(1, StringUtils.countOccurrencesOf(response,"股份性质变更"));
-        assertEquals(1, StringUtils.countOccurrencesOf(response,"股份冻结"));
-        assertEquals(1, StringUtils.countOccurrencesOf(response,"股份解冻"));
-        assertEquals(5, StringUtils.countOccurrencesOf(response,"股份回收"));
-        assertEquals(6, StringUtils.countOccurrencesOf(response,"场内转板"));
+        Boolean bFull = true;
+        if(!response.contains("\"txType\":\"投资者开户\"")) {log.info("投资者开户交易不存在");bFull = false;}
+        if(!response.contains("\"txType\":\"挂牌企业登记\"")) {log.info("挂牌企业登记交易不存在");bFull = false;}
+        if(!response.contains("\"txType\":\"股份发行\"")) {log.info("股份发行交易不存在");bFull = false;}
+        if(!response.contains("\"txType\":\"过户转让\"")) {log.info("过户转让交易不存在");bFull = false;}
+        if(!response.contains("\"txType\":\"股份性质变更\"")) {log.info("股份性质变更交易不存在");bFull = false;}
+        if(!response.contains("\"txType\":\"股份冻结\"")) {log.info("股份冻结交易不存在");bFull = false;}
+        if(!response.contains("\"txType\":\"股份解冻\"")) {log.info("股份解冻交易不存在");bFull = false;}
+        if(!response.contains("\"txType\":\"股份回收\"")) {log.info("股份回收交易不存在");bFull = false;}
+        if(!response.contains("\"txType\":\"场内转板\"")) {log.info("场内转板交易不存在");bFull = false;}
+
+        assertEquals("包含所有交易",true,bFull);
+
+        Boolean bNumOk = true;
+        String txType = "投资者开户";
+        if(StringUtils.countOccurrencesOf(response,txType) != 12) {
+            log.info(txType + "交易12 缺失：" + StringUtils.countOccurrencesOf(response,txType));
+            bNumOk = false;
+        }
+        txType = "挂牌企业登记";
+        if(StringUtils.countOccurrencesOf(response,txType) != 2) {
+            log.info(txType + "交易2 缺失：" + StringUtils.countOccurrencesOf(response,txType));
+            bNumOk = false;
+        }
+        txType = "股份发行";
+        if(StringUtils.countOccurrencesOf(response,txType) != 2) {
+            log.info(txType + "交易2 缺失：" + StringUtils.countOccurrencesOf(response,txType));
+            bNumOk = false;
+        }
+
+        txType = "过户转让";
+        if(StringUtils.countOccurrencesOf(response,txType) != 1) {
+            log.info(txType + "交易1 缺失：" + StringUtils.countOccurrencesOf(response,txType));
+            bNumOk = false;
+        }
+
+        txType = "股份性质变更";
+        if(StringUtils.countOccurrencesOf(response,txType) != 1) {
+            log.info(txType + "交易1 缺失：" + StringUtils.countOccurrencesOf(response,txType));
+            bNumOk = false;
+        }
+        txType = "股份冻结";
+        if(StringUtils.countOccurrencesOf(response,txType) != 1) {
+            log.info(txType + "交易1 缺失：" + StringUtils.countOccurrencesOf(response,txType));
+            bNumOk = false;
+        }
+        txType = "股份解冻";
+        if(StringUtils.countOccurrencesOf(response,txType) != 1) {
+            log.info(txType + "交易1 缺失：" + StringUtils.countOccurrencesOf(response,txType));
+            bNumOk = false;
+        }
+        txType = "股份回收";
+        if(StringUtils.countOccurrencesOf(response,txType) != 5) {
+            log.info(txType + "交易5 缺失：" + StringUtils.countOccurrencesOf(response,txType));
+            bNumOk = false;
+        }
+        txType = "场内转板";
+        if(StringUtils.countOccurrencesOf(response,txType) != 6) {
+            log.info(txType + "交易6 缺失：" + StringUtils.countOccurrencesOf(response,txType));
+            bNumOk = false;
+        }
 
         assertEquals("存在与链上不一致的交易",true,bContain);
+        assertEquals("存在与链上不一致的交易个数",true,bNumOk);
 
 
 

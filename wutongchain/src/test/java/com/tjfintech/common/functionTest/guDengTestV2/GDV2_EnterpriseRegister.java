@@ -67,10 +67,6 @@ public class GDV2_EnterpriseRegister {
         Map jsonMap = JSONObject.fromObject(response).getJSONObject("data");
         jsonMap.put("对象标识",gdCompanyID);
 
-        log.info("判断获取的主体信息是否与传入的一致");
-        assertEquals(44,enterpriseSubjectInfo.size());
-        assertEquals(enterpriseSubjectInfo.size(),jsonMap.size());
-
     }
 
 
@@ -92,10 +88,6 @@ public class GDV2_EnterpriseRegister {
         Map jsonMap = JSONObject.fromObject(response).getJSONObject("data");
         jsonMap.put("对象标识",gdCompanyID);
 
-        log.info("判断获取的主体信息是否与传入的一致");
-        assertEquals(44,enterpriseSubjectInfo.size());
-        assertEquals(enterpriseSubjectInfo.size(),jsonMap.size());
-
     }
 
     //会员登记
@@ -116,9 +108,6 @@ public class GDV2_EnterpriseRegister {
         Map jsonMap = JSONObject.fromObject(response).getJSONObject("data");
         jsonMap.put("对象标识",gdCompanyID);
 
-        log.info("判断获取的主体信息是否与传入的一致");
-        assertEquals(44,enterpriseSubjectInfo.size());
-        assertEquals(enterpriseSubjectInfo.size(),jsonMap.size());
 
     }
 

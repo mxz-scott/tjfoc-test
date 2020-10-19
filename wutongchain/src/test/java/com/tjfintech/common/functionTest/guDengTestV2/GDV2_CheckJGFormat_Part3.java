@@ -140,6 +140,7 @@ public class GDV2_CheckJGFormat_Part3 {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
+        sleepAndSaveInfo(SLEEPTIME);
         //获取上链交易时间戳
         long onChainTS = JSONObject.fromObject(store.GetTxDetail(txId)).getJSONObject("data").getJSONObject("header").getLong("timestamp");
 
@@ -356,6 +357,7 @@ public class GDV2_CheckJGFormat_Part3 {
         List<Map> shareList = gdConstructShareList(gdAccount5,increaseAmount,0);
         List<Map> shareList4 = gdConstructShareList(gdAccount6,increaseAmount,0, shareList);
         txInformation.put("交易类型",0);
+        txInformation.put("原持有方主体引用",mapAccAddr.get(gdAccount5));
         String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, equityProductInfo,txInformation);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
@@ -401,11 +403,15 @@ public class GDV2_CheckJGFormat_Part3 {
             log.info(equityProductInfo.toString());
             assertEquals(equityProductInfo.toString(), gdCF.contructEquityProdInfo(prodStoreId).toString().replaceAll("\"",""));
 
-            log.info("检查发行融资存证交易格式化及信息内容与传入一致:" + tempObjId);
-            log.info(gdCF.contructTxInfo(subTxReportStoreId, 2,tempObjId).toString().replaceAll("\"", ""));
-            log.info(txInformation.toString());
-            assertEquals(txInformation.toString(), gdCF.contructTxInfo(subTxReportStoreId, 2,tempObjId).toString().replaceAll("\"", ""));
         }
+
+        log.info("检查发行融资存证交易格式化及信息内容与传入一致:" + mapAccAddr.get(gdAccount5));
+        log.info(gdCF.contructTxInfo(subTxReportStoreId,
+                1,mapAccAddr.get(gdAccount5).toString()).toString().replaceAll("\"", ""));
+        log.info(txInformation.toString());
+        assertEquals(txInformation.toString(), gdCF.contructTxInfo(subTxReportStoreId,
+                1,mapAccAddr.get(gdAccount5).toString()).toString().replaceAll("\"", ""));
+
 
         log.info("检查增发存证主体格式化及信息内容与传入一致");
         String getTotalMem = enterpriseSubjectInfo.get("股东总数（个）").toString();
@@ -485,6 +491,7 @@ public class GDV2_CheckJGFormat_Part3 {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
+        sleepAndSaveInfo(SLEEPTIME);
         //查询挂牌企业数据
         //查询投资者信息
         //查询企业股东信息
