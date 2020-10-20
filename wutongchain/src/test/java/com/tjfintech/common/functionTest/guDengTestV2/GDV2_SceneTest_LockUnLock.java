@@ -8,10 +8,7 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runners.MethodSorters;
 
 import java.util.List;
@@ -65,6 +62,12 @@ public class GDV2_SceneTest_LockUnLock {
         uf.commonIssuePP01(1000);//发行给账户1~4 股权性质对应 0 1 0 1
     }
 
+    @After
+    public void calJGDataAfterTx()throws Exception{
+        GDUnitFunc uf = new GDUnitFunc();
+//        uf.calJGData();
+        uf.calJGDataEachHeight();
+    }
 //    @After
     public void DestroyEquityAndAcc()throws Exception{
         //查询企业所有股东持股情况
@@ -96,7 +99,7 @@ public class GDV2_SceneTest_LockUnLock {
 
     @Test
     public void lock()throws Exception{
-        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
+        uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,5000,0);
     }
 
 
@@ -106,7 +109,7 @@ public class GDV2_SceneTest_LockUnLock {
      */
 
     @Test
-    public void transferOutOfCutOffDate()throws Exception{
+    public void lock_OutOfCutOffDate()throws Exception{
 
         String response = "";
         //全部冻结

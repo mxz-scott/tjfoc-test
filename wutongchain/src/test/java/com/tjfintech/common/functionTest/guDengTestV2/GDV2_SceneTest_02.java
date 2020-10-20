@@ -70,8 +70,19 @@ public class GDV2_SceneTest_02 {
         uf.commonIssuePP0(1000);//发行给账户1~4
     }
 
+
+    public void calJGDataAfterTx()throws Exception{
+        GDUnitFunc uf = new GDUnitFunc();
+//        uf.calJGData();
+        uf.calJGDataEachHeight();
+    }
+
+
     @After
     public void DestroyEquityAndAcc()throws Exception{
+
+        calJGDataAfterTx();
+
         List<Map> shareList = new ArrayList<>();
         Boolean bOnlyZero = false;
 
@@ -3195,7 +3206,7 @@ public class GDV2_SceneTest_02 {
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":400,\"lockAmount\":1500}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":400,\"lockAmount\":500}"));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
                 "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
 

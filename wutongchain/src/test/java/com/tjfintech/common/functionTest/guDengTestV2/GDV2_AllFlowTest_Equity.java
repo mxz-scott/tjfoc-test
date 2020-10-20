@@ -10,6 +10,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -50,6 +51,7 @@ public class GDV2_AllFlowTest_Equity {
         TestBuilder tbTemp = TestBuilder.getInstance();
         Store storeTemp =tbTemp.getStore();
         beginHeigh = Integer.parseInt(JSONObject.fromObject(storeTemp.GetHeight()).getString("data"));
+        start = (new Date()).getTime();
 
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
@@ -1446,6 +1448,13 @@ public class GDV2_AllFlowTest_Equity {
 //        assertEquals(12, StringUtils.countOccurrencesOf(response,"投资者开户"));
 //        assertEquals(12,JSONObject.fromObject(response).getJSONArray("data").size());
 
+    }
+
+    @After
+    public void calJGDataAfterTx()throws Exception{
+        GDUnitFunc uf = new GDUnitFunc();
+//        uf.calJGData();
+        uf.calJGDataEachHeight();
     }
 
 

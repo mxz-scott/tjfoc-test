@@ -65,5 +65,6 @@ public class UtilsClassGD {
     public static long end = 0;
     public static int beginHeigh = 0;
     public static int endHeight = 0;
+    public static int blockHeight = 4179;
 
 }

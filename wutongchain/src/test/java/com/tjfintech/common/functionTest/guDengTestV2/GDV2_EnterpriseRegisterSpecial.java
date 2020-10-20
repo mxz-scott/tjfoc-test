@@ -10,10 +10,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 //import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runners.MethodSorters;
 import com.alibaba.fastjson.JSONObject;
 
@@ -47,6 +44,13 @@ public class GDV2_EnterpriseRegisterSpecial {
     @Before
     public void BeforeTest()throws Exception{
         gdEquityCode = Random(20);
+    }
+
+    @After
+    public void calJGDataAfterTx()throws Exception{
+        GDUnitFunc uf = new GDUnitFunc();
+//        uf.calJGData();
+        uf.calJGDataEachHeight();
     }
 
     //企业 股权类 登记

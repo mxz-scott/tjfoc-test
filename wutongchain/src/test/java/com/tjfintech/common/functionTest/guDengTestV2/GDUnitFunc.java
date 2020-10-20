@@ -5,14 +5,18 @@ import com.tjfintech.common.GDBeforeCondition;
 import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
+import org.springframework.util.StringUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -378,5 +382,90 @@ public class GDUnitFunc {
         }
 
         return regList;
+    }
+
+    public void calJGData()throws Exception{
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String sdStart = sdf.format((new Date()).getTime()); // 时间戳转换日期
+        int height = JSONObject.fromObject(store.GetHeight()).getInt("data");
+        log.info("check begin height " + blockHeight + " and end height " + height);
+        ArrayList<String> txStore = new ArrayList<>();
+        if(height > blockHeight){
+            txStore = commonFunc.getTxArrayWithKeyWord(
+                    commonFunc.getTxFromBlock(blockHeight + 1,height),"\"type\":0");
+        }
+        int[] dataNum = new int[7]; //分别对应 主体/账户/产品/交易报告/登记/资金结算/信披
+        for(int i = 0;i < txStore.size();i++){
+            String response = store.GetTxDetail(txStore.get(i));
+            String txType = "\\\"type\\\":\\\"主体\\\"";
+            dataNum[0] = dataNum[0] + StringUtils.countOccurrencesOf(response,txType);
+            txType = "\\\"type\\\":\\\"账户\\\"";
+            dataNum[1] = dataNum[1] + StringUtils.countOccurrencesOf(response,txType);
+            txType = "\\\"type\\\":\\\"产品\\\"";
+            dataNum[2] = dataNum[2] + StringUtils.countOccurrencesOf(response,txType);
+            txType = "\\\"type\\\":\\\"交易报告\\\"";
+            dataNum[3] = dataNum[3] + StringUtils.countOccurrencesOf(response,txType);
+            txType = "\\\"type\\\":\\\"登记\\\"";
+            dataNum[4] = dataNum[4] + StringUtils.countOccurrencesOf(response,txType);
+            txType = "\\\"type\\\":\\\"资金结算\\\"";
+            dataNum[5] = dataNum[5] + StringUtils.countOccurrencesOf(response,txType);
+            txType = "\\\"type\\\":\\\"信披\\\"";
+            dataNum[6] = dataNum[6] + StringUtils.countOccurrencesOf(response,txType);
+        }
+
+        String dataTopic = "获取时间\t\t\t\t起始高度\t结束高度\t主体\t账户\t产品\t交易报告\t登记\t资金结算\t信披";
+        String data = sdStart + "\t\t" + (blockHeight + 1) + "\t\t" + height + "\t\t" +
+                dataNum[0] + "\t\t" + dataNum[1]+ "\t\t" + dataNum[2] + "\t\t" + dataNum[3]+
+                "\t\t\t" + dataNum[4] + "\t\t" + dataNum[5]+ "\t\t\t" + dataNum[6];
+        FileOperation fo = new FileOperation();
+        String get = FileOperation.read("JGData.txt");
+        if(!get.contains("主体"))    fo.appendToFile(dataTopic,"JGData.txt");
+        fo.appendToFile(data,"JGData.txt");
+
+
+        blockHeight = height;
+    }
+
+    public void calJGDataEachHeight()throws Exception{
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        int height = JSONObject.fromObject(store.GetHeight()).getInt("data");
+        log.info("check begin height " + blockHeight + " and end height " + height);
+
+        String dataTopic = "获取时间\t\t\t\t高度\t主体\t账户\t产品\t交易报告\t登记\t资金结算\t信披";
+        FileOperation fo = new FileOperation();
+        String get = FileOperation.read("JGData.txt");
+        if(!get.contains("主体"))    fo.appendToFile(dataTopic,"JGData.txt");
+
+        for(int k = blockHeight + 1;k <= height;k++){
+            int[] dataNum = new int[7]; //分别对应 主体/账户/产品/交易报告/登记/资金结算/信披
+            String [] txArr = commonFunc.getTxsArray(k);
+            for(int m = 0;m<txArr.length;m++){
+                String response = store.GetTxDetail(txArr[m]);
+                if(!response.contains("\"type\":0")) continue;
+
+                String txType = "\\\"type\\\":\\\"主体\\\"";
+                dataNum[0] = dataNum[0] + StringUtils.countOccurrencesOf(response,txType);
+                txType = "\\\"type\\\":\\\"账户\\\"";
+                dataNum[1] = dataNum[1] + StringUtils.countOccurrencesOf(response,txType);
+                txType = "\\\"type\\\":\\\"产品\\\"";
+                dataNum[2] = dataNum[2] + StringUtils.countOccurrencesOf(response,txType);
+                txType = "\\\"type\\\":\\\"交易报告\\\"";
+                dataNum[3] = dataNum[3] + StringUtils.countOccurrencesOf(response,txType);
+                txType = "\\\"type\\\":\\\"登记\\\"";
+                dataNum[4] = dataNum[4] + StringUtils.countOccurrencesOf(response,txType);
+                txType = "\\\"type\\\":\\\"资金结算\\\"";
+                dataNum[5] = dataNum[5] + StringUtils.countOccurrencesOf(response,txType);
+                txType = "\\\"type\\\":\\\"信批\\\"";
+                dataNum[6] = dataNum[6] + StringUtils.countOccurrencesOf(response,txType);
+
+            }
+            String sdStart = sdf.format((new Date()).getTime()); // 时间戳转换日期
+            String data = sdStart + "\t\t" + k + "\t\t" +
+                    dataNum[0] + "\t\t" + dataNum[1]+ "\t\t" + dataNum[2] + "\t\t" + dataNum[3]+
+                    "\t\t\t" + dataNum[4] + "\t\t" + dataNum[5]+ "\t\t\t" + dataNum[6];
+            fo.appendToFile(data,"JGData.txt");
+        }
+        blockHeight = height;
     }
 }

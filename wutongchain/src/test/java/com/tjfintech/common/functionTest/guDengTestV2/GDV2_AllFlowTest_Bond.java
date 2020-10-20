@@ -9,6 +9,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -43,6 +44,13 @@ public class GDV2_AllFlowTest_Bond {
 //        gdBefore.initRegulationData();
         gdEquityCode = "fondTest" + Random(12);
         equityProductInfo = null;
+    }
+
+    @After
+    public void calJGDataAfterTx()throws Exception{
+        GDUnitFunc uf = new GDUnitFunc();
+//        uf.calJGData();
+        uf.calJGDataEachHeight();
     }
 
     @Test

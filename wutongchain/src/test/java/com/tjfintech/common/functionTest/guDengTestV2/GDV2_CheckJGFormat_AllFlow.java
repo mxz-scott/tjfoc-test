@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -63,6 +64,13 @@ public class GDV2_CheckJGFormat_AllFlow {
 //        gdBefore.initRegulationData();
         bondProductInfo = null;//本测试类为股权类产品
         gdEquityCode = "fondTest" + Random(12);
+    }
+
+    @After
+    public void calJGDataAfterTx()throws Exception{
+        GDUnitFunc uf = new GDUnitFunc();
+//        uf.calJGData();
+        uf.calJGDataEachHeight();
     }
 
     @Test
@@ -842,6 +850,7 @@ public class GDV2_CheckJGFormat_AllFlow {
         BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
                 "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
 
+        registerInfo = gdBF.init05RegInfo();
         regNo = "Eq" + "recylce" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
         registerInfo.put("登记流水号",regNo);       //更新对比的登记流水号
 

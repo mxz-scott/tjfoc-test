@@ -1255,6 +1255,23 @@ public class CommonFunc {
         return txSpecArr;
     }
 
+    //获取除指定类型的交易hash
+    public ArrayList<String> getTxArrayWithKeyWord(ArrayList<String> srcArr,String... keyWord){
+        ArrayList<String> txSpecArr = new ArrayList<>();
+        for(int i =0 ;i<srcArr.size();i++){
+            Boolean bContain = false;
+            String resp = store.GetTxDetail(srcArr.get(i));
+            for(int k =0;k<keyWord.length;k++){
+                if(resp.contains(keyWord[k])) {
+                    bContain = true;
+                    break;
+                }
+            }
+            if(bContain)  txSpecArr.add(srcArr.get(i));
+        }
+        log.info("返回交易个数 " + txSpecArr.size());
+        return txSpecArr;
+    }
 
     //根据区块高度获取区块中的交易列表
     public String[] getTxsArray(int i) {
