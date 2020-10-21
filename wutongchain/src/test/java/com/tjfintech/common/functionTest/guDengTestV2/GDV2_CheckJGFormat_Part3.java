@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.*;
+import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 
 import java.math.BigDecimal;
@@ -43,6 +44,8 @@ public class GDV2_CheckJGFormat_Part3 {
     long transferAmount = issueAmount;
     String lockAddress = gdAccount1;
 
+    @Rule
+    public TestName tm = new TestName();
     /***
      * 测试说明
      * 增发新增股东数
@@ -97,8 +100,10 @@ public class GDV2_CheckJGFormat_Part3 {
         assertEquals(true,respShareList4.containsAll(getShareList) && getShareList.containsAll(respShareList4));
 
     }
+
     @After
     public void calJGDataAfterTx()throws Exception{
+        testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
 //        uf.calJGData();
         uf.calJGDataEachHeight();

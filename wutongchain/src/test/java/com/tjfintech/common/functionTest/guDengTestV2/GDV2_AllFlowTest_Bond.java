@@ -9,10 +9,8 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 
 import java.math.BigDecimal;
@@ -37,6 +35,9 @@ public class GDV2_AllFlowTest_Bond {
     GDUnitFunc uf = new GDUnitFunc();
     public static String bizNoTest = "test" + Random(12);
 
+    @Rule
+    public TestName tm = new TestName();
+
     @BeforeClass
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
@@ -48,6 +49,7 @@ public class GDV2_AllFlowTest_Bond {
 
     @After
     public void calJGDataAfterTx()throws Exception{
+        testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
 //        uf.calJGData();
         uf.calJGDataEachHeight();

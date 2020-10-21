@@ -11,10 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 
 import java.math.BigDecimal;
@@ -46,6 +44,8 @@ public class GDV2_CheckJGFormat_AllFlow {
     long changeAmount = 500;
     long transferAmount = 1000;
 
+    @Rule
+    public TestName tm = new TestName();
     /***
      * 测试说明
      * 转让 会转给新的账户 因此转让会使得总股东数增加
@@ -68,6 +68,7 @@ public class GDV2_CheckJGFormat_AllFlow {
 
     @After
     public void calJGDataAfterTx()throws Exception{
+        testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
 //        uf.calJGData();
         uf.calJGDataEachHeight();

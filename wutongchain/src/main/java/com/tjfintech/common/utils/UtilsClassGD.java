@@ -67,5 +67,6 @@ public class UtilsClassGD {
     public static int endHeight = 0;
 	public static int blockHeight = 4892;
     public static long timeStamp = (new Date()).getTime();
+    public static String testCurMethodName = "";
 
 }

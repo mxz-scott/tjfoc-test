@@ -10,10 +10,8 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 import org.springframework.util.StringUtils;
 
@@ -45,6 +43,8 @@ public class GDV2_AllFlowTest_Equity {
 //    long end = 0;
 //    int beginHeigh = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
 //    int endHeight = 0;
+    @Rule
+    public TestName tm = new TestName();
 
     @BeforeClass
     public static void Before()throws Exception{
@@ -58,6 +58,14 @@ public class GDV2_AllFlowTest_Equity {
 //        gdBefore.initRegulationData();
         bondProductInfo = null;
         gdEquityCode = "fondTest" + Random(12);
+    }
+
+    @After
+    public void calJGDataAfterTx()throws Exception{
+        testCurMethodName = tm.getMethodName();
+        GDUnitFunc uf = new GDUnitFunc();
+//        uf.calJGData();
+        uf.calJGDataEachHeight();
     }
 
     @Test
@@ -1449,13 +1457,4 @@ public class GDV2_AllFlowTest_Equity {
 //        assertEquals(12,JSONObject.fromObject(response).getJSONArray("data").size());
 
     }
-
-    @After
-    public void calJGDataAfterTx()throws Exception{
-        GDUnitFunc uf = new GDUnitFunc();
-//        uf.calJGData();
-        uf.calJGDataEachHeight();
-    }
-
-
 }
