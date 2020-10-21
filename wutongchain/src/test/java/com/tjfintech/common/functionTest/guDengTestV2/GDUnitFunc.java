@@ -431,9 +431,11 @@ public class GDUnitFunc {
     public void calJGDataEachHeight()throws Exception{
         String testClassName = Thread.currentThread().getStackTrace()[2].getClassName();
         testClassName = testClassName.substring(testClassName.lastIndexOf(".")+1);
-        String testMethodName = Thread.currentThread().getStackTrace()[2].getMethodName();
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String saveFile = testResultPath + "JGData/" + testClassName + timeStamp + "_JG.txt";
+
+        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        String saveFile = testResultPath + "JGData/" + sdf2.format(timeStamp)  + "_" + testClassName + "_JG.txt";
 
         int height = JSONObject.fromObject(store.GetHeight()).getInt("data");
         log.info("check begin height " + blockHeight + " and end height " + height);
@@ -467,9 +469,9 @@ public class GDUnitFunc {
 
             }
             String sdStart = sdf.format((new Date()).getTime()); // 时间戳转换日期
-            String data = sdStart + "\t\t" + k + "\t\t" +
+            String data = sdStart + "\t\t" + k + "\t" +
                     dataNum[0] + "\t\t" + dataNum[1]+ "\t\t" + dataNum[2] + "\t\t" + dataNum[3]+
-                    "\t\t\t" + dataNum[4] + "\t\t" + dataNum[5]+ "\t\t\t" + dataNum[6] + "\t" + testCurMethodName;
+                    "\t\t\t" + dataNum[4] + "\t\t" + dataNum[5]+ "\t\t\t" + dataNum[6] + "\t\t" + testCurMethodName;
             fo.appendToFile(data,saveFile);
         }
         blockHeight = height;
