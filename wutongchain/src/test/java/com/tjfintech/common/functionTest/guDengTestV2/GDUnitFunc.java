@@ -388,6 +388,7 @@ public class GDUnitFunc {
     public void calJGData()throws Exception{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String sdStart = sdf.format((new Date()).getTime()); // 时间戳转换日期
+        String saveFile = testResultPath + "JGData/" + timeStamp + "_JG.txt";
         int height = JSONObject.fromObject(store.GetHeight()).getInt("data");
         log.info("check begin height " + blockHeight + " and end height " + height);
         ArrayList<String> txStore = new ArrayList<>();
@@ -419,9 +420,9 @@ public class GDUnitFunc {
                 dataNum[0] + "\t\t" + dataNum[1]+ "\t\t" + dataNum[2] + "\t\t" + dataNum[3]+
                 "\t\t\t" + dataNum[4] + "\t\t" + dataNum[5]+ "\t\t\t" + dataNum[6];
         FileOperation fo = new FileOperation();
-        String get = FileOperation.read("JGData.txt");
-        if(!get.contains("主体"))    fo.appendToFile(dataTopic,"JGData.txt");
-        fo.appendToFile(data,"JGData.txt");
+        String get = FileOperation.read(saveFile);
+        if(!get.contains("主体"))    fo.appendToFile(dataTopic,saveFile);
+        fo.appendToFile(data,saveFile);
 
 
         blockHeight = height;
@@ -429,7 +430,7 @@ public class GDUnitFunc {
 
     public void calJGDataEachHeight()throws Exception{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String saveFile = resourcePath + "JGData/" + timeStamp + "_JG.txt";
+        String saveFile = testResultPath + "JGData/" + timeStamp + "_JG.txt";
 
         int height = JSONObject.fromObject(store.GetHeight()).getInt("data");
         log.info("check begin height " + blockHeight + " and end height " + height);
