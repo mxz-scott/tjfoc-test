@@ -14,6 +14,7 @@ import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 import org.springframework.util.StringUtils;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -428,14 +429,15 @@ public class GDUnitFunc {
 
     public void calJGDataEachHeight()throws Exception{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String saveFile = resourcePath + "JGData/" + timeStamp + "_JG.txt";
 
         int height = JSONObject.fromObject(store.GetHeight()).getInt("data");
         log.info("check begin height " + blockHeight + " and end height " + height);
 
         String dataTopic = "获取时间\t\t\t\t高度\t主体\t账户\t产品\t交易报告\t登记\t资金结算\t信披";
         FileOperation fo = new FileOperation();
-        String get = FileOperation.read("JGData.txt");
-        if(!get.contains("主体"))    fo.appendToFile(dataTopic,"JGData.txt");
+        String get = FileOperation.read(saveFile);
+        if(!get.contains("主体"))    fo.appendToFile(dataTopic,saveFile);
 
         for(int k = blockHeight + 1;k <= height;k++){
             int[] dataNum = new int[7]; //分别对应 主体/账户/产品/交易报告/登记/资金结算/信披
@@ -464,8 +466,14 @@ public class GDUnitFunc {
             String data = sdStart + "\t\t" + k + "\t\t" +
                     dataNum[0] + "\t\t" + dataNum[1]+ "\t\t" + dataNum[2] + "\t\t" + dataNum[3]+
                     "\t\t\t" + dataNum[4] + "\t\t" + dataNum[5]+ "\t\t\t" + dataNum[6];
-            fo.appendToFile(data,"JGData.txt");
+            fo.appendToFile(data,saveFile);
         }
         blockHeight = height;
+        //执行成功后更新文件中的参数
+        FileOperation fo2 = new FileOperation();
+        fo2.replaceKeyword(System.getProperty("user.dir")  +
+                "\\src\\main\\java\\com\\tjfintech\\common\\utils\\UtilsClassGD.java",
+                "public static int blockHeight =",
+                "\tpublic static int blockHeight = " + blockHeight + ";");
     }
 }
