@@ -45,7 +45,6 @@ public class WVMContractTest {
     public int amountB = 60;
     public int transfer = 30;
     public String wvmFile = "wvm";
-    String tempWVMDir = testDataPath + "wvm/";
 
     /***
      * 跨合约调用

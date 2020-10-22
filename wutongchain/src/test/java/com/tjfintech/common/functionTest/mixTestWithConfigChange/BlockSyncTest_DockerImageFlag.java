@@ -494,7 +494,7 @@ public class BlockSyncTest_DockerImageFlag {
         WVMContractTest wvm = new WVMContractTest();
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
-        fileOper.replace(resourcePath + wvm.wvmFile + ".txt", wvm.orgName, ctName);
+        fileOper.replace(tempWVMDir + wvm.wvmFile + ".txt", wvm.orgName, ctName);
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvm.wvmInstallTest( wvm.wvmFile +"_temp.txt",PRIKEY1);

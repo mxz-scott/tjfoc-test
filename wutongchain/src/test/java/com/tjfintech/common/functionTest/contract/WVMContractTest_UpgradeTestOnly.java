@@ -45,7 +45,6 @@ public class WVMContractTest_UpgradeTestOnly {
     public int amountB = 60;
     public int transfer = 30;
     public String wvmFile = "wvm";
-    String tempWVMDir = testDataPath + "wvm/";
 
     @BeforeClass
     public  static void setPermFull()throws Exception{

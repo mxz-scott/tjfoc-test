@@ -24,8 +24,8 @@ public class SetTokenApiDatabaseMysql {
         String dbConfig = getTokenApiConfigValueByShell(utilsClass.getIPFromStr(TOKENADD),"DB","Connection");
         String database = getStrByReg(dbConfig,"\\/(.*?)\\?");
         String mysqlIP = utilsClass.getIPFromStr(dbConfig);
-        uploadFiletoDestDirByssh(resourcePath + "mysql\\" + sqlCreate,mysqlIP,USERNAME,PASSWD,destShellScriptDir,"");//文件上传到tokenDBTableSql即/root/tjshell目录下
-        uploadFiletoDestDirByssh(resourcePath + "mysql\\" + shCreate,mysqlIP,USERNAME,PASSWD,destShellScriptDir,"");//文件上传到tokenDBTableSql即/root/tjshell目录下
+        uploadFiletoDestDirByssh(testDataPath + "mysql\\" + sqlCreate,mysqlIP,USERNAME,PASSWD,destShellScriptDir,"");//文件上传到tokenDBTableSql即/root/tjshell目录下
+        uploadFiletoDestDirByssh(testDataPath + "mysql\\" + shCreate,mysqlIP,USERNAME,PASSWD,destShellScriptDir,"");//文件上传到tokenDBTableSql即/root/tjshell目录下
         shExeAndReturn(mysqlIP,"sed -i 's/\\\r//g' " + destShellScriptDir + "*.sh");
         shExeAndReturn(mysqlIP, "chmod +x " + destShellScriptDir + "*.sh");
         shExeAndReturn(mysqlIP,"sh " + destShellScriptDir + shCreate + " " + database + " " + destShellScriptDir + sqlCreate);

@@ -82,7 +82,7 @@ public class TimeofTxOnChain {
 //        String response2= store.GetInlocal(hash);
         if (response2.indexOf("200")!=-1){
             long nowTime = new Date().getTime();
-            fileOperation.appendToFile(hash + " on chain : " + (nowTime -time) + "ms",resourcePath + "onchain.txt");
+            fileOperation.appendToFile(hash + " on chain : " + (nowTime -time) + "ms",testResultPath + "onchain.txt");
 //               log.info(nowTime -time + "ms tx on chain");
         }else{
             Thread.sleep(50);
@@ -97,7 +97,7 @@ public class TimeofTxOnChain {
 //        String response2= store.GetInlocal(hash);
         if (response2.indexOf("200")!=-1){
             long nowTime = new Date().getTime();
-            fileOperation.appendToFile(hash + " sync db : " + (nowTime -time) + "ms",resourcePath + "storesyncdb.txt");
+            fileOperation.appendToFile(hash + " sync db : " + (nowTime -time) + "ms",testResultPath + "storesyncdb.txt");
 
         }else{
             Thread.sleep(50);

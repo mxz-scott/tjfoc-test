@@ -170,7 +170,7 @@ public class TestMainSubChain_WVM {
 
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
-        fileOper.replace(resourcePath + wvmContractTest.wvmFile + ".txt", wvmContractTest.orgName, ctName);
+        fileOper.replace(tempWVMDir + wvmContractTest.wvmFile + ".txt", wvmContractTest.orgName, ctName);
 
         //主链上安装wvm合约 使用PRIKEY1
         subLedger = "";
@@ -261,7 +261,7 @@ public class TestMainSubChain_WVM {
 
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
-        fileOper.replace(resourcePath + wvmContractTest.wvmFile + ".txt", wvmContractTest.orgName, ctName);
+        fileOper.replace(tempWVMDir + wvmContractTest.wvmFile + ".txt", wvmContractTest.orgName, ctName);
 
         //主链上安装wvm合约 使用PRIKEY1
         subLedger = "";
@@ -349,7 +349,7 @@ public class TestMainSubChain_WVM {
 
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
-        fileOper.replace(resourcePath + wvmContractTest.wvmFile + ".txt", wvmContractTest.orgName, ctName);
+        fileOper.replace(tempWVMDir + wvmContractTest.wvmFile + ".txt", wvmContractTest.orgName, ctName);
 
         //子链上安装wvm合约 使用PRIKEY1
         subLedger = subLedgerA;

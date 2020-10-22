@@ -44,8 +44,6 @@ public class WVMContractTest_withVersionUpgradeTest {
     public int amountB = 60;
     public int transfer = 10;
     public String wvmFile = "wvm";
-    String tempWVMDir = testDataPath + "wvm/";
-
 
     //调用不存在的版本合约
     @Test
