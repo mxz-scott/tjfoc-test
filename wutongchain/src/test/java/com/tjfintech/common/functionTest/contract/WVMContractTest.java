@@ -71,7 +71,7 @@ public class WVMContractTest {
         chkTxDetailRsp("200",txHash1);
 
         //安装需要跨合约调用的合约 wvm_cross.txt
-        String response2 = wvmInstallTest("testdata/wvm_cross.txt","");
+        String response2 = wvmInstallTest("wvm_cross.txt","");
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
         String ctHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("name");
 
