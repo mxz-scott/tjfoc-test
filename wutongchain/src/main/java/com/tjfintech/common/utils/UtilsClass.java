@@ -181,6 +181,7 @@ public class UtilsClass {
     
     public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";
     public static String testResultPath = "testresult/";
+    public static String testDataPath = "testdata/";
     public static String srcShellScriptDir = resourcePath + "/configFiles/shell/";
     public static String destShellScriptDir = "/root/tjshell/";
 //    public static String ccenvPull = "docker pull tjfoc/tjfoc-ccenv:2.1";
