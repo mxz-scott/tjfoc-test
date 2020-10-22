@@ -77,7 +77,7 @@ public class GDV2_AllFlowTest_Bond {
         //查询企业股东信息
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         assertEquals("400",JSONObject.fromObject(query).getString("state"));
-        assertEquals("该股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
+        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
 
         //查询股东持股情况 无当前股权代码信息
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
@@ -125,7 +125,7 @@ public class GDV2_AllFlowTest_Bond {
         //查询企业股东信息
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         assertEquals("400",JSONObject.fromObject(query).getString("state"));
-        assertEquals("该股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
+        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
 
         //查询股东持股情况 无当前股权代码信息
         query = gd.GDGetShareHolderInfo(gdContractAddress,cltNo);
