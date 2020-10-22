@@ -1206,7 +1206,7 @@ public class CommonFunc {
         }
         Date dtTest = new Date();
         long nowTime = dtTest.getTime();
-        String diffSaveFile = resourcePath + nowTime + "-diff.txt";
+        String diffSaveFile = testResultPath  + "compare" + nowTime + "-diff.txt";
         File diff = new File(diffSaveFile);
         if(diff.exists()) diff.delete();//如果存在则先删除
 

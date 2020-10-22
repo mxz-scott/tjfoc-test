@@ -1,6 +1,5 @@
 package com.tjfintech.common.functionTest.smartTokenTest;
 
-import com.alibaba.fastjson.JSON;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.CertTool;
 import com.tjfintech.common.CommonFunc;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -413,7 +411,7 @@ public class smtInterfaceTest {
         String tempSM3Hash = certTool.getSm3Hash(PEER4IP,sigMsg1);
         String cryptMsg = certTool.sign(PEER4IP ,PRIKEY1,"",tempSM3Hash,"hex");
 
-        String pubkey = utilsClass.readStringFromFile(resourcePath + "SM2/keys1/pubkey.pem").replaceAll("\r\n","\n");
+        String pubkey = utilsClass.readStringFromFile(testDataPath + "cert/SM2/keys1/pubkey.pem").replaceAll("\r\n","\n");
 
         String approveResp = multiSign.SmartIssueTokenApprove(sigMsg1,cryptMsg,pubkey);
 
@@ -432,7 +430,7 @@ public class smtInterfaceTest {
 
         String sigMsg1 = JSONObject.fromObject(isResp).getJSONObject("data").getString("sigMsg");
         String cryptMsg = certTool.sign(PEER4IP ,PRIKEY1,"",certTool.getSm3Hash(PEER4IP,sigMsg1),"hex");
-        String pubkey = utilsClass.readStringFromFile(resourcePath + "SM2/keys1/pubkey.pem").replaceAll("\r\n","\n");
+        String pubkey = utilsClass.readStringFromFile(testDataPath + "cert/SM2/keys1/pubkey.pem").replaceAll("\r\n","\n");
 
 
         log.info("所有字段为空");
@@ -633,7 +631,7 @@ public class smtInterfaceTest {
         String tempSM3Hash = certTool.getSm3Hash(PEER4IP,sigMsg1);
         String cryptMsg = certTool.sign(PEER4IP ,PRIKEY1,"",tempSM3Hash,"hex");
 
-        String pubkey = utilsClass.readStringFromFile(resourcePath + "SM2/keys1/pubkey.pem").replaceAll("\r\n","\n");
+        String pubkey = utilsClass.readStringFromFile(testDataPath + "cert/SM2/keys1/pubkey.pem").replaceAll("\r\n","\n");
 
         String approveResp = multiSign.SmartIssueTokenApprove(sigMsg1,cryptMsg,pubkey);
         return approveResp;

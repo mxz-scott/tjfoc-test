@@ -10,18 +10,14 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
-import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -48,6 +44,7 @@ public class WVMContractInvalidTest {
     public int amountB = 60;
     public int transfer = 30;
     public String wvmFile = "wvm";
+    String tempWVMDir = testDataPath + "wvm/";
 
     @BeforeClass
     public  static void setPermFull()throws Exception{
@@ -63,7 +60,7 @@ public class WVMContractInvalidTest {
         String ctName = "Err_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
-        fileOper.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
+        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmContractTest.wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1);
@@ -151,7 +148,7 @@ public class WVMContractInvalidTest {
         String ctName = "Err_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
-        fileOper.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
+        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmContractTest.wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1);

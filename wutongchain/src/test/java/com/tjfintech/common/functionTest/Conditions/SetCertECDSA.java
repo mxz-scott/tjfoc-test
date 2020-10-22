@@ -9,7 +9,7 @@ public class SetCertECDSA {
 
    @Test
     public void test(){
-        UtilsClass.certPath = "ECDSA";
+        UtilsClass.certPath = "cert/" + "ECDSA";
     }
 
 }

@@ -114,7 +114,7 @@ public class MultiSignInvalidTest {
     @Test
     public void testCreateMuliAddr10orMore() throws Exception{
         Map<String, Object> map =  new HashMap<>();
-        certPath = "RSA";
+        certPath = "cert/RSA";
         BeforeCondition beforeCondition = new BeforeCondition();
         beforeCondition.updatePubPriKey();
         map.clear();
@@ -125,7 +125,7 @@ public class MultiSignInvalidTest {
         map.put("5",PUBKEY5);
         map.put("6",PUBKEY6);
         map.put("7",PUBKEY7);
-        certPath = "SM2";
+        certPath = "cert/SM2";
         beforeCondition.updatePubPriKey();
         map.put("8",PUBKEY1);
         map.put("9",PUBKEY2);

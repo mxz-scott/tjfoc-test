@@ -9,15 +9,9 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-
 import static com.tjfintech.common.utils.UtilsClass.SLEEPTIME;
-import static com.tjfintech.common.utils.UtilsClass.resourcePath;
+//import static com.tjfintech.common.utils.UtilsClass.resourcePath;
+import static com.tjfintech.common.utils.UtilsClass.testDataPath;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -169,15 +163,15 @@ public class StoreTest {
     @Test
     public void TC010_createBigSizeStore() throws Exception {
 
-        String Data = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath +
-                "bigsize1.txt");
+        String Data = UtilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath +
+                "store/bigsize1.txt");
         String response = store.CreateStore(Data);
         assertThat(response, containsString("200"));
         assertThat(response, containsString("data"));
 
 
-        String Data2 = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
-                +  "bigsize2.txt");
+        String Data2 = UtilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath
+                + "store/bigsize2.txt");
         String response2 = store.CreateStore(Data2);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("data"));

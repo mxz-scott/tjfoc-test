@@ -4,7 +4,6 @@ import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
-import com.tjfintech.common.functionTest.Conditions.SetSDKPerm999;
 import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +14,9 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.tjfintech.common.utils.FileOperation.setSDKConfigByShell;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
@@ -47,6 +44,7 @@ public class WVMContractTest_withVersionUpgradeTest {
     public int amountB = 60;
     public int transfer = 10;
     public String wvmFile = "wvm";
+    String tempWVMDir = testDataPath + "wvm/";
 
 
     //调用不存在的版本合约
@@ -57,7 +55,7 @@ public class WVMContractTest_withVersionUpgradeTest {
 
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
-        fileOper.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
+        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmInstallTest(wvmFile +"_temp.txt","");
@@ -96,7 +94,7 @@ public class WVMContractTest_withVersionUpgradeTest {
         //升级合约
         wvmVersion = "1.2";
         wvmFile ="wvm_update";
-        fileOper.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
+        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
@@ -133,7 +131,7 @@ public class WVMContractTest_withVersionUpgradeTest {
         //升级合约
         wvmVersion = "2.2";
         wvmFile ="wvm_update";
-        fileOper.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
+        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
@@ -171,7 +169,7 @@ public class WVMContractTest_withVersionUpgradeTest {
         //升级合约
         wvmVersion = "3.2";
         wvmFile ="wvm_update";
-        fileOper.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
+        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
@@ -214,7 +212,7 @@ public class WVMContractTest_withVersionUpgradeTest {
         //升级合约
         wvmVersion = "4.2";
         wvmFile ="wvm_update";
-        fileOper.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
+        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
@@ -251,7 +249,7 @@ public class WVMContractTest_withVersionUpgradeTest {
         //当前示例合约仅存在三个方法：init ->method[0] transfer->method[1],getBalance->method[2]
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
-        fileOper.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
+        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmInstallTest(wvmFile + "_temp.txt",Prikey);
@@ -283,7 +281,7 @@ public class WVMContractTest_withVersionUpgradeTest {
         //当前示例合约仅存在三个方法：init ->method[0] transfer->method[1],getBalance->method[2]
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
-        fileOper.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
+        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
 
         //安装合约后会得到合约名：由Prikey和ctName进行运算得到
         String response1 = wvmInstallTest(wvmFile + "_temp.txt",Prikey);
@@ -328,7 +326,7 @@ public class WVMContractTest_withVersionUpgradeTest {
         //当前示例合约仅存在三个方法：init ->method[0] transfer->method[1],getBalance->method[2]
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
-        fileOper.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
+        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmInstallTest(wvmFile + "_temp.txt",Prikey);
@@ -377,7 +375,7 @@ public class WVMContractTest_withVersionUpgradeTest {
     public String intallUpdateName(String name,String priKey)throws Exception{
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
-        fileOper.replace(resourcePath + wvmFile + ".txt", orgName, name);
+        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, name);
         sleepAndSaveInfo(100,"文件操作后等待时间");
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
@@ -394,7 +392,7 @@ public class WVMContractTest_withVersionUpgradeTest {
     public String wvmInstallTest(String wvmfile,String Prikey) throws Exception {
         if(wvmfile == "") return contract.InstallWVM("",category,Prikey);
 
-        String filePath = resourcePath + wvmfile;
+        String filePath = testDataPath + "wvm/" + wvmfile;
         log.info("filepath "+ filePath);
         String file = utilsClass.readInput(filePath).toString().trim();
         String data = utilsClass.encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码

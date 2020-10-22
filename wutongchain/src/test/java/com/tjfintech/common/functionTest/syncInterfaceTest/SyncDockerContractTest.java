@@ -7,12 +7,10 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
-import org.junit.AfterClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -42,7 +40,7 @@ public class SyncDockerContractTest {
     @Test
     public void SynInstall() throws Exception {
         //正常情况下（120000毫秒）
-        String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";
+        String filePath = testDataPath + "docker/simple.go";
         String file=utilsClass.readInput(filePath).toString();
         String data = utilsClass.encryptBASE64(file.getBytes());//BASE64编码
         String response=contract.InstallWVM(name,category,data);

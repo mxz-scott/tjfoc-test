@@ -339,7 +339,7 @@ public class BeforeCondition {
      */
     public void installZXContract() throws Exception {
 
-        String creditfilePath = resourcePath + "credit/";
+        String creditfilePath = testDataPath + "credit/";
         String identity = "identity.wlang";
         String authorization = "authorization.wlang";
         String creditdata = "creditdata.wlang";

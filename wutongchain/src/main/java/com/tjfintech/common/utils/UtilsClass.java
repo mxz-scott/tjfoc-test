@@ -5,8 +5,6 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -17,7 +15,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.tjfintech.common.CommonFunc.*;
 import static com.tjfintech.common.utils.FileOperation.*;
 import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 
@@ -25,77 +22,50 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 @Slf4j
 public class UtilsClass {
 
-//    public static String SDKADD = "http://10.1.5.240:7779";
-//    public static String rSDKADD = "http://10.1.5.240:7779";
-//    public static String TOKENADD = "http://10.1.5.240:9190";
-//    //设置测试环境使用的节点端口及部署目录信息
-//    public static String PEER1IP = "10.1.3.240";
-//    public static String PEER2IP = "10.1.3.246";
-//    public static String PEER3IP = "10.1.5.168";
-//    public static String PEER4IP = "10.1.3.240";
-//    public static String PEER1RPCPort = "9800";
-//    public static String PEER2RPCPort = "9800";
-//    public static String PEER3RPCPort = "9800";
-//    public static String PEER4RPCPort = "9800";
-//    public static String PEER1TCPPort = "60080";
-//    public static String PEER2TCPPort = "60080";
-//    public static String PEER3TCPPort = "60080";
-//    public static String PEER4TCPPort = "60080";
-//    //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-//    public static String PTPATH = "/root/zll/auto/";
-//    public static String SDKPATH = PTPATH + "sdk/";
-//    public static String PeerPATH = PTPATH + "peer/";
-//    public static String ToolPATH = PTPATH + "toolkit/";
-//    public static String TokenApiPATH = PTPATH + "wtfinservice/";
-//    public static String PeerTPName = "Autop";
-//    public static String SDKTPName = "Autos";
-//    public static String ToolTPName = "Autokit";
-//    public static String TokenTPName = "Auto";
-//    public static String tmuxSessionTokenApi = "tmux send -t auto_t ";
-//    public static String tmuxSessionPeer = "tmux send -t auto ";
-//    public static String tmuxSessionSDK = "tmux send -t auto_s ";
-//    public static String sReleaseLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.1\\2.1.3\\";
-//    public static String sLatestLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.2\\";
-
-
-    //zhouxianxian env use start -----------
-
-    public static String ADD = "http://10.1.3.164:7001";
+//    public static String ADD = "http://121.229.44.232:7779";
+//    public static String ADD = "http://10.1.3.164:6001";
+//    public static String ADD = "http://121.229.39.12:59090";
+    public static String ADD = "http://10.1.3.161:7770";
+//        public static String ADD = "http://10.1.11.50:8888";
     public static String SDKADD = ADD;
     public static String rSDKADD = ADD;
     public static String TOKENADD = ADD;
-
     //设置测试环境使用的节点端口及部署目录信息
-    public static String PEER1IP = "10.1.3.162";
-    public static String PEER2IP = "10.1.3.163";
-    public static String PEER3IP = "10.1.3.161";
-    public static String PEER4IP = "10.1.3.164";
-    public static String PEER1RPCPort = "9300";
-    public static String PEER2RPCPort = "9300";
-    public static String PEER3RPCPort = "9300";
-    public static String PEER4RPCPort = "9300";
-    public static String PEER1TCPPort = "60030";
-    public static String PEER2TCPPort = "60030";
-    public static String PEER3TCPPort = "60030";
-    public static String PEER4TCPPort = "60030";
+    public static String PEER1IP = "10.1.3.160";
+    public static String PEER2IP = "10.1.5.240";
+    public static String PEER3IP = "10.1.5.168";
+    public static String PEER4IP = "10.1.3.161";
+    public static String PEER1RPCPort = "9800";
+    public static String PEER2RPCPort = "9800";
+    public static String PEER3RPCPort = "9800";
+    public static String PEER4RPCPort = "9800";
+    public static String PEER1TCPPort = "60080";
+    public static String PEER2TCPPort = "60080";
+    public static String PEER3TCPPort = "60080";
+    public static String PEER4TCPPort = "60080";
     //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-    public static String PTPATH = "/root/auto/";
+    public static String PTPATH = "/root/zll/auto/";
     public static String SDKPATH = PTPATH + "sdk/";
     public static String PeerPATH = PTPATH + "peer/";
     public static String ToolPATH = PTPATH + "toolkit/";
     public static String TokenApiPATH = PTPATH + "wtfinservice/";
-    public static String PeerTPName = "wtchain";
-    public static String SDKTPName = "wtsdk";
-    public static String ToolTPName = "wttool";
-    public static String TokenTPName = "wtfinservice";
-    public static String tmuxSessionTokenApi = "tmux send -t api ";
-    public static String tmuxSessionPeer = "tmux send -t peer ";
-    public static String tmuxSessionSDK = "tmux send -t sdk ";
-    public static String sReleaseLocalDir = "E:\\gopath\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.3\\";
-    public static String sLatestLocalDir = "E:\\test\\2.4.2\\";
-    //zhouxianxian env use end -----------
+    public static String PeerTPName = "Autop";
+    public static String SDKTPName = "Autos";
+    public static String ToolTPName = "Autokit";
+    public static String TokenTPName = "Autot";
+    public static String tmuxSessionTokenApi = "tmux send -t auto_t ";
+    public static String tmuxSessionPeer = "tmux send -t auto ";
+    public static String tmuxSessionSDK = "tmux send -t auto_s ";
+    public static String sReleaseLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.1\\2.1.3\\";
+    public static String sLatestLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.2\\";
 
-    public static String certPath = "SM2"; // 设置签名证书类型，可选值SM2(默认值)，ECDSA，MIX1，MIX2，RSA
+    //    public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";
+    public static String testResultPath = "testresult/";
+    public static String testDataPath = "testdata/";
+    public static String srcShellScriptDir = testDataPath + "/configFiles/shell/";
+    public static String destShellScriptDir = "/root/tjshell/";
+
+    public static String certPath = "cert/" + "SM2"; // 设置签名证书类型，可选值SM2(默认值)，ECDSA，MIX1，MIX2，RSA
     public static String subLedger = ""; // 修改接口兼容主子链
     public static String globalResponse = "";
     public static String globalSSHPort = "";
@@ -170,7 +140,7 @@ public class UtilsClass {
     public static int RESTARTTIME=20000;
     public static long ContractInstallSleep=75000;
 
-    public static String dockerFileName="simple.go";
+    public static String dockerFileName= testDataPath + "docker/" + "simple.go";
     public static String fullPerm = "[1 2 3 4 5 6 7 8 9 10 11 21 22 23 24 25 26 27 211 212 221 222 223 224 226 227 228 231 232 233 235 236 251 252 253 254 255 256 261 262 270 271 272 281 282 283 284]";
     public static String fullPerm2 ="[1 2 3 4 5 6 7 8 9 10 11 21 22 23 24 25 26 27 211 212 221 222 223 224 226 227 228 231 232 233 235 236 251 252 253 254 255 256 261 262 270 271 272 281 282 283 284]";
     public static String PeerMemConfigPath = PeerPATH + "config.toml";//全文件名为config.toml 节点集群信息
@@ -179,16 +149,13 @@ public class UtilsClass {
     public static String TokenApiConfigPath = TokenApiPATH + "conf/config.toml";//全文件名为config.toml
     public static String SDKZXConfigPath = SDKPATH + "conf/zxconfig.toml";//全文件名为config.toml
     
-    public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";
-    public static String testResultPath = "testresult/";
-    public static String testDataPath = "testdata/";
-    public static String srcShellScriptDir = resourcePath + "/configFiles/shell/";
-    public static String destShellScriptDir = "/root/tjshell/";
+
 //    public static String ccenvPull = "docker pull tjfoc/tjfoc-ccenv:2.1";
     public static String ccenvPull = "docker load < /root/dockerimages/ccenv_2.1.tar";//20191217出现网络慢pull需要很长时间 因此改回本地导入
 
     public static String startPeerCmd = "sh "+ destShellScriptDir +"startWithParam.sh \"" + tmuxSessionPeer + "\" " + PeerPATH + " " + PeerTPName;
-    public static String startSDKCmd = "sh "+ destShellScriptDir +"startWithParam.sh \""+ tmuxSessionSDK + "\" " + SDKPATH + " " + SDKTPName + " api";
+    public static String startSDKCmd = "sh "+ destShellScriptDir +"startWithParam.sh \""+ tmuxSessionSDK + "\" " + SDKPATH + " " + SDKTPName;
+    public static String startSDKAPICmd = "sh "+ destShellScriptDir +"startWithParam.sh \""+ tmuxSessionSDK + "\" " + SDKPATH + " " + SDKTPName + " api";
     public static String startTokenApiCmd = "sh "+ destShellScriptDir +"startWithParam.sh \""+ tmuxSessionTokenApi + "\" " + TokenApiPATH + " " + TokenTPName;
     public static String killPeerCmd = "pkill " + PeerTPName;
     public static String killSDKCmd = "pkill " + SDKTPName;
@@ -204,7 +171,7 @@ public class UtilsClass {
     public static String getTokenApiVerByShell = "cd " + TokenApiPATH + ";./"+ TokenTPName + " version| grep \"Version\" |cut -d \":\" -f 2";
     public static String getMgToolVerByShell = "cd " + ToolPATH + ";./"+ ToolTPName + " version| grep \"Tool Version\" |cut -d \":\" -f 2";
 
-    public static Date dt=new Date();
+    public static Date dt = new Date();
     public static SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd");
 
     public static int subTypeNo = 24;
@@ -679,7 +646,7 @@ public class UtilsClass {
     }
 
     public String getKeyPairsFromFile(String pemFileName)throws Exception{
-        String filePath =resourcePath+pemFileName;
+        String filePath = testDataPath + pemFileName;
         InputStream inStream =new FileInputStream(filePath);
         ByteArrayOutputStream out =new ByteArrayOutputStream();
 

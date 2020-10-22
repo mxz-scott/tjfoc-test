@@ -11,7 +11,7 @@ public class SetCertMIX2 {
 
    @Test
     public void test(){
-        UtilsClass.certPath = "MIX2";
+        UtilsClass.certPath =  "cert/" + "MIX2";
         MULITADD1 =""; //utxo测试时是否执行更新key以及重新生成地址的判断条件
     }
 

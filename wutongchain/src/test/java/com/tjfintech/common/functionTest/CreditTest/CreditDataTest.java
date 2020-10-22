@@ -142,7 +142,7 @@ public class CreditDataTest {
             String repStr = "CreditDataContract" + String.valueOf(g);
             FileOperation fileOper = new FileOperation();
             //安装creditdata.wlang
-            fileOper.replace(resourcePath + creditfilePath + creditdata, "CreditDataContract", repStr);
+            fileOper.replace(testDataPath + creditfilePath + creditdata, "CreditDataContract", repStr);
             sleepAndSaveInfo(2000, "等待合约更新");
             String response = wvm.wvmInstallTest(creditfilePath + "creditdata" + "_temp.wlang", "");
             String contractname = JSONObject.fromObject(response).getJSONObject("data").getString("name");
