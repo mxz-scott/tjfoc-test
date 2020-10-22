@@ -491,12 +491,12 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         String sd = sdf.format(new Date(onChainTS)); // 时间戳转换日期
         log.info("检查过户转让存证登记格式化及信息内容与传入一致:" + tempObjIdFrom);
-        fromNow.put("变动额", 0);
+        fromNow.put("变动额","-" + transferAmount);
         fromNow.put("登记时间", txInformation.get("成交时间").toString());
         fromNow.put("当前可用余额", issueAmount - transferAmount);
         fromNow.put("当前冻结余额", 0);   //当前冻结余额修改为实际冻结数
 
-        toNow.put("变动额", 0);
+        toNow.put("变动额", transferAmount);
         toNow.put("当前冻结余额", 0);   //当前冻结余额修改为实际冻结数
         toNow.put("登记时间", txInformation.get("成交时间").toString());
         toNow.put("当前可用余额", transferAmount);
