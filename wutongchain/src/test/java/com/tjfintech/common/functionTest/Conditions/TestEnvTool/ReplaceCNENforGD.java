@@ -32,8 +32,12 @@ public class ReplaceCNENforGD {
 
             String[] arr = line.split(",");
             iCount ++;
+            if(arr[0].contains("(")) {
+                mapCNEN.put(arr[0].replaceAll("\\(","\\\\(").replaceAll("\\)","\\\\)"),arr[1]);
+                log.info("en brackets " + arr[0] );
+            }
 //            log.info( line + "  " + iCount + " arr size " + arr.length + " 0 " + arr[0] + " 1 " + arr[1]);
-            mapCNEN.put(arr[0],arr[1]);
+            else mapCNEN.put(arr[0],arr[1]);
         }
         log.info("map数据" + mapCNEN.size());
     }
@@ -55,7 +59,7 @@ public class ReplaceCNENforGD {
                 Iterator iter = mapCNEN.keySet().iterator();
                 while (iter.hasNext()) {
                     Object key = iter.next();
-                    log.info("test " + key.toString() + " replace " + mapCNEN.get(key).toString());
+//                    log.info("test " + key.toString() + " replace " + mapCNEN.get(key).toString());
 //                    fo.replace(childs[i].getPath(), key.toString(), mapCNEN.get(key).toString());
                     cont = cont.replaceAll("\"" + key.toString() + "\"", "\"" + mapCNEN.get(key).toString() + "\"");
                 }
