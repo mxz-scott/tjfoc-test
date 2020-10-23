@@ -487,8 +487,8 @@ public  class GoGuDeng implements GuDeng {
 
     public String GDEquitySystemInit(String contractAddress,String platformKeyId){
         Map<String, Object> map = new HashMap<>();
-        map.put("contractAddress", contractAddress);
-        map.put("platformKeyId", platformKeyId);
+        if(!contractAddress.isEmpty()) map.put("contractAddress", contractAddress);
+        if(!platformKeyId.isEmpty()) map.put("platformKeyId", platformKeyId);
         String result = PostTest.postMethod(SDKADD + "/equity/system/init", map);
         log.info(result);
         return result;
