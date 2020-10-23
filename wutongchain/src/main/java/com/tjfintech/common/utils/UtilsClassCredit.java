@@ -1,41 +1,35 @@
-package com.tjfintech.common.functionTest.CreditTest;
+package com.tjfintech.common.utils;
 
-import com.tjfintech.common.Interface.MultiSign;
-import com.tjfintech.common.Interface.SoloSign;
-import com.tjfintech.common.Interface.Store;
-import com.tjfintech.common.Interface.Token;
-import com.tjfintech.common.MgToolCmd;
+import com.tjfintech.common.CommonFunc;
+import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.TestBuilder;
-import com.tjfintech.common.utils.FileOperation;
-import com.tjfintech.common.utils.MysqlOperation;
-import com.tjfintech.common.utils.Shell;
-import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.hamcrest.CoreMatchers;
-import sun.misc.BASE64Encoder;
 
-import java.io.File;
 import java.util.*;
 
 import static com.tjfintech.common.utils.FileOperation.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+
 
 @Slf4j
-public class CreditCommonFunc {
-    TestBuilder testBuilder = TestBuilder.getInstance();
-    MultiSign multiSign = testBuilder.getMultiSign();
-    SoloSign soloSign = testBuilder.getSoloSign();
-    Token tokenModule = testBuilder.getToken();
-    Store store = testBuilder.getStore();
+public class UtilsClassCredit {
+
     UtilsClass utilsClass = new UtilsClass();
-    MgToolCmd mgToolCmd = new MgToolCmd();
-    //获取所有地址账户与私钥密码信息
-    JSONObject jsonObjectAddrPri;
+    TestBuilder testBuilder = TestBuilder.getInstance();
+    Contract contract = testBuilder.getContract();
+    CommonFunc commonFunc = new CommonFunc();
+
+    //征信合约信息
+    public static String authContractName = "";
+    public static String viewContractName = "";
+    public static String identityContractName = "";
+    public static String creditContractName = "";
+    public static String zxCode = "ZX" + UtilsClass.Random(8);
+
+    public static String SDKZXConfigPath = SDKPATH + "conf/zxconfig.toml";
+
 
     //-------------------------------------------------征信模块相关通用函数start----------------------------------------------------------
 
@@ -135,4 +129,5 @@ public class CreditCommonFunc {
         }
         return isChange;
     }
+
 }

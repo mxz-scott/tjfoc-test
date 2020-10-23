@@ -7,6 +7,7 @@ import java.io.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClass.SDKPATH;
 
+import static com.tjfintech.common.utils.UtilsClassCredit.*;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.junit.Assert.*;
