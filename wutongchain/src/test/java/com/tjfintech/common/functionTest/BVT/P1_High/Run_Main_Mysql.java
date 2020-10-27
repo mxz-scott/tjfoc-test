@@ -20,24 +20,24 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        SetDatabaseMysql.class,
-        SetAccountEmpty.class,
-        SetCertSM2.class,
-        SetMainLedger.class,
-        PeerStartNoPermTest.class,
-
-        TestTxType.class,
+//        SetDatabaseMysql.class,
+//        SetAccountEmpty.class,
+//        SetCertSM2.class,
+//        SetMainLedger.class,
+//        PeerStartNoPermTest.class,
+//
+//        TestTxType.class,
 
         BeforeCondition.class,
 
         SetURLToSDKAddr.class,
         StoreTest.class,
         PrivateStoreTest.class,
-        PrivateStoreTestFastGet.class,
-        SetWVMversion1.class,
-        WVMContractTest.class,
+//        PrivateStoreTestFastGet.class,
+//        SetWVMversion1.class,
+//        WVMContractTest.class,
 
-        WVMContractInvalidTest.class,
+//        WVMContractInvalidTest.class,
 
         SetWVMversionEmpty.class,
         WVMContractTest.class,
@@ -46,7 +46,7 @@ import org.junit.runners.Suite;
 
         StoreInvalidTest.class,
 
-        AddPeerAndSyncData.class,
+//        AddPeerAndSyncData.class,
 
         VerifyTests.class,
 //        TestPermission.class,

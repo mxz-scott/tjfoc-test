@@ -59,8 +59,8 @@ public class NoPriPrivateStoreTest {
         String response2= priStore.GetPrivacyStore(StoreHashPwd,PUBKEY1);
         assertThat(response2, containsString("200"));
 
-        String secretKey = JSONObject.fromObject(JSONObject.fromObject(response2).getString("Data")).getString("SecretKey");
-        String secretData = JSONObject.fromObject(JSONObject.fromObject(response2).getString("Data")).getString("SecretData");
+        String secretKey = JSONObject.fromObject(JSONObject.fromObject(response2).getString("data")).getString("SecretKey");
+        String secretData = JSONObject.fromObject(JSONObject.fromObject(response2).getString("data")).getString("SecretData");
 
         String plainKey = certTool.decryptKey(PEER2IP,secretKey,PRIKEY1,"");
         assertEquals(Data,certTool.decryptPriData(PEER2IP,plainKey,secretData));
@@ -104,8 +104,8 @@ public class NoPriPrivateStoreTest {
         assertThat(res3,containsString("200"));
 
 
-        String secretKey = JSONObject.fromObject(JSONObject.fromObject(res3).getString("Data")).getString("SecretKey");
-        String secretData = JSONObject.fromObject(JSONObject.fromObject(res3).getString("Data")).getString("SecretData");
+        String secretKey = JSONObject.fromObject(JSONObject.fromObject(res3).getString("data")).getString("SecretKey");
+        String secretData = JSONObject.fromObject(JSONObject.fromObject(res3).getString("data")).getString("SecretData");
         String plainKey = certTool.decryptKey(PEER2IP,secretKey,PRIKEY7,PWD7);
         assertEquals(Data,certTool.decryptPriData(PEER2IP,plainKey,secretData));
 
@@ -117,8 +117,8 @@ public class NoPriPrivateStoreTest {
 
         //使用新被授权的公钥或者隐私存证并解密
         String res5 = priStore.GetPrivacyStore(hash,PUBKEY2);
-        secretKey = JSONObject.fromObject(JSONObject.fromObject(res5).getString("Data")).getString("SecretKey");
-        secretData = JSONObject.fromObject(JSONObject.fromObject(res5).getString("Data")).getString("SecretData");
+        secretKey = JSONObject.fromObject(JSONObject.fromObject(res5).getString("data")).getString("SecretKey");
+        secretData = JSONObject.fromObject(JSONObject.fromObject(res5).getString("data")).getString("SecretData");
         plainKey = certTool.decryptKey(PEER2IP,secretKey,PRIKEY2,"");
         assertEquals(Data,certTool.decryptPriData(PEER2IP,plainKey,secretData));
 
@@ -129,8 +129,8 @@ public class NoPriPrivateStoreTest {
 
         //使用新被授权的公钥或者隐私存证并解密
         String res6 = priStore.GetPrivacyStore(hash,PUBKEY6);
-        secretKey = JSONObject.fromObject(JSONObject.fromObject(res6).getString("Data")).getString("SecretKey");
-        secretData = JSONObject.fromObject(JSONObject.fromObject(res6).getString("Data")).getString("SecretData");
+        secretKey = JSONObject.fromObject(JSONObject.fromObject(res6).getString("data")).getString("SecretKey");
+        secretData = JSONObject.fromObject(JSONObject.fromObject(res6).getString("data")).getString("SecretData");
         plainKey = certTool.decryptKey(PEER2IP,secretKey,PRIKEY6,PWD6);
         assertEquals(Data,certTool.decryptPriData(PEER2IP,plainKey,secretData));
 
@@ -153,7 +153,7 @@ public class NoPriPrivateStoreTest {
         String listStr = JSON.toJSON(listSecrets).toString();
         listStr = listStr.replaceAll("\"","\\\\\"");
 
-        String Sign = certTool.sign(peerIP,ownerPri,ownPwd,listStr,"hex");
+        String Sign = certTool.sign(peerIP,ownerPri,ownPwd,listStr,"base64");
 
         String res1 = priStore.PrivacyStoreAuthorize(txHash, listSecrets,ownerPub,Sign);  //给toPub赋权限
         assertThat(res1,containsString("200"));

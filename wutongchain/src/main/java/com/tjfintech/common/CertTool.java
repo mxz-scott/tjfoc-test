@@ -18,7 +18,7 @@ public class CertTool{
     public String decryptPriData(String peerIP,String plainKey,String SecretData){
         //使用解密后的key对隐私存证密文进行解密
         String decryptData = shExeAndReturn(peerIP,sm4ToolExePath +
-                "decrypt -c \"" + SecretData + "\" -f base64 -k \"" + plainKey + "\" -t base64");
+                "decrypt -c \"" + SecretData + "\" -f hex -k \"" + plainKey + "\" -t hex");
         return decryptData.substring(decryptData.lastIndexOf("plaintext:") + 11);
     }
 
@@ -30,7 +30,7 @@ public class CertTool{
         //将key保存至文件key.pem 解密SecretKey
         shellExeCmd(peerIP,"echo " + prikey + " > " + destShellScriptDir + "key.pem");
         String key = shExeAndReturn(peerIP,certExePath +
-                "decrypt -i " + destShellScriptDir + "key.pem" + pwdParam + " -f base64 -c \""+ secretKey + "\" -t base64 -o base64");
+                "decrypt -i " + destShellScriptDir + "key.pem" + pwdParam + " -f base64 -c \""+ secretKey + "\" -t hex -o hex");
         key = key.trim().substring(key.lastIndexOf("msg:") + 5).trim();
 
         return key;
@@ -41,7 +41,7 @@ public class CertTool{
         //将key保存至文件key.pem 解密SecretKey
         shellExeCmd(peerIP,"echo " + addPubkey + " > " + destShellScriptDir + "pubkey.pem");
         String SecurityKey = shExeAndReturn(peerIP, certExePath +
-                "encrypt -i pubkey.pem -f base64 -m " + key + " -t base64 -o base64");
+                "encrypt -i pubkey.pem -f base64 -m " + key + " -t hex -o base64");
         SecurityKey = SecurityKey.trim().substring(key.lastIndexOf("cipher:") + 8).trim();
 
         //返回使公钥加密后的密码
@@ -56,7 +56,7 @@ public class CertTool{
         //将key保存至文件key.pem 解密SecretKey
         shellExeCmd(peerIP,"echo " + prikey + " > " + destShellScriptDir + "key.pem");
         String SignStr = shExeAndReturn(peerIP,certExePath +
-                "sign -i key.pem -f base64 -m \"" + data +"\""+ pwdParam +  " -t base64 -o " + outFormat);
+                "sign -i key.pem -f base64 -m \"" + data +"\""+ pwdParam +  " -o " + outFormat);
         SignStr = SignStr.trim().substring(SignStr.lastIndexOf("sign:") + 6).trim();
 
         return SignStr;
