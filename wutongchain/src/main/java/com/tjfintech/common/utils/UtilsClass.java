@@ -184,7 +184,6 @@ public class UtilsClass {
     public static String PeerBaseConfigPath = PeerPATH + "conf/base.toml";//全文件名为base.toml 节点运行相关配置
     public static String SDKConfigPath = SDKPATH + "conf/config.toml";//全文件名为config.toml
     public static String TokenApiConfigPath = TokenApiPATH + "conf/config.toml";//全文件名为config.toml
-    public static String SDKZXConfigPath = SDKPATH + "conf/zxconfig.toml";//全文件名为config.toml
     
 
 //    public static String ccenvPull = "docker pull tjfoc/tjfoc-ccenv:2.1";
@@ -272,13 +271,6 @@ public class UtilsClass {
     public static String  NoPermErrCode = "500";
 
     public static String smartAccoutCtHash = "";
-
-    //征信合约信息
-    public static String authContractName = "";
-    public static String viewContractName = "";
-    public static String identityContractName = "";
-    public static String creditContractName = "";
-    public static String zxCode = "ZX" + Random(8);
 
 
     /**

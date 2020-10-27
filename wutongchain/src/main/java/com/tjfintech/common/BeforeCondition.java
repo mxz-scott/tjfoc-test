@@ -334,57 +334,5 @@ public class BeforeCondition {
                 tokenModule.tokenCreateMultiAddr(map, "multiaddr5", M, "", "", listTag)).getString("data");
     }
 
-    /**
-     * 征信项目安装合约
-     */
-    public void installZXContract() throws Exception {
-
-        String creditfilePath = testDataPath + "credit/";
-        String identity = "identity.wlang";
-        String authorization = "authorization.wlang";
-        String creditdata = "creditdata.wlang";
-        String viewhistory = "viewhistory.wlang";
-        String category = "WVM";
-
-        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-        //安装3个公共合约和1个机构合约
-        //安装authorization.wlang
-        String filePath = creditfilePath + authorization;
-        String file = utilsClass.readInput(filePath).toString().trim();
-        String data = utilsClass.encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码
-        String response = contract.InstallWVM(data, category, "");
-        authContractName = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-
-        //安装viewhistory.wlang
-        filePath = creditfilePath + viewhistory;
-        file = utilsClass.readInput(filePath).toString().trim();
-        data = utilsClass.encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码
-        response = contract.InstallWVM(data, category, "");
-        viewContractName = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-
-        //安装identity.wlang
-        filePath = creditfilePath + identity;
-        file = utilsClass.readInput(filePath).toString().trim();
-        data = utilsClass.encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码
-        response = contract.InstallWVM(data, category, "");
-        identityContractName = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-
-        //安装creditdata.wlang
-        filePath = creditfilePath + creditdata;
-        file = utilsClass.readInput(filePath).toString().trim();
-        data = utilsClass.encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码
-        response = contract.InstallWVM(data, category, "");
-        creditContractName = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-
-        log.info("authContractName :" + authContractName);
-        log.info("viewContractName :" + viewContractName);
-        log.info("identityContractName :" + identityContractName);
-        log.info("creditContractName :" + creditContractName);
-
-    }
-
 
 }

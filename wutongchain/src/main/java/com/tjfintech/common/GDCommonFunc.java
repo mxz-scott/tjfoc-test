@@ -753,11 +753,38 @@ public class GDCommonFunc {
         getSubjectInfo.put("资产负债表(PDF)", objAccount.getJSONObject("财务报表文件").getString("资产负债表(PDF)"));
         getSubjectInfo.put("现金流量表(PDF)", objAccount.getJSONObject("财务报表文件").getString("现金流量表(PDF)"));
         getSubjectInfo.put("利润表(PDF)", objAccount.getJSONObject("财务报表文件").getString("利润表(PDF)"));
-
+        log.info(objKeyEvent.toString());
         getSubjectInfo.put("重大事件类型", objKeyEvent.getJSONObject("事件类型").getString("重大事件类型"));
         getSubjectInfo.put("文件列表", com.alibaba.fastjson.JSONObject.parseArray(
                 objKeyEvent.getJSONObject("文件").getJSONArray("文件列表").toJSONString(), String.class));
         getSubjectInfo.put("提报时间", objKeyEvent.getJSONObject("提报时间").getString("提报时间"));
+
+        com.alibaba.fastjson.JSONArray arrCD = jobjOK.getJSONObject("body").getJSONObject("信批信息").getJSONArray("诚信档案");
+        List<Map> tempList = new ArrayList<>();
+        for(int i=0;i< arrCD.size();i++){
+            Map tempMap = new HashMap();
+            com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(arrCD.get(i).toString());
+            tempMap.put("提供方主体引用", objTemp.getJSONObject("事项基本信息").getString("提供方主体引用"));
+            tempMap.put("提供方名称", objTemp.getJSONObject("事项基本信息").getString("提供方名称") );
+            tempMap.put("认定方主体标识引用", objTemp.getJSONObject("事项基本信息").getString("认定方主体标识引用"));
+            tempMap.put("认定方名称", objTemp.getJSONObject("事项基本信息").getString("认定方名称"));
+            tempMap.put("鉴定方主体标识引用", objTemp.getJSONObject("事项基本信息").getString("鉴定方主体标识引用"));
+            tempMap.put("鉴定方名称", objTemp.getJSONObject("事项基本信息").getString("鉴定方名称"));
+            tempMap.put("事项编号",objTemp.getJSONObject("事项明细").getString("事项编号"));
+            tempMap.put("事项名称", objTemp.getJSONObject("事项明细").getString("事项名称"));
+            tempMap.put("事项类型", objTemp.getJSONObject("事项明细").getString("事项类型"));
+            tempMap.put("事项描述", objTemp.getJSONObject("事项明细").getString("事项描述"));
+            tempMap.put("效力期限", objTemp.getJSONObject("事项明细").getString("效力期限"));
+            tempMap.put("开始日期", objTemp.getJSONObject("事项明细").getString("开始日期"));
+            tempMap.put("结束日期", objTemp.getJSONObject("事项明细").getString("结束日期"));
+            tempMap.put("状态", objTemp.getJSONObject("事项明细").getString("状态"));
+            tempMap.put("事项凭证",com.alibaba.fastjson.JSONObject.parseArray(
+                    objTemp.getJSONObject("事项明细").getJSONArray("事项凭证").toJSONString(), String.class));
+
+            tempList.add(tempMap);
+        }
+
+        getSubjectInfo.put("诚信档案", tempList);
 
         return getSubjectInfo;
     }

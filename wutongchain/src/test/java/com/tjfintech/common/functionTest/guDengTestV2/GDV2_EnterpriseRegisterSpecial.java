@@ -81,7 +81,7 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         //获取主体/产品存证hash
         String query = store.GetTxDetail(txId);
-        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("testdata/wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
+        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
         String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
@@ -122,7 +122,7 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         //获取主体/产品存证hash
         String query = store.GetTxDetail(txId);
-        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("testdata/wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
+        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
         String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
@@ -165,7 +165,7 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         //获取主体/产品存证hash
         String query = store.GetTxDetail(txId);
-        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("testdata/wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
+        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
         String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
@@ -257,7 +257,7 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         //获取主体/产品存证hash
         String query = store.GetTxDetail(txId);
-        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("testdata/wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
+        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
         String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
@@ -289,7 +289,7 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         //获取主体/产品存证hash
         String query = store.GetTxDetail(txId);
-        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("testdata/wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
+        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
         String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");

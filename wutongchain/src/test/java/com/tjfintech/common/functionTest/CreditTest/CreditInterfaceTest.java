@@ -2,12 +2,14 @@ package com.tjfintech.common.functionTest.CreditTest;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.CommonFunc;
+import com.tjfintech.common.CreditBeforeCondition;
 import com.tjfintech.common.Interface.Credit;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.UtilsClass;
+import com.tjfintech.common.utils.UtilsClassCredit;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Before;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClassCredit.*;
 import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -32,24 +35,25 @@ public class CreditInterfaceTest {
     Credit credit = testBuilder.getCredit();
     Store store = testBuilder.getStore();
     CommonFunc commonFunc = new CommonFunc();
-    CreditCommonFunc creditCommonFunc = new CreditCommonFunc();
     UtilsClass utilsClass = new UtilsClass();
+    UtilsClassCredit utilsClassCredit = new UtilsClassCredit();
     WVMContractTest wvm = new WVMContractTest();
 
     String enterprisecode = "enterprise" + utilsClass.Random(8);
 
     @BeforeClass
     public static void init() throws Exception {
-        CreditCommonFunc creditCommonFunc = new CreditCommonFunc();
+        UtilsClassCredit utilsClassCredit = new UtilsClassCredit();
         UtilsClass utilsClass = new UtilsClass();
         if (authContractName.isEmpty()) {
             BeforeCondition beforeCondition = new BeforeCondition();
+            CreditBeforeCondition creditBeforeCondition = new CreditBeforeCondition();
             beforeCondition.updatePubPriKey();
-            beforeCondition.installZXContract();
+            creditBeforeCondition.installZXContract();
         }
         //更新zxconfig配置文件Code和CreditdataPath
-        creditCommonFunc.setZXConfig(utilsClass.getIPFromStr(SDKADD), "Common", "Code", zxCode);
-        creditCommonFunc.setZXConfig(utilsClass.getIPFromStr(SDKADD), "SmartContract", "CreditdataPath", creditContractName);
+        utilsClassCredit.setZXConfig(utilsClass.getIPFromStr(SDKADD), "Common", "Code", zxCode);
+        utilsClassCredit.setZXConfig(utilsClass.getIPFromStr(SDKADD), "SmartContract", "CreditdataPath", creditContractName);
         shellExeCmd(utilsClass.getIPFromStr(SDKADD), killSDKCmd, startSDKCmd); //重启sdk api
         sleepAndSaveInfo(SLEEPTIME, "等待SDK重启");
     }
@@ -112,55 +116,55 @@ public class CreditInterfaceTest {
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //授权公司名称为空
-        creditlist = creditCommonFunc.constructCreditData("", enterprisecode, zxCode, zxCode, "hash1",
+        creditlist = utilsClassCredit.constructCreditData("", enterprisecode, zxCode, zxCode, "hash1",
                 "a", "2020-09-24-15-00-00", "a", "A");
         response = credit.creditCreditdataAdd(creditlist, "");
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //授权公司Code为空
-        creditlist = creditCommonFunc.constructCreditData(enterprisecode, "", zxCode, zxCode, "hash1",
+        creditlist = utilsClassCredit.constructCreditData(enterprisecode, "", zxCode, zxCode, "hash1",
                 "a", "2020-09-24-15-00-00", "a", "A");
         response = credit.creditCreditdataAdd(creditlist, "");
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //征信公司名称为空
-        creditlist = creditCommonFunc.constructCreditData(enterprisecode, enterprisecode, "", zxCode, "hash1",
+        creditlist = utilsClassCredit.constructCreditData(enterprisecode, enterprisecode, "", zxCode, "hash1",
                 "a", "2020-09-24-15-00-00", "a", "A");
         response = credit.creditCreditdataAdd(creditlist, "");
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //征信公司ID为空
-        creditlist = creditCommonFunc.constructCreditData(enterprisecode, enterprisecode, zxCode, "", "hash1",
+        creditlist = utilsClassCredit.constructCreditData(enterprisecode, enterprisecode, zxCode, "", "hash1",
                 "a", "2020-09-24-15-00-00", "a", "A");
         response = credit.creditCreditdataAdd(creditlist, "");
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //原始征信数据摘要为空
-        creditlist = creditCommonFunc.constructCreditData(enterprisecode, enterprisecode, zxCode, zxCode, "",
+        creditlist = utilsClassCredit.constructCreditData(enterprisecode, enterprisecode, zxCode, zxCode, "",
                 "a", "2020-09-24-15-00-00", "a", "A");
         response = credit.creditCreditdataAdd(creditlist, "");
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //征信数据大分类信息为空
-        creditlist = creditCommonFunc.constructCreditData(enterprisecode, enterprisecode, zxCode, zxCode, "hash1",
+        creditlist = utilsClassCredit.constructCreditData(enterprisecode, enterprisecode, zxCode, zxCode, "hash1",
                 "", "2020-09-24-15-00-00", "a", "A");
         response = credit.creditCreditdataAdd(creditlist, "");
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //授权开始时间为空
-        creditlist = creditCommonFunc.constructCreditData(enterprisecode, enterprisecode, zxCode, zxCode, "hash1",
+        creditlist = utilsClassCredit.constructCreditData(enterprisecode, enterprisecode, zxCode, zxCode, "hash1",
                 "a", "", "a", "A");
         response = credit.creditCreditdataAdd(creditlist, "");
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //原始征信数据URL为空
-        creditlist = creditCommonFunc.constructCreditData(enterprisecode, enterprisecode, zxCode, zxCode, "hash1",
+        creditlist = utilsClassCredit.constructCreditData(enterprisecode, enterprisecode, zxCode, zxCode, "hash1",
                 "a", "2020-09-24-15-00-00", "", "A");
         response = credit.creditCreditdataAdd(creditlist, "");
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //额外备注或者描述为空
-        creditlist = creditCommonFunc.constructCreditData(enterprisecode, enterprisecode, zxCode, zxCode, "hash1",
+        creditlist = utilsClassCredit.constructCreditData(enterprisecode, enterprisecode, zxCode, zxCode, "hash1",
                 "a", "2020-09-24-15-00-00", "a", "");
         response = credit.creditCreditdataAdd(creditlist, "");
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
@@ -182,7 +186,7 @@ public class CreditInterfaceTest {
 
         //节点机构列表为空
         ArrayList<String> orgid = new ArrayList<>();
-        List<Map> authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+        List<Map> authlist = utilsClassCredit.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                 zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
                 "2020-09-24-15-00-00", 10);
         String response = credit.creditAuthorizationAdd(orgid, authlist);
@@ -195,7 +199,7 @@ public class CreditInterfaceTest {
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //授权公司名称为空
-        authlist = creditCommonFunc.constructAuthorizationData("", enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+        authlist = utilsClassCredit.constructAuthorizationData("", enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                 zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
                 "2020-09-24-15-00-00", 10);
         response = credit.creditAuthorizationAdd(orgid, authlist);
@@ -203,7 +207,7 @@ public class CreditInterfaceTest {
 
         //授权公司code为空
         authlist.clear();
-        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, "", zxCode, zxCode, "ICBC", "ICBC",
+        authlist = utilsClassCredit.constructAuthorizationData(enterprisecode, "", zxCode, zxCode, "ICBC", "ICBC",
                 zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
                 "2020-09-24-15-00-00", 10);
         response = credit.creditAuthorizationAdd(orgid, authlist);
@@ -211,7 +215,7 @@ public class CreditInterfaceTest {
 
         //被授权银行/机构名称为空
         authlist.clear();
-        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "", "ICBC",
+        authlist = utilsClassCredit.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "", "ICBC",
                 zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
                 "2020-09-24-15-00-00", 10);
         response = credit.creditAuthorizationAdd(orgid, authlist);
@@ -219,7 +223,7 @@ public class CreditInterfaceTest {
 
         //被授权银行/机构code为空
         authlist.clear();
-        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "",
+        authlist = utilsClassCredit.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "",
                 zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
                 "2020-09-24-15-00-00", 10);
         response = credit.creditAuthorizationAdd(orgid, authlist);
@@ -227,7 +231,7 @@ public class CreditInterfaceTest {
 
         //征信公司名称为空
         authlist.clear();
-        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, "", zxCode, "ICBC", "ICBC",
+        authlist = utilsClassCredit.constructAuthorizationData(enterprisecode, enterprisecode, "", zxCode, "ICBC", "ICBC",
                 zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
                 "2020-09-24-15-00-00", 10);
         response = credit.creditAuthorizationAdd(orgid, authlist);
@@ -235,7 +239,7 @@ public class CreditInterfaceTest {
 
         //征信公司ID为空
         authlist.clear();
-        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, "", "ICBC", "ICBC",
+        authlist = utilsClassCredit.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, "", "ICBC", "ICBC",
                 zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
                 "2020-09-24-15-00-00", 10);
         response = credit.creditAuthorizationAdd(orgid, authlist);
@@ -243,7 +247,7 @@ public class CreditInterfaceTest {
 
         //异地征信公司名称为空
         authlist.clear();
-        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+        authlist = utilsClassCredit.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                 "", zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
                 "2020-09-24-15-00-00", 10);
         response = credit.creditAuthorizationAdd(orgid, authlist);
@@ -251,7 +255,7 @@ public class CreditInterfaceTest {
 
         //异地征信公司ID为空
         authlist.clear();
-        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+        authlist = utilsClassCredit.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                 zxCode, "", "aa", "https://www.baidu.com/", "hash1", "aa",
                 "2020-09-24-15-00-00", 10);
         response = credit.creditAuthorizationAdd(orgid, authlist);
@@ -259,7 +263,7 @@ public class CreditInterfaceTest {
 
         //本地/异地授权区分为空
         authlist.clear();
-        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+        authlist = utilsClassCredit.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                 zxCode, zxCode, "", "https://www.baidu.com/", "hash1", "aa",
                 "2020-09-24-15-00-00", 10);
         response = credit.creditAuthorizationAdd(orgid, authlist);
@@ -267,7 +271,7 @@ public class CreditInterfaceTest {
 
         //授权证照url为空
         authlist.clear();
-        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+        authlist = utilsClassCredit.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                 zxCode, zxCode, "aa", "", "hash1", "aa",
                 "2020-09-24-15-00-00", 10);
         response = credit.creditAuthorizationAdd(orgid, authlist);
@@ -275,7 +279,7 @@ public class CreditInterfaceTest {
 
         //授权证照摘要为空
         authlist.clear();
-        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+        authlist = utilsClassCredit.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                 zxCode, zxCode, "aa", "https://www.baidu.com/", "", "aa",
                 "2020-09-24-15-00-00", 10);
         response = credit.creditAuthorizationAdd(orgid, authlist);
@@ -283,7 +287,7 @@ public class CreditInterfaceTest {
 
         //授权类型为空
         authlist.clear();
-        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+        authlist = utilsClassCredit.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                 zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "",
                 "2020-09-24-15-00-00", 10);
         response = credit.creditAuthorizationAdd(orgid, authlist);
@@ -291,7 +295,7 @@ public class CreditInterfaceTest {
 
         //授权开始时间为空
         authlist.clear();
-        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+        authlist = utilsClassCredit.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                 zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
                 "", 10);
         response = credit.creditAuthorizationAdd(orgid, authlist);
@@ -299,7 +303,7 @@ public class CreditInterfaceTest {
 
         //授权有效天数为空
         authlist.clear();
-        authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+        authlist = utilsClassCredit.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                 zxCode, zxCode, "aa", "https://www.baidu.com/", "hash1", "aa",
                 "2020-09-24-15-00-00", 0);
         response = credit.creditAuthorizationAdd(orgid, authlist);
@@ -322,7 +326,7 @@ public class CreditInterfaceTest {
 
         //节点机构列表为空
         ArrayList<String> orgid = new ArrayList<>();
-        List<Map> viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+        List<Map> viewlist = utilsClassCredit.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                 zxCode, zxCode, "aa", "aa", "aa", "2020-09-24-15-00-00");
         String response = credit.creditViewhistoryAdd(orgid, viewlist);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
@@ -334,84 +338,84 @@ public class CreditInterfaceTest {
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //授权公司名称为空
-        viewlist = creditCommonFunc.constructViewData("", enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+        viewlist = utilsClassCredit.constructViewData("", enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                 zxCode, zxCode, "aa", "aa", "aa", "2020-09-24-15-00-00");
         response = credit.creditViewhistoryAdd(orgid, viewlist);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //授权公司code为空
         viewlist.clear();
-        viewlist = creditCommonFunc.constructViewData(enterprisecode, "", zxCode, zxCode, "ICBC", "ICBC",
+        viewlist = utilsClassCredit.constructViewData(enterprisecode, "", zxCode, zxCode, "ICBC", "ICBC",
                 zxCode, zxCode, "aa", "aa", "aa", "2020-09-24-15-00-00");
         response = credit.creditViewhistoryAdd(orgid, viewlist);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //征信机构名称为空
         viewlist.clear();
-        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, "", zxCode, "ICBC", "ICBC",
+        viewlist = utilsClassCredit.constructViewData(enterprisecode, enterprisecode, "", zxCode, "ICBC", "ICBC",
                 zxCode, zxCode, "aa", "aa", "aa", "2020-09-24-15-00-00");
         response = credit.creditViewhistoryAdd(orgid, viewlist);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //征信机构code为空
         viewlist.clear();
-        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, "", "ICBC", "ICBC",
+        viewlist = utilsClassCredit.constructViewData(enterprisecode, enterprisecode, zxCode, "", "ICBC", "ICBC",
                 zxCode, zxCode, "aa", "aa", "aa", "2020-09-24-15-00-00");
         response = credit.creditViewhistoryAdd(orgid, viewlist);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //银行机构名称为空
         viewlist.clear();
-        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "", "ICBC",
+        viewlist = utilsClassCredit.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "", "ICBC",
                 zxCode, zxCode, "aa", "aa", "aa", "2020-09-24-15-00-00");
         response = credit.creditViewhistoryAdd(orgid, viewlist);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //银行机构code为空
         viewlist.clear();
-        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "",
+        viewlist = utilsClassCredit.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "",
                 zxCode, zxCode, "aa", "aa", "aa", "2020-09-24-15-00-00");
         response = credit.creditViewhistoryAdd(orgid, viewlist);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //异地征信公司名称为空
         viewlist.clear();
-        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+        viewlist = utilsClassCredit.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                 "", zxCode, "aa", "aa", "aa", "2020-09-24-15-00-00");
         response = credit.creditViewhistoryAdd(orgid, viewlist);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //异地征信公司code为空
         viewlist.clear();
-        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+        viewlist = utilsClassCredit.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                 zxCode, "", "aa", "aa", "aa", "2020-09-24-15-00-00");
         response = credit.creditViewhistoryAdd(orgid, viewlist);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //本地/异地授权区分信息为空
         viewlist.clear();
-        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+        viewlist = utilsClassCredit.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                 zxCode, zxCode, "", "aa", "aa", "2020-09-24-15-00-00");
         response = credit.creditViewhistoryAdd(orgid, viewlist);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //查询操作人员为空
         viewlist.clear();
-        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+        viewlist = utilsClassCredit.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                 zxCode, zxCode, "aa", "", "aa", "2020-09-24-15-00-00");
         response = credit.creditViewhistoryAdd(orgid, viewlist);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //查询原因为空
         viewlist.clear();
-        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+        viewlist = utilsClassCredit.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                 zxCode, zxCode, "aa", "aa", "", "2020-09-24-15-00-00");
         response = credit.creditViewhistoryAdd(orgid, viewlist);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //查询时间为空
         viewlist.clear();
-        viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+        viewlist = utilsClassCredit.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                 zxCode, zxCode, "aa", "aa", "aa", "");
         response = credit.creditViewhistoryAdd(orgid, viewlist);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
