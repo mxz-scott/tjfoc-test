@@ -53,6 +53,9 @@ public class CreditDataTest {
         //更新zxconfig配置文件Code和CreditdataPath
         utilsClassCredit.setZXConfig(utilsClass.getIPFromStr(SDKADD), "Common", "Code", zxCode);
         utilsClassCredit.setZXConfig(utilsClass.getIPFromStr(SDKADD), "SmartContract", "CreditdataPath", creditContractName);
+        utilsClassCredit.setZXConfig(utilsClass.getIPFromStr(SDKADD), "SmartContract", "AuthorizationPath", authContractName);
+        utilsClassCredit.setZXConfig(utilsClass.getIPFromStr(SDKADD), "SmartContract", "ViewhistoryPath", viewContractName);
+        utilsClassCredit.setZXConfig(utilsClass.getIPFromStr(SDKADD), "SmartContract", "IdentityPath", identityContractName);
         shellExeCmd(utilsClass.getIPFromStr(SDKADD), killSDKCmd, startSDKCmd); //重启sdk api
         sleepAndSaveInfo(SLEEPTIME, "等待SDK重启");
     }
