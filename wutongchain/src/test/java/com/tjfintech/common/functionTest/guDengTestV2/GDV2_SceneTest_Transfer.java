@@ -68,7 +68,7 @@ public class GDV2_SceneTest_Transfer {
         uf.commonIssuePP01(1000);//发行给账户1~4 股权性质对应 0 1 0 1
     }
 
-    @After
+//    @After
     public void calJGDataAfterTx()throws Exception{
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
@@ -189,7 +189,7 @@ public class GDV2_SceneTest_Transfer {
         response = uf.shareTransfer(gdAccountKeyID1,gdAccount1,3500,gdAccount5,0,
                 gdEquityCode,false);
         assertEquals("500",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,JSONObject.fromObject(response).getString("message").contains(" Err:error"));
+        assertEquals(true,JSONObject.fromObject(response).getString("message").contains(" Err:账户可用余额不足"));
 //        sleepAndSaveInfo(SLEEPTIME);
 //        assertEquals("404",JSONObject.fromObject(
 //                store.GetTxDetail(JSONObject.fromObject(response).getJSONObject("data").getString("txId"))
@@ -283,7 +283,7 @@ public class GDV2_SceneTest_Transfer {
                 gdEquityCode,false);
 
         assertEquals("500",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("Err:error"));
+        assertEquals(true,response.contains("Err:账户可用余额不足"));
 
 //        sleepAndSaveInfo(SLEEPTIME);
 //        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
@@ -313,7 +313,7 @@ public class GDV2_SceneTest_Transfer {
                 gdEquityCode,false);
 
         assertEquals("500",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("Err:error"));
+        assertEquals(true,response.contains("Err:账户可用余额不足"));
 
 //        sleepAndSaveInfo(SLEEPTIME);
 //        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(
@@ -397,7 +397,7 @@ public class GDV2_SceneTest_Transfer {
                 gdEquityCode,false);
 
         assertEquals("500",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("Err:error"));
+        assertEquals(true,response.contains("Err:账户可用余额不足"));
 
 //        sleepAndSaveInfo(SLEEPTIME);
 //        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(

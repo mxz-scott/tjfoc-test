@@ -76,8 +76,9 @@ public class BlockSyncErrorTool {
 
         log.info("**********************************************************");
         //比较区块详情
-        if(blockDetail1 == blockDetail2)  log.info("区块详情一致");
-        else {
+        if(blockDetail1.trim().equals(blockDetail2.trim()))  {
+            log.info("区块详情一致");
+        }else {
             log.info("区块详情不一致");
             log.info(blockDetail1);
             log.info(blockDetail2);
