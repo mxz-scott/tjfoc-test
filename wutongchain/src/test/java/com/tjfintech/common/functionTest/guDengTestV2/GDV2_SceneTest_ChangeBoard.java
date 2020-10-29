@@ -703,11 +703,12 @@ public class GDV2_SceneTest_ChangeBoard {
         String response = gd.GDShareChangeBoard("bta47g1pgfltc7nntfb0",gdCompanyID,gdEquityCode,
                 "gdEC" + Random(12),regList, equityProductInfo,bondProductInfo);
         //链上报错
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME);
-        assertEquals("404",JSONObject.fromObject(
-                store.GetTxDetail(JSONObject.fromObject(response).getJSONObject("data").getString("txId"))
-                    ).getString("state"));
+        assertEquals("505",JSONObject.fromObject(response).getString("state"));
+        assertEquals("数字签名出错",JSONObject.fromObject(response).getString("message"));
+//        sleepAndSaveInfo(SLEEPTIME);
+//        assertEquals("404",JSONObject.fromObject(
+//                store.GetTxDetail(JSONObject.fromObject(response).getJSONObject("data").getString("txId"))
+//                    ).getString("state"));
 
     }
 
