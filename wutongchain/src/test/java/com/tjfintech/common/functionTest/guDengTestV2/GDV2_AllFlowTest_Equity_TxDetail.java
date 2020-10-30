@@ -60,7 +60,7 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         gdEquityCode = "fondTest" + Random(12);
     }
 
-    @After
+//    @After
     public void calJGDataAfterTx()throws Exception{
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
@@ -91,9 +91,11 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         assertEquals(gdContractAddress,jsonObjectWVM.getString("name"));
 
         String args = jsonObjectWVM.getJSONObject("arg").getJSONArray("args").get(0).toString();
-        assertEquals(true,args.contains("\\\"EquityCode\\\":\\\"" + gdEquityCode + "\\\""));
-        assertEquals(true,args.contains("\\\"TotalShares\\\":" + shareTotals + ""));
-        assertEquals(true,args.contains("DBSet"));
+
+        log.info(args);
+        assertEquals(true,args.contains("\"EquityCode\":\"" + gdEquityCode + "\""));
+        assertEquals(true,args.contains("\"TotalShares\":" + shareTotals + ""));
+        assertEquals(true,response.contains("DBSet"));
     }
 
 
@@ -123,8 +125,8 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         assertEquals("AddInvestor",jsonObjectWVM.getJSONObject("arg").getString("method"));
         assertEquals(gdContractAddress,jsonObjectWVM.getString("name"));
         String args = jsonObjectWVM.getJSONObject("arg").getJSONArray("args").get(0).toString();
-        assertEquals(true,args.contains("\\\"ClientNo\\\":\\\"" + cltNo + "\\\""));
-        assertEquals(true,args.contains("DBSet"));
+        assertEquals(true,args.contains("\"ClientNo\":\"" + cltNo + "\""));
+        assertEquals(true,response.contains("DBSet"));
 
     }
 
@@ -154,21 +156,21 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         JSONObject jsonObjectWVM = jsonObject1.getJSONObject("wvm").getJSONObject("wvmContractTx");
         assertEquals("IssueToken",jsonObjectWVM.getJSONObject("arg").getString("method"));
         assertEquals("Sys_SmartTokenContract",jsonObjectWVM.getString("name"));
-        String args = jsonObjectWVM.getJSONObject("arg").getJSONArray("args").get(0).toString();
-        assertEquals(true,args.contains("\\\"Type\\\":\\\"" + gdEquityCode + "\\\""));
-        assertEquals(true,args.contains("\\\"Status\\\":\\\"Normal\\\""));
-        assertEquals(true,args.contains("\\\"Amount\\\":20000000000"));
+        String args = jsonObjectWVM.getJSONObject("arg").toString();
+        assertEquals(true,args.contains("\"Type\":\"" + gdEquityCode + "\""));
+        assertEquals(true,args.contains("\"Status\":\"Normal\""));
+        assertEquals(true,args.contains("\"Amount\":20000000000"));
         assertEquals(true,args.contains(gdContractAddress));
 
-        assertEquals(true,response.contains("{\"from\": \""+ gdContractAddress + "\",\"to\": \"" +
-                gdAccount1 + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"5000\"}"));
-        assertEquals(true,response.contains("{\"from\": \""+ gdContractAddress + "\",\"to\": \"" +
-                gdAccount2 + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"5000\"}"));
-        assertEquals(true,response.contains("{\"from\": \""+ gdContractAddress + "\",\"to\": \"" +
-                gdAccount3 + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"5000\"}"));
-        assertEquals(true,response.contains("{\"from\": \""+ gdContractAddress + "\",\"to\": \"" +
-                gdAccount4 + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"5000\"}"));
-        assertEquals(true,args.contains("DBSet"));
+        assertEquals(true,response.contains("{\"from\":\""+ gdContractAddress + "\",\"to\":\"" +
+                gdAccount1 + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"5000\",\"subType\":\"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\""+ gdContractAddress + "\",\"to\":\"" +
+                gdAccount2 + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"5000\",\"subType\":\"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\""+ gdContractAddress + "\",\"to\":\"" +
+                gdAccount3 + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"5000\",\"subType\":\"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\""+ gdContractAddress + "\",\"to\":\"" +
+                gdAccount4 + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"5000\",\"subType\":\"0\"}"));
+        assertEquals(true,response.contains("DBSet"));
     }
 
     /***
@@ -204,10 +206,10 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         assertEquals("11",jsonObject1.getJSONObject("header").getString("subType"));
 
 
-        assertEquals(true,response.contains("{\"from\": \"" + address + "\",\"to\": \"" + address
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"500\",\"subType\": \"0\",\"newSubType\": \"1\"}"));
-        assertEquals(true,response.contains("{\"from\": \"" + address + "\",\"to\": \"" + address
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"4500\",\"subType\": \"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + address + "\",\"to\":\"" + address
+                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"500\",\"subType\":\"0\",\"newSubType\":\"1\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + address + "\",\"to\":\"" + address
+                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"4500\",\"subType\":\"0\"}"));
         assertEquals(true,response.contains("交易报告引用"));
     }
 
@@ -240,11 +242,11 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         assertEquals("11",jsonObject1.getJSONObject("header").getString("subType"));
 
 
-        assertEquals(true,response.contains("{\"from\": \"" + fromAddr + "\",\"to\": \"" + toAddr
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"1000\",\"subType\": \"0\"}"));
-        assertEquals(true,response.contains("{\"from\": \"" + fromAddr + "\",\"to\": \"" + fromAddr
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"3500\",\"subType\": \"0\"}"));
-        assertEquals(true,response.contains("交易报告引用"));
+        assertEquals(true,response.contains("{\"from\":\"" + fromAddr + "\",\"to\":\"" + toAddr
+                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"1000\",\"subType\":\"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + fromAddr + "\",\"to\":\"" + fromAddr
+                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"3500\",\"subType\":\"0\"}"));
+        assertEquals(true,response.contains("交易中介信息"));
     }
 
     @Test
@@ -259,10 +261,10 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         String reason = "股份分红";
         registerInfo.put("登记流水号","increase000001");
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,0, shareList);
-        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,1);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,1, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
 
         String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, equityProductInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -281,21 +283,22 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         JSONObject jsonObjectWVM = jsonObject1.getJSONObject("wvm").getJSONObject("wvmContractTx");
         assertEquals("IssueToken",jsonObjectWVM.getJSONObject("arg").getString("method"));
         assertEquals("Sys_SmartTokenContract",jsonObjectWVM.getString("name"));
-        String args = jsonObjectWVM.getJSONObject("arg").getJSONArray("args").get(0).toString();
-        assertEquals(true,args.contains("\\\"Type\\\":\\\"" + gdEquityCode + "\\\""));
-        assertEquals(true,args.contains("\\\"Status\\\":\\\"Normal\\\""));
-        assertEquals(true,args.contains("\\\"Amount\\\":40000000000"));
+        String args = jsonObjectWVM.getJSONObject("arg").toString();
+        log.info(args);
+        assertEquals(true,args.contains("\"Type\":\"" + gdEquityCode + "\""));
+        assertEquals(true,args.contains("\"Status\":\"Normal\""));
+        assertEquals(true,args.contains("\"Amount\":4000000000"));
         assertEquals(true,args.contains(gdContractAddress));
 
-        assertEquals(true,response.contains("{\"from\": \""+ gdContractAddress + "\",\"to\": \"" +
-                gdAccount1 + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"1000\"}"));
-        assertEquals(true,response.contains("{\"from\": \""+ gdContractAddress + "\",\"to\": \"" +
-                gdAccount2 + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"1000\"}"));
-        assertEquals(true,response.contains("{\"from\": \""+ gdContractAddress + "\",\"to\": \"" +
-                gdAccount3 + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"1000\"}"));
-        assertEquals(true,response.contains("{\"from\": \""+ gdContractAddress + "\",\"to\": \"" +
-                gdAccount4 + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"1000\"}"));
-        assertEquals(true,args.contains("DBSet"));
+        assertEquals(true,response.contains("{\"from\":\""+ gdContractAddress + "\",\"to\":\"" +
+                gdAccount1 + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"1000\",\"subType\":\"1\"}"));
+        assertEquals(true,response.contains("{\"from\":\""+ gdContractAddress + "\",\"to\":\"" +
+                gdAccount2 + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"1000\",\"subType\":\"1\"}"));
+        assertEquals(true,response.contains("{\"from\":\""+ gdContractAddress + "\",\"to\":\"" +
+                gdAccount3 + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"1000\",\"subType\":\"1\"}"));
+        assertEquals(true,response.contains("{\"from\":\""+ gdContractAddress + "\",\"to\":\"" +
+                gdAccount4 + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"1000\",\"subType\":\"1\"}"));
+        assertEquals(true,response.contains("DBSet"));
 
     }
 
@@ -331,14 +334,17 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         assertEquals("ShareLock",jsonObjectWVM.getJSONObject("arg").getString("method"));
         assertEquals(gdContractAddress,jsonObjectWVM.getString("name"));
         String args = jsonObjectWVM.getJSONObject("arg").getJSONArray("args").get(0).toString();
-        assertEquals(true,args.contains("\\\"BizNo\\\":\\\"" + bizNo + "\\\""));
-        assertEquals(true,args.contains("\\\"Address\\\":\\\"" + address + "\\\""));
-        assertEquals(true,args.contains("\\\"EquityCode\\\":\\\"" + gdEquityCode + "\\\""));
-        assertEquals(true,args.contains("\\\"Amount\\\":" + lockAmount + "000000"));
-        assertEquals(true,args.contains("\\\"ShareProperty\\\":\\\"" + shareProperty + "\\\""));
-        assertEquals(true,args.contains("\\\"Reason\\\":\\\"" + reason + "\\\""));
-        assertEquals(true,args.contains("\\\"CutoffDate\\\":\\\"" + (new Date(cutoffDate)) + "\\\""));
-        assertEquals(true,args.contains("DBSet"));
+        assertEquals(true,args.contains("\"BizNo\":\"" + bizNo + "\""));
+        assertEquals(true,args.contains("\"Address\":\"" + address + "\""));
+        assertEquals(true,args.contains("\"EquityCode\":\"" + gdEquityCode + "\""));
+        assertEquals(true,args.contains("\"Amount\":" + lockAmount + "000000"));
+        assertEquals(true,args.contains("\"ShareProperty\":\"" + shareProperty + "\""));
+        assertEquals(true,args.contains("\"Reason\":\"" + reason + "\""));
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        log.info("change " + simpleDateFormat.parse(cutoffDate).getTime());
+        assertEquals(true,args.contains("\"CutoffDate\":" + simpleDateFormat.parse(cutoffDate).getTime()));
+        assertEquals(true,response.contains("DBSet"));
 
     }
 
@@ -369,11 +375,11 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         JSONObject jsonObjectWVM = jsonObject1.getJSONObject("wvm").getJSONObject("wvmContractTx");
         assertEquals("ShareUnlock",jsonObjectWVM.getJSONObject("arg").getString("method"));
         assertEquals(gdContractAddress,jsonObjectWVM.getString("name"));
-        String args = jsonObjectWVM.getJSONObject("arg").getJSONArray("args").get(0).toString();
+        String args = jsonObjectWVM.getJSONObject("arg").toString();
         assertEquals(true,args.contains(bizNo));
-        assertEquals(true,args.contains("\\\"EquityCode\\\":\\\"" + gdEquityCode + "\\\""));
+        assertEquals(true,args.contains("\"EquityCode\":\"" + gdEquityCode + "\""));
         assertEquals(true,args.contains(amount + "000000"));
-        assertEquals(true,args.contains("DBSet"));
+        assertEquals(true,response.contains("DBSet"));
     }
 
     @Test
@@ -406,10 +412,10 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         assertEquals("12",jsonObject1.getJSONObject("header").getString("subType"));
 
 
-        assertEquals(true,response.contains("{\"from\": \"" + gdAccount1 + "\",\"to\": \"" + zeroAccount
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"100\",\"subType\": \"0\"}"));
-        assertEquals(true,response.contains("{\"from\": \"" + gdAccount1 + "\",\"to\": \"" + gdAccount1
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"3400\",\"subType\": \"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount1 + "\",\"to\":\"" + zeroAccount
+                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"100\",\"subType\":\"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount1 + "\",\"to\":\"" + gdAccount1
+                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"3400\",\"subType\":\"0\"}"));
         assertEquals(true,response.contains("交易报告引用"));
     }
 
@@ -446,25 +452,25 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         assertEquals("12",jsonObject1.getJSONObject("header").getString("subType"));
 
 
-        assertEquals(true,response.contains("{\"from\": \"" + gdAccount1 + "\",\"to\": \"" + zeroAccount
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"100\",\"subType\": \"0\"}"));
-        assertEquals(true,response.contains("{\"from\": \"" + gdAccount1 + "\",\"to\": \"" + gdAccount1
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"3300\",\"subType\": \"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount1 + "\",\"to\":\"" + zeroAccount
+                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"100\",\"subType\":\"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount1 + "\",\"to\":\"" + gdAccount1
+                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"3300\",\"subType\":\"0\"}"));
 
-        assertEquals(true,response.contains("{\"from\": \"" + gdAccount2 + "\",\"to\": \"" + zeroAccount
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"100\",\"subType\": \"0\"}"));
-        assertEquals(true,response.contains("{\"from\": \"" + gdAccount2 + "\",\"to\": \"" + gdAccount2
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"4900\",\"subType\": \"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount2 + "\",\"to\":\"" + zeroAccount
+                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"100\",\"subType\":\"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount2 + "\",\"to\":\"" + gdAccount2
+                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"4900\",\"subType\":\"0\"}"));
 
-        assertEquals(true,response.contains("{\"from\": \"" + gdAccount3 + "\",\"to\": \"" + zeroAccount
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"100\",\"subType\": \"0\"}"));
-        assertEquals(true,response.contains("{\"from\": \"" + gdAccount3 + "\",\"to\": \"" + gdAccount3
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"4900\",\"subType\": \"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount3 + "\",\"to\":\"" + zeroAccount
+                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"100\",\"subType\":\"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount3 + "\",\"to\":\"" + gdAccount3
+                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"4900\",\"subType\":\"0\"}"));
 
-        assertEquals(true,response.contains("{\"from\": \"" + gdAccount4 + "\",\"to\": \"" + zeroAccount
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"100\",\"subType\": \"0\"}"));
-        assertEquals(true,response.contains("{\"from\": \"" + gdAccount4 + "\",\"to\": \"" + gdAccount4
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"4900\",\"subType\": \"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount4 + "\",\"to\":\"" + zeroAccount
+                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"100\",\"subType\":\"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount4 + "\",\"to\":\"" + gdAccount4
+                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"4900\",\"subType\":\"0\"}"));
         assertEquals(true,response.contains("交易报告引用"));
     }
 
@@ -490,26 +496,30 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         JSONObject jsonObject1 = JSONObject.fromObject(response).getJSONObject("data");
         assertEquals("1",jsonObject1.getJSONObject("header").getString("version"));
         assertEquals("1",jsonObject1.getJSONObject("header").getString("type"));
-        assertEquals("12",jsonObject1.getJSONObject("header").getString("subType"));
+        assertEquals("13",jsonObject1.getJSONObject("header").getString("subType"));
 
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount1 + "\",\"to\":\"" + gdAccount1 +
+                "\",\"tokenType\":\"" + oldEquityCode + "\",\"newTokenType\":\"" + newEquityCode + "\",\"amount\":\"3300\",\"subType\":\"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount1 + "\",\"to\":\"" + gdAccount1 +
+                "\",\"tokenType\":\"" + oldEquityCode + "\",\"newTokenType\":\"" + newEquityCode + "\",\"amount\":\"1500\",\"subType\":\"1\"}"));
 
-        assertEquals(true,response.contains("{\"from\": \"" + gdAccount1 + "\",\"to\": \"" + gdAccount1
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"4300\",\"subType\": \"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount5 + "\",\"to\":\"" + gdAccount5 +
+                "\",\"tokenType\":\"" + oldEquityCode + "\",\"newTokenType\":\"" + newEquityCode + "\",\"amount\":\"1000\",\"subType\":\"0\"}"));
 
-        assertEquals(true,response.contains("{\"from\": \"" + gdAccount2 + "\",\"to\": \"" + gdAccount2
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"5900\",\"subType\": \"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount2 + "\",\"to\":\"" + gdAccount2 +
+                "\",\"tokenType\":\"" + oldEquityCode + "\",\"newTokenType\":\"" + newEquityCode + "\",\"amount\":\"4900\",\"subType\":\"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount2 + "\",\"to\":\"" + gdAccount2 +
+                "\",\"tokenType\":\"" + oldEquityCode + "\",\"newTokenType\":\"" + newEquityCode + "\",\"amount\":\"1000\",\"subType\":\"1\"}"));
 
-        assertEquals(true,response.contains("{\"from\": \"" + gdAccount3 + "\",\"to\": \"" + gdAccount3
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"5900\",\"subType\": \"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount3 + "\",\"to\":\"" + gdAccount3 +
+                "\",\"tokenType\":\"" + oldEquityCode + "\",\"newTokenType\":\"" + newEquityCode + "\",\"amount\":\"4900\",\"subType\":\"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount3 + "\",\"to\":\"" + gdAccount3 +
+                "\",\"tokenType\":\"" + oldEquityCode + "\",\"newTokenType\":\"" + newEquityCode + "\",\"amount\":\"1000\",\"subType\":\"1\"}"));
 
-        assertEquals(true,response.contains("{\"from\": \"" + gdAccount4 + "\",\"to\": \"" + gdAccount4
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"5900\",\"subType\": \"0\"}"));
-
-        assertEquals(true,response.contains("{\"from\": \"" + gdAccount1 + "\",\"to\": \"" + gdAccount1
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"500\",\"subType\": \"1\"}"));
-
-        assertEquals(true,response.contains("{\"from\": \"" + gdAccount5 + "\",\"to\": \"" + gdAccount5
-                + "\",\"tokenType\": \"" + gdEquityCode + "\",\"amount\": \"1000\",\"subType\": \"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount4 + "\",\"to\":\"" + gdAccount4 +
+                "\",\"tokenType\":\"" + oldEquityCode + "\",\"newTokenType\":\"" + newEquityCode + "\",\"amount\":\"4900\",\"subType\":\"0\"}"));
+        assertEquals(true,response.contains("{\"from\":\"" + gdAccount4 + "\",\"to\":\"" + gdAccount4 +
+                "\",\"tokenType\":\"" + oldEquityCode + "\",\"newTokenType\":\"" + newEquityCode + "\",\"amount\":\"1000\",\"subType\":\"1\"}"));
 
         assertEquals(true,response.contains("交易报告引用"));
 
@@ -538,14 +548,14 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         assertEquals("42",jsonObject1.getJSONObject("header").getString("subType"));
 
         JSONObject jsonObjectWVM = jsonObject1.getJSONObject("wvm").getJSONObject("wvmContractTx");
-        assertEquals("AddListedCompany",jsonObjectWVM.getJSONObject("arg").getString("method"));
+        assertEquals("DestroyInvestor",jsonObjectWVM.getJSONObject("arg").getString("method"));
         assertEquals(gdContractAddress,jsonObjectWVM.getString("name"));
 
-        String args = jsonObjectWVM.getJSONObject("arg").getJSONArray("args").get(0).toString();
+        String args = jsonObjectWVM.getJSONObject("arg").toString();
         assertEquals(true,args.contains(clntNo));
         assertEquals(true,args.contains("test.txt"));
         assertEquals(true,args.contains("close.txt"));
-        assertEquals(true,args.contains("DBSet"));
+        assertEquals(true,response.contains("DBSet"));
 
     }
 
