@@ -1188,7 +1188,7 @@ public class CommonFunc {
     }
 
 
-    public Boolean compareHashMap(Map<String,String> before ,Map<String,String> after)throws Exception{
+    public Boolean compareHashMap(Map<String,String> before ,Map<String,String> after,String keyWord)throws Exception{
         ArrayList<String> diffRespList = new ArrayList<>();
         Boolean bSame = true;
 
@@ -1208,7 +1208,7 @@ public class CommonFunc {
         Date dtTest = new Date();
         long nowTime = dtTest.getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        String diffSaveFile = testResultPath  + "compare" + sdf.format(nowTime) + "-diff.txt";
+        String diffSaveFile = testResultPath  + keyWord + "compare" + sdf.format(nowTime) + "-diff.txt";
         File diff = new File(diffSaveFile);
         if(diff.exists()) diff.delete();//如果存在则先删除
 
