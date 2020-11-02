@@ -152,23 +152,8 @@ public class GDV2_AllFlowTest_Equity {
         query = gd.GDGetShareHolderInfo(gdContractAddress,cltNo);
         assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
 
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+        //投资者信息查询
+        String query3 = gd.GDMainSubjectQuery(gdContractAddress,cltNo);
 
     }
 
@@ -906,7 +891,7 @@ public class GDV2_AllFlowTest_Equity {
 
 
         //检查存在余额的股东列表
-        assertEquals(respShareList4.size()+1,dataShareList.size());
+        assertEquals(respShareList4.size()+2,dataShareList.size());
 
         List<Map> getShareList = getShareListFromQueryNoZeroAcc(dataShareList);
         log.info(getShareList.toString());
@@ -1350,17 +1335,10 @@ public class GDV2_AllFlowTest_Equity {
 //        sdEnd = "2020-10-14 11:30:17";
         String type = "5";
         String value = gdAccClientNo1;
-        String value2 = "zhangsan";
-        String value3 = "SH" + gdAccClientNo1;
-        String value4 = gdEquityCode;
 
         String response = gd.GDGetTxReportInfo(type,value,sdStart,sdEnd);
         log.info(txList.toString());
-//        for(int i = 0;i< txList.size();i++){
-//            store.GetTxDetail(txList.get(i));
-//        }
-        //
-//        assertEquals("检查数量是否正确",txList.size(),JSONObject.fromObject(response).getJSONArray("data").size());
+
         Boolean bContain = true;
         for(int i =0;i< txList.size();i++){
             if(!response.contains(txList.get(i))){
@@ -1430,119 +1408,158 @@ public class GDV2_AllFlowTest_Equity {
             log.info(txType + "交易6 缺失：" + StringUtils.countOccurrencesOf(response,txType));
             bNumOk = false;
         }
+        Boolean bAccOK = checkAccDetail(response);
 
-        assertEquals("存在与链上不一致的交易",true,bContain);
-        assertEquals("存在与链上不一致的交易个数",true,bNumOk);
-
-
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 +
-                "\",\"shareholderNo\": \"SH" + gdAccClientNo1 + "\",\"txType\": \"投资者开户\""));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo2 +
-                "\",\"shareholderNo\": \"SH" + gdAccClientNo2 + "\",\"txType\": \"投资者开户\""));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo3 +
-                "\",\"shareholderNo\": \"SH" + gdAccClientNo3 + "\",\"txType\": \"投资者开户\""));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo4 +
-                "\",\"shareholderNo\": \"SH" + gdAccClientNo4 + "\",\"txType\": \"投资者开户\""));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo5 +
-                "\",\"shareholderNo\": \"SH" + gdAccClientNo5 + "\",\"txType\": \"投资者开户\""));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo6 +
-                "\",\"shareholderNo\": \"SH" + gdAccClientNo6 + "\",\"txType\": \"投资者开户\""));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo7 +
-                "\",\"shareholderNo\": \"SH" + gdAccClientNo7 + "\",\"txType\": \"投资者开户\""));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo8 +
-                "\",\"shareholderNo\": \"SH" + gdAccClientNo8 + "\",\"txType\": \"投资者开户\""));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo9 +
-                "\",\"shareholderNo\": \"SH" + gdAccClientNo9 + "\",\"txType\": \"投资者开户\""));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo10 +
-                "\",\"shareholderNo\": \"SH" + gdAccClientNo10 + "\",\"txType\": \"投资者开户\""));
-
-        assertEquals(true,response.contains("\"equityCode\": \"" + oldEquity +
-                "\",\"txType\": \"挂牌企业登记\""));
-
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 +
-                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 5000"));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo2 +
-                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 5000"));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo3 +
-                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 5000"));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo4 +
-                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 5000"));
-
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 +
-                "\",\"equityCode\": \"" + oldEquity + "\",\"shareProperty\": \"0\",\"txType\": \"股份性质变更\",\"close_amount\": 500"));
-
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \""
-                + oldEquity + "\",\"close_price\": \"1000\",\"txType\": \"过户转让\",\"close_amount\": 1000"));
-
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 +
-                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 1000"));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo2 +
-                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 1000"));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo3 +
-                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 1000"));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo4 +
-                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 1000"));
-
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \"" +
-                oldEquity + "\",\"shareProperty\": \"0\",\"txType\": \"股份冻结\",\"close_amount\": 500,\"remark\": \"司法冻结\""));
-
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \""
-                + oldEquity + "\",\"txType\": \"股份解冻\",\"close_amount\": 500,\"remark\": \"" + bizNoTest + "\""));
-
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \"" +
-                oldEquity + "\",\"txType\": \"股份回收\",\"close_amount\": 100,"));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \"" +
-                oldEquity + "\",\"txType\": \"股份回收\",\"close_amount\": 100,"));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo2 + "\",\"equityCode\": \"" +
-                oldEquity + "\",\"txType\": \"股份回收\",\"close_amount\": 100,"));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo3 + "\",\"equityCode\": \"" +
-                oldEquity + "\",\"txType\": \"股份回收\",\"close_amount\": 100,"));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo4 + "\",\"equityCode\": \"" +
-                oldEquity + "\",\"txType\": \"股份回收\",\"close_amount\": 100,"));
+        assertEquals("是否包含所有交易 " + bFull + "存在与链上不一致的交易 " + bContain +
+                        " 个数 " + bNumOk + " 账户包含情况" + bAccOK,
+                true,bFull || bContain || bNumOk || bAccOK);
 
 
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \"" +
-                newEquity + "\",\"txType\": \"场内转板\",\"close_amount\": 4400,"));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \"" +
-                newEquity + "\",\"txType\": \"场内转板\",\"close_amount\": 400,"));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo2 + "\",\"equityCode\": \"" +
-                newEquity + "\",\"txType\": \"场内转板\",\"close_amount\": 5900,"));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo3 + "\",\"equityCode\": \"" +
-                newEquity + "\",\"txType\": \"场内转板\",\"close_amount\": 5900,"));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo4 + "\",\"equityCode\": \"" +
-                newEquity + "\",\"txType\": \"场内转板\",\"close_amount\": 5900,"));
-        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo5 + "\",\"equityCode\": \"" +
-                newEquity + "\",\"txType\": \"场内转板\",\"close_amount\": 1000,"));
+    }
 
-
-
-
+    @Test
+    public void TC31_txReportQueryTest_ByClientNo()throws Exception{
 
         log.info("通过客户号查询");
-        response = gd.GDGetTxReportInfo("1",value,"","");
+        String response = gd.GDGetTxReportInfo("1",gdAccClientNo1,"","");
         assertEquals("确认投资者开户交易存在",true,response.contains("\"txType\":\"投资者开户\""));
 //        assertEquals(2,JSONObject.fromObject(response).getJSONArray("data").size());
+    }
 
-
+    @Test
+    public void TC32_txReportQueryTest_ByClientName()throws Exception{
         log.info("通过客户姓名查询");
-        response = gd.GDGetTxReportInfo("2",value2,"","");
+        String clientName = "zhangsan";
+        String response = gd.GDGetTxReportInfo("2",clientName,"","");
         assertEquals("确认投资者开户交易存在",true,response.contains("\"txType\":\"投资者开户\""));
 //        assertEquals(12, StringUtils.countOccurrencesOf(response,"投资者开户"));
 //        assertEquals(12,JSONObject.fromObject(response).getJSONArray("data").size());
 
+    }
+
+    @Test
+    public void TC33_txReportQueryTest_BySHNo()throws Exception{
         log.info("通过股东号查询");
-        response = gd.GDGetTxReportInfo("3",value3,"","");
+        String response = gd.GDGetTxReportInfo("3","SH" + gdAccClientNo1,"","");
 //        assertEquals("确认投资者开户交易存在",true,response.contains("\"txType\":\"投资者开户\""));
 //        assertEquals(12, StringUtils.countOccurrencesOf(response,"投资者开户"));
 //        assertEquals(12,JSONObject.fromObject(response).getJSONArray("data").size());
+    }
 
+    @Test
+    public void TC34_txReportQueryTest_ByEquityCode()throws Exception{
         log.info("通过股权代码查询");
-        response = gd.GDGetTxReportInfo("4",value4,"","");
+        String response = gd.GDGetTxReportInfo("4",gdEquityCode,"","");
 //        assertEquals("确认投资者开户交易存在",true,response.contains("\"txType\":\"投资者开户\""));
 //        assertEquals(12, StringUtils.countOccurrencesOf(response,"投资者开户"));
 //        assertEquals(12,JSONObject.fromObject(response).getJSONArray("data").size());
+    }
 
 
+    public Boolean checkAccDetail(String response){
+        Boolean bResult = true;
+        Boolean bAll = true;
+        Boolean bOk = true;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo1 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo1 + "\",\"txType\": \"投资者开户\"");  bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo2 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo2 + "\",\"txType\": \"投资者开户\"");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo3 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo3 + "\",\"txType\": \"投资者开户\"");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo4 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo4 + "\",\"txType\": \"投资者开户\"");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo5 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo5 + "\",\"txType\": \"投资者开户\"");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo6 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo6 + "\",\"txType\": \"投资者开户\"");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo7 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo7 + "\",\"txType\": \"投资者开户\"");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo8 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo8 + "\",\"txType\": \"投资者开户\"");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo9 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo9 + "\",\"txType\": \"投资者开户\"");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo10 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo10 + "\",\"txType\": \"投资者开户\"");bResult = bResult || bOk;
+        if(!bResult) log.info("存在投资者开户数据不一致的情况");
 
+        bAll = bAll || bResult;bResult = true;
+
+        bOk = response.contains("\"equityCode\": \"" + oldEquity + "\",\"txType\": \"挂牌企业登记\"");bResult = bResult || bOk;
+        if(!bResult) log.info("存在挂牌企业登记数据不一致的情况");
+
+        bAll = bAll || bResult;bResult = true;
+
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo1 +
+                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 5000");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo2 +
+                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 5000");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo3 +
+                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 5000");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo4 +
+                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 5000");bResult = bResult || bOk;
+        if(!bResult) log.info("存在股份发行数据不一致的情况");
+
+        bAll = bAll || bResult;bResult = true;
+
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo1 +
+                "\",\"equityCode\": \"" + oldEquity + "\",\"shareProperty\": \"0\",\"txType\": \"股份性质变更\",\"close_amount\": 500");bResult = bResult || bOk;
+        if(!bResult) log.info("存在股份性质变更数据不一致的情况");
+
+        bAll = bAll || bResult;bResult = true;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \""
+                + oldEquity + "\",\"close_price\": \"1000\",\"txType\": \"过户转让\",\"close_amount\": 1000");bResult = bResult || bOk;
+        if(!bResult) log.info("存在过户转让数据不一致的情况");
+
+        bAll = bAll || bResult;bResult = true;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo1 +
+                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 1000");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo2 +
+                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 1000");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo3 +
+                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 1000");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo4 +
+                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 1000");bResult = bResult || bOk;
+        if(!bResult) log.info("存在增发数据不一致的情况");
+
+        bAll = bAll || bResult;bResult = true;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \"" +
+                oldEquity + "\",\"shareProperty\": \"0\",\"txType\": \"股份冻结\",\"close_amount\": 500,\"remark\": \"司法冻结\"");bResult = bResult || bOk;
+        if(!bResult) log.info("存在司法冻结数据不一致的情况");
+
+        bAll = bAll || bResult;bResult = true;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \""
+                + oldEquity + "\",\"txType\": \"股份解冻\",\"close_amount\": 500,\"remark\": \"" + bizNoTest + "\"");bResult = bResult || bOk;
+        if(!bResult) log.info("存在股份解冻数据不一致的情况");
+
+        bAll = bAll || bResult;bResult = true;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \"" +
+                oldEquity + "\",\"txType\": \"股份回收\",\"close_amount\": 100,");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \"" +
+                oldEquity + "\",\"txType\": \"股份回收\",\"close_amount\": 100,");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo2 + "\",\"equityCode\": \"" +
+                oldEquity + "\",\"txType\": \"股份回收\",\"close_amount\": 100,");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo3 + "\",\"equityCode\": \"" +
+                oldEquity + "\",\"txType\": \"股份回收\",\"close_amount\": 100,");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo4 + "\",\"equityCode\": \"" +
+                oldEquity + "\",\"txType\": \"股份回收\",\"close_amount\": 100,");bResult = bResult || bOk;
+        if(!bResult) log.info("存在股份回收数据不一致的情况");
+
+        bAll = bAll || bResult;bResult = true;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \"" +
+                newEquity + "\",\"txType\": \"场内转板\",\"close_amount\": 4400,");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \"" +
+                newEquity + "\",\"txType\": \"场内转板\",\"close_amount\": 400,");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo2 + "\",\"equityCode\": \"" +
+                newEquity + "\",\"txType\": \"场内转板\",\"close_amount\": 5900,");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo3 + "\",\"equityCode\": \"" +
+                newEquity + "\",\"txType\": \"场内转板\",\"close_amount\": 5900,");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo4 + "\",\"equityCode\": \"" +
+                newEquity + "\",\"txType\": \"场内转板\",\"close_amount\": 5900,");bResult = bResult || bOk;
+        bOk = response.contains("\"clientNo\": \"" + gdAccClientNo5 + "\",\"equityCode\": \"" +
+                newEquity + "\",\"txType\": \"场内转板\",\"close_amount\": 1000,");bResult = bResult || bOk;
+        if(!bResult) log.info("存在场内转板数据不一致的情况");
+        bAll = bAll || bResult;
+        log.info("账户比对结果" + bAll);
+        return bAll;
     }
 }

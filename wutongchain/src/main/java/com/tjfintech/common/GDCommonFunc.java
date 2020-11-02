@@ -431,6 +431,7 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONArray jsonArray2 = com.alibaba.fastjson.JSONArray.parseArray(storeData2);
 
         if(!storeData2.contains(objId)){
+            log.info("storedata2 " + storeData2);
             assertEquals("未包含检查objID：" + objId,false,true);
             return null;
         }
@@ -438,7 +439,7 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject jobjOK = null;
 
         log.info("检查交易及登记array size:" + jsonArray2.size());
-        assertEquals(checkSize,jsonArray2.size());
+        assertEquals("json array:\n " + jsonArray2,checkSize,jsonArray2.size());
 
         log.info("获取指定存证信息");
         //获取登记存证信息 且权利人账户引用为指定的对象标识 股份性质为指定股份性质
