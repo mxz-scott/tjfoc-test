@@ -9,6 +9,7 @@ public class TestBuilder {
     private Contract contract;
     private Token token;
     private GuDeng guDeng;
+    private Kms kms;
     private Credit credit;
     TestBuilder() {
         setGoTest();
@@ -40,6 +41,7 @@ public class TestBuilder {
         token = new GoToken();
         guDeng = new GoGuDeng();
         credit = new GoCredit();
+        kms = new GoKms();
     }
 
 //    public void SetJavaTest() {
@@ -65,6 +67,7 @@ public class TestBuilder {
     public GuDeng getGuDeng() {
         return guDeng;
     }
+    public Kms getKms() {return kms;}
     public Credit getCredit() {
         return credit;
     }
