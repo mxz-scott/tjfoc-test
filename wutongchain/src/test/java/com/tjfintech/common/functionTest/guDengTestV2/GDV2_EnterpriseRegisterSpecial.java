@@ -9,8 +9,8 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 //import net.sf.json.JSONObject;
-import net.sf.json.JSONArray;
 import org.junit.*;
+import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 import com.alibaba.fastjson.JSONObject;
 
@@ -34,6 +34,10 @@ public class GDV2_EnterpriseRegisterSpecial {
     GDUnitFunc uf = new GDUnitFunc();
     public static String bizNoTest = "test" + Random(12);
 
+    @Rule
+    public TestName tm = new TestName();
+
+
     @BeforeClass
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
@@ -48,6 +52,7 @@ public class GDV2_EnterpriseRegisterSpecial {
 
     @After
     public void calJGDataAfterTx()throws Exception{
+        testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
 //        uf.calJGData();
         uf.calJGDataEachHeight();

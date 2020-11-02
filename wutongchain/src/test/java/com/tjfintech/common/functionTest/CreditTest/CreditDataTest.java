@@ -3,12 +3,14 @@ package com.tjfintech.common.functionTest.CreditTest;
 import com.alibaba.fastjson.JSON;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.CommonFunc;
+import com.tjfintech.common.CreditBeforeCondition;
 import com.tjfintech.common.Interface.Credit;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.UtilsClass;
+import com.tjfintech.common.utils.UtilsClassCredit;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.*;
@@ -18,6 +20,7 @@ import org.mockito.internal.configuration.MockAnnotationProcessor;
 import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClassCredit.*;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -31,24 +34,28 @@ public class CreditDataTest {
     Credit credit = testBuilder.getCredit();
     Store store = testBuilder.getStore();
     CommonFunc commonFunc = new CommonFunc();
-    CreditCommonFunc creditCommonFunc = new CreditCommonFunc();
     UtilsClass utilsClass = new UtilsClass();
-    WVMContractTest wvm = new WVMContractTest();
+    UtilsClassCredit utilsClassCredit = new UtilsClassCredit();
+    CreditBeforeCondition creditBeforeCondition = new CreditBeforeCondition();
 
     @BeforeClass
     public static void init() throws Exception {
 
-        CreditCommonFunc creditCommonFunc = new CreditCommonFunc();
+        UtilsClassCredit utilsClassCredit = new UtilsClassCredit();
         UtilsClass utilsClass = new UtilsClass();
 
         if (authContractName.isEmpty()) {
             BeforeCondition beforeCondition = new BeforeCondition();
+            CreditBeforeCondition creditBeforeCondition = new CreditBeforeCondition();
             beforeCondition.updatePubPriKey();
-            beforeCondition.installZXContract();
+            creditBeforeCondition.installZXContract();
         }
         //更新zxconfig配置文件Code和CreditdataPath
-        creditCommonFunc.setZXConfig(utilsClass.getIPFromStr(SDKADD), "Common", "Code", zxCode);
-        creditCommonFunc.setZXConfig(utilsClass.getIPFromStr(SDKADD), "SmartContract", "CreditdataPath", creditContractName);
+        utilsClassCredit.setZXConfig(utilsClass.getIPFromStr(SDKADD), "Common", "Code", zxCode);
+        utilsClassCredit.setZXConfig(utilsClass.getIPFromStr(SDKADD), "SmartContract", "CreditdataPath", creditContractName);
+        utilsClassCredit.setZXConfig(utilsClass.getIPFromStr(SDKADD), "SmartContract", "AuthorizationPath", authContractName);
+        utilsClassCredit.setZXConfig(utilsClass.getIPFromStr(SDKADD), "SmartContract", "ViewhistoryPath", viewContractName);
+        utilsClassCredit.setZXConfig(utilsClass.getIPFromStr(SDKADD), "SmartContract", "IdentityPath", identityContractName);
         shellExeCmd(utilsClass.getIPFromStr(SDKADD), killSDKCmd, startSDKCmd); //重启sdk api
         sleepAndSaveInfo(SLEEPTIME, "等待SDK重启");
     }
@@ -78,13 +85,13 @@ public class CreditDataTest {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains(zxCode));
 
-        int i = 100000;
+        int i = 3;
         for (int g = 1; g < i; g++) {
             //添加征信数据
             String enterprisecode = "enterprise" + utilsClass.Random(8);
             String hash = "hash" + utilsClass.Random(8);
             String time = String.valueOf(System.currentTimeMillis());
-            List<Map> creditlist = creditCommonFunc.constructCreditData(enterprisecode, enterprisecode, zxCode, zxCode, hash,
+            List<Map> creditlist = utilsClassCredit.constructCreditData(enterprisecode, enterprisecode, zxCode, zxCode, hash,
                     "a", time, "a", "A");
             response = credit.creditCreditdataAdd(creditlist, "");
             assertEquals("200", JSONObject.fromObject(response).getString("state"));
@@ -94,13 +101,14 @@ public class CreditDataTest {
             //查询征信数据
             response = credit.creditCreditdataQuery(enterprisecode);
             assertEquals("200", JSONObject.fromObject(response).getString("state"));
-            assertEquals(enterprisecode, JSONObject.fromObject(response).getJSONArray("data").getJSONObject(0).getString("EnterpriseCode"));
+            assertEquals(enterprisecode, JSONObject.fromObject(response).getJSONArray("data").getJSONObject(0).
+                    getString("EnterpriseCode"));
 
             //添加授权记录
             ArrayList<String> orgid = new ArrayList<>();
             orgid.add(zxCode);
-            List<Map> authlist = creditCommonFunc.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
-                    zxCode, zxCode, "aa", "https://www.baidu.com/", hash, "aa", time, 10);
+            List<Map> authlist = utilsClassCredit.constructAuthorizationData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC",
+                    "ICBC", zxCode, zxCode, "aa", "https://www.baidu.com/", hash, "aa", time, 10);
             response = credit.creditAuthorizationAdd(orgid, authlist);
             assertEquals("200", JSONObject.fromObject(response).getString("state"));
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
@@ -113,13 +121,12 @@ public class CreditDataTest {
             assertThat(response, allOf(containsString(zxCode), containsString(enterprisecode)));
 
             //查询记录上链
-            List<Map> viewlist = creditCommonFunc.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
+            List<Map> viewlist = utilsClassCredit.constructViewData(enterprisecode, enterprisecode, zxCode, zxCode, "ICBC", "ICBC",
                     zxCode, zxCode, "aa", "aa", "aa", time);
             response = credit.creditViewhistoryAdd(orgid, viewlist);
             assertEquals("200", JSONObject.fromObject(response).getString("state"));
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                     utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-            String viewkey;
         }
 
     }
@@ -132,19 +139,19 @@ public class CreditDataTest {
     @Test
     public void multiInstallCreditdataContractTest() throws Exception {
 
-        String creditfilePath = "credit/";
+        String creditfilePath = testDataPath + "credit/";
         String creditdata = "creditdata.wlang";
 
         //安装多个creditdata合约
-        int i = 200;
+        int i = 3;
         String oldStr = "CreditDataContract";
         for (int g = 1; g < i; g++) {
-            String repStr = "CreditDataContract" + String.valueOf(g);
+            String repStr = "CreditDataContract" + g;
             FileOperation fileOper = new FileOperation();
             //安装creditdata.wlang
-            fileOper.replace(resourcePath + creditfilePath + creditdata, "CreditDataContract", repStr);
+            fileOper.replace(creditfilePath + creditdata, "CreditDataContract", repStr);
             sleepAndSaveInfo(2000, "等待合约更新");
-            String response = wvm.wvmInstallTest(creditfilePath + "creditdata" + "_temp.wlang", "");
+            String response = creditBeforeCondition.contractInstallTest(creditfilePath + "creditdata" + "_temp.wlang", "");
             String contractname = JSONObject.fromObject(response).getJSONObject("data").getString("name");
             log.info(contractname + "****" + repStr);
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
@@ -156,8 +163,8 @@ public class CreditDataTest {
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                     utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
-            List<Map> list = creditCommonFunc.constructCreditData("A", "2020092506", oldStr, oldStr, "hash1",
-                    "a", "2020-09-24-15-00-00", "a", "A");
+            List<Map> list = utilsClassCredit.constructCreditData("A", "2020092506", oldStr, oldStr,
+                    "hash1", "a", "2020-09-24-15-00-00", "a", "A");
             credit.creditCreditdataAdd(list, contractname);
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                     utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);

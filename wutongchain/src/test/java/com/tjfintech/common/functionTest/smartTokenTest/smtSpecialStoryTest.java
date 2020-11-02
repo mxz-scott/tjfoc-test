@@ -11,20 +11,16 @@ import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.apache.commons.codec.binary.Hex;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -313,7 +309,7 @@ public class smtSpecialStoryTest {
         CommonFunc commonFuncTeSA = new CommonFunc();
         FileOperation fileOper = new FileOperation();
         String originKey = "contract Account";
-        fileOper.replace(resourcePath + abfileName, originKey, originKey+System.currentTimeMillis());
+        fileOper.replace(testDataPath + abfileName, originKey, originKey+System.currentTimeMillis());
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response = wvmContractTestSA.wvmInstallTest(abfileName.substring(0,abfileName.lastIndexOf(".")) + "_temp.wlang","");
@@ -334,7 +330,7 @@ public class smtSpecialStoryTest {
         String tempSM3Hash = certTool.getSm3Hash(PEER4IP,sigMsg1);
         String cryptMsg = certTool.sign(PEER4IP ,PRIKEY1,"",tempSM3Hash,"hex");
 
-        String pubkey = utilsClass.readStringFromFile(resourcePath + "SM2/keys1/pubkey.pem").replaceAll("\r\n","\n");
+        String pubkey = utilsClass.readStringFromFile(testDataPath + "cert/SM2/keys1/pubkey.pem").replaceAll("\r\n","\n");
 //        pubkey = (new BASE64Decoder()).decodeBuffer(PUBKEY1).toString().replaceAll("\r\n","\n");
 
         String approveResp = multiSign.SmartIssueTokenApprove(sigMsg1,cryptMsg,pubkey);

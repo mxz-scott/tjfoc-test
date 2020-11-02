@@ -10,10 +10,8 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 import org.springframework.util.StringUtils;
 
@@ -40,11 +38,15 @@ public class GDV2_AllFlowTest_Equity {
     GDUnitFunc uf = new GDUnitFunc();
     public static String bizNoTest = "test" + Random(12);
     Boolean bNotCheck = false;
+    public static String oldEquity = "";
+    public static String newEquity = "";
 
 //    long start = (new Date()).getTime();
 //    long end = 0;
 //    int beginHeigh = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
 //    int endHeight = 0;
+    @Rule
+    public TestName tm = new TestName();
 
     @BeforeClass
     public static void Before()throws Exception{
@@ -58,6 +60,15 @@ public class GDV2_AllFlowTest_Equity {
 //        gdBefore.initRegulationData();
         bondProductInfo = null;
         gdEquityCode = "fondTest" + Random(12);
+        oldEquity = gdEquityCode;
+    }
+
+    @After
+    public void calJGDataAfterTx()throws Exception{
+        testCurMethodName = tm.getMethodName();
+        GDUnitFunc uf = new GDUnitFunc();
+//        uf.calJGData();
+        uf.calJGDataEachHeight();
     }
 
     @Test
@@ -87,7 +98,7 @@ public class GDV2_AllFlowTest_Equity {
         //查询企业股东信息
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         assertEquals("400",JSONObject.fromObject(query).getString("state"));
-        assertEquals("该股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
+        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
 
         //查询股东持股情况 无当前股权代码信息
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
@@ -135,7 +146,7 @@ public class GDV2_AllFlowTest_Equity {
         //查询企业股东信息
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         assertEquals("400",JSONObject.fromObject(query).getString("state"));
-        assertEquals("该股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
+        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
 
         //查询股东持股情况 无当前股权代码信息
         query = gd.GDGetShareHolderInfo(gdContractAddress,cltNo);
@@ -753,7 +764,7 @@ public class GDV2_AllFlowTest_Equity {
 
         registerInfo.put("登记流水号","recylce000001");
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
+        List<Map> shareList = gdConstructShareList(gdAccount1,100,1);
 
         String response= gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList,remark);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -774,8 +785,8 @@ public class GDV2_AllFlowTest_Equity {
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();
-        respShareList = gdConstructQueryShareList(gdAccount1,4400,0,0,mapShareENCN().get("0"),respShareList);
-        respShareList = gdConstructQueryShareList(gdAccount1,500,1,0,mapShareENCN().get("1"),respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount1,4500,0,0,mapShareENCN().get("0"),respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount1,400,1,0,mapShareENCN().get("1"),respShareList);
         respShareList = gdConstructQueryShareList(gdAccount5,1000,0,0,mapShareENCN().get("0"),respShareList);
         List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,6000,0,0,mapShareENCN().get("0"), respShareList);
         List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,6000,0,0,mapShareENCN().get("0"), respShareList2);
@@ -802,9 +813,9 @@ public class GDV2_AllFlowTest_Equity {
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":4400,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":4500,\"lockAmount\":0}"));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":400,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
         assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
@@ -885,8 +896,8 @@ public class GDV2_AllFlowTest_Equity {
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();
-        respShareList = gdConstructQueryShareList(gdAccount1,4300,0,0,mapShareENCN().get("0"),respShareList);
-        respShareList = gdConstructQueryShareList(gdAccount1,500,1,0,mapShareENCN().get("1"),respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount1,4400,0,0,mapShareENCN().get("0"),respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount1,400,1,0,mapShareENCN().get("1"),respShareList);
         respShareList = gdConstructQueryShareList(gdAccount5,1000,0,0,mapShareENCN().get("0"),respShareList);
         List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,5900,0,0,mapShareENCN().get("0"), respShareList);
         List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,5900,0,0,mapShareENCN().get("0"), respShareList2);
@@ -912,9 +923,9 @@ public class GDV2_AllFlowTest_Equity {
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":4300,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":4400,\"lockAmount\":0}"));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":400,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
         assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
@@ -962,6 +973,7 @@ public class GDV2_AllFlowTest_Equity {
         String oldEquityCode = gdEquityCode;
         String newEquityCode = gdEquityCode + Random(5);
         String cpnyId = gdCompanyID;
+        newEquity = newEquityCode;
 
         String flowNo = "changeboard000001";
         List<Map> regList = uf.getAllHolderListReg(gdEquityCode,flowNo);
@@ -986,8 +998,8 @@ public class GDV2_AllFlowTest_Equity {
 
         //实际应该持股情况信息
         List<Map> respShareList = new ArrayList<>();
-        respShareList = gdConstructQueryShareList(gdAccount1,4300,0,0,mapShareENCN().get("0"),respShareList);
-        respShareList = gdConstructQueryShareList(gdAccount1,500,1,0,mapShareENCN().get("1"),respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount1,4400,0,0,mapShareENCN().get("0"),respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount1,400,1,0,mapShareENCN().get("1"),respShareList);
         respShareList = gdConstructQueryShareList(gdAccount5,1000,0,0,mapShareENCN().get("0"),respShareList);
         List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,5900,0,0,mapShareENCN().get("0"), respShareList);
         List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,5900,0,0,mapShareENCN().get("0"), respShareList2);
@@ -1012,9 +1024,9 @@ public class GDV2_AllFlowTest_Equity {
         assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
         assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":4300,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":4400,\"lockAmount\":0}"));
         assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":400,\"lockAmount\":0}"));
 
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
         assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
@@ -1382,8 +1394,8 @@ public class GDV2_AllFlowTest_Equity {
             bNumOk = false;
         }
         txType = "股份发行";
-        if(StringUtils.countOccurrencesOf(response,txType) != 2) {
-            log.info(txType + "交易2 缺失：" + StringUtils.countOccurrencesOf(response,txType));
+        if(StringUtils.countOccurrencesOf(response,txType) != 8) {
+            log.info(txType + "交易8 缺失：" + StringUtils.countOccurrencesOf(response,txType));
             bNumOk = false;
         }
 
@@ -1423,11 +1435,93 @@ public class GDV2_AllFlowTest_Equity {
         assertEquals("存在与链上不一致的交易个数",true,bNumOk);
 
 
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo1 + "\",\"txType\": \"投资者开户\""));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo2 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo2 + "\",\"txType\": \"投资者开户\""));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo3 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo3 + "\",\"txType\": \"投资者开户\""));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo4 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo4 + "\",\"txType\": \"投资者开户\""));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo5 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo5 + "\",\"txType\": \"投资者开户\""));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo6 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo6 + "\",\"txType\": \"投资者开户\""));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo7 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo7 + "\",\"txType\": \"投资者开户\""));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo8 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo8 + "\",\"txType\": \"投资者开户\""));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo9 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo9 + "\",\"txType\": \"投资者开户\""));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo10 +
+                "\",\"shareholderNo\": \"SH" + gdAccClientNo10 + "\",\"txType\": \"投资者开户\""));
+
+        assertEquals(true,response.contains("\"equityCode\": \"" + oldEquity +
+                "\",\"txType\": \"挂牌企业登记\""));
+
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 +
+                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 5000"));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo2 +
+                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 5000"));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo3 +
+                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 5000"));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo4 +
+                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 5000"));
+
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 +
+                "\",\"equityCode\": \"" + oldEquity + "\",\"shareProperty\": \"0\",\"txType\": \"股份性质变更\",\"close_amount\": 500"));
+
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \""
+                + oldEquity + "\",\"close_price\": \"1000\",\"txType\": \"过户转让\",\"close_amount\": 1000"));
+
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 +
+                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 1000"));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo2 +
+                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 1000"));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo3 +
+                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 1000"));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo4 +
+                "\",\"equityCode\": \"" + oldEquity + "\",\"txType\": \"股份发行\",\"close_amount\": 1000"));
+
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \"" +
+                oldEquity + "\",\"shareProperty\": \"0\",\"txType\": \"股份冻结\",\"close_amount\": 500,\"remark\": \"司法冻结\""));
+
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \""
+                + oldEquity + "\",\"txType\": \"股份解冻\",\"close_amount\": 500,\"remark\": \"" + bizNoTest + "\""));
+
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \"" +
+                oldEquity + "\",\"txType\": \"股份回收\",\"close_amount\": 100,"));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \"" +
+                oldEquity + "\",\"txType\": \"股份回收\",\"close_amount\": 100,"));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo2 + "\",\"equityCode\": \"" +
+                oldEquity + "\",\"txType\": \"股份回收\",\"close_amount\": 100,"));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo3 + "\",\"equityCode\": \"" +
+                oldEquity + "\",\"txType\": \"股份回收\",\"close_amount\": 100,"));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo4 + "\",\"equityCode\": \"" +
+                oldEquity + "\",\"txType\": \"股份回收\",\"close_amount\": 100,"));
+
+
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \"" +
+                newEquity + "\",\"txType\": \"场内转板\",\"close_amount\": 4400,"));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo1 + "\",\"equityCode\": \"" +
+                newEquity + "\",\"txType\": \"场内转板\",\"close_amount\": 400,"));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo2 + "\",\"equityCode\": \"" +
+                newEquity + "\",\"txType\": \"场内转板\",\"close_amount\": 5900,"));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo3 + "\",\"equityCode\": \"" +
+                newEquity + "\",\"txType\": \"场内转板\",\"close_amount\": 5900,"));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo4 + "\",\"equityCode\": \"" +
+                newEquity + "\",\"txType\": \"场内转板\",\"close_amount\": 5900,"));
+        assertEquals(true,response.contains("\"clientNo\": \"" + gdAccClientNo5 + "\",\"equityCode\": \"" +
+                newEquity + "\",\"txType\": \"场内转板\",\"close_amount\": 1000,"));
+
+
+
+
 
         log.info("通过客户号查询");
         response = gd.GDGetTxReportInfo("1",value,"","");
         assertEquals("确认投资者开户交易存在",true,response.contains("\"txType\":\"投资者开户\""));
-        assertEquals(1,JSONObject.fromObject(response).getJSONArray("data").size());
+//        assertEquals(2,JSONObject.fromObject(response).getJSONArray("data").size());
 
 
         log.info("通过客户姓名查询");
@@ -1448,14 +1542,7 @@ public class GDV2_AllFlowTest_Equity {
 //        assertEquals(12, StringUtils.countOccurrencesOf(response,"投资者开户"));
 //        assertEquals(12,JSONObject.fromObject(response).getJSONArray("data").size());
 
+
+
     }
-
-    @After
-    public void calJGDataAfterTx()throws Exception{
-        GDUnitFunc uf = new GDUnitFunc();
-//        uf.calJGData();
-        uf.calJGDataEachHeight();
-    }
-
-
 }

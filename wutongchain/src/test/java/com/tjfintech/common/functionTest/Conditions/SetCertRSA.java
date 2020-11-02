@@ -11,7 +11,7 @@ public class SetCertRSA {
 
    @Test
     public void test(){
-        UtilsClass.certPath = "RSA";
+        UtilsClass.certPath =  "cert/" + "RSA";
         MULITADD1 =""; //utxo测试时是否执行更新key以及重新生成地址的判断条件
     }
 

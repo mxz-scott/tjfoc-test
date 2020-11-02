@@ -18,6 +18,7 @@ import org.hamcrest.CoreMatchers;
 import sun.misc.BASE64Encoder;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.tjfintech.common.utils.FileOperation.*;
@@ -1206,7 +1207,8 @@ public class CommonFunc {
         }
         Date dtTest = new Date();
         long nowTime = dtTest.getTime();
-        String diffSaveFile = resourcePath + nowTime + "-diff.txt";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        String diffSaveFile = testResultPath  + "compare" + sdf.format(nowTime) + "-diff.txt";
         File diff = new File(diffSaveFile);
         if(diff.exists()) diff.delete();//如果存在则先删除
 

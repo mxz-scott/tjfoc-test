@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.*;
+import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
@@ -40,6 +41,8 @@ public class GDV2_SceneTest_01 {
     GDUnitFunc uf = new GDUnitFunc();
     public Boolean bCreateAccOnce = true;
 
+    @Rule
+    public TestName tm = new TestName();
     @BeforeClass
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
@@ -75,6 +78,7 @@ public class GDV2_SceneTest_01 {
 
     @After
     public void calJGDataAfterTx()throws Exception{
+        testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
 //        uf.calJGData();
         uf.calJGDataEachHeight();

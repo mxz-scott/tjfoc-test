@@ -535,7 +535,7 @@ public class TestTxType {
         WVMContractTest wvm = new WVMContractTest();
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
-        fileOper.replace(resourcePath + wvm.wvmFile + ".txt", wvm.orgName, ctName);
+        fileOper.replace(testDataPath + "wvm/" + wvm.wvmFile + ".txt", wvm.orgName, ctName);
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvm.wvmInstallTest( wvm.wvmFile +"_temp.txt",PRIKEY1);
@@ -583,7 +583,7 @@ public class TestTxType {
 
         //检查安装合约交易详情内参数
         String data = utilsClass.encryptBASE64(utilsClass.readInput(
-                resourcePath + "wvm_temp.txt").toString().trim().getBytes()).replaceAll("\r\n", "");
+                testDataPath + "wvm/" + "wvm_temp.txt").toString().trim().getBytes()).replaceAll("\r\n", "");
         //合约安装交易详情不再返回合约地址
 //        assertEquals(ctHash,
 //                jsonObjectCreate.getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("name"));

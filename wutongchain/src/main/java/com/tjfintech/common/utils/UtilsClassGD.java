@@ -24,7 +24,7 @@ public class UtilsClassGD {
 //    public static String gdPlatfromKeyID = "bu2n8f52vf0as7lne720";
     //外网对接
 //    public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
-//    public static String gdPlatfromKeyID = "bu77maphdkef95op7g00";
+//    public static String gdPlatfromKeyID = "bu8kas9hdkef95op7i2g";
     public static String gdEquityCode = "gdECSZ00" + UtilsClass.Random(6);
     public static String gdCompanyID = "gdCmpyId0001" + UtilsClass.Random(6);
 //    public static String gdCompanyID = "gdCmpyId0001";
@@ -65,6 +65,8 @@ public class UtilsClassGD {
     public static long end = 0;
     public static int beginHeigh = 0;
     public static int endHeight = 0;
-    public static int blockHeight = 4179;
+	public static int blockHeight = 4892;
+    public static long timeStamp = (new Date()).getTime();
+    public static String testCurMethodName = "";
 
 }

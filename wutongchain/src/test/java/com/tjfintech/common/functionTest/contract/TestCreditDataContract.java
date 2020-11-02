@@ -6,7 +6,7 @@ import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.UtilsClass;
 import net.sf.json.JSONObject;
 
-import static com.tjfintech.common.utils.UtilsClass.resourcePath;
+import static com.tjfintech.common.utils.UtilsClass.testResultPath;
 import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 
 public class TestCreditDataContract {
@@ -42,7 +42,7 @@ public class TestCreditDataContract {
         String sign = "3045022100ac8c5674f4eaab179e645ae7ddaa259317008e316faa0b5b8f13a87a9884da8402206510431c54d06a5ab905d81d56a2aabec5f327dc9abcf0ef9200918a9e0b5b40";
         String name = "76b24a2b5cb79b4ea3e971f53379aafea7c79e2fabec43cdb505a865c3bdb408";
 
-        String usccSaveFile = resourcePath + "uscc.txt";
+        String usccSaveFile = testResultPath + "uscc.txt";
         FileOperation fo = new FileOperation();
 
         for(int i=0;i<1500000;i++) {

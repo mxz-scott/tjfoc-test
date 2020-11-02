@@ -11,7 +11,6 @@ import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.apache.commons.codec.binary.Hex;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -19,7 +18,6 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -970,7 +968,7 @@ public class smtMultiTest {
         String tempSM3Hash = certTool.getSm3Hash(PEER4IP,sigMsg1);
         String cryptMsg = certTool.sign(PEER4IP ,PRIKEY1,"",tempSM3Hash,"hex");
 
-        String pubkey = utilsClass.readStringFromFile(resourcePath + "SM2/keys1/pubkey.pem").replaceAll("\r\n","\n");
+        String pubkey = utilsClass.readStringFromFile(testDataPath + "cert/SM2/keys1/pubkey.pem").replaceAll("\r\n","\n");
 //        pubkey = (new BASE64Decoder()).decodeBuffer(PUBKEY1).toString().replaceAll("\r\n","\n");
 
         String approveResp = multiSign.SmartIssueTokenApprove(sigMsg1,cryptMsg,pubkey);

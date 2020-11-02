@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.*;
+import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
@@ -33,6 +34,9 @@ public class GDV2_SceneTest_ChangeBoard {
     public static String bizNoTest = "test" + Random(12);
     GDUnitFunc uf = new GDUnitFunc();
     List<Map> regList = new ArrayList<>();
+
+    @Rule
+    public TestName tm = new TestName();
 
     @BeforeClass
     public static void Before()throws Exception{
@@ -66,6 +70,7 @@ public class GDV2_SceneTest_ChangeBoard {
 
     @After
     public void calJGDataAfterTx()throws Exception{
+        testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
 //        uf.calJGData();
         uf.calJGDataEachHeight();
@@ -181,7 +186,7 @@ public class GDV2_SceneTest_ChangeBoard {
 
         query  = gd.GDGetEnterpriseShareInfo(newEquityCode);
         assertEquals("400",JSONObject.fromObject(query).getString("state"));
-        assertEquals("该股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
+        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
 
         query  = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
@@ -208,7 +213,7 @@ public class GDV2_SceneTest_ChangeBoard {
 
         String query  = gd.GDGetEnterpriseShareInfo(newEquityCode);
         assertEquals("400",JSONObject.fromObject(query).getString("state"));
-        assertEquals("该股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
+        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
 
         query  = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
@@ -243,7 +248,7 @@ public class GDV2_SceneTest_ChangeBoard {
 
         String query  = gd.GDGetEnterpriseShareInfo(newEquityCode);
         assertEquals("400",JSONObject.fromObject(query).getString("state"));
-        assertEquals("该股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
+        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
 
         query  = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
@@ -283,7 +288,7 @@ public class GDV2_SceneTest_ChangeBoard {
 
         String query  = gd.GDGetEnterpriseShareInfo(oldEquityCode);
         assertEquals("400",JSONObject.fromObject(query).getString("state"));
-        assertEquals("该股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
+        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
 
         query  = gd.GDGetEnterpriseShareInfo(newEquityCode1);
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
@@ -294,11 +299,11 @@ public class GDV2_SceneTest_ChangeBoard {
 
         query  = gd.GDGetEnterpriseShareInfo(newEquityCode1);
         assertEquals("400",JSONObject.fromObject(query).getString("state"));
-        assertEquals("该股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
+        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
 
         query  = gd.GDGetEnterpriseShareInfo(oldEquityCode);
         assertEquals("400",JSONObject.fromObject(query).getString("state"));
-        assertEquals("该股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
+        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
 
         query  = gd.GDGetEnterpriseShareInfo(newEquityCode2);
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
@@ -318,11 +323,11 @@ public class GDV2_SceneTest_ChangeBoard {
 
         query  = gd.GDGetEnterpriseShareInfo(newEquityCode1);
         assertEquals("400",JSONObject.fromObject(query).getString("state"));
-        assertEquals("该股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
+        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
 
         query  = gd.GDGetEnterpriseShareInfo(oldEquityCode);
         assertEquals("400",JSONObject.fromObject(query).getString("state"));
-        assertEquals("该股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
+        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
 
         query  = gd.GDGetEnterpriseShareInfo(newEquityCode2);
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
@@ -698,11 +703,12 @@ public class GDV2_SceneTest_ChangeBoard {
         String response = gd.GDShareChangeBoard("bta47g1pgfltc7nntfb0",gdCompanyID,gdEquityCode,
                 "gdEC" + Random(12),regList, equityProductInfo,bondProductInfo);
         //链上报错
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-        sleepAndSaveInfo(SLEEPTIME);
-        assertEquals("404",JSONObject.fromObject(
-                store.GetTxDetail(JSONObject.fromObject(response).getJSONObject("data").getString("txId"))
-                    ).getString("state"));
+        assertEquals("505",JSONObject.fromObject(response).getString("state"));
+        assertEquals("数字签名出错",JSONObject.fromObject(response).getString("message"));
+//        sleepAndSaveInfo(SLEEPTIME);
+//        assertEquals("404",JSONObject.fromObject(
+//                store.GetTxDetail(JSONObject.fromObject(response).getJSONObject("data").getString("txId"))
+//                    ).getString("state"));
 
     }
 

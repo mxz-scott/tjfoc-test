@@ -159,22 +159,22 @@ public class StoreTest {
     @Test
     public void TC278_createBigSizeStore() throws Exception {
 
-        String Data = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath +
-                "bigsize1.txt");
+        String Data = UtilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath +
+                "store/bigsize1.txt");
         String response = store.CreateStore(Data);
         assertThat(response, containsString("200"));
         assertThat(response, containsString("data"));
 
 
-        String Data2 = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
-                +  "bigsize2.txt");
+        String Data2 = UtilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath
+                + "store/bigsize2.txt");
         String response2 = store.CreateStore(Data2);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("data"));
 
 
-        String Data3 = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
-                + "bigsize3.txt");
+        String Data3 = UtilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath
+                + "store/bigsize3.txt");
         String response3 = store.CreateStore(Data3);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("data"));

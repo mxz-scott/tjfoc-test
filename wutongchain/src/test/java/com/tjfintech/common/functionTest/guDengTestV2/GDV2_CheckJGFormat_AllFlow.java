@@ -11,10 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 
 import java.math.BigDecimal;
@@ -46,6 +44,8 @@ public class GDV2_CheckJGFormat_AllFlow {
     long changeAmount = 500;
     long transferAmount = 1000;
 
+    @Rule
+    public TestName tm = new TestName();
     /***
      * 测试说明
      * 转让 会转给新的账户 因此转让会使得总股东数增加
@@ -68,6 +68,7 @@ public class GDV2_CheckJGFormat_AllFlow {
 
     @After
     public void calJGDataAfterTx()throws Exception{
+        testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
 //        uf.calJGData();
         uf.calJGDataEachHeight();
@@ -373,12 +374,12 @@ public class GDV2_CheckJGFormat_AllFlow {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         String sd = sdf.format(new Date(onChainTS)); // 时间戳转换日期
         log.info("检查过户转让存证登记格式化及信息内容与传入一致:" + tempObjIdFrom);
-        fromNow.put("变动额",0);
+        fromNow.put("变动额","-" + transferAmount);
         fromNow.put("登记时间",txInformation.get("成交时间").toString());
         fromNow.put("当前可用余额",issueAmount - changeAmount - transferAmount);
         fromNow.put("当前冻结余额", 0);   //当前冻结余额修改为实际冻结数
 
-        toNow.put("变动额",0);
+        toNow.put("变动额",transferAmount);
         toNow.put("当前冻结余额", 0);   //当前冻结余额修改为实际冻结数
         toNow.put("登记时间",txInformation.get("成交时间").toString());
         toNow.put("当前可用余额",transferAmount);

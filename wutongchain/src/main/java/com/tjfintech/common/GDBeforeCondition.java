@@ -686,6 +686,10 @@ public class GDBeforeCondition {
         List<String> listPubFile = new ArrayList<>();
         listPubFile.add("tix.pdf");
 
+        //诚信档案
+        List<Map> listCredit = new ArrayList<>();
+        Map mapCd = new HashMap();
+
         mapTemp.clear();
 
         mapTemp.put("信批对象标识", "disoid00001");
@@ -708,6 +712,27 @@ public class GDBeforeCondition {
         mapTemp.put("重大事件类型", 0);
         mapTemp.put("文件列表", listPubFile);
         mapTemp.put("提报时间", "2020/9/6");
+
+
+        mapCd.put("提供方主体引用", "aaaaaaaaa");
+        mapCd.put("提供方名称", "aaa" );
+        mapCd.put("认定方主体标识引用", "idref");
+        mapCd.put("认定方名称", "rdname");
+        mapCd.put("鉴定方主体标识引用", "jdbiaozhi");
+        mapCd.put("鉴定方名称", "jdname");
+        mapCd.put("事项编号", "xyzza");
+        mapCd.put("事项名称", "item_name");
+        mapCd.put("事项类型", 14);
+        mapCd.put("事项描述", "describe_aaasss");
+        mapCd.put("效力期限", 1);
+        mapCd.put("开始日期", "2020/10/29");
+        mapCd.put("结束日期", "2020/12/30");
+        mapCd.put("状态", 1);
+        mapCd.put("事项凭证",listPubFile);
+        listCredit.add(mapCd);
+        listCredit.add(mapCd);
+
+        mapTemp.put("诚信档案",listCredit);
         return mapTemp;
     }
 

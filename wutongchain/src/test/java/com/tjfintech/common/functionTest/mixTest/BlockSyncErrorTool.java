@@ -39,7 +39,7 @@ public class BlockSyncErrorTool {
         cf.setSDKOnePeer(uc.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true","tjfoc.com");
         uc.setAndRestartSDK();//重启SDK
 
-        int blockHeight = 1625;
+        int blockHeight = 35;
         String blockDetail1 = store.GetBlockByHeight(blockHeight);
         log.info(blockDetail1);
         Map<String,String> mapHashDetail = new HashMap<>();
@@ -55,7 +55,7 @@ public class BlockSyncErrorTool {
         }
 
         //设置第二个节点
-        cf.setSDKOnePeer(uc.getIPFromStr(SDKADD),PEER2IP + ":" + PEER2RPCPort,"true","tjfoc.com");
+        cf.setSDKOnePeer(uc.getIPFromStr(SDKADD),PEER3IP + ":" + PEER3RPCPort,"true","tjfoc.com");
         uc.setAndRestartSDK();//重启SDK
 
         String blockDetail2 = store.GetBlockByHeight(blockHeight);
@@ -63,7 +63,7 @@ public class BlockSyncErrorTool {
         Map<String,String> mapHashDetail2 = new HashMap<>();
         Map<String,String> mapHashRaw2 = new HashMap<>();
 
-        log.info(PEER2IP + " check height: " + blockHeight);
+        log.info(PEER3IP + " check height: " + blockHeight);
         String[] txs2 = getTxsArray(blockHeight);
 
         log.info("区块交易个数 " + txs2.length);
@@ -76,8 +76,9 @@ public class BlockSyncErrorTool {
 
         log.info("**********************************************************");
         //比较区块详情
-        if(blockDetail1 == blockDetail2)  log.info("区块详情一致");
-        else {
+        if(blockDetail1.trim().equals(blockDetail2.trim()))  {
+            log.info("区块详情一致");
+        }else {
             log.info("区块详情不一致");
             log.info(blockDetail1);
             log.info(blockDetail2);

@@ -108,7 +108,7 @@ public class UpgradeTestHistoryData {
                 diffRespList.add(afterUpgrade.get(key));
             }
         }
-        String diffSaveFile = resourcePath + "diff.txt";
+        String diffSaveFile = testResultPath + "compare/" + "diff.txt";
         File diff = new File(diffSaveFile);
         if(diff.exists()) diff.delete();//如果存在则先删除
 

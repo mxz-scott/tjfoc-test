@@ -1,0 +1,48 @@
+contract AuthorizationContract {
+    struct Authorization {
+        string Ciphertext                   //数据密文
+        PermissionPair[] PermissionPairList //权限列表
+        string Key                          //上链唯一标识符
+        int64  TxTime                       //上链时间
+        string TxHash                       //上链交易hash
+        int64  BlockNo                      //交易区块链信息
+    }
+
+    struct PermissionPair{
+        string SecretCipher //解密密文密钥的密文
+        string Code         //加密上面字段的公钥的公司code
+    }
+
+    struct AuthorizationList{
+        Authorization[] AuthorizationList
+    }
+
+    public string AddAuthorizationList(string json){
+        int64 timeNow = getBlockTime()
+        string txid = getTxID()
+        int64 height = getBlockHeight()
+        AuthorizationList authList = json_to_obj<AuthorizationList>(json)
+        Authorization[] authorizationList = authList.AuthorizationList
+        int loop = len(authorizationList)
+        for(int i=0; i<loop; i++){
+            Authorization auth = authorizationList[i]
+            auth.TxTime = timeNow
+            auth.TxHash = txid
+            auth.BlockNo = height
+            string tmpJson = obj_to_json(auth)
+            string key = "auth_"+auth.Key
+            db_set(key,tmpJson)
+        }
+        json = obj_to_json(authorizationList)
+        event("Authorization",json)
+        return "success"
+    }
+
+    //获取授权信息
+    public string GetAuthorization(string key){
+        string json = ""
+        key = "auth_"+key
+		json = db_get<string>(key)
+		return json
+    }
+}

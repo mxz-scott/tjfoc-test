@@ -1,0 +1,20 @@
+
+[Members]
+[[Members.Peers]]
+Id = "QmdfYY3voMDQvdU1rz2PTvR4wbBcWvyjb7fB2uZPC8XvGd"
+ShownName = "peer240"
+Addr = "/ip4/10.1.3.240/tcp/60030"
+RpcPort = 9300
+
+[[Members.Peers]]
+Id = "QmT6XrBjLqdFnZ7BVHhQNsjMojHd75g9yg9ctR7xDVubQ4"
+ShownName = "peer246"
+Addr = "/ip4/10.1.3.246/tcp/60030"
+RpcPort = 9300
+
+[[Members.Peers]]
+Id = "QmXFh2Vi74NnERwbjvk5iwvYhWbKHtK1Q396Qf4sLjpTy5"
+ShownName = "peer247"
+Addr = "/ip4/10.1.3.247/tcp/60030"
+RpcPort = 9300
+Type = 1

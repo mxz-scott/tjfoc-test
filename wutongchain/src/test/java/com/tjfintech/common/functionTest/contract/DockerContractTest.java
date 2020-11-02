@@ -6,7 +6,6 @@ import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
-import com.tjfintech.common.functionTest.Conditions.SetSubLedger;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -16,7 +15,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 //import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
@@ -274,7 +272,7 @@ public class DockerContractTest {
 
     public String installTest() throws Exception {
         //String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";
-        String filePath =resourcePath + dockerFileName;
+        String filePath = testDataPath + "docker/" + dockerFileName;
         String file=utilsClass.readInput(filePath).toString();
         String data = utilsClass.encryptBASE64(file.getBytes());//BASE64编码
         String response=contract.Install(name,version,category,data);

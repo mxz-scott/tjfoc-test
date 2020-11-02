@@ -7,15 +7,11 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -94,24 +90,24 @@ public class StoreTest_UpgradeTestOnly {
     @Test
     public void TC278_createBigSizeStore() throws Exception {
 
-        String Data = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath +
-                "bigsize1.txt");
+        String Data = UtilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath +
+                "store/bigsize1.txt");
         String response = store.CreateStore(Data);
         assertThat(response, containsString("200"));
         assertThat(response, containsString("data"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-        String Data2 = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
-                +  "bigsize2.txt");
+        String Data2 = UtilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath
+                + "store/bigsize2.txt");
         String response2 = store.CreateStore(Data2);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("data"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-        String Data3 = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
-                + "bigsize3.txt");
+        String Data3 = UtilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath
+                + "store/bigsize3.txt");
         String response3 = store.CreateStore(Data3);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("data"));

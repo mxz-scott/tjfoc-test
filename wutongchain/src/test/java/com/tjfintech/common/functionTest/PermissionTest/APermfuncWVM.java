@@ -45,7 +45,7 @@ public class APermfuncWVM {
     public String wvmInstallTest(String wvmfile,String Prikey) throws Exception {
         if(wvmfile == "") return contract.InstallWVM("",category,Prikey);
 
-        String filePath = resourcePath + wvmfile;
+        String filePath = tempWVMDir + wvmfile;
         log.info("filepath "+ filePath);
         String file = utilsClass.readInput(filePath).toString().trim();
         String data = utilsClass.encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码

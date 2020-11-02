@@ -9,6 +9,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.*;
+import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 
 import java.util.List;
@@ -30,6 +31,9 @@ public class GDV2_SceneTest_LockUnLock {
     CommonFunc commonFunc = new CommonFunc();
     public static String bizNoTest = "test" + Random(12);
     GDUnitFunc uf = new GDUnitFunc();
+
+    @Rule
+    public TestName tm = new TestName();
 
     @BeforeClass
     public static void Before()throws Exception{
@@ -64,6 +68,7 @@ public class GDV2_SceneTest_LockUnLock {
 
     @After
     public void calJGDataAfterTx()throws Exception{
+        testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
 //        uf.calJGData();
         uf.calJGDataEachHeight();

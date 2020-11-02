@@ -173,7 +173,7 @@ public class TestPermission {
 
         //预先安装WVM合约
         String ctName="ok_" + sdf.format(dt) + RandomUtils.nextInt(100000);
-        fileOperation.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
+        fileOperation.replace(testDataPath + "wvm/" + wvmFile + ".txt", orgName, ctName);
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response4 = wvmContractTest.wvmInstallTest(wvmFile + "_temp.txt",PRIKEY1);
@@ -457,7 +457,7 @@ public class TestPermission {
 
         //安装wvm合约
         String ctName = "perm_" + sdf.format(dt) + RandomUtils.nextInt(100000);
-        fileOperation.replace(resourcePath + wvmFile + ".txt", orgName, ctName);
+        fileOperation.replace(testDataPath + "wvm/" + wvmFile + ".txt", orgName, ctName);
         permStr = permStr + pFunWVM.wvmInstallTest(wvmFile + "_temp.txt",PRIKEY2);
         permStr = permStr + pFunWVM.invokeNew(glbWVMHash,"initAccount",accountA,amountA);
         permStr = permStr + pFunWVM.wvmDestroyTest(glbWVMHash);
