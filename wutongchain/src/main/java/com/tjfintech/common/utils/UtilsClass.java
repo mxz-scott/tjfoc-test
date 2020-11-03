@@ -148,8 +148,8 @@ public class UtilsClass {
     public static int syncTimeout = 7;
     public static String wvmVersion = "";
 
-    public static String ipv4 = "ip4";
-    public static String tcpProtocol = "tcp";
+    public static String ipv4 = "/ip4/";
+    public static String tcpProtocol = "/tcp/";
 
     public static Integer  LONGTIMEOUT = 100000;//毫秒
     public static Integer  SHORTMEOUT = 3000;//毫秒

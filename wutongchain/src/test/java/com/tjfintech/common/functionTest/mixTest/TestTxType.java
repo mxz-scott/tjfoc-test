@@ -178,7 +178,7 @@ public class TestTxType {
 
             //节点加入交易详情检查
         String respAdd = mgToolCmd.addPeer("join", PEER1IP + ":" + PEER1RPCPort,
-                "/" + ipv4 + "/" + PEER2IP, "/" + tcpProtocol + "/" + PEER2TCPPort, PEER2RPCPort);
+                ipv4 + PEER2IP, tcpProtocol + PEER2TCPPort, PEER2RPCPort);
         assertEquals(true, respAdd.contains("success"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(respAdd,utilsClass.mgGetTxHashType),
@@ -193,9 +193,9 @@ public class TestTxType {
         assertEquals("peer" + PEER2IP.substring(PEER2IP.lastIndexOf(".") + 1).trim(),
                 jsonObjectAddPeer.getJSONObject("data").getJSONObject("system").getJSONObject("peerTransaction").getString("shownName"));
         assertEquals(true,
-                jsonObjectAddPeer.getJSONObject("data").getJSONObject("system").getJSONObject("peerTransaction").getString("lanAddrs").contains("/" + ipv4 + "/" + PEER2IP + "/" + tcpProtocol + "/" + PEER2TCPPort));
+                jsonObjectAddPeer.getJSONObject("data").getJSONObject("system").getJSONObject("peerTransaction").getString("lanAddrs").contains(ipv4 + PEER2IP + tcpProtocol + PEER2TCPPort));
         assertEquals(true,
-                jsonObjectAddPeer.getJSONObject("data").getJSONObject("system").getJSONObject("peerTransaction").getString("wlanAddrs").contains("/" + ipv4 + "/" + PEER2IP + "/" + tcpProtocol + "/" + PEER2TCPPort));
+                jsonObjectAddPeer.getJSONObject("data").getJSONObject("system").getJSONObject("peerTransaction").getString("wlanAddrs").contains(ipv4 + PEER2IP + tcpProtocol + PEER2TCPPort));
 //        assertEquals(PEER2RPCPort,
 //                jsonObjectAddPeer.getJSONObject("data").getJSONObject("system").getJSONObject("peerTransaction").getString("RpcPort"));
         assertEquals("0",
