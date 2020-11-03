@@ -2,28 +2,20 @@ package com.tjfintech.common.functionTest.KmsTest;
 
 import com.alibaba.fastjson.JSON;
 import com.gmsm.utils.GmUtils;
-import com.google.gson.JsonObject;
-import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Kms;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.TjParseEncryptionKey;
-import lombok.experimental.var;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.bouncycastle.jcajce.provider.symmetric.ChaCha;
 import org.junit.Test;
-import com.tjfintech.common.utils.UtilsClassKMS;
-
 
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClassKMS.*;
-import static com.tjfoc.sdk.Client.log;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-
+@Slf4j
 public class GoKmsTest {
     public final static int SHORTSLEEPTIME = 3 * 1000;
     TestBuilder testBuilder = TestBuilder.getInstance();
