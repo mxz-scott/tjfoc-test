@@ -69,8 +69,8 @@ public class TestMultiAppChain {
         outAddr.add("");
         peer.put("InAddrs",inAddr);
         peer.put("OutAddrs",outAddr);
-        peer.put("PeerType",0);
-        peer.put("RpcPort",Integer.valueOf(PEER3RPCPort));
+        peer.put("PeerType",2);
+        //        peer.put("RpcPort",Integer.valueOf(PEER3RPCPort));;
 
         listPeer.add(JSON.toJSONString(peer).replace("\"","\\\""));
 

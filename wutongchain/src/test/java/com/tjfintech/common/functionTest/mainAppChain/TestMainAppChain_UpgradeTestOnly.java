@@ -1,5 +1,7 @@
 package com.tjfintech.common.functionTest.mainAppChain;
 
+import com.alibaba.fastjson.JSON;
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
@@ -8,11 +10,13 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -38,12 +42,35 @@ public class TestMainAppChain_UpgradeTestOnly {
     String ids = " -m "+ id1+","+ id2+","+ id3;
     List<String> listPeer = new ArrayList<>();
 
+    @Before
+    public void clearData()throws Exception{
+        BeforeCondition beforeCondition = new BeforeCondition();
+        beforeCondition.clearDataSetPerm999();
+        sleepAndSaveInfo(SLEEPTIME);
+
+        HashMap peer = new HashMap();
+        peer.put("ID",id4);
+        peer.put("ShownName","testName");
+        List inAddr = new ArrayList();
+        List outAddr = new ArrayList();
+        inAddr.add(ipv4 + PEER3IP + tcpProtocol + PEER3TCPPort);
+        outAddr.add("");
+        peer.put("InAddrs",inAddr);
+        peer.put("OutAddrs",outAddr);
+        peer.put("PeerType",2);
+        //        peer.put("RpcPort",Integer.valueOf(PEER3RPCPort));;
+
+        listPeer.add(JSON.toJSONString(peer).replace("\"","\\\""));
+    }
+
     @Test
     public void CreaterecoverFreezeDestoryChain()throws Exception{
 
         //创建子链，包含三个节点
         String chainName="tc1515_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3"," -w first"," -c raft",ids, " -n \"" + listPeer.toString() + "\"");
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName,
+                " -t sm3"," -w first"," -c raft",
+                ids, " -n \"" + listPeer.toString() + "\"");
         assertEquals(res.contains("send transaction success"), true);
 
 //        sleepAndSaveInfo(SLEEPTIME*2);

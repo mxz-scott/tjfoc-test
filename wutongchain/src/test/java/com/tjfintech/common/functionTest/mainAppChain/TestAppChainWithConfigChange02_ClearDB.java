@@ -60,8 +60,8 @@ public class TestAppChainWithConfigChange02_ClearDB {
         outAddr.add("");
         peer.put("InAddrs",inAddr);
         peer.put("OutAddrs",outAddr);
-        peer.put("PeerType",0);
-        peer.put("RpcPort",Integer.valueOf(PEER3RPCPort));
+        peer.put("PeerType",2);
+        //        peer.put("RpcPort",Integer.valueOf(PEER3RPCPort));;
 
         listPeer.add(JSON.toJSONString(peer).replace("\"","\\\""));
     }
@@ -78,7 +78,8 @@ public class TestAppChainWithConfigChange02_ClearDB {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(mgResp,utilsClass.mgGetTxHashType),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME*2);
 
-        assertEquals(mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01.toLowerCase()+"\""), true);
+        assertEquals(mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains(
+                "\"name\": \""+glbChain01.toLowerCase()+"\""), true);
 
         //动态删除节点B，因已有活跃子链使用 无法成功删除
         String checkStr = "failed:some ledger is using this peer";
