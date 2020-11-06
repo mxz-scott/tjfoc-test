@@ -270,8 +270,9 @@ public class MgToolCmd implements ManageTool {
             log.info("开始时间 " + (new Date()).getTime());
             String cmd = "cd " + ToolPATH + ";./" + ToolTPName + " getledger -p "+ rpcPort +
                     " -z " + ledgerName.toLowerCase().trim();
+            String resp = shExeAndReturn(shellIP,cmd);
 
-            if(shExeAndReturn(shellIP,cmd).contains(ledgerName.toLowerCase().trim())) bOK = true;
+            if(resp.contains(ledgerName.toLowerCase().trim()) && (!resp.contains("not exist"))) bOK = true;
 
             sleepAndSaveInfo(1000,"等待再次查询子链是否存在");
         }
@@ -279,8 +280,8 @@ public class MgToolCmd implements ManageTool {
                 ledgerName + " " + ((new Date()).getTime() - nowTime));
 
         sleepAndSaveInfo(3000,"============================= 等待SDK同步数据");
-
-        return "";
+        if(bOK) return "exist";
+        else return "not exist";
     }
 
 
@@ -293,12 +294,13 @@ public class MgToolCmd implements ManageTool {
 
         if(resp.contains("transaction success")) {
 
-            chkLedgerExist(shellIP,rpcPort,chainNameParam.replaceAll("-z",""),SLEEPTIME*2);
-
-            subLedger = chainNameParam.trim().split(" ")[1];
-            log.info("**************  set permission 999 for " + subLedger);
-            String resp1 = setPeerPerm(PEER1IP + ":" + PEER1RPCPort, utilsClass.getSDKID(),"999");
-            subLedger = "";
+            resp = chkLedgerExist(shellIP,rpcPort,chainNameParam.replaceAll("-z",""),SLEEPTIME*2);
+            if(!resp.contains("not exist")) {
+                subLedger = chainNameParam.trim().split(" ")[1];
+                log.info("**************  set permission 999 for " + subLedger);
+                String resp1 = setPeerPerm(PEER1IP + ":" + PEER1RPCPort, utilsClass.getSDKID(), "999");
+                subLedger = "";
+            }
         }
         return resp;
     }
