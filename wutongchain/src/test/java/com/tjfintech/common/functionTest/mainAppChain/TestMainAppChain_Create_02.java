@@ -321,11 +321,11 @@ public class TestMainAppChain_Create_02 {
         //创建子链，id格式错误 非集群中的id
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m 1,"+id2+","+id3, " -n \"" + listPeer.toString() + "\"");
-        assertEquals(res.contains("not found peerId"), true);
+        assertEquals(res.contains("not exist"), true);
 
         res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m "+id1+",1,"+id3, " -n \"" + listPeer.toString() + "\"");
-        assertEquals(res.contains("not found peerId"), true);
+        assertEquals(res.contains("not exist"), true);
 
         res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft"," -m "+id1+","+id2+",1", " -n \"" + listPeer.toString() + "\"");
@@ -419,7 +419,7 @@ public class TestMainAppChain_Create_02 {
         String chainName1="#123";
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName1," -t sm3",
                 " -w first"," -c raft",ids, " -n \"" + listPeer.toString() + "\"");
-        assertEquals(res.contains("management addledger"), true);
+        assertEquals(res.contains("management addappledger"), true);
 
 
         String chainName2="a$";
