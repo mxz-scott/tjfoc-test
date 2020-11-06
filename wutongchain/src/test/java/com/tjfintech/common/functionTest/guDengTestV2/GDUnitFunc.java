@@ -442,8 +442,12 @@ public class GDUnitFunc {
 
         String dataTopic = "获取时间\t\t\t\t高度\t主体\t账户\t产品\t交易报告\t登记\t资金结算\t信披\t用例名称";
         FileOperation fo = new FileOperation();
-        String get = FileOperation.read(saveFile);
-        if(!get.contains("主体"))    fo.appendToFile(dataTopic,saveFile);
+        if((new File(saveFile)).exists()) {
+            String get = FileOperation.read(saveFile);
+            if (!get.contains("主体")) fo.appendToFile(dataTopic, saveFile);
+        }
+        else
+            fo.appendToFile(dataTopic,saveFile);
 
         for(int k = blockHeight + 1;k <= height;k++){
             int[] dataNum = new int[7]; //分别对应 主体/账户/产品/交易报告/登记/资金结算/信披
