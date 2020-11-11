@@ -28,4 +28,14 @@ public interface ManageTool {
     String freezeSubChain(String shellIP,String rpcPort,String chainNameParam);
     String recoverSubChain(String shellIP,String rpcPort,String chainNameParam);
     String destroySubChain(String shellIP,String rpcPort,String chainNameParam);
+
+    //应用链相关
+    String createAppChain(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
+                          String firstBlockInfoParam,String consensusParam,String peeridsParam,String outPeerList)throws Exception;
+    String createAppChainNoPerm(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
+                                String firstBlockInfoParam,String consensusParam,String peeridsParam,String outPeerList)throws Exception;
+    String getAppChain(String shellIP,String rpcPort,String chainNameParam);
+    String freezeAppChain(String shellIP,String rpcPort,String chainNameParam);
+    String recoverAppChain(String shellIP,String rpcPort,String chainNameParam);
+    String destroyAppChain(String shellIP,String rpcPort,String chainNameParam);
 }

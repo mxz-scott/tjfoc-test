@@ -89,9 +89,9 @@ public class BlockSyncErrorTool {
         else log.info("区块交易个数不一致 " + PEER1IP + " 交易个数 " + txs.length +  " " + PEER2IP + " 交易个数 " + txs2.length);
 
         //比较交易详情
-        Boolean detailSame = cf.compareHashMap(mapHashDetail,mapHashDetail2);
+        Boolean detailSame = cf.compareHashMap(mapHashDetail,mapHashDetail2,"交易详情");
         //比较交易raw data
-        Boolean rawSame =cf.compareHashMap(mapHashRaw,mapHashRaw2);
+        Boolean rawSame =cf.compareHashMap(mapHashRaw,mapHashRaw2,"交易原始数据");
 
         log.info("交易详情是否一致 " + detailSame);
         log.info("交易raw是否一致 " + rawSame);

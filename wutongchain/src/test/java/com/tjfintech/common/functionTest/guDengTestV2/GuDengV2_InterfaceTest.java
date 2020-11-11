@@ -1,9 +1,6 @@
 package com.tjfintech.common.functionTest.guDengTestV2;
 
-import com.sun.nio.sctp.PeerAddressChangeNotification;
 import com.tjfintech.common.CommonFunc;
-import com.tjfintech.common.GDBeforeCondition;
-import com.tjfintech.common.GDCommonFunc;
 import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -18,7 +15,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 
-import static com.tjfintech.common.GDCommonFunc.gdConstructShareList;
+import static com.tjfintech.common.functionTest.guDengTestV2.GDCommonFunc.gdConstructShareList;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassGD.*;
 import static org.junit.Assert.assertEquals;
@@ -75,7 +72,7 @@ public class GuDengV2_InterfaceTest {
         //构造股权账户信息
         Map shareHolderInfo = new HashMap();
         gdBF.init02EquityAccountInfo();
-        equityaccountInfo.put("账户对象标识",cltNo);  //更新账户对象标识字段
+        equityaccountInfo.put("account_object_id",cltNo);  //更新账户对象标识字段
         log.info(equityaccountInfo.toString());
         shareHolderInfo.put("shareholderNo",shareHolderNo);
         shareHolderInfo.put("accountInfo", equityaccountInfo);
@@ -83,15 +80,15 @@ public class GuDengV2_InterfaceTest {
 
         //资金账户信息
         gdBF.init02FundAccountInfo();
-        fundaccountInfo.put("账户对象标识",cltNo);  //更新账户对象标识字段
+        fundaccountInfo.put("account_object_id",cltNo);  //更新账户对象标识字段
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("fundNo",fundNo);
         mapFundInfo.put("accountInfo",fundaccountInfo);
 
         //构造个人/投资者主体信息
         gdBF.init01PersonalSubjectInfo();
-        investorSubjectInfo.put("对象标识",cltNo);  //更新对象标识字段
-        investorSubjectInfo.put("主体标识","sid" + cltNo);  //更新主体标识字段
+        investorSubjectInfo.put("letter_object_identification",cltNo);  //更新对象标识字段
+        investorSubjectInfo.put("subject_id","sid" + cltNo);  //更新主体标识字段
 
         log.info(" ************************ test fundInfo not must ************************ ");
         String response = gd.GDCreateAccout(gdContractAddress,cltNo,null,shareHolderInfo, investorSubjectInfo);

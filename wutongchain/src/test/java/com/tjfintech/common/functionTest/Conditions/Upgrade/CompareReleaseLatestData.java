@@ -14,6 +14,6 @@ public class CompareReleaseLatestData {
     @Test
     public void test()throws Exception {
         log.info("start compare release data and latest data");
-        assertEquals("判断升级前后内容是否一致",true,commonFunc.compareHashMap(beforeUpgrade,afterUpgrade));
+        assertEquals("判断升级前后内容是否一致",true,commonFunc.compareHashMap(beforeUpgrade,afterUpgrade,"升级测试"));
     }
 }

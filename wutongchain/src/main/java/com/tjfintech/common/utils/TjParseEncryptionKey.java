@@ -5,7 +5,6 @@ package com.tjfintech.common.utils;
 import com.gmsm.utils.GmUtils;
 import com.tjfoc.gmsm.ParseEncryptionKey;
 import com.tjfoc.gmsm.Util;
-import java.util.Base64;
 import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.asn1.x509.X509CertificateStructure;

@@ -1,8 +1,6 @@
 package com.tjfintech.common.functionTest.guDengTestV2;
 
 import com.tjfintech.common.CommonFunc;
-import com.tjfintech.common.GDBeforeCondition;
-import com.tjfintech.common.GDCommonFunc;
 import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -18,8 +16,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.tjfintech.common.CommonFunc.*;
-import static com.tjfintech.common.GDCommonFunc.*;
+import static com.tjfintech.common.functionTest.guDengTestV2.GDCommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassGD.*;
 import static org.junit.Assert.assertEquals;
@@ -83,7 +80,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
     public void TC06_shareIssue() throws Exception {
 
         regNo = "issue" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("登记流水号",regNo);       //更新对比的登记流水号
+        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
 
         List<Map> shareList = gdConstructShareList(gdAccount1,issueAmount,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,issueAmount,0, shareList);
@@ -121,19 +118,19 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
             log.info("检查发行存证登记格式化及信息内容与传入一致:" + tempObjId);
             registerInfo.put("权利人账户引用",tempObjId);
 
-            registerInfo.put("变动额", issueAmount);     //变动额修改为单个账户发行数量
-            registerInfo.put("当前冻结余额", 0);   //当前冻结余额修改为实际冻结数
-            registerInfo.put("当前可用余额", issueAmount);   //当前当前可用余额修改为当前实际可用余额
-            registerInfo.put("认购数量", issueAmount);   //当前认购数量修改为当前实际余额
-            registerInfo.put("冻结变动额", 0);   //冻结变动额修改为当前实际冻结变更额
+            registerInfo.put("register_rights_change_amount", issueAmount);     //变动额修改为单个账户发行数量
+            registerInfo.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
+            registerInfo.put("register_available_balance", issueAmount);   //当前当前可用余额修改为当前实际可用余额
+            registerInfo.put("register_creditor_subscription_count", issueAmount);   //当前认购数量修改为当前实际余额
+            registerInfo.put("register_rights_frozen_change_amount", 0);   //冻结变动额修改为当前实际冻结变更额
             log.info(gdCF.contructRegisterInfo(storeId, 4,tempObjId).toString().replaceAll("\"", ""));
             log.info(registerInfo.toString());
             assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId, 4,tempObjId).toString().replaceAll("\"", ""));
 
             assertEquals("检查发行不包送交易报告数据",false,store.GetTxDetail(storeId).contains("\"type\":\"交易报告\""));
 //            log.info("检查发行存证交易格式化及信息内容与传入一致:" + tempObjId);
-//            txInformation.put("原持有方主体引用",tempObjId);
-//            txInformation.put("交易产品引用",gdEquityCode + "01");
+//            txInformation.put("transaction_original_owner_subject_ref",tempObjId);
+//            txInformation.put("transaction_traded_product_ref",gdEquityCode + "01");
 //            log.info(gdCF.contructTxInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
 //            log.info(txInformation.toString());
 //            assertEquals(txInformation.toString(), gdCF.contructTxInfo(storeId, 8,tempObjId).toString().replaceAll("\"", ""));
@@ -215,16 +212,16 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         tempReg1.put("权利人账户引用", mapAccAddr.get(address));
         regNo = "Eq" + "ChangeProperty" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        tempReg1.put("登记流水号", regNo);       //更新对比的登记流水号
-        tempReg1.put("股份性质", oldProperty);
+        tempReg1.put("register_registration_serial_number", regNo);       //更新对比的登记流水号
+        tempReg1.put("register_nature_of_shares", oldProperty);
 
         List<Map> regListInfo = new ArrayList<>();
 
         regListInfo.add(tempReg1);
 
         tempReg2.put("权利人账户引用", mapAccAddr.get(address));
-        tempReg2.put("登记流水号", regNo);       //更新对比的登记流水号
-        tempReg2.put("股份性质", newProperty);
+        tempReg2.put("register_registration_serial_number", regNo);       //更新对比的登记流水号
+        tempReg2.put("register_nature_of_shares", newProperty);
         regListInfo.add(tempReg2);
 
         log.info(regListInfo.toString());
@@ -370,9 +367,9 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             String sd = sdf.format(new Date(onChainTS)); // 时间戳转换日期
 
-//            registerInfo.put("变动额", tempAmount);
-//            registerInfo.put("当前可用余额", tempAmount);
-//            registerInfo.put("登记时间", sd);
+//            registerInfo.put("register_rights_change_amount", tempAmount);
+//            registerInfo.put("register_available_balance", tempAmount);
+//            registerInfo.put("register_time", sd);
 //            log.info(gdCF.contructRegisterInfo(storeId, 7,tempObjId).toString().replaceAll("\"", ""));
 //            log.info(registerInfo.toString());
 //            assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId, 7,tempObjId).toString().replaceAll("\"", ""));
@@ -382,7 +379,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         log.info(gdCF.contructBondProdInfo(storeId).toString().replaceAll("\"",""));
         log.info(bondProductInfo.toString());
-        bondProductInfo.put("产品代码",gdEquityCode);
+        bondProductInfo.put("product_code",gdEquityCode);
         assertEquals(bondProductInfo.toString(), gdCF.contructBondProdInfo(storeId).toString().replaceAll("\"",""));
 
         log.info("================================检查存证数据格式化《结束》================================");
@@ -458,12 +455,12 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         Map toNow = gdBF.init05RegInfo();
 
         regNo = "Eq" + "transfer" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        fromNow.put("登记流水号", regNo);       //更新对比的登记流水号
-        toNow.put("登记流水号", regNo);       //更新对比的登记流水号
+        fromNow.put("register_registration_serial_number", regNo);       //更新对比的登记流水号
+        toNow.put("register_registration_serial_number", regNo);       //更新对比的登记流水号
         fromNow.put("权利人账户引用", tempObjIdFrom);       //更新对比的权利人账户引用
         toNow.put("权利人账户引用", tempObjIdTo);       //更新对比的权利人账户引用
 
-        txInformation.put("原持有方主体引用", tempObjIdFrom);
+        txInformation.put("transaction_original_owner_subject_ref", tempObjIdFrom);
         String response = gd.GDShareTransfer(keyId, fromAddr, transferAmount, toAddr, shareProperty, eqCode, txInformation, fromNow, toNow);
 
         JSONObject jsonObject = JSONObject.fromObject(response);
@@ -491,15 +488,15 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         String sd = sdf.format(new Date(onChainTS)); // 时间戳转换日期
         log.info("检查过户转让存证登记格式化及信息内容与传入一致:" + tempObjIdFrom);
-        fromNow.put("变动额","-" + transferAmount);
-        fromNow.put("登记时间", txInformation.get("成交时间").toString());
-        fromNow.put("当前可用余额", issueAmount - transferAmount);
-        fromNow.put("当前冻结余额", 0);   //当前冻结余额修改为实际冻结数
+        fromNow.put("register_rights_change_amount","-" + transferAmount);
+        fromNow.put("register_time", txInformation.get("transaction_close_time").toString());
+        fromNow.put("register_available_balance", issueAmount - transferAmount);
+        fromNow.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
 
-        toNow.put("变动额", transferAmount);
-        toNow.put("当前冻结余额", 0);   //当前冻结余额修改为实际冻结数
-        toNow.put("登记时间", txInformation.get("成交时间").toString());
-        toNow.put("当前可用余额", transferAmount);
+        toNow.put("register_rights_change_amount", transferAmount);
+        toNow.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
+        toNow.put("register_time", txInformation.get("transaction_close_time").toString());
+        toNow.put("register_available_balance", transferAmount);
         log.info(gdCF.contructRegisterInfo(storeId, 3, tempObjIdFrom).toString().replaceAll("\"", ""));
         log.info(fromNow.toString());
         assertEquals(fromNow.toString(), gdCF.contructRegisterInfo(storeId, 3, tempObjIdFrom).toString().replaceAll("\"", ""));
@@ -593,7 +590,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         registerInfo.put("权利人账户引用",mapAccAddr.get(address));
         regNo = "lock" + bizNo + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("登记流水号",regNo);       //更新对比的登记流水号
+        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
 
         String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,registerInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -608,7 +605,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         String storeId = gdCF.getJGStoreHash(txId,1);
 
         log.info("检查冻结存证登记格式化及信息内容与传入一致");
-        registerInfo.put("冻结变动额",lockAmount);   //冻结变动额修改为当前实际冻结变更额
+        registerInfo.put("register_rights_frozen_change_amount",lockAmount);   //冻结变动额修改为当前实际冻结变更额
         log.info(gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
         log.info(registerInfo.toString());
         assertEquals(registerInfo.toString(), gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
@@ -691,7 +688,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         String eqCode = gdEquityCode;
 
         regNo = "unlock" + bizNo + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("登记流水号",regNo);       //更新对比的登记流水号
+        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
 
         String response= gd.GDShareUnlock(bizNo,eqCode,unlockAmount,registerInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -790,14 +787,14 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         log.info("回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
         BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
+                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
         int totalHolderAccount = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getInt("股东总数（个）");
+                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getInt("subject_shareholders_number");
 
         log.info("before recycle 股本总数(股) " + totalShares + " 股东总数（个） " + totalHolderAccount);
 
         regNo = "recylce" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("登记流水号",regNo);       //更新对比的登记流水号
+        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
 
         //账户4全部回收
         List<Map> shareList = gdConstructShareList(gdAccount4,recycleAmount,0);
@@ -832,7 +829,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         log.info("检查回收存证登记格式化及信息内容与传入一致");
 
         registerInfo = gdBF.init05RegInfo();
-        registerInfo.put("变动额",(-1) * recycleAmount);     //变动额修改为单个账户发行数量
+        registerInfo.put("register_rights_change_amount",(-1) * recycleAmount);     //变动额修改为单个账户发行数量
         registerInfo.put("权利人账户引用",tempObjId);
         log.info(gdCF.contructRegisterInfo(regStoreId,1,tempObjId).toString().replaceAll("\"",""));
         log.info(registerInfo.toString());
@@ -841,10 +838,10 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         log.info("检查回收存证主体格式化及信息内容与传入一致");
 
-        String getTotal = enterpriseSubjectInfo.get("股本总数(股)").toString();
+        String getTotal = enterpriseSubjectInfo.get("subject_total_share_capital").toString();
         BigDecimal oldTotal = new BigDecimal(getTotal);
-        enterpriseSubjectInfo.put("股本总数(股)",oldTotal.subtract(new BigDecimal(recycleAmount)));     //变更总股本数为增发量 + 原始股本总数
-        enterpriseSubjectInfo.put("股东总数（个）",totalHolderAccount - 1);     //股东个数为原个数减1
+        enterpriseSubjectInfo.put("subject_total_share_capital",oldTotal.subtract(new BigDecimal(recycleAmount)));     //变更总股本数为增发量 + 原始股本总数
+        enterpriseSubjectInfo.put("subject_shareholders_number",totalHolderAccount - 1);     //股东个数为原个数减1
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
         log.info(enterpriseSubjectInfo.toString());
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
@@ -908,9 +905,9 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         log.info("判断回收一个完全账户后机构主体查询总股本数增加数正确");
         query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
         BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
+                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
         int totalHolderAccount2 = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getInt("股东总数（个）");
+                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getInt("subject_shareholders_number");
         assertEquals(totalShares.subtract(new BigDecimal(recycleAmount)),totalShares2);
         assertEquals(totalHolderAccount2 + 1,totalHolderAccount);//判断股东总数减一
     }
@@ -923,7 +920,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         String eqCode = gdEquityCode;
 
         regNo = "unlock" + bizNo + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("登记流水号",regNo);       //更新对比的登记流水号
+        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
 
         String response= gd.GDShareUnlock(bizNo,eqCode,lockAmount - unlockAmount,registerInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -1021,14 +1018,14 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         log.info("多个回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
         BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
+                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
         int totalHolderAccount = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getInt("股东总数（个）");
+                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getInt("subject_shareholders_number");
 
         log.info("before recycle 股本总数(股) " + totalShares + " 股东总数（个） " + totalHolderAccount);
 
         regNo = "recycle2" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("登记流水号",regNo);       //更新对比的登记流水号
+        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
 
         List<Map> shareList = new ArrayList<>();
         Boolean bOnlyZero = false;
@@ -1077,20 +1074,20 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
             registerInfo = gdBF.init05RegInfo();
 
             log.info("检查回收存证登记格式化及信息内容与传入一致");
-            registerInfo.put("变动额", "-" + tempAmount);     //变动额修改为单个账户发行数量
+            registerInfo.put("register_rights_change_amount", "-" + tempAmount);     //变动额修改为单个账户发行数量
             registerInfo.put("权利人账户引用", mapAccAddr.get(tempAddr));
             log.info(gdCF.contructRegisterInfo(regStoreId, shareList.size(),tempObjId,tempPP).toString().replaceAll("\"", ""));
             log.info(registerInfo.toString());
-            registerInfo.put("股份性质",tempPP);
+            registerInfo.put("register_nature_of_shares",tempPP);
             assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(regStoreId, shareList.size(),tempObjId,tempPP).toString().replaceAll("\"", ""));
 
         }
         log.info("检查回收存证主体格式化及信息内容与传入一致");
 
-        String getTotal = enterpriseSubjectInfo.get("股本总数(股)").toString();
+        String getTotal = enterpriseSubjectInfo.get("subject_total_share_capital").toString();
         BigDecimal oldTotal = new BigDecimal(getTotal);
-        enterpriseSubjectInfo.put("股本总数(股)",oldTotal.subtract(new BigDecimal(total)));     //变更总股本数为增发量 + 原始股本总数
-        enterpriseSubjectInfo.put("股东总数（个）",totalHolderAccount - 3);     //股东个数为原个数减1
+        enterpriseSubjectInfo.put("subject_total_share_capital",oldTotal.subtract(new BigDecimal(total)));     //变更总股本数为增发量 + 原始股本总数
+        enterpriseSubjectInfo.put("subject_shareholders_number",totalHolderAccount - 3);     //股东个数为原个数减1
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
         log.info(enterpriseSubjectInfo.toString());
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
@@ -1131,14 +1128,14 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         log.info("多个回收后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
         BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
+                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
 
         log.info("判断回收后机构主体查询总股本数变更正确");
         assertEquals(oldTotal.subtract(new BigDecimal(total)),totalShares2);
 
 
         int totalHolderAccount2 = JSONObject.fromObject(query3).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getInt("股东总数（个）");
+                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getInt("subject_shareholders_number");
         assertEquals(totalHolderAccount - 3,totalHolderAccount2);//判断股东总数减3
     }
 

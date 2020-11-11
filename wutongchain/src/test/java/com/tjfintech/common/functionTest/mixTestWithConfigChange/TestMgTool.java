@@ -358,7 +358,7 @@ public class TestMgTool {
         String rpcPort=queryIPPort.split(":")[1];//9300
         String queryIP=queryIPPort.split(":")[0];//10.1.3.240
         String[] temp = queryIP.split("\\.");
-        String tcpIP=queryIP+"/" + tcpProtocol + "/"+tcpPort; //10.1.3.240:60030
+        String tcpIP=queryIP+tcpProtocol+tcpPort; //10.1.3.240:60030
         String peerID=getPeerId(queryIP,USERNAME,PASSWD);  //取IP的最后一位点分十进制作为节点ID,ex. 240
         String peerName="peer"+temp[3];//peer240
 
@@ -404,7 +404,7 @@ public class TestMgTool {
         String rpcPort=queryIPPort.split(":")[1];//9300
         String queryIP=queryIPPort.split(":")[0];//10.1.3.240
         String[] temp = queryIP.split("\\.");
-        String tcpIP=queryIP+"/" + tcpProtocol + "/"+checkinfo[0]; //10.1.3.240:60030
+        String tcpIP=queryIP+tcpProtocol+checkinfo[0]; //10.1.3.240:60030
         String peerID=getPeerId(queryIP,USERNAME,PASSWD);  //根据证书生成
         String peerName="peer"+temp[3];//peer240
 

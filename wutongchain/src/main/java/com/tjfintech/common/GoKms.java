@@ -9,7 +9,7 @@ import org.apache.commons.logging.Log;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.tjfintech.common.utils.UtilsClass.KMSADD;
+import static com.tjfintech.common.utils.UtilsClassKMS.KMSADD;
 import static com.tjfintech.common.utils.UtilsClass.subLedger;
 import static com.tjfintech.common.utils.UtilsClassKMS.keySpecSm2;
 import static com.tjfintech.common.utils.UtilsClassKMS.plainText;

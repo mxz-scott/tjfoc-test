@@ -1,7 +1,6 @@
 package com.tjfintech.common.functionTest.guDengTestV2;
 
 import com.tjfintech.common.CommonFunc;
-import com.tjfintech.common.GDBeforeCondition;
 import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.GDCommonFunc.*;
+import static com.tjfintech.common.functionTest.guDengTestV2.GDCommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassGD.*;
 import static org.junit.Assert.assertEquals;
@@ -362,17 +361,17 @@ public class GDV2_SceneTest_Transfer {
         String response = "";
 
         log.info("股权代码过户转让非流通股");
-        txInformation.put("交易类型",2);//配置为交易过户类型
+        txInformation.put("transaction_type",2);//配置为交易过户类型
         response= gd.GDShareTransfer(gdAccountKeyID1,gdAccount2,100,gdAccount5,1,gdEquityCode,txInformation, registerInfo,registerInfo);
 
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("交易过户非流通股不可以转让",JSONObject.fromObject(response).getString("message"));
 
-        txInformation.put("交易类型",1);//配置为交易过户类型1
+        txInformation.put("transaction_type",1);//配置为交易过户类型1
         response= gd.GDShareTransfer(gdAccountKeyID2,gdAccount2,100,gdAccount5,1,gdEquityCode,txInformation, registerInfo,registerInfo);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
-        txInformation.put("交易类型",4);//配置为交易过户类型1
+        txInformation.put("transaction_type",4);//配置为交易过户类型1
         response= gd.GDShareTransfer(gdAccountKeyID4,gdAccount4,100,gdAccount5,1,gdEquityCode,txInformation, registerInfo,registerInfo);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
     }

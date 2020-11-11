@@ -1,7 +1,6 @@
 package com.tjfintech.common.functionTest.guDengTestV2;
 
 import com.tjfintech.common.CommonFunc;
-import com.tjfintech.common.GDBeforeCondition;
 import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -21,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.GDCommonFunc.gdConstructShareList;
+import static com.tjfintech.common.functionTest.guDengTestV2.GDCommonFunc.gdConstructShareList;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassGD.*;
 import static org.junit.Assert.assertEquals;
@@ -377,8 +376,8 @@ public class GDUnitFunc {
             log.info("检查发行存证登记格式化及信息内容与传入一致:" + tempObjId);
             Map tempReg =  gdBF.init05RegInfo();
             tempReg.put("权利人账户引用",tempObjId);
-            tempReg.put("登记流水号",flowNo);
-            tempReg.put("股份性质",tempPP);
+            tempReg.put("register_registration_serial_number",flowNo);
+            tempReg.put("register_nature_of_shares",tempPP);
             regList.add(tempReg);
         }
 
@@ -442,8 +441,12 @@ public class GDUnitFunc {
 
         String dataTopic = "获取时间\t\t\t\t高度\t主体\t账户\t产品\t交易报告\t登记\t资金结算\t信披\t用例名称";
         FileOperation fo = new FileOperation();
-        String get = FileOperation.read(saveFile);
-        if(!get.contains("主体"))    fo.appendToFile(dataTopic,saveFile);
+        if((new File(saveFile)).exists()) {
+            String get = FileOperation.read(saveFile);
+            if (!get.contains("主体")) fo.appendToFile(dataTopic, saveFile);
+        }
+        else
+            fo.appendToFile(dataTopic,saveFile);
 
         for(int k = blockHeight + 1;k <= height;k++){
             int[] dataNum = new int[7]; //分别对应 主体/账户/产品/交易报告/登记/资金结算/信披

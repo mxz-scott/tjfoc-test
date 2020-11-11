@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UtilsClassKMS {
     public static String keySpecSm4 = "sm4";
     public static String keySpecSm2 = "sm2";
+    public static String KMSADD = "http://10.1.5.223:8881";
     public static String password = "123";
     public static String oldPwd = "123";
     public static String newPwd = "321";
