@@ -46,7 +46,7 @@ public class GDV2_AllFlowTest_Equity {
     @Rule
     public TestName tm = new TestName();
 
-//    @BeforeClass
+    @BeforeClass
     public static void Before()throws Exception{
         TestBuilder tbTemp = TestBuilder.getInstance();
         Store storeTemp =tbTemp.getStore();
