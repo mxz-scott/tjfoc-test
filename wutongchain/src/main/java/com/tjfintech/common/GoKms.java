@@ -11,7 +11,7 @@ import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.KMSADD;
 import static com.tjfintech.common.utils.UtilsClass.subLedger;
-import static com.tjfintech.common.utils.UtilsClassKMS.keySpec1;
+import static com.tjfintech.common.utils.UtilsClassKMS.keySpecSm2;
 import static com.tjfintech.common.utils.UtilsClassKMS.plainText;
 
 @Slf4j
@@ -31,7 +31,6 @@ public class GoKms implements Kms {
         if(subLedger!="") param = param +"&ledger="+subLedger;
 
         String result = PostTest.postMethod(KMSADD + "/v1/createKey", map);
-//        log.info(result);
         return result;
     }
 
@@ -43,7 +42,7 @@ public class GoKms implements Kms {
      */
     public String getKey(String keySpec, String pubFormat) {
         Map<String, Object> map = new HashMap<>();
-        map.put("keySpec", keySpec1);
+        map.put("keySpec", keySpecSm2);
         map.put("pubFormat", pubFormat);
 
         String result = PostTest.postMethod(KMSADD + "/v1/getKeyImportParams", map);
