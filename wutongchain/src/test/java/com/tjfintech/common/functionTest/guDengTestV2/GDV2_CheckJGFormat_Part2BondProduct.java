@@ -116,7 +116,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
             String tempObjId = mapAccAddr.get(tempAddr).toString();
 
             log.info("检查发行存证登记格式化及信息内容与传入一致:" + tempObjId);
-            registerInfo.put("权利人账户引用",tempObjId);
+            registerInfo.put("register_account_obj_id",tempObjId);
 
             registerInfo.put("register_rights_change_amount", issueAmount);     //变动额修改为单个账户发行数量
             registerInfo.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
@@ -210,7 +210,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         tempReg1 = gdBF.init05RegInfo();
         tempReg2 = gdBF.init05RegInfo();
 
-        tempReg1.put("权利人账户引用", mapAccAddr.get(address));
+        tempReg1.put("register_account_obj_id", mapAccAddr.get(address));
         regNo = "Eq" + "ChangeProperty" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
         tempReg1.put("register_registration_serial_number", regNo);       //更新对比的登记流水号
         tempReg1.put("register_nature_of_shares", oldProperty);
@@ -219,7 +219,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         regListInfo.add(tempReg1);
 
-        tempReg2.put("权利人账户引用", mapAccAddr.get(address));
+        tempReg2.put("register_account_obj_id", mapAccAddr.get(address));
         tempReg2.put("register_registration_serial_number", regNo);       //更新对比的登记流水号
         tempReg2.put("register_nature_of_shares", newProperty);
         regListInfo.add(tempReg2);
@@ -363,7 +363,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
             log.info("================================检查存证数据格式化《开始》================================");
 
             log.info("检查场内转板存证登记格式化及信息内容与传入一致:" + tempObjId);
-            registerInfo.put("权利人账户引用",tempObjId);
+            registerInfo.put("register_account_obj_id",tempObjId);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             String sd = sdf.format(new Date(onChainTS)); // 时间戳转换日期
 
@@ -457,8 +457,8 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         regNo = "Eq" + "transfer" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
         fromNow.put("register_registration_serial_number", regNo);       //更新对比的登记流水号
         toNow.put("register_registration_serial_number", regNo);       //更新对比的登记流水号
-        fromNow.put("权利人账户引用", tempObjIdFrom);       //更新对比的权利人账户引用
-        toNow.put("权利人账户引用", tempObjIdTo);       //更新对比的权利人账户引用
+        fromNow.put("register_account_obj_id", tempObjIdFrom);       //更新对比的权利人账户引用
+        toNow.put("register_account_obj_id", tempObjIdTo);       //更新对比的权利人账户引用
 
         txInformation.put("transaction_original_owner_subject_ref", tempObjIdFrom);
         String response = gd.GDShareTransfer(keyId, fromAddr, transferAmount, toAddr, shareProperty, eqCode, txInformation, fromNow, toNow);
@@ -588,7 +588,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         String reason = "司法冻结";
         String cutoffDate = "2022-09-30";
 
-        registerInfo.put("权利人账户引用",mapAccAddr.get(address));
+        registerInfo.put("register_account_obj_id",mapAccAddr.get(address));
         regNo = "lock" + bizNo + (new Date()).getTime();   //区分不同类型的交易登记以流水号
         registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
 
@@ -830,7 +830,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         registerInfo = gdBF.init05RegInfo();
         registerInfo.put("register_rights_change_amount",(-1) * recycleAmount);     //变动额修改为单个账户发行数量
-        registerInfo.put("权利人账户引用",tempObjId);
+        registerInfo.put("register_account_obj_id",tempObjId);
         log.info(gdCF.contructRegisterInfo(regStoreId,1,tempObjId).toString().replaceAll("\"",""));
         log.info(registerInfo.toString());
         assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(regStoreId,1,tempObjId).toString().replaceAll("\"",""));
@@ -1075,7 +1075,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
             log.info("检查回收存证登记格式化及信息内容与传入一致");
             registerInfo.put("register_rights_change_amount", "-" + tempAmount);     //变动额修改为单个账户发行数量
-            registerInfo.put("权利人账户引用", mapAccAddr.get(tempAddr));
+            registerInfo.put("register_account_obj_id", mapAccAddr.get(tempAddr));
             log.info(gdCF.contructRegisterInfo(regStoreId, shareList.size(),tempObjId,tempPP).toString().replaceAll("\"", ""));
             log.info(registerInfo.toString());
             registerInfo.put("register_nature_of_shares",tempPP);
