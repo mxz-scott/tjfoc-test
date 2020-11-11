@@ -174,8 +174,9 @@ public class WVMContractTest {
 
         String response10 = query(ctHash,"BalanceTest",accountB);//获取账户B账户余额 报错
 
+        assertThat(JSONObject.fromObject(response10).getString("state"),containsString("500"));
         if (wvmVersion != ""){
-            assertThat(JSONObject.fromObject(response10).getString("message"),containsString("no such file or directory"));
+            assertThat(JSONObject.fromObject(response10).getString("message"),containsString("This version[1.0.0] of the smart contract is destroyed"));
         }else{
             assertThat(JSONObject.fromObject(response10).getString("message"),containsString("This smart contract is destroyed"));
         }
@@ -502,14 +503,13 @@ public class WVMContractTest {
 
         for(String ctHash : ctHashList){
             String response1 = query(ctHash,"BalanceTest",accountA);//获取账户A账户余额
-
+            //销毁后会提示找不到合约文件 500 error code
+            assertThat(JSONObject.fromObject(response1).getString("state"),containsString("500"));
             if (wvmVersion != ""){
-                assertThat(JSONObject.fromObject(response1).getString("message"),containsString("no such file or directory"));
+                assertThat(JSONObject.fromObject(response1).getString("message"),containsString("This version[1.0.0] of the smart contract is destroyed"));
             }else{
                 assertThat(JSONObject.fromObject(response1).getString("message"),containsString("This smart contract is destroyed"));
             }
-
-        //销毁后会提示找不到合约文件 500 error code
         }
     }
 
@@ -676,9 +676,15 @@ public class WVMContractTest {
         chkTxDetailRsp("200",txHash2);
 
         String response10 = query(ctHash1,"BalanceTest",accountB);//获取转账后账户B账户余额 报错
-//        assertThat(JSONObject.fromObject(response10).getString("message"),containsString("no such file or directory"));
-        assertThat(JSONObject.fromObject(response10).getString("message"),containsString("This smart contract is destroyed"));
-// 销毁后会提示找不到合约文件 500 error code
+
+        // 销毁后会提示找不到合约文件 500 error code
+        assertThat(JSONObject.fromObject(response10).getString("state"),containsString("500"));
+        if (wvmVersion != ""){
+            assertThat(JSONObject.fromObject(response10).getString("message"),containsString("This version[1.0.0] of the smart contract is destroyed"));
+        }else{
+            assertThat(JSONObject.fromObject(response10).getString("message"),containsString("This smart contract is destroyed"));
+        }
+
 
         return ctHash1;
     }

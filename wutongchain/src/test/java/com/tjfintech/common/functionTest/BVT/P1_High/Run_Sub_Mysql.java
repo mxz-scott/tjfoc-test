@@ -29,6 +29,7 @@ import org.junit.runners.Suite;
         StoreTest.class,
         PrivateStoreTest.class,
         PrivateStoreTestFastGet.class,
+        NoPriPrivateStoreTest.class,
         WVMContractTest.class,
         VerifyTests.class,
 

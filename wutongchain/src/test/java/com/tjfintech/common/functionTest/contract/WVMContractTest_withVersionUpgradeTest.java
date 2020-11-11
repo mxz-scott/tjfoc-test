@@ -237,8 +237,10 @@ public class WVMContractTest_withVersionUpgradeTest {
             chkTxDetailRsp("404",txHash2);
         }
         else {
-            assertEquals("400", JSONObject.fromObject(response4).getString("state"));
-            assertEquals(true, response4.contains("Smart contract does not exist"));
+//            assertEquals("400", JSONObject.fromObject(response4).getString("state"));
+//            assertEquals(true, response4.contains("Smart contract does not exist"));
+            assertEquals("500", JSONObject.fromObject(response4).getString("state"));
+            assertEquals(true, response4.contains("of the smart contract is destroyed"));
         }
     }
 
