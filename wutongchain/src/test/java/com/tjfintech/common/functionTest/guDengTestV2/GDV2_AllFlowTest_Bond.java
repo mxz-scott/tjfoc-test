@@ -1,7 +1,6 @@
 package com.tjfintech.common.functionTest.guDengTestV2;
 
 import com.tjfintech.common.CommonFunc;
-import com.tjfintech.common.GDBeforeCondition;
 import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.GDCommonFunc.*;
+import static com.tjfintech.common.functionTest.guDengTestV2.GDCommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassGD.*;
 import static org.junit.Assert.assertEquals;
@@ -70,7 +69,7 @@ public class GDV2_AllFlowTest_Bond {
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
         Map jsonMap = JSONObject.fromObject(response).getJSONObject("data");
-        jsonMap.put("对象标识",gdCompanyID);
+        jsonMap.put("letter_object_identification",gdCompanyID);
 
 
         //查询投资者信息
@@ -154,7 +153,7 @@ public class GDV2_AllFlowTest_Bond {
     @Test
     public void TC06_shareIssue() throws Exception {
 
-        registerInfo.put("登记流水号","issue000001");
+        registerInfo.put("register_registration_serial_number","issue000001");
         List<Map> shareList = gdConstructShareList(gdAccount1,5000,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,5000,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,5000,0, shareList2);
@@ -244,7 +243,7 @@ public class GDV2_AllFlowTest_Bond {
         long changeAmount = 500;
         int oldProperty = 0;
         int newProperty = 1;
-        registerInfo.put("登记流水号","ChangeProperty000001");
+        registerInfo.put("register_registration_serial_number","ChangeProperty000001");
         List<Map> regListInfo = new ArrayList<>();
         regListInfo.add(registerInfo);
         regListInfo.add(registerInfo);
@@ -332,7 +331,7 @@ public class GDV2_AllFlowTest_Bond {
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        registerInfo.put("登记流水号","transfer000001");
+        registerInfo.put("register_registration_serial_number","transfer000001");
         String response= gd.GDShareTransfer(keyId,fromAddr,amount,toAddr,shareProperty,eqCode,txInformation,registerInfo,registerInfo);
 
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -423,7 +422,7 @@ public class GDV2_AllFlowTest_Bond {
         String reason = "司法冻结";
         String cutoffDate = "2022-09-30";
 
-        registerInfo.put("登记流水号","lock" + bizNo);
+        registerInfo.put("register_registration_serial_number","lock" + bizNo);
 
         String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,registerInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -512,7 +511,7 @@ public class GDV2_AllFlowTest_Bond {
         String eqCode = gdEquityCode;
         long amount = 500;
 
-        registerInfo.put("登记流水号","unlock" + bizNo);
+        registerInfo.put("register_registration_serial_number","unlock" + bizNo);
 
         String response= gd.GDShareUnlock(bizNo,eqCode,amount,registerInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -601,9 +600,9 @@ public class GDV2_AllFlowTest_Bond {
         log.info("回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
         BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
+                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
 
-        registerInfo.put("登记流水号","recylce000001");
+        registerInfo.put("register_registration_serial_number","recylce000001");
 
         List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
 
@@ -692,7 +691,7 @@ public class GDV2_AllFlowTest_Bond {
         log.info("回收后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
         BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
+                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
 
         log.info("判断增发前后机构主体查询总股本数增加数正确");
         assertEquals(totalShares.subtract(new BigDecimal("100")),totalShares2);
@@ -708,9 +707,9 @@ public class GDV2_AllFlowTest_Bond {
         log.info("多个回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
         BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
+                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
 
-        registerInfo.put("登记流水号","recycle000002");
+        registerInfo.put("register_registration_serial_number","recycle000002");
 
         List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,100,0,shareList);
@@ -800,7 +799,7 @@ public class GDV2_AllFlowTest_Bond {
         log.info("多个回收后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
         BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("主体信息").getJSONObject("机构主体信息").getJSONObject("企业基本信息").getString("股本总数(股)"));
+                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
 
         log.info("判断增发前后机构主体查询总股本数增加数正确");
         assertEquals(totalShares.subtract(new BigDecimal("400")),totalShares2);

@@ -1,8 +1,6 @@
 package com.tjfintech.common.functionTest.guDengTestV2;
 
 import com.tjfintech.common.CommonFunc;
-import com.tjfintech.common.GDBeforeCondition;
-import com.tjfintech.common.GDCommonFunc;
 import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -246,7 +244,7 @@ public class GDV2_EnterpriseRegisterSpecial {
     @Test
     public void TC021_enterpriseRegisterEquityEmpty() throws Exception {
 
-        bondProductInfo.put("发行主体引用","");
+        bondProductInfo.put("product_issuer_subject_ref","");
         long shareTotals = 1000000;
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -265,7 +263,7 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         //检查主体存证信息内容与传入一致
         log.info("检查债券产品发行主体引用与主体对象标识一致");
-        equityProductInfo.put("发行主体引用",enterpriseSubjectInfo.get("对象标识").toString());
+        equityProductInfo.put("product_issuer_subject_ref",enterpriseSubjectInfo.get("letter_object_identification").toString());
         log.info(gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
         log.info(equityProductInfo.toString());
         assertEquals(equityProductInfo.toString(), gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
@@ -278,8 +276,8 @@ public class GDV2_EnterpriseRegisterSpecial {
     @Test
     public void TC022_enterpriseRegisterBondEmpty() throws Exception {
         Map mapEqOk = equityProductInfo;
-        String obj = equityProductInfo.get("发行主体引用").toString();
-        equityProductInfo.put("发行主体引用","");
+        String obj = equityProductInfo.get("product_issuer_subject_ref").toString();
+        equityProductInfo.put("product_issuer_subject_ref","");
         long shareTotals = 1000000;
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo, null,bondProductInfo);
         String txId =  net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -297,7 +295,7 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         //检查主体存证信息内容与传入一致
         log.info("检查债券产品发行主体引用与主体对象标识一致");
-        bondProductInfo.put("发行主体引用",enterpriseSubjectInfo.get("对象标识").toString());
+        bondProductInfo.put("product_issuer_subject_ref",enterpriseSubjectInfo.get("letter_object_identification").toString());
         log.info(gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
         log.info(bondProductInfo.toString());
         assertEquals(bondProductInfo.toString(), gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
@@ -310,11 +308,11 @@ public class GDV2_EnterpriseRegisterSpecial {
     public void TC023_createAccTestEmpty() throws Exception {
         GDBeforeCondition gdBC = new GDBeforeCondition();
         Map fundOk = equityaccountInfo;
-        equityaccountInfo.put("账户所属主体引用","");
-        equityaccountInfo.put("关联账户对象引用","");
+        equityaccountInfo.put("account_holder_subject_ref","");
+        equityaccountInfo.put("account_associated_account_ref","");
 
-        fundaccountInfo.put("账户所属主体引用","");
-        fundaccountInfo.put("关联账户对象引用","");
+        fundaccountInfo.put("account_holder_subject_ref","");
+        fundaccountInfo.put("account_associated_account_ref","");
 
 
         String cltNo = "tet00" + Random(12);
@@ -323,20 +321,20 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         //构造股权账户信息
         Map shareHolderInfo = new HashMap();
-        equityaccountInfo.put("账户对象标识",cltNo);  //更新账户对象标识字段
+        equityaccountInfo.put("account_object_id",cltNo);  //更新账户对象标识字段
         shareHolderInfo.put("shareholderNo",shareHolderNo);
         shareHolderInfo.put("accountInfo", equityaccountInfo);
 
         //构造资金账户信息
-        fundaccountInfo.put("账户对象标识",cltNo);  //更新账户对象标识字段
+        fundaccountInfo.put("account_object_id",cltNo);  //更新账户对象标识字段
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("fundNo",fundNo);
         mapFundInfo.put("accountInfo",fundaccountInfo);
 
         //构造个人/投资者主体信息
         gdBC.init01PersonalSubjectInfo();
-        investorSubjectInfo.put("对象标识",cltNo);  //更新对象标识字段
-        investorSubjectInfo.put("主体标识","sid" + cltNo);  //更新主体标识字段
+        investorSubjectInfo.put("letter_object_identification",cltNo);  //更新对象标识字段
+        investorSubjectInfo.put("subject_id","sid" + cltNo);  //更新主体标识字段
 
         String response = gd.GDCreateAccout(gdContractAddress,cltNo,mapFundInfo,shareHolderInfo, investorSubjectInfo);
         commonFunc.sdkCheckTxOrSleep(net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId"),utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -350,11 +348,11 @@ public class GDV2_EnterpriseRegisterSpecial {
         String subStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
 
 
-        equityaccountInfo.put("账户所属主体引用",investorSubjectInfo.get("对象标识"));
-//        equityaccountInfo.put("关联账户对象引用",investorSubjectInfo.get("对象标识"));//当前未自动填入
+        equityaccountInfo.put("account_holder_subject_ref",investorSubjectInfo.get("letter_object_identification"));
+//        equityaccountInfo.put("account_associated_account_ref",investorSubjectInfo.get("letter_object_identification"));//当前未自动填入
 
-        fundaccountInfo.put("账户所属主体引用",investorSubjectInfo.get("对象标识"));
-        fundaccountInfo.put("关联账户对象引用",investorSubjectInfo.get("对象标识"));
+        fundaccountInfo.put("account_holder_subject_ref",investorSubjectInfo.get("letter_object_identification"));
+        fundaccountInfo.put("account_associated_account_ref",investorSubjectInfo.get("letter_object_identification"));
 
         //检查主体存证信息内容与传入一致
         log.info("检查主体存证信息内容与传入一致");
