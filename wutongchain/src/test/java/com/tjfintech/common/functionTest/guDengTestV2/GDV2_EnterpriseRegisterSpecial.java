@@ -60,7 +60,97 @@ public class GDV2_EnterpriseRegisterSpecial {
     @Test
     public void TC011_enterpriseRegisterEquityCheckFormat() throws Exception {
         long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,null);
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo,
+                equityProductInfo,null,null);
+        String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+        //查询挂牌企业主体数据  交易上链后 数据可能还未写入合约 在此做2s内数据查询
+        for(int i = 0;i<20;i++) {
+            response = gd.GDMainSubjectQuery(gdContractAddress, gdCompanyID);
+            if(net.sf.json.JSONObject.fromObject(response).getString("state").equals("200"))
+                break;
+            sleepAndSaveInfo(100);
+        }
+        assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
+
+
+
+        //获取主体/产品存证hash
+        String query = store.GetTxDetail(txId);
+        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm"
+                ).getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
+        JSONObject jsonObject = JSONObject.parseObject(questInfo);
+
+        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
+        String ProductInfoTxId = jsonObject.getString("ProductInfoTxId");
+
+        //检查主体存证信息内容与传入一致
+        log.info("检查主体存证信息内容与传入一致");
+        log.info(gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
+        log.info(enterpriseSubjectInfo.toString());
+        assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
+
+        //检查产品存证信息内容与传入一致
+        log.info("检查产品存证信息内容与传入一致");
+        log.info(gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
+        log.info(equityProductInfo.toString());
+        assertEquals(equityProductInfo.toString(), gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
+    }
+
+
+    //企业 债券类 登记
+    @Test
+    public void TC012_enterpriseRegisterBondCheckFormat() throws Exception {
+        long shareTotals = 1000000;
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo,
+                null,bondProductInfo,null);
+        String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+        //查询挂牌企业主体数据  交易上链后 数据可能还未写入合约 在此做2s内数据查询
+        for(int i = 0;i<20;i++) {
+            response = gd.GDMainSubjectQuery(gdContractAddress, gdCompanyID);
+            if(net.sf.json.JSONObject.fromObject(response).getString("state").equals("200"))
+                break;
+            sleepAndSaveInfo(100);
+        }
+        assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
+
+        //获取主体/产品存证hash
+        String query = store.GetTxDetail(txId);
+        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm"
+                    ).getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
+        JSONObject jsonObject = JSONObject.parseObject(questInfo);
+
+        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
+        String ProductInfoTxId = jsonObject.getString("ProductInfoTxId");
+
+        //检查主体存证信息内容与传入一致
+        log.info("检查主体存证信息内容与传入一致");
+        log.info(gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
+        log.info(enterpriseSubjectInfo.toString());
+        assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
+
+        //检查产品存证信息内容与传入一致
+        log.info("检查产品存证信息内容与传入一致");
+        log.info(gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
+        log.info(bondProductInfo.toString());
+        assertEquals(bondProductInfo.toString(), gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
+
+
+    }
+
+    //企业 股权类 登记
+    @Test
+    public void TC013_enterpriseRegisterFundCheckFormat() throws Exception {
+        long shareTotals = 1000000;
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo,
+                null,null,fundProductInfo);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -94,58 +184,16 @@ public class GDV2_EnterpriseRegisterSpecial {
         //检查产品存证信息内容与传入一致
         log.info("检查产品存证信息内容与传入一致");
         log.info(gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
-        log.info(equityProductInfo.toString());
-        assertEquals(equityProductInfo.toString(), gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
-    }
-
-
-    //企业 债券类 登记
-    @Test
-    public void TC012_enterpriseRegisterBondCheckFormat() throws Exception {
-        long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo, null,bondProductInfo);
-        String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
-
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
-        //查询挂牌企业主体数据  交易上链后 数据可能还未写入合约 在此做2s内数据查询
-        for(int i = 0;i<20;i++) {
-            response = gd.GDMainSubjectQuery(gdContractAddress, gdCompanyID);
-            if(net.sf.json.JSONObject.fromObject(response).getString("state").equals("200"))
-                break;
-            sleepAndSaveInfo(100);
-        }
-        assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
-
-        //获取主体/产品存证hash
-        String query = store.GetTxDetail(txId);
-        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
-        JSONObject jsonObject = JSONObject.parseObject(questInfo);
-
-        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
-        String ProductInfoTxId = jsonObject.getString("ProductInfoTxId");
-
-        //检查主体存证信息内容与传入一致
-        log.info("检查主体存证信息内容与传入一致");
-        log.info(gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
-        log.info(enterpriseSubjectInfo.toString());
-        assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
-
-        //检查产品存证信息内容与传入一致
-        log.info("检查产品存证信息内容与传入一致");
-        log.info(gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
-        log.info(bondProductInfo.toString());
-        assertEquals(bondProductInfo.toString(), gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
-
-
+        log.info(fundProductInfo.toString());
+        assertEquals(fundProductInfo.toString(), gdCF.contructFundProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
     }
 
     //会员登记
     @Test
     public void TC013_enterpriseRegisterMemberCheckFormat() throws Exception {
         long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,"",0,enterpriseSubjectInfo, null,null);
+        String response= gd.GDEnterpriseResister(gdContractAddress,"",0,enterpriseSubjectInfo,
+                null,null,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -163,7 +211,8 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         //获取主体/产品存证hash
         String query = store.GetTxDetail(txId);
-        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
+        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm"
+                ).getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
         String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
@@ -246,7 +295,8 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         bondProductInfo.put("product_issuer_subject_ref","");
         long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,null);
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo,
+                    equityProductInfo,null,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -255,7 +305,8 @@ public class GDV2_EnterpriseRegisterSpecial {
 
         //获取主体/产品存证hash
         String query = store.GetTxDetail(txId);
-        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
+        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm"
+                ).getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
         String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
@@ -275,11 +326,10 @@ public class GDV2_EnterpriseRegisterSpecial {
     //产品主体引用置为空
     @Test
     public void TC022_enterpriseRegisterBondEmpty() throws Exception {
-        Map mapEqOk = equityProductInfo;
-        String obj = equityProductInfo.get("product_issuer_subject_ref").toString();
-        equityProductInfo.put("product_issuer_subject_ref","");
+        bondProductInfo.put("product_issuer_subject_ref","");
         long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo, null,bondProductInfo);
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo,
+                null,bondProductInfo,null);
         String txId =  net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -299,6 +349,36 @@ public class GDV2_EnterpriseRegisterSpecial {
         log.info(gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
         log.info(bondProductInfo.toString());
         assertEquals(bondProductInfo.toString(), gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
+
+    }
+
+    //企业 基金类 登记
+    //产品主体引用置为空
+    @Test
+    public void TC023_enterpriseRegisterBondEmpty() throws Exception {
+        fundProductInfo.put("product_issuer_subject_ref","");
+        long shareTotals = 1000000;
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo,
+                null,null,fundProductInfo);
+        String txId =  net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+        //获取主体/产品存证hash
+        String query = store.GetTxDetail(txId);
+        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
+        JSONObject jsonObject = JSONObject.parseObject(questInfo);
+
+        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
+        String ProductInfoTxId = jsonObject.getString("ProductInfoTxId");
+
+        //检查主体存证信息内容与传入一致
+        log.info("检查基金类产品发行主体引用与主体对象标识一致");
+        fundProductInfo.put("product_issuer_subject_ref",enterpriseSubjectInfo.get("letter_object_identification").toString());
+        log.info(gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
+        log.info(fundProductInfo.toString());
+        assertEquals(fundProductInfo.toString(), gdCF.contructFundProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
 
     }
 
@@ -337,7 +417,8 @@ public class GDV2_EnterpriseRegisterSpecial {
         investorSubjectInfo.put("subject_id","sid" + cltNo);  //更新主体标识字段
 
         String response = gd.GDCreateAccout(gdContractAddress,cltNo,mapFundInfo,shareHolderInfo, investorSubjectInfo);
-        commonFunc.sdkCheckTxOrSleep(net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId"),utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(net.sf.json.JSONObject.fromObject(response).getJSONObject("data"
+                    ).getString("txId"),utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 

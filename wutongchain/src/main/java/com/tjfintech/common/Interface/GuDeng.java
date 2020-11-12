@@ -5,7 +5,8 @@ import java.util.Map;
 
 public interface GuDeng {
 
-    String GDEnterpriseResister(String contractAddress, String equityCode, long totalShares, Map enterpriseSubjectInfo, Map equityProductInfo,Map bondProductInfo);
+    String GDEnterpriseResister(String contractAddress, String equityCode, long totalShares, Map enterpriseSubjectInfo,
+                                Map equityProductInfo,Map bondProductInfo,Map fundProductInfo);
     String GDCreateAccout(String contractAddress, String clientNo,Map fundInfo,Map shareholderInfo,Map investorInfo);
 
     String GDShareIssue(String contractAddress, String platformKeyId, String equityCode, List<Map> shareList);

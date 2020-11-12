@@ -189,8 +189,9 @@ public class GDBeforeCondition {
         investorSubjectInfo = init01PersonalSubjectInfo();        //初始化个人主体数据信息  涉及接口 开户
         equityaccountInfo = init02EquityAccountInfo();          //初始化账户数据信息 股权账户  涉及接口 开户
         fundaccountInfo = init02FundAccountInfo();            //初始化账户数据信息 资金账户  涉及接口 开户
-        equityProductInfo = init03EquityProductInfo();          //初始化股权类产品数据信息  涉及接口 挂牌企业登记 股份增发 场内转板
-        bondProductInfo = init03BondProductInfo();            //初始化债券类产品数据信息  涉及接口 挂牌企业登记 股份增发 场内转板
+        equityProductInfo = init03EquityProductInfo();          //初始化私募股权类产品数据信息  涉及接口 挂牌企业登记 股份增发 场内转板
+        bondProductInfo = init03BondProductInfo();            //初始化私募可转债产品数据信息  涉及接口 挂牌企业登记 发行
+        fundProductInfo = init03JiJin();            //初始化基金股权产品数据信息  涉及接口 挂牌企业登记 发行
         txInformation = init04TxInfo();                     //初始化交易数据信息  涉及接口 过户转让
         registerInfo = init05RegInfo();                    //初始化登记数据信息  涉及接口 发行 股份性质变更 过户转让 增发 冻结 解除冻结
         settleInfo = init06SettleInfo();                 //初始化资金结算数据信息  涉及接口 资金清算
@@ -776,7 +777,7 @@ public class GDBeforeCondition {
         return mapTemp;
     }
 
-    public Map init03JJ(){
+    public Map init03JiJin(){
         Map mapTemp = new HashMap();
         log.info("初始化03产品数据结构");
         mapTemp.clear();

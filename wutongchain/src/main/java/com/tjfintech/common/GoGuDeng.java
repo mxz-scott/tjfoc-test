@@ -24,7 +24,8 @@ public  class GoGuDeng implements GuDeng {
      * @param bondProductInfo
      * @return
      */
-    public String GDEnterpriseResister(String contractAddress, String equityCode, long totalShares, Map enterpriseSubjectInfo, Map equityProductInfo,Map bondProductInfo){
+    public String GDEnterpriseResister(String contractAddress, String equityCode, long totalShares, Map enterpriseSubjectInfo,
+                                       Map equityProductInfo,Map bondProductInfo,Map fundProductInfo){
 
         Map<String, Object> map = new HashMap<>();
         map.put("contractAddress", contractAddress);
@@ -33,6 +34,7 @@ public  class GoGuDeng implements GuDeng {
         map.put("enterpriseSubjectInfo", enterpriseSubjectInfo);
         map.put("equityProductInfo", equityProductInfo);
         map.put("bondProductInfo", bondProductInfo);
+        map.put("fundProductInfo", fundProductInfo);
 
         String result = PostTest.postMethod(SDKADD + "/equity/enterprise/issue", map);
         log.info(result);

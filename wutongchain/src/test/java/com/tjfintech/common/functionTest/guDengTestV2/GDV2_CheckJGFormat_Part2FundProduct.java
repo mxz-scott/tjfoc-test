@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDV2_CheckJGFormat_Part2BondProduct {
+public class GDV2_CheckJGFormat_Part2FundProduct {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
@@ -64,7 +64,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         gdBefore.gdCreateAccout();
 //        gdBefore.initRegulationData();
         equityProductInfo = null;//本测试类执行测试为债券产品
-        fundProductInfo = null;
+        bondProductInfo = null;
         gdEquityCode = "fondTest" + Random(12);
     }
 
@@ -379,9 +379,9 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         log.info("检查场内转板存证产品格式化及信息内容与传入一致");
 
         log.info(gdCF.contructBondProdInfo(storeId).toString().replaceAll("\"",""));
-        log.info(bondProductInfo.toString());
-        bondProductInfo.put("product_code",gdEquityCode);
-        assertEquals(bondProductInfo.toString(), gdCF.contructBondProdInfo(storeId).toString().replaceAll("\"",""));
+        log.info(fundProductInfo.toString());
+        fundProductInfo.put("product_code",gdEquityCode);
+        assertEquals(fundProductInfo.toString(), gdCF.contructFundProdInfo(storeId).toString().replaceAll("\"",""));
 
         log.info("================================检查存证数据格式化《结束》================================");
 

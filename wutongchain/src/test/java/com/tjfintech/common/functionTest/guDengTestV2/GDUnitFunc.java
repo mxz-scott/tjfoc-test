@@ -339,7 +339,7 @@ public class GDUnitFunc {
 
     public String enterpriseReg(String eqCode,Boolean bCheckOnchain)throws Exception{
         long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,eqCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,bondProductInfo);
+        String response= gd.GDEnterpriseResister(gdContractAddress,eqCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,bondProductInfo,fundProductInfo);
 
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);

@@ -32,6 +32,7 @@ public class ReplaceCNENforGD {
 
             String[] arr = line.split(",");
             iCount ++;
+            log.info(iCount + "  line  " + line);
             if(arr[0].contains("(")) {
                 mapCNEN.put(arr[0].replaceAll("\\(","\\\\(").replaceAll("\\)","\\\\)"),arr[1]);
                 log.info("en brackets " + arr[0] );
