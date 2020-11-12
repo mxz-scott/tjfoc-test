@@ -72,7 +72,7 @@ public class GDV2_AllFlowTest_Equity {
     @Test
     public void TC01_enterpriseRegister() throws Exception {
         long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,bondProductInfo);
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,bondProductInfo,fundProductInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -1120,7 +1120,7 @@ public class GDV2_AllFlowTest_Equity {
         //挂牌企业登记
         long shareTotals = 1000000;
         Map testSub = gdBF.init01EnterpriseSubjectInfo();
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,testSub, equityProductInfo,bondProductInfo);
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,testSub, equityProductInfo,bondProductInfo,fundProductInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 

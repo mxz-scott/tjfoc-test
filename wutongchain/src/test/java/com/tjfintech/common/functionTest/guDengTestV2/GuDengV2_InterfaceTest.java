@@ -44,19 +44,19 @@ public class GuDengV2_InterfaceTest {
     public void enterpriseIssueInterfaceTest() throws Exception {
         //验证接口正常
         long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,bondProductInfo);
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,bondProductInfo,fundProductInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
         //gdContractAddress为空
-        response= gd.GDEnterpriseResister("",gdEquityCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,bondProductInfo);
+        response= gd.GDEnterpriseResister("",gdEquityCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,bondProductInfo,fundProductInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("Error:Field validation for 'ContractAddress' failed on the 'required"));
 
         //主体信息为空
-        response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,null, equityProductInfo,bondProductInfo);
+        response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,null, equityProductInfo,bondProductInfo,fundProductInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("机构主体信息中对象标识不可以为空"));
 
@@ -128,7 +128,7 @@ public class GuDengV2_InterfaceTest {
         String eqCode = "issue" + Random(6);
         long shareTotals = 1000000;
         //执行挂牌企业登记
-        String response= gd.GDEnterpriseResister(gdContractAddress,eqCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,bondProductInfo);
+        String response= gd.GDEnterpriseResister(gdContractAddress,eqCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,bondProductInfo,fundProductInfo);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
         sleepAndSaveInfo(5000);
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
