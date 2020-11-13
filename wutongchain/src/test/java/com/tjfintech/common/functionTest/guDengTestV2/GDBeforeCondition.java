@@ -157,7 +157,7 @@ public class GDBeforeCondition {
 
         //构造个人/投资者主体信息
         init01PersonalSubjectInfo();
-        investorSubjectInfo.put("letter_object_identification",cltNo);  //更新对象标识字段
+        investorSubjectInfo.put("subject_object_id",cltNo);  //更新对象标识字段
         investorSubjectInfo.put("subject_id","sid" + cltNo);  //更新主体标识字段
 
         String response = gd.GDCreateAccout(gdContractAddress,cltNo,mapFundInfo,shareHolderInfo, investorSubjectInfo);
@@ -216,30 +216,7 @@ public class GDBeforeCondition {
         Map qualification1 = new HashMap();
         Map qualification2 = new HashMap();
         listQual.add(qualification1);
-        listQual.add(qualification2);
-
-        //主体信息 主体基本信息 主体资质信息 资质信息
-        qualification1.put("subject_qualification_category",0);
-        qualification1.put("subject_market_roles_types",0);
-        qualification1.put("subject_financial_qualification_types",0);
-
-        //主体信息 主体基本信息 主体资质信息 资质认证信息
-        qualification1.put("subject_role_qualification_number","CHpCT82aXlhaA3");
-        qualification1.put("subject_role_qualification_certification_document",fileList);
-        qualification1.put("subject_qualification_party_certification","CHbG59a6kufNo1");
-        qualification1.put("subject_role_qualification_reviewer","CH8Ggm9JnTBIp5");
-        qualification1.put("subject_certification_time","2020/11/05 14:14:59");
-        qualification1.put("subject_audit_time","2020/11/05 14:14:59");
-
-        qualification2.put("subject_qualification_category",0);
-        qualification2.put("subject_market_roles_types",0);
-        qualification2.put("subject_financial_qualification_types",0);
-        qualification2.put("subject_role_qualification_number","CHpCT82aXlhaA3");
-        qualification2.put("subject_role_qualification_certification_document",fileList);
-        qualification2.put("subject_qualification_party_certification","CHbG59a6kufNo1");
-        qualification2.put("subject_role_qualification_reviewer","CH8Ggm9JnTBIp5");
-        qualification2.put("subject_certification_time","2020/11/06 14:14:59");
-        qualification2.put("subject_audit_time","2020/11/06 14:14:59");
+//        listQual.add(qualification2);
 
         //对象标识
         mapTemp.put("subject_object_id",gdCompanyID);
@@ -252,7 +229,20 @@ public class GDBeforeCondition {
         mapTemp.put("subject_create_time","2020/11/06 14:14:59");
 
         //主体信息 主体基本信息 主体资质信息
-        mapTemp.put("subject_qualification_information",listQual);
+        //主体信息 主体基本信息 主体资质信息 资质信息
+        mapTemp.put("subject_qualification_category",0);
+        mapTemp.put("subject_market_roles_types",0);
+        mapTemp.put("subject_financial_qualification_types",0);
+
+        //主体信息 主体基本信息 主体资质信息 资质认证信息
+        mapTemp.put("subject_role_qualification_number","CHpCT82aXlhaA3");
+        mapTemp.put("subject_role_qualification_certification_document",fileList);
+        mapTemp.put("subject_qualification_party_certification","CHbG59a6kufNo1");
+        mapTemp.put("subject_role_qualification_reviewer","CH8Ggm9JnTBIp5");
+        mapTemp.put("subject_certification_time","2020/11/05 14:14:59");
+        mapTemp.put("subject_audit_time","2020/11/05 14:14:59");
+
+//        mapTemp.put("subject_qualification_information",listQual);
 
         //主体信息 机构主体信息 机构分类信息
         mapTemp.put("subject_organization_type",0);
@@ -320,22 +310,28 @@ public class GDBeforeCondition {
         mapTemp.put("subject_object_id",cltNo);
         mapTemp.put("subject_object_information_type",0);
 
+        //主体信息 主体基本信息 主体通用信息
+        mapTemp.put("subject_id",gdCompanyID + "sub");
+        mapTemp.put("subject_industry_code","CHDcdIuA52fhLo");
+        mapTemp.put("subject_type",0);
+        mapTemp.put("subject_create_time","2020/11/06 14:14:59");
+
         //主体信息 主体基本信息 主体资质信息
         //主体信息 主体基本信息 主体资质信息 资质信息
-        qualification1.put("subject_qualification_category",0);
-        qualification1.put("subject_market_roles_types",0);
-        qualification1.put("subject_financial_qualification_types",0);
+        mapTemp.put("subject_qualification_category",0);
+        mapTemp.put("subject_market_roles_types",0);
+        mapTemp.put("subject_financial_qualification_types",0);
 
         //主体信息 主体基本信息 主体资质信息 资质认证信息
-        qualification1.put("subject_role_qualification_number","CHpCT82aXlhaA3");
-        qualification1.put("subject_role_qualification_certification_document",fileList1);
-        qualification1.put("subject_qualification_party_certification","CHbG59a6kufNo1");
-        qualification1.put("subject_role_qualification_reviewer","CH8Ggm9JnTBIp5");
-        qualification1.put("subject_certification_time","2020/11/05 14:14:59");
-        qualification1.put("subject_audit_time","2020/11/05 14:14:59");
+        mapTemp.put("subject_role_qualification_number","CHpCT82aXlhaA3");
+        mapTemp.put("subject_role_qualification_certification_document",fileList1);
+        mapTemp.put("subject_qualification_party_certification","CHbG59a6kufNo1");
+        mapTemp.put("subject_role_qualification_reviewer","CH8Ggm9JnTBIp5");
+        mapTemp.put("subject_certification_time","2020/11/05 14:14:59");
+        mapTemp.put("subject_audit_time","2020/11/05 14:14:59");
 
-        mapQuali.add(qualification1);
-        mapTemp.put("subject_qualification_information",mapQuali);
+//        mapQuali.add(qualification1);
+//        mapTemp.put("subject_qualification_information",mapQuali);
 
         //主体信息 个人主体信息 个人主体基本信息
         mapTemp.put("subject_investor_name","zhangsan");
@@ -361,7 +357,7 @@ public class GDBeforeCondition {
         mapTemp.put("subject_city","苏州");
 
 
-        //主体信息 个人主体信息 个人基本信息
+        //主体信息 个人主体信息 个人主体风险评级
         mapTemp.put("subject_rating_results","通过");
         mapTemp.put("subject_rating_time","2020/09/12 12:01:12");
         mapTemp.put("subject_rating_record","记录");
@@ -499,58 +495,57 @@ public class GDBeforeCondition {
         return mapTemp;
     }
 
-    public Map init03EquityProductInfo() {
-        Map mapTemp = new HashMap();
-        log.info("初始化03产品数据结构");
-        mapTemp.clear();
+
+    public Map productCommonInfo(int type){
+        Map mapProdComInfo = new HashMap();
 
         //对象标识
-        mapTemp.put("product_object_id",gdEquityCode + "01");
-        mapTemp.put("product_object_information_type",0);
+        mapProdComInfo.put("product_object_id",gdEquityCode + "01");
+        mapProdComInfo.put("product_object_information_type",0);
 
         //产品信息 基本信息 产品基本信息
-        mapTemp.put("product_trading_market_category",0);
-        mapTemp.put("product_market_subject","msN0000110");
-        mapTemp.put("product_market_subject_name","上海交易所");
-        mapTemp.put("product_plate_trading_name","N板");  //以上为新增
-        mapTemp.put("product_issuer_subject_ref",gdCompanyID);
-        mapTemp.put("product_issuer_name","sh");
-        mapTemp.put("product_code","SH10001");
-        mapTemp.put("product_name","发行小额");
-        mapTemp.put("product_abbreviation","融资类小额");
-        mapTemp.put("product_use",0);
-        mapTemp.put("product_type",0);
-        mapTemp.put("product_term",50000);
-        mapTemp.put("product_info_disclosure_way",0);
-        mapTemp.put("product_scale_unit",5000);
-        mapTemp.put("product_scale_currency",0);
-        mapTemp.put("product_scale",100000);
-        mapTemp.put("product_customer_browsing_right",0);
-        mapTemp.put("product_customer_trading_right",0);
-        mapTemp.put("product_issuer_contact_person","张三");
-        mapTemp.put("product_issuer_contact_info","1555222");
+        mapProdComInfo.put("product_trading_market_category",0);
+        mapProdComInfo.put("product_market_subject","msN0000110");
+        mapProdComInfo.put("product_market_subject_name","上海交易所");
+        mapProdComInfo.put("product_plate_trading_name","N板");  //以上为新增
+        mapProdComInfo.put("product_issuer_subject_ref",gdCompanyID);
+        mapProdComInfo.put("product_issuer_name","sh");
+        mapProdComInfo.put("product_code","SH10001");
+        mapProdComInfo.put("product_name","发行小额");
+        mapProdComInfo.put("product_abbreviation","融资类小额");
+        mapProdComInfo.put("product_use",0);
+        mapProdComInfo.put("product_type",type);//私募股权 可转债 基金会有不同
+        mapProdComInfo.put("product_term",50000);
+        mapProdComInfo.put("product_info_disclosure_way",0);
+        mapProdComInfo.put("product_scale_unit",5000);
+        mapProdComInfo.put("product_scale_currency",0);
+        mapProdComInfo.put("product_scale",100000);
+        mapProdComInfo.put("product_customer_browsing_right",0);
+        mapProdComInfo.put("product_customer_trading_right",0);
+        mapProdComInfo.put("product_issuer_contact_person","张三");
+        mapProdComInfo.put("product_issuer_contact_info","1555222");
 
         //产品信息 基本信息 服务方信息
-        mapTemp.put("product_registry_subject_ref","regobj001");
-        mapTemp.put("product_name_registration_body","登记机构名");
-        mapTemp.put("product_trustee_subject_ref","regobj001");
-        mapTemp.put("product_name_trustee","联合股权");
-        mapTemp.put("product_underwriter_subject_ref","regobj001");
-        mapTemp.put("product_underwriter_name","承销机构名");
-        mapTemp.put("product_sponsor_subject","regobj001");
-        mapTemp.put("product_sponsor_subject_name","保荐机构名");
-        mapTemp.put("product_fund_administrator_account","regobj001");
-        mapTemp.put("product_fund_administrator_name","管理人名");
-        mapTemp.put("product_guarantor_subject_ref","regobj001");
-        mapTemp.put("product_guarantor_name","担保机构名");
-        mapTemp.put("product_law_firm_subject_ref","regobj001");
-        mapTemp.put("product_law_firm_name","律所名");
-        mapTemp.put("product_accounting_firm_subject_ref","regobj001");
-        mapTemp.put("product_accounting_firm_name","事务所名");
-        mapTemp.put("product_credit_enhancement_agency_subject_ref","regobj001");
-        mapTemp.put("product_credit_enhancement_agency_name","信用机构名");
-        mapTemp.put("product_credit_rating_agency_subject_ref","regobj001");
-        mapTemp.put("product_credit_rating_agency_name","评级机构名");
+        mapProdComInfo.put("product_registry_subject_ref","regobj001");
+        mapProdComInfo.put("product_name_registration_body","登记机构名");
+        mapProdComInfo.put("product_trustee_subject_ref","regobj001");
+        mapProdComInfo.put("product_name_trustee","联合股权");
+        mapProdComInfo.put("product_underwriter_subject_ref","regobj001");
+        mapProdComInfo.put("product_underwriter_name","承销机构名");
+        mapProdComInfo.put("product_sponsor_subject","regobj001");
+        mapProdComInfo.put("product_sponsor_subject_name","保荐机构名");
+        mapProdComInfo.put("product_fund_administrator_account","regobj001");
+        mapProdComInfo.put("product_fund_administrator_name","管理人名");
+        mapProdComInfo.put("product_guarantor_subject_ref","regobj001");
+        mapProdComInfo.put("product_guarantor_name","担保机构名");
+        mapProdComInfo.put("product_law_firm_subject_ref","regobj001");
+        mapProdComInfo.put("product_law_firm_name","律所名");
+        mapProdComInfo.put("product_accounting_firm_subject_ref","regobj001");
+        mapProdComInfo.put("product_accounting_firm_name","事务所名");
+        mapProdComInfo.put("product_credit_enhancement_agency_subject_ref","regobj001");
+        mapProdComInfo.put("product_credit_enhancement_agency_name","信用机构名");
+        mapProdComInfo.put("product_credit_rating_agency_subject_ref","regobj001");
+        mapProdComInfo.put("product_credit_rating_agency_name","评级机构名");
 
 
         //产品信息 基本信息 产品文件信息
@@ -560,7 +555,7 @@ public class GDBeforeCondition {
         mapPF.put("product_file_name","12345");
         mapPF.put("product_issue_doc","psf.pdf");
         listMapPF.add(mapPF);
-        mapTemp.put("product_file_information",listMapPF);
+        mapProdComInfo.put("product_file_information",listMapPF);
 
         //产品信息 基本信息 产品注册备案信息
         List<Map> listMapPR = new ArrayList<>();
@@ -571,69 +566,65 @@ public class GDBeforeCondition {
         mapPR.put("product_license_file_name","psf.pdf");
         mapPR.put("product_license_documents","psf.pdf");
         listMapPR.add(mapPR);
-        mapTemp.put("product_registration_information",listMapPR);
+        mapProdComInfo.put("product_registration_information",listMapPR);
 
 
         List<String> listFile = new ArrayList<>();
         listFile.add("dd.pdf");
 
         //产品信息 产品标的信息
-        mapTemp.put("product_fund_type",0);
-        mapTemp.put("product_description_fund_use",1);
+        mapProdComInfo.put("product_fund_type",0);
+        mapProdComInfo.put("product_description_fund_use",1);
         //产品信息 产品标准信息 经营用途信息
         List<Map> listMapBi = new ArrayList<>();
         Map mapBi = new HashMap();
+        mapBi.put("product_business_purpose_details","用途详情"); //与文档顺序中和名称调换 为数据比对
         mapBi.put("product_business_purpose_name","用途名称");
-        mapBi.put("product_business_purpose_details","用途详情");
         mapBi.put("product_documents_list",listFile);
         listMapBi.add(mapBi);
-        mapTemp.put("business_information",listMapBi);
+        mapProdComInfo.put("business_information",listMapBi);
         //产品信息 产品标准信息 投资组合信息
         List<Map> listMapPi = new ArrayList<>();
         Map mapPi = new HashMap();
+        mapPi.put("product_business_purpose_details","用途详情");//与文档顺序中和名称调换 为数据比对
         mapPi.put("product_business_purpose_name","用途名称");
-        mapPi.put("product_business_purpose_details","用途详情");
         mapPi.put("product_documents_list",listFile);
         listMapPi.add(mapPi);
-        mapTemp.put("portfolio_information",listMapPi);
+        mapProdComInfo.put("portfolio_information",listMapPi);
 
-        //产品信息 发行信息 私募可转债
-        mapTemp.put("product_duration","2025/10/11");
-        mapTemp.put("product_min_account_num",10);
-        mapTemp.put("product_face_value",10);
-        mapTemp.put("product_conversion_right","12");
-        mapTemp.put("product_conversion_price",12);
-        mapTemp.put("product_conversion_price_remark","zhuanhuan");
-        mapTemp.put("product_adjustment_change_control",15);
-        mapTemp.put("product_conversion_ratio",5);
-        mapTemp.put("product_conversion_period",20);
-        mapTemp.put("product_conversion_share_ranking",0);
-        mapTemp.put("product_redemption",0);
-        mapTemp.put("product_conversion_premium",12);
-        mapTemp.put("product_conversion_price_ref",20);
-        mapTemp.put("product_coupon_rate",10);
-        mapTemp.put("product_lnterest_rate_form","12");
-        mapTemp.put("product_interest_payment_method",0);
-        mapTemp.put("product_interest_type",0);
-        mapTemp.put("product_Interest_payment_frequency",10);
-        mapTemp.put("product_nonleap_year_interest_bearing_days",20);
-        mapTemp.put("product_leap_year_interest_bearing_days",60);
-        mapTemp.put("product_issue_price",12);
-        mapTemp.put("product_option_clause",0);
-        mapTemp.put("product_issue_scale_up",150000);
-        mapTemp.put("product_issue_scale_low",0);
-        mapTemp.put("product_issue_start_date","2020/12/12");
-        mapTemp.put("product_issue_end_date","2025/12/12");
-        mapTemp.put("product_registration_date","2020/12/12");
-        mapTemp.put("product_value_date","2021/12/12");
-        mapTemp.put("product_due_date","2025/12/12");
-        mapTemp.put("product_first_interest_payment_date","2021/12/12");
-        mapTemp.put("product_issuer_credit_rating",3);
-        mapTemp.put("product_credit_enhancement_agency_credit_rating",2);
-        mapTemp.put("product_guarantee_arrangement","d测试");
-        mapTemp.put("product_lockup",1222);
-        mapTemp.put("product_termination_conditions","退托管");
+        return mapProdComInfo;
+    }
 
+    public Map init03EquityProductInfo() {
+        Map mapTemp = new HashMap();
+        log.info("初始化03产品数据结构");
+        mapTemp.clear();
+
+        mapTemp = productCommonInfo(0); //私募股权
+
+        //产品信息 发行信息 私募股权
+        mapTemp.put("product_issue_price",50);
+        mapTemp.put("product_issue_price_method",0);
+        mapTemp.put("product_before_authorized_shares",5000);
+        mapTemp.put("product_after_authorized_shares",5000);
+        mapTemp.put("product_after_issue_market_value",5000);
+        mapTemp.put("product_net_profit",5000);
+        mapTemp.put("product_annual_net_profit",5000);
+        mapTemp.put("product_number_of_directional_issuers",5000);
+        mapTemp.put("product_issue_start_date","2021/10/11");
+        mapTemp.put("product_issue_end_date","2025/10/11");
+        mapTemp.put("product_registration_date","2021/10/11");
+        mapTemp.put("product_unlimited_sales_number_shares",5000);
+        mapTemp.put("restricted_shares_number",5000);
+
+
+        //交易信息
+        mapTemp.put("product_listing_code",gdEquityCode);
+        mapTemp.put("product_listing_time","2010/8/9");
+        mapTemp.put("product_listing_status",0);
+        mapTemp.put("product_listing_remarks","挂牌信息备注");
+        mapTemp.put("product_delisting_time","2010/8/9");
+        mapTemp.put("product_delisting_reason","不再挂牌");
         return mapTemp;
     }
 
@@ -643,99 +634,7 @@ public class GDBeforeCondition {
         log.info("初始化03产品数据结构");
         mapTemp.clear();
 
-        //对象标识
-        mapTemp.put("product_object_id",gdEquityCode + "01");
-        mapTemp.put("product_object_information_type",0);
-
-        //产品信息 基本信息 产品基本信息
-        mapTemp.put("product_trading_market_category",0);
-        mapTemp.put("product_market_subject","msN0000110");
-        mapTemp.put("product_market_subject_name","上海交易所");
-        mapTemp.put("product_plate_trading_name","N板");  //以上为新增
-        mapTemp.put("product_issuer_subject_ref",gdCompanyID);
-        mapTemp.put("product_issuer_name","sh");
-        mapTemp.put("product_code","SH10001");
-        mapTemp.put("product_name","发行小额");
-        mapTemp.put("product_abbreviation","融资类小额");
-        mapTemp.put("product_use",0);
-        mapTemp.put("product_type",0);
-        mapTemp.put("product_term",50000);
-        mapTemp.put("product_info_disclosure_way",0);
-        mapTemp.put("product_scale_unit",5000);
-        mapTemp.put("product_scale_currency",0);
-        mapTemp.put("product_scale",100000);
-        mapTemp.put("product_customer_browsing_right",0);
-        mapTemp.put("product_customer_trading_right",0);
-        mapTemp.put("product_issuer_contact_person","张三");
-        mapTemp.put("product_issuer_contact_info","1555222");
-
-        //产品信息 基本信息 服务方信息
-        mapTemp.put("product_registry_subject_ref","regobj001");
-        mapTemp.put("product_name_registration_body","登记机构名");
-        mapTemp.put("product_trustee_subject_ref","regobj001");
-        mapTemp.put("product_name_trustee","联合股权");
-        mapTemp.put("product_underwriter_subject_ref","regobj001");
-        mapTemp.put("product_underwriter_name","承销机构名");
-        mapTemp.put("product_sponsor_subject","regobj001");
-        mapTemp.put("product_sponsor_subject_name","保荐机构名");
-        mapTemp.put("product_fund_administrator_account","regobj001");
-        mapTemp.put("product_fund_administrator_name","管理人名");
-        mapTemp.put("product_guarantor_subject_ref","regobj001");
-        mapTemp.put("product_guarantor_name","担保机构名");
-        mapTemp.put("product_law_firm_subject_ref","regobj001");
-        mapTemp.put("product_law_firm_name","律所名");
-        mapTemp.put("product_accounting_firm_subject_ref","regobj001");
-        mapTemp.put("product_accounting_firm_name","事务所名");
-        mapTemp.put("product_credit_enhancement_agency_subject_ref","regobj001");
-        mapTemp.put("product_credit_enhancement_agency_name","信用机构名");
-        mapTemp.put("product_credit_rating_agency_subject_ref","regobj001");
-        mapTemp.put("product_credit_rating_agency_name","评级机构名");
-
-
-        //产品信息 基本信息 产品文件信息
-        List<Map> listMapPF = new ArrayList<>();
-        Map mapPF = new HashMap();
-        mapPF.put("product_issue_doc_num",122);
-        mapPF.put("product_file_name","12345");
-        mapPF.put("product_issue_doc","psf.pdf");
-        listMapPF.add(mapPF);
-        mapTemp.put("product_file_information",listMapPF);
-
-        //产品信息 基本信息 产品注册备案信息
-        List<Map> listMapPR = new ArrayList<>();
-        Map mapPR = new HashMap();
-
-        mapPR.put("product_license_type",122);
-        mapPR.put("product_license_number","12345");
-        mapPR.put("product_license_file_name","psf.pdf");
-        mapPR.put("product_license_documents","psf.pdf");
-        listMapPR.add(mapPR);
-        mapTemp.put("product_registration_information",listMapPR);
-
-
-        List<String> listFile = new ArrayList<>();
-        listFile.add("dd.pdf");
-
-        //产品信息 产品标的信息
-        mapTemp.put("product_fund_type",0);
-        mapTemp.put("product_description_fund_use",1);
-        //产品信息 产品标准信息 经营用途信息
-        List<Map> listMapBi = new ArrayList<>();
-        Map mapBi = new HashMap();
-        mapBi.put("product_business_purpose_name","用途名称");
-        mapBi.put("product_business_purpose_details","用途详情");
-        mapBi.put("product_documents_list",listFile);
-        listMapBi.add(mapBi);
-        mapTemp.put("business_information",listMapBi);
-        //产品信息 产品标准信息 投资组合信息
-        List<Map> listMapPi = new ArrayList<>();
-        Map mapPi = new HashMap();
-        mapPi.put("product_business_purpose_name","用途名称");
-        mapPi.put("product_business_purpose_details","用途详情");
-        mapPi.put("product_documents_list",listFile);
-        listMapPi.add(mapPi);
-        mapTemp.put("portfolio_information",listMapPi);
-
+        mapTemp = productCommonInfo(1);//私募可转债
 
         //产品信息 发行信息 私募可转债
         mapTemp.put("product_duration","2025/10/11");
@@ -774,6 +673,14 @@ public class GDBeforeCondition {
         mapTemp.put("product_lockup",1222);
         mapTemp.put("product_termination_conditions","退托管");
 
+        //交易信息
+        mapTemp.put("product_listing_code",gdEquityCode);
+        mapTemp.put("product_listing_time","2010/8/9");
+        mapTemp.put("product_listing_status",0);
+        mapTemp.put("product_listing_remarks","挂牌信息备注");
+        mapTemp.put("product_delisting_time","2010/8/9");
+        mapTemp.put("product_delisting_reason","不再挂牌");
+
         return mapTemp;
     }
 
@@ -782,98 +689,7 @@ public class GDBeforeCondition {
         log.info("初始化03产品数据结构");
         mapTemp.clear();
 
-        //对象标识
-        mapTemp.put("product_object_id",gdEquityCode + "01");
-        mapTemp.put("product_object_information_type",0);
-
-        //产品信息 基本信息 产品基本信息
-        mapTemp.put("product_trading_market_category",0);
-        mapTemp.put("product_market_subject","msN0000110");
-        mapTemp.put("product_market_subject_name","上海交易所");
-        mapTemp.put("product_plate_trading_name","N板");  //以上为新增
-        mapTemp.put("product_issuer_subject_ref",gdCompanyID);
-        mapTemp.put("product_issuer_name","sh");
-        mapTemp.put("product_code","SH10001");
-        mapTemp.put("product_name","发行小额");
-        mapTemp.put("product_abbreviation","融资类小额");
-        mapTemp.put("product_use",0);
-        mapTemp.put("product_type",0);
-        mapTemp.put("product_term",50000);
-        mapTemp.put("product_info_disclosure_way",0);
-        mapTemp.put("product_scale_unit",5000);
-        mapTemp.put("product_scale_currency",0);
-        mapTemp.put("product_scale",100000);
-        mapTemp.put("product_customer_browsing_right",0);
-        mapTemp.put("product_customer_trading_right",0);
-        mapTemp.put("product_issuer_contact_person","张三");
-        mapTemp.put("product_issuer_contact_info","1555222");
-
-        //产品信息 基本信息 服务方信息
-        mapTemp.put("product_registry_subject_ref","regobj001");
-        mapTemp.put("product_name_registration_body","登记机构名");
-        mapTemp.put("product_trustee_subject_ref","regobj001");
-        mapTemp.put("product_name_trustee","联合股权");
-        mapTemp.put("product_underwriter_subject_ref","regobj001");
-        mapTemp.put("product_underwriter_name","承销机构名");
-        mapTemp.put("product_sponsor_subject","regobj001");
-        mapTemp.put("product_sponsor_subject_name","保荐机构名");
-        mapTemp.put("product_fund_administrator_account","regobj001");
-        mapTemp.put("product_fund_administrator_name","管理人名");
-        mapTemp.put("product_guarantor_subject_ref","regobj001");
-        mapTemp.put("product_guarantor_name","担保机构名");
-        mapTemp.put("product_law_firm_subject_ref","regobj001");
-        mapTemp.put("product_law_firm_name","律所名");
-        mapTemp.put("product_accounting_firm_subject_ref","regobj001");
-        mapTemp.put("product_accounting_firm_name","事务所名");
-        mapTemp.put("product_credit_enhancement_agency_subject_ref","regobj001");
-        mapTemp.put("product_credit_enhancement_agency_name","信用机构名");
-        mapTemp.put("product_credit_rating_agency_subject_ref","regobj001");
-        mapTemp.put("product_credit_rating_agency_name","评级机构名");
-
-
-        //产品信息 基本信息 产品文件信息
-        List<Map> listMapPF = new ArrayList<>();
-        Map mapPF = new HashMap();
-        mapPF.put("product_issue_doc_num",122);
-        mapPF.put("product_file_name","12345");
-        mapPF.put("product_issue_doc","psf.pdf");
-        listMapPF.add(mapPF);
-        mapTemp.put("product_file_information",listMapPF);
-
-        //产品信息 基本信息 产品注册备案信息
-        List<Map> listMapPR = new ArrayList<>();
-        Map mapPR = new HashMap();
-
-        mapPR.put("product_license_type",122);
-        mapPR.put("product_license_number","12345");
-        mapPR.put("product_license_file_name","psf.pdf");
-        mapPR.put("product_license_documents","psf.pdf");
-        listMapPR.add(mapPR);
-        mapTemp.put("product_registration_information",listMapPR);
-
-
-        List<String> listFile = new ArrayList<>();
-        listFile.add("dd.pdf");
-
-        //产品信息 产品标的信息
-        mapTemp.put("product_fund_type",0);
-        mapTemp.put("product_description_fund_use",1);
-        //产品信息 产品标准信息 经营用途信息
-        List<Map> listMapBi = new ArrayList<>();
-        Map mapBi = new HashMap();
-        mapBi.put("product_business_purpose_name","用途名称");
-        mapBi.put("product_business_purpose_details","用途详情");
-        mapBi.put("product_documents_list",listFile);
-        listMapBi.add(mapBi);
-        mapTemp.put("business_information",listMapBi);
-        //产品信息 产品标准信息 投资组合信息
-        List<Map> listMapPi = new ArrayList<>();
-        Map mapPi = new HashMap();
-        mapPi.put("product_business_purpose_name","用途名称");
-        mapPi.put("product_business_purpose_details","用途详情");
-        mapPi.put("product_documents_list",listFile);
-        listMapPi.add(mapPi);
-        mapTemp.put("portfolio_information",listMapPi);
+        mapTemp = productCommonInfo(2); //基金
 
         //产品信息 发行信息 私募基金
         mapTemp.put("product_fund_type",0);
@@ -882,6 +698,14 @@ public class GDBeforeCondition {
         mapTemp.put("product_fund_fairvalue",100000);
         mapTemp.put("product_starting_time_raising","2020/12/12");
         mapTemp.put("product_closing_time_raising","2026/12/12");
+
+        //交易信息
+        mapTemp.put("product_listing_code",gdEquityCode);
+        mapTemp.put("product_listing_time","2010/8/9");
+        mapTemp.put("product_listing_status",0);
+        mapTemp.put("product_listing_remarks","挂牌信息备注");
+        mapTemp.put("product_delisting_time","2010/8/9");
+        mapTemp.put("product_delisting_reason","不再挂牌");
 
         return mapTemp;
     }

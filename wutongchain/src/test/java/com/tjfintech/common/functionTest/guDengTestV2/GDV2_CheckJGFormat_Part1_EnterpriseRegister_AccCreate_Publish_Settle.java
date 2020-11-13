@@ -96,9 +96,10 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         //检查产品存证信息内容与传入一致
         log.info("检查产品存证信息内容与传入一致");
-        log.info(gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
-        log.info(equityProductInfo.toString());
-        assertEquals(equityProductInfo.toString(), gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("(\")?( )?",""));
+        log.info(equityProductInfo.toString().replaceAll(" ",""));
+        assertEquals(equityProductInfo.toString().replaceAll(" ",""),
+                gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("(\")?( )?","").replaceAll(":","="));
     }
 
 
@@ -139,9 +140,10 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         //检查产品存证信息内容与传入一致
         log.info("检查产品存证信息内容与传入一致");
-        log.info(gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
-        log.info(bondProductInfo.toString());
-        assertEquals(bondProductInfo.toString(), gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("(\")?( )?",""));
+        log.info(bondProductInfo.toString().replaceAll(" ",""));
+        assertEquals(bondProductInfo.toString().replaceAll(" ",""),
+                gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("(\")?( )?","").replaceAll(":","="));
 
 
     }
@@ -184,9 +186,10 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         //检查产品存证信息内容与传入一致
         log.info("检查产品存证信息内容与传入一致");
-        log.info(gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("(\")?( )?",""));
         log.info(fundProductInfo.toString());
-        assertEquals(fundProductInfo.toString(), gdCF.contructFundProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
+        assertEquals(fundProductInfo.toString(),
+                gdCF.contructFundProdInfo(ProductInfoTxId).toString().replaceAll("(\")?( )?","").replaceAll(":","="));
     }
 
     //会员登记
@@ -276,14 +279,14 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         log.info("检查资金账户存证信息内容与传入一致");
         log.info(gdCF.contructFundAccountInfo(accStoreId,cltNo).toString().replaceAll("\"",""));
         log.info(fundaccountInfo.toString());
-        assertEquals(fundaccountInfo.toString().replaceAll(" ","").replaceAll("\"","").replaceAll("\\[","").replaceAll("]",""),
-                gdCF.contructFundAccountInfo(accStoreId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
+        assertEquals(fundaccountInfo.toString().replaceAll(" ","").replaceAll("(\")?(\\[)?(])?",""),
+                gdCF.contructFundAccountInfo(accStoreId,cltNo).toString().replaceAll(" ","").replaceAll("(\")?(\\[)?(])?",""));
 
         log.info("检查资金账户存证信息内容与传入一致");
         log.info(gdCF.contructEquityAccountInfo(accStoreId,cltNo).toString().replaceAll("\"",""));
         log.info(equityaccountInfo.toString());
-        assertEquals(equityaccountInfo.toString().replaceAll(" ","").replaceAll("\"","").replaceAll("\\[","").replaceAll("]",""),
-                gdCF.contructEquityAccountInfo(accStoreId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
+        assertEquals(equityaccountInfo.toString().replaceAll(" ","").replaceAll("(\")?(\\[)?(])?",""),
+                gdCF.contructEquityAccountInfo(accStoreId,cltNo).toString().replaceAll(" ","").replaceAll("(\")?(\\[)?(])?",""));
 
 
     }
@@ -315,10 +318,11 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         //检查主体存证信息内容与传入一致
         log.info("检查债券产品发行主体引用与主体对象标识一致");
-        equityProductInfo.put("product_issuer_subject_ref",enterpriseSubjectInfo.get("letter_object_identification").toString());
+        equityProductInfo.put("product_issuer_subject_ref",enterpriseSubjectInfo.get("subject_object_id").toString());
         log.info(gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
         log.info(equityProductInfo.toString());
-        assertEquals(equityProductInfo.toString(), gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
+        assertEquals(equityProductInfo.toString().replaceAll(" ",""),
+                gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("(\")?( )?","").replaceAll(":","="));
 
     }
 
@@ -338,7 +342,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         //获取主体/产品存证hash
         String query = store.GetTxDetail(txId);
-        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
+        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm"
+                    ).getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
         String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
@@ -346,17 +351,18 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         //检查主体存证信息内容与传入一致
         log.info("检查债券产品发行主体引用与主体对象标识一致");
-        bondProductInfo.put("product_issuer_subject_ref",enterpriseSubjectInfo.get("letter_object_identification").toString());
+        bondProductInfo.put("product_issuer_subject_ref",enterpriseSubjectInfo.get("subject_object_id").toString());
         log.info(gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
         log.info(bondProductInfo.toString());
-        assertEquals(bondProductInfo.toString(), gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
+        assertEquals(bondProductInfo.toString().replaceAll(" ",""),
+                gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("(\")?( )?","").replaceAll(":","="));
 
     }
 
     //企业 基金类 登记
     //产品主体引用置为空
     @Test
-    public void TC023_enterpriseRegisterBondEmpty() throws Exception {
+    public void TC023_enterpriseRegisterFundEmpty() throws Exception {
         fundProductInfo.put("product_issuer_subject_ref","");
         long shareTotals = 1000000;
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo,
@@ -376,10 +382,11 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         //检查主体存证信息内容与传入一致
         log.info("检查基金类产品发行主体引用与主体对象标识一致");
-        fundProductInfo.put("product_issuer_subject_ref",enterpriseSubjectInfo.get("letter_object_identification").toString());
+        fundProductInfo.put("product_issuer_subject_ref",enterpriseSubjectInfo.get("subject_object_id").toString());
         log.info(gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
         log.info(fundProductInfo.toString());
-        assertEquals(fundProductInfo.toString(), gdCF.contructFundProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
+        assertEquals(fundProductInfo.toString().replaceAll(" ",""),
+                gdCF.contructFundProdInfo(ProductInfoTxId).toString().replaceAll("(\")?( )?","").replaceAll(":","="));
 
     }
 
@@ -414,7 +421,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         //构造个人/投资者主体信息
         gdBC.init01PersonalSubjectInfo();
-        investorSubjectInfo.put("letter_object_identification",cltNo);  //更新对象标识字段
+        investorSubjectInfo.put("subject_object_id",cltNo);  //更新对象标识字段
         investorSubjectInfo.put("subject_id","sid" + cltNo);  //更新主体标识字段
 
         String response = gd.GDCreateAccout(gdContractAddress,cltNo,mapFundInfo,shareHolderInfo, investorSubjectInfo);
@@ -430,11 +437,11 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String subStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
 
 
-        equityaccountInfo.put("account_holder_subject_ref",investorSubjectInfo.get("letter_object_identification"));
+        equityaccountInfo.put("account_holder_subject_ref",investorSubjectInfo.get("subject_object_id"));
 //        equityaccountInfo.put("account_associated_account_ref",investorSubjectInfo.get("letter_object_identification"));//当前未自动填入
 
-        fundaccountInfo.put("account_holder_subject_ref",investorSubjectInfo.get("letter_object_identification"));
-        fundaccountInfo.put("account_associated_account_ref",investorSubjectInfo.get("letter_object_identification"));
+        fundaccountInfo.put("account_holder_subject_ref",investorSubjectInfo.get("subject_object_id"));
+        fundaccountInfo.put("account_associated_account_ref",investorSubjectInfo.get("subject_object_id"));
 
         //检查主体存证信息内容与传入一致
         log.info("检查主体存证信息内容与传入一致");
@@ -447,14 +454,14 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         log.info("检查资金账户存证信息内容与传入一致");
         log.info(gdCF.contructFundAccountInfo(accStoreId,cltNo).toString().replaceAll("\"",""));
         log.info(fundaccountInfo.toString());
-        assertEquals(fundaccountInfo.toString().replaceAll(" ","").replaceAll("\"","").replaceAll("\\[","").replaceAll("]",""),
-                gdCF.contructFundAccountInfo(accStoreId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
+        assertEquals(fundaccountInfo.toString().replaceAll(" ","").replaceAll("(\")?( )?(\\[)?(])?",""),
+                gdCF.contructFundAccountInfo(accStoreId,cltNo).toString().replaceAll("(\")?( )?(\\[)?(])?",""));
 
         log.info("检查股权账户存证信息内容与传入一致");
         log.info(gdCF.contructEquityAccountInfo(accStoreId,cltNo).toString().replaceAll("\"",""));
         log.info(equityaccountInfo.toString());
-        assertEquals(equityaccountInfo.toString().replaceAll(" ","").replaceAll("\"","").replaceAll("\\[","").replaceAll("]",""),
-                gdCF.contructEquityAccountInfo(accStoreId,cltNo).toString().replaceAll(" ","").replaceAll("\"",""));
+        assertEquals(equityaccountInfo.toString().replaceAll(" ","").replaceAll("(\")?( )?(\\[)?(])?",""),
+                gdCF.contructEquityAccountInfo(accStoreId,cltNo).toString().replaceAll("(\")?( )?(\\[)?(])?",""));
 
 
 

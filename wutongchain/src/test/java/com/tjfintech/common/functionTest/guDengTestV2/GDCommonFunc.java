@@ -469,7 +469,7 @@ public class GDCommonFunc {
             com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
             if (objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals("账户") &&
                     (objTemp.getJSONObject("body").getJSONObject("account_information").getJSONObject("basic_account_information").getIntValue("account_type") == 1) &&
-                    objTemp.getJSONObject("body").getJSONObject("capital_object_information").getString("account_object_id").equals(objId)) {
+                    objTemp.getJSONObject("body").getJSONObject("account_object_information").getString("account_object_id").equals(objId)) {
                 jobjOK = objTemp;
                 break;
             }
@@ -503,7 +503,7 @@ public class GDCommonFunc {
             com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
             if( objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals("账户") &&
                     (objTemp.getJSONObject("body").getJSONObject("account_information").getJSONObject("basic_account_information").getIntValue("account_type") == 0) &&
-                    objTemp.getJSONObject("body").getJSONObject("capital_object_information").getString("account_object_id").equals(objId)){
+                    objTemp.getJSONObject("body").getJSONObject("account_object_information").getString("account_object_id").equals(objId)){
                 jobjOK = objTemp;
                 break;
             }
@@ -700,6 +700,9 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject objSubI = jobj2.getJSONObject("body").getJSONObject("subject_information");
         com.alibaba.fastjson.JSONObject objSubBase = objSubI.getJSONObject("basic_information_subject");
         com.alibaba.fastjson.JSONObject objSubBaseCommon = objSubBase.getJSONObject("general_information_subject");
+        com.alibaba.fastjson.JSONObject objSubBaseQual = objSubBase.getJSONObject("subject_qualification_information");
+        com.alibaba.fastjson.JSONObject objSubBaseQQ = objSubBaseQual.getJSONObject("subject_qualification_information");
+        com.alibaba.fastjson.JSONObject objSubBaseQQ1 = objSubBaseQual.getJSONObject("subject_qualification_information1");
 
         com.alibaba.fastjson.JSONObject objEnterpriseSub = jobj2.getJSONObject("body").getJSONObject("subject_information").getJSONObject("subject_main_body_information");
         com.alibaba.fastjson.JSONObject objEnterpriseSubClassify = objEnterpriseSub.getJSONObject("classification_information");
@@ -707,16 +710,32 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject objEnterpriseSubCorp = objEnterpriseSub.getJSONObject("corporate_information");
 
         Map getSubjectInfo = new HashMap();
-        key = "subject_id";                         getSubjectInfo.put(key,objInfo.getString(key));
-        key = "subject_object_information_type";    getSubjectInfo.put(key,objInfo.getString(key));
+        key = "subject_object_id";                          getSubjectInfo.put(key,objInfo.getString(key));
+        key = "subject_object_information_type";            getSubjectInfo.put(key,objInfo.getString(key));
 
-        key = "subject_id";                         getSubjectInfo.put(key,objSubBaseCommon.getString(key));
-        key = "subject_industry_code";              getSubjectInfo.put(key,objSubBaseCommon.getString(key));
-        key = "subject_type";                       getSubjectInfo.put(key,objSubBaseCommon.getString(key));
-        key = "subject_create_time";                getSubjectInfo.put(key,objSubBaseCommon.getString(key));
+        key = "subject_id";                                 getSubjectInfo.put(key,objSubBaseCommon.getString(key));
+        key = "subject_industry_code";                      getSubjectInfo.put(key,objSubBaseCommon.getString(key));
+        key = "subject_type";                               getSubjectInfo.put(key,objSubBaseCommon.getString(key));
+        key = "subject_create_time";                        getSubjectInfo.put(key,objSubBaseCommon.getString(key));
 
-        key = "subject_qualification_information";   getSubjectInfo.put(key, com.alibaba.fastjson.JSONObject.parseArray(
-                objSubBase.getJSONArray(key).toJSONString(), Map.class));
+
+        key = "subject_qualification_category";             getSubjectInfo.put(key,objSubBaseQQ.getString(key));
+        key = "subject_market_roles_types";                 getSubjectInfo.put(key,objSubBaseQQ.getString(key));
+        key = "subject_financial_qualification_types";      getSubjectInfo.put(key,objSubBaseQQ.getString(key));
+        key = "subject_qualification_category";             getSubjectInfo.put(key,objSubBaseQQ.getString(key));
+        key = "subject_market_roles_types";                 getSubjectInfo.put(key,objSubBaseQQ.getString(key));
+        key = "subject_financial_qualification_types";      getSubjectInfo.put(key,objSubBaseQQ.getString(key));
+
+        key = "subject_role_qualification_number";          getSubjectInfo.put(key,objSubBaseQQ1.getString(key));
+        key = "subject_role_qualification_certification_document";getSubjectInfo.put(key, com.alibaba.fastjson.JSONObject.parseArray(
+                objSubBaseQQ1.getJSONArray(key).toJSONString(), String.class));
+        key = "subject_qualification_party_certification";  getSubjectInfo.put(key,objSubBaseQQ1.getString(key));
+        key = "subject_role_qualification_reviewer";        getSubjectInfo.put(key,objSubBaseQQ1.getString(key));
+        key = "subject_certification_time";                 getSubjectInfo.put(key,objSubBaseQQ1.getString(key));
+        key = "subject_audit_time";                         getSubjectInfo.put(key,objSubBaseQQ1.getString(key));
+
+//        key = "subject_qualification_information";   getSubjectInfo.put(key, com.alibaba.fastjson.JSONObject.parseArray(
+//                objSubBase.getJSONArray(key).toJSONString(), Map.class));
 
         key = "subject_organization_type";          getSubjectInfo.put(key,objEnterpriseSubClassify.getString(key));
         key = "subject_organization_nature";        getSubjectInfo.put(key,objEnterpriseSubClassify.getString(key));
@@ -770,13 +789,16 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject objSubI = jobj2.getJSONObject("body").getJSONObject("subject_information");
         com.alibaba.fastjson.JSONObject objSubBase = objSubI.getJSONObject("basic_information_subject");
         com.alibaba.fastjson.JSONObject objSubBaseCommon = objSubBase.getJSONObject("general_information_subject");
+        com.alibaba.fastjson.JSONObject objSubBaseQual = objSubBase.getJSONObject("subject_qualification_information");
+        com.alibaba.fastjson.JSONObject objSubBaseQQ = objSubBaseQual.getJSONObject("subject_qualification_information");
+        com.alibaba.fastjson.JSONObject objSubBaseQQ1 = objSubBaseQual.getJSONObject("subject_qualification_information1");
 
         com.alibaba.fastjson.JSONObject objPersonSub = objSubI.getJSONObject("personal_subject_information");
         com.alibaba.fastjson.JSONObject objPersonSubBase = objPersonSub.getJSONObject("basic_information_individual_subject");
         com.alibaba.fastjson.JSONObject objPersonRate = objPersonSub.getJSONObject("individual_subject_rating");
 
         Map getSubjectInfo = new HashMap();
-        key = "subject_id";                         getSubjectInfo.put(key,objInfo.getString(key));
+        key = "subject_object_id";                  getSubjectInfo.put(key,objInfo.getString(key));
         key = "subject_object_information_type";    getSubjectInfo.put(key,objInfo.getString(key));
 
         key = "subject_id";                         getSubjectInfo.put(key,objSubBaseCommon.getString(key));
@@ -784,8 +806,21 @@ public class GDCommonFunc {
         key = "subject_type";                       getSubjectInfo.put(key,objSubBaseCommon.getString(key));
         key = "subject_create_time";                getSubjectInfo.put(key,objSubBaseCommon.getString(key));
 
-        key = "subject_qualification_information";   getSubjectInfo.put(key, com.alibaba.fastjson.JSONObject.parseArray(
-                objSubBase.getJSONArray(key).toJSONString(), Map.class));
+
+        key = "subject_qualification_category";             getSubjectInfo.put(key,objSubBaseQQ.getString(key));
+        key = "subject_market_roles_types";                 getSubjectInfo.put(key,objSubBaseQQ.getString(key));
+        key = "subject_financial_qualification_types";      getSubjectInfo.put(key,objSubBaseQQ.getString(key));
+
+        key = "subject_role_qualification_number";          getSubjectInfo.put(key,objSubBaseQQ1.getString(key));
+        key = "subject_role_qualification_certification_document";getSubjectInfo.put(key, com.alibaba.fastjson.JSONObject.parseArray(
+                objSubBaseQQ1.getJSONArray(key).toJSONString(), String.class));
+        key = "subject_qualification_party_certification";  getSubjectInfo.put(key,objSubBaseQQ1.getString(key));
+        key = "subject_role_qualification_reviewer";        getSubjectInfo.put(key,objSubBaseQQ1.getString(key));
+        key = "subject_certification_time";                 getSubjectInfo.put(key,objSubBaseQQ1.getString(key));
+        key = "subject_audit_time";                         getSubjectInfo.put(key,objSubBaseQQ1.getString(key));
+
+//        key = "subject_qualification_information";   getSubjectInfo.put(key, com.alibaba.fastjson.JSONObject.parseArray(
+//                objSubBase.getJSONArray(key).toJSONString(), Map.class));
 
         key = "subject_investor_name";              getSubjectInfo.put(key,objPersonSubBase.getString(key));
         key = "subject_id_doc_type";                getSubjectInfo.put(key,objPersonSubBase.getString(key));
@@ -829,8 +864,8 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject objAccLifeFreeze = objAccLife.getJSONObject("freeze_information");
         com.alibaba.fastjson.JSONObject objAccLifeUnfreeze = objAccLife.getJSONObject("unfreezing_information");
 
+//        com.alibaba.fastjson.JSONObject objAccRela = jobjOK.getJSONObject("body").getJSONObject("account_information").getJSONObject("account_association_info");
         com.alibaba.fastjson.JSONObject objAccRela = jobjOK.getJSONObject("body").getJSONObject("account_information").getJSONObject("account_related_information");
-
         Map getSubjectInfo = new HashMap();
         key = "account_object_id";                  getSubjectInfo.put(key,objInfo.getString(key));
         key = "account_object_information_type";    getSubjectInfo.put(key,objInfo.getString(key));
@@ -871,7 +906,7 @@ public class GDCommonFunc {
 
         //产品信息对象
         com.alibaba.fastjson.JSONObject objProd = jobj2.getJSONObject("body").getJSONObject("product_information");
-        com.alibaba.fastjson.JSONObject objBase = objProd.getJSONObject("essential_information");//产品信息 基本信息对象
+        com.alibaba.fastjson.JSONObject objBase = objProd.getJSONObject("basic_information");//产品信息 基本信息对象
         com.alibaba.fastjson.JSONObject objProdBase = objBase.getJSONObject("essential_information");//产品信息 基本信息 产品基本信息对象
         com.alibaba.fastjson.JSONObject objProdService = objBase.getJSONObject("service_provider_information");//产品信息 基本信息 服务方信息对象
 
@@ -879,8 +914,8 @@ public class GDCommonFunc {
 
         com.alibaba.fastjson.JSONObject objProdIssue = objProd.getJSONObject("release_information");//产品信息 发行信息对象
         com.alibaba.fastjson.JSONObject objProdIssueEquity = objProdIssue.getJSONObject("equity_issue_information");//产品信息 发行信息 私募股权对象
-        com.alibaba.fastjson.JSONObject objProdIssueBond = objProd.getJSONObject("private_convertible_bonds");//产品信息 发行信息 私募可转债对象
-        com.alibaba.fastjson.JSONObject objProdIssueFund = objProd.getJSONObject("private_offering_fund");//产品信息 发行信息 私募基金对象
+        com.alibaba.fastjson.JSONObject objProdIssueBond = objProdIssue.getJSONObject("private_convertible_bonds");//产品信息 发行信息 私募可转债对象
+        com.alibaba.fastjson.JSONObject objProdIssueFund = objProdIssue.getJSONObject("private_offering_fund");//产品信息 发行信息 私募基金对象
 
         com.alibaba.fastjson.JSONObject objProdTran = objProd.getJSONObject("transaction_information");//产品信息 交易信息对象
 
@@ -944,8 +979,8 @@ public class GDCommonFunc {
 //        key = "product_license_file_name";getSubjectInfo.put(key,jobj.getString(key));
 //        key = "product_license_documents";getSubjectInfo.put(key,jobj.getString(key));
 
-        key = "product_fund_type";getSubjectInfo.put(key,objProdSub.getString(key));
-        key = "product_description _fund_use";getSubjectInfo.put(key,objProdSub.getString(key));
+        key = "product_fund_type";              getSubjectInfo.put(key,objProdSub.getString(key));
+        key = "product_description _fund_use";  getSubjectInfo.put(key,objProdSub.getString(key));
 
         key = "business_information";getSubjectInfo.put(key,
                 com.alibaba.fastjson.JSONObject.parseArray(objProdSub.getJSONArray(key).toJSONString(), String.class));
@@ -1023,13 +1058,14 @@ public class GDCommonFunc {
             key = "product_fund_fairvalue";       getSubjectInfo.put(key, objProdIssueFund.getString(key));
             key = "product_starting_time_raising";getSubjectInfo.put(key, objProdIssueFund.getString(key));
             key = "product_closing_time_raising"; getSubjectInfo.put(key, objProdIssueFund.getString(key));
-            key = "product_listing_code";         getSubjectInfo.put(key, objProdIssueFund.getString(key));
-            key = "product_listing_time";         getSubjectInfo.put(key, objProdIssueFund.getString(key));
-            key = "product_listing_status";       getSubjectInfo.put(key, objProdIssueFund.getString(key));
-            key = "product_listing_remarks";      getSubjectInfo.put(key, objProdIssueFund.getString(key));
-            key = "product_delisting_time";       getSubjectInfo.put(key, objProdIssueFund.getString(key));
-            key = "product_delisting_reason";     getSubjectInfo.put(key, objProdIssueFund.getString(key));
         }
+
+        key = "product_listing_code";         getSubjectInfo.put(key, objProdTran.getString(key));
+        key = "product_listing_time";         getSubjectInfo.put(key, objProdTran.getString(key));
+        key = "product_listing_status";       getSubjectInfo.put(key, objProdTran.getString(key));
+        key = "product_listing_remarks";      getSubjectInfo.put(key, objProdTran.getString(key));
+        key = "product_delisting_time";       getSubjectInfo.put(key, objProdTran.getString(key));
+        key = "product_delisting_reason";     getSubjectInfo.put(key, objProdTran.getString(key));
 
         return getSubjectInfo;
     }

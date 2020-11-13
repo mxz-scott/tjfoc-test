@@ -54,7 +54,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
      * @throws Exception
      */
 
-//    @BeforeClass
+    @BeforeClass
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
