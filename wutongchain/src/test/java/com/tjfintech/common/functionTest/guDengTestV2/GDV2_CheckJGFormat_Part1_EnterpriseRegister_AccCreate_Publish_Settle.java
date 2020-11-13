@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDV2_EnterpriseRegisterSpecial {
+public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settle {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
@@ -29,6 +29,7 @@ public class GDV2_EnterpriseRegisterSpecial {
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
     GDCommonFunc gdCF = new GDCommonFunc();
+    GDBeforeCondition gdBF = new GDBeforeCondition();
     GDUnitFunc uf = new GDUnitFunc();
     public static String bizNoTest = "test" + Random(12);
 
@@ -457,6 +458,54 @@ public class GDV2_EnterpriseRegisterSpecial {
 
 
 
+    }
+
+
+
+    @Test
+    public void TC15_infodisclosurePublishAndGet() throws Exception {
+        disclosureInfo = gdBF.init07PublishInfo();
+        String response= gd.GDInfoPublish(disclosureInfo);
+        net.sf.json.JSONObject jsonObject= net.sf.json.JSONObject.fromObject(response);
+        String txId = jsonObject.getString("data");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+        String responseGet = gd.GDInfoPublishGet(txId);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(responseGet).getString("state"));
+        assertEquals(false,responseGet.contains("\"data\":null"));
+
+
+        log.info("检查信批存证格式化及信息内容与传入一致");
+        Map tempPub = gdCF.contructPublishInfo(txId);
+        log.info(tempPub.toString().replaceAll("\"",""));
+
+        log.info(disclosureInfo.toString());
+        disclosureInfo.put("letter_disclosure_object_id",tempPub.get("letter_disclosure_object_id"));
+        assertEquals(disclosureInfo.toString(), tempPub.toString().replaceAll("\"",""));
+
+
+    }
+
+    @Test
+    public void TC16_balanceCount() throws Exception {
+        settleInfo = gdBF.init06SettleInfo();
+        String response= gd.GDCapitalSettlement(settleInfo);
+        net.sf.json.JSONObject jsonObject= net.sf.json.JSONObject.fromObject(response);
+        String txId = jsonObject.getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+        Map tempSet = gdCF.contructSettleInfo(txId);
+        log.info("检查资金结算存证格式化及信息内容与传入一致");
+        log.info(tempSet.toString().replaceAll("\"","").replaceAll(" ",""));
+
+        settleInfo.put("capita_settlement_object_id",tempSet.get("capita_settlement_object_id"));
+        log.info(settleInfo.toString().replaceAll(" ",""));
+        assertEquals(settleInfo.toString().replaceAll(" ",""),
+                tempSet.toString().replaceAll("\"","").replaceAll(" ",""));
     }
 
 

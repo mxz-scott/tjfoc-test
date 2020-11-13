@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDV2_CheckJGFormat_AllFlow {
+public class GDV2_CheckJGFormat_Part2EquityProduct {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
@@ -54,7 +54,7 @@ public class GDV2_CheckJGFormat_AllFlow {
      * @throws Exception
      */
 
-    @BeforeClass
+//    @BeforeClass
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
@@ -1303,78 +1303,4 @@ public class GDV2_CheckJGFormat_AllFlow {
         log.info("================================检查存证数据格式化《结束》================================");
 
     }
-
-
-    @Test
-    public void TC15_infodisclosurePublishAndGet() throws Exception {
-        disclosureInfo = gdBF.init07PublishInfo();
-        String response= gd.GDInfoPublish(disclosureInfo);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String txId = jsonObject.getString("data");
-
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
-        String responseGet = gd.GDInfoPublishGet(txId);
-        assertEquals("200",JSONObject.fromObject(responseGet).getString("state"));
-        assertEquals(false,responseGet.contains("\"data\":null"));
-
-
-        log.info("检查信批存证格式化及信息内容与传入一致");
-        Map tempPub = gdCF.contructPublishInfo(txId);
-        log.info(tempPub.toString().replaceAll("\"",""));
-
-        log.info(disclosureInfo.toString());
-        disclosureInfo.put("letter_disclosure_object_id",tempPub.get("letter_disclosure_object_id"));
-        assertEquals(disclosureInfo.toString(), tempPub.toString().replaceAll("\"",""));
-
-
-    }
-
-    @Test
-    public void TC16_balanceCount() throws Exception {
-        settleInfo = gdBF.init06SettleInfo();
-        String response= gd.GDCapitalSettlement(settleInfo);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String txId = jsonObject.getJSONObject("data").getString("txId");
-
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
-        Map tempSet = gdCF.contructSettleInfo(txId);
-        log.info("检查资金结算存证格式化及信息内容与传入一致");
-        log.info(tempSet.toString().replaceAll("\"","").replaceAll(" ",""));
-
-        settleInfo.put("capita_settlement_object_id",tempSet.get("capita_settlement_object_id"));
-        log.info(settleInfo.toString().replaceAll(" ",""));
-        assertEquals(settleInfo.toString().replaceAll(" ",""),
-                tempSet.toString().replaceAll("\"","").replaceAll(" ",""));
-    }
-
-
-//    @After
-    public void DestroyEquityAndAcc()throws Exception{
-        //查询企业所有股东持股情况
-        String response = gd.GDGetEnterpriseShareInfo(gdEquityCode);
-        String response10 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
-        String response11 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
-        String response12 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
-        String response13 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
-        String response14 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
-        String response15 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
-        String response16 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo7);
-        String response17 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo8);
-        String response18 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo9);
-        String response19 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo10);
-
-
-
-        //依次回收
-
-        //依次销户
-
-    }
-
-
-
 }
