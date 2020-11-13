@@ -30,11 +30,13 @@ import org.junit.runners.Suite;
         PrivateStoreTest.class,
         PrivateStoreTestFastGet.class,
         NoPriPrivateStoreTest.class,
+        StoreInvalidTest.class,
+
         WVMContractTest.class,
+        WVMContractInvalidTest.class,
+
         VerifyTests.class,
 
-        StoreInvalidTest.class,
-        WVMContractInvalidTest.class,
 })
 
 //Build Validation Test
