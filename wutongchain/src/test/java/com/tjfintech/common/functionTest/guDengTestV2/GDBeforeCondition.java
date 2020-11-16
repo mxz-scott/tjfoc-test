@@ -277,7 +277,7 @@ public class GDBeforeCondition {
         mapTemp.put("subject_mail_box","CHWV3Kh2S4jL8C");
         mapTemp.put("subject_association_articles","textTG5F4q9yQ1");
         mapTemp.put("subject_competent_unit","CHF3420egqe8IN");
-        mapTemp.put("subject_shareholders_number",500000);
+        mapTemp.put("subject_shareholders_number",10);
         mapTemp.put("subject_total_share_capital",500000);
         mapTemp.put("subject_actual_controller","CH2cnqo0H67567");
         mapTemp.put("subject_actual_controller_id_type","CH7QgaY0T0o7n0");
