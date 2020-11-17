@@ -787,10 +787,8 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         log.info("回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
-        int totalHolderAccount = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getInt("subject_shareholders_number");
+        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
+        int totalHolderAccount = JSONObject.fromObject(query2).getJSONObject("data").getInt("subject_shareholders_number");
 
         log.info("before recycle 股本总数(股) " + totalShares + " 股东总数（个） " + totalHolderAccount);
 
@@ -905,10 +903,8 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         log.info("判断回收一个完全账户后机构主体查询总股本数增加数正确");
         query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
-        int totalHolderAccount2 = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getInt("subject_shareholders_number");
+        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
+        int totalHolderAccount2 = JSONObject.fromObject(query2).getJSONObject("data").getInt("subject_shareholders_number");
         assertEquals(totalShares.subtract(new BigDecimal(recycleAmount)),totalShares2);
         assertEquals(totalHolderAccount2 + 1,totalHolderAccount);//判断股东总数减一
     }
@@ -1018,10 +1014,8 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         log.info("多个回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
-        int totalHolderAccount = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getInt("subject_shareholders_number");
+        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
+        int totalHolderAccount = JSONObject.fromObject(query2).getJSONObject("data").getInt("subject_shareholders_number");
 
         log.info("before recycle 股本总数(股) " + totalShares + " 股东总数（个） " + totalHolderAccount);
 
@@ -1128,15 +1122,13 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         log.info("多个回收后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
+        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
 
         log.info("判断回收后机构主体查询总股本数变更正确");
         assertEquals(oldTotal.subtract(new BigDecimal(total)),totalShares2);
 
 
-        int totalHolderAccount2 = JSONObject.fromObject(query3).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getInt("subject_shareholders_number");
+        int totalHolderAccount2 = JSONObject.fromObject(query3).getJSONObject("data").getInt("subject_shareholders_number");
         assertEquals(totalHolderAccount - 3,totalHolderAccount2);//判断股东总数减3
     }
 

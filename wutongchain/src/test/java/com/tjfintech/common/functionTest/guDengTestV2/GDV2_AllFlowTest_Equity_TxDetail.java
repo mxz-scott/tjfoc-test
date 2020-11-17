@@ -53,6 +53,8 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         gdBefore.gdCreateAccout();
 //        gdBefore.initRegulationData();
         bondProductInfo = null;
+        equityProductInfo = gdBefore.init03EquityProductInfo();
+        fundProductInfo = null;
         gdEquityCode = "fondTest" + Random(12);
     }
 
@@ -206,7 +208,7 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
                 + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"500\",\"subType\":\"0\",\"newSubType\":\"1\"}"));
         assertEquals(true,response.contains("{\"from\":\"" + address + "\",\"to\":\"" + address
                 + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"4500\",\"subType\":\"0\"}"));
-        assertEquals(true,response.contains("capita_transaction_ref"));
+        assertEquals(true,response.contains("register_account_obj_id")); //确认包含登记数据
     }
 
     @Test
@@ -250,8 +252,7 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
 
         log.info("增发前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
+        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";
@@ -386,8 +387,7 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
 
         log.info("回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
+        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
         registerInfo.put("register_registration_serial_number","recylce000001");
 
@@ -412,7 +412,7 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
                 + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"100\",\"subType\":\"0\"}"));
         assertEquals(true,response.contains("{\"from\":\"" + gdAccount1 + "\",\"to\":\"" + gdAccount1
                 + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"3400\",\"subType\":\"0\"}"));
-        assertEquals(true,response.contains("capita_transaction_ref"));
+        assertEquals(true,response.contains("register_account_obj_id"));
     }
 
     @Test
@@ -423,8 +423,7 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
 
         log.info("多个回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
+        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
         registerInfo.put("register_registration_serial_number","recycle000002");
 
@@ -467,7 +466,7 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
                 + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"100\",\"subType\":\"0\"}"));
         assertEquals(true,response.contains("{\"from\":\"" + gdAccount4 + "\",\"to\":\"" + gdAccount4
                 + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"4900\",\"subType\":\"0\"}"));
-        assertEquals(true,response.contains("capita_transaction_ref"));
+        assertEquals(true,response.contains("register_account_obj_id"));
     }
 
     @Test
@@ -517,7 +516,7 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         assertEquals(true,response.contains("{\"from\":\"" + gdAccount4 + "\",\"to\":\"" + gdAccount4 +
                 "\",\"tokenType\":\"" + oldEquityCode + "\",\"newTokenType\":\"" + newEquityCode + "\",\"amount\":\"1000\",\"subType\":\"1\"}"));
 
-        assertEquals(true,response.contains("capita_transaction_ref"));
+        assertEquals(true,response.contains("register_account_obj_id"));
 
     }
 
@@ -527,8 +526,12 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdAccClientNo10);
 
         String clntNo = gdAccClientNo10;
+        String cert1 = "test33.txt";
+        String cert2 = "close33.cert";
+        String date1 = "2020/06/12 17:08:08";
+        String date2 = "2020/06/12 18:08:08";
+        String response= gd.GDAccountDestroy(gdContractAddress,clntNo,date1,cert1,date2,cert2);
 
-        String response= gd.GDAccountDestroy(gdContractAddress,clntNo,"test.txt","close.txt");
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 

@@ -327,11 +327,14 @@ public  class GoGuDeng implements GuDeng {
      * @param clientNo
      * @return
      */
-    public String GDAccountDestroy(String contractAddress, String clientNo,String shareholderClosingCertificate,String fundClosingCertificate){
+    public String GDAccountDestroy(String contractAddress, String clientNo,String shareholderClosingDate,String shareholderClosingCertificate,
+                                   String fundClosingDate,String fundClosingCertificate){
         Map<String, Object> map = new HashMap<>();
         map.put("contractAddress", contractAddress);
         map.put("clientNo", clientNo);
+        map.put("shareholderClosingDate", shareholderClosingDate);
         map.put("shareholderClosingCertificate", shareholderClosingCertificate);
+        map.put("fundClosingDate", fundClosingDate);
         map.put("fundClosingCertificate", fundClosingCertificate);
 
         String result = PostTest.postMethod(SDKADD + "/equity/account/destroy", map);
@@ -505,6 +508,25 @@ public  class GoGuDeng implements GuDeng {
         log.info(result);
         return result;
     }
+
+    public String GDUpdateAccountInfo(String contractAddress,Map accountInfo){
+        Map<String, Object> map = new HashMap<>();
+        map.put("contractAddress", contractAddress);
+        map.put("accountInfo", accountInfo);
+        String result = PostTest.postMethod(SDKADD + "/equity/account/update", map);
+        log.info(result);
+        return result;
+    }
+
+    public String GDUpdateProductInfo(String contractAddress,Map productInfo){
+        Map<String, Object> map = new HashMap<>();
+        map.put("contractAddress", contractAddress);
+        map.put("productInfo", productInfo);
+        String result = PostTest.postMethod(SDKADD + "/equity/product/update", map);
+        log.info(result);
+        return result;
+    }
+
     public String GDGetTxReportInfo(String type, String value,String beginTime,String endTime){
         Map<String, Object> map = new HashMap<>();
         map.put("type", type);

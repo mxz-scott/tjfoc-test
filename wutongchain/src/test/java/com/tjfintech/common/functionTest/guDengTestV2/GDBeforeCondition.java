@@ -141,8 +141,8 @@ public class GDBeforeCondition {
 
         //构造股权账户信息
         Map shareHolderInfo = new HashMap();
-        init02EquityAccountInfo();
-        equityaccountInfo.put("account_object_id",cltNo);  //更新账户对象标识字段
+        init02ShareholderAccountInfo();
+        equityaccountInfo.put("account_object_id",shareHolderNo);  //更新账户对象标识字段
         log.info(equityaccountInfo.toString());
         shareHolderInfo.put("shareholderNo",shareHolderNo);
         shareHolderInfo.put("accountInfo", equityaccountInfo);
@@ -150,7 +150,7 @@ public class GDBeforeCondition {
 
         //资金账户信息
         init02FundAccountInfo();
-        fundaccountInfo.put("account_object_id",cltNo);  //更新账户对象标识字段
+        fundaccountInfo.put("account_object_id",fundNo);  //更新账户对象标识字段
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("fundNo",fundNo);
         mapFundInfo.put("accountInfo",fundaccountInfo);
@@ -187,11 +187,11 @@ public class GDBeforeCondition {
         log.info("初始化监管相关数据结构");
         enterpriseSubjectInfo = init01EnterpriseSubjectInfo();      //初始化企业主体数据信息  涉及接口 企业挂牌登记
         investorSubjectInfo = init01PersonalSubjectInfo();        //初始化个人主体数据信息  涉及接口 开户
-        equityaccountInfo = init02EquityAccountInfo();          //初始化账户数据信息 股权账户  涉及接口 开户
+        equityaccountInfo = init02ShareholderAccountInfo();          //初始化账户数据信息 股权账户  涉及接口 开户
         fundaccountInfo = init02FundAccountInfo();            //初始化账户数据信息 资金账户  涉及接口 开户
         equityProductInfo = init03EquityProductInfo();          //初始化私募股权类产品数据信息  涉及接口 挂牌企业登记 股份增发 场内转板
         bondProductInfo = init03BondProductInfo();            //初始化私募可转债产品数据信息  涉及接口 挂牌企业登记 发行
-        fundProductInfo = init03JiJin();            //初始化基金股权产品数据信息  涉及接口 挂牌企业登记 发行
+        fundProductInfo = init03JiJinProductInfo();            //初始化基金股权产品数据信息  涉及接口 挂牌企业登记 发行
         txInformation = init04TxInfo();                     //初始化交易数据信息  涉及接口 过户转让
         registerInfo = init05RegInfo();                    //初始化登记数据信息  涉及接口 发行 股份性质变更 过户转让 增发 冻结 解除冻结
         settleInfo = init06SettleInfo();                 //初始化资金结算数据信息  涉及接口 资金清算
@@ -365,7 +365,7 @@ public class GDBeforeCondition {
         return mapTemp;
     }
 
-    public Map init02EquityAccountInfo() {
+    public Map init02ShareholderAccountInfo() {
         Map mapTemp = new HashMap();
         log.info("初始化02账户数据结构");
         //默认股权账户
@@ -684,7 +684,7 @@ public class GDBeforeCondition {
         return mapTemp;
     }
 
-    public Map init03JiJin(){
+    public Map init03JiJinProductInfo(){
         Map mapTemp = new HashMap();
         log.info("初始化03产品数据结构");
         mapTemp.clear();

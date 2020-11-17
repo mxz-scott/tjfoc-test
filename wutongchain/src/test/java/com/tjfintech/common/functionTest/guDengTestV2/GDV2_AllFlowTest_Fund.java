@@ -45,6 +45,7 @@ public class GDV2_AllFlowTest_Fund {
         gdEquityCode = "fondTest" + Random(12);
         equityProductInfo = null;
         bondProductInfo = null;
+        fundProductInfo = gdBefore.init03JiJinProductInfo();
     }
 
     @After
@@ -71,7 +72,7 @@ public class GDV2_AllFlowTest_Fund {
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
         Map jsonMap = JSONObject.fromObject(response).getJSONObject("data");
-        jsonMap.put("letter_object_identification",gdCompanyID);
+        jsonMap.put("subject_object_id",gdCompanyID);
 
 
         //查询投资者信息
@@ -601,8 +602,7 @@ public class GDV2_AllFlowTest_Fund {
 
         log.info("回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
+        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
         registerInfo.put("register_registration_serial_number","recylce000001");
 
@@ -692,8 +692,7 @@ public class GDV2_AllFlowTest_Fund {
 
         log.info("回收后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
+        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
 
         log.info("判断增发前后机构主体查询总股本数增加数正确");
         assertEquals(totalShares.subtract(new BigDecimal("100")),totalShares2);
@@ -708,8 +707,7 @@ public class GDV2_AllFlowTest_Fund {
 
         log.info("多个回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
+        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
         registerInfo.put("register_registration_serial_number","recycle000002");
 
@@ -800,8 +798,7 @@ public class GDV2_AllFlowTest_Fund {
 
         log.info("多个回收后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getJSONObject(
-                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getString("subject_total_share_capital"));
+        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
 
         log.info("判断增发前后机构主体查询总股本数增加数正确");
         assertEquals(totalShares.subtract(new BigDecimal("400")),totalShares2);
@@ -908,9 +905,12 @@ public class GDV2_AllFlowTest_Fund {
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdAccClientNo10);
 
         String clntNo = gdAccClientNo10;
-        String cert1 = "2.txt";
-        String cert2 = "22.txt";
-        String response= gd.GDAccountDestroy(gdContractAddress,clntNo,cert1,cert2);
+        String cert1 = "test88.txt";
+        String cert2 = "close88.cert";
+        String date1 = "2020/07/12 17:08:08";
+        String date2 = "2020/07/12 18:08:08";
+        String response= gd.GDAccountDestroy(gdContractAddress,clntNo,date1,cert1,date2,cert2);
+
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
