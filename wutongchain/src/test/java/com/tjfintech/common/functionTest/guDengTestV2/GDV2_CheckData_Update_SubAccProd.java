@@ -14,10 +14,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
-import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.tjfintech.common.functionTest.guDengTestV2.GDCommonFunc.*;
@@ -1083,7 +1081,11 @@ public class GDV2_CheckData_Update_SubAccProd {
         }
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
         Map mapSubject = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(response).getString("data"));
-        assertEquals(testSub.toString(), mapSubject.toString().replaceAll("\"", ""));
+
+        Map<String, String> testMap1 = new TreeMap<String, String>(testSub);
+        Map<String, String> testMap2 = new TreeMap<String, String>(mapSubject);
+        assertEquals(testMap1.toString().replaceAll("( )?","").replaceAll(":","="),
+                testMap2.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
 
         //更新主体信息数据
         Map mapTemp = new HashMap();
@@ -1181,8 +1183,11 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         response = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
         Map mapTest = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(response).getString("data"));
-        assertEquals(mapTemp.toString(),mapTest.toString());
-//        assertEquals(mapTemp.toString(), gdCF.getEnterpriseSubInfo(response).toString().replaceAll("\"", ""));
+
+        Map<String, String> testMap3 = new TreeMap<String, String>(mapTemp);
+        Map<String, String> testMap4 = new TreeMap<String, String>(mapTest);
+        assertEquals(testMap3.toString().replaceAll("( )?","").replaceAll(":","="),
+                testMap4.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
     }
 
     @Test
@@ -1195,17 +1200,17 @@ public class GDV2_CheckData_Update_SubAccProd {
         //构造股权账户信息
         Map shareHolderInfo = new HashMap();
 
-        equityaccountInfo.put("account_object_id",shareHolderNo);  //更新账户对象标识字段
-        log.info(equityaccountInfo.toString());
+        shAccountInfo.put("account_object_id",shareHolderNo);  //更新账户对象标识字段
+        log.info(shAccountInfo.toString());
         shareHolderInfo.put("shareholderNo",shareHolderNo);
-        shareHolderInfo.put("accountInfo", equityaccountInfo);
+        shareHolderInfo.put("accountInfo", shAccountInfo);
         log.info(shareHolderInfo.toString());
 
         //资金账户信息
-        fundaccountInfo.put("account_object_id",fundNo);  //更新账户对象标识字段
+        fundAccountInfo.put("account_object_id",fundNo);  //更新账户对象标识字段
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("fundNo",fundNo);
-        mapFundInfo.put("accountInfo",fundaccountInfo);
+        mapFundInfo.put("accountInfo", fundAccountInfo);
 
         //构造个人/投资者主体信息
         Map testSub = gdBF.init01PersonalSubjectInfo();
@@ -1227,8 +1232,12 @@ public class GDV2_CheckData_Update_SubAccProd {
         }
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
-        assertEquals(testSub.toString().replaceAll(" ",""),
-                gdCF.getPersonalSubInfo(response).toString().replaceAll(" ","").replaceAll("\"", ""));
+        Map mapSubject = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(response).getString("data"));
+        Map<String, String> testMap1 = new TreeMap<String, String>(testSub);
+        Map<String, String> testMap2 = new TreeMap<String, String>(mapSubject);
+        assertEquals(testMap1.toString().replaceAll("( )?","").replaceAll(":","="),
+                testMap2.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+
 
         //更新主体信息数据
         List<String> fileList1 = new ArrayList<>();
@@ -1304,33 +1313,39 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //查询个人主体信息
         response = gd.GDMainSubjectQuery(gdContractAddress,cltNo);
-        assertEquals(mapTemp.toString().replaceAll(" ",""),
-                gdCF.getPersonalSubInfo(response).toString().replaceAll(" ","").replaceAll("\"", ""));
+        Map mapTest = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(response).getString("data"));
 
-        end = (new Date()).getTime();
+        Map<String, String> testMap3 = new TreeMap<String, String>(mapTemp);
+        Map<String, String> testMap4 = new TreeMap<String, String>(mapTest);
+        assertEquals(testMap3.toString().replaceAll("( )?","").replaceAll(":","="),
+                testMap4.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+
     }
 
     @Test
-    public void TC21_updateAccInfo_Personal()throws Exception{
+    public void TC21_updateSHAccInfo_Personal()throws Exception{
         //开户
         String cltNo = "updateCLI" + Random(12);
         String shareHolderNo = "SH" + cltNo;
         String fundNo = "fund" + cltNo;
 
+        shAccountInfo = gdBF.init02ShareholderAccountInfo();
+        fundAccountInfo = gdBF.init02FundAccountInfo();
+
         //构造股权账户信息
         Map shareHolderInfo = new HashMap();
 
-        equityaccountInfo.put("account_object_id",cltNo);  //更新账户对象标识字段
-        log.info(equityaccountInfo.toString());
+        shAccountInfo.put("account_object_id",shareHolderNo);  //更新账户对象标识字段
+        log.info(shAccountInfo.toString());
         shareHolderInfo.put("shareholderNo",shareHolderNo);
-        shareHolderInfo.put("accountInfo", equityaccountInfo);
+        shareHolderInfo.put("accountInfo", shAccountInfo);
         log.info(shareHolderInfo.toString());
 
         //资金账户信息
-        fundaccountInfo.put("account_object_id",cltNo);  //更新账户对象标识字段
+        fundAccountInfo.put("account_object_id",fundNo);  //更新账户对象标识字段
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("fundNo",fundNo);
-        mapFundInfo.put("accountInfo",fundaccountInfo);
+        mapFundInfo.put("accountInfo", fundAccountInfo);
 
         //构造个人/投资者主体信息
         Map testSub = gdBF.init01PersonalSubjectInfo();
@@ -1352,8 +1367,30 @@ public class GDV2_CheckData_Update_SubAccProd {
         }
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
-        assertEquals(testSub.toString().replaceAll(" ",""),
-                gdCF.getPersonalSubInfo(response).toString().replaceAll(" ","").replaceAll("\"", ""));
+        //查询投资者账户信息
+        String query = gd.GDAccountQuery(gdContractAddress,cltNo);
+        Map mapSHAccGet1 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
+                JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
+                        "AccountInfoList").get(0).toString()).getJSONObject(
+                "ShareholderAccount").getJSONObject("AccountInfo").toString());
+        Map mapFundccGet1 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
+                JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
+                        "AccountInfoList").get(0).toString()).getJSONObject(
+                "FundAccount").getJSONObject("AccountInfo").toString());
+
+        shAccountInfo.put("account_forzen_date","");
+        fundAccountInfo.put("account_forzen_date","");
+
+        Map<String, String> testMap11 = new TreeMap<String, String>(shAccountInfo);
+        Map<String, String> testMap12 = new TreeMap<String, String>(mapSHAccGet1);
+        assertEquals(testMap11.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
+                testMap12.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+
+        Map<String, String> testMap13 = new TreeMap<String, String>(fundAccountInfo);
+        Map<String, String> testMap14 = new TreeMap<String, String>(mapFundccGet1);
+        assertEquals(testMap13.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
+                testMap14.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+
 
         //更新股权账户信息数据
 
@@ -1379,7 +1416,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapTemp.clear();
 
         //对象信息
-        mapTemp.put("account_object_id","testacc00001");
+        mapTemp.put("account_object_id",cltNo);
         mapTemp.put("account_object_information_type",1);
 
         //账户信息 账户基本信息
@@ -1420,13 +1457,194 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapTemp.put("account_associated_acct_certificates",fileList5);
 
         String upResp = gd.GDUpdateAccountInfo(gdContractAddress,mapTemp);
-        txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        txId = JSONObject.fromObject(upResp).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
         //查询投资者账户信息
+        query = gd.GDAccountQuery(gdContractAddress,cltNo);
+        Map mapSHAccGet2 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
+                JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
+                        "AccountInfoList").get(0).toString()).getJSONObject(
+                "ShareholderAccount").getJSONObject("AccountInfo").toString());
+
+        Map mapFundAccGet2 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
+                JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
+                        "AccountInfoList").get(0).toString()).getJSONObject(
+                "FundAccount").getJSONObject("AccountInfo").toString());
+
+
+        Map<String, String> testMap21 = new TreeMap<String, String>(mapTemp);
+        Map<String, String> testMap22 = new TreeMap<String, String>(mapSHAccGet2);
+        assertEquals(testMap11.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
+                testMap12.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+
+        Map<String, String> testMap23 = new TreeMap<String, String>(fundAccountInfo);
+        Map<String, String> testMap24 = new TreeMap<String, String>(mapFundAccGet2);
+        assertEquals(testMap23.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
+                testMap24.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+    }
+
+    @Test
+    public void TC21_updateFundAccInfo_Personal()throws Exception{
+        //开户
+        String cltNo = "updateCLI" + Random(12);
+        String shareHolderNo = "SH" + cltNo;
+        String fundNo = "fund" + cltNo;
+
+        //构造股权账户信息
+        Map shareHolderInfo = new HashMap();
+
+        shAccountInfo.put("account_object_id",shareHolderNo);  //更新账户对象标识字段
+        log.info(shAccountInfo.toString());
+        shareHolderInfo.put("shareholderNo",shareHolderNo);
+        shareHolderInfo.put("accountInfo", shAccountInfo);
+        log.info(shareHolderInfo.toString());
+
+        //资金账户信息
+        fundAccountInfo.put("account_object_id",fundNo);  //更新账户对象标识字段
+        Map mapFundInfo = new HashMap();
+        mapFundInfo.put("fundNo",fundNo);
+        mapFundInfo.put("accountInfo", fundAccountInfo);
+
+        //构造个人/投资者主体信息
+        Map testSub = gdBF.init01PersonalSubjectInfo();
+        testSub.put("subject_object_id",cltNo);  //更新对象标识字段
+        testSub.put("subject_id","sid" + cltNo);  //更新主体标识字段
+
+        String response = gd.GDCreateAccout(gdContractAddress,cltNo,mapFundInfo,shareHolderInfo, testSub);
+        String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+        //查询个人主体数据
+        for(int i = 0;i < 20; i++) {
+            response = gd.GDMainSubjectQuery(gdContractAddress,cltNo);
+            if(JSONObject.fromObject(response).getString("state").equals("200"))
+                break;
+            sleepAndSaveInfo(100);
+        }
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+
+        //查询投资者账户信息
         String query = gd.GDAccountQuery(gdContractAddress,cltNo);
+        Map mapSHAccGet1 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
+                JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
+                        "AccountInfoList").get(0).toString()).getJSONObject(
+                "ShareholderAccount").getJSONObject("AccountInfo").toString());
+        Map mapFundccGet1 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
+                JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
+                        "AccountInfoList").get(0).toString()).getJSONObject(
+                "FundAccount").getJSONObject("AccountInfo").toString());
+
+        shAccountInfo.put("account_forzen_date","");
+        fundAccountInfo.put("account_forzen_date","");
+        Map<String, String> testMap11 = new TreeMap<String, String>(shAccountInfo);
+        Map<String, String> testMap12 = new TreeMap<String, String>(mapSHAccGet1);
+        assertEquals(testMap11.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
+                testMap12.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+
+        Map<String, String> testMap13 = new TreeMap<String, String>(fundAccountInfo);
+        Map<String, String> testMap14 = new TreeMap<String, String>(mapFundccGet1);
+        assertEquals(testMap13.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
+                testMap14.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+
+        //更新资金账户信息数据
+        Map mapTemp = new HashMap();
+        log.info("初始化02账户数据结构");
+        //默认股权账户
+        List<String> fileList1 = new ArrayList<>();
+        fileList1.add("test211.pdf");
+        fileList1.add("test212.pdf");
+
+        List<String> fileList2 = new ArrayList<>();
+        fileList2.add("test221.pdf");
+        fileList2.add("test222.pdf");
+        List<String> fileList3 = new ArrayList<>();
+        fileList3.add("test231.pdf");
+        fileList3.add("test232.pdf");
+        List<String> fileList4 = new ArrayList<>();
+        fileList4.add("test2141.pdf");
+        fileList4.add("test2142.pdf");
+        List<String> fileList5 = new ArrayList<>();
+        fileList5.add("test2151.pdf");
+        fileList5.add("test2152.pdf");
+        mapTemp.clear();
+
+        //对象信息
+        mapTemp.put("account_object_id",cltNo);
+        mapTemp.put("account_object_information_type",0);
+
+        //账户信息 账户基本信息
+        mapTemp.put("account_holder_subject_ref","hrefid000022");
+        mapTemp.put("account_depository_subject_ref","drefid000022");
+        mapTemp.put("account_number","h01235522");
+        mapTemp.put("account_type",1);  //资金账户
+        mapTemp.put("account_never",3);
+        mapTemp.put("account_status",2);
+
+        //账户信息 账户资质信息
+        mapTemp.put("account_qualification_certification_file",fileList1);
+        mapTemp.put("account_certifier","监管局232");
+        mapTemp.put("account_auditor","认证者232");
+        mapTemp.put("account_certification_time","2012/9/25");
+        mapTemp.put("account_audit_time","2012/9/25");
+
+        //账户信息 账户生命周期信息
+        //账户信息 账户生命周期信息 开户信息
+        mapTemp.put("account_opening_date","2012/8/29");
+        mapTemp.put("account_opening_certificate",fileList4);
+
+        //账户信息 账户生命周期信息 销户信息
+        mapTemp.put("account_closing_date","2022/6/29");
+        mapTemp.put("account_closing_certificate",fileList2);
+
+        //账户信息 账户生命周期信息 冻结信息
+        mapTemp.put("account_forzen_date","2020/9/29");
+        mapTemp.put("account_forzen_certificate",fileList3);
+
+        //账户信息 账户生命周期信息 解冻信息
+        mapTemp.put("account_thaw_date","2020/9/29");
+        mapTemp.put("account_thaw_certificate",fileList4);
+
+        //账户信息 账户关联信息
+        mapTemp.put("account_association",3);
+        mapTemp.put("account_associated_account_ref","t5123pdf");
+        mapTemp.put("account_associated_acct_certificates",fileList5);
+
+        String upResp = gd.GDUpdateAccountInfo(gdContractAddress,mapTemp);
+
+        txId = JSONObject.fromObject(upResp).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+        //查询投资者账户信息
+        query = gd.GDAccountQuery(gdContractAddress,cltNo);
+        Map mapSHAccGet2 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
+                JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
+                        "AccountInfoList").get(0).toString()).getJSONObject(
+                "ShareholderAccount").getJSONObject("AccountInfo").toString());
+
+        Map mapFundAccGet2 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
+                JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
+                        "AccountInfoList").get(0).toString()).getJSONObject(
+                "FundAccount").getJSONObject("AccountInfo").toString());
+
+
+        Map<String, String> testMap21 = new TreeMap<String, String>(shAccountInfo);
+        Map<String, String> testMap22 = new TreeMap<String, String>(mapSHAccGet2);
+        assertEquals(testMap11.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
+                testMap12.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+
+        Map<String, String> testMap23 = new TreeMap<String, String>(mapTemp);
+        Map<String, String> testMap24 = new TreeMap<String, String>(mapFundAccGet2);
+        assertEquals(testMap23.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
+                testMap24.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+
+
+
     }
 
 

@@ -828,7 +828,7 @@ public class GDV2_CheckJGFormat_Part2FundProduct {
         log.info("检查回收存证登记格式化及信息内容与传入一致");
 
         registerInfo = gdBF.init05RegInfo();
-        registerInfo.put("register_rights_change_amount",(-1) * recycleAmount);     //变动额修改为单个账户发行数量
+//        registerInfo.put("register_rights_change_amount",(-1) * recycleAmount);     //变动额修改为单个账户发行数量
         registerInfo.put("register_account_obj_id",tempObjId);
         log.info(gdCF.contructRegisterInfo(regStoreId,1,tempObjId).toString().replaceAll("\"",""));
         log.info(registerInfo.toString());
@@ -1069,7 +1069,7 @@ public class GDV2_CheckJGFormat_Part2FundProduct {
             registerInfo = gdBF.init05RegInfo();
 
             log.info("检查回收存证登记格式化及信息内容与传入一致");
-            registerInfo.put("register_rights_change_amount", "-" + tempAmount);     //变动额修改为单个账户发行数量
+//            registerInfo.put("register_rights_change_amount", "-" + tempAmount);     //变动额修改为单个账户发行数量
             registerInfo.put("register_account_obj_id", mapAccAddr.get(tempAddr));
             log.info(gdCF.contructRegisterInfo(regStoreId, shareList.size(),tempObjId,tempPP).toString().replaceAll("\"", ""));
             log.info(registerInfo.toString());

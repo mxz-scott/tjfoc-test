@@ -377,7 +377,7 @@ public class GDUnitFunc {
             String tempObjId = mapAccAddr.get(tempAddr).toString();
             log.info("检查发行存证登记格式化及信息内容与传入一致:" + tempObjId);
             Map tempReg =  gdBF.init05RegInfo();
-            tempReg.put("权利人账户引用",tempObjId);
+            tempReg.put("register_account_obj_id",tempObjId);
             tempReg.put("register_registration_serial_number",flowNo);
             tempReg.put("register_nature_of_shares",tempPP);
             regList.add(tempReg);

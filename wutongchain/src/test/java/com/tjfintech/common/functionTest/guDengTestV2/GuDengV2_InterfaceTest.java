@@ -72,18 +72,18 @@ public class GuDengV2_InterfaceTest {
         //构造股权账户信息
         Map shareHolderInfo = new HashMap();
         gdBF.init02ShareholderAccountInfo();
-        equityaccountInfo.put("account_object_id",cltNo);  //更新账户对象标识字段
-        log.info(equityaccountInfo.toString());
+        shAccountInfo.put("account_object_id",cltNo);  //更新账户对象标识字段
+        log.info(shAccountInfo.toString());
         shareHolderInfo.put("shareholderNo",shareHolderNo);
-        shareHolderInfo.put("accountInfo", equityaccountInfo);
+        shareHolderInfo.put("accountInfo", shAccountInfo);
         log.info(shareHolderInfo.toString());
 
         //资金账户信息
         gdBF.init02FundAccountInfo();
-        fundaccountInfo.put("account_object_id",cltNo);  //更新账户对象标识字段
+        fundAccountInfo.put("account_object_id",cltNo);  //更新账户对象标识字段
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("fundNo",fundNo);
-        mapFundInfo.put("accountInfo",fundaccountInfo);
+        mapFundInfo.put("accountInfo", fundAccountInfo);
 
         //构造个人/投资者主体信息
         gdBF.init01PersonalSubjectInfo();

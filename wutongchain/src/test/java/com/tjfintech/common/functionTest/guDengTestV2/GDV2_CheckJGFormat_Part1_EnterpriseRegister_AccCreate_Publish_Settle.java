@@ -302,14 +302,14 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         //检查账户存证信息内容与传入一致
         log.info("检查资金账户存证信息内容与传入一致");
         log.info(gdCF.contructFundAccountInfo(accStoreId,"fund" + cltNo).toString().replaceAll("\"",""));
-        log.info(fundaccountInfo.toString());
-        assertEquals(fundaccountInfo.toString().replaceAll(" ","").replaceAll("(\")?(\\[)?(])?",""),
+        log.info(fundAccountInfo.toString());
+        assertEquals(fundAccountInfo.toString().replaceAll(" ","").replaceAll("(\")?(\\[)?(])?",""),
                 gdCF.contructFundAccountInfo(accStoreId,"fund" + cltNo).toString().replaceAll(" ","").replaceAll("(\")?(\\[)?(])?",""));
 
         log.info("检查资金账户存证信息内容与传入一致");
         log.info(gdCF.contructEquityAccountInfo(accStoreId,"SH" + cltNo).toString().replaceAll("\"",""));
-        log.info(equityaccountInfo.toString());
-        assertEquals(equityaccountInfo.toString().replaceAll(" ","").replaceAll("(\")?(\\[)?(])?",""),
+        log.info(shAccountInfo.toString());
+        assertEquals(shAccountInfo.toString().replaceAll(" ","").replaceAll("(\")?(\\[)?(])?",""),
                 gdCF.contructEquityAccountInfo(accStoreId,"SH" + cltNo).toString().replaceAll(" ","").replaceAll("(\")?(\\[)?(])?",""));
 
 
@@ -482,7 +482,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
 
         shAcc.put("account_holder_subject_ref",investorSubjectInfo.get("subject_object_id"));
-//        equityaccountInfo.put("account_associated_account_ref",investorSubjectInfo.get("subject_object_id"));//当前未自动填入
+//        shAccountInfo.put("account_associated_account_ref",investorSubjectInfo.get("subject_object_id"));//当前未自动填入
 
         fundAcc.put("account_holder_subject_ref",investorSubjectInfo.get("subject_object_id"));
         fundAcc.put("account_associated_account_ref",shareHolderInfo.get("subject_object_id"));

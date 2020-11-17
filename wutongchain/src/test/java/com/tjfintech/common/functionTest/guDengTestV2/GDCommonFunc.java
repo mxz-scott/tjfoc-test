@@ -174,7 +174,7 @@ public class GDCommonFunc {
 //    public static List<Map> gdConstructShareListNoTxReport(String address, double amount, int shareProperty){
 //        GDBeforeCondition gdbf = new GDBeforeCondition();
 //        Map tempReg = gdbf.init05RegInfo();
-//        tempReg.put("权利人账户引用",mapAccAddr.get(address));
+//        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
 //        tempReg.put("register_nature_of_shares",shareProperty);
 //
 //        Map<String,Object> shares = new HashMap<>();
@@ -215,7 +215,7 @@ public class GDCommonFunc {
 //    public static List<Map> gdConstructShareListNoTxReport(String address, double amount, int shareProperty,List<Map> list){
 //        GDBeforeCondition gdbf = new GDBeforeCondition();
 //        Map tempReg = gdbf.init05RegInfo();
-//        tempReg.put("权利人账户引用",mapAccAddr.get(address));
+//        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
 //        tempReg.put("register_nature_of_shares",shareProperty);
 //
 //        List<Map> shareList = new ArrayList<>();

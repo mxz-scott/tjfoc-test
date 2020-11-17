@@ -1279,24 +1279,24 @@ public class GDV2_CheckJGFormat_Part2EquityProduct_NoComma {
         String storeId = gdCF.getJGStoreHash(txId,1);
 
         log.info("检查销户存证登记格式化及信息内容与传入一致");
-        fundaccountInfo.put("account_status",1);  //变更账号状态为1
+        fundAccountInfo.put("account_status",1);  //变更账号状态为1
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         String sd = sdf.format(new Date(onChainTS)); // 时间戳转换日期
-        fundaccountInfo.put("account_closing_date",sd);
-        fundaccountInfo.put("account_closing_certificate","2.txt");
+        fundAccountInfo.put("account_closing_date",sd);
+        fundAccountInfo.put("account_closing_certificate","2.txt");
         log.info(gdCF.contructFundAccountInfo(storeId,clntNo).toString().replaceAll("\"",""));
-        log.info(fundaccountInfo.toString());
-        assertEquals(fundaccountInfo.toString().replaceAll(" ","").replaceAll("\\[","").replaceAll("]",""),
+        log.info(fundAccountInfo.toString());
+        assertEquals(fundAccountInfo.toString().replaceAll(" ","").replaceAll("\\[","").replaceAll("]",""),
                 gdCF.contructFundAccountInfo(storeId,clntNo).toString().replaceAll("\"","").replaceAll(" ",""));
 
         log.info("检查销户存证产品格式化及信息内容与传入一致");
-        equityaccountInfo.put("account_status",1);  //变更账号状态为1
-        equityaccountInfo.put("account_closing_date",sd);
-        equityaccountInfo.put("account_closing_certificate","1.txt");
+        shAccountInfo.put("account_status",1);  //变更账号状态为1
+        shAccountInfo.put("account_closing_date",sd);
+        shAccountInfo.put("account_closing_certificate","1.txt");
         log.info(gdCF.contructEquityAccountInfo(storeId,clntNo).toString().replaceAll("\"",""));
-        log.info(equityaccountInfo.toString());
-        assertEquals(equityaccountInfo.toString().replaceAll(" ","").replaceAll("\\[","").replaceAll("]",""),
+        log.info(shAccountInfo.toString());
+        assertEquals(shAccountInfo.toString().replaceAll(" ","").replaceAll("\\[","").replaceAll("]",""),
                 gdCF.contructEquityAccountInfo(storeId,clntNo).toString().replaceAll("\"","").replaceAll(" ",""));
         log.info("================================检查存证数据格式化《结束》================================");
 

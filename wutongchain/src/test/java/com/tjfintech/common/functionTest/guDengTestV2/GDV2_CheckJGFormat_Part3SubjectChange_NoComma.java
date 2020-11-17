@@ -14,7 +14,10 @@ import org.junit.runners.MethodSorters;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import static com.tjfintech.common.functionTest.guDengTestV2.GDCommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -23,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDV2_CheckJGFormat_Part3SubjectChange {
+public class GDV2_CheckJGFormat_Part3SubjectChange_NoComma {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
@@ -152,11 +155,11 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
             registerInfo.put("register_account_obj_id",tempObjId);
 
             registerInfo.put("register_nature_of_shares", tempPP);
-//            registerInfo.put("register_rights_change_amount", issueAmount);     //变动额修改为单个账户发行数量
-//            registerInfo.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
-//            registerInfo.put("register_available_balance", issueAmount);   //当前当前可用余额修改为当前实际可用余额
-//            registerInfo.put("register_creditor_subscription_count", issueAmount);   //当前认购数量修改为当前实际余额
-//            registerInfo.put("register_rights_frozen_change_amount", 0);   //冻结变动额修改为当前实际冻结变更额
+            registerInfo.put("register_rights_change_amount", issueAmount);     //变动额修改为单个账户发行数量
+            registerInfo.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
+            registerInfo.put("register_available_balance", issueAmount);   //当前当前可用余额修改为当前实际可用余额
+            registerInfo.put("register_creditor_subscription_count", issueAmount);   //当前认购数量修改为当前实际余额
+            registerInfo.put("register_rights_frozen_change_amount", 0);   //冻结变动额修改为当前实际冻结变更额
             log.info(gdCF.contructRegisterInfo(storeId, 4,tempObjId,tempPP).toString().replaceAll("\"", ""));
             log.info(registerInfo.toString());
             assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId, 4,tempObjId,tempPP).toString().replaceAll("\"", ""));
@@ -233,7 +236,8 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
 
         log.info("转让前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        int totalHolderAccount = JSONObject.fromObject(query2).getJSONObject("data").getInt("subject_shareholders_number");
+        int totalHolderAccount = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getInt("subject_shareholders_number");
 
         //执行交易
         String response= gd.GDShareTransfer(keyId,fromAddr,transferAmount,toAddr,shareProperty,eqCode,txInformation,fromNow,toNow);
@@ -250,7 +254,8 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
 
         log.info("转让后查询机构主体信息");
         query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        int totalHolderAccountAft = JSONObject.fromObject(query2).getJSONObject("data").getInt("subject_shareholders_number");
+        int totalHolderAccountAft = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getInt("subject_shareholders_number");
 
         //查询企业股东信息
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
@@ -266,15 +271,15 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         String sd = sdf.format(new Date(onChainTS)); // 时间戳转换日期
         log.info("检查过户转让存证登记格式化及信息内容与传入一致:" + tempObjIdFrom);
-//        fromNow.put("register_rights_change_amount","-" + transferAmount);
-//        fromNow.put("register_time",txInformation.get("transaction_close_time").toString());
-//        fromNow.put("register_available_balance",issueAmount - transferAmount);
-//        fromNow.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
-//
-//        toNow.put("register_rights_change_amount",transferAmount);
-//        toNow.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
-//        toNow.put("register_time",txInformation.get("transaction_close_time").toString());
-//        toNow.put("register_available_balance",issueAmount + transferAmount);
+        fromNow.put("register_rights_change_amount","-" + transferAmount);
+        fromNow.put("register_time",txInformation.get("transaction_close_time").toString());
+        fromNow.put("register_available_balance",issueAmount - transferAmount);
+        fromNow.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
+
+        toNow.put("register_rights_change_amount",transferAmount);
+        toNow.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
+        toNow.put("register_time",txInformation.get("transaction_close_time").toString());
+        toNow.put("register_available_balance",issueAmount + transferAmount);
         log.info(gdCF.contructRegisterInfo(storeId, 3, tempObjIdFrom).toString().replaceAll("\"", ""));
         log.info(fromNow.toString());
         assertEquals(fromNow.toString(), gdCF.contructRegisterInfo(storeId,3,tempObjIdFrom).toString().replaceAll("\"",""));
@@ -339,10 +344,10 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
         Map toNow = gdBF.init05RegInfo();
 
         regNo = "Eq" + "transfer" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        fromNow.put("register_registration_type",2);       //更新对比的登记类型
-        toNow.put("register_registration_type",3);       //更新对比的登记类型
-        fromNow.put("register_currency","860");       //更新对比的登记币种
-        toNow.put("register_currency","861");       //更新对比的登记币种
+        fromNow.put("register_registration_type",2);       //更新对比的登记流水号
+        toNow.put("register_registration_type",3);       //更新对比的登记流水号
+        fromNow.put("register_currency","860");       //更新对比的登记流水号
+        toNow.put("register_currency","861");       //更新对比的登记流水号
         fromNow.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
         toNow.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
         fromNow.put("register_account_obj_id",tempObjIdFrom);       //更新对比的权利人账户引用
@@ -352,7 +357,8 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
 
         log.info("转让前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        int totalHolderAccount = JSONObject.fromObject(query2).getJSONObject("data").getInt("subject_shareholders_number");
+        int totalHolderAccount = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getInt("subject_shareholders_number");
 
         //执行交易
         String response= gd.GDShareTransfer(keyId,fromAddr,transferAmount,toAddr,shareProperty,eqCode,txInformation,fromNow,toNow);
@@ -369,7 +375,8 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
 
         log.info("转让后查询机构主体信息");
         query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        int totalHolderAccountAft = JSONObject.fromObject(query2).getJSONObject("data").getInt("subject_shareholders_number");
+        int totalHolderAccountAft = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject(
+                "body").getJSONObject("subject_information").getJSONObject("subject_main_body _information").getJSONObject("basic_information_enterprise").getInt("subject_shareholders_number");
 
         //查询企业股东信息
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
@@ -385,15 +392,15 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         String sd = sdf.format(new Date(onChainTS)); // 时间戳转换日期
         log.info("检查过户转让存证登记格式化及信息内容与传入一致:" + tempObjIdFrom);
-//        fromNow.put("register_rights_change_amount","-" + transferAmount);
-//        fromNow.put("register_time",txInformation.get("transaction_close_time").toString());
-//        fromNow.put("register_available_balance",issueAmount - transferAmount);
-//        fromNow.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
-//
-//        toNow.put("register_rights_change_amount",transferAmount);
-//        toNow.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
-//        toNow.put("register_time",txInformation.get("transaction_close_time").toString());
-//        toNow.put("register_available_balance",issueAmount + transferAmount);
+        fromNow.put("register_rights_change_amount","-" + transferAmount);
+        fromNow.put("register_time",txInformation.get("transaction_close_time").toString());
+        fromNow.put("register_available_balance",issueAmount - transferAmount);
+        fromNow.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
+
+        toNow.put("register_rights_change_amount",transferAmount);
+        toNow.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
+        toNow.put("register_time",txInformation.get("transaction_close_time").toString());
+        toNow.put("register_available_balance",issueAmount + transferAmount);
         log.info(gdCF.contructRegisterInfo(storeId, 3, tempObjIdFrom).toString().replaceAll("\"", ""));
         log.info(fromNow.toString());
         assertEquals(fromNow.toString(), gdCF.contructRegisterInfo(storeId,3,tempObjIdFrom).toString().replaceAll("\"",""));
@@ -496,7 +503,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
 
             log.info("检查增发存证登记格式化及信息内容与传入一致");
             registerInfo.put("register_account_obj_id",tempObjId);
-//            registerInfo.put("register_rights_change_amount",increaseAmount);     //变动额修改为单个账户发行数量
+            registerInfo.put("register_rights_change_amount",increaseAmount);     //变动额修改为单个账户发行数量
             log.info(gdCF.contructRegisterInfo(regStoreId,2,tempObjId).toString().replaceAll("\"",""));
             log.info(registerInfo.toString());
             assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(regStoreId,2,tempObjId).toString().replaceAll("\"",""));
@@ -610,7 +617,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
 
             log.info("检查增发存证登记格式化及信息内容与传入一致");
             registerInfo.put("register_account_obj_id",tempObjId);
-//            registerInfo.put("register_rights_change_amount",increaseAmount);     //变动额修改为单个账户发行数量
+            registerInfo.put("register_rights_change_amount",increaseAmount);     //变动额修改为单个账户发行数量
             log.info(gdCF.contructRegisterInfo(regStoreId,2,tempObjId).toString().replaceAll("\"",""));
             log.info(registerInfo.toString());
             assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(regStoreId,2,tempObjId).toString().replaceAll("\"",""));
@@ -734,7 +741,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
 
             log.info("检查增发存证登记格式化及信息内容与传入一致");
             registerInfo.put("register_account_obj_id",tempObjId);
-//            registerInfo.put("register_rights_change_amount",increaseAmount);     //变动额修改为单个账户发行数量
+            registerInfo.put("register_rights_change_amount",increaseAmount);     //变动额修改为单个账户发行数量
             log.info(gdCF.contructRegisterInfo(regStoreId,2,tempObjId).toString().replaceAll("\"",""));
             log.info(registerInfo.toString());
             assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(regStoreId,2,tempObjId).toString().replaceAll("\"",""));
@@ -827,7 +834,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
         String storeId = gdCF.getJGStoreHash(txId,1);
 
         log.info("检查冻结存证登记格式化及信息内容与传入一致");
-//        registerInfo.put("register_rights_frozen_change_amount",lockAmount);   //冻结变动额修改为当前实际冻结变更额
+        registerInfo.put("register_rights_frozen_change_amount",lockAmount);   //冻结变动额修改为当前实际冻结变更额
         log.info(gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
         log.info(registerInfo.toString());
         assertEquals(registerInfo.toString(), gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
@@ -893,7 +900,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
         //获取监管数据存证hash
         String storeId = gdCF.getJGStoreHash(txId,1);
         log.info("检查冻结存证登记格式化及信息内容与传入一致");
-//        registerInfo.put("register_rights_frozen_change_amount",lockAmount);   //冻结变动额修改为当前实际冻结变更额
+        registerInfo.put("register_rights_frozen_change_amount",lockAmount);   //冻结变动额修改为当前实际冻结变更额
         log.info(gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
         log.info(registerInfo.toString());
         assertEquals(registerInfo.toString(), gdCF.contructOneRegisterInfo(storeId).toString().replaceAll("\"",""));
