@@ -171,23 +171,6 @@ public class GDCommonFunc {
         return shareList;
     }
 
-//    public static List<Map> gdConstructShareListNoTxReport(String address, double amount, int shareProperty){
-//        GDBeforeCondition gdbf = new GDBeforeCondition();
-//        Map tempReg = gdbf.init05RegInfo();
-//        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
-//        tempReg.put("register_nature_of_shares",shareProperty);
-//
-//        Map<String,Object> shares = new HashMap<>();
-//        shares.put("address",address);
-//        shares.put("amount",amount);
-//        shares.put("shareProperty",shareProperty);
-//        shares.put("registerInformation",tempReg);
-//
-//        List<Map> shareList = new ArrayList<>();
-//        shareList.add(shares);
-//        return shareList;
-//    }
-
     public static List<Map> gdConstructShareList(String address, double amount, int shareProperty,List<Map> list){
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
@@ -231,6 +214,63 @@ public class GDCommonFunc {
 //        shareList.add(shares);
 //        return shareList;
 //    }
+
+    public static List<Map> gdConstructShareList2(String address, double amount, int shareProperty){
+        GDBeforeCondition gdbf = new GDBeforeCondition();
+        Map tempReg = gdbf.init05RegInfo();
+        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
+        tempReg.put("register_nature_of_shares",shareProperty);
+
+        //不填写如下字段
+        tempReg.remove("register_rights_change_amount");
+        tempReg.remove("register_rights_frozen_balance");
+        tempReg.remove("register_available_balance");
+        tempReg.remove("register_creditor_subscription_count");
+        tempReg.remove("register_rights_frozen_change_amount");
+
+
+        Map<String,Object> shares = new HashMap<>();
+        shares.put("address",address);
+        shares.put("amount",amount);
+        shares.put("shareProperty",shareProperty);
+        shares.put("registerInformation",tempReg);
+//        shares.put("transactionReport",tempTxInfo);
+
+        List<Map> shareList = new ArrayList<>();
+        shareList.add(shares);
+        return shareList;
+    }
+
+    public static List<Map> gdConstructShareList2(String address, double amount, int shareProperty,List<Map> list){
+        GDBeforeCondition gdbf = new GDBeforeCondition();
+        Map tempReg = gdbf.init05RegInfo();
+        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
+        tempReg.put("register_nature_of_shares",shareProperty);
+
+        //不填写如下字段
+        tempReg.remove("register_rights_change_amount");
+        tempReg.remove("register_rights_frozen_balance");
+        tempReg.remove("register_available_balance");
+        tempReg.remove("register_creditor_subscription_count");
+        tempReg.remove("register_rights_frozen_change_amount");
+
+
+        List<Map> shareList = new ArrayList<>();
+        for(int i = 0 ; i < list.size() ; i++) {
+            shareList.add(list.get(i));
+        }
+        Map<String,Object> shares = new HashMap<>();
+        shares.put("address",address);
+        shares.put("amount",amount);
+        shares.put("shareProperty",shareProperty);
+        shares.put("registerInformation",tempReg);
+//        shares.put("transactionReport",tempTxInfo);
+
+        shareList.add(shares);
+        return shareList;
+    }
+
+
 
     public static List<Map> getShareListFromQueryNoZeroAcc(JSONArray dataShareList)throws Exception {
         List<Map> getShareList = new ArrayList<>();
@@ -853,7 +893,6 @@ public class GDCommonFunc {
     }
 
     public Map accountInfo(com.alibaba.fastjson.JSONObject jobjOK){
-        log.info("++++++++++++++++++++++" + jobjOK.toString());
         com.alibaba.fastjson.JSONObject objInfo = jobjOK.getJSONObject("body").getJSONObject("account_object_information");
 
         com.alibaba.fastjson.JSONObject objAccbase = jobjOK.getJSONObject("body").getJSONObject("account_information").getJSONObject("basic_account_information");
@@ -879,14 +918,14 @@ public class GDCommonFunc {
         key = "account_never";                      getSubjectInfo.put(key,objAccbase.getString(key));
         key = "account_status";                     getSubjectInfo.put(key,objAccbase.getString(key));
 
-        key = "account_qualification_certification_file";   getSubjectInfo.put(key,objAccQaul.getString(key));
+        key = "account_qualification_certification_file";   getSubjectInfo.put(key,objAccQaul.getString(key));//可以直接get list string
         key = "account_certifier";                          getSubjectInfo.put(key,objAccQaul.getString(key));
         key = "account_auditor";                            getSubjectInfo.put(key,objAccQaul.getString(key));
         key = "account_certification_time";                 getSubjectInfo.put(key,objAccQaul.getString(key));
         key = "account_audit_time";                         getSubjectInfo.put(key,objAccQaul.getString(key));
 
         key = "account_opening_date";               getSubjectInfo.put(key,objAccLifeOpen.getString(key));
-        key = "account_opening_certificate";        getSubjectInfo.put(key,com.alibaba.fastjson.JSONObject.parseArray(objAccLifeOpen.getJSONArray(key).toJSONString(), String.class));
+        key = "account_opening_certificate";        getSubjectInfo.put(key,objAccLifeOpen.getString(key));
         key = "account_closing_date";               getSubjectInfo.put(key,objAccLifeCancel.getString(key));
         key = "account_closing_certificate";        getSubjectInfo.put(key,com.alibaba.fastjson.JSONObject.parseArray(objAccLifeCancel.getJSONArray(key).toJSONString(), String.class));
         key = "account_forzen_date";                getSubjectInfo.put(key,objAccLifeFreeze.getString(key));
