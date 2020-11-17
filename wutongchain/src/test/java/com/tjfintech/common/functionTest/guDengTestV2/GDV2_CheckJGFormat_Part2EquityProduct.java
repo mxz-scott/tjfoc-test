@@ -393,7 +393,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         String jgType = "主体";
         String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
-
+        enterpriseSubjectInfo.put("subject_object_information_type",1); //触发主体变更 类型变更为1
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
         log.info(enterpriseSubjectInfo.toString());
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));

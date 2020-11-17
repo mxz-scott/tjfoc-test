@@ -744,8 +744,10 @@ public class GDBeforeCondition {
         mapTemp.put("transaction_original_owner_name","zhagnsan");
         mapTemp.put("transaction_counterparty_subject_ref","acchobj002");
         mapTemp.put("transaction_counterparty_name","李四");
-        mapTemp.put("transaction_order_verification_certificates","ddd.pdf");
-        mapTemp.put("transaction_close_verification_certificates","erq.pdf");
+        List<String> list1 = new ArrayList<>();list1.add("ddd.pdf");
+        List<String> list2 = new ArrayList<>();list2.add("erq.pdf");
+        mapTemp.put("transaction_order_verification_certificates",list1);
+        mapTemp.put("transaction_close_verification_certificates",list2);
 
         List<Map> mapList1 = new ArrayList<>();
         Map equityMap = new HashMap();

@@ -1079,6 +1079,7 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject objDeal = jobjOK.getJSONObject("body").getJSONObject("transaction_report_information").getJSONObject("transaction_information");
         com.alibaba.fastjson.JSONObject objDealContent = objDeal.getJSONObject("transaction_content_information");
         com.alibaba.fastjson.JSONObject objDealFina = objDeal.getJSONObject("financing_transaction_party_information");
+        com.alibaba.fastjson.JSONObject objDealTxParty = objDeal.getJSONObject("transaction_party_information");
         com.alibaba.fastjson.JSONObject objDealVerify = objDeal.getJSONObject("transaction_verification_information");
 
         Map getSubjectInfo = new HashMap();
@@ -1104,15 +1105,15 @@ public class GDCommonFunc {
         key = "transaction_Investor_subject_ref";           getSubjectInfo.put(key,objDealFina.getString(key));
         key = "transaction_Investor_name";                  getSubjectInfo.put(key,objDealFina.getString(key));
 
-        key = "transaction_original_owner_subject_ref";     getSubjectInfo.put(key,objDealVerify.getString(key));
-        key = "transaction_original_owner_name";            getSubjectInfo.put(key,objDealVerify.getString(key));
-        key = "transaction_counterparty_subject_ref";       getSubjectInfo.put(key,objDealVerify.getString(key));
-        key = "transaction_counterparty_name";              getSubjectInfo.put(key,objDealVerify.getString(key));
+        key = "transaction_original_owner_subject_ref";     getSubjectInfo.put(key,objDealTxParty.getString(key));
+        key = "transaction_original_owner_name";            getSubjectInfo.put(key,objDealTxParty.getString(key));
+        key = "transaction_counterparty_subject_ref";       getSubjectInfo.put(key,objDealTxParty.getString(key));
+        key = "transaction_counterparty_name";              getSubjectInfo.put(key,objDealTxParty.getString(key));
 
         key = "transaction_order_verification_certificates"; getSubjectInfo.put(key,com.alibaba.fastjson.JSONObject.parseArray(
-                objDeal.getJSONObject("transaction_verification_information").getJSONArray(key).toJSONString(), String.class));
+                                                            objDealVerify.getJSONArray(key).toJSONString(), String.class));
         key = "transaction_close_verification_certificates"; getSubjectInfo.put(key,com.alibaba.fastjson.JSONObject.parseArray(
-                objDeal.getJSONObject("transaction_verification_information").getJSONArray(key).toJSONString(), String.class));
+                                                            objDealVerify.getJSONArray(key).toJSONString(), String.class));
 
         key = "transaction_intermediary_information";
         getSubjectInfo.put(key,com.alibaba.fastjson.JSONObject.parseArray(
