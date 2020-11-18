@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 public class UtilsClassScf {
     public static String platformKeyID = "bugfuble655f4d6o3n90";//平台ID
     public static String keyID = "bugeu8te655f4d6m3e00";
-
     public static String companyID = "001";
     public static String PIN = "123";
     public static long levelLimit = 5;

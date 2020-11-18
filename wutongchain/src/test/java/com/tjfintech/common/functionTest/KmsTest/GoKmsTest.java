@@ -34,14 +34,14 @@ public class GoKmsTest {
         assertThat(response, containsString("200"));
         assertThat(response, containsString("data"));
        //获取对称密钥加密参数
-        String s = UtilsClassKMS.a(response);
+        String a = UtilsClassKMS.a(response);
         //对称密钥加密
-        String response1 = kms.encrypt(s, password, plainText);
+        String response1 = kms.encrypt(a, password, plainText);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("data"));
         //获取对称密钥解密参数
-        String x = UtilsClassKMS.b(response1);
-        String response2 = kms.decrypt(s, password, x);
+        String b = UtilsClassKMS.b(response1);
+        String response2 = kms.decrypt(a, password, b);
         System.out.println("response2 = " + response2);
         //验证加解密参数
         assertThat(response2, containsString("200"));
@@ -62,16 +62,11 @@ public class GoKmsTest {
 
         assertThat(response, containsString("200"));
         assertThat(response, containsString("data"));
-
-        Map mapkey = JSON.parseObject(response, Map.class);
-        Map mapType1 = JSON.parseObject(mapkey.get("data").toString(), Map.class);
-        String s = mapType1.get("importToken").toString();
-        System.out.println("s = " + s);
-        String x = mapType1.get("encryptPublicKey").toString();
-        System.out.println("x = " + x);
+        String c = UtilsClassKMS.c(response);
+        String d = UtilsClassKMS.d(response);
         //将获取的密钥参数加密转码
-        System.out.println(x.substring(2));
-        byte[] pub=Base64.getDecoder().decode(x);
+        System.out.println(d.substring(2));
+        byte[] pub=Base64.getDecoder().decode(d);
         TjParseEncryptionKey tjParseEncryptionKey=new TjParseEncryptionKey();
         byte[] pubkey=tjParseEncryptionKey.readPublicKey(pub);
         GmUtils gmUtils=new GmUtils();
@@ -80,17 +75,14 @@ public class GoKmsTest {
         byte[] ciphertext=Base64.getEncoder().encode(cipher);
         System.out.println("密文："+new String(ciphertext));
         //导入密钥
-        String response1 = kms.importKey(s, new String(ciphertext));
+        String response1 = kms.importKey(c, new String(ciphertext));
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("data"));
         //获取导入公钥参数
-        Map mapkey1 = JSON.parseObject(response1, Map.class);
-        Map mapType2 = JSON.parseObject(mapkey1.get("data").toString(), Map.class);
-        String z = mapType2.get("keyId").toString();
-        System.out.println("z = " + z);
+        String e = UtilsClassKMS.e(response1);
+        System.out.println("e = " + e);
         //导入公钥
-        String response2 = kms.getPublicKey(z, pubFormat);
-
+        String response2 = kms.getPublicKey(e, pubFormat);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("data"));
     }
@@ -116,19 +108,15 @@ public class GoKmsTest {
     public void eccEncrypt_Test04() throws Exception{
         //获取非对称密钥导入参数
         String response = kms.getKey(keySpecSm2, pubFormat);
-
         assertThat(response, containsString("200"));
         assertThat(response, containsString("data"));
-        //获取导入密钥参数 s x
-        Map mapkey = JSON.parseObject(response, Map.class);
-        Map mapType1 = JSON.parseObject(mapkey.get("data").toString(), Map.class);
-        String s = mapType1.get("importToken").toString();
-        System.out.println("s =" + s);
-        String x = mapType1.get("encryptPublicKey").toString();
-        System.out.println("x = " + x);
+        //获取导入密钥参数
+
+        String c = UtilsClassKMS.c(response);
+        String d = UtilsClassKMS.d(response);
         //将获取的密钥参数加密转码
-        System.out.println(x.substring(2));
-        byte[] pub=Base64.getDecoder().decode(x);
+        System.out.println(d.substring(2));
+        byte[] pub=Base64.getDecoder().decode(d);
         TjParseEncryptionKey tjParseEncryptionKey=new TjParseEncryptionKey();
         byte[] pubkey=tjParseEncryptionKey.readPublicKey(pub);
         GmUtils gmUtils=new GmUtils();
@@ -137,32 +125,22 @@ public class GoKmsTest {
         byte[] ciphertext=Base64.getEncoder().encode(cipher);
         System.out.println("密文："+new String(ciphertext));
         //导入密钥
-        String response1 = kms.importKey(s, new String(ciphertext));
+        String response1 = kms.importKey(c, new String(ciphertext));
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("data"));
         //获取导入公钥参数
-        Map mapkey1 = JSON.parseObject(response1, Map.class);
-        Map mapType2 = JSON.parseObject(mapkey1.get("data").toString(), Map.class);
-        String z = mapType2.get("keyId").toString();
-        System.out.println("z = " + z);
+        String e = UtilsClassKMS.e(response1);
 
-        String response2 = kms.eccEncrypt(z, plainText);
-        System.out.println("response = " + response2); //打印返回值
-        Map mapType = JSON.parseObject(response2, Map.class);//把我的返回值转换成map
-        System.out.println("mapType = " + mapType);//打印转换成map格式的返回值
-        System.out.println(mapType.get("data"));
+        String response2 = kms.eccEncrypt(e, plainText);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("data"));
 
-        Map mapType3 = JSON.parseObject(mapType.get("data").toString(), Map.class);
-        System.out.println("====>" + mapType1.get("cipherText"));
+        String f = UtilsClassKMS.f(response2);
 
-        String v = mapType3.get("cipherText").toString();//从map里获取到cip的值 赋值给s
-        assertThat(response, containsString("200"));
-        assertThat(response, containsString("data"));
-
-        String response3 = kms.eccDecrypt(z, password, v);
-        System.out.println("response1 = " + response3);
+        String response3 = kms.eccDecrypt(e, password, f);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("data"));
+        assertThat(response3, containsString("U3ltbWV0cmljIGtleSBlbmNyeXB0aW9u"));
 
     }
 
@@ -173,16 +151,12 @@ public class GoKmsTest {
 
         assertThat(response, containsString("200"));
         assertThat(response, containsString("data"));
-        //获取导入密钥参数 s x
-        Map mapkey = JSON.parseObject(response, Map.class);
-        Map mapType1 = JSON.parseObject(mapkey.get("data").toString(), Map.class);
-        String s = mapType1.get("importToken").toString();
-        System.out.println("s =" + s);
-        String x = mapType1.get("encryptPublicKey").toString();
-        System.out.println("x = " + x);
+        //获取导入密钥参数
+        String c = UtilsClassKMS.c(response);
+        String d = UtilsClassKMS.d(response);
         //将获取的密钥参数加密转码
-        System.out.println(x.substring(2));
-        byte[] pub=Base64.getDecoder().decode(x);
+        System.out.println(d.substring(2));
+        byte[] pub=Base64.getDecoder().decode(d);
         TjParseEncryptionKey tjParseEncryptionKey=new TjParseEncryptionKey();
         byte[] pubkey=tjParseEncryptionKey.readPublicKey(pub);
         GmUtils gmUtils=new GmUtils();
@@ -191,28 +165,27 @@ public class GoKmsTest {
         byte[] ciphertext=Base64.getEncoder().encode(cipher);
         System.out.println("密文："+new String(ciphertext));
         //导入密钥
-        String response1 = kms.importKey(s, new String(ciphertext));
+        String response1 = kms.importKey(c, new String(ciphertext));
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("data"));
         //获取导入公钥参数
-        Map mapkey1 = JSON.parseObject(response1, Map.class);
-        Map mapType2 = JSON.parseObject(mapkey1.get("data").toString(), Map.class);
-        String z = mapType2.get("keyId").toString();
-        System.out.println("z = " + z);
+        String e = UtilsClassKMS.e(response1);
 
-        String response2 = kms.eccSign(z, password, Digest);
-
+        String response2 = kms.eccSign(e, password, Digest);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("data"));
 
-        Map mapkey2 = JSON.parseObject(response2, Map.class);
-        Map mapType3 = JSON.parseObject(mapkey2.get("data").toString(), Map.class);
-        String h = mapType3.get("value").toString();
-        System.out.println("h = " + h);
+        String g = UtilsClassKMS.g(response2);
 
-        String response3 = kms.eccVerify(z, Digest, h);
+        String response3 = kms.eccVerify(e, Digest, g);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("data"));
+        assertThat(response3, containsString("true"));
+        //验签异常测试
+        String response4 = kms.eccVerify(e, Digesterror, g);
+        assertThat(response4, containsString("400"));
+        assertThat(response4, containsString("验签原文内容应使用BASE64编码"));
+
     }
 
     @Test
@@ -221,15 +194,16 @@ public class GoKmsTest {
 
         assertThat(response, containsString("200"));
         assertThat(response, containsString("data"));
+        
+        String a = UtilsClassKMS.a(response);
 
-        Map mapkey = JSON.parseObject(response, Map.class);
-        Map mapType1 = JSON.parseObject(mapkey.get("data").toString(), Map.class);
-
-        String s = mapType1.get("keyId").toString();
-        System.out.println("s = " + s);
-
-        String response1 = kms.changePwd(s, oldPwd, newPwd);
+        String response1 = kms.changePwd(a, oldPwd, newPwd);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("data"));
+        assertThat(response1, containsString("ok"));
+        //修改后的密码创建账号
+        String response2 = kms.createKey(keySpecSm4, newPwd);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("data"));
     }
 }
