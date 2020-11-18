@@ -24,7 +24,8 @@ public  class GoGuDeng implements GuDeng {
      * @param bondProductInfo
      * @return
      */
-    public String GDEnterpriseResister(String contractAddress, String equityCode, long totalShares, Map enterpriseSubjectInfo, Map equityProductInfo,Map bondProductInfo){
+    public String GDEnterpriseResister(String contractAddress, String equityCode, long totalShares, Map enterpriseSubjectInfo,
+                                       Map equityProductInfo,Map bondProductInfo,Map fundProductInfo){
 
         Map<String, Object> map = new HashMap<>();
         map.put("contractAddress", contractAddress);
@@ -33,6 +34,7 @@ public  class GoGuDeng implements GuDeng {
         map.put("enterpriseSubjectInfo", enterpriseSubjectInfo);
         map.put("equityProductInfo", equityProductInfo);
         map.put("bondProductInfo", bondProductInfo);
+        map.put("fundProductInfo", fundProductInfo);
 
         String result = PostTest.postMethod(SDKADD + "/equity/enterprise/issue", map);
         log.info(result);
@@ -325,11 +327,14 @@ public  class GoGuDeng implements GuDeng {
      * @param clientNo
      * @return
      */
-    public String GDAccountDestroy(String contractAddress, String clientNo,String shareholderClosingCertificate,String fundClosingCertificate){
+    public String GDAccountDestroy(String contractAddress, String clientNo,String shareholderClosingDate,String shareholderClosingCertificate,
+                                   String fundClosingDate,String fundClosingCertificate){
         Map<String, Object> map = new HashMap<>();
         map.put("contractAddress", contractAddress);
         map.put("clientNo", clientNo);
+        map.put("shareholderClosingDate", shareholderClosingDate);
         map.put("shareholderClosingCertificate", shareholderClosingCertificate);
+        map.put("fundClosingDate", fundClosingDate);
         map.put("fundClosingCertificate", fundClosingCertificate);
 
         String result = PostTest.postMethod(SDKADD + "/equity/account/destroy", map);
@@ -503,6 +508,25 @@ public  class GoGuDeng implements GuDeng {
         log.info(result);
         return result;
     }
+
+    public String GDUpdateAccountInfo(String contractAddress,Map accountInfo){
+        Map<String, Object> map = new HashMap<>();
+        map.put("contractAddress", contractAddress);
+        map.put("accountInfo", accountInfo);
+        String result = PostTest.postMethod(SDKADD + "/equity/account/update", map);
+        log.info(result);
+        return result;
+    }
+
+    public String GDUpdateProductInfo(String contractAddress,Map productInfo){
+        Map<String, Object> map = new HashMap<>();
+        map.put("contractAddress", contractAddress);
+        map.put("productInfo", productInfo);
+        String result = PostTest.postMethod(SDKADD + "/equity/product/update", map);
+        log.info(result);
+        return result;
+    }
+
     public String GDGetTxReportInfo(String type, String value,String beginTime,String endTime){
         Map<String, Object> map = new HashMap<>();
         map.put("type", type);

@@ -5,7 +5,8 @@ import java.util.Map;
 
 public interface GuDeng {
 
-    String GDEnterpriseResister(String contractAddress, String equityCode, long totalShares, Map enterpriseSubjectInfo, Map equityProductInfo,Map bondProductInfo);
+    String GDEnterpriseResister(String contractAddress, String equityCode, long totalShares, Map enterpriseSubjectInfo,
+                                Map equityProductInfo,Map bondProductInfo,Map fundProductInfo);
     String GDCreateAccout(String contractAddress, String clientNo,Map fundInfo,Map shareholderInfo,Map investorInfo);
 
     String GDShareIssue(String contractAddress, String platformKeyId, String equityCode, List<Map> shareList);
@@ -32,7 +33,8 @@ public interface GuDeng {
 //    String GDShareChangeBoard(String platformKeyId, String companyId, String oldEquityCode, String newEquityCode,Map registerInformation,Map equityProductInfo,Map bondProductInfo);
     String GDShareChangeBoard(String platformKeyId, String companyId, String oldEquityCode, String newEquityCode,List<Map> regInfoList,Map equityProductInfo,Map bondProductInfo);
 
-    String GDAccountDestroy(String contractAddress, String clientNo,String shareholderClosingCertificate,String fundClosingCertificate);
+    String GDAccountDestroy(String contractAddress, String clientNo,String shareholderClosingDate,String shareholderClosingCertificate,
+                            String fundClosingDate,String fundClosingCertificate);
 
     String GDInfoPublish(Map infoDisclosure);
     String GDInfoPublishGet(String txId);
@@ -47,6 +49,8 @@ public interface GuDeng {
     String GDEquitySystemInit(String contractAddress,String platformKeyId);
 
     String GDUpdateSubjectInfo(String contractAddress,int type,Map subjectInfo);
+    String GDUpdateAccountInfo(String contractAddress,Map accountInfo);
+    String GDUpdateProductInfo(String contractAddress,Map productInfo);
     String GDGetTxReportInfo(String type, String value,String beginTime,String endTime);
 
 }

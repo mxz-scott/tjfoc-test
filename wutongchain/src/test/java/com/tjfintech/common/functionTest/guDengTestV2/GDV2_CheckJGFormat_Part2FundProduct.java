@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDV2_CheckJGFormat_Part2BondProduct {
+public class GDV2_CheckJGFormat_Part2FundProduct {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
@@ -64,8 +64,8 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         gdBefore.gdCreateAccout();
 //        gdBefore.initRegulationData();
         equityProductInfo = null;
-        bondProductInfo = gdBefore.init03BondProductInfo();
-        fundProductInfo = null;
+        bondProductInfo = null;
+        fundProductInfo = gdBefore.init03JiJinProductInfo();
         gdEquityCode = "fondTest" + Random(12);
     }
 
@@ -246,6 +246,8 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         log.info("================================检查存证数据格式化《开始》================================");
         //获取监管数据存证hash
         String storeId = gdCF.getJGStoreHash(txId, 1);
+
+
         String tempAddr = address;
         String tempObjId = mapAccAddr.get(tempAddr).toString();
 
@@ -378,9 +380,9 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         log.info("检查场内转板存证产品格式化及信息内容与传入一致");
 
         log.info(gdCF.contructBondProdInfo(storeId).toString().replaceAll("\"",""));
-        log.info(bondProductInfo.toString());
-        bondProductInfo.put("product_code",gdEquityCode);
-        assertEquals(bondProductInfo.toString(), gdCF.contructBondProdInfo(storeId).toString().replaceAll("\"",""));
+        log.info(fundProductInfo.toString());
+        fundProductInfo.put("product_code",gdEquityCode);
+        assertEquals(fundProductInfo.toString(), gdCF.contructFundProdInfo(storeId).toString().replaceAll("\"",""));
 
         log.info("================================检查存证数据格式化《结束》================================");
 
@@ -854,6 +856,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         respShareList = gdConstructQueryShareList(gdAccount3, 1000, 1, 0, mapShareENCN().get("1"), respShareList);
         List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2, 5000, 0, lockAmount - unlockAmount, mapShareENCN().get("0"), respShareList);
         List<Map> respShareList4 = gdConstructQueryShareList(gdAccount3, 5000, 0, 0, mapShareENCN().get("0"), respShareList2);
+//        List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4, 5000, 0, 0, mapShareENCN().get("0"), respShareList3);
 
         log.info(respShareList4.toString());
         //检查存在余额的股东列表
@@ -1083,10 +1086,9 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         enterpriseSubjectInfo.put("subject_total_share_capital",oldTotal.subtract(new BigDecimal(total)));     //变更总股本数为增发量 + 原始股本总数
         enterpriseSubjectInfo.put("subject_shareholders_number",totalHolderAccount - 3);     //股东个数为原个数减1
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
-        enterpriseSubjectInfo.put("subject_object_information_type",1);
         log.info(enterpriseSubjectInfo.toString());
+        enterpriseSubjectInfo.put("subject_object_information_type",1);
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
-
         log.info("================================检查存证数据格式化《结束》================================");
 
 

@@ -320,9 +320,11 @@ public class GDUnitFunc {
      */
     public String destroyAcc(String clntNo,boolean bCheckOnchain) throws Exception {
         log.info("销户 " + clntNo);
-        String cert1 = "2.txt";
-        String cert2 = "22.txt";
-        String response= gd.GDAccountDestroy(gdContractAddress,clntNo,cert1,cert2);
+        String cert1 = "comm.txt";
+        String cert2 = "com2.txt";
+        String date1 = "2020/08/12 17:08:08";
+        String date2 = "2020/08/12 18:08:08";
+        String response= gd.GDAccountDestroy(gdContractAddress,clntNo,date1,cert1,date2,cert2);
 
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);
@@ -339,7 +341,7 @@ public class GDUnitFunc {
 
     public String enterpriseReg(String eqCode,Boolean bCheckOnchain)throws Exception{
         long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,eqCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,bondProductInfo);
+        String response= gd.GDEnterpriseResister(gdContractAddress,eqCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,bondProductInfo,fundProductInfo);
 
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);
@@ -375,7 +377,7 @@ public class GDUnitFunc {
             String tempObjId = mapAccAddr.get(tempAddr).toString();
             log.info("检查发行存证登记格式化及信息内容与传入一致:" + tempObjId);
             Map tempReg =  gdBF.init05RegInfo();
-            tempReg.put("权利人账户引用",tempObjId);
+            tempReg.put("register_account_obj_id",tempObjId);
             tempReg.put("register_registration_serial_number",flowNo);
             tempReg.put("register_nature_of_shares",tempPP);
             regList.add(tempReg);

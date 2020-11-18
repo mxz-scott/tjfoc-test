@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 
+
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         SetDatabaseMysql.class,
@@ -29,12 +30,14 @@ import org.junit.runners.Suite;
         TestTxType.class,
 
         BeforeCondition.class,
-
         SetURLToSDKAddr.class,
+
         StoreTest.class,
         PrivateStoreTest.class,
         PrivateStoreTestFastGet.class,
         NoPriPrivateStoreTest.class,
+        StoreInvalidTest.class,
+
         SetWVMversion1.class,
         WVMContractTest.class,
         WVMContractInvalidTest.class,
@@ -43,13 +46,10 @@ import org.junit.runners.Suite;
         WVMContractTest.class,
         WVMContractInvalidTest.class,
         WVMContractTest_withVersionUpgradeTest.class,
-
-        StoreInvalidTest.class,
+        VerifyTests.class,
 
         AddPeerAndSyncData.class,
-
-        VerifyTests.class,
-        TestPermission.class,
+//        TestPermission.class,
 
 })
 

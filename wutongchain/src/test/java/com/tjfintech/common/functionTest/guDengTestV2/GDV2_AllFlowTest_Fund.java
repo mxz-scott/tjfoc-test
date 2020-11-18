@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDV2_AllFlowTest_Bond {
+public class GDV2_AllFlowTest_Fund {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
@@ -44,8 +44,8 @@ public class GDV2_AllFlowTest_Bond {
 //        gdBefore.initRegulationData();
         gdEquityCode = "fondTest" + Random(12);
         equityProductInfo = null;
-        bondProductInfo = gdBefore.init03BondProductInfo();
-        fundProductInfo = null;
+        bondProductInfo = null;
+        fundProductInfo = gdBefore.init03JiJinProductInfo();
     }
 
     @After
@@ -59,7 +59,8 @@ public class GDV2_AllFlowTest_Bond {
     @Test
     public void TC01_enterpriseRegister() throws Exception {
         long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,bondProductInfo,fundProductInfo);
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo,
+                equityProductInfo,bondProductInfo,fundProductInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -71,7 +72,7 @@ public class GDV2_AllFlowTest_Bond {
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
         Map jsonMap = JSONObject.fromObject(response).getJSONObject("data");
-        jsonMap.put("letter_object_identification",gdCompanyID);
+        jsonMap.put("subject_object_id",gdCompanyID);
 
 
         //查询投资者信息
@@ -803,8 +804,8 @@ public class GDV2_AllFlowTest_Bond {
         assertEquals(totalShares.subtract(new BigDecimal("400")),totalShares2);
     }
 
-    //不支持债权类转板
-    @Test
+    //不支持基金类转板
+//    @Test
     public void TC13_shareChangeBoard() throws Exception {
 
         String oldEquityCode = gdEquityCode;
@@ -904,11 +905,12 @@ public class GDV2_AllFlowTest_Bond {
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdAccClientNo10);
 
         String clntNo = gdAccClientNo10;
-        String cert1 = "2.txt";
-        String cert2 = "22.txt";
-        String date1 = "2020/05/12 17:08:08";
-        String date2 = "2020/05/12 18:08:08";
+        String cert1 = "test88.txt";
+        String cert2 = "close88.cert";
+        String date1 = "2020/07/12 17:08:08";
+        String date2 = "2020/07/12 18:08:08";
         String response= gd.GDAccountDestroy(gdContractAddress,clntNo,date1,cert1,date2,cert2);
+
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 

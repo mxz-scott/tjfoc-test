@@ -108,9 +108,9 @@ public class TestTxType {
         BeforeCondition bf = new BeforeCondition();
         bf.setPermission999();
         bf.updatePubPriKey();
-        bf.collAddressTest();
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+//        bf.collAddressTest();
+//        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
+//                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
     }
 
     @Test
@@ -638,7 +638,7 @@ public class TestTxType {
         log.info("Check destroy wvm tx detail complete");
     }
 
-    @Test
+   // @Test
     public void checkAdminTx()throws Exception{
         String tokenType = "FreezeToken-"+ UtilsClass.Random(6);
         String respon= soloSign.issueToken(PRIKEY1,tokenType,"100","单签"+ADDRESS1+"发行token "+tokenType,ADDRESS1);
