@@ -804,8 +804,8 @@ public class GDV2_AllFlowTest_Fund {
         assertEquals(totalShares.subtract(new BigDecimal("400")),totalShares2);
     }
 
-    //不支持债权类转板
-    @Test
+    //不支持基金类转板
+//    @Test
     public void TC13_shareChangeBoard() throws Exception {
 
         String oldEquityCode = gdEquityCode;

@@ -999,9 +999,9 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         log.info("================================检查存证数据格式化《开始》================================");
         //获取监管数据存证hash
         String jgType = "登记";
-        String regStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
+        String regStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
         jgType = "主体";
-        String subStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
+        String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
         for(int k = 0;k < shareList4.size();k ++) {
             String tempAddr = JSONObject.fromObject(shareList4.get(k)).getString("address");
@@ -1145,8 +1145,13 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         String totalAmount = getTotalAmountFromShareList(dataShareList);
 
         log.info("================================检查存证数据格式化《开始》================================");
+
         //获取监管数据存证hash
-        String storeId = gdCF.getJGStoreHash(txId, 1);
+        String jgType = "登记";
+        String regStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
+        jgType = "产品";
+        String prodStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
+
 
         //遍历检查所有账户登记及交易存证信息
         for(int k = 0 ;k < dataShareList.size(); k++) {
@@ -1169,18 +1174,18 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 //            registerInfo.put("register_time", sd);
             registerInfo.put("register_registration_serial_number", regNo);
 //            registerInfo.put("register_creditor_subscription_count", 0);
-            log.info(gdCF.contructRegisterInfo(storeId, dataShareList.size() + 2,tempObjId).toString().replaceAll("\"", ""));
+            log.info(gdCF.contructRegisterInfo(regStoreId, dataShareList.size() + 2,tempObjId).toString().replaceAll("\"", ""));
             log.info(registerInfo.toString());
-            assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId, dataShareList.size() + 2,tempObjId).toString().replaceAll("\"", ""));
+            assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(regStoreId, dataShareList.size() + 2,tempObjId).toString().replaceAll("\"", ""));
 
         }
         log.info("检查场内转板存证产品格式化及信息内容与传入一致");
 
-        log.info(gdCF.contructEquityProdInfo(storeId).toString().replaceAll("\"",""));
+        log.info(gdCF.contructEquityProdInfo(prodStoreId).toString().replaceAll("\"",""));
         log.info(equityProductInfo.toString());
         equityProductInfo.put("product_code",gdEquityCode);
         assertEquals(equityProductInfo.toString().replaceAll("( )?",""),
-                gdCF.contructEquityProdInfo(storeId).toString().replaceAll("(\")?( )?",""
+                gdCF.contructEquityProdInfo(prodStoreId).toString().replaceAll("(\")?( )?",""
                 ).replaceAll(":","="));
 
         log.info("================================检查存证数据格式化《结束》================================");
