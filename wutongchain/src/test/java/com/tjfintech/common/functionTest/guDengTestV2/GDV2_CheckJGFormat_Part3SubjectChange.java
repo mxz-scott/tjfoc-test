@@ -57,6 +57,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
         gdBefore.gdCreateAccout();
 //        gdBefore.initRegulationData();
         bondProductInfo = null;//本测试类为股权类产品
+        equityProductInfo = gdBefore.init03EquityProductInfo();
     }
 
     @Before

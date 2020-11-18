@@ -63,8 +63,9 @@ public class GDV2_CheckJGFormat_Part2FundProduct {
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
 //        gdBefore.initRegulationData();
-        equityProductInfo = null;//本测试类执行测试为债券产品
+        equityProductInfo = null;
         bondProductInfo = null;
+        fundProductInfo = gdBefore.init03JiJinProductInfo();
         gdEquityCode = "fondTest" + Random(12);
     }
 
