@@ -5,6 +5,7 @@ import com.gmsm.utils.GmUtils;
 import com.tjfintech.common.Interface.Kms;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.TjParseEncryptionKey;
+import com.tjfintech.common.utils.UtilsClassKMS;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Test;
@@ -30,32 +31,22 @@ public class GoKmsTest {
     public void createKey_Test01() {
         //生成对称密钥算法
         String response = kms.createKey(keySpecSm4, password);
-
         assertThat(response, containsString("200"));
         assertThat(response, containsString("data"));
        //获取对称密钥加密参数
-        Map mapkey = JSON.parseObject(response, Map.class);
-        Map mapType1 = JSON.parseObject(mapkey.get("data").toString(), Map.class);
-
-        String s = mapType1.get("keyId").toString();
-        System.out.println("s = " + s);
+        String s = UtilsClassKMS.a(response);
         //对称密钥加密
         String response1 = kms.encrypt(s, password, plainText);
-        System.out.println("response1 = " + response1);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("data"));
         //获取对称密钥解密参数
-        Map mapkey2 = JSON.parseObject(response1, Map.class);
-        Map mapType3 = JSON.parseObject(mapkey2.get("data").toString(), Map.class);
-
-        String x = mapType3.get("cipherText").toString();
-        System.out.println("x = " + x);
-        //对称密钥解密
+        String x = UtilsClassKMS.b(response1);
         String response2 = kms.decrypt(s, password, x);
         System.out.println("response2 = " + response2);
-
+        //验证加解密参数
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("data"));
+        assertThat(response2, containsString("U3ltbWV0cmljIGtleSBlbmNyeXB0aW9u"));
     }
 
     /***

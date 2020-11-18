@@ -10,6 +10,7 @@ public class TestBuilder {
     private Token token;
     private GuDeng guDeng;
     private Kms kms;
+    private Scf scf;
     private Credit credit;
     TestBuilder() {
         setGoTest();
@@ -42,6 +43,7 @@ public class TestBuilder {
         guDeng = new GoGuDeng();
         credit = new GoCredit();
         kms = new GoKms();
+        scf = new GoScf();
     }
 
 //    public void SetJavaTest() {
@@ -68,6 +70,7 @@ public class TestBuilder {
         return guDeng;
     }
     public Kms getKms() {return kms;}
+    public Scf getScf() {return scf;}
     public Credit getCredit() {
         return credit;
     }
