@@ -5,22 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="24ee8f85-eaab-48c6-ac8d-d9ff4ae4aaed" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_fastjson_1_2_58.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_github_virtuald_curvesapi_1_04.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_collections4_4_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_poi_poi_3_17.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_poi_poi_ooxml_3_17.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_poi_poi_ooxml_schemas_3_17.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_xmlbeans_xmlbeans_2_6_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__stax_stax_api_1_0_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/ScfBeforeCondition.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/Interface/Scf.java" beforeDir="false" afterPath="$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/Interface/Scf.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/TestBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/TestBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClass.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClassKMS.java" beforeDir="false" afterPath="$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClassKMS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClassScf.java" beforeDir="false" afterPath="$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClassScf.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wutongchain/src/test/java/com/tjfintech/common/functionTest/KmsTest/GoKmsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/wutongchain/src/test/java/com/tjfintech/common/functionTest/KmsTest/GoKmsTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/wutongchain/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -146,11 +132,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClassKMS.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="385">
-              <caret line="29" column="45" lean-forward="true" selection-start-line="29" selection-start-column="45" selection-end-line="29" selection-end-column="45" />
+            <state relative-caret-position="330">
+              <caret line="26" column="46" selection-start-line="26" selection-start-column="46" selection-end-line="26" selection-end-column="46" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -176,7 +162,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/GoScf.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="420">
@@ -201,7 +187,7 @@
         <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/FileOperation.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="450">
-              <caret line="38" column="42" lean-forward="true" selection-start-line="38" selection-start-column="42" selection-end-line="38" selection-end-column="42" />
+              <caret line="38" column="42" selection-start-line="38" selection-start-column="42" selection-end-line="38" selection-end-column="42" />
             </state>
           </provider>
         </entry>
@@ -221,8 +207,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClass.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2490">
-              <caret line="99" selection-start-line="99" selection-end-line="130" selection-end-column="63" />
+            <state relative-caret-position="2586">
+              <caret line="136" column="52" lean-forward="true" selection-start-line="136" selection-start-column="52" selection-end-line="136" selection-end-column="52" />
             </state>
           </provider>
         </entry>
@@ -292,9 +278,9 @@
         <option value="$PROJECT_DIR$/wutongchain/src/test/java/com/tjfintech/common/functionTest/ScfTest/GoScfTest.java" />
         <option value="$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClass.java" />
         <option value="$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/Interface/Scf.java" />
-        <option value="$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClassKMS.java" />
         <option value="$PROJECT_DIR$/wutongchain/src/test/java/com/tjfintech/common/functionTest/KmsTest/GoKmsTest.java" />
         <option value="$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/ScfBeforeCondition.java" />
+        <option value="$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClassKMS.java" />
       </list>
     </option>
   </component>
@@ -463,7 +449,7 @@
     <property name="SearchEverywhereHistoryKey" value="dependency&#9;PSI&#9;JAVA://com.sun.tracing.dtrace.Attributes#dependency&#10;depen&#9;PSI&#9;JAVA://com.sun.tracing.dtrace.DependencyClass&#10;plainText2&#9;null&#9;null&#10;class&#9;PSI&#9;JAVA://com.tjfintech.common.utils.UtilsClass&#10;/utxo/genmultiaddress&#9;PSI&#9;JAVA://com.tjfintech.common.functionTest.utxoMultiSign.MultiSignInvalidTest#TC1354_genmultiaddress" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1605678055532" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1605678274258" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit4" value="" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
@@ -667,7 +653,7 @@
       <workItem from="1590369558360" duration="7331000" />
       <workItem from="1603432630651" duration="52310000" />
       <workItem from="1605173511574" duration="717000" />
-      <workItem from="1605233538785" duration="7945000" />
+      <workItem from="1605233538785" duration="8268000" />
     </task>
     <servers />
   </component>
@@ -704,7 +690,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="231061000" />
+    <option name="totallyTimeSpent" value="231384000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -714,7 +700,7 @@
       <window_info id="Designer" order="1" />
       <window_info id="UI Designer" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="4" visible="true" weight="0.2793177" />
+      <window_info active="true" content_ui="combo" id="Project" order="4" visible="true" weight="0.2793177" />
       <window_info id="Structure" order="5" weight="0.25" />
       <window_info id="Image Layers" order="6" />
       <window_info anchor="bottom" id="Event Log" order="0" sideWeight="0.5021322" side_tool="true" weight="0.35070574" />
@@ -724,7 +710,7 @@
       <window_info anchor="bottom" id="Terminal" order="4" />
       <window_info anchor="bottom" id="Message" order="5" />
       <window_info anchor="bottom" id="Find" order="6" />
-      <window_info active="true" anchor="bottom" id="Run" order="7" sideWeight="0.4978678" visible="true" weight="0.35287732" />
+      <window_info anchor="bottom" id="Run" order="7" sideWeight="0.4978678" visible="true" weight="0.35287732" />
       <window_info anchor="bottom" id="Debug" order="8" weight="0.3984799" />
       <window_info anchor="bottom" id="Cvs" order="9" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="10" weight="0.4" />
@@ -1053,41 +1039,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_212/jre/lib/rt.jar!/com/sun/tracing/dtrace/DependencyClass.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_212/jre/lib/rt.jar!/com/sun/tracing/dtrace/Attributes.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="18" column="20" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClass.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2490">
-          <caret line="99" selection-start-line="99" selection-end-line="130" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/FileOperation.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="450">
-          <caret line="38" column="42" lean-forward="true" selection-start-line="38" selection-start-column="42" selection-end-line="38" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClassKMS.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="385">
-          <caret line="29" column="45" lean-forward="true" selection-start-line="29" selection-start-column="45" selection-end-line="29" selection-end-column="45" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+          <caret line="38" column="42" selection-start-line="38" selection-start-column="42" selection-end-line="38" selection-end-column="42" />
         </state>
       </provider>
     </entry>
@@ -1101,10 +1056,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClassScf.java">
+    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/GoScf.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        <state relative-caret-position="420">
+          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_212/jre/lib/rt.jar!/com/sun/tracing/dtrace/Attributes.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="18" column="20" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_212/jre/lib/rt.jar!/com/sun/tracing/dtrace/DependencyClass.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
         </state>
       </provider>
     </entry>
@@ -1125,10 +1097,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/GoScf.java">
+    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClass.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+        <state relative-caret-position="2586">
+          <caret line="136" column="52" lean-forward="true" selection-start-line="136" selection-start-column="52" selection-end-line="136" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClassScf.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wutongchain/src/main/java/com/tjfintech/common/utils/UtilsClassKMS.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="26" column="46" selection-start-line="26" selection-start-column="46" selection-end-line="26" selection-end-column="46" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
