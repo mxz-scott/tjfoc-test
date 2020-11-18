@@ -841,6 +841,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         enterpriseSubjectInfo.put("subject_shareholders_number",totalHolderAccount - 1);     //股东个数为原个数减1
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
         log.info(enterpriseSubjectInfo.toString());
+        enterpriseSubjectInfo.put("subject_object_information_type",1);
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
 
         log.info("================================检查存证数据格式化《结束》================================");
@@ -1066,7 +1067,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
             registerInfo = gdBF.init05RegInfo();
 
             log.info("检查回收存证登记格式化及信息内容与传入一致");
-            registerInfo.put("register_rights_change_amount", "-" + tempAmount);     //变动额修改为单个账户发行数量
+//            registerInfo.put("register_rights_change_amount", "-" + tempAmount);     //变动额修改为单个账户发行数量
             registerInfo.put("register_account_obj_id", mapAccAddr.get(tempAddr));
             log.info(gdCF.contructRegisterInfo(regStoreId, shareList.size(),tempObjId,tempPP).toString().replaceAll("\"", ""));
             log.info(registerInfo.toString());
@@ -1081,6 +1082,7 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
         enterpriseSubjectInfo.put("subject_total_share_capital",oldTotal.subtract(new BigDecimal(total)));     //变更总股本数为增发量 + 原始股本总数
         enterpriseSubjectInfo.put("subject_shareholders_number",totalHolderAccount - 3);     //股东个数为原个数减1
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
+        enterpriseSubjectInfo.put("subject_object_information_type",1);
         log.info(enterpriseSubjectInfo.toString());
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
 

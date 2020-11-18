@@ -887,6 +887,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         BigDecimal oldTotal = new BigDecimal(getTotal);
         enterpriseSubjectInfo.put("subject_total_share_capital",oldTotal.subtract(new BigDecimal(recycleAmount)));     //变更总股本数为增发量 + 原始股本总数
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
+        enterpriseSubjectInfo.put("subject_object_information_type",1);
         log.info(enterpriseSubjectInfo.toString());
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
 
@@ -1021,6 +1022,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         BigDecimal oldTotal = new BigDecimal(getTotal);
         enterpriseSubjectInfo.put("subject_total_share_capital",oldTotal.subtract(new BigDecimal(recycleAmount * 4)));     //变更总股本数为增发量 + 原始股本总数
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
+        enterpriseSubjectInfo.put("subject_object_information_type",1);
         log.info(enterpriseSubjectInfo.toString());
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
 

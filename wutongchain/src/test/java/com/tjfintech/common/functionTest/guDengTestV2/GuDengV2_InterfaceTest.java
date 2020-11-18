@@ -58,7 +58,7 @@ public class GuDengV2_InterfaceTest {
         //主体信息为空
         response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,null, equityProductInfo,bondProductInfo,fundProductInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("机构主体信息中对象标识不可以为空"));
+        assertEquals(true,response.contains("企业主体信息不可以为空"));
 
     }
 
@@ -225,7 +225,7 @@ public class GuDengV2_InterfaceTest {
         //产品数据为空
         response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList,reason, null);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("产品主体信息中发行主体引用不可以为空"));
+        assertEquals(true,response.contains("产品信息中产品对象标识不可以为空"));
 
         response= gd.GDShareIncrease("","",null,"", null);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
@@ -527,12 +527,12 @@ public class GuDengV2_InterfaceTest {
         response = gd.GDAccountDestroy(gdContractAddress,gdAccClientNo8,
                 "","1.txt","2020/05/12 18:08:08","2.txt");
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("无效的参数:Key: 'AccountDestroy.ClientNo' Error:Field validation for 'ClientNo' failed on the 'required' tag",
+        assertEquals("无效的参数:Key: 'AccountDestroy.ShareholderClosingDate' Error:Field validation for 'ShareholderClosingDate' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test shareholderClosingDate must ************************ ");
-        response = gd.GDAccountDestroy(gdContractAddress,"",
-                "2020/05/12 18:08:08","1.txt","2020/05/12 18:08:08","2.txt");
+        response = gd.GDAccountDestroy(gdContractAddress,gdAccClientNo8,
+                "","1.txt","2020/05/12 18:08:08","2.txt");
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("无效的参数:Key: 'AccountDestroy.ShareholderClosingDate' Error:Field validation for 'ShareholderClosingDate' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
