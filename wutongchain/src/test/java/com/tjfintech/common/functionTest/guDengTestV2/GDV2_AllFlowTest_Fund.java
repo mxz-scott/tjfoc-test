@@ -45,7 +45,7 @@ public class GDV2_AllFlowTest_Fund {
         gdEquityCode = "fondTest" + Random(12);
         equityProductInfo = null;
         bondProductInfo = null;
-        fundProductInfo = gdBefore.init03JiJinProductInfo();
+        fundProductInfo = gdBefore.init03FundProductInfo();
     }
 
     @After
