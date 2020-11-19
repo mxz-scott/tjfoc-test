@@ -302,7 +302,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
         int oldTotal = Integer.parseInt(getTotal);
         enterpriseSubjectInfo.put("subject_shareholders_number",oldTotal - 1);     //变更总股本数为增发量 + 原始股本总数
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
-        enterpriseSubjectInfo.put("subject_object_information_type",1);
+//        enterpriseSubjectInfo.put("subject_object_information_type",1);
         log.info(enterpriseSubjectInfo.toString());
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
 
@@ -422,7 +422,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
         int oldTotal = Integer.parseInt(getTotal);
         enterpriseSubjectInfo.put("subject_shareholders_number",oldTotal - 1);     //变更总股本数为增发量 + 原始股本总数
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
-        enterpriseSubjectInfo.put("subject_object_information_type",1);
+//        enterpriseSubjectInfo.put("subject_object_information_type",1);
         log.info(enterpriseSubjectInfo.toString());
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
 
@@ -454,7 +454,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
 
         log.info("增发前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
+//        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
         int totalHolderAccount = JSONObject.fromObject(query2).getJSONObject("data").getInt("subject_shareholders_number");
 
         String eqCode = gdEquityCode;
@@ -516,12 +516,12 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
         int oldTotalMem = Integer.parseInt(getTotalMem);
         enterpriseSubjectInfo.put("subject_shareholders_number",oldTotalMem + 2);     //变更总股本数为增发量 + 原始股本总数
 
-        String getTotal = enterpriseSubjectInfo.get("subject_total_share_capital").toString();
-        BigDecimal oldTotal = new BigDecimal(getTotal);
-        enterpriseSubjectInfo.put("subject_total_share_capital",oldTotal.add(new BigDecimal(increaseAmount * 2)));     //变更总股本数为增发量 + 原始股本总数
+//        String getTotal = enterpriseSubjectInfo.get("subject_total_share_capital").toString();
+//        BigDecimal oldTotal = new BigDecimal(getTotal);
+//        enterpriseSubjectInfo.put("subject_total_share_capital",oldTotal.add(new BigDecimal(increaseAmount * 2)));     //变更总股本数为增发量 + 原始股本总数
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
         log.info(enterpriseSubjectInfo.toString());
-        enterpriseSubjectInfo.put("subject_object_information_type",1);
+//        enterpriseSubjectInfo.put("subject_object_information_type",1);
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
 
         log.info("================================检查存证数据格式化《结束》================================");
@@ -545,10 +545,10 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
 
         log.info("增发后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
-
-        log.info("判断增发前后机构主体查询总股本数增加数正确");
-        assertEquals(totalShares.add(new BigDecimal("2000")),totalShares2);
+//        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
+//
+//        log.info("判断增发前后机构主体查询总股本数增加数正确");
+//        assertEquals(totalShares.add(new BigDecimal("2000")),totalShares2);
 
         int totalHolderAccountAft = JSONObject.fromObject(query3).getJSONObject("data").getInt("subject_shareholders_number");
 
@@ -567,7 +567,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
 
         log.info("增发前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
+//        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
         int totalHolderAccount = JSONObject.fromObject(query2).getJSONObject("data").getInt("subject_shareholders_number");
 
         String eqCode = gdEquityCode;
@@ -641,9 +641,9 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
         int oldTotalMem = Integer.parseInt(getTotalMem);
         enterpriseSubjectInfo.put("subject_shareholders_number",oldTotalMem + 2);     //变更总股本数为增发量 + 原始股本总数
 
-        String getTotal = enterpriseSubjectInfo.get("subject_total_share_capital").toString();
-        BigDecimal oldTotal = new BigDecimal(getTotal);
-        enterpriseSubjectInfo.put("subject_total_share_capital",oldTotal.add(new BigDecimal(increaseAmount * 2)));     //变更总股本数为增发量 + 原始股本总数
+//        String getTotal = enterpriseSubjectInfo.get("subject_total_share_capital").toString();
+//        BigDecimal oldTotal = new BigDecimal(getTotal);
+//        enterpriseSubjectInfo.put("subject_total_share_capital",oldTotal.add(new BigDecimal(increaseAmount * 2)));     //变更总股本数为增发量 + 原始股本总数
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
         log.info(enterpriseSubjectInfo.toString());
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
@@ -670,10 +670,10 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
 
         log.info("增发后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
-
-        log.info("判断增发前后机构主体查询总股本数增加数正确");
-        assertEquals(totalShares.add(new BigDecimal("2000")),totalShares2);
+//        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
+//
+//        log.info("判断增发前后机构主体查询总股本数增加数正确");
+//        assertEquals(totalShares.add(new BigDecimal("2000")),totalShares2);
 
         int totalHolderAccountAft = JSONObject.fromObject(query3).getJSONObject("data").getInt("subject_shareholders_number");
 
@@ -691,7 +691,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
 
         log.info("增发前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
+//        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
         int totalHolderAccount = JSONObject.fromObject(query2).getJSONObject("data").getInt("subject_shareholders_number");
 
         String eqCode = gdEquityCode;
@@ -758,11 +758,11 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
         int oldTotalMem = Integer.parseInt(getTotalMem);
         enterpriseSubjectInfo.put("subject_shareholders_number",oldTotalMem + 2);     //变更总股本数为增发量 + 原始股本总数
 
-        String getTotal = enterpriseSubjectInfo.get("subject_total_share_capital").toString();
-        BigDecimal oldTotal = new BigDecimal(getTotal);
-        enterpriseSubjectInfo.put("subject_total_share_capital",oldTotal.add(new BigDecimal(increaseAmount * 2)));     //变更总股本数为增发量 + 原始股本总数
+//        String getTotal = enterpriseSubjectInfo.get("subject_total_share_capital").toString();
+//        BigDecimal oldTotal = new BigDecimal(getTotal);
+//        enterpriseSubjectInfo.put("subject_total_share_capital",oldTotal.add(new BigDecimal(increaseAmount * 2)));     //变更总股本数为增发量 + 原始股本总数
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
-        enterpriseSubjectInfo.put("subject_object_information_type",1);
+//        enterpriseSubjectInfo.put("subject_object_information_type",1);
         log.info(enterpriseSubjectInfo.toString());
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
 
@@ -788,10 +788,10 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
 
         log.info("增发后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
-
-        log.info("判断增发前后机构主体查询总股本数增加数正确");
-        assertEquals(totalShares.add(new BigDecimal("2000")),totalShares2);
+//        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
+//
+//        log.info("判断增发前后机构主体查询总股本数增加数正确");
+//        assertEquals(totalShares.add(new BigDecimal("2000")),totalShares2);
 
         int totalHolderAccountAft = JSONObject.fromObject(query3).getJSONObject("data").getInt("subject_shareholders_number");
 

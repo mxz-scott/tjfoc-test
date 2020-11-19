@@ -222,9 +222,8 @@ public class GDBeforeCondition {
 
         //主体基本信息 主体资质信息 资质信息
         mapSQI.put("subject_qualification_category",1);
-        mapSQI.put("subject_qualification_category",1);
         mapSQI.put("subject_market_roles_type",1);
-        int[] type = new int[]{0,1};
+        List<Integer> type = new ArrayList<>(); type.add(0);type.add(1);
         mapSQI.put("subject_intermediary_qualification",type);
         mapSQI.put("subject_financial_qualification_type",1);
 
@@ -235,8 +234,8 @@ public class GDBeforeCondition {
         Map fileMap = new HashMap();
         fileMap.put("file_number",1);
         fileMap.put("file_name","file1.pdf");
-        fileMap.put("url","http://test.com/file/201/file1.pdf");
         fileMap.put("hash","da1234filehash5222");
+        fileMap.put("url","http://test.com/file/201/file1.pdf");
         fileMap.put("summary","简述");
         fileMap.put("term_of_validity_type","0");
         fileMap.put("term_of_validity","2020/04/18");
@@ -261,8 +260,9 @@ public class GDBeforeCondition {
         mapISI.put("subject_investor_qualification_status",true);
         listISI.add(mapISI);
 
-        mapSQI.put("qualification_authentication_information",listQAI);
         mapSQI.put("investor_suitability_information",listISI);
+        mapSQI.put("qualification_authentication_information",listQAI);
+
 
         listSQI.add(mapSQI);
         //-----------------主体资质信息---------------//
@@ -334,7 +334,8 @@ public class GDBeforeCondition {
         mapTemp.put("subject_company_status_deregistration_date","yyyy/MM/dd HH:mm:ss");
         mapTemp.put("subject_company_status_windingup","吊销原因CHARACTER");
         mapTemp.put("subject_company_status_windingup_date","yyyy/MM/dd HH:mm:ss");
-        mapTemp.put("subject_name_used_before","企业曾用名CHARACTER");
+        List<String> name = new ArrayList<>(); name.add("a");name.add("b");name.add("c");
+        mapTemp.put("subject_name_used_before",name);
         mapTemp.put("subject_personnel_size","人员规模CHARACTER");
         //-----------------机构主体信息---------------//
 
@@ -343,11 +344,11 @@ public class GDBeforeCondition {
         //-----------------主要人员信息---------------//
         Map mapLMI = new HashMap();
         List<Map> listLMI = new ArrayList<>();
-        mapLMI.put("subject_keypersonnel_name","姓名CHARACTER");
+        mapLMI.put("subject_keypersonnel_appointment_end","2029/12/20");
         mapLMI.put("subject_keypersonnel_type",0);
         mapLMI.put("subject_keypersonnel_position",0);
         mapLMI.put("subject_keypersonnel_appointment_start","2020/12/20");
-        mapLMI.put("subject_keypersonnel_appointment_end","2029/12/20");
+        mapLMI.put("subject_keypersonnel_name","姓名CHARACTER");
         mapLMI.put("subject_keypersonnel_nationality","国籍CHARACTER");
         mapLMI.put("subject_document_type",0);
         mapLMI.put("subject_keypersonnel_id","证件号码CHARACTER");
@@ -379,9 +380,8 @@ public class GDBeforeCondition {
 
         //主体基本信息 主体资质信息 资质信息
         mapSQI.put("subject_qualification_category",1);
-        mapSQI.put("subject_qualification_category",1);
         mapSQI.put("subject_market_roles_type",1);
-        int[] type = new int[]{0,1};
+        List<Integer> type = new ArrayList<>(); type.add(0);type.add(1);
         mapSQI.put("subject_intermediary_qualification",type);
         mapSQI.put("subject_financial_qualification_type",1);
 
@@ -392,8 +392,8 @@ public class GDBeforeCondition {
         Map fileMap = new HashMap();
         fileMap.put("file_number",1);
         fileMap.put("file_name","file1.pdf");
-        fileMap.put("url","http://test.com/file/201/file1.pdf");
         fileMap.put("hash","da1234filehash5222");
+        fileMap.put("url","http://test.com/file/201/file1.pdf");
         fileMap.put("summary","简述");
         fileMap.put("term_of_validity_type","0");
         fileMap.put("term_of_validity","2020/04/18");
@@ -418,8 +418,8 @@ public class GDBeforeCondition {
         mapISI.put("subject_investor_qualification_status",true);
         listISI.add(mapISI);
 
-        mapSQI.put("qualification_authentication_information",listQAI);
         mapSQI.put("investor_suitability_information",listISI);
+        mapSQI.put("qualification_authentication_information",listQAI);
 
         listSQI.add(mapSQI);
         //-----------------主体资质信息---------------//
@@ -427,12 +427,12 @@ public class GDBeforeCondition {
 
         //-----------------主体基本信息---------------//
         //对象标识
-        mapTemp.put("subject_object_id",gdCompanyID);
+        mapTemp.put("subject_object_id","clientNo0001");
 //        mapTemp.put("subject_object_information_type",0);
         mapTemp.put("subject_type",1);
 
         //主体信息 主体基本信息 主体通用信息
-        mapTemp.put("subject_id",gdCompanyID + "sub");
+        mapTemp.put("subject_id", "clientNo0001sub");
         mapTemp.put("subject_main_administrative_region",0);
         mapTemp.put("subject_create_time","2020/11/06 14:14:59");
 
@@ -442,7 +442,7 @@ public class GDBeforeCondition {
         //-----------------主体基本信息---------------//
 
         //主体信息 个人主体信息 个人主体基本信息
-        mapTemp.put("subject_investor_name","个人姓名CHARACTER");
+        mapTemp.put("subject_investor_name","zhangsan");
         mapTemp.put("subject_id_type",0);
         mapTemp.put("subject_id_number","个人身份证件号CHARACTER");
         mapTemp.put("subject_id_address","个人证件地址CHARACTER");
@@ -611,7 +611,7 @@ public class GDBeforeCondition {
         mapProdComInfo.put("product_market_subject","交易场所主体引用CHARACTER");
         mapProdComInfo.put("product_market_subject_name","交易场所主体名称CHARACTER");
         mapProdComInfo.put("product_plate_trading_name","交易场所板块名称CHARACTER");
-        mapProdComInfo.put("product_issuer_subject_ref","发行主体引用CHARACTER");
+        mapProdComInfo.put("product_issuer_subject_ref",gdCompanyID);
         mapProdComInfo.put("product_issuer_name","发行主体名称CHARACTER");
         mapProdComInfo.put("product_code","产品代码CHARACTER");
         mapProdComInfo.put("product_name","产品全称CHARACTER");
@@ -629,37 +629,19 @@ public class GDBeforeCondition {
         mapProdComInfo.put("product_create_time","2020/05/06 15:30:00");
 
         //产品信息 基本信息 服务方信息
-        mapProdComInfo.put("product_registry_subject_ref","登记机构主体引用CHARACTER");
-        mapProdComInfo.put("product_name_registration_body","登记机构名称CHARACTER");
-        mapProdComInfo.put("product_fsagency_subject_ref","持续服务机构主体引用CHARACTER");
-        mapProdComInfo.put("product_fsagency_name","持续服务机构名称CHARACTER");
-        mapProdComInfo.put("product_recommender_subject_ref","推荐商主体引用CHARACTER");
-        mapProdComInfo.put("product_recommender_name","推荐商名称CHARACTER");
-        mapProdComInfo.put("product_information_disclosure_obligor_subject_ref","信披义务人主体引用CHARACTER");
-        mapProdComInfo.put("product_information_disclosure_obligor_name","信披义务人名称CHARACTER");
-        mapProdComInfo.put("product_custodian_subject_ref","托管机构主体引用CHARACTER");
-        mapProdComInfo.put("product_name_custodian","托管机构名称CHARACTER");
-        mapProdComInfo.put("product_underwriter_subject_ref","承销机构主体引用CHARACTER");
-        mapProdComInfo.put("product_underwriter_name","承销机构名称CHARACTER");
-        mapProdComInfo.put("product_sponsor_subject","保荐机构主体引用CHARACTER");
-        mapProdComInfo.put("product_sponsor_subject_name","保荐机构名称CHARACTER");
-        mapProdComInfo.put("product_fund_administrator_account","管理人账户引用CHARACTER");
-        mapProdComInfo.put("product_fund_administrator_name","管理人名称CHARACTER");
-        mapProdComInfo.put("product_fund_manager_account","受托管理人账户引用CHARACTER");
-        mapProdComInfo.put("product_fund_manager_name","受托管理人名称CHARACTER");
-        mapProdComInfo.put("product_guarantor_subject_ref","担保机构主体引用CHARACTER");
-        mapProdComInfo.put("product_guarantor_name","担保机构名称CHARACTER");
-        mapProdComInfo.put("product_subject_assets_appraisal","资产评估机构主体引用CHARACTER");
-        mapProdComInfo.put("product_asset_appraisal_name","资产评估机构名称CHARACTER");
-        mapProdComInfo.put("product_law_firm_subject_ref","律师事务所主体引用CHARACTER");
-        mapProdComInfo.put("product_law_firm_name","律师事务所名称CHARACTER");
-        mapProdComInfo.put("product_accounting_firm_subject_ref","会计事务所主体引用CHARACTER");
-        mapProdComInfo.put("product_accounting_firm_name","会计事务所名称CHARACTER");
-        mapProdComInfo.put("product_credit_enhancement_agency_subject_ref","增信机构主体引用CHARACTER");
-        mapProdComInfo.put("product_credit_enhancement_agency_name","增信机构名称CHARACTER");
-        mapProdComInfo.put("product_credit_rating_agency_subject_ref","信用评级机构主体引用CHARACTER");
-        mapProdComInfo.put("product_credit_rating_agency_name","信用评级机构名称CHARACTER");
+        Map mapServ = new HashMap();
+        List<Map> listServ = new ArrayList<>();
+        mapServ.put("service_provider_type",0);
+        mapServ.put("service_provider_subject_ref","服务方主体引用");
+        mapServ.put("service_provider_name","服务方主体名称");
+        listServ.add(mapServ);
+        mapServ.clear();
+        mapServ.put("service_provider_type",1);
+        mapServ.put("service_provider_subject_ref","服务方主体引用");
+        mapServ.put("service_provider_name","服务方主体名称");
+        listServ.add(mapServ);
 
+        mapProdComInfo.put("service_provider_information",listServ);
 
         //产品信息 基本信息 产品文件信息
         //{"file_number":"1","file_name": "12312312","url": "12312312","hash": "12312312","summary": "12312312","term_of_validity_type": "0","term_of_validity":"yyyy/MM/dd"}
@@ -667,8 +649,8 @@ public class GDBeforeCondition {
         Map fileMap = new HashMap();
         fileMap.put("file_number",1);
         fileMap.put("file_name","file1.pdf");
-        fileMap.put("url","http://test.com/file/201/file1.pdf");
         fileMap.put("hash","da1234filehash5222");
+        fileMap.put("url","http://test.com/file/201/file1.pdf");
         fileMap.put("summary","简述");
         fileMap.put("term_of_validity_type","0");
         fileMap.put("term_of_validity","2020/04/18");
@@ -681,15 +663,6 @@ public class GDBeforeCondition {
         listMapPF.add(mapPF);
         mapProdComInfo.put("product_file_information",listMapPF);
 
-        //产品信息 基本信息 产品注册备案信息
-        List<Map> listMapPR = new ArrayList<>();
-        Map mapPR = new HashMap();
-        mapPR.put("product_license_type",122);
-        mapPR.put("product_license_number","12345");
-        mapPR.put("product_license_file_name","psf.pdf");
-        mapPR.put("product_license_documents","psf.pdf");
-        listMapPR.add(mapPR);
-        mapProdComInfo.put("product_registration_information",listMapPR);
 
 
         //产品信息 产品标的信息
@@ -721,26 +694,32 @@ public class GDBeforeCondition {
         Map fileMap = new HashMap();
         fileMap.put("file_number",1);
         fileMap.put("file_name","file2.pdf");
-        fileMap.put("url","http://test.com/file/201/file2.pdf");
         fileMap.put("hash","da1234filehash522234213");
+        fileMap.put("url","http://test.com/file/201/file2.pdf");
         fileMap.put("summary","简述");
         fileMap.put("term_of_validity_type","1");
         fileMap.put("term_of_validity","2020/08/18");
 
-        //------------------- 备案信息 -------------------//
-        mapTemp.put("product_license_type",2);
-        mapTemp.put("product_filing_date","2020/10/23");
-        mapTemp.put("product_filing_doc",fileMap);
-        mapTemp.put("product_filing_examine_doc",fileMap);
-        mapTemp.put("product_filing_documentation","备案说明信息TEXT");
 
+
+        //产品信息 基本信息 产品注册备案信息
+        List<Map> listMapPR = new ArrayList<>();
+        Map mapPR = new HashMap();
+
+        mapPR.put("product_license_type",122);
+        mapPR.put("product_filing_date","2020/10/10");
+        mapPR.put("product_filing_doc",fileMap);
+        mapPR.put("product_filing_examine_doc",fileMap);
+        mapPR.put("product_filing_documentation","psf.pdf");
+        listMapPR.add(mapPR);
+        mapTemp.put("filing_information",listMapPR);
 
         //产品信息 发行信息 私募股权
         mapTemp.put("product_issue_scope",12);
         mapTemp.put("product_issue_type",3);
 
-        List<String> listClass = new ArrayList<>();   listClass.add("1");listClass.add("4");
-        mapTemp.put("product_shares_issued_class",listClass);
+        List<Integer> iClass = new ArrayList<>(); iClass.add(1);iClass.add(2);
+        mapTemp.put("product_shares_issued_class",iClass);
         mapTemp.put("release_note_information","发行说明信息TEXT");
         mapTemp.put("product_issue_price",20);
         mapTemp.put("product_issue_price_method","发行价格定价标准TEXT");
@@ -808,18 +787,23 @@ public class GDBeforeCondition {
         Map fileMap = new HashMap();
         fileMap.put("file_number",1);
         fileMap.put("file_name","file2.pdf");
-        fileMap.put("url","http://test.com/file/201/file2.pdf");
         fileMap.put("hash","da1234filehash522234213");
+        fileMap.put("url","http://test.com/file/201/file2.pdf");
         fileMap.put("summary","简述");
         fileMap.put("term_of_validity_type","1");
         fileMap.put("term_of_validity","2020/08/18");
 
-        //------------------- 备案信息 -------------------//
-        mapTemp.put("product_license_type",2);
-        mapTemp.put("product_filing_date","2020/10/23");
-        mapTemp.put("product_filing_doc",fileMap);
-        mapTemp.put("product_filing_examine_doc",fileMap);
-        mapTemp.put("product_filing_documentation","备案说明信息TEXT");
+        //产品信息 基本信息 产品注册备案信息
+        List<Map> listMapPR = new ArrayList<>();
+        Map mapPR = new HashMap();
+
+        mapPR.put("product_license_type",122);
+        mapPR.put("product_filing_date","2020/10/10");
+        mapPR.put("product_filing_doc",fileMap);
+        mapPR.put("product_filing_examine_doc",fileMap);
+        mapPR.put("product_filing_documentation","psf.pdf");
+        listMapPR.add(mapPR);
+        mapTemp.put("filing_information",listMapPR);
 
 
         //产品信息 发行信息 私募债
@@ -921,18 +905,23 @@ public class GDBeforeCondition {
         Map fileMap = new HashMap();
         fileMap.put("file_number",1);
         fileMap.put("file_name","file2.pdf");
-        fileMap.put("url","http://test.com/file/201/file2.pdf");
         fileMap.put("hash","da1234filehash522234213");
+        fileMap.put("url","http://test.com/file/201/file2.pdf");
         fileMap.put("summary","简述");
         fileMap.put("term_of_validity_type","1");
         fileMap.put("term_of_validity","2020/08/18");
 
-        //------------------- 备案信息 -------------------//
-        mapTemp.put("product_license_type",2);
-        mapTemp.put("product_filing_date","2020/10/23");
-        mapTemp.put("product_filing_doc",fileMap);
-        mapTemp.put("product_filing_examine_doc",fileMap);
-        mapTemp.put("product_filing_documentation","备案说明信息TEXT");
+        //产品信息 基本信息 产品注册备案信息
+        List<Map> listMapPR = new ArrayList<>();
+        Map mapPR = new HashMap();
+
+        mapPR.put("product_license_type",122);
+        mapPR.put("product_filing_date","2020/10/10");
+        mapPR.put("product_filing_doc",fileMap);
+        mapPR.put("product_filing_examine_doc",fileMap);
+        mapPR.put("product_filing_documentation","psf.pdf");
+        listMapPR.add(mapPR);
+        mapTemp.put("filing_information",listMapPR);
 
 
         //产品信息 发行信息 私募基金
@@ -940,7 +929,9 @@ public class GDBeforeCondition {
         mapTemp.put("product_scope_fund_raising","募集范围TEXT");
         mapTemp.put("product_record_number","备案编号CHARACTER");
         mapTemp.put("product_fund_filing_date","2020/08/10");
-        mapTemp.put("product_fund_type",1);
+
+        List<Integer> ftype = new ArrayList<>();ftype.add(1);ftype.add(3);
+        mapTemp.put("product_fund_type",ftype);
         mapTemp.put("product_foundation_date","2020/12/10");
         mapTemp.put("product_escrow_bank","托管行CHARACTER");
         mapTemp.put("product_total_fund_share",50000);

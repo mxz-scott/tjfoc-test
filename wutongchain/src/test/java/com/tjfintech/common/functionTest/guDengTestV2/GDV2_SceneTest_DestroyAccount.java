@@ -126,8 +126,8 @@ public class GDV2_SceneTest_DestroyAccount {
     public void destroyAccWitContractAddrSpecChar()throws Exception{
         String clientNo = "spec" + Random(10);
         uf.createAcc(clientNo,true);
-        String cert1 = "2.txt";
-        String cert2 = "22.txt";
+        String[] cert1 = new String[]{"test.txt"};
+        String[] cert2 = new String[]{"close.cert"};
         String date1 = "2020/05/12 18:08:08";
         String date2 = "2020/05/12 18:08:08";
         String response = gd.GDAccountDestroy("@",clientNo,date1,cert1,date2,cert2);

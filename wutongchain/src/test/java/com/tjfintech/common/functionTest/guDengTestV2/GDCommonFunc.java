@@ -743,7 +743,7 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("subject_object_information");
         key = "subject_object_id";                          getSubjectInfo.put(key,objInfo.getString(key));
 //        key = "subject_object_information_type";            getSubjectInfo.put(key,objInfo.getString(key));
-        key = "subject_id";                                 getSubjectInfo.put(key,objInfo.getString(key));
+        key = "subject_type";                                 getSubjectInfo.put(key,objInfo.getString(key));
 
 
         com.alibaba.fastjson.JSONObject objSubI = jobj2.getJSONObject("body").getJSONObject("subject_information");
@@ -754,10 +754,10 @@ public class GDCommonFunc {
 //        com.alibaba.fastjson.JSONObject objSubBaseQQ1 = objSubBaseQual.getJSONObject("subject_qualification_information1");
 
         com.alibaba.fastjson.JSONObject objEnterpriseSub = jobj2.getJSONObject("body").getJSONObject("subject_information").getJSONObject("organization_subject_information");
-        com.alibaba.fastjson.JSONObject objEnterpriseSubBase = objEnterpriseSub.getJSONObject("basic_information_description");
+        com.alibaba.fastjson.JSONObject objEnterpriseSubBase = objEnterpriseSub.getJSONObject("basic_information_of_enterprise").getJSONObject("basic_information_description");
         //获取 主体信息 主体基本信息 主体通用信息
         key = "subject_main_administrative_region";                      getSubjectInfo.put(key,objSubBaseCommon.getString(key));
-        key = "subject_type";                               getSubjectInfo.put(key,objSubBaseCommon.getString(key));
+        key = "subject_id";                               getSubjectInfo.put(key,objSubBaseCommon.getString(key));
         key = "subject_create_time";                        getSubjectInfo.put(key,objSubBaseCommon.getString(key));
         //获取 主体信息 主体基本信息 主体资质信息
         key = "subject_qualification_information";      getSubjectInfo.put(key,objSubBase.getString(key));
@@ -814,8 +814,8 @@ public class GDCommonFunc {
         key = "subject_personnel_size";getSubjectInfo.put(key,objEnterpriseSubBase.getString(key));
 
         //获取 主体信息 机构主体信息 企业基本信息 主要人员信息
-
-        key = "leading_member_information";getSubjectInfo.put(key,objEnterpriseSubBase.getString(key));
+        com.alibaba.fastjson.JSONObject objEnterpriseSubBase2 = objEnterpriseSub.getJSONObject("basic_information_of_enterprise");
+        key = "leading_member_information";getSubjectInfo.put(key,objEnterpriseSubBase2.getString(key));
 
 
         return getSubjectInfo;
@@ -829,7 +829,7 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("subject_object_information");
         key = "subject_object_id";                  getSubjectInfo.put(key,objInfo.getString(key));
 //        key = "subject_object_information_type";    getSubjectInfo.put(key,objInfo.getString(key));
-        key = "subject_id";                         getSubjectInfo.put(key,objInfo.getString(key));
+        key = "subject_type";                         getSubjectInfo.put(key,objInfo.getString(key));
 
         //获取主体信息 主体基本信息
         com.alibaba.fastjson.JSONObject objSubI = jobj2.getJSONObject("body").getJSONObject("subject_information");
@@ -841,7 +841,7 @@ public class GDCommonFunc {
 
         //获取 主体信息 主体基本信息 主体通用信息
         key = "subject_main_administrative_region";                      getSubjectInfo.put(key,objSubBaseCommon.getString(key));
-        key = "subject_type";                               getSubjectInfo.put(key,objSubBaseCommon.getString(key));
+        key = "subject_id";                               getSubjectInfo.put(key,objSubBaseCommon.getString(key));
         key = "subject_create_time";                        getSubjectInfo.put(key,objSubBaseCommon.getString(key));
         //获取 主体信息 主体基本信息 主体资质信息
         key = "subject_qualification_information";      getSubjectInfo.put(key,objSubBase.getString(key));
@@ -961,37 +961,10 @@ public class GDCommonFunc {
 
         //获取 产品信息 基本信息 服务方信息
 
-        com.alibaba.fastjson.JSONObject objProdService = objBase.getJSONObject("service_provider_information");//产品信息 基本信息 服务方信息对象
-        key = "product_registry_subject_ref";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_name_registration_body";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_fsagency_subject_ref";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_fsagency_name";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_recommender_subject_ref";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_recommender_name";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_information_disclosure_obligor_subject_ref";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_information_disclosure_obligor_name";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_custodian_subject_ref";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_name_custodian";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_underwriter_subject_ref";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_underwriter_name";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_sponsor_subject";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_sponsor_subject_name";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_fund_administrator_account";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_fund_administrator_name";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_fund_manager_account";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_fund_manager_name";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_guarantor_subject_ref";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_guarantor_name";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_subject_assets_appraisal";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_asset_appraisal_name";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_law_firm_subject_ref";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_law_firm_name";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_accounting_firm_subject_ref";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_accounting_firm_name";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_credit_enhancement_agency_subject_ref";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_credit_enhancement_agency_name";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_credit_rating_agency_subject_ref";getSubjectInfo.put(key,objProdService.getString(key));
-        key = "product_credit_rating_agency_name";getSubjectInfo.put(key,objProdService.getString(key));
+//
+        key = "service_provider_information"; getSubjectInfo.put(key,
+                com.alibaba.fastjson.JSONObject.parseArray(objBase.getJSONArray(key).toJSONString(), Map.class));
+
 
         //产品信息 基本信息 产品文件信息
         key = "product_file_information";getSubjectInfo.put(key,
@@ -1007,12 +980,12 @@ public class GDCommonFunc {
         //产品信息 产品标的信息 经营用途信息
         com.alibaba.fastjson.JSONObject objBusi = objProdSub.getJSONObject("business_information");//产品信息 产品标的信息对象 经营用途信息
         key = "product_business_purpose_name";   getSubjectInfo.put(key,objBusi.getString(key));
-        key = " product_business_purpose_details";   getSubjectInfo.put(key,objBusi.getString(key));
+        key = "product_business_purpose_details";   getSubjectInfo.put(key,objBusi.getString(key));
         key = "product_business_purpose_documents";   getSubjectInfo.put(key,objBusi.getString(key));
 
         //产品信息 产品标的信息 投资组合信息
         com.alibaba.fastjson.JSONObject objPortfolio = objProdSub.getJSONObject("portfolio_information");//产品信息 产品标的信息对象 投资组合信息
-        key = "product_investment_products_typee";   getSubjectInfo.put(key,objPortfolio.getString(key));
+        key = "product_investment_products_type";   getSubjectInfo.put(key,objPortfolio.getString(key));
         key = "product_Investment_proportion_range";   getSubjectInfo.put(key,objPortfolio.getString(key));
         key = "product_Investment_product_details";   getSubjectInfo.put(key,objPortfolio.getString(key));
         key = "product_detailed_description_document";   getSubjectInfo.put(key,objPortfolio.getString(key));
@@ -1450,5 +1423,10 @@ public class GDCommonFunc {
 
 
         return getSubjectInfo;
+    }
+
+    public static String replaceCertain(String src){
+
+       return src.replaceAll("(\")?( )?","").replaceAll(":","=");
     }
 }
