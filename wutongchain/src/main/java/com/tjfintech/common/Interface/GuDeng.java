@@ -51,7 +51,7 @@ public interface GuDeng {
     String GDEquitySystemInit(String contractAddress,String platformKeyId);
 
     String GDUpdateSubjectInfo(String contractAddress,int type,Map subjectInfo);
-    String GDUpdateAccountInfo(String contractAddress,Map accountInfo);
+    String GDUpdateAccountInfo(String contractAddress,String clientNo,Map accountInfo);
     String GDUpdateProductInfo(String contractAddress,Map productInfo);
     String GDGetTxReportInfo(String type, String value,String beginTime,String endTime);
 

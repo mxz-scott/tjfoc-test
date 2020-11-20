@@ -89,8 +89,8 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         Map<String, String> testMap1 = new TreeMap<String, String>(testSub);
         Map<String, String> testMap2 = new TreeMap<String, String>(mapSubject);
-        assertEquals(testMap1.toString().replaceAll("( )?","").replaceAll(":","="),
-                testMap2.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap1.toString()),
+                replaceCertain(testMap2.toString()));
 
         //更新主体信息数据 全部数据
         Map mapTemp = new HashMap();
@@ -110,7 +110,8 @@ public class GDV2_CheckData_Update_SubAccProd {
         //主体基本信息 主体资质信息 资质信息
         mapSQI.put("subject_qualification_category",0);
         mapSQI.put("subject_market_roles_type",0);
-        int[] type = new int[]{2,3};
+
+        List<Integer> type = new ArrayList<>();type.add(2);type.add(3);
         mapSQI.put("subject_intermediary_qualification",type);
         mapSQI.put("subject_financial_qualification_type",0);
 
@@ -121,8 +122,8 @@ public class GDV2_CheckData_Update_SubAccProd {
         Map fileMap = new HashMap();
         fileMap.put("file_number",2);
         fileMap.put("file_name","file2.pdf");
-        fileMap.put("url","http://test.com/file/201/file2.pdf");
         fileMap.put("hash","hash0222222222222");
+        fileMap.put("url","http://test.com/file/201/file2.pdf");
         fileMap.put("summary","简述2");
         fileMap.put("term_of_validity_type","1");
         fileMap.put("term_of_validity","2020/08/18");
@@ -147,8 +148,9 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapISI.put("subject_investor_qualification_status",false);
         listISI.add(mapISI);
 
-        mapSQI.put("qualification_authentication_information",listQAI);
         mapSQI.put("investor_suitability_information",listISI);
+        mapSQI.put("qualification_authentication_information",listQAI);
+
 
         listSQI.add(mapSQI);
         //-----------------主体资质信息---------------//
@@ -229,11 +231,11 @@ public class GDV2_CheckData_Update_SubAccProd {
         //-----------------主要人员信息---------------//
         Map mapLMI = new HashMap();
         List<Map> listLMI = new ArrayList<>();
-        mapLMI.put("subject_keypersonnel_name","姓名CHARACTER2");
+        mapLMI.put("subject_keypersonnel_appointment_end","2029/12/21");
         mapLMI.put("subject_keypersonnel_type",1);
         mapLMI.put("subject_keypersonnel_position",1);
         mapLMI.put("subject_keypersonnel_appointment_start","2020/12/21");
-        mapLMI.put("subject_keypersonnel_appointment_end","2029/12/21");
+        mapLMI.put("subject_keypersonnel_name","姓名CHARACTER2");
         mapLMI.put("subject_keypersonnel_nationality","国籍CHARACTER2");
         mapLMI.put("subject_document_type",1);
         mapLMI.put("subject_keypersonnel_id","证件号码CHARACTER2");
@@ -259,8 +261,8 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         Map<String, String> testMap3 = new TreeMap<String, String>(mapTemp);
         Map<String, String> testMap4 = new TreeMap<String, String>(mapTest);
-        assertEquals(testMap3.toString().replaceAll("( )?","").replaceAll(":","="),
-                testMap4.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap3.toString()),
+                replaceCertain(testMap4.toString()));
     }
 
     @Test
@@ -289,8 +291,8 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         Map<String, String> testMap1 = new TreeMap<String, String>(testSub);
         Map<String, String> testMap2 = new TreeMap<String, String>(mapSubject);
-        assertEquals(testMap1.toString().replaceAll("( )?","").replaceAll(":","="),
-                testMap2.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap1.toString()),
+                replaceCertain(testMap2.toString()));
 
         //更新部分主体信息数据
         Map mapTemp = new HashMap();
@@ -330,12 +332,12 @@ public class GDV2_CheckData_Update_SubAccProd {
         key = "subject_company_name"; mapR.put(key,mapTest.get(key));
         key = "subject_document_infomation"; mapR.put(key,mapTest.get(key));
 
-        assertEquals(true,mapTest.get("subject_company_short_english_name").equals(null));
+//        assertEquals(true,mapTest.get("subject_company_short_english_name").equals(null));
 
         Map<String, String> testMap3 = new TreeMap<String, String>(mapTemp);
         Map<String, String> testMap4 = new TreeMap<String, String>(mapR);
-        assertEquals(testMap3.toString().replaceAll("( )?","").replaceAll(":","="),
-                testMap4.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap3.toString()),
+                replaceCertain(testMap4.toString()));
     }
 
 
@@ -384,8 +386,8 @@ public class GDV2_CheckData_Update_SubAccProd {
         Map mapSubject = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(response).getString("data"));
         Map<String, String> testMap1 = new TreeMap<String, String>(testSub);
         Map<String, String> testMap2 = new TreeMap<String, String>(mapSubject);
-        assertEquals(testMap1.toString().replaceAll("( )?","").replaceAll(":","="),
-                testMap2.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap1.toString()),
+                replaceCertain(testMap2.toString()));
 
 
         //更新主体信息数据
@@ -401,7 +403,8 @@ public class GDV2_CheckData_Update_SubAccProd {
         //主体基本信息 主体资质信息 资质信息
         mapSQI.put("subject_qualification_category",0);
         mapSQI.put("subject_market_roles_type",0);
-        int[] type = new int[]{4,5};
+
+        List<Integer> type = new ArrayList<>();type.add(4);type.add(5);
         mapSQI.put("subject_intermediary_qualification",type);
         mapSQI.put("subject_financial_qualification_type",0);
 
@@ -412,8 +415,8 @@ public class GDV2_CheckData_Update_SubAccProd {
         Map fileMap = new HashMap();
         fileMap.put("file_number",1);
         fileMap.put("file_name","file3.pdf");
-        fileMap.put("url","http://test.com/file/201/file3.pdf");
         fileMap.put("hash","da1234filehash5223");
+        fileMap.put("url","http://test.com/file/201/file3.pdf");
         fileMap.put("summary","简述3");
         fileMap.put("term_of_validity_type","3");
         fileMap.put("term_of_validity","2020/03/18");
@@ -438,8 +441,9 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapISI.put("subject_investor_qualification_status",true);
         listISI.add(mapISI);
 
-        mapSQI.put("qualification_authentication_information",listQAI);
         mapSQI.put("investor_suitability_information",listISI);
+        mapSQI.put("qualification_authentication_information",listQAI);
+
 
         listSQI.add(mapSQI);
         //-----------------主体资质信息---------------//
@@ -447,12 +451,12 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //-----------------主体基本信息---------------//
         //对象标识
-        mapTemp.put("subject_object_id",gdCompanyID);
+        mapTemp.put("subject_object_id",cltNo);
 //        mapTemp.put("subject_object_information_type",0);
         mapTemp.put("subject_type",1);
 
         //主体信息 主体基本信息 主体通用信息
-        mapTemp.put("subject_id",gdCompanyID + "sub");
+        mapTemp.put("subject_id",cltNo + "sub");
         mapTemp.put("subject_main_administrative_region",3);
         mapTemp.put("subject_create_time","2020/11/06 14:14:53");
 
@@ -497,8 +501,8 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         Map<String, String> testMap3 = new TreeMap<String, String>(mapTemp);
         Map<String, String> testMap4 = new TreeMap<String, String>(mapTest);
-        assertEquals(testMap3.toString().replaceAll("( )?","").replaceAll(":","="),
-                testMap4.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap3.toString()),
+                replaceCertain(testMap4.toString()));
 
     }
 
@@ -547,8 +551,8 @@ public class GDV2_CheckData_Update_SubAccProd {
         Map mapSubject = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(response).getString("data"));
         Map<String, String> testMap1 = new TreeMap<String, String>(testSub);
         Map<String, String> testMap2 = new TreeMap<String, String>(mapSubject);
-        assertEquals(testMap1.toString().replaceAll("( )?","").replaceAll(":","="),
-                testMap2.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap1.toString()),
+                replaceCertain(testMap2.toString()));
 
 
         //更新部分个人主体信息
@@ -564,8 +568,8 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //主体信息 个人主体信息 个人主体基本信息
         mapTemp.put("subject_investor_name","zhangsan1");
-        mapTemp.put("subject_id_doc_type",1);
-        mapTemp.put("subject_id_doc_number","325689199512230022");
+        mapTemp.put("subject_id_type",1);
+        mapTemp.put("subject_id_number","325689199512230022");
         //执行update操作 更新个人主体信息
         String resp2 = gd.GDUpdateSubjectInfo(gdContractAddress,1,mapTemp);
         txId = JSONObject.fromObject(resp2).getJSONObject("data").getString("txId");
@@ -587,12 +591,12 @@ public class GDV2_CheckData_Update_SubAccProd {
         key = "subject_id_type"; mapR.put(key,mapTest.get(key));
         key = "subject_id_number"; mapR.put(key,mapTest.get(key));
 
-        assertEquals(true,mapTest.get("subject_id_address").equals(null));
+//        assertEquals(true,mapTest.get("subject_id_address").equals(null));
 
         Map<String, String> testMap3 = new TreeMap<String, String>(mapTemp);
         Map<String, String> testMap4 = new TreeMap<String, String>(mapR);
-        assertEquals(testMap3.toString().replaceAll("( )?","").replaceAll(":","="),
-                testMap4.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap3.toString()),
+                replaceCertain(testMap4.toString()));
 
     }
 
@@ -657,13 +661,13 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         Map<String, String> testMap11 = new TreeMap<String, String>(shAccountInfo);
         Map<String, String> testMap12 = new TreeMap<String, String>(mapSHAccGet1);
-        assertEquals(testMap11.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
-                testMap12.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap11.toString()),
+                replaceCertain(testMap12.toString()));
 
         Map<String, String> testMap13 = new TreeMap<String, String>(fundAccountInfo);
         Map<String, String> testMap14 = new TreeMap<String, String>(mapFundccGet1);
-        assertEquals(testMap13.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
-                testMap14.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        log.info(fundAccountInfo.toString());
+        assertEquals(replaceCertain(testMap13.toString()),replaceCertain(testMap14.toString()));
 
 
         //更新股权账户信息数据
@@ -730,7 +734,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapTemp.put("account_associated_account_ref","t512pdf");
         mapTemp.put("account_associated_acct_certificates",fileList5);
 
-        String upResp = gd.GDUpdateAccountInfo(gdContractAddress,mapTemp);
+        String upResp = gd.GDUpdateAccountInfo(gdContractAddress,cltNo,mapTemp);
         txId = JSONObject.fromObject(upResp).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -751,13 +755,13 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         Map<String, String> testMap21 = new TreeMap<String, String>(mapTemp);
         Map<String, String> testMap22 = new TreeMap<String, String>(mapSHAccGet2);
-        assertEquals(testMap11.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
-                testMap12.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap11.toString()),
+                replaceCertain(testMap12.toString()));
 
         Map<String, String> testMap23 = new TreeMap<String, String>(fundAccountInfo);
         Map<String, String> testMap24 = new TreeMap<String, String>(mapFundAccGet2);
-        assertEquals(testMap23.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
-                testMap24.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap23.toString()),
+                replaceCertain(testMap24.toString()));
     }
 
 
@@ -822,13 +826,13 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         Map<String, String> testMap11 = new TreeMap<String, String>(shAccInfo);
         Map<String, String> testMap12 = new TreeMap<String, String>(mapSHAccGet1);
-        assertEquals(testMap11.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
-                testMap12.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap11.toString()),
+                replaceCertain(testMap12.toString()));
 
         Map<String, String> testMap13 = new TreeMap<String, String>(fundAccInfo);
         Map<String, String> testMap14 = new TreeMap<String, String>(mapFundccGet1);
-        assertEquals(testMap13.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
-                testMap14.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap13.toString()),
+                replaceCertain(testMap14.toString()));
 
         Map tempSHAcc = new HashMap();
         //更新股权账户信息数据
@@ -845,7 +849,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         //账户信息 账户关联信息
         tempSHAcc.put("account_association",6);
 
-        String upResp = gd.GDUpdateAccountInfo(gdContractAddress,tempSHAcc);
+        String upResp = gd.GDUpdateAccountInfo(gdContractAddress,cltNo,tempSHAcc);
         txId = JSONObject.fromObject(upResp).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -874,13 +878,13 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         Map<String, String> testMap21 = new TreeMap<String, String>(tempSHAcc);
         Map<String, String> testMap22 = new TreeMap<String, String>(mapR);
-        assertEquals(testMap11.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
-                testMap12.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap11.toString()),
+                replaceCertain(testMap12.toString()));
 
         Map<String, String> testMap23 = new TreeMap<String, String>(fundAccInfo);
         Map<String, String> testMap24 = new TreeMap<String, String>(mapFundAccGet2);
-        assertEquals(testMap23.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
-                testMap24.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap23.toString()),
+                replaceCertain(testMap24.toString()));
     }
 
     @Test
@@ -940,13 +944,12 @@ public class GDV2_CheckData_Update_SubAccProd {
         fundAccountInfo.put("account_forzen_date","");
         Map<String, String> testMap11 = new TreeMap<String, String>(shAccountInfo);
         Map<String, String> testMap12 = new TreeMap<String, String>(mapSHAccGet1);
-        assertEquals(testMap11.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
+        assertEquals(testMap11.toString().replaceAll("( )?","").replaceAll(":","="),
                 testMap12.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
 
         Map<String, String> testMap13 = new TreeMap<String, String>(fundAccountInfo);
         Map<String, String> testMap14 = new TreeMap<String, String>(mapFundccGet1);
-        assertEquals(testMap13.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
-                testMap14.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap13.toString()),replaceCertain(testMap14.toString()));
 
         //更新资金账户信息数据
         Map mapTemp = new HashMap();
@@ -1011,7 +1014,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapTemp.put("account_associated_account_ref","t5123pdf");
         mapTemp.put("account_associated_acct_certificates",fileList5);
 
-        String upResp = gd.GDUpdateAccountInfo(gdContractAddress,mapTemp);
+        String upResp = gd.GDUpdateAccountInfo(gdContractAddress,cltNo,mapTemp);
 
         txId = JSONObject.fromObject(upResp).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -1032,13 +1035,13 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         Map<String, String> testMap21 = new TreeMap<String, String>(shAccountInfo);
         Map<String, String> testMap22 = new TreeMap<String, String>(mapSHAccGet2);
-        assertEquals(testMap11.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
-                testMap12.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap11.toString()),
+                replaceCertain(testMap12.toString()));
 
         Map<String, String> testMap23 = new TreeMap<String, String>(mapTemp);
         Map<String, String> testMap24 = new TreeMap<String, String>(mapFundAccGet2);
-        assertEquals(testMap23.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
-                testMap24.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap23.toString()),
+                replaceCertain(testMap24.toString()));
 
     }
 
@@ -1102,13 +1105,13 @@ public class GDV2_CheckData_Update_SubAccProd {
         fundAccInfo.put("account_forzen_date","");
         Map<String, String> testMap11 = new TreeMap<String, String>(shAccInfo);
         Map<String, String> testMap12 = new TreeMap<String, String>(mapSHAccGet1);
-        assertEquals(testMap11.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
-                testMap12.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap11.toString()),
+                replaceCertain(testMap12.toString()));
 
         Map<String, String> testMap13 = new TreeMap<String, String>(fundAccInfo);
         Map<String, String> testMap14 = new TreeMap<String, String>(mapFundccGet1);
-        assertEquals(testMap13.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
-                testMap14.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap13.toString()),
+                replaceCertain(testMap14.toString()));
 
         //更新资金账户信息数据
         Map mapTemp = new HashMap();
@@ -1126,7 +1129,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         //账户信息 账户关联信息
         mapTemp.put("account_association",6);
 
-        String upResp = gd.GDUpdateAccountInfo(gdContractAddress,mapTemp);
+        String upResp = gd.GDUpdateAccountInfo(gdContractAddress,cltNo,mapTemp);
 
         txId = JSONObject.fromObject(upResp).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -1156,13 +1159,13 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         Map<String, String> testMap21 = new TreeMap<String, String>(mapR);
         Map<String, String> testMap22 = new TreeMap<String, String>(mapTemp);
-        assertEquals(testMap11.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
-                testMap12.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap11.toString()),
+                replaceCertain(testMap12.toString()));
 
         Map<String, String> testMap23 = new TreeMap<String, String>(mapTemp);
         Map<String, String> testMap24 = new TreeMap<String, String>(mapFundAccGet2);
-        assertEquals(testMap23.toString().replaceAll("( )?(\\[)?(])?","").replaceAll(":","="),
-                testMap24.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
+        assertEquals(replaceCertain(testMap23.toString()),
+                replaceCertain(testMap24.toString()));
 
     }
 

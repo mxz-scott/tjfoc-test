@@ -531,9 +531,10 @@ public  class GoGuDeng implements GuDeng {
         return result;
     }
 
-    public String GDUpdateAccountInfo(String contractAddress,Map accountInfo){
+    public String GDUpdateAccountInfo(String contractAddress,String clientNo,Map accountInfo){
         Map<String, Object> map = new HashMap<>();
         map.put("contractAddress", contractAddress);
+        map.put("clientNo", clientNo);
         map.put("accountInfo", accountInfo);
         String result = PostTest.postMethod(SDKADD + "/equity/account/update", map);
         log.info(result);
