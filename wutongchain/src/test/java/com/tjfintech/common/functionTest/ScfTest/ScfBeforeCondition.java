@@ -57,7 +57,7 @@ public class ScfBeforeCondition {
      *
      */
     @Test
-    public void createPlatformAccount() throws  Exception {
+    public void B001_createPlatformAccount() throws  Exception {
 
         String response = kms.createKey(keySpecSm2, password, pubFormatSM2);
         assertThat(response, containsString("200"));
@@ -67,6 +67,7 @@ public class ScfBeforeCondition {
 
         platformPubkeyPem = utilsClassScf.decodeBase64(platformPubkey);
 
+        log.info(platformKeyID);
         log.info(platformPubkeyPem);
 
     }
@@ -77,19 +78,21 @@ public class ScfBeforeCondition {
      *
      */
     @Test
-    public void createCoreCompanyAccount() throws  Exception {
+    public void B002_createCoreCompanyAccount() throws  Exception {
 
-        String response = kms.createKey(keySpecSm2, password, pubFormatSM2);
+        String commmets = utilsClassScf.generateMessage();
+
+        String response = scf.AccountCreate(platformKeyID, PIN, "", commmets);
         assertThat(response, containsString("200"));
 
-        coreCompanyKeyID = JSONObject.fromObject(response).getJSONObject("data").getString("keyId");
-        coreCompanyPubkey = JSONObject.fromObject(response).getJSONObject("data").getString("publicKey");
+        coreCompanyKeyID = JSONObject.fromObject(response).getString("keyID");
+        coreCompanyPubkeyPem = JSONObject.fromObject(response).getString("pubKey");
+        coreCompanyAddress = JSONObject.fromObject(response).getString("data");
 
-        coreCompanyPubkeyPem = utilsClassScf.decodeBase64(coreCompanyPubkey);
-
-//        log.info(coreCompanyPubkeyPem);
+        //        log.info(coreCompanyPubkeyPem);
 
     }
+
 
     /***
      * 安装合约
@@ -97,7 +100,7 @@ public class ScfBeforeCondition {
      *
      */
     @Test
-    public void installContracts() throws  Exception {
+    public void B003_installContracts() throws  Exception {
 
         //安装账户合约
 
@@ -145,5 +148,27 @@ public class ScfBeforeCondition {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         wvm.chkTxDetailRsp("200",txHash1);
+    }
+
+
+
+    /***
+     * 创建供应商账号
+     *
+     *
+     */
+    @Test
+    public void B004_createSupplyAccounts() throws  Exception {
+
+//        String commmets = utilsClassScf.generateMessage();
+
+        String response1 = scf.AccountCreate(platformKeyID, PIN, "","");
+        supplyAddress1 = JSONObject.fromObject(response1).getString("data");
+
+        String response2 = scf.AccountCreate(platformKeyID, PIN, "","");
+        supplyAddress2 = JSONObject.fromObject(response2).getString("data");
+
+        String response3 = scf.AccountCreate(platformKeyID, PIN, "","");
+        supplyAddress3 = JSONObject.fromObject(response3).getString("data");
     }
 }

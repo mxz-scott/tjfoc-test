@@ -6,6 +6,7 @@ import com.tjfoc.sdk.SDK_TjfocSDK_WalletSDK;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.SDKADD;
@@ -14,6 +15,10 @@ import static com.tjfintech.common.utils.UtilsClass.subLedger;
 @Slf4j
 public class GoScf implements Scf {
 
+    /**
+     * 创建账户（地址）
+     *
+     */
     public String AccountCreate(String platformKeyID, String PIN,String pubkey, String comments) {
 
         Map<String, Object> map = new HashMap<>();
@@ -107,6 +112,28 @@ public class GoScf implements Scf {
         if (subLedger!="") param = param +"ledger"+subLedger;
 
         String result = PostTest.postMethod(SDKADD + "/scf/issuing/reject", map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 发送存证扩展消息
+     *
+     */
+    public String SendMsg(String msgcode, String sender, List<Map> list, String mode, String reftx, String msgdata) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("msgcode", msgcode);
+        map.put("sender", sender);
+        map.put("receivers", list);
+        map.put("mode", mode);
+        map.put("reftx", reftx);
+        map.put("msgdata", msgdata);
+
+        String param="";
+        if (subLedger!="") param = param +"ledger"+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/func/sendmsg", map);
         log.info(result);
         return result;
     }
