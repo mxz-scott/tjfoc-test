@@ -70,4 +70,44 @@ public class UtilsClassGD {
     public static long timeStamp = (new Date()).getTime();
     public static String testCurMethodName = "";
 
+    public static Map fileObj = new HashMap();
+    public static List<Map> listFileObj = new ArrayList<>();
+
+    public static Map getFileObj(String word){
+        Map fileObj = new HashMap();
+        //{"file_number":"1","file_name": "12312312","url": "12312312","hash": "12312312","summary": "12312312","term_of_validity_type": "0","term_of_validity":"yyyy/MM/dd"}
+        //文件对象
+        Map fileMap = new HashMap();
+        fileMap.put("file_number",1);
+        fileMap.put("file_name",word + "file1.pdf");
+        fileMap.put("hash","da1234filehash5222" + word);
+        fileMap.put("url","http://test.com/file/201/" + word + "file1.pdf");
+        fileMap.put("summary","简述" + word);
+        fileMap.put("term_of_validity_type","0");
+        fileMap.put("term_of_validity","2020/04/18");
+        return fileObj;
+    }
+    public static Map getFileObj(){
+        Map fileObj = new HashMap();
+        //{"file_number":"1","file_name": "12312312","url": "12312312","hash": "12312312","summary": "12312312","term_of_validity_type": "0","term_of_validity":"yyyy/MM/dd"}
+        //文件对象
+        Map fileMap = new HashMap();
+        fileMap.put("file_number",1);
+        fileMap.put("file_name","file1.pdf");
+        fileMap.put("hash","da1234filehash5222");
+        fileMap.put("url","http://test.com/file/201/file1.pdf");
+        fileMap.put("summary","简述");
+        fileMap.put("term_of_validity_type","0");
+        fileMap.put("term_of_validity","2020/04/18");
+        return fileObj;
+    }
+
+    public static List<Map> getListFileObj(){
+        List<Map> listFileObj = new ArrayList<>();
+        //{"file_number":"1","file_name": "12312312","url": "12312312","hash": "12312312","summary": "12312312","term_of_validity_type": "0","term_of_validity":"yyyy/MM/dd"}
+        //文件对象
+        listFileObj.add(getFileObj("1"));
+        listFileObj.add(getFileObj("2"));
+        return listFileObj;
+    }
 }
