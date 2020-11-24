@@ -15,9 +15,9 @@ public class UtilsClassKMS {
     public static String newPwd = "321";
     public static String pubFormat = "sm2_pem";
     public static int size = 16;
-    public static String plainText = "U3ltbWV0cmljIGtleSBlbmNyeXB0aW9u";
-    public static String Digest = "MTIzNDU2Nzg5MDEyMzEyMw==";
-    public static String Digesterror = "MTIzNDU2Nzg5MDEyMz";
+    public static String plainText = "VGhpcyBpcyBwbGFpbiB0ZXh0Lg==";
+    public static String Digest = "VGhpcyBpcyB0ZXN0aW5nIGZvciBzaWduIGFuZCB2ZXJpZnku";
+    public static String Digesterror = "VGhpcyBpcyB0ZXN0aW5nIGZvciBzaWduLg==";
 
     //获取参数
     public static String a(String response) {

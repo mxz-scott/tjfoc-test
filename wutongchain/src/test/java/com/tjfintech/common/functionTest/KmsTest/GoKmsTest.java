@@ -46,7 +46,7 @@ public class GoKmsTest {
         //验证加解密参数
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("data"));
-        assertThat(response2, containsString("U3ltbWV0cmljIGtleSBlbmNyeXB0aW9u"));
+        assertThat(response2, containsString(plainText));
     }
 
     /***
@@ -140,7 +140,7 @@ public class GoKmsTest {
         String response3 = kms.eccDecrypt(e, password, f);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("data"));
-        assertThat(response3, containsString("U3ltbWV0cmljIGtleSBlbmNyeXB0aW9u"));
+        assertThat(response3, containsString(plainText));
 
     }
 
@@ -183,8 +183,8 @@ public class GoKmsTest {
         assertThat(response3, containsString("true"));
         //验签异常测试
         String response4 = kms.eccVerify(e, Digesterror, g);
-        assertThat(response4, containsString("400"));
-        assertThat(response4, containsString("验签原文内容应使用BASE64编码"));
+        assertThat(response4, containsString("200"));
+        assertThat(response4, containsString("false"));
 
     }
 
@@ -197,13 +197,34 @@ public class GoKmsTest {
         
         String a = UtilsClassKMS.a(response);
 
-        String response1 = kms.changePwd(a, oldPwd, newPwd);
+        String response1 = kms.changePwd(a, password, newPwd);
+        assertThat(response1, containsString("data"));
+        assertThat(response1, containsString("ok"));
+
+        //用新的密码去做一下加密解密，验证修改后的密码可用
+
+        //用旧密码做下加解密，验证是否会失败
+    }
+
+    @Test
+    public void changePwd_Test07() {
+        String response = kms.createKey(keySpecSm2, password);
+
+        assertThat(response, containsString("200"));
+        assertThat(response, containsString("data"));
+
+        String a = UtilsClassKMS.a(response);
+
+        String response1 = kms.changePwd(a, password, newPwd);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("data"));
         assertThat(response1, containsString("ok"));
-        //修改后的密码创建账号
-        String response2 = kms.createKey(keySpecSm4, newPwd);
-        assertThat(response2, containsString("200"));
-        assertThat(response2, containsString("data"));
+
+        //用新的密码去做一下加密解密，验证修改后的密码可用
+
+        //用旧密码做下加解密，验证是否会失败
+
     }
+
 }
+
