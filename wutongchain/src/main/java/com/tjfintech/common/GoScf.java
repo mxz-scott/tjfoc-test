@@ -14,16 +14,18 @@ import static com.tjfintech.common.utils.UtilsClass.subLedger;
 @Slf4j
 public class GoScf implements Scf {
 
-    public String AccountCreate(String platformKeyID, String PIN) {
-        Map<String, Object> map = new HashMap<>();
+    public String AccountCreate(String platformKeyID, String PIN,String pubkey, String comments) {
 
+        Map<String, Object> map = new HashMap<>();
         map.put("platformKeyID", platformKeyID);
-        map.put("PIN", PIN);
+        if (PIN !="")   map.put("PIN", PIN);
+        if (pubkey !="")   map.put("pubkey", pubkey);
+        map.put("comments", comments);
 
         String param="";
         if(subLedger!="") param = param +"&ledger="+subLedger;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/account/create", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/account/create" + param, map);
         log.info(result);
         return result;
     }

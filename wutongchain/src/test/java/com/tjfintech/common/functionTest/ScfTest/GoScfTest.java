@@ -13,14 +13,13 @@ import org.junit.Test;
 import java.util.Map;
 @Slf4j
 public class GoScfTest {
-        public final static int SHORTSLEEPTIME = 3 * 1000;
         TestBuilder testBuilder = TestBuilder.getInstance();
         Scf scf = testBuilder.getScf();
 
     @Test
     public void create_Test01() {
 
-        String response = scf.AccountCreate(platformKeyID, PIN);
+        String response = scf.AccountCreate(platformKeyID, PIN, "", "this is a test");
 
         assertThat(response, containsString("200"));
         assertThat(response, containsString("success"));

@@ -1,0 +1,13 @@
+contract QFJGContract{
+     public string PutFeedback(string ID,string Data,string Msg){
+        db_set(ID,Data)
+        event("payFeedback",Msg)
+        return "success"
+    }
+
+    public string GetProofInfo(string ID){
+        print("清分机构证明被调用")
+        string tmp = db_get<string>(ID)
+        return tmp
+    }
+}

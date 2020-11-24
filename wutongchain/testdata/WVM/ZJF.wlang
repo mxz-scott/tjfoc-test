@@ -1,0 +1,21 @@
+contract ZJFContract{
+    
+    public string PutFeedback(string ID,string Data,string Msg){
+        db_set(ID,Data)
+        event("financingFeedback",Msg)
+        return "success"
+    }
+
+    public string GetProofInfo(string ID){
+        print("资金方打款证明被调用")
+        string tmp = db_get<string>(ID)
+        return tmp
+    }
+
+    //融资试算
+    public double Test(double amount,double timeLimit){
+        double Num = 0.05*amount*timeLimit/365
+        print(Num)
+        return Num
+    }
+}

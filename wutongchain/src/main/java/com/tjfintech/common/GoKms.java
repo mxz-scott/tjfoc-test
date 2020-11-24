@@ -35,6 +35,26 @@ public class GoKms implements Kms {
     }
 
     /***
+     * 生成对称算法密钥
+     * @param keySpec
+     * @param password
+     * @return
+     */
+    public String createKey(String keySpec, String password, String pubFormat) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("keySpec", keySpec);
+        map.put("password", password);
+        map.put("pubFormat", pubFormat);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result = PostTest.postMethod(KMSADD + "/v1/createKey", map);
+        log.info(result);
+        return result;
+    }
+
+
+    /***
      * 获取密钥导入参数
      * @param keySpec
      * @param pubFormat

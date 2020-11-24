@@ -2,7 +2,7 @@ package com.tjfintech.common.Interface;
 
 public interface Scf {
 
-    String AccountCreate(String platformKeyID, String PIN);
+    String AccountCreate(String platformKeyID, String PIN, String pubkey, String comments);
     String IssuingApply(String contractAddress, String companyID, String keyID, String PIN, String tokenType, long levelLimit, long expireDate, String toAddr, long amount);
 //    String IssuingApprove(String tokenType, String keyID, String PIN);
 //    String IssuingCancel(String tokenType, String keyID, String PIN);

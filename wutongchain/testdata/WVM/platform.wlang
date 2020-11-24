@@ -1,0 +1,84 @@
+contract platform {
+
+    // 合约结构体
+    struct Contract {
+        // 类型 C:清分机构合约 O:核心企业合约 A:资金方合约
+        string type
+        // 合约地址
+        string address
+    }
+    
+    // 初始化
+    public string init(){
+        // 保存清分机构合约地址
+        Contract clearContract
+        clearContract.type = "C"
+        clearContract.address = "test_clear_address"
+        db_set("clearContract", clearContract)
+        return "success"
+    }
+
+    // 保存清分机构合约
+    public string saveClearContract(string address){
+        return saveContractAddress("C", "", address)
+    }
+
+    // 保存核心企业合约
+    public string saveCoreContract(string key, string address){
+        return saveContractAddress("O", key, address)
+    }
+
+    // 保存资金方企业合约
+    public string saveCapitalContract(string key, string address){
+        return saveContractAddress("A", key, address)
+    }
+
+    // 获取清分机构合约
+    public string getClearContract(){
+        return getContractAddress("C", "")
+    }
+
+    // 获取核心企业合约
+    public string getCoreContract(string key){
+        return getContractAddress("O", key)
+    }
+
+    // 获取资金方企业合约
+    public string getCapitalContract(string key){
+        return getContractAddress("A", key)
+    }
+
+    // 保存合约地址
+    public string saveContractAddress(string type, string key, string address){
+        Contract _contract
+        _contract.type = type
+        _contract.address = address
+        if(type == "C"){
+            db_set("clearContract", _contract)
+        }else if(type == "O"){
+            db_set("coreContract:" + key, _contract)
+        }else if(type == "A"){
+            db_set("capitalContract:" + key, _contract)
+        }else{
+            return "param error"
+        }
+        return "success"
+    }
+
+    // 获取合约地址
+    public string getContractAddress(string type, string key){
+        Contract _contract
+        if(type == "C"){
+            _contract = db_get<Contract>("clearContract")
+            return _contract.address
+        }else if(type == "O"){
+            _contract = db_get<Contract>("coreContract:" + key)
+            return _contract.address
+        }else if(type == "A"){
+            _contract = db_get<Contract>("capitalContract:" + key)
+            return _contract.address
+        }else{
+            return "param error"
+        }
+    }
+}

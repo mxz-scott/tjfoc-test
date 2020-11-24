@@ -2,6 +2,7 @@ package com.tjfintech.common.Interface;
 
 public interface Kms {
     String createKey(String keySpec, String password);
+    String createKey(String keySpec, String password, String pubFormat);
     String getKey(String keySpec, String pubFormat);
     String importKey(String importToken, String encryptedKeyMaterial);
     String getPublicKey(String keyId, String pubFormat);
