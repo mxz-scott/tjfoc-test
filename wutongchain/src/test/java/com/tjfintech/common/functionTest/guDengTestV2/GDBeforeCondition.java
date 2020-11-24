@@ -429,7 +429,7 @@ public class GDBeforeCondition {
         //对象标识
         mapTemp.put("subject_object_id","clientNo0001");
 //        mapTemp.put("subject_object_information_type",0);
-        mapTemp.put("subject_type",1);
+        mapTemp.put("subject_type",2);
 
         //主体信息 主体基本信息 主体通用信息
         mapTemp.put("subject_id", "clientNo0001sub");
