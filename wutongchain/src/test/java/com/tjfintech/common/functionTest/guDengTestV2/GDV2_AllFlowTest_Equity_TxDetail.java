@@ -252,7 +252,7 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
 
         log.info("增发前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
+//        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";
@@ -387,7 +387,7 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
 
         log.info("回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
+//        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
         registerInfo.put("register_registration_serial_number","recylce000001");
 
@@ -423,7 +423,7 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
 
         log.info("多个回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
+//        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
         registerInfo.put("register_registration_serial_number","recycle000002");
 
@@ -526,8 +526,8 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdAccClientNo10);
 
         String clntNo = gdAccClientNo10;
-        String cert1 = "test33.txt";
-        String cert2 = "close33.cert";
+        String[] cert1 = new String[]{"test.txt"};
+        String[] cert2 = new String[]{"close.cert"};
         String date1 = "2020/06/12 17:08:08";
         String date2 = "2020/06/12 18:08:08";
         String response= gd.GDAccountDestroy(gdContractAddress,clntNo,date1,cert1,date2,cert2);
@@ -553,7 +553,7 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         String args = jsonObjectWVM.getJSONObject("arg").toString();
         assertEquals(true,args.contains(clntNo));
         assertEquals(true,args.contains("test.txt"));
-        assertEquals(true,args.contains("close.txt"));
+        assertEquals(true,args.contains("close.cert"));
         assertEquals(true,response.contains("DBSet"));
 
     }

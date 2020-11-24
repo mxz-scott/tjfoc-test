@@ -601,7 +601,7 @@ public class GDV2_AllFlowTest_Bond {
 
         log.info("回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
+//        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
         registerInfo.put("register_registration_serial_number","recylce000001");
 
@@ -691,10 +691,10 @@ public class GDV2_AllFlowTest_Bond {
 
         log.info("回收后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
-
-        log.info("判断增发前后机构主体查询总股本数增加数正确");
-        assertEquals(totalShares.subtract(new BigDecimal("100")),totalShares2);
+//        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
+//
+//        log.info("判断增发前后机构主体查询总股本数增加数正确");
+//        assertEquals(totalShares.subtract(new BigDecimal("100")),totalShares2);
 
     }
 
@@ -706,7 +706,7 @@ public class GDV2_AllFlowTest_Bond {
 
         log.info("多个回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
+//        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
         registerInfo.put("register_registration_serial_number","recycle000002");
 
@@ -797,10 +797,10 @@ public class GDV2_AllFlowTest_Bond {
 
         log.info("多个回收后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
-
-        log.info("判断增发前后机构主体查询总股本数增加数正确");
-        assertEquals(totalShares.subtract(new BigDecimal("400")),totalShares2);
+//        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
+//
+//        log.info("判断增发前后机构主体查询总股本数增加数正确");
+//        assertEquals(totalShares.subtract(new BigDecimal("400")),totalShares2);
     }
 
     //不支持债权类转板
@@ -904,8 +904,8 @@ public class GDV2_AllFlowTest_Bond {
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdAccClientNo10);
 
         String clntNo = gdAccClientNo10;
-        String cert1 = "2.txt";
-        String cert2 = "22.txt";
+        String[] cert1 = new String[]{"test.txt"};
+        String[] cert2 = new String[]{"close.cert"};
         String date1 = "2020/05/12 17:08:08";
         String date2 = "2020/05/12 18:08:08";
         String response= gd.GDAccountDestroy(gdContractAddress,clntNo,date1,cert1,date2,cert2);

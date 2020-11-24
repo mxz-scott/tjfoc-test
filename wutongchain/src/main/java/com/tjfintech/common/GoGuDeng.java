@@ -327,8 +327,8 @@ public  class GoGuDeng implements GuDeng {
      * @param clientNo
      * @return
      */
-    public String GDAccountDestroy(String contractAddress, String clientNo,String shareholderClosingDate,String shareholderClosingCertificate,
-                                   String fundClosingDate,String fundClosingCertificate){
+    public String GDAccountDestroy(String contractAddress, String clientNo,String shareholderClosingDate,String[] shareholderClosingCertificate,
+                                   String fundClosingDate,String[] fundClosingCertificate){
         Map<String, Object> map = new HashMap<>();
         map.put("contractAddress", contractAddress);
         map.put("clientNo", clientNo);
@@ -490,6 +490,28 @@ public  class GoGuDeng implements GuDeng {
         return result;
     }
 
+    /***
+     * 主体信息查询接口
+     * @param contractAddress  合约地址
+     * @param productObjectId 产品数据中的对象标识
+     * @return
+     */
+    public String GDProductQuery(String contractAddress,String productObjectId){
+        Map<String, Object> map = new HashMap<>();
+        map.put("contractAddress", contractAddress);
+        map.put("productObjectId", productObjectId);
+        String result = PostTest.postMethod(SDKADD + "/equity/product/query", map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 初始化系统合约/更新系统合约
+     * contractAddress 和plateformKeyId 不传时 会重新生成平台platformKeyId 传时则做托管合约更新
+     * @param contractAddress
+     * @param platformKeyId
+     * @return
+     */
     public String GDEquitySystemInit(String contractAddress,String platformKeyId){
         Map<String, Object> map = new HashMap<>();
         if(!contractAddress.isEmpty()) map.put("contractAddress", contractAddress);
@@ -509,9 +531,10 @@ public  class GoGuDeng implements GuDeng {
         return result;
     }
 
-    public String GDUpdateAccountInfo(String contractAddress,Map accountInfo){
+    public String GDUpdateAccountInfo(String contractAddress,String clientNo,Map accountInfo){
         Map<String, Object> map = new HashMap<>();
         map.put("contractAddress", contractAddress);
+        map.put("clientNo", clientNo);
         map.put("accountInfo", accountInfo);
         String result = PostTest.postMethod(SDKADD + "/equity/account/update", map);
         log.info(result);

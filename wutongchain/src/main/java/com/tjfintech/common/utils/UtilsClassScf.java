@@ -8,6 +8,7 @@ import static com.tjfintech.common.utils.UtilsClass.testDataPath;
 
 @Slf4j
 public class UtilsClassScf {
+
     public static String platformKeyID = "";//平台ID
     public static String platformPubkey = "";//平台公钥
     public static String platformPubkeyPem= "";//平台公钥PEM格式

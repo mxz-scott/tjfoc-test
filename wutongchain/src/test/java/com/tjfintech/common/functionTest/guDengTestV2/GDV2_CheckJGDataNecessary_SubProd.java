@@ -6,19 +6,15 @@ import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 
-import java.math.BigDecimal;
 import java.util.*;
 
-import static com.tjfintech.common.functionTest.guDengTestV2.GDCommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassGD.*;
 import static org.junit.Assert.assertEquals;
@@ -262,7 +258,7 @@ public class GDV2_CheckJGDataNecessary_SubProd {
         long shareTotals = 1000000;
         String key = "";
         Map testSub = gdBF.init01EnterpriseSubjectInfo();
-        Map testEquityProdInfo = gdBF.init03JiJinProductInfo();
+        Map testEquityProdInfo = gdBF.init03FundProductInfo();
         key = "product_object_id";
         log.info("测试字段 " + key);
         testEquityProdInfo.remove(key);
@@ -271,7 +267,7 @@ public class GDV2_CheckJGDataNecessary_SubProd {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
-        testEquityProdInfo = gdBF.init03JiJinProductInfo();
+        testEquityProdInfo = gdBF.init03FundProductInfo();
         key = "product_trading_market_category";
         log.info("测试字段 " + key);
         testEquityProdInfo.remove(key);
@@ -280,7 +276,7 @@ public class GDV2_CheckJGDataNecessary_SubProd {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
-        testEquityProdInfo = gdBF.init03JiJinProductInfo();
+        testEquityProdInfo = gdBF.init03FundProductInfo();
         key = "product_market_subject";
         log.info("测试字段 " + key);
         testEquityProdInfo.remove(key);
@@ -289,7 +285,7 @@ public class GDV2_CheckJGDataNecessary_SubProd {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
-        testEquityProdInfo = gdBF.init03JiJinProductInfo();
+        testEquityProdInfo = gdBF.init03FundProductInfo();
         key = "product_market_subject_name";
         log.info("测试字段 " + key);
         testEquityProdInfo.remove(key);
@@ -298,7 +294,7 @@ public class GDV2_CheckJGDataNecessary_SubProd {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
-        testEquityProdInfo = gdBF.init03JiJinProductInfo();
+        testEquityProdInfo = gdBF.init03FundProductInfo();
         key = "product_issuer_subject_ref";
         log.info("测试字段 " + key);
         testEquityProdInfo.remove(key);
@@ -307,7 +303,7 @@ public class GDV2_CheckJGDataNecessary_SubProd {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
-        testEquityProdInfo = gdBF.init03JiJinProductInfo();
+        testEquityProdInfo = gdBF.init03FundProductInfo();
         key = "product_issuer_name";
         log.info("测试字段 " + key);
         testEquityProdInfo.remove(key);
@@ -316,7 +312,7 @@ public class GDV2_CheckJGDataNecessary_SubProd {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
-        testEquityProdInfo = gdBF.init03JiJinProductInfo();
+        testEquityProdInfo = gdBF.init03FundProductInfo();
         key = "product_code";
         log.info("测试字段 " + key);
         testEquityProdInfo.remove(key);
@@ -325,7 +321,7 @@ public class GDV2_CheckJGDataNecessary_SubProd {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
-        testEquityProdInfo = gdBF.init03JiJinProductInfo();
+        testEquityProdInfo = gdBF.init03FundProductInfo();
         key = "product_name";
         log.info("测试字段 " + key);
         testEquityProdInfo.remove(key);
@@ -334,7 +330,7 @@ public class GDV2_CheckJGDataNecessary_SubProd {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
-        testEquityProdInfo = gdBF.init03JiJinProductInfo();
+        testEquityProdInfo = gdBF.init03FundProductInfo();
         key = "product_type";
         log.info("测试字段 " + key);
         testEquityProdInfo.remove(key);
@@ -343,7 +339,7 @@ public class GDV2_CheckJGDataNecessary_SubProd {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
-        testEquityProdInfo = gdBF.init03JiJinProductInfo();
+        testEquityProdInfo = gdBF.init03FundProductInfo();
         key = "product_create_time";
         log.info("测试字段 " + key);
         testEquityProdInfo.remove(key);
@@ -352,7 +348,7 @@ public class GDV2_CheckJGDataNecessary_SubProd {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
-        testEquityProdInfo = gdBF.init03JiJinProductInfo();
+        testEquityProdInfo = gdBF.init03FundProductInfo();
         key = "product_registry_subject_ref";
         log.info("测试字段 " + key);
         testEquityProdInfo.remove(key);
@@ -361,7 +357,7 @@ public class GDV2_CheckJGDataNecessary_SubProd {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
-        testEquityProdInfo = gdBF.init03JiJinProductInfo();
+        testEquityProdInfo = gdBF.init03FundProductInfo();
         key = "product_name_registration_body";
         log.info("测试字段 " + key);
         testEquityProdInfo.remove(key);
@@ -370,7 +366,7 @@ public class GDV2_CheckJGDataNecessary_SubProd {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
-        testEquityProdInfo = gdBF.init03JiJinProductInfo();
+        testEquityProdInfo = gdBF.init03FundProductInfo();
         key = "product_shares_issued_class";
         log.info("测试字段 " + key);
         testEquityProdInfo.remove(key);

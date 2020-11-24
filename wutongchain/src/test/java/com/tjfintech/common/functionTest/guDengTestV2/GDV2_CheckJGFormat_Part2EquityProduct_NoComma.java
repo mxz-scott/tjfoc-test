@@ -422,7 +422,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct_NoComma {
 
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
         log.info(enterpriseSubjectInfo.toString());
-        enterpriseSubjectInfo.put("subject_object_information_type",1);
+//        enterpriseSubjectInfo.put("subject_object_information_type",1);
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
 
         log.info("================================检查存证数据格式化《结束》================================");
@@ -494,7 +494,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct_NoComma {
 
         log.info("增发前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
+//        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";
@@ -564,9 +564,9 @@ public class GDV2_CheckJGFormat_Part2EquityProduct_NoComma {
 //        int oldTotalMem = Integer.parseInt(getTotalMem);
 //        enterpriseSubjectInfo.put("subject_shareholders_number",oldTotalMem + 1);     //变更总股本数为增发量 + 原始股本总数
 
-        String getTotal = enterpriseSubjectInfo.get("subject_total_share_capital").toString();
-        BigDecimal oldTotal = new BigDecimal(getTotal);
-        enterpriseSubjectInfo.put("subject_total_share_capital",oldTotal.add(new BigDecimal(increaseAmount*4)));     //变更总股本数为增发量 + 原始股本总数
+//        String getTotal = enterpriseSubjectInfo.get("subject_total_share_capital").toString();
+//        BigDecimal oldTotal = new BigDecimal(getTotal);
+//        enterpriseSubjectInfo.put("subject_total_share_capital",oldTotal.add(new BigDecimal(increaseAmount*4)));     //变更总股本数为增发量 + 原始股本总数
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
         log.info(enterpriseSubjectInfo.toString());
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
@@ -639,10 +639,10 @@ public class GDV2_CheckJGFormat_Part2EquityProduct_NoComma {
 
         log.info("增发后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
+//        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
 
         log.info("判断增发前后机构主体查询总股本数增加数正确");
-        assertEquals(totalShares.add(new BigDecimal("4000")),totalShares2);
+//        assertEquals(totalShares.add(new BigDecimal("4000")),totalShares2);
 
     }
 
@@ -870,7 +870,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct_NoComma {
         String address = gdAccount1;
         log.info("回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
+//        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
         registerInfo = gdBF.init05RegInfo();
         regNo = "Eq" + "recylce" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
@@ -928,9 +928,9 @@ public class GDV2_CheckJGFormat_Part2EquityProduct_NoComma {
 
         log.info("检查回收存证主体格式化及信息内容与传入一致");
 
-        String getTotal = enterpriseSubjectInfo.get("subject_total_share_capital").toString();
-        BigDecimal oldTotal = new BigDecimal(getTotal);
-        enterpriseSubjectInfo.put("subject_total_share_capital",oldTotal.subtract(new BigDecimal(recycleAmount)));     //变更总股本数为增发量 + 原始股本总数
+//        String getTotal = enterpriseSubjectInfo.get("subject_total_share_capital").toString();
+//        BigDecimal oldTotal = new BigDecimal(getTotal);
+//        enterpriseSubjectInfo.put("subject_total_share_capital",oldTotal.subtract(new BigDecimal(recycleAmount)));     //变更总股本数为增发量 + 原始股本总数
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
         log.info(enterpriseSubjectInfo.toString());
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
@@ -1006,10 +1006,10 @@ public class GDV2_CheckJGFormat_Part2EquityProduct_NoComma {
 
         log.info("回收后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
-
-        log.info("判断增发前后机构主体查询总股本数增加数正确");
-        assertEquals(totalShares.subtract(new BigDecimal("100")),totalShares2);
+//        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
+//
+//        log.info("判断增发前后机构主体查询总股本数增加数正确");
+//        assertEquals(totalShares.subtract(new BigDecimal("100")),totalShares2);
 
     }
 
@@ -1021,7 +1021,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct_NoComma {
 
         log.info("多个回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
+//        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
         regNo = "Eq" + "recylce2" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
         registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
@@ -1068,11 +1068,11 @@ public class GDV2_CheckJGFormat_Part2EquityProduct_NoComma {
         }
         log.info("检查回收存证主体格式化及信息内容与传入一致");
 
-        String getTotal = enterpriseSubjectInfo.get("subject_total_share_capital").toString();
-        BigDecimal oldTotal = new BigDecimal(getTotal);
-        enterpriseSubjectInfo.put("subject_total_share_capital",oldTotal.subtract(new BigDecimal(recycleAmount * 4)));     //变更总股本数为增发量 + 原始股本总数
+//        String getTotal = enterpriseSubjectInfo.get("subject_total_share_capital").toString();
+//        BigDecimal oldTotal = new BigDecimal(getTotal);
+//        enterpriseSubjectInfo.put("subject_total_share_capital",oldTotal.subtract(new BigDecimal(recycleAmount * 4)));     //变更总股本数为增发量 + 原始股本总数
         log.info(gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
-        enterpriseSubjectInfo.put("subject_object_information_type",1);
+//        enterpriseSubjectInfo.put("subject_object_information_type",1);
         log.info(enterpriseSubjectInfo.toString());
         assertEquals(enterpriseSubjectInfo.toString(), gdCF.contructEnterpriseSubInfo(subStoreId).toString().replaceAll("\"",""));
 
@@ -1154,10 +1154,10 @@ public class GDV2_CheckJGFormat_Part2EquityProduct_NoComma {
 
         log.info("多个回收后查询机构主体信息");
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
-
-        log.info("判断增发前后机构主体查询总股本数增加数正确");
-        assertEquals(totalShares.subtract(new BigDecimal("400")),totalShares2);
+//        BigDecimal totalShares2 = new BigDecimal(JSONObject.fromObject(query3).getJSONObject("data").getString("subject_total_share_capital"));
+//
+//        log.info("判断增发前后机构主体查询总股本数增加数正确");
+//        assertEquals(totalShares.subtract(new BigDecimal("400")),totalShares2);
     }
 
     @Test
@@ -1313,9 +1313,10 @@ public class GDV2_CheckJGFormat_Part2EquityProduct_NoComma {
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdAccClientNo10);
 
         String clntNo = gdAccClientNo10;
-
+        String[] cert1 = new String[]{"test.txt"};
+        String[] cert2 = new String[]{"close.cert"};
         String response= gd.GDAccountDestroy(gdContractAddress,clntNo,
-                "2020/05/12 18:18:08","1.txt","2020/12/12 18:08:08","2.txt");
+                "2020/05/12 18:18:08",cert1,"2020/12/12 18:08:08",cert2);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
