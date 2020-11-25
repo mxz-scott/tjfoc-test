@@ -11,8 +11,8 @@ public class UtilsClassKMS {
     public static String keySpecSm2 = "sm2";
     public static String KMSADD = "http://10.1.3.164:6080";
     public static String password = "123";
-    public static String oldPwd = "123";
-    public static String newPwd = "321";
+    public static String oldPwd = "Pass7899";
+    public static String newPwd = "Pass4321";
     public static String pubFormat = "sm2_pem";
     public static int size = 16;
     public static String plainText = "VGhpcyBpcyBwbGFpbiB0ZXh0Lg==";

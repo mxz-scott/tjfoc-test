@@ -226,5 +226,41 @@ public class GoKmsTest {
 
     }
 
+    @Test
+    public void eccChangePWDandEncrypt_Test08() throws Exception {
+
+        String response = kms.createKey(keySpecSm2, password);
+
+        assertThat(response, containsString("200"));
+        assertThat(response, containsString("data"));
+        String keyId = UtilsClassKMS.a(response);
+
+        //修改密码
+        String response1 = kms.changePwd(keyId, password, oldPwd);
+        assertThat(response1, containsString("200"));
+        assertThat(response1, containsString("data"));
+        assertThat(response1, containsString("ok"));
+
+        //再改一次密码
+        response1 = kms.changePwd(keyId, oldPwd, newPwd);
+        assertThat(response1, containsString("200"));
+        assertThat(response1, containsString("data"));
+        assertThat(response1, containsString("ok"));
+
+        //加密
+        String response2 = kms.eccEncrypt(keyId, plainText);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("data"));
+
+        String f = UtilsClassKMS.f(response2);
+
+        //解密
+        String response3 = kms.eccDecrypt(keyId, newPwd, f);
+        assertThat(response3, containsString("200"));
+        assertThat(response3, containsString("data"));
+        assertThat(response3, containsString(plainText));
+
+    }
+
 }
 
