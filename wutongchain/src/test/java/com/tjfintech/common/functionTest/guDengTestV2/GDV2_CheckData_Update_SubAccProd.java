@@ -1165,7 +1165,12 @@ public class GDV2_CheckData_Update_SubAccProd {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
         //检查产品信息
+        String queryProd = gd.GDProductQuery(gdContractAddress,gdCompanyID);
 
+        Map mapProd = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(queryProd).getJSONObject("data").toString());
+        Map<String, String> testMap11 = new TreeMap<String, String>(mapProd);
+        Map<String, String> testMap12 = new TreeMap<String, String>(equityProductInfo);
+        assertEquals(replaceCertain(testMap11.toString()),replaceCertain(testMap12.toString()));
 
         //更新股权类产品信息
         Map mapProdComInfo = new HashMap();
@@ -1302,6 +1307,12 @@ public class GDV2_CheckData_Update_SubAccProd {
         String updateProd = gd.GDUpdateProductInfo(gdContractAddress,mapProdComInfo);
         assertEquals("200",JSONObject.fromObject(updateProd).get("state"));
         //检查产品信息是否是更新后的信息
+        queryProd = gd.GDProductQuery(gdContractAddress,gdCompanyID);
+
+        Map mapProd2 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(queryProd).getJSONObject("data").toString());
+        Map<String, String> testMap21 = new TreeMap<String, String>(mapProd2);
+        Map<String, String> testMap22 = new TreeMap<String, String>(mapProdComInfo);
+        assertEquals(replaceCertain(testMap21.toString()),replaceCertain(testMap22.toString()));
     }
 
     @Test
@@ -1314,6 +1325,13 @@ public class GDV2_CheckData_Update_SubAccProd {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
         //检查产品信息
+        String queryProd = gd.GDProductQuery(gdContractAddress,gdCompanyID);
+        Map mapProd = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(queryProd).getJSONObject("data").toString());
+        Map<String, String> testMap11 = new TreeMap<String, String>(mapProd);
+        Map<String, String> testMap12 = new TreeMap<String, String>(bondProductInfo);
+        assertEquals(replaceCertain(testMap11.toString()),replaceCertain(testMap12.toString()));
+
+
         //更新债券类产品信息
         Map mapTemp = new HashMap();
         mapTemp = gdBF.productCommonInfo(0); //私募股权
@@ -1389,6 +1407,12 @@ public class GDV2_CheckData_Update_SubAccProd {
         String updateProd = gd.GDUpdateProductInfo(gdContractAddress,mapTemp);
         assertEquals("200",JSONObject.fromObject(updateProd).get("state"));
         //检查产品信息是否是更新后的信息
+
+        queryProd = gd.GDProductQuery(gdContractAddress,gdCompanyID);
+        Map mapProd2 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(queryProd).getJSONObject("data").toString());
+        Map<String, String> testMap21 = new TreeMap<String, String>(mapProd2);
+        Map<String, String> testMap22 = new TreeMap<String, String>(mapTemp);
+        assertEquals(replaceCertain(testMap21.toString()),replaceCertain(testMap22.toString()));
     }
 
     @Test
@@ -1401,6 +1425,12 @@ public class GDV2_CheckData_Update_SubAccProd {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
         //检查产品信息
+        String queryProd = gd.GDProductQuery(gdContractAddress,gdCompanyID);
+        Map mapProd = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(queryProd).getJSONObject("data").toString());
+        Map<String, String> testMap11 = new TreeMap<String, String>(mapProd);
+        Map<String, String> testMap12 = new TreeMap<String, String>(fundProductInfo);
+        assertEquals(replaceCertain(testMap11.toString()),replaceCertain(testMap12.toString()));
+
         //更新基金类产品信息
         Map mapTemp = new HashMap();
         mapTemp = gdBF.productCommonInfo(0); //私募股权
@@ -1450,6 +1480,12 @@ public class GDV2_CheckData_Update_SubAccProd {
         String updateProd = gd.GDUpdateProductInfo(gdContractAddress,mapTemp);
         assertEquals("200",JSONObject.fromObject(updateProd).get("state"));
         //检查产品信息是否是更新后的信息
+
+        queryProd = gd.GDProductQuery(gdContractAddress,gdCompanyID);
+        Map mapProd2 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(queryProd).getJSONObject("data").toString());
+        Map<String, String> testMap21 = new TreeMap<String, String>(mapProd2);
+        Map<String, String> testMap22 = new TreeMap<String, String>(mapTemp);
+        assertEquals(replaceCertain(testMap21.toString()),replaceCertain(testMap22.toString()));
     }
 
 }
