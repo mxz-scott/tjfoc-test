@@ -501,7 +501,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         String jgType = "登记";
         String regStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
         jgType = "产品";
-        String prodStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
+        String prodStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
         jgType = "主体";
         String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
@@ -868,9 +868,9 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
         //获取监管数据存证hash
         String jgType = "登记";
-        String regStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
+        String regStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
         jgType = "主体";
-        String subStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
+        String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
         String tempObjId = mapAccAddr.get(address).toString();
         log.info("检查回收存证登记格式化及信息内容与传入一致");

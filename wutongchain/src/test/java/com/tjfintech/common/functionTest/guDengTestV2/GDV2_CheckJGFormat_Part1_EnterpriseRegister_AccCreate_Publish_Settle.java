@@ -292,9 +292,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         //获取监管数据存证hash
         String jgType = "账户";
-        String accStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
+        String accStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
         jgType = "主体";
-        String subStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
+        String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
 
         //检查主体存证信息内容与传入一致
@@ -478,9 +478,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         //获取监管数据存证hash
         String jgType = "账户";
-        String accStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
+        String accStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
         jgType = "主体";
-        String subStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
+        String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
 
         shAcc.put("account_holder_subject_ref",investorSubjectInfo.get("subject_object_id"));

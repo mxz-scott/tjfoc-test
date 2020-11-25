@@ -1059,9 +1059,9 @@ public class GDV2_CheckJGFormat_Part2FundProduct {
         log.info("================================检查存证数据格式化《开始》================================");
         //获取监管数据存证hash
         String jgType = "登记";
-        String regStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
+        String regStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
         jgType = "主体";
-        String subStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
+        String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
         for(int k = 0;k < shareList.size();k ++) {
             String tempAddr = JSONObject.fromObject(shareList.get(k)).getString("address");
