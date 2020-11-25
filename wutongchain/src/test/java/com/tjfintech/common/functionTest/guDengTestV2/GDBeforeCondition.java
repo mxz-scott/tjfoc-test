@@ -260,7 +260,7 @@ public class GDBeforeCondition {
 
         //-----------------主体基本信息---------------//
         //对象标识
-//        mapTemp.put("subject_object_id",gdCompanyID);
+        mapTemp.put("subject_object_id",gdCompanyID);
 //        mapTemp.put("subject_object_information_type",0);
 //        mapTemp.put("subject_type",1);
 
@@ -594,7 +594,7 @@ public class GDBeforeCondition {
         Map mapProdComInfo = new HashMap();
 
         //对象标识
-//        mapProdComInfo.put("product_object_id",gdEquityCode + "01");
+        mapProdComInfo.put("product_object_id",gdEquityCode);
 //        mapProdComInfo.put("product_object_information_type",0);
 
         //产品信息 基本信息 产品基本信息
@@ -878,7 +878,7 @@ public class GDBeforeCondition {
         log.info("初始化04交易数据结构");
         //04交易报告
         //对象信息
-//        mapTemp.put("transaction_object_id","txoid00001");
+        mapTemp.put("transaction_object_id","txoid00001");
 //        mapTemp.put("transaction_object_information_type",0);
 
         //交易报告信息 交易基本信息
@@ -947,7 +947,7 @@ public class GDBeforeCondition {
         listRegFile.add("verify.crt");
         mapTemp.clear();
         //对象标识
-//        mapTemp.put("register_registration_object_id","regid00001");
+        mapTemp.put("register_registration_object_id","regid00001");
 //        mapTemp.put("register_object_information_type",0);
 //        mapTemp.put("register_registration_type",0);
 
