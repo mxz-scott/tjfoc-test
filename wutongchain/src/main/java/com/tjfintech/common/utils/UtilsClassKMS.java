@@ -9,7 +9,8 @@ import java.util.Map;
 public class UtilsClassKMS {
     public static String keySpecSm4 = "sm4";
     public static String keySpecSm2 = "sm2";
-    public static String KMSADD = "http://10.1.3.164:6080";
+//    public static String KMSADD = "http://10.1.3.164:6080";
+    public static String KMSADD = "http://10.1.5.223:8881";
     public static String password = "123";
     public static String oldPwd = "Pass7899";
     public static String newPwd = "Pass4321";
@@ -20,53 +21,48 @@ public class UtilsClassKMS {
     public static String Digesterror = "VGhpcyBpcyB0ZXN0aW5nIGZvciBzaWduLg==";
 
     //获取参数
-    public static String a(String response) {
+    public static String getKeyIdSm4(String response) {
         Map mapkey = JSON.parseObject(response, Map.class);
         Map mapType1 = JSON.parseObject(mapkey.get("data").toString(), Map.class);
-        String a = mapType1.get("keyId").toString();
-        System.out.println("a = " + a);
-        return a;
+        String keyIdsm4 = mapType1.get("keyId").toString();
+        System.out.println("a = " + keyIdsm4);
+        return keyIdsm4;
     }
-    public static String b(String response) {
-        Map mapkey = JSON.parseObject(response, Map.class);
-        Map mapType1 = JSON.parseObject(mapkey.get("data").toString(), Map.class);
-        String b = mapType1.get("cipherText").toString();
-        System.out.println("x = " + b);
-        return b;
-    }
-    public static String c(String response) {
-        Map mapkey = JSON.parseObject(response, Map.class);
-        Map mapType1 = JSON.parseObject(mapkey.get("data").toString(), Map.class);
-        String c = mapType1.get("importToken").toString();
-        System.out.println("y = " + c);
-        return c;
-    }
-    public static String d(String response) {
-        Map mapkey = JSON.parseObject(response, Map.class);
-        Map mapType1 = JSON.parseObject(mapkey.get("data").toString(), Map.class);
-        String d = mapType1.get("encryptPublicKey").toString();
-        System.out.println("z = " + d);
-        return d;
-    }
-    public static String e(String response1) {
+
+    public static String getKeySm2(String response1) {
         Map mapkey = JSON.parseObject(response1, Map.class);
         Map mapType1 = JSON.parseObject(mapkey.get("data").toString(), Map.class);
-        String e = mapType1.get("keyId").toString();
-        System.out.println("e = " + e);
-        return e;
+        String keyIdsm2 = mapType1.get("keyId").toString();
+        System.out.println("b = " + keyIdsm2);
+        return keyIdsm2;
     }
-    public static String f(String response2) {
+    public static String getImportToken(String response) {
+        Map mapkey = JSON.parseObject(response, Map.class);
+        Map mapType1 = JSON.parseObject(mapkey.get("data").toString(), Map.class);
+        String importToken = mapType1.get("importToken").toString();
+        System.out.println("c = " + importToken);
+        return importToken;
+    }
+    public static String getEncryptPublicKey(String response) {
+        Map mapkey = JSON.parseObject(response, Map.class);
+        Map mapType1 = JSON.parseObject(mapkey.get("data").toString(), Map.class);
+        String encryptPublicKey = mapType1.get("encryptPublicKey").toString();
+        System.out.println("d = " + encryptPublicKey);
+        return encryptPublicKey;
+    }
+
+    public static String getCipherText(String response2) {
         Map mapkey = JSON.parseObject(response2, Map.class);
         Map mapType1 = JSON.parseObject(mapkey.get("data").toString(), Map.class);
-        String f = mapType1.get("cipherText").toString();
-        System.out.println("f = " + f);
-        return f;
+        String cipherText = mapType1.get("cipherText").toString();
+        System.out.println("e = " + cipherText);
+        return cipherText;
     }
-    public static String g(String response2) {
+    public static String getValue(String response2) {
         Map mapkey = JSON.parseObject(response2, Map.class);
         Map mapType1 = JSON.parseObject(mapkey.get("data").toString(), Map.class);
-        String g = mapType1.get("value").toString();
-        System.out.println("g = " + g);
-        return g;
+        String value = mapType1.get("value").toString();
+        System.out.println("f = " + value);
+        return value;
     }
 }

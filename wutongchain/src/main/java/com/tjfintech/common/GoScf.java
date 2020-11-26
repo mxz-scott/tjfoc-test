@@ -11,6 +11,7 @@ import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.SDKADD;
 import static com.tjfintech.common.utils.UtilsClass.subLedger;
+import static com.tjfintech.common.utils.UtilsClassScf.supplyID1;
 
 @Slf4j
 public class GoScf implements Scf {
@@ -35,17 +36,17 @@ public class GoScf implements Scf {
         return result;
     }
 
-    public String IssuingApply(String contractAddress, String companyID, String keyID, String PIN, String tokenType, long levelLimit, long expireDate, String toAddr, long amount) {
+    public String IssuingApply(String AccountAddress, String companyID1, String coreCompanyKeyID, String PIN, String tokenType, int levelLimit, long expireDate, String supplyAddress1, String amount) {
         Map<String, Object> map = new HashMap<>();
 
-        map.put("contractAddress", contractAddress);
-        map.put("companyID", companyID);
-        map.put("keyID", keyID);
+        map.put("contractAddress", AccountAddress);
+        map.put("companyID", companyID1);
+        map.put("keyID", coreCompanyKeyID);
         map.put("PIN", PIN);
         map.put("tokenType", tokenType);
         map.put("levelLimit", levelLimit);
         map.put("expireDate", expireDate);
-        map.put("toAddr", toAddr);
+        map.put("toAddr", supplyAddress1);
         map.put("amount", amount);
 
         String param="";
@@ -56,12 +57,12 @@ public class GoScf implements Scf {
         return result;
     }
 
-    public String IssuingApprove(String tokenType, String keyID, String PIN) {
+    public String IssuingApprove(String platformKeyID, String tokenType, String platformPIN) {
         Map<String, Object> map = new HashMap<>();
 
+        map.put("keyID", platformKeyID);
         map.put("tokenType", tokenType);
-        map.put("keyID", keyID);
-        map.put("PIN", PIN);
+        map.put("PIN", platformPIN);
 
         String param="";
         if (subLedger!="") param = param +"ledger"+subLedger;
@@ -86,12 +87,13 @@ public class GoScf implements Scf {
         return result;
     }
 
-    public String IssuingConfirm(String keyID, String PIN, String tokenType) {
+    public String IssuingConfirm(String coreCompanyKeyID, String tokenType, String PIN, String comments) {
         Map<String, Object> map = new HashMap<>();
 
-        map.put("keyID", keyID);
-        map.put("PIN", PIN);
+        map.put("keyID", coreCompanyKeyID);
         map.put("tokenType", tokenType);
+        map.put("PIN", PIN);
+        map.put("comments", comments);
 
         String param="";
         if (subLedger!="") param = param +"ledger"+subLedger;

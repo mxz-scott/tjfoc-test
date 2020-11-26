@@ -14,6 +14,8 @@ public interface Kms {
     String encrypt(String keyId, String password, String plainText);
     String decrypt(String keyId, String password, String cipherText2);
     String changePwd(String keyId, String oldPwd, String newPwd);
+    String buildinfo();
+    String apihealth();
 
 
 }

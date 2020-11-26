@@ -2,6 +2,7 @@ package com.tjfintech.common;
 
 import com.alibaba.fastjson.parser.JSONLexer;
 import com.tjfintech.common.Interface.Kms;
+import com.tjfintech.common.utils.GetTest;
 import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.logging.Log;
@@ -229,7 +230,7 @@ public class GoKms implements Kms {
 
     /***
      * 修改密钥PIN码
-     * @param keyId3
+     * @param keyId
      * @param oldPwd
      * @param newPwd
      * @return
@@ -242,6 +243,22 @@ public class GoKms implements Kms {
         map.put("newPwd", newPwd);
 
         String result = PostTest.postMethod(KMSADD + "/v1/changePwd", map);
+        log.info(result);
+        return result;
+    }
+
+    public String buildinfo() {
+        String param = "";
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+        String result = GetTest.SendGetTojson(KMSADD + "/buildinfo?" + param);
+        log.info(result);
+        return result;
+    }
+
+    public String apihealth() {
+        String param = "";
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+        String result = GetTest.SendGetTojson(KMSADD + "/v1/apihealth?" + param);
         log.info(result);
         return result;
     }

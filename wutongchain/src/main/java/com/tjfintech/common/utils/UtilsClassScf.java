@@ -15,26 +15,38 @@ public class UtilsClassScf {
     TestBuilder testBuilder = TestBuilder.getInstance();
     Scf scf = testBuilder.getScf();
 
-    public static String platformKeyID = "";//平台ID
-    public static String platformPubkey = "";//平台公钥
+    public static String platformKeyID = "bugeu8te655f4d6m4qkg";//平台ID
+    public static String platformPubkey = "-----BEGIN PUBLIC KEY-----\n" +
+            "MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEGHCtDx1FOkopYU75YMpHxaYi7S4l\n" +
+            "+jZfFhICvr7HNTzm2QfHoq6bbNOrKMcs4eUJ5pV4E6MQInqDg8L3FUvUnQ==\n" +
+            "-----END PUBLIC KEY-----";//平台公钥
     public static String platformPubkeyPem= "";//平台公钥PEM格式
+    public static String platformPIN = "123";
 
-    public static String coreCompanyKeyID = "";//核心企业ID
+    public static String coreCompanyKeyID = "bugeu8te655f4d6m4qjg";//核心企业ID
     public static String coreCompanyPubkey = "";//核心企业公钥
-    public static String coreCompanyPubkeyPem = "";//核心企业公钥PEM格式
-    public static String coreCompanyAddress = "";//核心企业地址
+    public static String coreCompanyPubkeyPem = "-----BEGIN PUBLIC KEY-----\\nMFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEc6kNe5as+na1DnvT/0Yo3+NhgtdT\\n7G7ciDoSuViStheLajrn1jyIhancka9TDZS8egH43aA9UnKU/DwdzPfWfQ==\\n-----END PUBLIC KEY-----\\n";//核心企业公钥PEM格式
+    public static String coreCompanyAddress = "SngPcZJ21VL1b2aNnYK1Fn64Xsb9hVvXM4tLKVHnYwiwJopmxqB";//核心企业地址
 
-    public static String  supplyAddress1 = "";//供应商地址1
-    public static String  supplyAddress2 = "";//供应商地址2
-    public static String  supplyAddress3 = "";//供应商地址3
+    public static String  supplyAddress1 = "SnbzpS7hndcXv1aHTDJsRVQezPTj2daL64WrELEf63ZyK1CSVL1";//供应商地址1
+    public static String  supplyAddress2 = "SoD5sJYbuigjUTc2RdkpVyhodsrA8rhEzkBQGhesdwCHDx4nLrz";//供应商地址2
+    public static String  supplyAddress3 = "SnqTiKrYMgqTu5oXNmckN3MrFaVVpoLfCNj4EyxNdKBAnYhwcco";//供应商地址3
+    public static String  supplyID1 = "bugeu8te655f4d6m4ql0";//供应商ID1
+    public static String  supplyID2 = "bugeu8te655f4d6m4qlg";//供应商ID2
+    public static String  supplyID3 = "bugeu8te655f4d6m4qm0";//供应商ID3
+
+    public static String  companyID1 = "001";//资金方ID01
+    public static String  companyID2 = "002";//资金方ID02
+    public static String  companyID3 = "003";//资金方ID03
 
     public static String PIN = "123456";
 
-    public static String AccountAddress = "f8cf823ab29cc3eada50d37951da61bfc5f39be700ef64b57a1d35cfcee3f22c";
-    public static String PlatformAddress = "69e82dd275f1be41a2179d83f52e3520a938fee7eb61a2c32329c98dd8812312";
-    public static String QFJGAddress = "";
-    public static String ZJFAddress = "";
+    public static String AccountAddress = "f85afef224e3b5c3e7eefbc3f21ecf904d84c4dbfb0e9857756415e7a28501fe";
+    public static String PlatformAddress = "827dd1501d88f543d45aa07c074144cee788562a8dee16244be3730696e62502";//平台合约
+    public static String QFJGAddress = "328d117c874ad576fac9290f8f6eec3e302f04856acbce0fa36a4763bcf84c50";
+    public static String ZJFAddress = "79e3381736610d2914a2ee5ca88c279b4d31aa6af3f5d5ac392658677710bba7";
     public static String pubFormatSM2 = "sm2_pem";
+    public static String comments = "BwAAAGZpbmFuY2UKAAAAdGVzdFNlbmRlcgENAAAAdGVzdFJlY2VpdmVycwAAAAAAAAAAAQAAADEAAAAADAAAAOa1i+ivlea2iOaBrw==";
 
     /**
     * base64解码

@@ -34,15 +34,14 @@ public class GoKmsTest {
         assertThat(response, containsString("200"));
         assertThat(response, containsString("data"));
        //获取对称密钥加密参数
-        String a = UtilsClassKMS.a(response);
+        String keyIdsm4 = UtilsClassKMS.getKeyIdSm4(response);
         //对称密钥加密
-        String response1 = kms.encrypt(a, password, plainText);
+        String response1 = kms.encrypt(keyIdsm4, password, plainText);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("data"));
         //获取对称密钥解密参数
-        String b = UtilsClassKMS.b(response1);
-        String response2 = kms.decrypt(a, password, b);
-        System.out.println("response2 = " + response2);
+        String cipherText = UtilsClassKMS.getCipherText(response1);
+        String response2 = kms.decrypt(keyIdsm4, password, cipherText);
         //验证加解密参数
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("data"));
@@ -62,11 +61,11 @@ public class GoKmsTest {
 
         assertThat(response, containsString("200"));
         assertThat(response, containsString("data"));
-        String c = UtilsClassKMS.c(response);
-        String d = UtilsClassKMS.d(response);
+        String importToken = UtilsClassKMS.getImportToken(response);
+        String encryptPublicKey = UtilsClassKMS.getEncryptPublicKey(response);
         //将获取的密钥参数加密转码
-        System.out.println(d.substring(2));
-        byte[] pub=Base64.getDecoder().decode(d);
+        System.out.println(encryptPublicKey.substring(2));
+        byte[] pub=Base64.getDecoder().decode(encryptPublicKey);
         TjParseEncryptionKey tjParseEncryptionKey=new TjParseEncryptionKey();
         byte[] pubkey=tjParseEncryptionKey.readPublicKey(pub);
         GmUtils gmUtils=new GmUtils();
@@ -75,14 +74,13 @@ public class GoKmsTest {
         byte[] ciphertext=Base64.getEncoder().encode(cipher);
         System.out.println("密文："+new String(ciphertext));
         //导入密钥
-        String response1 = kms.importKey(c, new String(ciphertext));
+        String response1 = kms.importKey(importToken, new String(ciphertext));
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("data"));
         //获取导入公钥参数
-        String e = UtilsClassKMS.e(response1);
-        System.out.println("e = " + e);
+        String keyIdsm2 = UtilsClassKMS.getKeySm2(response1);
         //导入公钥
-        String response2 = kms.getPublicKey(e, pubFormat);
+        String response2 = kms.getPublicKey(keyIdsm2, pubFormat);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("data"));
     }
@@ -112,11 +110,11 @@ public class GoKmsTest {
         assertThat(response, containsString("data"));
         //获取导入密钥参数
 
-        String c = UtilsClassKMS.c(response);
-        String d = UtilsClassKMS.d(response);
+        String importToken = UtilsClassKMS.getImportToken(response);
+        String encryptPublicKey = UtilsClassKMS.getEncryptPublicKey(response);
         //将获取的密钥参数加密转码
-        System.out.println(d.substring(2));
-        byte[] pub=Base64.getDecoder().decode(d);
+        System.out.println(encryptPublicKey.substring(2));
+        byte[] pub=Base64.getDecoder().decode(encryptPublicKey);
         TjParseEncryptionKey tjParseEncryptionKey=new TjParseEncryptionKey();
         byte[] pubkey=tjParseEncryptionKey.readPublicKey(pub);
         GmUtils gmUtils=new GmUtils();
@@ -125,19 +123,19 @@ public class GoKmsTest {
         byte[] ciphertext=Base64.getEncoder().encode(cipher);
         System.out.println("密文："+new String(ciphertext));
         //导入密钥
-        String response1 = kms.importKey(c, new String(ciphertext));
+        String response1 = kms.importKey(importToken, new String(ciphertext));
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("data"));
         //获取导入公钥参数
-        String e = UtilsClassKMS.e(response1);
+        String keyIdsm2 = UtilsClassKMS.getKeySm2(response1);
 
-        String response2 = kms.eccEncrypt(e, plainText);
+        String response2 = kms.eccEncrypt(keyIdsm2, plainText);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("data"));
 
-        String f = UtilsClassKMS.f(response2);
+        String cipherText = UtilsClassKMS.getCipherText(response2);
 
-        String response3 = kms.eccDecrypt(e, password, f);
+        String response3 = kms.eccDecrypt(keyIdsm2, password, cipherText);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("data"));
         assertThat(response3, containsString(plainText));
@@ -152,11 +150,11 @@ public class GoKmsTest {
         assertThat(response, containsString("200"));
         assertThat(response, containsString("data"));
         //获取导入密钥参数
-        String c = UtilsClassKMS.c(response);
-        String d = UtilsClassKMS.d(response);
+        String importToken = UtilsClassKMS.getImportToken(response);
+        String encryptPublicKey = UtilsClassKMS.getEncryptPublicKey(response);
         //将获取的密钥参数加密转码
-        System.out.println(d.substring(2));
-        byte[] pub=Base64.getDecoder().decode(d);
+        System.out.println(encryptPublicKey.substring(2));
+        byte[] pub=Base64.getDecoder().decode(encryptPublicKey);
         TjParseEncryptionKey tjParseEncryptionKey=new TjParseEncryptionKey();
         byte[] pubkey=tjParseEncryptionKey.readPublicKey(pub);
         GmUtils gmUtils=new GmUtils();
@@ -165,24 +163,24 @@ public class GoKmsTest {
         byte[] ciphertext=Base64.getEncoder().encode(cipher);
         System.out.println("密文："+new String(ciphertext));
         //导入密钥
-        String response1 = kms.importKey(c, new String(ciphertext));
+        String response1 = kms.importKey(importToken, new String(ciphertext));
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("data"));
         //获取导入公钥参数
-        String e = UtilsClassKMS.e(response1);
+        String keyIdsm2 = UtilsClassKMS.getKeySm2(response1);
 
-        String response2 = kms.eccSign(e, password, Digest);
+        String response2 = kms.eccSign(keyIdsm2, password, Digest);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("data"));
 
-        String g = UtilsClassKMS.g(response2);
+        String value = UtilsClassKMS.getValue(response2);
 
-        String response3 = kms.eccVerify(e, Digest, g);
+        String response3 = kms.eccVerify(keyIdsm2, Digest, value);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("data"));
         assertThat(response3, containsString("true"));
         //验签异常测试
-        String response4 = kms.eccVerify(e, Digesterror, g);
+        String response4 = kms.eccVerify(keyIdsm2, Digesterror, value);
         assertThat(response4, containsString("200"));
         assertThat(response4, containsString("false"));
 
@@ -190,20 +188,39 @@ public class GoKmsTest {
 
     @Test
     public void changePwd_Test06() {
+        //创建sm4账号
         String response = kms.createKey(keySpecSm4, password);
-
         assertThat(response, containsString("200"));
         assertThat(response, containsString("data"));
         
-        String a = UtilsClassKMS.a(response);
-
-        String response1 = kms.changePwd(a, password, newPwd);
+        String keyIdsm4 = UtilsClassKMS.getKeyIdSm4(response);
+        //修改密码
+        String response1 = kms.changePwd(keyIdsm4, password, newPwd);
         assertThat(response1, containsString("data"));
         assertThat(response1, containsString("ok"));
 
-        //用新的密码去做一下加密解密，验证修改后的密码可用
+        //新密码加密
+        String response2 = kms.encrypt(keyIdsm4, newPwd,plainText);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("data"));
 
-        //用旧密码做下加解密，验证是否会失败
+        //新密码解密
+        String cipherText = UtilsClassKMS.getCipherText(response2);
+        String response3 = kms.decrypt(keyIdsm4, newPwd, cipherText);
+        assertThat(response3, containsString("200"));
+        assertThat(response3, containsString("data"));
+        assertThat(response3, containsString(plainText));
+
+        //旧密码加密
+        String response4 = kms.encrypt(keyIdsm4, password,plainText);
+        assertThat(response4, containsString("400"));
+        assertThat(response4, containsString("pin码与密钥不匹配,或请稍后再试"));
+
+        //旧密码解密
+//        String cipherText = UtilsClassKMS.getCipherText(response4);
+        String response5 = kms.decrypt(keyIdsm4, password,cipherText);
+        assertThat(response5, containsString("400"));
+        assertThat(response5, containsString("pin码与密钥不匹配,或请稍后再试"));
     }
 
     @Test
@@ -213,16 +230,30 @@ public class GoKmsTest {
         assertThat(response, containsString("200"));
         assertThat(response, containsString("data"));
 
-        String a = UtilsClassKMS.a(response);
+        String keyIdsm2 = UtilsClassKMS.getKeySm2(response);
 
-        String response1 = kms.changePwd(a, password, newPwd);
+        String response1 = kms.changePwd(keyIdsm2, password, newPwd);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("data"));
         assertThat(response1, containsString("ok"));
+        //新密码加密，验证修改后的密码可用
+        String response2 = kms.eccEncrypt(keyIdsm2, plainText);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("data"));
+        //新密码解密
+        String cipherText = UtilsClassKMS.getCipherText(response2);
+        String response3 = kms.eccDecrypt(keyIdsm2, newPwd, cipherText);
+        assertThat(response3, containsString("200"));
+        assertThat(response3, containsString("data"));
+        assertThat(response3, containsString(plainText));
+        //旧密码加密,验证失败
+        String response4 = kms.eccEncrypt(keyIdsm2, plainText);
+        assertThat(response4, containsString("200"));
+        assertThat(response4, containsString("data"));
 
-        //用新的密码去做一下加密解密，验证修改后的密码可用
-
-        //用旧密码做下加解密，验证是否会失败
+        String response5 = kms.eccDecrypt(keyIdsm2, password,plainText);
+        assertThat(response5, containsString("400"));
+        assertThat(response5, containsString("pin码与密钥不匹配,或请稍后再试"));
 
     }
 
@@ -233,14 +264,13 @@ public class GoKmsTest {
 
         assertThat(response, containsString("200"));
         assertThat(response, containsString("data"));
-        String keyId = UtilsClassKMS.a(response);
+        String keyId = UtilsClassKMS.getKeySm2(response);
 
         //修改密码
         String response1 = kms.changePwd(keyId, password, oldPwd);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("data"));
         assertThat(response1, containsString("ok"));
-
         //再改一次密码
         response1 = kms.changePwd(keyId, oldPwd, newPwd);
         assertThat(response1, containsString("200"));
@@ -252,14 +282,33 @@ public class GoKmsTest {
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("data"));
 
-        String f = UtilsClassKMS.f(response2);
+        String cipherText = UtilsClassKMS.getCipherText(response2);
 
         //解密
-        String response3 = kms.eccDecrypt(keyId, newPwd, f);
+        String response3 = kms.eccDecrypt(keyId, newPwd, cipherText);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("data"));
         assertThat(response3, containsString(plainText));
 
+    }
+
+    @Test
+    public void buildinfo() {
+        String response = kms.buildinfo();
+
+        assertThat(response, containsString("200"));
+        assertThat(response, containsString("2020年11月25日 10:56:08"));
+        assertThat(response, containsString("bf0ae76381235ac9307173cf7079e7f911dd9e3d"));
+        assertThat(response, containsString("go version go1.15.1 windows/amd64"));
+        assertThat(response, containsString("1.0.1"));
+    }
+
+    @Test
+    public void apihealth() {
+        String response = kms.apihealth();
+
+        assertThat(response, containsString("200"));
+        assertThat(response, containsString("OK"));
     }
 
 }
