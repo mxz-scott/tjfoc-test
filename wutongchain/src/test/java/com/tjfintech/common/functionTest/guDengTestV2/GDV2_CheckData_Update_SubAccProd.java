@@ -114,9 +114,9 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapQAI.put("subject_qualification_code","资质代码2");
         mapQAI.put("subject_role_qualification_certification_doc",getListFileObj());
         mapQAI.put("subject_qualification_authenticator","认证方2");
-        mapQAI.put("subject_certification_time","2020/10/12 12:00:02");
+        mapQAI.put("subject_certification_time",time1);
         mapQAI.put("subject_qualification_reviewer","审核方2");
-        mapQAI.put("subject_review_time","2020/10/11 12:00:02");
+        mapQAI.put("subject_review_time",time1);
         mapQAI.put("subject_qualification_status",true);
         listQAI.add(mapQAI);
 
@@ -127,7 +127,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapISI.put("subject_investor_qualification_certificate",getListFileObj());
         mapISI.put("subject_investor_qualification_cerifier_ref","sub_ref_0002");
         mapISI.put("subject_investor_qualification_cerifier_name","适当性认证方主体名称2");
-        mapISI.put("subject_investor_qualification_certificate_time","2020/11/12 12:00:02");
+        mapISI.put("subject_investor_qualification_certificate_time",time1);
         mapISI.put("subject_investor_qualification_status",true);
         listISI.add(mapISI);
 
@@ -149,7 +149,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapTemp.put("subject_id",gdCompanyID);
         mapTemp.put("subject_type",2);
         mapTemp.put("subject_main_administrative_region",2);
-        mapTemp.put("subject_create_time","2020/11/06 14:14:52");
+        mapTemp.put("subject_create_time",time1);
 
         //主体信息 主体基本信息 主体资质信息
         //主体信息 主体基本信息 主体资质信息 资质信息
@@ -170,7 +170,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapTemp.put("subject_scale_type",1);
         mapTemp.put("subject_high_technology_enterpris",1);
         mapTemp.put("subject_document_infomation","证件类型及证件号码CHARACTER2");
-        mapTemp.put("subject_registry_date","2010/10/13");
+        mapTemp.put("subject_registry_date",date1);
         mapTemp.put("subject_business_license",getListFileObj());
         mapTemp.put("subject_business_scope","经营范围CHARACTER2");
         mapTemp.put("subject_industry",2);
@@ -199,13 +199,13 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapTemp.put("subject_invoice_account_number","发票账号CHARACTER2");
         mapTemp.put("subject_invoice_address","发票地址CHARACTER2");
         mapTemp.put("subject_invoice_telephone_number","发票电话CHARACTER2");
-        mapTemp.put("subject_approval_time","2010/12/12 15:00:02");
+        mapTemp.put("subject_approval_time",time1);
         mapTemp.put("subject_insured_number",52);
         mapTemp.put("subject_company_status",2);
         mapTemp.put("subject_company_status_deregistration","注销原因CHARACTER2");
-        mapTemp.put("subject_company_status_deregistration_date","yyyy/MM/dd HH:mm:ss");
+        mapTemp.put("subject_company_status_deregistration_date",time3);
         mapTemp.put("subject_company_status_windingup","吊销原因CHARACTER");
-        mapTemp.put("subject_company_status_windingup_date","yyyy/MM/dd HH:mm:ss");
+        mapTemp.put("subject_company_status_windingup_date",time3);
         List<String> name = new ArrayList<>(); name.add("h");name.add("c");name.add("d");
         mapTemp.put("subject_name_used_before",name);
         mapTemp.put("subject_personnel_size","人员规模CHARACTER2");
@@ -216,10 +216,10 @@ public class GDV2_CheckData_Update_SubAccProd {
         //-----------------主要人员信息---------------//
         Map mapLMI = new HashMap();
         List<Map> listLMI = new ArrayList<>();
-        mapLMI.put("subject_keypersonnel_appointment_end","2029/12/22");
+        mapLMI.put("subject_keypersonnel_appointment_end",date3);
         mapLMI.put("subject_keypersonnel_type",1);
         mapLMI.put("subject_keypersonnel_position",1);
-        mapLMI.put("subject_keypersonnel_appointment_start","2020/12/22");
+        mapLMI.put("subject_keypersonnel_appointment_start",date1);
         mapLMI.put("subject_keypersonnel_name","姓名CHARACTER2");
         mapLMI.put("subject_keypersonnel_nationality","国籍CHARACTER2");
         mapLMI.put("subject_document_type",1);
@@ -292,7 +292,7 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //主体信息 主体基本信息 主体通用信息
         mapTemp.put("subject_main_administrative_region",3);
-        mapTemp.put("subject_create_time","2020/11/06 14:14:03");
+        mapTemp.put("subject_create_time",time1);
 
         //-----------------机构主体信息---------------//
         //主体信息 机构主体信息 企业基本信息 基本信息描述
@@ -1199,7 +1199,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapProdComInfo.put("product_customer_browsing_right",3);
         mapProdComInfo.put("product_issuer_contact_person","联系人CHARACTER3");
         mapProdComInfo.put("product_issuer_contact_info","联系信息CHARACTER3");
-        mapProdComInfo.put("product_create_time","2020/05/06 15:30:03");
+        mapProdComInfo.put("product_create_time",time3);
 
         //产品信息 基本信息 服务方信息
         Map mapServ = new HashMap();
@@ -1242,7 +1242,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         Map mapPR = new HashMap();
 
         mapPR.put("product_license_type",122);
-        mapPR.put("product_filing_date","2020/10/13");
+        mapPR.put("product_filing_date",date1);
         mapPR.put("product_filing_doc",getListFileObj());
         mapPR.put("product_filing_examine_doc",getListFileObj());
         mapPR.put("product_filing_documentation","psf3.pdf");
@@ -1263,8 +1263,8 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapProdComInfo.put("product_net_profit",3000000);
         mapProdComInfo.put("product_annual_net_profit",6000000);
         mapProdComInfo.put("product_actual_raising_scale",30000);
-        mapProdComInfo.put("product_raising_start_time","2020/10/03");
-        mapProdComInfo.put("product_raising_end_time","2030/10/03");
+        mapProdComInfo.put("product_raising_start_time",date2);
+        mapProdComInfo.put("product_raising_end_time",date3);
         mapProdComInfo.put("product_registered_capital_before_issuance",300000);
         mapProdComInfo.put("product_registered_capital_issuance",500000);
         mapProdComInfo.put("product_paid_shares",600000);
@@ -1285,11 +1285,11 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapProdComInfo.put("product_risk_level","产品风险级别CHARACTER3");
         mapProdComInfo.put("product_transaction_unit",2000);
         mapProdComInfo.put("product_listing_code","挂牌代码CHARACTER3");
-        mapProdComInfo.put("product_listing_date","2020/11/13");
+        mapProdComInfo.put("product_listing_date",date2);
         mapProdComInfo.put("product_listing_remarks","挂牌备注信息CHARACTER3");
 
         //产品信息 交易信息 摘牌信息
-        mapProdComInfo.put("product_delisting_date","yyyy/MM/dd");
+        mapProdComInfo.put("product_delisting_date",date3);
         mapProdComInfo.put("product_delisting_type",2);
         mapProdComInfo.put("product_delisting_reason",2);
         mapProdComInfo.put("product_transfer_board_mrket",3);
@@ -1297,10 +1297,10 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapProdComInfo.put("product_delisting_remarks","摘牌备注信息TEXT3");
 
         //产品信息 托管信息
-        mapProdComInfo.put("product_custodian_registration_date","2020/10/13");
+        mapProdComInfo.put("product_custodian_registration_date",date1);
         mapProdComInfo.put("product_cusodian_documents",getListFileObj());
         mapProdComInfo.put("product_custodian_notes","托管备注信息TEXT3");
-        mapProdComInfo.put("product_escrow_deregistration_date","yyyy/MM/dd");
+        mapProdComInfo.put("product_escrow_deregistration_date",date3);
         mapProdComInfo.put("product_escrow_deregistration_document",getListFileObj());
         mapProdComInfo.put("product_escrow_deregistration_remarks","解除托管备注信息TEXT3");
 
@@ -1341,7 +1341,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         Map mapPR = new HashMap();
 
         mapPR.put("product_license_type",100);
-        mapPR.put("product_filing_date","2020/10/14");
+        mapPR.put("product_filing_date",date1);
         mapPR.put("product_filing_doc",getListFileObj());
         mapPR.put("product_filing_examine_doc",getListFileObj());
         mapPR.put("product_filing_documentation","psf4.pdf");
@@ -1366,7 +1366,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapTemp.put("product_payment_method",4);
         mapTemp.put("product_payment_method_remarks","兑付方式备注CHARACTER4");
         mapTemp.put("product_is_appoint_repayment_date",true);
-        mapTemp.put("product_appoint_repayment_date","2020/11/14");
+        mapTemp.put("product_appoint_repayment_date",date2);
         mapTemp.put("product_guarantee_measure","担保措施及方式TEXT4");
         mapTemp.put("product_converting_shares_condition","转股条件TEXT4");
         mapTemp.put("product_converting_shares_price_mode","转股价格的确定方式TEXT4");
@@ -1388,12 +1388,12 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapTemp.put("product_conversion_premium",40);
         mapTemp.put("product_conversion_price_ref",45);
         mapTemp.put("product_actual_issue_size",4000);
-        mapTemp.put("product_raising_start_date","2020/11/14");
-        mapTemp.put("product_raising_end_date","yyyy/MM/dd");
-        mapTemp.put("product_start_date","2020/11/14");
-        mapTemp.put("product_due_date","2029/14/12");
+        mapTemp.put("product_raising_start_date",date2);
+        mapTemp.put("product_raising_end_date",date4);
+        mapTemp.put("product_start_date",date1);
+        mapTemp.put("product_due_date",date3);
         mapTemp.put("product_amount_cashed",4000);
-        mapTemp.put("product_first_interest_payment_date","2020/11/14");
+        mapTemp.put("product_first_interest_payment_date",date3);
         mapTemp.put("product_issuer_credit_rating",4);
         mapTemp.put("product_credit_enhancement_agency_credit_rating",4);
         mapTemp.put("product_guarantee_arrangement","担保安排CHARACTER4");
@@ -1441,7 +1441,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         Map mapPR = new HashMap();
 
         mapPR.put("product_license_type",126);
-        mapPR.put("product_filing_date","2020/10/16");
+        mapPR.put("product_filing_date",date3);
         mapPR.put("product_filing_doc",getListFileObj());
         mapPR.put("product_filing_examine_doc",getListFileObj());
         mapPR.put("product_filing_documentation","psf6.pdf");
@@ -1453,17 +1453,17 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapTemp.put("product_raising_information_identification","募集信息标识CHARACTER6");
         mapTemp.put("product_scope_fund_raising","募集范围TEXT6");
         mapTemp.put("product_record_number","备案编号CHARACTER6");
-        mapTemp.put("product_fund_filing_date","2020/08/16");
+        mapTemp.put("product_fund_filing_date",date3);
         List<Integer> ftype = new ArrayList<>();ftype.add(6);ftype.add(3);
         mapTemp.put("product_fund_type",ftype);
-        mapTemp.put("product_foundation_date","2020/12/16");
+        mapTemp.put("product_foundation_date",date3);
         mapTemp.put("product_escrow_bank","托管行CHARACTER6");
         mapTemp.put("product_total_fund_share",60000);
         mapTemp.put("product_fund_unit_holders_number","基金份额持有人数CHARACTER6");
         mapTemp.put("product_fund_nav",10000);
         mapTemp.put("product_fund_fairvalue",10000);
-        mapTemp.put("product_raise_start_date","2020/12/16");
-        mapTemp.put("product_raise_end_date","2023/12/16");
+        mapTemp.put("product_raise_start_date",date3);
+        mapTemp.put("product_raise_end_date",date4);
         mapTemp.put("sales_organization_name","销售机构名称CHARACTER6");
         mapTemp.put("product_unified_social_credit_code","统一社会信用代码CHARACTER6");
         mapTemp.put("product_sales_organization_member_code","销售机构会员编码CHARACTER6");
