@@ -1087,8 +1087,13 @@ public class GDBeforeCondition {
 
         mapPR.put("product_license_type", 122);
         mapPR.put("product_filing_date", date2);
+
+        Map mapDoc = new HashMap();
         mapPR.put("product_filing_doc", getListFileObj());
-        mapPR.put("product_filing_examine_doc", getListFileObj());
+        List<Map> listPFI = new ArrayList<>();
+        listPFI.add(mapDoc);
+        mapPR.put("product_file_information", getListFileObj());
+        mapPR.put("product_filing_examine_doc", listPFI);
         mapPR.put("product_filing_documentation", "psf.pdf");
         listMapPR.add(mapPR);
         mapTemp.put("filing_information", listMapPR);

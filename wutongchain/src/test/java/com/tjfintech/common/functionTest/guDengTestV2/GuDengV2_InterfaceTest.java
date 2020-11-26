@@ -785,6 +785,21 @@ public class GuDengV2_InterfaceTest {
     }
 
     @Test
+    public void queryProductInterfaceMustParamTest() throws Exception {
+        log.info(" ************************ test contractAddress must ************************ ");
+        String response= gd.GDMainSubjectQuery("",gdCompanyID);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("无效的参数:Key: 'ProductQuery.ContractAddress' Error:Field validation for 'ContractAddress' failed on the 'required' tag",
+                JSONObject.fromObject(response).getString("message"));
+
+        log.info(" ************************ test productObjectId must ************************ ");
+        response= gd.GDProductQuery(gdContractAddress,"");
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("无效的参数:Key: 'ProductQuery.ProductObjectId' Error:Field validation for 'ProductObjectId' failed on the 'required' tag",
+                JSONObject.fromObject(response).getString("message"));
+    }
+
+    @Test
     public void updateSubjectInterfaceMustParamTest() throws Exception {
         log.info(" ************************ test contractAddress must ************************ ");
         String response= gd.GDUpdateSubjectInfo("",0,enterpriseSubjectInfo);
@@ -796,6 +811,40 @@ public class GuDengV2_InterfaceTest {
         response= gd.GDUpdateSubjectInfo(gdContractAddress,0,null);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("主体信息不可以为空",JSONObject.fromObject(response).getString("message"));
+    }
+
+    @Test
+    public void updateAccountInterfaceMustParamTest() throws Exception {
+        log.info(" ************************ test contractAddress must ************************ ");
+        String response= gd.GDUpdateAccountInfo("",gdAccClientNo8,shAccountInfo);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("无效的参数:Key: 'AccountUpdate.ContractAddress' Error:Field validation for 'ContractAddress' failed on the 'required' tag",
+                JSONObject.fromObject(response).getString("message"));
+
+        log.info(" ************************ test clientNo must ************************ ");
+        response= gd.GDUpdateAccountInfo(gdContractAddress,"",shAccountInfo);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("无效的参数:Key: 'AccountUpdate.ClientNo' Error:Field validation for 'ClientNo' failed on the 'required' tag",
+                JSONObject.fromObject(response).getString("message"));
+
+        log.info(" ************************ test accountInfo must ************************ ");
+        response= gd.GDUpdateAccountInfo(gdContractAddress,gdAccClientNo8,null);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("账户信息不可以为空",JSONObject.fromObject(response).getString("message"));
+    }
+
+    @Test
+    public void updateProductInterfaceMustParamTest() throws Exception {
+        log.info(" ************************ test contractAddress must ************************ ");
+        String response= gd.GDUpdateAccountInfo("",gdAccClientNo8,shAccountInfo);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("无效的参数:Key: 'ProductUpdate.ContractAddress' Error:Field validation for 'ContractAddress' failed on the 'required' tag",
+                JSONObject.fromObject(response).getString("message"));
+
+        log.info(" ************************ test productInfo must ************************ ");
+        response= gd.GDUpdateAccountInfo(gdContractAddress,gdAccClientNo8,null);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("产品信息不可以为空",JSONObject.fromObject(response).getString("message"));
     }
 
     @Test
