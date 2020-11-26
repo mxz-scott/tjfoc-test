@@ -2,7 +2,7 @@ package com.tjfintech.common;
 
 import com.tjfintech.common.Interface.Scf;
 import com.tjfintech.common.utils.PostTest;
-import com.tjfoc.sdk.SDK_TjfocSDK_WalletSDK;
+//import com.tjfoc.sdk.SDK_TjfocSDK_WalletSDK;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;

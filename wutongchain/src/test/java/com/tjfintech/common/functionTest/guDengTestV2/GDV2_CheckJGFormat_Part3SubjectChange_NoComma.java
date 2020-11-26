@@ -489,7 +489,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChange_NoComma {
         String jgType = "登记";
         String regStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
         jgType = "产品";
-        String prodStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
+        String prodStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
         jgType = "主体";
         String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
@@ -607,7 +607,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChange_NoComma {
         String jgType = "登记";
         String regStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
         jgType = "产品";
-        String prodStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
+        String prodStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
         jgType = "主体";
         String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
         jgType = "交易报告";
@@ -736,7 +736,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChange_NoComma {
         String jgType = "登记";
         String regStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
         jgType = "产品";
-        String prodStoreId = gdCF.getJGStoreHash2(txId,jgType,-1);
+        String prodStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
         jgType = "主体";
         String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
         jgType = "交易报告";
