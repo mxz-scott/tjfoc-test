@@ -169,7 +169,14 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapTemp.put("subject_company_type",1);
         mapTemp.put("subject_scale_type",1);
         mapTemp.put("subject_high_technology_enterpris",1);
-        mapTemp.put("subject_document_infomation","证件类型及证件号码CHARACTER2");
+
+        Map mapCertDoc = new HashMap();
+        List<Map> listCertDoc = new ArrayList<>();
+        mapCertDoc.put("type",1);
+        mapCertDoc.put("code","1233333333222");
+        listCertDoc.add(mapCertDoc);
+
+        mapTemp.put("subject_document_information",listCertDoc);
         mapTemp.put("subject_registry_date",date1);
         mapTemp.put("subject_business_license",getListFileObj());
         mapTemp.put("subject_business_scope","经营范围CHARACTER2");
