@@ -17,7 +17,9 @@ import org.apache.commons.lang.StringUtils;
 import org.hamcrest.CoreMatchers;
 import sun.misc.BASE64Encoder;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -1282,6 +1284,52 @@ public class CommonFunc {
         txsList = StringUtils.substringBefore(txsList, "\"]");
         String[] txs = txsList.split("\",\"");
         return txs;
+    }
+
+    /**
+     * 调用go编译的schema校验数据的exe进行schema和数据检验
+     * @param commonDir schema文档和数据文件 需要存放在同一个目录
+     * @param exeName  支持传入schema文件校验数据文件/数据字符串
+     * @param schemaFileName 传入的schema文件
+     * @param data 传入的待校验的数据文件或者数据
+     * @return
+     */
+    public Boolean schemaCheckData(String commonDir, String exeName, String schemaFileName, String data,String dataType){
+        Boolean bResult = true;
+        BufferedReader br = null;
+        BufferedReader brError = null;
+        if(!dataType.equals("1")){
+//            //此处为字符串作为参数传入的场景处理 文件名作为参数处理时不需要额外处理
+//            //作为将要调用exe的传参 需要进行多重转义 并且需要将\n和空格删除
+            data = "\"" + data.replaceAll("(\n)( )?","").replaceAll("\"","\\\\\\\"") + "\"";
+        }
+        String cmd = commonDir + exeName + " " + commonDir + " " +  schemaFileName + " " + data + " " + dataType;
+
+        try {
+            //执行exe  cmd可以为字符串(exe存放路径)也可为数组，调用exe时需要传入参数时，可以传数组调用(参数有顺序要求)
+            Process p = Runtime.getRuntime().exec(cmd);
+            String line = null;
+            //获得子进程的输入流。
+            br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            //获得子进程的错误流。
+            brError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            while ((line = br.readLine()) != null  || (line = brError.readLine()) != null) {
+                //输出exe输出的信息以及错误信息
+                System.out.println(line);
+                bResult = line.contains("The document is valid");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return  bResult;
     }
 
 }
