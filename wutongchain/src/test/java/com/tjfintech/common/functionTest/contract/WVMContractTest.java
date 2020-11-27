@@ -130,8 +130,28 @@ public class WVMContractTest {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
+        String response2= store.GetTxRaw(txHash1);
+        log.info(response2);
+        assertThat(response2,containsString("200"));
+        JSONObject.fromObject(response2).getInt("state");
+        JSONObject.fromObject(response2).getString("message");
+        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("timestamp");
+        String args=JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("transactionId");
+        assertEquals(args.equals(txHash1),true);
+        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("version"),containsString("2"));
+        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("type"),containsString("3"));
+        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("subType"),containsString("40"));
+        JSONObject.fromObject(response2).getJSONObject("data").getString("data");
+        JSONObject.fromObject(response2).getJSONObject("data").getString("pubkey");
+        JSONObject.fromObject(response2).getJSONObject("data").getString("sign");
+        JSONObject.fromObject(response2).getJSONObject("data").getString("raw");
+        JSONObject.fromObject(response2).getJSONObject("data").getString("result");
+        JSONObject.fromObject(response2).getJSONObject("data").getString("extra");
+        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("txproof").getString("left");
+        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("txproof").getString("right");
+
         //调用合约内的交易
-        String response2 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
+        response2 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
 
         String response3 = invokeNew(ctHash,"initAccount",accountB,amountB);//初始化账户B 账户余额60
