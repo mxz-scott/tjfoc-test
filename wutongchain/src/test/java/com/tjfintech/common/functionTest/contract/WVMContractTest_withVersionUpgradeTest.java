@@ -76,7 +76,14 @@ public class WVMContractTest_withVersionUpgradeTest {
         wvmVersion = "2.0";
         String response3 = invokeNew(ctHash,"initAccount",accountB,amountB);//初始化账户B 账户余额60
 
-        assertEquals("500",JSONObject.fromObject(response3).getString("state"));
+        int state = JSONObject.fromObject(response3).getInt("state");
+
+        if (state == 500 || state == 400){
+            assertThat("500 or 400, both ok", containsString("500 or 400, both ok"));
+        } else{
+            assertThat("wrong state", containsString("500 or 400, both ok"));
+        }
+
         assertEquals(true,response3.contains("This version[2.0] does not exist for smart contract"));
 
         String response5 = wvmDestroyTest(ctHash);//销毁
@@ -237,9 +244,13 @@ public class WVMContractTest_withVersionUpgradeTest {
             chkTxDetailRsp("404",txHash2);
         }
         else {
-//            assertEquals("400", JSONObject.fromObject(response4).getString("state"));
-//            assertEquals(true, response4.contains("Smart contract does not exist"));
-            assertEquals("500", JSONObject.fromObject(response4).getString("state"));
+            int state = JSONObject.fromObject(response4).getInt("state");
+
+            if (state == 500 || state == 400){
+                assertThat("500 or 400, both ok", containsString("500 or 400, both ok"));
+            } else{
+                assertThat("wrong state", containsString("500 or 400, both ok"));
+            }
             assertEquals(true, response4.contains("of the smart contract is destroyed"));
         }
     }

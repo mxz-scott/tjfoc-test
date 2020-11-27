@@ -27,7 +27,7 @@ public class PostTest {
         UtilsClass.globalResponse = ""; //请求执行前重置该变量
         JSONObject jsonObject=JSONObject.fromObject(map);
         String jsonString=jsonObject.toString();
-//        log .info(jsonString);
+        log .info(jsonString);
         String resultStr = "";
         try {
             // 创建url资源
