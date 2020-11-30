@@ -1,5 +1,6 @@
 package com.tjfintech.common.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.tjfintech.common.Interface.Scf;
 import com.tjfintech.common.TestBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -77,6 +78,18 @@ public class UtilsClassScf {
 
         return JSONObject.fromObject(Data).getString("data");
     }
+    /*
+    利用KMS随机数获取tokenType
+     */
+
+    public static String gettokenType(String response) {
+        Map mapkey = JSON.parseObject(response, Map.class);
+        Map mapType1 = JSON.parseObject(mapkey.get("data").toString(), Map.class);
+        String tokenType = mapType1.get("random").toString();
+        System.out.println("a = " + tokenType);
+        return tokenType;
+    }
+
 
 }
 

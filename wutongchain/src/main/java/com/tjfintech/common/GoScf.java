@@ -11,6 +11,7 @@ import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.SDKADD;
 import static com.tjfintech.common.utils.UtilsClass.subLedger;
+import static com.tjfintech.common.utils.UtilsClassScf.coreCompanyKeyID;
 import static com.tjfintech.common.utils.UtilsClassScf.supplyID1;
 
 @Slf4j
@@ -72,12 +73,15 @@ public class GoScf implements Scf {
         return result;
     }
 
-    public String IssuingCancel(String tokenType, String keyID, String PIN) {
+    public String IssuingCancel(String tokenType, String companyID1, String keyID, String PIN, String comments) {
         Map<String, Object> map = new HashMap<>();
 
         map.put("tokenType", tokenType);
+        map.put("companyID", companyID1);
         map.put("keyID", keyID);
         map.put("PIN", PIN);
+        map.put("comments", comments);
+
 
         String param="";
         if (subLedger!="") param = param +"ledger"+subLedger;
@@ -103,12 +107,14 @@ public class GoScf implements Scf {
         return result;
     }
 
-    public String IssuingReject(String keyID, String PIN, String tokenType) {
+    public String IssuingReject(String coreCompanyKeyID, String tokenType, String PIN, String companyID1, String comments) {
         Map<String, Object> map = new HashMap<>();
 
-        map.put("keyID", keyID);
-        map.put("PIN", PIN);
+        map.put("keyID", coreCompanyKeyID);
         map.put("tokenType", tokenType);
+        map.put("PIN", PIN);
+        map.put("companyID", companyID1);
+        map.put("comments", comments);
 
         String param="";
         if (subLedger!="") param = param +"ledger"+subLedger;
@@ -136,6 +142,19 @@ public class GoScf implements Scf {
         if (subLedger!="") param = param +"ledger"+subLedger;
 
         String result = PostTest.postMethod(SDKADD + "/scf/func/sendmsg", map);
+        log.info(result);
+        return result;
+    }
+
+    public String getowneraddr(String tokentype) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("tokentype", tokentype);
+
+        String param="";
+        if (subLedger!="") param = param +"ledger"+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/getowneraddr", map);
         log.info(result);
         return result;
     }
