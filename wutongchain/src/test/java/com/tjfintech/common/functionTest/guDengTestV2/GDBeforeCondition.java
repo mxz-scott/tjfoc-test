@@ -472,6 +472,7 @@ public class GDBeforeCondition {
     public Map init01PersonalSubjectInfo() {
         Map mapTemp = new HashMap();
         log.info("初始化01主体个人数据结构");
+        mapTemp.clear();
 
         //-----------------主体资质信息start---------------//
         List<Map> listSQI = new ArrayList<>();
@@ -695,13 +696,17 @@ public class GDBeforeCondition {
     public Map init02ShareholderAccountInfo() {
         Map mapTemp = new HashMap();
         log.info("初始化02账户数据结构");
+        mapTemp.clear();
 
         //账户信息 账户基本信息
         mapTemp.put("account_subject_ref", "hrefid00001");
         mapTemp.put("account_depository_ref", "drefid00001");
         mapTemp.put("account_number", "h0123555");
         mapTemp.put("account_type", 0);  //默认股权账户
-        mapTemp.put("account_purpose", "purpose000001");
+        List<Integer> type = new ArrayList<>();
+        type.add(0);
+        type.add(1);
+        mapTemp.put("account_purpose", type);
         mapTemp.put("account_status", 0);
         mapTemp.put("account_create_time", time1);
 
@@ -805,13 +810,17 @@ public class GDBeforeCondition {
     public Map init02FundAccountInfo() {
         Map mapTemp = new HashMap();
         log.info("初始化02账户数据结构");
+        mapTemp.clear();
 
         //账户信息 账户基本信息
         mapTemp.put("account_subject_ref", "hrefid00001");
         mapTemp.put("account_depository_ref", "drefid00001");
         mapTemp.put("account_number", "h0123555");
         mapTemp.put("account_type", 1);  //资金账户
-        mapTemp.put("account_purpose", "purpose000001");
+        List<Integer> type = new ArrayList<>();
+        type.add(0);
+        type.add(1);
+        mapTemp.put("account_purpose", type);
         mapTemp.put("account_status", 0);
         mapTemp.put("account_create_time", time1);
 
@@ -1322,146 +1331,344 @@ public class GDBeforeCondition {
         return mapTemp;
     }
 
+//    public Map init06SettleInfo() {
+//        Map mapTemp = new HashMap();
+//        log.info("初始化06资金清算数据结构");
+//        mapTemp.clear();
+//        List<String> listCert = new ArrayList<>();
+//        listCert.add("tix.pdf");
+//        listCert.add("tix2.pdf");
+//
+//        //对象信息
+//        mapTemp.put("capita_settlement_object_id", "CHAOyf0iKl68R3");
+//        mapTemp.put("capita_object_information_type", 0);
+//
+//        //资金结算基本信息
+//        mapTemp.put("capita_clearing_house_subject_ref", "CH5LDWxGtu6142");
+//        mapTemp.put("capita_settlement_type", 0);
+//        mapTemp.put("capita_settlement_serial_num", "CH1ktvx01x2e04");
+//        mapTemp.put("capita_settlement_time", "2020/11/06 14:14:59");
+//        mapTemp.put("capita_transaction_ref", "CHVXgXA1JsB5y2");
+//        mapTemp.put("capita_currency", "CHW5HHZl0gGgnj");
+//        mapTemp.put("capita_amount", 1000000);
+//        mapTemp.put("capita_notes", "textemu4AW4U57");
+//        mapTemp.put("capita_operation_certificates", listCert);
+//
+//        //转出方信息
+//        mapTemp.put("capita_out_bank_code", "CH3e9Vp967INOA");
+//        mapTemp.put("capita_out_bank_name", "CH1tY37wB57auz");
+//        mapTemp.put("capita_out_bank_number", "CHHe8e3M4j0N8o");
+//        mapTemp.put("capita_out_account_obj_ref", "CH62QCHF5Q7sob");
+//        mapTemp.put("capita_out_fund_account_name", "CH8tC5aG5om158");
+//        mapTemp.put("capita_out_amount_before_transfer", 1000000);
+//        mapTemp.put("capita_out_amount_after_transfer", 1000000);
+//
+//        //转入方信息
+//        mapTemp.put("capita_in_bank_code", "CH7YfKps3x65Y2");
+//        mapTemp.put("capita_in_bank_name", "CHp42HpuGtf6y3");
+//        mapTemp.put("capita_in_bank_number", "CHE0H230A17lu8");
+//        mapTemp.put("capita_in_account_obj_ref", "CH8QL30e0ggRvp");
+//        mapTemp.put("capita_in_fund_account_name", "CH6FU5bf2N2Y6B");
+//        mapTemp.put("capita_in_account_number", "CHd8re1Dojtmx0");
+//        mapTemp.put("capita_in_amount_before_transfer", 1000000);
+//        mapTemp.put("capita_in_amount_after_transfer", 1000000);
+//
+//        return mapTemp;
+//    }
+
     public Map init06SettleInfo() {
         Map mapTemp = new HashMap();
         log.info("初始化06资金清算数据结构");
         mapTemp.clear();
-        List<String> listCert = new ArrayList<>();
-        listCert.add("tix.pdf");
-        listCert.add("tix2.pdf");
 
-        //对象信息
-        mapTemp.put("capita_settlement_object_id", "CHAOyf0iKl68R3");
-        mapTemp.put("capita_object_information_type", 0);
+        //资金结算信息 资金结算基本信息
+        mapTemp.put("settlement_subject_ref", "CH5LDWxGtu6142");
+        mapTemp.put("settlement_type", 0);
+        mapTemp.put("settlement_serial_number", "CH1ktvx01x2e04");
+        mapTemp.put("settlement_time", time1);
+        mapTemp.put("settlement_product_ref", "CHVXgXA1JsB5y2");
+        mapTemp.put("settlement_transaction_reference", "CHW5HHZl0gGgnj");
+        mapTemp.put("settlement_currency", "156");
+        mapTemp.put("settlement_value", 600000);
+        mapTemp.put("settlement_note", "textemu4AW4U57");
+        mapTemp.put("settlement_operation_doc", getListFileObj());
+        mapTemp.put("settlement_information_maintenance_time", time1);
 
-        //资金结算基本信息
-        mapTemp.put("capita_clearing_house_subject_ref", "CH5LDWxGtu6142");
-        mapTemp.put("capita_settlement_type", 0);
-        mapTemp.put("capita_settlement_serial_num", "CH1ktvx01x2e04");
-        mapTemp.put("capita_settlement_time", "2020/11/06 14:14:59");
-        mapTemp.put("capita_transaction_ref", "CHVXgXA1JsB5y2");
-        mapTemp.put("capita_currency", "CHW5HHZl0gGgnj");
-        mapTemp.put("capita_amount", 1000000);
-        mapTemp.put("capita_notes", "textemu4AW4U57");
-        mapTemp.put("capita_operation_certificates", listCert);
+        //资金结算信息 转出方信息
+        mapTemp.put("settlement_out_bank_code", "CH3e9Vp967INOA");
+        mapTemp.put("settlement_out_bank_name", "CH1tY37wB57auz");
+        mapTemp.put("settlement_out_bank_account", "CHHe8e3M4j0N8o");
+        mapTemp.put("settlement_out_account_object_ref", "CH62QCHF5Q7sob");
+        mapTemp.put("settlement_out_account_name", "CH8tC5aG5om158");
+        mapTemp.put("settlement_out_account_balance_before_transfer", 1000000);
+        mapTemp.put("settlement_out_account_balance_after_transfer", 1000000);
 
-        //转出方信息
-        mapTemp.put("capita_out_bank_code", "CH3e9Vp967INOA");
-        mapTemp.put("capita_out_bank_name", "CH1tY37wB57auz");
-        mapTemp.put("capita_out_bank_number", "CHHe8e3M4j0N8o");
-        mapTemp.put("capita_out_account_obj_ref", "CH62QCHF5Q7sob");
-        mapTemp.put("capita_out_fund_account_name", "CH8tC5aG5om158");
-        mapTemp.put("capita_out_amount_before_transfer", 1000000);
-        mapTemp.put("capita_out_amount_after_transfer", 1000000);
-
-        //转入方信息
-        mapTemp.put("capita_in_bank_code", "CH7YfKps3x65Y2");
-        mapTemp.put("capita_in_bank_name", "CHp42HpuGtf6y3");
-        mapTemp.put("capita_in_bank_number", "CHE0H230A17lu8");
-        mapTemp.put("capita_in_account_obj_ref", "CH8QL30e0ggRvp");
-        mapTemp.put("capita_in_fund_account_name", "CH6FU5bf2N2Y6B");
-        mapTemp.put("capita_in_account_number", "CHd8re1Dojtmx0");
-        mapTemp.put("capita_in_amount_before_transfer", 1000000);
-        mapTemp.put("capita_in_amount_after_transfer", 1000000);
+        //资金结算信息 转入方信息
+        mapTemp.put("settlement_in_bank_code", "CH7YfKps3x65Y2");
+        mapTemp.put("settlement_in_bank_name", "CHp42HpuGtf6y3");
+        mapTemp.put("settlement_in_bank_account", "CHE0H230A17lu8");
+        mapTemp.put("settlement_in_account_object_ref", "CH8QL30e0ggRvp");
+        mapTemp.put("settlement_in_account_name", "CH6FU5bf2N2Y6B");
+        mapTemp.put("settlement_in_account_balance_before_transfer", 1000000);
+        mapTemp.put("settlement_in_account_balance_after_transfer", 1000000);
 
         return mapTemp;
     }
 
+//    public Map init07PublishInfo() {
+//        Map mapTemp = new HashMap();
+//        log.info("初始化07信披数据结构");
+//
+//        //07信披监管数据
+//        List<String> listPubFile = new ArrayList<>();
+//        listPubFile.add("tix.pdf");
+//
+//        //诚信档案
+//        List<Map> listCredit = new ArrayList<>();
+//        Map mapCd = new HashMap();
+//
+//        mapTemp.clear();
+//
+//
+//        //对象标识
+//        mapTemp.put("letter_disclosure_object_id", "CHo8M7Jzo6y6Uh");
+//        mapTemp.put("letter_object_information_type", 0);
+//
+//        //企业展示信息
+//        mapTemp.put("letter_show_subject_reference", "IDSR006");
+//        mapTemp.put("letter_show_subject_reference_ref", "IDSR007");
+//        mapTemp.put("letter_display_code", "C1106");
+//        mapTemp.put("letter_display_content", "xinpi");
+//        mapTemp.put("letter_display_main_audit_voucher", "mainpingzhen.pdf"); //20201106 此处监管数据为空格 与开发确认修改为下划线
+//        mapTemp.put("letter_show_content_audit_voucher", "contentpingzhen.pdf");
+//        mapTemp.put("letter_show_start_date", "2020/11/06");
+//        mapTemp.put("letter_show_end_date", "2020/11/06");
+//
+//        //信批基本信息
+//        mapTemp.put("letter_disclosure_subject_ref", "CH58dk5280yB0A");
+//        mapTemp.put("letter_disclosure_uploader_ref", "CH58dk5280yB0Aref");
+//        mapTemp.put("letter_approval_time", "2020/11/06 14:15:00");
+//
+//
+//        //诚信档案
+//        //事项基本信息
+//        mapCd.put("letter_provider_subject_ref", "CHl55WqGnO3hRd");
+//        mapCd.put("letter_provider_name", "CH60FNHO699i3S");
+//        mapCd.put("letter_identified_party_subject_ref", "CHAVko0Oq9139x");
+//        mapCd.put("letter_identified_party_name", "CHccO9f2A3gQuK");
+//        mapCd.put("letter_appraiser_subject_ref", "CH4Ntw87gm4H3m");
+//        mapCd.put("letter_appraiser_name", "CHc112rQVG0I5U");
+//        //事项明细
+//        mapCd.put("letter_item_number", "letter00000001");
+//        mapCd.put("letter_item_name", "lettername");
+//        mapCd.put("letter_item_type", 0);
+//        mapCd.put("letter_item_describe", "因非法开设证券期货交易场所或者组织证券期货交易被地方政府行政处罚或者采取清理整顿措施");
+//        mapCd.put("letter_term_of_validity", 1);
+//        mapCd.put("letter_start_time", "2020/10/29");
+//        mapCd.put("letter_end_time", "2022/10/29");
+//        mapCd.put("letter_item_state", 1);
+//        mapCd.put("letter_item_file", listPubFile);
+//        listCredit.add(mapCd);
+//        mapTemp.put("integrity_archives", listCredit);
+//
+//        //基本财务信息
+//        mapTemp.put("letter_start_date", "2020/11/06");
+//        mapTemp.put("letter_deadline", "2020/11/06");
+//        mapTemp.put("letter_report_type", 0);
+//        mapTemp.put("letter_ending_total_asset", 1000000);
+//        mapTemp.put("letter_ending_net_asset", 1000000);
+//        mapTemp.put("letter_total_liability", 1000000);
+//        mapTemp.put("letter_current_operating_income", 1000000);
+//        mapTemp.put("letter_current_total_profit", 1000000);
+//        mapTemp.put("letter_current_net_profit", 1000000);
+//        mapTemp.put("letter_cash_flow", 1000000);
+//        mapTemp.put("letter_whether_r&d_costs", 1000000);
+//        mapTemp.put("letter_r&d_costs", 1000000);
+//        //财务报表信息
+//        mapTemp.put("letter_balance_sheet", "829.pdf");
+//        mapTemp.put("letter_cash_flow_sheet", "53d.pdf");
+//        mapTemp.put("letter_profit_sheet", "6L6.pdf");
+//
+//        //重大事件列表
+//        List listME = new ArrayList();
+//        Map majorEvent = new HashMap();
+//        majorEvent.put("letter_major_event_type", 0);
+//        majorEvent.put("letter_file_list", "C63.pdf");
+//        majorEvent.put("letter_description_document", "7P6.pdf");
+//        majorEvent.put("letter_submission_time", "2020/11/06 14:15:00");
+//
+//        listME.add(majorEvent);
+//        mapTemp.put("major_event_information", listME);
+//
+//        //公告
+//        List listNotice = new ArrayList();
+//        Map notice = new HashMap();
+//        notice.put("letter_announcement_type", 0);
+//        notice.put("letter_file_list", "OG3.pdf");
+//        notice.put("letter_description_announcement", "535.pdf");
+//        notice.put("letter_announcement_time", "2020/11/06 14:15:00");
+//
+//        listNotice.add(notice);
+//        mapTemp.put("letter_notice", listNotice);
+//
+//        return mapTemp;
+//    }
+
     public Map init07PublishInfo() {
         Map mapTemp = new HashMap();
         log.info("初始化07信披数据结构");
-
-        //07信披监管数据
-        List<String> listPubFile = new ArrayList<>();
-        listPubFile.add("tix.pdf");
-
-        //诚信档案
-        List<Map> listCredit = new ArrayList<>();
-        Map mapCd = new HashMap();
-
         mapTemp.clear();
 
+        //信披信息 信披基本信息
+        mapTemp.put("disclosure_subject_ref", "CHo8M7Jzo6y6Uh");
+        mapTemp.put("disclosure_type", 0);
+        mapTemp.put("disclosure_submit_type", 0);
+        mapTemp.put("disclosure_referer_subject_ref", "CHo8M7Jzo6y6Uh");
+        mapTemp.put("disclosure_referer_name", "CHo8M7Jzo6y6Uh");
+        mapTemp.put("disclosure_submit_date", date1);
+        mapTemp.put("disclosure_submit_description", "CHo8M7Jzo6y6Uh");
 
-        //对象标识
-        mapTemp.put("letter_disclosure_object_id", "CHo8M7Jzo6y6Uh");
-        mapTemp.put("letter_object_information_type", 0);
+        //信披信息 企业展示信息
+        List<Map> listEnterpriseInformation = new ArrayList<>();
+        Map mapEId = new HashMap();
+        mapEId.put("disclosure_display_platform_ref", "IDSR006");
+        mapEId.put("disclosure_display_name", "IDSR007");
+        mapEId.put("disclosure_display_doc", getListFileObj());
+        mapEId.put("disclosure_display_description", "xinpi");
+        mapEId.put("disclosure_display_code", "mainpingzhen.pdf");
+        mapEId.put("disclosure_display_content", "contentpingzhen.pdf");
+        mapEId.put("disclosure_display_start_date", date1);
+        mapEId.put("disclosure_display_end_date", date2);
+        listEnterpriseInformation.add(mapEId);
+        mapTemp.put("enterprise_display_information",listEnterpriseInformation);
 
-        //企业展示信息
-        mapTemp.put("letter_show_subject_reference", "IDSR006");
-        mapTemp.put("letter_show_subject_reference_ref", "IDSR007");
-        mapTemp.put("letter_display_code", "C1106");
-        mapTemp.put("letter_display_content", "xinpi");
-        mapTemp.put("letter_display_main_audit_voucher", "mainpingzhen.pdf"); //20201106 此处监管数据为空格 与开发确认修改为下划线
-        mapTemp.put("letter_show_content_audit_voucher", "contentpingzhen.pdf");
-        mapTemp.put("letter_show_start_date", "2020/11/06");
-        mapTemp.put("letter_show_end_date", "2020/11/06");
+        //信披信息 监管信息
+        List<Map> listRegulatoryInfomation = new ArrayList<>();
+        Map mapRId = new HashMap();
+        mapRId.put("disclosure_regulatory_type",1);
+        mapRId.put("disclosure_regulatory_report_name", "IDSR007");
+        mapRId.put("disclosure_regulatory_report_doc", getListFileObj());
+        mapRId.put("disclosure_regulatory_report_description", "xinpi");
+        mapRId.put("disclosure_regulatory_measures", "mainpingzhen.pdf");
+        mapRId.put("disclosure_regulatory_report_date", date1);
+        listRegulatoryInfomation.add(mapRId);
+        mapTemp.put("regulatory_infomation",listRegulatoryInfomation);
 
-        //信批基本信息
-        mapTemp.put("letter_disclosure_subject_ref", "CH58dk5280yB0A");
-        mapTemp.put("letter_disclosure_uploader_ref", "CH58dk5280yB0Aref");
-        mapTemp.put("letter_approval_time", "2020/11/06 14:15:00");
+        //信披信息 企业报告
+        List<Map> listEnterpriseReport = new ArrayList<>();
+        Map mapERd = new HashMap();
+        mapERd.put("disclosure_enterprise_report_type",1);
+        mapERd.put("disclosure_enterprise_report_name", "IDSR007");
+        mapERd.put("disclosure_enterprise_report_doc", getListFileObj());
+        mapERd.put("disclosure_enterprise_report_description", "xinpi");
+        mapERd.put("disclosure_enterprise_report_date", date1);
+        listEnterpriseReport.add(mapERd);
+        mapTemp.put("enterprise_report",listEnterpriseReport);
 
+        //信披信息 公告
+        List listNotice = new ArrayList();
+        Map notice = new HashMap();
+        notice.put("disclosure_announcement_type", 0);
+        notice.put("disclosure_announcement_name", "OG3.pdf");
+        notice.put("disclosure_announcement_doc", getListFileObj());
+        notice.put("disclosure_announcement_description", "公告简述0001");
+        notice.put("disclosure_announcement_date", date1);
+        listNotice.add(notice);
+        mapTemp.put("disclosure_notice", listNotice);
 
-        //诚信档案
-        //事项基本信息
-        mapCd.put("letter_provider_subject_ref", "CHl55WqGnO3hRd");
-        mapCd.put("letter_provider_name", "CH60FNHO699i3S");
-        mapCd.put("letter_identified_party_subject_ref", "CHAVko0Oq9139x");
-        mapCd.put("letter_identified_party_name", "CHccO9f2A3gQuK");
-        mapCd.put("letter_appraiser_subject_ref", "CH4Ntw87gm4H3m");
-        mapCd.put("letter_appraiser_name", "CHc112rQVG0I5U");
-        //事项明细
-        mapCd.put("letter_item_number", "letter00000001");
-        mapCd.put("letter_item_name", "lettername");
-        mapCd.put("letter_item_type", 0);
-        mapCd.put("letter_item_describe", "因非法开设证券期货交易场所或者组织证券期货交易被地方政府行政处罚或者采取清理整顿措施");
-        mapCd.put("letter_term_of_validity", 1);
-        mapCd.put("letter_start_time", "2020/10/29");
-        mapCd.put("letter_end_time", "2022/10/29");
-        mapCd.put("letter_item_state", 1);
-        mapCd.put("letter_item_file", listPubFile);
-        listCredit.add(mapCd);
-        mapTemp.put("integrity_archives", listCredit);
-
-        //基本财务信息
-        mapTemp.put("letter_start_date", "2020/11/06");
-        mapTemp.put("letter_deadline", "2020/11/06");
-        mapTemp.put("letter_report_type", 0);
-        mapTemp.put("letter_ending_total_asset", 1000000);
-        mapTemp.put("letter_ending_net_asset", 1000000);
-        mapTemp.put("letter_total_liability", 1000000);
-        mapTemp.put("letter_current_operating_income", 1000000);
-        mapTemp.put("letter_current_total_profit", 1000000);
-        mapTemp.put("letter_current_net_profit", 1000000);
-        mapTemp.put("letter_cash_flow", 1000000);
-        mapTemp.put("letter_whether_r&d_costs", 1000000);
-        mapTemp.put("letter_r&d_costs", 1000000);
-        //财务报表信息
-        mapTemp.put("letter_balance_sheet", "829.pdf");
-        mapTemp.put("letter_cash_flow_sheet", "53d.pdf");
-        mapTemp.put("letter_profit_sheet", "6L6.pdf");
-
-        //重大事件列表
+        //信披信息 重大事件信息
         List listME = new ArrayList();
         Map majorEvent = new HashMap();
-        majorEvent.put("letter_major_event_type", 0);
-        majorEvent.put("letter_file_list", "C63.pdf");
-        majorEvent.put("letter_description_document", "7P6.pdf");
-        majorEvent.put("letter_submission_time", "2020/11/06 14:15:00");
-
+        majorEvent.put("disclosure_major_event_type", 0);
+        majorEvent.put("disclosure_major_event_name", "C63.pdf");
+        majorEvent.put("disclosure_major_event_doc", getListFileObj());
+        majorEvent.put("disclosure_major_event_document_description", "事件简述0001");
+        majorEvent.put("disclosure_major_event_reporting_date", date1);
         listME.add(majorEvent);
         mapTemp.put("major_event_information", listME);
 
-        //公告
-        List listNotice = new ArrayList();
-        Map notice = new HashMap();
-        notice.put("letter_announcement_type", 0);
-        notice.put("letter_file_list", "OG3.pdf");
-        notice.put("letter_description_announcement", "535.pdf");
-        notice.put("letter_announcement_time", "2020/11/06 14:15:00");
 
-        listNotice.add(notice);
-        mapTemp.put("letter_notice", listNotice);
+        //信披信息 诚信档案
+        //事项基本信息
+        List<Map> listCredit = new ArrayList<>();
+        Map mapCd = new HashMap();
+        mapCd.put("disclosure_identifier_ref", "CHl55WqGnO3hRd");
+        mapCd.put("disclosure_identifier_name", "CH60FNHO699i3S");
+        mapCd.put("disclosure_auditor_ref", "CHAVko0Oq9139x");
+        mapCd.put("disclosure_auditor_name", "CHccO9f2A3gQuK");
+        //事项明细
+        mapCd.put("disclosure_event_id", "letter00000001");
+        mapCd.put("disclosure_event_name", "lettername");
+        mapCd.put("disclosure_event_doc", getListFileObj());
+        mapCd.put("disclosure_event_description", "因非法开设证券期货交易场所或者组织证券期货交易被地方政府行政处罚或者采取清理整顿措施");
+        mapCd.put("disclosure_event_type", 1);
+        mapCd.put("disclosure_event_valid_time", "期限00001");
+        mapCd.put("disclosure_event_start_date", date1);
+        mapCd.put("disclosure_event_end_date", date2);
+        mapCd.put("disclosure_event_status", 1);
+        listCredit.add(mapCd);
+        mapTemp.put("integrity_archives", listCredit);
+
+        //信披信息 财务信息
+        List<Map> listFinancialInformation = new ArrayList<>();
+        Map mapFId = new HashMap();
+        //基本财务信息
+        mapFId.put("disclosure_financial_start_date", date1);
+        mapFId.put("disclosure_financial_end_date", date2);
+        mapFId.put("disclosure_financial_type", 0);
+        mapFId.put("disclosure_financial_periodend_total_asset", 1000000);
+        mapFId.put("disclosure_financial_periodend_net_asset", 1000000);
+        mapFId.put("disclosure_financial_periodend_total_liability", 1000000);
+        mapFId.put("disclosure_financial_periodend_revenue", 1000000);
+        mapFId.put("disclosure_financial_periodend_gross_profit", 1000000);
+        mapFId.put("disclosure_financial_periodend_net_profit", 1000000);
+        mapFId.put("disclosure_financial_cashflow", 1000000);
+        mapFId.put("disclosure_financial_whether_rd", true);
+        mapFId.put("letter_r&disclosure_financial_rd_cost", 1000000);
+        //财务报表文件
+        mapFId.put("disclosure_financial_balance_sheet_name", "829.pdf");
+        mapFId.put("disclosure_financial_balance_sheet", getListFileObj());
+        mapFId.put("disclosure_financial_balance_sheet_description", "6L6.pdf");
+        mapFId.put("disclosure_financial_cashflow_statement_name", "6L6.pdf");
+        mapFId.put("disclosure_financial_cashflow_statement", getListFileObj());
+        mapFId.put("disclosure_financial_cashflow_statement_description", "6L6.pdf");
+        mapFId.put("disclosure_financial_income_statement_name", "6L6.pdf");
+        mapFId.put("disclosure_financial_income_statement", getListFileObj());
+        mapFId.put("disclosure_financial_income_statement_description", "6L6.pdf");
+        listFinancialInformation.add(mapFId);
+        mapTemp.put("financial_information", listFinancialInformation);
+
+        //信披信息 企业经营信息
+        List listBusinessInformation = new ArrayList();
+        Map mapBID = new HashMap();
+        //经营基本信息
+        mapBID.put("disclosure_business_overview", "概述0001");
+        mapBID.put("disclosure_main_business_analysis", "C63.pdf");
+        mapBID.put("disclosure_main_business_analysis_non", "7P6.pdf");
+        mapBID.put("disclosure_assets_and_liabilities_analysis", "2020/11/06 14:15:00");
+        mapBID.put("disclosure_major_shareholders_analysis", 0);
+        mapBID.put("disclosure_major_events", "C63.pdf");
+        mapBID.put("disclosure_business_report_name", "7P6.pdf");
+        mapBID.put("disclosure_business_report_doc", getListFileObj());
+        mapBID.put("disclosure_business_report_description", 0);
+        mapBID.put("disclosure_business_report_date", date1);
+        //投融资信息
+        mapBID.put("disclosure_investment_analysis", "7P6.pdf");
+        mapBID.put("disclosure_fund_raising_analysis", "2020/11/06 14:15:00");
+        mapBID.put("disclosure_sell_situation_analysis","情况00001");
+        listBusinessInformation.add(mapBID);
+        mapTemp.put("business_information", listBusinessInformation);
+
+        //信披信息 第三方拓展信息
+        List listExpandInformation = new ArrayList();
+        Map mapEID = new HashMap();
+        mapBID.put("disclosure_expand_name", "概述0001");
+        mapBID.put("disclosure_expand_doc", getListFileObj());
+        mapBID.put("disclosure_expand_description", "7P6.pdf");
+        mapBID.put("disclosure_expand_date", date1);
+        listExpandInformation.add(mapEID);
+        mapTemp.put("expand_information", listExpandInformation);
+
 
         return mapTemp;
     }

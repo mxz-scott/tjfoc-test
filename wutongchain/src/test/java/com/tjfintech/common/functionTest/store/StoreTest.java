@@ -40,12 +40,13 @@ public class StoreTest {
         String response= store.CreateStore(Data);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getString("data");
+        JSONObject.fromObject(response).getInt("state");
+        JSONObject.fromObject(response).getString("message");
 
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         assertThat(response, containsString("200"));
         assertThat(response, containsString("success"));
-        assertThat(response,containsString("data"));
 
     }
 
@@ -68,6 +69,9 @@ public class StoreTest {
         String response2= store.GetStore(storeHash);
         assertThat(response2, containsString("200"));
         assertThat(response2,containsString("json"));
+        JSONObject.fromObject(response2).getString("data");
+        JSONObject.fromObject(response2).getInt("state");
+        JSONObject.fromObject(response2).getString("message");
     }
 
 
@@ -228,13 +232,23 @@ public class StoreTest {
 
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-        String response2= store.GetTxDetail(storeHash);
-        log.info(response2);
-        assertThat(response2,containsString("200"));
+        commonFunc.verifyTxDetailField(storeHash,"store", "0", "0", "0");
+        commonFunc.verifyTxRawField(storeHash, "0", "0", "0");
+        commonFunc.verifyRawFieldMatch(storeHash);
 
-        String args=JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("transactionId");
-        assertEquals(args.equals(storeHash),true);
+    }
 
+    @Test
+    public void TC279_getTxRaw() throws  Exception {
+        String Data = "{\"test\":\"json"+UtilsClass.Random(4)+"\"}";
+        String response= store.CreateStore(Data);
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String storeHash = jsonObject.getString("data");
+
+        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+        commonFunc.verifyTxRawField(storeHash, "0", "0", "0");
+        commonFunc.verifyRawFieldMatch(storeHash);
     }
 
     /**
@@ -251,6 +265,9 @@ public class StoreTest {
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         String response2= store.GetTransactionIndex(storeHash);
+        JSONObject.fromObject(response2).getInt("state");
+        JSONObject.fromObject(response2).getString("message");
+        JSONObject.fromObject(response2).getInt("data");
         assertThat(response2,containsString("200"));
         assertThat(response2,containsString("success"));
     }
@@ -262,8 +279,11 @@ public class StoreTest {
     public void TC275_getHeight() {
         String response= store.GetHeight();
         JSONObject jsonObject=JSONObject.fromObject(response);
-       Integer  height = jsonObject.getInt("data");
+        jsonObject.getInt("state");
+        jsonObject.getString("message");
+        int height = jsonObject.getInt("data");
         assertThat(response,containsString("200"));
+        assertThat(response,containsString("success"));
 
     }
 
@@ -279,6 +299,17 @@ public class StoreTest {
         int Height=4;
         String response2= store.GetBlockByHeight(Height-1);
         assertThat(response2,containsString("200"));
+        JSONObject.fromObject(response2).getInt("state");
+        JSONObject.fromObject(response2).getString("message");
+        JSONObject.fromObject(response2).getJSONObject("data").getString("extra");
+        JSONObject.fromObject(response2).getJSONObject("data").getString("txs");
+        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("version");
+        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("height");
+        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("timestamp");
+        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("blockId");
+        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("previousId");
+        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("worldStateRoot");
+        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("transactionRoot");
     }
     @Test
     public void TC243_getBlockByHash() {
@@ -291,6 +322,17 @@ public class StoreTest {
         String hash=JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("blockId");
         String response3= store.GetBlockByHash(hash);
         assertEquals(response2.equals(response3),true);
+        JSONObject.fromObject(response3).getInt("state");
+        JSONObject.fromObject(response3).getString("message");
+        JSONObject.fromObject(response3).getJSONObject("data").getString("extra");
+        JSONObject.fromObject(response3).getJSONObject("data").getString("txs");
+        JSONObject.fromObject(response3).getJSONObject("data").getJSONObject("header").getString("version");
+        JSONObject.fromObject(response3).getJSONObject("data").getJSONObject("header").getString("height");
+        JSONObject.fromObject(response3).getJSONObject("data").getJSONObject("header").getString("timestamp");
+        JSONObject.fromObject(response3).getJSONObject("data").getJSONObject("header").getString("blockId");
+        JSONObject.fromObject(response3).getJSONObject("data").getJSONObject("header").getString("previousId");
+        JSONObject.fromObject(response3).getJSONObject("data").getJSONObject("header").getString("worldStateRoot");
+        JSONObject.fromObject(response3).getJSONObject("data").getJSONObject("header").getString("transactionRoot");
     }
 
 
@@ -306,7 +348,11 @@ public class StoreTest {
 
         String response2=store.GetTransactionBlock(storeHash);
         log.info(response2);
+        JSONObject.fromObject(response2).getInt("state");
+        JSONObject.fromObject(response2).getString("message");
+        JSONObject.fromObject(response2).getInt("data");
         assertThat(response2,containsString("200"));
+        assertThat(response2,containsString("success"));
     }
 
     //20200728 代码不再检查重复交易

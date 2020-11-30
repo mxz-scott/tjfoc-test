@@ -272,7 +272,7 @@ public class DockerContractTest {
 
     public String installTest() throws Exception {
         //String filePath = System.getProperty("user.dir") + "/src/main/resources/simple.go";
-        String filePath = testDataPath + "docker/" + dockerFileName;
+        String filePath = dockerFileName;
         String file=utilsClass.readInput(filePath).toString();
         String data = utilsClass.encryptBASE64(file.getBytes());//BASE64编码
         String response=contract.Install(name,version,category,data);

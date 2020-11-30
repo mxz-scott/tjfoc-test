@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.guDengTestV2;
 
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
@@ -22,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 public class GDCommonFunc {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store = testBuilder.getStore();
+    CommonFunc cf = new CommonFunc();
     UtilsClass utilsClass=new UtilsClass();
     String key = "";
 
@@ -453,9 +455,13 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(subTxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
 
-        com.alibaba.fastjson.JSONObject jobj2 = parseJSONBaseOnJSONStr(storeData2,"主体");
+        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,"主体");
 
-        return subjectInfoEnterprise(jobj2);
+        //schema校验数据格式
+        assertEquals("schema校验数据是否匹配",true,
+                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
+
+        return subjectInfoEnterprise(jobjOK);
     }
 
 
@@ -465,9 +471,13 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(personalTxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
 
-        com.alibaba.fastjson.JSONObject jobj2 = parseJSONBaseOnJSONStr(storeData2,"主体");
+        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,"主体");
 
-        return subjectInfoPerson(jobj2);
+        //schema校验数据格式
+        assertEquals("schema校验数据是否匹配",true,
+                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
+
+        return subjectInfoPerson(jobjOK);
     }
 
 
@@ -515,6 +525,10 @@ public class GDCommonFunc {
             }
         }
         log.info("***********" + jobjOK.toString());
+
+        //schema校验数据格式
+        assertEquals("schema校验数据是否匹配",true,
+                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
         return accountInfo(jobjOK);
     }
 
@@ -549,6 +563,10 @@ public class GDCommonFunc {
             }
         }
 
+        //schema校验数据格式
+        assertEquals("schema校验数据是否匹配",true,
+                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
+
         return accountInfo(jobjOK);
     }
 
@@ -558,8 +576,12 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(prodTxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
 
-        com.alibaba.fastjson.JSONObject jobj2 = parseJSONBaseOnJSONStr(storeData2,"产品");
-        return productInfo(jobj2,"1");
+        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,"产品");
+
+        //schema校验数据格式
+        assertEquals("schema校验数据是否匹配",true,
+                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
+        return productInfo(jobjOK,"1");
     }
 
     public Map contructBondProdInfo(String prodTxId){
@@ -567,8 +589,12 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(prodTxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
 
-        com.alibaba.fastjson.JSONObject jobj2 = parseJSONBaseOnJSONStr(storeData2,"产品");
-        return productInfo(jobj2,"2");
+        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,"产品");
+
+        //schema校验数据格式
+        assertEquals("schema校验数据是否匹配",true,
+                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
+        return productInfo(jobjOK,"2");
     }
 
     public Map contructFundProdInfo(String prodTxId){
@@ -576,8 +602,13 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(prodTxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
 
-        com.alibaba.fastjson.JSONObject jobj2 = parseJSONBaseOnJSONStr(storeData2,"产品");
-        return productInfo(jobj2,"3");
+        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,"产品");
+
+        //schema校验数据格式
+        assertEquals("schema校验数据是否匹配",true,
+                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
+
+        return productInfo(jobjOK,"3");
     }
 
     //交易信息
@@ -609,6 +640,11 @@ public class GDCommonFunc {
             }
         }
         log.info(jobjOK.toString());
+
+        //schema校验数据格式
+        assertEquals("schema校验数据是否匹配",true,
+                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
+
         return transInfo(jobjOK);
 
     }
@@ -661,6 +697,11 @@ public class GDCommonFunc {
             }
         }
         log.info(jobjOK.toString());
+
+        //schema校验数据格式
+        assertEquals("schema校验数据是否匹配",true,
+                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
+
         return regiInfo(jobjOK);
     }
 
@@ -671,6 +712,10 @@ public class GDCommonFunc {
 
         com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,"登记");
 
+        //schema校验数据格式
+        assertEquals("schema校验数据是否匹配",true,
+                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
+
         return regiInfo(jobjOK);
     }
 
@@ -680,6 +725,10 @@ public class GDCommonFunc {
 
         com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,"资金结算");
 
+        //schema校验数据格式
+        assertEquals("schema校验数据是否匹配",true,
+                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
+
         return settleInfo(jobjOK);
     }
 
@@ -688,6 +737,10 @@ public class GDCommonFunc {
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
 
         com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,"信批");
+
+        //schema校验数据格式
+        assertEquals("schema校验数据是否匹配",true,
+                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
 
         return pubInfo(jobjOK);
     }

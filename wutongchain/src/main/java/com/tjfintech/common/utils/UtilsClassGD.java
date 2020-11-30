@@ -5,6 +5,7 @@ import net.sf.json.JSONObject;
 
 import java.util.*;
 
+import static com.tjfintech.common.utils.UtilsClass.testDataPath;
 
 
 @Slf4j
@@ -79,6 +80,11 @@ public class UtilsClassGD {
     public static String date2 = "2019-12-21";
     public static String date3 = "2025-12-16";
     public static String date4 = "2029-11-10";
+
+    public static String gdSchema = "Schema-v2.0.0-Alpha3.1.json" ;
+    public static String gdTestData = "test.json";
+    public static String chkSchemaToolName = "gojsonschema.exe";
+    public static String dirSchemaData = System.getProperty("user.dir") + "/" + testDataPath + "schemavalidate/";
 
     public static Map fileObj = new HashMap();
     public static List<Map> listFileObj = new ArrayList<>();

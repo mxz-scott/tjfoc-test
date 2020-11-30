@@ -53,12 +53,20 @@ public class PrivateStoreTest {
         String response1= store.CreatePrivateStore(Data,map);
         JSONObject jsonObject=JSONObject.fromObject(response1);
         String StoreHashPwd = jsonObject.getString("data");
+        JSONObject.fromObject(response1).getInt("state");
+        JSONObject.fromObject(response1).getString("message");
 
         commonFunc.sdkCheckTxOrSleep(StoreHashPwd,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         String response2= store.GetStorePost(StoreHashPwd,PRIKEY1);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString(Data));
+        JSONObject.fromObject(response2).getString("data");
+        JSONObject.fromObject(response2).getInt("state");
+        JSONObject.fromObject(response2).getString("message");
+
+        commonFunc.verifyTxRawField(StoreHashPwd, "1", "0", "1");
+        commonFunc.verifyRawFieldMatch(StoreHashPwd);
 
         String response3= store.GetStorePostPwd(StoreHashPwd,PRIKEY6,PWD6);
         assertThat(response3, containsString("200"));
@@ -90,6 +98,10 @@ public class PrivateStoreTest {
 
         assertThat(response1, containsString("200"));
         assertThat(response1,containsString("data"));
+
+        commonFunc.verifyTxDetailField(StoreHashPwd,"store", "1", "0", "1");
+        commonFunc.verifyTxRawField(StoreHashPwd, "1", "0", "1");
+        commonFunc.verifyRawFieldMatch(StoreHashPwd);
     }
 
     /**
@@ -150,6 +162,9 @@ public class PrivateStoreTest {
         map=new HashMap<>();
         map.put("pubKeys",PUBKEY2);
         String res1 = store.StoreAuthorize(hash, map, PRIKEY1,"");
+        JSONObject.fromObject(res1).getString("data");
+        JSONObject.fromObject(res1).getInt("state");
+        JSONObject.fromObject(res1).getString("message");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
@@ -168,6 +183,7 @@ public class PrivateStoreTest {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
 
         assertThat(res2,containsString("200"));
         assertThat(res2,containsString("success"));
@@ -552,4 +568,7 @@ public class PrivateStoreTest {
         assertThat(jsonResult.get("data").toString(),containsString(Data));
 
     }
+
+
+
 }

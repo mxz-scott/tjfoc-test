@@ -130,6 +130,10 @@ public class WVMContractTest {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
+        commonFunc.verifyTxDetailField(txHash1,"wvm_install", "2", "3", "40");
+        commonFunc.verifyTxRawField(txHash1, "2", "3", "40");
+        commonFunc.verifyRawFieldMatch(txHash1);
+
         //调用合约内的交易
         String response2 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
@@ -139,6 +143,10 @@ public class WVMContractTest {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        commonFunc.verifyTxDetailField(txHash2,"wvm_invoke", "2", "3", "42");
+        commonFunc.verifyTxRawField(txHash2, "2", "3", "42");
+        commonFunc.verifyRawFieldMatch(txHash2);
 
         String response4 = invokeNew(ctHash,"transfer",accountA,accountB,transfer);//A向B转30
         String txHash4 = JSONObject.fromObject(response4).getJSONObject("data").getString("txId");
@@ -172,9 +180,20 @@ public class WVMContractTest {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
+        commonFunc.verifyTxDetailField(txHash9,"wvm_destroy", "2", "3", "41");
+        commonFunc.verifyTxRawField(txHash9, "2", "3", "41");
+        commonFunc.verifyRawFieldMatch(txHash9);
+
         String response10 = query(ctHash,"BalanceTest",accountB);//获取账户B账户余额 报错
 
-        assertThat(JSONObject.fromObject(response10).getString("state"),containsString("500"));
+        int state = JSONObject.fromObject(response10).getInt("state");
+
+        if (state == 500 || state == 400){
+            assertThat("500 or 400, both ok", containsString("500 or 400, both ok"));
+        } else{
+            assertThat("wrong state", containsString("500 or 400, both ok"));
+        }
+
         if (wvmVersion != ""){
             assertThat(JSONObject.fromObject(response10).getString("message"),containsString("This version[1.0.0] of the smart contract is destroyed"));
         }else{
@@ -504,7 +523,15 @@ public class WVMContractTest {
         for(String ctHash : ctHashList){
             String response1 = query(ctHash,"BalanceTest",accountA);//获取账户A账户余额
             //销毁后会提示找不到合约文件 500 error code
-            assertThat(JSONObject.fromObject(response1).getString("state"),containsString("500"));
+
+            int state = JSONObject.fromObject(response1).getInt("state");
+
+            if (state == 500 || state == 400){
+                assertThat("500 or 400, both ok", containsString("500 or 400, both ok"));
+            } else{
+                assertThat("wrong state", containsString("500 or 400, both ok"));
+            }
+
             if (wvmVersion != ""){
                 assertThat(JSONObject.fromObject(response1).getString("message"),containsString("This version[1.0.0] of the smart contract is destroyed"));
             }else{
@@ -678,7 +705,14 @@ public class WVMContractTest {
         String response10 = query(ctHash1,"BalanceTest",accountB);//获取转账后账户B账户余额 报错
 
         // 销毁后会提示找不到合约文件 500 error code
-        assertThat(JSONObject.fromObject(response10).getString("state"),containsString("500"));
+        int state = JSONObject.fromObject(response10).getInt("state");
+
+        if (state == 500 || state == 400){
+            assertThat("500 or 400, both ok", containsString("500 or 400, both ok"));
+        } else{
+            assertThat("wrong state", containsString("500 or 400, both ok"));
+        }
+
         if (wvmVersion != ""){
             assertThat(JSONObject.fromObject(response10).getString("message"),containsString("This version[1.0.0] of the smart contract is destroyed"));
         }else{

@@ -217,7 +217,6 @@ public class GoKmsTest {
         assertThat(response4, containsString("pin码与密钥不匹配,或请稍后再试"));
 
         //旧密码解密
-//        String cipherText = UtilsClassKMS.getCipherText(response4);
         String response5 = kms.decrypt(keyIdsm4, password,cipherText);
         assertThat(response5, containsString("400"));
         assertThat(response5, containsString("pin码与密钥不匹配,或请稍后再试"));
@@ -251,7 +250,7 @@ public class GoKmsTest {
         assertThat(response4, containsString("200"));
         assertThat(response4, containsString("data"));
 
-        String response5 = kms.eccDecrypt(keyIdsm2, password,plainText);
+        String response5 = kms.eccDecrypt(keyIdsm2, password,cipherText);
         assertThat(response5, containsString("400"));
         assertThat(response5, containsString("pin码与密钥不匹配,或请稍后再试"));
 
