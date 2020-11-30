@@ -1332,4 +1332,104 @@ public class CommonFunc {
         return  bResult;
     }
 
+    /**
+     *  验证交易详情字段
+     * @param txId
+     * @param txType
+     * @param version
+     * @param type
+     * @param subType
+     */
+    public void verifyTxDetailField(String txId, String txType, String version, String type, String subType){
+        String response = store.GetTxDetail(txId);
+//        log.info(response);
+
+        assertEquals(JSONObject.fromObject(response).getString("state").equals("200"),true);
+        assertEquals(JSONObject.fromObject(response).getString("message").equals("success"),true);
+
+        assertEquals(JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getString("version").equals(version),true);
+        assertEquals(JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getString("type").equals(type),true);
+        assertEquals(JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getString("subType").equals(subType),true);
+        assertEquals(JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getString("transactionId").equals(txId),true);
+        JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getString("timestamp");
+
+        JSONObject.fromObject(response).getJSONObject("data").getString("raw");
+
+        switch (txType){
+            case "store":
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("store").getString("storeData");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("store").getString("extra");
+                break;
+            case "wvm_install":
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("method");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("caller");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("version");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("args");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("random");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("src");
+                break;
+            case "wvm_invoke":
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("method");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("caller");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("version");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("args");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("name");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getString("result");
+                break;
+            case "wvm_destroy":
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("method");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("caller");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("version");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("args");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("name");
+                break;
+        }
+
+    }
+
+    /**
+     * 验证交易原始数据详情字段
+     * @param txId
+     * @param version
+     * @param type
+     * @param subType
+     */
+    public void verifyTxRawField(String txId, String version, String type, String subType){
+        String response = store.GetTxRaw(txId);
+
+        assertEquals(JSONObject.fromObject(response).getString("state").equals("200"),true);
+        assertEquals(JSONObject.fromObject(response).getString("message").equals("success"),true);
+
+        assertEquals(JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getString("version").equals(version),true);
+        assertEquals(JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getString("type").equals(type),true);
+        assertEquals(JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getString("subType").equals(subType),true);
+        assertEquals(JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getString("transactionId").equals(txId),true);
+        JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getString("timestamp");
+
+        JSONObject.fromObject(response).getJSONObject("data").getString("data");
+        JSONObject.fromObject(response).getJSONObject("data").getString("pubkey");
+        JSONObject.fromObject(response).getJSONObject("data").getString("sign");
+        JSONObject.fromObject(response).getJSONObject("data").getString("raw");
+        JSONObject.fromObject(response).getJSONObject("data").getString("result");
+        JSONObject.fromObject(response).getJSONObject("data").getString("extra");
+        JSONObject.fromObject(response).getJSONObject("data").getJSONObject("txproof").getString("left");
+        JSONObject.fromObject(response).getJSONObject("data").getJSONObject("txproof").getString("right");
+
+    }
+
+
+    /**
+     * 验证交易详情与交易原始数据raw字段值一致
+     * @param txId
+     */
+    public void verifyRawFieldMatch(String txId){
+        String response1 = store.GetTxRaw(txId);
+        String response2 = store.GetTxDetail(txId);
+
+        String raw1 = JSONObject.fromObject(response1).getJSONObject("data").getString("raw");
+        String raw2 = JSONObject.fromObject(response2).getJSONObject("data").getString("raw");
+
+        assertEquals(raw1.equals(raw2),true);
+    }
+
 }

@@ -65,26 +65,8 @@ public class PrivateStoreTest {
         JSONObject.fromObject(response2).getInt("state");
         JSONObject.fromObject(response2).getString("message");
 
-        response2= store.GetTxRaw(StoreHashPwd);
-        log.info(response2);
-        assertThat(response2,containsString("200"));
-        JSONObject.fromObject(response2).getInt("state");
-        JSONObject.fromObject(response2).getString("message");
-        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("timestamp");
-        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("version"),containsString("1"));
-        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("type"),containsString("0"));
-        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("subType"),containsString("1"));
-        String args=JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("transactionId");
-        assertEquals(args.equals(StoreHashPwd),true);
-
-        JSONObject.fromObject(response2).getJSONObject("data").getString("data");
-        JSONObject.fromObject(response2).getJSONObject("data").getString("pubkey");
-        JSONObject.fromObject(response2).getJSONObject("data").getString("sign");
-        JSONObject.fromObject(response2).getJSONObject("data").getString("raw");
-        JSONObject.fromObject(response2).getJSONObject("data").getString("result");
-        JSONObject.fromObject(response2).getJSONObject("data").getString("extra");
-        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("txproof").getString("left");
-        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("txproof").getString("right");
+        commonFunc.verifyTxRawField(StoreHashPwd, "1", "0", "1");
+        commonFunc.verifyRawFieldMatch(StoreHashPwd);
 
         String response3= store.GetStorePostPwd(StoreHashPwd,PRIKEY6,PWD6);
         assertThat(response3, containsString("200"));
@@ -117,22 +99,9 @@ public class PrivateStoreTest {
         assertThat(response1, containsString("200"));
         assertThat(response1,containsString("data"));
 
-        String response2= store.GetTxDetail(StoreHashPwd);
-        log.info(response2);
-        assertThat(response2,containsString("200"));
-
-        String args=JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("transactionId");
-        assertEquals(args.equals(StoreHashPwd),true);
-        JSONObject.fromObject(response2).getInt("state");
-        JSONObject.fromObject(response2).getString("message");
-        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("version");
-        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("timestamp");
-        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("transactionId");
-        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("store").getString("storeData");
-        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("store").getString("extra");
-
-        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("type"),containsString("0"));
-        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("subType"),containsString("1"));
+        commonFunc.verifyTxDetailField(StoreHashPwd,"store", "1", "0", "1");
+        commonFunc.verifyTxRawField(StoreHashPwd, "1", "0", "1");
+        commonFunc.verifyRawFieldMatch(StoreHashPwd);
     }
 
     /**

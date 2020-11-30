@@ -232,21 +232,9 @@ public class StoreTest {
 
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-        String response2= store.GetTxDetail(storeHash);
-        log.info(response2);
-        assertThat(response2,containsString("200"));
-
-        String args=JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("transactionId");
-        assertEquals(args.equals(storeHash),true);
-        JSONObject.fromObject(response2).getInt("state");
-        JSONObject.fromObject(response2).getString("message");
-        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("timestamp");
-        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("transactionId");
-        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("store").getString("storeData");
-        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("store").getString("extra");
-        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("version"),containsString("0"));
-        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("type"),containsString("0"));
-        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("subType"),containsString("0"));
+        commonFunc.verifyTxDetailField(storeHash,"store", "0", "0", "0");
+        commonFunc.verifyTxRawField(storeHash, "0", "0", "0");
+        commonFunc.verifyRawFieldMatch(storeHash);
 
     }
 
@@ -259,25 +247,8 @@ public class StoreTest {
 
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-        String response2= store.GetTxRaw(storeHash);
-        log.info(response2);
-        assertThat(response2,containsString("200"));
-        JSONObject.fromObject(response2).getInt("state");
-        JSONObject.fromObject(response2).getString("message");
-        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("timestamp");
-        String args=JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("transactionId");
-        assertEquals(args.equals(storeHash),true);
-        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("version"),containsString("0"));
-        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("type"),containsString("0"));
-        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("subType"),containsString("0"));
-        JSONObject.fromObject(response2).getJSONObject("data").getString("data");
-        JSONObject.fromObject(response2).getJSONObject("data").getString("pubkey");
-        JSONObject.fromObject(response2).getJSONObject("data").getString("sign");
-        JSONObject.fromObject(response2).getJSONObject("data").getString("raw");
-        JSONObject.fromObject(response2).getJSONObject("data").getString("result");
-        JSONObject.fromObject(response2).getJSONObject("data").getString("extra");
-        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("txproof").getString("left");
-        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("txproof").getString("right");
+        commonFunc.verifyTxRawField(storeHash, "0", "0", "0");
+        commonFunc.verifyRawFieldMatch(storeHash);
     }
 
     /**

@@ -130,28 +130,12 @@ public class WVMContractTest {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
-        String response2= store.GetTxRaw(txHash1);
-        log.info(response2);
-        assertThat(response2,containsString("200"));
-        JSONObject.fromObject(response2).getInt("state");
-        JSONObject.fromObject(response2).getString("message");
-        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("timestamp");
-        String args=JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("transactionId");
-        assertEquals(args.equals(txHash1),true);
-        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("version"),containsString("2"));
-        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("type"),containsString("3"));
-        assertThat(JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("subType"),containsString("40"));
-        JSONObject.fromObject(response2).getJSONObject("data").getString("data");
-        JSONObject.fromObject(response2).getJSONObject("data").getString("pubkey");
-        JSONObject.fromObject(response2).getJSONObject("data").getString("sign");
-        JSONObject.fromObject(response2).getJSONObject("data").getString("raw");
-        JSONObject.fromObject(response2).getJSONObject("data").getString("result");
-        JSONObject.fromObject(response2).getJSONObject("data").getString("extra");
-        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("txproof").getString("left");
-        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("txproof").getString("right");
+        commonFunc.verifyTxDetailField(txHash1,"wvm_install", "2", "3", "40");
+        commonFunc.verifyTxRawField(txHash1, "2", "3", "40");
+        commonFunc.verifyRawFieldMatch(txHash1);
 
         //调用合约内的交易
-        response2 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
+        String response2 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
         String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
 
         String response3 = invokeNew(ctHash,"initAccount",accountB,amountB);//初始化账户B 账户余额60
@@ -159,6 +143,10 @@ public class WVMContractTest {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        commonFunc.verifyTxDetailField(txHash2,"wvm_invoke", "2", "3", "42");
+        commonFunc.verifyTxRawField(txHash2, "2", "3", "42");
+        commonFunc.verifyRawFieldMatch(txHash2);
 
         String response4 = invokeNew(ctHash,"transfer",accountA,accountB,transfer);//A向B转30
         String txHash4 = JSONObject.fromObject(response4).getJSONObject("data").getString("txId");
@@ -191,6 +179,10 @@ public class WVMContractTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
+
+        commonFunc.verifyTxDetailField(txHash9,"wvm_destroy", "2", "3", "41");
+        commonFunc.verifyTxRawField(txHash9, "2", "3", "41");
+        commonFunc.verifyRawFieldMatch(txHash9);
 
         String response10 = query(ctHash,"BalanceTest",accountB);//获取账户B账户余额 报错
 
