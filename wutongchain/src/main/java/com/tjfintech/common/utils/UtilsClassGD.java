@@ -90,7 +90,6 @@ public class UtilsClassGD {
     public static List<Map> listFileObj = new ArrayList<>();
 
     public static Map getFileObj(String word){
-        Map fileObj = new HashMap();
         //{"file_number":"1","file_name": "12312312","url": "12312312","hash": "12312312","summary": "12312312","term_of_validity_type": "0","term_of_validity":"yyyy/MM/dd"}
         //文件对象
         Map fileMap = new HashMap();
@@ -101,10 +100,9 @@ public class UtilsClassGD {
         fileMap.put("summary","简述" + word);
         fileMap.put("term_of_validity_type","0");
         fileMap.put("term_of_validity","2020/04/18");
-        return fileObj;
+        return fileMap;
     }
     public static Map getFileObj(){
-        Map fileObj = new HashMap();
         //{"file_number":"1","file_name": "12312312","url": "12312312","hash": "12312312","summary": "12312312","term_of_validity_type": "0","term_of_validity":"yyyy/MM/dd"}
         //文件对象
         Map fileMap = new HashMap();
@@ -115,7 +113,7 @@ public class UtilsClassGD {
         fileMap.put("summary","简述");
         fileMap.put("term_of_validity_type","0");
         fileMap.put("term_of_validity","2020/04/18");
-        return fileObj;
+        return fileMap;
     }
 
     public static List<Map> getListFileObj(){
@@ -124,6 +122,7 @@ public class UtilsClassGD {
         //文件对象
         listFileObj.add(getFileObj("1"));
         listFileObj.add(getFileObj("2"));
+        log.info(listFileObj.toString());
         return listFileObj;
     }
 }
