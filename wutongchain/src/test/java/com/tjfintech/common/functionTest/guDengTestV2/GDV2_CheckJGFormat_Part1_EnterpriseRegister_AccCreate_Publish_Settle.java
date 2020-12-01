@@ -311,7 +311,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         assertEquals(replaceCertain(fundAccountInfo.toString()),
                 replaceCertain(gdCF.contructFundAccountInfo(accStoreId,"fund" + cltNo).toString()));
 
-        log.info("检查资金账户存证信息内容与传入一致");
+        log.info("检查股权账户存证信息内容与传入一致");
         log.info(gdCF.contructEquityAccountInfo(accStoreId,"SH" + cltNo).toString().replaceAll("\"",""));
         log.info(shAccountInfo.toString());
         assertEquals(replaceCertain(shAccountInfo.toString()),
