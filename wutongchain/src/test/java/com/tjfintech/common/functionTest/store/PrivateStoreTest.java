@@ -73,7 +73,12 @@ public class PrivateStoreTest {
         assertThat(response3, containsString(Data));
 
         String response4= store.GetStorePost(StoreHashPwd,PRIKEY3);
-        assertThat(response4, containsString("500"));
+        int state = JSONObject.fromObject(response4).getInt("state");
+        if (state == 500 || state == 400){
+            assertThat("500 or 400, both ok", containsString("500 or 400, both ok"));
+        } else{
+            assertThat("wrong state", containsString("500 or 400, both ok"));
+        }
         assertThat(response4, containsString("you have no permission to get this transaction !"));
     }
 
@@ -287,7 +292,12 @@ public class PrivateStoreTest {
         assertThat(jsonResult.get("data").toString(),containsString(Data));
 
         String res6 = store.GetStorePost(hash,PRIKEY5);
-        assertThat(res6,containsString("500"));
+        int state = JSONObject.fromObject(res6).getInt("state");
+        if (state == 500 || state == 400){
+            assertThat("500 or 400, both ok", containsString("500 or 400, both ok"));
+        } else{
+            assertThat("wrong state", containsString("500 or 400, both ok"));
+        }
         assertThat(res6,containsString("you have no permission to get this transaction !"));
 
         String res7 = store.GetStorePostPwd(hash,PRIKEY6,PWD7);
@@ -301,7 +311,7 @@ public class PrivateStoreTest {
 
         res8 = store.GetStorePost(hash,"123456");
         assertThat(res8,containsString("400"));
-        assertThat(res8,containsString("illegal base64 data at input byte 4"));
+        assertThat(res8,containsString("illegal base64 data at input byte"));
 
         res8 = store.GetStorePost(hash,"MTIzNDU2");
         assertThat(res8,containsString("400"));

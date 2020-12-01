@@ -21,13 +21,13 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        SetDatabaseMysql.class,
-        SetAccountEmpty.class,
+//        SetDatabaseMysql.class,
+//        SetAccountEmpty.class,
         SetCertSM2.class,
         SetMainLedger.class,
-        PeerStartNoPermTest.class,
+//        PeerStartNoPermTest.class,
 
-        TestTxType.class,
+//        TestTxType.class,
 
         BeforeCondition.class,
         SetURLToSDKAddr.class,
@@ -47,8 +47,8 @@ import org.junit.runners.Suite;
         WVMContractInvalidTest.class,
         WVMContractTest_withVersionUpgradeTest.class,
         VerifyTests.class,
-
-        AddPeerAndSyncData.class,
+//
+//        AddPeerAndSyncData.class,
 //        TestPermission.class,
 
 })

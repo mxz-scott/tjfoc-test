@@ -76,7 +76,12 @@ public class NoPriPrivateStoreTest {
         assertEquals(Data,certTool.decryptPriData(PEER2IP,plainKey,secretData));
 
         String response4= store.GetStorePost(StoreHashPwd,PRIKEY3);
-        assertThat(response4, containsString("500"));
+        int state = JSONObject.fromObject(response4).getInt("state");
+        if (state == 500 || state == 400){
+            assertThat("500 or 400, both ok", containsString("500 or 400, both ok"));
+        } else{
+            assertThat("wrong state", containsString("500 or 400, both ok"));
+        }
         assertThat(response4, containsString("you have no permission to get this transaction !"));
     }
 
