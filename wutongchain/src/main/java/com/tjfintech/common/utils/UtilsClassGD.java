@@ -82,15 +82,15 @@ public class UtilsClassGD {
     public static String settleType = "settlement";
     public static String infoType = "infodisclosure";
 
-    public static String time1 = "2017-12-16T13:40:00+08:00";
-    public static String time2 = "2020-12-16T12:00:25+08:00";
-    public static String time3 = "2024-12-16T13:50:00+08:00";
-    public static String time4 = "2028-11-10T10:50:10+08:00";
+    public static String time1 = "2017/12/16 13:40:00";
+    public static String time2 = "2020/12/16 12:00:25";
+    public static String time3 = "2024/12/16 13:50:00";
+    public static String time4 = "2028/11/10 10:50:10";
 
-    public static String date1 = "2018-10-23";
-    public static String date2 = "2019-12-21";
-    public static String date3 = "2025-12-16";
-    public static String date4 = "2029-11-10";
+    public static String date1 = "2018/10/23";
+    public static String date2 = "2019/12/21";
+    public static String date3 = "2025/12/16";
+    public static String date4 = "2029/11/10";
 
     public static String gdSchema = "Schema-v2.0.0-Alpha3.1.json" ;
     public static String gdTestData = "test.json";

@@ -792,7 +792,8 @@ public class GDCommonFunc {
         key = "subject_object_id";                  getSubjectInfo.put(key,getSubObjId(jobj2));
 
         //获取 主体信息 主体基本信息 主体通用信息
-        com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("subject_information");
+//        com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("subject_information");
+        com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("subject");
         com.alibaba.fastjson.JSONObject objBaseGIS = objInfo.getJSONObject("basic_information_subject").getJSONObject("general_information_subject");
         key = "subject_id";                          getSubjectInfo.put(key,objBaseGIS.getString(key));
         key = "subject_type";                               getSubjectInfo.put(key,objBaseGIS.getString(key));
@@ -1977,5 +1978,22 @@ public class GDCommonFunc {
 
         return  bResult;
 
+    }
+
+    public Map constructContentMap(String...valueList){
+        Map tempMap = new HashMap();
+        String[] checkKey = new String[]{"type","object_id","version","operation","timestamp"};
+        for(int i =0;i<valueList.length;i++){
+            String temp = valueList[i];
+
+            if(checkKey[i].equals( "version")) {
+                tempMap.put(checkKey[i],Integer.valueOf(temp));
+            }else if(checkKey[i].equals( "timestamp")) {
+                tempMap.put(checkKey[i], Long.valueOf(temp));
+            }else {
+                tempMap.put(checkKey[i], temp);
+            }
+        }
+        return tempMap;
     }
 }
