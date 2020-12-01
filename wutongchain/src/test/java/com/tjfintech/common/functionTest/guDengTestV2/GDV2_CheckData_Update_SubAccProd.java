@@ -304,7 +304,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         //-----------------机构主体信息---------------//
         //主体信息 机构主体信息 企业基本信息 基本信息描述
         mapTemp.put("subject_company_name","公司全称CHARACTER3");
-        mapTemp.put("subject_document_infomation","证件类型及证件号码CHARACTER3");
+        mapTemp.put("subject_document_information","证件类型及证件号码CHARACTER3");
 
         //执行update操作
         String resp2 = gd.GDUpdateSubjectInfo(gdContractAddress,0,mapTemp);
@@ -322,7 +322,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         key = "subject_main_administrative_region"; mapR.put(key,mapTest.get(key));
         key = "subject_create_time"; mapR.put(key,mapTest.get(key));
         key = "subject_company_name"; mapR.put(key,mapTest.get(key));
-        key = "subject_document_infomation"; mapR.put(key,mapTest.get(key));
+        key = "subject_document_information"; mapR.put(key,mapTest.get(key));
 
 //        assertEquals(true,mapTest.get("subject_company_short_english_name").equals(null));
 

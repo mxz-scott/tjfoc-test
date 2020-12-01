@@ -83,13 +83,13 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         //获取主体/产品存证hash
         String query = store.GetTxDetail(txId);
         String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm"
-                ).getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
+        ).getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
         //获取监管数据存证hash
         String jgType = prodType;
         String ProductInfoTxId = gdCF.getJGStoreHash2(txId,jgType,1);
-        jgType = subjectType;
+        jgType = subjectType;//jgType = "主体";
         String SubjectObjectTxId = gdCF.getJGStoreHash2(txId,jgType,1);
 
 //        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
@@ -134,7 +134,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         //获取主体/产品存证hash
         String query = store.GetTxDetail(txId);
         String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm"
-                    ).getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
+        ).getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
         //获取监管数据存证hash
@@ -163,7 +163,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
     }
 
-    //企业 股权类 登记
+    //企业 基金类 登记
     @Test
     public void TC013_enterpriseRegisterFundCheckFormat() throws Exception {
         long shareTotals = 1000000;
@@ -187,7 +187,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         //获取主体/产品存证hash
         String query = store.GetTxDetail(txId);
-        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
+        String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm"
+        ).getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
         //获取监管数据存证hash

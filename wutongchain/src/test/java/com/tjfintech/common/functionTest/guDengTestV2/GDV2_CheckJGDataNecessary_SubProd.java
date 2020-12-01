@@ -88,7 +88,7 @@ public class GDV2_CheckJGDataNecessary_SubProd {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
         testSub = gdBF.init01EnterpriseSubjectInfo();
-        key = "subject_document_infomation";
+        key = "subject_document_information";
         log.info("测试字段 " + key);
         testSub.remove(key);
         response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,testSub,

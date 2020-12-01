@@ -575,8 +575,8 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,prodType);
 
         //schema校验数据格式
-        assertEquals("schema校验数据是否匹配",true,
-                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
+//        assertEquals("schema校验数据是否匹配",true,
+//                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
         return productInfo(jobjOK,"1");
     }
 
@@ -587,9 +587,9 @@ public class GDCommonFunc {
 
         com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,prodType);
 
-        //schema校验数据格式
-        assertEquals("schema校验数据是否匹配",true,
-                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
+//        //schema校验数据格式
+//        assertEquals("schema校验数据是否匹配",true,
+//                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
         return productInfo(jobjOK,"2");
     }
 
@@ -600,9 +600,9 @@ public class GDCommonFunc {
 
         com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,prodType);
 
-        //schema校验数据格式
-        assertEquals("schema校验数据是否匹配",true,
-                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
+//        //schema校验数据格式
+//        assertEquals("schema校验数据是否匹配",true,
+//                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
 
         return productInfo(jobjOK,"3");
     }
@@ -800,8 +800,8 @@ public class GDCommonFunc {
         key = "subject_create_time";                        getSubjectInfo.put(key,objBaseGIS.getString(key));
 
         //获取 主体信息 主体基本信息 主体资质信息
-        com.alibaba.fastjson.JSONObject objBaseSQI = objInfo.getJSONObject("basic_information_subject").getJSONObject("subject_qualification_information");
-        key = "subject_qualification_information";      getSubjectInfo.put(key,objBaseSQI.getString(key));
+//        com.alibaba.fastjson.JSONObject objBaseSQI = objInfo.getJSONObject("basic_information_subject").getJSONObject("subject_qualification_information");
+        key = "subject_qualification_information";      getSubjectInfo.put(key,objInfo.getJSONObject("basic_information_subject").getString(key));
 
         //获取 主体信息 机构主体信息 企业基本信息 基本信息描述
         com.alibaba.fastjson.JSONObject objBID = objInfo.getJSONObject("organization_subject_information"
@@ -817,7 +817,7 @@ public class GDCommonFunc {
         key = "subject_company_type";getSubjectInfo.put(key,objBID.getString(key));
         key = "subject_scale_type";getSubjectInfo.put(key,objBID.getString(key));
         key = "subject_high_technology_enterpris";getSubjectInfo.put(key,objBID.getString(key));
-        key = "subject_document_infomation";getSubjectInfo.put(key,objBID.getString(key));
+        key = "subject_document_information";getSubjectInfo.put(key,objBID.getString(key));
         key = "subject_registry_date";getSubjectInfo.put(key,objBID.getString(key));
         key = "subject_business_license";getSubjectInfo.put(key,objBID.getString(key));
         key = "subject_business_scope";getSubjectInfo.put(key,objBID.getString(key));
@@ -1057,7 +1057,7 @@ public class GDCommonFunc {
             key = "product_raising_start_time";getSubjectInfo.put(key,objProdIssueEquity.getString(key));
             key = "product_raising_end_time";getSubjectInfo.put(key,objProdIssueEquity.getString(key));
             key = "product_registered_capital_before_issuance";getSubjectInfo.put(key,objProdIssueEquity.getString(key));
-            key = "product_registered_capital_ issuance";getSubjectInfo.put(key,objProdIssueEquity.getString(key));
+            key = "product_registered_capital_issuance";getSubjectInfo.put(key,objProdIssueEquity.getString(key));
             key = "product_paid_shares";getSubjectInfo.put(key,objProdIssueEquity.getString(key));
             key = "product_shares_subscribed_number";getSubjectInfo.put(key,objProdIssueEquity.getString(key));
             key = "product_unlimited_sales_number_shares";getSubjectInfo.put(key,objProdIssueEquity.getString(key));
@@ -1131,7 +1131,7 @@ public class GDCommonFunc {
             key = "product_fund_filing_date";getSubjectInfo.put(key,objProdIssueFundBase.getString(key));
             key = "product_fund_type";getSubjectInfo.put(key,objProdIssueFundBase.getString(key));
             key = "product_foundation_date";getSubjectInfo.put(key,objProdIssueFundBase.getString(key));
-            key = "product_escrow bank";getSubjectInfo.put(key,objProdIssueFundBase.getString(key));
+            key = "product_escrow_bank";getSubjectInfo.put(key,objProdIssueFundBase.getString(key));
             key = "product_total_fund_share";getSubjectInfo.put(key,objProdIssueFundBase.getString(key));
             key = "product_fund_unit_holders_number";getSubjectInfo.put(key,objProdIssueFundBase.getString(key));
             key = "product_fund_nav";getSubjectInfo.put(key,objProdIssueFundBase.getString(key));
@@ -1145,7 +1145,7 @@ public class GDCommonFunc {
             key = "product_sales_organization_member_code";getSubjectInfo.put(key,objProdIssueFundSale.getString(key));
 
             //私募基金 基金管理人信息
-            key = "product_ fund_manager_name";getSubjectInfo.put(key,objProdIssueFundMger.getString(key));
+            key = "product_fund_manager_name";getSubjectInfo.put(key,objProdIssueFundMger.getString(key));
             key = "product_fund_manager_certificate_number";getSubjectInfo.put(key,objProdIssueFundMger.getString(key));
             key = "product_management_style";getSubjectInfo.put(key,objProdIssueFundMger.getString(key));
             key = "product_funds_under_management_number";getSubjectInfo.put(key,objProdIssueFundMger.getString(key));
@@ -1791,5 +1791,26 @@ public class GDCommonFunc {
     public static String replaceCertain(String src){
 
        return src.replaceAll("(\")?( )?","").replaceAll(":","=");
+    }
+
+    public Boolean checkJGDataHeader(com.alibaba.fastjson.JSONObject objTemp,String... checkList){
+
+        Boolean bResult = true;
+        assertEquals(gdJGModelProtocol,objTemp.getJSONObject("header").getJSONObject("model").getString("protocol"));
+        assertEquals(gdJGModelVersion,objTemp.getJSONObject("header").getJSONObject("model").getString("protocol"));
+        //一般检查content中的五个字段 0-4 ：type object_id version operation timestamp
+        log.info("check parameter no: " + checkList.length);
+        String[] checkKey = new String[]{"type","object_id","version","operation","timestamp"};
+        com.alibaba.fastjson.JSONObject headerContent = objTemp.getJSONObject("header").getJSONObject("content");
+        for(int i =0;i<checkList.length;i++){
+            if(!checkList[i].equals(headerContent.getString(checkKey[i]))){
+                log.info("检查字段 "+ checkKey[i] + " 不匹配 " + headerContent.getString(checkKey[i]));
+                bResult = false;
+            }
+
+        }
+
+        return  bResult;
+
     }
 }

@@ -71,6 +71,9 @@ public class UtilsClassGD {
     public static long timeStamp = (new Date()).getTime();
     public static String testCurMethodName = "";
 
+    public static String gdJGModelProtocol = "上海区域股权市场跨链监管业务数据模型";
+    public static String gdJGModelVersion = "2.0.0-alpha3";
+
     public static String subjectType = "subject";
     public static String accType = "account";
     public static String prodType = "product";
@@ -101,7 +104,7 @@ public class UtilsClassGD {
         //{"file_number":"1","file_name": "12312312","url": "12312312","hash": "12312312","summary": "12312312","term_of_validity_type": "0","term_of_validity":"yyyy/MM/dd"}
         //文件对象
         Map fileMap = new HashMap();
-        fileMap.put("file_number",1);
+        fileMap.put("file_number","2");
         fileMap.put("file_name",word + "file1.pdf");
         fileMap.put("hash","da1234filehash5222" + word);
         fileMap.put("url","http://test.com/file/201/" + word + "file1.pdf");
@@ -114,7 +117,7 @@ public class UtilsClassGD {
         //{"file_number":"1","file_name": "12312312","url": "12312312","hash": "12312312","summary": "12312312","term_of_validity_type": "0","term_of_validity":"yyyy/MM/dd"}
         //文件对象
         Map fileMap = new HashMap();
-        fileMap.put("file_number",1);
+        fileMap.put("file_number","1");
         fileMap.put("file_name","file1.pdf");
         fileMap.put("hash","da1234filehash5222");
         fileMap.put("url","http://test.com/file/201/file1.pdf");

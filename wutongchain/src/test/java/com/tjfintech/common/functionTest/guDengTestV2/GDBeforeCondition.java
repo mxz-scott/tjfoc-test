@@ -304,9 +304,9 @@ public class GDBeforeCondition {
         mapTemp.put("subject_company_business", "主营业务CHARACTER");
         mapTemp.put("subject_company_profile", "公司简介TEXT");
         mapTemp.put("subject_registered_capital", 6000000);
-        mapTemp.put("subject_registered_capital_currency", "注册资本币种CHARACTER");
+        mapTemp.put("subject_registered_capital_currency", "156");
         mapTemp.put("subject_paid_in_capital", 6000000);
-        mapTemp.put("subject_paid_in_capital_currency", "实收资本币种CHARACTER");
+        mapTemp.put("subject_paid_in_capital_currency", "156");
         mapTemp.put("subject_registered_address", "注册地址CHARACTER");
         mapTemp.put("subject_province", "注册地所在省份CHARACTER");
         mapTemp.put("subject_city", "注册地所在市CHARACTER");
@@ -545,7 +545,7 @@ public class GDBeforeCondition {
         mapTemp.put("subject_company_type", 1);
         mapTemp.put("subject_scale_type", 2);
         mapTemp.put("subject_high_technology_enterpris", 1);
-        mapTemp.put("subject_document_infomation", "英文简称CHARACTER");
+        mapTemp.put("subject_document_information", "英文简称CHARACTER");
         mapTemp.put("subject_registry_date", date1);
         mapTemp.put("subject_business_license", getListFileObj());
         mapTemp.put("subject_business_scope", "工作单位CHARACTER");
@@ -553,9 +553,9 @@ public class GDBeforeCondition {
         mapTemp.put("subject_company_business", "投资经历CHARACTER");
         mapTemp.put("subject_company_profile", "籍贯CHARACTER");
         mapTemp.put("subject_registered_capital", 6000000);
-        mapTemp.put("subject_registered_capital_currency", "城市CHARACTER");
+        mapTemp.put("subject_registered_capital_currency", "156");
         mapTemp.put("subject_paid_in_capital", 6000000);
-        mapTemp.put("subject_paid_in_capital_currency", "城市CHARACTER");
+        mapTemp.put("subject_paid_in_capital_currency", "156");
         mapTemp.put("subject_registered_address", "工作单位CHARACTER");
         mapTemp.put("subject_province", 1);
         mapTemp.put("subject_city", "投资经历CHARACTER");
