@@ -70,7 +70,15 @@ public class UtilsClassGD {
 	public static int blockHeight = 4892;
     public static long timeStamp = (new Date()).getTime();
     public static String testCurMethodName = "";
-    
+
+    public static String subjectType = "subject";
+    public static String accType = "account";
+    public static String prodType = "product";
+    public static String txrpType = "transactionreport";
+    public static String regType = "registration";
+    public static String settleType = "settlement";
+    public static String infoType = "infodisclosure";
+
     public static String time1 = "2017-12-16T13:40:00+08:00";
     public static String time2 = "2020-12-16T12:00:25+08:00";
     public static String time3 = "2024-12-16T13:50:00+08:00";
@@ -122,7 +130,6 @@ public class UtilsClassGD {
         //文件对象
         listFileObj.add(getFileObj("1"));
         listFileObj.add(getFileObj("2"));
-        log.info(listFileObj.toString());
         return listFileObj;
     }
 }

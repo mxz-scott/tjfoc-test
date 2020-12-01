@@ -12,7 +12,6 @@ import org.junit.*;
 import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -818,9 +817,9 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         log.info("================================检查存证数据格式化《开始》================================");
         //获取监管数据存证hash
-        String jgType = "登记";
+        String jgType = regType;
         String regStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
-        jgType = "主体";
+        jgType = subjectType;
         String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
         String tempObjId = mapAccAddr.get(gdAccount4).toString();
@@ -1055,9 +1054,9 @@ public class GDV2_CheckJGFormat_Part2BondProduct {
 
         log.info("================================检查存证数据格式化《开始》================================");
         //获取监管数据存证hash
-        String jgType = "登记";
+        String jgType = regType;
         String regStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
-        jgType = "主体";
+        jgType = subjectType;
         String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
         for(int k = 0;k < shareList.size();k ++) {

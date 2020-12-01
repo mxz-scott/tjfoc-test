@@ -87,9 +87,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
         //获取监管数据存证hash
-        String jgType = "产品";
+        String jgType = prodType;
         String ProductInfoTxId = gdCF.getJGStoreHash2(txId,jgType,1);
-        jgType = "主体";
+        jgType = subjectType;
         String SubjectObjectTxId = gdCF.getJGStoreHash2(txId,jgType,1);
 
 //        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
@@ -138,9 +138,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
         //获取监管数据存证hash
-        String jgType = "产品";
+        String jgType = prodType;
         String ProductInfoTxId = gdCF.getJGStoreHash2(txId,jgType,1);
-        jgType = "主体";
+        jgType = subjectType;
         String SubjectObjectTxId = gdCF.getJGStoreHash2(txId,jgType,1);
 
 //        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
@@ -191,9 +191,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
         //获取监管数据存证hash
-        String jgType = "产品";
+        String jgType = prodType;
         String ProductInfoTxId = gdCF.getJGStoreHash2(txId,jgType,1);
-        jgType = "主体";
+        jgType = subjectType;
         String SubjectObjectTxId = gdCF.getJGStoreHash2(txId,jgType,1);
 
 //        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
@@ -242,9 +242,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
         //获取监管数据存证hash
-        String jgType = "产品";
+        String jgType = prodType;
         String ProductInfoTxId = gdCF.getJGStoreHash2(txId,jgType,1);
-        jgType = "主体";
+        jgType = subjectType;
         String SubjectObjectTxId = gdCF.getJGStoreHash2(txId,jgType,1);
 
 //        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
@@ -291,9 +291,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
 
         //获取监管数据存证hash
-        String jgType = "账户";
+        String jgType = accType;
         String accStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
-        jgType = "主体";
+        jgType = subjectType;
         String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
 
@@ -342,9 +342,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
 
         //获取监管数据存证hash
-        String jgType = "产品";
+        String jgType = prodType;
         String ProductInfoTxId = gdCF.getJGStoreHash2(txId,jgType,1);
-        jgType = "主体";
+        jgType = subjectType;
         String SubjectObjectTxId = gdCF.getJGStoreHash2(txId,jgType,1);
 
 //        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
@@ -381,9 +381,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
         //获取监管数据存证hash
-        String jgType = "产品";
+        String jgType = prodType;
         String ProductInfoTxId = gdCF.getJGStoreHash2(txId,jgType,1);
-        jgType = "主体";
+        jgType = subjectType;
         String SubjectObjectTxId = gdCF.getJGStoreHash2(txId,jgType,1);
 
 //        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
@@ -417,9 +417,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
         //获取监管数据存证hash
-        String jgType = "产品";
+        String jgType = prodType;
         String ProductInfoTxId = gdCF.getJGStoreHash2(txId,jgType,1);
-        jgType = "主体";
+        jgType = subjectType;
         String SubjectObjectTxId = gdCF.getJGStoreHash2(txId,jgType,1);
 
 //        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
@@ -477,9 +477,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         //获取监管数据存证hash
-        String jgType = "账户";
+        String jgType = accType;
         String accStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
-        jgType = "主体";
+        jgType = subjectType;
         String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
 

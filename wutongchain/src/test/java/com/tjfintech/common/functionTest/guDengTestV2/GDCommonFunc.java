@@ -1,11 +1,7 @@
 package com.tjfintech.common.functionTest.guDengTestV2;
 
 import com.tjfintech.common.CommonFunc;
-import com.tjfintech.common.Interface.MultiSign;
-import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
-import com.tjfintech.common.Interface.Token;
-import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
@@ -70,7 +66,7 @@ public class GDCommonFunc {
         }
         if(storeId.equals("")) {
             log.info("存证与交易并未打在同一个区块中，尝试在下一个区块中查找报送数据存证");
-            sleepAndSaveInfo(6000,"等待下一个块交易打块");
+            sleepAndSaveInfo(3000,"等待下一个块交易打块");
             //如果没有新的区块则不处理
             if(JSONObject.fromObject(store.GetHeight()).getInt("data") >= Integer.parseInt(height) + offset) {
                 txArr = JSONObject.fromObject(store.GetBlockByHeight(Integer.parseInt(height) + offset)).getJSONObject("data").getJSONArray("txs");
@@ -455,7 +451,7 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(subTxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
 
-        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,"主体");
+        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2, subjectType);
 
         //schema校验数据格式
         assertEquals("schema校验数据是否匹配",true,
@@ -471,7 +467,7 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(personalTxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
 
-        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,"主体");
+        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2, subjectType);
 
         //schema校验数据格式
         assertEquals("schema校验数据是否匹配",true,
@@ -485,7 +481,7 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(response);
         String storeData2 = object2.getString("data");//.getJSONObject("store").getString("storeData");
 
-        com.alibaba.fastjson.JSONObject jobj2 = parseJSONBaseOnJSONStrCompatible(storeData2,"主体");
+        com.alibaba.fastjson.JSONObject jobj2 = parseJSONBaseOnJSONStrCompatible(storeData2, subjectType);
         return subjectInfoEnterprise(jobj2);
     }
 
@@ -517,7 +513,7 @@ public class GDCommonFunc {
         //获取账户类型  资金账户 指定账户对象标识的存证信息
         for(int i=0;i<jsonArray2.size();i++) {
             com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
-            if (objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals("账户") &&
+            if (objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals(accType) &&
                     (objTemp.getJSONObject("body").getJSONObject("account_information").getJSONObject("basic_account_information").getIntValue("account_type") == 1) &&
                     objTemp.getJSONObject("body").getJSONObject("account_object_information").getString("account_object_id").equals(objId)) {
                 jobjOK = objTemp;
@@ -555,7 +551,7 @@ public class GDCommonFunc {
         //获取账户类型  股权账户 指定账户对象标识的存证信息
         for(int i=0;i<jsonArray2.size();i++){
             com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
-            if( objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals("账户") &&
+            if( objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals(accType) &&
                     (objTemp.getJSONObject("body").getJSONObject("account_information").getJSONObject("basic_account_information").getIntValue("account_type") == 0) &&
                     objTemp.getJSONObject("body").getJSONObject("account_object_information").getString("account_object_id").equals(objId)){
                 jobjOK = objTemp;
@@ -576,7 +572,7 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(prodTxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
 
-        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,"产品");
+        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,prodType);
 
         //schema校验数据格式
         assertEquals("schema校验数据是否匹配",true,
@@ -589,7 +585,7 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(prodTxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
 
-        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,"产品");
+        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,prodType);
 
         //schema校验数据格式
         assertEquals("schema校验数据是否匹配",true,
@@ -602,7 +598,7 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(prodTxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
 
-        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,"产品");
+        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,prodType);
 
         //schema校验数据格式
         assertEquals("schema校验数据是否匹配",true,
@@ -631,7 +627,7 @@ public class GDCommonFunc {
 //            log.info("index " + i);
             com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
 //            log.info(objTemp.toString());
-            if( objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals("交易报告") &&
+            if( objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals(txrpType) &&
                     objTemp.getJSONObject("body").getJSONObject("transaction_report_information"
                     ).getJSONObject("transaction_information").getJSONObject("transaction_party_information"
                     ).getString("transaction_original_owner_subject_ref").equals(objId)){
@@ -685,7 +681,7 @@ public class GDCommonFunc {
             String type = objTemp.getJSONObject("header").getJSONObject("content").getString("type");
             log.info(type + "123");
 
-            if( type.equals("登记") ){
+            if( type.equals(regType) ){
                 String memRef = objTemp.getJSONObject("body").getJSONObject("registration_information"
                 ).getJSONObject("registration_rights").getJSONObject("basic_information_rights").getString("register_account_obj_id");
                 int sharepp = objTemp.getJSONObject("body").getJSONObject("registration_information").getJSONObject("roll_records"
@@ -710,7 +706,7 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(TxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
 
-        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,"登记");
+        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,regType);
 
         //schema校验数据格式
         assertEquals("schema校验数据是否匹配",true,
@@ -723,7 +719,7 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(TxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
 
-        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,"资金结算");
+        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,settleType);
 
         //schema校验数据格式
         assertEquals("schema校验数据是否匹配",true,
@@ -736,7 +732,7 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(store.GetTxDetail(TxId));
         String storeData2 = object2.getJSONObject("data").getJSONObject("store").getString("storeData");
 
-        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,"信批");
+        com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,infoType);
 
         //schema校验数据格式
         assertEquals("schema校验数据是否匹配",true,

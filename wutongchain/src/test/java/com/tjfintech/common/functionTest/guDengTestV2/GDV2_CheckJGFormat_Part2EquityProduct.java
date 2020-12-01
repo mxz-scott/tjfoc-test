@@ -12,7 +12,6 @@ import org.junit.*;
 import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -391,7 +390,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         log.info("检查转让存证主体格式化及信息内容与传入一致");
 
         //获取监管数据存证hash
-        String jgType = "主体";
+        String jgType = subjectType;
         String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
 //        enterpriseSubjectInfo.put("subject_object_information_type",1); //触发主体变更 类型变更为1
@@ -498,11 +497,11 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
         log.info("================================检查存证数据格式化《开始》================================");
         //获取监管数据存证hash
-        String jgType = "登记";
+        String jgType = regType;
         String regStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
-        jgType = "产品";
+        jgType = prodType;
         String prodStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
-        jgType = "主体";
+        jgType = subjectType;
         String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
         //遍历检查所有账户登记及交易存证信息
@@ -867,9 +866,9 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         log.info("================================检查存证数据格式化《开始》================================");
 
         //获取监管数据存证hash
-        String jgType = "登记";
+        String jgType = regType;
         String regStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
-        jgType = "主体";
+        jgType = subjectType;
         String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
         String tempObjId = mapAccAddr.get(address).toString();
@@ -998,9 +997,9 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
         log.info("================================检查存证数据格式化《开始》================================");
         //获取监管数据存证hash
-        String jgType = "登记";
+        String jgType = regType;
         String regStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
-        jgType = "主体";
+        jgType = subjectType;
         String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
         for(int k = 0;k < shareList4.size();k ++) {
@@ -1147,9 +1146,9 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         log.info("================================检查存证数据格式化《开始》================================");
 
         //获取监管数据存证hash
-        String jgType = "登记";
+        String jgType = regType;
         String regStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
-        jgType = "产品";
+        jgType = prodType;
         String prodStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
 

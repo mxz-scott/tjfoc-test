@@ -422,7 +422,7 @@ public class GDUnitFunc {
                 "\t\t\t" + dataNum[4] + "\t\t" + dataNum[5]+ "\t\t\t" + dataNum[6];
         FileOperation fo = new FileOperation();
         String get = FileOperation.read(saveFile);
-        if(!get.contains("主体"))    fo.appendToFile(dataTopic,saveFile);
+        if(!get.contains(subjectType))    fo.appendToFile(dataTopic,saveFile);
         fo.appendToFile(data,saveFile);
 
 
@@ -445,7 +445,7 @@ public class GDUnitFunc {
         FileOperation fo = new FileOperation();
         if((new File(saveFile)).exists()) {
             String get = FileOperation.read(saveFile);
-            if (!get.contains("主体")) fo.appendToFile(dataTopic, saveFile);
+            if (!get.contains(subjectType)) fo.appendToFile(dataTopic, saveFile);
         }
         else
             fo.appendToFile(dataTopic,saveFile);
