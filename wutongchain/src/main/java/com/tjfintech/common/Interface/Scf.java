@@ -11,7 +11,9 @@ public interface Scf {
     String IssuingCancel(String tokenType, String companyID1, String keyID, String PIN, String comments);
     String IssuingConfirm(String coreCompanyKeyID, String tokenType, String PIN, String comments);
     String IssuingReject(String coreCompanyKeyID, String tokenType, String PIN, String companyID1, String comments);
-//    String AssignmentApply(String fromAddress, String keyID, String PIN, String proof, String tokenType, Object Array tokenList, );
+    String AssignmentApply(String supplyAddress1, String supplyID1, String PIN, String proof, String tokenType, List<Map> list1,String newSubType, String supplyAddress2, String comments);
+    String AssignmentConfirm(String supplyID1, String PIN, String challenge, String tokenType, String comments);
+    String AssignmentReject(String challenge, String tokenType, String comments);
     String getowneraddr(String tokentype);
     String SendMsg(String msgcode, String sender, List<Map> list, String mode, String reftx, String msgdata);
 }
