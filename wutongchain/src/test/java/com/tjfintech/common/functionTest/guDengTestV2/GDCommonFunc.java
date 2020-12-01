@@ -866,6 +866,61 @@ public class GDCommonFunc {
         return getSubjectInfo;
     }
 
+//    public Map subjectInfoPerson(com.alibaba.fastjson.JSONObject jobj2){
+//
+//        Map getSubjectInfo = new HashMap();
+//
+//        //获取对象标识信息
+//        key = "subject_object_id";                  getSubjectInfo.put(key,getSubObjId(jobj2));
+//
+//        com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("subject_object_information");
+////        key = "subject_object_information_type";    getSubjectInfo.put(key,objInfo.getString(key));
+//        key = "subject_type";                         getSubjectInfo.put(key,objInfo.getString(key));
+//
+//        //获取主体信息 主体基本信息
+//        com.alibaba.fastjson.JSONObject objSubI = jobj2.getJSONObject("body").getJSONObject("subject_information");
+//        com.alibaba.fastjson.JSONObject objSubBase = objSubI.getJSONObject("basic_information_subject");
+//        com.alibaba.fastjson.JSONObject objSubBaseCommon = objSubBase.getJSONObject("general_information_subject");
+////        com.alibaba.fastjson.JSONObject objSubBaseQual = objSubBase.getJSONObject("subject_qualification_information");
+////        com.alibaba.fastjson.JSONObject objSubBaseQQ = objSubBaseQual.getJSONObject("subject_qualification_information");
+////        com.alibaba.fastjson.JSONObject objSubBaseQQ1 = objSubBaseQual.getJSONObject("subject_qualification_information1");
+//
+//        //获取 主体信息 主体基本信息 主体通用信息
+//        key = "subject_main_administrative_region";                      getSubjectInfo.put(key,objSubBaseCommon.getString(key));
+//        key = "subject_id";                               getSubjectInfo.put(key,objSubBaseCommon.getString(key));
+//        key = "subject_create_time";                        getSubjectInfo.put(key,objSubBaseCommon.getString(key));
+//        //获取 主体信息 主体基本信息 主体资质信息
+//        key = "subject_qualification_information";      getSubjectInfo.put(key,objSubBase.getString(key));
+//
+//        //获取 主体信息 个人主体信息 个人主体基本信息
+//        com.alibaba.fastjson.JSONObject objPersonSub = objSubI.getJSONObject("personal_subject_information");
+//        com.alibaba.fastjson.JSONObject objPersonSubBase = objPersonSub.getJSONObject("personal_subject_basic_information");
+//        key = "subject_investor_name";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_id_type";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_id_number";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_id_address";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_contact_address";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_contact_number";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_cellphone_number";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_personal_fax";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_postalcode_number";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_id_doc_mailbox";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_education";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_occupation";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_industry";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_birthday";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_gender";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_work_unit";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_investment_period";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_investment_experience";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_native_place";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_province";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_city";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//
+//
+//        return getSubjectInfo;
+//    }
+
     public Map subjectInfoPerson(com.alibaba.fastjson.JSONObject jobj2){
 
         Map getSubjectInfo = new HashMap();
@@ -873,99 +928,209 @@ public class GDCommonFunc {
         //获取对象标识信息
         key = "subject_object_id";                  getSubjectInfo.put(key,getSubObjId(jobj2));
 
-        com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("subject_object_information");
-//        key = "subject_object_information_type";    getSubjectInfo.put(key,objInfo.getString(key));
+        com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("subject");
         key = "subject_type";                         getSubjectInfo.put(key,objInfo.getString(key));
 
         //获取主体信息 主体基本信息
-        com.alibaba.fastjson.JSONObject objSubI = jobj2.getJSONObject("body").getJSONObject("subject_information");
-        com.alibaba.fastjson.JSONObject objSubBase = objSubI.getJSONObject("basic_information_subject");
-        com.alibaba.fastjson.JSONObject objSubBaseCommon = objSubBase.getJSONObject("general_information_subject");
-//        com.alibaba.fastjson.JSONObject objSubBaseQual = objSubBase.getJSONObject("subject_qualification_information");
-//        com.alibaba.fastjson.JSONObject objSubBaseQQ = objSubBaseQual.getJSONObject("subject_qualification_information");
-//        com.alibaba.fastjson.JSONObject objSubBaseQQ1 = objSubBaseQual.getJSONObject("subject_qualification_information1");
+        com.alibaba.fastjson.JSONObject objSubBase = objInfo.getJSONObject("basic_information_subject");
+        com.alibaba.fastjson.JSONObject objSubBaseCommon = objInfo.getJSONObject("general_information_subject");
 
         //获取 主体信息 主体基本信息 主体通用信息
-        key = "subject_main_administrative_region";                      getSubjectInfo.put(key,objSubBaseCommon.getString(key));
-        key = "subject_id";                               getSubjectInfo.put(key,objSubBaseCommon.getString(key));
+        key = "subject_main_administrative_region";         getSubjectInfo.put(key,objSubBaseCommon.getString(key));
+        key = "subject_id";                                 getSubjectInfo.put(key,objSubBaseCommon.getString(key));
         key = "subject_create_time";                        getSubjectInfo.put(key,objSubBaseCommon.getString(key));
+
         //获取 主体信息 主体基本信息 主体资质信息
-        key = "subject_qualification_information";      getSubjectInfo.put(key,objSubBase.getString(key));
+        key = "subject_qualification_information";          getSubjectInfo.put(key,objSubBase.getString(key));
+
+        //获取 主体信息 机构主体信息 企业基本信息 基本信息描述
+        com.alibaba.fastjson.JSONObject objOrgSub = objInfo.getJSONObject("organization_subject_information");
+        com.alibaba.fastjson.JSONObject objEnterpriseBase = objOrgSub.getJSONObject("basic_information_of_enterprise");
+        com.alibaba.fastjson.JSONObject objBase = objEnterpriseBase.getJSONObject("basic_information_description");
+        //主体信息 机构主体信息 企业基本信息 基本信息描述
+        key = "subject_company_name";                          getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_company_english_name";                  getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_company_short_name";                    getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_company_short_english_name";            getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_organization_nature";                   getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_legal_type";                            getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_economic_type";                         getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_company_type";                          getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_scale_type";                            getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_high_technology_enterpris";             getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_document_information";                  getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_registry_date";                         getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_business_license";                      getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_business_scope";                        getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_industry";                              getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_company_business";                      getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_company_profile";                       getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_registered_capital";                    getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_registered_capital_currency";           getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_paid_in_capital";                       getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_paid_in_capital_currency";              getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_registered_address";                    getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_province";                              getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_city";                                  getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_district";                              getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_office_address";                        getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_contact_address";                       getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_contact_number";                        getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_enterprise_fax";                        getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_postal_code";                           getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_internet_address";                      getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_mail_box";                              getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_association_articles";                  getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_regulator";                             getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_shareholders_number";                   getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_taxpayer_id_number";                    getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_invoice_bank";                          getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_invoice_account_number";                getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_invoice_address";                       getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_invoice_telephone_number";              getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_approval_time";                         getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_insured_number";                        getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_company_status";                        getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_company_status_deregistration";         getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_company_status_deregistration_date";    getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_company_status_windingup";              getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_company_status_windingup_date";         getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_name_used_before";                      getSubjectInfo.put(key,objBase.getString(key));
+        key = "subject_personnel_size";                        getSubjectInfo.put(key,objBase.getString(key));
+        //主体信息 机构主体信息 企业基本信息 主要人员信息
+        key = "leading_member_information";                    getSubjectInfo.put(key,objEnterpriseBase.getString(key));
 
         //获取 主体信息 个人主体信息 个人主体基本信息
-        com.alibaba.fastjson.JSONObject objPersonSub = objSubI.getJSONObject("personal_subject_information");
+        com.alibaba.fastjson.JSONObject objPersonSub = objInfo.getJSONObject("personal_subject_information");
         com.alibaba.fastjson.JSONObject objPersonSubBase = objPersonSub.getJSONObject("personal_subject_basic_information");
-        key = "subject_investor_name";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_id_type";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_id_number";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_id_address";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_contact_address";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_contact_number";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_cellphone_number";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_personal_fax";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_postalcode_number";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_id_doc_mailbox";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_education";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_occupation";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_industry";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_birthday";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_gender";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_work_unit";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_investment_period";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_investment_experience";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_native_place";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_province";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_city";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-
+        key = "subject_investor_name";                      getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_id_type";                            getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_id_number";                          getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_id_address";                         getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_contact_address";                    getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_contact_number";                     getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_cellphone_number";                   getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_personal_fax";                       getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_postalcode_number";                  getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_id_doc_mailbox";                     getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_education";                          getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_occupation";                         getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_industry";                           getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_birthday";                           getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_gender";                             getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_work_unit";                          getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_investment_period";                  getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_investment_experience";              getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_native_place";                       getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_province";                           getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_city";                               getSubjectInfo.put(key,objPersonSubBase.getString(key));
 
         return getSubjectInfo;
     }
 
+//    public Map accountInfo(com.alibaba.fastjson.JSONObject jobjOK){
+//        com.alibaba.fastjson.JSONObject objInfo = jobjOK.getJSONObject("body").getJSONObject("account_object_information");
+//
+//        com.alibaba.fastjson.JSONObject objAccbase = jobjOK.getJSONObject("body").getJSONObject("account_information").getJSONObject("basic_account_information");
+//
+//        com.alibaba.fastjson.JSONObject objAccQaul = jobjOK.getJSONObject("body").getJSONObject("account_information").getJSONObject("account_qualificat_information");
+//
+//        com.alibaba.fastjson.JSONObject objAccLife = jobjOK.getJSONObject("body").getJSONObject("account_information").getJSONObject("account_cycle_information");
+//        com.alibaba.fastjson.JSONObject objAccLifeOpen = objAccLife.getJSONObject("account_opening_information");
+//        com.alibaba.fastjson.JSONObject objAccLifeCancel = objAccLife.getJSONObject("account_cancellation_information");
+//        com.alibaba.fastjson.JSONObject objAccLifeFreeze = objAccLife.getJSONObject("freeze_information");
+//        com.alibaba.fastjson.JSONObject objAccLifeUnfreeze = objAccLife.getJSONObject("unfreezing_information");
+//
+////        com.alibaba.fastjson.JSONObject objAccRela = jobjOK.getJSONObject("body").getJSONObject("account_information").getJSONObject("account_association_info");
+//        com.alibaba.fastjson.JSONObject objAccRela = jobjOK.getJSONObject("body").getJSONObject("account_information").getJSONObject("account_related_information");
+//        Map getSubjectInfo = new HashMap();
+//        key = "account_object_id";                  getSubjectInfo.put(key,getSubObjId(jobjOK));
+//        key = "account_object_information_type";    getSubjectInfo.put(key,objInfo.getString(key));
+//
+//        key = "account_holder_subject_ref";         getSubjectInfo.put(key,objAccbase.getString(key));
+//        key = "account_depository_subject_ref";     getSubjectInfo.put(key,objAccbase.getString(key));
+//        key = "account_number";                     getSubjectInfo.put(key,objAccbase.getString(key));
+//        key = "account_type";                       getSubjectInfo.put(key,objAccbase.getString(key));
+//        key = "account_never";                      getSubjectInfo.put(key,objAccbase.getString(key));
+//        key = "account_status";                     getSubjectInfo.put(key,objAccbase.getString(key));
+//
+//        key = "account_qualification_certification_file";   getSubjectInfo.put(key,objAccQaul.getString(key));//可以直接get list string
+//        key = "account_certifier";                          getSubjectInfo.put(key,objAccQaul.getString(key));
+//        key = "account_auditor";                            getSubjectInfo.put(key,objAccQaul.getString(key));
+//        key = "account_certification_time";                 getSubjectInfo.put(key,objAccQaul.getString(key));
+//        key = "account_audit_time";                         getSubjectInfo.put(key,objAccQaul.getString(key));
+//
+//        key = "account_opening_date";               getSubjectInfo.put(key,objAccLifeOpen.getString(key));
+//        key = "account_opening_certificate";        getSubjectInfo.put(key,objAccLifeOpen.getString(key));
+//        key = "account_closing_date";               getSubjectInfo.put(key,objAccLifeCancel.getString(key));
+//        key = "account_closing_certificate";        getSubjectInfo.put(key,com.alibaba.fastjson.JSONObject.parseArray(objAccLifeCancel.getJSONArray(key).toJSONString(), String.class));
+//        key = "account_forzen_date";                getSubjectInfo.put(key,objAccLifeFreeze.getString(key));
+//        key = "account_forzen_certificate";         getSubjectInfo.put(key,com.alibaba.fastjson.JSONObject.parseArray(objAccLifeFreeze.getJSONArray(key).toJSONString(), String.class));
+//        key = "account_thaw_date";                  getSubjectInfo.put(key,objAccLifeUnfreeze.getString(key));
+//        key = "account_thaw_certificate";           getSubjectInfo.put(key,com.alibaba.fastjson.JSONObject.parseArray(objAccLifeUnfreeze.getJSONArray(key).toJSONString(), String.class));
+//
+//        key = "account_association";                    getSubjectInfo.put(key,objAccRela.getString(key));
+//        key = "account_associated_account_ref";         getSubjectInfo.put(key,objAccRela.getString(key));
+//        key = "account_associated_acct_certificates";   getSubjectInfo.put(key,objAccRela.getString(key));
+//
+//
+//        return getSubjectInfo;
+//    }
+
     public Map accountInfo(com.alibaba.fastjson.JSONObject jobjOK){
-        com.alibaba.fastjson.JSONObject objInfo = jobjOK.getJSONObject("body").getJSONObject("account_object_information");
+        com.alibaba.fastjson.JSONObject objInfo = jobjOK.getJSONObject("body").getJSONObject("account_information");
 
-        com.alibaba.fastjson.JSONObject objAccbase = jobjOK.getJSONObject("body").getJSONObject("account_information").getJSONObject("basic_account_information");
+        com.alibaba.fastjson.JSONObject objAccbase = objInfo.getJSONObject("basic_account_information");
 
-        com.alibaba.fastjson.JSONObject objAccQaul = jobjOK.getJSONObject("body").getJSONObject("account_information").getJSONObject("account_qualificat_information");
-
-        com.alibaba.fastjson.JSONObject objAccLife = jobjOK.getJSONObject("body").getJSONObject("account_information").getJSONObject("account_cycle_information");
+        com.alibaba.fastjson.JSONObject objAccLife = objInfo.getJSONObject("account_cycle_information");
         com.alibaba.fastjson.JSONObject objAccLifeOpen = objAccLife.getJSONObject("account_opening_information");
         com.alibaba.fastjson.JSONObject objAccLifeCancel = objAccLife.getJSONObject("account_cancellation_information");
         com.alibaba.fastjson.JSONObject objAccLifeFreeze = objAccLife.getJSONObject("freeze_information");
         com.alibaba.fastjson.JSONObject objAccLifeUnfreeze = objAccLife.getJSONObject("unfreezing_information");
 
-//        com.alibaba.fastjson.JSONObject objAccRela = jobjOK.getJSONObject("body").getJSONObject("account_information").getJSONObject("account_association_info");
-        com.alibaba.fastjson.JSONObject objAccRela = jobjOK.getJSONObject("body").getJSONObject("account_information").getJSONObject("account_related_information");
+        com.alibaba.fastjson.JSONObject objAccRela = objInfo.getJSONObject("account_related_information");
         Map getSubjectInfo = new HashMap();
-        key = "account_object_id";                  getSubjectInfo.put(key,getSubObjId(jobjOK));
-        key = "account_object_information_type";    getSubjectInfo.put(key,objInfo.getString(key));
+        key = "account_object_id";                    getSubjectInfo.put(key,getSubObjId(jobjOK));
+        key = "account_object_information_type";      getSubjectInfo.put(key,objInfo.getString(key));
 
-        key = "account_holder_subject_ref";         getSubjectInfo.put(key,objAccbase.getString(key));
-        key = "account_depository_subject_ref";     getSubjectInfo.put(key,objAccbase.getString(key));
-        key = "account_number";                     getSubjectInfo.put(key,objAccbase.getString(key));
-        key = "account_type";                       getSubjectInfo.put(key,objAccbase.getString(key));
-        key = "account_never";                      getSubjectInfo.put(key,objAccbase.getString(key));
-        key = "account_status";                     getSubjectInfo.put(key,objAccbase.getString(key));
+        //账户信息 账户基本信息
+        key = "account_subject_ref";                  getSubjectInfo.put(key,objAccbase.getString(key));
+        key = "account_depository_ref";               getSubjectInfo.put(key,objAccbase.getString(key));
+        key = "account_number";                       getSubjectInfo.put(key,objAccbase.getString(key));
+        key = "account_type";                         getSubjectInfo.put(key,objAccbase.getString(key));
+        key = "account_purpose";                      getSubjectInfo.put(key,objAccbase.getString(key));
+        key = "account_status";                       getSubjectInfo.put(key,objAccbase.getString(key));
+        key = "account_create_time";                  getSubjectInfo.put(key,objAccbase.getString(key));
 
-        key = "account_qualification_certification_file";   getSubjectInfo.put(key,objAccQaul.getString(key));//可以直接get list string
-        key = "account_certifier";                          getSubjectInfo.put(key,objAccQaul.getString(key));
-        key = "account_auditor";                            getSubjectInfo.put(key,objAccQaul.getString(key));
-        key = "account_certification_time";                 getSubjectInfo.put(key,objAccQaul.getString(key));
-        key = "account_audit_time";                         getSubjectInfo.put(key,objAccQaul.getString(key));
+        //账户信息 账户生命周期信息 开户信息
+        key = "account_establish_date";               getSubjectInfo.put(key,objAccLifeOpen.getString(key));
+        key = "account_open_date";                    getSubjectInfo.put(key,objAccLifeOpen.getString(key));
+        key = "account_open_doc";                     getSubjectInfo.put(key,objAccLifeOpen.getString(key));
+        key = "account_open_agency_name";             getSubjectInfo.put(key,objAccLifeOpen.getString(key));
+        key = "account_open_agency_phone";            getSubjectInfo.put(key,objAccLifeOpen.getString(key));
 
-        key = "account_opening_date";               getSubjectInfo.put(key,objAccLifeOpen.getString(key));
-        key = "account_opening_certificate";        getSubjectInfo.put(key,objAccLifeOpen.getString(key));
-        key = "account_closing_date";               getSubjectInfo.put(key,objAccLifeCancel.getString(key));
-        key = "account_closing_certificate";        getSubjectInfo.put(key,com.alibaba.fastjson.JSONObject.parseArray(objAccLifeCancel.getJSONArray(key).toJSONString(), String.class));
-        key = "account_forzen_date";                getSubjectInfo.put(key,objAccLifeFreeze.getString(key));
-        key = "account_forzen_certificate";         getSubjectInfo.put(key,com.alibaba.fastjson.JSONObject.parseArray(objAccLifeFreeze.getJSONArray(key).toJSONString(), String.class));
-        key = "account_thaw_date";                  getSubjectInfo.put(key,objAccLifeUnfreeze.getString(key));
-        key = "account_thaw_certificate";           getSubjectInfo.put(key,com.alibaba.fastjson.JSONObject.parseArray(objAccLifeUnfreeze.getJSONArray(key).toJSONString(), String.class));
+        //账户信息 账户生命周期信息 销户信息
+        key = "account_close_date";                   getSubjectInfo.put(key,objAccLifeCancel.getString(key));
+        key = "account_close_doc";                    getSubjectInfo.put(key,objAccLifeCancel.getString(key));
+        key = "account_close_agency_name";            getSubjectInfo.put(key,objAccLifeCancel.getString(key));
+        key = "account_close_agency_phone";           getSubjectInfo.put(key,objAccLifeCancel.getString(key));
+//        key = "account_thaw_certificate";           getSubjectInfo.put(key,com.alibaba.fastjson.JSONObject.parseArray(objAccLifeUnfreeze.getJSONArray(key).toJSONString(), String.class));
 
-        key = "account_association";                    getSubjectInfo.put(key,objAccRela.getString(key));
-        key = "account_associated_account_ref";         getSubjectInfo.put(key,objAccRela.getString(key));
-        key = "account_associated_acct_certificates";   getSubjectInfo.put(key,objAccRela.getString(key));
+        //账户信息 账户生命周期信息 冻结信息
+        key = "account_frozen_date";                  getSubjectInfo.put(key,objAccLifeFreeze.getString(key));
+        key = "account_frozen_doc";                   getSubjectInfo.put(key,objAccLifeFreeze.getString(key));
+        key = "account_frozen_applicant_name";        getSubjectInfo.put(key,objAccLifeFreeze.getString(key));
+        key = "account_frozen_event_description";     getSubjectInfo.put(key,objAccLifeFreeze.getString(key));
 
+        //账户信息 账户生命周期信息 解冻信息
+        key = "account_thaw_date";                    getSubjectInfo.put(key,objAccLifeUnfreeze.getString(key));
+        key = "account_thaw_doc";                     getSubjectInfo.put(key,objAccLifeUnfreeze.getString(key));
+        key = "account_thaw_applicant_name";          getSubjectInfo.put(key,objAccLifeUnfreeze.getString(key));
+        key = "account_thaw_event_description";       getSubjectInfo.put(key,objAccLifeUnfreeze.getString(key));
+
+        //账户信息 账户关联信息
+        key = "account_association";                  getSubjectInfo.put(key,objAccRela.getString(key));
+        key = "account_associated_account_ref";       getSubjectInfo.put(key,objAccRela.getString(key));
 
         return getSubjectInfo;
     }
