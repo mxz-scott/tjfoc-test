@@ -645,28 +645,28 @@ public class GDBeforeCondition {
         //账户信息 账户生命周期信息
         //账户信息 账户生命周期信息 开户信息
         mapTemp.put("account_establish_date", date1);
-        mapTemp.put("account_open_date", date1);
-        mapTemp.put("account_open_doc", getListFileObj());
-        mapTemp.put("account_open_agency_name", "name0001");
-        mapTemp.put("account_open_agency_phone", "phone0001");
+        mapTemp.put("account_opening_date", date1);
+        mapTemp.put("account_opening_doc", getListFileObj());
+        mapTemp.put("account_opening_agent_name", "name0001");
+        mapTemp.put("account_opening_agent_contact_number", "phone0001");
 
         //账户信息 账户生命周期信息 销户信息
-        mapTemp.put("account_close_date", date1);
-        mapTemp.put("account_close_doc", getListFileObj());
-        mapTemp.put("account_close_agency_name", "name0001");
-        mapTemp.put("account_close_agency_phone", "phone0001");
+        mapTemp.put("account_closing_date", date1);
+        mapTemp.put("account_closing_doc", getListFileObj());
+        mapTemp.put("account_closing_agent_name", "name0001");
+        mapTemp.put("account_closing_agent_contact_number", "phone0001");
 
         //账户信息 账户生命周期信息 冻结信息
         mapTemp.put("account_frozen_date", date1);
         mapTemp.put("account_frozen_doc", getListFileObj());
         mapTemp.put("account_frozen_applicant_name", "name0001");
-        mapTemp.put("account_frozen_event_description", "phone0001");
+        mapTemp.put("account_frozen_remark", "phone0001");
 
         //账户信息 账户生命周期信息 解冻信息
         mapTemp.put("account_thaw_date", date1);
         mapTemp.put("account_thaw_doc", getListFileObj());
         mapTemp.put("account_thaw_applicant_name", "name0001");
-        mapTemp.put("account_thaw_event_description", "escription0001");
+        mapTemp.put("account_thaw_remark", "escription0001");
 
         //账户信息 账户关联信息
         mapTemp.put("account_association", 0);
@@ -759,28 +759,28 @@ public class GDBeforeCondition {
         //账户信息 账户生命周期信息
         //账户信息 账户生命周期信息 开户信息
         mapTemp.put("account_establish_date", date1);
-        mapTemp.put("account_open_date", date1);
-        mapTemp.put("account_open_doc", getListFileObj());
-        mapTemp.put("account_open_agency_name", "name0001");
-        mapTemp.put("account_open_agency_phone", "phone0001");
+        mapTemp.put("account_opening_date", date1);
+        mapTemp.put("account_opening_doc", getListFileObj());
+        mapTemp.put("account_opening_agent_name", "name0001");
+        mapTemp.put("account_opening_agent_contact_number", "phone0001");
 
         //账户信息 账户生命周期信息 销户信息
-        mapTemp.put("account_close_date", "2022/6/25");
-        mapTemp.put("account_close_doc", getListFileObj());
-        mapTemp.put("account_close_agency_name", "name0001");
-        mapTemp.put("account_close_agency_phone", "phone0001");
+        mapTemp.put("account_closing_date", "2022/6/25");
+        mapTemp.put("account_closing_doc", getListFileObj());
+        mapTemp.put("account_closing_agent_name", "name0001");
+        mapTemp.put("account_closing_agent_contact_number", "phone0001");
 
         //账户信息 账户生命周期信息 冻结信息
         mapTemp.put("account_frozen_date", date1);
         mapTemp.put("account_frozen_doc", getListFileObj());
         mapTemp.put("account_frozen_applicant_name", "name0001");
-        mapTemp.put("account_frozen_event_description", "phone0001");
+        mapTemp.put("account_frozen_remark", "phone0001");
 
         //账户信息 账户生命周期信息 解冻信息
         mapTemp.put("account_thaw_date", date1);
         mapTemp.put("account_thaw_doc", getListFileObj());
         mapTemp.put("account_thaw_applicant_name", "name0001");
-        mapTemp.put("account_thaw_event_description", "escription0001");
+        mapTemp.put("account_thaw_remark", "escription0001");
 
         //账户信息 账户关联信息
         mapTemp.put("account_association", 0);

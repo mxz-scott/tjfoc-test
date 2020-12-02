@@ -1047,30 +1047,30 @@ public class GDCommonFunc {
         key = "account_create_time";                  getSubjectInfo.put(key,objAccbase.getString(key));
 
         //账户信息 账户生命周期信息 开户信息
-        key = "account_establish_date";               getSubjectInfo.put(key,objAccLifeOpen.getString(key));
-        key = "account_open_date";                    getSubjectInfo.put(key,objAccLifeOpen.getString(key));
-        key = "account_open_doc";                     getSubjectInfo.put(key,objAccLifeOpen.getString(key));
-        key = "account_open_agency_name";             getSubjectInfo.put(key,objAccLifeOpen.getString(key));
-        key = "account_open_agency_phone";            getSubjectInfo.put(key,objAccLifeOpen.getString(key));
+        key = "account_establish_date";                  getSubjectInfo.put(key,objAccLifeOpen.getString(key));
+        key = "account_opening_date";                    getSubjectInfo.put(key,objAccLifeOpen.getString(key));
+        key = "account_opening_doc";                     getSubjectInfo.put(key,objAccLifeOpen.getString(key));
+        key = "account_opening_agent_name";              getSubjectInfo.put(key,objAccLifeOpen.getString(key));
+        key = "account_opening_agent_contact_number";    getSubjectInfo.put(key,objAccLifeOpen.getString(key));
 
         //账户信息 账户生命周期信息 销户信息
-        key = "account_close_date";                   getSubjectInfo.put(key,objAccLifeCancel.getString(key));
-        key = "account_close_doc";                    getSubjectInfo.put(key,objAccLifeCancel.getString(key));
-        key = "account_close_agency_name";            getSubjectInfo.put(key,objAccLifeCancel.getString(key));
-        key = "account_close_agency_phone";           getSubjectInfo.put(key,objAccLifeCancel.getString(key));
+        key = "account_closing_date";                   getSubjectInfo.put(key,objAccLifeCancel.getString(key));
+        key = "account_closing_doc";                    getSubjectInfo.put(key,objAccLifeCancel.getString(key));
+        key = "account_closing_agent_name";             getSubjectInfo.put(key,objAccLifeCancel.getString(key));
+        key = "account_closing_agent_contact_number";   getSubjectInfo.put(key,objAccLifeCancel.getString(key));
 //        key = "account_thaw_certificate";           getSubjectInfo.put(key,com.alibaba.fastjson.JSONObject.parseArray(objAccLifeUnfreeze.getJSONArray(key).toJSONString(), String.class));
 
         //账户信息 账户生命周期信息 冻结信息
         key = "account_frozen_date";                  getSubjectInfo.put(key,objAccLifeFreeze.getString(key));
         key = "account_frozen_doc";                   getSubjectInfo.put(key,objAccLifeFreeze.getString(key));
         key = "account_frozen_applicant_name";        getSubjectInfo.put(key,objAccLifeFreeze.getString(key));
-        key = "account_frozen_event_description";     getSubjectInfo.put(key,objAccLifeFreeze.getString(key));
+        key = "account_frozen_remark";                getSubjectInfo.put(key,objAccLifeFreeze.getString(key));
 
         //账户信息 账户生命周期信息 解冻信息
         key = "account_thaw_date";                    getSubjectInfo.put(key,objAccLifeUnfreeze.getString(key));
         key = "account_thaw_doc";                     getSubjectInfo.put(key,objAccLifeUnfreeze.getString(key));
         key = "account_thaw_applicant_name";          getSubjectInfo.put(key,objAccLifeUnfreeze.getString(key));
-        key = "account_thaw_event_description";       getSubjectInfo.put(key,objAccLifeUnfreeze.getString(key));
+        key = "account_thaw_remark";                  getSubjectInfo.put(key,objAccLifeUnfreeze.getString(key));
 
         //账户信息 账户关联信息
         key = "account_association";                  getSubjectInfo.put(key,objAccRela.getString(key));
