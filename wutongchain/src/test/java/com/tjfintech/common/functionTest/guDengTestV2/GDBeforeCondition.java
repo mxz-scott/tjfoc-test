@@ -245,8 +245,8 @@ public class GDBeforeCondition {
         mapISI.put("subject_investor_qualification_sub", "适当性认证子类");
         mapISI.put("subject_investor_qualification_description", "适当性认证描述");
         mapISI.put("subject_investor_qualification_certificate", getListFileObj());
-        mapISI.put("subject_investor_qualification_cerifier_ref", "sub_ref_0001");
-        mapISI.put("subject_investor_qualification_cerifier_name", "适当性认证方主体名称");
+        mapISI.put("subject_investor_qualification_certifier_ref", "sub_ref_0001");
+        mapISI.put("subject_investor_qualification_certifier_name", "适当性认证方主体名称");
         mapISI.put("subject_investor_qualification_certificate_time", time2);
         mapISI.put("subject_investor_qualification_status", true);
         listISI.add(mapISI);
@@ -288,7 +288,7 @@ public class GDBeforeCondition {
         mapTemp.put("subject_economic_type", 0);
         mapTemp.put("subject_company_type", 0);
         mapTemp.put("subject_scale_type", 0);
-        mapTemp.put("subject_high_technology_enterpris", 0);
+        mapTemp.put("subject_high_technology_enterprise", 0);
 
         Map mapCertDoc = new HashMap();
         List<Map> listCertDoc = new ArrayList<>();
@@ -314,7 +314,7 @@ public class GDBeforeCondition {
         mapTemp.put("subject_office_address", "办公地址CHARACTER");
         mapTemp.put("subject_contact_address", "联系地址CHARACTER");
         mapTemp.put("subject_contact_number", "联系电话CHARACTER");
-        mapTemp.put("subject_enterprise_fax", "企业传真CHARACTER");
+        mapTemp.put("subject_fax", "企业传真CHARACTER");
         mapTemp.put("subject_postal_code", "邮政编码CHARACTER");
         mapTemp.put("subject_internet_address", "互联网地址CHARACTER");
         mapTemp.put("subject_mail_box", "电子邮箱CHARACTER");
@@ -346,18 +346,18 @@ public class GDBeforeCondition {
         //-----------------主要人员信息---------------//
         Map mapLMI = new HashMap();
         List<Map> listLMI = new ArrayList<>();
-        mapLMI.put("subject_keypersonnel_appointment_end", date2);
-        mapLMI.put("subject_keypersonnel_type", 0);
-        mapLMI.put("subject_keypersonnel_position", 0);
-        mapLMI.put("subject_keypersonnel_appointment_start", date2);
-        mapLMI.put("subject_keypersonnel_name", "姓名CHARACTER");
-        mapLMI.put("subject_keypersonnel_nationality", "国籍CHARACTER");
+        mapLMI.put("subject_key_personnel_appointment_end", date2);
+        mapLMI.put("subject_key_personnel_type", 0);
+        mapLMI.put("subject_key_personnel_position", 0);
+        mapLMI.put("subject_key_personnel_appointment_start", date2);
+        mapLMI.put("subject_key_personnel_name", "姓名CHARACTER");
+        mapLMI.put("subject_key_personnel_nationality", "国籍CHARACTER");
         mapLMI.put("subject_document_type", 0);
-        mapLMI.put("subject_keypersonnel_id", "证件号码CHARACTER");
-        mapLMI.put("subject_keypersonnel_address", "证件地址CHARACTER");
-        mapLMI.put("subject_keypersonnel_shareholding_ratio", 20);
-        mapLMI.put("subject_keypersonnel_shareholding", 500);
-        mapLMI.put("subject_keypersonnel_contact", "联系方式CHARACTER");
+        mapLMI.put("subject_key_personnel_id", "证件号码CHARACTER");
+        mapLMI.put("subject_key_personnel_address", "证件地址CHARACTER");
+        mapLMI.put("subject_key_personnel_shareholding_ratio", 20);
+        mapLMI.put("subject_key_personnel_shareholding", 500);
+        mapLMI.put("subject_key_personnel_contact", "联系方式CHARACTER");
         listLMI.add(mapLMI);
 
         mapTemp.put("leading_member_information", listLMI);
@@ -413,8 +413,8 @@ public class GDBeforeCondition {
 //        mapISI.put("subject_investor_qualification_sub","适当性认证子类");
 //        mapISI.put("subject_investor_qualification_description","适当性认证描述");
 //        mapISI.put("subject_investor_qualification_certificate",fileMap);
-//        mapISI.put("subject_investor_qualification_cerifier_ref","sub_ref_0001");
-//        mapISI.put("subject_investor_qualification_cerifier_name","适当性认证方主体名称");
+//        mapISI.put("subject_investor_qualification_certifier_ref","sub_ref_0001");
+//        mapISI.put("subject_investor_qualification_certifier_name","适当性认证方主体名称");
 //        mapISI.put("subject_investor_qualification_certificate_time","2020/11/12 12:00:00");
 //        mapISI.put("subject_investor_qualification_status",true);
 //        listISI.add(mapISI);
@@ -451,7 +451,7 @@ public class GDBeforeCondition {
 //        mapTemp.put("subject_contact_number","个人联系电话CHARACTER");
 //        mapTemp.put("subject_cellphone_number","个人手机号CHARACTER");
 //        mapTemp.put("subject_personal_fax","个人传真CHARACTER");
-//        mapTemp.put("subject_postalcode_number","邮政编码CHARACTER");
+//        mapTemp.put("subject_postal_code","邮政编码CHARACTER");
 //        mapTemp.put("subject_id_doc_mailbox","电子邮箱CHARACTER");
 //        mapTemp.put("subject_education",1);
 //        mapTemp.put("subject_occupation",2);
@@ -507,8 +507,8 @@ public class GDBeforeCondition {
         mapISI.put("subject_investor_qualification_sub", "适当性认证子类");
         mapISI.put("subject_investor_qualification_description", "适当性认证描述");
         mapISI.put("subject_investor_qualification_certificate", getListFileObj());
-        mapISI.put("subject_investor_qualification_cerifier_ref", "sub_ref_0001");
-        mapISI.put("subject_investor_qualification_cerifier_name", "适当性认证方主体名称");
+        mapISI.put("subject_investor_qualification_certifier_ref", "sub_ref_0001");
+        mapISI.put("subject_investor_qualification_certifier_name", "适当性认证方主体名称");
         mapISI.put("subject_investor_qualification_certificate_time", time1);
         mapISI.put("subject_investor_qualification_status", true);
         listISI.add(mapISI);
@@ -543,7 +543,7 @@ public class GDBeforeCondition {
         mapTemp.put("subject_contact_number", "个人联系电话CHARACTER");
         mapTemp.put("subject_cellphone_number", "个人手机号CHARACTER");
         mapTemp.put("subject_personal_fax", "个人传真CHARACTER");
-        mapTemp.put("subject_postalcode_number", "邮政编码CHARACTER");
+        mapTemp.put("subject_postal_code", "邮政编码CHARACTER");
         mapTemp.put("subject_id_doc_mailbox", "电子邮箱CHARACTER");
         mapTemp.put("subject_education", 1);
         mapTemp.put("subject_occupation", 2);

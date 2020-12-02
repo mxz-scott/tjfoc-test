@@ -817,7 +817,7 @@ public class GDCommonFunc {
         key = "subject_economic_type";getSubjectInfo.put(key,objBID.getString(key));
         key = "subject_company_type";getSubjectInfo.put(key,objBID.getString(key));
         key = "subject_scale_type";getSubjectInfo.put(key,objBID.getString(key));
-        key = "subject_high_technology_enterpris";getSubjectInfo.put(key,objBID.getString(key));
+        key = "subject_high_technology_enterprise";getSubjectInfo.put(key,objBID.getString(key));
         key = "subject_document_information";getSubjectInfo.put(key,objBID.getString(key));
         key = "subject_registry_date";getSubjectInfo.put(key,objBID.getString(key));
         key = "subject_business_license";getSubjectInfo.put(key,objBID.getString(key));
@@ -836,7 +836,7 @@ public class GDCommonFunc {
         key = "subject_office_address";getSubjectInfo.put(key,objBID.getString(key));
         key = "subject_contact_address";getSubjectInfo.put(key,objBID.getString(key));
         key = "subject_contact_number";getSubjectInfo.put(key,objBID.getString(key));
-        key = "subject_enterprise_fax";getSubjectInfo.put(key,objBID.getString(key));
+        key = "subject_fax";getSubjectInfo.put(key,objBID.getString(key));
         key = "subject_postal_code";getSubjectInfo.put(key,objBID.getString(key));
         key = "subject_internet_address";getSubjectInfo.put(key,objBID.getString(key));
         key = "subject_mail_box";getSubjectInfo.put(key,objBID.getString(key));
@@ -904,7 +904,7 @@ public class GDCommonFunc {
 //        key = "subject_contact_number";getSubjectInfo.put(key,objPersonSubBase.getString(key));
 //        key = "subject_cellphone_number";getSubjectInfo.put(key,objPersonSubBase.getString(key));
 //        key = "subject_personal_fax";getSubjectInfo.put(key,objPersonSubBase.getString(key));
-//        key = "subject_postalcode_number";getSubjectInfo.put(key,objPersonSubBase.getString(key));
+//        key = "subject_postal_code";getSubjectInfo.put(key,objPersonSubBase.getString(key));
 //        key = "subject_id_doc_mailbox";getSubjectInfo.put(key,objPersonSubBase.getString(key));
 //        key = "subject_education";getSubjectInfo.put(key,objPersonSubBase.getString(key));
 //        key = "subject_occupation";getSubjectInfo.put(key,objPersonSubBase.getString(key));
@@ -955,7 +955,7 @@ public class GDCommonFunc {
         key = "subject_contact_number";                     getSubjectInfo.put(key,objPersonSubBase.getString(key));
         key = "subject_cellphone_number";                   getSubjectInfo.put(key,objPersonSubBase.getString(key));
         key = "subject_personal_fax";                       getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_postalcode_number";                  getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_postal_code";                  getSubjectInfo.put(key,objPersonSubBase.getString(key));
         key = "subject_id_doc_mailbox";                     getSubjectInfo.put(key,objPersonSubBase.getString(key));
         key = "subject_education";                          getSubjectInfo.put(key,objPersonSubBase.getString(key));
         key = "subject_occupation";                         getSubjectInfo.put(key,objPersonSubBase.getString(key));
