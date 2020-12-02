@@ -1038,7 +1038,7 @@ public class GDCommonFunc {
 
         com.alibaba.fastjson.JSONObject objAccRela = objInfo.getJSONObject("account_related_information");
         Map getSubjectInfo = new HashMap();
-        key = "account_object_id";                    getSubjectInfo.put(key,getSubObjId(jobjOK));
+        key = "account_object_id";                    getSubjectInfo.put(key,getSubObjId(jobj2));
 
         //账户信息 账户基本信息
         key = "account_subject_ref";                  getSubjectInfo.put(key,objAccbase.getString(key));
