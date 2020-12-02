@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -454,8 +455,8 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2, subjectType);
 
         //schema校验数据格式
-//        assertEquals("schema校验数据是否匹配",true,
-//                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
+        assertEquals("schema校验数据是否匹配",true,
+                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
 
         return subjectInfoEnterprise(jobjOK);
     }
@@ -514,8 +515,8 @@ public class GDCommonFunc {
         for(int i=0;i<jsonArray2.size();i++) {
             com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
             if (objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals(accType) &&
-                    (objTemp.getJSONObject("body").getJSONObject("account_information").getJSONObject("basic_account_information").getIntValue("account_type") == 1) &&
-                    objTemp.getJSONObject("body").getJSONObject("account_object_information").getString("account_object_id").equals(objId)) {
+                    (objTemp.getJSONObject("body").getJSONObject("account_information").getJSONObject("basic_account_information").getIntValue("account_type") == 2) &&
+                    objTemp.getJSONObject("header").getJSONObject("content").getString("object_id").equals(objId)) {
                 jobjOK = objTemp;
                 break;
             }
@@ -552,8 +553,8 @@ public class GDCommonFunc {
         for(int i=0;i<jsonArray2.size();i++){
             com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(jsonArray2.get(i).toString());
             if( objTemp.getJSONObject("header").getJSONObject("content").getString("type").equals(accType) &&
-                    (objTemp.getJSONObject("body").getJSONObject("account_information").getJSONObject("basic_account_information").getIntValue("account_type") == 0) &&
-                    objTemp.getJSONObject("body").getJSONObject("account_object_information").getString("account_object_id").equals(objId)){
+                    (objTemp.getJSONObject("body").getJSONObject("account_information").getJSONObject("basic_account_information").getIntValue("account_type") == 1) &&
+                    objTemp.getJSONObject("header").getJSONObject("content").getString("object_id").equals(objId)){
                 jobjOK = objTemp;
                 break;
             }
@@ -575,8 +576,8 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,prodType);
 
         //schema校验数据格式
-//        assertEquals("schema校验数据是否匹配",true,
-//                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
+        assertEquals("schema校验数据是否匹配",true,
+                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
         return productInfo(jobjOK,"1");
     }
 
@@ -588,8 +589,8 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,prodType);
 
 //        //schema校验数据格式
-//        assertEquals("schema校验数据是否匹配",true,
-//                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
+        assertEquals("schema校验数据是否匹配",true,
+                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
         return productInfo(jobjOK,"2");
     }
 
@@ -601,8 +602,8 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2,prodType);
 
 //        //schema校验数据格式
-//        assertEquals("schema校验数据是否匹配",true,
-//                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
+        assertEquals("schema校验数据是否匹配",true,
+                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
 
         return productInfo(jobjOK,"3");
     }
@@ -931,16 +932,17 @@ public class GDCommonFunc {
         //获取对象标识信息
         key = "subject_object_id";                  getSubjectInfo.put(key,getSubObjId(jobj2));
 
-        com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("subject");
-        key = "subject_type";                         getSubjectInfo.put(key,objInfo.getString(key));
+        com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("subject_information");
+
 
         //获取主体信息 主体基本信息
         com.alibaba.fastjson.JSONObject objSubBase = objInfo.getJSONObject("basic_information_subject");
-        com.alibaba.fastjson.JSONObject objSubBaseCommon = objInfo.getJSONObject("general_information_subject");
+        com.alibaba.fastjson.JSONObject objSubBaseCommon = objSubBase.getJSONObject("general_information_subject");
 
         //获取 主体信息 主体基本信息 主体通用信息
         key = "subject_main_administrative_region";         getSubjectInfo.put(key,objSubBaseCommon.getString(key));
         key = "subject_id";                                 getSubjectInfo.put(key,objSubBaseCommon.getString(key));
+        key = "subject_type";                               getSubjectInfo.put(key,objSubBaseCommon.getString(key));
         key = "subject_create_time";                        getSubjectInfo.put(key,objSubBaseCommon.getString(key));
 
         //获取 主体信息 主体基本信息 主体资质信息
@@ -975,55 +977,6 @@ public class GDCommonFunc {
 
         return getSubjectInfo;
     }
-
-//    public Map accountInfo(com.alibaba.fastjson.JSONObject jobjOK){
-//        com.alibaba.fastjson.JSONObject objInfo = jobjOK.getJSONObject("body").getJSONObject("account_object_information");
-//
-//        com.alibaba.fastjson.JSONObject objAccbase = jobjOK.getJSONObject("body").getJSONObject("account_information").getJSONObject("basic_account_information");
-//
-//        com.alibaba.fastjson.JSONObject objAccQaul = jobjOK.getJSONObject("body").getJSONObject("account_information").getJSONObject("account_qualificat_information");
-//
-//        com.alibaba.fastjson.JSONObject objAccLife = jobjOK.getJSONObject("body").getJSONObject("account_information").getJSONObject("account_cycle_information");
-//        com.alibaba.fastjson.JSONObject objAccLifeOpen = objAccLife.getJSONObject("account_opening_information");
-//        com.alibaba.fastjson.JSONObject objAccLifeCancel = objAccLife.getJSONObject("account_cancellation_information");
-//        com.alibaba.fastjson.JSONObject objAccLifeFreeze = objAccLife.getJSONObject("freeze_information");
-//        com.alibaba.fastjson.JSONObject objAccLifeUnfreeze = objAccLife.getJSONObject("unfreezing_information");
-//
-////        com.alibaba.fastjson.JSONObject objAccRela = jobjOK.getJSONObject("body").getJSONObject("account_information").getJSONObject("account_association_info");
-//        com.alibaba.fastjson.JSONObject objAccRela = jobjOK.getJSONObject("body").getJSONObject("account_information").getJSONObject("account_related_information");
-//        Map getSubjectInfo = new HashMap();
-//        key = "account_object_id";                  getSubjectInfo.put(key,getSubObjId(jobjOK));
-//        key = "account_object_information_type";    getSubjectInfo.put(key,objInfo.getString(key));
-//
-//        key = "account_holder_subject_ref";         getSubjectInfo.put(key,objAccbase.getString(key));
-//        key = "account_depository_subject_ref";     getSubjectInfo.put(key,objAccbase.getString(key));
-//        key = "account_number";                     getSubjectInfo.put(key,objAccbase.getString(key));
-//        key = "account_type";                       getSubjectInfo.put(key,objAccbase.getString(key));
-//        key = "account_never";                      getSubjectInfo.put(key,objAccbase.getString(key));
-//        key = "account_status";                     getSubjectInfo.put(key,objAccbase.getString(key));
-//
-//        key = "account_qualification_certification_file";   getSubjectInfo.put(key,objAccQaul.getString(key));//可以直接get list string
-//        key = "account_certifier";                          getSubjectInfo.put(key,objAccQaul.getString(key));
-//        key = "account_auditor";                            getSubjectInfo.put(key,objAccQaul.getString(key));
-//        key = "account_certification_time";                 getSubjectInfo.put(key,objAccQaul.getString(key));
-//        key = "account_audit_time";                         getSubjectInfo.put(key,objAccQaul.getString(key));
-//
-//        key = "account_opening_date";               getSubjectInfo.put(key,objAccLifeOpen.getString(key));
-//        key = "account_opening_certificate";        getSubjectInfo.put(key,objAccLifeOpen.getString(key));
-//        key = "account_closing_date";               getSubjectInfo.put(key,objAccLifeCancel.getString(key));
-//        key = "account_closing_certificate";        getSubjectInfo.put(key,com.alibaba.fastjson.JSONObject.parseArray(objAccLifeCancel.getJSONArray(key).toJSONString(), String.class));
-//        key = "account_forzen_date";                getSubjectInfo.put(key,objAccLifeFreeze.getString(key));
-//        key = "account_forzen_certificate";         getSubjectInfo.put(key,com.alibaba.fastjson.JSONObject.parseArray(objAccLifeFreeze.getJSONArray(key).toJSONString(), String.class));
-//        key = "account_thaw_date";                  getSubjectInfo.put(key,objAccLifeUnfreeze.getString(key));
-//        key = "account_thaw_certificate";           getSubjectInfo.put(key,com.alibaba.fastjson.JSONObject.parseArray(objAccLifeUnfreeze.getJSONArray(key).toJSONString(), String.class));
-//
-//        key = "account_association";                    getSubjectInfo.put(key,objAccRela.getString(key));
-//        key = "account_associated_account_ref";         getSubjectInfo.put(key,objAccRela.getString(key));
-//        key = "account_associated_acct_certificates";   getSubjectInfo.put(key,objAccRela.getString(key));
-//
-//
-//        return getSubjectInfo;
-//    }
 
     public Map accountInfo(com.alibaba.fastjson.JSONObject jobj2){
         com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("account_information");
@@ -1940,9 +1893,10 @@ public class GDCommonFunc {
     public Map constructContentMap(String...valueList){
         Map tempMap = new HashMap();
         String[] checkKey = new String[]{"type","object_id","version","operation","timestamp"};
+
         for(int i =0;i<valueList.length;i++){
             String temp = valueList[i];
-
+            log.info("temp **** " + temp);
             if(checkKey[i].equals( "version")) {
                 tempMap.put(checkKey[i],Integer.valueOf(temp));
             }else if(checkKey[i].equals( "timestamp")) {
@@ -1952,5 +1906,12 @@ public class GDCommonFunc {
             }
         }
         return tempMap;
+    }
+
+    public String getTimeStampFromMap(Map objMap,String timeKeyWord)throws Exception{
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        long dt = sdf.parse(objMap.get(timeKeyWord).toString()).getTime()/1000;
+        return String.valueOf(dt);
+
     }
 }

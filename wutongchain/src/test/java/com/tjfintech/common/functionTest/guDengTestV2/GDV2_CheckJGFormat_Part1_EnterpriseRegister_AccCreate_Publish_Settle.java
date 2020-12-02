@@ -33,6 +33,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
     GDBeforeCondition gdBF = new GDBeforeCondition();
     GDUnitFunc uf = new GDUnitFunc();
     public static String bizNoTest = "test" + Random(12);
+    public int verTemp = 0;
 
     @Rule
     public TestName tm = new TestName();
@@ -62,8 +63,11 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
     @Test
     public void TC011_enterpriseRegisterEquityCheckFormat() throws Exception {
         long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo,
-                equityProductInfo,null,null);
+        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
+        Map eqProdInfo = gdBF.init03EquityProductInfo();
+
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enSubInfo,
+                eqProdInfo,null,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -95,12 +99,22 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         Map getSubInfo = gdCF.contructEnterpriseSubInfo(SubjectObjectTxId);
         Map getProInfo = gdCF.contructEquityProdInfo(ProductInfoTxId);
+        if(bChkHeader) {
+            String timeStampSub = gdCF.getTimeStampFromMap(getSubInfo, "subject_create_time");
+            String timeStampProd = gdCF.getTimeStampFromMap(getProInfo, "product_create_time");
+            enSubInfo.put("content",
+                gdCF.constructContentMap(subjectType,gdCompanyID,String.valueOf(verTemp),"create",
+                        timeStampSub));
+            eqProdInfo.put("content",
+                gdCF.constructContentMap(prodType,gdEquityCode,String.valueOf(verTemp),"create",
+                        timeStampProd));
+        }
 
-        log.info("检查主体存证信息内容与传入一致\n" + enterpriseSubjectInfo.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(enterpriseSubjectInfo.toString()),replaceCertain(getSubInfo.toString()));
+        log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
+        assertEquals(replaceCertain(enSubInfo.toString()),replaceCertain(getSubInfo.toString()));
 
-        log.info("检查产品存证信息内容与传入一致\n" + equityProductInfo.toString() + "\n" + getProInfo.toString());
-        assertEquals(replaceCertain(equityProductInfo.toString()),replaceCertain(getProInfo.toString()));
+        log.info("检查产品存证信息内容与传入一致\n" + eqProdInfo.toString() + "\n" + getProInfo.toString());
+        assertEquals(replaceCertain(eqProdInfo.toString()),replaceCertain(getProInfo.toString()));
     }
 
 
@@ -108,6 +122,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
     @Test
     public void TC012_enterpriseRegisterBondCheckFormat() throws Exception {
         long shareTotals = 1000000;
+        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
+        Map eqProdInfo = gdBF.init03EquityProductInfo();
+
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo,
                 null,bondProductInfo,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");

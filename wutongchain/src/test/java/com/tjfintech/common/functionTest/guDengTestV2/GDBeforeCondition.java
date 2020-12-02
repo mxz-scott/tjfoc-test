@@ -368,107 +368,6 @@ public class GDBeforeCondition {
         return mapTemp;
     }
 
-//    public Map init01PersonalSubjectInfo() {
-//        Map mapTemp = new HashMap();
-//        log.info("初始化01主体个人数据结构");
-//        //-----------------主体资质信息---------------//
-//        List<Map> listSQI = new ArrayList<>();
-//        List<Map> listQAI = new ArrayList<>();
-//        List<Map> listISI = new ArrayList<>();
-//        Map mapSQI = new HashMap();
-//
-//        Map mapQAI = new HashMap();
-//        Map mapISI = new HashMap();
-//
-//        //主体基本信息 主体资质信息 资质信息
-//        mapSQI.put("subject_qualification_category",1);
-//        mapSQI.put("subject_market_roles_type",1);
-//        List<Integer> type = new ArrayList<>(); type.add(0);type.add(1);
-//        mapSQI.put("subject_intermediary_qualification",type);
-//        mapSQI.put("subject_financial_qualification_type",1);
-//
-//
-//        //主体基本信息 主体资质信息 资质认证信息
-//        //{"file_number":"1","file_name": "12312312","url": "12312312","hash": "12312312","summary": "12312312","term_of_validity_type": "0","term_of_validity":"yyyy/MM/dd"}
-//        //文件对象
-//        Map fileMap = new HashMap();
-//        fileMap.put("file_number",1);
-//        fileMap.put("file_name","file1.pdf");
-//        fileMap.put("hash","da1234filehash5222");
-//        fileMap.put("url","http://test.com/file/201/file1.pdf");
-//        fileMap.put("summary","简述");
-//        fileMap.put("term_of_validity_type","0");
-//        fileMap.put("term_of_validity","2020/04/18");
-//
-//        mapQAI.put("subject_qualification_code","资质代码");
-//        mapQAI.put("subject_role_qualification_certification_doc",fileMap);
-//        mapQAI.put("subject_qualification_authenticator","认证方");
-//        mapQAI.put("subject_certification_time","2020/10/12 12:00:00");
-//        mapQAI.put("subject_qualification_reviewer","审核方");
-//        mapQAI.put("subject_review_time","2020/10/11 12:00:00");
-//        mapQAI.put("subject_qualification_status",true);
-//        listQAI.add(mapQAI);
-//
-//        //主体基本信息 主体资质信息 投资者适当性信息
-//        mapISI.put("subject_investor_qualification",1);
-//        mapISI.put("subject_investor_qualification_sub","适当性认证子类");
-//        mapISI.put("subject_investor_qualification_description","适当性认证描述");
-//        mapISI.put("subject_investor_qualification_certificate",fileMap);
-//        mapISI.put("subject_investor_qualification_certifier_ref","sub_ref_0001");
-//        mapISI.put("subject_investor_qualification_certifier_name","适当性认证方主体名称");
-//        mapISI.put("subject_investor_qualification_certificate_time","2020/11/12 12:00:00");
-//        mapISI.put("subject_investor_qualification_status",true);
-//        listISI.add(mapISI);
-//
-//        mapSQI.put("investor_suitability_information",listISI);
-//        mapSQI.put("qualification_authentication_information",listQAI);
-//
-//        listSQI.add(mapSQI);
-//        //-----------------主体资质信息---------------//
-//
-//
-//        //-----------------主体基本信息---------------//
-//        //对象标识
-//        mapTemp.put("subject_object_id","clientNo0001");
-////        mapTemp.put("subject_object_information_type",0);
-//        mapTemp.put("subject_type",2);
-//
-//        //主体信息 主体基本信息 主体通用信息
-//        mapTemp.put("subject_id", "clientNo0001sub");
-//        mapTemp.put("subject_main_administrative_region",0);
-//        mapTemp.put("subject_create_time","2020/11/06 14:14:59");
-//
-//        //主体信息 主体基本信息 主体资质信息
-//        //主体信息 主体基本信息 主体资质信息 资质信息
-//        mapTemp.put("subject_qualification_information",listSQI);
-//        //-----------------主体基本信息---------------//
-//
-//        //主体信息 个人主体信息 个人主体基本信息
-//        mapTemp.put("subject_investor_name","zhangsan");
-//        mapTemp.put("subject_id_type",0);
-//        mapTemp.put("subject_id_number","个人身份证件号CHARACTER");
-//        mapTemp.put("subject_id_address","个人证件地址CHARACTER");
-//        mapTemp.put("subject_contact_address","个人联系地址CHARACTER");
-//        mapTemp.put("subject_contact_number","个人联系电话CHARACTER");
-//        mapTemp.put("subject_cellphone_number","个人手机号CHARACTER");
-//        mapTemp.put("subject_personal_fax","个人传真CHARACTER");
-//        mapTemp.put("subject_postal_code","邮政编码CHARACTER");
-//        mapTemp.put("subject_id_doc_mailbox","电子邮箱CHARACTER");
-//        mapTemp.put("subject_education",1);
-//        mapTemp.put("subject_occupation",2);
-//        mapTemp.put("subject_industry",1);
-//        mapTemp.put("subject_birthday","yyyy/MM/dd");
-//        mapTemp.put("subject_gender",0);
-//        mapTemp.put("subject_work_unit","工作单位CHARACTER");
-//        mapTemp.put("subject_investment_period","投资年限CHARACTER");
-//        mapTemp.put("subject_investment_experience","投资经历CHARACTER");
-//        mapTemp.put("subject_native_place","籍贯CHARACTER");
-//        mapTemp.put("subject_province","省份CHARACTER");
-//        mapTemp.put("subject_city","城市CHARACTER");
-//
-//
-//        return mapTemp;
-//    }
 
     public Map init01PersonalSubjectInfo() {
         Map mapTemp = new HashMap();
@@ -524,10 +423,10 @@ public class GDBeforeCondition {
         //-----------------主体基本信息start---------------//
         //对象标识
         mapTemp.put("subject_object_id", "clientNo0001");
-        mapTemp.put("subject_type", 2);
 
         //主体信息 主体基本信息 主体通用信息
         mapTemp.put("subject_id", "clientNo0001sub");
+        mapTemp.put("subject_type", 2);
         mapTemp.put("subject_main_administrative_region", 0);
         mapTemp.put("subject_create_time", time1);
 
@@ -550,9 +449,9 @@ public class GDBeforeCondition {
         mapTemp.put("subject_occupation", 2);
         mapTemp.put("subject_industry", 1);
         mapTemp.put("subject_birthday", date1);
-        mapTemp.put("subject_gender", 0);
+        mapTemp.put("subject_gender", 1);
         mapTemp.put("subject_work_unit", "工作单位CHARACTER");
-        mapTemp.put("subject_investment_period", "投资年限CHARACTER");
+        mapTemp.put("subject_investment_period", "12");
         mapTemp.put("subject_investment_experience", "投资经历CHARACTER");
         mapTemp.put("subject_native_place", "籍贯CHARACTER");
         mapTemp.put("subject_province", "省份CHARACTER");
@@ -560,71 +459,6 @@ public class GDBeforeCondition {
 
         return mapTemp;
     }
-
-//    public Map init02ShareholderAccountInfo() {
-//        Map mapTemp = new HashMap();
-//        log.info("初始化02账户数据结构");
-//        //默认股权账户
-//        List<String> fileList1 = new ArrayList<>();
-//        fileList1.add("test1.pdf");
-//        fileList1.add("test2.pdf");
-//
-//        List<String> fileList2 = new ArrayList<>();
-//        fileList2.add("test21.pdf");
-//        fileList2.add("test22.pdf");
-//        List<String> fileList3 = new ArrayList<>();
-//        fileList3.add("test31.pdf");
-//        fileList3.add("test32.pdf");
-//        List<String> fileList4 = new ArrayList<>();
-//        fileList4.add("test41.pdf");
-//        fileList4.add("test42.pdf");
-//        List<String> fileList5 = new ArrayList<>();
-//        fileList5.add("test51.pdf");
-//        fileList5.add("test52.pdf");
-//        mapTemp.clear();
-//
-//        //对象信息
-//        mapTemp.put("account_object_id", "testacc00001");
-//        mapTemp.put("account_object_information_type", 0);
-//
-//        //账户信息 账户基本信息
-//        mapTemp.put("account_holder_subject_ref", "hrefid00001");
-//        mapTemp.put("account_depository_subject_ref", "drefid00001");
-//        mapTemp.put("account_number", "h0123555");
-//        mapTemp.put("account_type", 0);  //默认股权账户
-//        mapTemp.put("account_never", 0);
-//        mapTemp.put("account_status", 0);
-//
-//        //账户信息 账户资质信息
-//        mapTemp.put("account_qualification_certification_file", fileList1);
-//        mapTemp.put("account_certifier", "监管局");
-//        mapTemp.put("account_auditor", "认证者");
-//        mapTemp.put("account_certification_time", "2012/6/25");
-//        mapTemp.put("account_audit_time", "2012/6/25");
-//
-//        //账户信息 账户生命周期信息
-//        //账户信息 账户生命周期信息 开户信息
-//        mapTemp.put("account_opening_date", "2012/6/25");
-//        mapTemp.put("account_opening_certificate", fileList4);
-//
-//        //账户信息 账户生命周期信息 销户信息
-//        mapTemp.put("account_closing_date", "2022/6/25");
-//        mapTemp.put("account_closing_certificate", fileList2);
-//
-//        //账户信息 账户生命周期信息 冻结信息
-//        mapTemp.put("account_forzen_date", "2020/6/25");
-//        mapTemp.put("account_forzen_certificate", fileList3);
-//
-//        //账户信息 账户生命周期信息 解冻信息
-//        mapTemp.put("account_thaw_date", "2020/6/25");
-//        mapTemp.put("account_thaw_certificate", fileList4);
-//
-//        //账户信息 账户关联信息
-//        mapTemp.put("account_association", 0);
-//        mapTemp.put("account_associated_account_ref", "t5pdf");
-//        mapTemp.put("account_associated_acct_certificates", fileList5);
-//        return mapTemp;
-//    }
 
     public Map init02ShareholderAccountInfo() {
         Map mapTemp = new HashMap();
@@ -642,7 +476,7 @@ public class GDBeforeCondition {
         type.add(0);
         type.add(1);
         mapTemp.put("account_purpose", type);
-        mapTemp.put("account_status", 0);
+        mapTemp.put("account_status", 1);
         mapTemp.put("account_create_time", time1);
 
         //账户信息 账户生命周期信息
@@ -677,71 +511,6 @@ public class GDBeforeCondition {
         return mapTemp;
     }
 
-//    public Map init02FundAccountInfo() {
-//        Map mapTemp = new HashMap();
-//        log.info("初始化02账户数据结构");
-//        //默认股权账户
-//        List<String> fileList1 = new ArrayList<>();
-//        fileList1.add("test1.pdf");
-//        fileList1.add("test2.pdf");
-//
-//        List<String> fileList2 = new ArrayList<>();
-//        fileList2.add("test21.pdf");
-//        fileList2.add("test22.pdf");
-//        List<String> fileList3 = new ArrayList<>();
-//        fileList3.add("test31.pdf");
-//        fileList3.add("test32.pdf");
-//        List<String> fileList4 = new ArrayList<>();
-//        fileList4.add("test41.pdf");
-//        fileList4.add("test42.pdf");
-//        List<String> fileList5 = new ArrayList<>();
-//        fileList5.add("test51.pdf");
-//        fileList5.add("test52.pdf");
-//        mapTemp.clear();
-//
-//        //对象信息
-//        mapTemp.put("account_object_id", "testacc00001");
-//        mapTemp.put("account_object_information_type", 0);
-//
-//        //账户信息 账户基本信息
-//        mapTemp.put("account_holder_subject_ref", "hrefid00001");
-//        mapTemp.put("account_depository_subject_ref", "drefid00001");
-//        mapTemp.put("account_number", "h0123555");
-//        mapTemp.put("account_type", 1);  //资金账户
-//        mapTemp.put("account_never", 0);
-//        mapTemp.put("account_status", 0);
-//
-//        //账户信息 账户资质信息
-//        mapTemp.put("account_qualification_certification_file", fileList1);
-//        mapTemp.put("account_certifier", "监管局");
-//        mapTemp.put("account_auditor", "认证者");
-//        mapTemp.put("account_certification_time", "2012/6/25");
-//        mapTemp.put("account_audit_time", "2012/6/25");
-//
-//        //账户信息 账户生命周期信息
-//        //账户信息 账户生命周期信息 开户信息
-//        mapTemp.put("account_opening_date", "2012/6/25");
-//        mapTemp.put("account_opening_certificate", fileList4);
-//
-//        //账户信息 账户生命周期信息 销户信息
-//        mapTemp.put("account_closing_date", "2022/6/25");
-//        mapTemp.put("account_closing_certificate", fileList2);
-//
-//        //账户信息 账户生命周期信息 冻结信息
-//        mapTemp.put("account_forzen_date", "2020/6/25");
-//        mapTemp.put("account_forzen_certificate", fileList3);
-//
-//        //账户信息 账户生命周期信息 解冻信息
-//        mapTemp.put("account_thaw_date", "2020/6/25");
-//        mapTemp.put("account_thaw_certificate", fileList4);
-//
-//        //账户信息 账户关联信息
-//        mapTemp.put("account_association", 0);
-//        mapTemp.put("account_associated_account_ref", "t5pdf");
-//        mapTemp.put("account_associated_acct_certificates", fileList5);
-//        return mapTemp;
-//    }
-
     public Map init02FundAccountInfo() {
         Map mapTemp = new HashMap();
         log.info("初始化02账户数据结构");
@@ -753,12 +522,12 @@ public class GDBeforeCondition {
         mapTemp.put("account_subject_ref", "hrefid00001");
         mapTemp.put("account_depository_ref", "drefid00001");
         mapTemp.put("account_number", "h0123555");
-        mapTemp.put("account_type", 1);  //资金账户
+        mapTemp.put("account_type", 2);  //资金账户
         List<Integer> type = new ArrayList<>();
         type.add(0);
         type.add(1);
         mapTemp.put("account_purpose", type);
-        mapTemp.put("account_status", 0);
+        mapTemp.put("account_status", 1);
         mapTemp.put("account_create_time", time1);
 
         //账户信息 账户生命周期信息
