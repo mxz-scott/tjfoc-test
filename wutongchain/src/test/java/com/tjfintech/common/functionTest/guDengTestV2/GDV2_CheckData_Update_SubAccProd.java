@@ -68,9 +68,12 @@ public class GDV2_CheckData_Update_SubAccProd {
         gdEquityCode = "update" + Random(12);
         //挂牌企业登记
         long shareTotals = 1000000;
+
         Map testSub = gdBF.init01EnterpriseSubjectInfo();
+        Map eqProdInfo = gdBF.init03EquityProductInfo();
+
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,testSub,
-                equityProductInfo,bondProductInfo,fundProductInfo);
+                eqProdInfo,null,null);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -89,8 +92,7 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         Map<String, String> testMap1 = new TreeMap<String, String>(testSub);
         Map<String, String> testMap2 = new TreeMap<String, String>(mapSubject);
-        assertEquals(replaceCertain(testMap1.toString()),
-                replaceCertain(testMap2.toString()));
+        assertEquals(replaceCertain(testMap1.toString()),replaceCertain(testMap2.toString()));
 
         //更新主体信息数据 全部数据
         Map mapTemp = new HashMap();
@@ -99,40 +101,41 @@ public class GDV2_CheckData_Update_SubAccProd {
         List<Map> listQAI = new ArrayList<>();
         List<Map> listISI = new ArrayList<>();
         Map mapSQI = new HashMap();
+
         Map mapQAI = new HashMap();
         Map mapISI = new HashMap();
 
         //主体基本信息 主体资质信息 资质信息
-        mapSQI.put("subject_qualification_category",0);
-        mapSQI.put("subject_market_roles_type",0);
-        List<Integer> type = new ArrayList<>(); type.add(2);type.add(3);
-        mapSQI.put("subject_intermediary_qualification",type);
-        mapSQI.put("subject_financial_qualification_type",0);
+        mapSQI.put("subject_qualification_category", 1);
+        mapSQI.put("subject_market_roles_type", 1);
+        List<Integer> type = new ArrayList<>();  type.add(0);  type.add(1);
+        mapSQI.put("subject_intermediary_qualification", type);
+        mapSQI.put("subject_financial_qualification_type", 1);
 
 
         //主体基本信息 主体资质信息 资质认证信息
-        mapQAI.put("subject_qualification_code","资质代码2");
-        mapQAI.put("subject_role_qualification_certification_doc",getListFileObj());
-        mapQAI.put("subject_qualification_authenticator","认证方2");
-        mapQAI.put("subject_certification_time",time1);
-        mapQAI.put("subject_qualification_reviewer","审核方2");
-        mapQAI.put("subject_review_time",time1);
-        mapQAI.put("subject_qualification_status",true);
+        mapQAI.put("subject_qualification_code", "资质代码2");
+        mapQAI.put("subject_role_qualification_certification_doc", getListFileObj());
+        mapQAI.put("subject_qualification_authenticator", "认证方2");
+        mapQAI.put("subject_certification_time", time1);
+        mapQAI.put("subject_qualification_reviewer", "审核方2");
+        mapQAI.put("subject_review_time", time1);
+        mapQAI.put("subject_qualification_status", true);
         listQAI.add(mapQAI);
 
         //主体基本信息 主体资质信息 投资者适当性信息
-        mapISI.put("subject_investor_qualification",2);
-        mapISI.put("subject_investor_qualification_sub","适当性认证子类2");
-        mapISI.put("subject_investor_qualification_description","适当性认证描述2");
-        mapISI.put("subject_investor_qualification_certificate",getListFileObj());
-        mapISI.put("subject_investor_qualification_cerifier_ref","sub_ref_0002");
-        mapISI.put("subject_investor_qualification_cerifier_name","适当性认证方主体名称2");
-        mapISI.put("subject_investor_qualification_certificate_time",time1);
-        mapISI.put("subject_investor_qualification_status",true);
+        mapISI.put("subject_investor_qualification", 1);
+        mapISI.put("subject_investor_qualification_sub", "适当性认证子类2");
+        mapISI.put("subject_investor_qualification_description", "适当性认证描述2");
+        mapISI.put("subject_investor_qualification_certificate", getListFileObj());
+        mapISI.put("subject_investor_qualification_certifier_ref", "sub_ref_0001");
+        mapISI.put("subject_investor_qualification_certifier_name", "适当性认证方主体名称2");
+        mapISI.put("subject_investor_qualification_certificate_time", time2);
+        mapISI.put("subject_investor_qualification_status", true);
         listISI.add(mapISI);
 
-        mapSQI.put("investor_suitability_information",listISI);
-        mapSQI.put("qualification_authentication_information",listQAI);
+        mapSQI.put("investor_suitability_information", listISI);
+        mapSQI.put("qualification_authentication_information", listQAI);
 
 
         listSQI.add(mapSQI);
@@ -141,81 +144,82 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //-----------------主体基本信息---------------//
         //对象标识
-        mapTemp.put("subject_object_id",gdCompanyID);
+        mapTemp.put("subject_object_id", gdCompanyID);
 //        mapTemp.put("subject_object_information_type",0);
 //        mapTemp.put("subject_type",1);
 
         //主体信息 主体基本信息 主体通用信息
-        mapTemp.put("subject_id",gdCompanyID);
-        mapTemp.put("subject_type",2);
-        mapTemp.put("subject_main_administrative_region",2);
-        mapTemp.put("subject_create_time",time1);
+        mapTemp.put("subject_id", gdCompanyID);
+        mapTemp.put("subject_type", 1);
+        mapTemp.put("subject_main_administrative_region", 0);
+        mapTemp.put("subject_create_time", time3);
 
         //主体信息 主体基本信息 主体资质信息
         //主体信息 主体基本信息 主体资质信息 资质信息
-        mapTemp.put("subject_qualification_information",listSQI);
+        mapTemp.put("subject_qualification_information", listSQI);
         //-----------------主体基本信息---------------//
 
 
         //-----------------机构主体信息---------------//
         //主体信息 机构主体信息 企业基本信息 基本信息描述
-        mapTemp.put("subject_company_name","公司全称CHARACTER2");
-        mapTemp.put("subject_company_english_name","英文名称CHARACTER2");
-        mapTemp.put("subject_company_short_name","公司简称CHARACTER2");
-        mapTemp.put("subject_company_short_english_name","英文简称CHARACTER2");
-        mapTemp.put("subject_organization_nature",1);
-        mapTemp.put("subject_legal_type",1);
-        mapTemp.put("subject_economic_type",1);
-        mapTemp.put("subject_company_type",1);
-        mapTemp.put("subject_scale_type",1);
-        mapTemp.put("subject_high_technology_enterpris",1);
+        mapTemp.put("subject_company_name", "公司全称CHARACTER2");
+        mapTemp.put("subject_company_english_name", "英文名称CHARACTER2");
+        mapTemp.put("subject_company_short_name", "公司简称CHARACTER2");
+        mapTemp.put("subject_company_short_english_name", "英文简称CHARACTER2");
+        mapTemp.put("subject_organization_nature", 0);
+        mapTemp.put("subject_legal_type", 0);
+        mapTemp.put("subject_economic_type", 0);
+        mapTemp.put("subject_company_type", 0);
+        mapTemp.put("subject_scale_type", 0);
+        mapTemp.put("subject_high_technology_enterprise", 0);
 
         Map mapCertDoc = new HashMap();
         List<Map> listCertDoc = new ArrayList<>();
         mapCertDoc.put("type",1);
-        mapCertDoc.put("code","1233333333222");
+        mapCertDoc.put("code","1233333333");
         listCertDoc.add(mapCertDoc);
 
         mapTemp.put("subject_document_information",listCertDoc);
-        mapTemp.put("subject_registry_date",date1);
-        mapTemp.put("subject_business_license",getListFileObj());
-        mapTemp.put("subject_business_scope","经营范围CHARACTER2");
-        mapTemp.put("subject_industry",2);
-        mapTemp.put("subject_company_business","主营业务CHARACTER2");
-        mapTemp.put("subject_company_profile","公司简介TEXT2");
-        mapTemp.put("subject_registered_capital",5000000);
-        mapTemp.put("subject_registered_capital_currency","注册资本币种CHARACTER2");
-        mapTemp.put("subject_paid_in_capital",5000000);
-        mapTemp.put("subject_paid_in_capital_currency","实收资本币种CHARACTER2");
-        mapTemp.put("subject_registered_address","注册地址CHARACTER2");
-        mapTemp.put("subject_province","注册地所在省份CHARACTER2");
-        mapTemp.put("subject_city","注册地所在市CHARACTER2");
-        mapTemp.put("subject_district","注册地所在区CHARACTER2");
-        mapTemp.put("subject_office_address","办公地址CHARACTER2");
-        mapTemp.put("subject_contact_address","联系地址CHARACTER2");
-        mapTemp.put("subject_contact_number","联系电话CHARACTER2");
-        mapTemp.put("subject_enterprise_fax","企业传真CHARACTER2");
-        mapTemp.put("subject_postal_code","邮政编码CHARACTER2");
-        mapTemp.put("subject_internet_address","互联网地址CHARACTER2");
-        mapTemp.put("subject_mail_box","电子邮箱CHARACTER2");
-        mapTemp.put("subject_association_articles",getListFileObj());
-        mapTemp.put("subject_regulator","主管单位CHARACTER2");
-        mapTemp.put("subject_shareholders_number",12);
-        mapTemp.put("subject_taxpayer_id_number","纳税人识别号CHARACTER2");
-        mapTemp.put("subject_invoice_bank","发票开户行CHARACTER2");
-        mapTemp.put("subject_invoice_account_number","发票账号CHARACTER2");
-        mapTemp.put("subject_invoice_address","发票地址CHARACTER2");
-        mapTemp.put("subject_invoice_telephone_number","发票电话CHARACTER2");
-        mapTemp.put("subject_approval_time",time1);
-        mapTemp.put("subject_insured_number",52);
-        mapTemp.put("subject_company_status",2);
-        mapTemp.put("subject_company_status_deregistration","注销原因CHARACTER2");
-        mapTemp.put("subject_company_status_deregistration_date",time3);
-        mapTemp.put("subject_company_status_windingup","吊销原因CHARACTER");
-        mapTemp.put("subject_company_status_windingup_date",time3);
-        List<String> name = new ArrayList<>(); name.add("h");name.add("c");name.add("d");
-        mapTemp.put("subject_name_used_before",name);
-        mapTemp.put("subject_personnel_size","人员规模CHARACTER2");
+        mapTemp.put("subject_registry_date", date1);
+        mapTemp.put("subject_business_license", getListFileObj());
+        mapTemp.put("subject_business_scope", "经营范围CHARACTER2");
+        mapTemp.put("subject_industry", 1);
+        mapTemp.put("subject_company_business", "主营业务CHARACTER2");
+        mapTemp.put("subject_company_profile", "公司简介TEXT2");
+        mapTemp.put("subject_registered_capital", 7000000);
+        mapTemp.put("subject_registered_capital_currency", "156");
+        mapTemp.put("subject_paid_in_capital", 7000000);
+        mapTemp.put("subject_paid_in_capital_currency", "156");
+        mapTemp.put("subject_registered_address", "注册地址CHARACTER2");
+        mapTemp.put("subject_province", "注册地所在省份CHARACTER2");
+        mapTemp.put("subject_city", "注册地所在市CHARACTER2");
+        mapTemp.put("subject_district", "注册地所在区CHARACTER2");
+        mapTemp.put("subject_office_address", "办公地址CHARACTER2");
+        mapTemp.put("subject_contact_address", "联系地址CHARACTER2");
+        mapTemp.put("subject_contact_number", "联系电话CHARACTER2");
+        mapTemp.put("subject_fax", "企业传真CHARACTER2");
+        mapTemp.put("subject_postal_code", "邮政编码CHARACTER2");
+        mapTemp.put("subject_internet_address", "互联网地址CHARACTER2");
+        mapTemp.put("subject_mail_box", "电子邮箱CHARACTER2");
+        mapTemp.put("subject_association_articles", getListFileObj());
+        mapTemp.put("subject_regulator", "主管单位CHARACTER2");
+        mapTemp.put("subject_shareholders_number", 15);
+        mapTemp.put("subject_taxpayer_id_number", "纳税人识别号CHARACTER2");
+        mapTemp.put("subject_invoice_bank", "发票开户行CHARACTER2");
+        mapTemp.put("subject_invoice_account_number", "发票账号CHARACTER2");
+        mapTemp.put("subject_invoice_address", "发票地址CHARACTER2");
+        mapTemp.put("subject_invoice_telephone_number", "发票电话CHARACTER2");
+        mapTemp.put("subject_approval_time", time3);
+        mapTemp.put("subject_insured_number", 52);
+        mapTemp.put("subject_company_status", 1);
+        mapTemp.put("subject_company_status_deregistration", "注销原因CHARACTER2");
+        mapTemp.put("subject_company_status_deregistration_date", date3);
+        mapTemp.put("subject_company_status_windingup", "吊销原因CHARACTER3");
+        mapTemp.put("subject_company_status_windingup_date", date3);
+        List<String> name = new ArrayList<>();
+        name.add("曾用名a2");        name.add("曾用名b2");        name.add("曾用名c2");
+        mapTemp.put("subject_name_used_before", name);
+        mapTemp.put("subject_personnel_size", "人员规模CHARACTER2");
         //-----------------机构主体信息---------------//
 
 
@@ -223,21 +227,22 @@ public class GDV2_CheckData_Update_SubAccProd {
         //-----------------主要人员信息---------------//
         Map mapLMI = new HashMap();
         List<Map> listLMI = new ArrayList<>();
-        mapLMI.put("subject_keypersonnel_appointment_end",date3);
-        mapLMI.put("subject_keypersonnel_type",1);
-        mapLMI.put("subject_keypersonnel_position",1);
-        mapLMI.put("subject_keypersonnel_appointment_start",date1);
-        mapLMI.put("subject_keypersonnel_name","姓名CHARACTER2");
-        mapLMI.put("subject_keypersonnel_nationality","国籍CHARACTER2");
-        mapLMI.put("subject_document_type",1);
-        mapLMI.put("subject_keypersonnel_id","证件号码CHARACTER2");
-        mapLMI.put("subject_keypersonnel_address","证件地址CHARACTER2");
-        mapLMI.put("subject_keypersonnel_shareholding_ratio",21);
-        mapLMI.put("subject_keypersonnel_shareholding",50);
-        mapLMI.put("subject_keypersonnel_contact","联系方式CHARACTER2");
+        mapLMI.put("subject_key_personnel_appointment_end", date1);
+        mapLMI.put("subject_key_personnel_id", "证件号码CHARACTER2");
+
+        mapLMI.put("subject_key_personnel_position", 1);
+        mapLMI.put("subject_key_personnel_appointment_start", date3);
+        mapLMI.put("subject_key_personnel_name", "姓名CHARACTER2");
+        mapLMI.put("subject_key_personnel_nationality", "国籍CHARACTER2");
+        mapLMI.put("subject_document_type", 0);
+        mapLMI.put("subject_key_personnel_type", 0);
+        mapLMI.put("subject_key_personnel_address", "证件地址CHARACTER2");
+        mapLMI.put("subject_key_personnel_shareholding_ratio", 30);
+        mapLMI.put("subject_key_personnel_shareholding", 5000);
+        mapLMI.put("subject_key_personnel_contact", "联系方式CHARACTER2");
         listLMI.add(mapLMI);
 
-        mapTemp.put("leading_member_information",listLMI);
+        mapTemp.put("leading_member_information", listLMI);
         //-----------------主要人员信息---------------//
 
         //执行update操作
@@ -255,6 +260,24 @@ public class GDV2_CheckData_Update_SubAccProd {
         Map<String, String> testMap4 = new TreeMap<String, String>(mapTest);
         assertEquals(replaceCertain(testMap3.toString()),
                 replaceCertain(testMap4.toString()));
+
+
+        //获取监管数据存证hash
+        String jgType = subjectType;
+        String SubjectObjectTxId = gdCF.getJGStoreHash2(txId,jgType,1);
+
+        Map getSubInfo = gdCF.contructEnterpriseSubInfo(SubjectObjectTxId);
+
+        if(bChkHeader) {
+            String timeStampSub = gdCF.getTimeStampFromMap(getSubInfo, "subject_create_time");
+            mapTemp.put("content",
+                    gdCF.constructContentMap(subjectType,gdCompanyID,"1","create",
+                            timeStampSub));
+        }
+
+        log.info("检查主体存证信息内容与传入一致\n" + mapTemp.toString() + "\n" + getSubInfo.toString());
+        assertEquals(replaceCertain(mapTemp.toString()),replaceCertain(getSubInfo.toString()));
+
     }
 
     @Test
