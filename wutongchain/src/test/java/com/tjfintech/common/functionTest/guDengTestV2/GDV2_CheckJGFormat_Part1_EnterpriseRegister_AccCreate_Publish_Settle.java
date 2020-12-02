@@ -64,10 +64,10 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
     public void TC011_enterpriseRegisterEquityCheckFormat() throws Exception {
         long shareTotals = 1000000;
         Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
-        Map eqProdInfo = gdBF.init03EquityProductInfo();
+        Map prodInfo = gdBF.init03EquityProductInfo();
 
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enSubInfo,
-                eqProdInfo,null,null);
+                prodInfo,null,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -105,7 +105,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
             enSubInfo.put("content",
                 gdCF.constructContentMap(subjectType,gdCompanyID,String.valueOf(verTemp),"create",
                         timeStampSub));
-            eqProdInfo.put("content",
+            prodInfo.put("content",
                 gdCF.constructContentMap(prodType,gdEquityCode,String.valueOf(verTemp),"create",
                         timeStampProd));
         }
@@ -113,8 +113,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
         assertEquals(replaceCertain(enSubInfo.toString()),replaceCertain(getSubInfo.toString()));
 
-        log.info("检查产品存证信息内容与传入一致\n" + eqProdInfo.toString() + "\n" + getProInfo.toString());
-        assertEquals(replaceCertain(eqProdInfo.toString()),replaceCertain(getProInfo.toString()));
+        log.info("检查产品存证信息内容与传入一致\n" + prodInfo.toString() + "\n" + getProInfo.toString());
+        assertEquals(replaceCertain(prodInfo.toString()),replaceCertain(getProInfo.toString()));
     }
 
 
@@ -123,10 +123,10 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
     public void TC012_enterpriseRegisterBondCheckFormat() throws Exception {
         long shareTotals = 1000000;
         Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
-        Map eqProdInfo = gdBF.init03EquityProductInfo();
+        Map prodInfo = gdBF.init03BondProductInfo();
 
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo,
-                null,bondProductInfo,null);
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enSubInfo,
+                null,prodInfo,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -158,11 +158,23 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         Map getProInfo = gdCF.contructBondProdInfo(ProductInfoTxId);
 
 
-        log.info("检查主体存证信息内容与传入一致\n" + enterpriseSubjectInfo.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(enterpriseSubjectInfo.toString()),replaceCertain(getSubInfo.toString()));
+        if(bChkHeader) {
+            String timeStampSub = gdCF.getTimeStampFromMap(getSubInfo, "subject_create_time");
+            String timeStampProd = gdCF.getTimeStampFromMap(getProInfo, "product_create_time");
+            enSubInfo.put("content",
+                    gdCF.constructContentMap(subjectType,gdCompanyID,String.valueOf(verTemp),"create",
+                            timeStampSub));
+            prodInfo.put("content",
+                    gdCF.constructContentMap(prodType,gdEquityCode,String.valueOf(verTemp),"create",
+                            timeStampProd));
+        }
 
-        log.info("检查产品存证信息内容与传入一致\n" + bondProductInfo.toString() + "\n" + getProInfo.toString());
-        assertEquals(replaceCertain(bondProductInfo.toString()),replaceCertain(getProInfo.toString()));
+
+        log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
+        assertEquals(replaceCertain(enSubInfo.toString()),replaceCertain(getSubInfo.toString()));
+
+        log.info("检查产品存证信息内容与传入一致\n" + prodInfo.toString() + "\n" + getProInfo.toString());
+        assertEquals(replaceCertain(prodInfo.toString()),replaceCertain(getProInfo.toString()));
 
     }
 
@@ -170,8 +182,10 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
     @Test
     public void TC013_enterpriseRegisterFundCheckFormat() throws Exception {
         long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo,
-                null,null,fundProductInfo);
+        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
+        Map prodInfo = gdBF.init03FundProductInfo();
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enSubInfo,
+                null,null,prodInfo);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -204,17 +218,29 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         Map getProInfo = gdCF.contructFundProdInfo(ProductInfoTxId);
 
 
-        log.info("检查主体存证信息内容与传入一致\n" + enterpriseSubjectInfo.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(enterpriseSubjectInfo.toString()),replaceCertain(getSubInfo.toString()));
+        if(bChkHeader) {
+            String timeStampSub = gdCF.getTimeStampFromMap(getSubInfo, "subject_create_time");
+            String timeStampProd = gdCF.getTimeStampFromMap(getProInfo, "product_create_time");
+            enSubInfo.put("content",
+                    gdCF.constructContentMap(subjectType,gdCompanyID,String.valueOf(verTemp),"create",
+                            timeStampSub));
+            prodInfo.put("content",
+                    gdCF.constructContentMap(prodType,gdEquityCode,String.valueOf(verTemp),"create",
+                            timeStampProd));
+        }
 
-        log.info("检查产品存证信息内容与传入一致\n" + fundProductInfo.toString() + "\n" + getProInfo.toString());
-        assertEquals(replaceCertain(fundProductInfo.toString()),replaceCertain(getProInfo.toString()));
+        log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
+        assertEquals(replaceCertain(enSubInfo.toString()),replaceCertain(getSubInfo.toString()));
+
+        log.info("检查产品存证信息内容与传入一致\n" + prodInfo.toString() + "\n" + getProInfo.toString());
+        assertEquals(replaceCertain(prodInfo.toString()),replaceCertain(getProInfo.toString()));
     }
 
     //机构 会员登记
     @Test
     public void TC013_enterpriseRegisterMemberCheckFormat() throws Exception {
-        String response= gd.GDEnterpriseResister(gdContractAddress,"",0,enterpriseSubjectInfo,
+        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
+        String response= gd.GDEnterpriseResister(gdContractAddress,"",0,enSubInfo,
                 null,null,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
@@ -245,9 +271,15 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
 
         Map getSubInfo = gdCF.contructEnterpriseSubInfo(SubjectObjectTxId);
+        if(bChkHeader) {
+            String timeStampSub = gdCF.getTimeStampFromMap(getSubInfo, "subject_create_time");
+            enSubInfo.put("content",
+                    gdCF.constructContentMap(subjectType,gdCompanyID,String.valueOf(verTemp),"create",
+                            timeStampSub));
+        }
 
-        log.info("检查主体存证信息内容与传入一致\n" + enterpriseSubjectInfo.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(enterpriseSubjectInfo.toString()),replaceCertain(getSubInfo.toString()));
+        log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
+        assertEquals(replaceCertain(enSubInfo.toString()),replaceCertain(getSubInfo.toString()));
 
     }
 
@@ -312,11 +344,13 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
     //产品主体引用置为空
     @Test
     public void TC021_enterpriseRegisterEquityEmpty() throws Exception {
+        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
+        Map prodInfo = gdBF.init03EquityProductInfo();
 
-        bondProductInfo.put("product_issuer_subject_ref","");
+        prodInfo.put("product_issuer_subject_ref","");
         long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo,
-                    equityProductInfo,null,null);
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enSubInfo,
+                prodInfo,null,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -327,25 +361,34 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String query = store.GetTxDetail(txId);
         String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm"
                 ).getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
-        JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
 
         //获取监管数据存证hash
         String jgType = prodType;
         String ProductInfoTxId = gdCF.getJGStoreHash2(txId,jgType,1);
-        jgType = subjectType;
+        jgType = subjectType;//jgType = "主体";
         String SubjectObjectTxId = gdCF.getJGStoreHash2(txId,jgType,1);
 
-//        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
-//        String ProductInfoTxId = jsonObject.getString("ProductInfoTxId");
 
-        //检查主体存证信息内容与传入一致
-        log.info("检查债券产品发行主体引用与主体对象标识一致");
-        equityProductInfo.put("product_issuer_subject_ref",enterpriseSubjectInfo.get("subject_object_id").toString());
-        log.info(gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
-        log.info(equityProductInfo.toString());
-        assertEquals(replaceCertain(equityProductInfo.toString()),
-                replaceCertain(gdCF.contructEquityProdInfo(ProductInfoTxId).toString()));
+        Map getSubInfo = gdCF.contructEnterpriseSubInfo(SubjectObjectTxId);
+        Map getProInfo = gdCF.contructEquityProdInfo(ProductInfoTxId);
+        if(bChkHeader) {
+            String timeStampSub = gdCF.getTimeStampFromMap(getSubInfo, "subject_create_time");
+            String timeStampProd = gdCF.getTimeStampFromMap(getProInfo, "product_create_time");
+            enSubInfo.put("content",
+                    gdCF.constructContentMap(subjectType,gdCompanyID,String.valueOf(verTemp),"create",
+                            timeStampSub));
+            prodInfo.put("content",
+                    gdCF.constructContentMap(prodType,gdEquityCode,String.valueOf(verTemp),"create",
+                            timeStampProd));
+        }
+        prodInfo.put("product_issuer_subject_ref",enSubInfo.get("subject_object_id").toString());
+
+        log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
+        assertEquals(replaceCertain(enSubInfo.toString()),replaceCertain(getSubInfo.toString()));
+
+        log.info("检查产品存证信息内容与传入一致\n" + prodInfo.toString() + "\n" + getProInfo.toString());
+        assertEquals(replaceCertain(prodInfo.toString()),replaceCertain(getProInfo.toString()));
 
     }
 
@@ -354,10 +397,13 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
     //产品主体引用置为空
     @Test
     public void TC022_enterpriseRegisterBondEmpty() throws Exception {
-        bondProductInfo.put("product_issuer_subject_ref","");
+        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
+        Map prodInfo = gdBF.init03BondProductInfo();
+
+        prodInfo.put("product_issuer_subject_ref","");
         long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo,
-                null,bondProductInfo,null);
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enSubInfo,
+                null,prodInfo,null);
         String txId =  net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -375,26 +421,39 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         jgType = subjectType;
         String SubjectObjectTxId = gdCF.getJGStoreHash2(txId,jgType,1);
 
-//        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
-//        String ProductInfoTxId = jsonObject.getString("ProductInfoTxId");
 
-        //检查主体存证信息内容与传入一致
-        log.info("检查债券产品发行主体引用与主体对象标识一致");
-        bondProductInfo.put("product_issuer_subject_ref",enterpriseSubjectInfo.get("subject_object_id").toString());
-        log.info(gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
-        log.info(bondProductInfo.toString());
-        assertEquals(replaceCertain(bondProductInfo.toString()),
-                replaceCertain(gdCF.contructBondProdInfo(ProductInfoTxId).toString()));
+        Map getSubInfo = gdCF.contructEnterpriseSubInfo(SubjectObjectTxId);
+        Map getProInfo = gdCF.contructBondProdInfo(ProductInfoTxId);
+
+        if(bChkHeader) {
+            String timeStampSub = gdCF.getTimeStampFromMap(getSubInfo, "subject_create_time");
+            String timeStampProd = gdCF.getTimeStampFromMap(getProInfo, "product_create_time");
+            enSubInfo.put("content",
+                    gdCF.constructContentMap(subjectType,gdCompanyID,String.valueOf(verTemp),"create",
+                            timeStampSub));
+            prodInfo.put("content",
+                    gdCF.constructContentMap(prodType,gdEquityCode,String.valueOf(verTemp),"create",
+                            timeStampProd));
+        }
+        prodInfo.put("product_issuer_subject_ref",enSubInfo.get("subject_object_id").toString());
+
+        log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
+        assertEquals(replaceCertain(enSubInfo.toString()),replaceCertain(getSubInfo.toString()));
+
+        log.info("检查产品存证信息内容与传入一致\n" + prodInfo.toString() + "\n" + getProInfo.toString());
+        assertEquals(replaceCertain(prodInfo.toString()),replaceCertain(getProInfo.toString()));
     }
 
     //企业 基金类 登记
     //产品主体引用置为空
     @Test
     public void TC023_enterpriseRegisterFundEmpty() throws Exception {
-        fundProductInfo.put("product_issuer_subject_ref","");
+        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
+        Map prodInfo = gdBF.init03FundProductInfo();
+        prodInfo.put("product_issuer_subject_ref","");
         long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo,
-                null,null,fundProductInfo);
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enSubInfo,
+                null,null,prodInfo);
         String txId =  net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -403,7 +462,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         //获取主体/产品存证hash
         String query = store.GetTxDetail(txId);
         String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
-        JSONObject jsonObject = JSONObject.parseObject(questInfo);
+
 
         //获取监管数据存证hash
         String jgType = prodType;
@@ -411,16 +470,27 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         jgType = subjectType;
         String SubjectObjectTxId = gdCF.getJGStoreHash2(txId,jgType,1);
 
-//        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
-//        String ProductInfoTxId = jsonObject.getString("ProductInfoTxId");
 
-        //检查主体存证信息内容与传入一致
-        log.info("检查基金类产品发行主体引用与主体对象标识一致");
-        fundProductInfo.put("product_issuer_subject_ref",enterpriseSubjectInfo.get("subject_object_id").toString());
-        log.info(gdCF.contructFundProdInfo(ProductInfoTxId).toString().replaceAll("\"",""));
-        log.info(fundProductInfo.toString());
-        assertEquals(replaceCertain(fundProductInfo.toString()),
-                replaceCertain(gdCF.contructFundProdInfo(ProductInfoTxId).toString()));
+        Map getSubInfo = gdCF.contructEnterpriseSubInfo(SubjectObjectTxId);
+        Map getProInfo = gdCF.contructFundProdInfo(ProductInfoTxId);
+
+        if(bChkHeader) {
+            String timeStampSub = gdCF.getTimeStampFromMap(getSubInfo, "subject_create_time");
+            String timeStampProd = gdCF.getTimeStampFromMap(getProInfo, "product_create_time");
+            enSubInfo.put("content",
+                    gdCF.constructContentMap(subjectType,gdCompanyID,String.valueOf(verTemp),"create",
+                            timeStampSub));
+            prodInfo.put("content",
+                    gdCF.constructContentMap(prodType,gdEquityCode,String.valueOf(verTemp),"create",
+                            timeStampProd));
+        }
+        prodInfo.put("product_issuer_subject_ref",enSubInfo.get("subject_object_id").toString());
+
+        log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
+        assertEquals(replaceCertain(enSubInfo.toString()),replaceCertain(getSubInfo.toString()));
+
+        log.info("检查产品存证信息内容与传入一致\n" + prodInfo.toString() + "\n" + getProInfo.toString());
+        assertEquals(replaceCertain(prodInfo.toString()),replaceCertain(getProInfo.toString()));
 
     }
 
