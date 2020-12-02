@@ -92,7 +92,7 @@ public class UtilsClassGD {
     public static String date3 = "2025/12/16";
     public static String date4 = "2029/11/10";
 
-    public static String gdSchema = "Schema-v2.0.0-Alpha3.1.json" ;
+    public static String gdSchema = "数据对象Schema-v2.0.0-Alpha4.json" ;
     public static String gdTestData = "test.json";
     public static String chkSchemaToolName = "gojsonschema.exe";
     public static String dirSchemaData = System.getProperty("user.dir") + "/" + testDataPath + "schemavalidate/";
