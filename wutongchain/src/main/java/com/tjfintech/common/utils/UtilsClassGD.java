@@ -16,7 +16,7 @@ public class UtilsClassGD {
 //    public static String gdPlatfromKeyID = "btguv5bsnk7r259qh85g";
     //10.1.3.161:7779
     public static String gdContractAddress = "018a976954474678a3a100d33200b7f9fd1b34a60118c4cb13cfd79f6f324b5d";
-    public static String gdPlatfromKeyID = "bu4iruhpgflsbm0msddg";
+    public static String gdPlatfromKeyID = "bv2q0152uehbsbgg2i80";
     //股登164环境
 //    public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
 //    public static String gdPlatfromKeyID = "bu1qdg1pgfltc7no3hp0";
@@ -97,6 +97,52 @@ public class UtilsClassGD {
     public static String chkSchemaToolName = "gojsonschema.exe";
     public static String dirSchemaData = System.getProperty("user.dir") + "/" + testDataPath + "schemavalidate/";
     public static Boolean bChkHeader = false;
+
+    //引用信息变量
+    //主体
+    public static String subject_investor_qualification_certifier_ref;
+    //账户
+    public static String account_subject_ref;
+    public static String account_depository_ref;
+    public static String account_associated_account_ref;
+    //产品
+    public static String product_market_subject_ref;
+    public static String product_issuer_subject_ref;
+    public static String service_provider_subject_ref;
+    public static String product_conversion_price_ref;
+    //交易报告
+    public static String transaction_custody_product_ref;
+    public static String transaction_product_issuer_ref;
+    public static String transaction_issuer_ref;
+    public static String transaction_investor_ref;
+    public static String transaction_investor_original_ref;
+    public static String transaction_investor_counterparty_ref;
+    public static String transaction_intermediary_subject_ref;
+    //登记
+    public static String register_subject_ref;
+    public static String register_subject_account_ref;
+    public static String register_transaction_ref;
+    public static String register_product_ref;
+    public static String register_right_recognition_subject_ref;
+    public static String register_right_recognition_agent_subject_ref;
+    public static String roll_register_subject_ref;
+    public static String roll_register_product_ref;
+    public static String register_equity_subject_ref;
+    public static String register_debt_holder_ref;
+    public static String register_investor_subject_ref;
+    //资金结算
+    public static String settlement_subject_ref;
+    public static String settlement_product_ref;
+    public static String settlement_transaction_ref;
+    public static String settlement_out_account_object_ref;
+    public static String settlement_in_account_object_ref;
+    //信披
+    public static String disclosure_subject_ref;
+    public static String disclosure_referer_subject_ref;
+    public static String disclosure_referer_name;
+    public static String disclosure_display_platform_ref;
+    public static String disclosure_identifier_ref;
+    public static String disclosure_auditor_ref;
 
     public static Map fileObj = new HashMap();
     public static List<Map> listFileObj = new ArrayList<>();
