@@ -802,7 +802,7 @@ public class GDBeforeCondition {
 //        mapProdComInfo.put("product_object_information_type",0);
 
         //产品信息 基本信息 产品基本信息
-        mapProdComInfo.put("product_trading_market_category", 2);
+        mapProdComInfo.put("product_trading_market_category", 1);
         mapProdComInfo.put("product_market_subject_ref", "交易场所主体引用CHARACTER");
         mapProdComInfo.put("product_market_subject_name", "交易场所主体名称CHARACTER");
         mapProdComInfo.put("product_plate_trading_name", "交易场所板块名称CHARACTER");
@@ -815,8 +815,8 @@ public class GDBeforeCondition {
         mapProdComInfo.put("product_type", type);
         mapProdComInfo.put("product_account_number_max", 2000);
         mapProdComInfo.put("product_info_disclosure_way", 0);
-        mapProdComInfo.put("product_scale_unit", 12);
-        mapProdComInfo.put("product_scale_currency", "产品规模币种CHARACTER");
+        mapProdComInfo.put("product_scale_unit", 5);
+        mapProdComInfo.put("product_scale_currency", "156");
         mapProdComInfo.put("product_scale", 50000);
         mapProdComInfo.put("product_customer_browsing_right", 1);
         mapProdComInfo.put("product_issuer_contact_person", "联系人CHARACTER");
@@ -866,10 +866,10 @@ public class GDBeforeCondition {
 
         //产品信息 交易信息
         //产品信息 交易信息 交易状态
-        mapProdComInfo.put("product_transaction_status", 0);
+        mapProdComInfo.put("product_transaction_status", 1);
 
         //产品信息 交易信息 挂牌信息
-        mapProdComInfo.put("product_transaction_scope", 12);
+        mapProdComInfo.put("product_transaction_scope", 1);
         mapProdComInfo.put("product_transfer_permission_institution_to_individual", true);
         mapProdComInfo.put("product_transfer_lockup_days", 20);
         mapProdComInfo.put("product_transfer_validity", 30);
@@ -910,7 +910,7 @@ public class GDBeforeCondition {
         List<Map> listMapPR = new ArrayList<>();
         Map mapPR = new HashMap();
 
-        mapPR.put("product_license_type", 122);
+        mapPR.put("product_license_type", 1);
         mapPR.put("product_filing_date", date1);
         mapPR.put("product_filing_doc", getListFileObj());
         mapPR.put("product_filing_examine_doc", getListFileObj());
@@ -919,8 +919,8 @@ public class GDBeforeCondition {
         mapTemp.put("filing_information", listMapPR);
 
         //产品信息 发行信息 私募股权
-        mapTemp.put("product_issue_scope", 12);
-        mapTemp.put("product_issue_type", 3);
+        mapTemp.put("product_issue_scope", 2);
+        mapTemp.put("product_issue_type", 0);
         List<Integer> iClass = new ArrayList<>();
         iClass.add(1);
         iClass.add(2);
@@ -960,7 +960,7 @@ public class GDBeforeCondition {
         List<Map> listMapPR = new ArrayList<>();
         Map mapPR = new HashMap();
 
-        mapPR.put("product_license_type", 122);
+        mapPR.put("product_license_type", 1);
         mapPR.put("product_filing_date", date2);
         mapPR.put("product_filing_doc", getListFileObj());
         mapPR.put("product_filing_examine_doc", getListFileObj());
@@ -970,8 +970,8 @@ public class GDBeforeCondition {
 
 
         //产品信息 发行信息 私募债
-        mapTemp.put("product_scope_issue", 9);
-        mapTemp.put("product_bond_duration_unit", 15);
+        mapTemp.put("product_scope_issue", 1);
+        mapTemp.put("product_bond_duration_unit", 1);
         mapTemp.put("product_bond_duration", 20);
         mapTemp.put("product_filing_amount", 200000);
         mapTemp.put("product_by_stages", true);
@@ -1038,7 +1038,7 @@ public class GDBeforeCondition {
         List<Map> listMapPR = new ArrayList<>();
         Map mapPR = new HashMap();
 
-        mapPR.put("product_license_type", 122);
+        mapPR.put("product_license_type", 0);
         mapPR.put("product_filing_date", date2);
 
         Map mapDoc = new HashMap();
@@ -1057,10 +1057,8 @@ public class GDBeforeCondition {
         mapTemp.put("product_scope_fund_raising", "募集范围TEXT");
         mapTemp.put("product_record_number", "备案编号CHARACTER");
         mapTemp.put("product_fund_filing_date", date2);
-        List<Integer> ftype = new ArrayList<>();
-        ftype.add(1);
-        ftype.add(3);
-        mapTemp.put("product_fund_type", ftype);
+//        List<Integer> ftype = new ArrayList<>();//        ftype.add(1);//        ftype.add(3);
+        mapTemp.put("product_fund_type", 1);
         mapTemp.put("product_foundation_date", date2);
         mapTemp.put("product_escrow_bank", "托管行CHARACTER");
         mapTemp.put("product_total_fund_share", 50000);
