@@ -944,63 +944,6 @@ public class GDCommonFunc {
         //获取 主体信息 主体基本信息 主体资质信息
         key = "subject_qualification_information";          getSubjectInfo.put(key,objSubBase.getString(key));
 
-        //获取 主体信息 机构主体信息 企业基本信息 基本信息描述
-        com.alibaba.fastjson.JSONObject objOrgSub = objInfo.getJSONObject("organization_subject_information");
-        com.alibaba.fastjson.JSONObject objEnterpriseBase = objOrgSub.getJSONObject("basic_information_of_enterprise");
-        com.alibaba.fastjson.JSONObject objBase = objEnterpriseBase.getJSONObject("basic_information_description");
-        //主体信息 机构主体信息 企业基本信息 基本信息描述
-        key = "subject_company_name";                          getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_company_english_name";                  getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_company_short_name";                    getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_company_short_english_name";            getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_organization_nature";                   getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_legal_type";                            getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_economic_type";                         getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_company_type";                          getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_scale_type";                            getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_high_technology_enterpris";             getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_document_information";                  getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_registry_date";                         getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_business_license";                      getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_business_scope";                        getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_industry";                              getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_company_business";                      getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_company_profile";                       getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_registered_capital";                    getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_registered_capital_currency";           getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_paid_in_capital";                       getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_paid_in_capital_currency";              getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_registered_address";                    getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_province";                              getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_city";                                  getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_district";                              getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_office_address";                        getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_contact_address";                       getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_contact_number";                        getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_enterprise_fax";                        getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_postal_code";                           getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_internet_address";                      getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_mail_box";                              getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_association_articles";                  getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_regulator";                             getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_shareholders_number";                   getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_taxpayer_id_number";                    getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_invoice_bank";                          getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_invoice_account_number";                getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_invoice_address";                       getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_invoice_telephone_number";              getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_approval_time";                         getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_insured_number";                        getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_company_status";                        getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_company_status_deregistration";         getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_company_status_deregistration_date";    getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_company_status_windingup";              getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_company_status_windingup_date";         getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_name_used_before";                      getSubjectInfo.put(key,objBase.getString(key));
-        key = "subject_personnel_size";                        getSubjectInfo.put(key,objBase.getString(key));
-        //主体信息 机构主体信息 企业基本信息 主要人员信息
-        key = "leading_member_information";                    getSubjectInfo.put(key,objEnterpriseBase.getString(key));
-
         //获取 主体信息 个人主体信息 个人主体基本信息
         com.alibaba.fastjson.JSONObject objPersonSub = objInfo.getJSONObject("personal_subject_information");
         com.alibaba.fastjson.JSONObject objPersonSubBase = objPersonSub.getJSONObject("personal_subject_basic_information");
