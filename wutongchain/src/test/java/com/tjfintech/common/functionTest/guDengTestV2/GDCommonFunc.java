@@ -1093,7 +1093,7 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject objBase = objInfo.getJSONObject("essential_information");//产品信息 基本信息对象
         com.alibaba.fastjson.JSONObject objProdBase = objBase.getJSONObject("basic_product_information");//产品信息 基本信息 产品基本信息对象
         key = "product_trading_market_category";getSubjectInfo.put(key,objProdBase.getString(key));
-        key = "product_market_subject";getSubjectInfo.put(key,objProdBase.getString(key));
+        key = "product_market_subject_ref";getSubjectInfo.put(key,objProdBase.getString(key));
         key = "product_market_subject_name";getSubjectInfo.put(key,objProdBase.getString(key));
         key = "product_plate_trading_name";getSubjectInfo.put(key,objProdBase.getString(key));
         key = "product_issuer_subject_ref";getSubjectInfo.put(key,objProdBase.getString(key));
@@ -1138,7 +1138,7 @@ public class GDCommonFunc {
         //产品信息 产品标的信息 投资组合信息
         com.alibaba.fastjson.JSONObject objPortfolio = objPSI.getJSONObject("portfolio_information");//产品信息 产品标的信息对象 投资组合信息
         key = "product_investment_products_type";   getSubjectInfo.put(key,objPortfolio.getString(key));
-        key = "product_Investment_proportion_range";   getSubjectInfo.put(key,objPortfolio.getString(key));
+        key = "product_investment_proportion_range";   getSubjectInfo.put(key,objPortfolio.getString(key));
         key = "product_Investment_product_details";   getSubjectInfo.put(key,objPortfolio.getString(key));
         key = "product_detailed_description_document";   getSubjectInfo.put(key,objPortfolio.getString(key));
 
@@ -1273,7 +1273,7 @@ public class GDCommonFunc {
         key = "product_transaction_scope";getSubjectInfo.put(key,objProdTxList.getString(key));
         key = "product_transfer_permission_institution_to_individual";getSubjectInfo.put(key,objProdTxList.getString(key));
         key = "product_transfer_lockup_days";getSubjectInfo.put(key,objProdTxList.getString(key));
-        key = "product_trasfer_validity";getSubjectInfo.put(key,objProdTxList.getString(key));
+        key = "product_transfer_validity";getSubjectInfo.put(key,objProdTxList.getString(key));
         key = "product_risk_level";getSubjectInfo.put(key,objProdTxList.getString(key));
         key = "product_transaction_unit";getSubjectInfo.put(key,objProdTxList.getString(key));
         key = "product_listing_code";getSubjectInfo.put(key,objProdTxList.getString(key));
@@ -1285,14 +1285,14 @@ public class GDCommonFunc {
         key = "product_delisting_date";getSubjectInfo.put(key,objProdTxDelist.getString(key));
         key = "product_delisting_type";getSubjectInfo.put(key,objProdTxDelist.getString(key));
         key = "product_delisting_reason";getSubjectInfo.put(key,objProdTxDelist.getString(key));
-        key = "product_transfer_board_mrket";getSubjectInfo.put(key,objProdTxDelist.getString(key));
+        key = "product_transfer_board_market";getSubjectInfo.put(key,objProdTxDelist.getString(key));
         key = "product_acquisition_company_market";getSubjectInfo.put(key,objProdTxDelist.getString(key));
         key = "product_delisting_remarks";getSubjectInfo.put(key,objProdTxDelist.getString(key));
 
         //产品信息 托管信息
         com.alibaba.fastjson.JSONObject objProdEscrow = objInfo.getJSONObject("escrow_information");//产品信息 托管信息对象
         key = "product_custodian_registration_date";getSubjectInfo.put(key,objProdEscrow.getString(key));
-        key = "product_cusodian_documents";getSubjectInfo.put(key,objProdEscrow.getString(key));
+        key = "product_custodian_documents";getSubjectInfo.put(key,objProdEscrow.getString(key));
         key = "product_custodian_notes";getSubjectInfo.put(key,objProdEscrow.getString(key));
         key = "product_escrow_deregistration_date";getSubjectInfo.put(key,objProdEscrow.getString(key));
         key = "product_escrow_deregistration_document";getSubjectInfo.put(key,objProdEscrow.getString(key));

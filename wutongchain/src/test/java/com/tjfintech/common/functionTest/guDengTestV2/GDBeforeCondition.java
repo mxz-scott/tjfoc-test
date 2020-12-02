@@ -798,7 +798,7 @@ public class GDBeforeCondition {
 
         //产品信息 基本信息 产品基本信息
         mapProdComInfo.put("product_trading_market_category", 2);
-        mapProdComInfo.put("product_market_subject", "交易场所主体引用CHARACTER");
+        mapProdComInfo.put("product_market_subject_ref", "交易场所主体引用CHARACTER");
         mapProdComInfo.put("product_market_subject_name", "交易场所主体名称CHARACTER");
         mapProdComInfo.put("product_plate_trading_name", "交易场所板块名称CHARACTER");
         mapProdComInfo.put("product_issuer_subject_ref", gdCompanyID);
@@ -849,7 +849,7 @@ public class GDBeforeCondition {
         mapProdComInfo.put("product_business_purpose_details", "经营用途详情CHARACTER");
         mapProdComInfo.put("product_business_purpose_documents", getListFileObj());
         mapProdComInfo.put("product_investment_products_type", 1);
-        mapProdComInfo.put("product_Investment_proportion_range", 50);
+        mapProdComInfo.put("product_investment_proportion_range", 50);
         mapProdComInfo.put("product_Investment_product_details", "投资产品详情CHARACTER");
         mapProdComInfo.put("product_detailed_description_document", getListFileObj());
 
@@ -867,7 +867,7 @@ public class GDBeforeCondition {
         mapProdComInfo.put("product_transaction_scope", 12);
         mapProdComInfo.put("product_transfer_permission_institution_to_individual", true);
         mapProdComInfo.put("product_transfer_lockup_days", 20);
-        mapProdComInfo.put("product_trasfer_validity", 30);
+        mapProdComInfo.put("product_transfer_validity", 30);
         mapProdComInfo.put("product_risk_level", "产品风险级别CHARACTER");
         mapProdComInfo.put("product_transaction_unit", 1000);
         mapProdComInfo.put("product_listing_code", "挂牌代码CHARACTER");
@@ -878,13 +878,13 @@ public class GDBeforeCondition {
         mapProdComInfo.put("product_delisting_date", date3);
         mapProdComInfo.put("product_delisting_type", 1);
         mapProdComInfo.put("product_delisting_reason", 1);
-        mapProdComInfo.put("product_transfer_board_mrket", 2);
+        mapProdComInfo.put("product_transfer_board_market", 2);
         mapProdComInfo.put("product_acquisition_company_market", 3);
         mapProdComInfo.put("product_delisting_remarks", "摘牌备注信息TEXT");
 
         //产品信息 托管信息
         mapProdComInfo.put("product_custodian_registration_date", date2);
-        mapProdComInfo.put("product_cusodian_documents", getListFileObj());
+        mapProdComInfo.put("product_custodian_documents", getListFileObj());
         mapProdComInfo.put("product_custodian_notes", "托管备注信息TEXT");
         mapProdComInfo.put("product_escrow_deregistration_date", date4);
         mapProdComInfo.put("product_escrow_deregistration_document", getListFileObj());
