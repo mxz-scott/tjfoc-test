@@ -631,6 +631,8 @@ public class GDBeforeCondition {
         log.info("初始化02账户数据结构");
         mapTemp.clear();
 
+        mapTemp.put("account_object_id", "testacc00001");
+
         //账户信息 账户基本信息
         mapTemp.put("account_subject_ref", "hrefid00001");
         mapTemp.put("account_depository_ref", "drefid00001");
@@ -744,6 +746,8 @@ public class GDBeforeCondition {
         Map mapTemp = new HashMap();
         log.info("初始化02账户数据结构");
         mapTemp.clear();
+
+        mapTemp.put("account_object_id", "testacc00001");
 
         //账户信息 账户基本信息
         mapTemp.put("account_subject_ref", "hrefid00001");
