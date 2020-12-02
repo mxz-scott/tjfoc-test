@@ -454,8 +454,8 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject jobjOK = parseJSONBaseOnJSONStr(storeData2, subjectType);
 
         //schema校验数据格式
-        assertEquals("schema校验数据是否匹配",true,
-                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
+//        assertEquals("schema校验数据是否匹配",true,
+//                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
 
         return subjectInfoEnterprise(jobjOK);
     }
@@ -864,6 +864,8 @@ public class GDCommonFunc {
         ).getJSONObject("basic_information_of_enterprise");
         key = "leading_member_information";getSubjectInfo.put(key,objLMI.getString(key));
 
+        if(bChkHeader) key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+
         return getSubjectInfo;
     }
 
@@ -969,6 +971,8 @@ public class GDCommonFunc {
         key = "subject_province";                           getSubjectInfo.put(key,objPersonSubBase.getString(key));
         key = "subject_city";                               getSubjectInfo.put(key,objPersonSubBase.getString(key));
 
+        if(bChkHeader) key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+
         return getSubjectInfo;
     }
 
@@ -1021,8 +1025,8 @@ public class GDCommonFunc {
 //        return getSubjectInfo;
 //    }
 
-    public Map accountInfo(com.alibaba.fastjson.JSONObject jobjOK){
-        com.alibaba.fastjson.JSONObject objInfo = jobjOK.getJSONObject("body").getJSONObject("account_information");
+    public Map accountInfo(com.alibaba.fastjson.JSONObject jobj2){
+        com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("account_information");
 
         com.alibaba.fastjson.JSONObject objAccbase = objInfo.getJSONObject("basic_account_information");
 
@@ -1074,6 +1078,8 @@ public class GDCommonFunc {
         //账户信息 账户关联信息
         key = "account_association";                  getSubjectInfo.put(key,objAccRela.getString(key));
         key = "account_associated_account_ref";       getSubjectInfo.put(key,objAccRela.getString(key));
+
+        if(bChkHeader) key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
 
         return getSubjectInfo;
     }
@@ -1297,11 +1303,13 @@ public class GDCommonFunc {
         key = "product_escrow_deregistration_document";getSubjectInfo.put(key,objProdEscrow.getString(key));
         key = "product_escrow_deregistration_remarks";getSubjectInfo.put(key,objProdEscrow.getString(key));
 
+        if(bChkHeader) key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+
         return getSubjectInfo;
     }
 
-    public Map transInfo(com.alibaba.fastjson.JSONObject jobjOK){
-        com.alibaba.fastjson.JSONObject objInfo = jobjOK.getJSONObject("body").getJSONObject("transaction_report_information");
+    public Map transInfo(com.alibaba.fastjson.JSONObject jobj2){
+        com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("transaction_report_information");
 
         com.alibaba.fastjson.JSONObject objBase = objInfo.getJSONObject("basic_transaction_information");
         com.alibaba.fastjson.JSONObject objBaseBIR = objBase.getJSONObject("basic_information_remark");
@@ -1309,7 +1317,7 @@ public class GDCommonFunc {
 
 
         Map getSubjectInfo = new HashMap();
-        key = "transaction_object_id";                      getSubjectInfo.put(key,getSubObjId(jobjOK));
+        key = "transaction_object_id";                      getSubjectInfo.put(key,getSubObjId(jobj2));
 //        key = "transaction_object_information_type";        getSubjectInfo.put(key,objInfo.getString(key));
 
         //交易报告信息 交易基本信息 基本信息描述
@@ -1372,14 +1380,16 @@ public class GDCommonFunc {
         //交易报告信息 交易中介信息
         key = "transaction_intermediary_information";
         getSubjectInfo.put(key,com.alibaba.fastjson.JSONObject.parseArray(
-                jobjOK.getJSONObject("body").getJSONObject("transaction_report_information").getJSONArray(key).toJSONString(), Map.class));
+                jobj2.getJSONObject("body").getJSONObject("transaction_report_information").getJSONArray(key).toJSONString(), Map.class));
+
+        if(bChkHeader) key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
 
         return getSubjectInfo;
     }
 
 
-    public Map regiInfo(com.alibaba.fastjson.JSONObject jobjOK){
-        com.alibaba.fastjson.JSONObject objInfo = jobjOK.getJSONObject("body").getJSONObject("registration_information");
+    public Map regiInfo(com.alibaba.fastjson.JSONObject jobj2){
+        com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("registration_information");
         com.alibaba.fastjson.JSONObject objRegBase = objInfo.getJSONObject("register_basic_infomation");
 
         com.alibaba.fastjson.JSONObject objRegRights = objInfo.getJSONObject("registration_rights");
@@ -1389,7 +1399,7 @@ public class GDCommonFunc {
 
         Map getSubjectInfo = new HashMap();
         //登记信息 登记基本信息
-        key = "register_registration_object_id"; getSubjectInfo.put(key,getSubObjId(jobjOK));
+        key = "register_registration_object_id"; getSubjectInfo.put(key,getSubObjId(jobj2));
         key = "register_object_type";        getSubjectInfo.put(key,objRegBase.getString(key));
         key = "register_event_type";       getSubjectInfo.put(key,objRegBase.getString(key));
 
@@ -1461,6 +1471,8 @@ public class GDCommonFunc {
         key = "register_creditors";getSubjectInfo.put(key,objRollRecords.getString(key));
         //名册登记 基金投资人名册
         key = "fund_investors";getSubjectInfo.put(key,objRollRecords.getString(key));
+
+        if(bChkHeader) key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
         return getSubjectInfo;
     }
 
@@ -1506,15 +1518,15 @@ public class GDCommonFunc {
 //        return getSubjectInfo;
 //    }
 
-    public Map settleInfo(com.alibaba.fastjson.JSONObject jobjOK){
+    public Map settleInfo(com.alibaba.fastjson.JSONObject jobj2){
 
-        com.alibaba.fastjson.JSONObject objInfo = jobjOK.getJSONObject("body").getJSONObject("capital_object_information");
-        com.alibaba.fastjson.JSONObject objBase = jobjOK.getJSONObject("body").getJSONObject("capital_settlement_information").getJSONObject("basic_information_capital_settlement");
-        com.alibaba.fastjson.JSONObject objIn = jobjOK.getJSONObject("body").getJSONObject("capital_settlement_information").getJSONObject("transferor_information");
-        com.alibaba.fastjson.JSONObject objOut = jobjOK.getJSONObject("body").getJSONObject("capital_settlement_information").getJSONObject("transferee_information");
+        com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("capital_object_information");
+        com.alibaba.fastjson.JSONObject objBase = jobj2.getJSONObject("body").getJSONObject("capital_settlement_information").getJSONObject("basic_information_capital_settlement");
+        com.alibaba.fastjson.JSONObject objIn = jobj2.getJSONObject("body").getJSONObject("capital_settlement_information").getJSONObject("transferor_information");
+        com.alibaba.fastjson.JSONObject objOut = jobj2.getJSONObject("body").getJSONObject("capital_settlement_information").getJSONObject("transferee_information");
 
         Map getSubjectInfo = new HashMap();
-        key = "capita_settlement_object_id";                        getSubjectInfo.put(key,getSubObjId(jobjOK));
+        key = "capita_settlement_object_id";                        getSubjectInfo.put(key,getSubObjId(jobj2));
         key = "capita_object_information_type";                     getSubjectInfo.put(key,objInfo.getString(key));
 
 
@@ -1545,6 +1557,8 @@ public class GDCommonFunc {
         key = "settlement_in_account_name";                         getSubjectInfo.put(key,objIn.getString(key));
         key = "settlement_in_account_balance_before_transfer";      getSubjectInfo.put(key,objIn.getString(key));
         key = "settlement_in_account_balance_after_transfer";       getSubjectInfo.put(key,objIn.getString(key));
+
+        if(bChkHeader) key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
 
         return getSubjectInfo;
     }
@@ -1888,6 +1902,7 @@ public class GDCommonFunc {
         }
 
         getSubjectInfo.put("expand_information", tempList10);
+        if(bChkHeader) key = "content";getSubjectInfo.put(key,jobjOK.getJSONObject("header").getString(key));
 
         return getSubjectInfo;
     }

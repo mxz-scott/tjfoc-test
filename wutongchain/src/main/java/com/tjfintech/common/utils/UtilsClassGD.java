@@ -96,6 +96,7 @@ public class UtilsClassGD {
     public static String gdTestData = "test.json";
     public static String chkSchemaToolName = "gojsonschema.exe";
     public static String dirSchemaData = System.getProperty("user.dir") + "/" + testDataPath + "schemavalidate/";
+    public static Boolean bChkHeader = false;
 
     public static Map fileObj = new HashMap();
     public static List<Map> listFileObj = new ArrayList<>();
