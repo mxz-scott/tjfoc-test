@@ -347,13 +347,14 @@ public class GDBeforeCondition {
         Map mapLMI = new HashMap();
         List<Map> listLMI = new ArrayList<>();
         mapLMI.put("subject_key_personnel_appointment_end", date2);
-        mapLMI.put("subject_key_personnel_type", 0);
+        mapLMI.put("subject_key_personnel_id", "证件号码CHARACTER");
+
         mapLMI.put("subject_key_personnel_position", 0);
         mapLMI.put("subject_key_personnel_appointment_start", date2);
         mapLMI.put("subject_key_personnel_name", "姓名CHARACTER");
         mapLMI.put("subject_key_personnel_nationality", "国籍CHARACTER");
         mapLMI.put("subject_document_type", 0);
-        mapLMI.put("subject_key_personnel_id", "证件号码CHARACTER");
+        mapLMI.put("subject_key_personnel_type", 0);
         mapLMI.put("subject_key_personnel_address", "证件地址CHARACTER");
         mapLMI.put("subject_key_personnel_shareholding_ratio", 20);
         mapLMI.put("subject_key_personnel_shareholding", 500);
