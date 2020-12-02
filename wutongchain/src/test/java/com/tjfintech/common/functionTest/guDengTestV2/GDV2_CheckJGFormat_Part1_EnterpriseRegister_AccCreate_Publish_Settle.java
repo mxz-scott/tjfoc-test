@@ -92,22 +92,15 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         jgType = subjectType;//jgType = "主体";
         String SubjectObjectTxId = gdCF.getJGStoreHash2(txId,jgType,1);
 
-//        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
-//        String ProductInfoTxId = jsonObject.getString("ProductInfoTxId");
 
-        //检查主体存证信息内容与传入一致
-        log.info("检查主体存证信息内容与传入一致");
-        log.info(gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
-        log.info(enterpriseSubjectInfo.toString());
-        assertEquals(enterpriseSubjectInfo.toString().replaceAll("( )?","").replaceAll(":","="),
-                gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("(\")?( )?","").replaceAll(":","="));
+        Map getSubInfo = gdCF.contructEnterpriseSubInfo(SubjectObjectTxId);
+        Map getProInfo = gdCF.contructEquityProdInfo(ProductInfoTxId);
 
-        //检查产品存证信息内容与传入一致
-        log.info("检查产品存证信息内容与传入一致");
-        log.info(gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("(\")?( )?",""));
-        log.info(equityProductInfo.toString().replaceAll(" ",""));
-        assertEquals(equityProductInfo.toString().replaceAll(" ","").replaceAll(":","="),
-                gdCF.contructEquityProdInfo(ProductInfoTxId).toString().replaceAll("(\")?( )?","").replaceAll(":","="));
+        log.info("检查主体存证信息内容与传入一致\n" + enterpriseSubjectInfo.toString() + "\n" + getSubInfo.toString());
+        assertEquals(replaceCertain(enterpriseSubjectInfo.toString()),replaceCertain(getSubInfo.toString()));
+
+        log.info("检查产品存证信息内容与传入一致\n" + equityProductInfo.toString() + "\n" + getProInfo.toString());
+        assertEquals(replaceCertain(equityProductInfo.toString()),replaceCertain(getProInfo.toString()));
     }
 
 
@@ -143,23 +136,16 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         jgType = subjectType;
         String SubjectObjectTxId = gdCF.getJGStoreHash2(txId,jgType,1);
 
-//        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
-//        String ProductInfoTxId = jsonObject.getString("ProductInfoTxId");
 
-        //检查主体存证信息内容与传入一致
-        log.info("检查主体存证信息内容与传入一致");
-        log.info(gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
-        log.info(enterpriseSubjectInfo.toString());
-        assertEquals(enterpriseSubjectInfo.toString().replaceAll("(\")?( )?","").replaceAll(":","="),
-                gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("(\")?( )?","").replaceAll(":","="));
+        Map getSubInfo = gdCF.contructEnterpriseSubInfo(SubjectObjectTxId);
+        Map getProInfo = gdCF.contructBondProdInfo(ProductInfoTxId);
 
-        //检查产品存证信息内容与传入一致
-        log.info("检查产品存证信息内容与传入一致");
-        log.info(gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("(\")?( )?",""));
-        log.info(bondProductInfo.toString().replaceAll(" ",""));
-        assertEquals(bondProductInfo.toString().replaceAll(" ","").replaceAll(":","="),
-                gdCF.contructBondProdInfo(ProductInfoTxId).toString().replaceAll("(\")?( )?","").replaceAll(":","="));
 
+        log.info("检查主体存证信息内容与传入一致\n" + enterpriseSubjectInfo.toString() + "\n" + getSubInfo.toString());
+        assertEquals(replaceCertain(enterpriseSubjectInfo.toString()),replaceCertain(getSubInfo.toString()));
+
+        log.info("检查产品存证信息内容与传入一致\n" + bondProductInfo.toString() + "\n" + getProInfo.toString());
+        assertEquals(replaceCertain(bondProductInfo.toString()),replaceCertain(getProInfo.toString()));
 
     }
 
@@ -197,28 +183,20 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         jgType = subjectType;
         String SubjectObjectTxId = gdCF.getJGStoreHash2(txId,jgType,1);
 
-//        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
-//        String ProductInfoTxId = jsonObject.getString("ProductInfoTxId");
+        Map getSubInfo = gdCF.contructEnterpriseSubInfo(SubjectObjectTxId);
+        Map getProInfo = gdCF.contructFundProdInfo(ProductInfoTxId);
 
-        //检查主体存证信息内容与传入一致
-        log.info("检查主体存证信息内容与传入一致");
-        log.info(gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
-        log.info(enterpriseSubjectInfo.toString());
-        assertEquals(enterpriseSubjectInfo.toString().replaceAll("(\")?( )?","").replaceAll(":","="),
-                gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("(\")?( )?","").replaceAll(":","="));
 
-        //检查产品存证信息内容与传入一致
-        log.info("检查产品存证信息内容与传入一致");
-        log.info(gdCF.contructFundProdInfo(ProductInfoTxId).toString().replaceAll("(\")?( )?",""));
-        log.info(fundProductInfo.toString());
-        assertEquals(fundProductInfo.toString().replaceAll("( )?","").replaceAll(":","="),
-                gdCF.contructFundProdInfo(ProductInfoTxId).toString().replaceAll("(\")?( )?","").replaceAll(":","="));
+        log.info("检查主体存证信息内容与传入一致\n" + enterpriseSubjectInfo.toString() + "\n" + getSubInfo.toString());
+        assertEquals(replaceCertain(enterpriseSubjectInfo.toString()),replaceCertain(getSubInfo.toString()));
+
+        log.info("检查产品存证信息内容与传入一致\n" + fundProductInfo.toString() + "\n" + getProInfo.toString());
+        assertEquals(replaceCertain(fundProductInfo.toString()),replaceCertain(getProInfo.toString()));
     }
 
-    //会员登记
+    //机构 会员登记
     @Test
     public void TC013_enterpriseRegisterMemberCheckFormat() throws Exception {
-        long shareTotals = 1000000;
         String response= gd.GDEnterpriseResister(gdContractAddress,"",0,enterpriseSubjectInfo,
                 null,null,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -248,18 +226,11 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         jgType = subjectType;
         String SubjectObjectTxId = gdCF.getJGStoreHash2(txId,jgType,1);
 
-//        String SubjectObjectTxId = jsonObject.getString("SubjectObjectTxId");
-//        String ProductInfoTxId = jsonObject.getString("ProductInfoTxId");
 
-        log.info("判断无产品存证交易");
-        assertEquals("",ProductInfoTxId);
+        Map getSubInfo = gdCF.contructEnterpriseSubInfo(SubjectObjectTxId);
 
-        //检查主体存证信息内容与传入一致
-        log.info("检查主体存证信息内容与传入一致");
-        log.info(gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString().replaceAll("\"",""));
-        log.info(enterpriseSubjectInfo.toString());
-        assertEquals(replaceCertain(enterpriseSubjectInfo.toString()),
-                replaceCertain(gdCF.contructEnterpriseSubInfo(SubjectObjectTxId).toString()));
+        log.info("检查主体存证信息内容与传入一致\n" + enterpriseSubjectInfo.toString() + "\n" + getSubInfo.toString());
+        assertEquals(replaceCertain(enterpriseSubjectInfo.toString()),replaceCertain(getSubInfo.toString()));
 
     }
 
