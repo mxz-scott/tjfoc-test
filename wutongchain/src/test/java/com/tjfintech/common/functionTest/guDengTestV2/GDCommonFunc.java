@@ -864,7 +864,7 @@ public class GDCommonFunc {
         ).getJSONObject("basic_information_of_enterprise");
         key = "leading_member_information";getSubjectInfo.put(key,objLMI.getString(key));
 
-        if(bChkHeader) key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+        if(bChkHeader) {key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));}
 
         return getSubjectInfo;
     }
@@ -971,7 +971,7 @@ public class GDCommonFunc {
         key = "subject_province";                           getSubjectInfo.put(key,objPersonSubBase.getString(key));
         key = "subject_city";                               getSubjectInfo.put(key,objPersonSubBase.getString(key));
 
-        if(bChkHeader) key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+        if(bChkHeader) {key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));}
 
         return getSubjectInfo;
     }
@@ -1079,7 +1079,7 @@ public class GDCommonFunc {
         key = "account_association";                  getSubjectInfo.put(key,objAccRela.getString(key));
         key = "account_associated_account_ref";       getSubjectInfo.put(key,objAccRela.getString(key));
 
-        if(bChkHeader) key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+        if(bChkHeader) {key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));}
 
         return getSubjectInfo;
     }
@@ -1303,7 +1303,7 @@ public class GDCommonFunc {
         key = "product_escrow_deregistration_document";getSubjectInfo.put(key,objProdEscrow.getString(key));
         key = "product_escrow_deregistration_remarks";getSubjectInfo.put(key,objProdEscrow.getString(key));
 
-        if(bChkHeader) key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+        if(bChkHeader) {key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));}
 
         return getSubjectInfo;
     }
@@ -1382,7 +1382,7 @@ public class GDCommonFunc {
         getSubjectInfo.put(key,com.alibaba.fastjson.JSONObject.parseArray(
                 jobj2.getJSONObject("body").getJSONObject("transaction_report_information").getJSONArray(key).toJSONString(), Map.class));
 
-        if(bChkHeader) key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+        if(bChkHeader) {key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));}
 
         return getSubjectInfo;
     }
@@ -1472,7 +1472,7 @@ public class GDCommonFunc {
         //名册登记 基金投资人名册
         key = "fund_investors";getSubjectInfo.put(key,objRollRecords.getString(key));
 
-        if(bChkHeader) key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+        if(bChkHeader) {key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));}
         return getSubjectInfo;
     }
 
@@ -1558,7 +1558,7 @@ public class GDCommonFunc {
         key = "settlement_in_account_balance_before_transfer";      getSubjectInfo.put(key,objIn.getString(key));
         key = "settlement_in_account_balance_after_transfer";       getSubjectInfo.put(key,objIn.getString(key));
 
-        if(bChkHeader) key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+        if(bChkHeader) {key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));}
 
         return getSubjectInfo;
     }
