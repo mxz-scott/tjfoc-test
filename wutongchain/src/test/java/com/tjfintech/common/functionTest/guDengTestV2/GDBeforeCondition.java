@@ -143,6 +143,7 @@ public class GDBeforeCondition {
         Map shareHolderInfo = new HashMap();
         init02ShareholderAccountInfo();
         shAccountInfo.put("account_object_id", shareHolderNo);  //更新账户对象标识字段
+        shAccountInfo.put("account_subject_ref", cltNo);  //更新账户所属主体引用
         log.info(shAccountInfo.toString());
         shareHolderInfo.put("shareholderNo", shareHolderNo);
         shareHolderInfo.put("accountInfo", shAccountInfo);
@@ -151,6 +152,8 @@ public class GDBeforeCondition {
         //资金账户信息
         init02FundAccountInfo();
         fundAccountInfo.put("account_object_id", fundNo);  //更新账户对象标识字段
+        fundAccountInfo.put("account_subject_ref", cltNo);  //更新账户所属主体引用
+        fundAccountInfo.put("account_associated_account_ref", fundNo);  //更新关联账户对象引用
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("fundNo", fundNo);
         mapFundInfo.put("accountInfo", fundAccountInfo);
@@ -196,6 +199,7 @@ public class GDBeforeCondition {
         registerInfo = init05RegInfo();                    //初始化登记数据信息  涉及接口 发行 股份性质变更 过户转让 增发 冻结 解除冻结
         settleInfo = init06SettleInfo();                 //初始化资金结算数据信息  涉及接口 资金清算
         disclosureInfo = init07PublishInfo();                //初始化信息数据信息  涉及接口 写入公告
+        initCommonRefSubAndReg();                           //初始化监管引用数据做挂牌企业登记操作
 
         //初始化listRegInfo
         listRegInfo.clear();
@@ -469,7 +473,7 @@ public class GDBeforeCondition {
 
         //账户信息 账户基本信息
         mapTemp.put("account_subject_ref", "hrefid00001");
-        mapTemp.put("account_depository_ref", "drefid00001");
+        mapTemp.put("account_depository_ref", account_depository_ref);
         mapTemp.put("account_number", "h0123555");
         mapTemp.put("account_type", 1);  //默认证券/股权账户
         List<Integer> type = new ArrayList<>();
@@ -520,7 +524,7 @@ public class GDBeforeCondition {
 
         //账户信息 账户基本信息
         mapTemp.put("account_subject_ref", "hrefid00001");
-        mapTemp.put("account_depository_ref", "drefid00001");
+        mapTemp.put("account_depository_ref", account_depository_ref);
         mapTemp.put("account_number", "h0123555");
         mapTemp.put("account_type", 2);  //资金账户
         List<Integer> type = new ArrayList<>();
