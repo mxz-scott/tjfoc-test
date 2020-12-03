@@ -413,7 +413,7 @@ public class GDBeforeCondition {
         mapISI.put("subject_investor_qualification_sub", "适当性认证子类");
         mapISI.put("subject_investor_qualification_description", "适当性认证描述");
         mapISI.put("subject_investor_qualification_certificate", getListFileObj());
-        mapISI.put("subject_investor_qualification_certifier_ref", "sub_ref_0001");
+        mapISI.put("subject_investor_qualification_certifier_ref", subject_investor_qualification_certifier_ref);
         mapISI.put("subject_investor_qualification_certifier_name", "适当性认证方主体名称");
         mapISI.put("subject_investor_qualification_certificate_time", time1);
         mapISI.put("subject_investor_qualification_status", true);
