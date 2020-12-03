@@ -312,7 +312,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         Map getSubInfo = gdCF.contructPersonalSubInfo(subStoreId);
         Map getFundAccInfo = gdCF.contructFundAccountInfo(accStoreId,"fund" + cltNo);
-        Map getSHAccInfo = gdCF.contructFundAccountInfo(accStoreId,"SH" + cltNo);
+        Map getSHAccInfo = gdCF.contructEquityAccountInfo(accStoreId,"SH" + cltNo);
 
         Map enSubInfo = investorSubjectInfo;
         Map accFund = fundAccountInfo;

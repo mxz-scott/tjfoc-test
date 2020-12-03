@@ -471,7 +471,7 @@ public class GDBeforeCondition {
         mapTemp.put("account_subject_ref", "hrefid00001");
         mapTemp.put("account_depository_ref", "drefid00001");
         mapTemp.put("account_number", "h0123555");
-        mapTemp.put("account_type", 0);  //默认股权账户
+        mapTemp.put("account_type", 1);  //默认证券/股权账户
         List<Integer> type = new ArrayList<>();
         type.add(0);
         type.add(1);
