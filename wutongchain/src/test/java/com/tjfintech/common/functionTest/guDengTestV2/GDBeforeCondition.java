@@ -1390,6 +1390,8 @@ public class GDBeforeCondition {
 
         for (int i=0;i<refDataArray.length;i++){
             mapTemp.put("subject_object_id",refDataArray[i]);
+            mapTemp.remove("subject_qualification_information");
+            log.info(mapTemp.toString());
             gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,mapTemp,null,null,null);
         }
 
