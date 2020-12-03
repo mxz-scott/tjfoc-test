@@ -1298,6 +1298,7 @@ public class CommonFunc {
         Boolean bResult = true;
         BufferedReader br = null;
         BufferedReader brError = null;
+        log.info(data);
         if(!dataType.equals("1")){
 //            //此处为字符串作为参数传入的场景处理 文件名作为参数处理时不需要额外处理
 //            //作为将要调用exe的传参 需要进行多重转义 并且需要将\n和空格删除

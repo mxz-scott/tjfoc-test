@@ -342,25 +342,6 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         log.info("检查资金账户存证信息内容与传入一致\n" + accFund.toString() + "\n" + getFundAccInfo.toString());
         assertEquals(replaceCertain(accFund.toString()),replaceCertain(getFundAccInfo.toString()));
 
-//        //检查主体存证信息内容与传入一致
-//        log.info("检查主体存证信息内容与传入一致");
-//        log.info(gdCF.contructPersonalSubInfo(subStoreId).toString().replaceAll("\"",""));
-//        log.info(investorSubjectInfo.toString());
-//        assertEquals(replaceCertain(investorSubjectInfo.toString()),
-//                replaceCertain(gdCF.contructPersonalSubInfo(subStoreId).toString()));
-//
-//        //检查账户存证信息内容与传入一致
-//        log.info("检查资金账户存证信息内容与传入一致");
-//        log.info(gdCF.contructFundAccountInfo(accStoreId,"fund" + cltNo).toString().replaceAll("\"",""));
-//        log.info(fundAccountInfo.toString());
-//        assertEquals(replaceCertain(fundAccountInfo.toString()),
-//                replaceCertain(gdCF.contructFundAccountInfo(accStoreId,"fund" + cltNo).toString()));
-//
-//        log.info("检查股权账户存证信息内容与传入一致");
-//        log.info(gdCF.contructEquityAccountInfo(accStoreId,"SH" + cltNo).toString().replaceAll("\"",""));
-//        log.info(shAccountInfo.toString());
-//        assertEquals(replaceCertain(shAccountInfo.toString()),
-//                replaceCertain(gdCF.contructEquityAccountInfo(accStoreId,"SH" + cltNo).toString()));
     }
 
 
@@ -525,10 +506,10 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         GDBeforeCondition gdBC = new GDBeforeCondition();
         Map shAcc = gdBC.init02ShareholderAccountInfo();
         Map fundAcc = gdBC.init02FundAccountInfo();
-        shAcc.put("account_holder_subject_ref","");
+        shAcc.put("account_subject_ref","");
         shAcc.put("account_associated_account_ref","");
 
-        fundAcc.put("account_holder_subject_ref","");
+        fundAcc.put("account_subject_ref","");
         fundAcc.put("account_associated_account_ref","");
 
 
@@ -565,33 +546,68 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         jgType = subjectType;
         String subStoreId = gdCF.getJGStoreHash2(txId,jgType,1);
 
-
-        shAcc.put("account_holder_subject_ref",investorSubjectInfo.get("subject_object_id"));
+        //补足引用字段
+        shAcc.put("account_subject_ref",investorSubjectInfo.get("subject_object_id"));
 //        shAccountInfo.put("account_associated_account_ref",investorSubjectInfo.get("subject_object_id"));//当前未自动填入
 
-        fundAcc.put("account_holder_subject_ref",investorSubjectInfo.get("subject_object_id"));
+        fundAcc.put("account_subject_ref",investorSubjectInfo.get("subject_object_id"));
         fundAcc.put("account_associated_account_ref",shareHolderInfo.get("subject_object_id"));
 
-        //检查主体存证信息内容与传入一致
-        log.info("检查主体存证信息内容与传入一致");
-        log.info(gdCF.contructPersonalSubInfo(subStoreId).toString().replaceAll("\"",""));
-        log.info(investorSubjectInfo.toString());
-        assertEquals(replaceCertain(investorSubjectInfo.toString()),
-                replaceCertain(gdCF.contructPersonalSubInfo(subStoreId).toString()));
+        Map getSubInfo = gdCF.contructPersonalSubInfo(subStoreId);
+        Map getFundAccInfo = gdCF.contructFundAccountInfo(accStoreId,"fund" + cltNo);
+        Map getSHAccInfo = gdCF.contructEquityAccountInfo(accStoreId,"SH" + cltNo);
 
-        //检查账户存证信息内容与传入一致
-        log.info("检查资金账户存证信息内容与传入一致");
-        log.info(gdCF.contructFundAccountInfo(accStoreId,fundNo).toString().replaceAll("\"",""));
-        fundAcc.put("account_associated_account_ref",shareHolderNo);
-        log.info(fundAcc.toString());
-        assertEquals(replaceCertain(fundAcc.toString()),
-                replaceCertain(gdCF.contructFundAccountInfo(accStoreId,fundNo).toString()));
 
-        log.info("检查股权账户存证信息内容与传入一致");
-        log.info(gdCF.contructEquityAccountInfo(accStoreId,shareHolderNo).toString().replaceAll("\"",""));
-        log.info(shAcc.toString());
-        assertEquals(replaceCertain(shAcc.toString()),
-                replaceCertain(gdCF.contructEquityAccountInfo(accStoreId,shareHolderNo).toString()));
+        Map enSubInfo = investorSubjectInfo;
+
+
+        if(bChkHeader) {
+            String timeStampSub = gdCF.getTimeStampFromMap(getSubInfo, "subject_create_time");
+            String timeStampFundAcc = gdCF.getTimeStampFromMap(getFundAccInfo, "account_create_time");
+            String timeStampSHAcc = gdCF.getTimeStampFromMap(getSHAccInfo, "account_create_time");
+            enSubInfo.put("content",
+                    gdCF.constructContentMap(subjectType,cltNo,String.valueOf(verTemp),"create",
+                            timeStampSub));
+            fundAcc.put("content",
+                    gdCF.constructContentMap(accType,"fund" + cltNo,String.valueOf(verTemp),"create",
+                            timeStampFundAcc));
+            shAcc.put("content",
+                    gdCF.constructContentMap(accType,"SH" + cltNo,String.valueOf(verTemp),"create",
+                            timeStampSHAcc));
+        }
+
+        log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
+        assertEquals(replaceCertain(enSubInfo.toString()),replaceCertain(getSubInfo.toString()));
+
+        log.info("检查股权账户存证信息内容与传入一致\n" + shAcc.toString() + "\n" + getSHAccInfo.toString());
+        assertEquals(replaceCertain(shAcc.toString()),replaceCertain(getSHAccInfo.toString()));
+
+        log.info("检查资金账户存证信息内容与传入一致\n" + fundAcc.toString() + "\n" + getFundAccInfo.toString());
+        assertEquals(replaceCertain(fundAcc.toString()),replaceCertain(getFundAccInfo.toString()));
+
+
+
+//
+//        //检查主体存证信息内容与传入一致
+//        log.info("检查主体存证信息内容与传入一致");
+//        log.info(gdCF.contructPersonalSubInfo(subStoreId).toString().replaceAll("\"",""));
+//        log.info(investorSubjectInfo.toString());
+//        assertEquals(replaceCertain(investorSubjectInfo.toString()),
+//                replaceCertain(gdCF.contructPersonalSubInfo(subStoreId).toString()));
+//
+//        //检查账户存证信息内容与传入一致
+//        log.info("检查资金账户存证信息内容与传入一致");
+//        log.info(gdCF.contructFundAccountInfo(accStoreId,fundNo).toString().replaceAll("\"",""));
+//        fundAcc.put("account_associated_account_ref",shareHolderNo);
+//        log.info(fundAcc.toString());
+//        assertEquals(replaceCertain(fundAcc.toString()),
+//                replaceCertain(gdCF.contructFundAccountInfo(accStoreId,fundNo).toString()));
+//
+//        log.info("检查股权账户存证信息内容与传入一致");
+//        log.info(gdCF.contructEquityAccountInfo(accStoreId,shareHolderNo).toString().replaceAll("\"",""));
+//        log.info(shAcc.toString());
+//        assertEquals(replaceCertain(shAcc.toString()),
+//                replaceCertain(gdCF.contructEquityAccountInfo(accStoreId,shareHolderNo).toString()));
 
 
 
