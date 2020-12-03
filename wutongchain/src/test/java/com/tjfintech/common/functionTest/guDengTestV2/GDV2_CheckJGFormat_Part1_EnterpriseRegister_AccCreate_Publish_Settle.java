@@ -114,8 +114,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref));
         assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(product_market_subject_ref));
-        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(gdCompanyID));
-        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(service_provider_subject_ref));
+        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(gdCompanyID));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(service_provider_subject_ref));
 
         String[] verForSub = new String[]{"/" + gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref)};
         String[] verForProd = new String[]{"/" + gdCF.getObjectLatestVer(product_market_subject_ref),
@@ -182,8 +182,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref));
         assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(product_market_subject_ref));
-        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(gdCompanyID));
-        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(service_provider_subject_ref));
+        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(gdCompanyID));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(service_provider_subject_ref));
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
         assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(enSubInfo,subjectType)),replaceCertain(getSubInfo.toString()));
@@ -249,8 +249,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref));
         assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(product_market_subject_ref));
-        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(gdCompanyID));
-        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(service_provider_subject_ref));
+        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(gdCompanyID));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(service_provider_subject_ref));
 
         String[] verForSub = new String[]{"/" + gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref)};
         String[] verForProd = new String[]{"/" + gdCF.getObjectLatestVer(product_market_subject_ref),
@@ -312,8 +312,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref));
         assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(product_market_subject_ref));
-        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(gdCompanyID));
-        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(service_provider_subject_ref));
+        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(gdCompanyID));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(service_provider_subject_ref));
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
         assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(enSubInfo,subjectType)),replaceCertain(getSubInfo.toString()));
@@ -434,8 +434,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref));
         assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(product_market_subject_ref));
-        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(gdCompanyID));
-        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(service_provider_subject_ref));
+        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(gdCompanyID));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(service_provider_subject_ref));
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
         assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(enSubInfo,subjectType)),replaceCertain(getSubInfo.toString()));
@@ -494,8 +494,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref));
         assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(product_market_subject_ref));
-        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(gdCompanyID));
-        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(service_provider_subject_ref));
+        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(gdCompanyID));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(service_provider_subject_ref));
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
         assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(enSubInfo,subjectType)),replaceCertain(getSubInfo.toString()));
@@ -551,8 +551,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref));
         assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(product_market_subject_ref));
-        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(gdCompanyID));
-        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(service_provider_subject_ref));
+        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(gdCompanyID));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(service_provider_subject_ref));
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
         assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(enSubInfo,subjectType)),replaceCertain(getSubInfo.toString()));
