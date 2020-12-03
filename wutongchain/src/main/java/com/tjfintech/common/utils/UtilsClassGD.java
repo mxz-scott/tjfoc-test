@@ -2,6 +2,7 @@ package com.tjfintech.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import sun.reflect.generics.tree.VoidDescriptor;
 
 import java.util.*;
 
@@ -98,51 +99,105 @@ public class UtilsClassGD {
     public static String dirSchemaData = System.getProperty("user.dir") + "/" + testDataPath + "schemavalidate/";
     public static Boolean bChkHeader = false;
 
-    //引用信息变量
+    //获取引用信息初始值放入数组
+    public static  String[] refData() {
+
+        HashMap<String,String> refInfo = new HashMap<String,String>();
+        //主体
+        refInfo.put("subject_investor_qualification_certifier_ref", subject_investor_qualification_certifier_ref);
+        //账户
+        refInfo.put("account_subject_ref", account_subject_ref);
+        refInfo.put("account_depository_ref", account_depository_ref);
+        refInfo.put("account_associated_account_ref", account_associated_account_ref);
+        //产品
+        refInfo.put("product_market_subject_ref", product_market_subject_ref);
+        refInfo.put("product_issuer_subject_ref", product_issuer_subject_ref);
+        refInfo.put("service_provider_subject_ref", service_provider_subject_ref);
+        refInfo.put("product_conversion_price_ref", product_conversion_price_ref);
+        //交易报告
+        refInfo.put("transaction_custody_product_ref", transaction_custody_product_ref);
+        refInfo.put("transaction_product_issuer_ref", transaction_product_issuer_ref);
+        refInfo.put("transaction_issuer_ref", transaction_issuer_ref);
+        refInfo.put("transaction_investor_ref", transaction_investor_ref);
+        refInfo.put("transaction_investor_original_ref", transaction_investor_original_ref);
+        refInfo.put("transaction_investor_counterparty_ref", transaction_investor_counterparty_ref);
+        refInfo.put("transaction_intermediary_subject_ref", transaction_intermediary_subject_ref);
+        //登记
+        refInfo.put("register_subject_ref", register_subject_ref);
+        refInfo.put("register_subject_account_ref", register_subject_account_ref);
+        refInfo.put("register_transaction_ref", register_transaction_ref);
+        refInfo.put("register_product_ref", register_product_ref);
+        refInfo.put("register_right_recognition_subject_ref", register_right_recognition_subject_ref);
+        refInfo.put("register_right_recognition_agent_subject_ref", register_right_recognition_agent_subject_ref);
+        refInfo.put("roll_register_subject_ref", roll_register_subject_ref);
+        refInfo.put("roll_register_product_ref", roll_register_product_ref);
+        refInfo.put("register_equity_subject_ref",register_equity_subject_ref);
+        refInfo.put("register_debt_holder_ref", register_debt_holder_ref);
+        refInfo.put("register_investor_subject_ref", register_investor_subject_ref);
+        //资金结算
+        refInfo.put("settlement_subject_ref", settlement_subject_ref);
+        refInfo.put("settlement_product_ref", settlement_product_ref);
+        refInfo.put("settlement_transaction_ref", settlement_transaction_ref);
+        refInfo.put("settlement_out_account_object_ref", settlement_out_account_object_ref);
+        refInfo.put("settlement_in_account_object_ref", settlement_in_account_object_ref);
+        //信披
+        refInfo.put("disclosure_subject_ref", disclosure_subject_ref);
+        refInfo.put("disclosure_referer_subject_ref", disclosure_referer_subject_ref);
+        refInfo.put("disclosure_display_platform_ref", disclosure_display_platform_ref);
+        refInfo.put("disclosure_identifier_ref", disclosure_identifier_ref);
+        refInfo.put("disclosure_auditor_ref", disclosure_auditor_ref);
+
+        String refInfoArray[] = new String[refInfo.size()];
+        int i=0;
+        for(String value: refInfo.values()) {
+            refInfoArray[i] = value;
+            i++;
+        }
+        return refInfoArray;
+    }
     //主体
-    public static String subject_investor_qualification_certifier_ref;
+    public static String subject_investor_qualification_certifier_ref = "SIQCR" + UtilsClass.Random(8);
     //账户
-    public static String account_subject_ref;
-    public static String account_depository_ref;
-    public static String account_associated_account_ref;
+    public static String account_subject_ref = "ASR" + UtilsClass.Random(8);
+    public static String account_depository_ref = "ADR" + UtilsClass.Random(8);
+    public static String account_associated_account_ref = "AAAR" + UtilsClass.Random(8);
     //产品
-    public static String product_market_subject_ref;
-    public static String product_issuer_subject_ref;
-    public static String service_provider_subject_ref;
-    public static String product_conversion_price_ref;
+    public static String product_market_subject_ref = "PMSR" + UtilsClass.Random(8);
+    public static String product_issuer_subject_ref = "PISR" + UtilsClass.Random(8);
+    public static String service_provider_subject_ref = "SPSR" + UtilsClass.Random(8);
+    public static String product_conversion_price_ref = "PCPR" + UtilsClass.Random(8);
     //交易报告
-    public static String transaction_custody_product_ref;
-    public static String transaction_product_issuer_ref;
-    public static String transaction_issuer_ref;
-    public static String transaction_investor_ref;
-    public static String transaction_investor_original_ref;
-    public static String transaction_investor_counterparty_ref;
-    public static String transaction_intermediary_subject_ref;
+    public static String transaction_custody_product_ref = "TCPR" + UtilsClass.Random(8);
+    public static String transaction_product_issuer_ref = "TPIR" + UtilsClass.Random(8);
+    public static String transaction_issuer_ref = "TIssR" + UtilsClass.Random(8);
+    public static String transaction_investor_ref = "TIR" + UtilsClass.Random(8);
+    public static String transaction_investor_original_ref = "TIOR" + UtilsClass.Random(8);
+    public static String transaction_investor_counterparty_ref = "TICR" + UtilsClass.Random(8);
+    public static String transaction_intermediary_subject_ref = "TISR" + UtilsClass.Random(8);
     //登记
-    public static String register_subject_ref;
-    public static String register_subject_account_ref;
-    public static String register_transaction_ref;
-    public static String register_product_ref;
-    public static String register_right_recognition_subject_ref;
-    public static String register_right_recognition_agent_subject_ref;
-    public static String roll_register_subject_ref;
-    public static String roll_register_product_ref;
-    public static String register_equity_subject_ref;
-    public static String register_debt_holder_ref;
-    public static String register_investor_subject_ref;
+    public static String register_subject_ref = "RSR" + UtilsClass.Random(8);
+    public static String register_subject_account_ref = "RSAR" + UtilsClass.Random(8);
+    public static String register_transaction_ref = "RTR" + UtilsClass.Random(8);
+    public static String register_product_ref = "RPR" + UtilsClass.Random(8);
+    public static String register_right_recognition_subject_ref = "RRRSR" + UtilsClass.Random(8);
+    public static String register_right_recognition_agent_subject_ref = "RRRASR" + UtilsClass.Random(8);
+    public static String roll_register_subject_ref = "RRSR" + UtilsClass.Random(8);
+    public static String roll_register_product_ref = "RRPR" + UtilsClass.Random(8);
+    public static String register_equity_subject_ref = "RESR" + UtilsClass.Random(8);
+    public static String register_debt_holder_ref = "RDHR" + UtilsClass.Random(8);
+    public static String register_investor_subject_ref = "RISR" + UtilsClass.Random(8);
     //资金结算
-    public static String settlement_subject_ref;
-    public static String settlement_product_ref;
-    public static String settlement_transaction_ref;
-    public static String settlement_out_account_object_ref;
-    public static String settlement_in_account_object_ref;
+    public static String settlement_subject_ref = "SSR" + UtilsClass.Random(8);
+    public static String settlement_product_ref = "SPR" + UtilsClass.Random(8);
+    public static String settlement_transaction_ref = "STR" + UtilsClass.Random(8);
+    public static String settlement_out_account_object_ref = "SOAOR" + UtilsClass.Random(8);
+    public static String settlement_in_account_object_ref = "SIAOR" + UtilsClass.Random(8);
     //信披
-    public static String disclosure_subject_ref;
-    public static String disclosure_referer_subject_ref;
-    public static String disclosure_referer_name;
-    public static String disclosure_display_platform_ref;
-    public static String disclosure_identifier_ref;
-    public static String disclosure_auditor_ref;
+    public static String disclosure_subject_ref = "DSR" + UtilsClass.Random(8);
+    public static String disclosure_referer_subject_ref = "DRSR" + UtilsClass.Random(8);
+    public static String disclosure_display_platform_ref = "DDPR" + UtilsClass.Random(8);
+    public static String disclosure_identifier_ref = "DIR" + UtilsClass.Random(8);
+    public static String disclosure_auditor_ref = "DAR" + UtilsClass.Random(8);
 
     public static Map fileObj = new HashMap();
     public static List<Map> listFileObj = new ArrayList<>();

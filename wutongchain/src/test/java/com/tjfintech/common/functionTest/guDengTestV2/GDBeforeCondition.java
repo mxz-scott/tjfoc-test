@@ -1375,4 +1375,21 @@ public class GDBeforeCondition {
         return mapTemp;
     }
 
+    public void initCommonRefSubAndReg() {
+
+        log.info("初始化监管引用相关数据结构");
+        Map mapTemp = init01EnterpriseSubjectInfo();
+        String refDataArray[]=refData();
+
+        for (int i=0;i<refDataArray.length;i++){
+            mapTemp.put("subject_object_id",refDataArray[i]);
+            gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,mapTemp,null,null,null);
+        }
+
+        for (int i=0;i<refDataArray.length;i++){
+            String response = gd.GDMainSubjectQuery(gdContractAddress, refDataArray[i]);
+            assertEquals(true,response.contains(refDataArray[i]));
+        }
+    }
+
 }
