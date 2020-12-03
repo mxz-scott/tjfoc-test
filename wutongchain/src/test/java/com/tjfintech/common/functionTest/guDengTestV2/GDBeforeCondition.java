@@ -201,7 +201,6 @@ public class GDBeforeCondition {
         listRegInfo.clear();
         listRegInfo.add(registerInfo);
         listRegInfo.add(registerInfo);
-        initCommonRefSubAndReg();//初始化监管数据中相关引用主体信息
     }
 
     public Map init01EnterpriseSubjectInfo() {

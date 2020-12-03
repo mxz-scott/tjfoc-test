@@ -1914,4 +1914,27 @@ public class GDCommonFunc {
         return String.valueOf(dt);
 
     }
+
+
+    public String matchVerSubMapRefStr(Map subInfo,String...ver){
+        String tempSubStr = subInfo.toString();
+
+//        String ver = "";  //String ver = "/0"; //当前版本为未带版本号的版本 后面需要适配修改为带版本号的版本
+        //将对应的字段值替换为对象标识加版本号
+        tempSubStr = tempSubStr.replaceAll(subject_investor_qualification_certifier_ref,
+                subject_investor_qualification_certifier_ref + ver[0]);
+        return tempSubStr;
+    }
+
+    public String matchVerProdMapRefStr(Map profInfo,String...ver){
+        String tempProdStr = profInfo.toString();
+
+//        String ver = "";  //String ver = "/0"; //当前版本为未带版本号的版本 后面需要适配修改为带版本号的版本
+        //将对应的字段值替换为对象标识加版本号
+        //替换为对的版本号
+        tempProdStr = tempProdStr.replaceAll(product_market_subject_ref,product_market_subject_ref + ver[0]);
+        tempProdStr = tempProdStr.replaceAll(gdCompanyID, gdCompanyID + ver[1]);
+        tempProdStr = tempProdStr.replaceAll(service_provider_subject_ref,service_provider_subject_ref + ver[2]);
+        return tempProdStr;
+    }
 }
