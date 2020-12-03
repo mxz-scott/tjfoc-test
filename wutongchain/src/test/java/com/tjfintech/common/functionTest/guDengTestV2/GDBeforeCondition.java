@@ -201,6 +201,7 @@ public class GDBeforeCondition {
         listRegInfo.clear();
         listRegInfo.add(registerInfo);
         listRegInfo.add(registerInfo);
+        initCommonRefSubAndReg();//初始化监管数据中相关引用主体信息
     }
 
     public Map init01EnterpriseSubjectInfo() {
@@ -245,7 +246,7 @@ public class GDBeforeCondition {
         mapISI.put("subject_investor_qualification_sub", "适当性认证子类");
         mapISI.put("subject_investor_qualification_description", "适当性认证描述");
         mapISI.put("subject_investor_qualification_certificate", getListFileObj());
-        mapISI.put("subject_investor_qualification_certifier_ref", "sub_ref_0001");
+        mapISI.put("subject_investor_qualification_certifier_ref", subject_investor_qualification_certifier_ref);
         mapISI.put("subject_investor_qualification_certifier_name", "适当性认证方主体名称");
         mapISI.put("subject_investor_qualification_certificate_time", time2);
         mapISI.put("subject_investor_qualification_status", true);
@@ -572,7 +573,7 @@ public class GDBeforeCondition {
 
         //产品信息 基本信息 产品基本信息
         mapProdComInfo.put("product_trading_market_category", 1);
-        mapProdComInfo.put("product_market_subject_ref", "交易场所主体引用CHARACTER");
+        mapProdComInfo.put("product_market_subject_ref", product_market_subject_ref);
         mapProdComInfo.put("product_market_subject_name", "交易场所主体名称CHARACTER");
         mapProdComInfo.put("product_plate_trading_name", "交易场所板块名称CHARACTER");
         mapProdComInfo.put("product_issuer_subject_ref", gdCompanyID);
@@ -596,12 +597,12 @@ public class GDBeforeCondition {
         Map mapServ = new HashMap();
         List<Map> listServ = new ArrayList<>();
         mapServ.put("service_provider_type", 0);
-        mapServ.put("service_provider_subject_ref", "服务方主体引用");
+        mapServ.put("service_provider_subject_ref", service_provider_subject_ref);
         mapServ.put("service_provider_name", "服务方主体名称");
         listServ.add(mapServ);
         mapServ.clear();
         mapServ.put("service_provider_type", 1);
-        mapServ.put("service_provider_subject_ref", "服务方主体引用");
+        mapServ.put("service_provider_subject_ref", service_provider_subject_ref);
         mapServ.put("service_provider_name", "服务方主体名称");
         listServ.add(mapServ);
 
