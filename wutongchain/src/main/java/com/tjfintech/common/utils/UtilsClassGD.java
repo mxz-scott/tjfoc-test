@@ -77,6 +77,7 @@ public class UtilsClassGD {
 
     public static String subjectType = "subject";
     public static String accType = "account";
+    public static String accSHType = "accountSH";
     public static String prodType = "product";
     public static String txrpType = "transactionreport";
     public static String regType = "registration";

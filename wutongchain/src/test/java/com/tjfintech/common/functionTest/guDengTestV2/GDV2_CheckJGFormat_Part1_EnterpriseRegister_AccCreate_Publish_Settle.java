@@ -370,14 +370,18 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
                             timeStampSHAcc));
         }
 
+        String[] verForSub = new String[]{"/0"};
+        String[] verForAccSH = new String[]{"/0","/0"};
+        String[] verForAcc = new String[]{"/0","/0","/0"};
+
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(enSubInfo.toString()),replaceCertain(getSubInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
 
         log.info("检查股权账户存证信息内容与传入一致\n" + accSH.toString() + "\n" + getSHAccInfo.toString());
-        assertEquals(replaceCertain(accSH.toString()),replaceCertain(getSHAccInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(accSH,accSHType,verForAccSH)),replaceCertain(getSHAccInfo.toString()));
 
         log.info("检查资金账户存证信息内容与传入一致\n" + accFund.toString() + "\n" + getFundAccInfo.toString());
-        assertEquals(replaceCertain(accFund.toString()),replaceCertain(getFundAccInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(accFund,accType,verForAcc)),replaceCertain(getFundAccInfo.toString()));
 
     }
 
