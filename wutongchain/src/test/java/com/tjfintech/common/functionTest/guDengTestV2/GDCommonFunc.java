@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.guDengTestV2;
 
 import com.tjfintech.common.CommonFunc;
+import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -20,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 public class GDCommonFunc {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store = testBuilder.getStore();
+    GuDeng gd = testBuilder.getGuDeng();
     CommonFunc cf = new CommonFunc();
     UtilsClass utilsClass=new UtilsClass();
     String key = "";
@@ -1936,5 +1938,10 @@ public class GDCommonFunc {
         tempProdStr = tempProdStr.replaceAll(gdCompanyID, gdCompanyID + ver[1]);
         tempProdStr = tempProdStr.replaceAll(service_provider_subject_ref,service_provider_subject_ref + ver[2]);
         return tempProdStr;
+    }
+    public String getObjectLatestVer(String objectId){
+        return JSONObject.fromObject(gd.GDObjectQueryByVer(objectId,-1)).getJSONObject("data"
+        ).getJSONObject("header").getJSONObject("content").getString("version");
+
     }
 }

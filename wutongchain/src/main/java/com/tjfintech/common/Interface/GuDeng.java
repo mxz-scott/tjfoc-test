@@ -47,6 +47,7 @@ public interface GuDeng {
     String GDAccountQuery(String contractAddress,String clientNo);
     String GDMainSubjectQuery(String contractAddress,String subjectObjectId);
     String GDProductQuery(String contractAddress,String productObjectId);
+    String GDObjectQueryByVer(String objectId,int version);
 
     String GDEquitySystemInit(String contractAddress,String platformKeyId);
 

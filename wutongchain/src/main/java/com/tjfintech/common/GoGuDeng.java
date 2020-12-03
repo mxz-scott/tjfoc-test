@@ -561,4 +561,12 @@ public  class GoGuDeng implements GuDeng {
         return result;
     }
 
+    public String GDObjectQueryByVer(String objectId,int version) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("objectId", objectId);
+        map.put("version", version);
+        String result = PostTest.postMethod(SDKADD + "/equity/info/query", map);
+        log.info(result);
+        return result;
+    }
 }
