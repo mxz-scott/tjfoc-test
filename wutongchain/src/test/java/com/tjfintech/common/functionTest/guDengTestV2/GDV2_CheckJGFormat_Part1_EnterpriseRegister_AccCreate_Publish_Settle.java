@@ -66,7 +66,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
         Map prodInfo = gdBF.init03EquityProductInfo();
 
-        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));
+        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
 
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enSubInfo,
                 prodInfo,null,null);
@@ -90,7 +90,6 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String query = store.GetTxDetail(txId);
         String questInfo = net.sf.json.JSONObject.fromObject(query).getJSONObject("data").getJSONObject("wvm"
         ).getJSONObject("wvmContractTx").getJSONObject("arg").getJSONArray("args").get(0).toString();
-        JSONObject jsonObject = JSONObject.parseObject(questInfo);
 
         //获取监管数据存证hash
         String jgType = prodType;
@@ -111,6 +110,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
                 gdCF.constructContentMap(prodType,gdEquityCode,String.valueOf(verTemp),"create",
                         timeStampProd));
         }
+        product_issuer_subject_ref = gdCompanyID;
+
         assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref));
         assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(product_market_subject_ref));
         assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(gdCompanyID));
@@ -138,6 +139,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
         Map prodInfo = gdBF.init03BondProductInfo();
 
+        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
+
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enSubInfo,
                 null,prodInfo,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -146,12 +149,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
         //查询挂牌企业主体数据  交易上链后 数据可能还未写入合约 在此做2s内数据查询
-        for(int i = 0;i<20;i++) {
-            response = gd.GDMainSubjectQuery(gdContractAddress, gdCompanyID);
-            if(net.sf.json.JSONObject.fromObject(response).getString("state").equals("200"))
-                break;
-            sleepAndSaveInfo(100);
-        }
+        response = gd.GDMainSubjectQuery(gdContractAddress, gdCompanyID);
         assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
 
         //获取主体/产品存证hash
@@ -182,15 +180,16 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
                             timeStampProd));
         }
 
-
-        String[] verForSub = new String[]{""};
-        String[] verForProd = new String[]{"","",""};
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(product_market_subject_ref));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(gdCompanyID));
+        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(service_provider_subject_ref));
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(enSubInfo,subjectType)),replaceCertain(getSubInfo.toString()));
 
         log.info("检查产品存证信息内容与传入一致\n" + prodInfo.toString() + "\n" + getProInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(prodInfo,prodType,verForProd)),replaceCertain(getProInfo.toString()));;
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(prodInfo,prodType)),replaceCertain(getProInfo.toString()));
 
     }
 
@@ -200,6 +199,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         long shareTotals = 1000000;
         Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
         Map prodInfo = gdBF.init03FundProductInfo();
+
+        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
+
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enSubInfo,
                 null,null,prodInfo);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -245,8 +247,15 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
                             timeStampProd));
         }
 
-        String[] verForSub = new String[]{""};
-        String[] verForProd = new String[]{"","",""};
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(product_market_subject_ref));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(gdCompanyID));
+        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(service_provider_subject_ref));
+
+        String[] verForSub = new String[]{"/" + gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref)};
+        String[] verForProd = new String[]{"/" + gdCF.getObjectLatestVer(product_market_subject_ref),
+                "/" + gdCF.getObjectLatestVer(gdCompanyID),
+                "/" + gdCF.getObjectLatestVer(service_provider_subject_ref)};
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
         assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
@@ -259,6 +268,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
     @Test
     public void TC013_enterpriseRegisterMemberCheckFormat() throws Exception {
         Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
+
+        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
+
         String response= gd.GDEnterpriseResister(gdContractAddress,"",0,enSubInfo,
                 null,null,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -297,10 +309,14 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
                             timeStampSub));
         }
 
-        String[] verForSub = new String[]{""};
+
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(product_market_subject_ref));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(gdCompanyID));
+        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(service_provider_subject_ref));
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(enSubInfo,subjectType)),replaceCertain(getSubInfo.toString()));
 
     }
 
@@ -373,6 +389,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
         Map prodInfo = gdBF.init03EquityProductInfo();
 
+        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
+
         prodInfo.put("product_issuer_subject_ref","");
         long shareTotals = 1000000;
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enSubInfo,
@@ -410,14 +428,16 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         }
         prodInfo.put("product_issuer_subject_ref",enSubInfo.get("subject_object_id").toString());
 
-        String[] verForSub = new String[]{""};
-        String[] verForProd = new String[]{"","",""};
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(product_market_subject_ref));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(gdCompanyID));
+        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(service_provider_subject_ref));
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(enSubInfo,subjectType)),replaceCertain(getSubInfo.toString()));
 
         log.info("检查产品存证信息内容与传入一致\n" + prodInfo.toString() + "\n" + getProInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(prodInfo,prodType,verForProd)),replaceCertain(getProInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(prodInfo,prodType)),replaceCertain(getProInfo.toString()));
 
     }
 
@@ -428,6 +448,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
     public void TC022_enterpriseRegisterBondEmpty() throws Exception {
         Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
         Map prodInfo = gdBF.init03BondProductInfo();
+
+        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
 
         prodInfo.put("product_issuer_subject_ref","");
         long shareTotals = 1000000;
@@ -466,14 +488,16 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         }
         prodInfo.put("product_issuer_subject_ref",enSubInfo.get("subject_object_id").toString());
 
-        String[] verForSub = new String[]{""};
-        String[] verForProd = new String[]{"","",""};
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(product_market_subject_ref));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(gdCompanyID));
+        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(service_provider_subject_ref));
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(enSubInfo,subjectType)),replaceCertain(getSubInfo.toString()));
 
         log.info("检查产品存证信息内容与传入一致\n" + prodInfo.toString() + "\n" + getProInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(prodInfo,prodType,verForProd)),replaceCertain(getProInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(prodInfo,prodType)),replaceCertain(getProInfo.toString()));
     }
 
     //企业 基金类 登记
@@ -482,6 +506,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
     public void TC023_enterpriseRegisterFundEmpty() throws Exception {
         Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
         Map prodInfo = gdBF.init03FundProductInfo();
+
+        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
+
         prodInfo.put("product_issuer_subject_ref","");
         long shareTotals = 1000000;
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enSubInfo,
@@ -518,14 +545,16 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         }
         prodInfo.put("product_issuer_subject_ref",enSubInfo.get("subject_object_id").toString());
 
-        String[] verForSub = new String[]{""};
-        String[] verForProd = new String[]{"","",""};
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(product_market_subject_ref));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(gdCompanyID));
+        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(service_provider_subject_ref));
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(enSubInfo,subjectType)),replaceCertain(getSubInfo.toString()));
 
         log.info("检查产品存证信息内容与传入一致\n" + prodInfo.toString() + "\n" + getProInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(prodInfo,prodType,verForProd)),replaceCertain(getProInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(prodInfo,prodType)),replaceCertain(getProInfo.toString()));
 
     }
 
@@ -614,32 +643,6 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         log.info("检查资金账户存证信息内容与传入一致\n" + fundAcc.toString() + "\n" + getFundAccInfo.toString());
         assertEquals(replaceCertain(fundAcc.toString()),replaceCertain(getFundAccInfo.toString()));
-
-
-
-//
-//        //检查主体存证信息内容与传入一致
-//        log.info("检查主体存证信息内容与传入一致");
-//        log.info(gdCF.contructPersonalSubInfo(subStoreId).toString().replaceAll("\"",""));
-//        log.info(investorSubjectInfo.toString());
-//        assertEquals(replaceCertain(investorSubjectInfo.toString()),
-//                replaceCertain(gdCF.contructPersonalSubInfo(subStoreId).toString()));
-//
-//        //检查账户存证信息内容与传入一致
-//        log.info("检查资金账户存证信息内容与传入一致");
-//        log.info(gdCF.contructFundAccountInfo(accStoreId,fundNo).toString().replaceAll("\"",""));
-//        fundAcc.put("account_associated_account_ref",shareHolderNo);
-//        log.info(fundAcc.toString());
-//        assertEquals(replaceCertain(fundAcc.toString()),
-//                replaceCertain(gdCF.contructFundAccountInfo(accStoreId,fundNo).toString()));
-//
-//        log.info("检查股权账户存证信息内容与传入一致");
-//        log.info(gdCF.contructEquityAccountInfo(accStoreId,shareHolderNo).toString().replaceAll("\"",""));
-//        log.info(shAcc.toString());
-//        assertEquals(replaceCertain(shAcc.toString()),
-//                replaceCertain(gdCF.contructEquityAccountInfo(accStoreId,shareHolderNo).toString()));
-
-
 
     }
 
