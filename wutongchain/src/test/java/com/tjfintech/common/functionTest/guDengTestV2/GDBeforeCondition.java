@@ -187,6 +187,8 @@ public class GDBeforeCondition {
         //更新系统合约
         gd.GDEquitySystemInit(gdContractAddress, gdPlatfromKeyID);
 
+        initCommonRefSubAndReg();                           //初始化监管引用数据做挂牌企业登记操作
+
         log.info("初始化监管相关数据结构");
         enterpriseSubjectInfo = init01EnterpriseSubjectInfo();      //初始化企业主体数据信息  涉及接口 企业挂牌登记
         investorSubjectInfo = init01PersonalSubjectInfo();        //初始化个人主体数据信息  涉及接口 开户
@@ -199,7 +201,7 @@ public class GDBeforeCondition {
         registerInfo = init05RegInfo();                    //初始化登记数据信息  涉及接口 发行 股份性质变更 过户转让 增发 冻结 解除冻结
         settleInfo = init06SettleInfo();                 //初始化资金结算数据信息  涉及接口 资金清算
         disclosureInfo = init07PublishInfo();                //初始化信息数据信息  涉及接口 写入公告
-        initCommonRefSubAndReg();                           //初始化监管引用数据做挂牌企业登记操作
+
 
         //初始化listRegInfo
         listRegInfo.clear();
@@ -1382,6 +1384,7 @@ public class GDBeforeCondition {
     public void initCommonRefSubAndReg() {
 
         log.info("初始化监管引用相关数据结构");
+        resetRefObjectId();
         Map mapTemp = init01EnterpriseSubjectInfo();
         String refDataArray[]=refData();
 
@@ -1394,6 +1397,52 @@ public class GDBeforeCondition {
             String response = gd.GDMainSubjectQuery(gdContractAddress, refDataArray[i]);
             assertEquals(true,response.contains(refDataArray[i]));
         }
+    }
+
+    public void resetRefObjectId(){
+        //主体
+        subject_investor_qualification_certifier_ref = "SIQCR" + UtilsClass.Random(9);
+        //账户
+        account_subject_ref = "ASR" + UtilsClass.Random(9);
+        account_depository_ref = "ADR" + UtilsClass.Random(9);
+        account_associated_account_ref = "AAAR" + UtilsClass.Random(9);
+        //产品
+        product_market_subject_ref = "PMSR" + UtilsClass.Random(9);
+        product_issuer_subject_ref = "PISR" + UtilsClass.Random(9);
+        service_provider_subject_ref = "SPSR" + UtilsClass.Random(9);
+        product_conversion_price_ref = "PCPR" + UtilsClass.Random(9);
+        //交易报告
+        transaction_custody_product_ref = "TCPR" + UtilsClass.Random(9);
+        transaction_product_issuer_ref = "TPIR" + UtilsClass.Random(9);
+        transaction_issuer_ref = "TIssR" + UtilsClass.Random(9);
+        transaction_investor_ref = "TIR" + UtilsClass.Random(9);
+        transaction_investor_original_ref = "TIOR" + UtilsClass.Random(9);
+        transaction_investor_counterparty_ref = "TICR" + UtilsClass.Random(9);
+        transaction_intermediary_subject_ref = "TISR" + UtilsClass.Random(9);
+        //登记
+        register_subject_ref = "RSR" + UtilsClass.Random(9);
+        register_subject_account_ref = "RSAR" + UtilsClass.Random(9);
+        register_transaction_ref = "RTR" + UtilsClass.Random(9);
+        register_product_ref = "RPR" + UtilsClass.Random(9);
+        register_right_recognition_subject_ref = "RRRSR" + UtilsClass.Random(9);
+        register_right_recognition_agent_subject_ref = "RRRASR" + UtilsClass.Random(9);
+        roll_register_subject_ref = "RRSR" + UtilsClass.Random(9);
+        roll_register_product_ref = "RRPR" + UtilsClass.Random(9);
+        register_equity_subject_ref = "RESR" + UtilsClass.Random(9);
+        register_debt_holder_ref = "RDHR" + UtilsClass.Random(9);
+        register_investor_subject_ref = "RISR" + UtilsClass.Random(9);
+        //资金结算
+        settlement_subject_ref = "SSR" + UtilsClass.Random(9);
+        settlement_product_ref = "SPR" + UtilsClass.Random(9);
+        settlement_transaction_ref = "STR" + UtilsClass.Random(9);
+        settlement_out_account_object_ref = "SOAOR" + UtilsClass.Random(9);
+        settlement_in_account_object_ref = "SIAOR" + UtilsClass.Random(9);
+        //信披
+        disclosure_subject_ref = "DSR" + UtilsClass.Random(9);
+        disclosure_referer_subject_ref = "DRSR" + UtilsClass.Random(9);
+        disclosure_display_platform_ref = "DDPR" + UtilsClass.Random(9);
+        disclosure_identifier_ref = "DIR" + UtilsClass.Random(9);
+        disclosure_auditor_ref = "DAR" + UtilsClass.Random(9);
     }
 
 }
