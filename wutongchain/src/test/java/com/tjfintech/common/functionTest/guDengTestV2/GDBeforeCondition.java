@@ -927,8 +927,6 @@ public class GDBeforeCondition {
         mapTemp.clear();
         //对象标识
         mapTemp.put("register_registration_object_id", "regid00001");
-//        mapTemp.put("register_object_information_type",0);
-//        mapTemp.put("register_registration_type",0);
 
         //登记信息 登记基本信息
         mapTemp.put("register_object_type", 0);
@@ -967,7 +965,7 @@ public class GDBeforeCondition {
         //登记信息 权利登记 权利基本信息 质押登记
         mapTemp.put("register_pledge_balance_change", 1000);
         mapTemp.put("register_pledge_balance_before", 1000);
-        mapTemp.put("register_plged_balance_after", 5000);
+        mapTemp.put("register_pledge_balance_after", 5000);
 
         //登记信息 权利登记 权利基本信息 冻结登记
         mapTemp.put("register_frozen_balance_change", 500);
@@ -983,11 +981,11 @@ public class GDBeforeCondition {
         mapTemp.put("register_asset_equity_type", 1);
         mapTemp.put("register_source_type", 0);
         mapTemp.put("register_asset_note", "登记说明TEXT");
-        mapTemp.put("register_asset_verrification_doc", getListFileObj());
+        mapTemp.put("register_asset_verification_doc", getListFileObj());
 
 
         //登记信息 名册登记 名册基本信息
-        mapTemp.put("register_list_subject_ref", "名册主体引用CHARACTER");
+        mapTemp.put("register_subject_ref", "名册主体引用CHARACTER");
         mapTemp.put("register_product_ref", "产品引用");
         mapTemp.put("register_product_name", "产品名称");
         mapTemp.put("register_product_description", "产品描述");
@@ -1023,7 +1021,7 @@ public class GDBeforeCondition {
         //登记信息 名册登记 基金投资人名册
         List<Map> listFi = new ArrayList<>();
         Map mapFI = new HashMap();
-        mapFI.put("register_investor_subject_citation", "投资人主体引用CHARACTER");
+        mapFI.put("register_investor_subject_ref", "投资人主体引用CHARACTER");
         mapFI.put("register_investor_name", "投资人主体名称CHARACTER");
         mapFI.put("register_subscription_amount", 1000);
         mapFI.put("register_subscription_number", 2000);

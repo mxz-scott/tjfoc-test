@@ -1389,7 +1389,7 @@ public class GDCommonFunc {
         //登记信息 权利登记 权利基本信息 质押登记
         key = "register_pledge_balance_change";getSubjectInfo.put(key,objRegRigBase.getString(key));
         key = "register_pledge_balance_before";getSubjectInfo.put(key,objRegRigBase.getString(key));
-        key = "register_plged_balance_after";getSubjectInfo.put(key,objRegRigBase.getString(key));
+        key = "register_pledge_balance_after";getSubjectInfo.put(key,objRegRigBase.getString(key));
 
         //登记信息 权利登记 权利基本信息 冻结登记
         key = "register_frozen_balance_change";getSubjectInfo.put(key,objRegRigBase.getString(key));
@@ -1405,13 +1405,13 @@ public class GDCommonFunc {
         key = "register_asset_equity_type";getSubjectInfo.put(key,objRegRigBase.getString(key));
         key = "register_source_type";getSubjectInfo.put(key,objRegRigBase.getString(key));
         key = "register_asset_note";getSubjectInfo.put(key,objRegRigBase.getString(key));
-        key = "register_asset_verrification_doc";getSubjectInfo.put(key,objRegRigBase.getString(key));
+        key = "register_asset_verification_doc";getSubjectInfo.put(key,objRegRigBase.getString(key));
 
         //名册登记 名册基本信息
         com.alibaba.fastjson.JSONObject objRollRecords = objInfo.getJSONObject("roll_records");
         com.alibaba.fastjson.JSONObject objRollBase = objRollRecords.getJSONObject("basic_information_roster");
 
-        key = "register_list_subject_ref";getSubjectInfo.put(key,objRollBase.getString(key));
+        key = "register_subject_ref";getSubjectInfo.put(key,objRollBase.getString(key));
         key = "register_product_ref";getSubjectInfo.put(key,objRollBase.getString(key));
         key = "register_product_name";getSubjectInfo.put(key,objRollBase.getString(key));
         key = "register_product_description";getSubjectInfo.put(key,objRollBase.getString(key));
