@@ -1919,20 +1919,54 @@ public class GDCommonFunc {
 
     public String matchRefMapCertVer(Map dataInfo,String type,String...ver){
         String tempStr = dataInfo.toString();
+        String key = "";
         switch (type){
             case "subject":
-                tempStr = tempStr.replaceAll(subject_investor_qualification_certifier_ref,
-                        subject_investor_qualification_certifier_ref + ver[0]);
+                key = subject_investor_qualification_certifier_ref; tempStr = tempStr.replaceAll(key,key + ver[0]);
                 break;
             case "account":
-                tempStr = tempStr.replaceAll(account_subject_ref,account_subject_ref + ver[0]);
-                tempStr = tempStr.replaceAll(account_depository_ref, account_depository_ref + ver[1]);
-                tempStr = tempStr.replaceAll(account_associated_account_ref,account_associated_account_ref + ver[2]);
+                key = account_subject_ref; tempStr = tempStr.replaceAll(key,key + ver[0]);
+                key = account_depository_ref; tempStr = tempStr.replaceAll(key,key + ver[1]);
+                key = account_associated_account_ref; tempStr = tempStr.replaceAll(key,key + ver[2]);
                 break;
             case "product":
-                tempStr = tempStr.replaceAll(product_market_subject_ref,product_market_subject_ref + ver[0]);
-                tempStr = tempStr.replaceAll(gdCompanyID, gdCompanyID + ver[1]);
-                tempStr = tempStr.replaceAll(service_provider_subject_ref,service_provider_subject_ref + ver[2]);
+                key = product_market_subject_ref; tempStr = tempStr.replaceAll(key,key + ver[0]);
+                key = product_issuer_subject_ref; tempStr = tempStr.replaceAll(key,key + ver[1]);
+                key = service_provider_subject_ref; tempStr = tempStr.replaceAll(key,key + ver[2]);
+                break;
+            case "transactionreport" : break;
+            case "registration" : break;
+            case "settlement" : break;
+            case "infodisclosure" : break;
+        }
+        return tempStr;
+    }
+
+    public String matchRefMapCertVer2(Map dataInfo,String type){
+        String tempStr = dataInfo.toString();
+        String certainVer = "";
+        String key = "";
+        switch (type){
+            case "subject":
+                key = subject_investor_qualification_certifier_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                break;
+            case "account":
+                key = account_subject_ref;              certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                key = account_depository_ref;           certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                key = account_associated_account_ref;   certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+
+                break;
+            case "product":
+                key = product_market_subject_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                key = product_issuer_subject_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                key = service_provider_subject_ref;     certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
                 break;
             case "transactionreport" : break;
             case "registration" : break;
