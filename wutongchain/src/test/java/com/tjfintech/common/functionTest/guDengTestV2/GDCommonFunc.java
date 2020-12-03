@@ -1917,31 +1917,37 @@ public class GDCommonFunc {
 
     }
 
-
-    public String matchVerSubMapRefStr(Map subInfo,String...ver){
-        String tempSubStr = subInfo.toString();
-
-//        String ver = "";  //String ver = "/0"; //当前版本为未带版本号的版本 后面需要适配修改为带版本号的版本
-        //将对应的字段值替换为对象标识加版本号
-        tempSubStr = tempSubStr.replaceAll(subject_investor_qualification_certifier_ref,
-                subject_investor_qualification_certifier_ref + ver[0]);
-        return tempSubStr;
+    public String matchRefMapCertVer(Map dataInfo,String type,String...ver){
+        String tempStr = dataInfo.toString();
+        switch (type){
+            case "subject":
+                tempStr = tempStr.replaceAll(subject_investor_qualification_certifier_ref,
+                        subject_investor_qualification_certifier_ref + ver[0]);
+                break;
+            case "account":
+                tempStr = tempStr.replaceAll(account_subject_ref,account_subject_ref + ver[0]);
+                tempStr = tempStr.replaceAll(account_depository_ref, account_depository_ref + ver[1]);
+                tempStr = tempStr.replaceAll(account_associated_account_ref,account_associated_account_ref + ver[2]);
+                break;
+            case "product":
+                tempStr = tempStr.replaceAll(product_market_subject_ref,product_market_subject_ref + ver[0]);
+                tempStr = tempStr.replaceAll(gdCompanyID, gdCompanyID + ver[1]);
+                tempStr = tempStr.replaceAll(service_provider_subject_ref,service_provider_subject_ref + ver[2]);
+                break;
+            case "transactionreport" : break;
+            case "registration" : break;
+            case "settlement" : break;
+            case "infodisclosure" : break;
+        }
+        return tempStr;
     }
 
-    public String matchVerProdMapRefStr(Map profInfo,String...ver){
-        String tempProdStr = profInfo.toString();
 
-//        String ver = "";  //String ver = "/0"; //当前版本为未带版本号的版本 后面需要适配修改为带版本号的版本
-        //将对应的字段值替换为对象标识加版本号
-        //替换为对的版本号
-        tempProdStr = tempProdStr.replaceAll(product_market_subject_ref,product_market_subject_ref + ver[0]);
-        tempProdStr = tempProdStr.replaceAll(gdCompanyID, gdCompanyID + ver[1]);
-        tempProdStr = tempProdStr.replaceAll(service_provider_subject_ref,service_provider_subject_ref + ver[2]);
-        return tempProdStr;
-    }
     public String getObjectLatestVer(String objectId){
-        return JSONObject.fromObject(gd.GDObjectQueryByVer(objectId,-1)).getJSONObject("data"
-        ).getJSONObject("header").getJSONObject("content").getString("version");
-
+        String response = gd.GDObjectQueryByVer(objectId,-1);
+        if(response.contains("不存在此对象标识和版本对应的数据")) return "-1";
+        else
+            return JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header"
+                                                ).getJSONObject("content").getString("version");
     }
 }

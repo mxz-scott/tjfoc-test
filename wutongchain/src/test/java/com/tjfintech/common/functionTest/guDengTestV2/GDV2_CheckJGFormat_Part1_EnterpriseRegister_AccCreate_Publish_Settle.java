@@ -66,6 +66,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
         Map prodInfo = gdBF.init03EquityProductInfo();
 
+        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));
+
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enSubInfo,
                 prodInfo,null,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -109,15 +111,21 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
                 gdCF.constructContentMap(prodType,gdEquityCode,String.valueOf(verTemp),"create",
                         timeStampProd));
         }
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(product_market_subject_ref));
+        assertEquals(String.valueOf(0),gdCF.getObjectLatestVer(gdCompanyID));
+        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(service_provider_subject_ref));
 
-        String[] verForSub = new String[]{""};
-        String[] verForProd = new String[]{"","",""};
+        String[] verForSub = new String[]{"/" + gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref)};
+        String[] verForProd = new String[]{"/" + gdCF.getObjectLatestVer(product_market_subject_ref),
+                                            "/" + gdCF.getObjectLatestVer(gdCompanyID),
+                                            "/" + gdCF.getObjectLatestVer(service_provider_subject_ref)};
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchVerSubMapRefStr(enSubInfo,verForSub)),replaceCertain(getSubInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
 
         log.info("检查产品存证信息内容与传入一致\n" + prodInfo.toString() + "\n" + getProInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchVerSubMapRefStr(prodInfo,verForProd)),replaceCertain(getProInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(prodInfo,prodType,verForProd)),replaceCertain(getProInfo.toString()));
     }
 
 
@@ -179,10 +187,10 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String[] verForProd = new String[]{"","",""};
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchVerSubMapRefStr(enSubInfo,verForSub)),replaceCertain(getSubInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
 
         log.info("检查产品存证信息内容与传入一致\n" + prodInfo.toString() + "\n" + getProInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchVerSubMapRefStr(prodInfo,verForProd)),replaceCertain(getProInfo.toString()));;
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(prodInfo,prodType,verForProd)),replaceCertain(getProInfo.toString()));;
 
     }
 
@@ -241,10 +249,10 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String[] verForProd = new String[]{"","",""};
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchVerSubMapRefStr(enSubInfo,verForSub)),replaceCertain(getSubInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
 
         log.info("检查产品存证信息内容与传入一致\n" + prodInfo.toString() + "\n" + getProInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchVerSubMapRefStr(prodInfo,verForProd)),replaceCertain(getProInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(prodInfo,prodType,verForProd)),replaceCertain(getProInfo.toString()));
     }
 
     //机构 会员登记
@@ -292,7 +300,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String[] verForSub = new String[]{""};
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchVerSubMapRefStr(enSubInfo,verForSub)),replaceCertain(getSubInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
 
     }
 
@@ -406,10 +414,10 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String[] verForProd = new String[]{"","",""};
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchVerSubMapRefStr(enSubInfo,verForSub)),replaceCertain(getSubInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
 
         log.info("检查产品存证信息内容与传入一致\n" + prodInfo.toString() + "\n" + getProInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchVerSubMapRefStr(prodInfo,verForProd)),replaceCertain(getProInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(prodInfo,prodType,verForProd)),replaceCertain(getProInfo.toString()));
 
     }
 
@@ -462,10 +470,10 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String[] verForProd = new String[]{"","",""};
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchVerSubMapRefStr(enSubInfo,verForSub)),replaceCertain(getSubInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
 
         log.info("检查产品存证信息内容与传入一致\n" + prodInfo.toString() + "\n" + getProInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchVerSubMapRefStr(prodInfo,verForProd)),replaceCertain(getProInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(prodInfo,prodType,verForProd)),replaceCertain(getProInfo.toString()));
     }
 
     //企业 基金类 登记
@@ -514,10 +522,10 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String[] verForProd = new String[]{"","",""};
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchVerSubMapRefStr(enSubInfo,verForSub)),replaceCertain(getSubInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
 
         log.info("检查产品存证信息内容与传入一致\n" + prodInfo.toString() + "\n" + getProInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchVerSubMapRefStr(prodInfo,verForProd)),replaceCertain(getProInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(prodInfo,prodType,verForProd)),replaceCertain(getProInfo.toString()));
 
     }
 
