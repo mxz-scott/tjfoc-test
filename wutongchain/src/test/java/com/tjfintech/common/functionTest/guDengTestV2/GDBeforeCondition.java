@@ -1090,12 +1090,12 @@ public class GDBeforeCondition {
         mapTemp.clear();
 
         //资金结算信息 资金结算基本信息
-        mapTemp.put("settlement_subject_ref", "CH5LDWxGtu6142");
+        mapTemp.put("settlement_subject_ref", settlement_subject_ref);
         mapTemp.put("settlement_type", 0);
         mapTemp.put("settlement_serial_number", "CH1ktvx01x2e04");
         mapTemp.put("settlement_time", time1);
-        mapTemp.put("settlement_product_ref", "CHVXgXA1JsB5y2");
-        mapTemp.put("settlement_transaction_reference", "CHW5HHZl0gGgnj");
+        mapTemp.put("settlement_product_ref", settlement_product_ref);
+        mapTemp.put("settlement_transaction_ref", settlement_transaction_ref);
         mapTemp.put("settlement_currency", "156");
         mapTemp.put("settlement_value", 600000);
         mapTemp.put("settlement_note", "textemu4AW4U57");
@@ -1106,7 +1106,7 @@ public class GDBeforeCondition {
         mapTemp.put("settlement_out_bank_code", "CH3e9Vp967INOA");
         mapTemp.put("settlement_out_bank_name", "CH1tY37wB57auz");
         mapTemp.put("settlement_out_bank_account", "CHHe8e3M4j0N8o");
-        mapTemp.put("settlement_out_account_object_ref", "CH62QCHF5Q7sob");
+        mapTemp.put("settlement_out_account_object_ref", settlement_out_account_object_ref);
         mapTemp.put("settlement_out_account_name", "CH8tC5aG5om158");
         mapTemp.put("settlement_out_account_balance_before_transfer", 1000000);
         mapTemp.put("settlement_out_account_balance_after_transfer", 1000000);
@@ -1115,7 +1115,7 @@ public class GDBeforeCondition {
         mapTemp.put("settlement_in_bank_code", "CH7YfKps3x65Y2");
         mapTemp.put("settlement_in_bank_name", "CHp42HpuGtf6y3");
         mapTemp.put("settlement_in_bank_account", "CHE0H230A17lu8");
-        mapTemp.put("settlement_in_account_object_ref", "CH8QL30e0ggRvp");
+        mapTemp.put("settlement_in_account_object_ref",settlement_in_account_object_ref);
         mapTemp.put("settlement_in_account_name", "CH6FU5bf2N2Y6B");
         mapTemp.put("settlement_in_account_balance_before_transfer", 1000000);
         mapTemp.put("settlement_in_account_balance_after_transfer", 1000000);

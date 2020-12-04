@@ -1476,21 +1476,19 @@ public class GDCommonFunc {
     public Map settleInfo(com.alibaba.fastjson.JSONObject jobj2){
 
         com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("capital_object_information");
-        com.alibaba.fastjson.JSONObject objBase = jobj2.getJSONObject("body").getJSONObject("capital_settlement_information").getJSONObject("basic_information_capital_settlement");
-        com.alibaba.fastjson.JSONObject objIn = jobj2.getJSONObject("body").getJSONObject("capital_settlement_information").getJSONObject("transferor_information");
-        com.alibaba.fastjson.JSONObject objOut = jobj2.getJSONObject("body").getJSONObject("capital_settlement_information").getJSONObject("transferee_information");
+        com.alibaba.fastjson.JSONObject objBase = objInfo.getJSONObject("basic_information_capital_settlement");
+        com.alibaba.fastjson.JSONObject objOut = objInfo.getJSONObject("transferor_information");
+        com.alibaba.fastjson.JSONObject objIn = objInfo.getJSONObject("transferee_information");
 
         Map getSubjectInfo = new HashMap();
         key = "capita_settlement_object_id";                        getSubjectInfo.put(key,getSubObjId(jobj2));
-        key = "capita_object_information_type";                     getSubjectInfo.put(key,objInfo.getString(key));
-
 
         key = "settlement_subject_ref";                             getSubjectInfo.put(key,objBase.getString(key));
         key = "settlement_type";                                    getSubjectInfo.put(key,objBase.getString(key));
         key = "settlement_serial_number";                           getSubjectInfo.put(key,objBase.getString(key));
         key = "settlement_time";                                    getSubjectInfo.put(key,objBase.getString(key));
         key = "settlement_product_ref";                             getSubjectInfo.put(key,objBase.getString(key));
-        key = "settlement_transaction_reference";                   getSubjectInfo.put(key,objBase.getString(key));
+        key = "settlement_transaction_ref";                         getSubjectInfo.put(key,objBase.getString(key));
         key = "settlement_currency";                                getSubjectInfo.put(key,objBase.getString(key));
         key = "settlement_value";                                   getSubjectInfo.put(key,objBase.getString(key));
         key = "settlement_note";                                    getSubjectInfo.put(key,objBase.getString(key));
