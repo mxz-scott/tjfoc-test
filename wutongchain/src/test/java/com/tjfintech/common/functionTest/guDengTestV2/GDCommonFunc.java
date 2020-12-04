@@ -961,7 +961,7 @@ public class GDCommonFunc {
         key = "subject_contact_number";                     getSubjectInfo.put(key,objPersonSubBase.getString(key));
         key = "subject_cellphone_number";                   getSubjectInfo.put(key,objPersonSubBase.getString(key));
         key = "subject_personal_fax";                       getSubjectInfo.put(key,objPersonSubBase.getString(key));
-        key = "subject_postal_code";                  getSubjectInfo.put(key,objPersonSubBase.getString(key));
+        key = "subject_postal_code";                        getSubjectInfo.put(key,objPersonSubBase.getString(key));
         key = "subject_id_doc_mailbox";                     getSubjectInfo.put(key,objPersonSubBase.getString(key));
         key = "subject_education";                          getSubjectInfo.put(key,objPersonSubBase.getString(key));
         key = "subject_occupation";                         getSubjectInfo.put(key,objPersonSubBase.getString(key));
@@ -1633,228 +1633,61 @@ public class GDCommonFunc {
 //    }
 
     public Map pubInfo(com.alibaba.fastjson.JSONObject jobjOK) {
-        com.alibaba.fastjson.JSONObject objInfo = jobjOK.getJSONObject("body").getJSONObject("letter_object_identification");
-        com.alibaba.fastjson.JSONObject objDis = jobjOK.getJSONObject("body").getJSONObject("disclosure_approval_information").getJSONObject("enterprise_display_information");
-        com.alibaba.fastjson.JSONObject objRegulatory = jobjOK.getJSONObject("body").getJSONObject("disclosure_approval_information").getJSONObject("regulatory_infomation");
-        com.alibaba.fastjson.JSONObject objReport = jobjOK.getJSONObject("body").getJSONObject("disclosure_approval_information").getJSONObject("enterprise_report");
-        com.alibaba.fastjson.JSONObject objNotice = jobjOK.getJSONObject("body").getJSONObject("disclosure_approval_information").getJSONObject("disclosure_notice");
-        com.alibaba.fastjson.JSONObject objMajor = jobjOK.getJSONObject("body").getJSONObject("disclosure_approval_information").getJSONObject("major_event_information");
-        com.alibaba.fastjson.JSONObject objIntegrity = jobjOK.getJSONObject("body").getJSONObject("disclosure_approval_information").getJSONObject("integrity_archives");
+        com.alibaba.fastjson.JSONObject objInfo = jobjOK.getJSONObject("body").getJSONObject("disclosure_approval_information");
+        com.alibaba.fastjson.JSONObject objDis = objInfo.getJSONObject("enterprise_display_information");
+        com.alibaba.fastjson.JSONObject objRegulatory = objInfo.getJSONObject("regulatory_infomation");
+        com.alibaba.fastjson.JSONObject objReport = objInfo.getJSONObject("enterprise_report");
+        com.alibaba.fastjson.JSONObject objNotice = objInfo.getJSONObject("disclosure_notice");
+        com.alibaba.fastjson.JSONObject objMajor = objInfo.getJSONObject("major_event_information");
+        com.alibaba.fastjson.JSONObject objIntegrity = objInfo.getJSONObject("integrity_archives");
         com.alibaba.fastjson.JSONObject objExpandBasic = objIntegrity.getJSONObject("basic_information");
         com.alibaba.fastjson.JSONObject objExpandItem = objIntegrity.getJSONObject("item_details");
-        com.alibaba.fastjson.JSONObject objFinancial = jobjOK.getJSONObject("body").getJSONObject("disclosure_approval_information").getJSONObject("financial_information");
+        com.alibaba.fastjson.JSONObject objFinancial = objInfo.getJSONObject("financial_information");
         com.alibaba.fastjson.JSONObject objFinancialBasic = objFinancial.getJSONObject("basic_financial_information");
         com.alibaba.fastjson.JSONObject objFinancialDocuments = objFinancial.getJSONObject("financial_statement_documents");
-        com.alibaba.fastjson.JSONObject objBusiness = jobjOK.getJSONObject("body").getJSONObject("disclosure_approval_information").getJSONObject("business_information");
+        com.alibaba.fastjson.JSONObject objBusiness = objInfo.getJSONObject("business_information");
         com.alibaba.fastjson.JSONObject objBusinessBasic = objBusiness.getJSONObject("business_basic_information");
         com.alibaba.fastjson.JSONObject objBusinessInvestment = objBusiness.getJSONObject("Investment_and_financing");
-        com.alibaba.fastjson.JSONObject objExpand = jobjOK.getJSONObject("body").getJSONObject("disclosure_approval_information").getJSONObject("expand_information");
+        com.alibaba.fastjson.JSONObject objExpand = objInfo.getJSONObject("expand_information");
 
         Map getSubjectInfo = new HashMap();
 
         //信批基本信息
-        key = "disclosure_subject_ref";                          getSubjectInfo.put(key, objInfo.getString(key));
-        key = "disclosure_type";                                 getSubjectInfo.put(key, objInfo.getString(key));
-        key = "disclosure_submit_type";                          getSubjectInfo.put(key, objInfo.getString(key));
-        key = "disclosure_referer_subject_ref";                  getSubjectInfo.put(key, objInfo.getString(key));
-        key = "disclosure_referer_name";                         getSubjectInfo.put(key, objInfo.getString(key));
-        key = "disclosure_submit_date";                          getSubjectInfo.put(key, objInfo.getString(key));
-        key = "disclosure_submit_description";                   getSubjectInfo.put(key, objInfo.getString(key));
-
+        key = "disclosure_subject_ref";                          getSubjectInfo.put(key, objDis.getString(key));
+        key = "disclosure_type";                                 getSubjectInfo.put(key, objDis.getString(key));
+        key = "disclosure_submit_type";                          getSubjectInfo.put(key, objDis.getString(key));
+        key = "disclosure_referer_subject_ref";                  getSubjectInfo.put(key, objDis.getString(key));
+        key = "disclosure_referer_name";                         getSubjectInfo.put(key, objDis.getString(key));
+        key = "disclosure_submit_date";                          getSubjectInfo.put(key, objDis.getString(key));
+        key = "disclosure_submit_description";                   getSubjectInfo.put(key, objDis.getString(key));
 
         //拼组企业展示信息1
-        com.alibaba.fastjson.JSONArray arrEDI = objDis.getJSONArray("enterprise_display_information");
-        List<Map> tempList1 = new ArrayList<>();
-        for (int i = 0; i < arrEDI.size(); i++) {
-            Map tempMap = new HashMap();
-            com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(arrEDI.get(i).toString());
-            key = "disclosure_display_platform_ref";                                tempMap.put(key, objDis.getJSONObject("enterprise_display_information").getString(key));
-            key = "disclosure_display_name";                                        tempMap.put(key, objDis.getJSONObject("enterprise_display_information").getString(key));
-            key = "disclosure_display_doc";                                         tempMap.put(key, objDis.getJSONObject("enterprise_display_information").getString(key));
-            key = "disclosure_display_description";                                 tempMap.put(key, objDis.getJSONObject("enterprise_display_information").getString(key));
-            key = "disclosure_display_code";                                        tempMap.put(key, objDis.getJSONObject("enterprise_display_information").getString(key));
-            key = "disclosure_display_content";                                     tempMap.put(key, objDis.getJSONObject("enterprise_display_information").getString(key));
-            key = "disclosure_display_start_date";                                  tempMap.put(key, objDis.getJSONObject("enterprise_display_information").getString(key));
-            key = "disclosure_display_end_date";                                    tempMap.put(key, objDis.getJSONObject("enterprise_display_information").getString(key));
-
-            tempList1.add(tempMap);
-        }
-
-        getSubjectInfo.put("enterprise_display_information", tempList1);
+        key = "enterprise_display_information";                  getSubjectInfo.put(key, objInfo.getString(key));
 
         //拼组监管信息3
-        com.alibaba.fastjson.JSONArray arrRI = objRegulatory.getJSONArray("regulatory_infomation");
-        List<Map> tempList3 = new ArrayList<>();
-        for (int i = 0; i < arrRI.size(); i++) {
-            Map tempMap = new HashMap();
-            com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(arrRI.get(i).toString());
-            key = "disclosure_enterprise_report_type";                                        tempMap.put(key, objRegulatory.getJSONObject("regulatory_infomation").getString(key));
-            key = "disclosure_enterprise_report_name";                                        tempMap.put(key, objRegulatory.getJSONObject("regulatory_infomation").getString(key));
-            key = "disclosure_enterprise_report_doc";                                         tempMap.put(key, objRegulatory.getJSONObject("regulatory_infomation").getString(key));
-            key = "disclosure_enterprise_report_description";                                 tempMap.put(key, objRegulatory.getJSONObject("regulatory_infomation").getString(key));
-            key = "disclosure_enterprise_report_date";                                        tempMap.put(key, objRegulatory.getJSONObject("regulatory_infomation").getString(key));
-
-            tempList3.add(tempMap);
-        }
-
-        getSubjectInfo.put("regulatory_infomation", tempList3);
+        key = "regulatory_infomation";                           getSubjectInfo.put(key, objInfo.getString(key));
 
         //拼组企业报告4
-        com.alibaba.fastjson.JSONArray arrER = objReport.getJSONArray("enterprise_report");
-        List<Map> tempList4 = new ArrayList<>();
-        for (int i = 0; i < arrER.size(); i++) {
-            Map tempMap = new HashMap();
-            com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(arrER.get(i).toString());
-            key = "disclosure_enterprise_report_type";                                        tempMap.put(key, objReport.getJSONObject("enterprise_report").getString(key));
-            key = "disclosure_enterprise_report_name";                                        tempMap.put(key, objReport.getJSONObject("enterprise_report").getString(key));
-            key = "disclosure_enterprise_report_doc";                                         tempMap.put(key, objReport.getJSONObject("enterprise_report").getString(key));
-            key = "disclosure_enterprise_report_description";                                 tempMap.put(key, objReport.getJSONObject("enterprise_report").getString(key));
-            key = "disclosure_enterprise_report_date";                                        tempMap.put(key, objReport.getJSONObject("enterprise_report").getString(key));
-
-            tempList4.add(tempMap);
-        }
-
-        getSubjectInfo.put("enterprise_report", tempList4);
+        key = "enterprise_report";                               getSubjectInfo.put(key, objInfo.getString(key));
 
         //拼组公告信息5
-        com.alibaba.fastjson.JSONArray arrDN = objNotice.getJSONArray("disclosure_notice");
-        List<Map> tempList5 = new ArrayList<>();
-        for (int i = 0; i < arrDN.size(); i++) {
-            Map tempMap = new HashMap();
-            com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(arrDN.get(i).toString());
-            key = "disclosure_announcement_type";                                        tempMap.put(key, objNotice.getJSONObject("disclosure_notice").getString(key));
-            key = "disclosure_announcement_name";                                        tempMap.put(key, objNotice.getJSONObject("disclosure_notice").getString(key));
-            key = "disclosure_announcement_doc";                                         tempMap.put(key, objNotice.getJSONObject("disclosure_notice").getString(key));
-            key = "disclosure_announcement_description";                                 tempMap.put(key, objNotice.getJSONObject("disclosure_notice").getString(key));
-            key = "disclosure_announcement_date";                                        tempMap.put(key, objNotice.getJSONObject("disclosure_notice").getString(key));
-
-            tempList5.add(tempMap);
-        }
-
-        getSubjectInfo.put("disclosure_notice", tempList5);
+        key = "disclosure_notice";                               getSubjectInfo.put(key, objInfo.getString(key));
 
         //拼组重大事件信息6
-        com.alibaba.fastjson.JSONArray arrMAE = objMajor.getJSONArray("major_event_information");
-        List<Map> tempList6 = new ArrayList<>();
-        for (int i = 0; i < arrMAE.size(); i++) {
-            Map tempMap = new HashMap();
-            com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(arrMAE.get(i).toString());
-            key = "disclosure_major_event_type";                                        tempMap.put(key, objMajor.getJSONObject("major_event_information").getString(key));
-            key = "disclosure_major_event_name";                                        tempMap.put(key, objMajor.getJSONObject("major_event_information").getString(key));
-            key = "disclosure_major_event_doc";                                         tempMap.put(key, objMajor.getJSONObject("major_event_information").getString(key));
-            key = "disclosure_major_event_document_description";                        tempMap.put(key, objMajor.getJSONObject("major_event_information").getString(key));
-            key = "disclosure_major_event_reporting_date";                              tempMap.put(key, objMajor.getJSONObject("major_event_information").getString(key));
-
-            tempList6.add(tempMap);
-        }
-
-        getSubjectInfo.put("major_event_information", tempList6);
+        key = "major_event_information";                         getSubjectInfo.put(key, objInfo.getString(key));
 
         //拼组诚信档案信息7
-        com.alibaba.fastjson.JSONArray arrCD = objIntegrity.getJSONArray("integrity_archives");
-        List<Map> tempList7 = new ArrayList<>();
-        for (int i = 0; i < arrCD.size(); i++) {
-            Map tempMap = new HashMap();
-            com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(arrCD.get(i).toString());
-            //事项基本信息
-            key = "disclosure_identifier_ref";                      tempMap.put(key, objExpandBasic.getJSONObject("basic_information").getString(key));
-            key = "disclosure_identifier_name";                     tempMap.put(key, objExpandBasic.getJSONObject("basic_information").getString(key));
-            key = "disclosure_auditor_ref";                         tempMap.put(key, objExpandBasic.getJSONObject("basic_information").getString(key));
-            key = "disclosure_auditor_name";                        tempMap.put(key, objExpandBasic.getJSONObject("basic_information").getString(key));
-            //事项明细
-            key = "disclosure_event_id";                            tempMap.put(key, objExpandItem.getJSONObject("item_details").getString(key));
-            key = "disclosure_event_name";                          tempMap.put(key, objExpandItem.getJSONObject("item_details").getString(key));
-            key = "disclosure_event_doc";                           tempMap.put(key, objExpandItem.getJSONObject("item_details").getString(key));
-            key = "disclosure_event_description";                   tempMap.put(key, objExpandItem.getJSONObject("item_details").getString(key));
-            key = "disclosure_event_type";                          tempMap.put(key, objExpandItem.getJSONObject("item_details").getString(key));
-            key = "disclosure_event_valid_time";                    tempMap.put(key, objExpandItem.getJSONObject("item_details").getString(key));
-            key = "disclosure_event_start_date";                    tempMap.put(key, objExpandItem.getJSONObject("item_details").getString(key));
-            key = "disclosure_event_end_date";                      tempMap.put(key, objExpandItem.getJSONObject("item_details").getString(key));
-            key = "disclosure_event_status";                        tempMap.put(key, objExpandItem.getJSONObject("item_details").getString(key));
-
-            tempList7.add(tempMap);
-        }
-
-        getSubjectInfo.put("integrity_archives", tempList7);
+        key = "integrity_archives";                              getSubjectInfo.put(key, objInfo.getString(key));
 
         //拼组财务信息8
-        com.alibaba.fastjson.JSONArray arrFI = objFinancial.getJSONArray("financial_information");
-        List<Map> tempList8 = new ArrayList<>();
-        for (int i = 0; i < arrFI.size(); i++) {
-            Map tempMap = new HashMap();
-            com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(arrFI.get(i).toString());
-            //财务信息 基本财务信息
-            key = "disclosure_financial_start_date";                        getSubjectInfo.put(key, objFinancialBasic.getJSONObject("basic_financial_information").getString(key));
-            key = "disclosure_financial_end_date";                          getSubjectInfo.put(key, objFinancialBasic.getJSONObject("basic_financial_information").getString(key));
-            key = "disclosure_financial_type";                              getSubjectInfo.put(key, objFinancialBasic.getJSONObject("basic_financial_information").getString(key));
-            key = "disclosure_financial_periodend_total_asset";             getSubjectInfo.put(key, objFinancialBasic.getJSONObject("basic_financial_information").getString(key));
-            key = "disclosure_financial_periodend_net_asset";               getSubjectInfo.put(key, objFinancialBasic.getJSONObject("basic_financial_information").getString(key));
-            key = "disclosure_financial_periodend_total_liability";         getSubjectInfo.put(key, objFinancialBasic.getJSONObject("basic_financial_information").getString(key));
-            key = "disclosure_financial_periodend_revenue";                 getSubjectInfo.put(key, objFinancialBasic.getJSONObject("basic_financial_information").getString(key));
-            key = "disclosure_financial_periodend_gross_profit";            getSubjectInfo.put(key, objFinancialBasic.getJSONObject("basic_financial_information").getString(key));
-            key = "disclosure_financial_periodend_net_profit";              getSubjectInfo.put(key, objFinancialBasic.getJSONObject("basic_financial_information").getString(key));
-            key = "disclosure_financial_cashflow";                          getSubjectInfo.put(key, objFinancialBasic.getJSONObject("basic_financial_information").getString(key));
-            key = "disclosure_financial_whether_rd&d_costs";                getSubjectInfo.put(key, objFinancialBasic.getJSONObject("basic_financial_information").getString(key));
-            key = "disclosure_financial_rd_cost";                           getSubjectInfo.put(key, objFinancialBasic.getJSONObject("basic_financial_information").getString(key));
-            //财务信息 财务报表文件
-            key = "disclosure_financial_balance_sheet_name";               getSubjectInfo.put(key, objFinancialDocuments.getJSONObject("financial_statement_documents").getString(key));
-            key = "disclosure_financial_balance_sheet";                    getSubjectInfo.put(key, objFinancialDocuments.getJSONObject("financial_statement_documents").getString(key));
-            key = "disclosure_financial_balance_sheet_description";        getSubjectInfo.put(key, objFinancialDocuments.getJSONObject("financial_statement_documents").getString(key));
-            key = "disclosure_financial_cashflow_statement_name";          getSubjectInfo.put(key, objFinancialDocuments.getJSONObject("financial_statement_documents").getString(key));
-            key = "disclosure_financial_cashflow_statement";               getSubjectInfo.put(key, objFinancialDocuments.getJSONObject("financial_statement_documents").getString(key));
-            key = "disclosure_financial_cashflow_statement_description";   getSubjectInfo.put(key, objFinancialDocuments.getJSONObject("financial_statement_documents").getString(key));
-            key = "disclosure_financial_income_statement_name";            getSubjectInfo.put(key, objFinancialDocuments.getJSONObject("financial_statement_documents").getString(key));
-            key = "disclosure_financial_income_statement";                 getSubjectInfo.put(key, objFinancialDocuments.getJSONObject("financial_statement_documents").getString(key));
-            key = "disclosure_financial_income_statement_description";     getSubjectInfo.put(key, objFinancialDocuments.getJSONObject("financial_statement_documents").getString(key));
-
-            tempList8.add(tempMap);
-        }
-
-        getSubjectInfo.put("financial_information", tempList8);
+        key = "financial_information";                           getSubjectInfo.put(key, objInfo.getString(key));
 
         //拼组企业经营信息9
-        com.alibaba.fastjson.JSONArray arrBI = objBusiness.getJSONArray("business_information");
-        List<Map> tempList9 = new ArrayList<>();
-        for (int i = 0; i < arrFI.size(); i++) {
-            Map tempMap = new HashMap();
-            com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(arrBI.get(i).toString());
-            //企业经营信息 经营基本信息
-            key = "disclosure_business_overview";                             getSubjectInfo.put(key, objBusinessBasic.getJSONObject("business_basic_information").getString(key));
-            key = "disclosure_main_business_analysis";                        getSubjectInfo.put(key, objBusinessBasic.getJSONObject("business_basic_information").getString(key));
-            key = "disclosure_main_business_analysis_non";                    getSubjectInfo.put(key, objBusinessBasic.getJSONObject("business_basic_information").getString(key));
-            key = "disclosure_assets_and_liabilities_analysis";               getSubjectInfo.put(key, objBusinessBasic.getJSONObject("business_basic_information").getString(key));
-            key = "disclosure_major_shareholders_analysis";                   getSubjectInfo.put(key, objBusinessBasic.getJSONObject("business_basic_information").getString(key));
-            key = "disclosure_major_events";                                  getSubjectInfo.put(key, objBusinessBasic.getJSONObject("business_basic_information").getString(key));
-            key = "disclosure_business_report_name";                          getSubjectInfo.put(key, objBusinessBasic.getJSONObject("business_basic_information").getString(key));
-            key = "disclosure_business_report_doc";                           getSubjectInfo.put(key, objBusinessBasic.getJSONObject("business_basic_information").getString(key));
-            key = "disclosure_business_report_description";                   getSubjectInfo.put(key, objBusinessBasic.getJSONObject("business_basic_information").getString(key));
-            key = "disclosure_business_report_date";                          getSubjectInfo.put(key, objBusinessBasic.getJSONObject("business_basic_information").getString(key));
-            //企业经营信息 投融资信息
-            key = "disclosure_investment_analysis";                          getSubjectInfo.put(key, objBusinessInvestment.getJSONObject("Investment_and_financing").getString(key));
-            key = "disclosure_fund_raising_analysis";                        getSubjectInfo.put(key, objBusinessInvestment.getJSONObject("Investment_and_financing").getString(key));
-            key = "disclosure_sell_situation_analysis";                      getSubjectInfo.put(key, objBusinessInvestment.getJSONObject("Investment_and_financing").getString(key));
-
-            tempList9.add(tempMap);
-        }
-
-        getSubjectInfo.put("business_information", tempList9);
+        key = "business_information";                            getSubjectInfo.put(key, objInfo.getString(key));
 
         //拼组第三方拓展信息10
-        com.alibaba.fastjson.JSONArray arrEI = objExpand.getJSONArray("expand_information");
-        List<Map> tempList10 = new ArrayList<>();
-        for (int i = 0; i < arrFI.size(); i++) {
-            Map tempMap = new HashMap();
-            com.alibaba.fastjson.JSONObject objTemp = com.alibaba.fastjson.JSONObject.parseObject(arrEI.get(i).toString());
+        key = "expand_information";                              getSubjectInfo.put(key, objInfo.getString(key));
 
-            key = "disclosure_expand_name";                             getSubjectInfo.put(key, objExpand.getJSONObject("expand_information").getString(key));
-            key = "disclosure_expand_doc";                              getSubjectInfo.put(key, objExpand.getJSONObject("expand_information").getString(key));
-            key = "disclosure_expand_description";                      getSubjectInfo.put(key, objExpand.getJSONObject("expand_information").getString(key));
-            key = "disclosure_expand_date";                             getSubjectInfo.put(key, objExpand.getJSONObject("expand_information").getString(key));
-
-            tempList10.add(tempMap);
-        }
-
-        getSubjectInfo.put("expand_information", tempList10);
         if(bChkHeader) key = "content";getSubjectInfo.put(key,jobjOK.getJSONObject("header").getString(key));
 
         return getSubjectInfo;

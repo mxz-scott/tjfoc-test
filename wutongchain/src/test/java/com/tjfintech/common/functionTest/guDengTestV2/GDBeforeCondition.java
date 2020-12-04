@@ -1228,10 +1228,10 @@ public class GDBeforeCondition {
         mapTemp.clear();
 
         //信披信息 信披基本信息
-        mapTemp.put("disclosure_subject_ref", "CHo8M7Jzo6y6Uh");
+        mapTemp.put("disclosure_subject_ref", disclosure_subject_ref);
         mapTemp.put("disclosure_type", 0);
         mapTemp.put("disclosure_submit_type", 0);
-        mapTemp.put("disclosure_referer_subject_ref", "CHo8M7Jzo6y6Uh");
+        mapTemp.put("disclosure_referer_subject_ref", disclosure_referer_subject_ref);
         mapTemp.put("disclosure_referer_name", "CHo8M7Jzo6y6Uh");
         mapTemp.put("disclosure_submit_date", date1);
         mapTemp.put("disclosure_submit_description", "CHo8M7Jzo6y6Uh");
@@ -1239,7 +1239,7 @@ public class GDBeforeCondition {
         //信披信息 企业展示信息
         List<Map> listEnterpriseInformation = new ArrayList<>();
         Map mapEId = new HashMap();
-        mapEId.put("disclosure_display_platform_ref", "IDSR006");
+        mapEId.put("disclosure_display_platform_ref", disclosure_display_platform_ref);
         mapEId.put("disclosure_display_name", "IDSR007");
         mapEId.put("disclosure_display_doc", getListFileObj());
         mapEId.put("disclosure_display_description", "xinpi");
@@ -1300,9 +1300,9 @@ public class GDBeforeCondition {
         //事项基本信息
         List<Map> listCredit = new ArrayList<>();
         Map mapCd = new HashMap();
-        mapCd.put("disclosure_identifier_ref", "CHl55WqGnO3hRd");
+        mapCd.put("disclosure_identifier_ref", disclosure_identifier_ref);
         mapCd.put("disclosure_identifier_name", "CH60FNHO699i3S");
-        mapCd.put("disclosure_auditor_ref", "CHAVko0Oq9139x");
+        mapCd.put("disclosure_auditor_ref", disclosure_auditor_ref);
         mapCd.put("disclosure_auditor_name", "CHccO9f2A3gQuK");
         //事项明细
         mapCd.put("disclosure_event_id", "letter00000001");
