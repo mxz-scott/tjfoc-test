@@ -1983,7 +1983,7 @@ public class GDCommonFunc {
 
     public String getObjectLatestVer(String objectId){
         String response = gd.GDObjectQueryByVer(objectId,-1);
-        if(response.contains("不存在此对象标识和版本对应的数据")) return "-1";
+        if(response.contains("\"state\":400")) return "-1";
         else
             return JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header"
                                                 ).getJSONObject("content").getString("version");
