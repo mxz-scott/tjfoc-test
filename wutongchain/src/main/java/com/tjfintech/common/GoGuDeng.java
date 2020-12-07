@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.SDKADD;
+import static com.tjfintech.common.utils.UtilsClassGD.*;
 
 @Slf4j
 public  class GoGuDeng implements GuDeng {
@@ -36,6 +37,9 @@ public  class GoGuDeng implements GuDeng {
         map.put("bondProductInfo", bondProductInfo);
         map.put("fundProductInfo", fundProductInfo);
 
+        map.put("subjectCreateTime", ts1);
+        map.put("productCreateTime", ts3);
+
         String result = PostTest.postMethod(SDKADD + "/equity/enterprise/issue", map);
         log.info(result);
         return result;
@@ -54,6 +58,7 @@ public  class GoGuDeng implements GuDeng {
         map.put("fundInfo", fundInfo);
         map.put("shareholderInfo", shareholderInfo);
         map.put("investorInfo", investorInfo);
+        map.put("createTime", ts1);
 
         String result = PostTest.postMethod(SDKADD + "/equity/account/create", map);
         log.info(result);

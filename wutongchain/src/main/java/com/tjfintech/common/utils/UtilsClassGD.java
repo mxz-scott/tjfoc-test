@@ -160,48 +160,48 @@ public class UtilsClassGD {
         return refInfoArray;
     }
     //主体
-    public static String subject_investor_qualification_certifier_ref = "SIQCR" + UtilsClass.Random(8);
+    public static String subject_investor_qualification_certifier_ref = "SIQCR001";// + UtilsClass.Random(8);
     //账户
-    public static String account_subject_ref = "ASR" + UtilsClass.Random(8);
-    public static String account_depository_ref = "ADR" + UtilsClass.Random(8);
-    public static String account_associated_account_ref = "AAAR" + UtilsClass.Random(8);
+    public static String account_subject_ref = "ASR001";// + UtilsClass.Random(8);
+    public static String account_depository_ref = "ADR001";// + UtilsClass.Random(8);
+    public static String account_associated_account_ref = "AAAR001";// + UtilsClass.Random(8);
     //产品
-    public static String product_market_subject_ref = "PMSR" + UtilsClass.Random(8);
-    public static String product_issuer_subject_ref = "PISR" + UtilsClass.Random(8);
-    public static String service_provider_subject_ref = "SPSR" + UtilsClass.Random(8);
-    public static String product_conversion_price_ref = "PCPR" + UtilsClass.Random(8);
+    public static String product_market_subject_ref = "PMSR001";// + UtilsClass.Random(8);
+    public static String product_issuer_subject_ref = "PISR001";// + UtilsClass.Random(8);
+    public static String service_provider_subject_ref = "SPSR001";// + UtilsClass.Random(8);
+    public static String product_conversion_price_ref = "PCPR001";// + UtilsClass.Random(8);
     //交易报告
-    public static String transaction_custody_product_ref = "TCPR" + UtilsClass.Random(8);
-    public static String transaction_product_issuer_ref = "TPIR" + UtilsClass.Random(8);
-    public static String transaction_issuer_ref = "TIssR" + UtilsClass.Random(8);
-    public static String transaction_investor_ref = "TIR" + UtilsClass.Random(8);
-    public static String transaction_investor_original_ref = "TIOR" + UtilsClass.Random(8);
-    public static String transaction_investor_counterparty_ref = "TICR" + UtilsClass.Random(8);
-    public static String transaction_intermediary_subject_ref = "TISR" + UtilsClass.Random(8);
+    public static String transaction_custody_product_ref = "TCPR001";// + UtilsClass.Random(8);
+    public static String transaction_product_issuer_ref = "TPIR001";// + UtilsClass.Random(8);
+    public static String transaction_issuer_ref = "TIssR001";// + UtilsClass.Random(8);
+    public static String transaction_investor_ref = "TIR001";// + UtilsClass.Random(8);
+    public static String transaction_investor_original_ref = "TIOR001";// + UtilsClass.Random(8);
+    public static String transaction_investor_counterparty_ref = "TICR001";// + UtilsClass.Random(8);
+    public static String transaction_intermediary_subject_ref = "TISR001";// + UtilsClass.Random(8);
     //登记
-    public static String register_subject_ref = "RSR" + UtilsClass.Random(8);
-    public static String register_subject_account_ref = "RSAR" + UtilsClass.Random(8);
-    public static String register_transaction_ref = "RTR" + UtilsClass.Random(8);
-    public static String register_product_ref = "RPR" + UtilsClass.Random(8);
-    public static String register_right_recognition_subject_ref = "RRRSR" + UtilsClass.Random(8);
-    public static String register_right_recognition_agent_subject_ref = "RRRASR" + UtilsClass.Random(8);
-    public static String roll_register_subject_ref = "RRSR" + UtilsClass.Random(8);
-    public static String roll_register_product_ref = "RRPR" + UtilsClass.Random(8);
-    public static String register_equity_subject_ref = "RESR" + UtilsClass.Random(8);
-    public static String register_debt_holder_ref = "RDHR" + UtilsClass.Random(8);
-    public static String register_investor_subject_ref = "RISR" + UtilsClass.Random(8);
+    public static String register_subject_ref = "RSR001";// + UtilsClass.Random(8);
+    public static String register_subject_account_ref = "RSAR001";// + UtilsClass.Random(8);
+    public static String register_transaction_ref = "RTR001";// + UtilsClass.Random(8);
+    public static String register_product_ref = "RPR001";// + UtilsClass.Random(8);
+    public static String register_right_recognition_subject_ref = "RRRSR001";// + UtilsClass.Random(8);
+    public static String register_right_recognition_agent_subject_ref = "RRRASR001";// + UtilsClass.Random(8);
+    public static String roll_register_subject_ref = "RRSR001";// + UtilsClass.Random(8);
+    public static String roll_register_product_ref = "RRPR001";// + UtilsClass.Random(8);
+    public static String register_equity_subject_ref = "RESR001";// + UtilsClass.Random(8);
+    public static String register_debt_holder_ref = "RDHR001";// + UtilsClass.Random(8);
+    public static String register_investor_subject_ref = "RISR001";// + UtilsClass.Random(8);
     //资金结算
-    public static String settlement_subject_ref = "SSR" + UtilsClass.Random(8);
-    public static String settlement_product_ref = "SPR" + UtilsClass.Random(8);
-    public static String settlement_transaction_ref = "STR" + UtilsClass.Random(8);
-    public static String settlement_out_account_object_ref = "SOAOR" + UtilsClass.Random(8);
-    public static String settlement_in_account_object_ref = "SIAOR" + UtilsClass.Random(8);
+    public static String settlement_subject_ref = "SSR001";// + UtilsClass.Random(8);
+    public static String settlement_product_ref = "SPR001";// + UtilsClass.Random(8);
+    public static String settlement_transaction_ref = "STR001";// + UtilsClass.Random(8);
+    public static String settlement_out_account_object_ref = "SOAOR001";// + UtilsClass.Random(8);
+    public static String settlement_in_account_object_ref = "SIAOR001";// + UtilsClass.Random(8);
     //信披
-    public static String disclosure_subject_ref = "DSR" + UtilsClass.Random(8);
-    public static String disclosure_referer_subject_ref = "DRSR" + UtilsClass.Random(8);
-    public static String disclosure_display_platform_ref = "DDPR" + UtilsClass.Random(8);
-    public static String disclosure_identifier_ref = "DIR" + UtilsClass.Random(8);
-    public static String disclosure_auditor_ref = "DAR" + UtilsClass.Random(8);
+    public static String disclosure_subject_ref = "DSR001";// + UtilsClass.Random(8);
+    public static String disclosure_referer_subject_ref = "DRSR001";// + UtilsClass.Random(8);
+    public static String disclosure_display_platform_ref = "DDPR001";// + UtilsClass.Random(8);
+    public static String disclosure_identifier_ref = "DIR001";// + UtilsClass.Random(8);
+    public static String disclosure_auditor_ref = "DAR001";// + UtilsClass.Random(8);
 
     public static Map fileObj = new HashMap();
     public static List<Map> listFileObj = new ArrayList<>();
