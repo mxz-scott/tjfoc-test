@@ -371,7 +371,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         }
 
         String[] verForSub = new String[]{"/0"};
-        String[] verForAccSH = new String[]{"/0","/0"};
+        String[] verForAccSH = new String[]{"/0","/0","/0"};
         String[] verForAcc = new String[]{"/0","/0","/0"};
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());

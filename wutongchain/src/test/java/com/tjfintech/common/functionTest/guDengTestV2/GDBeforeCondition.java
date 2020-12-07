@@ -144,6 +144,7 @@ public class GDBeforeCondition {
         init02ShareholderAccountInfo();
         shAccountInfo.put("account_object_id", shareHolderNo);  //更新账户对象标识字段
         shAccountInfo.put("account_subject_ref", cltNo);  //更新账户所属主体引用
+        shAccountInfo.put("account_associated_account_ref", shareHolderNo);  //更新账户所属主体引用
         log.info(shAccountInfo.toString());
         shareHolderInfo.put("shareholderNo", shareHolderNo);
         shareHolderInfo.put("accountInfo", shAccountInfo);
