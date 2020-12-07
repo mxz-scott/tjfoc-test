@@ -51,7 +51,7 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
 
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
-//        gdBefore.initRegulationData();
+        gdBefore.initRegulationData();
         bondProductInfo = null;
         equityProductInfo = gdBefore.init03EquityProductInfo();
         fundProductInfo = null;

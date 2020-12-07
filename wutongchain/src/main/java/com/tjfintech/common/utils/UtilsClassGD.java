@@ -99,6 +99,9 @@ public class UtilsClassGD {
     public static String chkSchemaToolName = "gojsonschema.exe";
     public static String dirSchemaData = System.getProperty("user.dir") + "/" + testDataPath + "schemavalidate/";
     public static Boolean bChkHeader = false;
+    public static String minIOUser ="minioadmin";
+    public static String minIOPwd ="Pass@7899";
+    public static String minIOEP ="http://b2904236d6.zicp.vip:8098";
 
     //获取引用信息初始值放入数组
     public static  String[] refData() {

@@ -88,7 +88,7 @@ public  class GoStore implements Store {
         if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
         if(subLedger!="") param = param +"&ledger="+subLedger;
 
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/store?" + param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/store?" + param, map);
         log.info(result);
         return result;
     }
@@ -147,7 +147,7 @@ public  class GoStore implements Store {
         map.put("hash", hashEncode);
         param = GetTest.ParamtoUrl(map);
         if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/getstore2" + "?" + param);
+        String result = GetTest.doGet2(SDKADD + "/getstore2" + "?" + param);
 //        log.info(result);
         return result;
     }
@@ -167,7 +167,7 @@ public  class GoStore implements Store {
         String param = "";
         if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
 
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/store/query?" + param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/query?" + param, map);
         log.info(result);
         return result;
     }
@@ -190,7 +190,7 @@ public  class GoStore implements Store {
 //        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
         if(subLedger!="") param = param +"&ledger="+subLedger;
 
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/store/query?" + param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/query?" + param, map);
         log.info(result);
         return result;
 
@@ -207,7 +207,7 @@ public  class GoStore implements Store {
 
         String param = "";
         if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/v2/block/tx/index/" + hash + "?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/block/tx/index/" + hash + "?" + param);
         log.info(result);
         return result;
 
@@ -222,7 +222,7 @@ public  class GoStore implements Store {
     public String GetHeight() {
         String param = "";
         if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/v2/block/height" + "?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/block/height" + "?" + param);
         log.info(result);
         return result;
     }
@@ -238,7 +238,7 @@ public  class GoStore implements Store {
         String param = "";
         String strHeight = Integer.toString(height);
         if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/v2/block/detail/" + strHeight + "?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/block/detail/" + strHeight + "?" + param);
 //        log.info(result);
         return result;
     }
@@ -253,7 +253,7 @@ public  class GoStore implements Store {
     public String GetBlockByHash(String hash) {
         String param = "";
         if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/v2/block/detail/" + hash + "?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/block/detail/" + hash + "?" + param);
 //        log.info(result);
         return result;
     }
@@ -285,7 +285,7 @@ public  class GoStore implements Store {
     public String GetInlocal(String hash) {
         String param = "";
         if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/v2/tx/inlocal/" + hash + "?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/tx/inlocal/" + hash + "?" + param);
         log.info(result);
         return result;
     }
@@ -302,7 +302,7 @@ public  class GoStore implements Store {
     public String GetPeerList() {
         String param = "";
         if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result = GetTest.SendGetTojson(SDKADD + "/getpeerlist?" + param);
+        String result = GetTest.doGet2(SDKADD + "/getpeerlist?" + param);
         log.info(result);
         return result;
     }

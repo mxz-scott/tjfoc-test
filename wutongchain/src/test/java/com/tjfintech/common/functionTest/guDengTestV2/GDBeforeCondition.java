@@ -154,7 +154,7 @@ public class GDBeforeCondition {
         init02FundAccountInfo();
         fundAccountInfo.put("account_object_id", fundNo);  //更新账户对象标识字段
         fundAccountInfo.put("account_subject_ref", cltNo);  //更新账户所属主体引用
-        fundAccountInfo.put("account_associated_account_ref", fundNo);  //更新关联账户对象引用
+        fundAccountInfo.put("account_associated_account_ref", account_associated_account_ref);  //更新关联账户对象引用
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("fundNo", fundNo);
         mapFundInfo.put("accountInfo", fundAccountInfo);
@@ -514,7 +514,7 @@ public class GDBeforeCondition {
 
         //账户信息 账户关联信息
         mapTemp.put("account_association", 0);
-        mapTemp.put("account_associated_account_ref", "t5pdf");
+        mapTemp.put("account_associated_account_ref", account_associated_account_ref);
         return mapTemp;
     }
 
@@ -565,7 +565,7 @@ public class GDBeforeCondition {
 
         //账户信息 账户关联信息
         mapTemp.put("account_association", 0);
-        mapTemp.put("account_associated_account_ref", "t5pdf");
+        mapTemp.put("account_associated_account_ref", account_associated_account_ref);
         return mapTemp;
     }
 
@@ -942,14 +942,14 @@ public class GDBeforeCondition {
         //登记信息 权利信息 权利基本信息 权利基本信息描述
         mapTemp.put("register_serial_number", "登记流水号CHARACTER");
         mapTemp.put("register_time", time2);
-        mapTemp.put("register_subject_ref", "登记主体引用CHARACTER");
+        mapTemp.put("register_subject_ref", register_subject_ref);
         mapTemp.put("register_subject_type", 1);
-        mapTemp.put("register_subject_account_reference", "登记账户引用CHARACTER");
+        mapTemp.put("register_subject_account_reference", register_subject_ref);
         mapTemp.put("register_asset_type", 1);
         mapTemp.put("register_asset_unit", 1);
-        mapTemp.put("register_asset_currency", "登记币种CHARACTER");
+        mapTemp.put("register_asset_currency", "156");
         mapTemp.put("register_transaction_ref", 1);
-        mapTemp.put("register_product_ref", "登记产品引用");
+        mapTemp.put("register_product_ref", register_product_ref);
         mapTemp.put("register_description", "登记描述信息CHARACTER");
         mapTemp.put("register_create_time", time2);
         mapTemp.put("register_authentic_right_recognition_status", 1);
@@ -957,9 +957,9 @@ public class GDBeforeCondition {
         //登记信息 权利登记 权利基本信息 确权记录
         mapTemp.put("register_authentic_right_recognition_date", date3);
         mapTemp.put("register_right_recognition_mode", 1);
-        mapTemp.put("register_right_recognition_subject_ref", "确权方主体引用CHARACTER");
+        mapTemp.put("register_right_recognition_subject_ref", register_right_recognition_subject_ref);
         mapTemp.put("register_right_recognition_subject_name", "确权方主体名称CHARACTER");
-        mapTemp.put("register_right_recognition_agent_subject_ref", "确权代理方主体引用CHARACTER");
+        mapTemp.put("register_right_recognition_agent_subject_ref", register_right_recognition_agent_subject_ref);
         mapTemp.put("register_right_recognition_agent_subject_name", "确权代理方主体名称CHARACTER");
         mapTemp.put("register_right_recognition_doc", getListFileObj());
         mapTemp.put("register_right_recognition_description", "确权描述信息CHARACTER");
@@ -992,8 +992,8 @@ public class GDBeforeCondition {
 
 
         //登记信息 名册登记 名册基本信息
-        mapTemp.put("register_subject_ref", "名册主体引用CHARACTER");
-        mapTemp.put("register_product_ref", "产品引用");
+        mapTemp.put("register_subject_ref", register_subject_ref);
+        mapTemp.put("register_product_ref", register_product_ref);
         mapTemp.put("register_product_name", "产品名称");
         mapTemp.put("register_product_description", "产品描述");
         mapTemp.put("register_list_asset_type", 1);
@@ -1003,7 +1003,7 @@ public class GDBeforeCondition {
         //登记信息 名册登记 股东名册
         List<Map> listRSH = new ArrayList<>();
         Map mapRSH = new HashMap();
-        mapRSH.put("register_equity_subject_ref", "股东主体引用CHARACTER");
+        mapRSH.put("register_equity_subject_ref", register_equity_subject_ref);
         mapRSH.put("register_equity_subject_type", 1);
         mapRSH.put("register_equity_type", 1);
         mapRSH.put("register_equity_capital", 200);
@@ -1016,7 +1016,7 @@ public class GDBeforeCondition {
         //登记信息 名册登记 债权人名册
         List<Map> listRC = new ArrayList<>();
         Map mapRC = new HashMap();
-        mapRC.put("register_debt_holder_ref", "债权人主体引用CHARACTER");
+        mapRC.put("register_debt_holder_ref", register_debt_holder_ref);
         mapRC.put("register_debt_holder_type", 1);
         mapRC.put("register_debt_holder_subscription_quantity", 1000);
         mapRC.put("register_debt_holder_subscription_price", 10000);
@@ -1028,7 +1028,7 @@ public class GDBeforeCondition {
         //登记信息 名册登记 基金投资人名册
         List<Map> listFi = new ArrayList<>();
         Map mapFI = new HashMap();
-        mapFI.put("register_investor_subject_ref", "投资人主体引用CHARACTER");
+        mapFI.put("register_investor_subject_ref", register_investor_subject_ref);
         mapFI.put("register_investor_name", "投资人主体名称CHARACTER");
         mapFI.put("register_subscription_amount", 1000);
         mapFI.put("register_subscription_number", 2000);
