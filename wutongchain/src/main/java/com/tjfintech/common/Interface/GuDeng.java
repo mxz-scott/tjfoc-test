@@ -33,8 +33,8 @@ public interface GuDeng {
 //    String GDShareChangeBoard(String platformKeyId, String companyId, String oldEquityCode, String newEquityCode,Map registerInformation,Map equityProductInfo,Map bondProductInfo);
     String GDShareChangeBoard(String platformKeyId, String companyId, String oldEquityCode, String newEquityCode,List<Map> regInfoList,Map equityProductInfo,Map bondProductInfo);
 
-    String GDAccountDestroy(String contractAddress, String clientNo,String shareholderClosingDate,String[] shareholderClosingCertificate,
-                            String fundClosingDate,String[] fundClosingCertificate);
+    String GDAccountDestroy(String contractAddress, String clientNo,String shareholderClosingDate,List<Map> shareholderClosingCertificate,
+                            String fundClosingDate,List<Map> fundClosingCertificate);
 
     String GDInfoPublish(Map infoDisclosure);
     String GDInfoPublishGet(String txId);

@@ -1,5 +1,7 @@
 contract QFJGContract{
      public string PutFeedback(string ID,string Data,string Msg){
+     print(ID)
+     print(Data)
         db_set(ID,Data)
         event("payFeedback",Msg)
         return "success"

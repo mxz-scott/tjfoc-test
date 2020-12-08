@@ -55,7 +55,7 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
 
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
-//        gdBefore.initRegulationData();
+        gdBefore.initRegulationData();
         bondProductInfo = null;
         equityProductInfo = gdBefore.init03EquityProductInfo();
         fundProductInfo = null;
@@ -1058,11 +1058,7 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
 
         String clntNo = gdAccClientNo10;
 
-        String[] cert1 = new String[]{"test.txt"};
-        String[] cert2 = new String[]{"close.cert"};
-        String date1 = "2020/05/12 17:08:08";
-        String date2 = "2020/05/12 18:08:08";
-        String response= gd.GDAccountDestroy(gdContractAddress,clntNo,date1,cert1,date2,cert2);
+        String response= gd.GDAccountDestroy(gdContractAddress,clntNo,date1,getListFileObj(),date2,getListFileObj());
 
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");

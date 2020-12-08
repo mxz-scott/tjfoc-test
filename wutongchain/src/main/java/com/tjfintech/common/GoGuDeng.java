@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.SDKADD;
+import static com.tjfintech.common.utils.UtilsClass.ccenvPull;
+import static com.tjfintech.common.utils.UtilsClassGD.*;
 
 @Slf4j
 public  class GoGuDeng implements GuDeng {
@@ -36,6 +38,9 @@ public  class GoGuDeng implements GuDeng {
         map.put("bondProductInfo", bondProductInfo);
         map.put("fundProductInfo", fundProductInfo);
 
+        map.put("subjectCreateTime", ts1);
+        map.put("productCreateTime", ts3);
+
         String result = PostTest.postMethod(SDKADD + "/equity/enterprise/issue", map);
         log.info(result);
         return result;
@@ -54,6 +59,7 @@ public  class GoGuDeng implements GuDeng {
         map.put("fundInfo", fundInfo);
         map.put("shareholderInfo", shareholderInfo);
         map.put("investorInfo", investorInfo);
+        map.put("createTime", ts1);
 
         String result = PostTest.postMethod(SDKADD + "/equity/account/create", map);
         log.info(result);
@@ -102,6 +108,7 @@ public  class GoGuDeng implements GuDeng {
         map.put("oldShareProperty", oldShareProperty);
         map.put("newShareProperty", newShareProperty);
         map.put("registerInformationList", registerInformationList);
+        map.put("updateTime",ts5);
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/change", map);
         log.info(result);
@@ -327,8 +334,8 @@ public  class GoGuDeng implements GuDeng {
      * @param clientNo
      * @return
      */
-    public String GDAccountDestroy(String contractAddress, String clientNo,String shareholderClosingDate,String[] shareholderClosingCertificate,
-                                   String fundClosingDate,String[] fundClosingCertificate){
+    public String GDAccountDestroy(String contractAddress, String clientNo,String shareholderClosingDate,List<Map> shareholderClosingCertificate,
+                                   String fundClosingDate,List<Map> fundClosingCertificate){
         Map<String, Object> map = new HashMap<>();
         map.put("contractAddress", contractAddress);
         map.put("clientNo", clientNo);
@@ -350,6 +357,7 @@ public  class GoGuDeng implements GuDeng {
     public String GDInfoPublish(Map infoDisclosure){
         Map<String, Object> map = new HashMap<>();
         map.put("infoDisclosure", infoDisclosure);
+        map.put("disclosureSubmitDate",ts7);
 
         String result = PostTest.postMethod(SDKADD + "/equity/infodisclosure/publish", map);
         log.info(result);
@@ -454,6 +462,7 @@ public  class GoGuDeng implements GuDeng {
     public String GDCapitalSettlement(Map balanceAccount){
         Map<String, Object> map = new HashMap<>();
         map.put("balanceAccount", balanceAccount);
+        map.put("settlementInformationMaintenanceTime", ts6);
 
         String result = PostTest.postMethod(SDKADD + "/equity/balance/count", map);
         log.info(result);

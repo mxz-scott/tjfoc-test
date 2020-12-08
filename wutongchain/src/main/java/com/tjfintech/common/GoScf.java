@@ -12,9 +12,7 @@ import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.SDKADD;
 import static com.tjfintech.common.utils.UtilsClass.subLedger;
-import static com.tjfintech.common.utils.UtilsClassScf.companyID2;
-import static com.tjfintech.common.utils.UtilsClassScf.coreCompanyKeyID;
-import static com.tjfintech.common.utils.UtilsClassScf.supplyID1;
+import static com.tjfintech.common.utils.UtilsClassScf.*;
 
 @Slf4j
 public class GoScf implements Scf {
@@ -98,17 +96,17 @@ public class GoScf implements Scf {
     /**
      * 开立取消
      * @param tokenType
-     * @param companyID2
+     * @param companyID1
      * @param keyID
      * @param PIN
      * @param comments
      * @return
      */
-    public String IssuingCancel(String tokenType, String companyID2, String keyID, String PIN, String comments) {
+    public String IssuingCancel(String tokenType, String companyID1, String keyID, String PIN, String comments) {
         Map<String, Object> map = new HashMap<>();
 
         map.put("tokenType", tokenType);
-        map.put("companyID", companyID2);
+        map.put("companyID", companyID1);
         map.put("keyID", keyID);
         map.put("PIN", PIN);
         map.put("comments", comments);
@@ -246,10 +244,19 @@ public class GoScf implements Scf {
         return result;
     }
 
-    public String AssignmentConfirm(String supplyID2, String PIN, String challenge, String tokenType, String comments) {
+    /**
+     * 资产转让签收
+     * @param supplyID1
+     * @param PIN
+     * @param challenge
+     * @param tokenType
+     * @param comments
+     * @return
+     */
+    public String AssignmentConfirm(String supplyID1, String PIN, String challenge, String tokenType, String comments) {
         Map<String, Object> map = new HashMap<>();
 
-        map.put("keyID", supplyID2);
+        map.put("keyID", supplyID1);
         map.put("PIN",PIN);
         map.put("challenge",challenge);
         map.put("tokenType",tokenType);
@@ -284,6 +291,7 @@ public class GoScf implements Scf {
         log.info(result);
         return result;
     }
+
     /**
      * 开立额度调整
      * @param AccountAddress
@@ -326,4 +334,184 @@ public class GoScf implements Scf {
         log.info(result);
         return result;
     }
+
+    /**
+     * 融资申请
+     */
+    public String FinacingApply(String supplyAddress1, String supplyID1, String PIN, String proof, String tokenType, String amount, String subType, String newFromSubType, String newToSubType, String supplyAddress2) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("fromAddress",supplyAddress1);
+        map.put("keyID",supplyID1);
+        map.put("PIN",PIN);
+        map.put("proof",proof);
+        map.put("tokenType",tokenType);
+        map.put("amount",amount);
+        map.put("subType",subType);
+        map.put("newFromSubType",newFromSubType);
+        map.put("newToSubType",newToSubType);
+        map.put("toAddress",supplyAddress2);
+
+        String param="";
+        if (subLedger!="") param = param +"ledger"+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/finacing/apply", map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 融资试算
+     */
+    public String FinacingTest(String ZJFAddress, String amount, String timeLimit) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("contractAddress",ZJFAddress);
+        map.put("amount",amount);
+        map.put("timeLimit",timeLimit);
+
+        String param="";
+        if (subLedger!="") param = param +"ledger"+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/finacing/test", map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 融资申请反馈
+     */
+    public String FinacingFeedback(String ZJFAddress, String applyNo, String state, String comments) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("contractAddress",ZJFAddress);
+        map.put("applyNo",applyNo);
+        map.put("state",state);
+        map.put("comments",comments);
+
+        String param="";
+        if (subLedger!="") param = param +"ledger"+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/finacing/feedback", map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 融资签收
+     */
+    public String FinacingConfirm(String applyNo, String ZJFAddress, String supplyID1, String companyID1, String PIN, String tokenType, String supplyAddress2, String challenge, String comments) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("applyNo",applyNo);
+        map.put("contractAddress",ZJFAddress);
+        map.put("keyID",supplyID1);
+        map.put("companyID",companyID1);
+        map.put("PIN",PIN);
+        map.put("tokenType",tokenType);
+        map.put("toAddr",supplyAddress2);
+        map.put("challenge",challenge);
+        map.put("comments",comments);
+
+        String param="";
+        if (subLedger!="") param = param +"ledger"+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/finacing/confirm", map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 融资取消
+     */
+    public String FinacingCancel(String challenge, String tokenType, String comments) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("challenge",challenge);
+        map.put("tokenType",tokenType);
+        map.put("comments",comments);
+
+        String param="";
+        if (subLedger!="") param = param +"ledger"+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/finacing/cancel", map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 兑付申请
+     */
+    public String PayingApply(String tokenType, String companyID1) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("tokenType",tokenType);
+        map.put("companyID",companyID1);
+
+        String param="";
+        if (subLedger!="") param = param +"ledger"+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/paying/apply", map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 兑付通知
+     */
+    public String PayingNotify(String AccountAddress, String message) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("AccountAddress",AccountAddress);
+        map.put("message",message);
+
+        String param="";
+        if (subLedger!="") param = param +"ledger"+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/paying/notify", map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 兑付反馈
+     */
+    public String PayingFeedback(String QFJGAddress, String tokenType, String state, String comments) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("contractAddress",QFJGAddress);
+        map.put("tokenType",tokenType);
+        map.put("state",state);
+        map.put("comments",comments);
+
+        String param="";
+        if (subLedger!="") param = param +"ledger"+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/paying/feedback", map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 兑付确认
+     */
+    public String PayingConfirm(String QFJGAddress, String companyID1, List<Map> list4, String platformKeyID, String platformPIN, String tokenType, String comments) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("contractAddress",QFJGAddress);
+        map.put("companyID",companyID1);
+        map.put("accounts",list4);
+        map.put("platformKeyID",platformKeyID);
+        map.put("PIN",platformPIN);
+        map.put("tokenType",tokenType);
+        map.put("comments",comments);
+
+        String param="";
+        if (subLedger!="") param = param +"ledger"+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/paying/confirm", map);
+        log.info(result);
+        return result;
+    }
+
+
 }

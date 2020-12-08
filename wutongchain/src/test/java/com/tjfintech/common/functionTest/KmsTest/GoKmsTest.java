@@ -8,19 +8,26 @@ import com.tjfintech.common.utils.TjParseEncryptionKey;
 import com.tjfintech.common.utils.UtilsClassKMS;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import java.util.Base64;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClassKMS.*;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 @Slf4j
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+
 public class GoKmsTest {
     public final static int SHORTSLEEPTIME = 3 * 1000;
     TestBuilder testBuilder = TestBuilder.getInstance();
     Kms kms = testBuilder.getKms();
+
+    public int KMS_SLEEP_TIME = 1000;
 
     /***
      * 生成对称算法密钥
@@ -28,14 +35,17 @@ public class GoKmsTest {
      * 对称密钥解密
      */
     @Test
-    public void createKey_Test01() {
+    public void Test001_createKey() {
         //生成对称密钥算法
         String response = kms.createKey(keySpecSm4, password);
         assertThat(response, containsString("200"));
         assertThat(response, containsString("data"));
        //获取对称密钥加密参数
         String keyIdsm4 = UtilsClassKMS.getKeyIdSm4(response);
-        //对称密钥加密
+
+//        keyIdsm4 = "bv4b3b9pgflv43mqhsug";
+
+                //对称密钥加密
         String response1 = kms.encrypt(keyIdsm4, password, plainText);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("data"));
@@ -55,7 +65,7 @@ public class GoKmsTest {
      * 获取非对称密钥加密ID公钥
      */
     @Test
-    public void getKey_Test02() throws  Exception{
+    public void Test002_getKey() throws  Exception{
         //生成非对称密钥导入参数 sm2
         String response = kms.getKey(keySpecSm2, pubFormat);
 
@@ -87,7 +97,7 @@ public class GoKmsTest {
 
 
     @Test
-    public void genRandom_Test03() {
+    public void Test003_genRandom() {
         JSONObject data = new JSONObject();
 
         data.put(16, size);
@@ -103,7 +113,7 @@ public class GoKmsTest {
 
 
     @Test
-    public void eccEncrypt_Test04() throws Exception{
+    public void Test004_eccEncrypt() throws Exception{
         //获取非对称密钥导入参数
         String response = kms.getKey(keySpecSm2, pubFormat);
         assertThat(response, containsString("200"));
@@ -143,7 +153,7 @@ public class GoKmsTest {
     }
 
     @Test
-    public void eccSign_Test05() throws Exception{
+    public void Test005_eccSign() throws Exception{
         //获取非对称密钥导入参数
         String response = kms.getKey(keySpecSm2, pubFormat);
 
@@ -186,14 +196,66 @@ public class GoKmsTest {
 
     }
 
+
     @Test
-    public void changePwd_Test06() {
+    public void Test006_eccEncrypt() throws Exception{
+
+        String response = kms.createKey(keySpecSm2, password);
+        assertThat(response, containsString("200"));
+        assertThat(response, containsString("data"));
+        String keyIdsm2 = UtilsClassKMS.getKeySm2(response);
+
+//        String keyIdsm2 = "bv7f759pgflpa6oine6g";
+
+        String response2 = kms.eccEncrypt(keyIdsm2, plainText);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("data"));
+
+        String cipherText = UtilsClassKMS.getCipherText(response2);
+
+        String response3 = kms.eccDecrypt(keyIdsm2, password, cipherText);
+        assertThat(response3, containsString("200"));
+        assertThat(response3, containsString("data"));
+        assertThat(response3, containsString(plainText));
+
+    }
+
+    @Test
+    public void Test007_eccSign() throws Exception{
+
+        String response = kms.createKey(keySpecSm2, password);
+        assertThat(response, containsString("200"));
+        assertThat(response, containsString("data"));
+        String keyIdsm2 = UtilsClassKMS.getKeySm2(response);
+
+//        String keyIdsm2 = "bv7f759pgflpa6oineeg";
+
+        String response2 = kms.eccSign(keyIdsm2, password, Digest);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("data"));
+
+        String value = UtilsClassKMS.getValue(response2);
+
+        String response3 = kms.eccVerify(keyIdsm2, Digest, value);
+        assertThat(response3, containsString("200"));
+        assertThat(response3, containsString("data"));
+        assertThat(response3, containsString("true"));
+        //验签异常测试
+        String response4 = kms.eccVerify(keyIdsm2, Digesterror, value);
+        assertThat(response4, containsString("200"));
+        assertThat(response4, containsString("false"));
+
+    }
+
+    @Test
+    public void Test008_changePwd() throws Exception {
         //创建sm4账号
         String response = kms.createKey(keySpecSm4, password);
         assertThat(response, containsString("200"));
         assertThat(response, containsString("data"));
-        
+
         String keyIdsm4 = UtilsClassKMS.getKeyIdSm4(response);
+
         //修改密码
         String response1 = kms.changePwd(keyIdsm4, password, newPwd);
         assertThat(response1, containsString("data"));
@@ -214,16 +276,16 @@ public class GoKmsTest {
         //旧密码加密
         String response4 = kms.encrypt(keyIdsm4, password,plainText);
         assertThat(response4, containsString("400"));
-        assertThat(response4, containsString("pin码与密钥不匹配,或请稍后再试"));
+        assertThat(response4, containsString("pin码与密钥不匹配"));
 
         //旧密码解密
         String response5 = kms.decrypt(keyIdsm4, password,cipherText);
         assertThat(response5, containsString("400"));
-        assertThat(response5, containsString("pin码与密钥不匹配,或请稍后再试"));
+        assertThat(response5, containsString("pin码与密钥不匹配"));
     }
 
     @Test
-    public void changePwd_Test07() {
+    public void Test009_changePwd() {
         String response = kms.createKey(keySpecSm2, password);
 
         assertThat(response, containsString("200"));
@@ -252,12 +314,12 @@ public class GoKmsTest {
 
         String response5 = kms.eccDecrypt(keyIdsm2, password,cipherText);
         assertThat(response5, containsString("400"));
-        assertThat(response5, containsString("pin码与密钥不匹配,或请稍后再试"));
+        assertThat(response5, containsString("pin码与密钥不匹配"));
 
     }
 
     @Test
-    public void eccChangePWDandEncrypt_Test08() throws Exception {
+    public void Test010_eccChangePWDandEncrypt() throws Exception {
 
         String response = kms.createKey(keySpecSm2, password);
 
@@ -292,18 +354,19 @@ public class GoKmsTest {
     }
 
     @Test
-    public void buildinfo() {
+    public void Test011_buildinfo() {
         String response = kms.buildinfo();
 
-        assertThat(response, containsString("200"));
-        assertThat(response, containsString("2020年11月25日 10:56:08"));
-        assertThat(response, containsString("bf0ae76381235ac9307173cf7079e7f911dd9e3d"));
-        assertThat(response, containsString("go version go1.15.1 windows/amd64"));
-        assertThat(response, containsString("1.0.1"));
+        assertEquals(JSONObject.fromObject(response).getString("status").equals("200"),true);
+        assertEquals(JSONObject.fromObject(response).getJSONObject("data").getString("Build time").equals(""),false);
+        assertEquals(JSONObject.fromObject(response).getJSONObject("data").getString("Git commit").equals(""),false);
+        assertEquals(JSONObject.fromObject(response).getJSONObject("data").getString("Go version").equals(""),false);
+        assertEquals(JSONObject.fromObject(response).getJSONObject("data").getString("Version").equals(""),false);
+
     }
 
     @Test
-    public void apihealth() {
+    public void Test012_apihealth() {
         String response = kms.apihealth();
 
         assertThat(response, containsString("200"));

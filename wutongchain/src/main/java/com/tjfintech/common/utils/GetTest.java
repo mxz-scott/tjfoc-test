@@ -95,9 +95,14 @@ public class GetTest {
 
         /* 2 生成 GetMethod 对象并设置参数 */
         GetMethod getMethod = new GetMethod(url);
-        // 设置 get 请求超时为 5 秒
+//         设置 get 请求超时为 5 秒
         getMethod.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, 10000);
-        // 设置请求重试处理，用的是默认的重试处理：请求三次
+
+        getMethod.addRequestHeader("X-Timestamp","1607310768");
+        getMethod.addRequestHeader("X-Nonce","dQv0Aoghch");
+        getMethod.addRequestHeader("X-Sign","3045022100a39ec7d0c0a505c8121ccdb187e4bac48fe1af86a1d8fb95af5bdb4551dd5e8f02201b1d25a48fb93d369c9e8810c48c098fe287b73bc1ef7b766ce9f23241d85ae3");
+
+       // 设置请求重试处理，用的是默认的重试处理：请求三次
         getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler());
         String response = "";
         /* 3 执行 HTTP GET 请求 */

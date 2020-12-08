@@ -144,7 +144,9 @@ public class GDBeforeCondition {
         init02ShareholderAccountInfo();
         shAccountInfo.put("account_object_id", shareHolderNo);  //更新账户对象标识字段
         shAccountInfo.put("account_subject_ref", cltNo);  //更新账户所属主体引用
+        shAccountInfo.put("account_associated_account_ref", account_associated_account_ref);  //更新账户所属主体引用
         log.info(shAccountInfo.toString());
+        shareHolderInfo.put("createTime", ts2);
         shareHolderInfo.put("shareholderNo", shareHolderNo);
         shareHolderInfo.put("accountInfo", shAccountInfo);
         log.info(shareHolderInfo.toString());
@@ -153,8 +155,10 @@ public class GDBeforeCondition {
         init02FundAccountInfo();
         fundAccountInfo.put("account_object_id", fundNo);  //更新账户对象标识字段
         fundAccountInfo.put("account_subject_ref", cltNo);  //更新账户所属主体引用
-        fundAccountInfo.put("account_associated_account_ref", fundNo);  //更新关联账户对象引用
+//        fundAccountInfo.put("account_associated_account_ref", shareHolderNo);  //更新关联账户对象引用
+        fundAccountInfo.put("account_associated_account_ref", account_associated_account_ref);  //更新关联账户对象引用
         Map mapFundInfo = new HashMap();
+        mapFundInfo.put("createTime", ts2);
         mapFundInfo.put("fundNo", fundNo);
         mapFundInfo.put("accountInfo", fundAccountInfo);
 
@@ -187,7 +191,10 @@ public class GDBeforeCondition {
         //更新系统合约
         gd.GDEquitySystemInit(gdContractAddress, gdPlatfromKeyID);
 
-        initCommonRefSubAndReg();                           //初始化监管引用数据做挂牌企业登记操作
+        //为缩短初始化时间 判断对象标识是否存在 存在则不再挂牌 否则执行
+        if (!JSONObject.fromObject(gd.GDObjectQueryByVer(subject_investor_qualification_certifier_ref, -1)).getString("state").equals("200")){
+            initCommonRefSubAndReg();                           //初始化监管引用数据做挂牌企业登记操作
+        }
 
         log.info("初始化监管相关数据结构");
         enterpriseSubjectInfo = init01EnterpriseSubjectInfo();      //初始化企业主体数据信息  涉及接口 企业挂牌登记
@@ -413,7 +420,7 @@ public class GDBeforeCondition {
         mapISI.put("subject_investor_qualification_sub", "适当性认证子类");
         mapISI.put("subject_investor_qualification_description", "适当性认证描述");
         mapISI.put("subject_investor_qualification_certificate", getListFileObj());
-        mapISI.put("subject_investor_qualification_certifier_ref", "sub_ref_0001");
+        mapISI.put("subject_investor_qualification_certifier_ref", subject_investor_qualification_certifier_ref);
         mapISI.put("subject_investor_qualification_certifier_name", "适当性认证方主体名称");
         mapISI.put("subject_investor_qualification_certificate_time", time1);
         mapISI.put("subject_investor_qualification_status", true);
@@ -513,7 +520,7 @@ public class GDBeforeCondition {
 
         //账户信息 账户关联信息
         mapTemp.put("account_association", 0);
-        mapTemp.put("account_associated_account_ref", "t5pdf");
+        mapTemp.put("account_associated_account_ref", account_associated_account_ref);
         return mapTemp;
     }
 
@@ -564,7 +571,7 @@ public class GDBeforeCondition {
 
         //账户信息 账户关联信息
         mapTemp.put("account_association", 0);
-        mapTemp.put("account_associated_account_ref", "t5pdf");
+        mapTemp.put("account_associated_account_ref", account_associated_account_ref);
         return mapTemp;
     }
 
@@ -869,27 +876,27 @@ public class GDBeforeCondition {
         //交易报告信息 交易基本信息
         mapTemp.put("transaction_market_type", 0);
         mapTemp.put("transaction_type", 1);
-        mapTemp.put("transaction_method", 2);
+        mapTemp.put("transaction_method", 1);
         mapTemp.put("transaction_description", "交易描述信息300字以内描述");
         mapTemp.put("transaction_create_time", time3);
 
         //交易报告信息 交易资产信息
         mapTemp.put("transaction_product_custody_status", 0);
-        mapTemp.put("transaction_custody_product_ref", "交易产品引用CHARACTER");
+        mapTemp.put("transaction_custody_product_ref", transaction_custody_product_ref);
         mapTemp.put("transaction_product_name", "交易资产名称CHARACTER");
-        mapTemp.put("transaction_product_issuer_ref", "交易资产发行主体引用CHARACTER");
+        mapTemp.put("transaction_product_issuer_ref", transaction_product_issuer_ref);
         mapTemp.put("transaction_product_issuer_name", "交易资产发行主体名称CHARACTER");
         mapTemp.put("transaction_product_asset_type", 0);
         mapTemp.put("transaction_product_asset_unit", 1);
-        mapTemp.put("transaction_product_asset_currency", "交易资产规模币种CHARACTER");
+        mapTemp.put("transaction_product_asset_currency", "156");
         mapTemp.put("transaction_product_asset_value", 10000);
         mapTemp.put("transaction_product_asset_doc", getListFileObj());
-        mapTemp.put("transaction_product_decription", "交易资产描述信息CHARACTER");
+        mapTemp.put("transaction_product_description", "交易资产描述信息CHARACTER");
 
 
         //交易报告信息 交易成交信息 成交内容信息
         mapTemp.put("transaction_series_number", "交易成交流水号CHARACTER");
-        mapTemp.put("transaction_settlement_currency", "成交币种CHARACTER");
+        mapTemp.put("transaction_settlement_currency", "156");
         mapTemp.put("transaction_settlement_price", 20);
         mapTemp.put("transaction_settlement_quantity", 1000);
         mapTemp.put("transaction_settlement_time", time3);
@@ -899,13 +906,13 @@ public class GDBeforeCondition {
         //交易报告信息 交易成交信息 融资类交易成交方信息
         mapTemp.put("transaction_issuer_ref", gdCompanyID);
         mapTemp.put("transaction_issuer_name", "issue001");
-        mapTemp.put("transaction_investor_ref", "accobj0001");
+        mapTemp.put("transaction_investor_ref", transaction_investor_ref);
         mapTemp.put("transaction_investor_name", "联合");
 
         //交易报告信息 交易成交信息 交易成交方信息
-        mapTemp.put("transaction_investor_original_ref", "acchobj001");
+        mapTemp.put("transaction_investor_original_ref",transaction_investor_original_ref);
         mapTemp.put("transaction_investor_original_name", "zhagnsan");
-        mapTemp.put("transaction_investor_counterparty_ref", "acchobj002");
+        mapTemp.put("transaction_investor_counterparty_ref", transaction_investor_counterparty_ref);
         mapTemp.put("transaction_investor_counterparty_name", "李四");
 
         //交易报告信息 交易成交信息 成交核验信息
@@ -917,9 +924,12 @@ public class GDBeforeCondition {
         Map equityMap = new HashMap();
 
         equityMap.put("transaction_intermediary_type", 0);
-        equityMap.put("transaction_intermediary_subject_ref", "obj001");
+        equityMap.put("transaction_intermediary_subject_ref", transaction_intermediary_subject_ref);
         equityMap.put("transaction_intermediary_description", "中介机构服务描述200字以内描述");
-        mapTemp.put("transaction_intermediary_name", "中介机构名称");
+        equityMap.put("transaction_intermediary_name", "中介机构名称");
+
+        mapList1.add(equityMap);
+        mapTemp.put("transaction_intermediary_information", mapList1);
 
         return mapTemp;
     }
@@ -941,14 +951,14 @@ public class GDBeforeCondition {
         //登记信息 权利信息 权利基本信息 权利基本信息描述
         mapTemp.put("register_serial_number", "登记流水号CHARACTER");
         mapTemp.put("register_time", time2);
-        mapTemp.put("register_subject_ref", "登记主体引用CHARACTER");
+        mapTemp.put("register_subject_ref", register_subject_ref);
         mapTemp.put("register_subject_type", 1);
-        mapTemp.put("register_subject_account_reference", "登记账户引用CHARACTER");
+        mapTemp.put("register_subject_account_ref", register_subject_ref);
         mapTemp.put("register_asset_type", 1);
         mapTemp.put("register_asset_unit", 1);
-        mapTemp.put("register_asset_currency", "登记币种CHARACTER");
-        mapTemp.put("register_transaction_ref", 1);
-        mapTemp.put("register_product_ref", "登记产品引用");
+        mapTemp.put("register_asset_currency", "156");
+        mapTemp.put("register_transaction_ref", register_transaction_ref);
+        mapTemp.put("register_product_ref", register_product_ref);
         mapTemp.put("register_description", "登记描述信息CHARACTER");
         mapTemp.put("register_create_time", time2);
         mapTemp.put("register_authentic_right_recognition_status", 1);
@@ -956,9 +966,9 @@ public class GDBeforeCondition {
         //登记信息 权利登记 权利基本信息 确权记录
         mapTemp.put("register_authentic_right_recognition_date", date3);
         mapTemp.put("register_right_recognition_mode", 1);
-        mapTemp.put("register_right_recognition_subject_ref", "确权方主体引用CHARACTER");
+        mapTemp.put("register_right_recognition_subject_ref", register_right_recognition_subject_ref);
         mapTemp.put("register_right_recognition_subject_name", "确权方主体名称CHARACTER");
-        mapTemp.put("register_right_recognition_agent_subject_ref", "确权代理方主体引用CHARACTER");
+        mapTemp.put("register_right_recognition_agent_subject_ref", register_right_recognition_agent_subject_ref);
         mapTemp.put("register_right_recognition_agent_subject_name", "确权代理方主体名称CHARACTER");
         mapTemp.put("register_right_recognition_doc", getListFileObj());
         mapTemp.put("register_right_recognition_description", "确权描述信息CHARACTER");
@@ -991,8 +1001,8 @@ public class GDBeforeCondition {
 
 
         //登记信息 名册登记 名册基本信息
-        mapTemp.put("register_subject_ref", "名册主体引用CHARACTER");
-        mapTemp.put("register_product_ref", "产品引用");
+        mapTemp.put("register_subject_ref", register_subject_ref);
+        mapTemp.put("register_product_ref", register_product_ref);
         mapTemp.put("register_product_name", "产品名称");
         mapTemp.put("register_product_description", "产品描述");
         mapTemp.put("register_list_asset_type", 1);
@@ -1002,7 +1012,7 @@ public class GDBeforeCondition {
         //登记信息 名册登记 股东名册
         List<Map> listRSH = new ArrayList<>();
         Map mapRSH = new HashMap();
-        mapRSH.put("register_equity_subject_ref", "股东主体引用CHARACTER");
+        mapRSH.put("register_equity_subject_ref", register_equity_subject_ref);
         mapRSH.put("register_equity_subject_type", 1);
         mapRSH.put("register_equity_type", 1);
         mapRSH.put("register_equity_capital", 200);
@@ -1015,7 +1025,7 @@ public class GDBeforeCondition {
         //登记信息 名册登记 债权人名册
         List<Map> listRC = new ArrayList<>();
         Map mapRC = new HashMap();
-        mapRC.put("register_debt_holder_ref", "债权人主体引用CHARACTER");
+        mapRC.put("register_debt_holder_ref", register_debt_holder_ref);
         mapRC.put("register_debt_holder_type", 1);
         mapRC.put("register_debt_holder_subscription_quantity", 1000);
         mapRC.put("register_debt_holder_subscription_price", 10000);
@@ -1027,7 +1037,7 @@ public class GDBeforeCondition {
         //登记信息 名册登记 基金投资人名册
         List<Map> listFi = new ArrayList<>();
         Map mapFI = new HashMap();
-        mapFI.put("register_investor_subject_ref", "投资人主体引用CHARACTER");
+        mapFI.put("register_investor_subject_ref", register_investor_subject_ref);
         mapFI.put("register_investor_name", "投资人主体名称CHARACTER");
         mapFI.put("register_subscription_amount", 1000);
         mapFI.put("register_subscription_number", 2000);
@@ -1039,63 +1049,20 @@ public class GDBeforeCondition {
         return mapTemp;
     }
 
-//    public Map init06SettleInfo() {
-//        Map mapTemp = new HashMap();
-//        log.info("初始化06资金清算数据结构");
-//        mapTemp.clear();
-//        List<String> listCert = new ArrayList<>();
-//        listCert.add("tix.pdf");
-//        listCert.add("tix2.pdf");
-//
-//        //对象信息
-//        mapTemp.put("capita_settlement_object_id", "CHAOyf0iKl68R3");
-//        mapTemp.put("capita_object_information_type", 0);
-//
-//        //资金结算基本信息
-//        mapTemp.put("capita_clearing_house_subject_ref", "CH5LDWxGtu6142");
-//        mapTemp.put("capita_settlement_type", 0);
-//        mapTemp.put("capita_settlement_serial_num", "CH1ktvx01x2e04");
-//        mapTemp.put("capita_settlement_time", "2020/11/06 14:14:59");
-//        mapTemp.put("capita_transaction_ref", "CHVXgXA1JsB5y2");
-//        mapTemp.put("capita_currency", "CHW5HHZl0gGgnj");
-//        mapTemp.put("capita_amount", 1000000);
-//        mapTemp.put("capita_notes", "textemu4AW4U57");
-//        mapTemp.put("capita_operation_certificates", listCert);
-//
-//        //转出方信息
-//        mapTemp.put("capita_out_bank_code", "CH3e9Vp967INOA");
-//        mapTemp.put("capita_out_bank_name", "CH1tY37wB57auz");
-//        mapTemp.put("capita_out_bank_number", "CHHe8e3M4j0N8o");
-//        mapTemp.put("capita_out_account_obj_ref", "CH62QCHF5Q7sob");
-//        mapTemp.put("capita_out_fund_account_name", "CH8tC5aG5om158");
-//        mapTemp.put("capita_out_amount_before_transfer", 1000000);
-//        mapTemp.put("capita_out_amount_after_transfer", 1000000);
-//
-//        //转入方信息
-//        mapTemp.put("capita_in_bank_code", "CH7YfKps3x65Y2");
-//        mapTemp.put("capita_in_bank_name", "CHp42HpuGtf6y3");
-//        mapTemp.put("capita_in_bank_number", "CHE0H230A17lu8");
-//        mapTemp.put("capita_in_account_obj_ref", "CH8QL30e0ggRvp");
-//        mapTemp.put("capita_in_fund_account_name", "CH6FU5bf2N2Y6B");
-//        mapTemp.put("capita_in_account_number", "CHd8re1Dojtmx0");
-//        mapTemp.put("capita_in_amount_before_transfer", 1000000);
-//        mapTemp.put("capita_in_amount_after_transfer", 1000000);
-//
-//        return mapTemp;
-//    }
-
     public Map init06SettleInfo() {
         Map mapTemp = new HashMap();
         log.info("初始化06资金清算数据结构");
         mapTemp.clear();
 
+        mapTemp.put("capita_settlement_object_id", "CHAOyf0iKl68R3");
+
         //资金结算信息 资金结算基本信息
-        mapTemp.put("settlement_subject_ref", "CH5LDWxGtu6142");
+        mapTemp.put("settlement_subject_ref", settlement_subject_ref);
         mapTemp.put("settlement_type", 0);
         mapTemp.put("settlement_serial_number", "CH1ktvx01x2e04");
         mapTemp.put("settlement_time", time1);
-        mapTemp.put("settlement_product_ref", "CHVXgXA1JsB5y2");
-        mapTemp.put("settlement_transaction_reference", "CHW5HHZl0gGgnj");
+        mapTemp.put("settlement_product_ref", settlement_product_ref);
+        mapTemp.put("settlement_transaction_ref", settlement_transaction_ref);
         mapTemp.put("settlement_currency", "156");
         mapTemp.put("settlement_value", 600000);
         mapTemp.put("settlement_note", "textemu4AW4U57");
@@ -1106,7 +1073,7 @@ public class GDBeforeCondition {
         mapTemp.put("settlement_out_bank_code", "CH3e9Vp967INOA");
         mapTemp.put("settlement_out_bank_name", "CH1tY37wB57auz");
         mapTemp.put("settlement_out_bank_account", "CHHe8e3M4j0N8o");
-        mapTemp.put("settlement_out_account_object_ref", "CH62QCHF5Q7sob");
+        mapTemp.put("settlement_out_account_object_ref", settlement_out_account_object_ref);
         mapTemp.put("settlement_out_account_name", "CH8tC5aG5om158");
         mapTemp.put("settlement_out_account_balance_before_transfer", 1000000);
         mapTemp.put("settlement_out_account_balance_after_transfer", 1000000);
@@ -1115,7 +1082,7 @@ public class GDBeforeCondition {
         mapTemp.put("settlement_in_bank_code", "CH7YfKps3x65Y2");
         mapTemp.put("settlement_in_bank_name", "CHp42HpuGtf6y3");
         mapTemp.put("settlement_in_bank_account", "CHE0H230A17lu8");
-        mapTemp.put("settlement_in_account_object_ref", "CH8QL30e0ggRvp");
+        mapTemp.put("settlement_in_account_object_ref",settlement_in_account_object_ref);
         mapTemp.put("settlement_in_account_name", "CH6FU5bf2N2Y6B");
         mapTemp.put("settlement_in_account_balance_before_transfer", 1000000);
         mapTemp.put("settlement_in_account_balance_after_transfer", 1000000);
@@ -1226,156 +1193,177 @@ public class GDBeforeCondition {
         Map mapTemp = new HashMap();
         log.info("初始化07信披数据结构");
         mapTemp.clear();
+        //信披对象标识
+        mapTemp.put("letter_disclosure_object_id", "CHo8M7Jzo6y6Uh");
 
         //信披信息 信披基本信息
-        mapTemp.put("disclosure_subject_ref", "CHo8M7Jzo6y6Uh");
-        mapTemp.put("disclosure_type", 0);
+        mapTemp.put("disclosure_subject_ref", disclosure_subject_ref);
+        mapTemp.put("disclosure_type", disclosureType);
         mapTemp.put("disclosure_submit_type", 0);
-        mapTemp.put("disclosure_referer_subject_ref", "CHo8M7Jzo6y6Uh");
+        mapTemp.put("disclosure_referer_subject_ref", disclosure_referer_subject_ref);
         mapTemp.put("disclosure_referer_name", "CHo8M7Jzo6y6Uh");
         mapTemp.put("disclosure_submit_date", date1);
         mapTemp.put("disclosure_submit_description", "CHo8M7Jzo6y6Uh");
 
-        //信披信息 企业展示信息
-        List<Map> listEnterpriseInformation = new ArrayList<>();
-        Map mapEId = new HashMap();
-        mapEId.put("disclosure_display_platform_ref", "IDSR006");
-        mapEId.put("disclosure_display_name", "IDSR007");
-        mapEId.put("disclosure_display_doc", getListFileObj());
-        mapEId.put("disclosure_display_description", "xinpi");
-        mapEId.put("disclosure_display_code", "mainpingzhen.pdf");
-        mapEId.put("disclosure_display_content", "contentpingzhen.pdf");
-        mapEId.put("disclosure_display_start_date", date1);
-        mapEId.put("disclosure_display_end_date", date2);
-        listEnterpriseInformation.add(mapEId);
-        mapTemp.put("enterprise_display_information",listEnterpriseInformation);
+        switch (disclosureType) {
+            case 1:
+                //信披信息 企业展示信息
+                List<Map> listEnterpriseInformation = new ArrayList<>();
+                Map mapEId = new HashMap();
+                mapEId.put("disclosure_display_platform_ref", disclosure_display_platform_ref);
+                mapEId.put("disclosure_display_name", "IDSR007");
+                mapEId.put("disclosure_display_doc", getListFileObj());
+                mapEId.put("disclosure_display_description", "xinpi");
+                mapEId.put("disclosure_display_code", "mainpingzhen.pdf");
+                mapEId.put("disclosure_display_content", "contentpingzhen.pdf");
+                mapEId.put("disclosure_display_start_date", date1);
+                mapEId.put("disclosure_display_end_date", date2);
 
-        //信披信息 监管信息
-        List<Map> listRegulatoryInfomation = new ArrayList<>();
-        Map mapRId = new HashMap();
-        mapRId.put("disclosure_regulatory_type",1);
-        mapRId.put("disclosure_regulatory_report_name", "IDSR007");
-        mapRId.put("disclosure_regulatory_report_doc", getListFileObj());
-        mapRId.put("disclosure_regulatory_report_description", "xinpi");
-        mapRId.put("disclosure_regulatory_measures", "mainpingzhen.pdf");
-        mapRId.put("disclosure_regulatory_report_date", date1);
-        listRegulatoryInfomation.add(mapRId);
-        mapTemp.put("regulatory_infomation",listRegulatoryInfomation);
+                listEnterpriseInformation.add(mapEId);
+                mapTemp.put("enterprise_display_information", listEnterpriseInformation);
+                break;
 
-        //信披信息 企业报告
-        List<Map> listEnterpriseReport = new ArrayList<>();
-        Map mapERd = new HashMap();
-        mapERd.put("disclosure_enterprise_report_type",1);
-        mapERd.put("disclosure_enterprise_report_name", "IDSR007");
-        mapERd.put("disclosure_enterprise_report_doc", getListFileObj());
-        mapERd.put("disclosure_enterprise_report_description", "xinpi");
-        mapERd.put("disclosure_enterprise_report_date", date1);
-        listEnterpriseReport.add(mapERd);
-        mapTemp.put("enterprise_report",listEnterpriseReport);
+            case 3:
+                //信披信息 监管信息
+                List<Map> listRegulatoryInfomation = new ArrayList<>();
+                Map mapRId = new HashMap();
+                mapRId.put("disclosure_regulatory_type", 1);
+                mapRId.put("disclosure_regulatory_report_name", "IDSR007");
+                mapRId.put("disclosure_regulatory_report_doc", getListFileObj());
+                mapRId.put("disclosure_regulatory_report_description", "xinpi");
+                mapRId.put("disclosure_regulatory_measures", "mainpingzhen.pdf");
+                mapRId.put("disclosure_regulatory_report_date", date1);
+                listRegulatoryInfomation.add(mapRId);
+                mapTemp.put("regulatory_infomation", listRegulatoryInfomation);
+                break;
 
-        //信披信息 公告
-        List listNotice = new ArrayList();
-        Map notice = new HashMap();
-        notice.put("disclosure_announcement_type", 0);
-        notice.put("disclosure_announcement_name", "OG3.pdf");
-        notice.put("disclosure_announcement_doc", getListFileObj());
-        notice.put("disclosure_announcement_description", "公告简述0001");
-        notice.put("disclosure_announcement_date", date1);
-        listNotice.add(notice);
-        mapTemp.put("disclosure_notice", listNotice);
+            case 4:
+                //信披信息 企业报告
+                List<Map> listEnterpriseReport = new ArrayList<>();
+                Map mapERd = new HashMap();
+                mapERd.put("disclosure_enterprise_report_type", 1);
+                mapERd.put("disclosure_enterprise_report_name", "IDSR007");
+                mapERd.put("disclosure_enterprise_report_doc", getListFileObj());
+                mapERd.put("disclosure_enterprise_report_description", "xinpi");
+                mapERd.put("disclosure_enterprise_report_date", date1);
+                listEnterpriseReport.add(mapERd);
+                mapTemp.put("enterprise_report", listEnterpriseReport);
+                break;
+            case 5:
+                //信披信息 公告
+                List listNotice = new ArrayList();
+                Map notice = new HashMap();
+                notice.put("disclosure_announcement_type", 0);
+                notice.put("disclosure_announcement_name", "OG3.pdf");
+                notice.put("disclosure_announcement_doc", getListFileObj());
+                notice.put("disclosure_announcement_description", "公告简述0001");
+                notice.put("disclosure_announcement_date", date1);
+                listNotice.add(notice);
+                mapTemp.put("disclosure_notice", listNotice);
+                break;
 
-        //信披信息 重大事件信息
-        List listME = new ArrayList();
-        Map majorEvent = new HashMap();
-        majorEvent.put("disclosure_major_event_type", 0);
-        majorEvent.put("disclosure_major_event_name", "C63.pdf");
-        majorEvent.put("disclosure_major_event_doc", getListFileObj());
-        majorEvent.put("disclosure_major_event_document_description", "事件简述0001");
-        majorEvent.put("disclosure_major_event_reporting_date", date1);
-        listME.add(majorEvent);
-        mapTemp.put("major_event_information", listME);
+            case 6:
+                //信披信息 重大事件信息
+                List listME = new ArrayList();
+                Map majorEvent = new HashMap();
+                majorEvent.put("disclosure_major_event_type", 0);
+                majorEvent.put("disclosure_major_event_name", "C63.pdf");
+                majorEvent.put("disclosure_major_event_doc", getListFileObj());
+                majorEvent.put("disclosure_major_event_document_description", "事件简述0001");
+                majorEvent.put("disclosure_major_event_reporting_date", date1);
+                listME.add(majorEvent);
+                mapTemp.put("major_event_information", listME);
+                break;
 
+            case 7:
+                //信披信息 诚信档案
+                //事项基本信息
+                List<Map> listCredit = new ArrayList<>();
+                Map mapCd = new HashMap();
+                mapCd.put("disclosure_identifier_ref", disclosure_identifier_ref);
+                mapCd.put("disclosure_identifier_name", "CH60FNHO699i3S");
+                mapCd.put("disclosure_auditor_ref", disclosure_auditor_ref);
+                mapCd.put("disclosure_auditor_name", "CHccO9f2A3gQuK");
+                //事项明细
+                mapCd.put("disclosure_event_id", "letter00000001");
+                mapCd.put("disclosure_event_name", "lettername");
+                mapCd.put("disclosure_event_doc", getListFileObj());
+                mapCd.put("disclosure_event_description", "因非法开设证券期货交易场所或者组织证券期货交易被地方政府行政处罚或者采取清理整顿措施");
+                mapCd.put("disclosure_event_type", 1);
+                mapCd.put("disclosure_event_valid_time", "期限00001");
+                mapCd.put("disclosure_event_start_date", date1);
+                mapCd.put("disclosure_event_end_date", date2);
+                mapCd.put("disclosure_event_status", 1);
+                listCredit.add(mapCd);
+                mapTemp.put("integrity_archives", listCredit);
+                break;
 
-        //信披信息 诚信档案
-        //事项基本信息
-        List<Map> listCredit = new ArrayList<>();
-        Map mapCd = new HashMap();
-        mapCd.put("disclosure_identifier_ref", "CHl55WqGnO3hRd");
-        mapCd.put("disclosure_identifier_name", "CH60FNHO699i3S");
-        mapCd.put("disclosure_auditor_ref", "CHAVko0Oq9139x");
-        mapCd.put("disclosure_auditor_name", "CHccO9f2A3gQuK");
-        //事项明细
-        mapCd.put("disclosure_event_id", "letter00000001");
-        mapCd.put("disclosure_event_name", "lettername");
-        mapCd.put("disclosure_event_doc", getListFileObj());
-        mapCd.put("disclosure_event_description", "因非法开设证券期货交易场所或者组织证券期货交易被地方政府行政处罚或者采取清理整顿措施");
-        mapCd.put("disclosure_event_type", 1);
-        mapCd.put("disclosure_event_valid_time", "期限00001");
-        mapCd.put("disclosure_event_start_date", date1);
-        mapCd.put("disclosure_event_end_date", date2);
-        mapCd.put("disclosure_event_status", 1);
-        listCredit.add(mapCd);
-        mapTemp.put("integrity_archives", listCredit);
+            case 8:
+                //信披信息 财务信息
+                List<Map> listFinancialInformation = new ArrayList<>();
+                Map mapFId = new HashMap();
+                //基本财务信息
+                mapFId.put("disclosure_financial_start_date", date1);
+                mapFId.put("disclosure_financial_end_date", date2);
+                mapFId.put("disclosure_financial_type", 0);
+                mapFId.put("disclosure_financial_periodend_total_asset", 1000000);
+                mapFId.put("disclosure_financial_periodend_net_asset", 1000000);
+                mapFId.put("disclosure_financial_periodend_total_liability", 1000000);
+                mapFId.put("disclosure_financial_periodend_revenue", 1000000);
+                mapFId.put("disclosure_financial_periodend_gross_profit", 1000000);
+                mapFId.put("disclosure_financial_periodend_net_profit", 1000000);
+                mapFId.put("disclosure_financial_cashflow", 1000000);
+                mapFId.put("disclosure_financial_whether_rd", true);
+                mapFId.put("letter_r&disclosure_financial_rd_cost", 1000000);
+                //财务报表文件
+                mapFId.put("disclosure_financial_balance_sheet_name", "829.pdf");
+                mapFId.put("disclosure_financial_balance_sheet", getListFileObj());
+                mapFId.put("disclosure_financial_balance_sheet_description", "6L6.pdf");
+                mapFId.put("disclosure_financial_cashflow_statement_name", "6L6.pdf");
+                mapFId.put("disclosure_financial_cashflow_statement", getListFileObj());
+                mapFId.put("disclosure_financial_cashflow_statement_description", "6L6.pdf");
+                mapFId.put("disclosure_financial_income_statement_name", "6L6.pdf");
+                mapFId.put("disclosure_financial_income_statement", getListFileObj());
+                mapFId.put("disclosure_financial_income_statement_description", "6L6.pdf");
+                listFinancialInformation.add(mapFId);
+                mapTemp.put("financial_information", listFinancialInformation);
+                break;
 
-        //信披信息 财务信息
-        List<Map> listFinancialInformation = new ArrayList<>();
-        Map mapFId = new HashMap();
-        //基本财务信息
-        mapFId.put("disclosure_financial_start_date", date1);
-        mapFId.put("disclosure_financial_end_date", date2);
-        mapFId.put("disclosure_financial_type", 0);
-        mapFId.put("disclosure_financial_periodend_total_asset", 1000000);
-        mapFId.put("disclosure_financial_periodend_net_asset", 1000000);
-        mapFId.put("disclosure_financial_periodend_total_liability", 1000000);
-        mapFId.put("disclosure_financial_periodend_revenue", 1000000);
-        mapFId.put("disclosure_financial_periodend_gross_profit", 1000000);
-        mapFId.put("disclosure_financial_periodend_net_profit", 1000000);
-        mapFId.put("disclosure_financial_cashflow", 1000000);
-        mapFId.put("disclosure_financial_whether_rd", true);
-        mapFId.put("letter_r&disclosure_financial_rd_cost", 1000000);
-        //财务报表文件
-        mapFId.put("disclosure_financial_balance_sheet_name", "829.pdf");
-        mapFId.put("disclosure_financial_balance_sheet", getListFileObj());
-        mapFId.put("disclosure_financial_balance_sheet_description", "6L6.pdf");
-        mapFId.put("disclosure_financial_cashflow_statement_name", "6L6.pdf");
-        mapFId.put("disclosure_financial_cashflow_statement", getListFileObj());
-        mapFId.put("disclosure_financial_cashflow_statement_description", "6L6.pdf");
-        mapFId.put("disclosure_financial_income_statement_name", "6L6.pdf");
-        mapFId.put("disclosure_financial_income_statement", getListFileObj());
-        mapFId.put("disclosure_financial_income_statement_description", "6L6.pdf");
-        listFinancialInformation.add(mapFId);
-        mapTemp.put("financial_information", listFinancialInformation);
+            case 9:
+                //信披信息 企业经营信息
+                List listBusinessInformation = new ArrayList();
+                Map mapBID = new HashMap();
+                //经营基本信息
+                mapBID.put("disclosure_business_overview", "概述0001");
+                mapBID.put("disclosure_main_business_analysis", "C63.pdf");
+                mapBID.put("disclosure_main_business_analysis_non", "7P6.pdf");
+                mapBID.put("disclosure_assets_and_liabilities_analysis", "2020/11/06 14:15:00");
+                mapBID.put("disclosure_major_shareholders_analysis", 0);
+                mapBID.put("disclosure_major_events", "C63.pdf");
+                mapBID.put("disclosure_business_report_name", "7P6.pdf");
+                mapBID.put("disclosure_business_report_doc", getListFileObj());
+                mapBID.put("disclosure_business_report_description", 0);
+                mapBID.put("disclosure_business_report_date", date1);
+                //投融资信息
+                mapBID.put("disclosure_investment_analysis", "7P6.pdf");
+                mapBID.put("disclosure_fund_raising_analysis", "2020/11/06 14:15:00");
+                mapBID.put("disclosure_sell_situation_analysis", "情况00001");
+                listBusinessInformation.add(mapBID);
+                mapTemp.put("business_information", listBusinessInformation);
+                break;
 
-        //信披信息 企业经营信息
-        List listBusinessInformation = new ArrayList();
-        Map mapBID = new HashMap();
-        //经营基本信息
-        mapBID.put("disclosure_business_overview", "概述0001");
-        mapBID.put("disclosure_main_business_analysis", "C63.pdf");
-        mapBID.put("disclosure_main_business_analysis_non", "7P6.pdf");
-        mapBID.put("disclosure_assets_and_liabilities_analysis", "2020/11/06 14:15:00");
-        mapBID.put("disclosure_major_shareholders_analysis", 0);
-        mapBID.put("disclosure_major_events", "C63.pdf");
-        mapBID.put("disclosure_business_report_name", "7P6.pdf");
-        mapBID.put("disclosure_business_report_doc", getListFileObj());
-        mapBID.put("disclosure_business_report_description", 0);
-        mapBID.put("disclosure_business_report_date", date1);
-        //投融资信息
-        mapBID.put("disclosure_investment_analysis", "7P6.pdf");
-        mapBID.put("disclosure_fund_raising_analysis", "2020/11/06 14:15:00");
-        mapBID.put("disclosure_sell_situation_analysis","情况00001");
-        listBusinessInformation.add(mapBID);
-        mapTemp.put("business_information", listBusinessInformation);
-
-        //信披信息 第三方拓展信息
-        List listExpandInformation = new ArrayList();
-        Map mapEID = new HashMap();
-        mapBID.put("disclosure_expand_name", "概述0001");
-        mapBID.put("disclosure_expand_doc", getListFileObj());
-        mapBID.put("disclosure_expand_description", "7P6.pdf");
-        mapBID.put("disclosure_expand_date", date1);
-        listExpandInformation.add(mapEID);
-        mapTemp.put("expand_information", listExpandInformation);
+            case 10:
+                //信披信息 第三方拓展信息
+                List listExpandInformation = new ArrayList();
+                Map mapEID = new HashMap();
+                mapEID.put("disclosure_expand_name", "概述0001");
+                mapEID.put("disclosure_expand_doc", getListFileObj());
+                mapEID.put("disclosure_expand_description", "7P6.pdf");
+                mapEID.put("disclosure_expand_date", date1);
+                listExpandInformation.add(mapEID);
+                mapTemp.put("expand_information", listExpandInformation);
+            break;
+        }
 
 
         return mapTemp;
@@ -1384,13 +1372,15 @@ public class GDBeforeCondition {
     public void initCommonRefSubAndReg() {
 
         log.info("初始化监管引用相关数据结构");
-        resetRefObjectId();
+//        resetRefObjectId();
         Map mapTemp = init01EnterpriseSubjectInfo();
         String refDataArray[]=refData();
 
         for (int i=0;i<refDataArray.length;i++){
             mapTemp.put("subject_object_id",refDataArray[i]);
-            mapTemp.remove("subject_qualification_information");
+//            mapTemp.remove("subject_qualification_information");
+            ArrayList aSqi = new ArrayList();
+            mapTemp.put("subject_qualification_information",aSqi);
             log.info(mapTemp.toString());
             gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,mapTemp,null,null,null);
         }
