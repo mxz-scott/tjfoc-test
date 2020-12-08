@@ -659,8 +659,14 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
     @Test
     public void TC15_type1_infodisclosurePublishAndGet() throws Exception {
         infodisclosurePublishAndGetByType(1);
-
-
+        infodisclosurePublishAndGetByType(3);
+        infodisclosurePublishAndGetByType(4);
+        infodisclosurePublishAndGetByType(5);
+        infodisclosurePublishAndGetByType(6);
+        infodisclosurePublishAndGetByType(7);
+        infodisclosurePublishAndGetByType(8);
+        infodisclosurePublishAndGetByType(9);
+        infodisclosurePublishAndGetByType(10);
     }
 
     public void infodisclosurePublishAndGetByType(int type) throws Exception {
