@@ -1263,7 +1263,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         String[] cert1 = new String[]{"test.txt"};
         String[] cert2 = new String[]{"close.cert"};
         String response= gd.GDAccountDestroy(gdContractAddress,clntNo,
-                "2020/05/12 18:18:08",cert1,"2020/12/12 18:08:08",cert2);
+                date4,getListFileObj(),date4,getListFileObj());
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 

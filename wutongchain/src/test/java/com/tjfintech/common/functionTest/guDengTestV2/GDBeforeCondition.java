@@ -876,7 +876,7 @@ public class GDBeforeCondition {
         //交易报告信息 交易基本信息
         mapTemp.put("transaction_market_type", 0);
         mapTemp.put("transaction_type", 1);
-        mapTemp.put("transaction_method", 0);
+        mapTemp.put("transaction_method", 1);
         mapTemp.put("transaction_description", "交易描述信息300字以内描述");
         mapTemp.put("transaction_create_time", time3);
 

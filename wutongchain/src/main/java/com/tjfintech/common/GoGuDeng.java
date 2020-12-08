@@ -334,8 +334,8 @@ public  class GoGuDeng implements GuDeng {
      * @param clientNo
      * @return
      */
-    public String GDAccountDestroy(String contractAddress, String clientNo,String shareholderClosingDate,String[] shareholderClosingCertificate,
-                                   String fundClosingDate,String[] fundClosingCertificate){
+    public String GDAccountDestroy(String contractAddress, String clientNo,String shareholderClosingDate,List<Map> shareholderClosingCertificate,
+                                   String fundClosingDate,List<Map> fundClosingCertificate){
         Map<String, Object> map = new HashMap<>();
         map.put("contractAddress", contractAddress);
         map.put("clientNo", clientNo);

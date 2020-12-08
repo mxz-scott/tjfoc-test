@@ -476,10 +476,12 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         String newEquityCode = gdEquityCode + Random(5);
         String cpnyId = gdCompanyID;
 
+        Map eqProd = gdBF.init03EquityProductInfo();
+
         String flowNo = "changeboard000001";
         List<Map> regList = uf.getAllHolderListReg(gdEquityCode,flowNo);
 
-        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,regList,equityProductInfo,bondProductInfo);
+        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,regList,eqProd,null);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -526,11 +528,8 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdAccClientNo10);
 
         String clntNo = gdAccClientNo10;
-        String[] cert1 = new String[]{"test.txt"};
-        String[] cert2 = new String[]{"close.cert"};
-        String date1 = "2020/06/12 17:08:08";
-        String date2 = "2020/06/12 18:08:08";
-        String response= gd.GDAccountDestroy(gdContractAddress,clntNo,date1,cert1,date2,cert2);
+
+        String response= gd.GDAccountDestroy(gdContractAddress,clntNo,date3,getListFileObj(),date3,getListFileObj());
 
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
