@@ -16,4 +16,6 @@ public interface Scf {
     String AssignmentReject(String challenge, String tokenType, String comments);
     String getowneraddr(String tokentype);
     String SendMsg(String msgcode, String sender, List<Map> list, String mode, String reftx, String msgdata);
+    String CreditAdjust(String AccountAddress, String companyID2, String amount);
+    String FuncGetoutputinfo(String supplyAddress1, String tokenType, String subtype);
 }

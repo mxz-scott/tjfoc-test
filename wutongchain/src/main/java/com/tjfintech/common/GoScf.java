@@ -273,14 +273,56 @@ public class GoScf implements Scf {
     public String AssignmentReject(String challenge, String tokenType, String comments) {
         Map<String, Object> map = new HashMap<>();
 
-        map.put("challenge",challenge);
-        map.put("tokenType",tokenType);
-        map.put("comments",comments);
+        map.put("challenge", challenge);
+        map.put("tokenType", tokenType);
+        map.put("comments", comments);
 
-        String param="";
-        if (subLedger!="") param = param +"ledger"+subLedger;
+        String param = "";
+        if (subLedger != "") param = param + "ledger" + subLedger;
 
         String result = PostTest.postMethod(SDKADD + "/scf/assignment/reject", map);
+        log.info(result);
+        return result;
+    }
+    /**
+     * 开立额度调整
+     * @param AccountAddress
+     * @param companyID1
+     * @param amount
+     * @return
+     */
+    public String CreditAdjust(String AccountAddress, String companyID1, String amount) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("contractAddress", AccountAddress);
+        map.put("companyID", companyID2);
+        map.put("amount", amount);
+
+        String param = "";
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/credit/adjust", map);
+        log.info(result);
+        return result;
+    }
+    /**
+     * 获取output的交易id和index
+     * @param supplyAddress1
+     * @param tokenType
+     * @param subType
+     * @return
+     */
+    public String FuncGetoutputinfo(String supplyAddress1, String tokenType, String subType) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("address", supplyAddress1);
+        map.put("tokenType", tokenType);
+        map.put("subType", subType);
+
+        String param = "";
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/func/getoutputinfo", map);
         log.info(result);
         return result;
     }

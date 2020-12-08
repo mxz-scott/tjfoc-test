@@ -27,13 +27,14 @@ public class GoScfTest {
     Kms kms = testBuilder.getKms();
 
     /**
-     * 开立-审核-签收-查询资产
+     * 开立-审核-签收-查询资产-获取output交易ID和index
      * @throws InterruptedException
      */
     @Test
     public void IssuingApply_Test01() throws InterruptedException {
         int levelLimit = 5;
         String amount = "100.0";
+        String subType = "0";
         String response = kms.genRandom(size);
         String tokenType = UtilsClassScf.gettokenType(response);
         //资产开立申请
@@ -53,12 +54,20 @@ public class GoScfTest {
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("success"));
         assertThat(response3, containsString("data"));
+        Thread.sleep(5000);
         //查询tokentype资产
         String response4 = scf.getowneraddr(tokenType);
         assertThat(response4, containsString("200"));
         assertThat(response4, containsString("success"));
         assertThat(response4, containsString("address"));
         assertThat(response4, containsString("value"));
+        //获取output的交易id和index
+        String response5 = scf .FuncGetoutputinfo(supplyAddress1, tokenType, subType);
+        assertThat(response5, containsString("200"));
+        assertThat(response5, containsString("success"));
+        assertThat(response5, containsString("data"));
+        assertThat(response5, containsString("index"));
+        Thread.sleep(5000);
     }
 
     /**
@@ -198,4 +207,29 @@ public class GoScfTest {
          assertThat(response5, containsString("success"));
          assertThat(response5, containsString("data"));
      }
+    /**
+     授信额度调整==companyID2
+     */
+    @Test
+    public void CreditAdjust_Test06 () throws InterruptedException {
+        String amount = "30000000.0";
+        String response1 = scf.CreditAdjust(AccountAddress, companyID2, amount);
+        assertThat(response1, containsString("200"));
+        assertThat(response1, containsString("success"));
+        assertThat(response1, containsString("data"));
+    }
+    /**
+     获取output的交易id和index
+     */
+    @Test//输入错误随机的未开立资产的tokentype
+     public void FuncGetoutputinfo_Test08 () throws InterruptedException {
+         String subType = "0";
+         String response = kms.genRandom(size);
+         String tokenType = UtilsClassScf.gettokenType(response);
+         String response1 = scf.FuncGetoutputinfo(supplyAddress1, tokenType, subType);
+         assertThat(response1, containsString("400"));
+         assertThat(response1, containsString("error"));
+         assertThat(response1, containsString(""));
+     }
+
 }
