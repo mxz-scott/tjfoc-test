@@ -155,8 +155,8 @@ public class GDBeforeCondition {
         init02FundAccountInfo();
         fundAccountInfo.put("account_object_id", fundNo);  //更新账户对象标识字段
         fundAccountInfo.put("account_subject_ref", cltNo);  //更新账户所属主体引用
-//        fundAccountInfo.put("account_associated_account_ref", shareHolderNo);  //更新关联账户对象引用
-        fundAccountInfo.put("account_associated_account_ref", account_associated_account_ref);  //更新关联账户对象引用
+        fundAccountInfo.put("account_associated_account_ref", shareHolderNo);  //更新关联账户对象引用
+//        fundAccountInfo.put("account_associated_account_ref", account_associated_account_ref);  //更新关联账户对象引用
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("createTime", ts2);
         mapFundInfo.put("fundNo", fundNo);
@@ -192,9 +192,9 @@ public class GDBeforeCondition {
         gd.GDEquitySystemInit(gdContractAddress, gdPlatfromKeyID);
 
         //为缩短初始化时间 判断对象标识是否存在 存在则不再挂牌 否则执行
-        if (!JSONObject.fromObject(gd.GDObjectQueryByVer(subject_investor_qualification_certifier_ref, -1)).getString("state").equals("200")){
-            initCommonRefSubAndReg();                           //初始化监管引用数据做挂牌企业登记操作
-        }
+//        if (!JSONObject.fromObject(gd.GDObjectQueryByVer(subject_investor_qualification_certifier_ref, -1)).getString("state").equals("200")){
+//            initCommonRefSubAndReg();                           //初始化监管引用数据做挂牌企业登记操作
+//        }
 
         log.info("初始化监管相关数据结构");
         enterpriseSubjectInfo = init01EnterpriseSubjectInfo();      //初始化企业主体数据信息  涉及接口 企业挂牌登记

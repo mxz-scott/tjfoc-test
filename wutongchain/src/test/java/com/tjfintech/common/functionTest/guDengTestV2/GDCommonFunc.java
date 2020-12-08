@@ -4,6 +4,7 @@ import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.utils.MinIOOperation;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
@@ -24,6 +25,7 @@ public class GDCommonFunc {
     GuDeng gd = testBuilder.getGuDeng();
     CommonFunc cf = new CommonFunc();
     UtilsClass utilsClass=new UtilsClass();
+    MinIOOperation minio = new MinIOOperation();
     String key = "";
 
 
@@ -463,6 +465,38 @@ public class GDCommonFunc {
         return subjectInfoEnterprise(jobjOK);
     }
 
+    public static String conJGFileName(String objectId,String version){
+        return objectId + "_" + version + ".json";
+    }
+
+    public Map constructJGDataFromStr(String miniofileName,String type,String subType)throws Exception{
+        log.info("监管存证: " + miniofileName + " 待检测数据模型：" + type + " 数据模型子类型：" + subType);
+
+        String storeData2 = minio.getFileFromMinIO(minIOEP,jgBucket,miniofileName,"");
+
+        //schema校验数据格式
+        assertEquals("schema校验数据是否匹配",true,
+                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,storeData2,"2"));
+
+        com.alibaba.fastjson.JSONObject jobjOK = com.alibaba.fastjson.JSONObject.parseObject(storeData2);
+
+        Map mapData = new HashMap();
+        switch (type){
+            case "subject":
+                if(subType.equals("1"))     {  mapData = subjectInfoEnterprise(jobjOK);   }
+                else if(subType.equals("2")){  mapData = subjectInfoPerson(jobjOK);       }
+                break;
+            case "account":                 mapData = accountInfo(jobjOK);break;
+            case "product":                 mapData = productInfo(jobjOK,subType);break;
+            case "transactionreport":       mapData = transInfo(jobjOK);break;
+            case "registration":            mapData = regiInfo(jobjOK);break;
+            case "settlement":              mapData = settleInfo(jobjOK);break;
+            case "infodisclosure":          mapData = pubInfo(jobjOK);break;
+            default: log.info("未能识别的类型 " + type);
+        }
+        return mapData;
+    }
+
 
     public Map contructPersonalSubInfo(String personalTxId){
         log.info("检查的交易id " + personalTxId);
@@ -479,11 +513,23 @@ public class GDCommonFunc {
         return subjectInfoPerson(jobjOK);
     }
 
+    public Map conPersonalSubInfoNew(String miniofileName)throws Exception{
+        log.info("监管存证: " + miniofileName);
+
+        String storeData2 = minio.getFileFromMinIO(minIOEP,jgBucket,miniofileName,"");
+
+        //schema校验数据格式
+        assertEquals("schema校验数据是否匹配",true,
+                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,storeData2,"2"));
+
+        com.alibaba.fastjson.JSONObject jobjOK = com.alibaba.fastjson.JSONObject.parseObject(storeData2);
+        return subjectInfoPerson(jobjOK);
+    }
+
 
     public Map getEnterpriseSubInfo(String response){
         com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(response);
         String storeData2 = object2.getString("data");//.getJSONObject("store").getString("storeData");
-
         com.alibaba.fastjson.JSONObject jobj2 = parseJSONBaseOnJSONStrCompatible(storeData2, subjectType);
         return subjectInfoEnterprise(jobj2);
     }
