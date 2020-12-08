@@ -155,7 +155,8 @@ public class GDBeforeCondition {
         init02FundAccountInfo();
         fundAccountInfo.put("account_object_id", fundNo);  //更新账户对象标识字段
         fundAccountInfo.put("account_subject_ref", cltNo);  //更新账户所属主体引用
-        fundAccountInfo.put("account_associated_account_ref", shareHolderNo);  //更新关联账户对象引用
+//        fundAccountInfo.put("account_associated_account_ref", shareHolderNo);  //更新关联账户对象引用
+        fundAccountInfo.put("account_associated_account_ref", account_associated_account_ref);  //更新关联账户对象引用
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("createTime", ts2);
         mapFundInfo.put("fundNo", fundNo);
@@ -875,27 +876,27 @@ public class GDBeforeCondition {
         //交易报告信息 交易基本信息
         mapTemp.put("transaction_market_type", 0);
         mapTemp.put("transaction_type", 1);
-        mapTemp.put("transaction_method", 2);
+        mapTemp.put("transaction_method", 0);
         mapTemp.put("transaction_description", "交易描述信息300字以内描述");
         mapTemp.put("transaction_create_time", time3);
 
         //交易报告信息 交易资产信息
         mapTemp.put("transaction_product_custody_status", 0);
-        mapTemp.put("transaction_custody_product_ref", "交易产品引用CHARACTER");
+        mapTemp.put("transaction_custody_product_ref", transaction_custody_product_ref);
         mapTemp.put("transaction_product_name", "交易资产名称CHARACTER");
-        mapTemp.put("transaction_product_issuer_ref", "交易资产发行主体引用CHARACTER");
+        mapTemp.put("transaction_product_issuer_ref", transaction_product_issuer_ref);
         mapTemp.put("transaction_product_issuer_name", "交易资产发行主体名称CHARACTER");
         mapTemp.put("transaction_product_asset_type", 0);
         mapTemp.put("transaction_product_asset_unit", 1);
-        mapTemp.put("transaction_product_asset_currency", "交易资产规模币种CHARACTER");
+        mapTemp.put("transaction_product_asset_currency", "156");
         mapTemp.put("transaction_product_asset_value", 10000);
         mapTemp.put("transaction_product_asset_doc", getListFileObj());
-        mapTemp.put("transaction_product_decription", "交易资产描述信息CHARACTER");
+        mapTemp.put("transaction_product_description", "交易资产描述信息CHARACTER");
 
 
         //交易报告信息 交易成交信息 成交内容信息
         mapTemp.put("transaction_series_number", "交易成交流水号CHARACTER");
-        mapTemp.put("transaction_settlement_currency", "成交币种CHARACTER");
+        mapTemp.put("transaction_settlement_currency", "156");
         mapTemp.put("transaction_settlement_price", 20);
         mapTemp.put("transaction_settlement_quantity", 1000);
         mapTemp.put("transaction_settlement_time", time3);
@@ -905,13 +906,13 @@ public class GDBeforeCondition {
         //交易报告信息 交易成交信息 融资类交易成交方信息
         mapTemp.put("transaction_issuer_ref", gdCompanyID);
         mapTemp.put("transaction_issuer_name", "issue001");
-        mapTemp.put("transaction_investor_ref", "accobj0001");
+        mapTemp.put("transaction_investor_ref", transaction_investor_ref);
         mapTemp.put("transaction_investor_name", "联合");
 
         //交易报告信息 交易成交信息 交易成交方信息
-        mapTemp.put("transaction_investor_original_ref", "acchobj001");
+        mapTemp.put("transaction_investor_original_ref",transaction_investor_original_ref);
         mapTemp.put("transaction_investor_original_name", "zhagnsan");
-        mapTemp.put("transaction_investor_counterparty_ref", "acchobj002");
+        mapTemp.put("transaction_investor_counterparty_ref", transaction_investor_counterparty_ref);
         mapTemp.put("transaction_investor_counterparty_name", "李四");
 
         //交易报告信息 交易成交信息 成交核验信息
@@ -923,9 +924,12 @@ public class GDBeforeCondition {
         Map equityMap = new HashMap();
 
         equityMap.put("transaction_intermediary_type", 0);
-        equityMap.put("transaction_intermediary_subject_ref", "obj001");
+        equityMap.put("transaction_intermediary_subject_ref", transaction_intermediary_subject_ref);
         equityMap.put("transaction_intermediary_description", "中介机构服务描述200字以内描述");
-        mapTemp.put("transaction_intermediary_name", "中介机构名称");
+        equityMap.put("transaction_intermediary_name", "中介机构名称");
+
+        mapList1.add(equityMap);
+        mapTemp.put("transaction_intermediary_information", mapList1);
 
         return mapTemp;
     }
@@ -949,11 +953,11 @@ public class GDBeforeCondition {
         mapTemp.put("register_time", time2);
         mapTemp.put("register_subject_ref", register_subject_ref);
         mapTemp.put("register_subject_type", 1);
-        mapTemp.put("register_subject_account_reference", register_subject_ref);
+        mapTemp.put("register_subject_account_ref", register_subject_ref);
         mapTemp.put("register_asset_type", 1);
         mapTemp.put("register_asset_unit", 1);
         mapTemp.put("register_asset_currency", "156");
-        mapTemp.put("register_transaction_ref", 1);
+        mapTemp.put("register_transaction_ref", register_transaction_ref);
         mapTemp.put("register_product_ref", register_product_ref);
         mapTemp.put("register_description", "登记描述信息CHARACTER");
         mapTemp.put("register_create_time", time2);
@@ -1045,55 +1049,12 @@ public class GDBeforeCondition {
         return mapTemp;
     }
 
-//    public Map init06SettleInfo() {
-//        Map mapTemp = new HashMap();
-//        log.info("初始化06资金清算数据结构");
-//        mapTemp.clear();
-//        List<String> listCert = new ArrayList<>();
-//        listCert.add("tix.pdf");
-//        listCert.add("tix2.pdf");
-//
-//        //对象信息
-//        mapTemp.put("capita_settlement_object_id", "CHAOyf0iKl68R3");
-//        mapTemp.put("capita_object_information_type", 0);
-//
-//        //资金结算基本信息
-//        mapTemp.put("capita_clearing_house_subject_ref", "CH5LDWxGtu6142");
-//        mapTemp.put("capita_settlement_type", 0);
-//        mapTemp.put("capita_settlement_serial_num", "CH1ktvx01x2e04");
-//        mapTemp.put("capita_settlement_time", "2020/11/06 14:14:59");
-//        mapTemp.put("capita_transaction_ref", "CHVXgXA1JsB5y2");
-//        mapTemp.put("capita_currency", "CHW5HHZl0gGgnj");
-//        mapTemp.put("capita_amount", 1000000);
-//        mapTemp.put("capita_notes", "textemu4AW4U57");
-//        mapTemp.put("capita_operation_certificates", listCert);
-//
-//        //转出方信息
-//        mapTemp.put("capita_out_bank_code", "CH3e9Vp967INOA");
-//        mapTemp.put("capita_out_bank_name", "CH1tY37wB57auz");
-//        mapTemp.put("capita_out_bank_number", "CHHe8e3M4j0N8o");
-//        mapTemp.put("capita_out_account_obj_ref", "CH62QCHF5Q7sob");
-//        mapTemp.put("capita_out_fund_account_name", "CH8tC5aG5om158");
-//        mapTemp.put("capita_out_amount_before_transfer", 1000000);
-//        mapTemp.put("capita_out_amount_after_transfer", 1000000);
-//
-//        //转入方信息
-//        mapTemp.put("capita_in_bank_code", "CH7YfKps3x65Y2");
-//        mapTemp.put("capita_in_bank_name", "CHp42HpuGtf6y3");
-//        mapTemp.put("capita_in_bank_number", "CHE0H230A17lu8");
-//        mapTemp.put("capita_in_account_obj_ref", "CH8QL30e0ggRvp");
-//        mapTemp.put("capita_in_fund_account_name", "CH6FU5bf2N2Y6B");
-//        mapTemp.put("capita_in_account_number", "CHd8re1Dojtmx0");
-//        mapTemp.put("capita_in_amount_before_transfer", 1000000);
-//        mapTemp.put("capita_in_amount_after_transfer", 1000000);
-//
-//        return mapTemp;
-//    }
-
     public Map init06SettleInfo() {
         Map mapTemp = new HashMap();
         log.info("初始化06资金清算数据结构");
         mapTemp.clear();
+
+        mapTemp.put("capita_settlement_object_id", "CHAOyf0iKl68R3");
 
         //资金结算信息 资金结算基本信息
         mapTemp.put("settlement_subject_ref", settlement_subject_ref);
@@ -1232,6 +1193,8 @@ public class GDBeforeCondition {
         Map mapTemp = new HashMap();
         log.info("初始化07信披数据结构");
         mapTemp.clear();
+        //信披对象标识
+        mapTemp.put("letter_disclosure_object_id", "CHo8M7Jzo6y6Uh");
 
         //信披信息 信披基本信息
         mapTemp.put("disclosure_subject_ref", disclosure_subject_ref);

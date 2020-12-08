@@ -208,7 +208,7 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
                 + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"500\",\"subType\":\"0\",\"newSubType\":\"1\"}"));
         assertEquals(true,response.contains("{\"from\":\"" + address + "\",\"to\":\"" + address
                 + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"4500\",\"subType\":\"0\"}"));
-        assertEquals(true,response.contains("register_account_obj_id")); //确认包含登记数据
+        assertEquals(true,response.contains("register_investor_subject_ref")); //确认包含登记数据
     }
 
     @Test

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.SDKADD;
+import static com.tjfintech.common.utils.UtilsClass.ccenvPull;
 import static com.tjfintech.common.utils.UtilsClassGD.*;
 
 @Slf4j
@@ -107,6 +108,7 @@ public  class GoGuDeng implements GuDeng {
         map.put("oldShareProperty", oldShareProperty);
         map.put("newShareProperty", newShareProperty);
         map.put("registerInformationList", registerInformationList);
+        map.put("updateTime",ts5);
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/change", map);
         log.info(result);

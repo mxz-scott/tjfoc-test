@@ -1756,14 +1756,15 @@ public class GDCommonFunc {
                 key = subject_investor_qualification_certifier_ref; tempStr = tempStr.replaceAll(key,key + ver[0]);
                 break;
             case "account":
-                key = account_subject_ref; tempStr = tempStr.replaceAll(key,key + ver[0]);
+                key = "account_subject_ref=" + account_subject_ref; tempStr = tempStr.replaceAll(key,key + ver[0]);
                 key = account_depository_ref; tempStr = tempStr.replaceAll(key,key + ver[1]);
-                key = account_associated_account_ref; tempStr = tempStr.replaceAll(key,key + ver[2]);
+                key = "account_associated_account_ref=" + account_associated_account_ref; tempStr = tempStr.replaceAll(key,key + ver[2]);
                 break;
-            case "accountSH":
-                key = account_subject_ref; tempStr = tempStr.replaceAll(key,key + ver[0]);
-                key = account_depository_ref; tempStr = tempStr.replaceAll(key,key + ver[1]);
-                break;
+//            case "accountAcc":
+//                key = account_subject_ref; tempStr = tempStr.replaceAll(key,key + ver[0]);
+//                key = account_depository_ref; tempStr = tempStr.replaceAll(key,key + ver[1]);
+//                key = "account_associated_account_ref=" + account_associated_account_ref ; tempStr = tempStr.replaceAll(key,key + ver[2]);
+//                break;
             case "product":
                 key = product_market_subject_ref; tempStr = tempStr.replaceAll(key,key + ver[0]);
                 key = product_issuer_subject_ref; tempStr = tempStr.replaceAll(key,key + ver[1]);
