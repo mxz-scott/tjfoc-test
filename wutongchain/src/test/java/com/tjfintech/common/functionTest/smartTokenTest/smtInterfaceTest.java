@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -57,7 +58,7 @@ public class smtInterfaceTest {
 
     }
 
-    @Test
+    @Before
     public void beforeConfig() throws Exception {
 
         //安装smart token定制化合约
@@ -79,8 +80,10 @@ public class smtInterfaceTest {
 
         log.info("查询数字资产余额");
         String queryBalance = st.SmartGetBalanceByAddr(ADDRESS1, "");
-        assertEquals(actualAmount1,JSONObject.fromObject(queryBalance).getJSONObject("data").getJSONObject("detail").getString(tokenType));
         assertEquals("200",JSONObject.fromObject(queryBalance).getString("state"));
+        assertThat(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType),containsString(actualAmount1));
+        assertEquals(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType),containsString("test"));
+        assertEquals(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType),containsString("true"));
 
     }
 

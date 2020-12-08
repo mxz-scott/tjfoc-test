@@ -25,7 +25,7 @@ public class GoSmartToken implements SmartToken {
                                      int maxLevel, List<Map> toList, String extend) {
 
         Map<String, Object> map = new HashMap<>();
-        map.put("ContractAddress", contractAddress);
+        map.put("contractAddress", contractAddress);
         map.put("tokenType", tokenType);
         if (!reissued.equals(null)) {
             map.put("reissued", reissued);
@@ -78,7 +78,7 @@ public class GoSmartToken implements SmartToken {
             PubkeysObjects.add(value);
         }
         map.put("pubkeys", PubkeysObjects);
-        map.put("MinSignatures", number);
+        map.put("minSignatures", number);
 
         String param = "";
         if (subLedger != "") param = param + "&ledger=" + subLedger;
@@ -138,15 +138,14 @@ public class GoSmartToken implements SmartToken {
         return "";
     }
 
+    //根据地址查询余额
     public String SmartGetBalanceByAddr(String addr, String tokenType) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("tokenType", tokenType);
-        map.put("address", addr);
 
-        String param = "";
+        String param = "address=" + addr;
+        if (tokenType != "") param = param + "&tokenType=" + tokenType;
         if (subLedger != "") param = param + "&ledger=" + subLedger;
 
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/balance?" + param, map);
+        String result = (GetTest.SendGetTojson(SDKADD + "/v2/tx/stoken/balance?" + param));
         log.info(result);
         return result;
     }
