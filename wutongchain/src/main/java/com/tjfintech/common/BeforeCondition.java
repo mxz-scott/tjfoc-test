@@ -33,7 +33,7 @@ public class BeforeCondition {
     Contract contract = testBuilder.getContract();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
-
+    GoSmartToken st = new GoSmartToken();
 
     //赋值权限999 区分是否主子链
     public void setPermission999() throws Exception {
@@ -268,6 +268,61 @@ public class BeforeCondition {
         IMPPUTIONADD = JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//45
     }
 
+
+    /**
+     * 创建多签地址 保存在数据库中
+     * 当数据库被清，库中没多签地址信息时候调用。
+     */
+    public void createSTAddresses() throws Exception {
+
+        int M = 1;
+        Map<String, Object> map = new HashMap<>();
+        map.put("1", PUBKEY1);
+        ADDRESS1 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");
+
+        map = new HashMap<>();
+        map.put("1", PUBKEY2);
+        ADDRESS2 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");
+
+
+        M = 3;
+        map = new HashMap<>();
+        map.put("1", PUBKEY1);
+        map.put("2", PUBKEY2);
+        map.put("3", PUBKEY3);
+        MULITADD1 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//123
+        map = new HashMap<>();
+        map.put("1", PUBKEY1);
+        map.put("2", PUBKEY2);
+        map.put("3", PUBKEY6);
+        MULITADD2 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//126
+        map = new HashMap<>();
+        map.put("1", PUBKEY1);
+        map.put("2", PUBKEY6);
+        map.put("3", PUBKEY7);
+        MULITADD3 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//167
+        M = 1;
+        map = new HashMap<>();
+        map.put("1", PUBKEY1);
+        map.put("2", PUBKEY2);
+        MULITADD4 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//12
+        map = new HashMap<>();
+        map.put("1", PUBKEY1);
+        map.put("2", PUBKEY3);
+        MULITADD5 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//13
+        map = new HashMap<>();
+        map.put("1", PUBKEY3);
+        map.put("2", PUBKEY4);
+        MULITADD6 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//34
+        map = new HashMap<>();
+        map.put("1", PUBKEY1);
+        map.put("2", PUBKEY6);
+        MULITADD7 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//16
+        map = new HashMap<>();
+        map.put("1", PUBKEY4);
+        map.put("2", PUBKEY5);
+        IMPPUTIONADD = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//45
+    }
 
     /**
      * 创建token 模块使用的单签以及多签地址

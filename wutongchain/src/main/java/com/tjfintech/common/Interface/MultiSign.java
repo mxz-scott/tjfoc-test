@@ -38,7 +38,7 @@ public interface MultiSign {
     String tokenstate(String TokenType);
     String getTotalbyDay(int starttime,int endtime);
     String getUTXODetail(long StartTime,long EndTime,String tokenType,int UTXOtype,String FromAddr,String ToAddr);
-    String getUTXODetail(long StartTime,long EndTime,String tokenType,int UTXOtype,String FromAddr,double ToAddr);
+    String getUTXODetail(long StartTime,long EndTime,String tokenTypeSmartGetBalanceByAddr,int UTXOtype,String FromAddr,double ToAddr);
     String getUTXODetail(long StartTime,long EndTime,String tokenType,String UTXOtype,String FromAddr,String ToAddr);
     String getUTXODetail();
 
@@ -52,17 +52,4 @@ public interface MultiSign {
     String RecycleLocalSign(String multiAddr,String pubKey,String tokenType,String amount);
     String RecyclesLocalSign(List<Map> tokenList);
 
-
-    //smart token接口
-    String SmartIssueTokenReq(String userContract, String tokenType, Boolean reissued, BigDecimal expiredDate, BigDecimal activeDate,
-                              double maxLevel, List<Map> toList, String extend);
-    String SmartIssueTokenApprove(String sigMsg,String sigCrypt,String pubKey);
-    String SmartTransfer(String Address,String prikey,String prikeyPwd,List<Map>tokenList,String data,String extendArgs);
-    String SmartRecyle(String Address,String prikey,String prikeyPwd,String tokenType ,String amount,String data);
-    String SmartSign(String Address,String prikey,String fromAddr ,List<Map>tokenList);
-
-    String SmartGetBalanceByAddr(String addr,String tokenType); //按地址查询余额
-    String SmartGetZeroBalance(String tokenType); //按地址查询余额
-    String SmartGetAssetsTotal(BigDecimal startTime,BigDecimal endTime,String tokenType);
-    String SmartGetOwnerAddrs(String tokenType);
 }

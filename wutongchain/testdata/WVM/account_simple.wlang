@@ -1,22 +1,29 @@
-contract Account {
-    
+contract STAccountAPI {
+
     //平台方账号
-    string Platform = "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAElXY3ATD6mPI3lK9uJpFMtuNmMf2p\n7Qy5V6RIm/Luxw/HhDzA3B/Fx6v39tnXI2YpedANmw7wlP0LyTvwDWoecg==\n-----END PUBLIC KEY-----\n"
-    
-    //核心企业账号   
-    string CoreEnterprise = "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAE//mJXr664mrguhkIe1VI/zNjzSgm\n1kAkeIMLSCNO7rvdt202+HtUTY+lkloW0dahfp7/Pirlk5wtr0k9UcZLUw==\n-----END PUBLIC KEY-----\n"
-   
+    string Platform = "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEX2csYuBLWNXG1LFsJF1mDx/Gqmba\nOmopoK3o4uwQAlJyguSfjtYU8/bxxNaEgxx1eQBNlu9vwlMGFO00E8+rSw==\n-----END PUBLIC KEY-----\n"
+
+    //核心企业账号
+    string CoreEnterprise = "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEeJTP95jKhtY5a4a4ddZDagU0Wbt8\naXvPCzL9BQaGF1/mGKunPYNzro8+Uy5RoEVyQEG4/oK7I53luzGqBHNi7g==\n-----END PUBLIC KEY-----\n"
+
     //发行地址信息
     struct Account {
-        int MinNum          //最小签名数h
-        uint64 Quota        //受信额度z
-        uint64 UsedQuota    //已用配额h
-        bool Recycle        //是否可以循环受信z
-        int64 EffectiveDate //生效日期时间戳h
-        int64 ExpiryDate    //授信有效期时间戳z
-        string Remark       //备注信息h
-        bool Cancel         //授信是否被取消z
-        string[] MemberList //发行参与方名称h
+        int MinNum          //最小签名数
+        uint64 Quota        //受信额度
+        uint64 UsedQuota    //已用配额
+        bool Recycle        //是否可以循环受信
+        int64 EffectiveDate //生效日期时间戳
+        int64 ExpiryDate    //授信有效期时间戳
+        string Remark       //备注信息
+        bool Cancel         //授信是否被取消
+        string[] MemberList //发行参与方名称
+    }
+
+    //资金方信息
+    struct Fund {
+        string CompanyID    //资金方ID
+        uint64 Quota        //受信额度
+        uint64 UsedQuota    //已用配额
     }
 
     //数字资产
@@ -32,16 +39,46 @@ contract Account {
 
     string accountKey
 
+    //初始化账户信息
     public string init(){
+        string tmp = Platform+CoreEnterprise
+        accountKey = hash(tmp)
+        string accountJson = db_get<string>(accountKey)
+        if(accountJson!=""){
+            print("账户已存在")
+            return "error"
+        }
+
+        Fund f1
+        f1.CompanyID = "001"
+        f1.Quota = 50000000000
+        string key = "f_"+f1.CompanyID
+        db_set(key,f1)
+
+        Fund f2
+        f2.CompanyID = "002"
+        f2.Quota = 1000000000
+        key = "f_"+f2.CompanyID
+        db_set(key,f2)
+
+        Fund f3
+        f3.CompanyID = "003"
+        f3.Quota = 1500000000
+        key = "f_"+f3.CompanyID
+        db_set(key,f3)
+
         Account account
         account.MinNum = 2
-        account.Quota = 50000000000
+        account.Quota = f3.Quota+f2.Quota+f1.Quota
+        account.UsedQuota= 0
         account.Recycle = true
-        string[]memberList = {"SSR"}
+        string[]memberList = {""}
         account.MemberList = memberList
         string json = obj_to_json(account)
-        return SetAccountInfo(json)
+        db_set(accountKey,json)
+        return "success"
     }
+
 
     //设置账户信息
     public string SetAccountInfo(string json){
@@ -63,16 +100,17 @@ contract Account {
     struct IssueArg {
         string ToAddress //一级供应商地址
         string Data      //扩展数据
+        string CompanyID //指定资金方的唯一标识
     }
     //发行数字资产之前的验证签名操作
     public string beforIssue(string pubkey,string tokenJsonTmp,string argsJson){
-       
-        //7.满足则返回收集到的签名和原文，不满足则返回相应提示
+         print("argsJson:"+argsJson)
         return "success"
     }
 
     //记录外带数据
     public string afterIssue(string pubkey,string tokenJsonTmp,string argsJson){
+      print("argsJson:"+argsJson)
         return "success"
     }
     //获取外带数据
@@ -83,17 +121,20 @@ contract Account {
 
     struct TransferArg {
         string ID           //融资编号
+        string Challenge    //解密标签
         string ContractAddr //资金方合约地址
         string Msg          //通知信息
     }
     //融资才需要的打款证明验证
     // public string beforTransfer(string ID,string contractAddr){
-    public string beforTransfer(string fromAddr,string toAddr,uint64 amount,string tokenJsonTmp,string argsJson ){
+    public string beforTransfer(string tokenJsonTmp,string argsJson ){
+         print("argsJson:"+argsJson)
         return "success"
         //转账自定义业务逻辑验证/通知
     }
 
-    public string afterTransfer(string fromAddr,string toAddr,uint64 amount,string tokenJsonTmp,string argsJson){
+    public string afterTransfer(string tokenJsonTmp,string argsJson){
+     print("argsJson:"+argsJson)
         return "success"
     }
 
@@ -101,27 +142,49 @@ contract Account {
         string ID           //兑付编号
         string ContractAddr //清分机构合约地址
         string Msg          //通知信息
+        string CompanyID    //指定资金方的唯一标识
     }
     //回收之前验证打款证明
-    public string beforRecycle(string fromAddr,uint64 amount,string tokenJsonTmp,string argsJson){
+    public string beforRecycle(string tokenJsonTmp,string argsJson){
+     print("argsJson:"+argsJson)
         return "success"
     }
 
     //回收之后验证
-    public string afterRecycle(string fromAddr,uint64 amount,string tokenJsonTmp,string argsJson){
+    public string afterRecycle(string tokenJsonTmp,string argsJson){
+    print("argsJson:"+argsJson)
         return "success"
     }
 
-    //修改账户合约受信额度
-    public string ChangeAccountQuota(uint64 quota,string sign){
-        string tmp = itoa(quota)
-        if(verify("sm2",Platform,tmp,sign)!=true){
-            return "you have no permission to change Account"
+    //转场前验证
+    public string beforExchange(string tokenJsonTmp,string argsJson){
+        print("argsJson:"+argsJson)
+        return "success"
+    }
+
+    //转场之后验证
+    public string afterExchange(string tokenJsonTmp,string txid){
+        print("txid:"+txid)
+        return "success"
+    }
+    //修改受信额度
+    public string ChangeAccountQuota(uint64 quota,string companyID){
+
+        Fund f
+        string key = "f_" + companyID
+        if(db_exist(key)!=true){
+            f.CompanyID = companyID
+        }else{
+            f = db_get<Fund>(key)
         }
-        
-        tmp = Platform+CoreEnterprise
+
+        f.Quota = quota
+        db_set(key,f)
+
+
+        string tmp = Platform+CoreEnterprise
         accountKey = hash(tmp)
-       
+
         string accountJson = db_get<string>(accountKey)
         Account acc = json_to_obj<Account>(accountJson)
         acc.Quota = quota
@@ -135,15 +198,106 @@ contract Account {
         return CoreEnterprise
     }
 
-    public string GetToAddr(string tokenType){
+    //获取平台公钥
+    public string GetPlatform(){
+        return Platform
+    }
+
+    public string GetToAddress(string tokenType){
         string addr=db_get<string>("addr_"+tokenType)
         return addr
     }
-    //融资试算
-    public double Test(double amount,double timeLimit){
-        double Num = amount*timeLimit
-        print(Num)
-        return Num
+    struct LockInfo{
+        string Proof
+        string Address
+        TokenTypeList[] TKList
+        int64 ExpireDate
     }
-    
+
+    struct TokenTypeList{
+        string NewFromSubType
+        string NewToSubType
+        string Address
+        string TokenType
+        string SubType
+        uint64 Amount
+        string ToAddr
+    }
+
+    //转让申请时，冻结资产
+    public string Apply(string json,string comments){
+        LockInfo lockInfo
+        lockInfo = json_to_obj<LockInfo>(json)
+
+        string proof = lockInfo.Proof
+        TokenTypeList[] TKList = lockInfo.TKList
+        string addr = lockInfo.Address
+        int loop = len(TKList)
+        for(int i = 0;i<loop;i++){
+            TokenTypeList tmp = TKList[i]
+            if(addr==""){
+                addr = tmp.Address
+            }
+
+            string tk = tmp.TokenType
+            string stype = tmp.SubType
+            uint64 amount = tmp.Amount
+
+            //获取对应资产的余额
+            uint64 balance = getAddressBalance(addr,tk,stype)
+            print(tmp)
+            print(balance)
+            print(amount)
+            if(balance<amount){
+                print("可使用余额不足")
+                return "error"
+            }
+            string key = "fr_"+addr+tk+stype
+            db_set(key,amount)
+        }
+        db_set(proof,json)
+        if(comments!=""){
+            event("apply",comments)
+        }
+        return "success"
+    }
+
+    //解冻资产
+    public string Challenge(string challenge,string comments){
+        string json = db_get<string>(challenge)
+        if(json == ""){
+            return "failed"
+        }else if (json == "success"){
+            print("不可反复解冻")
+            return "failed"
+        }
+        LockInfo lockInfo
+        lockInfo = json_to_obj<LockInfo>(json)
+
+        TokenTypeList[] TKList = lockInfo.TKList
+
+        int loop = len(TKList)
+        for(int i = 0;i<loop;i++){
+            TokenTypeList tmp = TKList[i]
+            string addr = tmp.Address
+            string tk = tmp.TokenType
+            string stype = tmp.SubType
+
+            uint64 amount = tmp.Amount
+            string key = "fr_"+addr+tk+stype
+            uint64 i = 0
+            db_set(key,i)
+        }
+        db_set(challenge,"success")
+        if(comments!=""){
+            event("topic",comments)
+        }
+        return "success"
+    }
+
+    //获取冻结的待转让数字资产
+    public string GetTransferList(string challenge){
+        string json = db_get<string>(challenge)
+        return json
+    }
 }
