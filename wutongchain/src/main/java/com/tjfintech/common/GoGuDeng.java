@@ -357,6 +357,7 @@ public  class GoGuDeng implements GuDeng {
     public String GDInfoPublish(Map infoDisclosure){
         Map<String, Object> map = new HashMap<>();
         map.put("infoDisclosure", infoDisclosure);
+        map.put("disclosureSubmitDate",ts7);
 
         String result = PostTest.postMethod(SDKADD + "/equity/infodisclosure/publish", map);
         log.info(result);
@@ -461,6 +462,7 @@ public  class GoGuDeng implements GuDeng {
     public String GDCapitalSettlement(Map balanceAccount){
         Map<String, Object> map = new HashMap<>();
         map.put("balanceAccount", balanceAccount);
+        map.put("settlementInformationMaintenanceTime", ts6);
 
         String result = PostTest.postMethod(SDKADD + "/equity/balance/count", map);
         log.info(result);
