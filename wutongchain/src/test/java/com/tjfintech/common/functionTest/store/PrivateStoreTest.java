@@ -65,8 +65,8 @@ public class PrivateStoreTest {
         JSONObject.fromObject(response2).getInt("state");
         JSONObject.fromObject(response2).getString("message");
 
-        commonFunc.verifyTxRawField(StoreHashPwd, "1", "0", "1");
-        commonFunc.verifyRawFieldMatch(StoreHashPwd);
+ //       commonFunc.verifyTxRawField(StoreHashPwd, "1", "0", "1");
+ //       commonFunc.verifyRawFieldMatch(StoreHashPwd);
 
         String response3= store.GetStorePostPwd(StoreHashPwd,PRIKEY6,PWD6);
         assertThat(response3, containsString("200"));
@@ -105,8 +105,8 @@ public class PrivateStoreTest {
         assertThat(response1,containsString("data"));
 
         commonFunc.verifyTxDetailField(StoreHashPwd,"store", "1", "0", "1");
-        commonFunc.verifyTxRawField(StoreHashPwd, "1", "0", "1");
-        commonFunc.verifyRawFieldMatch(StoreHashPwd);
+//        commonFunc.verifyTxRawField(StoreHashPwd, "1", "0", "1");
+   //     commonFunc.verifyRawFieldMatch(StoreHashPwd);
     }
 
     /**

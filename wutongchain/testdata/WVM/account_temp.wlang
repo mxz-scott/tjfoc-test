@@ -1,11 +1,7 @@
 contract AccountAPI {
     
     //平台方账号
-    string Platform = "-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAE9DB+/uzS93lLtnPjPnC7pbKSmhYP
-09r1lBZ8aTrrfU4kGZn7P+epeNsVLuhYdh2WbiTT7a67SoZgZ/hQhn2Ebg==
------END PUBLIC KEY-----
-"
+    string Platform = ""
     
     //核心企业账号   
     string CoreEnterprise = "CoreEnterprisePubkey"
