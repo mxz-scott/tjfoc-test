@@ -657,7 +657,14 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
 
     @Test
-    public void TC15_infodisclosurePublishAndGet() throws Exception {
+    public void TC15_type1_infodisclosurePublishAndGet() throws Exception {
+        infodisclosurePublishAndGetByType(1);
+
+
+    }
+
+    public void infodisclosurePublishAndGetByType(int type) throws Exception {
+        disclosureType = type;
         disclosureInfo = gdBF.init07PublishInfo();
         String response= gd.GDInfoPublish(disclosureInfo);
         net.sf.json.JSONObject jsonObject= net.sf.json.JSONObject.fromObject(response);

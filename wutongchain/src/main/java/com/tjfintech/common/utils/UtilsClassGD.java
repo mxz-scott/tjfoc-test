@@ -84,21 +84,44 @@ public class UtilsClassGD {
     public static String settleType = "settlement";
     public static String infoType = "infodisclosure";
 
-    public static String time1 = "2017/12/16 13:40:00";
-    public static String time2 = "2020/12/16 12:00:25";
-    public static String time3 = "2024/12/16 13:50:00";
-    public static String time4 = "2028/11/10 10:50:10";
+//    public static String time1 = "2017/12/16 13:40:00";
+//    public static String time2 = "2020/12/16 12:00:25";
+//    public static String time3 = "2024/12/16 13:50:00";
+//    public static String time4 = "2028/11/10 10:50:10";
+//
+//    public static String date1 = "2018/10/23";
+//    public static String date2 = "2019/12/21";
+//    public static String date3 = "2025/12/16";
+//    public static String date4 = "2029/11/10";
 
-    public static String date1 = "2018/10/23";
-    public static String date2 = "2019/12/21";
-    public static String date3 = "2025/12/16";
-    public static String date4 = "2029/11/10";
+    public static String time1 = "2017-12-16T13:40:00+08:00";
+    public static String time2 = "2020-12-16T12:00:25+08:00";
+    public static String time3 = "2024-12-16T13:50:00+08:00";
+    public static String time4 = "2028-11-10T10:50:10+08:00";
+
+    public static String date1 = "2018-10-23";
+    public static String date2 = "2019-12-21";
+    public static String date3 = "2025-12-16";
+    public static String date4 = "2029-11-10";
+
+    public static long ts1 = 1513374000;
+    public static long ts2 = 1608062425;
+    public static long ts3 = 1734299400;
+    public static long ts4 = 1857408610;
+    public static long ts5 = 1513374000;
+    public static long ts6 = 1513374000;
+    public static long ts7 = 1513374000;
+    public static long ts8 = 1513374000;
+
 
     public static String gdSchema = "数据对象Schema-v2.0.0-Alpha4.json" ;
     public static String gdTestData = "test.json";
     public static String chkSchemaToolName = "gojsonschema.exe";
     public static String dirSchemaData = System.getProperty("user.dir") + "/" + testDataPath + "schemavalidate/";
-    public static Boolean bChkHeader = false;
+    public static Boolean bChkHeader = true;
+
+    public static Integer disclosureType = 1;
+
     public static String minIOUser ="minioadmin";
     public static String minIOPwd ="Pass@7899";
     public static String minIOEP ="http://b2904236d6.zicp.vip:8098";

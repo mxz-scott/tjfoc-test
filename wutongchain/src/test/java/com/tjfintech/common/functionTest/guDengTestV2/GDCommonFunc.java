@@ -1651,42 +1651,63 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject objExpand = objInfo.getJSONObject("expand_information");
 
         Map getSubjectInfo = new HashMap();
+        String keyType = "";
 
         //信批基本信息
         key = "disclosure_subject_ref";                          getSubjectInfo.put(key, objDis.getString(key));
-        key = "disclosure_type";                                 getSubjectInfo.put(key, objDis.getString(key));
+        key = "disclosure_type";                                 getSubjectInfo.put(key, objDis.getString(key));keyType=objDis.getString(key);
         key = "disclosure_submit_type";                          getSubjectInfo.put(key, objDis.getString(key));
         key = "disclosure_referer_subject_ref";                  getSubjectInfo.put(key, objDis.getString(key));
         key = "disclosure_referer_name";                         getSubjectInfo.put(key, objDis.getString(key));
         key = "disclosure_submit_date";                          getSubjectInfo.put(key, objDis.getString(key));
         key = "disclosure_submit_description";                   getSubjectInfo.put(key, objDis.getString(key));
 
-        //拼组企业展示信息1
-        key = "enterprise_display_information";                  getSubjectInfo.put(key, objInfo.getString(key));
-
-        //拼组监管信息3
-        key = "regulatory_infomation";                           getSubjectInfo.put(key, objInfo.getString(key));
-
-        //拼组企业报告4
-        key = "enterprise_report";                               getSubjectInfo.put(key, objInfo.getString(key));
-
-        //拼组公告信息5
-        key = "disclosure_notice";                               getSubjectInfo.put(key, objInfo.getString(key));
-
-        //拼组重大事件信息6
-        key = "major_event_information";                         getSubjectInfo.put(key, objInfo.getString(key));
-
-        //拼组诚信档案信息7
-        key = "integrity_archives";                              getSubjectInfo.put(key, objInfo.getString(key));
-
-        //拼组财务信息8
-        key = "financial_information";                           getSubjectInfo.put(key, objInfo.getString(key));
-
-        //拼组企业经营信息9
-        key = "business_information";                            getSubjectInfo.put(key, objInfo.getString(key));
-
-        //拼组第三方拓展信息10
-        key = "expand_information";                              getSubjectInfo.put(key, objInfo.getString(key));
+        switch (keyType) {
+            case "1":
+                //拼组企业展示信息1
+                key = "enterprise_display_information";
+                getSubjectInfo.put(key, objInfo.getString(key));
+                break;
+            case "3":
+                //拼组监管信息3
+                key = "regulatory_infomation";
+                getSubjectInfo.put(key, objInfo.getString(key));
+                break;
+            case "4":
+                //拼组企业报告4
+                key = "enterprise_report";
+                getSubjectInfo.put(key, objInfo.getString(key));
+                break;
+            case "5":
+                //拼组公告信息5
+                key = "disclosure_notice";
+                getSubjectInfo.put(key, objInfo.getString(key));
+                break;
+            case "6":
+                //拼组重大事件信息6
+                key = "major_event_information";
+                getSubjectInfo.put(key, objInfo.getString(key));
+                break;
+            case "7":
+                //拼组诚信档案信息7
+                key = "integrity_archives";
+                getSubjectInfo.put(key, objInfo.getString(key));
+                break;
+            case "8":
+                //拼组财务信息8
+                key = "financial_information";
+                getSubjectInfo.put(key, objInfo.getString(key));
+                break;
+            case "9":
+                //拼组企业经营信息9
+                key = "business_information";
+                getSubjectInfo.put(key, objInfo.getString(key));
+                break;
+            case "10":
+                //拼组第三方拓展信息10
+                key = "expand_information";
+                getSubjectInfo.put(key, objInfo.getString(key));
+        }
 
         if(bChkHeader) key = "content";getSubjectInfo.put(key,jobjOK.getJSONObject("header").getString(key));
 
