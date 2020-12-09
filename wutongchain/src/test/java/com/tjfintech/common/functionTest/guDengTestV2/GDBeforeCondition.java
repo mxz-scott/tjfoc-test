@@ -179,6 +179,8 @@ public class GDBeforeCondition {
         mapAccInfo.put("keyID", keyID);
         mapAccInfo.put("accout", addr);
         mapAccInfo.put("txId", txId);
+        mapAccInfo.put("shareholderNo", shareHolderNo);
+        mapAccInfo.put("fundNo", fundNo);
         mapAccInfo.put("response", response);
 
         mapAccAddr.put(addr, clientNo);
@@ -192,8 +194,10 @@ public class GDBeforeCondition {
         gd.GDEquitySystemInit(gdContractAddress, gdPlatfromKeyID);
 
         //为缩短初始化时间 判断对象标识是否存在 存在则不再挂牌 否则执行
+
 //        if (!JSONObject.fromObject(gd.GDObjectQueryByVer(subject_investor_qualification_certifier_ref, -1)).getString("state").equals("200")){
 //            initCommonRefSubAndReg();                           //初始化监管引用数据做挂牌企业登记操作
+//        updateCommonRefSubAndReg();
 //        }
 
         log.info("初始化监管相关数据结构");

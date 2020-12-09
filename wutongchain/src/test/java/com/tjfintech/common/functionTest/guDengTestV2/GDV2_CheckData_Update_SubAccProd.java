@@ -64,7 +64,7 @@ public class GDV2_CheckData_Update_SubAccProd {
 
 
     @Test
-    public void TC20_allUpdateSubjectInfo_Enterprise()throws Exception{
+    public void TC20_allUpdateSubjectInfo_Enterprise()throws Exception {
         gdEquityCode = "update" + Random(12);
         //挂牌企业登记
         long shareTotals = 1000000;
@@ -72,27 +72,27 @@ public class GDV2_CheckData_Update_SubAccProd {
         Map testSub = gdBF.init01EnterpriseSubjectInfo();
         Map eqProdInfo = gdBF.init03EquityProductInfo();
 
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,testSub,
-                eqProdInfo,null,null);
-        JSONObject jsonObject=JSONObject.fromObject(response);
+        String response = gd.GDEnterpriseResister(gdContractAddress, gdEquityCode, shareTotals, testSub,
+                eqProdInfo, null, null);
+        JSONObject jsonObject = JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
         //查询挂牌企业主体数据
-        for(int i = 0;i<20;i++) {
-            response = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-            if(JSONObject.fromObject(response).getString("state").equals("200"))
+        for (int i = 0; i < 20; i++) {
+            response = gd.GDMainSubjectQuery(gdContractAddress, gdCompanyID);
+            if (JSONObject.fromObject(response).getString("state").equals("200"))
                 break;
             sleepAndSaveInfo(100);
         }
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-        Map mapSubject = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(response).getString("data"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        Map mapSubject = (Map) com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(response).getString("data"));
 
         Map<String, String> testMap1 = new TreeMap<String, String>(testSub);
         Map<String, String> testMap2 = new TreeMap<String, String>(mapSubject);
-        assertEquals(replaceCertain(testMap1.toString()),replaceCertain(testMap2.toString()));
+        assertEquals(replaceCertain(testMap1.toString()), replaceCertain(testMap2.toString()));
 
         //更新主体信息数据 全部数据
         Map mapTemp = new HashMap();
@@ -108,7 +108,9 @@ public class GDV2_CheckData_Update_SubAccProd {
         //主体基本信息 主体资质信息 资质信息
         mapSQI.put("subject_qualification_category", 1);
         mapSQI.put("subject_market_roles_type", 1);
-        List<Integer> type = new ArrayList<>();  type.add(0);  type.add(1);
+        List<Integer> type = new ArrayList<>();
+        type.add(0);
+        type.add(1);
         mapSQI.put("subject_intermediary_qualification", type);
         mapSQI.put("subject_financial_qualification_type", 1);
 
@@ -175,11 +177,11 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         Map mapCertDoc = new HashMap();
         List<Map> listCertDoc = new ArrayList<>();
-        mapCertDoc.put("type",1);
-        mapCertDoc.put("code","1233333333");
+        mapCertDoc.put("type", 1);
+        mapCertDoc.put("code", "1233333333");
         listCertDoc.add(mapCertDoc);
 
-        mapTemp.put("subject_document_information",listCertDoc);
+        mapTemp.put("subject_document_information", listCertDoc);
         mapTemp.put("subject_registry_date", date1);
         mapTemp.put("subject_business_license", getListFileObj());
         mapTemp.put("subject_business_scope", "经营范围CHARACTER2");
@@ -217,7 +219,9 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapTemp.put("subject_company_status_windingup", "吊销原因CHARACTER3");
         mapTemp.put("subject_company_status_windingup_date", date3);
         List<String> name = new ArrayList<>();
-        name.add("曾用名a2");        name.add("曾用名b2");        name.add("曾用名c2");
+        name.add("曾用名a2");
+        name.add("曾用名b2");
+        name.add("曾用名c2");
         mapTemp.put("subject_name_used_before", name);
         mapTemp.put("subject_personnel_size", "人员规模CHARACTER2");
         //-----------------机构主体信息---------------//
@@ -246,15 +250,15 @@ public class GDV2_CheckData_Update_SubAccProd {
         //-----------------主要人员信息---------------//
 
         //执行update操作
-        String resp2 = gd.GDUpdateSubjectInfo(gdContractAddress,0,mapTemp);
+        String resp2 = gd.GDUpdateSubjectInfo(gdContractAddress, 0, mapTemp);
         txId = JSONObject.fromObject(resp2).getJSONObject("data").getString("txId");
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
         sleepAndSaveInfo(2000);
 
-        response = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        Map mapTest = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(response).getString("data"));
+        response = gd.GDMainSubjectQuery(gdContractAddress, gdCompanyID);
+        Map mapTest = (Map) com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(response).getString("data"));
 
         Map<String, String> testMap3 = new TreeMap<String, String>(mapTemp);
         Map<String, String> testMap4 = new TreeMap<String, String>(mapTest);
@@ -264,19 +268,19 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //获取监管数据存证hash
         String jgType = subjectType;
-        String SubjectObjectTxId = gdCF.getJGStoreHash2(txId,jgType,1);
+        String SubjectObjectTxId = gdCF.getJGStoreHash2(txId, jgType, 1);
 
         Map getSubInfo = gdCF.contructEnterpriseSubInfo(SubjectObjectTxId);
 
-        if(bChkHeader) {
-            String timeStampSub = gdCF.getTimeStampFromMap(getSubInfo, "subject_create_time");
-            mapTemp.put("content",
-                    gdCF.constructContentMap(subjectType,gdCompanyID,"1","create",
-                            timeStampSub));
-        }
+
+        String timeStampSub = gdCF.getTimeStampFromMap(getSubInfo, "subject_create_time");
+        mapTemp.put("content",
+                gdCF.constructContentMap(subjectType, gdCompanyID, "1", "create",
+                        timeStampSub));
+
 
         log.info("检查主体存证信息内容与传入一致\n" + mapTemp.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(mapTemp.toString()),replaceCertain(getSubInfo.toString()));
+        assertEquals(replaceCertain(mapTemp.toString()), replaceCertain(getSubInfo.toString()));
 
     }
 
