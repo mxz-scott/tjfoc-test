@@ -16,8 +16,8 @@ public class UtilsClassGD {
 //    public static String gdContractAddress = "faa54ef5e71e8f69cb30af684ae9f145b5c099ed4253a49fc1b144db1fe27f3c";
 //    public static String gdPlatfromKeyID = "btguv5bsnk7r259qh85g";
     //10.1.3.161:7779
-    public static String gdContractAddress = "018a976954474678a3a100d33200b7f9fd1b34a60118c4cb13cfd79f6f324b5d";
-    public static String gdPlatfromKeyID = "bv2q0152uehbsbgg46p0";
+//    public static String gdContractAddress = "018a976954474678a3a100d33200b7f9fd1b34a60118c4cb13cfd79f6f324b5d";
+//    public static String gdPlatfromKeyID = "bv2q0152uehbsbgg46p0";
     //股登164环境
 //    public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
 //    public static String gdPlatfromKeyID = "bu1qdg1pgfltc7no3hp0";
@@ -183,49 +183,50 @@ public class UtilsClassGD {
         }
         return refInfoArray;
     }
+    public static String commNo = "002"; //存oss后会导致 db删除后挂牌会挂不上
     //主体
-    public static String subject_investor_qualification_certifier_ref = "SIQCR001";// + UtilsClass.Random(8);
+    public static String subject_investor_qualification_certifier_ref = "SIQCR" + commNo;// + UtilsClass.Random(8);
     //账户
-    public static String account_subject_ref = "ASR001";// + UtilsClass.Random(8);
-    public static String account_depository_ref = "ADR001";// + UtilsClass.Random(8);
-    public static String account_associated_account_ref = "AAAR001";// + UtilsClass.Random(8);
+    public static String account_subject_ref = "ASR" + commNo;// + UtilsClass.Random(8);
+    public static String account_depository_ref = "ADR" + commNo;// + UtilsClass.Random(8);
+    public static String account_associated_account_ref = "AAAR" + commNo;// + UtilsClass.Random(8);
     //产品
-    public static String product_market_subject_ref = "PMSR001";// + UtilsClass.Random(8);
-    public static String product_issuer_subject_ref = "PISR001";// + UtilsClass.Random(8);
-    public static String service_provider_subject_ref = "SPSR001";// + UtilsClass.Random(8);
-    public static String product_conversion_price_ref = "PCPR001";// + UtilsClass.Random(8);
+    public static String product_market_subject_ref = "PMSR" + commNo;// + UtilsClass.Random(8);
+    public static String product_issuer_subject_ref = "PISR" + commNo;// + UtilsClass.Random(8);
+    public static String service_provider_subject_ref = "SPSR" + commNo;// + UtilsClass.Random(8);
+    public static String product_conversion_price_ref = "PCPR" + commNo;// + UtilsClass.Random(8);
     //交易报告
-    public static String transaction_custody_product_ref = "TCPR001";// + UtilsClass.Random(8);
-    public static String transaction_product_issuer_ref = "TPIR001";// + UtilsClass.Random(8);
-    public static String transaction_issuer_ref = "TIssR001";// + UtilsClass.Random(8);
-    public static String transaction_investor_ref = "TIR001";// + UtilsClass.Random(8);
-    public static String transaction_investor_original_ref = "TIOR001";// + UtilsClass.Random(8);
-    public static String transaction_investor_counterparty_ref = "TICR001";// + UtilsClass.Random(8);
-    public static String transaction_intermediary_subject_ref = "TISR001";// + UtilsClass.Random(8);
+    public static String transaction_custody_product_ref = "TCPR" + commNo;// + UtilsClass.Random(8);
+    public static String transaction_product_issuer_ref = "TPIR" + commNo;// + UtilsClass.Random(8);
+    public static String transaction_issuer_ref = "TIssR" + commNo;// + UtilsClass.Random(8);
+    public static String transaction_investor_ref = "TIR" + commNo;// + UtilsClass.Random(8);
+    public static String transaction_investor_original_ref = "TIOR" + commNo;// + UtilsClass.Random(8);
+    public static String transaction_investor_counterparty_ref = "TICR" + commNo;// + UtilsClass.Random(8);
+    public static String transaction_intermediary_subject_ref = "TISR" + commNo;// + UtilsClass.Random(8);
     //登记
-    public static String register_subject_ref = "RSR001";// + UtilsClass.Random(8);
-    public static String register_subject_account_ref = "RSAR001";// + UtilsClass.Random(8);
-    public static String register_transaction_ref = "RTR001";// + UtilsClass.Random(8);
-    public static String register_product_ref = "RPR001";// + UtilsClass.Random(8);
-    public static String register_right_recognition_subject_ref = "RRRSR001";// + UtilsClass.Random(8);
-    public static String register_right_recognition_agent_subject_ref = "RRRASR001";// + UtilsClass.Random(8);
-    public static String roll_register_subject_ref = "RRSR001";// + UtilsClass.Random(8);
-    public static String roll_register_product_ref = "RRPR001";// + UtilsClass.Random(8);
-    public static String register_equity_subject_ref = "RESR001";// + UtilsClass.Random(8);
-    public static String register_debt_holder_ref = "RDHR001";// + UtilsClass.Random(8);
-    public static String register_investor_subject_ref = "RISR001";// + UtilsClass.Random(8);
+    public static String register_subject_ref = "RSR" + commNo;// + UtilsClass.Random(8);
+    public static String register_subject_account_ref = "RSAR" + commNo;// + UtilsClass.Random(8);
+    public static String register_transaction_ref = "RTR" + commNo;// + UtilsClass.Random(8);
+    public static String register_product_ref = "RPR" + commNo;// + UtilsClass.Random(8);
+    public static String register_right_recognition_subject_ref = "RRRSR" + commNo;// + UtilsClass.Random(8);
+    public static String register_right_recognition_agent_subject_ref = "RRRASR" + commNo;// + UtilsClass.Random(8);
+    public static String roll_register_subject_ref = "RRSR" + commNo;// + UtilsClass.Random(8);
+    public static String roll_register_product_ref = "RRPR" + commNo;// + UtilsClass.Random(8);
+    public static String register_equity_subject_ref = "RESR" + commNo;// + UtilsClass.Random(8);
+    public static String register_debt_holder_ref = "RDHR" + commNo;// + UtilsClass.Random(8);
+    public static String register_investor_subject_ref = "RISR" + commNo;// + UtilsClass.Random(8);
     //资金结算
-    public static String settlement_subject_ref = "SSR001";// + UtilsClass.Random(8);
-    public static String settlement_product_ref = "SPR001";// + UtilsClass.Random(8);
-    public static String settlement_transaction_ref = "STR001";// + UtilsClass.Random(8);
-    public static String settlement_out_account_object_ref = "SOAOR001";// + UtilsClass.Random(8);
-    public static String settlement_in_account_object_ref = "SIAOR001";// + UtilsClass.Random(8);
+    public static String settlement_subject_ref = "SSR" + commNo;// + UtilsClass.Random(8);
+    public static String settlement_product_ref = "SPR" + commNo;// + UtilsClass.Random(8);
+    public static String settlement_transaction_ref = "STR" + commNo;// + UtilsClass.Random(8);
+    public static String settlement_out_account_object_ref = "SOAOR" + commNo;// + UtilsClass.Random(8);
+    public static String settlement_in_account_object_ref = "SIAOR" + commNo;// + UtilsClass.Random(8);
     //信披
-    public static String disclosure_subject_ref = "DSR001";// + UtilsClass.Random(8);
-    public static String disclosure_referer_subject_ref = "DRSR001";// + UtilsClass.Random(8);
-    public static String disclosure_display_platform_ref = "DDPR001";// + UtilsClass.Random(8);
-    public static String disclosure_identifier_ref = "DIR001";// + UtilsClass.Random(8);
-    public static String disclosure_auditor_ref = "DAR001";// + UtilsClass.Random(8);
+    public static String disclosure_subject_ref = "DSR" + commNo;// + UtilsClass.Random(8);
+    public static String disclosure_referer_subject_ref = "DRSR" + commNo;// + UtilsClass.Random(8);
+    public static String disclosure_display_platform_ref = "DDPR" + commNo;// + UtilsClass.Random(8);
+    public static String disclosure_identifier_ref = "DIR" + commNo;// + UtilsClass.Random(8);
+    public static String disclosure_auditor_ref = "DAR" + commNo;// + UtilsClass.Random(8);
 
     public static Map fileObj = new HashMap();
     public static List<Map> listFileObj = new ArrayList<>();

@@ -1385,10 +1385,32 @@ public class GDBeforeCondition {
             gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,mapTemp,null,null,null);
         }
 
+//        for (int i=0;i<refDataArray.length;i++){
+//            String response = gd.GDMainSubjectQuery(gdContractAddress, refDataArray[i]);
+//            assertEquals(true,response.contains(refDataArray[i]));
+//        }
+    }
+
+    public void updateCommonRefSubAndReg() {
+
+        log.info("初始化监管引用相关数据结构");
+//        resetRefObjectId();
+        Map mapTemp = init01EnterpriseSubjectInfo();
+        String refDataArray[]=refData();
+
         for (int i=0;i<refDataArray.length;i++){
-            String response = gd.GDMainSubjectQuery(gdContractAddress, refDataArray[i]);
-            assertEquals(true,response.contains(refDataArray[i]));
+            mapTemp.put("subject_object_id",refDataArray[i]);
+//            mapTemp.remove("subject_qualification_information");
+            ArrayList aSqi = new ArrayList();
+            mapTemp.put("subject_qualification_information",aSqi);
+            log.info(mapTemp.toString());
+            gd.GDUpdateSubjectInfo(gdContractAddress,0,mapTemp);
         }
+
+//        for (int i=0;i<refDataArray.length;i++){
+//            String response = gd.GDMainSubjectQuery(gdContractAddress, refDataArray[i]);
+//            assertEquals(true,response.contains(refDataArray[i]));
+//        }
     }
 
     public void resetRefObjectId(){
