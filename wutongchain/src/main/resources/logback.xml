@@ -1,0 +1,20 @@
+
+<configuration debug="false">
+    <!--以下三行一定注释掉，否则还会打印部分debug日志，o.apache.commons.httpclient.HttpClient-->
+    <!--<logger name="org.apache" level="INFO" />-->
+    <!--<logger name="org.apache.http.wire" level="DEBUG" />-->
+    <!--<logger name="org.apache.http.header" level="INFO" />-->
+
+    <property name="CONSOLE_LOG_PATTERN" value="%date{yyyy-MM-dd HH:mm:ss.SSS}  : %msg%n"/>
+    <!-- 日志输出编码 -->
+    <Encoding>UTF-8</Encoding>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
