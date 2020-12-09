@@ -405,29 +405,6 @@ public  class GoGuDeng implements GuDeng {
         return result;
     }
 
-//    /***
-//     * 场内转板接口
-//     * @param platformKeyId
-//     * @param companyId
-//     * @param oldEquityCode
-//     * @param newEquityCode
-//     * @param registerInformation
-//     * @return
-//     */
-//    public String GDShareChangeBoard(String platformKeyId, String companyId, String oldEquityCode, String newEquityCode,Map registerInformation, Map equityProductInfo,Map bondProductInfo){
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("platformKeyId", platformKeyId);
-//        map.put("companyId", companyId);
-//        map.put("oldEquityCode", oldEquityCode);
-//        map.put("newEquityCode", newEquityCode);
-//        map.put("registerInformation", registerInformation);
-//        map.put("equityProductInfo", equityProductInfo);
-//        map.put("bondProductInfo", bondProductInfo);
-//
-//        String result = PostTest.postMethod(SDKADD + "/equity/share/changeboard", map);
-//        log.info(result);
-//        return result;
-//    }
 
     /***
      * 场内转板接口
