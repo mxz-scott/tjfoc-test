@@ -68,7 +68,7 @@ public class smtInterfaceTest {
         double timeStampNow = System.currentTimeMillis();
         BigDecimal deadline = new BigDecimal(timeStampNow + 12356789);
 
-        List<Map>list = utilsClass.smartConstuctIssueToList(ADDRESS1, "test", actualAmount1);
+        List<Map>list = utilsClass.smartConstuctIssueToList(ADDRESS1,  actualAmount1);
 
         log.info("发行数字资产");
         tokenType = "soloIntf-"+UtilsClass.Random(6);
