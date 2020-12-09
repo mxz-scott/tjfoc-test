@@ -214,10 +214,14 @@ public class GDCommonFunc {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static List<Map> gdConstructShareList(String address, double amount, int shareProperty){
+        String regObjId = mapAccAddr.get(address) + Random(6);
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
         tempReg.put("register_account_obj_id",mapAccAddr.get(address));
         tempReg.put("register_nature_of_shares",shareProperty);
+        tempReg.put("register_registration_object_id",regObjId);
+
+        mapAddrRegObjId.put(address,regObjId);//方便后面测试验证
 
 //        Map tempTxInfo = gdbf.init04TxInfo();
 //        tempTxInfo.put("transaction_original_owner_subject_ref",mapAccAddr.get(address));
@@ -235,10 +239,14 @@ public class GDCommonFunc {
     }
 
     public static List<Map> gdConstructShareList(String address, double amount, int shareProperty,List<Map> list){
+        String regObjId = mapAccAddr.get(address) + Random(6);
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
         tempReg.put("register_account_obj_id",mapAccAddr.get(address));
         tempReg.put("register_nature_of_shares",shareProperty);
+        tempReg.put("register_registration_object_id",regObjId);
+
+        mapAddrRegObjId.put(address,regObjId);//方便后面测试验证
 
 //        Map tempTxInfo = gdbf.init04TxInfo();
 //        tempTxInfo.put("transaction_original_owner_subject_ref",mapAccAddr.get(address));

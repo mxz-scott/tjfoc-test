@@ -48,6 +48,7 @@ public class UtilsClassGD {
                          gdAccountKeyID6,gdAccountKeyID7,gdAccountKeyID8,gdAccountKeyID9,gdAccountKeyID10;
 
     public static Map mapAccAddr = new HashMap<>(); //存放地址和客户号（账户对象标识 主体标识）
+    public static Map mapAddrRegObjId = new HashMap<>(); //存放地址和登记主体id
 
     public static Map registerInfo = new HashMap();//05登记 //发行 股份性质变更 过户转让 股份增发
     public static Map txInformation = new HashMap();//04交易报告  //过户转让

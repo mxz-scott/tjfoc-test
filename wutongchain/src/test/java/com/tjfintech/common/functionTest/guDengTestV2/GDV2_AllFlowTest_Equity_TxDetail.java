@@ -131,7 +131,7 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
     @Test
     public void TC06_shareIssue() throws Exception {
 
-        registerInfo.put("register_registration_serial_number","issue000001");
+        registerInfo.put("register_registration_serial_number","issue000001"+Random(3));
         List<Map> shareList = gdConstructShareList(gdAccount1,5000,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,5000,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,5000,0, shareList2);
@@ -184,10 +184,20 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         long changeAmount = 500;
         int oldProperty = 0;
         int newProperty = 1;
-        registerInfo.put("register_registration_serial_number","ChangeProperty000001");
+        Map testReg1 = gdBF.init05RegInfo();
+        Map testReg2 = gdBF.init05RegInfo();
+        String regObjId1 = mapAccAddr.get(address) + "CProp1" + Random(6);
+        String regObjId2 = mapAccAddr.get(address) + "CProp2" + Random(6);
+        testReg1.put("register_registration_serial_number","ChangeProperty000001");
+        testReg1.put("register_account_obj_id",mapAccAddr.get(address));
+        testReg1.put("register_registration_object_id",regObjId1);
+
+        testReg2.put("register_registration_serial_number","ChangeProperty000001");
+        testReg2.put("register_account_obj_id",mapAccAddr.get(address));
+        testReg2.put("register_registration_object_id",regObjId2);
         List<Map> regListInfo = new ArrayList<>();
-        regListInfo.add(registerInfo);
-        regListInfo.add(registerInfo);
+        regListInfo.add(testReg1);
+        regListInfo.add(testReg2);
 
         String response= gd.GDShareChangeProperty(gdPlatfromKeyID,address,eqCode,changeAmount,oldProperty,newProperty,regListInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -208,7 +218,7 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
                 + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"500\",\"subType\":\"0\",\"newSubType\":\"1\"}"));
         assertEquals(true,response.contains("{\"from\":\"" + address + "\",\"to\":\"" + address
                 + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"4500\",\"subType\":\"0\"}"));
-        assertEquals(true,response.contains("register_investor_subject_ref")); //确认包含登记数据
+//        assertEquals(false,response.contains("register_investor_subject_ref")); //确认不包含登记数据
     }
 
     @Test
@@ -220,11 +230,25 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        registerInfo.put("register_registration_serial_number","transfer000001");
+
+        Map testReg1 = gdBF.init05RegInfo();
+        Map testReg2 = gdBF.init05RegInfo();
+        String regObjId1 = mapAccAddr.get(fromAddr) + "Trf1" + Random(6);
+        String regObjId2 = mapAccAddr.get(toAddr) + "Trf2" + Random(6);
+        testReg1.put("register_registration_serial_number","transfer000001");
+        testReg1.put("register_account_obj_id",mapAccAddr.get(fromAddr));
+        testReg1.put("register_registration_object_id",regObjId1);
+
+        testReg2.put("register_registration_serial_number","transfer000001");
+        testReg2.put("register_account_obj_id",mapAccAddr.get(toAddr));
+        testReg2.put("register_registration_object_id",regObjId2);
+
+        txInformation.put("transaction_object_id",mapAccAddr.get(toAddr) + "TrfTx" + Random(6));
+
         List<Map> regInfoList = new ArrayList<>();
-        regInfoList.add(registerInfo);
-        regInfoList.add(registerInfo);
-        String response= gd.GDShareTransfer(keyId,fromAddr,amount,toAddr,shareProperty,eqCode,txInformation,registerInfo,registerInfo);
+        regInfoList.add(testReg1);
+        regInfoList.add(testReg2);
+        String response= gd.GDShareTransfer(keyId,fromAddr,amount,toAddr,shareProperty,eqCode,txInformation,testReg1,testReg2);
 
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
@@ -311,9 +335,13 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         String reason = "司法冻结";
         String cutoffDate = "2022-09-30";
 
-        registerInfo.put("register_registration_serial_number","lock" + bizNo);
+        Map testReg1 = gdBF.init05RegInfo();
+        String regObjId1 = mapAccAddr.get(address) + "lock" + Random(6);
+        testReg1.put("register_registration_serial_number","lock" + bizNo);
+        testReg1.put("register_account_obj_id",mapAccAddr.get(address));
+        testReg1.put("register_registration_object_id",regObjId1);
 
-        String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,registerInfo);
+        String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,testReg1);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -348,14 +376,18 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
     @Test
     public void TC11_shareUnlock() throws Exception {
         sleepAndSaveInfo(3000);
-
+        String address = gdAccount1; //需要和冻结对应
         String bizNo = bizNoTest;
         String eqCode = gdEquityCode;
         long amount = 500;
 
-        registerInfo.put("register_registration_serial_number","unlock" + bizNo);
+        Map testReg1 = gdBF.init05RegInfo();
+        String regObjId1 = mapAccAddr.get(address) + "unlock" + Random(6);
+        testReg1.put("register_registration_serial_number","unlock" + bizNo);
+        testReg1.put("register_account_obj_id",mapAccAddr.get(address));
+        testReg1.put("register_registration_object_id",regObjId1);
 
-        String response= gd.GDShareUnlock(bizNo,eqCode,amount,registerInfo);
+        String response= gd.GDShareUnlock(bizNo,eqCode,amount,testReg1);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -518,7 +550,7 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         assertEquals(true,response.contains("{\"from\":\"" + gdAccount4 + "\",\"to\":\"" + gdAccount4 +
                 "\",\"tokenType\":\"" + oldEquityCode + "\",\"newTokenType\":\"" + newEquityCode + "\",\"amount\":\"1000\",\"subType\":\"1\"}"));
 
-        assertEquals(true,response.contains("register_account_obj_id"));
+//        assertEquals(false,response.contains("register_account_obj_id"));//不应该包含监管数据信息
 
     }
 

@@ -75,7 +75,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
     @Test
     public void TC06_shareIssue() throws Exception {
         log.info(registerInfo.toString());
-
+        mapAddrRegObjId.clear(); //先清空map 这样后面map中拿到的就是此次发行的登记对象标识
         regNo = "Eq" + "issue" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
         registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
 
@@ -100,30 +100,55 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
 
         log.info("================================检查存证数据格式化《开始》================================");
-        //获取监管数据存证hash
-        String storeId = gdCF.getJGStoreHash(txId,1);
-        store.GetTxDetail(storeId);
 
+        //定义相关对象标识版本变量
+        String regRSRefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
+        String regRSARefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
+        String regRTRefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
+        String regRPRefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
+        String regRRRSRefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
+        String regRRRASRefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
+        String regRPRRefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
+        String regRESRefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
+        String regRDHRefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
+        String regRISRefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
+
+        Map uriInfo = gdCF.getJGURIStoreHash(txId,conJGFileName(mapAddrRegObjId.get(gdAccount1).toString(),"0"),1);
 
         //遍历检查所有账户登记及交易存证信息
         for(int k = 0 ;k < dataShareList.size(); k++) {
             String tempAddr = JSONObject.fromObject(dataShareList.get(k)).getString("address");
-            String tempObjId = mapAccAddr.get(tempAddr).toString();
+            String tempObjId = mapAddrRegObjId.get(tempAddr).toString();
+            String regVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
 
-            log.info("检查发行存证登记格式化及信息内容与传入一致:" + tempObjId);
-            registerInfo.put("register_account_obj_id",tempObjId);
+            //获取链上mini url的存证信息 并检查是否包含uri信息 每个登记都是新的 则都是0
+            String regfileName = conJGFileName(tempObjId,regVer);
+            String chkRegURI = minIOEP + "/" + jgBucket + "/" + regfileName;
+            assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI));
+//        assertEquals(false,uriInfo.get("storeData").toString().contains("meta"));//确认meta信息移除
+
+            //直接从minio上获取报送数据文件信息
+            Map getRegInfo = gdCF.constructJGDataFromStr(regfileName,regType,"");
+
+            Map regInfoInput = gdBF.init05RegInfo();
+            regInfoInput.put("content",gdCF.constructContentMap(regType,tempObjId,regVer,"create",String.valueOf(ts5)));
+
+
+            //需要将比较的对象标识增加版本号信息
+            String[] verForReg = new String[]{"/" + regRSRefVer,"/" + regRSARefVer,"/" + regRTRefVer
+                    ,"/" + regRPRefVer,"/" + regRRRSRefVer,"/" + regRRRASRefVer,"/" + regRPRRefVer
+                    ,"/" + regRESRefVer,"/" + regRDHRefVer,"/" + regRISRefVer};
 
 //            registerInfo.put("register_rights_change_amount", issueAmount);     //变动额修改为单个账户发行数量
 //            registerInfo.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
 //            registerInfo.put("register_available_balance", issueAmount);   //当前当前可用余额修改为当前实际可用余额
 //            registerInfo.put("register_creditor_subscription_count", issueAmount);   //当前认购数量修改为当前实际余额
 //            registerInfo.put("register_rights_frozen_change_amount", 0);   //冻结变动额修改为当前实际冻结变更额
-            log.info(gdCF.contructRegisterInfo(storeId, 4,tempObjId).toString().replaceAll("\"", ""));
-            log.info(registerInfo.toString());
-            assertEquals(registerInfo.toString(), gdCF.contructRegisterInfo(storeId, 4,tempObjId).toString().replaceAll("\"", ""));
 
+            log.info("检查主体存证信息内容与传入一致\n" + regInfoInput.toString() + "\n" + getRegInfo.toString());
+            assertEquals(replaceCertain(gdCF.matchRefMapCertVer(regInfoInput,subjectType,verForReg)),replaceCertain(getRegInfo.toString()));
 //            log.info("检查发行不包送交易报告数据");
-            assertEquals("检查发行不包送交易报告数据",false,store.GetTxDetail(storeId).contains("\"type\":\"交易报告\""));
+//            assertEquals("检查发行不包送交易报告数据",false,store.GetTxDetail(storeId).contains("\"type\":\"交易报告\""));
 
         }
         log.info("================================检查存证数据格式化《结束》================================");
@@ -194,29 +219,29 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
         int oldProperty = 0;
         int newProperty = 1;
-        Map tempReg1 = new HashMap();
-        Map tempReg2 = new HashMap();
 
-        tempReg1 = gdBF.init05RegInfo();
-        tempReg2 = gdBF.init05RegInfo();
+        Map testReg1 = gdBF.init05RegInfo();
+        Map testReg2 = gdBF.init05RegInfo();
+        String regObjId1 = mapAccAddr.get(address) + "CProp1" + Random(6);
+        String regObjId2 = mapAccAddr.get(address) + "CProp2" + Random(6);
+        testReg1.put("register_registration_serial_number","ChangeProperty000001");
+        testReg1.put("register_account_obj_id",mapAccAddr.get(address));
+        testReg1.put("register_registration_object_id",regObjId1);
+        testReg1.put("register_nature_of_shares", oldProperty);
 
-        tempReg1.put("register_account_obj_id", mapAccAddr.get(address));
-        regNo = "Eq" + "ChangeProperty" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        tempReg1.put("register_registration_serial_number", regNo);       //更新对比的登记流水号
-        tempReg1.put("register_nature_of_shares", oldProperty);
+        testReg2.put("register_registration_serial_number","ChangeProperty000001");
+        testReg2.put("register_account_obj_id",mapAccAddr.get(address));
+        testReg2.put("register_registration_object_id",regObjId2);
+        testReg2.put("register_nature_of_shares", newProperty);
 
         List<Map> regListInfo = new ArrayList<>();
+        regListInfo.add(testReg1);
+        regListInfo.add(testReg2);
 
-        regListInfo.add(tempReg1);
+        String response= gd.GDShareChangeProperty(gdPlatfromKeyID,address,eqCode,changeAmount,oldProperty,newProperty,regListInfo);
 
-        tempReg2.put("register_account_obj_id", mapAccAddr.get(address));
-        tempReg2.put("register_registration_serial_number", regNo);       //更新对比的登记流水号
-        tempReg2.put("register_nature_of_shares", newProperty);
-        regListInfo.add(tempReg2);
 
-        log.info(regListInfo.toString());
 
-        String response = gd.GDShareChangeProperty(gdPlatfromKeyID, address, eqCode, changeAmount, oldProperty, newProperty, regListInfo);
         JSONObject jsonObject = JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -242,12 +267,12 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         log.info("检查股权性质变更存证登记格式化及信息内容与传入一致");
 
         log.info(gdCF.contructRegisterInfo(storeId, 2, tempObjId, String.valueOf(oldProperty)).toString().replaceAll("\"", ""));
-        log.info(tempReg1.toString());
-        assertEquals(tempReg1.toString(), gdCF.contructRegisterInfo(storeId, 2, tempObjId, String.valueOf(oldProperty)).toString().replaceAll("\"", ""));
+        log.info(testReg1.toString());
+        assertEquals(testReg1.toString(), gdCF.contructRegisterInfo(storeId, 2, tempObjId, String.valueOf(oldProperty)).toString().replaceAll("\"", ""));
 
         log.info(gdCF.contructRegisterInfo(storeId, 2, tempObjId, String.valueOf(newProperty)).toString().replaceAll("\"", ""));
-        log.info(tempReg2.toString());
-        assertEquals(tempReg2.toString(), gdCF.contructRegisterInfo(storeId, 2, tempObjId, String.valueOf(newProperty)).toString().replaceAll("\"", ""));
+        log.info(testReg2.toString());
+        assertEquals(testReg2.toString(), gdCF.contructRegisterInfo(storeId, 2, tempObjId, String.valueOf(newProperty)).toString().replaceAll("\"", ""));
 
         log.info("================================检查存证数据格式化《结束》================================");
 

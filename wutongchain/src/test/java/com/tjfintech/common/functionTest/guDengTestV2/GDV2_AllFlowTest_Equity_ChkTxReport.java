@@ -82,16 +82,10 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
         //查询挂牌企业主体数据
-        for(int i = 0;i<20;i++) {
             response = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-            if(net.sf.json.JSONObject.fromObject(response).getString("state").equals("200"))
-                break;
-            sleepAndSaveInfo(100);
-        }
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
-        Map jsonMap = JSONObject.fromObject(response).getJSONObject("data");
-        jsonMap.put("letter_object_identification",gdCompanyID);
+//        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+
 
 
         //查询投资者信息

@@ -1209,6 +1209,8 @@ public class GDBeforeCondition {
         mapTemp.put("disclosure_submit_date", date1);
         mapTemp.put("disclosure_submit_description", "CHo8M7Jzo6y6Uh");
 
+        List<Map> listEmptyp = new ArrayList<>();
+
         switch (disclosureType) {
             case 1:
                 //信披信息 企业展示信息
@@ -1222,9 +1224,18 @@ public class GDBeforeCondition {
                 mapEId.put("disclosure_display_content", "contentpingzhen.pdf");
                 mapEId.put("disclosure_display_start_date", date1);
                 mapEId.put("disclosure_display_end_date", date2);
-
                 listEnterpriseInformation.add(mapEId);
+
+                //其他需要传List
                 mapTemp.put("enterprise_display_information", listEnterpriseInformation);
+                mapTemp.put("regulatory_information", listEmptyp);
+                mapTemp.put("enterprise_report", listEmptyp);
+                mapTemp.put("disclosure_notice", listEmptyp);
+                mapTemp.put("major_event_information", listEmptyp);
+                mapTemp.put("integrity_archives", listEmptyp);
+                mapTemp.put("financial_information", listEmptyp);
+                mapTemp.put("business_information", listEmptyp);
+                mapTemp.put("expand_information", listEmptyp);
                 break;
 
             case 3:
@@ -1238,7 +1249,18 @@ public class GDBeforeCondition {
                 mapRId.put("disclosure_regulatory_measures", "mainpingzhen.pdf");
                 mapRId.put("disclosure_regulatory_report_date", date1);
                 listRegulatoryInfomation.add(mapRId);
-                mapTemp.put("regulatory_infomation", listRegulatoryInfomation);
+
+                //其他需要传List
+                mapTemp.put("enterprise_display_information", listEmptyp);
+                mapTemp.put("regulatory_information", listRegulatoryInfomation);
+                mapTemp.put("enterprise_report", listEmptyp);
+                mapTemp.put("disclosure_notice", listEmptyp);
+                mapTemp.put("major_event_information", listEmptyp);
+                mapTemp.put("integrity_archives", listEmptyp);
+                mapTemp.put("financial_information", listEmptyp);
+                mapTemp.put("business_information", listEmptyp);
+                mapTemp.put("expand_information", listEmptyp);
+
                 break;
 
             case 4:
@@ -1251,7 +1273,18 @@ public class GDBeforeCondition {
                 mapERd.put("disclosure_enterprise_report_description", "xinpi");
                 mapERd.put("disclosure_enterprise_report_date", date1);
                 listEnterpriseReport.add(mapERd);
+
+                //其他需要传List
+                mapTemp.put("enterprise_display_information", listEmptyp);
+                mapTemp.put("regulatory_information", listEmptyp);
                 mapTemp.put("enterprise_report", listEnterpriseReport);
+                mapTemp.put("disclosure_notice", listEmptyp);
+                mapTemp.put("major_event_information", listEmptyp);
+                mapTemp.put("integrity_archives", listEmptyp);
+                mapTemp.put("financial_information", listEmptyp);
+                mapTemp.put("business_information", listEmptyp);
+                mapTemp.put("expand_information", listEmptyp);
+
                 break;
             case 5:
                 //信披信息 公告
@@ -1263,7 +1296,18 @@ public class GDBeforeCondition {
                 notice.put("disclosure_announcement_description", "公告简述0001");
                 notice.put("disclosure_announcement_date", date1);
                 listNotice.add(notice);
+
+                //其他需要传List
+                mapTemp.put("enterprise_display_information", listEmptyp);
+                mapTemp.put("regulatory_information", listEmptyp);
+                mapTemp.put("enterprise_report", listEmptyp);
                 mapTemp.put("disclosure_notice", listNotice);
+                mapTemp.put("major_event_information", listEmptyp);
+                mapTemp.put("integrity_archives", listEmptyp);
+                mapTemp.put("financial_information", listEmptyp);
+                mapTemp.put("business_information", listEmptyp);
+                mapTemp.put("expand_information", listEmptyp);
+
                 break;
 
             case 6:
@@ -1276,7 +1320,18 @@ public class GDBeforeCondition {
                 majorEvent.put("disclosure_major_event_document_description", "事件简述0001");
                 majorEvent.put("disclosure_major_event_reporting_date", date1);
                 listME.add(majorEvent);
+
+                //其他需要传List
+                mapTemp.put("enterprise_display_information", listEmptyp);
+                mapTemp.put("regulatory_information", listEmptyp);
+                mapTemp.put("enterprise_report", listEmptyp);
+                mapTemp.put("disclosure_notice", listEmptyp);
                 mapTemp.put("major_event_information", listME);
+                mapTemp.put("integrity_archives", listEmptyp);
+                mapTemp.put("financial_information", listEmptyp);
+                mapTemp.put("business_information", listEmptyp);
+                mapTemp.put("expand_information", listEmptyp);
+
                 break;
 
             case 7:
@@ -1299,7 +1354,18 @@ public class GDBeforeCondition {
                 mapCd.put("disclosure_event_end_date", date2);
                 mapCd.put("disclosure_event_status", 1);
                 listCredit.add(mapCd);
+
+                //其他需要传List
+                mapTemp.put("enterprise_display_information", listEmptyp);
+                mapTemp.put("regulatory_information", listEmptyp);
+                mapTemp.put("enterprise_report", listEmptyp);
+                mapTemp.put("disclosure_notice", listEmptyp);
+                mapTemp.put("major_event_information", listEmptyp);
                 mapTemp.put("integrity_archives", listCredit);
+                mapTemp.put("financial_information", listEmptyp);
+                mapTemp.put("business_information", listEmptyp);
+                mapTemp.put("expand_information", listEmptyp);
+
                 break;
 
             case 8:
@@ -1330,7 +1396,18 @@ public class GDBeforeCondition {
                 mapFId.put("disclosure_financial_income_statement", getListFileObj());
                 mapFId.put("disclosure_financial_income_statement_description", "6L6.pdf");
                 listFinancialInformation.add(mapFId);
+
+                //其他需要传List
+                mapTemp.put("enterprise_display_information", listEmptyp);
+                mapTemp.put("regulatory_information", listEmptyp);
+                mapTemp.put("enterprise_report", listEmptyp);
+                mapTemp.put("disclosure_notice", listEmptyp);
+                mapTemp.put("major_event_information", listEmptyp);
+                mapTemp.put("integrity_archives", listEmptyp);
                 mapTemp.put("financial_information", listFinancialInformation);
+                mapTemp.put("business_information", listEmptyp);
+                mapTemp.put("expand_information", listEmptyp);
+
                 break;
 
             case 9:
@@ -1353,7 +1430,18 @@ public class GDBeforeCondition {
                 mapBID.put("disclosure_fund_raising_analysis", "2020/11/06 14:15:00");
                 mapBID.put("disclosure_sell_situation_analysis", "情况00001");
                 listBusinessInformation.add(mapBID);
+
+                //其他需要传List
+                mapTemp.put("enterprise_display_information", listEmptyp);
+                mapTemp.put("regulatory_information", listEmptyp);
+                mapTemp.put("enterprise_report", listEmptyp);
+                mapTemp.put("disclosure_notice", listEmptyp);
+                mapTemp.put("major_event_information", listEmptyp);
+                mapTemp.put("integrity_archives", listEmptyp);
+                mapTemp.put("financial_information", listEmptyp);
                 mapTemp.put("business_information", listBusinessInformation);
+                mapTemp.put("expand_information", listEmptyp);
+
                 break;
 
             case 10:
@@ -1365,6 +1453,16 @@ public class GDBeforeCondition {
                 mapEID.put("disclosure_expand_description", "7P6.pdf");
                 mapEID.put("disclosure_expand_date", date1);
                 listExpandInformation.add(mapEID);
+
+                //其他需要传List
+                mapTemp.put("enterprise_display_information", listEmptyp);
+                mapTemp.put("regulatory_information", listEmptyp);
+                mapTemp.put("enterprise_report", listEmptyp);
+                mapTemp.put("disclosure_notice", listEmptyp);
+                mapTemp.put("major_event_information", listEmptyp);
+                mapTemp.put("integrity_archives", listEmptyp);
+                mapTemp.put("financial_information", listEmptyp);
+                mapTemp.put("business_information", listEmptyp);
                 mapTemp.put("expand_information", listExpandInformation);
             break;
         }
