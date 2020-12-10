@@ -62,6 +62,21 @@ public class CertTool{
         return SignStr;
     }
 
+    //Smart token转让接口签名
+    public String smartSign(String peerIP,String prikey,String pwd,String data,String outFormat)throws Exception{
+
+        String pwdParam = "";
+        if(!pwd.isEmpty()) pwdParam = " -p " + pwd;
+
+        //将key保存至文件key.pem 解密SecretKey
+        shellExeCmd(peerIP,"echo " + prikey + " > " + destShellScriptDir + "key.pem");
+        String SignStr = shExeAndReturn(peerIP,certExePath +
+                "sign -i key.pem -f base64 -s hex -m \"" + data +"\""+ pwdParam +  " -o " + outFormat);
+        SignStr = SignStr.trim().substring(SignStr.lastIndexOf("sign:") + 6).trim();
+
+        return SignStr;
+    }
+
     public String signUTXO(String strTBS,String prikey){
         String sig = "";
         String resp = shExeAndReturn(PEER2IP,wuxiUTXOSignExePath + strTBS + " " + prikey);

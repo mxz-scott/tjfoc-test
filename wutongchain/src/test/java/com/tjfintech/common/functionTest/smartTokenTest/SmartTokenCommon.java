@@ -164,7 +164,7 @@ public class SmartTokenCommon {
 
         for(int i = 0; i < signMsgArray.size(); i++) {
             String signData = JSONObject.fromObject(signMsgArray.get(i)).getString("signMsg");
-            String cryptMsg = certTool.sign(PEER4IP ,PRIKEY1,"",signData,"hex");
+            String cryptMsg = certTool.smartSign(PEER4IP ,PRIKEY1,"",signData,"hex");
             pubkeys.add(PUBKEY1);
             signList.add(cryptMsg);
         }
@@ -173,7 +173,7 @@ public class SmartTokenCommon {
         List<Map> payInfoList = smartConstructPayAddressInfoList(ADDRESS1, pubkeys, signList);
 
         String approveResp = st.SmartTransferApprove(payInfoList,UTXOInfo);
-        log.info(approveResp);
+//        log.info(approveResp);
         return approveResp;
 
     }
