@@ -2,22 +2,18 @@ package com.tjfintech.common.functionTest.smartTokenTest;
 
 import com.tjfintech.common.*;
 import com.tjfintech.common.Interface.MultiSign;
-import com.tjfintech.common.Interface.SmartToken;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.apache.commons.codec.binary.Hex;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
-import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -30,67 +26,14 @@ import static org.junit.Assert.assertThat;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class smtInterfaceTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
-    MultiSign multiSign =testBuilder.getMultiSign();
-    SoloSign soloSign = testBuilder.getSoloSign();
-    Store store = testBuilder.getStore();
-
-    GoSmartToken st = new GoSmartToken();
-    UtilsClass utilsClass=new UtilsClass();
-    CommonFunc commonFunc = new CommonFunc();
-    CertTool certTool = new CertTool();
-
-    private static String tokenType;
-    private static String tokenType2;
-    private static String actualAmount1;
 
 
-    String constFileName = "account_simple.wlang";
-    String contractFileName = "account_simple.wlang";
-    String HQuotaFileName = "account_simple_HQuota.wlang";
 
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-        if (MULITADD1.isEmpty()) {
-            BeforeCondition bf = new BeforeCondition();
-            bf.updatePubPriKey();
-            bf.createSTAddresses();
-        }
-
-    }
-
-    @Before
-    public void beforeConfig() throws Exception {
-
-        //安装smart token定制化合约
-        installSmartAccountContract(contractFileName);
-
-        actualAmount1 = "10000.123456";
-        double timeStampNow = System.currentTimeMillis();
-        BigDecimal deadline = new BigDecimal(timeStampNow + 12356789);
-
-        List<Map>list = utilsClass.smartConstuctIssueToList(ADDRESS1,  actualAmount1);
-
-        log.info("发行数字资产");
-        tokenType = "soloIntf-"+UtilsClass.Random(6);
-        String issueResp = smartIssueToken(tokenType,deadline,list);
-        assertEquals("200",JSONObject.fromObject(issueResp).getString("state"));
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(issueResp,utilsClass.sdkGetTxHashType21),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-        log.info("查询数字资产余额");
-        String queryBalance = st.SmartGetBalanceByAddr(ADDRESS1, "");
-        assertEquals("200",JSONObject.fromObject(queryBalance).getString("state"));
-        assertThat(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType),containsString(actualAmount1));
-        assertEquals(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType),containsString("test"));
-        assertEquals(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType),containsString("true"));
-
-    }
 
 
 //    @Test
 //    public void testSmartIssueReqInterface() throws Exception {
-//        String userContract = smartAccoutCtHash;
+//        String userContract = smartAccoutContractAddress;
 //        String tokenType = "smtIntfIReq" + UtilsClass.Random(6);
 //        Boolean reIssued = true;
 //        BigDecimal timeStart = new BigDecimal(System.currentTimeMillis());
@@ -126,21 +69,21 @@ public class smtInterfaceTest {
 //        log.info("******************* test Issue Req  Parameter : tokenType *******************");
 //
 //        log.info("tokenType为空");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,"",false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,"",false,
 //                expire,active,maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals(true, JSONObject.fromObject(isResp).getString("message").contains("Invalid parameter :Key: 'TokenType'"));
 //
 //
 ////        log.info("tokenType为空格");
-////        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash," ",false,
+////        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress," ",false,
 ////                expire,active,maxLevel,issueToList,"");
 ////        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 ////        assertEquals("tokenType is mandatory", JSONObject.fromObject(isResp).getString("message"));
 //
 //        log.info("tokenType字符串长度为300");
 //        String testtokenType = UtilsClass.Random(300);
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,testtokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,testtokenType,false,
 //                expire,active,maxLevel,issueToList,"");
 //        assertEquals("200", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals(true, JSONObject.fromObject(isResp).getString("data").contains(testtokenType));
@@ -150,30 +93,30 @@ public class smtInterfaceTest {
 //        log.info("expireDate为字母：需手动测试");//手动测试 java不能传不同类型参数
 //
 //        log.info("expireDate为0");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(0),active,maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals(true, JSONObject.fromObject(isResp).getString("message").contains("Invalid parameter :Key: 'ExpireDate'"));
 //
 //        log.info("expireDate为非13位时间戳");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(123456),active,maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals(true, JSONObject.fromObject(isResp).getString("message").contains("有效日期时间戳需要精确到毫秒"));
 //
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal("123456789123456789"),active,maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals(true, JSONObject.fromObject(isResp).getString("message").contains("有效日期时间戳需要精确到毫秒"));
 //
 //        log.info("expireDate为过去的时间timeStart");//sdk端不校验 合约端进行校验
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                timeStart,active,maxLevel,issueToList,"");
 //        assertEquals("200", JSONObject.fromObject(isResp).getString("state"));
 ////        assertEquals("invalid parameter expireDate", JSONObject.fromObject(isResp).getString("message"));
 //
 //        log.info("expireDate时间早于activeDate");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() - 123456),new BigDecimal(System.currentTimeMillis() + 12345),maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals(true, JSONObject.fromObject(isResp).getString("message").contains("激活日期时间戳必须小于有效期时间戳"));
@@ -182,14 +125,14 @@ public class smtInterfaceTest {
 //        log.info("******************* test Issue Req  Parameter : token *******************");
 //        log.info("token list 为空");
 //        issueToList.clear();
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 ////        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 ////        assertEquals(true, JSONObject.fromObject(isResp).getString("message").contains("mandatory"));
 //
 //        log.info("token list 中amount为空");
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS1,"");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals(true, JSONObject.fromObject(isResp).getString("message").contains("Invalid parameter :Key: 'TokenList[0].Amount'"));
@@ -197,7 +140,7 @@ public class smtInterfaceTest {
 //
 //        log.info("token list 中amount为负数");
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS1,"-100");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals("Token amount must be a valid number and less than 18446744073709", JSONObject.fromObject(isResp).getString("message"));
@@ -205,14 +148,14 @@ public class smtInterfaceTest {
 //
 //        log.info("token list 中amount为字母");
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS1,"abcd");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals("Token amount must be a valid number and less than 18446744073709", JSONObject.fromObject(isResp).getString("message"));
 //
 //        log.info("token list 中amount为0");
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS1,"0");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals("Token amount must be a valid number and less than 18446744073709", JSONObject.fromObject(isResp).getString("message"));
@@ -220,35 +163,35 @@ public class smtInterfaceTest {
 //
 //        log.info("token list 中amount为0.0000001");
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS1,"0");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals("invalid parameter amount", JSONObject.fromObject(isResp).getString("message"));
 //
 //        log.info("token list 中amount7位有效数字");
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS1,"90.2345678");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("200", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals(true, JSONObject.fromObject(isResp).getJSONObject("data").getString("msg").contains("\\\"Value\\\":90.234567"));
 //
 //        log.info("token list 中amount为小于最大数值临界值");
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS1,"18446744073708.999999");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("200", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals(true, JSONObject.fromObject(isResp).getJSONObject("data").getString("msg").contains("\\\"Value\\\":18446744073708.999999"));
 //
 //        log.info("token list 中amount为最大数值");
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS1,"18446744073709");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("200", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals(true, JSONObject.fromObject(isResp).getJSONObject("data").getString("msg").contains("\\\"Value\\\":18446744073709"));
 //
 //        log.info("token list 中amount为最小数字值");
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS1,"0.000001");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("200", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals(true, JSONObject.fromObject(isResp).getJSONObject("data").getString("msg").contains("\\\"Value\\\":0.000001"));
@@ -256,14 +199,14 @@ public class smtInterfaceTest {
 //
 //        log.info("token list 中amount超过最大数值");
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS1,"18446744073709.1");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals("Token amount must be a valid number and less than 18446744073709", JSONObject.fromObject(isResp).getString("message"));
 //
 //        log.info("token list 中address为空");
 //        issueToList = utilsClass.smartConstuctIssueToList("","123");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals(true, JSONObject.fromObject(isResp).getString("message").contains("mandatory"));
@@ -271,7 +214,7 @@ public class smtInterfaceTest {
 //
 //        log.info("token list 中address为空格");
 //        issueToList = utilsClass.smartConstuctIssueToList(" ","123");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals(true, JSONObject.fromObject(isResp).getString("message").contains("mandatory"));
@@ -279,7 +222,7 @@ public class smtInterfaceTest {
 //
 //        log.info("token list 中address为非法地址格式");
 //        issueToList = utilsClass.smartConstuctIssueToList("446add","123");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals("invalid parameter", JSONObject.fromObject(isResp).getString("message"));
@@ -288,7 +231,7 @@ public class smtInterfaceTest {
 //        log.info("token list 中address为非数据库中的地址");
 //        String AddrNotInDB = "4AEeTzUkL8g2GN2kcK3GXWdv7nPyNjKR4hxJ5J96nFqxAGAHnB";
 //        issueToList = utilsClass.smartConstuctIssueToList(AddrNotInDB,"123");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("200", JSONObject.fromObject(isResp).getString("state"));
 //
@@ -299,7 +242,7 @@ public class smtInterfaceTest {
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS3,"100",issueToList);
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS4,"100",issueToList);
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS5,"100",issueToList);
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("200", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals(true, JSONObject.fromObject(isResp).getString("message").contains(ADDRESS1));
@@ -312,7 +255,7 @@ public class smtInterfaceTest {
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS1,"10446744073709");
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS2,"8000000000000",issueToList);
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS3,"100",issueToList);
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals(true, JSONObject.fromObject(isResp).getString("message").contains("can not"));
@@ -321,7 +264,7 @@ public class smtInterfaceTest {
 //        log.info("token list 为多个不超过上限,相同地址");
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS1,"10446744073709");
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS1,"8000000000000",issueToList);
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals(true, JSONObject.fromObject(isResp).getString("message").contains("can not"));
@@ -330,13 +273,13 @@ public class smtInterfaceTest {
 //        log.info("******************* test Issue Req  Parameter : reissued *******************");
 //        log.info("增发flag为false");
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS1,"50000");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("200", JSONObject.fromObject(isResp).getString("state"));
 //
 //        log.info("增发flag为true");
 //        issueToList = utilsClass.smartConstuctIssueToList(ADDRESS1,"50000");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                new BigDecimal(System.currentTimeMillis() + 123456),new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("200", JSONObject.fromObject(isResp).getString("state"));
 //
@@ -346,24 +289,24 @@ public class smtInterfaceTest {
 //        log.info("activeDate为字母：需手动测试");//手动测试 java不能传不同类型参数
 //
 //        log.info("activeDate为0");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,expire,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,expire,
 //                new BigDecimal(0),maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals("invalid parameter activeDate", JSONObject.fromObject(isResp).getString("message"));
 //
 //        log.info("activeDate为非13位时间戳");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,expire,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,expire,
 //                new BigDecimal(123456),maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals("invalid parameter activeDate", JSONObject.fromObject(isResp).getString("message"));
 //
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,expire,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,expire,
 //                new BigDecimal("123456789123456789"),maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals("invalid parameter activeDate", JSONObject.fromObject(isResp).getString("message"));
 //
 //        log.info("activeDate为过去的时间timeStart");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                expire,timeStart,maxLevel,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals("invalid parameter expireDate", JSONObject.fromObject(isResp).getString("message"));
@@ -373,13 +316,13 @@ public class smtInterfaceTest {
 //        log.info("******************* test Issue Req  Parameter : level *******************");
 //
 //        log.info("level为负数");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                expire,active,-100,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals("invalid parameter level", JSONObject.fromObject(isResp).getString("message"));
 //
 //        log.info("level为小数");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                expire,active,5.22,issueToList,"");
 //        assertEquals("400", JSONObject.fromObject(isResp).getString("state"));
 //        assertEquals("Invalid parameter", JSONObject.fromObject(isResp).getString("message"));
@@ -387,7 +330,7 @@ public class smtInterfaceTest {
 //
 //        log.info("******************* test Issue Req  Parameter : extend *******************");
 //        log.info("extend为不匹配的json字符串");
-//        isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,false,
+//        isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,false,
 //                expire,active,5.22,issueToList,"12345646");
 //        assertEquals("200", JSONObject.fromObject(isResp).getString("state"));
 //
@@ -410,7 +353,7 @@ public class smtInterfaceTest {
 //
 //        log.info("******************* test Issue Appr  Parameter : sigMsg *******************");
 //        String tokenTest01 = "smtIntfIAppr" + UtilsClass.Random(6);
-//        String isResp = multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenTest01,true,
+//        String isResp = multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenTest01,true,
 //                new BigDecimal(System.currentTimeMillis() + 12356789),new BigDecimal(0),
 //                0,utilsClass.smartConstuctIssueToList(ADDRESS1,"100"),"");
 //        assertEquals("200", JSONObject.fromObject(isResp).getString("state"));
@@ -476,63 +419,63 @@ public class smtInterfaceTest {
 //
 //
 //        log.info("转出地址为空");
-//        String transferInfo = multiSign.SmartTransfer("",PRIKEY1,"",list,"", "");
+//        String transferInfo = multiSign.SmartTransferReq("",PRIKEY1,"",list,"", "");
 //        assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
 //        assertEquals("Parameter MultiAddr is mandatory",JSONObject.fromObject(transferInfo).getString("message"));
 //
 //        log.info("转出地址不存在");
-//        transferInfo = multiSign.SmartTransfer("4AEeTzUkL8g2GN2kcK3GXWdv7nPyNjKR4hxJ5J96nFqxAGAHnB",PRIKEY1,"",list,"", "");
+//        transferInfo = multiSign.SmartTransferReq("4AEeTzUkL8g2GN2kcK3GXWdv7nPyNjKR4hxJ5J96nFqxAGAHnB",PRIKEY1,"",list,"", "");
 //        assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
 //        assertEquals("Parameter MultiAddr is mandatory",JSONObject.fromObject(transferInfo).getString("message"));
 //
 //
 //        log.info("私钥为空");
-//        transferInfo = multiSign.SmartTransfer(fromAddr,"","",list,"", "");
+//        transferInfo = multiSign.SmartTransferReq(fromAddr,"","",list,"", "");
 //        assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
 //        assertEquals("Parameter 'PriKey' is mandatory",JSONObject.fromObject(transferInfo).getString("message"));
 //
 //        log.info("私钥不匹配");
-//        transferInfo = multiSign.SmartTransfer(fromAddr,PRIKEY4,"",list,"", "");
+//        transferInfo = multiSign.SmartTransferReq(fromAddr,PRIKEY4,"",list,"", "");
 //        assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
 //        assertEquals(true,JSONObject.fromObject(transferInfo).getString("message").contains("not match"));
 //
 //
 //        log.info("转向list为空");
 //        list.clear();
-//        transferInfo = multiSign.SmartTransfer(fromAddr,PRIKEY4,"",list,"", "");
+//        transferInfo = multiSign.SmartTransferReq(fromAddr,PRIKEY4,"",list,"", "");
 //        assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
 //        assertEquals(true,JSONObject.fromObject(transferInfo).getString("message").contains("Invalid parameter"));
 //
 //        log.info("转向list中地址为空");
 //        list = soloSign.constructToken("",tokenType,"100.25");
-//        transferInfo = multiSign.SmartTransfer(fromAddr,PRIKEY4,"",list,"", "");
+//        transferInfo = multiSign.SmartTransferReq(fromAddr,PRIKEY4,"",list,"", "");
 //        assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
 //        assertEquals(true,JSONObject.fromObject(transferInfo).getString("message").contains("Invalid parameter"));
 //
 //
 //        log.info("转向list中tokentype为空");
 //        list = soloSign.constructToken(ADDRESS3,"","100.25");
-//        transferInfo = multiSign.SmartTransfer(fromAddr,PRIKEY4,"",list,"", "");
+//        transferInfo = multiSign.SmartTransferReq(fromAddr,PRIKEY4,"",list,"", "");
 //        assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
 //        assertEquals(true,JSONObject.fromObject(transferInfo).getString("message").contains("Invalid parameter"));
 //
 //
 //        log.info("转向list中amount为空");
 //        list = soloSign.constructToken(ADDRESS3,tokenType,"");
-//        transferInfo = multiSign.SmartTransfer(fromAddr,PRIKEY4,"",list,"", "");
+//        transferInfo = multiSign.SmartTransferReq(fromAddr,PRIKEY4,"",list,"", "");
 //        assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
 //        assertEquals(true,JSONObject.fromObject(transferInfo).getString("message").contains("Invalid parameter"));
 //
 //
 //        log.info("转向list中amount负数");
 //        list = soloSign.constructToken(ADDRESS3,tokenType,"-455");
-//        transferInfo = multiSign.SmartTransfer(fromAddr,PRIKEY4,"",list,"", "");
+//        transferInfo = multiSign.SmartTransferReq(fromAddr,PRIKEY4,"",list,"", "");
 //        assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
 //        assertEquals(true,JSONObject.fromObject(transferInfo).getString("message").contains("Invalid parameter"));
 //
 //        log.info("extend格式不匹配合约中的格式");
 //        list = soloSign.constructToken(ADDRESS3,tokenType,"100");
-//        transferInfo = multiSign.SmartTransfer(fromAddr,PRIKEY4,"",list,"", "123456");
+//        transferInfo = multiSign.SmartTransferReq(fromAddr,PRIKEY4,"",list,"", "123456");
 //        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 //
 //        String txHash = JSONObject.fromObject(transferInfo).getString("data");
@@ -591,34 +534,5 @@ public class smtInterfaceTest {
 //    }
 //
 //
-    public void installSmartAccountContract(String abfileName)throws Exception{
-        WVMContractTest wvmContractTestSA = new WVMContractTest();
-        UtilsClass utilsClassSA = new UtilsClass();
-        CommonFunc commonFuncTeSA = new CommonFunc();
 
-        //如果smartAccoutCtHash为空或者contractFileName不为constFileName 即"wvm\\account_simple.wlang" 时会重新安装
-        if(smartAccoutCtHash.equals("") || (!contractFileName.equals(constFileName))){
-            //安装
-            String response =wvmContractTestSA.wvmInstallTest(abfileName,"");
-            assertEquals("200",JSONObject.fromObject(response).getString("state"));
-            commonFuncTeSA.sdkCheckTxOrSleep(commonFuncTeSA.getTxHash(response,utilsClassSA.sdkGetTxHashType20),
-                    utilsClassSA.sdkGetTxDetailTypeV2,SLEEPTIME);
-            smartAccoutCtHash = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-        }
-    }
-
-    //单签账户目前的签名公私钥对为PUBKEY1 PRIKEY1
-    public String smartIssueToken(String tokenType,BigDecimal deadline,List<Map> issueToList)throws Exception{
-        String isResult= st.SmartIssueTokenReq(smartAccoutCtHash,tokenType,true,
-                deadline,new BigDecimal(0),0,issueToList,"");
-        String sigMsg1 = JSONObject.fromObject(isResult).getJSONObject("data").getString("sigMsg");
-
-        String tempSM3Hash = certTool.getSm3Hash(PEER4IP,sigMsg1);
-        String cryptMsg = certTool.sign(PEER4IP ,PRIKEY1,"",tempSM3Hash,"hex");
-
-        String pubkey = utilsClass.readStringFromFile(testDataPath + "cert/SM2/keys1/pubkey.pem").replaceAll("\r\n","\n");
-
-        String approveResp = st.SmartIssueTokenApprove(sigMsg1,cryptMsg,pubkey);
-        return approveResp;
-    }
 }

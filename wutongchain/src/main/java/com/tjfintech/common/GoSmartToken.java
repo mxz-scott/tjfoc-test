@@ -20,9 +20,8 @@ public class GoSmartToken implements SmartToken {
 
 
     //发行申请
-    public String SmartIssueTokenReq(String contractAddress, String tokenType, Boolean reissued,
-                                     BigDecimal expiredDate, BigDecimal activeDate,
-                                     int maxLevel, List<Map> toList, String extend) {
+    public String SmartIssueTokenReq(String contractAddress, String tokenType, BigDecimal expiredDate, List<Map> toList,
+                                     BigDecimal activeDate, Boolean reissued, int maxLevel, String extend) {
 
         Map<String, Object> map = new HashMap<>();
         map.put("contractAddress", contractAddress);
@@ -88,26 +87,43 @@ public class GoSmartToken implements SmartToken {
         return response;
     }
 
-
-    public String SmartTransfer(String Address, String prikey, String prikeyPwd, List<Map> tokenList,
-                                String data, String extendArgs) {
+    //转让申请
+    public String SmartTransferReq(String tokenType, List<Map> payList, List<Map> collList,
+                                   String newSubType, String extendArgs, String extendData) {
         Map<String, Object> map = new HashMap<>();
-        map.put("multiAddr", Address);
-        map.put("prikey", prikey);
-        map.put("data", data);
-        if (!prikeyPwd.isEmpty()) {
-            map.put("password", prikeyPwd);
-        }
-        map.put("token", tokenList);
+        map.put("tokenType", tokenType);
+        map.put("paymentList", payList);
+        map.put("collectionList", collList);
+        if (!newSubType.isEmpty()) map.put("newSubType", newSubType);
+        if (!extendArgs.isEmpty()) map.put("extendArgs", extendArgs);
+        if (!extendData.isEmpty()) map.put("extendData", extendData);
 
         String param = "";
         if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
         if (subLedger != "") param = param + "&ledger=" + subLedger;
 
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/transfer?" + param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/transfer/apply?" + param, map);
         log.info(result);
         return result;
     }
+
+    //转让申请
+    public String SmartTransferApprove(List<Map> payInfoList, String UTXOInfo) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("payAddressInfoList", payInfoList);
+        map.put("UTXOInfo", UTXOInfo);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/transfer/approve?" + param, map);
+        log.info(result);
+        return result;
+    }
+
+
+
 
     public String SmartRecyle(String Address, String prikey, String prikeyPwd, String tokenType, String amount, String data) {
         Map<String, Object> map = new HashMap<>();

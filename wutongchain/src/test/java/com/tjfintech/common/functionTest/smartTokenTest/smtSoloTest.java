@@ -127,7 +127,7 @@
 //        List<Map> listModel = soloSign.constructToken(ADDRESS3,tokenType,"100.25");
 //        log.info(ADDRESS3);
 //        List<Map> list=soloSign.constructToken(ADDRESS5,tokenType2,"200.555",listModel);
-//        String transferInfo= multiSign.SmartTransfer(ADDRESS1,PRIKEY1,"",list,transferData, "");
+//        String transferInfo= multiSign.SmartTransferReq(ADDRESS1,PRIKEY1,"",list,transferData, "");
 //
 //
 //        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
@@ -144,7 +144,7 @@
 //        assertThat(queryInfo2, containsString("200.555"));
 //        log.info("3向4转账token1");
 //        List<Map> list1 = soloSign.constructToken(ADDRESS4,tokenType,"30");
-//        String recycleInfo = multiSign.SmartTransfer(ADDRESS3,PRIKEY3,"",list1, "3向4转账token1","");
+//        String recycleInfo = multiSign.SmartTransferReq(ADDRESS3,PRIKEY3,"",list1, "3向4转账token1","");
 //        assertThat(recycleInfo, containsString("200"));
 //
 //        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
@@ -152,7 +152,7 @@
 //
 //
 //        List<Map> list2 = soloSign.constructToken(ADDRESS4,tokenType2,"80");
-//        String recycleInfo1 = multiSign.SmartTransfer(ADDRESS5,PRIKEY5,"",list2, "5向4转账token2","");
+//        String recycleInfo1 = multiSign.SmartTransferReq(ADDRESS5,PRIKEY5,"",list2, "5向4转账token2","");
 //        assertThat(recycleInfo1, containsString("200"));
 //
 //        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
@@ -161,7 +161,7 @@
 //
 //        List<Map> list3 = soloSign.constructToken(ADDRESS2,tokenType,"30");
 //        List<Map>list4= soloSign.constructToken(ADDRESS2,tokenType2,"70",list3);
-//        String recycleInfo2 = multiSign.SmartTransfer(ADDRESS4,PRIKEY4,"",list4, "4向2转账", "");
+//        String recycleInfo2 = multiSign.SmartTransferReq(ADDRESS4,PRIKEY4,"",list4, "4向2转账", "");
 //        assertThat(recycleInfo2, containsString("200"));
 //
 //        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
@@ -169,7 +169,7 @@
 //
 //
 //        List<Map> list5 = soloSign.constructToken(ADDRESS2,tokenType2,"20");
-//        String recycleInfo3 = multiSign.SmartTransfer(ADDRESS5,PRIKEY5,"",list5, "5向2转账", "");
+//        String recycleInfo3 = multiSign.SmartTransferReq(ADDRESS5,PRIKEY5,"",list5, "5向2转账", "");
 //        assertThat(recycleInfo3, containsString("200"));
 //
 //        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
@@ -178,7 +178,7 @@
 //
 //        List<Map> list6 = (soloSign.constructToken(ADDRESS4,tokenType2,"30"));
 //        List<Map> list7= soloSign.constructToken(ADDRESS4,tokenType2,"50",list6);
-//        String recycleInfo4 = multiSign.SmartTransfer(ADDRESS2,PRIKEY2,"",list7, "2向4转账", "");
+//        String recycleInfo4 = multiSign.SmartTransferReq(ADDRESS2,PRIKEY2,"",list7, "2向4转账", "");
 //        log.info(recycleInfo4);
 //        assertThat(recycleInfo4, containsString("200"));
 //
@@ -228,7 +228,7 @@
 //        List<Map> listModel = soloSign.constructToken(ADDRESS3,tokenType,issueAmount1);
 //        log.info(ADDRESS3);
 //        List<Map> list=soloSign.constructToken(ADDRESS5,tokenType2,issueAmount2,listModel);
-//        String transferInfo= multiSign.SmartTransfer(ADDRESS1,PRIKEY1,"",list, transferData,"");
+//        String transferInfo= multiSign.SmartTransferReq(ADDRESS1,PRIKEY1,"",list, transferData,"");
 //        assertThat(transferInfo, containsString("200"));
 //
 //        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
@@ -308,7 +308,7 @@
 ////        List<Map> listModel = soloSign.constructToken(ADDRESS3,tokenType,"0.003");
 ////        log.info(ADDRESS3);
 ////        List<Map> list=soloSign.constructToken(ADDRESS5,tokenType2,"0.8",listModel);
-////        String transferInfo= multiSign.SmartTransfer(list,PRIKEY1, transferData);
+////        String transferInfo= multiSign.SmartTransferReq(list,PRIKEY1, transferData);
 ////        assertThat(transferInfo, containsString("200"));
 ////
 ////        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
@@ -369,7 +369,7 @@
 ////        List<Map> listModel1 = soloSign.constructToken(ADDRESS3,tokenType,"100.25");
 ////        log.info(ADDRESS3);
 ////        List<Map> list1=soloSign.constructToken(ADDRESS5,tokenType2,"200.555",listModel1);
-////        String transferInfo= multiSign.SmartTransfer(list1,PRIKEY1, transferData);
+////        String transferInfo= multiSign.SmartTransferReq(list1,PRIKEY1, transferData);
 //////        assertThat(transferInfo, containsString("400"));
 ////
 ////
@@ -392,7 +392,7 @@
 ////        List<Map> listModel = soloSign.constructToken(ADDRESS3,tokenType,"100.25");
 ////        log.info(ADDRESS3);
 ////        List<Map> list=soloSign.constructToken(ADDRESS5,tokenType2,"200.555",listModel);
-////        transferInfo= multiSign.SmartTransfer(list,PRIKEY1, transferData);
+////        transferInfo= multiSign.SmartTransferReq(list,PRIKEY1, transferData);
 ////        assertThat(transferInfo, containsString("200"));
 ////
 ////        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
@@ -419,7 +419,7 @@
 ////        log.info(transferData);
 ////        List<Map> list=soloSign.constructToken(ADDRESS3,tokenType,"3000");
 ////        List<Map> list1=soloSign.constructToken(ADDRESS3,tokenType2,"3000",list);
-////        String transferInfo= multiSign.SmartTransfer(list1,PRIKEY1,transferData);
+////        String transferInfo= multiSign.SmartTransferReq(list1,PRIKEY1,transferData);
 ////        assertThat(transferInfo, containsString("200"));
 ////
 ////        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
@@ -428,17 +428,17 @@
 ////
 ////        List<Map> list2 = soloSign.constructToken(ADDRESS4,tokenType,"4000");
 ////        List<Map>list3= soloSign.constructToken(ADDRESS5,tokenType,"70",list2);
-////        String recycleInfo2 = multiSign.SmartTransfer(list3, PRIKEY3, "李四向小六转账4000 TT001, 70 TT001");
+////        String recycleInfo2 = multiSign.SmartTransferReq(list3, PRIKEY3, "李四向小六转账4000 TT001, 70 TT001");
 ////        assertThat(recycleInfo2, containsString("insufficient balance"));
 ////
 ////        List<Map> list4 = soloSign.constructToken(ADDRESS4,tokenType,"4000");
 ////        List<Map>list5= soloSign.constructToken(ADDRESS5,tokenType2,"4001",list4);
-////        String recycleInfo3 = multiSign.SmartTransfer(list5, PRIKEY3, "李四向小六转账4000 TT001, 4001 TT002");
+////        String recycleInfo3 = multiSign.SmartTransferReq(list5, PRIKEY3, "李四向小六转账4000 TT001, 4001 TT002");
 ////        assertThat(recycleInfo3, containsString("insufficient balance"));
 ////
 ////        List<Map> list6 = soloSign.constructToken(ADDRESS4,tokenType,"4000");
 ////        List<Map>list7= soloSign.constructToken(ADDRESS5,tokenType2,"60",list6);
-////        String recycleInfo4 = multiSign.SmartTransfer(list7, PRIKEY3, "李四向小六转账30 TT001, 60 TT002");
+////        String recycleInfo4 = multiSign.SmartTransferReq(list7, PRIKEY3, "李四向小六转账30 TT001, 60 TT002");
 ////        assertThat(recycleInfo4, containsString("insufficient balance"));
 ////
 ////        String Info = multiSign.SmartRecyle( PRIKEY3, tokenType, "3000");
@@ -456,7 +456,7 @@
 ////        log.info(transferData);
 ////        List<Map> list=soloSign.constructToken(ADDRESS3,tokenType,"3000");
 ////        List<Map> list1=soloSign.constructToken(ADDRESS3,tokenType2,"3000",list);
-////        String transferInfo= multiSign.SmartTransfer(list1,PRIKEY1, transferData);
+////        String transferInfo= multiSign.SmartTransferReq(list1,PRIKEY1, transferData);
 ////        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 ////
 ////        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
@@ -465,19 +465,19 @@
 ////
 ////        List<Map> list2 = soloSign.constructToken(ADDRESS4,tokenType,"200");
 ////        List<Map>list3= soloSign.constructToken(MULITADD5,tokenType,"7000",list2);
-////        String recycleInfo2 = multiSign.SmartTransfer(list3, PRIKEY3, "李四向小六转账4000 TT001, 70 TT001");
+////        String recycleInfo2 = multiSign.SmartTransferReq(list3, PRIKEY3, "李四向小六转账4000 TT001, 70 TT001");
 ////        assertThat(recycleInfo2, containsString("insufficient balance"));
 ////
 ////
 ////        List<Map> list4 = soloSign.constructToken(ADDRESS4,tokenType,"4000");
 ////        List<Map>list5= soloSign.constructToken(MULITADD5,tokenType2,"4001",list4);
-////        String recycleInfo3 = multiSign.SmartTransfer(list5, PRIKEY3, "李四向小六转账4000 TT001, 4001 TT002");
+////        String recycleInfo3 = multiSign.SmartTransferReq(list5, PRIKEY3, "李四向小六转账4000 TT001, 4001 TT002");
 ////        assertThat(recycleInfo3, containsString("insufficient balance"));
 ////
 ////
 ////        List<Map> list6 = soloSign.constructToken(ADDRESS4,tokenType,"4000");
 ////        List<Map>list7= soloSign.constructToken(MULITADD5,tokenType2,"400",list6);
-////        String recycleInfo4 = multiSign.SmartTransfer(list7, PRIKEY3, "李四向小六转账4000 TT001, 4001 TT002");
+////        String recycleInfo4 = multiSign.SmartTransferReq(list7, PRIKEY3, "李四向小六转账4000 TT001, 4001 TT002");
 ////        assertThat(recycleInfo3, containsString("insufficient balance"));
 ////
 ////
@@ -542,7 +542,7 @@
 ////
 ////        List<Map> list=soloSign.constructToken(ADDRESS3,tokenType,"3000");
 ////        List<Map> list1=soloSign.constructToken(ADDRESS3,tokenType2,"3000",list);
-////        String transferInfo= multiSign.SmartTransfer(list1,PRIKEY1,transferData);
+////        String transferInfo= multiSign.SmartTransferReq(list1,PRIKEY1,transferData);
 ////        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 ////
 ////        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
@@ -551,7 +551,7 @@
 ////
 ////        List<Map> list2 = soloSign.constructToken(ADDRESS4,tokenType,"200");
 ////        List<Map>list3= soloSign.constructToken(MULITADD5,tokenType,"70",list2);
-////        String recycleInfo2 = multiSign.SmartTransfer(list3, PRIKEY3, "李四向小六转账4000 TT001, 70 TT001");
+////        String recycleInfo2 = multiSign.SmartTransferReq(list3, PRIKEY3, "李四向小六转账4000 TT001, 70 TT001");
 ////
 ////        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
 ////                utilsClass.sdkGetTxDetailType,SLEEPTIME);
@@ -559,7 +559,7 @@
 ////
 ////        List<Map> list4 = soloSign.constructToken(ADDRESS4,tokenType,"400");
 ////        List<Map>list5= soloSign.constructToken(MULITADD5,tokenType2,"401",list4);
-////        String recycleInfo3 = multiSign.SmartTransfer(list5, PRIKEY3, "李四向小六转账4000 TT001, 4001 TT002");
+////        String recycleInfo3 = multiSign.SmartTransferReq(list5, PRIKEY3, "李四向小六转账4000 TT001, 4001 TT002");
 ////        assertEquals("200",JSONObject.fromObject(recycleInfo3).getString("state"));
 ////
 ////        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
@@ -632,16 +632,16 @@
 ////        log.info(transferData);
 ////        List<Map> list=soloSign.constructToken(ADDRESS3,tokenType2,"3000");
 ////        List<Map> list0=soloSign.constructToken(ADDRESS3,tokenType,"4000",list);
-////        String transferInfo= multiSign.SmartTransfer(list0,PRIKEY1, transferData);
+////        String transferInfo= multiSign.SmartTransferReq(list0,PRIKEY1, transferData);
 ////
 ////        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
 ////                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 ////
 ////
 ////        List<Map> list1= soloSign.constructToken(ADDRESS4,tokenType,"300");
-////        String transferInfo1= multiSign.SmartTransfer(list1, PRIKEY3, "双花验证");
+////        String transferInfo1= multiSign.SmartTransferReq(list1, PRIKEY3, "双花验证");
 ////        List<Map> list2= soloSign.constructToken(ADDRESS4,tokenType,"301");
-////        String transferInfo2= multiSign.SmartTransfer(list2, PRIKEY3, "双花验证");
+////        String transferInfo2= multiSign.SmartTransferReq(list2, PRIKEY3, "双花验证");
 ////        assertThat(transferInfo1, containsString("200"));
 ////
 ////        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
@@ -652,8 +652,8 @@
 ////        assertThat(response,anyOf(containsString("300"),containsString("301")));
 ////        List<Map> list3= soloSign.constructToken(ADDRESS4,tokenType,"400");
 ////        List<Map> list4= soloSign.constructToken(ADDRESS4,tokenType2,"411",list3);
-////        String transferInfo3= multiSign.SmartTransfer(list3, PRIKEY3, "双花验证");
-////        String transferInfo4= multiSign.SmartTransfer(list4, PRIKEY3, "双花验证");
+////        String transferInfo3= multiSign.SmartTransferReq(list3, PRIKEY3, "双花验证");
+////        String transferInfo4= multiSign.SmartTransferReq(list4, PRIKEY3, "双花验证");
 ////        assertThat(transferInfo3, containsString("200"));
 ////
 ////        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
@@ -667,8 +667,8 @@
 ////
 ////        List<Map> list5= soloSign.constructToken(ADDRESS4,tokenType,"320");
 ////        List<Map> list6= soloSign.constructToken(ADDRESS4,tokenType2,"320");
-////        String transferInfo5= multiSign.SmartTransfer(list5, PRIKEY3, "双花验证");
-////        String transferInfo6= multiSign.SmartTransfer(list6, PRIKEY3, "双花验证");
+////        String transferInfo5= multiSign.SmartTransferReq(list5, PRIKEY3, "双花验证");
+////        String transferInfo6= multiSign.SmartTransferReq(list6, PRIKEY3, "双花验证");
 ////        assertThat(transferInfo5, containsString("200"));
 ////
 ////        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
@@ -688,7 +688,7 @@
 ////        String transferData = ADDRESS1 + "转给自己" + "转账100.25个" + tokenType;
 ////        log.info(transferData);
 ////        List<Map> listModel = soloSign.constructToken(ADDRESS1,tokenType,"100.25");
-////        String transferInfo= multiSign.SmartTransfer(listModel,PRIKEY1, transferData);
+////        String transferInfo= multiSign.SmartTransferReq(listModel,PRIKEY1, transferData);
 ////        assertEquals(true,transferInfo.contains("can't transfer to self"));
 ////    }
 //
@@ -701,19 +701,19 @@
 //        CommonFunc commonFuncTeSA = new CommonFunc();
 //
 //        //如果smartAccoutCtHash为空或者contractFileName不为constFileName 即"wvm\\account_simple.wlang" 时会重新安装
-//        if(smartAccoutCtHash.equals("") || (!contractFileName.equals(constFileName))){
+//        if(smartAccoutContractAddress.equals("") || (!contractFileName.equals(constFileName))){
 //            //安装
 //            String response =wvmContractTestSA.wvmInstallTest(abfileName,"");
 //            assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //            commonFuncTeSA.sdkCheckTxOrSleep(commonFuncTeSA.getTxHash(response,utilsClassSA.sdkGetTxHashType20),
 //                    utilsClassSA.sdkGetTxDetailTypeV2,SLEEPTIME);
-//            smartAccoutCtHash = JSONObject.fromObject(response).getJSONObject("data").getString("name");
+//            smartAccoutContractAddress = JSONObject.fromObject(response).getJSONObject("data").getString("name");
 //        }
 //    }
 //
 //    //单签账户目前为签名公私钥对为PUBKEY1 PRIKEY1
 //    public String smartIssueToken(String tokenType,BigDecimal deadline,List<Map> issueToList)throws Exception{
-//        String isResult= multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,true,
+//        String isResult= multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,true,
 //                deadline,new BigDecimal(0),0,issueToList,"123456");
 //        String sigMsg1 = JSONObject.fromObject(isResult).getJSONObject("data").getString("sigMsg");
 ////        assertEquals(sigMsg1,String.valueOf(Hex.encodeHex(

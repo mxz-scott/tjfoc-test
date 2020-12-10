@@ -4,11 +4,11 @@ package com.tjfintech.common.functionTest.smartTokenTest;
 import com.tjfintech.common.*;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
-import com.tjfintech.common.functionTest.contract.WVMContractTest;
+import com.tjfintech.common.functionTest.guDengTestV2.GDBeforeCondition;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -29,61 +29,19 @@ import static org.junit.Assert.assertThat;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class smtMultiTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
-    MultiSign multiSign =testBuilder.getMultiSign();
-    SoloSign soloSign = testBuilder.getSoloSign();
-    UtilsClass utilsClass=new UtilsClass();
-    smtInterfaceTest stInterface = new smtInterfaceTest();
-    CommonFunc commonFunc = new CommonFunc();
-    CertTool certTool = new CertTool();
+    UtilsClass utilsClass = new UtilsClass();
     GoSmartToken st = new GoSmartToken();
+    SmartTokenCommon stc = new SmartTokenCommon();
 
     private static String tokenType;
-    private static String tokenType2;
-    private static String issueAmount1;
-    private static String issueAmount2;
-    private static String actualAmount1;
-    private static String actualAmount2;
-
-    String constFileName = "account_simple.wlang";
-    String contractFileName = "account_simple.wlang";
-
 
     @BeforeClass
-    public static void beforeClass() throws Exception {
+    public static void BeforeClass()throws Exception{
         if (MULITADD1.isEmpty()) {
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
             bf.createSTAddresses();
         }
-    }
-
-    @Before
-    public void beforeConfig() throws Exception {
-
-        //安装smart token定制化合约
-        stInterface.installSmartAccountContract(contractFileName);
-
-        actualAmount1 = "1000.15";
-        double timeStampNow = System.currentTimeMillis();
-        BigDecimal deadline = new BigDecimal(timeStampNow + 12356789);
-
-        List<Map>list = utilsClass.smartConstuctIssueToList(ADDRESS1,  actualAmount1);
-
-        log.info("发行数字资产");
-        tokenType = "soloIntf-"+UtilsClass.Random(6);
-        String issueResp = stInterface.smartIssueToken(tokenType,deadline,list);
-        assertEquals("200",JSONObject.fromObject(issueResp).getString("state"));
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(issueResp,utilsClass.sdkGetTxHashType21),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-        log.info("查询数字资产余额");
-        String queryBalance = st.SmartGetBalanceByAddr(ADDRESS1, "");
-        assertEquals("200",JSONObject.fromObject(queryBalance).getString("state"));
-        assertThat(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType),containsString(actualAmount1));
-        assertEquals(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType),containsString("test"));
-        assertEquals(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType),containsString("true"));
-
     }
 
     /**
@@ -92,53 +50,42 @@ public class smtMultiTest {
      */
     @Test
     public void TC03_multiProgress() throws Exception {
-        String transferData = "归集地址向" + MULITADD4 + "转账10个" + tokenType;
-        log.info(transferData);
-        List<Map>list=utilsClass.constructToken(MULITADD4,tokenType,"10");
-        log.info(transferData);
-        String transferInfo= st.SmartTransfer(IMPPUTIONADD,PRIKEY4,"",list,transferData,"");
-        Thread.sleep(SLEEPTIME);
+//        tokenType =  stc.beforeConfigIssueNewToken("1000.25");
+        tokenType = "TB_EswhX4";
+        String transferData = "ADDRESS1 向 MULITADD4 转账10个" + tokenType;
+        List<Map> payList= stc.smartConstructTokenList(ADDRESS1, "test", "10");
+        List<Map> collList= stc.smartConstructTokenList(MULITADD4,"test", "10");
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        String transferResp= stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
 
+        assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
 
-        assertThat(transferInfo, containsString("200"));
-
-        String amount1;
-
-        if (UtilsClass.PRECISION == 10) {
-            amount1 = "990.1234567891";
-        }else {
-            amount1 = "990.123456";
-        }
-
-        log.info("查询归集地址跟MULITADD4余额，判断转账是否成功");
-        String queryInfo = st.SmartGetBalanceByAddr(IMPPUTIONADD, tokenType);
-        String queryInfo2 = st.SmartGetBalanceByAddr(MULITADD4,  tokenType);
-        assertEquals("200",JSONObject.fromObject(queryInfo).getString("state"));
-        assertEquals(amount1,JSONObject.fromObject(queryInfo).getJSONObject("data").getString("total"));
-        assertEquals("200",JSONObject.fromObject(queryInfo2).getString("state"));
-        assertEquals("10",JSONObject.fromObject(queryInfo2).getJSONObject("data").getString("total"));
-
-        log.info("回收归集地址跟MULITADD4的新发token");
-        String recycleInfo = st.SmartRecyle(IMPPUTIONADD, PRIKEY4, "",tokenType, amount1,"");
-        String recycleInfo2 = st.SmartRecyle(MULITADD4, PRIKEY1,"", tokenType, "10","");
-        assertEquals("200",JSONObject.fromObject(recycleInfo).getString("state"));
-        assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("state"));
-
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-
-        log.info("查询回收后账户余额是否为0");
-        String queryInfo3 = st.SmartGetBalanceByAddr(IMPPUTIONADD,  tokenType);
-        String queryInfo4 = st.SmartGetBalanceByAddr(MULITADD4,tokenType);
-        assertEquals("200",JSONObject.fromObject(queryInfo3).getString("state"));
-        assertEquals("0",JSONObject.fromObject(queryInfo3).getJSONObject("data").getString("total"));
-        assertEquals("200",JSONObject.fromObject(queryInfo4).getString("state"));
-        assertEquals("0",JSONObject.fromObject(queryInfo4).getJSONObject("data").getString("total"));
+//        log.info("查询归集地址跟MULITADD4余额，判断转账是否成功");
+//        String queryInfo = st.SmartGetBalanceByAddr(IMPPUTIONADD, tokenType);
+//        String queryInfo2 = st.SmartGetBalanceByAddr(MULITADD4,  tokenType);
+//        assertEquals("200",JSONObject.fromObject(queryInfo).getString("state"));
+//        assertEquals(amount1,JSONObject.fromObject(queryInfo).getJSONObject("data").getString("total"));
+//        assertEquals("200",JSONObject.fromObject(queryInfo2).getString("state"));
+//        assertEquals("10",JSONObject.fromObject(queryInfo2).getJSONObject("data").getString("total"));
+//
+//        log.info("回收归集地址跟MULITADD4的新发token");
+//        String recycleInfo = st.SmartRecyle(IMPPUTIONADD, PRIKEY4, "",tokenType, amount1,"");
+//        String recycleInfo2 = st.SmartRecyle(MULITADD4, PRIKEY1,"", tokenType, "10","");
+//        assertEquals("200",JSONObject.fromObject(recycleInfo).getString("state"));
+//        assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("state"));
+//
+//
+//        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+//                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+//
+//
+//        log.info("查询回收后账户余额是否为0");
+//        String queryInfo3 = st.SmartGetBalanceByAddr(IMPPUTIONADD,  tokenType);
+//        String queryInfo4 = st.SmartGetBalanceByAddr(MULITADD4,tokenType);
+//        assertEquals("200",JSONObject.fromObject(queryInfo3).getString("state"));
+//        assertEquals("0",JSONObject.fromObject(queryInfo3).getJSONObject("data").getString("total"));
+//        assertEquals("200",JSONObject.fromObject(queryInfo4).getString("state"));
+//        assertEquals("0",JSONObject.fromObject(queryInfo4).getJSONObject("data").getString("total"));
 
 
     }
@@ -156,7 +103,7 @@ public class smtMultiTest {
 //        log.info(transferData);
 //        List<Map>list=utilsClass.constructToken(MULITADD4,tokenType,issueAmount1);
 //        log.info(transferData);
-//        String transferInfo= multiSign.SmartTransfer(IMPPUTIONADD,PRIKEY4,"",list,transferData,"");
+//        String transferInfo= multiSign.SmartTransferReq(IMPPUTIONADD,PRIKEY4,"",list,transferData,"");
 //
 //        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
 //                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -247,7 +194,7 @@ public class smtMultiTest {
 //        log.info(transferData);
 //        List<Map>list=utilsClass.constructToken(MULITADD4,tokenType,"0.02");
 //        log.info(transferData);
-//        String transferInfo= multiSign.SmartTransfer(IMPPUTIONADD,PRIKEY4,"", list,transferData, "");
+//        String transferInfo= multiSign.SmartTransferReq(IMPPUTIONADD,PRIKEY4,"", list,transferData, "");
 //        assertThat(transferInfo, containsString("200"));
 //
 //        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
@@ -314,7 +261,7 @@ public class smtMultiTest {
 ////        List<Map>list=utilsClass.constructToken(MULITADD4,tokenType,"10");
 ////        log.info(transferData);
 ////
-////        String transferInfo= SmartTransfer(IMPPUTIONADD,PRIKEY4,"", transferData, IMPPUTIONADD,list);//相同币种
+////        String transferInfo= SmartTransferReq(IMPPUTIONADD,PRIKEY4,"", transferData, IMPPUTIONADD,list);//相同币种
 ////        assertEquals("500",JSONObject.fromObject(transferInfo).getString("state"));
 ////
 ////
@@ -347,13 +294,13 @@ public class smtMultiTest {
 ////        List<Map>list2=utilsClass.constructToken(MULITADD5,tokenType2,"10",list);
 ////        List<Map>list3=utilsClass.constructToken(MULITADD5,tokenType,"10",list);
 ////        log.info(transferData);
-////        transferInfo= SmartTransfer(IMPPUTIONADD,PRIKEY4,"", transferData, IMPPUTIONADD,list2);//不同币种
+////        transferInfo= SmartTransferReq(IMPPUTIONADD,PRIKEY4,"", transferData, IMPPUTIONADD,list2);//不同币种
 ////
 ////        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
 ////                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 ////
 ////
-////        String transferInfo2= SmartTransfer(IMPPUTIONADD,PRIKEY4,"", transferData, IMPPUTIONADD,list3);//相同币种
+////        String transferInfo2= SmartTransferReq(IMPPUTIONADD,PRIKEY4,"", transferData, IMPPUTIONADD,list3);//相同币种
 ////        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 ////        assertEquals("200",JSONObject.fromObject(transferInfo2).getString("state"));
 ////
@@ -438,13 +385,13 @@ public class smtMultiTest {
 //         List<Map>list2=utilsClass.constructToken(MULITADD5,tokenType2,"10",list);
 //         List<Map>list3=utilsClass.constructToken(MULITADD5,tokenType,"10",list);
 //         log.info(transferData);
-//         String transferInfo= multiSign.SmartTransfer(IMPPUTIONADD,PRIKEY4,"",list2, transferData, "");//不同币种
+//         String transferInfo= multiSign.SmartTransferReq(IMPPUTIONADD,PRIKEY4,"",list2, transferData, "");//不同币种
 //
 //         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
 //                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 //
 //
-//         String transferInfo2= multiSign.SmartTransfer(IMPPUTIONADD,PRIKEY4,"", list3,transferData, "");//相同币种
+//         String transferInfo2= multiSign.SmartTransferReq(IMPPUTIONADD,PRIKEY4,"", list3,transferData, "");//相同币种
 //         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 //         assertEquals("200",JSONObject.fromObject(transferInfo2).getString("state"));
 //
@@ -518,13 +465,13 @@ public class smtMultiTest {
 //        List<Map>list2=utilsClass.constructToken(MULITADD4,tokenType2,"10",list);
 //        List<Map>list3=utilsClass.constructToken(MULITADD4,tokenType,"10",list);
 //        log.info(transferData);
-//        String transferInfo= multiSign.SmartTransfer(IMPPUTIONADD,PRIKEY4,"", list2,transferData, "");//不相同币种
+//        String transferInfo= multiSign.SmartTransferReq(IMPPUTIONADD,PRIKEY4,"", list2,transferData, "");//不相同币种
 //
 //        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
 //                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 //
 //
-//        String transferInfo2= multiSign.SmartTransfer(IMPPUTIONADD,PRIKEY4,"",list3, transferData, "");//相同币种
+//        String transferInfo2= multiSign.SmartTransferReq(IMPPUTIONADD,PRIKEY4,"",list3, transferData, "");//相同币种
 //        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 //        assertEquals("200",JSONObject.fromObject(transferInfo2).getString("state"));
 //
@@ -580,13 +527,13 @@ public class smtMultiTest {
 //        List<Map>list2=utilsClass.constructToken(ADDRESS2,tokenType2,"10",list);
 //        List<Map>list3=utilsClass.constructToken(ADDRESS2,tokenType,"10",list);
 //        log.info(transferData);
-//        String transferInfo= multiSign.SmartTransfer(IMPPUTIONADD,PRIKEY4,"",list2, transferData, "");//两个地址不同币种
+//        String transferInfo= multiSign.SmartTransferReq(IMPPUTIONADD,PRIKEY4,"",list2, transferData, "");//两个地址不同币种
 //
 //        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
 //                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 //
 //
-//        String transferInfo2= multiSign.SmartTransfer(IMPPUTIONADD,PRIKEY4,"",list3, transferData, "");//两个地址相同币种
+//        String transferInfo2= multiSign.SmartTransferReq(IMPPUTIONADD,PRIKEY4,"",list3, transferData, "");//两个地址相同币种
 //        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 //        assertEquals("200",JSONObject.fromObject(transferInfo2).getString("state"));
 //
@@ -647,7 +594,7 @@ public class smtMultiTest {
 //        List<Map> listInit = utilsClass.constructToken(MULITADD4, tokenType, "1000");
 //        List<Map> list0 = utilsClass.constructToken(MULITADD4, tokenType2, "1000", listInit);
 //        log.info(transferData);
-//        String transferInfoInit = multiSign.SmartTransfer(IMPPUTIONADD,PRIKEY4,"",list0, transferData, "" );//转账给多签地址
+//        String transferInfoInit = multiSign.SmartTransferReq(IMPPUTIONADD,PRIKEY4,"",list0, transferData, "" );//转账给多签地址
 //        assertEquals("200",JSONObject.fromObject(transferInfoInit).getString("state"));
 //
 //        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
@@ -658,13 +605,13 @@ public class smtMultiTest {
 //        List<Map> list2 = utilsClass.constructToken(MULITADD5, tokenType2, "10", list);
 //        List<Map> list3 = utilsClass.constructToken(MULITADD5, tokenType, "10", list);
 //        log.info(transferData);
-//        String transferInfo = multiSign.SmartTransfer(ADDRESS1,PRIKEY1, "",list2,transferData, "" );//不相同币种
+//        String transferInfo = multiSign.SmartTransferReq(ADDRESS1,PRIKEY1, "",list2,transferData, "" );//不相同币种
 //
 //        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
 //                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 //
 //
-//        String transferInfo2 = multiSign.SmartTransfer(ADDRESS1,PRIKEY1, "",list3,transferData, "" );//相同币种
+//        String transferInfo2 = multiSign.SmartTransferReq(ADDRESS1,PRIKEY1, "",list3,transferData, "" );//相同币种
 //        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 //        assertEquals("200",JSONObject.fromObject(transferInfo2).getString("state"));
 //
@@ -730,7 +677,7 @@ public class smtMultiTest {
 ////        List<Map> listInit = utilsClass.constructToken(MULITADD4, tokenType, "1000");
 ////        List<Map> list0 = utilsClass.constructToken(MULITADD4, tokenType2, "1000", listInit);
 ////        log.info(transferData);
-////        String transferInfoInit = SmartTransfer(IMPPUTIONADD,PRIKEY4,"", transferData, IMPPUTIONADD, list0);//转账给多签地址
+////        String transferInfoInit = SmartTransferReq(IMPPUTIONADD,PRIKEY4,"", transferData, IMPPUTIONADD, list0);//转账给多签地址
 ////        assertEquals("200",JSONObject.fromObject(transferInfoInit).getString("state"));
 ////
 ////        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
@@ -743,13 +690,13 @@ public class smtMultiTest {
 ////        List<Map> list2 = utilsClass.constructToken(MULITADD5, tokenType2, "10", list);
 ////        List<Map> list3 = utilsClass.constructToken(MULITADD5, tokenType, "10", list);
 ////        log.info(transferData);
-////        String transferInfo = multiSign.SmartTransfer(PRIKEY1, transferData, MULITADD4, list2);//不相同币种
+////        String transferInfo = multiSign.SmartTransferReq(PRIKEY1, transferData, MULITADD4, list2);//不相同币种
 ////
 ////        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
 ////                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 ////
 ////
-////        String transferInfo2 = multiSign.SmartTransfer(PRIKEY1, transferData, MULITADD4, list3);//相同币种
+////        String transferInfo2 = multiSign.SmartTransferReq(PRIKEY1, transferData, MULITADD4, list3);//相同币种
 ////        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 ////        assertEquals("200",JSONObject.fromObject(transferInfo2).getString("state"));
 ////
@@ -835,7 +782,7 @@ public class smtMultiTest {
 //        List<Map> listInit = utilsClass.constructToken(MULITADD4, tokenType, "1000");
 //        List<Map> list0 = utilsClass.constructToken(MULITADD4, tokenType2, "1000", listInit);
 //        log.info(transferData);
-//        String transferInfoInit = multiSign.SmartTransfer(IMPPUTIONADD,PRIKEY4,"", list0,transferData, "" );//转账给多签地址
+//        String transferInfoInit = multiSign.SmartTransferReq(IMPPUTIONADD,PRIKEY4,"", list0,transferData, "" );//转账给多签地址
 //        assertEquals("200",JSONObject.fromObject(transferInfoInit).getString("state"));
 //
 //        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
@@ -846,9 +793,9 @@ public class smtMultiTest {
 //        List<Map> list2 = utilsClass.constructToken(ADDRESS2,tokenType2, "10", list);
 //        List<Map> list3 = utilsClass.constructToken(ADDRESS2, tokenType, "10", list);
 //        log.info(transferData);
-//        String transferInfo = multiSign.SmartTransfer(ADDRESS1,PRIKEY1, "",list2,transferData, "" );//不相同币种
+//        String transferInfo = multiSign.SmartTransferReq(ADDRESS1,PRIKEY1, "",list2,transferData, "" );//不相同币种
 //        Thread.sleep(SLEEPTIME);//UTXO关系，两笔交易之间需要休眠
-//        String transferInfo2 = multiSign.SmartTransfer(ADDRESS1,PRIKEY1, "", list3,transferData, "" );//相同币种
+//        String transferInfo2 = multiSign.SmartTransferReq(ADDRESS1,PRIKEY1, "", list3,transferData, "" );//相同币种
 //        assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 //        assertEquals("200",JSONObject.fromObject(transferInfo2).getString("state"));
 //
@@ -911,9 +858,9 @@ public class smtMultiTest {
 //        List<Map> listInit = utilsClass.constructToken(IMPPUTIONADD, tokenType, "1000");
 //        List<Map> list0 = utilsClass.constructToken(MULITADD4, tokenType2, "1000", listInit);
 //        log.info(transferData);
-//        String transferInfoInit = multiSign.SmartTransfer(IMPPUTIONADD,PRIKEY4,"", list0,transferData, "" );//转账给包含自己地址的多个地址
+//        String transferInfoInit = multiSign.SmartTransferReq(IMPPUTIONADD,PRIKEY4,"", list0,transferData, "" );//转账给包含自己地址的多个地址
 //        assertEquals(true,transferInfoInit.contains("can't transfer to self"));
-//        String transferInfoInit2 = multiSign.SmartTransfer(IMPPUTIONADD,PRIKEY4,"",listInit, transferData, "" );//仅转账给自己
+//        String transferInfoInit2 = multiSign.SmartTransferReq(IMPPUTIONADD,PRIKEY4,"",listInit, transferData, "" );//仅转账给自己
 //        assertEquals(true,transferInfoInit2.contains("can't transfer to self"));
 //    }
 //
@@ -926,19 +873,19 @@ public class smtMultiTest {
 //        CommonFunc commonFuncTeSA = new CommonFunc();
 //
 //        //如果smartAccoutCtHash为空或者contractFileName不为constFileName 即"wvm\\account_simple.wlang" 时会重新安装
-//        if(smartAccoutCtHash.equals("") || (!contractFileName.equals(constFileName))){
+//        if(smartAccoutContractAddress.equals("") || (!contractFileName.equals(constFileName))){
 //            //安装
 //            String response =wvmContractTestSA.wvmInstallTest(abfileName,"");
 //            assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //            commonFuncTeSA.sdkCheckTxOrSleep(commonFuncTeSA.getTxHash(response,utilsClassSA.sdkGetTxHashType20),
 //                    utilsClassSA.sdkGetTxDetailTypeV2,SLEEPTIME);
-//            smartAccoutCtHash = JSONObject.fromObject(response).getJSONObject("data").getString("name");
+//            smartAccoutContractAddress = JSONObject.fromObject(response).getJSONObject("data").getString("name");
 //        }
 //    }
 //
 //    //单签账户目前为签名公私钥对为PUBKEY1 PRIKEY1
 //    public String smartIssueToken(String tokenType,BigDecimal deadline,List<Map> issueToList)throws Exception{
-//        String isResult= multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,true,
+//        String isResult= multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,true,
 //                deadline,new BigDecimal(0),0,issueToList,"123456");
 //        String sigMsg1 = JSONObject.fromObject(isResult).getJSONObject("data").getString("sigMsg");
 ////        assertEquals(sigMsg1,String.valueOf(Hex.encodeHex(

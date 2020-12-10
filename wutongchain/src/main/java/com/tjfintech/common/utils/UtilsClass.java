@@ -307,65 +307,46 @@ public class UtilsClass {
     public static String  NoPermErrMsg = "no permission";
     public static String  NoPermErrCode = "500";
 
-    public static String smartAccoutCtHash = "";
+    public static String smartAccoutContractAddress = "";
 
 
-    /**
-     * token平台转账TOKEN数组构建方法
-     * @param toAddr     接收地址
-     * @param amount      数量
-     * @return     返回TOKEN的LIST
-     */
-    public  List<Map>   smartConstuctIssueToList(String toAddr, String amount){
+//    /**
+//     * token平台转账TOKEN数组构建方法
+//     * @param toAddr     接收地址
+//     * @param amount      数量
+//     * @return     返回TOKEN的LIST
+//     */
+//    public  List<Map>   smartConstuctIssueToList(String toAddr, String amount){
+//
+//        Map<String,Object>amountMap=new HashMap<>();
+//        amountMap.put("address",toAddr);
+//        amountMap.put("amount",amount);
+//
+//        List<Map>tokenList=new ArrayList<>();
+//        tokenList.add(amountMap);
+//        return tokenList;
+//    }
 
-        Map<String,Object>amountMap=new HashMap<>();
-        amountMap.put("address",toAddr);
-        amountMap.put("amount",amount);
 
-        List<Map>tokenList=new ArrayList<>();
-        tokenList.add(amountMap);
-        return tokenList;
-    }
 
-    /**
-     * token平台转账TOKEN数组构建方法
-     * @param toAddr
-     * @param subType
-     * @param amount
-     * @return
-     */
-    public  List<Map>   smartConstuctIssueToList(String toAddr, String subType, String amount){
-
-        Map<String,Object>amountMap=new HashMap<>();
-        amountMap.put("address",toAddr);
-        amountMap.put("amount",amount);
-
-        if(subType != "")
-            amountMap.put("subType",subType);
-
-        List<Map>tokenList=new ArrayList<>();
-        tokenList.add(amountMap);
-        return tokenList;
-    }
-
-    /**
-     * token平台转账TOKEN数组构建方法
-     * @param toAddr     发送地址
-     * @param amount      数量
-     * @return     返回TOKEN的LIST
-     */
-    public  List<Map>   smartConstuctIssueToList(String toAddr,String amount, List<Map> list){
-        List<Map>tokenList=new ArrayList<>();
-        for(int i = 0 ; i < list.size() ; i++) {
-            tokenList.add(list.get(i));
-        }
-        Map<String,Object>amountMap=new HashMap<>();
-        amountMap.put("toAddr",toAddr);
-        amountMap.put("amount",amount);
-
-        tokenList.add(amountMap);
-        return tokenList;
-    }
+//    /**
+//     * token平台转账TOKEN数组构建方法
+//     * @param toAddr     发送地址
+//     * @param amount      数量
+//     * @return     返回TOKEN的LIST
+//     */
+//    public  List<Map>   smartConstuctIssueToList(String toAddr,String amount, List<Map> list){
+//        List<Map>tokenList=new ArrayList<>();
+//        for(int i = 0 ; i < list.size() ; i++) {
+//            tokenList.add(list.get(i));
+//        }
+//        Map<String,Object>amountMap=new HashMap<>();
+//        amountMap.put("toAddr",toAddr);
+//        amountMap.put("amount",amount);
+//
+//        tokenList.add(amountMap);
+//        return tokenList;
+//    }
 
 
     /**

@@ -316,12 +316,12 @@
 //        assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        commonFuncTeSA.sdkCheckTxOrSleep(commonFuncTeSA.getTxHash(response,utilsClassSA.sdkGetTxHashType20),
 //                    utilsClassSA.sdkGetTxDetailTypeV2,SLEEPTIME);
-//        smartAccoutCtHash = JSONObject.fromObject(response).getJSONObject("data").getString("name");
+//        smartAccoutContractAddress = JSONObject.fromObject(response).getJSONObject("data").getString("name");
 //    }
 //
 //    //单签账户目前为签名公私钥对为PUBKEY1 PRIKEY1
 //    public String smartIssueToken(String tokenType,BigDecimal deadline,List<Map> issueToList)throws Exception{
-//        String isResult= multiSign.SmartIssueTokenReq(smartAccoutCtHash,tokenType,true,
+//        String isResult= multiSign.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,true,
 //                deadline,new BigDecimal(0),0,issueToList,"");
 //        String sigMsg1 = JSONObject.fromObject(isResult).getJSONObject("data").getString("sigMsg");
 ////        assertEquals(sigMsg1,String.valueOf(Hex.encodeHex(
