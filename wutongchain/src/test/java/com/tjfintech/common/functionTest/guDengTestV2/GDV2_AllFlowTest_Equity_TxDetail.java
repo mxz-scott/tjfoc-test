@@ -583,8 +583,6 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
 
         String args = jsonObjectWVM.getJSONObject("arg").toString();
         assertEquals(true,args.contains(clntNo));
-        assertEquals(true,args.contains("test.txt"));
-        assertEquals(true,args.contains("close.cert"));
         assertEquals(true,response.contains("DBSet"));
 
     }

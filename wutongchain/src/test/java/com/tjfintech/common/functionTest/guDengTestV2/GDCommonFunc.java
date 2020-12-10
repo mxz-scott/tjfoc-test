@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -1498,13 +1499,13 @@ public class GDCommonFunc {
 
     public Map settleInfo(com.alibaba.fastjson.JSONObject jobj2){
 
-        com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("capital_object_information");
+        com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("capital_settlement_information");
         com.alibaba.fastjson.JSONObject objBase = objInfo.getJSONObject("basic_information_capital_settlement");
         com.alibaba.fastjson.JSONObject objOut = objInfo.getJSONObject("transferor_information");
         com.alibaba.fastjson.JSONObject objIn = objInfo.getJSONObject("transferee_information");
 
         Map getSubjectInfo = new HashMap();
-        key = "capita_settlement_object_id";                        getSubjectInfo.put(key,getSubObjId(jobj2));
+//        key = "capita_settlement_object_id";                        getSubjectInfo.put(key,getSubObjId(jobj2));
 
         key = "settlement_subject_ref";                             getSubjectInfo.put(key,objBase.getString(key));
         key = "settlement_type";                                    getSubjectInfo.put(key,objBase.getString(key));
@@ -1542,33 +1543,33 @@ public class GDCommonFunc {
 
     public Map pubInfo(com.alibaba.fastjson.JSONObject jobjOK) {
         com.alibaba.fastjson.JSONObject objInfo = jobjOK.getJSONObject("body").getJSONObject("disclosure_approval_information");
-        com.alibaba.fastjson.JSONObject objDis = objInfo.getJSONObject("enterprise_display_information");
-        com.alibaba.fastjson.JSONObject objRegulatory = objInfo.getJSONObject("regulatory_infomation");
-        com.alibaba.fastjson.JSONObject objReport = objInfo.getJSONObject("enterprise_report");
-        com.alibaba.fastjson.JSONObject objNotice = objInfo.getJSONObject("disclosure_notice");
-        com.alibaba.fastjson.JSONObject objMajor = objInfo.getJSONObject("major_event_information");
-        com.alibaba.fastjson.JSONObject objIntegrity = objInfo.getJSONObject("integrity_archives");
-        com.alibaba.fastjson.JSONObject objExpandBasic = objIntegrity.getJSONObject("basic_information");
-        com.alibaba.fastjson.JSONObject objExpandItem = objIntegrity.getJSONObject("item_details");
-        com.alibaba.fastjson.JSONObject objFinancial = objInfo.getJSONObject("financial_information");
-        com.alibaba.fastjson.JSONObject objFinancialBasic = objFinancial.getJSONObject("basic_financial_information");
-        com.alibaba.fastjson.JSONObject objFinancialDocuments = objFinancial.getJSONObject("financial_statement_documents");
-        com.alibaba.fastjson.JSONObject objBusiness = objInfo.getJSONObject("business_information");
-        com.alibaba.fastjson.JSONObject objBusinessBasic = objBusiness.getJSONObject("business_basic_information");
-        com.alibaba.fastjson.JSONObject objBusinessInvestment = objBusiness.getJSONObject("Investment_and_financing");
-        com.alibaba.fastjson.JSONObject objExpand = objInfo.getJSONObject("expand_information");
+        com.alibaba.fastjson.JSONObject objBaic = objInfo.getJSONObject("disclosure_basic_information");
+//        com.alibaba.fastjson.JSONObject objRegulatory = objInfo.getJSONObject("regulatory_infomation");
+//        com.alibaba.fastjson.JSONObject objReport = objInfo.getJSONObject("enterprise_report");
+//        com.alibaba.fastjson.JSONObject objNotice = objInfo.getJSONObject("disclosure_notice");
+//        com.alibaba.fastjson.JSONObject objMajor = objInfo.getJSONObject("major_event_information");
+//        com.alibaba.fastjson.JSONObject objIntegrity = objInfo.getJSONObject("integrity_archives");
+//        com.alibaba.fastjson.JSONObject objExpandBasic = objIntegrity.getJSONObject("basic_information");
+//        com.alibaba.fastjson.JSONObject objExpandItem = objIntegrity.getJSONObject("item_details");
+//        com.alibaba.fastjson.JSONObject objFinancial = objInfo.getJSONObject("financial_information");
+//        com.alibaba.fastjson.JSONObject objFinancialBasic = objFinancial.getJSONObject("basic_financial_information");
+//        com.alibaba.fastjson.JSONObject objFinancialDocuments = objFinancial.getJSONObject("financial_statement_documents");
+//        com.alibaba.fastjson.JSONObject objBusiness = objInfo.getJSONObject("business_information");
+//        com.alibaba.fastjson.JSONObject objBusinessBasic = objBusiness.getJSONObject("business_basic_information");
+//        com.alibaba.fastjson.JSONObject objBusinessInvestment = objBusiness.getJSONObject("Investment_and_financing");
+//        com.alibaba.fastjson.JSONObject objExpand = objInfo.getJSONObject("expand_information");
 
         Map getSubjectInfo = new HashMap();
         String keyType = "";
 
         //信批基本信息
-        key = "disclosure_subject_ref";                          getSubjectInfo.put(key, objDis.getString(key));
-        key = "disclosure_type";                                 getSubjectInfo.put(key, objDis.getString(key));keyType=objDis.getString(key);
-        key = "disclosure_submit_type";                          getSubjectInfo.put(key, objDis.getString(key));
-        key = "disclosure_referer_subject_ref";                  getSubjectInfo.put(key, objDis.getString(key));
-        key = "disclosure_referer_name";                         getSubjectInfo.put(key, objDis.getString(key));
-        key = "disclosure_submit_date";                          getSubjectInfo.put(key, objDis.getString(key));
-        key = "disclosure_submit_description";                   getSubjectInfo.put(key, objDis.getString(key));
+        key = "disclosure_subject_ref";                          getSubjectInfo.put(key, objBaic.getString(key));
+        key = "disclosure_type";                                 getSubjectInfo.put(key, objBaic.getString(key));keyType=objBaic.getString(key);
+        key = "disclosure_submit_type";                          getSubjectInfo.put(key, objBaic.getString(key));
+        key = "disclosure_referer_subject_ref";                  getSubjectInfo.put(key, objBaic.getString(key));
+        key = "disclosure_referer_name";                         getSubjectInfo.put(key, objBaic.getString(key));
+        key = "disclosure_submit_date";                          getSubjectInfo.put(key, objBaic.getString(key));
+        key = "disclosure_submit_description";                   getSubjectInfo.put(key, objBaic.getString(key));
 
         switch (keyType) {
             case "1":
@@ -1578,7 +1579,7 @@ public class GDCommonFunc {
                 break;
             case "3":
                 //拼组监管信息3
-                key = "regulatory_infomation";
+                key = "regulatory_information";
                 getSubjectInfo.put(key, objInfo.getString(key));
                 break;
             case "4":
@@ -1599,17 +1600,95 @@ public class GDCommonFunc {
             case "7":
                 //拼组诚信档案信息7
                 key = "integrity_archives";
-                getSubjectInfo.put(key, objInfo.getString(key));
+                JSONObject objBaseInfo = JSONObject.fromObject(objInfo.getJSONArray(key).get(0).toString()).getJSONObject("basic_information");
+                JSONObject objItemDetails = JSONObject.fromObject(objInfo.getJSONArray(key).get(0).toString()).getJSONObject("item_details");
+
+                Map mapIR = new HashMap();
+
+                key = "disclosure_identifier_ref"; mapIR.put(key, objBaseInfo.getString(key));
+                key = "disclosure_identifier_name"; mapIR.put(key, objBaseInfo.getString(key));
+                key = "disclosure_auditor_ref" ; mapIR.put(key, objBaseInfo.getString(key));
+                key = "disclosure_auditor_name" ; mapIR.put(key, objBaseInfo.getString(key));
+
+                key = "disclosure_event_id" ; mapIR.put(key, objItemDetails.getString(key));
+                key = "disclosure_event_name" ; mapIR.put(key, objItemDetails.getString(key));
+                key = "disclosure_event_doc" ; mapIR.put(key, objItemDetails.getString(key));
+                key = "disclosure_event_description" ; mapIR.put(key, objItemDetails.getString(key));
+                key = "disclosure_event_type" ; mapIR.put(key, objItemDetails.getString(key));
+                key = "disclosure_event_valid_time" ; mapIR.put(key, objItemDetails.getString(key));
+                key = "disclosure_event_start_date" ; mapIR.put(key, objItemDetails.getString(key));
+                key = "disclosure_event_end_date"; mapIR.put(key, objItemDetails.getString(key));
+                key = "disclosure_event_status"; mapIR.put(key, objItemDetails.getString(key));
+
+                ArrayList listIR = new ArrayList();
+                listIR.add(mapIR);
+
+                key = "integrity_archives"; getSubjectInfo.put(key, listIR);
                 break;
             case "8":
                 //拼组财务信息8
                 key = "financial_information";
-                getSubjectInfo.put(key, objInfo.getString(key));
+                JSONObject objBaseFi = JSONObject.fromObject(objInfo.getJSONArray(key).get(0).toString()).getJSONObject("basic_financial_information");
+                JSONObject objFiStat = JSONObject.fromObject(objInfo.getJSONArray(key).get(0).toString()).getJSONObject("financial_statement_documents");
+
+                Map mapFi = new HashMap();
+
+                key = "disclosure_financial_start_date";mapFi.put(key, objBaseFi.getString(key));
+                key = "disclosure_financial_end_date" ;mapFi.put(key, objBaseFi.getString(key));
+                key = "disclosure_financial_type" ;mapFi.put(key, objBaseFi.getString(key));
+                key = "disclosure_financial_periodend_total_asset" ;mapFi.put(key, objBaseFi.getString(key));
+                key = "disclosure_financial_periodend_net_asset" ;mapFi.put(key, objBaseFi.getString(key));
+                key = "disclosure_financial_periodend_total_liability" ;mapFi.put(key, objBaseFi.getString(key));
+                key = "disclosure_financial_periodend_revenue" ;mapFi.put(key, objBaseFi.getString(key));
+                key = "disclosure_financial_periodend_gross_profit" ;mapFi.put(key, objBaseFi.getString(key));
+                key = "disclosure_financial_periodend_net_profit" ;mapFi.put(key, objBaseFi.getString(key));
+                key = "disclosure_financial_cashflow" ;mapFi.put(key, objBaseFi.getString(key));
+                key = "disclosure_financial_whether_rd" ;mapFi.put(key, objBaseFi.getString(key));
+                key = "disclosure_financial_rd_cost" ;mapFi.put(key, objBaseFi.getString(key));
+
+                key = "disclosure_financial_balance_sheet_name" ;mapFi.put(key, objFiStat.getString(key));
+                key = "disclosure_financial_balance_sheet" ;mapFi.put(key, objFiStat.getString(key));
+                key = "disclosure_financial_balance_sheet_description" ;mapFi.put(key, objFiStat.getString(key));
+                key = "disclosure_financial_cashflow_statement_name" ;mapFi.put(key, objFiStat.getString(key));
+                key = "disclosure_financial_cashflow_statement" ;mapFi.put(key, objFiStat.getString(key));
+                key = "disclosure_financial_cashflow_statement_description" ;mapFi.put(key, objFiStat.getString(key));
+                key = "disclosure_financial_income_statement_name" ;mapFi.put(key, objFiStat.getString(key));
+                key = "disclosure_financial_income_statement" ;mapFi.put(key, objFiStat.getString(key));
+                key = "disclosure_financial_income_statement_description";mapFi.put(key, objFiStat.getString(key));
+
+                ArrayList listFI = new ArrayList();
+                listFI.add(mapFi);
+
+                key = "financial_information";getSubjectInfo.put(key, listFI);
+
                 break;
             case "9":
                 //拼组企业经营信息9
                 key = "business_information";
-                getSubjectInfo.put(key, objInfo.getString(key));
+
+                JSONObject objBusBase = JSONObject.fromObject(objInfo.getJSONArray(key).get(0).toString()).getJSONObject("business_basic_information");
+                JSONObject objInvest = JSONObject.fromObject(objInfo.getJSONArray(key).get(0).toString()).getJSONObject("Investment_and_financing");
+
+                Map mapBI = new HashMap();
+
+                key = "disclosure_business_overview" ;mapBI.put(key, objBusBase.getString(key));
+                key = "disclosure_main_business_analysis" ;mapBI.put(key, objBusBase.getString(key));
+                key = "disclosure_main_business_analysis_non" ;mapBI.put(key, objBusBase.getString(key));
+                key = "disclosure_assets_and_liabilities_analysis" ;mapBI.put(key, objBusBase.getString(key));
+                key = "disclosure_major_shareholders_analysis" ;mapBI.put(key, objBusBase.getString(key));
+                key = "disclosure_major_events" ;mapBI.put(key, objBusBase.getString(key));
+                key = "disclosure_business_report_name" ;mapBI.put(key, objBusBase.getString(key));
+                key = "disclosure_business_report_doc" ;mapBI.put(key, objBusBase.getString(key));
+                key = "disclosure_business_report_description" ;mapBI.put(key, objBusBase.getString(key));
+                key = "disclosure_business_report_date" ;mapBI.put(key, objBusBase.getString(key));
+
+                key = "disclosure_investment_analysis" ;mapBI.put(key, objInvest.getString(key));
+                key = "disclosure_fund_raising_analysis" ;mapBI.put(key, objInvest.getString(key));
+                key = "disclosure_sell_situation_analysis" ;mapBI.put(key, objInvest.getString(key));
+
+                ArrayList listBI = new ArrayList();
+                listBI.add(mapBI);
+                key = "business_information"; getSubjectInfo.put(key, listBI);
                 break;
             case "10":
                 //拼组第三方拓展信息10
@@ -1736,9 +1815,73 @@ public class GDCommonFunc {
                 break;
             case "transactionreport" : break;
             case "registration" : break;
-            case "settlement" : break;
-            case "infodisclosure" : break;
+            case "settlement" :
+                key = settlement_subject_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                key = settlement_product_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                key = settlement_transaction_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                key = settlement_out_account_object_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                key = settlement_in_account_object_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+
+//                replaceObjIdKey(tempStr,"settlement_subject_ref");
+//                replaceObjIdKey(tempStr,"settlement_product_ref");
+//                replaceObjIdKey(tempStr,"settlement_transaction_ref");
+//                replaceObjIdKey(tempStr,"settlement_out_account_object_ref");
+//                replaceObjIdKey(tempStr,"settlement_in_account_object_ref");
+                break;
+            case "infodisclosure" :
+                key = disclosure_subject_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+
+                key = disclosure_referer_subject_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                key = disclosure_display_platform_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                key = disclosure_identifier_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                key = disclosure_auditor_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+//                replaceObjIdKey(tempStr,"disclosure_subject_ref");
+//                replaceObjIdKey(tempStr,"disclosure_referer_subject_ref");
+//                replaceObjIdKey(tempStr,"disclosure_display_platform_ref");
+//                replaceObjIdKey(tempStr,"disclosure_identifier_ref");
+//                replaceObjIdKey(tempStr,"disclosure_auditor_ref");
+                break;
         }
+        return tempStr;
+    }
+
+    public String replaceObjIdKey2(String srcStr,String objectName){
+        String certainVer = "";
+        String tempStr = srcStr;
+        log.info("/*/*/////////////////////////////////////////////");
+        log.info(objectName);
+        log.info(refInfo.get(objectName));
+        key = objectName + "=" + refInfo.get(objectName);
+        log.info(key);
+        certainVer = getObjectLatestVer(refInfo.get(objectName));
+        tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+        log.info(tempStr);
+
+        return tempStr;
+    }
+
+    public String replaceObjIdKey(String srcStr,String objectName){
+        String certainVer = "";
+        String tempStr = srcStr;
+        log.info("/*/*/////////////////////////////////////////////");
+        log.info(objectName);
+        log.info(refInfo.get(objectName));
+        key = refInfo.get(objectName);
+        log.info(key);
+        certainVer = getObjectLatestVer(refInfo.get(objectName));
+        tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+        log.info(tempStr);
+
         return tempStr;
     }
 
@@ -1749,5 +1892,74 @@ public class GDCommonFunc {
         else
             return JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header"
                                                 ).getJSONObject("content").getString("version");
+    }
+
+    public Boolean chkSensitiveWord(String chkStr,String type){
+        Boolean noSensWord = true;
+
+        String[] subSensWords = new String[]{"subject_invoice_account_number","subject_key_personnel_name",
+                "subject_key_personnel_id","subject_key_personnel_contact",
+                "subject_investor_name","subject_id_number",
+                "subject_contact_number","subject_cellphone_number",
+                "subject_personal_fax"};
+
+        String[] accSensWords = new String[]{"account_opening_agent_name" ,"account_opening_agent_contact_number",
+                "account_closing_agent_name","account_closing_agent_contact_number"};
+
+        String[] prodSensWords = new String[]{"product_issuer_contact_person" ,"product_issuer_contact_info",
+                "product_fund_manager_name","product_fund_manager_certificate_number"};
+
+        String[] txRpSensWords = new String[]{"transaction_product_issuer_name","transaction_issuer_name",
+                "transaction_investor_name","transaction_investor_original_name",
+                "transaction_investor_counterparty_name"};
+
+        String[] regSensWords = new String[]{"register_right_recognition_subject_name","register_right_recognition_agent_subject_name",
+                "register_debt_holder_contact_number","register_investor_name"};
+
+        String[] settleSensWords = new String[]{"settlement_out_bank_account","settlement_out_account_name",
+                "settlement_in_bank_account","settlement_in_account_name"};
+        String[] disclosureSensWords = new String[]{"disclosure_identifier_name","disclosure_auditor_name"};
+
+        switch (type) {
+            case "subject":
+                for (String sensKey : subSensWords) {
+                    if (chkStr.contains(sensKey)) noSensWord = false;
+                }
+                break;
+            case "accout":
+                for (String sensKey : accSensWords) {
+                    if (chkStr.contains(sensKey)) noSensWord = false;
+                }
+                break;
+            case "product":
+                for (String sensKey : prodSensWords) {
+                    if (chkStr.contains(sensKey)) noSensWord = false;
+                }
+                break;
+            case "transactionreport":
+                for (String sensKey : txRpSensWords) {
+                    if (chkStr.contains(sensKey)) noSensWord = false;
+                }
+                break;
+            case "registration":
+                for (String sensKey : regSensWords) {
+                    if (chkStr.contains(sensKey)) noSensWord = false;
+                }
+                break;
+            case "settlement":
+                for (String sensKey : settleSensWords) {
+                    if (chkStr.contains(sensKey)) noSensWord = false;
+                }
+                break;
+            case "infodisclosure":
+                for (String sensKey : disclosureSensWords) {
+                    if (chkStr.contains(sensKey)) noSensWord = false;
+                }
+                break;
+            default:
+                log.info("错误的类型");
+        }
+
+        return noSensWord;
     }
 }
