@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Kms;
 import com.tjfintech.common.Interface.Scf;
+import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 
 import static com.tjfintech.common.performanceTest.ConfigurationTest.tokenType;
@@ -18,6 +19,7 @@ import static org.junit.Assert.assertThat;
 import com.tjfintech.common.utils.UtilsClass;
 import com.tjfintech.common.utils.UtilsClassScf;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -26,12 +28,18 @@ import java.util.Map;
 
 @Slf4j
 public class GoScfTest {
-    TestBuilder testBuilder = TestBuilder.getInstance();
+
+    public   final static int   SHORTSLEEPTIME=3*1000;
+    TestBuilder testBuilder= TestBuilder.getInstance();
+    Store store =testBuilder.getStore();
+    UtilsClass utilsClass = new UtilsClass();
+    CommonFunc commonFunc = new CommonFunc();
+//    TestBuilder testBuilder = TestBuilder.getInstance();
     Scf scf = testBuilder.getScf();
     public static long expireDate = System.currentTimeMillis() + 100000000;
     Kms kms = testBuilder.getKms();
-    UtilsClass utilsClass = new UtilsClass();
-    CommonFunc commonFunc = new CommonFunc();
+//    UtilsClass utilsClass = new UtilsClass();
+//    CommonFunc commonFunc = new CommonFunc();
 
     /**
      * 开立-审核-签收-查询资产-获取output交易ID和index
@@ -50,36 +58,44 @@ public class GoScfTest {
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
         Thread.sleep(5000);
-//        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
         //开立审核
         String response2 = scf.IssuingApprove(platformKeyID, tokenType, platformPIN);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("success"));
         assertThat(response2, containsString("data"));
         Thread.sleep(5000);
-//        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
         //开立签收
         String response3 = scf.IssuingConfirm(coreCompanyKeyID, tokenType, PIN, comments);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("success"));
         assertThat(response3, containsString("data"));
-        Thread.sleep(5000);
 
+//        JSONObject jsonObject=JSONObject.fromObject(response3);
+//        String  storeHash = jsonObject.getString("data");
+//
 //        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+//
+//        String response4= store.GetStore(storeHash);
+//        assertThat(response4, containsString("200"));
+//        assertThat(response4,containsString("json"));
+//        JSONObject.fromObject(response4).getString("data");
+//        JSONObject.fromObject(response4).getInt("state");
+//        JSONObject.fromObject(response4).getString("message");
 
+        Thread.sleep(5000);
         //查询tokentype资产
-        String response4 = scf.getowneraddr(tokenType);
-        assertThat(response4, containsString("200"));
-        assertThat(response4, containsString("success"));
-        assertThat(response4, containsString("address"));
-        assertThat(response4, containsString("value"));
-        //获取output的交易id和index
-        String response5 = scf .FuncGetoutputinfo(supplyAddress1, tokenType, subType);
+        String response5 = scf.getowneraddr(tokenType);
         assertThat(response5, containsString("200"));
         assertThat(response5, containsString("success"));
-        assertThat(response5, containsString("data"));
-        assertThat(response5, containsString("index"));
-        Thread.sleep(5000);
+        assertThat(response5, containsString("\"address\":\"SnMn7eXperY2Vp6MMexUW5sdVC1PKEQo7grXP2SBypee8irugZg\""));
+        assertThat(response5, containsString("\"value\":100"));
+        //获取output的交易id和index
+        String response6 = scf .FuncGetoutputinfo(supplyAddress1, tokenType, subType);
+        assertThat(response6, containsString("200"));
+        assertThat(response6, containsString("success"));
+        assertThat(response6, containsString("data"));
+        assertThat(response6, containsString("index"));
+
     }
 
     /**
@@ -303,6 +319,7 @@ public class GoScfTest {
         assertThat(response6, containsString("200"));
         assertThat(response6, containsString("success"));
         assertThat(response6, containsString("data"));
+        Thread.sleep(5000);
         //融资签收
         String response7 = scf.FinacingConfirm(applyNo, ZJFAddress, supplyID1, companyID1, PIN, tokenType, supplyAddress2, challenge, comments);
         assertThat(response7, containsString("200"));
