@@ -107,6 +107,26 @@ public class GoSmartToken implements SmartToken {
         return result;
     }
 
+
+    public String SmartExchangeReq(String tokenType, List<Map> payList, List<Map> collList, String newTokenType,
+                            String extendArgs, String extendData){
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenType", tokenType);
+        map.put("paymentList", payList);
+        map.put("collectionList", collList);
+        map.put("newTokenType", newTokenType);
+        if (!extendArgs.isEmpty()) map.put("extendArgs", extendArgs);
+        if (!extendData.isEmpty()) map.put("extendData", extendData);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/exchange/apply?" + param, map);
+        log.info(result);
+        return result;
+    }
+
     //销毁申请
     public String SmartDestroyReq(String tokenType, List<Map> payList, String extendArgs, String extendData){
         Map<String, Object> map = new HashMap<>();
@@ -155,35 +175,21 @@ public class GoSmartToken implements SmartToken {
         return result;
     }
 
-
-    public String SmartRecyle(String Address, String prikey, String prikeyPwd, String tokenType, String amount, String data) {
+    //
+    public String SmartExchangeApprove(List<Map> payInfoList, String UTXOInfo) {
         Map<String, Object> map = new HashMap<>();
-        map.put("multiAddress", Address);
-        map.put("prikey", prikey);
-        if (!prikeyPwd.isEmpty()) {
-            map.put("password", prikeyPwd);
-        }
-        map.put("tokenType", tokenType);
-        map.put("amount", amount);
-        map.put("data", data);
-
+        map.put("payAddressInfoList", payInfoList);
+        map.put("UTXOInfo", UTXOInfo);
 
         String param = "";
         if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
         if (subLedger != "") param = param + "&ledger=" + subLedger;
 
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/stoken/recycle?" + param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/exchange/approve?" + param, map);
         log.info(result);
         return result;
     }
 
-    public String SmartSign(String Address, String prikey, String fromAddr, List<Map> tokenList) {
-
-        String param = "";
-        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
-        if (subLedger != "") param = param + "&ledger=" + subLedger;
-        return "";
-    }
 
     //根据地址查询余额
     public String SmartGetBalanceByAddr(String addr, String tokenType) {

@@ -15,7 +15,10 @@ public interface SmartToken {
     String SmartDestroyReq(String tokenType, List<Map> payList, String extendArgs, String extendData);
     String SmartDestroyApprove(List<Map> payInfoList, String UTXOInfo);
 
-//    String SmartDestroyApprove(String Address, String prikey, String fromAddr, List<Map> tokenList);
+    String SmartExchangeReq(String tokenType, List<Map> payList, List<Map> collList, String newTokenType,
+                            String extendArgs, String extendData);
+
+    String SmartExchangeApprove(List<Map> payInfoList, String UTXOInfo);
 
     String SmartGetBalanceByAddr(String addr, String tokenType); //按地址查询余额
     String SmartGetZeroBalance(String tokenType); //按地址查询余额

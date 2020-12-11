@@ -286,6 +286,54 @@ public class SmartTokenCommon {
     }
 
 
+    //转换
+    //单签账户目前的签名公私钥对为PUBKEY1 PRIKEY1
+    public String smartExchange(String tokenType, List<Map> payList, List<Map> collList, String newTokenType,
+                                String extendArgs, String extendData) throws Exception {
+        //转换申请
+        String exchangeInfo = st.SmartExchangeReq(tokenType, payList, collList, newTokenType,
+                extendArgs, extendData);
+
+        assertThat(exchangeInfo, containsString("200"));
+        String UTXOInfo = JSONObject.fromObject(exchangeInfo).getJSONObject("data").getString("UTXOInfo");
+
+        //组装信息列表
+        String signMsg = JSONObject.fromObject(exchangeInfo).getJSONObject("data").getString("sigMsg");
+
+        JSONArray signMsgArray = JSONArray.fromObject(signMsg);
+        ArrayList<String> pubkeys = new ArrayList();
+        ArrayList<String> prikeys = new ArrayList();
+        ArrayList<String> signList = new ArrayList();
+        String signAddress = "";
+
+        for (int i = 0; i < signMsgArray.size(); i++) {
+
+            log.info("签名数组长度" + signMsgArray.size());
+
+            String signData = JSONObject.fromObject(signMsgArray.get(i)).getString("signMsg");
+            log.info(signData);
+            signAddress = JSONObject.fromObject(signMsgArray.get(i)).getString("address");
+            log.info(signAddress);
+            pubkeys = getPubkeyListFromAddress(signAddress);
+            prikeys = getPrikeyListFromAddress(signAddress);
+            log.info("私钥数组长度" + prikeys.size());
+            for (int j = 0; j < prikeys.size(); j++) {
+//                log.info(prikeys.get(j));
+                String cryptMsg = certTool.smartSign(PEER4IP, prikeys.get(j), "", signData, "hex");
+                signList.add(cryptMsg);
+            }
+        }
+
+        //转让审核
+        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList);
+
+        String approveResp = st.SmartExchangeApprove(payInfoList, UTXOInfo);
+
+        return approveResp;
+
+    }
+
+
     //验证账户地址余额
     public void verifyAddressHasBalance(String address, String tokenType, String amount) throws Exception {
 

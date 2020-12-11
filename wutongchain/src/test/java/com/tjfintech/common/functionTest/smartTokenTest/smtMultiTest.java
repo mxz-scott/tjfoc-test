@@ -1,37 +1,23 @@
 package com.tjfintech.common.functionTest.smartTokenTest;
 
-
 import com.tjfintech.common.*;
-import com.tjfintech.common.Interface.MultiSign;
-import com.tjfintech.common.Interface.SoloSign;
-import com.tjfintech.common.functionTest.guDengTestV2.GDBeforeCondition;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
-//import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class smtMultiTest {
-    TestBuilder testBuilder= TestBuilder.getInstance();
     UtilsClass utilsClass = new UtilsClass();
-    GoSmartToken st = new GoSmartToken();
     SmartTokenCommon stc = new SmartTokenCommon();
     CommonFunc commonFunc = new CommonFunc();
 
@@ -47,7 +33,7 @@ public class smtMultiTest {
     }
 
     /**
-     * Tc03多签正常流程-发币：签名：查询：转账：查询:回收：查询
+     * 多签正常流程-发币：签名：查询：转账：查询:回收：查询
      *
      */
     @Test
@@ -90,6 +76,35 @@ public class smtMultiTest {
 
         log.info("查询回收账户余额");
         stc.verifyAddressHasBalance(ZEROADDRESS, tokenType, "1000.25");
+    }
+
+
+
+    /**
+     * 资产类型转换
+     *
+     */
+    @Test
+    public void TC_exchange() throws Exception {
+
+        //发行
+        tokenType =  stc.beforeConfigIssueNewToken("200");
+
+        //转换
+        String transferData = "ADDRESS1 向 MULITADD4 转账10个" + tokenType;
+        List<Map> payList= stc.smartConstructTokenList(ADDRESS1, "test", "200");
+        List<Map> collList= stc.smartConstructTokenList(MULITADD4,"test", "200");
+        String transferResp= stc.smartExchange(tokenType, payList, collList, "NEW_TB001","", transferData);
+
+        assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+        log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
+        stc.verifyAddressNoBalance(ADDRESS1, tokenType);
+        stc.verifyAddressHasBalance(MULITADD4, "NEW_TB001", "200");
+
+
     }
 
 
