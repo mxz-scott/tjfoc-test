@@ -192,12 +192,12 @@ public class GDBeforeCondition {
     public void initRegulationData() {
         updateWord = "";
         //更新系统合约
-        gd.GDEquitySystemInit(gdContractAddress, gdPlatfromKeyID);
+//        gd.GDEquitySystemInit(gdContractAddress, gdPlatfromKeyID);
 
         refData();
 
         //为缩短初始化时间 判断对象标识是否存在 存在则不再挂牌 否则执行
-
+//        updateCommonRefSubAndReg();
         if (!JSONObject.fromObject(gd.GDObjectQueryByVer(subject_investor_qualification_certifier_ref, -1)).getString("state").equals("200")){
             initCommonRefSubAndReg();                           //初始化监管引用数据做挂牌企业登记操作
 //        updateCommonRefSubAndReg();

@@ -360,7 +360,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         String responseGet = gd.GDInfoPublishGet(txId);
         assertEquals("200", net.sf.json.JSONObject.fromObject(responseGet).getString("state"));
-//        assertEquals(false,responseGet.contains("\"data\":null"));
+        assertEquals(false,responseGet.contains("\"data\":null"));
+
+
 
 
         log.info("检查信批存证格式化及信息内容与传入一致");
@@ -407,6 +409,11 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 //        String disDARefVer = gdCF.getObjectLatestVer(disclosure_auditor_ref);
 
         String objfileName = conJGFileName(newDisObjId,newDisObjIdVer);
+
+        //比较query的和minio上的是数据是否一致
+        MinIOOperation minio = new MinIOOperation();
+        String getStr = minio.getFileFromMinIO(minIOEP,jgBucket,objfileName,"");
+        assertEquals("检查查询与minio上数据是否一致",true,responseGet.contains(getStr));
 
 
         //直接从minio上通过对象标识+版本号的方式获取指定对象文件
