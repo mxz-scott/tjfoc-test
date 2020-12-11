@@ -23,19 +23,19 @@ import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.junit.Assert.*;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SmartTokenCommon {
-    TestBuilder testBuilder= TestBuilder.getInstance();
-    MultiSign multiSign =testBuilder.getMultiSign();
+    TestBuilder testBuilder = TestBuilder.getInstance();
+    MultiSign multiSign = testBuilder.getMultiSign();
     SoloSign soloSign = testBuilder.getSoloSign();
     Store store = testBuilder.getStore();
 
     GoSmartToken st = new GoSmartToken();
-    UtilsClass utilsClass=new UtilsClass();
+    UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
     CertTool certTool = new CertTool();
 
@@ -50,107 +50,106 @@ public class SmartTokenCommon {
         installSmartAccountContract(contractFileName);
 
         log.info("发行数字资产");
-        tokenType = "TB_"+UtilsClass.Random(10);
+        tokenType = "TB_" + UtilsClass.Random(10);
         double timeStampNow = System.currentTimeMillis();
         BigDecimal deadline = new BigDecimal(timeStampNow + 12356789);
-        List<Map>list = smartConstructTokenList(ADDRESS1, "test", amount);
+        List<Map> list = smartConstructTokenList(ADDRESS1, "test", amount);
 
-        String issueResp = smartIssueToken(tokenType,deadline,list,true, 0, "");
-        assertEquals("200",JSONObject.fromObject(issueResp).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(issueResp,utilsClass.sdkGetTxHashType21),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        String issueResp = smartIssueToken(tokenType, deadline, list, true, 0, "");
+        assertEquals("200", JSONObject.fromObject(issueResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(issueResp, utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
-        log.info("查询数字资产余额");
-        String queryBalance = st.SmartGetBalanceByAddr(ADDRESS1, "");
-        assertEquals("200",JSONObject.fromObject(queryBalance).getString("state"));
-        assertThat(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType),containsString(amount));
-        assertThat(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType),containsString("test"));
-        assertThat(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType),containsString("true"));
+        log.info("验证数字资产余额");
+        verifyAddressHasBalance(ADDRESS1, tokenType, amount);
 
         return tokenType;
 
     }
 
     //安装账户合约
-    public void installSmartAccountContract(String abfileName)throws Exception{
+    public void installSmartAccountContract(String abfileName) throws Exception {
         WVMContractTest wvmContractTestSA = new WVMContractTest();
         UtilsClass utilsClassSA = new UtilsClass();
         CommonFunc commonFuncTeSA = new CommonFunc();
 
         //如果smartAccoutCtHash为空或者contractFileName不为constFileName 即"wvm\\account_simple.wlang" 时会重新安装
-        if(smartAccoutContractAddress.equals("") || (!contractFileName.equals(constFileName))){
+        if (smartAccoutContractAddress.equals("") || (!contractFileName.equals(constFileName))) {
             //安装
-            String response =wvmContractTestSA.wvmInstallTest(abfileName,"");
-            assertEquals("200",JSONObject.fromObject(response).getString("state"));
-            commonFuncTeSA.sdkCheckTxOrSleep(commonFuncTeSA.getTxHash(response,utilsClassSA.sdkGetTxHashType20),
-                    utilsClassSA.sdkGetTxDetailTypeV2,SLEEPTIME);
+            String response = wvmContractTestSA.wvmInstallTest(abfileName, "");
+            assertEquals("200", JSONObject.fromObject(response).getString("state"));
+            commonFuncTeSA.sdkCheckTxOrSleep(commonFuncTeSA.getTxHash(response, utilsClassSA.sdkGetTxHashType20),
+                    utilsClassSA.sdkGetTxDetailTypeV2, SLEEPTIME);
             smartAccoutContractAddress = JSONObject.fromObject(response).getJSONObject("data").getString("name");
         }
     }
 
     /**
      * tokenList 数组构建方法
+     *
      * @param toAddr
      * @param subType
      * @param amount
      * @return
      */
-    public  List<Map>   smartConstructTokenList(String toAddr, String subType, String amount){
+    public List<Map> smartConstructTokenList(String toAddr, String subType, String amount) {
 
-        Map<String,Object>amountMap=new HashMap<>();
-        amountMap.put("address",toAddr);
-        amountMap.put("amount",amount);
+        Map<String, Object> amountMap = new HashMap<>();
+        amountMap.put("address", toAddr);
+        amountMap.put("amount", amount);
 
-        if(subType != "")
-            amountMap.put("subType",subType);
+        if (subType != "")
+            amountMap.put("subType", subType);
 
-        List<Map>tokenList=new ArrayList<>();
+        List<Map> tokenList = new ArrayList<>();
         tokenList.add(amountMap);
         return tokenList;
     }
 
     /**
      * payAddressInfoList 数组构建方法
+     *
      * @param fromAddr
      * @param payList
      * @param signList
      * @return
      */
-    public  List<Map>   smartConstructPayAddressInfoList(String fromAddr, List<Map> payList, List<Map> signList){
+    public List<Map> smartConstructPayAddressInfoList(String fromAddr, List<String> payList, List<String> signList) {
 
-        Map<String,Object>signMap=new HashMap<>();
-        signMap.put("address",fromAddr);
-        signMap.put("pubkeyList",payList);
-        signMap.put("signList",signList);
+        Map<String, Object> signMap = new HashMap<>();
+        signMap.put("address", fromAddr);
+        signMap.put("pubkeyList", payList);
+        signMap.put("signList", signList);
 
-        List<Map>payAddressInfoList=new ArrayList<>();
+        List<Map> payAddressInfoList = new ArrayList<>();
         payAddressInfoList.add(signMap);
         return payAddressInfoList;
     }
 
     //单签账户目前的签名公私钥对为PUBKEY1 PRIKEY1
     public String smartIssueToken(String tokenType, BigDecimal deadline, List<Map> issueToList,
-                                  boolean reissued, int maxLevel, String extend)throws Exception{
+                                  boolean reissued, int maxLevel, String extend) throws Exception {
 
         //发行申请
-        String isResult= st.SmartIssueTokenReq(smartAccoutContractAddress,tokenType,
-                deadline,issueToList, new BigDecimal(0), reissued, maxLevel, extend);
+        String isResult = st.SmartIssueTokenReq(smartAccoutContractAddress, tokenType,
+                deadline, issueToList, new BigDecimal(0), reissued, maxLevel, extend);
         String sigMsg1 = JSONObject.fromObject(isResult).getJSONObject("data").getString("sigMsg");
 
         //发行审核
-        String tempSM3Hash = certTool.getSm3Hash(PEER4IP,sigMsg1);
-        String cryptMsg = certTool.sign(PEER4IP ,PRIKEY1,"",tempSM3Hash,"hex");
+        String tempSM3Hash = certTool.getSm3Hash(PEER4IP, sigMsg1);
+        String cryptMsg = certTool.sign(PEER4IP, PRIKEY1, "", tempSM3Hash, "hex");
 //        String pubkey = utilsClass.readStringFromFile(testDataPath + "cert/SM2/keys1/pubkey.pem").replaceAll("\r\n","\n");
 
-        String approveResp = st.SmartIssueTokenApprove(sigMsg1,cryptMsg,PUBKEY1);
+        String approveResp = st.SmartIssueTokenApprove(sigMsg1, cryptMsg, PUBKEY1);
         return approveResp;
     }
 
+    //转让
     //单签账户目前的签名公私钥对为PUBKEY1 PRIKEY1
-    public String smartTransfer(String tokenType, List<Map> payList, List<Map> collList,
-                                String newSubType, String extendArgs, String extendData)throws Exception {
+    public String smartTransfer(String tokenType, List<Map> payList, List<Map> collList, String newSubType,
+                                String extendArgs, String extendData) throws Exception {
         //转让申请
-        String transferInfo= st.SmartTransferReq(tokenType, payList, collList, newSubType, extendArgs, extendData);
+        String transferInfo = st.SmartTransferReq(tokenType, payList, collList, newSubType, extendArgs, extendData);
 
         assertThat(transferInfo, containsString("200"));
         String UTXOInfo = JSONObject.fromObject(transferInfo).getJSONObject("data").getString("UTXOInfo");
@@ -159,23 +158,161 @@ public class SmartTokenCommon {
         String signMsg = JSONObject.fromObject(transferInfo).getJSONObject("data").getString("sigMsg");
 
         JSONArray signMsgArray = JSONArray.fromObject(signMsg);
-        ArrayList  pubkeys = new ArrayList();
-        ArrayList  signList = new ArrayList();
+        ArrayList<String> pubkeys = new ArrayList();
+        ArrayList<String> prikeys = new ArrayList();
+        ArrayList<String> signList = new ArrayList();
+        String signAddress = "";
 
-        for(int i = 0; i < signMsgArray.size(); i++) {
+        for (int i = 0; i < signMsgArray.size(); i++) {
+
+            log.info("签名数组长度" + signMsgArray.size());
+
             String signData = JSONObject.fromObject(signMsgArray.get(i)).getString("signMsg");
-            String cryptMsg = certTool.smartSign(PEER4IP ,PRIKEY1,"",signData,"hex");
-            pubkeys.add(PUBKEY1);
-            signList.add(cryptMsg);
+            log.info(signData);
+            signAddress = JSONObject.fromObject(signMsgArray.get(i)).getString("address");
+            log.info(signAddress);
+            pubkeys = getPubkeyListFromAddress(signAddress);
+            prikeys = getPrikeyListFromAddress(signAddress);
+            log.info("私钥数组长度" + prikeys.size());
+            for (int j = 0; j < prikeys.size(); j++) {
+//                log.info(prikeys.get(j));
+                String cryptMsg = certTool.smartSign(PEER4IP, prikeys.get(j), "", signData, "hex");
+                signList.add(cryptMsg);
+            }
         }
 
         //转让审核
-        List<Map> payInfoList = smartConstructPayAddressInfoList(ADDRESS1, pubkeys, signList);
+        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList);
 
-        String approveResp = st.SmartTransferApprove(payInfoList,UTXOInfo);
-//        log.info(approveResp);
+        String approveResp = st.SmartTransferApprove(payInfoList, UTXOInfo);
+
         return approveResp;
 
     }
 
+    //根据地址返回公钥列表
+    public ArrayList<String> getPubkeyListFromAddress(String fromAddress) throws Exception {
+
+        ArrayList<String> pubkeys = new ArrayList();
+
+        if (fromAddress.equals(ADDRESS1)) {
+            log.info("进入这里了" + ADDRESS1);
+            pubkeys.add(PUBKEY1);
+        } else if (fromAddress.equals(ADDRESS2)){
+            pubkeys.add(PUBKEY2);
+        } else if (fromAddress.equals(MULITADD2)){ //126 (3/3签名)
+            pubkeys.add(PUBKEY1);
+            pubkeys.add(PUBKEY2);
+            pubkeys.add(PUBKEY6);
+        } else if (fromAddress.equals(MULITADD4)){ //12  (1/2签名)
+            pubkeys.add(PUBKEY1);
+            pubkeys.add(PUBKEY2);
+        } else if (fromAddress.equals(MULITADD7)){ //16  (1/2签名)
+            pubkeys.add(PUBKEY1);
+            pubkeys.add(PUBKEY6);
+        }
+
+        return pubkeys;
+
+    }
+
+
+    //根据地址返回私钥列表
+    public ArrayList<String> getPrikeyListFromAddress(String fromAddress) throws Exception {
+
+        ArrayList<String> prikeys = new ArrayList();
+
+        if (fromAddress.equals(ADDRESS1)) {
+            prikeys.add(PRIKEY1);
+        } else if (fromAddress.equals(ADDRESS2)){
+            prikeys.add(PRIKEY2);
+        } else if (fromAddress.equals(MULITADD2)){ //126 (3/3签名)
+            prikeys.add(PRIKEY1);
+            prikeys.add(PRIKEY2);
+            prikeys.add(PRIKEY6);
+        } else if (fromAddress.equals(MULITADD4)){ //12  (1/2签名)
+            prikeys.add(PRIKEY1);
+            prikeys.add(PRIKEY2);
+        } else if (fromAddress.equals(MULITADD7)){ //16  (1/2签名)
+            prikeys.add(PRIKEY1);
+            prikeys.add(PRIKEY6);
+        }
+
+        return prikeys;
+
+    }
+
+    //销毁
+    //单签账户目前的签名公私钥对为PUBKEY1 PRIKEY1
+    public String smartDestroy(String tokenType, List<Map> payList, String extendArgs, String extendData) throws Exception {
+        //销毁申请
+        String destroyInfo = st.SmartDestroyReq(tokenType, payList, extendArgs, extendData);
+
+        assertThat(destroyInfo, containsString("200"));
+        String UTXOInfo = JSONObject.fromObject(destroyInfo).getJSONObject("data").getString("UTXOInfo");
+
+        //组装信息列表
+        String signMsg = JSONObject.fromObject(destroyInfo).getJSONObject("data").getString("sigMsg");
+
+        JSONArray signMsgArray = JSONArray.fromObject(signMsg);
+        ArrayList<String> pubkeys = new ArrayList();
+        ArrayList<String> prikeys = new ArrayList();
+        ArrayList<String> signList = new ArrayList();
+        String signAddress = "";
+
+        for (int i = 0; i < signMsgArray.size(); i++) {
+
+            log.info("签名数组长度" + signMsgArray.size());
+
+            String signData = JSONObject.fromObject(signMsgArray.get(i)).getString("signMsg");
+            log.info(signData);
+            signAddress = JSONObject.fromObject(signMsgArray.get(i)).getString("address");
+            log.info(signAddress);
+            pubkeys = getPubkeyListFromAddress(signAddress);
+            prikeys = getPrikeyListFromAddress(signAddress);
+            log.info("私钥数组长度" + prikeys.size());
+            for (int j = 0; j < prikeys.size(); j++) {
+                String cryptMsg = certTool.smartSign(PEER4IP, prikeys.get(j), "", signData, "hex");
+                signList.add(cryptMsg);
+            }
+        }
+
+        //审核
+        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList);
+
+        String approveResp = st.SmartDestroyApprove(payInfoList, UTXOInfo);
+        return approveResp;
+
+    }
+
+
+    //验证账户地址余额
+    public void verifyAddressHasBalance(String address, String tokenType, String amount) throws Exception {
+
+        String queryBalance = st.SmartGetBalanceByAddr(address, tokenType);
+        assertEquals("200", JSONObject.fromObject(queryBalance).getString("state"));
+        assertEquals("success", JSONObject.fromObject(queryBalance).getString("message"));
+
+        if (tokenType.equals("")){
+            assertThat(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType), containsString(amount));
+            assertThat(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType), containsString("test"));
+            assertThat(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType), containsString("true"));
+        }else{
+            assertThat(JSONObject.fromObject(queryBalance).getString("data"), containsString(amount));
+            assertThat(JSONObject.fromObject(queryBalance).getString("data"), containsString("test"));
+            assertThat(JSONObject.fromObject(queryBalance).getString("data"), containsString("true"));
+        }
+    }
+
+    //验证账户地址余额
+    public void verifyAddressNoBalance(String address, String tokenType) throws Exception {
+
+        String queryBalance = st.SmartGetBalanceByAddr(address, tokenType);
+        assertEquals("200", JSONObject.fromObject(queryBalance).getString("state"));
+        assertEquals("success", JSONObject.fromObject(queryBalance).getString("message"));
+        assertEquals("null", JSONObject.fromObject(queryBalance).getString("data"));
+
+    }
+
 }
+

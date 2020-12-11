@@ -278,50 +278,56 @@ public class BeforeCondition {
         int M = 1;
         Map<String, Object> map = new HashMap<>();
         map.put("1", PUBKEY1);
+        log.info("ADDRESS1");
         ADDRESS1 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");
 
         map = new HashMap<>();
         map.put("1", PUBKEY2);
+        log.info("ADDRESS2");
         ADDRESS2 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");
-
 
         M = 3;
         map = new HashMap<>();
         map.put("1", PUBKEY1);
         map.put("2", PUBKEY2);
-        map.put("3", PUBKEY3);
-        MULITADD1 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//123
-        map = new HashMap<>();
-        map.put("1", PUBKEY1);
-        map.put("2", PUBKEY2);
         map.put("3", PUBKEY6);
+        log.info("MULITADD2");
         MULITADD2 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//126
-        map = new HashMap<>();
-        map.put("1", PUBKEY1);
-        map.put("2", PUBKEY6);
-        map.put("3", PUBKEY7);
-        MULITADD3 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//167
+
         M = 1;
         map = new HashMap<>();
         map.put("1", PUBKEY1);
         map.put("2", PUBKEY2);
+        log.info("MULITADD4");
         MULITADD4 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//12
         map = new HashMap<>();
         map.put("1", PUBKEY1);
-        map.put("2", PUBKEY3);
-        MULITADD5 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//13
-        map = new HashMap<>();
-        map.put("1", PUBKEY3);
-        map.put("2", PUBKEY4);
-        MULITADD6 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//34
-        map = new HashMap<>();
-        map.put("1", PUBKEY1);
         map.put("2", PUBKEY6);
+        log.info("MULITADD7");
         MULITADD7 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//16
-        map = new HashMap<>();
-        map.put("1", PUBKEY4);
-        map.put("2", PUBKEY5);
-        IMPPUTIONADD = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//45
+
+//        map = new HashMap<>();
+//        map.put("1", PUBKEY1);
+//        map.put("2", PUBKEY2);
+//        map.put("3", PUBKEY3);
+//        MULITADD1 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//123
+//        map = new HashMap<>();
+//        map.put("1", PUBKEY1);
+//        map.put("2", PUBKEY6);
+//        map.put("3", PUBKEY7);
+//        MULITADD3 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//167
+//        map = new HashMap<>();
+//        map.put("1", PUBKEY1);
+//        map.put("2", PUBKEY3);
+//        MULITADD5 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//13
+//        map = new HashMap<>();
+//        map.put("1", PUBKEY3);
+//        map.put("2", PUBKEY4);
+//        MULITADD6 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//34
+//        map = new HashMap<>();
+//        map.put("1", PUBKEY4);
+//        map.put("2", PUBKEY5);
+//        IMPPUTIONADD = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");//45
     }
 
     /**
