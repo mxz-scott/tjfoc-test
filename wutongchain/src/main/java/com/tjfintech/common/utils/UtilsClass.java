@@ -164,6 +164,7 @@ public class UtilsClass {
 
     //零地址/回收地址账户
     public static String zeroAccount = "0000000000000000";
+    public static String ZEROADDRESS = "osEoy933LkHyyBcgjE7vCivfsX";
     //SM2公私钥对
     public static String  ADDRESS1, ADDRESS2, ADDRESS3, ADDRESS4, ADDRESS5, ADDRESS6, ADDRESS7;
     public static String  MULITADD1 ="";//123 (3/3签名)

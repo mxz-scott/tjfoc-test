@@ -9,6 +9,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -32,6 +33,7 @@ public class smtMultiTest {
     UtilsClass utilsClass = new UtilsClass();
     GoSmartToken st = new GoSmartToken();
     SmartTokenCommon stc = new SmartTokenCommon();
+    CommonFunc commonFunc = new CommonFunc();
 
     private static String tokenType;
 
@@ -50,44 +52,44 @@ public class smtMultiTest {
      */
     @Test
     public void TC03_multiProgress() throws Exception {
-//        tokenType =  stc.beforeConfigIssueNewToken("1000.25");
-        tokenType = "TB_EswhX4";
+
+        //发行
+        tokenType =  stc.beforeConfigIssueNewToken("1000.25");
+
+        //转让
         String transferData = "ADDRESS1 向 MULITADD4 转账10个" + tokenType;
         List<Map> payList= stc.smartConstructTokenList(ADDRESS1, "test", "10");
         List<Map> collList= stc.smartConstructTokenList(MULITADD4,"test", "10");
-
         String transferResp= stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
 
         assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-//        log.info("查询归集地址跟MULITADD4余额，判断转账是否成功");
-//        String queryInfo = st.SmartGetBalanceByAddr(IMPPUTIONADD, tokenType);
-//        String queryInfo2 = st.SmartGetBalanceByAddr(MULITADD4,  tokenType);
-//        assertEquals("200",JSONObject.fromObject(queryInfo).getString("state"));
-//        assertEquals(amount1,JSONObject.fromObject(queryInfo).getJSONObject("data").getString("total"));
-//        assertEquals("200",JSONObject.fromObject(queryInfo2).getString("state"));
-//        assertEquals("10",JSONObject.fromObject(queryInfo2).getJSONObject("data").getString("total"));
-//
-//        log.info("回收归集地址跟MULITADD4的新发token");
-//        String recycleInfo = st.SmartRecyle(IMPPUTIONADD, PRIKEY4, "",tokenType, amount1,"");
-//        String recycleInfo2 = st.SmartRecyle(MULITADD4, PRIKEY1,"", tokenType, "10","");
-//        assertEquals("200",JSONObject.fromObject(recycleInfo).getString("state"));
-//        assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("state"));
-//
-//
-//        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-//                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-//
-//
-//        log.info("查询回收后账户余额是否为0");
-//        String queryInfo3 = st.SmartGetBalanceByAddr(IMPPUTIONADD,  tokenType);
-//        String queryInfo4 = st.SmartGetBalanceByAddr(MULITADD4,tokenType);
-//        assertEquals("200",JSONObject.fromObject(queryInfo3).getString("state"));
-//        assertEquals("0",JSONObject.fromObject(queryInfo3).getJSONObject("data").getString("total"));
-//        assertEquals("200",JSONObject.fromObject(queryInfo4).getString("state"));
-//        assertEquals("0",JSONObject.fromObject(queryInfo4).getJSONObject("data").getString("total"));
+        log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "990.25");
+        stc.verifyAddressHasBalance(MULITADD4, tokenType, "10");
 
+        //销毁
+        String destroyData1 = "销毁 ADDRESS1 中的" + tokenType;
+        String destroyData2 = "销毁 MULITADD4 中的" + tokenType;
+        List<Map> payList1 = stc.smartConstructTokenList(ADDRESS1, "test", "990.25");
+        List<Map> payList2 = stc.smartConstructTokenList(MULITADD4, "test", "10");
 
+        String destroyResp1 = stc.smartDestroy(tokenType, payList1, "", destroyData1);
+        String destroyResp2 = stc.smartDestroy(tokenType, payList2, "", destroyData2);
+
+        assertEquals("200",JSONObject.fromObject(destroyResp1).getString("state"));
+        assertEquals("200",JSONObject.fromObject(destroyResp2).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+        log.info("查询回收后账户余额是否为0");
+        stc.verifyAddressNoBalance(ADDRESS1, tokenType);
+        stc.verifyAddressNoBalance(MULITADD4, tokenType);
+
+        log.info("查询回收账户余额");
+        stc.verifyAddressHasBalance(ZEROADDRESS, tokenType, "1000.25");
     }
 
 

@@ -107,7 +107,25 @@ public class GoSmartToken implements SmartToken {
         return result;
     }
 
-    //转让申请
+    //销毁申请
+    public String SmartDestroyReq(String tokenType, List<Map> payList, String extendArgs, String extendData){
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenType", tokenType);
+        map.put("paymentList", payList);
+        if (!extendArgs.isEmpty()) map.put("extendArgs", extendArgs);
+        if (!extendData.isEmpty()) map.put("extendData", extendData);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/destroy/apply?" + param, map);
+        log.info(result);
+        return result;
+    }
+
+
+    //转让审核
     public String SmartTransferApprove(List<Map> payInfoList, String UTXOInfo) {
         Map<String, Object> map = new HashMap<>();
         map.put("payAddressInfoList", payInfoList);
@@ -122,7 +140,20 @@ public class GoSmartToken implements SmartToken {
         return result;
     }
 
+    //回收审核
+    public String SmartDestroyApprove(List<Map> payInfoList, String UTXOInfo) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("payAddressInfoList", payInfoList);
+        map.put("UTXOInfo", UTXOInfo);
 
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/destroy/approve?" + param, map);
+        log.info(result);
+        return result;
+    }
 
 
     public String SmartRecyle(String Address, String prikey, String prikeyPwd, String tokenType, String amount, String data) {
@@ -158,7 +189,7 @@ public class GoSmartToken implements SmartToken {
     public String SmartGetBalanceByAddr(String addr, String tokenType) {
 
         String param = "address=" + addr;
-        if (tokenType != "") param = param + "&tokenType=" + tokenType;
+        if (tokenType != "") param = param + "&tokentype=" + tokenType;
         if (subLedger != "") param = param + "&ledger=" + subLedger;
 
         String result = (GetTest.SendGetTojson(SDKADD + "/v2/tx/stoken/balance?" + param));
