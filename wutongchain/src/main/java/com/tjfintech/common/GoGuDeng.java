@@ -471,6 +471,7 @@ public  class GoGuDeng implements GuDeng {
         Map<String, Object> map = new HashMap<>();
         map.put("contractAddress", contractAddress);
         map.put("subjectObjectId", subjectObjectId);
+
         String result = PostTest.postMethod(SDKADD + "/equity/subject/query", map);
         log.info(result);
         return result;
@@ -512,6 +513,7 @@ public  class GoGuDeng implements GuDeng {
         map.put("contractAddress", contractAddress);
         map.put("type", type);
         map.put("subjectInfo", subjectInfo);
+        map.put("updateTime",ts8);
         String result = PostTest.postMethod(SDKADD + "/equity/subject/update", map);
         log.info(result);
         return result;
@@ -522,6 +524,7 @@ public  class GoGuDeng implements GuDeng {
         map.put("contractAddress", contractAddress);
         map.put("clientNo", clientNo);
         map.put("accountInfo", accountInfo);
+        map.put("updateTime",ts8);
         String result = PostTest.postMethod(SDKADD + "/equity/account/update", map);
         log.info(result);
         return result;
@@ -531,6 +534,7 @@ public  class GoGuDeng implements GuDeng {
         Map<String, Object> map = new HashMap<>();
         map.put("contractAddress", contractAddress);
         map.put("productInfo", productInfo);
+        map.put("updateTime",ts8);
         String result = PostTest.postMethod(SDKADD + "/equity/product/update", map);
         log.info(result);
         return result;

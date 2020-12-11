@@ -51,7 +51,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         GDBeforeCondition gdBefore = new GDBeforeCondition();
 //        gdBefore.gdCreateAccout();
         gdBefore.initRegulationData();
-        gdEquityCode = "fondTest" + Random(12);
+        gdEquityCode = "updateTest" + Random(12);
     }
 
 //    @After
@@ -69,6 +69,8 @@ public class GDV2_CheckData_Update_SubAccProd {
         //挂牌企业登记
         long shareTotals = 1000000;
 
+        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
+
         Map testSub = gdBF.init01EnterpriseSubjectInfo();
         Map eqProdInfo = gdBF.init03EquityProductInfo();
 
@@ -79,20 +81,6 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
-        //查询挂牌企业主体数据
-        for (int i = 0; i < 20; i++) {
-            response = gd.GDMainSubjectQuery(gdContractAddress, gdCompanyID);
-            if (JSONObject.fromObject(response).getString("state").equals("200"))
-                break;
-            sleepAndSaveInfo(100);
-        }
-        assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        Map mapSubject = (Map) com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(response).getString("data"));
-
-        Map<String, String> testMap1 = new TreeMap<String, String>(testSub);
-        Map<String, String> testMap2 = new TreeMap<String, String>(mapSubject);
-        assertEquals(replaceCertain(testMap1.toString()), replaceCertain(testMap2.toString()));
 
         //更新主体信息数据 全部数据
         Map mapTemp = new HashMap();
@@ -130,7 +118,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapISI.put("subject_investor_qualification_sub", "适当性认证子类2");
         mapISI.put("subject_investor_qualification_description", "适当性认证描述2");
         mapISI.put("subject_investor_qualification_certificate", getListFileObj());
-        mapISI.put("subject_investor_qualification_certifier_ref", "sub_ref_0001");
+        mapISI.put("subject_investor_qualification_certifier_ref", subject_investor_qualification_certifier_ref);
         mapISI.put("subject_investor_qualification_certifier_name", "适当性认证方主体名称2");
         mapISI.put("subject_investor_qualification_certificate_time", time2);
         mapISI.put("subject_investor_qualification_status", true);
@@ -257,34 +245,62 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         sleepAndSaveInfo(2000);
 
-        response = gd.GDMainSubjectQuery(gdContractAddress, gdCompanyID);
-        Map mapTest = (Map) com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(response).getString("data"));
+//        response = gd.GDMainSubjectQuery(gdContractAddress, gdCompanyID);
+//        Map mapTest = (Map) com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(response).getString("data"));
 
-        Map<String, String> testMap3 = new TreeMap<String, String>(mapTemp);
-        Map<String, String> testMap4 = new TreeMap<String, String>(mapTest);
-        assertEquals(replaceCertain(testMap3.toString()),
-                replaceCertain(testMap4.toString()));
+//        Map<String, String> testMap3 = new TreeMap<String, String>(mapTemp);
+//        Map<String, String> testMap4 = new TreeMap<String, String>(mapTest);
+//        assertEquals(replaceCertain(testMap3.toString()),
+//                replaceCertain(testMap4.toString()));
+
+//
+//        //获取监管数据存证hash
+//        String jgType = subjectType;
+//        String SubjectObjectTxId = gdCF.getJGStoreHash2(txId, jgType, 1);
+//
+//        Map getSubInfo = gdCF.contructEnterpriseSubInfo(SubjectObjectTxId);
+//
+//
+//        String timeStampSub = gdCF.getTimeStampFromMap(getSubInfo, "subject_create_time");
+//        mapTemp.put("content",
+//                gdCF.constructContentMap(subjectType, gdCompanyID, "1", "create",
+//                        timeStampSub));
+//
+//
+//        log.info("检查主体存证信息内容与传入一致\n" + mapTemp.toString() + "\n" + getSubInfo.toString());
+//        assertEquals(replaceCertain(mapTemp.toString()), replaceCertain(getSubInfo.toString()));
 
 
-        //获取监管数据存证hash
-        String jgType = subjectType;
-        String SubjectObjectTxId = gdCF.getJGStoreHash2(txId, jgType, 1);
+        //设置各个主体版本变量
+        String newSubVer = gdCF.getObjectLatestVer(gdCompanyID);
+        String subSIQCRefVer = gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref);
 
-        Map getSubInfo = gdCF.contructEnterpriseSubInfo(SubjectObjectTxId);
+        //获取链上mini url的存证信息并检查是否包含uri信息
+        String subfileName = conJGFileName(gdCompanyID,newSubVer);
+
+        Map uriInfo = gdCF.getJGURIStoreHash(txId,conJGFileName(gdCompanyID,newSubVer),1);
+        String chkSubURI = minIOEP + "/" + jgBucket + "/" + subfileName;
+        log.info(uriInfo.get("storeData").toString());
+        log.info(chkSubURI);
+        assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
+        assertEquals(true,uriInfo.get("storeData").toString().contains("\"meta\":null"));//确认meta信息移除
 
 
-        String timeStampSub = gdCF.getTimeStampFromMap(getSubInfo, "subject_create_time");
-        mapTemp.put("content",
-                gdCF.constructContentMap(subjectType, gdCompanyID, "1", "create",
-                        timeStampSub));
+        //直接从minio上通过对象标识+版本号的方式获取指定对象文件
+        Map getSubInfo = gdCF.constructJGDataFromStr(conJGFileName(gdCompanyID,newSubVer),subjectType,"1");
 
+        //填充header content字段
+        mapTemp.put("content",gdCF.constructContentMap(subjectType,gdCompanyID,newSubVer,"update",String.valueOf(ts8)));
 
+        assertEquals(String.valueOf(gdCpmIdOldVer + 2),newSubVer);
+
+        String[] verForSub = new String[]{"/" + subSIQCRefVer };
         log.info("检查主体存证信息内容与传入一致\n" + mapTemp.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(mapTemp.toString()), replaceCertain(getSubInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(mapTemp,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
 
     }
 
-    @Test
+//    @Test
     public void TC20_partUpdateSubjectInfo_Enterprise()throws Exception{
         gdEquityCode = "update" + Random(12);
         //挂牌企业登记
@@ -367,11 +383,14 @@ public class GDV2_CheckData_Update_SubAccProd {
         String shareHolderNo = "SH" + cltNo;
         String fundNo = "fund" + cltNo;
 
+        int gdClient = Integer.parseInt(gdCF.getObjectLatestVer(cltNo));//获取当前开户主体最新版本信息
+
         //构造股权账户信息
         Map shareHolderInfo = new HashMap();
 
         shAccountInfo.put("account_object_id",shareHolderNo);  //更新账户对象标识字段
         log.info(shAccountInfo.toString());
+        shareHolderInfo.put("createTime", ts2);
         shareHolderInfo.put("shareholderNo",shareHolderNo);
         shareHolderInfo.put("accountInfo", shAccountInfo);
         log.info(shareHolderInfo.toString());
@@ -379,6 +398,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         //资金账户信息
         fundAccountInfo.put("account_object_id",fundNo);  //更新账户对象标识字段
         Map mapFundInfo = new HashMap();
+        mapFundInfo.put("createTime", ts2);
         mapFundInfo.put("fundNo",fundNo);
         mapFundInfo.put("accountInfo", fundAccountInfo);
 
@@ -393,119 +413,96 @@ public class GDV2_CheckData_Update_SubAccProd {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
-        //查询个人主体数据
-        for(int i = 0;i < 20; i++) {
-            response = gd.GDMainSubjectQuery(gdContractAddress,cltNo);
-            if(JSONObject.fromObject(response).getString("state").equals("200"))
-                break;
-            sleepAndSaveInfo(100);
-        }
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-
-        Map mapSubject = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(response).getString("data"));
-        Map<String, String> testMap1 = new TreeMap<String, String>(testSub);
-        Map<String, String> testMap2 = new TreeMap<String, String>(mapSubject);
-        assertEquals(replaceCertain(testMap1.toString()),
-                replaceCertain(testMap2.toString()));
-
 
         //更新主体信息数据
         Map mapTemp = new HashMap();
+        log.info("初始化01主体个人数据结构");
+        mapTemp.clear();
+
+        //-----------------主体资质信息start---------------//
         List<Map> listSQI = new ArrayList<>();
         List<Map> listQAI = new ArrayList<>();
         List<Map> listISI = new ArrayList<>();
-        Map mapSQI = new HashMap();
 
+        Map mapSQI = new HashMap();
         Map mapQAI = new HashMap();
         Map mapISI = new HashMap();
 
-        //主体基本信息 主体资质信息 资质信息
-        mapSQI.put("subject_qualification_category",0);
-        mapSQI.put("subject_market_roles_type",0);
+        //主体信息 主体基本信息 主体资质信息 资质信息
+        mapSQI.put("subject_qualification_category", 2);
+        mapSQI.put("subject_market_roles_type", 2);
+        List<Integer> type = new ArrayList<>();
+        type.add(2);
+        type.add(3);
+        mapSQI.put("subject_intermediary_qualification", type);
+        mapSQI.put("subject_financial_qualification_type", 2);
 
-        List<Integer> type = new ArrayList<>();type.add(4);type.add(5);
-        mapSQI.put("subject_intermediary_qualification",type);
-        mapSQI.put("subject_financial_qualification_type",0);
-
-
-        //主体基本信息 主体资质信息 资质认证信息
-        //{"file_number":"1","file_name": "12312312","url": "12312312","hash": "12312312","summary": "12312312","term_of_validity_type": "0","term_of_validity":"yyyy/MM/dd"}
-        //文件对象
-        Map fileMap = new HashMap();
-        fileMap.put("file_number",1);
-        fileMap.put("file_name","file3.pdf");
-        fileMap.put("hash","da1234filehash5223");
-        fileMap.put("url","http://test.com/file/201/file3.pdf");
-        fileMap.put("summary","简述3");
-        fileMap.put("term_of_validity_type","3");
-        fileMap.put("term_of_validity","2020/03/18");
-
-        mapQAI.put("subject_qualification_code","资质代码3");
-        mapQAI.put("subject_role_qualification_certification_doc",fileMap);
-        mapQAI.put("subject_qualification_authenticator","认证方3");
-        mapQAI.put("subject_certification_time","2020/10/12 12:00:03");
-        mapQAI.put("subject_qualification_reviewer","审核方3");
-        mapQAI.put("subject_review_time","2020/10/11 12:00:03");
-        mapQAI.put("subject_qualification_status",true);
+        //主体信息 主体基本信息 主体资质信息 资质认证信息
+        mapQAI.put("subject_qualification_code", "资质代码2");
+        mapQAI.put("subject_role_qualification_certification_doc", getListFileObj());
+        mapQAI.put("subject_qualification_authenticator", "认证方2");
+        mapQAI.put("subject_certification_time", time2);
+        mapQAI.put("subject_qualification_reviewer", "审核方2");
+        mapQAI.put("subject_review_time", time2);
+        mapQAI.put("subject_qualification_status", false);
         listQAI.add(mapQAI);
 
-        //主体基本信息 主体资质信息 投资者适当性信息
-        mapISI.put("subject_investor_qualification",3);
-        mapISI.put("subject_investor_qualification_sub","适当性认证子类3");
-        mapISI.put("subject_investor_qualification_description","适当性认证描述3");
-        mapISI.put("subject_investor_qualification_certificate",fileMap);
-        mapISI.put("subject_investor_qualification_cerifier_ref","sub_ref_0003");
-        mapISI.put("subject_investor_qualification_cerifier_name","适当性认证方主体名称3");
-        mapISI.put("subject_investor_qualification_certificate_time","2020/11/12 12:00:03");
-        mapISI.put("subject_investor_qualification_status",true);
+        //主体信息 主体基本信息 主体资质信息 投资者适当性信息
+        mapISI.put("subject_investor_qualification", 2);
+        mapISI.put("subject_investor_qualification_sub", "适当性认证子类2");
+        mapISI.put("subject_investor_qualification_description", "适当性认证描述2");
+        mapISI.put("subject_investor_qualification_certificate", getListFileObj());
+        mapISI.put("subject_investor_qualification_certifier_ref", subject_investor_qualification_certifier_ref);
+        mapISI.put("subject_investor_qualification_certifier_name", "适当性认证方主体名称2");
+        mapISI.put("subject_investor_qualification_certificate_time", time2);
+        mapISI.put("subject_investor_qualification_status", true);
         listISI.add(mapISI);
 
-        mapSQI.put("investor_suitability_information",listISI);
-        mapSQI.put("qualification_authentication_information",listQAI);
-
+        mapSQI.put("investor_suitability_information", listISI);
+        mapSQI.put("qualification_authentication_information", listQAI);
 
         listSQI.add(mapSQI);
-        //-----------------主体资质信息---------------//
+        //-----------------主体资质信息end---------------//
 
 
-        //-----------------主体基本信息---------------//
+        //-----------------主体基本信息start---------------//
         //对象标识
-        mapTemp.put("subject_object_id",cltNo);
-//        mapTemp.put("subject_object_information_type",0);
-        mapTemp.put("subject_type",2);
+        mapTemp.put("subject_object_id", cltNo);
 
         //主体信息 主体基本信息 主体通用信息
-        mapTemp.put("subject_id",cltNo + "sub");
-        mapTemp.put("subject_main_administrative_region",3);
-        mapTemp.put("subject_create_time","2020/11/06 14:14:53");
+        mapTemp.put("subject_id", cltNo);
+        mapTemp.put("subject_type", 2);
+        mapTemp.put("subject_main_administrative_region", 1);
+        mapTemp.put("subject_create_time", time2);
 
         //主体信息 主体基本信息 主体资质信息
-        //主体信息 主体基本信息 主体资质信息 资质信息
-        mapTemp.put("subject_qualification_information",listSQI);
-        //-----------------主体基本信息---------------//
+        mapTemp.put("subject_qualification_information", listSQI);
+        //-----------------主体基本信息end---------------//
 
         //主体信息 个人主体信息 个人主体基本信息
-        mapTemp.put("subject_investor_name","个人姓名CHARACTER3");
-        mapTemp.put("subject_id_type",0);
-        mapTemp.put("subject_id_number","个人身份证件号CHARACTER3");
-        mapTemp.put("subject_id_address","个人证件地址CHARACTER3");
-        mapTemp.put("subject_contact_address","个人联系地址CHARACTER3");
-        mapTemp.put("subject_contact_number","个人联系电话CHARACTER3");
-        mapTemp.put("subject_cellphone_number","个人手机号CHARACTER3");
-        mapTemp.put("subject_personal_fax","个人传真CHARACTER3");
-        mapTemp.put("subject_postalcode_number","邮政编码CHARACTER3");
-        mapTemp.put("subject_id_doc_mailbox","电子邮箱CHARACTER3");
-        mapTemp.put("subject_education",3);
-        mapTemp.put("subject_occupation",3);
-        mapTemp.put("subject_industry",3);
-        mapTemp.put("subject_birthday","yyyy/MM/dd");
-        mapTemp.put("subject_gender",2);
-        mapTemp.put("subject_work_unit","工作单位CHARACTER3");
-        mapTemp.put("subject_investment_period","投资年限CHARACTER3");
-        mapTemp.put("subject_investment_experience","投资经历CHARACTER3");
-        mapTemp.put("subject_native_place","籍贯CHARACTER3");
-        mapTemp.put("subject_province","省份CHARACTER3");
-        mapTemp.put("subject_city","城市CHARACTER3");
+        mapTemp.put("subject_investor_name", "zhangsan2");
+        mapTemp.put("subject_id_type", 1);
+        mapTemp.put("subject_id_number", "个人身份证件号CHARACTER2");
+        mapTemp.put("subject_id_address", "个人证件地址CHARACTER2");
+        mapTemp.put("subject_contact_address", "个人联系地址CHARACTER2");
+        mapTemp.put("subject_contact_number", "个人联系电话CHARACTER2");
+        mapTemp.put("subject_cellphone_number", "个人手机号CHARACTER2");
+        mapTemp.put("subject_personal_fax", "个人传真CHARACTER2");
+        mapTemp.put("subject_postal_code", "邮政编码CHARACTER2");
+        mapTemp.put("subject_id_doc_mailbox", "电子邮箱CHARACTER2");
+        mapTemp.put("subject_education", 2);
+        mapTemp.put("subject_occupation", 1);
+        mapTemp.put("subject_industry", 2);
+        mapTemp.put("subject_birthday", date2);
+        mapTemp.put("subject_gender", 1);
+        mapTemp.put("subject_work_unit", "工作单位CHARACTER2");
+        mapTemp.put("subject_investment_period", "122");
+        mapTemp.put("subject_investment_experience", "投资经历CHARACTER2");
+        mapTemp.put("subject_native_place", "籍贯CHARACTER2");
+        mapTemp.put("subject_province", "省份CHARACTER2");
+        mapTemp.put("subject_city", "城市CHARACTER2");
+
+
         //执行update操作 更新个人主体信息
         String resp2 = gd.GDUpdateSubjectInfo(gdContractAddress,1,mapTemp);
         txId = JSONObject.fromObject(resp2).getJSONObject("data").getString("txId");
@@ -514,18 +511,44 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         sleepAndSaveInfo(2000);
 
-        //查询个人主体信息
-        response = gd.GDMainSubjectQuery(gdContractAddress,cltNo);
-        Map mapTest = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(response).getString("data"));
+        //定义相关对象标识版本变量
 
-        Map<String, String> testMap3 = new TreeMap<String, String>(mapTemp);
-        Map<String, String> testMap4 = new TreeMap<String, String>(mapTest);
-        assertEquals(replaceCertain(testMap3.toString()),
-                replaceCertain(testMap4.toString()));
+        String personSubVer =  gdCF.getObjectLatestVer(cltNo);
+        String subSIQCRefVer = gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref);
+
+
+        //获取链上mini url的存证信息 并检查是否包含uri信息
+        String subfileName = conJGFileName(cltNo,personSubVer);
+
+        Map uriInfo = gdCF.getJGURIStoreHash(txId,subfileName,1);
+        String chkSubURI = minIOEP + "/" + jgBucket + "/" + subfileName;
+        log.info(uriInfo.get("storeData").toString());
+        log.info(chkSubURI);
+        assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
+        assertEquals(true,uriInfo.get("storeData").toString().contains("\"meta\":null"));//确认meta信息移除
+
+
+        //直接从minio上获取报送数据文件信息
+        Map getSubInfo = gdCF.constructJGDataFromStr(subfileName,subjectType,"2");
+
+        Map enSubInfo = mapTemp;
+
+        //填充header content 信息
+        enSubInfo.put("content",gdCF.constructContentMap(subjectType,cltNo,personSubVer,"update",String.valueOf(ts8)));
+
+        assertEquals(String.valueOf(gdClient + 2),personSubVer);
+
+
+        //需要将比较的对象标识增加版本号信息
+        String[] verForSub = new String[]{"/" + subSIQCRefVer};
+
+
+        log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
 
     }
 
-    @Test
+//    @Test
     public void TC20_partUpdateSubjectInfo_Personal()throws Exception{
         //开户
         String cltNo = "updateCLI" + Random(12);
@@ -626,6 +649,8 @@ public class GDV2_CheckData_Update_SubAccProd {
         String shareHolderNo = "SH" + cltNo;
         String fundNo = "fund" + cltNo;
 
+        int gdClient = Integer.parseInt(gdCF.getObjectLatestVer(cltNo));//获取当前开户主体最新版本信息
+
         shAccountInfo = gdBF.init02ShareholderAccountInfo();
         fundAccountInfo = gdBF.init02FundAccountInfo();
 
@@ -634,6 +659,7 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         shAccountInfo.put("account_object_id",shareHolderNo);  //更新账户对象标识字段
         log.info(shAccountInfo.toString());
+        shareHolderInfo.put("createTime", ts2);
         shareHolderInfo.put("shareholderNo",shareHolderNo);
         shareHolderInfo.put("accountInfo", shAccountInfo);
         log.info(shareHolderInfo.toString());
@@ -641,6 +667,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         //资金账户信息
         fundAccountInfo.put("account_object_id",fundNo);  //更新账户对象标识字段
         Map mapFundInfo = new HashMap();
+        mapFundInfo.put("createTime", ts2);
         mapFundInfo.put("fundNo",fundNo);
         mapFundInfo.put("accountInfo", fundAccountInfo);
 
@@ -655,136 +682,78 @@ public class GDV2_CheckData_Update_SubAccProd {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
-        //查询个人主体数据
-        for(int i = 0;i < 20; i++) {
-            response = gd.GDMainSubjectQuery(gdContractAddress,cltNo);
-            if(JSONObject.fromObject(response).getString("state").equals("200"))
-                break;
-            sleepAndSaveInfo(100);
-        }
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-
-        //查询投资者账户信息
-        String query = gd.GDAccountQuery(gdContractAddress,cltNo);
-        Map mapSHAccGet1 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
-                JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
-                        "AccountInfoList").get(0).toString()).getJSONObject(
-                "ShareholderAccount").getJSONObject("AccountInfo").toString());
-        Map mapFundccGet1 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
-                JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
-                        "AccountInfoList").get(0).toString()).getJSONObject(
-                "FundAccount").getJSONObject("AccountInfo").toString());
-
-        shAccountInfo.put("account_forzen_date","");
-        fundAccountInfo.put("account_forzen_date","");
-
-        Map<String, String> testMap11 = new TreeMap<String, String>(shAccountInfo);
-        Map<String, String> testMap12 = new TreeMap<String, String>(mapSHAccGet1);
-        assertEquals(replaceCertain(testMap11.toString()),
-                replaceCertain(testMap12.toString()));
-
-        Map<String, String> testMap13 = new TreeMap<String, String>(fundAccountInfo);
-        Map<String, String> testMap14 = new TreeMap<String, String>(mapFundccGet1);
-        log.info(fundAccountInfo.toString());
-        assertEquals(replaceCertain(testMap13.toString()),replaceCertain(testMap14.toString()));
-
 
         //更新股权账户信息数据
+        updateWord = "udEq02";
+        Map mapTemp = gdBF.init02ShareholderAccountInfo();
 
-        Map mapTemp = new HashMap();
-        log.info("初始化02账户数据结构");
-        //默认股权账户
-        List<String> fileList1 = new ArrayList<>();
-        fileList1.add("test111.pdf");
-        fileList1.add("test112.pdf");
-
-        List<String> fileList2 = new ArrayList<>();
-        fileList2.add("test121.pdf");
-        fileList2.add("test122.pdf");
-        List<String> fileList3 = new ArrayList<>();
-        fileList3.add("test131.pdf");
-        fileList3.add("test132.pdf");
-        List<String> fileList4 = new ArrayList<>();
-        fileList4.add("test141.pdf");
-        fileList4.add("test142.pdf");
-        List<String> fileList5 = new ArrayList<>();
-        fileList5.add("test151.pdf");
-        fileList5.add("test152.pdf");
-        mapTemp.clear();
-
-        //对象信息
-        mapTemp.put("account_object_id",cltNo);
-        mapTemp.put("account_object_information_type",1);
+        mapTemp.put("account_object_id", shareHolderNo);
 
         //账户信息 账户基本信息
-        mapTemp.put("account_holder_subject_ref","hrefid00002");
-        mapTemp.put("account_depository_subject_ref","drefid00002");
-        mapTemp.put("account_number","h0123552");
-        mapTemp.put("account_type",0);  //默认股权账户
-        mapTemp.put("account_never",2);
-        mapTemp.put("account_status",1);
-
-        //账户信息 账户资质信息
-        mapTemp.put("account_qualification_certification_file",fileList1);
-        mapTemp.put("account_certifier","监管局22");
-        mapTemp.put("account_auditor","认证者22");
-        mapTemp.put("account_certification_time","2012/8/25");
-        mapTemp.put("account_audit_time","2012/8/25");
-
-        //账户信息 账户生命周期信息
-        //账户信息 账户生命周期信息 开户信息
-        mapTemp.put("account_opening_date","2012/8/25");
-        mapTemp.put("account_opening_certificate",fileList4);
-
-        //账户信息 账户生命周期信息 销户信息
-        mapTemp.put("account_closing_date","2022/6/25");
-        mapTemp.put("account_closing_certificate",fileList2);
-
-        //账户信息 账户生命周期信息 冻结信息
-        mapTemp.put("account_forzen_date","2020/9/25");
-        mapTemp.put("account_forzen_certificate",fileList3);
-
-        //账户信息 账户生命周期信息 解冻信息
-        mapTemp.put("account_thaw_date","2020/9/25");
-        mapTemp.put("account_thaw_certificate",fileList4);
-
-        //账户信息 账户关联信息
-        mapTemp.put("account_association",2);
-        mapTemp.put("account_associated_account_ref","t512pdf");
-        mapTemp.put("account_associated_acct_certificates",fileList5);
+        mapTemp.put("account_subject_ref", cltNo);
+        mapTemp.put("account_depository_ref", account_depository_ref);
 
         String upResp = gd.GDUpdateAccountInfo(gdContractAddress,cltNo,mapTemp);
         txId = JSONObject.fromObject(upResp).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        String txDetail = store.GetTxDetail(txId);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+//        String storeData = com.alibaba.fastjson.JSONObject.parseArray(com.alibaba.fastjson.JSONObject.parseObject(txDetail).getJSONObject(
+//                "data").getJSONObject("store").getString("storeData")).get(0).toString();
+
+
+        //检查各个查询对象返回信息中不包含敏感词
+        assertEquals("不包含敏感词",true,
+                gdCF.chkSensitiveWord(txDetail,accType));
 
         //查询投资者账户信息
-        query = gd.GDAccountQuery(gdContractAddress,cltNo);
-        Map mapSHAccGet2 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
-                JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
-                        "AccountInfoList").get(0).toString()).getJSONObject(
-                "ShareholderAccount").getJSONObject("AccountInfo").toString());
-
-        Map mapFundAccGet2 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
-                JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
-                        "AccountInfoList").get(0).toString()).getJSONObject(
-                "FundAccount").getJSONObject("AccountInfo").toString());
+        response = gd.GDGetShareHolderInfo(gdContractAddress,cltNo);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
 
 
-        Map<String, String> testMap21 = new TreeMap<String, String>(mapTemp);
-        Map<String, String> testMap22 = new TreeMap<String, String>(mapSHAccGet2);
-        assertEquals(replaceCertain(testMap11.toString()),
-                replaceCertain(testMap12.toString()));
+        //定义相关对象标识版本变量
+        String accASrefVer = gdCF.getObjectLatestVer(account_subject_ref);
+        String accADrefVer =  gdCF.getObjectLatestVer(account_depository_ref);
+        String accAAARefVer =  gdCF.getObjectLatestVer(account_associated_account_ref);
 
-        Map<String, String> testMap23 = new TreeMap<String, String>(fundAccountInfo);
-        Map<String, String> testMap24 = new TreeMap<String, String>(mapFundAccGet2);
-        assertEquals(replaceCertain(testMap23.toString()),
-                replaceCertain(testMap24.toString()));
+        String shAccVer =  gdCF.getObjectLatestVer("SH" + cltNo);
+        String fundAccVer =  gdCF.getObjectLatestVer("fund" + cltNo);
+        String personSubVer =  gdCF.getObjectLatestVer(cltNo);
+
+        String SHObjId = shareHolderNo;
+        //获取链上mini url的存证信息 并检查是否包含uri信息
+        String shAccfileName = conJGFileName(SHObjId,shAccVer);
+
+        //获取链上mini url的存证信息 并检查是否包含uri信息
+        Map uriInfo = gdCF.getJGURIStoreHash(txId,shAccfileName,1);
+        String chkSHAccURI = minIOEP + "/" + jgBucket + "/" + shAccfileName;
+        log.info(uriInfo.get("storeData").toString());
+        assertEquals(true,uriInfo.get("storeData").toString().contains(chkSHAccURI));
+        assertEquals(true,uriInfo.get("storeData").toString().contains("\"meta\":null"));//确认meta信息移除
+
+
+        //直接从minio上获取报送数据文件信息
+        Map getSHAccInfo = gdCF.constructJGDataFromStr(shAccfileName,accType,"");
+        Map accSH = mapTemp;
+
+        //填充header content 信息
+        accSH.put("content",gdCF.constructContentMap(accType,SHObjId,shAccVer,"update",String.valueOf(ts8)));
+
+        assertEquals("确认主体版本无变更",String.valueOf(gdClient + 1),personSubVer);
+
+        //账户的如下字段默认引用的是开户主体的对象标识
+        account_subject_ref = cltNo;
+
+        //需要将比较的对象标识增加版本号信息
+        String[] verForAccSH = new String[]{"/" + personSubVer,"/" + accADrefVer,"/" + accAAARefVer};
+
+        log.info("检查股权账户存证信息内容与传入一致\n" + accSH.toString() + "\n" + getSHAccInfo.toString());
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(accSH,accType,verForAccSH)),replaceCertain(getSHAccInfo.toString()));
     }
 
 
-    @Test
+//    @Test
     public void TC21_partUpdateSHAccInfo_Personal()throws Exception{
         //开户
         String cltNo = "updateCLI" + Random(12);
@@ -909,15 +878,21 @@ public class GDV2_CheckData_Update_SubAccProd {
     @Test
     public void TC21_allUpdateFundAccInfo_Personal()throws Exception{
         //开户
-        String cltNo = "updateCLI" + Random(12);
+        String cltNo = "updateFund" + Random(12);
         String shareHolderNo = "SH" + cltNo;
         String fundNo = "fund" + cltNo;
+
+        int gdClient = Integer.parseInt(gdCF.getObjectLatestVer(cltNo));//获取当前开户主体最新版本信息
+
+        shAccountInfo = gdBF.init02ShareholderAccountInfo();
+        fundAccountInfo = gdBF.init02FundAccountInfo();
 
         //构造股权账户信息
         Map shareHolderInfo = new HashMap();
 
         shAccountInfo.put("account_object_id",shareHolderNo);  //更新账户对象标识字段
         log.info(shAccountInfo.toString());
+        shareHolderInfo.put("createTime", ts2);
         shareHolderInfo.put("shareholderNo",shareHolderNo);
         shareHolderInfo.put("accountInfo", shAccountInfo);
         log.info(shareHolderInfo.toString());
@@ -925,6 +900,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         //资金账户信息
         fundAccountInfo.put("account_object_id",fundNo);  //更新账户对象标识字段
         Map mapFundInfo = new HashMap();
+        mapFundInfo.put("createTime", ts2);
         mapFundInfo.put("fundNo",fundNo);
         mapFundInfo.put("accountInfo", fundAccountInfo);
 
@@ -939,132 +915,82 @@ public class GDV2_CheckData_Update_SubAccProd {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
-        //查询个人主体数据
-        for(int i = 0;i < 20; i++) {
-            response = gd.GDMainSubjectQuery(gdContractAddress,cltNo);
-            if(JSONObject.fromObject(response).getString("state").equals("200"))
-                break;
-            sleepAndSaveInfo(100);
-        }
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
-        //查询投资者账户信息
-        String query = gd.GDAccountQuery(gdContractAddress,cltNo);
-        Map mapSHAccGet1 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
-                JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
-                        "AccountInfoList").get(0).toString()).getJSONObject(
-                "ShareholderAccount").getJSONObject("AccountInfo").toString());
-        Map mapFundccGet1 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
-                JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
-                        "AccountInfoList").get(0).toString()).getJSONObject(
-                "FundAccount").getJSONObject("AccountInfo").toString());
+        //更新股权账户信息数据
+        updateWord = "udEq02";
+        Map mapTemp = gdBF.init02FundAccountInfo();
 
-        shAccountInfo.put("account_forzen_date","");
-        fundAccountInfo.put("account_forzen_date","");
-        Map<String, String> testMap11 = new TreeMap<String, String>(shAccountInfo);
-        Map<String, String> testMap12 = new TreeMap<String, String>(mapSHAccGet1);
-        assertEquals(testMap11.toString().replaceAll("( )?","").replaceAll(":","="),
-                testMap12.toString().replaceAll("(\")?( )?", "").replaceAll(":","="));
-
-        Map<String, String> testMap13 = new TreeMap<String, String>(fundAccountInfo);
-        Map<String, String> testMap14 = new TreeMap<String, String>(mapFundccGet1);
-        assertEquals(replaceCertain(testMap13.toString()),replaceCertain(testMap14.toString()));
-
-        //更新资金账户信息数据
-        Map mapTemp = new HashMap();
-        log.info("初始化02账户数据结构");
-        //默认股权账户
-        List<String> fileList1 = new ArrayList<>();
-        fileList1.add("test211.pdf");
-        fileList1.add("test212.pdf");
-
-        List<String> fileList2 = new ArrayList<>();
-        fileList2.add("test221.pdf");
-        fileList2.add("test222.pdf");
-        List<String> fileList3 = new ArrayList<>();
-        fileList3.add("test231.pdf");
-        fileList3.add("test232.pdf");
-        List<String> fileList4 = new ArrayList<>();
-        fileList4.add("test2141.pdf");
-        fileList4.add("test2142.pdf");
-        List<String> fileList5 = new ArrayList<>();
-        fileList5.add("test2151.pdf");
-        fileList5.add("test2152.pdf");
-        mapTemp.clear();
-
-        //对象信息
-        mapTemp.put("account_object_id",cltNo);
-        mapTemp.put("account_object_information_type",0);
+        mapTemp.put("account_object_id", fundNo);
 
         //账户信息 账户基本信息
-        mapTemp.put("account_holder_subject_ref","hrefid000022");
-        mapTemp.put("account_depository_subject_ref","drefid000022");
-        mapTemp.put("account_number","h01235522");
-        mapTemp.put("account_type",1);  //资金账户
-        mapTemp.put("account_never",3);
-        mapTemp.put("account_status",2);
-
-        //账户信息 账户资质信息
-        mapTemp.put("account_qualification_certification_file",fileList1);
-        mapTemp.put("account_certifier","监管局232");
-        mapTemp.put("account_auditor","认证者232");
-        mapTemp.put("account_certification_time","2012/9/25");
-        mapTemp.put("account_audit_time","2012/9/25");
-
-        //账户信息 账户生命周期信息
-        //账户信息 账户生命周期信息 开户信息
-        mapTemp.put("account_opening_date","2012/8/29");
-        mapTemp.put("account_opening_certificate",fileList4);
-
-        //账户信息 账户生命周期信息 销户信息
-        mapTemp.put("account_closing_date","2022/6/29");
-        mapTemp.put("account_closing_certificate",fileList2);
-
-        //账户信息 账户生命周期信息 冻结信息
-        mapTemp.put("account_forzen_date","2020/9/29");
-        mapTemp.put("account_forzen_certificate",fileList3);
-
-        //账户信息 账户生命周期信息 解冻信息
-        mapTemp.put("account_thaw_date","2020/9/29");
-        mapTemp.put("account_thaw_certificate",fileList4);
-
-        //账户信息 账户关联信息
-        mapTemp.put("account_association",3);
-        mapTemp.put("account_associated_account_ref","t5123pdf");
-        mapTemp.put("account_associated_acct_certificates",fileList5);
+        mapTemp.put("account_subject_ref", cltNo);
+        mapTemp.put("account_depository_ref", account_depository_ref);
+        mapTemp.put("account_associated_account_ref",shareHolderNo);
 
         String upResp = gd.GDUpdateAccountInfo(gdContractAddress,cltNo,mapTemp);
-
         txId = JSONObject.fromObject(upResp).getJSONObject("data").getString("txId");
+
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        String txDetail = store.GetTxDetail(txId);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
+
+
+        //检查各个查询对象返回信息中不包含敏感词
+        assertEquals("不包含敏感词",true,
+                gdCF.chkSensitiveWord(txDetail,accType));
+
         //查询投资者账户信息
-        query = gd.GDAccountQuery(gdContractAddress,cltNo);
-        Map mapSHAccGet2 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
-                JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
-                        "AccountInfoList").get(0).toString()).getJSONObject(
-                "ShareholderAccount").getJSONObject("AccountInfo").toString());
-
-        Map mapFundAccGet2 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
-                JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
-                        "AccountInfoList").get(0).toString()).getJSONObject(
-                "FundAccount").getJSONObject("AccountInfo").toString());
+        response = gd.GDGetShareHolderInfo(gdContractAddress,cltNo);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
 
 
-        Map<String, String> testMap21 = new TreeMap<String, String>(shAccountInfo);
-        Map<String, String> testMap22 = new TreeMap<String, String>(mapSHAccGet2);
-        assertEquals(replaceCertain(testMap11.toString()),
-                replaceCertain(testMap12.toString()));
+        //定义相关对象标识版本变量
+        String accASrefVer = gdCF.getObjectLatestVer(account_subject_ref);
+        String accADrefVer =  gdCF.getObjectLatestVer(account_depository_ref);
+        String accAAARefVer =  gdCF.getObjectLatestVer(account_associated_account_ref);
 
-        Map<String, String> testMap23 = new TreeMap<String, String>(mapTemp);
-        Map<String, String> testMap24 = new TreeMap<String, String>(mapFundAccGet2);
-        assertEquals(replaceCertain(testMap23.toString()),
-                replaceCertain(testMap24.toString()));
+        String shAccVer =  gdCF.getObjectLatestVer("SH" + cltNo);
+        String fundAccVer =  gdCF.getObjectLatestVer("fund" + cltNo);
+        String personSubVer =  gdCF.getObjectLatestVer(cltNo);
 
+        String fundObjId = fundNo;
+
+        //获取链上mini url的存证信息 并检查是否包含uri信息
+        String fundAccfileName = conJGFileName(fundObjId,fundAccVer);
+
+
+        //获取链上mini url的存证信息 并检查是否包含uri信息
+        Map uriInfo = gdCF.getJGURIStoreHash(txId,fundAccfileName,1);
+        String chkSHAccURI = minIOEP + "/" + jgBucket + "/" + fundAccfileName;
+        log.info(uriInfo.get("storeData").toString());
+        assertEquals(true,uriInfo.get("storeData").toString().contains(chkSHAccURI));
+        assertEquals(true,uriInfo.get("storeData").toString().contains("\"meta\":null"));//确认meta信息移除
+
+
+        //直接从minio上获取报送数据文件信息
+        Map getFundAccInfo = gdCF.constructJGDataFromStr(fundAccfileName,accType,"");
+
+        Map accFund = mapTemp;
+
+        //填充header content 信息
+        accFund.put("content",gdCF.constructContentMap(accType,fundObjId,fundAccVer,"update",String.valueOf(ts8)));
+
+        assertEquals("确认主体版本无变更",String.valueOf(gdClient + 1),personSubVer);
+
+        //账户的如下字段默认引用的是开户主体的对象标识
+        account_subject_ref = cltNo;
+
+        //需要将比较的对象标识增加版本号信息
+
+        account_associated_account_ref = shareHolderNo;
+        String[] verForAccFund = new String[]{"/" + personSubVer,"/" + accADrefVer,"/" + shAccVer};
+//
+        log.info("检查资金账户存证信息内容与传入一致\n" + accFund.toString() + "\n" + getFundAccInfo.toString());
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(accFund,accType,verForAccFund)),replaceCertain(getFundAccInfo.toString()));
     }
 
-    @Test
+//    @Test
     public void TC21_partUpdateFundAccInfo_Personal()throws Exception{
         //开户
         String cltNo = "updateCLI" + Random(12);
@@ -1191,335 +1117,257 @@ public class GDV2_CheckData_Update_SubAccProd {
 
     @Test
     public void TC22_allUpdateEquityProdAccInfo()throws Exception{
+        String type = "1";
+
+        Map mapProd = gdBF.init03EquityProductInfo();
+
+        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
         //挂牌登记一个股权类产品
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,10000,enterpriseSubjectInfo,
-                equityProductInfo,null,null);
+                mapProd,null,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
         //检查产品信息
-        String queryProd = gd.GDProductQuery(gdContractAddress,gdCompanyID);
+        String queryProd = gd.GDProductQuery(gdContractAddress,gdEquityCode);
 
-        Map mapProd = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(queryProd).getJSONObject("data").toString());
-        Map<String, String> testMap11 = new TreeMap<String, String>(mapProd);
-        Map<String, String> testMap12 = new TreeMap<String, String>(equityProductInfo);
-        assertEquals(replaceCertain(testMap11.toString()),replaceCertain(testMap12.toString()));
 
         //更新股权类产品信息
-        Map mapProdComInfo = new HashMap();
-
+        updateWord = "udEq02";
+        Map mapProdComInfo = gdBF.init03EquityProductInfo();
         //对象标识
         mapProdComInfo.put("product_object_id",gdEquityCode);
-//        mapProdComInfo.put("product_object_information_type",0);
-
-        //产品信息 基本信息 产品基本信息
-        mapProdComInfo.put("product_trading_market_category",3);
-        mapProdComInfo.put("product_market_subject","交易场所主体引用CHARACTER3");
-        mapProdComInfo.put("product_market_subject_name","交易场所主体名称CHARACTER3");
-        mapProdComInfo.put("product_plate_trading_name","交易场所板块名称CHARACTER3");
-        mapProdComInfo.put("product_issuer_subject_ref",gdCompanyID);
-        mapProdComInfo.put("product_issuer_name","发行主体名称CHARACTER3");
-        mapProdComInfo.put("product_code","产品代码CHARACTER3");
-        mapProdComInfo.put("product_name","产品全称CHARACTER3");
-        mapProdComInfo.put("product_name_abbreviation","产品简称CHARACTER3");
-        mapProdComInfo.put("product_type_function",3);
-        mapProdComInfo.put("product_type",0);
-        mapProdComInfo.put("product_account_number_max",3000);
-        mapProdComInfo.put("product_info_disclosure_way",3);
-        mapProdComInfo.put("product_scale_unit",13);
-        mapProdComInfo.put("product_scale_currency","产品规模币种CHARACTER3");
-        mapProdComInfo.put("product_scale",30000);
-        mapProdComInfo.put("product_customer_browsing_right",3);
-        mapProdComInfo.put("product_issuer_contact_person","联系人CHARACTER3");
-        mapProdComInfo.put("product_issuer_contact_info","联系信息CHARACTER3");
-        mapProdComInfo.put("product_create_time",time3);
-
-        //产品信息 基本信息 服务方信息
-        Map mapServ = new HashMap();
-        List<Map> listServ = new ArrayList<>();
-        mapServ.put("service_provider_type",3);
-        mapServ.put("service_provider_subject_ref","服务方主体引用3");
-        mapServ.put("service_provider_name","服务方主体名称3");
-        listServ.add(mapServ);
-        mapServ.clear();
-        mapServ.put("service_provider_type",3);
-        mapServ.put("service_provider_subject_ref","服务方主体引用3");
-        mapServ.put("service_provider_name","服务方主体名称3");
-        listServ.add(mapServ);
-
-        mapProdComInfo.put("service_provider_information",listServ);
-
-        //产品信息 基本信息 产品文件信息
-        List<Map> listMapPF = new ArrayList<>();
-        Map mapPF = new HashMap();
-        mapPF.put("product_issue_doc",getListFileObj());
-        listMapPF.add(mapPF);
-        mapProdComInfo.put("product_file_information",listMapPF);
-
-
-
-        //产品信息 产品标的信息
-        mapProdComInfo.put("product_fund_use_type",3);
-        mapProdComInfo.put("product_description_fund_use","资金用途描述CHARACTER3");
-        mapProdComInfo.put("product_document_describing_funds",getListFileObj());
-        mapProdComInfo.put("product_business_purpose_name","经营用途名称CHARACTER3");
-        mapProdComInfo.put("product_business_purpose_details","经营用途详情CHARACTER3");
-        mapProdComInfo.put("product_business_purpose_documents",getListFileObj());
-        mapProdComInfo.put("product_investment_products_type",3);
-        mapProdComInfo.put("product_Investment_proportion_range",53);
-        mapProdComInfo.put("product_Investment_product_details","投资产品详情CHARACTER3");
-        mapProdComInfo.put("product_detailed_description_document",getListFileObj());
-
-        //产品信息 发行信息 备案信息
-        List<Map> listMapPR = new ArrayList<>();
-        Map mapPR = new HashMap();
-
-        mapPR.put("product_license_type",122);
-        mapPR.put("product_filing_date",date1);
-        mapPR.put("product_filing_doc",getListFileObj());
-        mapPR.put("product_filing_examine_doc",getListFileObj());
-        mapPR.put("product_filing_documentation","psf3.pdf");
-        listMapPR.add(mapPR);
-        mapProdComInfo.put("filing_information",listMapPR);
-
-        //产品信息 发行信息 私募股权
-        mapProdComInfo.put("product_issue_scope",13);
-        mapProdComInfo.put("product_issue_type",2);
-        List<Integer> iClass = new ArrayList<>(); iClass.add(1);iClass.add(3);
-        mapProdComInfo.put("product_shares_issued_class",iClass);
-        mapProdComInfo.put("release_note_information","发行说明信息TEXT3");
-        mapProdComInfo.put("product_issue_price",30);
-        mapProdComInfo.put("product_issue_price_method","发行价格定价标准TEXT3");
-        mapProdComInfo.put("product_before_authorized_shares",3000);
-        mapProdComInfo.put("product_after_authorized_shares",30000);
-        mapProdComInfo.put("product_after_issue_market_value",30000000);
-        mapProdComInfo.put("product_net_profit",3000000);
-        mapProdComInfo.put("product_annual_net_profit",6000000);
-        mapProdComInfo.put("product_actual_raising_scale",30000);
-        mapProdComInfo.put("product_raising_start_time",date2);
-        mapProdComInfo.put("product_raising_end_time",date3);
-        mapProdComInfo.put("product_registered_capital_before_issuance",300000);
-        mapProdComInfo.put("product_registered_capital_issuance",500000);
-        mapProdComInfo.put("product_paid_shares",600000);
-        mapProdComInfo.put("product_shares_subscribed_number",600000);
-        mapProdComInfo.put("product_unlimited_sales_number_shares",10000);
-        mapProdComInfo.put("product_restricted_shares_number",50000);
-
-
-        //产品信息 交易信息
-        //产品信息 交易信息 交易状态
-        mapProdComInfo.put("product_transaction_status",2);
-
-        //产品信息 交易信息 挂牌信息
-        mapProdComInfo.put("product_transaction_scope",13);
-        mapProdComInfo.put("product_transfer_permission_institution_to_individual",true);
-        mapProdComInfo.put("product_transfer_lockup_days",30);
-        mapProdComInfo.put("product_trasfer_validity",20);
-        mapProdComInfo.put("product_risk_level","产品风险级别CHARACTER3");
-        mapProdComInfo.put("product_transaction_unit",2000);
-        mapProdComInfo.put("product_listing_code","挂牌代码CHARACTER3");
-        mapProdComInfo.put("product_listing_date",date2);
-        mapProdComInfo.put("product_listing_remarks","挂牌备注信息CHARACTER3");
-
-        //产品信息 交易信息 摘牌信息
-        mapProdComInfo.put("product_delisting_date",date3);
-        mapProdComInfo.put("product_delisting_type",2);
-        mapProdComInfo.put("product_delisting_reason",2);
-        mapProdComInfo.put("product_transfer_board_mrket",3);
-        mapProdComInfo.put("product_acquisition_company_market",2);
-        mapProdComInfo.put("product_delisting_remarks","摘牌备注信息TEXT3");
-
-        //产品信息 托管信息
-        mapProdComInfo.put("product_custodian_registration_date",date1);
-        mapProdComInfo.put("product_cusodian_documents",getListFileObj());
-        mapProdComInfo.put("product_custodian_notes","托管备注信息TEXT3");
-        mapProdComInfo.put("product_escrow_deregistration_date",date3);
-        mapProdComInfo.put("product_escrow_deregistration_document",getListFileObj());
-        mapProdComInfo.put("product_escrow_deregistration_remarks","解除托管备注信息TEXT3");
 
         String updateProd = gd.GDUpdateProductInfo(gdContractAddress,mapProdComInfo);
-        assertEquals("200",JSONObject.fromObject(updateProd).get("state"));
-        //检查产品信息是否是更新后的信息
-        queryProd = gd.GDProductQuery(gdContractAddress,gdCompanyID);
+        assertEquals("200",JSONObject.fromObject(updateProd).getString("state"));
 
-        Map mapProd2 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(queryProd).getJSONObject("data").toString());
-        Map<String, String> testMap21 = new TreeMap<String, String>(mapProd2);
-        Map<String, String> testMap22 = new TreeMap<String, String>(mapProdComInfo);
-        assertEquals(replaceCertain(testMap21.toString()),replaceCertain(testMap22.toString()));
+        txId = net.sf.json.JSONObject.fromObject(updateProd).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        String txDetail = store.GetTxDetail(txId);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        String storeData = com.alibaba.fastjson.JSONObject.parseArray(com.alibaba.fastjson.JSONObject.parseObject(txDetail).getJSONObject(
+                "data").getJSONObject("store").getString("storeData")).get(0).toString();
+
+        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(txDetail,prodType));
+
+
+        //检查产品信息是否是更新后的信息
+        queryProd = gd.GDProductQuery(gdContractAddress,gdEquityCode);
+
+
+        //设置各个主体版本变量
+        String newSubVer = gdCF.getObjectLatestVer(gdCompanyID);
+        String newEqProdVer = gdCF.getObjectLatestVer(gdEquityCode);
+
+        //检查产品更新不会影响主体版本变更
+        assertEquals("主体版本信息版本",String.valueOf(gdCpmIdOldVer+1),newSubVer);
+
+        String prodPMSRefVer = gdCF.getObjectLatestVer(product_market_subject_ref);
+        String prodSPSRefVer = gdCF.getObjectLatestVer(service_provider_subject_ref);
+
+        //获取链上mini url的存证信息并检查是否包含uri信息
+        String prodfileName = conJGFileName(gdEquityCode,newEqProdVer);
+        String chkProdURI = minIOEP + "/" + jgBucket + "/" + prodfileName;
+        assertEquals(true,storeData.contains(chkProdURI));
+        assertEquals(false,storeData.contains("\"meta\":null"));//确认meta信息移除
+
+
+        //直接从minio上通过对象标识+版本号的方式获取指定对象文件
+        Map getProInfo = null;
+        if(!type.equals("4")) getProInfo = gdCF.constructJGDataFromStr(conJGFileName(gdEquityCode, newEqProdVer), prodType, type);
+
+        //填充header content字段
+        //如果不是机构会员登记 则执行产品填充header content字段
+        if(!type.equals("4")) {
+            mapProdComInfo.put("content",gdCF.constructContentMap(prodType, gdEquityCode, newEqProdVer, "update", String.valueOf(ts8)));
+        }
+
+        //产品发行主体引用设置为空场景 当前代码会自动补充发行主体对象标识
+//        mapProdComInfo.put("product_issuer_subject_ref", gdCompanyID);
+        //产品如下字段引用的是发行主体
+        product_issuer_subject_ref = gdCompanyID;
+
+        String[] verForProd = new String[]{"/" + prodPMSRefVer,"/" + newSubVer,"/" + prodSPSRefVer};
+
+        if(!type.equals("4")) {
+            log.info("检查产品存证信息内容与传入一致\n" + mapProdComInfo.toString() + "\n" + getProInfo.toString());
+            assertEquals(replaceCertain(gdCF.matchRefMapCertVer(mapProdComInfo, prodType, verForProd)), replaceCertain(getProInfo.toString()));
+        }
+
+
     }
 
     @Test
     public void TC22_allUpdateBondProdAccInfo()throws Exception{
         //挂牌登记一个债券类产品
+        String type = "2";
+
+        Map mapProd = gdBF.init03BondProductInfo();
+
+        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
+        //挂牌登记一个股权类产品
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,10000,enterpriseSubjectInfo,
-                null,bondProductInfo,null);
+                null,mapProd,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
         //检查产品信息
-        String queryProd = gd.GDProductQuery(gdContractAddress,gdCompanyID);
-        Map mapProd = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(queryProd).getJSONObject("data").toString());
-        Map<String, String> testMap11 = new TreeMap<String, String>(mapProd);
-        Map<String, String> testMap12 = new TreeMap<String, String>(bondProductInfo);
-        assertEquals(replaceCertain(testMap11.toString()),replaceCertain(testMap12.toString()));
+        String queryProd = gd.GDProductQuery(gdContractAddress,gdEquityCode);
+
+//        Map mapProd = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(queryProd).getJSONObject("data").toString());
+//        Map<String, String> testMap11 = new TreeMap<String, String>(mapProd);
+//        Map<String, String> testMap12 = new TreeMap<String, String>(equityProductInfo);
+//        assertEquals(replaceCertain(testMap11.toString()),replaceCertain(testMap12.toString()));
+
+        //更新股权类产品信息
+        updateWord = "udBond02";
+        Map mapProdComInfo = gdBF.init03BondProductInfo();
+        //对象标识
+        mapProdComInfo.put("product_object_id",gdEquityCode);
+
+        String updateProd = gd.GDUpdateProductInfo(gdContractAddress,mapProdComInfo);
+        assertEquals("200",JSONObject.fromObject(updateProd).getString("state"));
+
+        txId = net.sf.json.JSONObject.fromObject(updateProd).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        String txDetail = store.GetTxDetail(txId);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        String storeData = com.alibaba.fastjson.JSONObject.parseArray(com.alibaba.fastjson.JSONObject.parseObject(txDetail).getJSONObject(
+                "data").getJSONObject("store").getString("storeData")).get(0).toString();
+
+        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(txDetail,prodType));
 
 
-        //更新债券类产品信息
-        Map mapTemp = new HashMap();
-        mapTemp = gdBF.productCommonInfo(0); //私募股权
-
-        //产品信息 发行信息 备案信息
-        List<Map> listMapPR = new ArrayList<>();
-        Map mapPR = new HashMap();
-
-        mapPR.put("product_license_type",100);
-        mapPR.put("product_filing_date",date1);
-        mapPR.put("product_filing_doc",getListFileObj());
-        mapPR.put("product_filing_examine_doc",getListFileObj());
-        mapPR.put("product_filing_documentation","psf4.pdf");
-        listMapPR.add(mapPR);
-        mapTemp.put("filing_information",listMapPR);
-
-
-        //产品信息 发行信息 私募债
-        mapTemp.put("product_scope_issue",4);
-        mapTemp.put("product_bond_duration_unit",14);
-        mapTemp.put("product_bond_duration",40);
-        mapTemp.put("product_filing_amount",40000);
-        mapTemp.put("product_by_stages",true);
-        mapTemp.put("product_bond_interest_rate_floor",0.4);
-        mapTemp.put("product_bond_interest_rate_cap",56.24);
-        mapTemp.put("product_staging_frequency",4);
-        mapTemp.put("product_initial_issue_amount",40000);
-        mapTemp.put("product_initial_ratio",1.4);
-        mapTemp.put("product_initial_interest_rate",4.3);
-        mapTemp.put("product_interest_calculation_method",4);
-        mapTemp.put("product_interest_calculation_method_remarks","计息方式备注CHARACTER4");
-        mapTemp.put("product_payment_method",4);
-        mapTemp.put("product_payment_method_remarks","兑付方式备注CHARACTER4");
-        mapTemp.put("product_is_appoint_repayment_date",true);
-        mapTemp.put("product_appoint_repayment_date",date2);
-        mapTemp.put("product_guarantee_measure","担保措施及方式TEXT4");
-        mapTemp.put("product_converting_shares_condition","转股条件TEXT4");
-        mapTemp.put("product_converting_shares_price_mode","转股价格的确定方式TEXT4");
-        mapTemp.put("product_converting_shares_term","转股期限TEXT4");
-        mapTemp.put("product_redemption","赎回条款TEXT4");
-        mapTemp.put("product_issue_price",40);
-        mapTemp.put("product_face_value",400);
-        mapTemp.put("product_subscription_base",40);
-        mapTemp.put("product_successful_release_proportion",4.5);
-        mapTemp.put("product_fund_raising_conversion_condition","募集资金划转条件TEXT4");
-        mapTemp.put("product_is_make_over",true);
-        mapTemp.put("product_number_of_holders_max",4000);
-        mapTemp.put("product_subscription_upper_limit",4000);
-        mapTemp.put("product_subscription_lower_limit",40);
-        mapTemp.put("product_redemption_clause","赎回及回收条款TEXT4");
-        mapTemp.put("product_termination_conditions","产品终止条件CHARACTER4");
-        mapTemp.put("product_duration","存续期限CHARACTER4");
-        mapTemp.put("product_adjustment_change_control","控制权变更调整CHARACTER4");
-        mapTemp.put("product_conversion_premium",40);
-        mapTemp.put("product_conversion_price_ref",45);
-        mapTemp.put("product_actual_issue_size",4000);
-        mapTemp.put("product_raising_start_date",date2);
-        mapTemp.put("product_raising_end_date",date4);
-        mapTemp.put("product_start_date",date1);
-        mapTemp.put("product_due_date",date3);
-        mapTemp.put("product_amount_cashed",4000);
-        mapTemp.put("product_first_interest_payment_date",date3);
-        mapTemp.put("product_issuer_credit_rating",4);
-        mapTemp.put("product_credit_enhancement_agency_credit_rating",4);
-        mapTemp.put("product_guarantee_arrangement","担保安排CHARACTER4");
-        mapTemp.put("product_repo_arrangement","回售安排CHARACTER4");
-        mapTemp.put("product_lockup","股东禁售期限CHARACTER4");
-
-
-        //交易信息 托管信息
-        gdBF.productCommonInfo2(mapTemp);
-
-        String updateProd = gd.GDUpdateProductInfo(gdContractAddress,mapTemp);
-        assertEquals("200",JSONObject.fromObject(updateProd).get("state"));
         //检查产品信息是否是更新后的信息
+        queryProd = gd.GDProductQuery(gdContractAddress,gdEquityCode);
 
-        queryProd = gd.GDProductQuery(gdContractAddress,gdCompanyID);
-        Map mapProd2 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(queryProd).getJSONObject("data").toString());
-        Map<String, String> testMap21 = new TreeMap<String, String>(mapProd2);
-        Map<String, String> testMap22 = new TreeMap<String, String>(mapTemp);
-        assertEquals(replaceCertain(testMap21.toString()),replaceCertain(testMap22.toString()));
+
+        //设置各个主体版本变量
+        String newSubVer = gdCF.getObjectLatestVer(gdCompanyID);
+        String newEqProdVer = gdCF.getObjectLatestVer(gdEquityCode);
+
+        //检查产品更新不会影响主体版本变更
+        assertEquals("主体版本信息版本",String.valueOf(gdCpmIdOldVer+1),newSubVer);
+
+        String prodPMSRefVer = gdCF.getObjectLatestVer(product_market_subject_ref);
+        String prodSPSRefVer = gdCF.getObjectLatestVer(service_provider_subject_ref);
+
+        //获取链上mini url的存证信息并检查是否包含uri信息
+        String prodfileName = conJGFileName(gdEquityCode,newEqProdVer);
+        String chkProdURI = minIOEP + "/" + jgBucket + "/" + prodfileName;
+        assertEquals(true,storeData.contains(chkProdURI));
+        assertEquals(false,storeData.contains("\"meta\":null"));//确认meta信息移除
+
+
+        //直接从minio上通过对象标识+版本号的方式获取指定对象文件
+        Map getProInfo = null;
+        if(!type.equals("4")) getProInfo = gdCF.constructJGDataFromStr(conJGFileName(gdEquityCode, newEqProdVer), prodType, type);
+
+        //填充header content字段
+        //如果不是机构会员登记 则执行产品填充header content字段
+        if(!type.equals("4")) {
+            mapProdComInfo.put("content",gdCF.constructContentMap(prodType, gdEquityCode, newEqProdVer, "update", String.valueOf(ts8)));
+        }
+
+        //产品发行主体引用设置为空场景 当前代码会自动补充发行主体对象标识
+//        mapProdComInfo.put("product_issuer_subject_ref", gdCompanyID);
+        //产品如下字段引用的是发行主体
+        product_issuer_subject_ref = gdCompanyID;
+
+        String[] verForProd = new String[]{"/" + prodPMSRefVer,"/" + newSubVer,"/" + prodSPSRefVer};
+
+        if(!type.equals("4")) {
+            log.info("检查产品存证信息内容与传入一致\n" + mapProdComInfo.toString() + "\n" + getProInfo.toString());
+            assertEquals(replaceCertain(gdCF.matchRefMapCertVer(mapProdComInfo, prodType, verForProd)), replaceCertain(getProInfo.toString()));
+        }
     }
 
     @Test
     public void TC22_allUpdateFundProdAccInfo()throws Exception{
-        //挂牌登记一个基金类产品
+        //挂牌登记一个债券类产品
+        String type = "3";
+
+        Map mapProd = gdBF.init03FundProductInfo();
+
+        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
+        //挂牌登记一个股权类产品
         String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,10000,enterpriseSubjectInfo,
-                null,null,fundProductInfo);
+                null,null,mapProd);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
         //检查产品信息
-        String queryProd = gd.GDProductQuery(gdContractAddress,gdCompanyID);
-        Map mapProd = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(queryProd).getJSONObject("data").toString());
-        Map<String, String> testMap11 = new TreeMap<String, String>(mapProd);
-        Map<String, String> testMap12 = new TreeMap<String, String>(fundProductInfo);
-        assertEquals(replaceCertain(testMap11.toString()),replaceCertain(testMap12.toString()));
+        String queryProd = gd.GDProductQuery(gdContractAddress,gdEquityCode);
 
-        //更新基金类产品信息
-        Map mapTemp = new HashMap();
-        mapTemp = gdBF.productCommonInfo(0); //私募股权
+//        Map mapProd = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(queryProd).getJSONObject("data").toString());
+//        Map<String, String> testMap11 = new TreeMap<String, String>(mapProd);
+//        Map<String, String> testMap12 = new TreeMap<String, String>(equityProductInfo);
+//        assertEquals(replaceCertain(testMap11.toString()),replaceCertain(testMap12.toString()));
 
+        //更新股权类产品信息
+        updateWord = "udFund02";
+        Map mapProdComInfo = gdBF.init03FundProductInfo();
+        //对象标识
+        mapProdComInfo.put("product_object_id",gdEquityCode);
 
-        //产品信息 基本信息 备案信息
-        List<Map> listMapPR = new ArrayList<>();
-        Map mapPR = new HashMap();
+        String updateProd = gd.GDUpdateProductInfo(gdContractAddress,mapProdComInfo);
+        assertEquals("200",JSONObject.fromObject(updateProd).getString("state"));
 
-        mapPR.put("product_license_type",126);
-        mapPR.put("product_filing_date",date3);
-        mapPR.put("product_filing_doc",getListFileObj());
-        mapPR.put("product_filing_examine_doc",getListFileObj());
-        mapPR.put("product_filing_documentation","psf6.pdf");
-        listMapPR.add(mapPR);
-        mapTemp.put("filing_information",listMapPR);
+        txId = net.sf.json.JSONObject.fromObject(updateProd).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        String txDetail = store.GetTxDetail(txId);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        String storeData = com.alibaba.fastjson.JSONObject.parseArray(com.alibaba.fastjson.JSONObject.parseObject(txDetail).getJSONObject(
+                "data").getJSONObject("store").getString("storeData")).get(0).toString();
 
-
-        //产品信息 发行信息 私募基金
-        mapTemp.put("product_raising_information_identification","募集信息标识CHARACTER6");
-        mapTemp.put("product_scope_fund_raising","募集范围TEXT6");
-        mapTemp.put("product_record_number","备案编号CHARACTER6");
-        mapTemp.put("product_fund_filing_date",date3);
-        List<Integer> ftype = new ArrayList<>();ftype.add(6);ftype.add(3);
-        mapTemp.put("product_fund_type",ftype);
-        mapTemp.put("product_foundation_date",date3);
-        mapTemp.put("product_escrow_bank","托管行CHARACTER6");
-        mapTemp.put("product_total_fund_share",60000);
-        mapTemp.put("product_fund_unit_holders_number","基金份额持有人数CHARACTER6");
-        mapTemp.put("product_fund_nav",10000);
-        mapTemp.put("product_fund_fairvalue",10000);
-        mapTemp.put("product_raise_start_date",date3);
-        mapTemp.put("product_raise_end_date",date4);
-        mapTemp.put("sales_organization_name","销售机构名称CHARACTER6");
-        mapTemp.put("product_unified_social_credit_code","统一社会信用代码CHARACTER6");
-        mapTemp.put("product_sales_organization_member_code","销售机构会员编码CHARACTER6");
-        mapTemp.put("product_fund_manager_name","基金管理人名称CHARACTER6");
-        mapTemp.put("product_fund_manager_certificate_number","基金管理人证件号码CHARACTER6");
-        mapTemp.put("product_management_style","管理方式TEXT6");
-        mapTemp.put("product_funds_under_management_number",6000);
-        mapTemp.put("product_fund_management_scale",60000);
+        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(txDetail,prodType));
 
 
-        //交易信息 托管信息
-        gdBF.productCommonInfo2(mapTemp);
-
-        String updateProd = gd.GDUpdateProductInfo(gdContractAddress,mapTemp);
-        assertEquals("200",JSONObject.fromObject(updateProd).get("state"));
         //检查产品信息是否是更新后的信息
+        queryProd = gd.GDProductQuery(gdContractAddress,gdEquityCode);
 
-        queryProd = gd.GDProductQuery(gdContractAddress,gdCompanyID);
-        Map mapProd2 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(queryProd).getJSONObject("data").toString());
-        Map<String, String> testMap21 = new TreeMap<String, String>(mapProd2);
-        Map<String, String> testMap22 = new TreeMap<String, String>(mapTemp);
-        assertEquals(replaceCertain(testMap21.toString()),replaceCertain(testMap22.toString()));
+
+        //设置各个主体版本变量
+        String newSubVer = gdCF.getObjectLatestVer(gdCompanyID);
+        String newEqProdVer = gdCF.getObjectLatestVer(gdEquityCode);
+
+        //检查产品更新不会影响主体版本变更
+        assertEquals("主体版本信息版本",String.valueOf(gdCpmIdOldVer+1),newSubVer);
+
+        String prodPMSRefVer = gdCF.getObjectLatestVer(product_market_subject_ref);
+        String prodSPSRefVer = gdCF.getObjectLatestVer(service_provider_subject_ref);
+
+        //获取链上mini url的存证信息并检查是否包含uri信息
+        String prodfileName = conJGFileName(gdEquityCode,newEqProdVer);
+        String chkProdURI = minIOEP + "/" + jgBucket + "/" + prodfileName;
+        assertEquals(true,storeData.contains(chkProdURI));
+        assertEquals(false,storeData.contains("\"meta\":null"));//确认meta信息移除
+
+
+        //直接从minio上通过对象标识+版本号的方式获取指定对象文件
+        Map getProInfo = null;
+        if(!type.equals("4")) getProInfo = gdCF.constructJGDataFromStr(conJGFileName(gdEquityCode, newEqProdVer), prodType, type);
+
+        //填充header content字段
+        //如果不是机构会员登记 则执行产品填充header content字段
+        if(!type.equals("4")) {
+            mapProdComInfo.put("content",gdCF.constructContentMap(prodType, gdEquityCode, newEqProdVer, "update", String.valueOf(ts8)));
+        }
+
+        //产品发行主体引用设置为空场景 当前代码会自动补充发行主体对象标识
+//        mapProdComInfo.put("product_issuer_subject_ref", gdCompanyID);
+        //产品如下字段引用的是发行主体
+        product_issuer_subject_ref = gdCompanyID;
+
+        String[] verForProd = new String[]{"/" + prodPMSRefVer,"/" + newSubVer,"/" + prodSPSRefVer};
+
+        if(!type.equals("4")) {
+            log.info("检查产品存证信息内容与传入一致\n" + mapProdComInfo.toString() + "\n" + getProInfo.toString());
+            assertEquals(replaceCertain(gdCF.matchRefMapCertVer(mapProdComInfo, prodType, verForProd)), replaceCertain(getProInfo.toString()));
+        }
     }
 
 }

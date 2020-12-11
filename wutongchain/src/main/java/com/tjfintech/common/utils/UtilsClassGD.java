@@ -121,6 +121,8 @@ public class UtilsClassGD {
     public static String dirSchemaData = System.getProperty("user.dir") + "/" + testDataPath + "schemavalidate/";
 //    public static Boolean bChkHeader = true;
 
+    public static String updateWord = "";
+
     public static Integer disclosureType = 1;
 
     public static String minIOUser ="minioadmin";
@@ -128,10 +130,11 @@ public class UtilsClassGD {
     public static String minIOEP ="http://b2904236d6.zicp.vip:8098";
     public static String jgBucket = "my-oss-test";
 
+    public static  HashMap<String,String> refInfo = new HashMap<String,String>();
+
     //获取引用信息初始值放入数组
     public static  String[] refData() {
-
-        HashMap<String,String> refInfo = new HashMap<String,String>();
+        refInfo.clear();
         //主体
         refInfo.put("subject_investor_qualification_certifier_ref", subject_investor_qualification_certifier_ref);
         //账户
