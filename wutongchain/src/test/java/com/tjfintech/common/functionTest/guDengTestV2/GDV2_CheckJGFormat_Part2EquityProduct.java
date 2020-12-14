@@ -102,16 +102,17 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         log.info("================================检查存证数据格式化《开始》================================");
 
         //定义相关对象标识版本变量
-        String regRSRefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
-        String regRSARefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
-        String regRTRefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
-        String regRPRefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
-        String regRRRSRefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
-        String regRRRASRefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
-        String regRPRRefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
-        String regRESRefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
-        String regRDHRefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
-        String regRISRefVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
+        String regRSRefVer = gdCF.getObjectLatestVer(register_subject_ref);
+        String regRSARefVer = gdCF.getObjectLatestVer(register_subject_account_ref);
+        String regRTRefVer = gdCF.getObjectLatestVer(register_transaction_ref);
+        String regRPRefVer = gdCF.getObjectLatestVer(register_product_ref);
+        String regRRRSRefVer = gdCF.getObjectLatestVer(register_right_recognition_subject_ref);
+        String regRRRASRefVer = gdCF.getObjectLatestVer(register_right_recognition_agent_subject_ref);
+        String regRPRRefVer = gdCF.getObjectLatestVer(roll_register_product_ref);
+        String regRRSRefVer = gdCF.getObjectLatestVer(roll_register_subject_ref);
+        String regRESRefVer = gdCF.getObjectLatestVer(register_equity_subject_ref);
+        String regRDHRefVer = gdCF.getObjectLatestVer(register_debt_holder_ref);
+        String regRISRefVer = gdCF.getObjectLatestVer(register_investor_subject_ref);
 
         Map uriInfo = gdCF.getJGURIStoreHash(txId,conJGFileName(mapAddrRegObjId.get(gdAccount1).toString(),"0"),1);
 
@@ -131,6 +132,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
             Map getRegInfo = gdCF.constructJGDataFromStr(regfileName,regType,"");
 
             Map regInfoInput = gdBF.init05RegInfo();
+            regInfoInput.put("register_registration_object_id",mapAddrRegObjId.get(tempAddr));
             regInfoInput.put("content",gdCF.constructContentMap(regType,tempObjId,regVer,"create",String.valueOf(ts5)));
 
 
@@ -145,8 +147,8 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 //            registerInfo.put("register_creditor_subscription_count", issueAmount);   //当前认购数量修改为当前实际余额
 //            registerInfo.put("register_rights_frozen_change_amount", 0);   //冻结变动额修改为当前实际冻结变更额
 
-            log.info("检查主体存证信息内容与传入一致\n" + regInfoInput.toString() + "\n" + getRegInfo.toString());
-            assertEquals(replaceCertain(gdCF.matchRefMapCertVer(regInfoInput,subjectType,verForReg)),replaceCertain(getRegInfo.toString()));
+            log.info("检查登记存证信息内容与传入一致\n" + regInfoInput.toString() + "\n" + getRegInfo.toString());
+            assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(regInfoInput,regType)),replaceCertain(getRegInfo.toString()));
 //            log.info("检查发行不包送交易报告数据");
 //            assertEquals("检查发行不包送交易报告数据",false,store.GetTxDetail(storeId).contains("\"type\":\"交易报告\""));
 

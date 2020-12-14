@@ -960,7 +960,7 @@ public class GDBeforeCondition {
         mapTemp.put("register_time", time2);
         mapTemp.put("register_subject_ref", register_subject_ref);
         mapTemp.put("register_subject_type", 1);
-        mapTemp.put("register_subject_account_ref", register_subject_ref);
+        mapTemp.put("register_subject_account_ref", register_subject_account_ref);
         mapTemp.put("register_asset_type", 1);
         mapTemp.put("register_asset_unit", 1);
         mapTemp.put("register_asset_currency", "156");
@@ -1021,11 +1021,11 @@ public class GDBeforeCondition {
         Map mapRSH = new HashMap();
         mapRSH.put("register_equity_subject_ref", register_equity_subject_ref);
         mapRSH.put("register_equity_subject_type", 1);
-        mapRSH.put("register_equity_type", 1);
+        mapRSH.put("register_equity_shareholding", 10);
         mapRSH.put("register_equity_capital", 200);
         mapRSH.put("register_equity_capital_paidin", 30000);
         mapRSH.put("register_equity_number", 20);
-        mapRSH.put("register_equity_shareholding", 10);
+        mapRSH.put("register_equity_type", 1);
         listRSH.add(mapRSH);
         mapTemp.put("register_shareholders", listRSH);
 
@@ -1035,8 +1035,9 @@ public class GDBeforeCondition {
         mapRC.put("register_debt_holder_ref", register_debt_holder_ref);
         mapRC.put("register_debt_holder_type", 1);
         mapRC.put("register_debt_holder_subscription_quantity", 1000);
-        mapRC.put("register_debt_holder_subscription_price", 10000);
+
         mapRC.put("register_debt_holder_contact_number", "债权人联系方式CHARACTER");
+        mapRC.put("register_debt_holder_subscription_price", 10000);
 
         listRC.add(mapRC);
         mapTemp.put("register_creditors", listRC);
