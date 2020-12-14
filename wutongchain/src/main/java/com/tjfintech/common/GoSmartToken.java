@@ -99,7 +99,6 @@ public class GoSmartToken implements SmartToken {
         if (!extendData.isEmpty()) map.put("extendData", extendData);
 
         String param = "";
-        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
         if (subLedger != "") param = param + "&ledger=" + subLedger;
 
         String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/transfer/apply?" + param, map);
@@ -119,7 +118,6 @@ public class GoSmartToken implements SmartToken {
         if (!extendData.isEmpty()) map.put("extendData", extendData);
 
         String param = "";
-        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
         if (subLedger != "") param = param + "&ledger=" + subLedger;
 
         String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/exchange/apply?" + param, map);
@@ -136,7 +134,6 @@ public class GoSmartToken implements SmartToken {
         if (!extendData.isEmpty()) map.put("extendData", extendData);
 
         String param = "";
-        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
         if (subLedger != "") param = param + "&ledger=" + subLedger;
 
         String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/destroy/apply?" + param, map);
@@ -145,9 +142,10 @@ public class GoSmartToken implements SmartToken {
     }
 
 
-    //转让审核
-    public String SmartTransferApprove(List<Map> payInfoList, String UTXOInfo) {
+    //转让、转换、销毁审核
+    public String SmartTEDApprove(String type, List<Map> payInfoList, String UTXOInfo) {
         Map<String, Object> map = new HashMap<>();
+        map.put("type", type);
         map.put("payAddressInfoList", payInfoList);
         map.put("UTXOInfo", UTXOInfo);
 
@@ -155,41 +153,10 @@ public class GoSmartToken implements SmartToken {
         if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
         if (subLedger != "") param = param + "&ledger=" + subLedger;
 
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/transfer/approve?" + param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/approve?" + param, map);
         log.info(result);
         return result;
     }
-
-    //回收审核
-    public String SmartDestroyApprove(List<Map> payInfoList, String UTXOInfo) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("payAddressInfoList", payInfoList);
-        map.put("UTXOInfo", UTXOInfo);
-
-        String param = "";
-        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
-        if (subLedger != "") param = param + "&ledger=" + subLedger;
-
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/destroy/approve?" + param, map);
-        log.info(result);
-        return result;
-    }
-
-    //
-    public String SmartExchangeApprove(List<Map> payInfoList, String UTXOInfo) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("payAddressInfoList", payInfoList);
-        map.put("UTXOInfo", UTXOInfo);
-
-        String param = "";
-        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
-        if (subLedger != "") param = param + "&ledger=" + subLedger;
-
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/exchange/approve?" + param, map);
-        log.info(result);
-        return result;
-    }
-
 
     //根据地址查询余额
     public String SmartGetBalanceByAddr(String addr, String tokenType) {
@@ -203,42 +170,69 @@ public class GoSmartToken implements SmartToken {
         return result;
     }
 
-
-    public String SmartGetZeroBalance(String tokenType) {
-        String param = "";
-        if (subLedger != "") param = param + "&ledger=" + subLedger;
-        String result = (GetTest.SendGetTojson(SDKADD + "/v2/tx/stoken/zeroaddr/balance/?" + tokenType + param));
-        log.info(result);
-        return result;
-    }
-
-
-    public String SmartGetAssetsTotal(BigDecimal startTime, BigDecimal endTime, String tokenType) {
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("startTime", startTime);
-        map.put("endTime", endTime);
-        map.put("tokenType", tokenType);
-        String param = "";
-        if (subLedger != "") param = param + "&ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/assets/total?" + param, map);
-        log.info(result);
-        return result;
-
-    }
-
-    public String SmartGetOwnerAddrs(String tokenType) {
-
+    public String SmartFreeze(String tokenType, String comments){
         Map<String, Object> map = new HashMap<>();
         map.put("tokenType", tokenType);
+        map.put("comments", comments);
+
         String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
         if (subLedger != "") param = param + "&ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/getowneraddr?" + param, map);
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/freeze?" + param, map);
         log.info(result);
         return result;
-
     }
 
+    public String SmartRecover(String tokenType, String comments){
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenType", tokenType);
+        map.put("comments", comments);
+
+        String param = "";
+        if (syncFlag) param = param + "&sync=true&timeout=" + syncTimeout;
+        if (subLedger != "") param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/recover?" + param, map);
+        log.info(result);
+        return result;
+    }
+
+
+//    public String SmartGetZeroBalance(String tokenType) {
+//        String param = "";
+//        if (subLedger != "") param = param + "&ledger=" + subLedger;
+//        String result = (GetTest.SendGetTojson(SDKADD + "/v2/tx/stoken/zeroaddr/balance/?" + tokenType + param));
+//        log.info(result);
+//        return result;
+//    }
+//
+//
+//    public String SmartGetAssetsTotal(BigDecimal startTime, BigDecimal endTime, String tokenType) {
+//
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("startTime", startTime);
+//        map.put("endTime", endTime);
+//        map.put("tokenType", tokenType);
+//        String param = "";
+//        if (subLedger != "") param = param + "&ledger=" + subLedger;
+//        String result = PostTest.postMethod(SDKADD + "/v2/tx/utxo/assets/total?" + param, map);
+//        log.info(result);
+//        return result;
+//
+//    }
+//
+//    public String SmartGetOwnerAddrs(String tokenType) {
+//
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("tokenType", tokenType);
+//        String param = "";
+//        if (subLedger != "") param = param + "&ledger=" + subLedger;
+//        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/getowneraddr?" + param, map);
+//        log.info(result);
+//        return result;
+//
+//    }
 
 }
 

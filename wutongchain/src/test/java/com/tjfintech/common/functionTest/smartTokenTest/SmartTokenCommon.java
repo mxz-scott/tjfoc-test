@@ -1,39 +1,26 @@
 package com.tjfintech.common.functionTest.smartTokenTest;
 
 import com.tjfintech.common.*;
-import com.tjfintech.common.Interface.MultiSign;
-import com.tjfintech.common.Interface.SoloSign;
-import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.checkerframework.checker.units.qual.A;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.Assert.*;
 
 @Slf4j
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SmartTokenCommon {
     TestBuilder testBuilder = TestBuilder.getInstance();
-    MultiSign multiSign = testBuilder.getMultiSign();
-    SoloSign soloSign = testBuilder.getSoloSign();
-    Store store = testBuilder.getStore();
-
     GoSmartToken st = new GoSmartToken();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
@@ -138,8 +125,6 @@ public class SmartTokenCommon {
         //发行审核
         String tempSM3Hash = certTool.getSm3Hash(PEER4IP, sigMsg1);
         String cryptMsg = certTool.sign(PEER4IP, PRIKEY1, "", tempSM3Hash, "hex");
-//        String pubkey = utilsClass.readStringFromFile(testDataPath + "cert/SM2/keys1/pubkey.pem").replaceAll("\r\n","\n");
-
         String approveResp = st.SmartIssueTokenApprove(sigMsg1, cryptMsg, PUBKEY1);
         return approveResp;
     }
@@ -184,7 +169,7 @@ public class SmartTokenCommon {
         //转让审核
         List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList);
 
-        String approveResp = st.SmartTransferApprove(payInfoList, UTXOInfo);
+        String approveResp = st.SmartTEDApprove("transfer", payInfoList, UTXOInfo);
 
         return approveResp;
 
@@ -280,7 +265,7 @@ public class SmartTokenCommon {
         //审核
         List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList);
 
-        String approveResp = st.SmartDestroyApprove(payInfoList, UTXOInfo);
+        String approveResp = st.SmartTEDApprove("destroy", payInfoList, UTXOInfo);
         return approveResp;
 
     }
@@ -324,10 +309,10 @@ public class SmartTokenCommon {
             }
         }
 
-        //转让审核
+        //审核
         List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList);
 
-        String approveResp = st.SmartExchangeApprove(payInfoList, UTXOInfo);
+        String approveResp = st.SmartTEDApprove("exchange", payInfoList, UTXOInfo);
 
         return approveResp;
 
