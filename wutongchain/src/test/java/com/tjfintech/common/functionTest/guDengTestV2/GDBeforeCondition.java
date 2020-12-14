@@ -192,7 +192,7 @@ public class GDBeforeCondition {
     public void initRegulationData() {
         updateWord = "";
         //更新系统合约
-//        gd.GDEquitySystemInit(gdContractAddress, gdPlatfromKeyID);
+        gd.GDEquitySystemInit(gdContractAddress, gdPlatfromKeyID);
 
         refData();
 
@@ -885,7 +885,7 @@ public class GDBeforeCondition {
         mapTemp.put("transaction_type", 1);
         mapTemp.put("transaction_method", 1);
         mapTemp.put("transaction_description", "交易描述信息300字以内描述");
-        mapTemp.put("transaction_create_time", time3);
+        mapTemp.put("transaction_create_time", time4);
 
         //交易报告信息 交易资产信息
         mapTemp.put("transaction_product_custody_status", 0);
@@ -911,16 +911,16 @@ public class GDBeforeCondition {
 
 
         //交易报告信息 交易成交信息 融资类交易成交方信息
-        mapTemp.put("transaction_issuer_ref", gdCompanyID);
-        mapTemp.put("transaction_issuer_name", "issue001");
+        mapTemp.put("transaction_issuer_ref", transaction_issuer_ref);
+        mapTemp.put("transaction_issuer_name", "发行方名称");
         mapTemp.put("transaction_investor_ref", transaction_investor_ref);
-        mapTemp.put("transaction_investor_name", "联合");
+        mapTemp.put("transaction_investor_name", "投资方名称");
 
         //交易报告信息 交易成交信息 交易成交方信息
         mapTemp.put("transaction_investor_original_ref",transaction_investor_original_ref);
-        mapTemp.put("transaction_investor_original_name", "zhagnsan");
+        mapTemp.put("transaction_investor_original_name", "原持有方名称");
         mapTemp.put("transaction_investor_counterparty_ref", transaction_investor_counterparty_ref);
-        mapTemp.put("transaction_investor_counterparty_name", "李四");
+        mapTemp.put("transaction_investor_counterparty_name", "对手方名称");
 
         //交易报告信息 交易成交信息 成交核验信息
         mapTemp.put("transaction_orderplacing_verification_doc", getListFileObj());

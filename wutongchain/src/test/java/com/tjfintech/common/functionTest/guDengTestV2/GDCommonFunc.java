@@ -218,8 +218,8 @@ public class GDCommonFunc {
         String regObjId = mapAccAddr.get(address) + Random(6);
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
-        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
-        tempReg.put("register_nature_of_shares",shareProperty);
+//        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
+//        tempReg.put("register_nature_of_shares",shareProperty);
         tempReg.put("register_registration_object_id",regObjId);
 
         mapAddrRegObjId.put(address,regObjId);//方便后面测试验证
@@ -244,8 +244,8 @@ public class GDCommonFunc {
         String regObjId = mapAccAddr.get(address) + Random(6);
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
-        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
-        tempReg.put("register_nature_of_shares",shareProperty);
+//        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
+//        tempReg.put("register_nature_of_shares",shareProperty);
         tempReg.put("register_registration_object_id",regObjId);
 
         mapAddrRegObjId.put(address,regObjId);//方便后面测试验证
@@ -290,10 +290,14 @@ public class GDCommonFunc {
 //    }
 
     public static List<Map> gdConstructShareList2(String address, double amount, int shareProperty){
+        String regObjId = mapAccAddr.get(address) + Random(6);
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
-        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
-        tempReg.put("register_nature_of_shares",shareProperty);
+//        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
+//        tempReg.put("register_nature_of_shares",shareProperty);
+        tempReg.put("register_registration_object_id",regObjId);
+
+        mapAddrRegObjId.put(address,regObjId);//方便后面测试验证
 
         //不填写如下字段
         tempReg.remove("register_rights_change_amount");
@@ -317,10 +321,14 @@ public class GDCommonFunc {
     }
 
     public static List<Map> gdConstructShareList2(String address, double amount, int shareProperty,List<Map> list){
+        String regObjId = mapAccAddr.get(address) + Random(6);
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
-        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
-        tempReg.put("register_nature_of_shares",shareProperty);
+//        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
+//        tempReg.put("register_nature_of_shares",shareProperty);
+        tempReg.put("register_registration_object_id",regObjId);
+
+        mapAddrRegObjId.put(address,regObjId);//方便后面测试验证
 
         //不填写如下字段
         tempReg.remove("register_rights_change_amount");
@@ -1355,11 +1363,12 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject objBaseTAIACS = objBaseTAI.getJSONObject("asset_custody_state");
         com.alibaba.fastjson.JSONObject objBaseTAICAT = objBaseTAI.getJSONObject("custody_asset_transaction");
         com.alibaba.fastjson.JSONObject objBaseTAINCAT = objBaseTAI.getJSONObject("no_custody_asset_transaction");
-        //交易资产托管状态
+
+        //交易报告信息 交易基本信息 交易资产信息 交易资产托管状态
         key = "transaction_product_custody_status";                     getSubjectInfo.put(key,objBaseTAIACS.getString(key));
-        //已托管交易资产交易
+        //交易报告信息 交易基本信息 交易资产信息 已托管交易资产交易
         key = "transaction_custody_product_ref";                   getSubjectInfo.put(key,objBaseTAICAT.getString(key));
-        //未托管交易资产交易
+        //交易报告信息 交易基本信息 交易资产信息 未托管交易资产交易
         key = "transaction_product_name";getSubjectInfo.put(key,objBaseTAINCAT.getString(key));
         key = "transaction_product_issuer_ref";getSubjectInfo.put(key,objBaseTAINCAT.getString(key));
         key = "transaction_product_issuer_name";getSubjectInfo.put(key,objBaseTAINCAT.getString(key));
@@ -1368,9 +1377,9 @@ public class GDCommonFunc {
         key = "transaction_product_asset_currency";getSubjectInfo.put(key,objBaseTAINCAT.getString(key));
         key = "transaction_product_asset_value";getSubjectInfo.put(key,objBaseTAINCAT.getString(key));
         key = "transaction_product_asset_doc";getSubjectInfo.put(key,objBaseTAINCAT.getString(key));
-        key = "transaction_product_decription";getSubjectInfo.put(key,objBaseTAINCAT.getString(key));
+        key = "transaction_product_description";getSubjectInfo.put(key,objBaseTAINCAT.getString(key));
 
-
+        //交易报告信息 交易成交信息
         com.alibaba.fastjson.JSONObject objDeal = objInfo.getJSONObject("transaction_information");
         com.alibaba.fastjson.JSONObject objDealContent = objDeal.getJSONObject("transaction_content_information");
         com.alibaba.fastjson.JSONObject objDealFina = objDeal.getJSONObject("financing_transaction_party_information");
@@ -1824,7 +1833,23 @@ public class GDCommonFunc {
                 key = service_provider_subject_ref;     certainVer = getObjectLatestVer(key);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
                 break;
-            case "transactionreport" : break;
+            case "transactionreport" :
+                key =  transaction_custody_product_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                key =  transaction_product_issuer_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                key =  transaction_issuer_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                key =  transaction_investor_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                key =  transaction_investor_original_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                key =  transaction_investor_counterparty_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                key =  transaction_intermediary_subject_ref;       certainVer = getObjectLatestVer(key);
+                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+
+                break;
             case "registration" :
                 key =  "register_subject_ref=" + register_subject_ref;       certainVer = getObjectLatestVer(register_subject_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);

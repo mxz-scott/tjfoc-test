@@ -85,6 +85,7 @@
       ]
     }
   },
+  "required": ["header"],
   "definitions": {
     "Header": {
       "description": "数据头",
@@ -98,16 +99,13 @@
             "protocol": {
               "description": "数据模型协议名称",
               "type": "string",
-              "maxLength": 64,
               "enum": [
-                "上海区域股权市场跨链监管业务数据模型",
-				"区域性股权市场跨链业务数据模型"
+                "区域性股权市场跨链业务数据模型"
               ]
             },
             "version": {
               "description": "数据模型版本号",
               "type": "string",
-              "maxLength": 32,
               "enum": [
                 "2.0.0-alpha4"
               ]
@@ -125,7 +123,6 @@
             "type": {
               "description": "数据对象类型",
               "type": "string",
-              "maxLength": 16,
               "enum": [
                 "subject",
                 "account",
@@ -168,8 +165,7 @@
           ]
         },
         "metadata": {
-          "description": "数据对象元数据,数据对象元数据为预留字段，可根据地方链技术特点和跨链对接需求，定制元数据结构",
-          "type": "null"
+          "description": "数据对象元数据,数据对象元数据为预留字段，可根据地方链技术特点和跨链对接需求，定制元数据结构"
         }
       },
       "required": [
@@ -257,7 +253,7 @@
                 "subject_create_time": {
                   "description": "主体信息维护时间",
                   "type": "string",
-                  "format": "yyyy/MM/dd HH:mm:ss"
+                  "format": "yyyy-MM-ddTHH:mm:ssX"
                 }
               },
               "required": [
@@ -407,7 +403,7 @@
                       "subject_certification_time": {
                         "description": "资质认证时间",
                         "type": "string",
-                        "format": "yyyy/MM/dd HH:mm:ss"
+                        "format": "yyyy-MM-ddTHH:mm:ssX"
                       },
                       "subject_qualification_reviewer": {
                         "description": "资质审核方",
@@ -417,7 +413,7 @@
                       "subject_review_time": {
                         "description": "审核时间",
                         "type": "string",
-                        "format": "yyyy/MM/dd HH:mm:ss"
+                        "format": "yyyy-MM-ddTHH:mm:ssX"
                       },
                       "subject_qualification_status": {
                         "type": "boolean",
@@ -473,7 +469,7 @@
                       "subject_investor_qualification_certificate_time": {
                         "description": "适当性认证时间",
                         "type": "string",
-                        "format": "yyyy/MM/dd HH:mm:ss"
+                        "format": "yyyy-MM-ddTHH:mm:ssX"
                       },
                       "subject_investor_qualification_status": {
                         "description": "适当性认证状态",
@@ -640,7 +636,7 @@
                     "subject_registry_date": {
                       "description": "注册日期",
                       "type": "string",
-                      "format": "yyyy/MM/dd"
+                      "format": "yyyy-MM-dd"
                     },
                     "subject_business_license": {
                       "description": "营业执照",
@@ -805,7 +801,7 @@
                     "subject_approval_time": {
                       "description": "核准时间",
                       "type": "string",
-                      "format": "yyyy/MM/dd HH:mm:ss"
+                      "format": "yyyy-MM-ddTHH:mm:ssX"
                     },
                     "subject_insured_number": {
                       "description": "参保人数",
@@ -835,7 +831,7 @@
                     "subject_company_status_deregistration_date": {
                       "description": "注销日期",
                       "type": "string",
-                      "format": "yyyy/MM/dd"
+                      "format": "yyyy-MM-dd"
                     },
                     "subject_company_status_windingup": {
                       "description": "吊销原因",
@@ -845,7 +841,7 @@
                     "subject_company_status_windingup_date": {
                       "description": "吊销日期",
                       "type": "string",
-                      "format": "yyyy/MM/dd"
+                      "format": "yyyy-MM-dd"
                     },
                     "subject_name_used_before": {
                       "description": "企业曾用名",
@@ -906,12 +902,12 @@
                       "subject_key_personnel_appointment_start": {
                         "description": "任职开始日期",
                         "type": "string",
-                        "format": "yyyy/MM/dd"
+                        "format": "yyyy-MM-dd"
                       },
                       "subject_key_personnel_appointment_end": {
                         "description": "任职结束日期",
                         "type": "string",
-                        "format": "yyyy/MM/dd"
+                        "format": "yyyy-MM-dd"
                       },
                       "subject_key_personnel_nationality": {
                         "description": "国籍",
@@ -1098,7 +1094,7 @@
                 "subject_birthday": {
                   "description": "出生日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "subject_gender": {
                   "description": "性别",
@@ -1220,7 +1216,7 @@
             "account_create_time": {
               "description": "账户信息维护时间",
               "type": "string",
-              "format": "yyyy/MM/dd HH:mm:ss"
+              "format": "yyyy-MM-ddTHH:mm:ssX"
             }
           },
           "definitions": {
@@ -1278,12 +1274,12 @@
                 "account_establish_date": {
                   "description": "账户创建日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "account_opening_date": {
                   "description": "账户开户日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "account_opening_doc": {
                   "type": "array",
@@ -1312,7 +1308,7 @@
                 "account_closing_date": {
                   "description": "账户销户日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "account_closing_doc": {
                   "type": "array",
@@ -1341,7 +1337,7 @@
                 "account_frozen_date": {
                   "description": "账户冻结日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "account_frozen_doc": {
                   "type": "array",
@@ -1370,7 +1366,7 @@
                 "account_thaw_date": {
                   "description": "账户解冻日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "account_thaw_doc": {
                   "type": "array",
@@ -1615,7 +1611,7 @@
                 "product_create_time": {
                   "description": "产品信息维护时间",
                   "type": "string",
-                  "format": "yyyy/MM/dd HH:mm:ss"
+                  "format": "yyyy-MM-ddTHH:mm:ssX"
                 }
               },
               "required": [
@@ -1852,7 +1848,7 @@
                 "product_filing_date": {
                   "description": "备案日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "product_filing_doc": {
                   "description": "备案文件",
@@ -1948,12 +1944,12 @@
                 "product_raising_start_time": {
                   "description": "募集开始日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "product_raising_end_time": {
                   "description": "募集结束日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "product_registered_capital_before_issuance": {
                   "description": "发行前注册资本",
@@ -2116,7 +2112,7 @@
                 "product_appoint_repayment_date": {
                   "description": "指定还款日",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "product_guarantee_measure": {
                   "description": "担保措施及方式",
@@ -2208,22 +2204,22 @@
                 "product_raising_start_date": {
                   "description": "募集开始日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "product_raising_end_date": {
                   "description": "募集结束日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "product_start_date": {
                   "description": "起息日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "product_due_date": {
                   "description": "到期日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "product_amount_cashed": {
                   "description": "兑付金额",
@@ -2232,7 +2228,7 @@
                 "product_first_interest_payment_date": {
                   "description": "首次付息日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "product_issuer_credit_rating": {
                   "description": "发行方主体信用评级",
@@ -2352,7 +2348,7 @@
                     "product_fund_filing_date": {
                       "description": "基金备案日期",
                       "type": "string",
-                      "format": "yyyy/MM/dd"
+                      "format": "yyyy-MM-dd"
                     },
                     "product_fund_type": {
                       "description": "基金类型",
@@ -2368,7 +2364,7 @@
                     "product_foundation_date": {
                       "description": "基金成立日期",
                       "type": "string",
-                      "format": "yyyy/MM/dd"
+                      "format": "yyyy-MM-dd"
                     },
                     "product_escrow_bank": {
                       "description": "托管行",
@@ -2395,12 +2391,12 @@
                     "product_raise_start_date": {
                       "description": "募集开始日期",
                       "type": "string",
-                      "format": "yyyy/MM/dd"
+                      "format": "yyyy-MM-dd"
                     },
                     "product_raise_end_date": {
                       "description": "募集结束日期",
                       "type": "string",
-                      "format": "yyyy/MM/dd"
+                      "format": "yyyy-MM-dd"
                     }
                   }
                 },
@@ -2544,7 +2540,7 @@
                 "product_listing_date": {
                   "description": "挂牌日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "product_listing_remarks": {
                   "description": "挂牌备注信息,500字以内描述文字",
@@ -2562,7 +2558,7 @@
                 "product_delisting_date": {
                   "description": "摘牌日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "product_delisting_type": {
                   "description": "摘牌类型",
@@ -2624,7 +2620,7 @@
             "product_custodian_registration_date": {
               "description": "托管登记日期",
               "type": "string",
-              "format": "yyyy/MM/dd"
+              "format": "yyyy-MM-dd"
             },
             "product_custodian_documents": {
               "description": "托管文件",
@@ -2640,7 +2636,7 @@
             "product_escrow_deregistration_date": {
               "description": "解除托管登记日期",
               "type": "string",
-              "format": "yyyy/MM/dd"
+              "format": "yyyy-MM-dd"
             },
             "product_escrow_deregistration_document": {
               "description": "解除托管文件",
@@ -2730,8 +2726,8 @@
                   "description": "交易方式, 1 线上协议\n2 线下协议",
                   "type": "integer",
                   "enum": [
-                    0,
-                    1
+                    1,
+                    2
                   ]
                 },
                 "transaction_description": {
@@ -2742,7 +2738,7 @@
                 "transaction_create_time": {
                   "description": "交易信息维护时间",
                   "type": "string",
-                  "format": "yyyy/MM/dd HH:mm:ss"
+                  "format": "yyyy-MM-ddTHH:mm:ssX"
                 }
               },
               "required": [
@@ -2927,7 +2923,7 @@
                 "transaction_settlement_time": {
                   "description": "成交时间",
                   "type": "string",
-                  "format": "yyyy/MM/dd HH:mm:ss"
+                  "format": "yyyy-MM-ddTHH:mm:ssX"
                 },
                 "transaction_settlement_description": {
                   "description": "交易成交描述信息",
@@ -3105,7 +3101,7 @@
             "settlement_time": {
               "description": "结算时间",
               "type": "string",
-              "format": "yyyy/MM/dd HH:mm:ss"
+              "format": "yyyy-MM-ddTHH:mm:ssX"
             },
             "settlement_product_ref": {
               "description": "交易产品引用",
@@ -3148,7 +3144,7 @@
             "settlement_information_maintenance_time": {
               "description": "资金结算信息维护时间",
               "type": "string",
-              "format": "yyyy/MM/dd HH:mm:ss"
+              "format": "yyyy-MM-ddTHH:mm:ssX"
             }
           },
           "required": [
@@ -3345,7 +3341,7 @@
                     "register_time": {
                       "description": "登记时间",
                       "type": "string",
-                      "format": "yyyy/MM/dd HH:mm:ss"
+                      "format": "yyyy-MM-ddTHH:mm:ssX"
                     },
                     "register_subject_ref": {
                       "description": "登记主体引用",
@@ -3390,15 +3386,7 @@
                     },
                     "register_asset_currency": {
                       "description": "登记币种",
-                      "type": "string",
-                      "enum": [
-                        "156",
-                        "840",
-                        "036",
-                        "978",
-                        "276",
-                        "344"
-                      ]
+                      "$ref": "#CurrencyType"
                     },
                     "register_transaction_ref": {
                       "description": "交易报告引用",
@@ -3418,7 +3406,7 @@
                     "register_create_time": {
                       "description": "登记信息维护时间",
                       "type": "string",
-                      "format": "yyyy/MM/dd HH:mm:ss"
+                      "format": "yyyy-MM-ddTHH:mm:ssX"
                     },
                     "register_authentic_right_recognition_status": {
                       "description": "登记确权状态",
@@ -3450,7 +3438,7 @@
                     "register_authentic_right_recognition_date": {
                       "description": "登记确权日期",
                       "type": "string",
-                      "format": "yyyy/MM/dd"
+                      "format": "yyyy-MM-dd"
                     },
                     "register_right_recognition_mode": {
                       "description": "确权方式",
@@ -3604,7 +3592,8 @@
                         6,
                         7,
                         8,
-                        9
+                        9,
+                        255
                       ]
                     },
                     "register_asset_equity_type": {
@@ -3649,7 +3638,9 @@
                       }
                     }
                   },
-                  "required": ["register_source_type"]
+                  "required": [
+                    "register_source_type"
+                  ]
                 }
               }
             }
@@ -3716,7 +3707,7 @@
                 "register_list_date": {
                   "description": "登记日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd HH:mm:ss"
+                  "format": "yyyy-MM-ddTHH:mm:ssX"
                 }
               }
             },
@@ -3987,7 +3978,7 @@
             "disclosure_submit_date": {
               "description": "提报时间",
               "type": "string",
-              "format": "yyyy/MM/dd"
+              "format": "yyyy-MM-dd"
             },
             "disclosure_submit_description": {
               "description": "提报描述信息",
@@ -4042,12 +4033,12 @@
             "disclosure_display_start_date": {
               "description": "展示开始日期",
               "type": "string",
-              "format": "yyyy/MM/dd"
+              "format": "yyyy-MM-dd"
             },
             "disclosure_display_end_date": {
               "description": "展示结束日期",
               "type": "string",
-              "format": "yyyy/MM/dd"
+              "format": "yyyy-MM-dd"
             }
           },
           "required": [
@@ -4102,7 +4093,7 @@
             "disclosure_regulatory_report_date": {
               "description": "监管信息发布时间",
               "type": "string",
-              "format": "yyyy/MM/dd"
+              "format": "yyyy-MM-dd"
             }
           }
         },
@@ -4144,7 +4135,7 @@
             "disclosure_enterprise_report_date": {
               "description": "报告发布时间",
               "type": "string",
-              "format": "yyyy/MM/dd"
+              "format": "yyyy-MM-dd"
             }
           },
           "required": [
@@ -4204,7 +4195,7 @@
             "disclosure_announcement_date": {
               "description": "公告时间",
               "type": "string",
-              "format": "yyyy/MM/dd"
+              "format": "yyyy-MM-dd"
             }
           },
           "required": [
@@ -4253,7 +4244,7 @@
             "disclosure_major_event_reporting_date": {
               "description": "提报时间",
               "type": "string",
-              "format": "yyyy/MM/dd"
+              "format": "yyyy-MM-dd"
             }
           },
           "required": [
@@ -4366,12 +4357,12 @@
                 "disclosure_event_start_date": {
                   "description": "开始日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "disclosure_event_end_date": {
                   "description": "结束日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "disclosure_event_status": {
                   "description": "状态",
@@ -4414,12 +4405,12 @@
                 "disclosure_financial_start_date": {
                   "description": "期间起始日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "disclosure_financial_end_date": {
                   "description": "期间截止日期",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 },
                 "disclosure_financial_type": {
                   "description": "报表类型",
@@ -4598,7 +4589,7 @@
                 "disclosure_business_report_date": {
                   "description": "经营信息发布时间",
                   "type": "string",
-                  "format": "yyyy/MM/dd"
+                  "format": "yyyy-MM-dd"
                 }
               },
               "required": [
@@ -4654,7 +4645,7 @@
             "disclosure_expand_date": {
               "description": "拓展信息发布时间",
               "type": "string",
-              "format": "yyyy/MM/dd"
+              "format": "yyyy-MM-dd"
             }
           },
           "required": [
@@ -4704,7 +4695,7 @@
             "term_of_validity": {
               "description": "文件有效期",
               "type": "string",
-              "format": "yyyy/MM/dd"
+              "format": "yyyy-MM-dd"
             }
           }
         },

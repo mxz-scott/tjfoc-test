@@ -7,6 +7,7 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,6 +36,12 @@ public class GDV2_CheckJGDataNecessary_SubProd {
     @Rule
     public TestName tm = new TestName();
 
+    @BeforeClass
+    public static void Before()throws Exception{
+        GDBeforeCondition gdBefore = new GDBeforeCondition();
+//        gdBefore.gdCreateAccout();
+        gdBefore.initRegulationData();
+    }
     @Test
     public void subjectInfo_Must_Test()throws Exception{
         gdEquityCode = "nece" + Random(12);
@@ -102,8 +109,8 @@ public class GDV2_CheckJGDataNecessary_SubProd {
         testSub.remove(key);
         response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,testSub,
                 testEquityProdInfo,null,null);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
         testSub = gdBF.init01EnterpriseSubjectInfo();
         key = "subject_id_type";

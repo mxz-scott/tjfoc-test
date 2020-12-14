@@ -1433,4 +1433,24 @@ public class CommonFunc {
         assertEquals(raw1.equals(raw2),true);
     }
 
+    public Boolean compareTwoStr(String str1,String str2){
+        Boolean bSame = true;
+        log.info(str1);
+        log.info(str2);
+        char ch;
+        char[] arr1 = str1.toCharArray();
+        char[] arr2 = str2.toCharArray();
+        for(int i=0;i<arr1.length;i++)
+        {
+            if(arr1[i]!=arr2[i]) {
+                bSame = false;
+                String keyWord1 = str1.substring(i,i+10);
+                String keyWord2 = str2.substring(i,i+10);
+                log.info("test diff from column " + i + " arr1 " + keyWord1 + " arr2 " + keyWord2);
+                break;
+            }
+        }
+        return bSame;
+    }
+
 }
