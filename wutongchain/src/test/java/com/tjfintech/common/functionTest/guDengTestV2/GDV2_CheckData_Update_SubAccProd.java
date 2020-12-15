@@ -283,7 +283,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         log.info(uriInfo.get("storeData").toString());
         log.info(chkSubURI);
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
-        assertEquals(true,uriInfo.get("storeData").toString().contains("\"meta\":null"));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
 
 
         //直接从minio上通过对象标识+版本号的方式获取指定对象文件
@@ -525,7 +525,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         log.info(uriInfo.get("storeData").toString());
         log.info(chkSubURI);
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
-        assertEquals(true,uriInfo.get("storeData").toString().contains("\"meta\":null"));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
 
 
         //直接从minio上获取报送数据文件信息
@@ -730,7 +730,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         String chkSHAccURI = minIOEP + "/" + jgBucket + "/" + shAccfileName;
         log.info(uriInfo.get("storeData").toString());
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSHAccURI));
-        assertEquals(true,uriInfo.get("storeData").toString().contains("\"meta\":null"));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
 
 
         //直接从minio上获取报送数据文件信息
@@ -965,7 +965,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         String chkSHAccURI = minIOEP + "/" + jgBucket + "/" + fundAccfileName;
         log.info(uriInfo.get("storeData").toString());
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSHAccURI));
-        assertEquals(true,uriInfo.get("storeData").toString().contains("\"meta\":null"));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
 
 
         //直接从minio上获取报送数据文件信息
@@ -1170,7 +1170,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         String prodfileName = conJGFileName(gdEquityCode,newEqProdVer);
         String chkProdURI = minIOEP + "/" + jgBucket + "/" + prodfileName;
         assertEquals(true,storeData.contains(chkProdURI));
-        assertEquals(false,storeData.contains("\"meta\":null"));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息移除
 
 
         //直接从minio上通过对象标识+版本号的方式获取指定对象文件
@@ -1258,7 +1258,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         String prodfileName = conJGFileName(gdEquityCode,newEqProdVer);
         String chkProdURI = minIOEP + "/" + jgBucket + "/" + prodfileName;
         assertEquals(true,storeData.contains(chkProdURI));
-        assertEquals(false,storeData.contains("\"meta\":null"));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息移除
 
 
         //直接从minio上通过对象标识+版本号的方式获取指定对象文件
@@ -1344,7 +1344,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         String prodfileName = conJGFileName(gdEquityCode,newEqProdVer);
         String chkProdURI = minIOEP + "/" + jgBucket + "/" + prodfileName;
         assertEquals(true,storeData.contains(chkProdURI));
-        assertEquals(false,storeData.contains("\"meta\":null"));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息移除
 
 
         //直接从minio上通过对象标识+版本号的方式获取指定对象文件

@@ -2019,4 +2019,8 @@ public class GDCommonFunc {
 
         return noSensWord;
     }
+
+    public Boolean bContainJGFlag(String jsonStr){
+        return jsonStr.contains("\"meta\":{\"data_type\":\"supervision\"}");//确认meta信息包含监管标识
+    }
 }

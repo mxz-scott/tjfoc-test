@@ -131,7 +131,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
             String regfileName = conJGFileName(tempObjId,regVer);
             String chkRegURI = minIOEP + "/" + jgBucket + "/" + regfileName;
             assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI));
-//        assertEquals(false,uriInfo.get("storeData").toString().contains("meta"));//确认meta信息移除
+            assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
 
             //直接从minio上获取报送数据文件信息
             Map getRegInfo = gdCF.constructJGDataFromStr(regfileName,regType,"");
@@ -281,7 +281,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         log.info(chkRegURI1 + "      " + chkRegURI2);
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI1));
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI2));
-        assertEquals(true,uriInfo.get("storeData").toString().contains("\"meta\":null"));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
 
         //直接从minio上获取报送数据文件信息
         Map getRegInfo1 = gdCF.constructJGDataFromStr(regfileName1,regType,"");
@@ -396,7 +396,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
         //检查各个查询对象返回信息中不包含敏感词
         assertEquals("不包含登记数据敏感词",true,gdCF.chkSensitiveWord(txDetail,regType));
-//        assertEquals("不包含交易报告敏感词",true,gdCF.chkSensitiveWord(txDetail,txrpType));
+        assertEquals("不包含交易报告敏感词",true,gdCF.chkSensitiveWord(txDetail,txrpType));
 
         //获取上链交易时间戳
         long onChainTS = JSONObject.fromObject(store.GetTxDetail(txId)).getJSONObject("data").getJSONObject("header").getLong("timestamp");
@@ -466,7 +466,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI2));
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkTxRpURI));
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
-        assertEquals(true,uriInfo.get("storeData").toString().contains("\"meta\":null"));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
 
         //直接从minio上获取报送数据文件信息
         Map getRegInfo1 = gdCF.constructJGDataFromStr(regfileName1,regType,"");
@@ -769,7 +769,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
         log.info(uriInfo.get("storeData").toString());
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI1));
-        assertEquals(true,uriInfo.get("storeData").toString().contains("\"meta\":null"));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
 
         //直接从minio上获取报送数据文件信息
         Map getRegInfo1 = gdCF.constructJGDataFromStr(regfileName1,regType,"");
@@ -892,7 +892,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
         log.info(uriInfo.get("storeData").toString());
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI1));
-        assertEquals(true,uriInfo.get("storeData").toString().contains("\"meta\":null"));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
 
         //直接从minio上获取报送数据文件信息
         Map getRegInfo1 = gdCF.constructJGDataFromStr(regfileName1,regType,"");

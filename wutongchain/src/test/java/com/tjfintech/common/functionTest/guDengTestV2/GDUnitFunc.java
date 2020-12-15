@@ -358,7 +358,7 @@ public class GDUnitFunc {
         //获取股东列表
         String Qry = gd.GDGetEnterpriseShareInfo(equityCode);
         if(!JSONObject.fromObject(Qry).getString("state").equals("200")){
-            regList.add(registerInfo);
+//            regList.add(registerInfo);
             return  regList;
         }
 //        assertEquals("200",JSONObject.fromObject(Qry).getString("state"));
@@ -373,8 +373,12 @@ public class GDUnitFunc {
             String tempObjId = mapAccAddr.get(tempAddr).toString();
             log.info("检查发行存证登记格式化及信息内容与传入一致:" + tempObjId);
             Map tempReg =  gdBF.init05RegInfo();
-            tempReg.put("register_account_obj_id",tempObjId);
-            tempReg.put("register_registration_serial_number",flowNo);
+            String regObjId = mapAccAddr.get(tempAddr) + Random(6);
+            GDBeforeCondition gdbf = new GDBeforeCondition();
+
+            tempReg.put("register_registration_object_id",regObjId);
+
+            mapAddrRegObjId.put(tempAddr,regObjId);//方便后面测试验证
             tempReg.put("register_nature_of_shares",tempPP);
             regList.add(tempReg);
         }

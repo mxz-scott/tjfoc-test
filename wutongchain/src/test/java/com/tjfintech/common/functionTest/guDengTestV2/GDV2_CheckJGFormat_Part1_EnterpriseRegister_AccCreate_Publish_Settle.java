@@ -148,7 +148,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSHAccURI));
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkFundAccURI));
-//        assertEquals(false,uriInfo.get("storeData").toString().contains("meta"));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
 
 
         //直接从minio上获取报送数据文件信息
@@ -295,8 +295,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSHAccURI));
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkFundAccURI));
-//        assertEquals(false,uriInfo.get("storeData").toString().contains("meta"));//确认meta信息移除
-
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
 
         //直接从minio上获取报送数据文件信息
         Map getSubInfo = gdCF.constructJGDataFromStr(subfileName,subjectType,"2");
@@ -390,6 +389,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
                 com.alibaba.fastjson.JSONObject.parseArray(storeData).get(0).toString());
         String chkObjURI = minIOEP + "/" + jgBucket + "/" + objPrefix;
         assertEquals(true,storeData.contains(chkObjURI));
+        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息移除
 
         String uriOrgStr =  objURI.getString("uri");
         String objVerTemp = uriOrgStr.substring(uriOrgStr.lastIndexOf(objPrefix),uriOrgStr.lastIndexOf("."));
@@ -451,6 +451,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
                 com.alibaba.fastjson.JSONObject.parseArray(storeData).get(0).toString());
         String chkObjURI = minIOEP + "/" + jgBucket + "/" + objPrefix;
         assertEquals(true,storeData.contains(chkObjURI));
+        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息移除
 
         String uriOrgStr =  objURI.getString("uri");
         String objVerTemp = uriOrgStr.substring(uriOrgStr.lastIndexOf(objPrefix),uriOrgStr.lastIndexOf("."));
@@ -545,8 +546,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         log.info(chkSubURI);
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
         if(!type.equals("4")) assertEquals(true,uriInfo.get("storeData").toString().contains(chkProdURI));
-//        assertEquals(false,uriInfo.get("storeData").toString().contains("meta"));//确认meta信息移除
-
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
 
         //直接从minio上通过对象标识+版本号的方式获取指定对象文件
         Map getSubInfo = gdCF.constructJGDataFromStr(conJGFileName(gdCompanyID,newSubVer),subjectType,"1");
@@ -624,6 +624,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
                 com.alibaba.fastjson.JSONObject.parseArray(storeData).get(0).toString());
         String chkObjURI = minIOEP + "/" + jgBucket + "/" + objPrefix;
         assertEquals(true,storeData.contains(chkObjURI));
+        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息移除
 
         String uriOrgStr =  objURI.getString("uri");
         String objVerTemp = uriOrgStr.substring(uriOrgStr.lastIndexOf(objPrefix),uriOrgStr.lastIndexOf("."));
