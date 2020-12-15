@@ -44,8 +44,8 @@ public class smtMultiTest {
 
         //转让
         String transferData = "ADDRESS1 向 MULITADD4 转账10个" + tokenType;
-        List<Map> payList= stc.smartConstructTokenList(ADDRESS1, "test", "10");
-        List<Map> collList= stc.smartConstructTokenList(MULITADD4,"test", "10");
+        List<Map> payList= stc.smartConstructTokenList(ADDRESS1, "test", "10",null);
+        List<Map> collList= stc.smartConstructTokenList(MULITADD4,"test", "10",null);
         String transferResp= stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
 
         assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
@@ -59,8 +59,8 @@ public class smtMultiTest {
         //销毁
         String destroyData1 = "销毁 ADDRESS1 中的" + tokenType;
         String destroyData2 = "销毁 MULITADD4 中的" + tokenType;
-        List<Map> payList1 = stc.smartConstructTokenList(ADDRESS1, "test", "990.25");
-        List<Map> payList2 = stc.smartConstructTokenList(MULITADD4, "test", "10");
+        List<Map> payList1 = stc.smartConstructTokenList(ADDRESS1, "test", "990.25",null);
+        List<Map> payList2 = stc.smartConstructTokenList(MULITADD4, "test", "10",null);
 
         String destroyResp1 = stc.smartDestroy(tokenType, payList1, "", destroyData1);
         String destroyResp2 = stc.smartDestroy(tokenType, payList2, "", destroyData2);
@@ -92,8 +92,8 @@ public class smtMultiTest {
 
         //转换
         String transferData = "ADDRESS1 向 MULITADD4 转账10个" + tokenType;
-        List<Map> payList= stc.smartConstructTokenList(ADDRESS1, "test", "200");
-        List<Map> collList= stc.smartConstructTokenList(MULITADD4,"test", "200");
+        List<Map> payList= stc.smartConstructTokenList(ADDRESS1, "test", "200",null);
+        List<Map> collList= stc.smartConstructTokenList(MULITADD4,"test", "200",null);
         String transferResp= stc.smartExchange(tokenType, payList, collList, "NEW_TB001","", transferData);
 
         assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));

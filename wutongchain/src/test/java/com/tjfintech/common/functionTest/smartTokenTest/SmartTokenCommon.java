@@ -40,7 +40,7 @@ public class SmartTokenCommon {
         tokenType = "TB_" + UtilsClass.Random(10);
         double timeStampNow = System.currentTimeMillis();
         BigDecimal deadline = new BigDecimal(timeStampNow + 12356789);
-        List<Map> list = smartConstructTokenList(ADDRESS1, "test", amount);
+        List<Map> list = smartConstructTokenList(ADDRESS1, "test", amount,null);
 
         String issueResp = smartIssueToken(tokenType, deadline, list, true, 0, "");
         assertEquals("200", JSONObject.fromObject(issueResp).getString("state"));
@@ -77,9 +77,10 @@ public class SmartTokenCommon {
      * @param toAddr
      * @param subType
      * @param amount
+     * @param list   之前的数组
      * @return
      */
-    public List<Map> smartConstructTokenList(String toAddr, String subType, String amount) {
+    public List<Map> smartConstructTokenList(String toAddr, String subType, String amount, List<Map> list ) {
 
         Map<String, Object> amountMap = new HashMap<>();
         amountMap.put("address", toAddr);
@@ -93,15 +94,17 @@ public class SmartTokenCommon {
         return tokenList;
     }
 
+
     /**
      * payAddressInfoList 数组构建方法
      *
      * @param fromAddr
      * @param payList
      * @param signList
+     * @param list       之前的数组
      * @return
      */
-    public List<Map> smartConstructPayAddressInfoList(String fromAddr, List<String> payList, List<String> signList) {
+    public List<Map> smartConstructPayAddressInfoList(String fromAddr, List<String> payList, List<String> signList, List<Map> list) {
 
         Map<String, Object> signMap = new HashMap<>();
         signMap.put("address", fromAddr);
@@ -167,7 +170,7 @@ public class SmartTokenCommon {
         }
 
         //转让审核
-        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList);
+        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList,null);
 
         String approveResp = st.SmartTEDApprove("transfer", payInfoList, UTXOInfo);
 
@@ -263,7 +266,7 @@ public class SmartTokenCommon {
         }
 
         //审核
-        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList);
+        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList,null);
 
         String approveResp = st.SmartTEDApprove("destroy", payInfoList, UTXOInfo);
         return approveResp;
@@ -310,7 +313,7 @@ public class SmartTokenCommon {
         }
 
         //审核
-        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList);
+        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList,null);
 
         String approveResp = st.SmartTEDApprove("exchange", payInfoList, UTXOInfo);
 

@@ -50,8 +50,8 @@ public class smtInterfaceTest {
 
         tokenType =  stc.beforeConfigIssueNewToken("1000.25");
         String invalidAddress = "SsPB7k7FFcTG3DbtCHPpn9n3op46pu4GVQ3SW2PxRWqanES6yP7";
-        List<Map> payList= stc.smartConstructTokenList(ADDRESS1, "test", "10");
-        List<Map> collList= stc.smartConstructTokenList(MULITADD4,"test", "10");
+        List<Map> payList= stc.smartConstructTokenList(ADDRESS1, "test", "10",null);
+        List<Map> collList= stc.smartConstructTokenList(MULITADD4,"test", "10",null);
 
         log.info("tokenType为空");
         String transferResp= st.SmartTransferReq("", payList, collList, "", "", "");
@@ -66,14 +66,14 @@ public class smtInterfaceTest {
 
         log.info("转出金额不存在");
         payList.clear();
-        payList= stc.smartConstructTokenList(ADDRESS1, "test", "");
+        payList= stc.smartConstructTokenList(ADDRESS1, "test", "",null);
         transferResp= st.SmartTransferReq(tokenType, payList, collList, "", "", "");
         assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
         assertEquals(true,transferResp.contains("支出金额为必填字段"));
 
         log.info("受让list不存在");
         payList.clear();
-        payList= stc.smartConstructTokenList(ADDRESS1, "test", "10");
+        payList= stc.smartConstructTokenList(ADDRESS1, "test", "10",null);
         collList.clear();
         transferResp= st.SmartTransferReq(tokenType, payList, collList, "", "", "");
         assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
@@ -81,7 +81,7 @@ public class smtInterfaceTest {
 
         log.info("受让金额不存在");
         collList.clear();
-        collList= stc.smartConstructTokenList(MULITADD4, "test", "");
+        collList= stc.smartConstructTokenList(MULITADD4, "test", "",null);
         transferResp= st.SmartTransferReq(tokenType, payList, collList, "", "", "");
         assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
         assertEquals(true,transferResp.contains("收入金额为必填字段"));
