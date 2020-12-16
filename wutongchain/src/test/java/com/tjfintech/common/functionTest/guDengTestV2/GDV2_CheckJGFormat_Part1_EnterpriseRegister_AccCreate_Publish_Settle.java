@@ -140,9 +140,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String fundAccfileName = conJGFileName(fundObjId,fundAccVer);
 
         Map uriInfo = gdCF.getJGURIStoreHash(txId,subfileName,1);
-        String chkSubURI = minIOEP + "/" + jgBucket + "/" + subfileName;
-        String chkSHAccURI = minIOEP + "/" + jgBucket + "/" + shAccfileName;
-        String chkFundAccURI = minIOEP + "/" + jgBucket + "/" + fundAccfileName;
+        String chkSubURI = subfileName;
+        String chkSHAccURI = shAccfileName;
+        String chkFundAccURI = fundAccfileName;
         log.info(uriInfo.get("storeData").toString());
         log.info(chkSubURI);
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
@@ -287,9 +287,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String fundAccfileName = conJGFileName(fundObjId,fundAccVer);
 
         Map uriInfo = gdCF.getJGURIStoreHash(txId,subfileName,1);
-        String chkSubURI = minIOEP + "/" + jgBucket + "/" + subfileName;
-        String chkSHAccURI = minIOEP + "/" + jgBucket + "/" + shAccfileName;
-        String chkFundAccURI = minIOEP + "/" + jgBucket + "/" + fundAccfileName;
+        String chkSubURI = subfileName;
+        String chkSHAccURI = shAccfileName;
+        String chkFundAccURI = fundAccfileName;
 //        log.info(uriInfo.get("storeData").toString());
 //        log.info(chkSubURI);
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
@@ -387,17 +387,16 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         log.info(storeData);
         com.alibaba.fastjson.JSONObject objURI = com.alibaba.fastjson.JSONObject.parseObject(
                 com.alibaba.fastjson.JSONObject.parseArray(storeData).get(0).toString());
-        String chkObjURI = minIOEP + "/" + jgBucket + "/" + objPrefix;
+        String chkObjURI = objPrefix;
         assertEquals(true,storeData.contains(chkObjURI));
         assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字
 
-        String uriOrgStr =  objURI.getString("uri");
-        String objVerTemp = uriOrgStr.substring(uriOrgStr.lastIndexOf(objPrefix),uriOrgStr.lastIndexOf("."));
+        String objVerTemp =  objURI.getString("uri").trim();
 
         String newDisObjId = "";
-        newDisObjId = objVerTemp.substring(0,objVerTemp.lastIndexOf("_"));
+        newDisObjId = objVerTemp.substring(0,objVerTemp.lastIndexOf("/"));
 
-        String newDisObjIdVer = objVerTemp.substring(objVerTemp.lastIndexOf("_") + 1);//gdCF.getObjectLatestVer(newDisObjId);
+        String newDisObjIdVer = objVerTemp.substring(objVerTemp.lastIndexOf("/") + 1);//gdCF.getObjectLatestVer(newDisObjId);
         log.info(objVerTemp + " " + newDisObjIdVer);
 
 //        assertEquals(objVerTemp.substring(objVerTemp.lastIndexOf("_") + 1),newDisObjIdVer);//确认uri中的版本号和实际最新版本号一致
@@ -428,6 +427,12 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
     }
 
+//    @Test
+    public  void tet()throws Exception{
+        MinIOOperation minio = new MinIOOperation();
+        String storeData2 = minio.getFileFromMinIO(minIOEP,jgBucket,"fund_a8dee7aa95e94e13baac526782dca87/0","");
+    }
+
     @Test
     public void TC16_balanceCount() throws Exception {
         settleInfo = gdBF.init06SettleInfo();
@@ -449,24 +454,30 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         log.info(storeData);
         com.alibaba.fastjson.JSONObject objURI = com.alibaba.fastjson.JSONObject.parseObject(
                 com.alibaba.fastjson.JSONObject.parseArray(storeData).get(0).toString());
-        String chkObjURI = minIOEP + "/" + jgBucket + "/" + objPrefix;
+        String chkObjURI = objPrefix;
         assertEquals(true,storeData.contains(chkObjURI));
         assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字
 
-        String uriOrgStr =  objURI.getString("uri");
-        String objVerTemp = uriOrgStr.substring(uriOrgStr.lastIndexOf(objPrefix),uriOrgStr.lastIndexOf("."));
+        String objVerTemp =  objURI.getString("uri").trim();
 
         String newSettleObjId = "";
-        newSettleObjId = objVerTemp.substring(0,objVerTemp.lastIndexOf("_"));
+        newSettleObjId = objVerTemp.substring(0,objVerTemp.lastIndexOf("/")-1);
 
-        String newDisObjIdVer = objVerTemp.substring(objVerTemp.lastIndexOf("_") + 1);//gdCF.getObjectLatestVer(newDisObjId);
+        String newDisObjIdVer = objVerTemp.substring(objVerTemp.lastIndexOf("/") + 1);//gdCF.getObjectLatestVer(newDisObjId);
         log.info(objVerTemp + " " + newDisObjIdVer);
 
         String objfileName = conJGFileName(newSettleObjId,newDisObjIdVer);
 
+//        sleepAndSaveInfo(80000);
+//        log.info(objfileName);
+
+//        MinIOOperation minio = new MinIOOperation();
+//        String storeData2 = minio.getFileFromMinIO(minIOEP,jgBucket,objfileName,"");
 
         //直接从minio上通过对象标识+版本号的方式获取指定对象文件
         Map getSettleInfo = gdCF.constructJGDataFromStr(objfileName,settleType,"");
+
+
 
         //填充header content字段
         settleInfo.put("content",gdCF.constructContentMap(settleType,newSettleObjId,newDisObjIdVer,"create",String.valueOf(ts6)));
@@ -540,8 +551,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String prodfileName = conJGFileName(gdEquityCode,newEqProdVer);
 
         Map uriInfo = gdCF.getJGURIStoreHash(txId,conJGFileName(gdCompanyID,newSubVer),1);
-        String chkSubURI = minIOEP + "/" + jgBucket + "/" + subfileName;
-        String chkProdURI = minIOEP + "/" + jgBucket + "/" + prodfileName;
+        String chkSubURI = subfileName;
+        String chkProdURI = prodfileName;
         log.info(uriInfo.get("storeData").toString());
         log.info(chkSubURI);
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
@@ -622,15 +633,14 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         log.info(storeData);
         com.alibaba.fastjson.JSONObject objURI = com.alibaba.fastjson.JSONObject.parseObject(
                 com.alibaba.fastjson.JSONObject.parseArray(storeData).get(0).toString());
-        String chkObjURI = minIOEP + "/" + jgBucket + "/" + objPrefix;
+        String chkObjURI = objPrefix;
         assertEquals(true,storeData.contains(chkObjURI));
         assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字
 
-        String uriOrgStr =  objURI.getString("uri");
-        String objVerTemp = uriOrgStr.substring(uriOrgStr.lastIndexOf(objPrefix),uriOrgStr.lastIndexOf("."));
+        String objVerTemp =  objURI.getString("uri").trim();
 
         String newObjId = "";
-        newObjId = objVerTemp.substring(0,objVerTemp.lastIndexOf("_"));
+        newObjId = objVerTemp.substring(0,objVerTemp.lastIndexOf("/"));
 
         String newObjIdVer = objVerTemp.substring(objVerTemp.lastIndexOf("_") + 1);//gdCF.getObjectLatestVer(newDisObjId);
         log.info(objVerTemp + " " + newObjIdVer);

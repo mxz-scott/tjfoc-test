@@ -17,30 +17,30 @@ public class UtilsClassGD {
 //    public static String gdPlatfromKeyID = "btguv5bsnk7r259qh85g";
     //10.1.3.161:7779
     public static String gdContractAddress = "018a976954474678a3a100d33200b7f9fd1b34a60118c4cb13cfd79f6f324b5d";
-    public static String gdPlatfromKeyID = "bv2q0152uehbsbgg46p0";
+    public static String gdPlatfromKeyID = "bv2q01d2uehbsbgg4u50";
     //股登164环境
 //    public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
 //    public static String gdPlatfromKeyID = "bu1qdg1pgfltc7no3hp0";
     //股登性能测试环境
 //    public static String gdContractAddress = "e0618bd8a18d799e18d6716824e4b767e381d2ce58a49be20c89b48b53cff900";
-//    public static String gdPlatfromKeyID = "bu2n8f52vf0as7lne720";
+//    public static String gdPlatfromKeyID = "bv7h273snk7pq9fpgr70";
     //外网对接
 //    public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
-//    public static String gdPlatfromKeyID = "bu8kas9hdkef95op7i2g";
-    public static String gdEquityCode = "gdECSZ00" + UtilsClass.Random(6);
-    public static String gdCompanyID = "gdCmpyId0001" + UtilsClass.Random(6);
-//    public static String gdCompanyID = "gdCmpyId0001";
+//    public static String gdPlatfromKeyID = "bv6t8lphdkebd3873ti0";
+    public static String gdEquityCode = "gdTokenZ0" + UtilsClass.Random(6);
+    public static String gdCompanyID = "gdCmpyId01" + UtilsClass.Random(6);
+//    public static String gdCompanyID = "gdCmpyId0002";
 
-    public static String gdAccClientNo1 = "No000" + UtilsClass.Random(10);
-    public static String gdAccClientNo2 = "No100" + UtilsClass.Random(10);
-    public static String gdAccClientNo3 = "No200" + UtilsClass.Random(10);
-    public static String gdAccClientNo4 = "No300" + UtilsClass.Random(10);
-    public static String gdAccClientNo5 = "No400" + UtilsClass.Random(10);
-    public static String gdAccClientNo6 = "No500" + UtilsClass.Random(10);
-    public static String gdAccClientNo7 = "No600" + UtilsClass.Random(10);
-    public static String gdAccClientNo8 = "No700" + UtilsClass.Random(10);
-    public static String gdAccClientNo9 = "No800" + UtilsClass.Random(10);
-    public static String gdAccClientNo10 = "No900" + UtilsClass.Random(10);
+    public static String gdAccClientNo1 = "No000" + UtilsClass.Random(5);
+    public static String gdAccClientNo2 = "No100" + UtilsClass.Random(5);
+    public static String gdAccClientNo3 = "No200" + UtilsClass.Random(5);
+    public static String gdAccClientNo4 = "No300" + UtilsClass.Random(5);
+    public static String gdAccClientNo5 = "No400" + UtilsClass.Random(5);
+    public static String gdAccClientNo6 = "No500" + UtilsClass.Random(5);
+    public static String gdAccClientNo7 = "No600" + UtilsClass.Random(5);
+    public static String gdAccClientNo8 = "No700" + UtilsClass.Random(5);
+    public static String gdAccClientNo9 = "No800" + UtilsClass.Random(5);
+    public static String gdAccClientNo10 = "No900" + UtilsClass.Random(5);
 
     public static String gdAccount1,gdAccount2,gdAccount3,gdAccount4,gdAccount5,
                          gdAccount6,gdAccount7,gdAccount8,gdAccount9,gdAccount10;
@@ -115,7 +115,7 @@ public class UtilsClassGD {
     public static long ts8 = 1513374000;
 
 
-    public static String gdSchema = "Schema-v2.0.0-Alpha4.json" ;
+    public static String gdSchema = "Schema-v2.0.0-Alpha4.2.json" ;
     public static String gdTestData = "test.json";
     public static String chkSchemaToolName = "gojsonschema.exe";
     public static String dirSchemaData = System.getProperty("user.dir") + "/" + testDataPath + "schemavalidate/";
@@ -187,7 +187,7 @@ public class UtilsClassGD {
         }
         return refInfoArray;
     }
-    public static String commNo = "106"; //存oss后会导致 db删除后挂牌会挂不上
+    public static String commNo = "010"; //存oss后会导致 db删除后挂牌会挂不上
     //主体
     public static String subject_investor_qualification_certifier_ref = "SIQCR" + commNo;// + UtilsClass.Random(8);
     //账户
@@ -245,7 +245,7 @@ public class UtilsClassGD {
         fileMap.put("url","http://test.com/file/201/" + word + "file1.pdf");
         fileMap.put("summary","简述" + word);
         fileMap.put("term_of_validity_type","0");
-        fileMap.put("term_of_validity","2020/04/18");
+        fileMap.put("term_of_validity",date1);
         return fileMap;
     }
     public static Map getFileObj(){
@@ -258,7 +258,7 @@ public class UtilsClassGD {
         fileMap.put("url","http://test.com/file/201/file1.pdf");
         fileMap.put("summary","简述");
         fileMap.put("term_of_validity_type","0");
-        fileMap.put("term_of_validity","2020/04/18");
+        fileMap.put("term_of_validity",date2);
         return fileMap;
     }
 

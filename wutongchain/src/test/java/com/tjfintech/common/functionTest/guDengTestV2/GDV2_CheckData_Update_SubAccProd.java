@@ -279,7 +279,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         String subfileName = conJGFileName(gdCompanyID,newSubVer);
 
         Map uriInfo = gdCF.getJGURIStoreHash(txId,conJGFileName(gdCompanyID,newSubVer),1);
-        String chkSubURI = minIOEP + "/" + jgBucket + "/" + subfileName;
+        String chkSubURI = subfileName;
         log.info(uriInfo.get("storeData").toString());
         log.info(chkSubURI);
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
@@ -521,7 +521,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         String subfileName = conJGFileName(cltNo,personSubVer);
 
         Map uriInfo = gdCF.getJGURIStoreHash(txId,subfileName,1);
-        String chkSubURI = minIOEP + "/" + jgBucket + "/" + subfileName;
+        String chkSubURI = subfileName;
         log.info(uriInfo.get("storeData").toString());
         log.info(chkSubURI);
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
@@ -727,7 +727,7 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //获取链上mini url的存证信息 并检查是否包含uri信息
         Map uriInfo = gdCF.getJGURIStoreHash(txId,shAccfileName,1);
-        String chkSHAccURI = minIOEP + "/" + jgBucket + "/" + shAccfileName;
+        String chkSHAccURI = shAccfileName;
         log.info(uriInfo.get("storeData").toString());
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSHAccURI));
         assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
@@ -962,7 +962,7 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //获取链上mini url的存证信息 并检查是否包含uri信息
         Map uriInfo = gdCF.getJGURIStoreHash(txId,fundAccfileName,1);
-        String chkSHAccURI = minIOEP + "/" + jgBucket + "/" + fundAccfileName;
+        String chkSHAccURI = fundAccfileName;
         log.info(uriInfo.get("storeData").toString());
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSHAccURI));
         assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
@@ -1168,7 +1168,7 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //获取链上mini url的存证信息并检查是否包含uri信息
         String prodfileName = conJGFileName(gdEquityCode,newEqProdVer);
-        String chkProdURI = minIOEP + "/" + jgBucket + "/" + prodfileName;
+        String chkProdURI = prodfileName;
         assertEquals(true,storeData.contains(chkProdURI));
         assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字
 
@@ -1256,7 +1256,7 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //获取链上mini url的存证信息并检查是否包含uri信息
         String prodfileName = conJGFileName(gdEquityCode,newEqProdVer);
-        String chkProdURI = minIOEP + "/" + jgBucket + "/" + prodfileName;
+        String chkProdURI = prodfileName;
         assertEquals(true,storeData.contains(chkProdURI));
         assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字
 
@@ -1342,7 +1342,7 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //获取链上mini url的存证信息并检查是否包含uri信息
         String prodfileName = conJGFileName(gdEquityCode,newEqProdVer);
-        String chkProdURI = minIOEP + "/" + jgBucket + "/" + prodfileName;
+        String chkProdURI = prodfileName;
         assertEquals(true,storeData.contains(chkProdURI));
         assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字
 

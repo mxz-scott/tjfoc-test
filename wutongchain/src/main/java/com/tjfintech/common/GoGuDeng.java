@@ -147,7 +147,7 @@ public  class GoGuDeng implements GuDeng {
         map.put("fromRegisterInformation", fromRegisterInfo);
         map.put("toRegisterInformation", toRegisterInfo);
         map.put("txCreateTime",ts4);
-        map.put("romRegisterUpdateTime",ts5);
+        map.put("fromRegisterUpdateTime",ts5);
         map.put("toRegisterUpdateTime",ts5);
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/transfer", map);
@@ -438,7 +438,9 @@ public  class GoGuDeng implements GuDeng {
         map.put("registerInformationList", regInfoList);
         map.put("equityProductInfo", equityProductInfo);
         map.put("bondProductInfo", bondProductInfo);
-
+        map.put("oldProductDeleteTime",ts8);
+        map.put("newProductCreateTime",ts3);
+        map.put("registerInfoCreateTime",ts5);
         String result = PostTest.postMethod(SDKADD + "/equity/share/changeboard", map);
         log.info(result);
         return result;

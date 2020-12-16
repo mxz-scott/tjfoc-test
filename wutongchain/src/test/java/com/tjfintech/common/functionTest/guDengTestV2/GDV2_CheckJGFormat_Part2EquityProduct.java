@@ -41,6 +41,8 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
     long transferAmount = 1000;
     Boolean bSame = true;
 
+    String tempaccount_subject_ref,tempsubject_investor_qualification_certifier_ref,tempproduct_issuer_subject_ref;
+
     @Rule
     public TestName tm = new TestName();
     /***
@@ -65,20 +67,24 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         gdEquityCode = "fondTest" + Random(12);
     }
 
-//    @After
+    @Before
+    public void resetVar(){
+        tempsubject_investor_qualification_certifier_ref =subject_investor_qualification_certifier_ref;
+    }
+
+    @After
     public void calJGDataAfterTx()throws Exception{
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
 //        uf.calJGData();
-        uf.calJGDataEachHeight();
+//        uf.calJGDataEachHeight();
+        subject_investor_qualification_certifier_ref =tempsubject_investor_qualification_certifier_ref;
     }
 
     @Test
     public void TC06_shareIssue() throws Exception {
         log.info(registerInfo.toString());
         mapAddrRegObjId.clear(); //先清空map 这样后面map中拿到的就是此次发行的登记对象标识
-        regNo = "Eq" + "issue" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
 
         List<Map> shareList = gdConstructShareList(gdAccount1,issueAmount,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,issueAmount,0, shareList);
@@ -129,7 +135,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
             //获取链上mini url的存证信息 并检查是否包含uri信息 每个登记都是新的 则都是0
             String regfileName = conJGFileName(tempObjId,regVer);
-            String chkRegURI = minIOEP + "/" + jgBucket + "/" + regfileName;
+            String chkRegURI = regfileName;
             assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI));
             assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
 
@@ -232,12 +238,10 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         Map testReg2 = gdBF.init05RegInfo();
         String regObjId1 = mapAccAddr.get(address) + "CProp1" + Random(6);
         String regObjId2 = mapAccAddr.get(address) + "CProp2" + Random(6);
-        testReg1.put("register_registration_serial_number","ChangeProperty000001");
         testReg1.put("register_account_obj_id",mapAccAddr.get(address));
         testReg1.put("register_registration_object_id",regObjId1);
         testReg1.put("register_nature_of_shares", oldProperty);
 
-        testReg2.put("register_registration_serial_number","ChangeProperty000001");
         testReg2.put("register_account_obj_id",mapAccAddr.get(address));
         testReg2.put("register_registration_object_id",regObjId2);
         testReg2.put("register_nature_of_shares", newProperty);
@@ -275,8 +279,8 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         //获取链上mini url的存证信息 并检查是否包含uri信息 每个登记都是新的 则都是0
         String regfileName1 = conJGFileName(regObjId1,regVer);
         String regfileName2 = conJGFileName(regObjId2,regVer);
-        String chkRegURI1 = minIOEP + "/" + jgBucket + "/" + regfileName1;
-        String chkRegURI2 = minIOEP + "/" + jgBucket + "/" + regfileName2;
+        String chkRegURI1 = regfileName1;
+        String chkRegURI2 = regfileName2;
 
         log.info(uriInfo.get("storeData").toString());
         log.info(chkRegURI1 + "      " + chkRegURI2);
@@ -384,9 +388,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         Map fromNow = gdBF.init05RegInfo();
         Map toNow = gdBF.init05RegInfo();
 
-        regNo = "Eq" + "transfer" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        fromNow.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
-        toNow.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
+        register_transaction_ref = txRpObjId;//登记引用的是交易报告的对象标识
 
         fromNow.put("register_registration_object_id",tempObjIdFrom);
         toNow.put("register_registration_object_id",tempObjIdTo);
@@ -458,10 +460,10 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         String txfileName = conJGFileName(txRpObjId,txRpVer);
         String subfileName = conJGFileName(gdCompanyID,subVer);
 
-        String chkRegURI1 = minIOEP + "/" + jgBucket + "/" + regfileName1;
-        String chkRegURI2 = minIOEP + "/" + jgBucket + "/" + regfileName2;
-        String chkTxRpURI = minIOEP + "/" + jgBucket + "/" + txfileName;
-        String chkSubURI = minIOEP + "/" + jgBucket + "/" + subfileName;
+        String chkRegURI1 =  regfileName1;
+        String chkRegURI2 = regfileName2;
+        String chkTxRpURI = txfileName;
+        String chkSubURI = subfileName;
 
         log.info(uriInfo.get("storeData").toString());
         log.info(chkRegURI1 + "      " + chkRegURI2);
@@ -482,24 +484,35 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         fromNow.put("content",gdCF.constructContentMap(regType,tempObjIdFrom,regVer,"create",String.valueOf(ts5)));
         log.info("检查登记存证信息内容与传入一致\n" + fromNow.toString() + "\n" + getRegInfo1.toString());
         bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(fromNow,regType)),replaceCertain(getRegInfo1.toString()));
-//        assertEquals("from检查数据是否一致" ,true,bSame);
-        log.info("from登记检查数据是否一致" + bSame);
+        assertEquals("from检查数据是否一致" ,true,bSame);
+//        log.info("from登记检查数据是否一致" + bSame);
 
         //填充header content字段
         toNow.put("content",gdCF.constructContentMap(regType,tempObjIdTo,regVer,"create",String.valueOf(ts5)));
         log.info("检查登记存证信息内容与传入一致\n" + toNow.toString() + "\n" + getRegInfo1.toString());
         bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(toNow,regType)),replaceCertain(getRegInfo2.toString()));
-//        assertEquals("from检查数据是否一致" ,true,bSame);
-        log.info("to登记检查数据是否一致" + bSame);
+        assertEquals("from检查数据是否一致" ,true,bSame);
+//        log.info("to登记检查数据是否一致" + bSame);
 
         //填充header content字段
         txInfo.put("content",gdCF.constructContentMap(txrpType,txRpObjId,txRpVer,"create",String.valueOf(ts4)));
         bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(txInfo,txrpType)),replaceCertain(getTxRpInfo.toString()));
-//        assertEquals("检查转让交易报告数据是否一致" ,true,bSame);
-        log.info("交易报告检查数据是否一致" + bSame);
+        assertEquals("检查转让交易报告数据是否一致" ,true,bSame);
+//        log.info("交易报告检查数据是否一致" + bSame);
+
+
+        query2 = gd.GDObjectQueryByVer(gdCompanyID,-1);
+        int totalMembers = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject("body"
+                                ).getJSONObject("subject_information").getJSONObject("organization_subject_information"
+                                ).getJSONObject("basic_information_of_enterprise").getJSONObject("basic_information_description"
+                                ).getInt("subject_shareholders_number");
 
         //填充header content字段
         Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
+
+        //更新股东数量 非用户传入的数据 而是依据前面转让给新账户后的股东数
+        enSubInfo.put("subject_shareholders_number",totalMembers);
+
         log.info("+++++++++++++++++++++++++++++++++++++++++++++++++++");
         log.info(getSubInfo.toString());
         enSubInfo.put("content",gdCF.constructContentMap(subjectType,gdCompanyID,subVer,"update",String.valueOf(ts1)));
@@ -620,7 +633,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
             String regVer = "0" ;
             //获取链上mini url的存证信息 并检查是否包含uri信息 每个登记都是新的 则都是0
             String regfileName = conJGFileName(tempObjId,regVer);
-            String chkRegURI = minIOEP + "/" + jgBucket + "/" + regfileName;
+            String chkRegURI = regfileName;
             assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI));
 //            assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
             log.info("检查增发存证产品格式化及信息内容与传入一致");
@@ -634,11 +647,14 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
             log.info("检查登记存证信息内容与传入一致\n" + regInfoInput.toString() + "\n" + getRegInfo.toString());
             bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(regInfoInput,regType)),replaceCertain(getRegInfo.toString()));
-//            assertEquals("检查增发登记数据是否一致" ,true,bSame);
-            log.info("检查增发登记数据:" + bSame);
+            assertEquals("检查增发登记数据是否一致" ,true,bSame);
+//            log.info("检查增发登记数据:" + bSame);
         }
 
         String newEqProdVer = gdCF.getObjectLatestVer(gdEquityCode);
+
+        log.info(uriInfo.get("storeData").toString());
+        product_issuer_subject_ref = gdCompanyID;
 
         Map getProInfo = gdCF.constructJGDataFromStr(conJGFileName(gdEquityCode, newEqProdVer), prodType, "1");
         eqProd.put("content",gdCF.constructContentMap(prodType, gdEquityCode, newEqProdVer, "update", String.valueOf(ts3)));
@@ -647,6 +663,8 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 //        assertEquals("检查增发产品是否一致" ,true,bSame);
         log.info("检查增发产品是否一致:" + bSame);
 
+
+        product_issuer_subject_ref = gdCompanyID;
         txInfo.put("content",gdCF.constructContentMap(txrpType, txObjId, "0", "create", String.valueOf(ts4)));
         Map getTxRpInfo = gdCF.constructJGDataFromStr(conJGFileName(txObjId, "0"), txrpType, "");
         bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(txInfo,txrpType)),replaceCertain(getTxRpInfo.toString()));
@@ -778,7 +796,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
         //获取链上mini url的存证信息 并检查是否包含uri信息 每个登记都是新的 则都是0
         String regfileName1 = conJGFileName(tempObjId,regVer);
-        String chkRegURI1 = minIOEP + "/" + jgBucket + "/" + regfileName1;
+        String chkRegURI1 = regfileName1;
 
         log.info(uriInfo.get("storeData").toString());
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI1));
@@ -901,7 +919,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
         //获取链上mini url的存证信息 并检查是否包含uri信息 每个登记都是新的 则都是0
         String regfileName1 = conJGFileName(tempObjId,regVer);
-        String chkRegURI1 = minIOEP + "/" + jgBucket + "/" + regfileName1;
+        String chkRegURI1 = regfileName1;
 
         log.info(uriInfo.get("storeData").toString());
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI1));
@@ -1001,12 +1019,11 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
         String subObjId = gdCompanyID;
 
-        String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-//        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
-
-        registerInfo = gdBF.init05RegInfo();
-        regNo = "Eq" + "recylce" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
+        String query2 = gd.GDObjectQueryByVer(gdCompanyID,-1);
+        int totalMembers = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject("body"
+                            ).getJSONObject("subject_information").getJSONObject("organization_subject_information"
+                            ).getJSONObject("basic_information_of_enterprise").getJSONObject("basic_information_description"
+                            ).getInt("subject_shareholders_number");
 
         List<Map> shareList = gdConstructShareList(address,recycleAmount,0);
 
@@ -1038,8 +1055,8 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         //获取链上mini url的存证信息 并检查是否包含uri信息 每个登记都是新的 则都是0
         String regfileName = conJGFileName(tempObjId,regVer);
         String subfileName = conJGFileName(gdCompanyID,subVer);
-        String chkRegURI = minIOEP + "/" + jgBucket + "/" + regfileName;
-        String chkSubURI = minIOEP + "/" + jgBucket + "/" + subfileName;
+        String chkRegURI = regfileName;
+        String chkSubURI = subfileName;
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI));
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
 //        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
@@ -1058,10 +1075,13 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
         log.info("检查回收存证主体格式化及信息内容与传入一致");
 
+
         Map enSub = gdBF.init01EnterpriseSubjectInfo();
+        //更新股东数量 非用户传入的数据 而是依据前面转让给新账户后的股东数
+        enSub.put("subject_shareholders_number",totalMembers);
 
         enSub.put("content",gdCF.constructContentMap(subjectType, subObjId, subVer, "update", String.valueOf(ts1)));
-        Map getEnSubInfo = gdCF.constructJGDataFromStr(conJGFileName(subObjId, subVer), subjectType, "");
+        Map getEnSubInfo = gdCF.constructJGDataFromStr(conJGFileName(subObjId, subVer), subjectType, "1");
         bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(enSub,subjectType)),replaceCertain(getEnSubInfo.toString()));
         assertEquals("检查增发交易报告数据是否一致" ,true,bSame);
         log.info("================================检查存证数据格式化《结束》================================");
@@ -1149,8 +1169,11 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         String remark = "777777";
 
         log.info("多个回收前查询机构主体信息");
-        String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-//        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
+        String query2 = gd.GDObjectQueryByVer(gdCompanyID,-1);
+        int totalMembers = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject("body"
+                            ).getJSONObject("subject_information").getJSONObject("organization_subject_information"
+                            ).getJSONObject("basic_information_of_enterprise").getJSONObject("basic_information_description"
+                            ).getInt("subject_shareholders_number");
 
         regNo = "Eq" + "recylce2" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
         registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
@@ -1179,7 +1202,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
             //获取链上mini url的存证信息 并检查是否包含uri信息 每个登记都是新的 则都是0
             String regfileName = conJGFileName(tempObjId,regVer);
-            String chkRegURI = minIOEP + "/" + jgBucket + "/" + regfileName;
+            String chkRegURI = regfileName;
             assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI));
 //            assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
 
@@ -1192,15 +1215,18 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
             log.info("检查登记存证信息内容与传入一致\n" + regInfoInput.toString() + "\n" + getRegInfo.toString());
             bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(regInfoInput,regType)),replaceCertain(getRegInfo.toString()));
-//            assertEquals(tempObjId + "检查发行登记报告数据是否一致" ,true,bSame);
+            assertEquals(tempObjId + "检查回收登记报告数据是否一致" ,true,bSame);
         }
 
         log.info("检查回收存证主体格式化及信息内容与传入一致");
         Map enSub = gdBF.init01EnterpriseSubjectInfo();
+        //更新股东数量 非用户传入的数据 而是依据前面转让给新账户后的股东数
+        enSub.put("subject_shareholders_number",totalMembers);
+
         String subObjId = gdCompanyID;
         String subVer = gdCF.getObjectLatestVer(subObjId);
         enSub.put("content",gdCF.constructContentMap(subjectType, subObjId, subVer, "update", String.valueOf(ts1)));
-        Map getEnSubInfo = gdCF.constructJGDataFromStr(conJGFileName(subObjId, subVer), subjectType, "");
+        Map getEnSubInfo = gdCF.constructJGDataFromStr(conJGFileName(subObjId, subVer), subjectType, "1");
         bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(enSub,subjectType)),replaceCertain(getEnSubInfo.toString()));
         assertEquals("检查增发交易报告数据是否一致" ,true,bSame);
 
@@ -1292,7 +1318,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
     public void TC13_shareChangeBoard() throws Exception {
 
         String oldEquityCode = gdEquityCode;
-        String newEquityCode = gdEquityCode + Random(5);
+        String newEquityCode = gdEquityCode + "new" + Random(2);
         String cpnyId = gdCompanyID;
 
         regNo = "Eq" + "changeboard" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
@@ -1336,7 +1362,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
             //获取链上mini url的存证信息 并检查是否包含uri信息 每个登记都是新的 则都是0
             String regfileName = conJGFileName(tempObjId,regVer);
-            String chkRegURI = minIOEP + "/" + jgBucket + "/" + regfileName;
+            String chkRegURI = regfileName;
             assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI));
             assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
 
@@ -1359,15 +1385,18 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
         //检查历史
         Map getOldProInfo = gdCF.constructJGDataFromStr(conJGFileName(oldEquityCode, oldProdVer), prodType, "1");
-        eqProd.put("content",gdCF.constructContentMap(prodType, oldEquityCode, oldProdVer, "delete", String.valueOf(ts3)));
-        log.info("检查产品存证信息内容与传入一致\n" + eqProd.toString() + "\n" + getOldProInfo.toString());
+        eqProd.put("product_code",oldEquityCode);
+        eqProd.put("content",gdCF.constructContentMap(prodType, oldEquityCode, oldProdVer, "delete", String.valueOf(ts8)));
+        log.info("检查转板前产品存证信息内容与传入一致\n" + eqProd.toString() + "\n" + getOldProInfo.toString());
         bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(eqProd, prodType)), replaceCertain(getOldProInfo.toString()));
 //        assertEquals("检查增发产品是否一致" ,true,bSame);
 
+        product_issuer_subject_ref = gdCompanyID;
+        eqProd.put("product_code",newEquityCode);
         //检查新产品
         Map getNewProInfo = gdCF.constructJGDataFromStr(conJGFileName(newEquityCode, newEqProdVer), prodType, "1");
         eqProd.put("content",gdCF.constructContentMap(prodType, newEquityCode, newEqProdVer, "create", String.valueOf(ts3)));
-        log.info("检查产品存证信息内容与传入一致\n" + eqProd.toString() + "\n" + getNewProInfo.toString());
+        log.info("检查转板后产品存证信息内容与传入一致\n" + eqProd.toString() + "\n" + getNewProInfo.toString());
         bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(eqProd, prodType)), replaceCertain(getNewProInfo.toString()));
         assertEquals("检查增发产品是否一致" ,true,bSame);
 
@@ -1468,8 +1497,8 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         String fundAccfileName = conJGFileName(fundObjId,fundAccVer);
 
         Map uriInfo = gdCF.getJGURIStoreHash(txId,shAccfileName,1);
-        String chkSHAccURI = minIOEP + "/" + jgBucket + "/" + shAccfileName;
-        String chkFundAccURI = minIOEP + "/" + jgBucket + "/" + fundAccfileName;
+        String chkSHAccURI = shAccfileName;
+        String chkFundAccURI = fundAccfileName;
         log.info(uriInfo.get("storeData").toString());
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSHAccURI));
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkFundAccURI));
