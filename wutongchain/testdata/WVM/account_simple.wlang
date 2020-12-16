@@ -51,19 +51,19 @@ contract STAccountAPI {
 
         Fund f1
         f1.CompanyID = "001"
-        f1.Quota = 50000000000
+        f1.Quota = 0
         string key = "f_"+f1.CompanyID
         db_set(key,f1)
 
         Fund f2
         f2.CompanyID = "002"
-        f2.Quota = 1000000000
+        f2.Quota = 0
         key = "f_"+f2.CompanyID
         db_set(key,f2)
 
         Fund f3
         f3.CompanyID = "003"
-        f3.Quota = 1500000000
+        f3.Quota = 0
         key = "f_"+f3.CompanyID
         db_set(key,f3)
 
