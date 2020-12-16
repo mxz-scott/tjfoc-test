@@ -9,6 +9,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
@@ -550,8 +551,8 @@ public class GDCommonFunc {
         return objectId + "_" + version + ".json";
     }
 
-    public Map constructJGDataFromStr(String miniofileName,String type,String subType)throws Exception{
-        log.info("监管存证: " + miniofileName + " 待检测数据模型：" + type + " 数据模型子类型：" + subType);
+    public Map constructJGDataFromStr(String miniofileName,String type,String subTypeSubProd)throws Exception{
+        log.info("监管存证: " + miniofileName + " 待检测数据模型：" + type + " 数据模型子类型：" + subTypeSubProd);
 
         String storeData2 = minio.getFileFromMinIO(minIOEP,jgBucket,miniofileName,"");
 
@@ -564,11 +565,11 @@ public class GDCommonFunc {
         Map mapData = new HashMap();
         switch (type){
             case "subject":
-                if(subType.equals("1"))     {  mapData = subjectInfoEnterprise(jobjOK);   }
-                else if(subType.equals("2")){  mapData = subjectInfoPerson(jobjOK);       }
+                if(subTypeSubProd.equals("1"))     {  mapData = subjectInfoEnterprise(jobjOK);   }
+                else if(subTypeSubProd.equals("2")){  mapData = subjectInfoPerson(jobjOK);       }
                 break;
             case "account":                 mapData = accountInfo(jobjOK);break;
-            case "product":                 mapData = productInfo(jobjOK,subType);break;
+            case "product":                 mapData = productInfo(jobjOK,subTypeSubProd);break;
             case "transactionreport":       mapData = transInfo(jobjOK);break;
             case "registration":            mapData = regiInfo(jobjOK);break;
             case "settlement":              mapData = settleInfo(jobjOK);break;
@@ -1817,11 +1818,11 @@ public class GDCommonFunc {
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
                 break;
             case "account":
-                key = "account_subject_ref=" + account_subject_ref;   certainVer = getObjectLatestVer(key);
+                key = "account_subject_ref=" + account_subject_ref;   certainVer = getObjectLatestVer(account_subject_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
                 key = account_depository_ref;           certainVer = getObjectLatestVer(key);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
-                key = "account_associated_account_ref=" + account_associated_account_ref;   certainVer = getObjectLatestVer(key);
+                key = "account_associated_account_ref=" + account_associated_account_ref;   certainVer = getObjectLatestVer(account_associated_account_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
                 break;
@@ -2021,6 +2022,9 @@ public class GDCommonFunc {
     }
 
     public Boolean bContainJGFlag(String jsonStr){
-        return jsonStr.contains("\"meta\":{\"data_type\":\"supervision\"}");//确认meta信息包含监管标识
+        //确认meta信息包含监管标识 且每笔都包含meta data_type supervision
+        if(!jsonStr.contains("[")) return jsonStr.contains("\"meta\":{\"data_type\":\"supervision\"}");
+        else return (StringUtils.countOccurrencesOf(jsonStr,"\"meta\":{\"data_type\":\"supervision\"}") ==
+                JSONArray.fromObject(jsonStr).size());
     }
 }

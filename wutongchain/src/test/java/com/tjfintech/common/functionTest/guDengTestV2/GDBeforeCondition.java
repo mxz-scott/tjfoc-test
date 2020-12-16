@@ -958,7 +958,7 @@ public class GDBeforeCondition {
         //登记信息 权利信息 权利基本信息 权利基本信息描述
         mapTemp.put("register_serial_number", "登记流水号CHARACTER");
         mapTemp.put("register_time", time2);
-        mapTemp.put("register_subject_ref", register_subject_ref);
+        mapTemp.put("register_subject_ref",gdCompanyID);
         mapTemp.put("register_subject_type", 1);
         mapTemp.put("register_subject_account_ref", register_subject_account_ref);
         mapTemp.put("register_asset_type", 1);

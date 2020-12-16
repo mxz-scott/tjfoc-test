@@ -207,6 +207,8 @@ public  class GoGuDeng implements GuDeng {
         map.put("reason", reason);
         map.put("equityProductInfo", equityProductInfo);
         map.put("transactionReport", txInfo);
+        map.put("productUpdateTime",ts3);
+        map.put("txCreateTime",ts4);
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/increase", map);
         log.info(result);
@@ -235,8 +237,10 @@ public  class GoGuDeng implements GuDeng {
         map.put("shareProperty", shareProperty);
         map.put("reason", reason);
         map.put("cutoffDate", cutoffDate);
+        map.put("registerInfoUpdateTime",ts5);
         map.put("registerInformation", registerInformation);
         map.put("transactionReport", txInfo);
+        map.put("txCreateTime",ts4);
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/lock", map);
         log.info(result);
@@ -266,6 +270,7 @@ public  class GoGuDeng implements GuDeng {
         map.put("reason", reason);
         map.put("cutoffDate", cutoffDate);
         map.put("registerInformation", registerInformation);
+        map.put("registerInfoUpdateTime",ts5);
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/lock", map);
         log.info(result);
@@ -287,6 +292,8 @@ public  class GoGuDeng implements GuDeng {
         map.put("amount", amount);
         map.put("registerInformation", registerInformation);
         map.put("transactionReport", txInfo);
+        map.put("txCreateTime",ts4);
+        map.put("registerInfoUpdateTime",ts5);
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/unlock", map);
         log.info(result);
@@ -307,6 +314,7 @@ public  class GoGuDeng implements GuDeng {
         map.put("equityCode", equityCode);
         map.put("amount", amount);
         map.put("registerInformation", registerInformation);
+        map.put("registerInfoUpdateTime",ts5);
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/unlock", map);
         log.info(result);
