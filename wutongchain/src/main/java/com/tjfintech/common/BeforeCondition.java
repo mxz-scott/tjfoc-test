@@ -268,6 +268,27 @@ public class BeforeCondition {
         IMPPUTIONADD = JSONObject.fromObject(multiSign.genMultiAddress(M, map)).getJSONObject("data").getString("address");//45
     }
 
+    /**
+     * 安装SmartToken账户合约
+     */
+    public void installSmartAccountContract(String abfileName) throws Exception {
+
+        String constFileName = "account_simple.wlang";
+        String contractFileName = "account_simple.wlang";
+        //如果smartAccoutCtHash为空或者contractFileName不为constFileName 即"wvm\\account_simple.wlang" 时会重新安装
+        if (smartAccoutContractAddress.equals("") || (!contractFileName.equals(constFileName))) {
+            //安装
+            String filePath = testDataPath + "wvm/" + abfileName;
+            log.info("filepath " + filePath);
+            String file = utilsClass.readInput(filePath).toString().trim();
+            String data = utilsClass.encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码
+            String response = contract.InstallWVM(data, "wvm", "");
+            assertEquals("200", JSONObject.fromObject(response).getString("state"));
+            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(response, utilsClass.sdkGetTxHashType20),
+                    utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+            smartAccoutContractAddress = JSONObject.fromObject(response).getJSONObject("data").getString("name");
+        }
+    }
 
     /**
      * 创建多签地址 保存在数据库中

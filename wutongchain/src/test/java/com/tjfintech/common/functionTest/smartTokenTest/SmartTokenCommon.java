@@ -27,14 +27,9 @@ public class SmartTokenCommon {
     CertTool certTool = new CertTool();
 
     private String tokenType;
-    String constFileName = "account_simple.wlang";
-    String contractFileName = "account_simple.wlang";
 
 
     public String beforeConfigIssueNewToken(String amount) throws Exception {
-
-        //安装smart token定制化合约
-        installSmartAccountContract(contractFileName);
 
         log.info("发行数字资产");
         tokenType = "TB_" + UtilsClass.Random(10);
@@ -52,23 +47,6 @@ public class SmartTokenCommon {
 
         return tokenType;
 
-    }
-
-    //安装账户合约
-    public void installSmartAccountContract(String abfileName) throws Exception {
-        WVMContractTest wvmContractTestSA = new WVMContractTest();
-        UtilsClass utilsClassSA = new UtilsClass();
-        CommonFunc commonFuncTeSA = new CommonFunc();
-
-        //如果smartAccoutCtHash为空或者contractFileName不为constFileName 即"wvm\\account_simple.wlang" 时会重新安装
-        if (smartAccoutContractAddress.equals("") || (!contractFileName.equals(constFileName))) {
-            //安装
-            String response = wvmContractTestSA.wvmInstallTest(abfileName, "");
-            assertEquals("200", JSONObject.fromObject(response).getString("state"));
-            commonFuncTeSA.sdkCheckTxOrSleep(commonFuncTeSA.getTxHash(response, utilsClassSA.sdkGetTxHashType20),
-                    utilsClassSA.sdkGetTxDetailTypeV2, SLEEPTIME);
-            smartAccoutContractAddress = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-        }
     }
 
     /**
