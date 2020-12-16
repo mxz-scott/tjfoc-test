@@ -286,6 +286,31 @@ public class BeforeCondition {
         log.info("ADDRESS2");
         ADDRESS2 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");
 
+        map = new HashMap<>();
+        map.put("1", PUBKEY3);
+        log.info("ADDRESS3");
+        ADDRESS3 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");
+
+        map = new HashMap<>();
+        map.put("1", PUBKEY4);
+        log.info("ADDRESS4");
+        ADDRESS4 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");
+
+        map = new HashMap<>();
+        map.put("1", PUBKEY5);
+        log.info("ADDRESS5");
+        ADDRESS5 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");
+
+        map = new HashMap<>();
+        map.put("1", PUBKEY6);
+        log.info("ADDRESS6");
+        ADDRESS6 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");
+
+        map = new HashMap<>();
+        map.put("1", PUBKEY7);
+        log.info("ADDRESS7");
+        ADDRESS7 = JSONObject.fromObject(st.SmartGenarateAddress(M, map)).getString("data");
+
         M = 3;
         map = new HashMap<>();
         map.put("1", PUBKEY1);

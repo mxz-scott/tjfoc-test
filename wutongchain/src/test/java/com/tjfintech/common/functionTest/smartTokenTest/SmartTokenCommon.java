@@ -89,9 +89,18 @@ public class SmartTokenCommon {
         if (subType != "")
             amountMap.put("subType", subType);
 
-        List<Map> tokenList = new ArrayList<>();
-        tokenList.add(amountMap);
-        return tokenList;
+        List<Map>tokenList=new ArrayList<>();
+        if (list == null){
+            tokenList.add(amountMap);
+            return tokenList;
+        }else {
+            for(int i = 0 ; i < list.size() ; i++) {
+                tokenList.add(list.get(i));
+            }
+            tokenList.add(amountMap);
+            return tokenList;
+        }
+
     }
 
 
@@ -112,8 +121,16 @@ public class SmartTokenCommon {
         signMap.put("signList", signList);
 
         List<Map> payAddressInfoList = new ArrayList<>();
-        payAddressInfoList.add(signMap);
-        return payAddressInfoList;
+        if (list == null){
+            payAddressInfoList.add(signMap);
+            return payAddressInfoList;
+        }else {
+            for(int i = 0 ; i < list.size() ; i++) {
+                payAddressInfoList.add(list.get(i));
+            }
+            payAddressInfoList.add(signMap);
+            return payAddressInfoList;
+        }
     }
 
     //单签账户目前的签名公私钥对为PUBKEY1 PRIKEY1

@@ -20,6 +20,7 @@ public class smtMultiTest {
     UtilsClass utilsClass = new UtilsClass();
     SmartTokenCommon stc = new SmartTokenCommon();
     CommonFunc commonFunc = new CommonFunc();
+    GoSmartToken st = new GoSmartToken();
 
     private static String tokenType;
 
@@ -103,6 +104,35 @@ public class smtMultiTest {
         log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
         stc.verifyAddressNoBalance(ADDRESS1, tokenType);
         stc.verifyAddressHasBalance(MULITADD4, "NEW_TB001", "200");
+
+
+    }
+
+    /**
+     * 同时向单签和多签地址转让
+     *
+     */
+    @Test
+    public void TC_transferSoloMulti() throws Exception {
+
+        //发行
+        tokenType =  stc.beforeConfigIssueNewToken("200");
+
+        //转账
+        String transferData = "ADDRESS1 向 MULITADD4/ADDRESS2 转账10.123456/20.123456个" + tokenType;
+        List<Map> payList= stc.smartConstructTokenList(ADDRESS1, "test", "30.246912",null);
+        List<Map> collList= stc.smartConstructTokenList(MULITADD4,"test", "10.123456",null);
+        List<Map> collList2 = stc.smartConstructTokenList(ADDRESS2,"test", "20.123456",collList);
+        String transferResp= stc.smartTransfer(tokenType, payList, collList2, "", "", transferData);
+
+        assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+        log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "169.753088");
+        stc.verifyAddressHasBalance(MULITADD4, tokenType, "10.123456");
+        stc.verifyAddressHasBalance(ADDRESS2, tokenType, "20.123456");
 
 
     }
