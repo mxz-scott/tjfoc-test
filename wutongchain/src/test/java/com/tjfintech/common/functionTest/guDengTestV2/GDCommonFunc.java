@@ -1563,7 +1563,7 @@ public class GDCommonFunc {
     }
 
     public Map pubInfo(com.alibaba.fastjson.JSONObject jobjOK) {
-        com.alibaba.fastjson.JSONObject objInfo = jobjOK.getJSONObject("body").getJSONObject("disclosure_basic_information");
+        com.alibaba.fastjson.JSONObject objInfo = jobjOK.getJSONObject("body").getJSONObject("disclosure_approval_information");
         com.alibaba.fastjson.JSONObject objBaic = objInfo.getJSONObject("disclosure_basic_information");
 //        com.alibaba.fastjson.JSONObject objRegulatory = objInfo.getJSONObject("regulatory_infomation");
 //        com.alibaba.fastjson.JSONObject objReport = objInfo.getJSONObject("enterprise_report");

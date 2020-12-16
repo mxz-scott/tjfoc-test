@@ -468,15 +468,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         String objfileName = conJGFileName(newSettleObjId,newDisObjIdVer);
 
-//        sleepAndSaveInfo(80000);
-//        log.info(objfileName);
-
-//        MinIOOperation minio = new MinIOOperation();
-//        String storeData2 = minio.getFileFromMinIO(minIOEP,jgBucket,objfileName,"");
-
         //直接从minio上通过对象标识+版本号的方式获取指定对象文件
         Map getSettleInfo = gdCF.constructJGDataFromStr(objfileName,settleType,"");
-
 
 
         //填充header content字段
