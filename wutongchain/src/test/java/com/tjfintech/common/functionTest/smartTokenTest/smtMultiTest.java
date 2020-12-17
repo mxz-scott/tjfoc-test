@@ -56,6 +56,9 @@ public class smtMultiTest {
         stc.verifyAddressHasBalance(ADDRESS1, tokenType, "990.25");
         stc.verifyAddressHasBalance(MULITADD4, tokenType, "10");
 
+
+
+
         //销毁
         String destroyData1 = "销毁 ADDRESS1 中的" + tokenType;
         String destroyData2 = "销毁 MULITADD4 中的" + tokenType;
@@ -106,6 +109,9 @@ public class smtMultiTest {
 
 
     }
+
+
+
 
 
 //    /**

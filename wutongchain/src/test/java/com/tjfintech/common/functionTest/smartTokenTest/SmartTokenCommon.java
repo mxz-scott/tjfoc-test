@@ -9,10 +9,8 @@ import net.sf.json.JSONObject;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.*;
@@ -53,6 +51,59 @@ public class SmartTokenCommon {
         return tokenType;
 
     }
+    //MAXlevel流转层级限制
+    public String MAXlevelbeforeConfigIssueNewToken(String amount) throws Exception {
+
+        //安装smart token定制化合约
+        installSmartAccountContract(contractFileName);
+
+        log.info("发行数字资产");
+        tokenType = "TB_" + UtilsClass.Random(10);
+        double timeStampNow = System.currentTimeMillis();
+        BigDecimal deadline = new BigDecimal(timeStampNow + 12356789);
+        List<Map> list = smartConstructTokenList(ADDRESS1, "test", amount,null);
+
+        String issueResp = smartIssueToken(tokenType, deadline, list, true, 2, "");
+        assertEquals("200", JSONObject.fromObject(issueResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(issueResp, utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+
+        log.info("验证数字资产余额");
+        verifyAddressHasBalance(ADDRESS1, tokenType, amount);
+
+        return tokenType;
+
+    }
+
+    //更改资产有效期时间戳验证资产过期情况
+    public String expiredDatebeforeConfigIssueNewToken(String amount) throws Exception {
+
+        //安装smart token定制化合约
+        installSmartAccountContract(contractFileName);
+
+        log.info("发行数字资产");
+        tokenType = "TB_" + UtilsClass.Random(10);
+        double timeStampNow = System.currentTimeMillis();
+        BigDecimal deadline = new BigDecimal(timeStampNow + 60000);
+        List<Map> list = smartConstructTokenList(ADDRESS1, "test", amount,null);
+
+        String issueResp = smartIssueToken(tokenType, deadline, list, true, 0, "");
+        assertEquals("200", JSONObject.fromObject(issueResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(issueResp, utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+
+        log.info("验证数字资产余额");
+        verifyAddressHasBalance(ADDRESS1, tokenType, amount);
+
+        return tokenType;
+      }
+
+
+
+
+
+
+
 
     //安装账户合约
     public void installSmartAccountContract(String abfileName) throws Exception {
