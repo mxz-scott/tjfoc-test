@@ -9,6 +9,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
@@ -215,7 +216,7 @@ public class GDCommonFunc {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static List<Map> gdConstructShareList(String address, double amount, int shareProperty){
-        String regObjId = mapAccAddr.get(address) + Random(6);
+        String regObjId = "5" + mapAccAddr.get(address) + Random(6);
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
 //        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
@@ -241,7 +242,7 @@ public class GDCommonFunc {
     }
 
     public static List<Map> gdConstructShareList(String address, double amount, int shareProperty,List<Map> list){
-        String regObjId = mapAccAddr.get(address) + Random(6);
+        String regObjId = "5" + mapAccAddr.get(address) + Random(6);
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
 //        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
@@ -290,7 +291,7 @@ public class GDCommonFunc {
 //    }
 
     public static List<Map> gdConstructShareList2(String address, double amount, int shareProperty){
-        String regObjId = mapAccAddr.get(address) + Random(6);
+        String regObjId = "5" + mapAccAddr.get(address) + Random(6);
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
 //        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
@@ -321,7 +322,7 @@ public class GDCommonFunc {
     }
 
     public static List<Map> gdConstructShareList2(String address, double amount, int shareProperty,List<Map> list){
-        String regObjId = mapAccAddr.get(address) + Random(6);
+        String regObjId = "5" + mapAccAddr.get(address) + Random(6);
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
 //        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
@@ -547,11 +548,11 @@ public class GDCommonFunc {
     }
 
     public static String conJGFileName(String objectId,String version){
-        return objectId + "_" + version + ".json";
+        return objectId + "/" + version;// + ".json";
     }
 
-    public Map constructJGDataFromStr(String miniofileName,String type,String subType)throws Exception{
-        log.info("监管存证: " + miniofileName + " 待检测数据模型：" + type + " 数据模型子类型：" + subType);
+    public Map constructJGDataFromStr(String miniofileName,String type,String subTypeSubProd)throws Exception{
+        log.info("监管存证: " + miniofileName + " 待检测数据模型：" + type + " 数据模型子类型：" + subTypeSubProd);
 
         String storeData2 = minio.getFileFromMinIO(minIOEP,jgBucket,miniofileName,"");
 
@@ -564,11 +565,11 @@ public class GDCommonFunc {
         Map mapData = new HashMap();
         switch (type){
             case "subject":
-                if(subType.equals("1"))     {  mapData = subjectInfoEnterprise(jobjOK);   }
-                else if(subType.equals("2")){  mapData = subjectInfoPerson(jobjOK);       }
+                if(subTypeSubProd.equals("1"))     {  mapData = subjectInfoEnterprise(jobjOK);   }
+                else if(subTypeSubProd.equals("2")){  mapData = subjectInfoPerson(jobjOK);       }
                 break;
             case "account":                 mapData = accountInfo(jobjOK);break;
-            case "product":                 mapData = productInfo(jobjOK,subType);break;
+            case "product":                 mapData = productInfo(jobjOK,subTypeSubProd);break;
             case "transactionreport":       mapData = transInfo(jobjOK);break;
             case "registration":            mapData = regiInfo(jobjOK);break;
             case "settlement":              mapData = settleInfo(jobjOK);break;
@@ -995,7 +996,7 @@ public class GDCommonFunc {
         key = "leading_member_information";getSubjectInfo.put(key,objLMI.getString(key));
 
         //填充header content字段
-        key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+        addContent(getSubjectInfo,jobj2);
 
         return getSubjectInfo;
     }
@@ -1048,8 +1049,10 @@ public class GDCommonFunc {
         key = "subject_province";                           getSubjectInfo.put(key,objPersonSubBase.getString(key));
         key = "subject_city";                               getSubjectInfo.put(key,objPersonSubBase.getString(key));
 
-        //填充header content字段
-        key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+//        //填充header content字段
+//        key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+
+        addContent(getSubjectInfo,jobj2);
 
         return getSubjectInfo;
     }
@@ -1109,7 +1112,7 @@ public class GDCommonFunc {
         key = "account_associated_account_ref";       getSubjectInfo.put(key,objAccRela.getString(key));
 
         //填充header content字段
-        key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+         addContent(getSubjectInfo,jobj2);
 
         return getSubjectInfo;
     }
@@ -1334,7 +1337,7 @@ public class GDCommonFunc {
         key = "product_escrow_deregistration_remarks";getSubjectInfo.put(key,objProdEscrow.getString(key));
 
         //填充header content字段
-        key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+         addContent(getSubjectInfo,jobj2);
 
         return getSubjectInfo;
     }
@@ -1415,9 +1418,18 @@ public class GDCommonFunc {
                 jobj2.getJSONObject("body").getJSONObject("transaction_report_information").getJSONArray(key).toJSONString(), Map.class));
 
         //填充header content字段
-        key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+         addContent(getSubjectInfo,jobj2);
 
         return getSubjectInfo;
+    }
+
+    public Map addContent(Map mapSrc,com.alibaba.fastjson.JSONObject jobj2){
+        //填充header content字段
+        TreeMap contentMap = new TreeMap(
+                com.alibaba.fastjson.JSONObject.toJavaObject(
+                        jobj2.getJSONObject("header").getJSONObject("content"), Map.class));
+        key = "content";mapSrc.put(key,contentMap);
+        return mapSrc;
     }
 
 
@@ -1513,7 +1525,7 @@ public class GDCommonFunc {
         key = "fund_investors";getSubjectInfo.put(key,objRollRecords.getString(key));
 
         //填充header content字段
-        key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+         addContent(getSubjectInfo,jobj2);
         return getSubjectInfo;
     }
 
@@ -1556,7 +1568,7 @@ public class GDCommonFunc {
         key = "settlement_in_account_balance_after_transfer";       getSubjectInfo.put(key,objIn.getString(key));
 
         //填充header content字段
-        key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+         addContent(getSubjectInfo,jobj2);
 
         return getSubjectInfo;
     }
@@ -1770,6 +1782,26 @@ public class GDCommonFunc {
         return tempMap;
     }
 
+    public TreeMap constructContentTreeMap(String...valueList){
+        TreeMap tempMap = new TreeMap();
+        String[] checkKey = new String[]{"type","object_id","version","operation","timestamp"};
+
+        for(int i =0;i<valueList.length;i++){
+            String temp = valueList[i];
+            log.info("temp **** " + temp);
+            if(checkKey[i].equals( "version")) {
+                tempMap.put(checkKey[i],Integer.valueOf(temp));
+            }else if(checkKey[i].equals( "timestamp")) {
+                tempMap.put(checkKey[i], Long.valueOf(temp));
+            }else {
+                tempMap.put(checkKey[i], temp);
+            }
+        }
+
+
+        return tempMap;
+    }
+
     public String getTimeStampFromMap(Map objMap,String timeKeyWord)throws Exception{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         long dt = sdf.parse(objMap.get(timeKeyWord).toString()).getTime()/1000;
@@ -1782,12 +1814,13 @@ public class GDCommonFunc {
         String key = "";
         switch (type){
             case "subject":
-                key = subject_investor_qualification_certifier_ref; tempStr = tempStr.replaceAll(key,key + ver[0]);
+                key = "=" + subject_investor_qualification_certifier_ref;
+                tempStr = tempStr.replaceAll(key,key + ver[0]);
                 break;
             case "account":
-                key = "account_subject_ref=" + account_subject_ref; tempStr = tempStr.replaceAll(key,key + ver[0]);
+                key = "=" + account_subject_ref; tempStr = tempStr.replaceAll(key,key + ver[0]);
                 key = account_depository_ref; tempStr = tempStr.replaceAll(key,key + ver[1]);
-                key = "account_associated_account_ref=" + account_associated_account_ref; tempStr = tempStr.replaceAll(key,key + ver[2]);
+                key = "=" + account_associated_account_ref; tempStr = tempStr.replaceAll(key,key + ver[2]);
                 break;
 //            case "accountAcc":
 //                key = account_subject_ref; tempStr = tempStr.replaceAll(key,key + ver[0]);
@@ -1813,15 +1846,16 @@ public class GDCommonFunc {
         String key = "";
         switch (type){
             case "subject":
-                key = subject_investor_qualification_certifier_ref;       certainVer = getObjectLatestVer(key);
+                key = "=" + subject_investor_qualification_certifier_ref;
+                certainVer = getObjectLatestVer(subject_investor_qualification_certifier_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
                 break;
             case "account":
-                key = "account_subject_ref=" + account_subject_ref;   certainVer = getObjectLatestVer(key);
+                key = "=" + account_subject_ref;   certainVer = getObjectLatestVer(account_subject_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
                 key = account_depository_ref;           certainVer = getObjectLatestVer(key);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
-                key = "account_associated_account_ref=" + account_associated_account_ref;   certainVer = getObjectLatestVer(key);
+                key = "=" + account_associated_account_ref;   certainVer = getObjectLatestVer(account_associated_account_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
                 break;
@@ -1851,38 +1885,38 @@ public class GDCommonFunc {
 
                 break;
             case "registration" :
-                key =  "register_subject_ref=" + register_subject_ref;       certainVer = getObjectLatestVer(register_subject_ref);
+                key =  "=" + register_subject_ref;       certainVer = getObjectLatestVer(register_subject_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
-                key =  "register_subject_account_ref=" + register_subject_account_ref;       certainVer = getObjectLatestVer(register_subject_account_ref);
+                key =  "=" + register_subject_account_ref;       certainVer = getObjectLatestVer(register_subject_account_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
-                key =  "register_transaction_ref=" + register_transaction_ref;       certainVer = getObjectLatestVer(register_transaction_ref);
+                key =  "=" + register_transaction_ref;       certainVer = getObjectLatestVer(register_transaction_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
-                key = "register_product_ref=" + register_product_ref;       certainVer = getObjectLatestVer(register_product_ref);
+                key = "=" + register_product_ref;       certainVer = getObjectLatestVer(register_product_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
-                key =  "register_right_recognition_subject_ref=" + register_right_recognition_subject_ref;
+                key =  "=" + register_right_recognition_subject_ref;
                 certainVer = getObjectLatestVer(register_right_recognition_subject_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
                 key =  register_right_recognition_agent_subject_ref;       certainVer = getObjectLatestVer(key);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
-                key =  "roll_register_subject_ref=" + roll_register_subject_ref;       certainVer = getObjectLatestVer(roll_register_subject_ref);
+                key =  "=" + roll_register_subject_ref;       certainVer = getObjectLatestVer(roll_register_subject_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
-                key = "roll_register_product_ref=" + roll_register_product_ref;       certainVer = getObjectLatestVer(roll_register_product_ref);
+                key = "=" + roll_register_product_ref;       certainVer = getObjectLatestVer(roll_register_product_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
-                key = "register_equity_subject_ref=" + register_equity_subject_ref;       certainVer = getObjectLatestVer(register_equity_subject_ref);
+                key = "=" + register_equity_subject_ref;       certainVer = getObjectLatestVer(register_equity_subject_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
-                key =  "register_debt_holder_ref=" + register_debt_holder_ref;       certainVer = getObjectLatestVer(register_debt_holder_ref);
+                key =  "=" + register_debt_holder_ref;       certainVer = getObjectLatestVer(register_debt_holder_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
-                key =  "register_investor_subject_ref=" + register_investor_subject_ref;       certainVer = getObjectLatestVer(register_investor_subject_ref);
+                key =  "=" + register_investor_subject_ref;       certainVer = getObjectLatestVer(register_investor_subject_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
                 break;
             case "settlement" :
@@ -2021,6 +2055,71 @@ public class GDCommonFunc {
     }
 
     public Boolean bContainJGFlag(String jsonStr){
-        return jsonStr.contains("\"meta\":{\"data_type\":\"supervision\"}");//确认meta信息包含监管标识
+        //确认meta信息包含监管标识 且每笔都包含meta data_type supervision
+        if(!jsonStr.contains("[")) return jsonStr.contains("\"meta\":{\"data_type\":\"supervision\"}");
+        else return (StringUtils.countOccurrencesOf(jsonStr,"\"meta\":{\"data_type\":\"supervision\"}") ==
+                JSONArray.fromObject(jsonStr).size());
+    }
+
+    public Boolean bCheckJGParams(Map mapKeyWod)throws Exception{
+        GDBeforeCondition gdBF = new GDBeforeCondition();
+        CommonFunc commonFunc = new CommonFunc();
+
+        Boolean bResult = true;
+
+        String tempAddr = mapKeyWod.get("address").toString();
+        String tempTxId = mapKeyWod.get("txId").toString();
+        String tempObjId = mapKeyWod.get("objectid").toString();
+        String tempObjVer = mapKeyWod.get("version").toString();
+        String keyWordGetUriStore = mapKeyWod.get("hashKeyWord").toString();
+        String objType = mapKeyWod.get("objType").toString();
+        String headerType = mapKeyWod.get("headerType").toString();
+        String subProdSubType = mapKeyWod.get("subProdSubType").toString();
+
+        Map uriInfo = getJGURIStoreHash(tempTxId,conJGFileName(keyWordGetUriStore,""),1);
+
+        //获取链上mini url的存证信息 并检查是否包含uri信息 每个登记都是新的 则都是0
+        String storeFileName = conJGFileName(tempObjId,tempObjVer);
+        String chkStoreURI = "uri:" + storeFileName;
+        assertEquals(true,uriInfo.get("storeData").toString().contains(chkStoreURI));
+        assertEquals(true,bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
+
+        //直接从minio上获取报送数据文件信息
+        Map getRegInfo = constructJGDataFromStr(storeFileName,headerType,"");
+
+        switch (objType) {
+            case "subject":
+
+                break;
+            case "accout":
+
+                break;
+            case "product":
+
+                break;
+            case "transactionreport":
+
+                break;
+            case "registration":
+                Map regInfoInput = gdBF.init05RegInfo();
+                regInfoInput.put("register_registration_object_id",tempObjId);
+                regInfoInput.put("content",constructContentMap(objType,tempObjId,tempObjVer,headerType,String.valueOf(ts5)));
+
+                log.info("检查登记存证信息内容与传入一致\n" + regInfoInput.toString() + "\n" + getRegInfo.toString());
+                Boolean bSame = commonFunc.compareTwoStr(replaceCertain(matchRefMapCertVer2(regInfoInput,regType)),replaceCertain(getRegInfo.toString()));
+                assertEquals(tempObjId + "检查发行登记报告数据是否一致" ,true,bSame);
+
+                break;
+            case "settlement":
+
+                break;
+            case "infodisclosure":
+
+                break;
+            default:
+                log.info("错误的类型");
+        }
+
+        return bResult;
     }
 }

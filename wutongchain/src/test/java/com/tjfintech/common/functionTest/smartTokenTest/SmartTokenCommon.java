@@ -25,14 +25,9 @@ public class SmartTokenCommon {
     CertTool certTool = new CertTool();
 
     private String tokenType;
-    String constFileName = "account_simple.wlang";
-    String contractFileName = "account_simple.wlang";
 
 
     public String beforeConfigIssueNewToken(String amount) throws Exception {
-
-        //安装smart token定制化合约
-        installSmartAccountContract(contractFileName);
 
         log.info("发行数字资产");
         tokenType = "TB_" + UtilsClass.Random(10);
@@ -105,23 +100,6 @@ public class SmartTokenCommon {
 
 
 
-    //安装账户合约
-    public void installSmartAccountContract(String abfileName) throws Exception {
-        WVMContractTest wvmContractTestSA = new WVMContractTest();
-        UtilsClass utilsClassSA = new UtilsClass();
-        CommonFunc commonFuncTeSA = new CommonFunc();
-
-        //如果smartAccoutCtHash为空或者contractFileName不为constFileName 即"wvm\\account_simple.wlang" 时会重新安装
-        if (smartAccoutContractAddress.equals("") || (!contractFileName.equals(constFileName))) {
-            //安装
-            String response = wvmContractTestSA.wvmInstallTest(abfileName, "");
-            assertEquals("200", JSONObject.fromObject(response).getString("state"));
-            commonFuncTeSA.sdkCheckTxOrSleep(commonFuncTeSA.getTxHash(response, utilsClassSA.sdkGetTxHashType20),
-                    utilsClassSA.sdkGetTxDetailTypeV2, SLEEPTIME);
-            smartAccoutContractAddress = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-        }
-    }
-
     /**
      * tokenList 数组构建方法
      *
@@ -140,9 +118,18 @@ public class SmartTokenCommon {
         if (subType != "")
             amountMap.put("subType", subType);
 
-        List<Map> tokenList = new ArrayList<>();
-        tokenList.add(amountMap);
-        return tokenList;
+        List<Map>tokenList=new ArrayList<>();
+        if (list == null){
+            tokenList.add(amountMap);
+            return tokenList;
+        }else {
+            for(int i = 0 ; i < list.size() ; i++) {
+                tokenList.add(list.get(i));
+            }
+            tokenList.add(amountMap);
+            return tokenList;
+        }
+
     }
 
 
@@ -163,8 +150,16 @@ public class SmartTokenCommon {
         signMap.put("signList", signList);
 
         List<Map> payAddressInfoList = new ArrayList<>();
-        payAddressInfoList.add(signMap);
-        return payAddressInfoList;
+        if (list == null){
+            payAddressInfoList.add(signMap);
+            return payAddressInfoList;
+        }else {
+            for(int i = 0 ; i < list.size() ; i++) {
+                payAddressInfoList.add(list.get(i));
+            }
+            payAddressInfoList.add(signMap);
+            return payAddressInfoList;
+        }
     }
 
     //单签账户目前的签名公私钥对为PUBKEY1 PRIKEY1

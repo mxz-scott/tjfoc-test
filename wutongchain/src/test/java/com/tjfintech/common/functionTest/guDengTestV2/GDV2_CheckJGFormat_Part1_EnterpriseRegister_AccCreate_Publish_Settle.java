@@ -140,15 +140,15 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String fundAccfileName = conJGFileName(fundObjId,fundAccVer);
 
         Map uriInfo = gdCF.getJGURIStoreHash(txId,subfileName,1);
-        String chkSubURI = minIOEP + "/" + jgBucket + "/" + subfileName;
-        String chkSHAccURI = minIOEP + "/" + jgBucket + "/" + shAccfileName;
-        String chkFundAccURI = minIOEP + "/" + jgBucket + "/" + fundAccfileName;
+        String chkSubURI = subfileName;
+        String chkSHAccURI = shAccfileName;
+        String chkFundAccURI = fundAccfileName;
         log.info(uriInfo.get("storeData").toString());
         log.info(chkSubURI);
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSHAccURI));
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkFundAccURI));
-        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
 
 
         //直接从minio上获取报送数据文件信息
@@ -162,9 +162,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
 
         //填充header content 信息
-        enSubInfo.put("content",gdCF.constructContentMap(subjectType,cltNo,personSubVer,"create",String.valueOf(ts1)));
-        accFund.put("content",gdCF.constructContentMap(accType,fundObjId,fundAccVer,"create",String.valueOf(ts2)));
-        accSH.put("content",gdCF.constructContentMap(accType,SHObjId,shAccVer,"create",String.valueOf(ts2)));
+        enSubInfo.put("content",gdCF.constructContentTreeMap(subjectType,cltNo,personSubVer,"create",String.valueOf(ts1)));
+        accFund.put("content",gdCF.constructContentTreeMap(accType,fundObjId,fundAccVer,"create",String.valueOf(ts2)));
+        accSH.put("content",gdCF.constructContentTreeMap(accType,SHObjId,shAccVer,"create",String.valueOf(ts2)));
 
         assertEquals(String.valueOf(gdClient + 1),personSubVer);
 
@@ -287,15 +287,15 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String fundAccfileName = conJGFileName(fundObjId,fundAccVer);
 
         Map uriInfo = gdCF.getJGURIStoreHash(txId,subfileName,1);
-        String chkSubURI = minIOEP + "/" + jgBucket + "/" + subfileName;
-        String chkSHAccURI = minIOEP + "/" + jgBucket + "/" + shAccfileName;
-        String chkFundAccURI = minIOEP + "/" + jgBucket + "/" + fundAccfileName;
+        String chkSubURI = subfileName;
+        String chkSHAccURI = shAccfileName;
+        String chkFundAccURI = fundAccfileName;
 //        log.info(uriInfo.get("storeData").toString());
 //        log.info(chkSubURI);
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSHAccURI));
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkFundAccURI));
-        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
 
         //直接从minio上获取报送数据文件信息
         Map getSubInfo = gdCF.constructJGDataFromStr(subfileName,subjectType,"2");
@@ -304,9 +304,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
 
         //填充header content 信息
-        enSubInfo.put("content",gdCF.constructContentMap(subjectType,cltNo,personSubVer,"create",String.valueOf(ts1)));
-        accFund.put("content",gdCF.constructContentMap(accType,fundObjId,fundAccVer,"create",String.valueOf(ts2)));
-        accSH.put("content",gdCF.constructContentMap(accType,SHObjId,shAccVer,"create",String.valueOf(ts2)));
+        enSubInfo.put("content",gdCF.constructContentTreeMap(subjectType,cltNo,personSubVer,"create",String.valueOf(ts1)));
+        accFund.put("content",gdCF.constructContentTreeMap(accType,fundObjId,fundAccVer,"create",String.valueOf(ts2)));
+        accSH.put("content",gdCF.constructContentTreeMap(accType,SHObjId,shAccVer,"create",String.valueOf(ts2)));
 
         assertEquals(String.valueOf(gdClient + 1),personSubVer);
 
@@ -387,17 +387,16 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         log.info(storeData);
         com.alibaba.fastjson.JSONObject objURI = com.alibaba.fastjson.JSONObject.parseObject(
                 com.alibaba.fastjson.JSONObject.parseArray(storeData).get(0).toString());
-        String chkObjURI = minIOEP + "/" + jgBucket + "/" + objPrefix;
+        String chkObjURI = objPrefix;
         assertEquals(true,storeData.contains(chkObjURI));
-        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字
 
-        String uriOrgStr =  objURI.getString("uri");
-        String objVerTemp = uriOrgStr.substring(uriOrgStr.lastIndexOf(objPrefix),uriOrgStr.lastIndexOf("."));
+        String objVerTemp =  objURI.getString("uri").trim();
 
         String newDisObjId = "";
-        newDisObjId = objVerTemp.substring(0,objVerTemp.lastIndexOf("_"));
+        newDisObjId = objVerTemp.substring(0,objVerTemp.lastIndexOf("/"));
 
-        String newDisObjIdVer = objVerTemp.substring(objVerTemp.lastIndexOf("_") + 1);//gdCF.getObjectLatestVer(newDisObjId);
+        String newDisObjIdVer = objVerTemp.substring(objVerTemp.lastIndexOf("/") + 1);//gdCF.getObjectLatestVer(newDisObjId);
         log.info(objVerTemp + " " + newDisObjIdVer);
 
 //        assertEquals(objVerTemp.substring(objVerTemp.lastIndexOf("_") + 1),newDisObjIdVer);//确认uri中的版本号和实际最新版本号一致
@@ -420,12 +419,18 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         Map getDisclosureInfo = gdCF.constructJGDataFromStr(objfileName,infoType,"");
 
         //填充header content字段
-        disclosureInfo.put("content",gdCF.constructContentMap(infoType,newDisObjId,newDisObjIdVer,"create",String.valueOf(ts7)));
+        disclosureInfo.put("content",gdCF.constructContentTreeMap(infoType,newDisObjId,newDisObjIdVer,"create",String.valueOf(ts7)));
 
 
         log.info("检查主体存证信息内容与传入一致\n" + getDisclosureInfo.toString() + "\n" + getDisclosureInfo.toString());
         assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(disclosureInfo,infoType)),replaceCertain(getDisclosureInfo.toString()));
 
+    }
+
+//    @Test
+    public  void tet()throws Exception{
+        MinIOOperation minio = new MinIOOperation();
+        String storeData2 = minio.getFileFromMinIO(minIOEP,jgBucket,"fund_a8dee7aa95e94e13baac526782dca87/0","");
     }
 
     @Test
@@ -441,7 +446,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
 
         //设置各个主体版本变量
-        String objPrefix = "fund_";
+        String objPrefix = "uri";
 
         //获取（从交易详情中）链上mini url的存证信息并检查是否包含uri信息 通过前缀信息获取信披对象id
         String storeData = com.alibaba.fastjson.JSONObject.parseObject(txDetail).getJSONObject(
@@ -449,17 +454,16 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         log.info(storeData);
         com.alibaba.fastjson.JSONObject objURI = com.alibaba.fastjson.JSONObject.parseObject(
                 com.alibaba.fastjson.JSONObject.parseArray(storeData).get(0).toString());
-        String chkObjURI = minIOEP + "/" + jgBucket + "/" + objPrefix;
+        String chkObjURI = objPrefix;
         assertEquals(true,storeData.contains(chkObjURI));
-        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字
 
-        String uriOrgStr =  objURI.getString("uri");
-        String objVerTemp = uriOrgStr.substring(uriOrgStr.lastIndexOf(objPrefix),uriOrgStr.lastIndexOf("."));
+        String objVerTemp =  objURI.getString("uri").trim();
 
         String newSettleObjId = "";
-        newSettleObjId = objVerTemp.substring(0,objVerTemp.lastIndexOf("_"));
+        newSettleObjId = objVerTemp.substring(0,objVerTemp.lastIndexOf("/"));
 
-        String newDisObjIdVer = objVerTemp.substring(objVerTemp.lastIndexOf("_") + 1);//gdCF.getObjectLatestVer(newDisObjId);
+        String newDisObjIdVer = objVerTemp.substring(objVerTemp.lastIndexOf("/") + 1);//gdCF.getObjectLatestVer(newDisObjId);
         log.info(objVerTemp + " " + newDisObjIdVer);
 
         String objfileName = conJGFileName(newSettleObjId,newDisObjIdVer);
@@ -468,8 +472,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         //直接从minio上通过对象标识+版本号的方式获取指定对象文件
         Map getSettleInfo = gdCF.constructJGDataFromStr(objfileName,settleType,"");
 
+
         //填充header content字段
-        settleInfo.put("content",gdCF.constructContentMap(settleType,newSettleObjId,newDisObjIdVer,"create",String.valueOf(ts6)));
+        settleInfo.put("content",gdCF.constructContentTreeMap(settleType,newSettleObjId,newDisObjIdVer,"create",String.valueOf(ts6)));
 
 
         log.info("检查主体存证信息内容与传入一致\n" + settleInfo.toString() + "\n" + getSettleInfo.toString());
@@ -540,13 +545,13 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String prodfileName = conJGFileName(gdEquityCode,newEqProdVer);
 
         Map uriInfo = gdCF.getJGURIStoreHash(txId,conJGFileName(gdCompanyID,newSubVer),1);
-        String chkSubURI = minIOEP + "/" + jgBucket + "/" + subfileName;
-        String chkProdURI = minIOEP + "/" + jgBucket + "/" + prodfileName;
+        String chkSubURI = subfileName;
+        String chkProdURI = prodfileName;
         log.info(uriInfo.get("storeData").toString());
         log.info(chkSubURI);
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
         if(!type.equals("4")) assertEquals(true,uriInfo.get("storeData").toString().contains(chkProdURI));
-        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
 
         //直接从minio上通过对象标识+版本号的方式获取指定对象文件
         Map getSubInfo = gdCF.constructJGDataFromStr(conJGFileName(gdCompanyID,newSubVer),subjectType,"1");
@@ -554,10 +559,10 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         if(!type.equals("4")) getProInfo = gdCF.constructJGDataFromStr(conJGFileName(gdEquityCode, newEqProdVer), prodType, type);
 
         //填充header content字段
-        enSubInfo.put("content",gdCF.constructContentMap(subjectType,gdCompanyID,newSubVer,"create",String.valueOf(ts1)));
+        enSubInfo.put("content",gdCF.constructContentTreeMap(subjectType,gdCompanyID,newSubVer,"create",String.valueOf(ts1)));
         //如果不是机构会员登记 则执行产品填充header content字段
         if(!type.equals("4")) {
-            prodInfo.put("content",gdCF.constructContentMap(prodType, gdEquityCode, newEqProdVer, "create", String.valueOf(ts3)));
+            prodInfo.put("content",gdCF.constructContentTreeMap(prodType, gdEquityCode, newEqProdVer, "create", String.valueOf(ts3)));
         }
 
         //产品发行主体引用设置为空场景 当前代码会自动补充发行主体对象标识
@@ -622,15 +627,14 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         log.info(storeData);
         com.alibaba.fastjson.JSONObject objURI = com.alibaba.fastjson.JSONObject.parseObject(
                 com.alibaba.fastjson.JSONObject.parseArray(storeData).get(0).toString());
-        String chkObjURI = minIOEP + "/" + jgBucket + "/" + objPrefix;
+        String chkObjURI = objPrefix;
         assertEquals(true,storeData.contains(chkObjURI));
-        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字
 
-        String uriOrgStr =  objURI.getString("uri");
-        String objVerTemp = uriOrgStr.substring(uriOrgStr.lastIndexOf(objPrefix),uriOrgStr.lastIndexOf("."));
+        String objVerTemp =  objURI.getString("uri").trim();
 
         String newObjId = "";
-        newObjId = objVerTemp.substring(0,objVerTemp.lastIndexOf("_"));
+        newObjId = objVerTemp.substring(0,objVerTemp.lastIndexOf("/"));
 
         String newObjIdVer = objVerTemp.substring(objVerTemp.lastIndexOf("_") + 1);//gdCF.getObjectLatestVer(newDisObjId);
         log.info(objVerTemp + " " + newObjIdVer);
@@ -642,7 +646,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         Map getSettleInfo = gdCF.constructJGDataFromStr(objfileName,type,"");
 
         //填充header content字段
-        settleInfo.put("content",gdCF.constructContentMap(type,newObjId,newObjIdVer,"create",timeStamp));
+        settleInfo.put("content",gdCF.constructContentTreeMap(type,newObjId,newObjIdVer,"create",timeStamp));
 
 
         log.info("检查主体存证信息内容与传入一致\n" + mapObjParam.toString() + "\n" + getSettleInfo.toString());

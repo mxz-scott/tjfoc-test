@@ -69,7 +69,9 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
     @Test
     public void TC01_enterpriseRegister() throws Exception {
         long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,bondProductInfo,fundProductInfo);
+        Map eqProd = gdBF.init03EquityProductInfo();
+        Map enSub = gdBF.init01EnterpriseSubjectInfo();
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enSub, eqProd,bondProductInfo,fundProductInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -509,10 +511,15 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         String newEquityCode = gdEquityCode + Random(5);
         String cpnyId = gdCompanyID;
 
+        gd.GDObjectQueryByVer("" + newEquityCode,-1);
+
         mapAddrRegObjId.clear();
 
         Map eqProd = gdBF.init03EquityProductInfo();
-        eqProd.put("product_object_id",newEquityCode);
+        eqProd.put("product_object_id","new" + newEquityCode);
+
+        gd.GDObjectQueryByVer(oldEquityCode,-1);
+        gd.GDObjectQueryByVer("new" + newEquityCode,-1);
 
         String flowNo = "changeboard000001";
         List<Map> regList = uf.getAllHolderListReg(gdEquityCode,flowNo);

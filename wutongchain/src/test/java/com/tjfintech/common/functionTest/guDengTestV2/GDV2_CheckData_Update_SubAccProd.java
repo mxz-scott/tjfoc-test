@@ -263,7 +263,7 @@ public class GDV2_CheckData_Update_SubAccProd {
 //
 //        String timeStampSub = gdCF.getTimeStampFromMap(getSubInfo, "subject_create_time");
 //        mapTemp.put("content",
-//                gdCF.constructContentMap(subjectType, gdCompanyID, "1", "create",
+//                gdCF.constructContentTreeMap(subjectType, gdCompanyID, "1", "create",
 //                        timeStampSub));
 //
 //
@@ -279,18 +279,18 @@ public class GDV2_CheckData_Update_SubAccProd {
         String subfileName = conJGFileName(gdCompanyID,newSubVer);
 
         Map uriInfo = gdCF.getJGURIStoreHash(txId,conJGFileName(gdCompanyID,newSubVer),1);
-        String chkSubURI = minIOEP + "/" + jgBucket + "/" + subfileName;
+        String chkSubURI = subfileName;
         log.info(uriInfo.get("storeData").toString());
         log.info(chkSubURI);
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
-        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
 
 
         //直接从minio上通过对象标识+版本号的方式获取指定对象文件
         Map getSubInfo = gdCF.constructJGDataFromStr(conJGFileName(gdCompanyID,newSubVer),subjectType,"1");
 
         //填充header content字段
-        mapTemp.put("content",gdCF.constructContentMap(subjectType,gdCompanyID,newSubVer,"update",String.valueOf(ts8)));
+        mapTemp.put("content",gdCF.constructContentTreeMap(subjectType,gdCompanyID,newSubVer,"update",String.valueOf(ts8)));
 
         assertEquals(String.valueOf(gdCpmIdOldVer + 2),newSubVer);
 
@@ -521,11 +521,11 @@ public class GDV2_CheckData_Update_SubAccProd {
         String subfileName = conJGFileName(cltNo,personSubVer);
 
         Map uriInfo = gdCF.getJGURIStoreHash(txId,subfileName,1);
-        String chkSubURI = minIOEP + "/" + jgBucket + "/" + subfileName;
+        String chkSubURI = subfileName;
         log.info(uriInfo.get("storeData").toString());
         log.info(chkSubURI);
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
-        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
 
 
         //直接从minio上获取报送数据文件信息
@@ -534,7 +534,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         Map enSubInfo = mapTemp;
 
         //填充header content 信息
-        enSubInfo.put("content",gdCF.constructContentMap(subjectType,cltNo,personSubVer,"update",String.valueOf(ts8)));
+        enSubInfo.put("content",gdCF.constructContentTreeMap(subjectType,cltNo,personSubVer,"update",String.valueOf(ts8)));
 
         assertEquals(String.valueOf(gdClient + 2),personSubVer);
 
@@ -727,10 +727,10 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //获取链上mini url的存证信息 并检查是否包含uri信息
         Map uriInfo = gdCF.getJGURIStoreHash(txId,shAccfileName,1);
-        String chkSHAccURI = minIOEP + "/" + jgBucket + "/" + shAccfileName;
+        String chkSHAccURI = shAccfileName;
         log.info(uriInfo.get("storeData").toString());
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSHAccURI));
-        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
 
 
         //直接从minio上获取报送数据文件信息
@@ -738,7 +738,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         Map accSH = mapTemp;
 
         //填充header content 信息
-        accSH.put("content",gdCF.constructContentMap(accType,SHObjId,shAccVer,"update",String.valueOf(ts8)));
+        accSH.put("content",gdCF.constructContentTreeMap(accType,SHObjId,shAccVer,"update",String.valueOf(ts8)));
 
         assertEquals("确认主体版本无变更",String.valueOf(gdClient + 1),personSubVer);
 
@@ -962,10 +962,10 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //获取链上mini url的存证信息 并检查是否包含uri信息
         Map uriInfo = gdCF.getJGURIStoreHash(txId,fundAccfileName,1);
-        String chkSHAccURI = minIOEP + "/" + jgBucket + "/" + fundAccfileName;
+        String chkSHAccURI = fundAccfileName;
         log.info(uriInfo.get("storeData").toString());
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkSHAccURI));
-        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
 
 
         //直接从minio上获取报送数据文件信息
@@ -974,7 +974,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         Map accFund = mapTemp;
 
         //填充header content 信息
-        accFund.put("content",gdCF.constructContentMap(accType,fundObjId,fundAccVer,"update",String.valueOf(ts8)));
+        accFund.put("content",gdCF.constructContentTreeMap(accType,fundObjId,fundAccVer,"update",String.valueOf(ts8)));
 
         assertEquals("确认主体版本无变更",String.valueOf(gdClient + 1),personSubVer);
 
@@ -1168,9 +1168,9 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //获取链上mini url的存证信息并检查是否包含uri信息
         String prodfileName = conJGFileName(gdEquityCode,newEqProdVer);
-        String chkProdURI = minIOEP + "/" + jgBucket + "/" + prodfileName;
+        String chkProdURI = prodfileName;
         assertEquals(true,storeData.contains(chkProdURI));
-        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字
 
 
         //直接从minio上通过对象标识+版本号的方式获取指定对象文件
@@ -1180,7 +1180,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         //填充header content字段
         //如果不是机构会员登记 则执行产品填充header content字段
         if(!type.equals("4")) {
-            mapProdComInfo.put("content",gdCF.constructContentMap(prodType, gdEquityCode, newEqProdVer, "update", String.valueOf(ts8)));
+            mapProdComInfo.put("content",gdCF.constructContentTreeMap(prodType, gdEquityCode, newEqProdVer, "update", String.valueOf(ts8)));
         }
 
         //产品发行主体引用设置为空场景 当前代码会自动补充发行主体对象标识
@@ -1256,9 +1256,9 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //获取链上mini url的存证信息并检查是否包含uri信息
         String prodfileName = conJGFileName(gdEquityCode,newEqProdVer);
-        String chkProdURI = minIOEP + "/" + jgBucket + "/" + prodfileName;
+        String chkProdURI = prodfileName;
         assertEquals(true,storeData.contains(chkProdURI));
-        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字
 
 
         //直接从minio上通过对象标识+版本号的方式获取指定对象文件
@@ -1268,7 +1268,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         //填充header content字段
         //如果不是机构会员登记 则执行产品填充header content字段
         if(!type.equals("4")) {
-            mapProdComInfo.put("content",gdCF.constructContentMap(prodType, gdEquityCode, newEqProdVer, "update", String.valueOf(ts8)));
+            mapProdComInfo.put("content",gdCF.constructContentTreeMap(prodType, gdEquityCode, newEqProdVer, "update", String.valueOf(ts8)));
         }
 
         //产品发行主体引用设置为空场景 当前代码会自动补充发行主体对象标识
@@ -1342,9 +1342,9 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //获取链上mini url的存证信息并检查是否包含uri信息
         String prodfileName = conJGFileName(gdEquityCode,newEqProdVer);
-        String chkProdURI = minIOEP + "/" + jgBucket + "/" + prodfileName;
+        String chkProdURI = prodfileName;
         assertEquals(true,storeData.contains(chkProdURI));
-        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息移除
+        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字
 
 
         //直接从minio上通过对象标识+版本号的方式获取指定对象文件
@@ -1354,7 +1354,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         //填充header content字段
         //如果不是机构会员登记 则执行产品填充header content字段
         if(!type.equals("4")) {
-            mapProdComInfo.put("content",gdCF.constructContentMap(prodType, gdEquityCode, newEqProdVer, "update", String.valueOf(ts8)));
+            mapProdComInfo.put("content",gdCF.constructContentTreeMap(prodType, gdEquityCode, newEqProdVer, "update", String.valueOf(ts8)));
         }
 
         //产品发行主体引用设置为空场景 当前代码会自动补充发行主体对象标识
