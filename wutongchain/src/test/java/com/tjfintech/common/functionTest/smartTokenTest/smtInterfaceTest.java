@@ -16,6 +16,7 @@ import org.junit.runners.MethodSorters;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -101,6 +102,59 @@ public class smtInterfaceTest {
         transferResp= st.SmartTransferReq(tokenType, payList, collList, "", "", "");
         assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
         assertEquals(true,transferResp.contains("收入金额为必填字段"));
+
+    }
+
+    @Test
+    public void smtStokenApproveInterfaceTest()throws Exception{
+
+        tokenType =  stc.beforeConfigIssueNewToken("200");
+        String invalidAddress = "SsPB7k7FFcTG3DbtCHPpn9n3op46pu4GVQ3SW2PxRWqanES6yP7";
+        List<Map> payList= stc.smartConstructTokenList(ADDRESS1, "test", "200",null);
+        List<Map> collList= stc.smartConstructTokenList(MULITADD4,"test", "200",null);
+        String transferResp= st.SmartTransferReq(tokenType, payList, collList, "", "", "");
+        assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
+        String UTXOInfo = JSONObject.fromObject(transferResp).getJSONObject("data").getString("UTXOInfo");
+        String signMsg = JSONObject.fromObject(transferResp).getJSONObject("data").getString("sigMsg");
+        HashMap<String,Object> sigMsgmap = stc.smartContractApproveData(signMsg);
+        String signAddress = sigMsgmap.get("signAddress").toString();
+        List<String>pubkeys =(List<String>)sigMsgmap.get("pubkeys");
+        List<String>signList =(List<String>)sigMsgmap.get("signList");
+        List<Map> payInfoList = stc.smartConstructPayAddressInfoList(signAddress, pubkeys, signList,null);
+
+        log.info("type为空");
+        String approveResp = st.SmartTEDApprove("", payInfoList, UTXOInfo);
+        assertEquals("400",JSONObject.fromObject(approveResp).getString("state"));
+        assertEquals(true,approveResp.contains("交易类型为必填字段"));
+
+        log.info("UTXOInfo为空");
+        approveResp = st.SmartTEDApprove("transfer", payInfoList, "");
+        assertEquals("400",JSONObject.fromObject(approveResp).getString("state"));
+        assertEquals(true,approveResp.contains("UTXO结构为必填字段"));
+
+        log.info("payAddressInfoList转让方信息列表为空");
+        approveResp = st.SmartTEDApprove("transfer", null, UTXOInfo);
+        assertEquals("400",JSONObject.fromObject(approveResp).getString("state"));
+        assertEquals(true,approveResp.contains("支出账户的信息为必填字段"));
+
+        log.info("payAddressInfoList.address转让方签名地址为空");
+        payInfoList = stc.smartConstructPayAddressInfoList("", pubkeys, signList,null);
+        approveResp = st.SmartTEDApprove("transfer", payInfoList, UTXOInfo);
+        assertEquals("400",JSONObject.fromObject(approveResp).getString("state"));
+        assertEquals(true,approveResp.contains("账户地址为必填字段"));
+
+        log.info("payAddressInfoList.pubkeyList转让方签名地址公钥为空");
+        payInfoList = stc.smartConstructPayAddressInfoList(signAddress, null, signList,null);
+        approveResp = st.SmartTEDApprove("transfer", payInfoList, UTXOInfo);
+        assertEquals("400",JSONObject.fromObject(approveResp).getString("state"));
+        assertEquals(true,approveResp.contains("生成账户地址的公钥为必填字段"));
+
+        log.info("payAddressInfoList.signList公钥签名后的数据为空");
+        payInfoList = stc.smartConstructPayAddressInfoList(signAddress, pubkeys, null,null);
+        approveResp = st.SmartTEDApprove("transfer", payInfoList, UTXOInfo);
+        assertEquals("400",JSONObject.fromObject(approveResp).getString("state"));
+        assertEquals(true,approveResp.contains("生成账户地址的公钥对应私钥的签名为必填字段"));
+
 
     }
 

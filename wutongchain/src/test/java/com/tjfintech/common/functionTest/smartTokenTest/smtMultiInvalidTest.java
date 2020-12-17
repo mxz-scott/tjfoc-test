@@ -28,6 +28,7 @@ public class smtMultiInvalidTest {
     GoSmartToken st = new GoSmartToken();
 
     private static String tokenType;
+    String invalidAddress = "SsPB7k7FFcTG3DbtCHPpn9n3op46pu4GVQ3SW2PxRWqanES6yP7";
 
     @BeforeClass
     public static void BeforeClass()throws Exception{
@@ -157,7 +158,7 @@ public class smtMultiInvalidTest {
         String transferResp= st.SmartTransferReq(tokenType, payList, collList, "", "", transferData);
         assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
 
-        //未审核
+        //未审核状态
         tokenType = "TB_" + UtilsClass.Random(10);
         double timeStampNow = System.currentTimeMillis();
         BigDecimal deadline = new BigDecimal(timeStampNow + 12356789);
@@ -169,7 +170,7 @@ public class smtMultiInvalidTest {
         transferResp= st.SmartTransferReq(tokenType, payList, collList, "", "", transferData);
         assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
 
-        //冻结
+        //冻结状态
         tokenType =  stc.beforeConfigIssueNewToken("200");
         String freezeResp = st.SmartFreeze(tokenType,"");
         assertEquals("200",JSONObject.fromObject(freezeResp).getString("state"));
@@ -186,5 +187,37 @@ public class smtMultiInvalidTest {
         stc.verifyAddressNoBalance(MULITADD4, tokenType);
 
     }
+
+    /**
+     * paymentList列表数据异常，转账申请失败
+     */
+    @Test
+    public void TC_transferPayCollListInvalid() throws Exception {
+
+        //paymentList.address地址错误
+        tokenType =  stc.beforeConfigIssueNewToken("200");
+        String transferData = "ADDRESS1 向 MULITADD4 转账200个" + tokenType;
+        List<Map> payList= stc.smartConstructTokenList(invalidAddress, "test", "200",null);
+        List<Map> collList= stc.smartConstructTokenList(MULITADD4,"test", "200",null);
+        String transferResp= st.SmartTransferReq(tokenType, payList, collList, "", "", transferData);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+
+        //paymentList.amount数量超出余额
+        payList.clear();
+        payList= stc.smartConstructTokenList(ADDRESS1, "test", "300",null);
+        transferResp= st.SmartTransferReq(tokenType, payList, collList, "", "", transferData);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+
+        //collectionList.amount数量超出支出金额
+        payList.clear();
+        payList= stc.smartConstructTokenList(ADDRESS1, "test", "200",null);
+        collList.clear();
+        collList = stc.smartConstructTokenList(MULITADD4,"test","300",null);
+        transferResp= st.SmartTransferReq(tokenType, payList, collList, "", "", transferData);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+
+
+    }
+
 
 }
