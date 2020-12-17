@@ -1573,23 +1573,9 @@ public class GDCommonFunc {
         return getSubjectInfo;
     }
 
-    public Map pubInfo(com.alibaba.fastjson.JSONObject jobjOK) {
-        com.alibaba.fastjson.JSONObject objInfo = jobjOK.getJSONObject("body").getJSONObject("disclosure_approval_information");
+    public Map pubInfo(com.alibaba.fastjson.JSONObject jobj2) {
+        com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("disclosure_approval_information");
         com.alibaba.fastjson.JSONObject objBaic = objInfo.getJSONObject("disclosure_basic_information");
-//        com.alibaba.fastjson.JSONObject objRegulatory = objInfo.getJSONObject("regulatory_infomation");
-//        com.alibaba.fastjson.JSONObject objReport = objInfo.getJSONObject("enterprise_report");
-//        com.alibaba.fastjson.JSONObject objNotice = objInfo.getJSONObject("disclosure_notice");
-//        com.alibaba.fastjson.JSONObject objMajor = objInfo.getJSONObject("major_event_information");
-//        com.alibaba.fastjson.JSONObject objIntegrity = objInfo.getJSONObject("integrity_archives");
-//        com.alibaba.fastjson.JSONObject objExpandBasic = objIntegrity.getJSONObject("basic_information");
-//        com.alibaba.fastjson.JSONObject objExpandItem = objIntegrity.getJSONObject("item_details");
-//        com.alibaba.fastjson.JSONObject objFinancial = objInfo.getJSONObject("financial_information");
-//        com.alibaba.fastjson.JSONObject objFinancialBasic = objFinancial.getJSONObject("basic_financial_information");
-//        com.alibaba.fastjson.JSONObject objFinancialDocuments = objFinancial.getJSONObject("financial_statement_documents");
-//        com.alibaba.fastjson.JSONObject objBusiness = objInfo.getJSONObject("business_information");
-//        com.alibaba.fastjson.JSONObject objBusinessBasic = objBusiness.getJSONObject("business_basic_information");
-//        com.alibaba.fastjson.JSONObject objBusinessInvestment = objBusiness.getJSONObject("Investment_and_financing");
-//        com.alibaba.fastjson.JSONObject objExpand = objInfo.getJSONObject("expand_information");
 
         Map getSubjectInfo = new HashMap();
         String keyType = "";
@@ -1729,7 +1715,8 @@ public class GDCommonFunc {
         }
 
         //填充header content字段
-        key = "content";getSubjectInfo.put(key,jobjOK.getJSONObject("header").getString(key));
+//        key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+        addContent(getSubjectInfo,jobj2);
 
         return getSubjectInfo;
     }
@@ -2071,12 +2058,16 @@ public class GDCommonFunc {
         String tempTxId = mapKeyWod.get("txId").toString();
         String tempObjId = mapKeyWod.get("objectid").toString();
         String tempObjVer = mapKeyWod.get("version").toString();
-        String keyWordGetUriStore = mapKeyWod.get("hashKeyWord").toString();
-        String objType = mapKeyWod.get("objType").toString();
-        String headerType = mapKeyWod.get("headerType").toString();
+//        String keyWordGetUriStore = mapKeyWod.get("hashKeyWord").toString();//固定使用监管提供的supervision字符串
+//        String objType = mapKeyWod.get("objType").toString();
+        String contentType = mapKeyWod.get("contentType").toString();
         String subProdSubType = mapKeyWod.get("subProdSubType").toString();
 
-        Map uriInfo = getJGURIStoreHash(tempTxId,conJGFileName(keyWordGetUriStore,""),1);
+        //检查各个交易详情信息中不包含敏感词
+        assertEquals("不包含敏感词",true,chkSensitiveWord(store.GetTxDetail(tempTxId),contentType));
+
+        //获取链上的uri存证信息所在交易hash 不是从链上取版本
+        Map uriInfo = getJGURIStoreHash(tempTxId,conJGFileName("supervision",""),1);
 
         //获取链上mini url的存证信息 并检查是否包含uri信息 每个登记都是新的 则都是0
         String storeFileName = conJGFileName(tempObjId,tempObjVer);
@@ -2085,40 +2076,74 @@ public class GDCommonFunc {
         assertEquals(true,bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
 
         //直接从minio上获取报送数据文件信息
-        Map getRegInfo = constructJGDataFromStr(storeFileName,headerType,"");
+        Map getRegInfo = constructJGDataFromStr(storeFileName,contentType,subProdSubType);
 
-        switch (objType) {
+        //重组的入参信息 即对比信息
+        Map mapParam = null;
+
+        //时间戳
+        long tempTS = ts1;
+
+        switch (contentType) {
             case "subject":
-
+                if(subProdSubType.equals("1"))           mapParam = gdBF.init01EnterpriseSubjectInfo();
+                else if(subProdSubType.equals("2"))      mapParam = gdBF.init01PersonalSubjectInfo();
+                tempTS = ts1;
+                //这边固定主体的更新时间都是ts1 方便测试检查
+                mapParam.put("subject_object_id",tempObjId);
                 break;
+
             case "accout":
-
+                if(subProdSubType.equals("1"))          mapParam = gdBF.init02ShareholderAccountInfo();
+                else if(subProdSubType.equals("2"))     mapParam = gdBF.init02FundAccountInfo();
+                tempTS = ts2;
+                mapParam.put("account_object_id",tempObjId);
                 break;
+
             case "product":
-
+                if(subProdSubType.equals("1"))          mapParam = gdBF.init03EquityProductInfo();
+                else if(subProdSubType.equals("3"))     mapParam = gdBF.init03BondProductInfo();
+                else if(subProdSubType.equals("5"))     mapParam = gdBF.init03FundProductInfo();
+                tempTS = ts3;
+                mapParam.put("product_object_id",tempObjId);
                 break;
+
             case "transactionreport":
-
+                mapParam = gdBF.init04TxInfo();
+                tempTS = ts4;
+                mapParam.put("transaction_object_id",tempObjId);
                 break;
+
             case "registration":
-                Map regInfoInput = gdBF.init05RegInfo();
-                regInfoInput.put("register_registration_object_id",tempObjId);
-                regInfoInput.put("content",constructContentMap(objType,tempObjId,tempObjVer,headerType,String.valueOf(ts5)));
-
-                log.info("检查登记存证信息内容与传入一致\n" + regInfoInput.toString() + "\n" + getRegInfo.toString());
-                Boolean bSame = commonFunc.compareTwoStr(replaceCertain(matchRefMapCertVer2(regInfoInput,regType)),replaceCertain(getRegInfo.toString()));
-                assertEquals(tempObjId + "检查发行登记报告数据是否一致" ,true,bSame);
-
+                mapParam = gdBF.init05RegInfo();
+                tempTS = ts5;
+                mapParam.put("register_registration_object_id",tempObjId);
                 break;
+
             case "settlement":
-
+                mapParam = gdBF.init06SettleInfo();
+                tempTS = ts6;
                 break;
+
             case "infodisclosure":
-
+                mapParam = gdBF.init07PublishInfo();
+                tempTS = ts7;
                 break;
+
             default:
                 log.info("错误的类型");
+
         }
+        assertEquals("检查参数map不为空",false,mapParam.equals(null));
+
+        //采用有序TreeMap存 header content
+        mapParam.put("content",constructContentTreeMap(contentType,tempObjId,tempObjVer,contentType,String.valueOf(tempTS)));
+
+        log.info("检查" + contentType + "存证信息内容与传入一致\n" + mapParam.toString() + "\n" + getRegInfo.toString());
+        bResult = commonFunc.compareTwoStr(replaceCertain(matchRefMapCertVer2(mapParam,contentType)),
+                            replaceCertain(getRegInfo.toString()));
+        assertEquals("交易hash：" + tempTxId + "\n" + tempObjId + "检查" + contentType + "数据是否一致" ,
+                true,bResult);
 
         return bResult;
     }

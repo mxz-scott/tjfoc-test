@@ -320,7 +320,9 @@ public class GDUnitFunc {
      */
     public String destroyAcc(String clntNo,boolean bCheckOnchain) throws Exception {
         log.info("销户 " + clntNo);
-        String response= gd.GDAccountDestroy(gdContractAddress,clntNo,date1,getListFileObj(),date2,getListFileObj());
+        String name = "销户代理人姓名1";
+        String number = "销户代理人电话1";
+        String response= gd.GDAccountDestroy(gdContractAddress,clntNo,date1,getListFileObj(),date2,getListFileObj(),name,number);
 
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);

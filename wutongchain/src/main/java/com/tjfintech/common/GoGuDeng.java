@@ -149,8 +149,8 @@ public  class GoGuDeng implements GuDeng {
         map.put("txCreateTime",ts4);
         map.put("fromRegisterUpdateTime",ts5);
         map.put("toRegisterUpdateTime",ts5);
-
         map.put("subjectObjectId",gdCompanyID);
+        map.put("subjectUpdateTime",ts1);
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/transfer", map);
         log.info(result);
@@ -211,6 +211,7 @@ public  class GoGuDeng implements GuDeng {
         map.put("transactionReport", txInfo);
         map.put("productUpdateTime",ts3);
         map.put("txCreateTime",ts4);
+        map.put("subjectUpdateTime",ts1);
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/increase", map);
         log.info(result);
@@ -337,6 +338,8 @@ public  class GoGuDeng implements GuDeng {
         map.put("equityCode", equityCode);
         map.put("addressList", addressList);
         map.put("remark", remark);
+        map.put("subjectUpdateTime",ts1);
+        map.put("subjectObjectId",gdCompanyID);
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/recycle", map);
         log.info(result);
@@ -350,7 +353,7 @@ public  class GoGuDeng implements GuDeng {
      * @return
      */
     public String GDAccountDestroy(String contractAddress, String clientNo,String shareholderClosingDate,List<Map> shareholderClosingCertificate,
-                                   String fundClosingDate,List<Map> fundClosingCertificate){
+                                   String fundClosingDate,List<Map> fundClosingCertificate,String name,String number){
         Map<String, Object> map = new HashMap<>();
         map.put("contractAddress", contractAddress);
         map.put("clientNo", clientNo);
@@ -358,6 +361,8 @@ public  class GoGuDeng implements GuDeng {
         map.put("shareholderClosingCertificate", shareholderClosingCertificate);
         map.put("fundClosingDate", fundClosingDate);
         map.put("fundClosingCertificate", fundClosingCertificate);
+        map.put("name",name);
+        map.put("number",number);
 
         String result = PostTest.postMethod(SDKADD + "/equity/account/destroy", map);
         log.info(result);

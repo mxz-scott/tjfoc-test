@@ -126,24 +126,25 @@ public class GDV2_SceneTest_DestroyAccount {
     public void destroyAccWitContractAddrSpecChar()throws Exception{
         String clientNo = "spec" + Random(10);
         uf.createAcc(clientNo,true);
-
-        String response = gd.GDAccountDestroy("@",clientNo,date1,getListFileObj(),date2,getListFileObj());
+        String name = "销户代理人姓名";
+        String number = "销户代理人电话";
+        String response = gd.GDAccountDestroy("@",clientNo,date1,getListFileObj(),date2,getListFileObj(),name,number);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("查询账号信息失败",JSONObject.fromObject(response).getString("message"));
 
-        response = gd.GDAccountDestroy("#",clientNo,date1,getListFileObj(),date2,getListFileObj());
+        response = gd.GDAccountDestroy("#",clientNo,date1,getListFileObj(),date2,getListFileObj(),name,number);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("查询账号信息失败",JSONObject.fromObject(response).getString("message"));
 
-        response = gd.GDAccountDestroy("%",clientNo,date1,getListFileObj(),date2,getListFileObj());
+        response = gd.GDAccountDestroy("%",clientNo,date1,getListFileObj(),date2,getListFileObj(),name,number);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("查询账号信息失败",JSONObject.fromObject(response).getString("message"));
 
-        response = gd.GDAccountDestroy("_",clientNo,date1,getListFileObj(),date2,getListFileObj());
+        response = gd.GDAccountDestroy("_",clientNo,date1,getListFileObj(),date2,getListFileObj(),name,number);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("查询账号信息失败",JSONObject.fromObject(response).getString("message"));
 
-        response = gd.GDAccountDestroy("|",clientNo,date1,getListFileObj(),date2,getListFileObj());
+        response = gd.GDAccountDestroy("|",clientNo,date1,getListFileObj(),date2,getListFileObj(),name,number);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("查询账号信息失败",JSONObject.fromObject(response).getString("message"));
 

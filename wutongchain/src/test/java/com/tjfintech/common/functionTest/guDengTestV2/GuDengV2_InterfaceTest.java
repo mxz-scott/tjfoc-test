@@ -518,48 +518,50 @@ public class GuDengV2_InterfaceTest {
 
         log.info(" ************************ test contractAddress must ************************ ");
         String response = gd.GDAccountDestroy("",gdAccClientNo8,
-                date3,getListFileObj(),date3,getListFileObj());
+                date3,getListFileObj(),date3,getListFileObj(),"name5","num05");
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("无效的参数:Key: 'AccountDestroy.ContractAddress' Error:Field validation for 'ContractAddress' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test clientNo must ************************ ");
         response = gd.GDAccountDestroy(gdContractAddress,gdAccClientNo8,
-                "",getListFileObj(),date3,getListFileObj());
+                "",getListFileObj(),date3,getListFileObj(),"name5","num05");
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("无效的参数:Key: 'AccountDestroy.ShareholderClosingDate' Error:Field validation for 'ShareholderClosingDate' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test shareholderClosingDate must ************************ ");
         response = gd.GDAccountDestroy(gdContractAddress,gdAccClientNo8,
-                "",getListFileObj(),date3,getListFileObj());
+                "",getListFileObj(),date3,getListFileObj(),"name5","num05");
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("无效的参数:Key: 'AccountDestroy.ShareholderClosingDate' Error:Field validation for 'ShareholderClosingDate' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test shareholderClosingCertificate must ************************ ");
         response = gd.GDAccountDestroy(gdContractAddress,gdAccClientNo8,
-                date3,null,date3,getListFileObj());
+                date3,null,date3,getListFileObj(),"name5","num05");
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("无效的参数:Key: 'AccountDestroy.ShareholderClosingCertificate' Error:Field validation for 'ShareholderClosingCertificate' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test fundClosingDate must ************************ ");
         response = gd.GDAccountDestroy(gdContractAddress,gdAccClientNo8,
-                date3,getListFileObj(),"",getListFileObj());
+                date3,getListFileObj(),"",getListFileObj(),"name5","num05");
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("无效的参数:Key: 'AccountDestroy.FundClosingDate' Error:Field validation for 'FundClosingDate' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test fundClosingCertificate must ************************ ");
         response = gd.GDAccountDestroy(gdContractAddress,gdAccClientNo8,
-                date3,getListFileObj(),date3,null);
+                date3,getListFileObj(),date3,null,"name5","num05");
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("无效的参数:Key: 'AccountDestroy.FundClosingCertificate' Error:Field validation for 'FundClosingCertificate' failed on the 'required' tag",
                 JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test all must ************************ ");
-        response = gd.GDAccountDestroy("","","",null,"",null);
+        response = gd.GDAccountDestroy("","","",
+                null,"",null,
+                "name5","num05");
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("无效的参数"));
 //        assertEquals(true,response.contains("Key: 'AccountDestroy.ClientNo' Error:Field validation for 'ClientNo' failed on the 'required' tag"));

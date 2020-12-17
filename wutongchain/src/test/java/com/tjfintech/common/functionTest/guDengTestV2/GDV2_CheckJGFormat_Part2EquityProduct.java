@@ -669,7 +669,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         eqProd.put("content",gdCF.constructContentTreeMap(prodType, gdEquityCode, newEqProdVer, "update", String.valueOf(ts3)));
         log.info("检查产品存证信息内容与传入一致\n" + eqProd.toString() + "\n" + getProInfo.toString());
         bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(eqProd, prodType)), replaceCertain(getProInfo.toString()));
-//        assertEquals("检查增发产品是否一致" ,true,bSame);
+        assertEquals("检查增发产品是否一致" ,true,bSame);
         log.info("检查增发产品是否一致:" + bSame);
 
 
@@ -677,16 +677,27 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         txInfo.put("content",gdCF.constructContentTreeMap(txrpType, txObjId, "0", "create", String.valueOf(ts4)));
         Map getTxRpInfo = gdCF.constructJGDataFromStr(conJGFileName(txObjId, "0"), txrpType, "");
         bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(txInfo,txrpType)),replaceCertain(getTxRpInfo.toString()));
-//        assertEquals("检查增发交易报告数据是否一致" ,true,bSame);
+        assertEquals("检查增发交易报告数据是否一致" ,true,bSame);
         log.info("检查增发交易报告数据是否一致:" + bSame);
+
+
+        query2 = gd.GDObjectQueryByVer(gdCompanyID,-1);
+        int totalMembers = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject("body"
+        ).getJSONObject("subject_information").getJSONObject("organization_subject_information"
+        ).getJSONObject("basic_information_of_enterprise").getJSONObject("basic_information_description"
+        ).getInt("subject_shareholders_number");
 
         Map enSub = gdBF.init01EnterpriseSubjectInfo();
         String subObjId = gdCompanyID;
         String subVer = gdCF.getObjectLatestVer(subObjId);
+
+        //更新股东数量 非用户传入的数据 而是依据前面转让给新账户后的股东数
+        enSub.put("subject_shareholders_number",totalMembers);
+
         enSub.put("content",gdCF.constructContentTreeMap(subjectType, subObjId, subVer, "update", String.valueOf(ts1)));
-        Map getEnSubInfo = gdCF.constructJGDataFromStr(conJGFileName(subObjId, subVer), subjectType, "");
+        Map getEnSubInfo = gdCF.constructJGDataFromStr(conJGFileName(subObjId, subVer), subjectType, "1");
         bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(enSub,subjectType)),replaceCertain(getEnSubInfo.toString()));
-//        assertEquals("检查增发交易报告数据是否一致" ,true,bSame);
+        assertEquals("检查增发交易报告数据是否一致" ,true,bSame);
         log.info("检查增发交易报告数据是否一致:" + bSame);
 
         log.info("================================检查存证数据格式化《结束》================================");
@@ -1111,7 +1122,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         enSub.put("content",gdCF.constructContentTreeMap(subjectType, subObjId, subVer, "update", String.valueOf(ts1)));
         Map getEnSubInfo = gdCF.constructJGDataFromStr(conJGFileName(subObjId, subVer), subjectType, "1");
         bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(enSub,subjectType)),replaceCertain(getEnSubInfo.toString()));
-        assertEquals("检查增发交易报告数据是否一致" ,true,bSame);
+        assertEquals("检查回收主体数据是否一致" ,true,bSame);
         log.info("================================检查存证数据格式化《结束》================================");
 
 
@@ -1203,9 +1214,6 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
                             ).getJSONObject("basic_information_of_enterprise").getJSONObject("basic_information_description"
                             ).getInt("subject_shareholders_number");
 
-        regNo = "Eq" + "recylce2" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
-
         List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,100,0,shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,100,0, shareList2);
@@ -1256,7 +1264,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         enSub.put("content",gdCF.constructContentTreeMap(subjectType, subObjId, subVer, "update", String.valueOf(ts1)));
         Map getEnSubInfo = gdCF.constructJGDataFromStr(conJGFileName(subObjId, subVer), subjectType, "1");
         bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(enSub,subjectType)),replaceCertain(getEnSubInfo.toString()));
-        assertEquals("检查增发交易报告数据是否一致" ,true,bSame);
+        assertEquals("检查增发主体数据是否一致" ,true,bSame);
 
         log.info("================================检查存证数据格式化《结束》================================");
 
@@ -1403,7 +1411,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
             log.info("检查登记存证信息内容与传入一致\n" + regInfoInput.toString() + "\n" + getRegInfo.toString());
             bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(regInfoInput,regType)),replaceCertain(getRegInfo.toString()));
-//            assertEquals(tempObjId + "检查发行登记报告数据是否一致" ,true,bSame);
+            assertEquals(tempObjId + "检查发行登记报告数据是否一致" ,true,bSame);
         }
         log.info("检查场内转板存证产品格式化及信息内容与传入一致");
         String oldProdVer = gdCF.getObjectLatestVer(oldEquityCode);
@@ -1417,7 +1425,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         eqProd.put("content",gdCF.constructContentTreeMap(prodType, oldEquityCode, oldProdVer, "delete", String.valueOf(ts8)));
         log.info("检查转板前产品存证信息内容与传入一致\n" + eqProd.toString() + "\n" + getOldProInfo.toString());
         bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(eqProd, prodType)), replaceCertain(getOldProInfo.toString()));
-//        assertEquals("检查增发产品是否一致" ,true,bSame);
+        assertEquals("检查增发产品是否一致" ,true,bSame);
 
         product_issuer_subject_ref = gdCompanyID;
         eqProd.put("product_code",newEquityCode);
@@ -1501,7 +1509,8 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         String cltNo = gdAccClientNo10;
         int gdClient = Integer.parseInt(gdCF.getObjectLatestVer(cltNo));//获取当前开户主体最新版本信息
 
-        String response= gd.GDAccountDestroy(gdContractAddress,cltNo,date4,getListFileObj(),date4,getListFileObj());
+        String response= gd.GDAccountDestroy(gdContractAddress,cltNo,date4,getListFileObj(),date4,getListFileObj(),
+                "销户代理人姓名2","销户代理人电话2");
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 

@@ -189,7 +189,7 @@ public class UtilsClassGD {
         }
         return refInfoArray;
     }
-    public static String commNo = "010"; //存oss后会导致 db删除后挂牌会挂不上
+    public static String commNo = "011"; //存oss后会导致 db删除后挂牌会挂不上
     //主体
     public static String subject_investor_qualification_certifier_ref = "SIQCR" + commNo;// + UtilsClass.Random(8);
     //账户

@@ -434,7 +434,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
     }
 
     @Test
-    public void TC16_balanceCount() throws Exception {
+    public void TCN16_balanceCount() throws Exception {
         settleInfo = gdBF.init06SettleInfo();
         String response= gd.GDCapitalSettlement(settleInfo);
         net.sf.json.JSONObject jsonObject= net.sf.json.JSONObject.fromObject(response);
