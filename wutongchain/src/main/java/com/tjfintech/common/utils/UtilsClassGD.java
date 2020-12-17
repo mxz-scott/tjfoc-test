@@ -112,7 +112,7 @@ public class UtilsClassGD {
     public static long ts5 = 1513374000;
     public static long ts6 = 1513374000;
     public static long ts7 = 1513374000;
-    public static long ts8 = 1513374000;
+    public static long ts8 = 1888934400;
 
 
     public static String gdSchema = "Schema-v2.0.0-Alpha4.2.json" ;
@@ -189,7 +189,7 @@ public class UtilsClassGD {
         }
         return refInfoArray;
     }
-    public static String commNo = "011"; //存oss后会导致 db删除后挂牌会挂不上
+    public static String commNo = "011"; //存oss后会导致 db删除后挂牌会挂不上 1011
     //主体
     public static String subject_investor_qualification_certifier_ref = "SIQCR" + commNo;// + UtilsClass.Random(8);
     //账户

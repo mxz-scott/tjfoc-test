@@ -558,7 +558,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
 
 
     /***
-     * 增发给新的股东 * 2  增发带交易报告（0 发行融资）
+     * 增发给新的股东 * 2  增发带交易报告（交易报告类型为0 空） 不报送交易报告
      * @throws Exception
      */
     @Test
@@ -572,14 +572,19 @@ public class GDV2_CheckJGFormat_Part3SubjectChange {
         String eqCode = gdEquityCode;
         String reason = "股份分红";
 
-        regNo = "Eq" + "increase" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
+        String txObjId = "2increaseObj" + Random(5);
+
+        Map eqProd = gdBF.init03EquityProductInfo();
+        Map txInfo = gdBF.init04TxInfo();
+        txInfo.put("transaction_object_id",txObjId);
+//        register_transaction_ref = txObjId; //此处为发行融资 设置登记引用接口中的交易报告
+
+        log.info("发行主体版本  " + gdCF.getObjectLatestVer(gdCompanyID));
 
         List<Map> shareList = gdConstructShareList(gdAccount5,increaseAmount,0);
         List<Map> shareList4 = gdConstructShareList(gdAccount6,increaseAmount,0, shareList);
-        txInformation.put("transaction_type",0);
-        txInformation.put("transaction_original_owner_subject_ref",mapAccAddr.get(gdAccount5));
-        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, equityProductInfo,txInformation);
+
+        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, eqProd,txInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
