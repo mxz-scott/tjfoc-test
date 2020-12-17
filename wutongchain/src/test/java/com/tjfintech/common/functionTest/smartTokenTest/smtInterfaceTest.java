@@ -65,7 +65,7 @@ public class smtInterfaceTest {
         payList.clear();
         transferResp= st.SmartTransferReq(tokenType, payList, collList, "", "", "");
         assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
-        assertEquals(true,transferResp.contains("token list  invalid!"));
+        assertEquals(true,transferResp.contains("支出列表必须大于0项"));
 
         log.info("支出地址不存在");
         payList.clear();
@@ -87,7 +87,7 @@ public class smtInterfaceTest {
         collList.clear();
         transferResp= st.SmartTransferReq(tokenType, payList, collList, "", "", "");
         assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
-        assertEquals(true,transferResp.contains("token list  invalid!"));
+        assertEquals(true,transferResp.contains("收入列表必须大于0项"));
 
         log.info("收入地址不存在");
         collList.clear();

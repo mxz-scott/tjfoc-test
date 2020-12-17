@@ -98,12 +98,13 @@ public class smtMultiInvalidTest {
 
         //发行
         tokenType =  stc.beforeConfigIssueNewToken("200");
+        String newTokenType = "NEW_"+UtilsClass.Random(10);
 
         //转换
         String transferData = "ADDRESS1 向 MULITADD4 转账10个" + tokenType;
         List<Map> payList= stc.smartConstructTokenList(ADDRESS1, "test", "200",null);
         List<Map> collList= stc.smartConstructTokenList(MULITADD4,"test", "200",null);
-        String transferResp= stc.smartExchange(tokenType, payList, collList, "NEW_TB001","", transferData);
+        String transferResp= stc.smartExchange(tokenType, payList, collList, newTokenType,"", transferData);
 
         assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
@@ -111,7 +112,7 @@ public class smtMultiInvalidTest {
 
         log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
         stc.verifyAddressNoBalance(ADDRESS1, tokenType);
-        stc.verifyAddressHasBalance(MULITADD4, "NEW_TB001", "200");
+        stc.verifyAddressHasBalance(MULITADD4, newTokenType, "200");
 
 
     }
@@ -121,7 +122,7 @@ public class smtMultiInvalidTest {
      *
      */
     @Test
-    public void TC_transferSoloMulti() throws Exception {
+    public void TC_transferAmountMismatch() throws Exception {
 
         //发行
         tokenType =  stc.beforeConfigIssueNewToken("200");
