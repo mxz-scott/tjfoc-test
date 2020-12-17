@@ -130,6 +130,8 @@ public class UtilsClassGD {
     public static String minIOEP ="http://b2904236d6.zicp.vip:8098";
     public static String jgBucket = "my-oss-test";
 
+    public static Boolean bRegTxRef = false;
+
     public static  HashMap<String,String> refInfo = new HashMap<String,String>();
 
     //获取引用信息初始值放入数组

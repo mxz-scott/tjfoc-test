@@ -150,6 +150,8 @@ public  class GoGuDeng implements GuDeng {
         map.put("fromRegisterUpdateTime",ts5);
         map.put("toRegisterUpdateTime",ts5);
 
+        map.put("subjectObjectId",gdCompanyID);
+
         String result = PostTest.postMethod(SDKADD + "/equity/share/transfer", map);
         log.info(result);
         return result;

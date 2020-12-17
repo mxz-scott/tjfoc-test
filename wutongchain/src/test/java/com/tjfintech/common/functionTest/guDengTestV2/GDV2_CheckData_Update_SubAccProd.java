@@ -263,7 +263,7 @@ public class GDV2_CheckData_Update_SubAccProd {
 //
 //        String timeStampSub = gdCF.getTimeStampFromMap(getSubInfo, "subject_create_time");
 //        mapTemp.put("content",
-//                gdCF.constructContentMap(subjectType, gdCompanyID, "1", "create",
+//                gdCF.constructContentTreeMap(subjectType, gdCompanyID, "1", "create",
 //                        timeStampSub));
 //
 //
@@ -290,7 +290,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         Map getSubInfo = gdCF.constructJGDataFromStr(conJGFileName(gdCompanyID,newSubVer),subjectType,"1");
 
         //填充header content字段
-        mapTemp.put("content",gdCF.constructContentMap(subjectType,gdCompanyID,newSubVer,"update",String.valueOf(ts8)));
+        mapTemp.put("content",gdCF.constructContentTreeMap(subjectType,gdCompanyID,newSubVer,"update",String.valueOf(ts8)));
 
         assertEquals(String.valueOf(gdCpmIdOldVer + 2),newSubVer);
 
@@ -534,7 +534,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         Map enSubInfo = mapTemp;
 
         //填充header content 信息
-        enSubInfo.put("content",gdCF.constructContentMap(subjectType,cltNo,personSubVer,"update",String.valueOf(ts8)));
+        enSubInfo.put("content",gdCF.constructContentTreeMap(subjectType,cltNo,personSubVer,"update",String.valueOf(ts8)));
 
         assertEquals(String.valueOf(gdClient + 2),personSubVer);
 
@@ -738,7 +738,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         Map accSH = mapTemp;
 
         //填充header content 信息
-        accSH.put("content",gdCF.constructContentMap(accType,SHObjId,shAccVer,"update",String.valueOf(ts8)));
+        accSH.put("content",gdCF.constructContentTreeMap(accType,SHObjId,shAccVer,"update",String.valueOf(ts8)));
 
         assertEquals("确认主体版本无变更",String.valueOf(gdClient + 1),personSubVer);
 
@@ -974,7 +974,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         Map accFund = mapTemp;
 
         //填充header content 信息
-        accFund.put("content",gdCF.constructContentMap(accType,fundObjId,fundAccVer,"update",String.valueOf(ts8)));
+        accFund.put("content",gdCF.constructContentTreeMap(accType,fundObjId,fundAccVer,"update",String.valueOf(ts8)));
 
         assertEquals("确认主体版本无变更",String.valueOf(gdClient + 1),personSubVer);
 
@@ -1180,7 +1180,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         //填充header content字段
         //如果不是机构会员登记 则执行产品填充header content字段
         if(!type.equals("4")) {
-            mapProdComInfo.put("content",gdCF.constructContentMap(prodType, gdEquityCode, newEqProdVer, "update", String.valueOf(ts8)));
+            mapProdComInfo.put("content",gdCF.constructContentTreeMap(prodType, gdEquityCode, newEqProdVer, "update", String.valueOf(ts8)));
         }
 
         //产品发行主体引用设置为空场景 当前代码会自动补充发行主体对象标识
@@ -1268,7 +1268,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         //填充header content字段
         //如果不是机构会员登记 则执行产品填充header content字段
         if(!type.equals("4")) {
-            mapProdComInfo.put("content",gdCF.constructContentMap(prodType, gdEquityCode, newEqProdVer, "update", String.valueOf(ts8)));
+            mapProdComInfo.put("content",gdCF.constructContentTreeMap(prodType, gdEquityCode, newEqProdVer, "update", String.valueOf(ts8)));
         }
 
         //产品发行主体引用设置为空场景 当前代码会自动补充发行主体对象标识
@@ -1354,7 +1354,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         //填充header content字段
         //如果不是机构会员登记 则执行产品填充header content字段
         if(!type.equals("4")) {
-            mapProdComInfo.put("content",gdCF.constructContentMap(prodType, gdEquityCode, newEqProdVer, "update", String.valueOf(ts8)));
+            mapProdComInfo.put("content",gdCF.constructContentTreeMap(prodType, gdEquityCode, newEqProdVer, "update", String.valueOf(ts8)));
         }
 
         //产品发行主体引用设置为空场景 当前代码会自动补充发行主体对象标识

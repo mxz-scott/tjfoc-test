@@ -162,9 +162,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
 
         //填充header content 信息
-        enSubInfo.put("content",gdCF.constructContentMap(subjectType,cltNo,personSubVer,"create",String.valueOf(ts1)));
-        accFund.put("content",gdCF.constructContentMap(accType,fundObjId,fundAccVer,"create",String.valueOf(ts2)));
-        accSH.put("content",gdCF.constructContentMap(accType,SHObjId,shAccVer,"create",String.valueOf(ts2)));
+        enSubInfo.put("content",gdCF.constructContentTreeMap(subjectType,cltNo,personSubVer,"create",String.valueOf(ts1)));
+        accFund.put("content",gdCF.constructContentTreeMap(accType,fundObjId,fundAccVer,"create",String.valueOf(ts2)));
+        accSH.put("content",gdCF.constructContentTreeMap(accType,SHObjId,shAccVer,"create",String.valueOf(ts2)));
 
         assertEquals(String.valueOf(gdClient + 1),personSubVer);
 
@@ -304,9 +304,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
 
         //填充header content 信息
-        enSubInfo.put("content",gdCF.constructContentMap(subjectType,cltNo,personSubVer,"create",String.valueOf(ts1)));
-        accFund.put("content",gdCF.constructContentMap(accType,fundObjId,fundAccVer,"create",String.valueOf(ts2)));
-        accSH.put("content",gdCF.constructContentMap(accType,SHObjId,shAccVer,"create",String.valueOf(ts2)));
+        enSubInfo.put("content",gdCF.constructContentTreeMap(subjectType,cltNo,personSubVer,"create",String.valueOf(ts1)));
+        accFund.put("content",gdCF.constructContentTreeMap(accType,fundObjId,fundAccVer,"create",String.valueOf(ts2)));
+        accSH.put("content",gdCF.constructContentTreeMap(accType,SHObjId,shAccVer,"create",String.valueOf(ts2)));
 
         assertEquals(String.valueOf(gdClient + 1),personSubVer);
 
@@ -419,7 +419,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         Map getDisclosureInfo = gdCF.constructJGDataFromStr(objfileName,infoType,"");
 
         //填充header content字段
-        disclosureInfo.put("content",gdCF.constructContentMap(infoType,newDisObjId,newDisObjIdVer,"create",String.valueOf(ts7)));
+        disclosureInfo.put("content",gdCF.constructContentTreeMap(infoType,newDisObjId,newDisObjIdVer,"create",String.valueOf(ts7)));
 
 
         log.info("检查主体存证信息内容与传入一致\n" + getDisclosureInfo.toString() + "\n" + getDisclosureInfo.toString());
@@ -446,7 +446,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
 
         //设置各个主体版本变量
-        String objPrefix = "fund_";
+        String objPrefix = "uri";
 
         //获取（从交易详情中）链上mini url的存证信息并检查是否包含uri信息 通过前缀信息获取信披对象id
         String storeData = com.alibaba.fastjson.JSONObject.parseObject(txDetail).getJSONObject(
@@ -461,19 +461,20 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String objVerTemp =  objURI.getString("uri").trim();
 
         String newSettleObjId = "";
-        newSettleObjId = objVerTemp.substring(0,objVerTemp.lastIndexOf("/")-1);
+        newSettleObjId = objVerTemp.substring(0,objVerTemp.lastIndexOf("/"));
 
         String newDisObjIdVer = objVerTemp.substring(objVerTemp.lastIndexOf("/") + 1);//gdCF.getObjectLatestVer(newDisObjId);
         log.info(objVerTemp + " " + newDisObjIdVer);
 
         String objfileName = conJGFileName(newSettleObjId,newDisObjIdVer);
 
+
         //直接从minio上通过对象标识+版本号的方式获取指定对象文件
         Map getSettleInfo = gdCF.constructJGDataFromStr(objfileName,settleType,"");
 
 
         //填充header content字段
-        settleInfo.put("content",gdCF.constructContentMap(settleType,newSettleObjId,newDisObjIdVer,"create",String.valueOf(ts6)));
+        settleInfo.put("content",gdCF.constructContentTreeMap(settleType,newSettleObjId,newDisObjIdVer,"create",String.valueOf(ts6)));
 
 
         log.info("检查主体存证信息内容与传入一致\n" + settleInfo.toString() + "\n" + getSettleInfo.toString());
@@ -558,10 +559,10 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         if(!type.equals("4")) getProInfo = gdCF.constructJGDataFromStr(conJGFileName(gdEquityCode, newEqProdVer), prodType, type);
 
         //填充header content字段
-        enSubInfo.put("content",gdCF.constructContentMap(subjectType,gdCompanyID,newSubVer,"create",String.valueOf(ts1)));
+        enSubInfo.put("content",gdCF.constructContentTreeMap(subjectType,gdCompanyID,newSubVer,"create",String.valueOf(ts1)));
         //如果不是机构会员登记 则执行产品填充header content字段
         if(!type.equals("4")) {
-            prodInfo.put("content",gdCF.constructContentMap(prodType, gdEquityCode, newEqProdVer, "create", String.valueOf(ts3)));
+            prodInfo.put("content",gdCF.constructContentTreeMap(prodType, gdEquityCode, newEqProdVer, "create", String.valueOf(ts3)));
         }
 
         //产品发行主体引用设置为空场景 当前代码会自动补充发行主体对象标识
@@ -645,7 +646,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         Map getSettleInfo = gdCF.constructJGDataFromStr(objfileName,type,"");
 
         //填充header content字段
-        settleInfo.put("content",gdCF.constructContentMap(type,newObjId,newObjIdVer,"create",timeStamp));
+        settleInfo.put("content",gdCF.constructContentTreeMap(type,newObjId,newObjIdVer,"create",timeStamp));
 
 
         log.info("检查主体存证信息内容与传入一致\n" + mapObjParam.toString() + "\n" + getSettleInfo.toString());

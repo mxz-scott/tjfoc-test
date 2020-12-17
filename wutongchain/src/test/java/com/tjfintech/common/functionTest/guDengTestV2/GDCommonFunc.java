@@ -996,7 +996,7 @@ public class GDCommonFunc {
         key = "leading_member_information";getSubjectInfo.put(key,objLMI.getString(key));
 
         //填充header content字段
-        key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+        addContent(getSubjectInfo,jobj2);
 
         return getSubjectInfo;
     }
@@ -1049,8 +1049,10 @@ public class GDCommonFunc {
         key = "subject_province";                           getSubjectInfo.put(key,objPersonSubBase.getString(key));
         key = "subject_city";                               getSubjectInfo.put(key,objPersonSubBase.getString(key));
 
-        //填充header content字段
-        key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+//        //填充header content字段
+//        key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+
+        addContent(getSubjectInfo,jobj2);
 
         return getSubjectInfo;
     }
@@ -1110,7 +1112,7 @@ public class GDCommonFunc {
         key = "account_associated_account_ref";       getSubjectInfo.put(key,objAccRela.getString(key));
 
         //填充header content字段
-        key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+         addContent(getSubjectInfo,jobj2);
 
         return getSubjectInfo;
     }
@@ -1335,7 +1337,7 @@ public class GDCommonFunc {
         key = "product_escrow_deregistration_remarks";getSubjectInfo.put(key,objProdEscrow.getString(key));
 
         //填充header content字段
-        key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+         addContent(getSubjectInfo,jobj2);
 
         return getSubjectInfo;
     }
@@ -1416,9 +1418,18 @@ public class GDCommonFunc {
                 jobj2.getJSONObject("body").getJSONObject("transaction_report_information").getJSONArray(key).toJSONString(), Map.class));
 
         //填充header content字段
-        key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+         addContent(getSubjectInfo,jobj2);
 
         return getSubjectInfo;
+    }
+
+    public Map addContent(Map mapSrc,com.alibaba.fastjson.JSONObject jobj2){
+        //填充header content字段
+        TreeMap contentMap = new TreeMap(
+                com.alibaba.fastjson.JSONObject.toJavaObject(
+                        jobj2.getJSONObject("header").getJSONObject("content"), Map.class));
+        key = "content";mapSrc.put(key,contentMap);
+        return mapSrc;
     }
 
 
@@ -1514,7 +1525,7 @@ public class GDCommonFunc {
         key = "fund_investors";getSubjectInfo.put(key,objRollRecords.getString(key));
 
         //填充header content字段
-        key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+         addContent(getSubjectInfo,jobj2);
         return getSubjectInfo;
     }
 
@@ -1557,7 +1568,7 @@ public class GDCommonFunc {
         key = "settlement_in_account_balance_after_transfer";       getSubjectInfo.put(key,objIn.getString(key));
 
         //填充header content字段
-        key = "content";getSubjectInfo.put(key,jobj2.getJSONObject("header").getString(key));
+         addContent(getSubjectInfo,jobj2);
 
         return getSubjectInfo;
     }
@@ -1771,6 +1782,26 @@ public class GDCommonFunc {
         return tempMap;
     }
 
+    public TreeMap constructContentTreeMap(String...valueList){
+        TreeMap tempMap = new TreeMap();
+        String[] checkKey = new String[]{"type","object_id","version","operation","timestamp"};
+
+        for(int i =0;i<valueList.length;i++){
+            String temp = valueList[i];
+            log.info("temp **** " + temp);
+            if(checkKey[i].equals( "version")) {
+                tempMap.put(checkKey[i],Integer.valueOf(temp));
+            }else if(checkKey[i].equals( "timestamp")) {
+                tempMap.put(checkKey[i], Long.valueOf(temp));
+            }else {
+                tempMap.put(checkKey[i], temp);
+            }
+        }
+
+
+        return tempMap;
+    }
+
     public String getTimeStampFromMap(Map objMap,String timeKeyWord)throws Exception{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         long dt = sdf.parse(objMap.get(timeKeyWord).toString()).getTime()/1000;
@@ -1783,13 +1814,13 @@ public class GDCommonFunc {
         String key = "";
         switch (type){
             case "subject":
-                key = "subject_investor_qualification_certifier_ref=" + subject_investor_qualification_certifier_ref;
+                key = "=" + subject_investor_qualification_certifier_ref;
                 tempStr = tempStr.replaceAll(key,key + ver[0]);
                 break;
             case "account":
-                key = "account_subject_ref=" + account_subject_ref; tempStr = tempStr.replaceAll(key,key + ver[0]);
+                key = "=" + account_subject_ref; tempStr = tempStr.replaceAll(key,key + ver[0]);
                 key = account_depository_ref; tempStr = tempStr.replaceAll(key,key + ver[1]);
-                key = "account_associated_account_ref=" + account_associated_account_ref; tempStr = tempStr.replaceAll(key,key + ver[2]);
+                key = "=" + account_associated_account_ref; tempStr = tempStr.replaceAll(key,key + ver[2]);
                 break;
 //            case "accountAcc":
 //                key = account_subject_ref; tempStr = tempStr.replaceAll(key,key + ver[0]);
@@ -2043,6 +2074,7 @@ public class GDCommonFunc {
         String keyWordGetUriStore = mapKeyWod.get("hashKeyWord").toString();
         String objType = mapKeyWod.get("objType").toString();
         String headerType = mapKeyWod.get("headerType").toString();
+        String subProdSubType = mapKeyWod.get("subProdSubType").toString();
 
         Map uriInfo = getJGURIStoreHash(tempTxId,conJGFileName(keyWordGetUriStore,""),1);
 
@@ -2053,7 +2085,7 @@ public class GDCommonFunc {
         assertEquals(true,bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
 
         //直接从minio上获取报送数据文件信息
-        Map getRegInfo = constructJGDataFromStr(storeFileName,regType,"");
+        Map getRegInfo = constructJGDataFromStr(storeFileName,headerType,"");
 
         switch (objType) {
             case "subject":
