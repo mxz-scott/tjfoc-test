@@ -191,13 +191,14 @@ public class smtMultiInvalidTest {
 
     }
     /**
-     *增发资产【在想一下】
+     *增发资产限制后，增发失败
      *
      */
     @Test
-    public void TC_reissed()throws Exception {
+    public void TC_reissedFalsetest()throws Exception {
 
 
+        String tokenType = "TB_" + UtilsClass.Random(10);
         double timeStampNow = System.currentTimeMillis();
         BigDecimal expiredDate = new BigDecimal(timeStampNow + 12356789);
         BigDecimal activeDate = new BigDecimal(timeStampNow );
@@ -205,7 +206,7 @@ public class smtMultiInvalidTest {
         List<Map> toList = stc.smartConstructTokenList(ADDRESS1, "test", "10",null);
         //第一次发行
         //发行申请
-        String IssueApplyResp9= st.SmartIssueTokenReq(contractAddress,"TB_1114",expiredDate,toList,activeDate,true ,0,"");
+        String IssueApplyResp9= st.SmartIssueTokenReq(contractAddress,tokenType,expiredDate,toList,activeDate,false ,0,"");
         String sigMsg1 = JSONObject.fromObject(IssueApplyResp9).getJSONObject("data").getString("sigMsg");
         //发行审核
         String tempSM3Hash = certTool.getSm3Hash(PEER4IP, sigMsg1);
@@ -216,11 +217,11 @@ public class smtMultiInvalidTest {
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         // 验证第一次发行查询账户余额
         log.info("查询发行的账户余额");
-        stc.verifyAddressHasBalance(ADDRESS1, "TB_1114", "10");
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "10");
         //第二次发行
         toList.clear();
-        List<Map> toList1 = stc.smartConstructTokenList(ADDRESS1, "test1", "20",null);
-        String IssueApplyResp10= st.SmartIssueTokenReq(contractAddress,"TB_1114",expiredDate,toList1,activeDate,false ,0,"");
+        List<Map> toList1 = stc.smartConstructTokenList(ADDRESS1, "test", "30",null);
+        String IssueApplyResp10= st.SmartIssueTokenReq(contractAddress,tokenType,expiredDate,toList1,activeDate,false ,0,"");
         String sigMsg2= JSONObject.fromObject(IssueApplyResp10).getJSONObject("data").getString("sigMsg");
         String tempSM3Hash1= certTool.getSm3Hash(PEER4IP, sigMsg2);
         String cryptMsg1 = certTool.sign(PEER4IP, PRIKEY1, "", tempSM3Hash1, "hex");
@@ -230,7 +231,8 @@ public class smtMultiInvalidTest {
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         //验证第二次发行后账户余额
         log.info("查询发行的账户余额");
-        stc.verifyAddressHasBalance(ADDRESS1, "TB_1114", "20");
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "10");
+
     }
 
 

@@ -108,7 +108,7 @@ public class smtInterfaceTest {
     }
 
 
-    //发行申请必填字段验证及有效期最大流转层级数值的增发验证
+
 
     @Test
     public void smtStokenApproveInterfaceTest()throws Exception{
@@ -236,36 +236,42 @@ public class smtInterfaceTest {
         assertEquals(true,IssueApplyResp7.contains("数字资产有效期时间戳必须大于数字资产激活日期"));
 
 
-        log.info("不支持增发");
-        //第一次发行
-        //发行申请
-        String IssueApplyResp9= st.SmartIssueTokenReq(contractAddress,"TB_1113",expiredDate,toList,activeDate,false ,0,"");
-        String sigMsg1 = JSONObject.fromObject(IssueApplyResp9).getJSONObject("data").getString("sigMsg");
-        //发行审核
-        String tempSM3Hash = certTool.getSm3Hash(PEER4IP, sigMsg1);
-        String cryptMsg = certTool.sign(PEER4IP, PRIKEY1, "", tempSM3Hash, "hex");
-        String approveResp = st.SmartIssueTokenApprove(sigMsg1, cryptMsg, PUBKEY1);
-        assertEquals("200", JSONObject.fromObject( approveResp).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash( approveResp, utilsClass.sdkGetTxHashType21),
-                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-        // 验证第一次发行查询账户余额
-        log.info("查询发行的账户余额");
-        stc.verifyAddressHasBalance(ADDRESS1, "TB_1113", "10");
+    }
 
-        //第二次发行
-        toList.clear();
-        List<Map> toList1 = stc.smartConstructTokenList(ADDRESS1, "test", "20",null);
-        String IssueApplyResp10= st.SmartIssueTokenReq(contractAddress,"TB_1113",expiredDate,toList1,activeDate,false ,0,"");
-        String sigMsg2= JSONObject.fromObject(IssueApplyResp10).getJSONObject("data").getString("sigMsg");
-        String tempSM3Hash1= certTool.getSm3Hash(PEER4IP, sigMsg2);
-        String cryptMsg1 = certTool.sign(PEER4IP, PRIKEY1, "", tempSM3Hash1, "hex");
-        String approveResp1= st.SmartIssueTokenApprove(sigMsg2, cryptMsg1, PUBKEY1);
-        assertEquals("200", JSONObject.fromObject( approveResp1).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash( approveResp1, utilsClass.sdkGetTxHashType21),
-                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-        //验证第二次发行后账户余额应该不变【因为链上不会报错，所以这边验证余额】
-        log.info("查询发行的账户余额");
-        stc.verifyAddressHasBalance(ADDRESS1, "TB_1113", "10");
+    //发行审核必填字段验证
+    @Test
+    public void smtissueapproveTest()throws Exception{
+        log.info("sigCrypt为空");
+
+        String issueapprove = st.SmartIssueTokenApprove("0","0","");
+        assertEquals("400",JSONObject.fromObject(issueapprove).getString("state"));
+        assertEquals(true,issueapprove.contains("数字资产类型为必填字段"));
+
+        log.info("sigCrypt为空");
+
+        String issueapprove1 = st.SmartIssueTokenApprove("0","0","");
+        assertEquals("400",JSONObject.fromObject(issueapprove).getString("state"));
+        assertEquals(true,issueapprove.contains("数字资产类型为必填字段"));
+
+    }
+
+
+    //冻结资产必填字段验证
+    @Test
+    public void smtfreezeTest()throws Exception{
+        log.info("tokentype 为空");
+        String freezeResp = st.SmartFreeze("","");
+        assertEquals("400",JSONObject.fromObject(freezeResp).getString("state"));
+        assertEquals(true,freezeResp.contains("数字资产类型为必填字段"));
+
+    }
+    //解冻资产必填字段验证
+    @Test
+    public void smtrecoverTest()throws Exception{
+        log.info("tokentype 为空");
+        String freezeResp = st.SmartRecover("","");
+        assertEquals("400",JSONObject.fromObject(freezeResp).getString("state"));
+        assertEquals(true,freezeResp.contains("数字资产类型为必填字段"));
 
     }
 
@@ -277,4 +283,4 @@ public class smtInterfaceTest {
 
 
 
-    }
+}

@@ -253,10 +253,100 @@ public class smtMultiTest {
 
         log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
         stc.verifyAddressHasBalance(ADDRESS1, tokenType, "10.15");
-        String queryBalance = st.SmartGetBalanceByAddr(MULITADD4, tokenType);
-        assertEquals("200", JSONObject.fromObject(queryBalance).getString("state"));
-        assertEquals("null", JSONObject.fromObject(queryBalance).getString("data"));
+        stc.verifyAddressNoBalance(MULITADD4, tokenType);
+
     }
+    /**
+     *增发资产
+     *
+     */
+
+    @Test
+    public void TC_reissedTruetest()throws Exception {
+
+        String tokenType = "TB_" + UtilsClass.Random(10);
+        double timeStampNow = System.currentTimeMillis();
+        BigDecimal expiredDate = new BigDecimal(timeStampNow + 12356789);
+        BigDecimal activeDate = new BigDecimal(timeStampNow );
+        String contractAddress=smartAccoutContractAddress;
+        List<Map> toList = stc.smartConstructTokenList(ADDRESS1, "test", "10",null);
+        //第一次发行
+        //发行申请
+        String IssueApplyResp9= st.SmartIssueTokenReq(contractAddress,tokenType,expiredDate,toList,activeDate,true ,0,"");
+        String sigMsg1 = JSONObject.fromObject(IssueApplyResp9).getJSONObject("data").getString("sigMsg");
+        //发行审核
+        String tempSM3Hash = certTool.getSm3Hash(PEER4IP, sigMsg1);
+        String cryptMsg = certTool.sign(PEER4IP, PRIKEY1, "", tempSM3Hash, "hex");
+        String approveResp = st.SmartIssueTokenApprove(sigMsg1, cryptMsg, PUBKEY1);
+        assertEquals("200", JSONObject.fromObject( approveResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash( approveResp, utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        // 验证第一次发行查询账户余额
+        log.info("查询发行的账户余额");
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "10");
+        //第二次发行
+        toList.clear();
+        List<Map> toList1 = stc.smartConstructTokenList(ADDRESS1, "test", "30",null);
+        String IssueApplyResp10= st.SmartIssueTokenReq(contractAddress,tokenType,expiredDate,toList1,activeDate,false ,0,"");
+        String sigMsg2= JSONObject.fromObject(IssueApplyResp10).getJSONObject("data").getString("sigMsg");
+        String tempSM3Hash1= certTool.getSm3Hash(PEER4IP, sigMsg2);
+        String cryptMsg1 = certTool.sign(PEER4IP, PRIKEY1, "", tempSM3Hash1, "hex");
+        String approveResp1= st.SmartIssueTokenApprove(sigMsg2, cryptMsg1, PUBKEY1);
+        assertEquals("200", JSONObject.fromObject( approveResp1).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash( approveResp1, utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        //验证第二次发行后账户余额
+        log.info("查询发行的账户余额");
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "40");
+    }
+
+    /**
+     *发行 - 冻结 - 转让 - 解冻 - 回收
+     *
+     */
+    @Test
+    public void TC_recovertransfer()throws Exception {
+
+        String transferData = "ADDRESS1 向 MULITADD4 转账10个" + tokenType;
+        List<Map> payList= stc.smartConstructTokenList(ADDRESS1, "test", "10",null);
+        List<Map> collList= stc.smartConstructTokenList(MULITADD4,"test", "10",null);
+
+        // 发行
+        tokenType =  stc.beforeConfigIssueNewToken("100.75");
+        //冻结
+        String freezeResp = st.SmartFreeze(tokenType,"");
+        assertEquals("200",JSONObject.fromObject(freezeResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        //转账
+        String transferResp= stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
+        assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+        log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "100.75");
+        stc.verifyAddressNoBalance(MULITADD4, tokenType);
+        //解冻
+        String recoverResp = st.SmartRecover(tokenType,"");
+        assertEquals("200",JSONObject.fromObject(recoverResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+        String transferResp1= stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
+        assertEquals("200",JSONObject.fromObject(transferResp1).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+        log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "90.75");
+        stc.verifyAddressHasBalance(MULITADD4, tokenType, "10");
+
+
+
+    }
+
+
 
 
 
