@@ -590,6 +590,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
     }
 
+    //交易报告填写且类型为1 发行融资 即需要报送交易报告
     @Test
     public void TC09_shareIncrease() throws Exception {
 
@@ -1362,7 +1363,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         registerInfo = gdBF.init05RegInfo();
 
         Map eqProd = gdBF.init03EquityProductInfo();
-        eqProd.put("product_object_id",newEquityCode);
+        eqProd.put("product_object_id",oldEquityCode);//20201217 yu
 
         String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,regList,eqProd,null);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -1414,10 +1415,11 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
             assertEquals(tempObjId + "检查发行登记报告数据是否一致" ,true,bSame);
         }
         log.info("检查场内转板存证产品格式化及信息内容与传入一致");
-        String oldProdVer = gdCF.getObjectLatestVer(oldEquityCode);
-        String newEqProdVer = gdCF.getObjectLatestVer(newEquityCode);
+//        String oldProdVer = gdCF.getObjectLatestVer(oldEquityCode);
+        String oldProdVer = String.valueOf(Integer.valueOf(gdCF.getObjectLatestVer(oldEquityCode))-1);
+        String newEqProdVer = gdCF.getObjectLatestVer(oldEquityCode);
 
-//        assertEquals("0",newEqProdVer);
+        assertEquals("2",newEqProdVer);
 
         //检查历史
         Map getOldProInfo = gdCF.constructJGDataFromStr(conJGFileName(oldEquityCode, oldProdVer), prodType, "1");
@@ -1430,8 +1432,8 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         product_issuer_subject_ref = gdCompanyID;
         eqProd.put("product_code",newEquityCode);
         //检查新产品
-        Map getNewProInfo = gdCF.constructJGDataFromStr(conJGFileName(newEquityCode, newEqProdVer), prodType, "1");
-        eqProd.put("content",gdCF.constructContentTreeMap(prodType, newEquityCode, newEqProdVer, "create", String.valueOf(ts3)));
+        Map getNewProInfo = gdCF.constructJGDataFromStr(conJGFileName(oldEquityCode, newEqProdVer), prodType, "1");
+        eqProd.put("content",gdCF.constructContentTreeMap(prodType, oldEquityCode, newEqProdVer, "create", String.valueOf(ts3)));
         log.info("检查转板后产品存证信息内容与传入一致\n" + eqProd.toString() + "\n" + getNewProInfo.toString());
         bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(eqProd, prodType)), replaceCertain(getNewProInfo.toString()));
         assertEquals("检查增发产品是否一致" ,true,bSame);
@@ -1508,9 +1510,10 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         log.info("销户前查询个人主体信息");
         String cltNo = gdAccClientNo10;
         int gdClient = Integer.parseInt(gdCF.getObjectLatestVer(cltNo));//获取当前开户主体最新版本信息
-
+        String name = "销户代理人姓名2";
+        String number = "销户代理人电话2";
         String response= gd.GDAccountDestroy(gdContractAddress,cltNo,date4,getListFileObj(),date4,getListFileObj(),
-                "销户代理人姓名2","销户代理人电话2");
+                name,number);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -1550,6 +1553,13 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         Map accFund = fundAccountInfo;
         Map accSH = shAccountInfo;
 
+        accFund.put("account_closing_agent_name",name);
+        accFund.put("account_closing_agent_contact_number",number);
+        accFund.put("account_closing_date",date4);
+
+        accSH.put("account_closing_agent_name",name);
+        accSH.put("account_closing_agent_contact_number",number);
+        accSH.put("account_closing_date",date4);
 
         accFund.put("content",gdCF.constructContentTreeMap(accType,fundObjId,fundAccVer,"delete",String.valueOf(ts8)));
         accSH.put("content",gdCF.constructContentTreeMap(accType,SHObjId,shAccVer,"delete",String.valueOf(ts8)));
@@ -1561,12 +1571,12 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         account_subject_ref = cltNo;
 
         log.info("检查股权账户存证信息内容与传入一致\n" + accSH.toString() + "\n" + getSHAccInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(accSH,accType)),replaceCertain(getSHAccInfo.toString()));
-
+        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(accSH,accType)),replaceCertain(getSHAccInfo.toString()));
+        assertEquals("检查销户后股权账户数据",true,bSame);
         account_associated_account_ref = SHObjId;
 
         log.info("检查资金账户存证信息内容与传入一致\n" + accFund.toString() + "\n" + getFundAccInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(accFund,accType)),replaceCertain(getFundAccInfo.toString()));
-
+        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(accFund,accType)),replaceCertain(getFundAccInfo.toString()));
+        assertEquals("检查销户后股权账户数据",true,bSame);
     }
 }

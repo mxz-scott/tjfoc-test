@@ -8,11 +8,13 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.*;
@@ -46,6 +48,51 @@ public class SmartTokenCommon {
         verifyAddressHasBalance(ADDRESS1, tokenType, amount);
 
         return tokenType;
+
+
+    }
+
+    //MAXlevel流转层级限制
+    public String MAXlevelbeforeConfigIssueNewToken(String amount) throws Exception {
+
+
+        log.info("发行数字资产");
+        tokenType = "TB_" + UtilsClass.Random(10);
+        double timeStampNow = System.currentTimeMillis();
+        BigDecimal deadline = new BigDecimal(timeStampNow + 12356789);
+        List<Map> list = smartConstructTokenList(ADDRESS1, "test", amount, null);
+
+        String issueResp = smartIssueToken(tokenType, deadline, list, true, 2, "");
+        assertEquals("200", JSONObject.fromObject(issueResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(issueResp, utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+
+        log.info("验证数字资产余额");
+        verifyAddressHasBalance(ADDRESS1, tokenType, amount);
+
+        return tokenType;
+
+    }
+
+    //更改资产有效期时间戳验证资产过期情况
+    public String expiredDatebeforeConfigIssueNewToken(String amount) throws Exception {
+
+
+        log.info("发行数字资产");
+        tokenType = "TB_" + UtilsClass.Random(10);
+        double timeStampNow = System.currentTimeMillis();
+        BigDecimal deadline = new BigDecimal(timeStampNow + 60000);
+        List<Map> list = smartConstructTokenList(ADDRESS1, "test", amount, null);
+
+        String issueResp = smartIssueToken(tokenType, deadline, list, true, 0, "");
+        assertEquals("200", JSONObject.fromObject(issueResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(issueResp, utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+
+        log.info("验证数字资产余额");
+        verifyAddressHasBalance(ADDRESS1, tokenType, amount);
+
+        return tokenType;
     }
 
     /**
@@ -54,10 +101,10 @@ public class SmartTokenCommon {
      * @param toAddr
      * @param subType
      * @param amount
-     * @param list   之前的数组
+     * @param list    之前的数组
      * @return
      */
-    public List<Map> smartConstructTokenList(String toAddr, String subType, String amount, List<Map> list ) {
+    public List<Map> smartConstructTokenList(String toAddr, String subType, String amount, List<Map> list) {
 
         Map<String, Object> amountMap = new HashMap<>();
         amountMap.put("address", toAddr);
@@ -66,12 +113,12 @@ public class SmartTokenCommon {
         if (subType != "")
             amountMap.put("subType", subType);
 
-        List<Map>tokenList=new ArrayList<>();
-        if (list == null){
+        List<Map> tokenList = new ArrayList<>();
+        if (list == null) {
             tokenList.add(amountMap);
             return tokenList;
-        }else {
-            for(int i = 0 ; i < list.size() ; i++) {
+        } else {
+            for (int i = 0; i < list.size(); i++) {
                 tokenList.add(list.get(i));
             }
             tokenList.add(amountMap);
@@ -87,7 +134,7 @@ public class SmartTokenCommon {
      * @param fromAddr
      * @param payList
      * @param signList
-     * @param list       之前的数组
+     * @param list     之前的数组
      * @return
      */
     public List<Map> smartConstructPayAddressInfoList(String fromAddr, List<String> payList, List<String> signList, List<Map> list) {
@@ -98,11 +145,11 @@ public class SmartTokenCommon {
         signMap.put("signList", signList);
 
         List<Map> payAddressInfoList = new ArrayList<>();
-        if (list == null){
+        if (list == null) {
             payAddressInfoList.add(signMap);
             return payAddressInfoList;
-        }else {
-            for(int i = 0 ; i < list.size() ; i++) {
+        } else {
+            for (int i = 0; i < list.size(); i++) {
                 payAddressInfoList.add(list.get(i));
             }
             payAddressInfoList.add(signMap);
@@ -139,6 +186,23 @@ public class SmartTokenCommon {
         //组装信息列表
         String signMsg = JSONObject.fromObject(transferInfo).getJSONObject("data").getString("sigMsg");
 
+        HashMap<String,Object>sigMsgmap = smartContractApproveData(signMsg);
+        String signAddress = sigMsgmap.get("signAddress").toString();
+        List<String>pubkeys =(List<String>)sigMsgmap.get("pubkeys");
+        List<String>signList =(List<String>)sigMsgmap.get("signList");
+
+        //转让审核
+        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList, null);
+
+        String approveResp = st.SmartTEDApprove("transfer", payInfoList, UTXOInfo);
+
+        return approveResp;
+
+    }
+
+    //组装转让、转换、销毁审核数据
+    public HashMap smartContractApproveData(String signMsg) throws Exception {
+
         JSONArray signMsgArray = JSONArray.fromObject(signMsg);
         ArrayList<String> pubkeys = new ArrayList();
         ArrayList<String> prikeys = new ArrayList();
@@ -148,7 +212,6 @@ public class SmartTokenCommon {
         for (int i = 0; i < signMsgArray.size(); i++) {
 
             log.info("签名数组长度" + signMsgArray.size());
-
             String signData = JSONObject.fromObject(signMsgArray.get(i)).getString("signMsg");
             log.info(signData);
             signAddress = JSONObject.fromObject(signMsgArray.get(i)).getString("address");
@@ -157,18 +220,16 @@ public class SmartTokenCommon {
             prikeys = getPrikeyListFromAddress(signAddress);
             log.info("私钥数组长度" + prikeys.size());
             for (int j = 0; j < prikeys.size(); j++) {
-//                log.info(prikeys.get(j));
                 String cryptMsg = certTool.smartSign(PEER4IP, prikeys.get(j), "", signData, "hex");
                 signList.add(cryptMsg);
             }
         }
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("signAddress",signAddress);
+        map.put("pubkeys",pubkeys);
+        map.put("signList",signList);
 
-        //转让审核
-        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList,null);
-
-        String approveResp = st.SmartTEDApprove("transfer", payInfoList, UTXOInfo);
-
-        return approveResp;
+        return map;
 
     }
 
@@ -180,16 +241,16 @@ public class SmartTokenCommon {
         if (fromAddress.equals(ADDRESS1)) {
             log.info("进入这里了" + ADDRESS1);
             pubkeys.add(PUBKEY1);
-        } else if (fromAddress.equals(ADDRESS2)){
+        } else if (fromAddress.equals(ADDRESS2)) {
             pubkeys.add(PUBKEY2);
-        } else if (fromAddress.equals(MULITADD2)){ //126 (3/3签名)
+        } else if (fromAddress.equals(MULITADD2)) { //126 (3/3签名)
             pubkeys.add(PUBKEY1);
             pubkeys.add(PUBKEY2);
             pubkeys.add(PUBKEY6);
-        } else if (fromAddress.equals(MULITADD4)){ //12  (1/2签名)
+        } else if (fromAddress.equals(MULITADD4)) { //12  (1/2签名)
             pubkeys.add(PUBKEY1);
             pubkeys.add(PUBKEY2);
-        } else if (fromAddress.equals(MULITADD7)){ //16  (1/2签名)
+        } else if (fromAddress.equals(MULITADD7)) { //16  (1/2签名)
             pubkeys.add(PUBKEY1);
             pubkeys.add(PUBKEY6);
         }
@@ -206,16 +267,16 @@ public class SmartTokenCommon {
 
         if (fromAddress.equals(ADDRESS1)) {
             prikeys.add(PRIKEY1);
-        } else if (fromAddress.equals(ADDRESS2)){
+        } else if (fromAddress.equals(ADDRESS2)) {
             prikeys.add(PRIKEY2);
-        } else if (fromAddress.equals(MULITADD2)){ //126 (3/3签名)
+        } else if (fromAddress.equals(MULITADD2)) { //126 (3/3签名)
             prikeys.add(PRIKEY1);
             prikeys.add(PRIKEY2);
             prikeys.add(PRIKEY6);
-        } else if (fromAddress.equals(MULITADD4)){ //12  (1/2签名)
+        } else if (fromAddress.equals(MULITADD4)) { //12  (1/2签名)
             prikeys.add(PRIKEY1);
             prikeys.add(PRIKEY2);
-        } else if (fromAddress.equals(MULITADD7)){ //16  (1/2签名)
+        } else if (fromAddress.equals(MULITADD7)) { //16  (1/2签名)
             prikeys.add(PRIKEY1);
             prikeys.add(PRIKEY6);
         }
@@ -236,31 +297,13 @@ public class SmartTokenCommon {
         //组装信息列表
         String signMsg = JSONObject.fromObject(destroyInfo).getJSONObject("data").getString("sigMsg");
 
-        JSONArray signMsgArray = JSONArray.fromObject(signMsg);
-        ArrayList<String> pubkeys = new ArrayList();
-        ArrayList<String> prikeys = new ArrayList();
-        ArrayList<String> signList = new ArrayList();
-        String signAddress = "";
-
-        for (int i = 0; i < signMsgArray.size(); i++) {
-
-            log.info("签名数组长度" + signMsgArray.size());
-
-            String signData = JSONObject.fromObject(signMsgArray.get(i)).getString("signMsg");
-            log.info(signData);
-            signAddress = JSONObject.fromObject(signMsgArray.get(i)).getString("address");
-            log.info(signAddress);
-            pubkeys = getPubkeyListFromAddress(signAddress);
-            prikeys = getPrikeyListFromAddress(signAddress);
-            log.info("私钥数组长度" + prikeys.size());
-            for (int j = 0; j < prikeys.size(); j++) {
-                String cryptMsg = certTool.smartSign(PEER4IP, prikeys.get(j), "", signData, "hex");
-                signList.add(cryptMsg);
-            }
-        }
+        HashMap<String,Object>sigMsgmap = smartContractApproveData(signMsg);
+        String signAddress = sigMsgmap.get("signAddress").toString();
+        List<String>pubkeys =(List<String>)sigMsgmap.get("pubkeys");
+        List<String>signList =(List<String>)sigMsgmap.get("signList");
 
         //审核
-        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList,null);
+        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList, null);
 
         String approveResp = st.SmartTEDApprove("destroy", payInfoList, UTXOInfo);
         return approveResp;
@@ -282,32 +325,13 @@ public class SmartTokenCommon {
         //组装信息列表
         String signMsg = JSONObject.fromObject(exchangeInfo).getJSONObject("data").getString("sigMsg");
 
-        JSONArray signMsgArray = JSONArray.fromObject(signMsg);
-        ArrayList<String> pubkeys = new ArrayList();
-        ArrayList<String> prikeys = new ArrayList();
-        ArrayList<String> signList = new ArrayList();
-        String signAddress = "";
-
-        for (int i = 0; i < signMsgArray.size(); i++) {
-
-            log.info("签名数组长度" + signMsgArray.size());
-
-            String signData = JSONObject.fromObject(signMsgArray.get(i)).getString("signMsg");
-            log.info(signData);
-            signAddress = JSONObject.fromObject(signMsgArray.get(i)).getString("address");
-            log.info(signAddress);
-            pubkeys = getPubkeyListFromAddress(signAddress);
-            prikeys = getPrikeyListFromAddress(signAddress);
-            log.info("私钥数组长度" + prikeys.size());
-            for (int j = 0; j < prikeys.size(); j++) {
-//                log.info(prikeys.get(j));
-                String cryptMsg = certTool.smartSign(PEER4IP, prikeys.get(j), "", signData, "hex");
-                signList.add(cryptMsg);
-            }
-        }
+        HashMap<String,Object>sigMsgmap = smartContractApproveData(signMsg);
+        String signAddress = sigMsgmap.get("signAddress").toString();
+        List<String>pubkeys =(List<String>)sigMsgmap.get("pubkeys");
+        List<String>signList =(List<String>)sigMsgmap.get("signList");
 
         //审核
-        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList,null);
+        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList, null);
 
         String approveResp = st.SmartTEDApprove("exchange", payInfoList, UTXOInfo);
 
@@ -323,11 +347,11 @@ public class SmartTokenCommon {
         assertEquals("200", JSONObject.fromObject(queryBalance).getString("state"));
         assertEquals("success", JSONObject.fromObject(queryBalance).getString("message"));
 
-        if (tokenType.equals("")){
+        if (tokenType.equals("")) {
             assertThat(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType), containsString(amount));
             assertThat(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType), containsString("test"));
             assertThat(JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType), containsString("true"));
-        }else{
+        } else {
             assertThat(JSONObject.fromObject(queryBalance).getString("data"), containsString(amount));
             assertThat(JSONObject.fromObject(queryBalance).getString("data"), containsString("test"));
             assertThat(JSONObject.fromObject(queryBalance).getString("data"), containsString("true"));

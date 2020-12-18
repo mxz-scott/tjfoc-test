@@ -2059,7 +2059,7 @@ public class GDCommonFunc {
         String tempObjId = mapKeyWod.get("objectid").toString();
         String tempObjVer = mapKeyWod.get("version").toString();
 //        String keyWordGetUriStore = mapKeyWod.get("hashKeyWord").toString();//固定使用监管提供的supervision字符串
-//        String objType = mapKeyWod.get("objType").toString();
+        String operationType = mapKeyWod.get("operationType").toString();
         String contentType = mapKeyWod.get("contentType").toString();
         String subProdSubType = mapKeyWod.get("subProdSubType").toString();
 
@@ -2067,11 +2067,13 @@ public class GDCommonFunc {
         assertEquals("不包含敏感词",true,chkSensitiveWord(store.GetTxDetail(tempTxId),contentType));
 
         //获取链上的uri存证信息所在交易hash 不是从链上取版本
-        Map uriInfo = getJGURIStoreHash(tempTxId,conJGFileName("supervision",""),1);
-
+        Map uriInfo = getJGURIStoreHash(tempTxId,conJGFileName(tempObjId,tempObjVer),1);
+        log.info(uriInfo.toString());
+        String storeData = uriInfo.get("storeData").toString();
         //获取链上mini url的存证信息 并检查是否包含uri信息 每个登记都是新的 则都是0
         String storeFileName = conJGFileName(tempObjId,tempObjVer);
-        String chkStoreURI = "uri:" + storeFileName;
+        String chkStoreURI = storeFileName;
+        log.info(storeData + "\n检查存证信息是否包含" + chkStoreURI);
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkStoreURI));
         assertEquals(true,bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
 
@@ -2137,7 +2139,7 @@ public class GDCommonFunc {
         assertEquals("检查参数map不为空",false,mapParam.equals(null));
 
         //采用有序TreeMap存 header content
-        mapParam.put("content",constructContentTreeMap(contentType,tempObjId,tempObjVer,contentType,String.valueOf(tempTS)));
+        mapParam.put("content",constructContentTreeMap(contentType,tempObjId,tempObjVer,operationType,String.valueOf(tempTS)));
 
         log.info("检查" + contentType + "存证信息内容与传入一致\n" + mapParam.toString() + "\n" + getRegInfo.toString());
         bResult = commonFunc.compareTwoStr(replaceCertain(matchRefMapCertVer2(mapParam,contentType)),

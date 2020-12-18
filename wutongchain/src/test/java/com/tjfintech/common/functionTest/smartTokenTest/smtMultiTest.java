@@ -114,7 +114,7 @@ public class smtMultiTest {
     }
 
     /**
-     * 同时向单签和多签地址转让
+     * 连续向单签和多签地址转让2次
      *
      */
     @Test
@@ -139,15 +139,15 @@ public class smtMultiTest {
         stc.verifyAddressHasBalance(MULITADD4, tokenType, "10.123456");
         stc.verifyAddressHasBalance(ADDRESS2, tokenType, "20.123456");
 
-//        //转账
-//        transferResp= stc.smartTransfer(tokenType, payList, collList2, "", "", transferData);
-//        assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
-//        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-//                utilsClass.sdkGetTxDetailType,SLEEPTIME);
-//
-//        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "139.506176");
-//        stc.verifyAddressHasBalance(MULITADD4, tokenType, "20.246912");
-//        stc.verifyAddressHasBalance(ADDRESS2, tokenType, "40.246912");
+        //转账
+        transferResp= stc.smartTransfer(tokenType, payList, collList2, "", "", transferData);
+        assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "139.506176");
+        stc.verifyAddressHasBalance(MULITADD4, tokenType, "20.246912");
+        stc.verifyAddressHasBalance(ADDRESS2, tokenType, "40.246912");
 
     }
     /**
