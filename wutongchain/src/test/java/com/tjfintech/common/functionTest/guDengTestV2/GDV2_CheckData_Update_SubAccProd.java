@@ -1,17 +1,16 @@
 package com.tjfintech.common.functionTest.guDengTestV2;
 
+import com.sun.org.apache.xalan.internal.xsltc.runtime.ErrorMessages_zh_CN;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.utils.MinIOOperation;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 
@@ -41,7 +40,7 @@ public class GDV2_CheckData_Update_SubAccProd {
     @Rule
     public TestName tm = new TestName();
 
-    @BeforeClass
+//    @BeforeClass
     public static void Before()throws Exception{
         TestBuilder tbTemp = TestBuilder.getInstance();
         Store storeTemp =tbTemp.getStore();
@@ -53,6 +52,13 @@ public class GDV2_CheckData_Update_SubAccProd {
         gdBefore.initRegulationData();
         gdEquityCode = "updateTest" + Random(12);
     }
+
+    @Before
+    public void reset()throws Exception{
+        gdCompanyID = "P1Re" + Random(8);
+        gdEquityCode = "updateTest" + Random(12);
+    }
+
 
 //    @After
     public void calJGDataAfterTx()throws Exception{
@@ -244,31 +250,6 @@ public class GDV2_CheckData_Update_SubAccProd {
         assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
         sleepAndSaveInfo(2000);
-
-//        response = gd.GDMainSubjectQuery(gdContractAddress, gdCompanyID);
-//        Map mapTest = (Map) com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(response).getString("data"));
-
-//        Map<String, String> testMap3 = new TreeMap<String, String>(mapTemp);
-//        Map<String, String> testMap4 = new TreeMap<String, String>(mapTest);
-//        assertEquals(replaceCertain(testMap3.toString()),
-//                replaceCertain(testMap4.toString()));
-
-//
-//        //获取监管数据存证hash
-//        String jgType = subjectType;
-//        String SubjectObjectTxId = gdCF.getJGStoreHash2(txId, jgType, 1);
-//
-//        Map getSubInfo = gdCF.contructEnterpriseSubInfo(SubjectObjectTxId);
-//
-//
-//        String timeStampSub = gdCF.getTimeStampFromMap(getSubInfo, "subject_create_time");
-//        mapTemp.put("content",
-//                gdCF.constructContentTreeMap(subjectType, gdCompanyID, "1", "create",
-//                        timeStampSub));
-//
-//
-//        log.info("检查主体存证信息内容与传入一致\n" + mapTemp.toString() + "\n" + getSubInfo.toString());
-//        assertEquals(replaceCertain(mapTemp.toString()), replaceCertain(getSubInfo.toString()));
 
 
         //设置各个主体版本变量
@@ -1120,10 +1101,11 @@ public class GDV2_CheckData_Update_SubAccProd {
         String type = "1";
 
         Map mapProd = gdBF.init03EquityProductInfo();
+        Map enSub = gdBF.init01EnterpriseSubjectInfo();
 
         int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
         //挂牌登记一个股权类产品
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,10000,enterpriseSubjectInfo,
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,10000,enSub,
                 mapProd,null,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
@@ -1202,12 +1184,14 @@ public class GDV2_CheckData_Update_SubAccProd {
     public void TC22_allUpdateBondProdAccInfo()throws Exception{
         //挂牌登记一个债券类产品
         String type = "2";
+        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
 
         Map mapProd = gdBF.init03BondProductInfo();
+        Map enSub = gdBF.init01EnterpriseSubjectInfo();
 
-        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
+//        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
         //挂牌登记一个股权类产品
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,10000,enterpriseSubjectInfo,
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,10000,enSub,
                 null,mapProd,null);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
@@ -1290,10 +1274,11 @@ public class GDV2_CheckData_Update_SubAccProd {
         String type = "3";
 
         Map mapProd = gdBF.init03FundProductInfo();
+        Map enSub = gdBF.init01EnterpriseSubjectInfo();
 
         int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
         //挂牌登记一个股权类产品
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,10000,enterpriseSubjectInfo,
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,10000,enSub,
                 null,null,mapProd);
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
@@ -1367,6 +1352,67 @@ public class GDV2_CheckData_Update_SubAccProd {
         if(!type.equals("4")) {
             log.info("检查产品存证信息内容与传入一致\n" + mapProdComInfo.toString() + "\n" + getProInfo.toString());
             assertEquals(replaceCertain(gdCF.matchRefMapCertVer(mapProdComInfo, prodType, verForProd)), replaceCertain(getProInfo.toString()));
+        }
+    }
+
+    @Test
+    public void check()throws Exception{
+        MinIOOperation mo = new MinIOOperation();
+        for(int i=3000;i<=3553;i++) {
+            Map temp = gdCF.findDataInBlock(i, "supervision");
+            String storeData = temp.get("storeData").toString();
+            if(storeData.equals("")) continue;
+            if(storeData.contains("[")){
+                for(int k=0;k<com.alibaba.fastjson.JSONArray.parseArray(storeData).size();k++) {
+                    com.alibaba.fastjson.JSONObject jsonStore = com.alibaba.fastjson.JSONObject.parseObject(
+                            com.alibaba.fastjson.JSONArray.parseArray(storeData).get(k).toString());
+
+                    checkBlkUri(com.alibaba.fastjson.JSONArray.parseArray(storeData).get(k).toString());
+
+                }
+            }
+            else {
+                checkBlkUri(storeData);
+            }
+        }
+    }
+
+    public void checkBlkUri(String storeData)throws Exception{
+        MinIOOperation mo = new MinIOOperation();
+        com.alibaba.fastjson.JSONObject jsonStore = com.alibaba.fastjson.JSONObject.parseObject(storeData);
+        String uri = jsonStore.getString("uri");
+        String data = mo.getFileFromMinIO(minIOEP,jgBucket,uri,"");
+        Boolean bFlag = false;
+
+        if(data.contains("\"operation\":\"create\"") && (!(
+                data.contains("\"operation\":\"create\",\"version\":0") ||
+                        data.contains("\"version\":0,\"operation\":\"create\"")))){
+            bFlag = true;
+        }
+
+        if(data.contains("\"operation\":\"update\"") && (data.contains("\"operation\":\"update\",\"version\":0")
+                || data.contains("\"version\":0,\"operation\":update"))){
+            bFlag = true;
+        }
+
+        if(data.contains("\"operation\":\"delete\"") && (data.contains("\"operation\":\"delete\",\"version\":0")
+                || data.contains("\"version\":0,\"operation\":delete"))){
+            bFlag = true;
+        }
+        if(bFlag) {
+            log.info("检查uri " + uri + "\n" + data);
+//            assertEquals(false,bFlag);
+        }
+    }
+
+//    @Test
+    public void check2()throws Exception{
+        MinIOOperation mo = new MinIOOperation();
+        for(int i=500;i<=554;i++) {
+            Map temp = gdCF.findDataInBlock(i, "gdCmpyId01z3k4gF");
+            String storeData = temp.get("storeData").toString();
+            log.info(storeData);
+
         }
     }
 

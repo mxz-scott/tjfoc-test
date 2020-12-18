@@ -18,6 +18,7 @@ import java.util.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassGD.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 
 @Slf4j
@@ -145,12 +146,14 @@ public class GDCommonFunc {
                 if(storeData2.contains(keyword)) {
                     storeId = txArr.get(i).toString();
                     storeData = storeData2;
+                    log.info("查找到的当前区块高度 " + blockHeiht);
                     break;
                 }
             }
         }
         mapStoreInfo.put("storeId",storeId);
         mapStoreInfo.put("storeData",storeData);
+        uriStoreData = storeData;
 
         return mapStoreInfo;
     }
@@ -1773,6 +1776,15 @@ public class GDCommonFunc {
         TreeMap tempMap = new TreeMap();
         String[] checkKey = new String[]{"type","object_id","version","operation","timestamp"};
 
+        log.info("operation " + valueList[3] + " version " + valueList[2]);
+        if(valueList[3] == "create") {
+            log.info("create ----------------------------------");
+            assertEquals("0",valueList[2]);}
+        if(valueList[3] == "update") {
+            log.info("update ----------------------------------");
+            assertNotEquals("0",valueList[2]);
+        }
+        if(valueList[3] == "delete") assertNotEquals("0",valueList[2]);
         for(int i =0;i<valueList.length;i++){
             String temp = valueList[i];
             log.info("temp **** " + temp);

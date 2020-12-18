@@ -51,6 +51,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
     @Before
     public void BeforeTest()throws Exception{
         gdEquityCode = Random(20);
+        gdCompanyID = "P1Re" + Random(8);
 
         tempaccount_subject_ref = account_subject_ref;
         tempaccount_associated_account_ref =account_associated_account_ref;

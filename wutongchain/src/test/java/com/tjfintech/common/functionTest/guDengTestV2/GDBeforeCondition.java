@@ -286,7 +286,7 @@ public class GDBeforeCondition {
 //        mapTemp.put("subject_type",1);
 
         //主体信息 主体基本信息 主体通用信息
-        mapTemp.put("subject_id", gdCompanyID);
+        mapTemp.put("subject_id", "");//地方链信息不填写
         mapTemp.put("subject_type", 1);
         mapTemp.put("subject_main_administrative_region", 0);
         mapTemp.put("subject_create_time", time3);
@@ -445,7 +445,7 @@ public class GDBeforeCondition {
         mapTemp.put("subject_object_id", "clientNo0001");
 
         //主体信息 主体基本信息 主体通用信息
-        mapTemp.put("subject_id", "clientNo0001sub");
+        mapTemp.put("subject_id", "");//地方链信息不填写
         mapTemp.put("subject_type", 2);
         mapTemp.put("subject_main_administrative_region", 0);
         mapTemp.put("subject_create_time", time1);
@@ -958,7 +958,7 @@ public class GDBeforeCondition {
         //登记信息 权利信息 权利基本信息 权利基本信息描述
         mapTemp.put("register_serial_number", "登记流水号CHARACTER");
         mapTemp.put("register_time", time2);
-        mapTemp.put("register_subject_ref",gdCompanyID);
+        mapTemp.put("register_subject_ref",register_subject_ref);
         mapTemp.put("register_subject_type", 1);
         mapTemp.put("register_subject_account_ref", register_subject_account_ref);
         mapTemp.put("register_asset_type", 1);
