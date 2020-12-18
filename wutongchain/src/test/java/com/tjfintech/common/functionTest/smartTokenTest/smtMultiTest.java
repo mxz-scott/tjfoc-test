@@ -8,6 +8,8 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -21,6 +23,7 @@ public class smtMultiTest {
     SmartTokenCommon stc = new SmartTokenCommon();
     CommonFunc commonFunc = new CommonFunc();
     GoSmartToken st = new GoSmartToken();
+    CertTool certTool = new CertTool();
 
     private static String tokenType;
 
@@ -147,6 +150,116 @@ public class smtMultiTest {
 //        stc.verifyAddressHasBalance(ADDRESS2, tokenType, "40.246912");
 
     }
+    /**
+     * MAXlevel为2验证流转层级大于2的情况[第2次转让不会成功，验证余额]
+     *
+     */
+
+    @Test
+    public void  TC_MAXleveltransfer()throws Exception {
+        tokenType = "TB_" + Random(10);
+        double timeStampNow = System.currentTimeMillis();
+        BigDecimal expiredDate = new BigDecimal(timeStampNow + 12356789);
+        BigDecimal activeDate = new BigDecimal(timeStampNow );
+        String contractAddress=smartAccoutContractAddress;
+
+        List<Map> toList = stc.smartConstructTokenList(ADDRESS1, "test", "1000.25",null);
+
+        //发行申请
+        String IssueApplyResp9= st.SmartIssueTokenReq(contractAddress,tokenType,expiredDate,toList,activeDate,true ,2,"");
+        String sigMsg1 = JSONObject.fromObject(IssueApplyResp9).getJSONObject("data").getString("sigMsg");
+        //发行审核
+        String tempSM3Hash = certTool.getSm3Hash(PEER4IP, sigMsg1);
+        String cryptMsg = certTool.sign(PEER4IP, PRIKEY1, "", tempSM3Hash, "hex");
+        String approveResp = st.SmartIssueTokenApprove(sigMsg1, cryptMsg, PUBKEY1);
+        assertEquals("200", JSONObject.fromObject( approveResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash( approveResp, utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        // 第一次发行查询账户余额
+        log.info("查询发行的账户余额");
+        stc.verifyAddressHasBalance(ADDRESS1,tokenType,"1000.25");
+
+        //转让为2级流转
+        String transferData = "ADDRESS1 向 MULITADD4 转账10个" + tokenType;
+        List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", "10", null);
+        List<Map> collList = stc.smartConstructTokenList(MULITADD4, "test", "10", null);
+        String transferResp = stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
+        assertEquals("200", JSONObject.fromObject(transferResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType, SLEEPTIME);
+
+        //流转后验证余额
+        log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "990.25");
+        stc.verifyAddressHasBalance(MULITADD4, tokenType, "10");
+
+
+        //在转1次3级流转
+        String transferData1 = "MULITADD4向 ADDRESS1 转账5个" + tokenType;
+        List<Map> payList1 = stc.smartConstructTokenList(MULITADD4, "test", "5", null);
+        List<Map> collList1 = stc.smartConstructTokenList(ADDRESS1, "test", "5", null);
+        String transferResp1 = stc.smartTransfer(tokenType, payList1, collList1, "", "", transferData1);
+        //请求应该是成功，但是应该转不过去的
+        assertEquals("200", JSONObject.fromObject(transferResp1).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType, SLEEPTIME);
+        //流转后验证余额
+        log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功/这里应该是失败的");
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "990.25");
+        stc.verifyAddressHasBalance(MULITADD4, tokenType, "10");
+
+    }
+    /**
+     *过期资产转让
+     *
+     */
+    @Test
+    public void TC_expiredtransfer()throws Exception {
+
+        tokenType = "TB_" + UtilsClass.Random(10);
+        double timeStampNow = System.currentTimeMillis();
+        BigDecimal expiredDate = new BigDecimal(timeStampNow + 60000);
+        BigDecimal activeDate = new BigDecimal(timeStampNow );
+        String contractAddress=smartAccoutContractAddress;
+
+        List<Map> toList = stc.smartConstructTokenList(ADDRESS1, "test", "10.15",null);
+
+        //发行申请
+        String IssueApplyResp9= st.SmartIssueTokenReq(contractAddress,tokenType,expiredDate,toList,activeDate,true ,0,"");
+        String sigMsg1 = JSONObject.fromObject(IssueApplyResp9).getJSONObject("data").getString("sigMsg");
+        //发行审核
+        String tempSM3Hash = certTool.getSm3Hash(PEER4IP, sigMsg1);
+        String cryptMsg = certTool.sign(PEER4IP, PRIKEY1, "", tempSM3Hash, "hex");
+        String approveResp = st.SmartIssueTokenApprove(sigMsg1, cryptMsg, PUBKEY1);
+        assertEquals("200", JSONObject.fromObject( approveResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash( approveResp, utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        // 第一次发行查询账户余额
+        log.info("查询发行的账户余额");
+        stc.verifyAddressHasBalance(ADDRESS1,tokenType,"10.15");
+
+        Thread.sleep(180000);//3分钟
+
+        //转让【应该转让不成功】
+        String transferData = "ADDRESS1 向 MULITADD4 转账10个" + tokenType;
+        List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", "10", null);
+        List<Map> collList = stc.smartConstructTokenList(MULITADD4, "test", "10", null);
+
+        String transferResp = stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
+
+        assertEquals("200", JSONObject.fromObject(transferResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType, SLEEPTIME);
+
+        log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "10.15");
+        String queryBalance = st.SmartGetBalanceByAddr(MULITADD4, tokenType);
+        assertEquals("200", JSONObject.fromObject(queryBalance).getString("state"));
+        assertEquals("null", JSONObject.fromObject(queryBalance).getString("data"));
+    }
+
+
+
 
 
 //    /**

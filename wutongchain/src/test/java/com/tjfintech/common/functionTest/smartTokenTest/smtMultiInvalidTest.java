@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.smartTokenTest;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.CertTool;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.GoSmartToken;
 import com.tjfintech.common.utils.UtilsClass;
@@ -26,6 +27,7 @@ public class smtMultiInvalidTest {
     SmartTokenCommon stc = new SmartTokenCommon();
     CommonFunc commonFunc = new CommonFunc();
     GoSmartToken st = new GoSmartToken();
+    CertTool certTool = new CertTool();
 
     private static String tokenType;
 
@@ -186,5 +188,50 @@ public class smtMultiInvalidTest {
         stc.verifyAddressNoBalance(MULITADD4, tokenType);
 
     }
+    /**
+     *增发资产【在想一下】
+     *
+     */
+    @Test
+    public void TC_reissed()throws Exception {
+
+
+        double timeStampNow = System.currentTimeMillis();
+        BigDecimal expiredDate = new BigDecimal(timeStampNow + 12356789);
+        BigDecimal activeDate = new BigDecimal(timeStampNow );
+        String contractAddress=smartAccoutContractAddress;
+        List<Map> toList = stc.smartConstructTokenList(ADDRESS1, "test", "10",null);
+        //第一次发行
+        //发行申请
+        String IssueApplyResp9= st.SmartIssueTokenReq(contractAddress,"TB_1114",expiredDate,toList,activeDate,true ,0,"");
+        String sigMsg1 = JSONObject.fromObject(IssueApplyResp9).getJSONObject("data").getString("sigMsg");
+        //发行审核
+        String tempSM3Hash = certTool.getSm3Hash(PEER4IP, sigMsg1);
+        String cryptMsg = certTool.sign(PEER4IP, PRIKEY1, "", tempSM3Hash, "hex");
+        String approveResp = st.SmartIssueTokenApprove(sigMsg1, cryptMsg, PUBKEY1);
+        assertEquals("200", JSONObject.fromObject( approveResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash( approveResp, utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        // 验证第一次发行查询账户余额
+        log.info("查询发行的账户余额");
+        stc.verifyAddressHasBalance(ADDRESS1, "TB_1114", "10");
+        //第二次发行
+        toList.clear();
+        List<Map> toList1 = stc.smartConstructTokenList(ADDRESS1, "test1", "20",null);
+        String IssueApplyResp10= st.SmartIssueTokenReq(contractAddress,"TB_1114",expiredDate,toList1,activeDate,false ,0,"");
+        String sigMsg2= JSONObject.fromObject(IssueApplyResp10).getJSONObject("data").getString("sigMsg");
+        String tempSM3Hash1= certTool.getSm3Hash(PEER4IP, sigMsg2);
+        String cryptMsg1 = certTool.sign(PEER4IP, PRIKEY1, "", tempSM3Hash1, "hex");
+        String approveResp1= st.SmartIssueTokenApprove(sigMsg2, cryptMsg1, PUBKEY1);
+        assertEquals("200", JSONObject.fromObject( approveResp1).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash( approveResp1, utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        //验证第二次发行后账户余额
+        log.info("查询发行的账户余额");
+        stc.verifyAddressHasBalance(ADDRESS1, "TB_1114", "20");
+    }
+
+
+
 
 }
