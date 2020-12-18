@@ -6,6 +6,7 @@ import com.tjfintech.common.TestBuilder;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 
+import java.math.BigInteger;
 import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.testDataPath;
@@ -24,7 +25,8 @@ public class UtilsClassScf {
     public static String coreCompanyKeyID = "buushlte655bj3jflqv0";//核心企业ID
     public static String coreCompanyPubkey = "";//核心企业公钥
     public static String coreCompanyPubkeyPem = "";//核心企业公钥PEM格式
-    public static String coreCompanyAddress = "SnsEEcAsq9364NW1y72XNKfXE3tJvTacyxX838Cwr8VRdiscmky";//核心企业地址
+//    public static String coreCompanyAddress = "SnsEEcAsq9364NW1y72XNKfXE3tJvTacyxX838Cwr8VRdiscmky";//核心企业地址
+    public static String coreCompanyAddress = "4RXgvexgSJ3fvhKiFqKRYQzuJycjxijzr8oeijyzvhkgwAXDgm";//核心企业地址
 
     public static String supplyAddress1 = "SnMn7eXperY2Vp6MMexUW5sdVC1PKEQo7grXP2SBypee8irugZg";//供应商地址1
     public static String supplyAddress2 = "Sn5ANYdXD8ZK1ioghfoZ2LfFa82QTXvDWGiZiaxCxMFz6ZjxMPi";//供应商地址2
@@ -90,6 +92,13 @@ public class UtilsClassScf {
         return tokenType;
     }
 
+    /**
+     * 转账list
+     * @param amount
+     * @param subType
+     * @param list
+     * @return
+     */
     public static List<Map> Assignment(String amount, String subType, List<Map> list) {
         List<Map> tokenList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
@@ -103,7 +112,16 @@ public class UtilsClassScf {
         return tokenList;
     }
 
-    public static List<Map> paying(String address, String keyID, String subtype, List<Map> list) {
+    /**
+     * 兑付list
+     * @param address
+     * @param keyID
+     * @param subtype
+     * @param amount
+     * @param list
+     * @return
+     */
+    public static List<Map> paying(String address, String keyID, String subtype, String amount, List<Map> list) {
         List<Map> accounts = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             accounts.add(list.get(i));
@@ -112,9 +130,17 @@ public class UtilsClassScf {
         amountMap.put("address", address);
         amountMap.put("keyID", keyID);
         amountMap.put("subtype", subtype);
+        amountMap.put("amount", amount);
 
         accounts.add(amountMap);
         return accounts;
+    }
+    /**
+     * base64转16进制
+     */
+    public static String strToHex(String s) {
+        byte[] decoded = Base64.getDecoder().decode(s);
+        return String.format("%040x", new BigInteger(1, decoded));
     }
 }
 

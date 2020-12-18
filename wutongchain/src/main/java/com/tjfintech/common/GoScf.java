@@ -338,15 +338,15 @@ public class GoScf implements Scf {
     /**
      * 融资申请
      */
-    public String FinacingApply(String supplyAddress1, String supplyID1, String PIN, String proof, String tokenType, String amount, String subType, String newFromSubType, String newToSubType, String supplyAddress2) {
+    public String FinacingApply(String supplyAddress1, String supplyID1, String PIN, String rzproof, String tokenType, String rzamount, String subType, String newFromSubType, String newToSubType, String supplyAddress2) {
         Map<String, Object> map = new HashMap<>();
 
         map.put("fromAddress",supplyAddress1);
         map.put("keyID",supplyID1);
         map.put("PIN",PIN);
-        map.put("proof",proof);
+        map.put("proof",rzproof);
         map.put("tokenType",tokenType);
-        map.put("amount",amount);
+        map.put("amount",rzamount);
         map.put("subType",subType);
         map.put("newFromSubType",newFromSubType);
         map.put("newToSubType",newToSubType);
@@ -363,11 +363,11 @@ public class GoScf implements Scf {
     /**
      * 融资试算
      */
-    public String FinacingTest(String ZJFAddress, String amount, String timeLimit) {
+    public String FinacingTest(String ZJFAddress, String rzamount, String timeLimit) {
         Map<String, Object> map = new HashMap<>();
 
         map.put("contractAddress",ZJFAddress);
-        map.put("amount",amount);
+        map.put("amount",rzamount);
         map.put("timeLimit",timeLimit);
 
         String param="";
@@ -400,17 +400,17 @@ public class GoScf implements Scf {
     /**
      * 融资签收
      */
-    public String FinacingConfirm(String applyNo, String ZJFAddress, String supplyID1, String companyID1, String PIN, String tokenType, String supplyAddress2, String challenge, String comments) {
+    public String FinacingConfirm(String applyNo, String ZJFAddress, String supplyID, String companyID1, String PIN, String tokenType, String supplyAddress2, String rzchallenge, String comments) {
         Map<String, Object> map = new HashMap<>();
 
         map.put("applyNo",applyNo);
         map.put("contractAddress",ZJFAddress);
-        map.put("keyID",supplyID1);
+        map.put("keyID",supplyID);
         map.put("companyID",companyID1);
         map.put("PIN",PIN);
         map.put("tokenType",tokenType);
         map.put("toAddr",supplyAddress2);
-        map.put("challenge",challenge);
+        map.put("challenge",rzchallenge);
         map.put("comments",comments);
 
         String param="";
