@@ -599,6 +599,12 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         List<Map> shareList3 = gdConstructShareList(gdAccount3,increaseAmount,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,increaseAmount,0, shareList3);
 
+        //测试增发一个不存在的产品对象 2020/12/19
+        Map eqPErr = gdBF.init03EquityProductInfo();
+        eqPErr.put("product_object_id","testErr" + Random(3));
+        String err= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, eqProd,txInfo);
+        assertEquals("400", net.sf.json.JSONObject.fromObject(err).getString("state"));
+
         String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, eqProd,txInfo);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         String txDetail = store.GetTxDetail(txId);
