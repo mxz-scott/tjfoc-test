@@ -157,7 +157,7 @@ public class smtMultiTest {
 
     @Test
     public void  TC_MAXleveltransfer()throws Exception {
-        tokenType = "TB_" + Random(10);
+        tokenType = "TB_" + UtilsClass.Random(10);
         double timeStampNow = System.currentTimeMillis();
         BigDecimal expiredDate = new BigDecimal(timeStampNow + 12356789);
         BigDecimal activeDate = new BigDecimal(timeStampNow );
@@ -318,7 +318,7 @@ public class smtMultiTest {
         assertEquals("200",JSONObject.fromObject(freezeResp).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        //转账
+        //转账失败
         String transferResp= stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
         assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
@@ -332,7 +332,7 @@ public class smtMultiTest {
         assertEquals("200",JSONObject.fromObject(recoverResp).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SLEEPTIME);
-
+        //转账成功
         String transferResp1= stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
         assertEquals("200",JSONObject.fromObject(transferResp1).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
