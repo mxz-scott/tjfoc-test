@@ -7,10 +7,7 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 
@@ -42,6 +39,16 @@ public class GDV2_CheckJGDataNecessary_SubProd {
 //        gdBefore.gdCreateAccout();
         gdBefore.initRegulationData();
     }
+
+    @After
+    public void calJGDataAfterTx()throws Exception{
+        testCurMethodName = tm.getMethodName();
+        GDUnitFunc uf = new GDUnitFunc();
+        int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
+        uf.checkJGHeaderOpVer(blockHeight,endHeight);
+        uf.updateBlockHeightParam(endHeight);
+    }
+
     @Test
     public void subjectInfo_Must_Test()throws Exception{
         gdEquityCode = "nece" + Random(12);

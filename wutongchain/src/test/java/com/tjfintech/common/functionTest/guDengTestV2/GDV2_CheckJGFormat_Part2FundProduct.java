@@ -72,8 +72,9 @@ public class GDV2_CheckJGFormat_Part2FundProduct {
     public void calJGDataAfterTx()throws Exception{
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
-//        uf.calJGData();
-        uf.calJGDataEachHeight();
+        int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
+        uf.checkJGHeaderOpVer(blockHeight,endHeight);
+        uf.updateBlockHeightParam(endHeight);
     }
 
 

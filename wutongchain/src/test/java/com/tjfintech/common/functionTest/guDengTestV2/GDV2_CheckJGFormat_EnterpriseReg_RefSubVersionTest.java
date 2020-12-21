@@ -1,12 +1,12 @@
 package com.tjfintech.common.functionTest.guDengTestV2;
 
-import com.alibaba.fastjson.JSONObject;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
 import org.junit.*;
 import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
@@ -64,12 +64,13 @@ public class GDV2_CheckJGFormat_EnterpriseReg_RefSubVersionTest {
 
 
 
-//    @After
+    @After
     public void calJGDataAfterTx()throws Exception{
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
-//        uf.calJGData();
-        uf.calJGDataEachHeight();
+        int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
+        uf.checkJGHeaderOpVer(blockHeight,endHeight);
+        uf.updateBlockHeightParam(endHeight);
     }
 
     //企业 股权类 登记

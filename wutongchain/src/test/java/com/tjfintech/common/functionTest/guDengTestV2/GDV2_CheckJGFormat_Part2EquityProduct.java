@@ -81,8 +81,10 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
     public void calJGDataAfterTx()throws Exception{
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
-//        uf.calJGData();
-//        uf.calJGDataEachHeight();
+        int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
+        uf.checkJGHeaderOpVer(blockHeight,endHeight);
+        uf.updateBlockHeightParam(endHeight);
+
         subject_investor_qualification_certifier_ref =tempsubject_investor_qualification_certifier_ref;
         register_transaction_ref = tempregister_transaction_ref;
     }

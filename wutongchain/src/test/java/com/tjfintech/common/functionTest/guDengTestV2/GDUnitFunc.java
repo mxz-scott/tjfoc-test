@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.FixMethodOrder;
+import org.junit.Rule;
+import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 import org.springframework.util.StringUtils;
 
@@ -33,7 +35,7 @@ public class GDUnitFunc {
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
     String result = "check on chain success";
-
+    SimpleDateFormat sdfSec = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -505,9 +507,8 @@ public class GDUnitFunc {
 
         Map chkData = new HashMap();
 
-        String saveFile = testResultPath + "JGData/" + testClassName + "JGPrinciple.txt";
+        String saveFile = testResultPath + "JGData/" + testClassName + "_JGPrinciple.txt";
         FileOperation fo = new FileOperation();
-        fo.appendToFile("//===================================================================",saveFile);
 
         for(int i=iStart;i<=iEnd;i++) {
             Map temp = gdCF.findDataInBlock(i, "supervision");
@@ -518,9 +519,11 @@ public class GDUnitFunc {
                 for(int k=0;k<com.alibaba.fastjson.JSONArray.parseArray(storeData).size();k++) {
                     chkData = checkBlkUriDataJGPrinciple(com.alibaba.fastjson.JSONArray.parseArray(storeData).get(k).toString());
                     if(!chkData.isEmpty()){
-                        fo.appendToFile("test case " + testCurMethodName,saveFile);//将单元测试用例名写入文件
-                        fo.appendToFile("block height " + i + "uri " + chkData.get("uri").toString(),saveFile);//将uri信息写入文件
-                        fo.appendToFile(chkData.get("JGData").toString(),saveFile);//将报送的监管数据信息写入文件
+                        //将当前时间 单元测试用例名 uri信息 报送的监管数据信息 写入文件
+                        fo.appendToFile("//===================================================================",saveFile);
+                        fo.appendToFile(sdfSec.format((new Date()).getTime()) + " test case " + testCurMethodName
+                                + "\nblock height " + i + " \nuri " + chkData.get("uri").toString()
+                                + "\n" + chkData.get("JGData").toString() ,saveFile );
                     }
                 }
             }
@@ -528,9 +531,11 @@ public class GDUnitFunc {
                 //StoreData仅是一个JSON字符串时
                 chkData =checkBlkUriDataJGPrinciple(storeData);
                 if(!chkData.equals(null)){
-                    fo.appendToFile("test case " + testCurMethodName,saveFile);//将单元测试用例名写入文件
-                    fo.appendToFile("block height " + i + "uri " + chkData.get("uri").toString(),saveFile);//将uri信息写入文件
-                    fo.appendToFile(chkData.get("JGData").toString(),saveFile);//将报送的监管数据信息写入文件
+                    //将当前时间 单元测试用例名 uri信息 报送的监管数据信息 写入文件
+                    fo.appendToFile("**===================================================================",saveFile);
+                    fo.appendToFile(sdfSec.format((new Date()).getTime()) + " test case " + testCurMethodName
+                            + "\nblock height " + i + " \nuri " + chkData.get("uri").toString()
+                            + "\n" + chkData.get("JGData").toString() ,saveFile );
                 }
             }
 

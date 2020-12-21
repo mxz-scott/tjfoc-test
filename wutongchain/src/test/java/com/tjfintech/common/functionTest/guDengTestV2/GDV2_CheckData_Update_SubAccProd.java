@@ -60,14 +60,14 @@ public class GDV2_CheckData_Update_SubAccProd {
     }
 
 
-//    @After
+    @After
     public void calJGDataAfterTx()throws Exception{
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
-//        uf.calJGData();
-        uf.calJGDataEachHeight();
+        int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
+        uf.checkJGHeaderOpVer(blockHeight,endHeight);
+        uf.updateBlockHeightParam(endHeight);
     }
-
 
     @Test
     public void TC20_allUpdateSubjectInfo_Enterprise()throws Exception {
