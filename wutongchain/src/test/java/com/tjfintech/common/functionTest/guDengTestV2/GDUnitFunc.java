@@ -5,6 +5,7 @@ import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.FileOperation;
+import com.tjfintech.common.utils.MinIOOperation;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
@@ -15,10 +16,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.tjfintech.common.functionTest.guDengTestV2.GDCommonFunc.gdConstructShareList;
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -488,5 +486,100 @@ public class GDUnitFunc {
                 "\\src\\main\\java\\com\\tjfintech\\common\\utils\\UtilsClassGD.java",
                 "public static int blockHeight =",
                 "\tpublic static int blockHeight = " + blockHeight + ";");
+    }
+
+    public void updateBlockHeightParam(int height)throws Exception{
+        //执行成功后更新文件中的参数
+        FileOperation fo2 = new FileOperation();
+        fo2.replaceKeyword(System.getProperty("user.dir")  +
+                        "\\src\\main\\java\\com\\tjfintech\\common\\utils\\UtilsClassGD.java",
+                "public static int blockHeight =",
+                "\tpublic static int blockHeight = " + height + ";");
+    }
+
+    public void checkJGHeaderOpVer(int iStart,int iEnd)throws Exception{
+        GDCommonFunc gdCF = new GDCommonFunc();
+
+        String testClassName = Thread.currentThread().getStackTrace()[2].getClassName();
+        testClassName = testClassName.substring(testClassName.lastIndexOf(".")+1);
+
+        Map chkData = new HashMap();
+
+        String saveFile = testResultPath + "JGData/" + testClassName + "JGPrinciple.txt";
+        FileOperation fo = new FileOperation();
+        fo.appendToFile("//===================================================================",saveFile);
+
+        for(int i=iStart;i<=iEnd;i++) {
+            Map temp = gdCF.findDataInBlock(i, "supervision");
+            String storeData = temp.get("storeData").toString();
+            if(storeData.equals("")) continue;
+            //storeData是个List时
+            if(storeData.contains("[")){
+                for(int k=0;k<com.alibaba.fastjson.JSONArray.parseArray(storeData).size();k++) {
+                    chkData = checkBlkUriDataJGPrinciple(com.alibaba.fastjson.JSONArray.parseArray(storeData).get(k).toString());
+                    if(!chkData.isEmpty()){
+                        fo.appendToFile("test case " + testCurMethodName,saveFile);//将单元测试用例名写入文件
+                        fo.appendToFile("block height " + i + "uri " + chkData.get("uri").toString(),saveFile);//将uri信息写入文件
+                        fo.appendToFile(chkData.get("JGData").toString(),saveFile);//将报送的监管数据信息写入文件
+                    }
+                }
+            }
+            else {
+                //StoreData仅是一个JSON字符串时
+                chkData =checkBlkUriDataJGPrinciple(storeData);
+                if(!chkData.equals(null)){
+                    fo.appendToFile("test case " + testCurMethodName,saveFile);//将单元测试用例名写入文件
+                    fo.appendToFile("block height " + i + "uri " + chkData.get("uri").toString(),saveFile);//将uri信息写入文件
+                    fo.appendToFile(chkData.get("JGData").toString(),saveFile);//将报送的监管数据信息写入文件
+                }
+            }
+
+        }
+    }
+
+    public Map checkBlkUriDataJGPrinciple(String storeData)throws Exception{
+        Map mapData = new HashMap();
+        MinIOOperation mo = new MinIOOperation();
+        com.alibaba.fastjson.JSONObject jsonStore = com.alibaba.fastjson.JSONObject.parseObject(storeData);
+        String uri = jsonStore.getString("uri");
+        String data = mo.getFileFromMinIO(minIOEP,jgBucket,uri,"");
+        Boolean bFlag = false;
+
+
+        if(data.contains("\"operation\":\"create\"") && (!(
+                data.contains("\"operation\":\"create\",\"version\":0") ||
+                        data.contains("\"version\":0,\"operation\":\"create\"")))){
+            bFlag = true;
+        }
+
+        if(data.contains("\"operation\":\"update\"") && (data.contains("\"operation\":\"update\",\"version\":0")
+                || data.contains("\"version\":0,\"operation\":update"))){
+            bFlag = true;
+        }
+
+        if(data.contains("\"operation\":\"delete\"") && (data.contains("\"operation\":\"delete\",\"version\":0")
+                || data.contains("\"version\":0,\"operation\":delete"))){
+            bFlag = true;
+        }
+        if(bFlag) {
+//            log.info("检查uri " + uri + "\n" + data);
+            mapData.put("uri" ,uri);
+            mapData.put("JGData",data);
+//            assertEquals(false,bFlag);
+        }
+        return mapData;
+    }
+
+    //检查包含特定字符的交易及区块信息
+    public void storeDataCheckKeyWord(int iStart,int iEnd,String keyWord)throws Exception{
+        GDCommonFunc gdCF = new GDCommonFunc();
+        MinIOOperation mo = new MinIOOperation();
+        for(int i=iStart;i<=iEnd;i++) {
+            Map temp = gdCF.findDataInBlock(i, keyWord);
+//            Map temp = findDataInBlock(i, "gdCmpyId01z3k4gF");
+            String storeData = temp.get("storeData").toString();
+            log.info(storeData);
+
+        }
     }
 }
