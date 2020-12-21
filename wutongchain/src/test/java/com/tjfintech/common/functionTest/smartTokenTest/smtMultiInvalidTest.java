@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -277,9 +278,9 @@ public class smtMultiInvalidTest {
 
         String IssueApplyResp3 = st.SmartIssueTokenReq(contractAddress, tokenType, expiredDate, toList, activeDate, false, 0, "");
         String sigMsg3 = JSONObject.fromObject(IssueApplyResp3).getJSONObject("data").getString("sigMsg");
-        String tempSM3Hash2= certTool.getSm3Hash(PEER4IP, sigMsg3);
+        String tempSM3Hash2 = certTool.getSm3Hash(PEER4IP, sigMsg3);
         String cryptMsg2 = certTool.sign(PEER4IP, PRIKEY1, "", tempSM3Hash2, "hex");
-        String approveResp2= st.SmartIssueTokenApprove(sigMsg3, cryptMsg2, PUBKEY1);
+        String approveResp2 = st.SmartIssueTokenApprove(sigMsg3, cryptMsg2, PUBKEY1);
         assertEquals("200", JSONObject.fromObject(approveResp2).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(approveResp2, utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
@@ -428,6 +429,7 @@ public class smtMultiInvalidTest {
         assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
 
     }
+
     /**
      * 过期转换 过期回收
      */
@@ -472,7 +474,7 @@ public class smtMultiInvalidTest {
 
         log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
         stc.verifyAddressHasBalance(ADDRESS1, tokenType, "100.15");
-        stc.verifyAddressNoBalance(MULITADD4,newTokenType);
+        stc.verifyAddressNoBalance(MULITADD4, newTokenType);
 
         //回收
         String destroyData1 = "销毁 ADDRESS1 中的" + tokenType;
@@ -489,6 +491,7 @@ public class smtMultiInvalidTest {
         stc.verifyAddressHasBalance(ZEROADDRESS, tokenType, "100.15");
 
     }
+
     /**
      * 未激活时转让（不可以转让）转换（不可以转换）回收（可以回收）
      */
@@ -519,10 +522,10 @@ public class smtMultiInvalidTest {
         stc.verifyAddressHasBalance(ADDRESS1, tokenType, "100.15");
         //转账
         String transferData = "ADDRESS1 向 MULITADD4 转账10个" + tokenType;
-        String transferResp1= stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
-        assertEquals("200",JSONObject.fromObject(transferResp1).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        String transferResp1 = stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
+        assertEquals("200", JSONObject.fromObject(transferResp1).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType, SLEEPTIME);
 
         log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
         stc.verifyAddressHasBalance(ADDRESS1, tokenType, "100.15");
@@ -541,7 +544,7 @@ public class smtMultiInvalidTest {
 
         log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
         stc.verifyAddressHasBalance(ADDRESS1, tokenType, "100.15");
-        stc.verifyAddressNoBalance(MULITADD4,newTokenType);
+        stc.verifyAddressNoBalance(MULITADD4, newTokenType);
 
         //回收
         String destroyData1 = "销毁 ADDRESS1 中的" + tokenType;
@@ -556,6 +559,79 @@ public class smtMultiInvalidTest {
 
         log.info("查询回收账户余额");
         stc.verifyAddressHasBalance(ZEROADDRESS, tokenType, "100.15");
+
+    }
+
+    /**
+     * token未发行、未审核通过，回收失败
+     */
+    @Test
+    public void TC_destroyTokenInvalid() throws Exception {
+
+        //token未发行
+        tokenType = System.currentTimeMillis() + "";
+        String destroyData = "回收" + tokenType;
+        List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", "200", null);
+        String destroyResp = st.SmartDestroyReq(tokenType, payList, "", destroyData);
+        assertEquals("400", JSONObject.fromObject(destroyResp).getString("state"));
+
+        //未审核状态
+        tokenType = "TB_" + UtilsClass.Random(10);
+        double timeStampNow = System.currentTimeMillis();
+        BigDecimal deadline = new BigDecimal(timeStampNow + 12356789);
+        List<Map> list = stc.smartConstructTokenList(ADDRESS1, "test", "200", null);
+        String issueResp = st.SmartIssueTokenReq
+                (smartAccoutContractAddress, tokenType, deadline, list, new BigDecimal(0), true, 0, "");
+        assertEquals("200", JSONObject.fromObject(issueResp).getString("state"));
+
+        destroyResp = st.SmartDestroyReq(tokenType, payList, "", destroyData);
+        assertEquals("400", JSONObject.fromObject(destroyResp).getString("state"));
+
+    }
+
+
+    /**
+     * paymentList列表数据异常，回收失败
+     */
+    @Test
+    public void TC_destroyPayListInvalid() throws Exception {
+
+        //paymentList.address地址错误
+        tokenType = stc.beforeConfigIssueNewToken("200");
+        String destroyData = "回收" + tokenType;
+        List<Map> payList = stc.smartConstructTokenList(invalidAddress, "test", "200", null);
+        String destroyResp = st.SmartDestroyReq(tokenType, payList, "", destroyData);
+        assertEquals("400", JSONObject.fromObject(destroyResp).getString("state"));
+
+        //paymentList.amount数量超出余额
+        payList.clear();
+        payList = stc.smartConstructTokenList(ADDRESS1, "test", "300", null);
+        destroyResp = st.SmartDestroyReq(tokenType, payList, "", destroyData);
+        assertEquals("400", JSONObject.fromObject(destroyResp).getString("state"));
+
+
+    }
+
+    /**
+     * pubkeys、minSignatures数据异常，创建地址失败
+     */
+    @Test
+    public void TC_GenarateAddressInvalid() throws Exception {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("1", PUBKEY1);
+        map.put("2", PUBKEY1);
+
+        //pubkeys传入两个一样的公钥数据
+        String transferResp = st.SmartGenarateAddress(2, map);
+        assertEquals("500", JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true, transferResp.contains("不能传入相同公钥!"));
+
+        //minSignatures传入3，pubkeys传入2组公钥数据
+        transferResp = st.SmartGenarateAddress(3, map);
+        assertEquals("500", JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true, transferResp.contains("公钥个数[2]不能小于最小签名数[3]!"));
+
 
     }
 

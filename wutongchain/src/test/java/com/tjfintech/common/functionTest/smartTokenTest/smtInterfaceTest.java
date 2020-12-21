@@ -49,6 +49,27 @@ public class smtInterfaceTest {
 
     }
 
+    //创建账户地址必填字段验证
+    @Test
+    public void smtGenarateAddressInterfaceTest() throws Exception {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("1", PUBKEY1);
+        map.put("2", PUBKEY2);
+
+        log.info("minSignatures为0");
+        String transferResp = st.SmartGenarateAddress(0, map);
+        assertEquals("500", JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true, transferResp.contains("minSignature[0] \\u003c 1"));
+
+        log.info("pubkeys数组为空或null");
+        map.clear();
+        transferResp = st.SmartGenarateAddress(2, map);
+        assertEquals("500", JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true, transferResp.contains("公钥个数[0]不能小于最小签名数[2]!"));
+
+    }
+
     //转让申请必填字段验证
     @Test
     public void smtTransferApplyInterfaceTest() throws Exception {
@@ -236,6 +257,44 @@ public class smtInterfaceTest {
 
     }
 
+    //销毁/回收申请必填字段验证
+    @Test
+    public void smtDestroyApplyInterfaceTest() throws Exception {
+
+        String issueAmount = "100";
+        tokenType = stc.beforeConfigIssueNewToken(issueAmount);
+        List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", issueAmount, null);
+
+        log.info("tokenType为空");
+        String transferResp = st.SmartDestroyReq("", payList, "", "");
+        assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true, transferResp.contains("数字资产类型为必填字段"));
+
+        log.info("支出list不存在");
+        payList.clear();
+        transferResp = st.SmartDestroyReq(tokenType, payList, "", "");
+//        assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
+//        assertEquals(true,transferResp.contains("支出列表必须大于0项"));
+        transferResp = st.SmartDestroyReq(tokenType, null, "", "");
+        assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true, transferResp.contains("支出列表为必填字段"));
+
+        log.info("支出地址不存在");
+        payList.clear();
+        payList = stc.smartConstructTokenList("", "test", issueAmount, null);
+        transferResp = st.SmartDestroyReq(tokenType, payList, "", "");
+        assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true, transferResp.contains("支出地址为必填字段"));
+
+        log.info("支出金额不存在");
+        payList.clear();
+        payList = stc.smartConstructTokenList(ADDRESS1, "test", "", null);
+        transferResp = st.SmartDestroyReq(tokenType, payList, "", "");
+        assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true, transferResp.contains("支出金额为必填字段"));
+
+    }
+
     //发行申请必填字段验证及有效期最大流转层级的验证
 
     @Test
@@ -255,15 +314,15 @@ public class smtInterfaceTest {
 
         log.info("tokenType为空");
 
-        IssueApplyResp= st.SmartIssueTokenReq(contractAddress,"", expiredDate, toList,activeDate,true,0,"");
-        assertEquals("400",JSONObject.fromObject(IssueApplyResp).getString("state"));
-        assertEquals(true,IssueApplyResp.contains("数字资产类型为必填字段"));
+        IssueApplyResp = st.SmartIssueTokenReq(contractAddress, "", expiredDate, toList, activeDate, true, 0, "");
+        assertEquals("400", JSONObject.fromObject(IssueApplyResp).getString("state"));
+        assertEquals(true, IssueApplyResp.contains("数字资产类型为必填字段"));
 
 
         log.info("数字资产有效期时间戳为空");
-        IssueApplyResp= st.SmartIssueTokenReq(contractAddress,tokenType, null,toList,activeDate,true,0,"");
-        assertEquals("400",JSONObject.fromObject(IssueApplyResp).getString("state"));
-        assertEquals(true,IssueApplyResp.contains("数字资产有效期时间戳为必填字段"));
+        IssueApplyResp = st.SmartIssueTokenReq(contractAddress, tokenType, null, toList, activeDate, true, 0, "");
+        assertEquals("400", JSONObject.fromObject(IssueApplyResp).getString("state"));
+        assertEquals(true, IssueApplyResp.contains("数字资产有效期时间戳为必填字段"));
 
         String IssueApplyResp1 = st.SmartIssueTokenReq(contractAddress, "", expiredDate, toList, activeDate, true, 0, "");
         assertEquals("400", JSONObject.fromObject(IssueApplyResp1).getString("state"));
@@ -273,37 +332,37 @@ public class smtInterfaceTest {
         log.info("tokenList不存在");
         toList.clear();
 
-        IssueApplyResp= st.SmartIssueTokenReq(contractAddress,tokenType,expiredDate,toList,activeDate,true,0,"");
-        assertEquals("400",JSONObject.fromObject(IssueApplyResp).getString("state"));
-        assertEquals(true,IssueApplyResp.contains("数字资产接收信息必须至少包含1项"));
+        IssueApplyResp = st.SmartIssueTokenReq(contractAddress, tokenType, expiredDate, toList, activeDate, true, 0, "");
+        assertEquals("400", JSONObject.fromObject(IssueApplyResp).getString("state"));
+        assertEquals(true, IssueApplyResp.contains("数字资产接收信息必须至少包含1项"));
 
         log.info("接收金额为空");
         toList.clear();
-        toList = stc.smartConstructTokenList(ADDRESS1, "test", "",null);
-        IssueApplyResp= st.SmartIssueTokenReq(contractAddress,tokenType,expiredDate,toList,activeDate,true,0,"");
-        assertEquals("400",JSONObject.fromObject(IssueApplyResp).getString("state"));
-        assertEquals(true,IssueApplyResp.contains("接收金额为必填字段"));
+        toList = stc.smartConstructTokenList(ADDRESS1, "test", "", null);
+        IssueApplyResp = st.SmartIssueTokenReq(contractAddress, tokenType, expiredDate, toList, activeDate, true, 0, "");
+        assertEquals("400", JSONObject.fromObject(IssueApplyResp).getString("state"));
+        assertEquals(true, IssueApplyResp.contains("接收金额为必填字段"));
 
         log.info("受让地址为空");
         toList.clear();
-        toList = stc.smartConstructTokenList("", "test", "10",null);
-        IssueApplyResp= st.SmartIssueTokenReq(contractAddress,tokenType,expiredDate,toList,activeDate,true,0,"");
-        assertEquals("400",JSONObject.fromObject(IssueApplyResp).getString("state"));
-        assertEquals(true,IssueApplyResp.contains("接收地址为必填字段"));
+        toList = stc.smartConstructTokenList("", "test", "10", null);
+        IssueApplyResp = st.SmartIssueTokenReq(contractAddress, tokenType, expiredDate, toList, activeDate, true, 0, "");
+        assertEquals("400", JSONObject.fromObject(IssueApplyResp).getString("state"));
+        assertEquals(true, IssueApplyResp.contains("接收地址为必填字段"));
 
         log.info("最大流转层级为1");
         toList.clear();
-        toList = stc.smartConstructTokenList(ADDRESS1, "test", "10",null);
-        IssueApplyResp= st.SmartIssueTokenReq(contractAddress,tokenType,expiredDate,toList,activeDate,true,1,"");
-        assertEquals("400",JSONObject.fromObject(IssueApplyResp).getString("state"));
-        assertEquals(true,IssueApplyResp.contains("可流转层级必须大于1"));
+        toList = stc.smartConstructTokenList(ADDRESS1, "test", "10", null);
+        IssueApplyResp = st.SmartIssueTokenReq(contractAddress, tokenType, expiredDate, toList, activeDate, true, 1, "");
+        assertEquals("400", JSONObject.fromObject(IssueApplyResp).getString("state"));
+        assertEquals(true, IssueApplyResp.contains("可流转层级必须大于1"));
 
         log.info("最大流转层级为负数");
         toList.clear();
-        toList = stc.smartConstructTokenList(ADDRESS1, "test", "10",null);
-        IssueApplyResp= st.SmartIssueTokenReq(contractAddress,tokenType,expiredDate,toList,activeDate,true,-1,"");
-        assertEquals("400",JSONObject.fromObject(IssueApplyResp).getString("state"));
-        assertEquals(true,IssueApplyResp.contains("可流转层级必须大于1"));
+        toList = stc.smartConstructTokenList(ADDRESS1, "test", "10", null);
+        IssueApplyResp = st.SmartIssueTokenReq(contractAddress, tokenType, expiredDate, toList, activeDate, true, -1, "");
+        assertEquals("400", JSONObject.fromObject(IssueApplyResp).getString("state"));
+        assertEquals(true, IssueApplyResp.contains("可流转层级必须大于1"));
 
         String IssueApplyResp3 = st.SmartIssueTokenReq(contractAddress, tokenType, expiredDate, toList, activeDate, true, 0, "");
         assertEquals("400", JSONObject.fromObject(IssueApplyResp3).getString("state"));
@@ -313,18 +372,18 @@ public class smtInterfaceTest {
         log.info("数字资产有效期小于数字资产激活日期时间戳");
         BigDecimal expiredDate1 = new BigDecimal(timeStampNow - 12356789);
 
-        BigDecimal activeDate1= new BigDecimal(timeStampNow );
-        toList = stc.smartConstructTokenList(ADDRESS1, "test", "10",null);
-        IssueApplyResp= st.SmartIssueTokenReq(contractAddress,tokenType,expiredDate1,toList,activeDate1,true,0,"");
-        assertEquals("400",JSONObject.fromObject(IssueApplyResp).getString("state"));
-        assertEquals(true,IssueApplyResp.contains("数字资产有效期时间戳必须大于数字资产激活日期"));
+        BigDecimal activeDate1 = new BigDecimal(timeStampNow);
+        toList = stc.smartConstructTokenList(ADDRESS1, "test", "10", null);
+        IssueApplyResp = st.SmartIssueTokenReq(contractAddress, tokenType, expiredDate1, toList, activeDate1, true, 0, "");
+        assertEquals("400", JSONObject.fromObject(IssueApplyResp).getString("state"));
+        assertEquals(true, IssueApplyResp.contains("数字资产有效期时间戳必须大于数字资产激活日期"));
 
     }
 
     //发行审核必填字段验证
     @Test
 
-    public void smtissueapproveTest()throws Exception {
+    public void smtissueapproveTest() throws Exception {
         tokenType = "TB_" + UtilsClass.Random(10);
         double timeStampNow = System.currentTimeMillis();
         BigDecimal expiredDate = new BigDecimal(timeStampNow + 12356789);
@@ -353,24 +412,24 @@ public class smtInterfaceTest {
         assertEquals("400", JSONObject.fromObject(approveResp).getString("state"));
         assertEquals(true, approveResp.contains("签名公钥为必填字段"));
 
-        }
-
-        //冻结资产必填字段验证
-        @Test
-        public void smtfreezeTest () throws Exception {
-            log.info("tokentype 为空");
-            String freezeResp = st.SmartFreeze("", "");
-            assertEquals("400", JSONObject.fromObject(freezeResp).getString("state"));
-            assertEquals(true, freezeResp.contains("数字资产类型为必填字段"));
-        }
-
-        //解冻资产必填字段验证
-        @Test
-        public void smtrecoverTest () throws Exception {
-            log.info("tokentype 为空");
-            String freezeResp = st.SmartRecover("", "");
-            assertEquals("400", JSONObject.fromObject(freezeResp).getString("state"));
-            assertEquals(true, freezeResp.contains("数字资产类型为必填字段"));
-
-        }
     }
+
+    //冻结资产必填字段验证
+    @Test
+    public void smtfreezeTest() throws Exception {
+        log.info("tokentype 为空");
+        String freezeResp = st.SmartFreeze("", "");
+        assertEquals("400", JSONObject.fromObject(freezeResp).getString("state"));
+        assertEquals(true, freezeResp.contains("数字资产类型为必填字段"));
+    }
+
+    //解冻资产必填字段验证
+    @Test
+    public void smtrecoverTest() throws Exception {
+        log.info("tokentype 为空");
+        String freezeResp = st.SmartRecover("", "");
+        assertEquals("400", JSONObject.fromObject(freezeResp).getString("state"));
+        assertEquals(true, freezeResp.contains("数字资产类型为必填字段"));
+
+    }
+}

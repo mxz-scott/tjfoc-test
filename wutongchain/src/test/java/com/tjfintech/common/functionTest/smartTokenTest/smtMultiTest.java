@@ -154,9 +154,8 @@ public class smtMultiTest {
 
     @Test
 
-    public void  TC_MAXleveltransfer()throws Exception {
+    public void TC_MAXleveltransfer() throws Exception {
         tokenType = "TB_" + UtilsClass.Random(10);
-
 
 
         double timeStampNow = System.currentTimeMillis();
@@ -315,30 +314,30 @@ public class smtMultiTest {
         tokenType = stc.beforeConfigIssueNewToken("100.75");
         //冻结
 
-        String freezeResp = st.SmartFreeze(tokenType,"");
-        assertEquals("200",JSONObject.fromObject(freezeResp).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        String freezeResp = st.SmartFreeze(tokenType, "");
+        assertEquals("200", JSONObject.fromObject(freezeResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType, SLEEPTIME);
         //转账失败
-        String transferResp= stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
-        assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        String transferResp = stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
+        assertEquals("200", JSONObject.fromObject(transferResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType, SLEEPTIME);
 
         log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
         stc.verifyAddressHasBalance(ADDRESS1, tokenType, "100.75");
         stc.verifyAddressNoBalance(MULITADD4, tokenType);
         //解冻
 
-        String recoverResp = st.SmartRecover(tokenType,"");
-        assertEquals("200",JSONObject.fromObject(recoverResp).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        String recoverResp = st.SmartRecover(tokenType, "");
+        assertEquals("200", JSONObject.fromObject(recoverResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType, SLEEPTIME);
         //转账
-        String transferResp1= stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
-        assertEquals("200",JSONObject.fromObject(transferResp1).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        String transferResp1 = stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
+        assertEquals("200", JSONObject.fromObject(transferResp1).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType, SLEEPTIME);
 
         log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
         stc.verifyAddressHasBalance(ADDRESS1, tokenType, "90.75");
@@ -375,10 +374,10 @@ public class smtMultiTest {
         tokenType = stc.beforeConfigIssueNewToken("100.75");
         //冻结
 
-        String freezeResp = st.SmartFreeze(tokenType,"");
-        assertEquals("200",JSONObject.fromObject(freezeResp).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        String freezeResp = st.SmartFreeze(tokenType, "");
+        assertEquals("200", JSONObject.fromObject(freezeResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType, SLEEPTIME);
 
         //部分回收
         String destroyData1 = "销毁 ADDRESS1 中的" + tokenType;
@@ -410,10 +409,10 @@ public class smtMultiTest {
         stc.verifyAddressHasBalance(ADDRESS1, tokenType, "10");
         stc.verifyAddressNoBalance(MULITADD4, tokenType);
         //解冻
-        String recoverResp = st.SmartRecover(tokenType,"");
-        assertEquals("200",JSONObject.fromObject(recoverResp).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        String recoverResp = st.SmartRecover(tokenType, "");
+        assertEquals("200", JSONObject.fromObject(recoverResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType, SLEEPTIME);
         //转换
         String transferResp1 = stc.smartExchange
                 (tokenType, payList, collList, newTokenType, "", transferData);
@@ -428,7 +427,92 @@ public class smtMultiTest {
 
     }
 
+    /**
+     * 单签回收、多签回收、单多签同时回收、冻结后回收[此案例还需修改]
+     */
+    @Test
+    public void TC_destroySoloMulti() throws Exception {
 
+        //发行
+        tokenType = stc.beforeConfigIssueNewToken("200");
+        sleepAndSaveInfo(2000);
+
+        //转账
+        String transferData = "ADDRESS1 向 MULITADD4 转账100.123456个" + tokenType;
+        List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", "100.123456", null);
+        List<Map> collList = stc.smartConstructTokenList(MULITADD4, "test", "100.123456", null);
+        String transferResp = stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
+
+        assertEquals("200", JSONObject.fromObject(transferResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType, SLEEPTIME);
+
+        log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "99.876544");
+        stc.verifyAddressHasBalance(MULITADD4, tokenType, "100.123456");
+        sleepAndSaveInfo(2000);
+
+        //ADDRESS1回收50.000044
+        payList.clear();
+        payList = stc.smartConstructTokenList(ADDRESS1, "test", "50.000044", null);
+        String destroyResp = stc.smartDestroy(tokenType, payList, "", "");
+        assertEquals("200", JSONObject.fromObject(destroyResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType, SLEEPTIME);
+
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "49.8765");
+        stc.verifyAddressHasBalance(MULITADD4, tokenType, "100.123456");
+        stc.verifyAddressHasBalance(ZEROADDRESS, tokenType, "50.000044");
+        sleepAndSaveInfo(2000);
+
+        //MULITADD4回收50.023456
+        payList.clear();
+        payList = stc.smartConstructTokenList(MULITADD4, "test", "50.023456", null);
+        destroyResp = stc.smartDestroy(tokenType, payList, "", "");
+        assertEquals("200", JSONObject.fromObject(destroyResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType, SLEEPTIME);
+
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "49.8765");
+        stc.verifyAddressHasBalance(MULITADD4, tokenType, "50.1");
+        stc.verifyAddressHasBalance(ZEROADDRESS, tokenType, "100.0235");
+        sleepAndSaveInfo(2000);
+
+        //ADDRESS1/MULITADD4同时回收20
+        payList.clear();
+        payList = stc.smartConstructTokenList(ADDRESS1, "test", "20", null);
+        List<Map> payList2 = stc.smartConstructTokenList(MULITADD4, "test", "20", payList);
+        destroyResp = stc.smartDestroy(tokenType, payList2, "", "");
+        assertEquals("200", JSONObject.fromObject(destroyResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType, SLEEPTIME);
+
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "29.8765");
+        stc.verifyAddressHasBalance(MULITADD4, tokenType, "30.1");
+        stc.verifyAddressHasBalance(ZEROADDRESS, tokenType, "140.0235");
+        sleepAndSaveInfo(2000);
+
+        //冻结tokentype
+        String freezeResp = st.SmartFreeze(tokenType,"");
+        assertEquals("200", JSONObject.fromObject(freezeResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType, SLEEPTIME);
+
+        //ADDRESS1/MULITADD4同时回收20
+        payList.clear();
+        payList2.clear();
+        payList = stc.smartConstructTokenList(ADDRESS1, "test", "29.8765", null);
+        payList2 = stc.smartConstructTokenList(MULITADD4, "test", "30.1", payList);
+        destroyResp = stc.smartDestroy(tokenType, payList2, "", "");
+        assertEquals("200", JSONObject.fromObject(destroyResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType, SLEEPTIME);
+
+        stc.verifyAddressNoBalance(ADDRESS1, tokenType);
+        stc.verifyAddressNoBalance(MULITADD4, tokenType);
+        stc.verifyAddressHasBalance(ZEROADDRESS, tokenType, "200");
+
+    }
 
 //    /**
 //     * 精度测试
