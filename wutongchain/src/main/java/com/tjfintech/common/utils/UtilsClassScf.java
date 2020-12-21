@@ -9,43 +9,37 @@ import net.sf.json.JSONObject;
 import java.math.BigInteger;
 import java.util.*;
 
-import static com.tjfintech.common.utils.UtilsClass.testDataPath;
-import static org.junit.Assert.assertThat;
 
 @Slf4j
 public class UtilsClassScf {
     TestBuilder testBuilder = TestBuilder.getInstance();
     Scf scf = testBuilder.getScf();
 
-    public static String platformKeyID = "buushlte655bj3jflqog";//平台ID
+    public static String platformKeyID = "";//平台ID
     public static String platformPubkey = "";//平台公钥
     public static String platformPubkeyPem = "";//平台公钥PEM格式
     public static String platformPIN = "123";
 
-    public static String coreCompanyKeyID = "buushlte655bj3jflqv0";//核心企业ID
-    public static String coreCompanyPubkey = "";//核心企业公钥
+    public static String coreCompanyKeyID = "";//核心企业ID
     public static String coreCompanyPubkeyPem = "";//核心企业公钥PEM格式
-//    public static String coreCompanyAddress = "SnsEEcAsq9364NW1y72XNKfXE3tJvTacyxX838Cwr8VRdiscmky";//核心企业地址
-    public static String coreCompanyAddress = "4RXgvexgSJ3fvhKiFqKRYQzuJycjxijzr8oeijyzvhkgwAXDgm";//核心企业地址
+    public static String coreCompanyAddress = "";//核心企业地址
 
-    public static String supplyAddress1 = "SnMn7eXperY2Vp6MMexUW5sdVC1PKEQo7grXP2SBypee8irugZg";//供应商地址1
-    public static String supplyAddress2 = "Sn5ANYdXD8ZK1ioghfoZ2LfFa82QTXvDWGiZiaxCxMFz6ZjxMPi";//供应商地址2
-    public static String supplyAddress3 = "SoAx16qvTbobNnZyQEWhSXuDubKeDryBfneQ3neThrwrY6CYHfY";//供应商地址3
-
-    public static String supplyID1 = "buushlte655bj3jflsd0";//供应商ID1
-    public static String supplyID2 = "buushlte655bj3jflslg";//供应商ID2
-    public static String supplyID3 = "buushlte655bj3jflsrg";//供应商ID3
+    public static String supplyAddress1 = "";//供应商地址1
+    public static String supplyAddress2 = "";//供应商地址2
+    public static String supplyAddress3 = "";//供应商地址3
+    public static String supplyID1 = "";//供应商ID1
+    public static String supplyID2 = "";//供应商ID2
+    public static String supplyID3 = "";//供应商ID3
 
     public static String companyID1 = "001";//资金方ID01
     public static String companyID2 = "002";//资金方ID02
-    public static String companyID3 = "003";//资金方ID03
 
     public static String PIN = "123456";
 
-    public static String AccountAddress = "99773fdc7a8442e91ccf0d75f1af588c1ae6f9990d86768df900f9e84e2f5298";
-    public static String PlatformAddress = "827dd1501d88f543d45aa07c074144cee788562a8dee16244be3730696e62502";//平台合约
-    public static String QFJGAddress = "7af8cb6b2faaac695bda1b56b8ba52eeeeafb812dc180d16c9ca93acaa8c7541";
-    public static String ZJFAddress = "79e3381736610d2914a2ee5ca88c279b4d31aa6af3f5d5ac392658677710bba7";
+    public static String AccountAddress = ""; //账户合约
+    public static String PlatformAddress = ""; //平台合约
+    public static String QFJGAddress = ""; //清分机构合约，需要赋予everyone权限
+    public static String ZJFAddress = ""; //资金方合约，需要赋予everyone权限
     public static String pubFormatSM2 = "sm2_pem";
     public static String comments = "BwAAAGZpbmFuY2UKAAAAdGVzdFNlbmRlcgENAAAAdGVzdFJlY2VpdmVycwAAAAAAAAAAAQAAADEAAAAADAAAAOa1i+ivlea2iOaBrw==";
 

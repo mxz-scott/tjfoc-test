@@ -56,7 +56,7 @@ public class ScfBeforeCondition {
      *
      *
      */
-    @Test
+    //@Test
     public void B001_createPlatformAccount() throws  Exception {
 
         String response = kms.createKey(keySpecSm2, password, pubFormatSM2);
@@ -77,7 +77,7 @@ public class ScfBeforeCondition {
      *
      *
      */
-    @Test
+    //@Test
     public void B002_createCoreCompanyAccount() throws  Exception {
 
         String commmets = utilsClassScf.generateMessage();
@@ -99,7 +99,7 @@ public class ScfBeforeCondition {
      *
      *
      */
-    @Test
+    //@Test
     public void B003_installContracts() throws  Exception {
 
         //安装账户合约
@@ -157,18 +157,21 @@ public class ScfBeforeCondition {
      *
      *
      */
-    @Test
+    //@Test
     public void B004_createSupplyAccounts() throws  Exception {
 
 //        String commmets = utilsClassScf.generateMessage();
 
         String response1 = scf.AccountCreate(platformKeyID, PIN, "","");
         supplyAddress1 = JSONObject.fromObject(response1).getString("data");
+        supplyID1 = JSONObject.fromObject(response1).getString("keyID");
 
         String response2 = scf.AccountCreate(platformKeyID, PIN, "","");
         supplyAddress2 = JSONObject.fromObject(response2).getString("data");
+        supplyID2 = JSONObject.fromObject(response2).getString("keyID");
 
         String response3 = scf.AccountCreate(platformKeyID, PIN, "","");
         supplyAddress3 = JSONObject.fromObject(response3).getString("data");
+        supplyID3 = JSONObject.fromObject(response3).getString("keyID");
     }
 }

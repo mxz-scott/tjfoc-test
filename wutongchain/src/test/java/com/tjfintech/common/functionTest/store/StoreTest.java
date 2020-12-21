@@ -355,6 +355,49 @@ public class StoreTest {
         assertThat(response2,containsString("success"));
     }
 
+    @Test
+    public void getPeerlist()throws  Exception{
+
+        String response= store.GetPeerList();
+        assertThat(response,containsString("200"));
+        assertThat(response,containsString("success"));
+        assertThat(response,containsString("data"));
+        assertThat(response,containsString("ip"));
+        assertThat(response,containsString("state"));
+    }
+
+    @Test
+    public void getMemberlist()throws  Exception{
+        String response= store.GetMemberList();
+        assertThat(response,containsString("200"));
+        assertThat(response,containsString("success"));
+        assertThat(response,containsString("memberList"));
+        assertThat(response,containsString("id"));
+        assertThat(response,containsString("addr"));
+        assertThat(response,containsString("version"));
+        assertThat(response,containsString("port"));
+        assertThat(response,containsString("shownName"));
+        assertThat(response,containsString("inAddr"));
+        assertThat(response,containsString("height"));
+        assertThat(response,containsString("hashType"));
+        assertThat(response,containsString("consensus"));
+    }
+
+    @Test
+    public void getSubLedger()throws  Exception{
+        String response= store.GetLedger();
+        assertThat(response,containsString("200"));
+        assertThat(response,containsString("success"));
+        assertThat(response,containsString("number"));
+    }
+
+    @Test
+    public void getAPIHealth()throws  Exception{
+        String response= store.GetApiHealth();
+        assertThat(response,containsString("200"));
+        assertThat(response,containsString("success"));
+    }
+
     //20200728 代码不再检查重复交易
 //    @Test
     public void createStoreDupDataString() throws Exception {

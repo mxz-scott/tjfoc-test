@@ -33,19 +33,47 @@ public  class GoStore implements Store {
     }
 
     /**
-     * 根据子链名字获取子链信息。
+     *  获取应用链信息
      *
      * @method GET
      */
 
-    public String GetLedger(String ledgerName) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("ledger", ledgerName);
-        String result = PostTest.sendPostToJson(SDKADD + "/v2/subledger", map);
+    public String GetLedger(String ledger) {
+        String param = "";
+        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
+        String result = GetTest.doGet2(SDKADD + "/xxxxxxxxxx?" + param);
         log.info(result);
         return result;
-
     }
+
+    /**
+     *  获取应用链信息
+     *
+     * @method GET
+     */
+
+    public String GetLedger() {
+        String param = "";
+        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
+        String result = GetTest.doGet2(SDKADD + "/v2/subledger?" + param);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     *  获取节点信息详情
+     *
+     * @method GET
+     */
+
+    public String GetMemberList() {
+        String param = "";
+        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
+        String result = GetTest.doGet2(SDKADD + "/v2/memberlist?" + param);
+        log.info(result);
+        return result;
+    }
+
 
     /**
      * 获取交易详情。
@@ -302,7 +330,7 @@ public  class GoStore implements Store {
     public String GetPeerList() {
         String param = "";
         if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/getpeerlist?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/peerlist?" + param);
         log.info(result);
         return result;
     }

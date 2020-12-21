@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.ScfTest;
 
 import com.alibaba.fastjson.JSON;
+import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Kms;
 import com.tjfintech.common.Interface.Scf;
@@ -18,6 +19,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import com.tjfintech.common.utils.UtilsClassScf;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -29,16 +31,22 @@ import java.util.Map;
 @Slf4j
 public class GoScfTest {
 
-    public   final static int   SHORTSLEEPTIME=3*1000;
     TestBuilder testBuilder= TestBuilder.getInstance();
-    Store store =testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
     Scf scf = testBuilder.getScf();
     public static long expireDate = System.currentTimeMillis() + 100000000;
     Kms kms = testBuilder.getKms();
 
-
+    @BeforeClass
+    public static void beforeConfig() throws Exception {
+        ScfBeforeCondition bf = new ScfBeforeCondition();
+        bf.B001_createPlatformAccount();
+        bf.B002_createCoreCompanyAccount();
+        bf.B003_installContracts();
+        bf.B004_createSupplyAccounts();
+        Thread.sleep(5000);
+    }
     /**
      * 开立-审核-签收-查询资产-获取output交易ID和index
      * @throws InterruptedException
@@ -83,7 +91,7 @@ public class GoScfTest {
         String response5 = scf.getowneraddr(tokenType);
         assertThat(response5, containsString("200"));
         assertThat(response5, containsString("success"));
-        assertThat(response5, containsString("\"address\":\"SnMn7eXperY2Vp6MMexUW5sdVC1PKEQo7grXP2SBypee8irugZg\""));
+        assertThat(response5, containsString("\"address\":\""+ supplyAddress1));
         assertThat(response5, containsString("\"value\":100"));
         //获取output的交易id和index
         String response6 = scf.FuncGetoutputinfo(supplyAddress1, tokenType, subType);
@@ -210,9 +218,9 @@ public class GoScfTest {
         String response6 = scf.getowneraddr(tokenType);
         assertThat(response6, containsString("200"));
         assertThat(response6, containsString("success"));
-        assertThat(response6, containsString("\"address\":\"Sn5ANYdXD8ZK1ioghfoZ2LfFa82QTXvDWGiZiaxCxMFz6ZjxMPi\""));
+        assertThat(response6, containsString("\"address\":\""+ supplyAddress2));
         assertThat(response6, containsString("\"value\":1"));
-        assertThat(response6, containsString("\"address\":\"SnMn7eXperY2Vp6MMexUW5sdVC1PKEQo7grXP2SBypee8irugZg\""));
+        assertThat(response6, containsString("\"address\":\""+ supplyAddress1));
         assertThat(response6, containsString("\"value\":99"));
     }
 
@@ -417,6 +425,7 @@ public class GoScfTest {
 
     /**
      * 开立-审核-签收-兑付申请-兑付试算-兑付反馈-兑付确认
+     * 兑付需要给清分机构和资金方合约里的方法everyone调用权限。
      */
     @Test
      public void Test008_PayingConfirm() throws Exception {
@@ -474,7 +483,7 @@ public class GoScfTest {
         Thread.sleep(5000);
         //兑付确认
         List<Map> list = new ArrayList<>(10);
-        List<Map> list1 = UtilsClassScf.paying("SnMn7eXperY2Vp6MMexUW5sdVC1PKEQo7grXP2SBypee8irugZg", "buushlte655bj3jflsd0", "0", "100", list);
+        List<Map> list1 = UtilsClassScf.paying(supplyAddress1, supplyID1, "0", "100", list);
         String response9 = scf.PayingConfirm(QFJGAddress, companyID1, list1, platformKeyID, platformPIN, tokenType, comments);
         assertThat(response9, containsString("200"));
         assertThat(response9, containsString("success"));
@@ -579,8 +588,8 @@ public class GoScfTest {
         assertThat(response8, containsString("data"));
         Thread.sleep(5000);
         //兑付确认
-        List<Map> list2 = UtilsClassScf.paying("SnMn7eXperY2Vp6MMexUW5sdVC1PKEQo7grXP2SBypee8irugZg", "buushlte655bj3jflsd0", "0", "99", list);
-        List<Map> list3 = UtilsClassScf.paying("Sn5ANYdXD8ZK1ioghfoZ2LfFa82QTXvDWGiZiaxCxMFz6ZjxMPi", "buushlte655bj3jflslg", "n", "1", list2);
+        List<Map> list2 = UtilsClassScf.paying(supplyAddress1, supplyID1, "0", "99", list);
+        List<Map> list3 = UtilsClassScf.paying(supplyAddress2, supplyID2, "n", "1", list2);
         String response9 = scf.PayingConfirm(QFJGAddress, companyID1, list3, platformKeyID, platformPIN, tokenType, comments);
         assertThat(response9, containsString("200"));
         assertThat(response9, containsString("success"));
@@ -701,7 +710,7 @@ public class GoScfTest {
         Thread.sleep(5000);
         //兑付确认
         List<Map> list = new ArrayList<>(10);
-        List<Map> list2 = UtilsClassScf.paying("Sn5ANYdXD8ZK1ioghfoZ2LfFa82QTXvDWGiZiaxCxMFz6ZjxMPi", "buushlte655bj3jflslg", "b", "1", list);
+        List<Map> list2 = UtilsClassScf.paying(supplyAddress2, supplyID2, "b", "1", list);
         String response11 = scf.PayingConfirm(QFJGAddress, companyID1, list2, platformKeyID, platformPIN, tokenType, comments);
         assertThat(response11, containsString("200"));
         assertThat(response11, containsString("success"));
@@ -843,9 +852,9 @@ public class GoScfTest {
          assertThat(response12, containsString("data"));
          Thread.sleep(5000);
          //兑付确认
-         List<Map> list2 = UtilsClassScf.paying("SnMn7eXperY2Vp6MMexUW5sdVC1PKEQo7grXP2SBypee8irugZg", "buushlte655bj3jflsd0", "0", "1", list);
-         List<Map> list3 = UtilsClassScf.paying("Sn5ANYdXD8ZK1ioghfoZ2LfFa82QTXvDWGiZiaxCxMFz6ZjxMPi", "buushlte655bj3jflslg", "a", "98", list2);
-         List<Map> list4 = UtilsClassScf.paying("SoAx16qvTbobNnZyQEWhSXuDubKeDryBfneQ3neThrwrY6CYHfY", "buushlte655bj3jflsrg", "b", "1", list3);
+         List<Map> list2 = UtilsClassScf.paying(supplyAddress1, supplyID1, "0", "1", list);
+         List<Map> list3 = UtilsClassScf.paying(supplyAddress2, supplyID2, "a", "98", list2);
+         List<Map> list4 = UtilsClassScf.paying(supplyAddress3, supplyID3, "b", "1", list3);
          String response13 = scf.PayingConfirm(QFJGAddress, companyID1, list4, platformKeyID, platformPIN, tokenType, comments);
          assertThat(response13, containsString("200"));
          assertThat(response13, containsString("success"));
