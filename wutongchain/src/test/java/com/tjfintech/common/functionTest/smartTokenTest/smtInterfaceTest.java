@@ -355,7 +355,6 @@ public class smtInterfaceTest {
 
         }
 
-
         //冻结资产必填字段验证
         @Test
         public void smtfreezeTest () throws Exception {
