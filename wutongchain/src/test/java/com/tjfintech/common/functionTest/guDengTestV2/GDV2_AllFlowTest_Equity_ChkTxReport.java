@@ -34,7 +34,7 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
     GDBeforeCondition gdBF = new GDBeforeCondition();
     GDCommonFunc gdCF = new GDCommonFunc();
     GDUnitFunc uf = new GDUnitFunc();
-    public static String bizNoTest = "test" + Random(12);
+    public static String bizNoTest = "TxRp" + Random(12);
     Boolean bNotCheck = false;
     public static String oldEquity = "";
     public static String newEquity = "";
@@ -59,7 +59,8 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
         bondProductInfo = null;
         equityProductInfo = gdBefore.init03EquityProductInfo();
         fundProductInfo = null;
-        gdEquityCode = "fondTest" + Random(12);
+        gdCompanyID = "chkRpSub" + Random(5);
+        gdEquityCode = "chkRpProd" + Random(12);
         oldEquity = gdEquityCode;
     }
 
@@ -1142,13 +1143,14 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
     @Test
     public void TC30_txReportQueryTest_ByTime()throws Exception{
 
+        //{"end":"2020-12-21 13:20:25","type":"5","value":"No000jA8Jo","begin":"2020-12-21 13:17:53"}
         //获取最开始的区块高度
         endHeight = Integer.valueOf(JSONObject.fromObject(store.GetHeight()).getString("data"));
 
-//        beginHeigh = 136;
-//        endHeight = 163;
+//        beginHeigh = 4182;
+//        endHeight = 4206;
 
-        log.info("起始高度 " + beginHeigh + " 结束高度 " + endHeight);
+//        log.info("起始高度 " + beginHeigh + " 结束高度 " + endHeight);
         //排除存证、合约安装、更新主体信息、销户等交易
         ArrayList<String> txList = commonFunc.getTxArrayExceptKeyWord(commonFunc.getTxFromBlock(beginHeigh+1,endHeight),
                 "\"type\":0","\"method\":\"DestroyInvestor\"","\"method\":\"UpdateSubject\"","\"subType\":40");//排除存证
@@ -1157,8 +1159,8 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String sdStart = sdf.format(start); // 时间戳转换日期
         String sdEnd = sdf.format(end); // 时间戳转换日期
-//        sdStart = "2020-10-14 11:23:49";
-//        sdEnd = "2020-10-14 11:30:17";
+//        sdStart = "2020-12-21 13:17:53";
+//        sdEnd = "2020-12-21 13:20:25";
         String type = "5";
         String value = gdAccClientNo1;
 
@@ -1188,57 +1190,57 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
 
         Boolean bNumOk = true;
         String txType = "投资者开户";
-        if(StringUtils.countOccurrencesOf(response,txType) != 12) {
-            log.info(txType + "交易12 缺失：" + StringUtils.countOccurrencesOf(response,txType));
-            bNumOk = false;
+        if(StringUtils.countOccurrencesOf(response,txType) != 11) {
+            log.info(txType + "交易11 缺失：" + StringUtils.countOccurrencesOf(response,txType));
+            bNumOk = bNumOk && false;
         }
         txType = "挂牌企业登记";
-        if(StringUtils.countOccurrencesOf(response,txType) != 2) {
-            log.info(txType + "交易2 缺失：" + StringUtils.countOccurrencesOf(response,txType));
-            bNumOk = false;
+        if(StringUtils.countOccurrencesOf(response,txType) != 1) {
+            log.info(txType + "交易1 缺失：" + StringUtils.countOccurrencesOf(response,txType));
+            bNumOk = bNumOk && false;
         }
         txType = "股份发行";
         if(StringUtils.countOccurrencesOf(response,txType) != 8) {
             log.info(txType + "交易8 缺失：" + StringUtils.countOccurrencesOf(response,txType));
-            bNumOk = false;
+            bNumOk = bNumOk && false;
         }
 
         txType = "过户转让";
         if(StringUtils.countOccurrencesOf(response,txType) != 1) {
             log.info(txType + "交易1 缺失：" + StringUtils.countOccurrencesOf(response,txType));
-            bNumOk = false;
+            bNumOk = bNumOk && false;
         }
 
         txType = "股份性质变更";
         if(StringUtils.countOccurrencesOf(response,txType) != 1) {
             log.info(txType + "交易1 缺失：" + StringUtils.countOccurrencesOf(response,txType));
-            bNumOk = false;
+            bNumOk = bNumOk && false;
         }
         txType = "股份冻结";
         if(StringUtils.countOccurrencesOf(response,txType) != 1) {
             log.info(txType + "交易1 缺失：" + StringUtils.countOccurrencesOf(response,txType));
-            bNumOk = false;
+            bNumOk = bNumOk && false;
         }
         txType = "股份解冻";
         if(StringUtils.countOccurrencesOf(response,txType) != 1) {
             log.info(txType + "交易1 缺失：" + StringUtils.countOccurrencesOf(response,txType));
-            bNumOk = false;
+            bNumOk = bNumOk && false;
         }
         txType = "股份回收";
         if(StringUtils.countOccurrencesOf(response,txType) != 5) {
             log.info(txType + "交易5 缺失：" + StringUtils.countOccurrencesOf(response,txType));
-            bNumOk = false;
+            bNumOk = bNumOk && false;
         }
         txType = "场内转板";
         if(StringUtils.countOccurrencesOf(response,txType) != 6) {
             log.info(txType + "交易6 缺失：" + StringUtils.countOccurrencesOf(response,txType));
-            bNumOk = false;
+            bNumOk = bNumOk && false;
         }
         Boolean bAccOK = checkAccDetail(response);
 
         assertEquals("是否包含所有交易 " + bFull + "存在与链上不一致的交易 " + bContain +
                         " 个数 " + bNumOk + " 账户包含情况" + bAccOK,
-                true,bFull || bContain || bNumOk || bAccOK);
+                true,bFull && bContain && bNumOk && bAccOK);
 
 
     }
