@@ -366,22 +366,25 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         int gdClient = Integer.parseInt(gdCF.getObjectLatestVer(cltNo));//获取当前开户主体最新版本信息
 
+        Map tempSHAcc = gdBF.init02ShareholderAccountInfo();
+        Map tempFundAcc = gdBF.init02FundAccountInfo();
+
         //构造股权账户信息
         Map shareHolderInfo = new HashMap();
 
-        shAccountInfo.put("account_object_id",shareHolderNo);  //更新账户对象标识字段
-        log.info(shAccountInfo.toString());
+        tempSHAcc.put("account_object_id",shareHolderNo);  //更新账户对象标识字段
+        log.info(tempSHAcc.toString());
         shareHolderInfo.put("createTime", ts2);
         shareHolderInfo.put("shareholderNo",shareHolderNo);
-        shareHolderInfo.put("accountInfo", shAccountInfo);
+        shareHolderInfo.put("accountInfo", tempSHAcc);
         log.info(shareHolderInfo.toString());
 
         //资金账户信息
-        fundAccountInfo.put("account_object_id",fundNo);  //更新账户对象标识字段
+        tempFundAcc.put("account_object_id",fundNo);  //更新账户对象标识字段
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("createTime", ts2);
         mapFundInfo.put("fundNo",fundNo);
-        mapFundInfo.put("accountInfo", fundAccountInfo);
+        mapFundInfo.put("accountInfo", tempFundAcc);
 
         //构造个人/投资者主体信息
         Map testSub = gdBF.init01PersonalSubjectInfo();

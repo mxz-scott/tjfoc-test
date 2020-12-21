@@ -283,14 +283,15 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";
-        registerInfo.put("register_registration_serial_number","increase000001");
+
+        Map eqProd = gdBF.init03EquityProductInfo();
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,1);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,1, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
 
-        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, equityProductInfo);
+        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, eqProd);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 

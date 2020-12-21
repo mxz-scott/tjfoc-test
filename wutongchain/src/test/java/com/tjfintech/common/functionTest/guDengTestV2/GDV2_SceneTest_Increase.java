@@ -32,6 +32,8 @@ public class GDV2_SceneTest_Increase {
     CommonFunc commonFunc = new CommonFunc();
     public static String bizNoTest = "test" + Random(12);
     GDUnitFunc uf = new GDUnitFunc();
+    GDBeforeCondition gdBF = new GDBeforeCondition();
+    GDCommonFunc gdCF = new GDCommonFunc();
 
     @Rule
     public TestName tm = new TestName();
@@ -113,6 +115,34 @@ public class GDV2_SceneTest_Increase {
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
         assertEquals("该股份从未发行过，不可以增发", JSONObject.fromObject(response).getString("message"));
 
+    }
+
+    //增发一个不存在的产品对象
+    @Test
+    public void TC09_shareIncreaseNotExistProductObject() throws Exception {
+
+        log.info("增发前查询机构主体信息");
+        String query2 = gd.GDMainSubjectQuery(gdContractAddress, gdCompanyID);
+//        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
+
+        String eqCode = gdEquityCode;
+        String reason = "股份分红";
+        String txObjId = "increaseObj" + Random(6);
+
+        Map eqProd = gdBF.init03EquityProductInfo();
+        Map txInfo = gdBF.init04TxInfo();
+        txInfo.put("transaction_object_id", txObjId);
+        register_transaction_ref = txObjId; //此处为发行融资 设置登记引用接口中的交易报告
+
+        log.info("发行主体版本  " + gdCF.getObjectLatestVer(gdCompanyID));
+
+        List<Map> shareList = gdConstructShareList(gdAccount1, 1000, 0);
+
+        //测试增发一个不存在的产品对象 2020/12/19
+        Map eqPErr = gdBF.init03EquityProductInfo();
+        eqPErr.put("product_object_id", "testErr" + Random(3));
+        String err = gd.GDShareIncrease(gdPlatfromKeyID, eqCode, shareList, reason, eqProd, txInfo);
+        assertEquals("400", net.sf.json.JSONObject.fromObject(err).getString("state"));
     }
 
 
