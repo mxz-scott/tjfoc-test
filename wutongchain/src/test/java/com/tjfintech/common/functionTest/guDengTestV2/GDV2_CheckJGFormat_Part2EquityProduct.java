@@ -61,13 +61,14 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
     @BeforeClass
     public static void Before()throws Exception{
+        gdEquityCode = "fondTest" + Random(12);
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
 //        gdBefore.initRegulationData();
         equityProductInfo = gdBefore.init03EquityProductInfo();
         bondProductInfo = null;
         fundProductInfo = null;
-        gdEquityCode = "fondTest" + Random(12);
+
     }
 
     @Before
@@ -116,19 +117,6 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
 
         log.info("================================检查存证数据格式化《开始》================================");
-
-        //定义相关对象标识版本变量
-//        String regRSRefVer = gdCF.getObjectLatestVer(register_subject_ref);
-//        String regRSARefVer = gdCF.getObjectLatestVer(register_subject_account_ref);
-//        String regRTRefVer = gdCF.getObjectLatestVer(register_transaction_ref);
-//        String regRPRefVer = gdCF.getObjectLatestVer(register_product_ref);
-//        String regRRRSRefVer = gdCF.getObjectLatestVer(register_right_recognition_subject_ref);
-//        String regRRRASRefVer = gdCF.getObjectLatestVer(register_right_recognition_agent_subject_ref);
-//        String regRPRRefVer = gdCF.getObjectLatestVer(roll_register_product_ref);
-//        String regRRSRefVer = gdCF.getObjectLatestVer(roll_register_subject_ref);
-//        String regRESRefVer = gdCF.getObjectLatestVer(register_equity_subject_ref);
-//        String regRDHRefVer = gdCF.getObjectLatestVer(register_debt_holder_ref);
-//        String regRISRefVer = gdCF.getObjectLatestVer(register_investor_subject_ref);
 
         Map uriInfo = gdCF.getJGURIStoreHash(txId,conJGFileName(mapAddrRegObjId.get(gdAccount1).toString(),"0"),1);
 
@@ -378,9 +366,6 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        String tempRegister_subject_ref = register_subject_ref;
-        register_subject_ref = gdCompanyID;
-
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
         String txRpObjId = "txReport" + Random(6);
@@ -390,16 +375,16 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         String tempObjIdFrom = "reg" + mapAccAddr.get(gdAccount1).toString() + Random(3);
         String tempObjIdTo = "reg" + mapAccAddr.get(gdAccount5).toString() + Random(3);
 
+        register_transaction_ref = txRpObjId;//登记引用的是交易报告的对象标识
+
         Map fromNow = gdBF.init05RegInfo();
         Map toNow = gdBF.init05RegInfo();
-
-        register_transaction_ref = txRpObjId;//登记引用的是交易报告的对象标识
 
         fromNow.put("register_registration_object_id",tempObjIdFrom);
         toNow.put("register_registration_object_id",tempObjIdTo);
 
-        fromNow.put("register_transaction_ref",txRpObjId);
-        toNow.put("register_transaction_ref",txRpObjId);
+//        fromNow.put("register_transaction_ref",txRpObjId);
+//        toNow.put("register_transaction_ref",txRpObjId);
 
 
 
@@ -605,7 +590,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         Map eqProd = gdBF.init03EquityProductInfo();
         Map txInfo = gdBF.init04TxInfo();
         txInfo.put("transaction_object_id",txObjId);
-//        register_transaction_ref = txObjId; //此处为发行融资 设置登记引用接口中的交易报告
+        register_transaction_ref = txObjId; //此处为发行融资 设置登记引用接口中的交易报告
 
         log.info("发行主体版本  " + gdCF.getObjectLatestVer(gdCompanyID));
 
@@ -613,6 +598,12 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         List<Map> shareList2 = gdConstructShareList(gdAccount2,increaseAmount,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,increaseAmount,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,increaseAmount,0, shareList3);
+
+        //测试增发一个不存在的产品对象 2020/12/19
+        Map eqPErr = gdBF.init03EquityProductInfo();
+        eqPErr.put("product_object_id","testErr" + Random(3));
+        String err= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, eqProd,txInfo);
+        assertEquals("400", net.sf.json.JSONObject.fromObject(err).getString("state"));
 
         String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, eqProd,txInfo);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
