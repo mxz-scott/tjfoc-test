@@ -134,7 +134,6 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
     @Test
     public void TC06_shareIssue() throws Exception {
 
-        registerInfo.put("register_registration_serial_number","issue000001"+Random(3));
         List<Map> shareList = gdConstructShareList(gdAccount1,5000,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,5000,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,5000,0, shareList2);
@@ -425,8 +424,6 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         log.info("回收前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
 //        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
-
-        registerInfo.put("register_registration_serial_number","recylce000001");
 
         List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
 

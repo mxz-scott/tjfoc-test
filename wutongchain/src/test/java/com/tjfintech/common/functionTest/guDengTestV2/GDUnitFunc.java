@@ -497,6 +497,7 @@ public class GDUnitFunc {
                         "\\src\\main\\java\\com\\tjfintech\\common\\utils\\UtilsClassGD.java",
                 "public static int blockHeight =",
                 "\tpublic static int blockHeight = " + height + ";");
+        blockHeight = height;
     }
 
     public void checkJGHeaderOpVer(int iStart,int iEnd)throws Exception{
