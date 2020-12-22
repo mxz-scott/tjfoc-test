@@ -104,8 +104,7 @@ public class smtMultiInvalidTest {
         //转换
         String transferData = "ADDRESS1 向 MULITADD4 转账10个" + tokenType;
         List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", "200", null);
-        List<Map> collList = stc.smartConstructTokenList(MULITADD4, "test", "200", null);
-        String transferResp = stc.smartExchange(tokenType, payList, collList, newTokenType, "", transferData);
+        String transferResp = stc.smartExchange(tokenType, payList,  newTokenType, "", transferData);
 
         assertEquals("200", JSONObject.fromObject(transferResp).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
@@ -334,7 +333,7 @@ public class smtMultiInvalidTest {
         String exchangeData = "token 向 newtoken 转换";
         List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", "200", null);
         List<Map> collList = stc.smartConstructTokenList(MULITADD4, "test", "200", null);
-        String exchangeResp = st.SmartExchangeReq(tokenType, payList, collList, newTokenType, "", exchangeData);
+        String exchangeResp = st.SmartExchangeReq(tokenType, payList,  newTokenType, "", exchangeData);
         assertEquals("400", JSONObject.fromObject(exchangeResp).getString("state"));
 
         //未审核状态
@@ -347,7 +346,7 @@ public class smtMultiInvalidTest {
         assertEquals("200", JSONObject.fromObject(issueResp).getString("state"));
         collList.clear();
         collList = stc.smartConstructTokenList(ADDRESS1, "test", "200", null);
-        exchangeResp = st.SmartExchangeReq(tokenType, payList, collList, newTokenType, "", exchangeData);
+        exchangeResp = st.SmartExchangeReq(tokenType, payList,  newTokenType, "", exchangeData);
         assertEquals("400", JSONObject.fromObject(exchangeResp).getString("state"));
 
         //冻结状态
@@ -357,7 +356,7 @@ public class smtMultiInvalidTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType, SLEEPTIME);
 
-        exchangeResp = stc.smartExchange(tokenType, payList, collList, newTokenType, "", exchangeData);
+        exchangeResp = stc.smartExchange(tokenType, payList,  newTokenType, "", exchangeData);
         assertEquals("200", JSONObject.fromObject(exchangeResp).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType, SLEEPTIME);
@@ -370,33 +369,25 @@ public class smtMultiInvalidTest {
 
 
     /**
-     * paymentList/collectionList列表数据异常，转换申请失败
+     * paymentList列表数据异常，转换申请失败
      */
     @Test
-    public void TC_exchangePayCollListInvalid() throws Exception {
+    public void TC_exchangePayListInvalid() throws Exception {
 
         //paymentList.address地址错误
         tokenType = stc.beforeConfigIssueNewToken("200");
         newTokenType = "New" + tokenType;
         String exchangeResp = "token 向 newtoken 转换";
         List<Map> payList = stc.smartConstructTokenList(invalidAddress, "test", "200", null);
-        List<Map> collList = stc.smartConstructTokenList(MULITADD4, "test", "200", null);
-        String transferResp = st.SmartExchangeReq(tokenType, payList, collList, newTokenType, "", exchangeResp);
+        String transferResp = st.SmartExchangeReq(tokenType, payList,  newTokenType, "", exchangeResp);
         assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
 
         //paymentList.amount数量不等于余额
         payList.clear();
         payList = stc.smartConstructTokenList(ADDRESS1, "test", "300", null);
-        transferResp = st.SmartExchangeReq(tokenType, payList, collList, newTokenType, "", exchangeResp);
-        assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
-
-        //collectionList.amount数量超出支出金额
-        payList.clear();
-        payList = stc.smartConstructTokenList(ADDRESS1, "test", "200", null);
-        collList.clear();
-        collList = stc.smartConstructTokenList(MULITADD4, "test", "300", null);
-        transferResp = st.SmartExchangeReq(tokenType, payList, collList, newTokenType, "", exchangeResp);
-        assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
+        transferResp = st.SmartExchangeReq(tokenType, payList,  newTokenType, "", exchangeResp);
+        assertEquals("500", JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true, transferResp.contains("转换余额大于余额"));
 
 
     }
@@ -416,16 +407,15 @@ public class smtMultiInvalidTest {
         String exchangeResp = "token 向 newtoken 转换";
         List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", "300", null);
         List<Map> collList = stc.smartConstructTokenList(ADDRESS1, "test", "300", null);
-        String transferResp = st.SmartExchangeReq(tokenType, payList, collList, newTokenType, "", exchangeResp);
-        assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
+        String transferResp = st.SmartExchangeReq(tokenType, payList,  newTokenType, "", exchangeResp);
+        assertEquals("500", JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true, transferResp.contains("转换余额大于余额"));
 
         //paymentList.amount小于该地址的token余额
         payList.clear();
         collList.clear();
         payList = stc.smartConstructTokenList(ADDRESS1, "test", "100", null);
-        collList = stc.smartConstructTokenList(ADDRESS1, "test", "100", null);
-//        transferResp= st.SmartExchangeReq(tokenType, payList, collList, newTokenType, "", exchangeResp);
-        transferResp = stc.smartExchange(tokenType, payList, collList, newTokenType, "", exchangeResp);
+        transferResp = stc.smartExchange(tokenType, payList,  newTokenType, "", exchangeResp);
         assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
 
     }
@@ -466,7 +456,7 @@ public class smtMultiInvalidTest {
         List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", "100.15", null);
         List<Map> collList = stc.smartConstructTokenList(MULITADD4, "test", "100.15", null);
         String transferResp1 = stc.smartExchange
-                (tokenType, payList, collList, newTokenType, "", transferData);
+                (tokenType, payList,  newTokenType, "", transferData);
 
         assertEquals("200", JSONObject.fromObject(transferResp1).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
@@ -536,7 +526,7 @@ public class smtMultiInvalidTest {
         String exchangeData = "ADDRESS1 向 MULITADD4 转换10个" + tokenType;
 
         String exchangeResp = stc.smartExchange
-                (tokenType, payList, collList, newTokenType, "", exchangeData);
+                (tokenType, payList,  newTokenType, "", exchangeData);
 
         assertEquals("200", JSONObject.fromObject(exchangeResp).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),

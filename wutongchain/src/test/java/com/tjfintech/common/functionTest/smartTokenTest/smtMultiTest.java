@@ -99,7 +99,7 @@ public class smtMultiTest {
         List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", "200", null);
         List<Map> collList = stc.smartConstructTokenList(MULITADD4, "test", "200", null);
         String transferResp = stc.smartExchange
-                (tokenType, payList, collList, newTokenType, "", transferData);
+                (tokenType, payList,  newTokenType, "", transferData);
 
         assertEquals("200", JSONObject.fromObject(transferResp).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
@@ -399,7 +399,7 @@ public class smtMultiTest {
         List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", "10", null);
         List<Map> collList = stc.smartConstructTokenList(MULITADD4, "test", "10", null);
         String transferResp = stc.smartExchange
-                (tokenType, payList, collList, newTokenType, "", transferData);
+                (tokenType, payList,  newTokenType, "", transferData);
 
         assertEquals("200", JSONObject.fromObject(transferResp).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
@@ -415,7 +415,7 @@ public class smtMultiTest {
                 utilsClass.sdkGetTxDetailType, SLEEPTIME);
         //转换
         String transferResp1 = stc.smartExchange
-                (tokenType, payList, collList, newTokenType, "", transferData);
+                (tokenType, payList,  newTokenType, "", transferData);
 
         assertEquals("200", JSONObject.fromObject(transferResp1).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),

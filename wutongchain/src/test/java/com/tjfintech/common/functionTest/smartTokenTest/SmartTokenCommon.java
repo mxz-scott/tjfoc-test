@@ -150,7 +150,8 @@ public class SmartTokenCommon {
         List<String> signList = (List<String>) sigMsgmap.get("signList");
 
         //转让审核
-        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList, null);
+//        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList, null);
+        List<Map> payInfoList = smartContractApproveList(signMsg);
 
         String approveResp = st.SmartTEDApprove("transfer", payInfoList, UTXOInfo);
 
@@ -189,6 +190,37 @@ public class SmartTokenCommon {
 
         return map;
 
+    }
+
+    //组装转让、转换、销毁审核数据
+    public List<Map> smartContractApproveList(String signMsg) throws Exception {
+
+        List<Map> signMsgList = new ArrayList<>();
+        JSONArray signMsgArray = JSONArray.fromObject(signMsg);
+        for (int i = 0; i < signMsgArray.size(); i++) {
+            ArrayList<String> pubkeys = new ArrayList();
+            ArrayList<String> prikeys = new ArrayList();
+            ArrayList<String> signList = new ArrayList();
+            String signAddress = "";
+            log.info("签名数组长度" + signMsgArray.size());
+            String signData = JSONObject.fromObject(signMsgArray.get(i)).getString("signMsg");
+            log.info(signData);
+            signAddress = JSONObject.fromObject(signMsgArray.get(i)).getString("address");
+            log.info(signAddress);
+            pubkeys = getPubkeyListFromAddress(signAddress);
+            prikeys = getPrikeyListFromAddress(signAddress);
+            log.info("私钥数组长度" + prikeys.size());
+            for (int j = 0; j < prikeys.size(); j++) {
+                String cryptMsg = certTool.smartSign(PEER4IP, prikeys.get(j), "", signData, "hex");
+                signList.add(cryptMsg);
+            }
+            HashMap<String, Object> map = new HashMap<String, Object>();
+            map.put("signAddress", signAddress);
+            map.put("pubkeys", pubkeys);
+            map.put("signList", signList);
+            signMsgList.add(map);
+        }
+        return signMsgList;
     }
 
     //根据地址返回公钥列表
@@ -261,8 +293,8 @@ public class SmartTokenCommon {
         List<String> signList = (List<String>) sigMsgmap.get("signList");
 
         //审核
-        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList, null);
-
+//        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList, null);
+        List<Map> payInfoList = smartContractApproveList(signMsg);
         String approveResp = st.SmartTEDApprove("destroy", payInfoList, UTXOInfo);
         return approveResp;
 
@@ -271,10 +303,10 @@ public class SmartTokenCommon {
 
     //转换
     //单签账户目前的签名公私钥对为PUBKEY1 PRIKEY1
-    public String smartExchange(String tokenType, List<Map> payList, List<Map> collList, String newTokenType,
+    public String smartExchange(String tokenType, List<Map> payList,  String newTokenType,
                                 String extendArgs, String extendData) throws Exception {
         //转换申请
-        String exchangeInfo = st.SmartExchangeReq(tokenType, payList, collList, newTokenType,
+        String exchangeInfo = st.SmartExchangeReq(tokenType, payList,  newTokenType,
                 extendArgs, extendData);
 
         assertThat(exchangeInfo, containsString("200"));
@@ -289,8 +321,8 @@ public class SmartTokenCommon {
         List<String> signList = (List<String>) sigMsgmap.get("signList");
 
         //审核
-        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList, null);
-
+//        List<Map> payInfoList = smartConstructPayAddressInfoList(signAddress, pubkeys, signList, null);
+        List<Map> payInfoList = smartContractApproveList(signMsg);
         String approveResp = st.SmartTEDApprove("exchange", payInfoList, UTXOInfo);
 
         return approveResp;
