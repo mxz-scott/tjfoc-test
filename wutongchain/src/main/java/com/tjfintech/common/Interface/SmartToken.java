@@ -13,7 +13,7 @@ public interface SmartToken {
     String SmartTransferReq(String tokenType, List<Map> payList, List<Map> collList,
                             String newSubType, String extendArgs, String extendData);
     String SmartDestroyReq(String tokenType, List<Map> payList, String extendArgs, String extendData);
-    String SmartExchangeReq(String tokenType, List<Map> payList, List<Map> collList, String newTokenType,
+    String SmartExchangeReq(String tokenType, List<Map> payList,  String newTokenType,
                             String extendArgs, String extendData);
     String SmartTEDApprove(String type, List<Map> payInfoList, String UTXOInfo);
     String SmartGetBalanceByAddr(String addr, String tokenType); //按地址查询余额

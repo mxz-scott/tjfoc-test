@@ -90,7 +90,7 @@ public class smtInterfaceTest {
         assertEquals(true, transferResp.contains("支出列表必须大于0项"));
         transferResp = st.SmartTransferReq(tokenType, null, collList, "", "", "");
         assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
-        assertEquals(true, transferResp.contains("支出列表必须大于0项"));
+        assertEquals(true, transferResp.contains("支出列表为必填字段"));
 
         log.info("支出地址不存在");
         payList.clear();
@@ -115,7 +115,7 @@ public class smtInterfaceTest {
         assertEquals(true, transferResp.contains("收入列表必须大于0项"));
         transferResp = st.SmartTransferReq(tokenType, payList, null, "", "", "");
         assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
-        assertEquals(true, transferResp.contains("收入列表必须大于0项"));
+        assertEquals(true, transferResp.contains("收入列表为必填字段"));
 
         log.info("收入地址不存在");
         collList.clear();
@@ -172,13 +172,25 @@ public class smtInterfaceTest {
         assertEquals("400", JSONObject.fromObject(approveResp).getString("state"));
         assertEquals(true, approveResp.contains("账户地址为必填字段"));
 
-        log.info("payAddressInfoList.pubkeyList转让方签名地址公钥为空");
+        log.info("payAddressInfoList.pubkeyList转让方签名地址公钥为空或者null");
         payInfoList = stc.smartConstructPayAddressInfoList(signAddress, null, signList, null);
         approveResp = st.SmartTEDApprove("transfer", payInfoList, UTXOInfo);
         assertEquals("400", JSONObject.fromObject(approveResp).getString("state"));
         assertEquals(true, approveResp.contains("生成账户地址的公钥为必填字段"));
+        pubkeys.clear();
+        payInfoList = stc.smartConstructPayAddressInfoList(signAddress, pubkeys, signList, null);
+        approveResp = st.SmartTEDApprove("transfer", payInfoList, UTXOInfo);
+        assertEquals("400", JSONObject.fromObject(approveResp).getString("state"));
+        assertEquals(true, approveResp.contains("生成账户地址的公钥必须大于0项"));
 
-        log.info("payAddressInfoList.signList公钥签名后的数据为空");
+        log.info("payAddressInfoList.signList公钥签名后的数据为空或者null");
+        signList.clear();
+        sigMsgmap = stc.smartContractApproveData(signMsg);
+        pubkeys = (List<String>) sigMsgmap.get("pubkeys");
+        payInfoList = stc.smartConstructPayAddressInfoList(signAddress, pubkeys, signList, null);
+        approveResp = st.SmartTEDApprove("transfer", payInfoList, UTXOInfo);
+        assertEquals("400", JSONObject.fromObject(approveResp).getString("state"));
+        assertEquals(true, approveResp.contains("生成账户地址的公钥对应私钥的签名必须大于0项"));
         payInfoList = stc.smartConstructPayAddressInfoList(signAddress, pubkeys, null, null);
         approveResp = st.SmartTEDApprove("transfer", payInfoList, UTXOInfo);
         assertEquals("400", JSONObject.fromObject(approveResp).getString("state"));
@@ -195,65 +207,39 @@ public class smtInterfaceTest {
         tokenType = stc.beforeConfigIssueNewToken(issueAmount);
         String newTokenType = "NEW" + tokenType;
         List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", issueAmount, null);
-        List<Map> collList = stc.smartConstructTokenList(ADDRESS1, "test", issueAmount, null);
 
         log.info("tokenType为空");
-        String transferResp = st.SmartExchangeReq("", payList, collList, newTokenType, "", "");
+        String transferResp = st.SmartExchangeReq("", payList, newTokenType, "", "");
         assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
         assertEquals(true, transferResp.contains("数字资产类型为必填字段"));
 
         log.info("newTokenType为空");
-        transferResp = st.SmartExchangeReq(tokenType, payList, collList, "", "", "");
+        transferResp = st.SmartExchangeReq(tokenType, payList, "", "", "");
         assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
         assertEquals(true, transferResp.contains("数字资产类型为必填字段"));
 
         log.info("转出list不存在");
         payList.clear();
-        transferResp = st.SmartExchangeReq(tokenType, payList, collList, newTokenType, "", "");
+        transferResp = st.SmartExchangeReq(tokenType, payList, newTokenType, "", "");
         assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
-//        assertEquals(true,transferResp.contains("支出列表必须大于0项"));
-        transferResp = st.SmartExchangeReq(tokenType, null, collList, newTokenType, "", "");
+        assertEquals(true, transferResp.contains("支出列表必须大于0项"));
+        transferResp = st.SmartExchangeReq(tokenType, null, newTokenType, "", "");
         assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
         assertEquals(true, transferResp.contains("支出列表为必填字段"));
 
         log.info("支出地址不存在");
         payList.clear();
         payList = stc.smartConstructTokenList("", "test", issueAmount, null);
-        transferResp = st.SmartExchangeReq(tokenType, payList, collList, newTokenType, "", "");
+        transferResp = st.SmartExchangeReq(tokenType, payList, newTokenType, "", "");
         assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
         assertEquals(true, transferResp.contains("支出地址为必填字段"));
 
         log.info("支出金额不存在");
         payList.clear();
         payList = stc.smartConstructTokenList(ADDRESS1, "test", "", null);
-        transferResp = st.SmartExchangeReq(tokenType, payList, collList, newTokenType, "", "");
+        transferResp = st.SmartExchangeReq(tokenType, payList, newTokenType, "", "");
         assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
         assertEquals(true, transferResp.contains("支出金额为必填字段"));
-
-        log.info("受让list不存在");
-        payList.clear();
-        payList = stc.smartConstructTokenList(ADDRESS1, "test", issueAmount, null);
-        collList.clear();
-        transferResp = st.SmartExchangeReq(tokenType, payList, collList, newTokenType, "", "");
-        assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
-//        assertEquals(true,transferResp.contains("收入列表必须大于0项"));
-        transferResp = st.SmartExchangeReq(tokenType, payList, null, newTokenType, "", "");
-        assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
-        assertEquals(true, transferResp.contains("收入列表为必填字段"));
-
-        log.info("收入地址不存在");
-        collList.clear();
-        collList = stc.smartConstructTokenList("", "test", issueAmount, null);
-        transferResp = st.SmartExchangeReq(tokenType, payList, collList, newTokenType, "", "");
-        assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
-        assertEquals(true, transferResp.contains("收入地址为必填字段"));
-
-        log.info("收入金额不存在");
-        collList.clear();
-        collList = stc.smartConstructTokenList(ADDRESS1, "test", "", null);
-        transferResp = st.SmartExchangeReq(tokenType, payList, collList, newTokenType, "", "");
-        assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
-        assertEquals(true, transferResp.contains("收入金额为必填字段"));
 
     }
 
@@ -273,8 +259,8 @@ public class smtInterfaceTest {
         log.info("支出list不存在");
         payList.clear();
         transferResp = st.SmartDestroyReq(tokenType, payList, "", "");
-//        assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
-//        assertEquals(true,transferResp.contains("支出列表必须大于0项"));
+        assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true, transferResp.contains("支出列表必须大于0项"));
         transferResp = st.SmartDestroyReq(tokenType, null, "", "");
         assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
         assertEquals(true, transferResp.contains("支出列表为必填字段"));
@@ -432,4 +418,6 @@ public class smtInterfaceTest {
         assertEquals(true, freezeResp.contains("数字资产类型为必填字段"));
 
     }
+
+
 }

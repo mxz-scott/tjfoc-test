@@ -107,12 +107,12 @@ public class GoSmartToken implements SmartToken {
     }
 
 
-    public String SmartExchangeReq(String tokenType, List<Map> payList, List<Map> collList, String newTokenType,
+    public String SmartExchangeReq(String tokenType, List<Map> payList, String newTokenType,
                             String extendArgs, String extendData){
         Map<String, Object> map = new HashMap<>();
         map.put("tokenType", tokenType);
         map.put("paymentList", payList);
-        map.put("collectionList", collList);
+//        map.put("collectionList", collList);
         map.put("newTokenType", newTokenType);
         if (!extendArgs.isEmpty()) map.put("extendArgs", extendArgs);
         if (!extendData.isEmpty()) map.put("extendData", extendData);
