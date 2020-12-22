@@ -488,7 +488,7 @@ public class GDBeforeCondition {
         mapTemp.put("account_object_id", "testacc00001");
 
         //账户信息 账户基本信息
-        mapTemp.put("account_subject_ref", "hrefid00001");
+        mapTemp.put("account_subject_ref", account_subject_ref);
         mapTemp.put("account_depository_ref", account_depository_ref);
         mapTemp.put("account_number", "h0123555"+ updateWord);
         mapTemp.put("account_type", 1);  //默认证券/股权账户
@@ -539,7 +539,7 @@ public class GDBeforeCondition {
         mapTemp.put("account_object_id", "testacc00001");
 
         //账户信息 账户基本信息
-        mapTemp.put("account_subject_ref", "hrefid00001");
+        mapTemp.put("account_subject_ref", account_subject_ref);
         mapTemp.put("account_depository_ref", account_depository_ref);
         mapTemp.put("account_number", "h0123555"+ updateWord);
         mapTemp.put("account_type", 2);  //资金账户
@@ -952,8 +952,8 @@ public class GDBeforeCondition {
         mapTemp.put("register_registration_object_id", "regid00001");
 
         //登记信息 登记基本信息
-        mapTemp.put("register_object_type", 0);
-        mapTemp.put("register_event_type", 1);
+        mapTemp.put("register_object_type", 1);
+        mapTemp.put("register_event_type", 2);
 
         //登记信息 权利信息 权利基本信息 权利基本信息描述
         mapTemp.put("register_serial_number", "登记流水号CHARACTER");

@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDV2_CheckJGFormat_Part3SubjectChange_NoComma {
+public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend_NoComma {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();

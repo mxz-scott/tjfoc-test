@@ -68,7 +68,7 @@ public class MinIOOperation {
             // 调用statObject()来判断对象是否存在。
             String temp = minioClient.statObject(
                             StatObjectArgs.builder().bucket(bucket).object(targetFile).build()).toString();
-            System.out.println("存在状态" + temp);
+//            System.out.println("存在状态" + temp);
             // 获取1.png的流并保存到photo.png文件中。
             //参数为：文件夹，要获得的文件，要写入的文件
             isGet = minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(targetFile).build());
@@ -95,6 +95,7 @@ public class MinIOOperation {
 //            }
 
         }catch(MinioException e) {
+            strGet = "错误";
             System.out.println("错误: " + e);
         }
         return strGet;

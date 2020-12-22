@@ -43,7 +43,7 @@ public class GDCommonFunc {
         JSONArray txArr = JSONObject.fromObject(store.GetBlockByHeight(Integer.parseInt(height))).getJSONObject("data").getJSONArray("txs");
         String storeId = "";
         for (int i = 0; i < txArr.size(); i++) {
-            log.info("区块交易数 " + txArr.size());
+//            log.info("区块交易数 " + txArr.size());
             String txdetail = store.GetTxDetail(txArr.get(i).toString());
 
             com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(txdetail);
@@ -133,7 +133,7 @@ public class GDCommonFunc {
 
         //同区块高度中查找
         for (int i = 0; i < txArr.size(); i++) {
-            log.info("区块交易数 " + txArr.size());
+//            log.info("区块交易数 " + txArr.size());
             String txdetail = store.GetTxDetail(txArr.get(i).toString());
 
             com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(txdetail);
@@ -165,7 +165,7 @@ public class GDCommonFunc {
         JSONArray txArr = JSONObject.fromObject(store.GetBlockByHeight(Integer.parseInt(height))).getJSONObject("data").getJSONArray("txs");
         String storeId = "";
         for (int i = 0; i < txArr.size(); i++) {
-            log.info("区块交易数 " + txArr.size());
+//            log.info("区块交易数 " + txArr.size());
             //判断是存证则存储
             if (JSONObject.fromObject(store.GetTxDetail(txArr.get(i).toString())).getJSONObject("data").getJSONObject("header").getInt("type") == 0) {
                 storeId = txArr.get(i).toString();
@@ -222,8 +222,6 @@ public class GDCommonFunc {
         String regObjId = "5" + mapAccAddr.get(address) + Random(6);
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
-//        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
-//        tempReg.put("register_nature_of_shares",shareProperty);
         tempReg.put("register_registration_object_id",regObjId);
 
         mapAddrRegObjId.put(address,regObjId);//方便后面测试验证
@@ -248,14 +246,10 @@ public class GDCommonFunc {
         String regObjId = "5" + mapAccAddr.get(address) + Random(6);
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
-//        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
-//        tempReg.put("register_nature_of_shares",shareProperty);
         tempReg.put("register_registration_object_id",regObjId);
 
         mapAddrRegObjId.put(address,regObjId);//方便后面测试验证
 
-//        Map tempTxInfo = gdbf.init04TxInfo();
-//        tempTxInfo.put("transaction_original_owner_subject_ref",mapAccAddr.get(address));
 
         List<Map> shareList = new ArrayList<>();
         for(int i = 0 ; i < list.size() ; i++) {
@@ -1760,7 +1754,7 @@ public class GDCommonFunc {
 
         for(int i =0;i<valueList.length;i++){
             String temp = valueList[i];
-            log.info("temp **** " + temp);
+//            log.info("temp **** " + temp);
             if(checkKey[i].equals( "version")) {
                 tempMap.put(checkKey[i],Integer.valueOf(temp));
             }else if(checkKey[i].equals( "timestamp")) {
@@ -1776,18 +1770,18 @@ public class GDCommonFunc {
         TreeMap tempMap = new TreeMap();
         String[] checkKey = new String[]{"type","object_id","version","operation","timestamp"};
 
-        log.info("operation " + valueList[3] + " version " + valueList[2]);
+//        log.info("operation " + valueList[3] + " version " + valueList[2]);
         if(valueList[3] == "create") {
-            log.info("create ----------------------------------");
+//            log.info("create ----------------------------------");
             assertEquals("0",valueList[2]);}
         if(valueList[3] == "update") {
-            log.info("update ----------------------------------");
+//            log.info("update ----------------------------------");
             assertNotEquals("0",valueList[2]);
         }
         if(valueList[3] == "delete") assertNotEquals("0",valueList[2]);
         for(int i =0;i<valueList.length;i++){
             String temp = valueList[i];
-            log.info("temp **** " + temp);
+//            log.info("temp **** " + temp);
             if(checkKey[i].equals( "version")) {
                 tempMap.put(checkKey[i],Integer.valueOf(temp));
             }else if(checkKey[i].equals( "timestamp")) {
@@ -2075,6 +2069,15 @@ public class GDCommonFunc {
         String contentType = mapKeyWod.get("contentType").toString();
         String subProdSubType = mapKeyWod.get("subProdSubType").toString();
 
+        Map update = null;
+        //如果存在key 或者
+        if(mapKeyWod.containsKey("updateMap") && (!mapKeyWod.get("updateMap").equals(null)))
+        {
+            update = com.alibaba.fastjson.JSONObject.parseObject(mapKeyWod.get("updateMap").toString(), Map.class);
+        }
+
+
+
         //检查各个交易详情信息中不包含敏感词
         assertEquals("不包含敏感词",true,chkSensitiveWord(store.GetTxDetail(tempTxId),contentType));
 
@@ -2107,7 +2110,7 @@ public class GDCommonFunc {
                 mapParam.put("subject_object_id",tempObjId);
                 break;
 
-            case "accout":
+            case "account":
                 if(subProdSubType.equals("1"))          mapParam = gdBF.init02ShareholderAccountInfo();
                 else if(subProdSubType.equals("2"))     mapParam = gdBF.init02FundAccountInfo();
                 tempTS = ts2;
@@ -2149,6 +2152,16 @@ public class GDCommonFunc {
 
         }
         assertEquals("检查参数map不为空",false,mapParam.equals(null));
+
+        if(!(update == null)) {
+            //更新其他字段信息
+            Iterator iter = update.keySet().iterator();
+            while (iter.hasNext()) {
+                Object key = iter.next();
+                String value = update.get(key).toString();
+                mapParam.put(key, value);
+            }
+        }
 
         //采用有序TreeMap存 header content
         mapParam.put("content",constructContentTreeMap(contentType,tempObjId,tempObjVer,operationType,String.valueOf(tempTS)));

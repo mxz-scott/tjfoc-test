@@ -587,7 +587,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";
-        String txObjId = "increaseObj" + Random(6);
+        String txObjId = "4increaseObj" + Random(6);
 
         Map eqProd = gdBF.init03EquityProductInfo();
         Map txInfo = gdBF.init04TxInfo();
