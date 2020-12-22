@@ -781,9 +781,6 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         //登记数据
         Map regInfo = gdBF.init05RegInfo();
         String tempObjId = mapAccAddr.get(gdAccount1).toString() + Random(5);
-
-        regNo = "Eq" + "lock" + bizNo + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        regInfo.put("register_serial_number",regNo);       //更新对比的登记流水号
         regInfo.put("register_registration_object_id",tempObjId);
 
         String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,regInfo);
@@ -914,8 +911,6 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         //登记数据
         Map regInfo = gdBF.init05RegInfo();
         String tempObjId = mapAccAddr.get(gdAccount1).toString() + Random(5);
-        regNo = "Eq" + "unlock" + bizNo + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        regInfo.put("register_serial_number",regNo);       //更新对比的登记流水号
         regInfo.put("register_registration_object_id",tempObjId);
 
         String response= gd.GDShareUnlock(bizNo,eqCode,amount,regInfo);

@@ -209,6 +209,151 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
     }
 
+    //部分转让给已有账户
+    @Test
+    public void shareTransfer_PartOut()throws Exception{
+
+        String keyId = gdAccountKeyID1;
+        String fromAddr = gdAccount1;
+        String toAddr = gdAccount2;
+        int shareProperty = 0;
+        String eqCode = gdEquityCode;
+
+        String tempObjIdFrom = "5" + CNKey + mapAccAddr.get(fromAddr).toString() + Random(4);
+        String tempObjIdTo = "5" + CNKey + mapAccAddr.get(toAddr).toString() + Random(4);
+
+        //交易报告数据
+        Map txInfo = gdBF.init04TxInfo();
+        String txRpObjId = "4" + CNKey + Random(6);
+        txInfo.put("transaction_object_id",txRpObjId);
+
+        //登记数据
+        Map fromNow = gdBF.init05RegInfo();
+        Map toNow = gdBF.init05RegInfo();
+
+        register_transaction_ref = txRpObjId;//登记引用的是交易报告的对象标识
+
+        fromNow.put("register_registration_object_id",tempObjIdFrom);
+        toNow.put("register_registration_object_id",tempObjIdTo);
+        fromNow.put("register_transaction_ref",txRpObjId);
+        toNow.put("register_transaction_ref",txRpObjId);
+
+
+        log.info("转让前查询机构主体信息");
+        String query2 = gd.GDObjectQueryByVer(gdCompanyID,-1);
+        int totalMembers = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject("body"
+        ).getJSONObject("subject_information").getJSONObject("organization_subject_information"
+        ).getJSONObject("basic_information_of_enterprise").getJSONObject("basic_information_description"
+        ).getInt("subject_shareholders_number");
+
+
+        //执行交易
+        String response= gd.GDShareTransfer(keyId,fromAddr,transferAmount/2,toAddr,shareProperty,eqCode,txInfo,fromNow,toNow);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        String txId = jsonObject.getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+
+        log.info("转让后查询机构主体信息");
+        query2 = gd.GDObjectQueryByVer(gdCompanyID,-1);
+        int totalMembersAft = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject("body"
+        ).getJSONObject("subject_information").getJSONObject("organization_subject_information"
+        ).getJSONObject("basic_information_of_enterprise").getJSONObject("basic_information_description"
+        ).getInt("subject_shareholders_number");
+
+
+
+        //查询企业股东信息
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+        assertEquals("200", JSONObject.fromObject(query).getString("state"));
+
+        JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
+
+        log.info("================================检查存证数据格式化《开始》================================");
+        log.info("检查转让from账户登记信息");
+        String tempObjId = tempObjIdFrom;
+
+        Map mapChkKeys = new HashMap();
+        mapChkKeys.put("address","");
+        mapChkKeys.put("txId",txId);
+        mapChkKeys.put("objectid",tempObjId);
+        mapChkKeys.put("version","0");
+        mapChkKeys.put("contentType",regType);
+        mapChkKeys.put("subProdSubType","");
+        mapChkKeys.put("operationType","create");
+
+
+        assertEquals("检查数据-登记",true,gdCF.bCheckJGParams(mapChkKeys));
+
+        log.info("检查转让from账户登记信息");
+        tempObjId = tempObjIdTo;
+
+        mapChkKeys.clear();
+        mapChkKeys.put("address","");
+        mapChkKeys.put("txId",txId);
+        mapChkKeys.put("objectid",tempObjId);
+        mapChkKeys.put("version","0");
+        mapChkKeys.put("contentType",regType);
+        mapChkKeys.put("subProdSubType","");
+        mapChkKeys.put("operationType","create");
+
+        assertEquals("检查数据-登记",true,gdCF.bCheckJGParams(mapChkKeys));
+
+        assertEquals("不报送主体信息",false,uriStoreData.contains(gdCompanyID));
+//        assertEquals("更新主体版本非0",false,gdCF.getObjectLatestVer(gdCompanyID).equals("0"));
+//        mapChkKeys.clear();
+//        mapChkKeys.put("address","");
+//        mapChkKeys.put("txId",txId);
+//        mapChkKeys.put("objectid",gdCompanyID);
+//        mapChkKeys.put("version",gdCF.getObjectLatestVer(gdCompanyID));
+//        mapChkKeys.put("contentType",subjectType);
+//        mapChkKeys.put("subProdSubType","1");
+//        mapChkKeys.put("operationType","update");
+//
+//        Map mapKeyUpdate =  new HashMap();
+//        mapKeyUpdate.put("subject_shareholders_number",totalMembersAft);
+//
+//        String json = JSON.toJSONString(mapKeyUpdate);
+//        mapChkKeys.put("updateMap",json);
+//
+//        assertEquals("检查数据-主体",true,gdCF.bCheckJGParams(mapChkKeys));
+
+        mapChkKeys.clear();
+        mapChkKeys.put("address","");
+        mapChkKeys.put("txId",txId);
+        mapChkKeys.put("objectid",txRpObjId);
+        mapChkKeys.put("version","0");
+        mapChkKeys.put("contentType",txrpType);
+        mapChkKeys.put("subProdSubType","");
+        mapChkKeys.put("operationType","create");
+
+        assertEquals("检查数据-交易报告",true,gdCF.bCheckJGParams(mapChkKeys));
+
+
+
+        log.info("================================检查存证数据格式化《结束》================================");
+
+        //实际应该持股情况信息
+        List<Map> respShareList = new ArrayList<>();
+        respShareList = gdConstructQueryShareList(gdAccount1,2500,0,0,mapShareENCN().get("0"),respShareList);
+        List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,7500,0,0,mapShareENCN().get("0"), respShareList);
+        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,5000,0,0,mapShareENCN().get("0"), respShareList2);
+        List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,5000,0,0,mapShareENCN().get("0"), respShareList3);
+
+        log.info(respShareList4.toString());
+        //检查存在余额的股东列表
+        assertEquals(respShareList4.size(),dataShareList.size());
+        List<Map> getShareList = getShareListFromQueryNoZeroAcc(dataShareList);
+        assertEquals(respShareList4.size(),getShareList.size());
+        assertEquals(true,respShareList4.containsAll(getShareList) && getShareList.containsAll(respShareList4));
+
+        assertEquals("检查总股东数变更是否正确",totalMembersAft,totalMembers);
+    }
+
 
     //转让全部转出转给已存在的股东 减少一个股东数 存在主体报送
     @Test
@@ -788,6 +933,10 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
             assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
             sleepAndSaveInfo(4000);
+            //查询企业股东信息
+            String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+//            assertEquals("未冻结成功",false,query.contains("\"lockAmount\":" + lockAmount));
+
             String ver2 = gdCF.getObjectLatestVer(tempObjId);
 
             assertEquals("登记版本变更",true,ver1.equals(ver2));//应该不要变更
@@ -796,9 +945,12 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
             String storeData2 = minio.getFileFromMinIO(minIOEP,jgBucket,tempObjId + "/" + Integer.valueOf(ver1)+1,"");
             assertEquals("未获取到更新的登记对象版本信息",true,storeData2.contains("错误"));
 
+            assertEquals("RTR011",tempregister_transaction_ref);
             register_transaction_ref = tempregister_transaction_ref; //设置登记引用已存在的交易报告对象
+
             regInfo = gdBF.init05RegInfo();
             regInfo.put("register_registration_object_id",tempObjId);
+            bizNo = Random(15);//不应该 但临时测试报送
             response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,regInfo,txInfo);
 
         }
@@ -836,6 +988,12 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
             mapChkKeys.put("contentType", txrpType);
             mapChkKeys.put("subProdSubType", "");
             mapChkKeys.put("operationType", "create");
+
+            Map mapKeyUpdate = new HashMap();
+            mapKeyUpdate.put("transaction_type",type);
+
+            String json = JSON.toJSONString(mapKeyUpdate);
+            mapChkKeys.put("updateMap",json);
 
             assertEquals("检查数据-交易报告", true, gdCF.bCheckJGParams(mapChkKeys));
         }else {
@@ -956,7 +1114,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
         assertEquals("检查数据-登记",true,gdCF.bCheckJGParams(mapChkKeys));
 
         //交易报告质押融资类型6报送交易报告 否则不报送
-        if(type == 6) {
+        if(type == 7) {
             //交易报告对象检查
             assertEquals("更新交易报告版本非0", true, gdCF.getObjectLatestVer(txObjId).equals("0"));
             mapChkKeys.clear();
@@ -967,6 +1125,12 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
             mapChkKeys.put("contentType", txrpType);
             mapChkKeys.put("subProdSubType", "");
             mapChkKeys.put("operationType", "create");
+
+            Map mapKeyUpdate = new HashMap();
+            mapKeyUpdate.put("transaction_type",type);
+
+            String json = JSON.toJSONString(mapKeyUpdate);
+            mapChkKeys.put("updateMap",json);
 
             assertEquals("检查数据-交易报告", true, gdCF.bCheckJGParams(mapChkKeys));
         }else {

@@ -1139,7 +1139,7 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
 
     }
 
-
+    //Y查询类型 (1:按客户号查询,2:按股东号查询,3:按股权代码查询,4:按时间段查询 )
     @Test
     public void TC30_txReportQueryTest_ByTime()throws Exception{
 
@@ -1161,7 +1161,7 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
         String sdEnd = sdf.format(end); // 时间戳转换日期
 //        sdStart = "2020-12-21 13:17:53";
 //        sdEnd = "2020-12-21 13:20:25";
-        String type = "5";
+        String type = "4";
         String value = gdAccClientNo1;
 
         String response = gd.GDGetTxReportInfo(type,value,sdStart,sdEnd);
@@ -1254,7 +1254,8 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
 //        assertEquals(2,JSONObject.fromObject(response).getJSONArray("data").size());
     }
 
-    @Test
+    //2020/12/21 不再支持通过客户姓名查询交易报告库
+//    @Test
     public void TC32_txReportQueryTest_ByClientName()throws Exception{
         log.info("通过客户姓名查询");
         String clientName = "zhangsan";
@@ -1268,7 +1269,7 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
     @Test
     public void TC33_txReportQueryTest_BySHNo()throws Exception{
         log.info("通过股东号查询");
-        String response = gd.GDGetTxReportInfo("3","SH" + gdAccClientNo1,"","");
+        String response = gd.GDGetTxReportInfo("2","SH" + gdAccClientNo1,"","");
 //        assertEquals("确认投资者开户交易存在",true,response.contains("\"txType\":\"投资者开户\""));
 //        assertEquals(12, StringUtils.countOccurrencesOf(response,"投资者开户"));
 //        assertEquals(12,JSONObject.fromObject(response).getJSONArray("data").size());
@@ -1277,7 +1278,7 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
     @Test
     public void TC34_txReportQueryTest_ByEquityCode()throws Exception{
         log.info("通过股权代码查询");
-        String response = gd.GDGetTxReportInfo("4",gdEquityCode,"","");
+        String response = gd.GDGetTxReportInfo("3",gdEquityCode,"","");
 //        assertEquals("确认投资者开户交易存在",true,response.contains("\"txType\":\"投资者开户\""));
 //        assertEquals(12, StringUtils.countOccurrencesOf(response,"投资者开户"));
 //        assertEquals(12,JSONObject.fromObject(response).getJSONArray("data").size());
