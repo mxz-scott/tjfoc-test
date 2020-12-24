@@ -81,9 +81,6 @@ public class GDV2_CheckJGFormat_Part2FundProduct {
     @Test
     public void TC06_shareIssue() throws Exception {
 
-        regNo = "issue" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
-
         List<Map> shareList = gdConstructShareList(gdAccount1,issueAmount,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,issueAmount,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,issueAmount,0, shareList2);
@@ -794,9 +791,6 @@ public class GDV2_CheckJGFormat_Part2FundProduct {
 //        log.info("before recycle 股本总数(股) " + totalShares + " 股东总数（个） " + totalHolderAccount);
         log.info("before recycle  " + "股东总数（个） " + totalHolderAccount);
 
-        regNo = "recylce" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
-
         //账户4全部回收
         List<Map> shareList = gdConstructShareList(gdAccount4,recycleAmount,0);
 
@@ -1021,9 +1015,6 @@ public class GDV2_CheckJGFormat_Part2FundProduct {
         int totalHolderAccount = JSONObject.fromObject(query2).getJSONObject("data").getInt("subject_shareholders_number");
 
 //        log.info("before recycle 股本总数(股) " + totalShares + " 股东总数（个） " + totalHolderAccount);
-
-        regNo = "recycle2" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
 
         List<Map> shareList = new ArrayList<>();
         Boolean bOnlyZero = false;

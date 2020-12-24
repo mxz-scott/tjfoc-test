@@ -77,9 +77,6 @@ public class GDV2_CheckJGFormat_Part2EquityProduct_NoComma {
     public void TC06_shareIssue() throws Exception {
         log.info(registerInfo.toString());
 
-        regNo = "Eq" + "issue" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
-
         List<Map> shareList = gdConstructShareList2(gdAccount1,issueAmount,0);
         List<Map> shareList2 = gdConstructShareList2(gdAccount2,issueAmount,0, shareList);
         List<Map> shareList3 = gdConstructShareList2(gdAccount3,issueAmount,0, shareList2);
@@ -496,9 +493,6 @@ public class GDV2_CheckJGFormat_Part2EquityProduct_NoComma {
         String eqCode = gdEquityCode;
         String reason = "股份分红";
 
-        regNo = "Eq" + "increase" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
-
         List<Map> shareList = gdConstructShareList2(gdAccount1,increaseAmount,0);
         List<Map> shareList2 = gdConstructShareList2(gdAccount2,increaseAmount,0, shareList);
         List<Map> shareList3 = gdConstructShareList2(gdAccount3,increaseAmount,0, shareList2);
@@ -869,9 +863,6 @@ public class GDV2_CheckJGFormat_Part2EquityProduct_NoComma {
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
 //        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
-        registerInfo = gdBF.init05RegInfo();
-        regNo = "Eq" + "recylce" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
 
         List<Map> shareList = gdConstructShareList2(address,recycleAmount,0);
 
@@ -1020,8 +1011,6 @@ public class GDV2_CheckJGFormat_Part2EquityProduct_NoComma {
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
 //        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
-        regNo = "Eq" + "recylce2" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
 
         List<Map> shareList = gdConstructShareList2(gdAccount1,100,0);
         List<Map> shareList2 = gdConstructShareList2(gdAccount2,100,0,shareList);

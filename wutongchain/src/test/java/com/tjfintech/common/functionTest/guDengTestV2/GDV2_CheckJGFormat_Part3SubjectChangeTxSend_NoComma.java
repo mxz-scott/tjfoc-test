@@ -66,9 +66,6 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend_NoComma {
     public void TC06_shareIssue() throws Exception {
         gdEquityCode = "fondTest" + Random(12);
 
-        regNo = "Eq" + "issue" + ( new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
-
         List<Map> shareList = gdConstructShareList(gdAccount1,issueAmount,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,issueAmount,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,issueAmount,0, shareList2);
@@ -115,10 +112,6 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend_NoComma {
     public void shareIssueWithDiffShareProperty() throws Exception {
         gdEquityCode = "fondTest" + Random(12);
         log.info(registerInfo.toString());
-
-        regNo = "Eq" + "issue" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo = gdBF.init05RegInfo();
-        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
 
         List<Map> shareList = gdConstructShareList2(gdAccount1,issueAmount,0);
         List<Map> shareList2 = gdConstructShareList2(gdAccount1,issueAmount,1, shareList);
@@ -580,9 +573,6 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend_NoComma {
         String eqCode = gdEquityCode;
         String reason = "股份分红";
 
-        regNo = "Eq" + "increase" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
-
         List<Map> shareList = gdConstructShareList2(gdAccount5,increaseAmount,0);
         List<Map> shareList4 = gdConstructShareList2(gdAccount6,increaseAmount,0, shareList);
         txInformation.put("transaction_type",0);
@@ -708,9 +698,6 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend_NoComma {
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";
-
-        regNo = "Eq" + "increase" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
-        registerInfo.put("register_registration_serial_number",regNo);       //更新对比的登记流水号
 
         List<Map> shareList = gdConstructShareList2(gdAccount5,increaseAmount,0);
         List<Map> shareList4 = gdConstructShareList2(gdAccount6,increaseAmount,0, shareList);

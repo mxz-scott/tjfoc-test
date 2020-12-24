@@ -134,6 +134,7 @@ public class UtilsClassGD {
     public static Boolean bHeaderCalOK = true;
     public static String CNKey = "Eq1";
     public static String uriStoreData = "";
+    public static String productType = "1";
 
     public static  HashMap<String,String> refInfo = new HashMap<String,String>();
 

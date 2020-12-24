@@ -13,6 +13,7 @@ import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class GDV2_SceneTest_Issue {
     CommonFunc commonFunc = new CommonFunc();
     public static String bizNoTest = "test" + Random(12);
     GDUnitFunc uf = new GDUnitFunc();
-    String typeProduct = "1";
+    GDCommonFunc gdCF = new GDCommonFunc();
 
     @Rule
     public TestName tm = new TestName();
@@ -70,13 +71,13 @@ public class GDV2_SceneTest_Issue {
         uf.commonIssuePP01(1000);//发行给账户1~4 股权性质对应 0 1 0 1
     }
 
-    @After
+//    @After
     public void calJGDataAfterTx()throws Exception{
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
         int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
         uf.checkJGHeaderOpVer(blockHeight,endHeight);
-        uf.updateBlockHeightParam(endHeight);
+//        uf.updateBlockHeightParam(endHeight);
     }
 //    @After
     public void DestroyEquityAndAcc()throws Exception{
@@ -120,6 +121,53 @@ public class GDV2_SceneTest_Issue {
 
     }
 
+
+    /***
+     * 多次发行登记对象标识使用同一个
+     *
+     * */
+
+    @Test
+    public void issueSameRegisterObjectId()throws Exception{
+        gdEquityCode = "sameRegObjIdEC" + Random(3);
+        gdCompanyID = "sameRegObjIdSub" + Random(3);
+
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+
+        //发行已经发行过的股权代码
+        String response = uf.shareIssue(gdEquityCode,shareList4,false);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+
+        sleepAndSaveInfo(3000);
+
+        gdEquityCode = "sameRegObjIdEC2" + Random(3);
+        gdCompanyID = "sameRegObjIdSub2" + Random(3);
+
+        response = uf.shareIssue(gdEquityCode,shareList4,false);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+        String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+
+        //遍历检查所有账户登记及交易存证信息
+        for(int k = 0 ;k < shareList4.size(); k++) {
+            String tempAddr = JSONObject.fromObject(shareList4.get(k)).getString("address");
+            String tempObjId = mapAddrRegObjId.get(tempAddr).toString();
+
+            Map mapChkKeys = new HashMap();
+            mapChkKeys.put("address","");
+            mapChkKeys.put("txId",txId);
+            mapChkKeys.put("objectid",tempObjId);
+            mapChkKeys.put("version","1");
+            mapChkKeys.put("contentType",regType);
+            mapChkKeys.put("subProdSubType","");
+            mapChkKeys.put("operationType","update");
+
+            assertEquals("检查数据",true,gdCF.bCheckJGParams(mapChkKeys));
+        }
+
+    }
     /***
      * 发行不同股权代码性质的股权 多个股东
      */
@@ -228,7 +276,8 @@ public class GDV2_SceneTest_Issue {
 
     @Test
     public void issueOneHolderDiffPropertyEquityCode()throws Exception{
-        gdEquityCode = "gdEC" + Random(13);
+        gdEquityCode = "gdEC1" + Random(10);
+        gdCompanyID = "gdSub1" + Random(10);
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
         shareList = gdConstructShareList(gdAccount1,1000,1,shareList);
         shareList = gdConstructShareList(gdAccount1,1000,2,shareList);
@@ -397,6 +446,9 @@ public class GDV2_SceneTest_Issue {
 
     @Test
     public void issueMin_TC2492()throws Exception{
+
+        gdEquityCode = "gdEC2" + Random(10);
+        gdCompanyID = "gdSub2" + Random(10);
 
         List<Map> shareList = gdConstructShareList(gdAccount1,1,0);
         shareList = gdConstructShareList(gdAccount1,1,1,shareList);

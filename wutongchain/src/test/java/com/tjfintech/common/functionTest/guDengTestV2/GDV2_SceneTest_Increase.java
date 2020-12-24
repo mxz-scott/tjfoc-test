@@ -34,6 +34,7 @@ public class GDV2_SceneTest_Increase {
     GDUnitFunc uf = new GDUnitFunc();
     GDBeforeCondition gdBF = new GDBeforeCondition();
     GDCommonFunc gdCF = new GDCommonFunc();
+    String tempregister_transaction_ref = register_transaction_ref;
 
     @Rule
     public TestName tm = new TestName();
@@ -47,7 +48,7 @@ public class GDV2_SceneTest_Increase {
     @Before
     public void IssueEquity()throws Exception{
         bizNoTest = "test" + Random(12);
-
+        tempregister_transaction_ref = register_transaction_ref;
         //重新创建账户
 //        gdAccClientNo1 = "No000" + Random(10);
 //        gdAccClientNo2 = "No100" + Random(10);
@@ -71,11 +72,12 @@ public class GDV2_SceneTest_Increase {
 
     @After
     public void calJGDataAfterTx()throws Exception{
+        register_transaction_ref = tempregister_transaction_ref;
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
         int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
         uf.checkJGHeaderOpVer(blockHeight,endHeight);
-        uf.updateBlockHeightParam(endHeight);
+//        uf.updateBlockHeightParam(endHeight);
     }
 //    @After
     public void DestroyEquityAndAcc()throws Exception{
@@ -142,7 +144,7 @@ public class GDV2_SceneTest_Increase {
         //测试增发一个不存在的产品对象 2020/12/19
         Map eqPErr = gdBF.init03EquityProductInfo();
         eqPErr.put("product_object_id", "testErr" + Random(3));
-        String err = gd.GDShareIncrease(gdPlatfromKeyID, eqCode, shareList, reason, eqProd, txInfo);
+        String err = gd.GDShareIncrease(gdPlatfromKeyID, eqCode, shareList, reason, eqPErr, txInfo);
         assertEquals("400", net.sf.json.JSONObject.fromObject(err).getString("state"));
     }
 
