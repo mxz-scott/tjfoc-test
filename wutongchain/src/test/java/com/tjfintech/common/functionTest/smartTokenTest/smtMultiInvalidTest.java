@@ -381,6 +381,7 @@ public class smtMultiInvalidTest {
         List<Map> payList = stc.smartConstructTokenList(invalidAddress, "test", "200", null);
         String transferResp = st.SmartExchangeReq(tokenType, payList,  newTokenType, "", exchangeResp);
         assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true, transferResp.contains("Insufficient Balance!"));
 
         //paymentList.amount数量不等于余额
         payList.clear();
@@ -415,8 +416,9 @@ public class smtMultiInvalidTest {
         payList.clear();
         collList.clear();
         payList = stc.smartConstructTokenList(ADDRESS1, "test", "100", null);
-        transferResp = stc.smartExchange(tokenType, payList,  newTokenType, "", exchangeResp);
-        assertEquals("400", JSONObject.fromObject(transferResp).getString("state"));
+        transferResp = st.SmartExchangeReq(tokenType, payList,  newTokenType, "", exchangeResp);
+        assertEquals("500", JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true, transferResp.contains("未转换所有余额"));
 
     }
 

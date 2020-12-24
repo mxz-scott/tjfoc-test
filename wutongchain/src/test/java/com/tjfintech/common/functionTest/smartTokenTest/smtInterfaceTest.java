@@ -146,8 +146,8 @@ public class smtInterfaceTest {
         String UTXOInfo = JSONObject.fromObject(transferResp).getJSONObject("data").getString("UTXOInfo");
         String signMsg = JSONObject.fromObject(transferResp).getJSONObject("data").getString("sigMsg");
         HashMap<String, Object> sigMsgmap = stc.smartContractApproveData(signMsg);
-        String signAddress = sigMsgmap.get("signAddress").toString();
-        List<String> pubkeys = (List<String>) sigMsgmap.get("pubkeys");
+        String signAddress = sigMsgmap.get("address").toString();
+        List<String> pubkeys = (List<String>) sigMsgmap.get("pubkeyList");
         List<String> signList = (List<String>) sigMsgmap.get("signList");
         List<Map> payInfoList = stc.smartConstructPayAddressInfoList(signAddress, pubkeys, signList, null);
 

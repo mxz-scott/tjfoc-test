@@ -145,8 +145,8 @@ public class SmartTokenCommon {
         String signMsg = JSONObject.fromObject(transferInfo).getJSONObject("data").getString("sigMsg");
 
         HashMap<String, Object> sigMsgmap = smartContractApproveData(signMsg);
-        String signAddress = sigMsgmap.get("signAddress").toString();
-        List<String> pubkeys = (List<String>) sigMsgmap.get("pubkeys");
+        String signAddress = sigMsgmap.get("address").toString();
+        List<String> pubkeys = (List<String>) sigMsgmap.get("pubkeyList");
         List<String> signList = (List<String>) sigMsgmap.get("signList");
 
         //转让审核
@@ -184,8 +184,8 @@ public class SmartTokenCommon {
             }
         }
         HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("signAddress", signAddress);
-        map.put("pubkeys", pubkeys);
+        map.put("address", signAddress);
+        map.put("pubkeyList", pubkeys);
         map.put("signList", signList);
 
         return map;
@@ -215,8 +215,8 @@ public class SmartTokenCommon {
                 signList.add(cryptMsg);
             }
             HashMap<String, Object> map = new HashMap<String, Object>();
-            map.put("signAddress", signAddress);
-            map.put("pubkeys", pubkeys);
+            map.put("address", signAddress);
+            map.put("pubkeyList", pubkeys);
             map.put("signList", signList);
             signMsgList.add(map);
         }
@@ -288,8 +288,8 @@ public class SmartTokenCommon {
         String signMsg = JSONObject.fromObject(destroyInfo).getJSONObject("data").getString("sigMsg");
 
         HashMap<String, Object> sigMsgmap = smartContractApproveData(signMsg);
-        String signAddress = sigMsgmap.get("signAddress").toString();
-        List<String> pubkeys = (List<String>) sigMsgmap.get("pubkeys");
+        String signAddress = sigMsgmap.get("address").toString();
+        List<String> pubkeys = (List<String>) sigMsgmap.get("pubkeyList");
         List<String> signList = (List<String>) sigMsgmap.get("signList");
 
         //审核
@@ -316,8 +316,8 @@ public class SmartTokenCommon {
         String signMsg = JSONObject.fromObject(exchangeInfo).getJSONObject("data").getString("sigMsg");
 
         HashMap<String, Object> sigMsgmap = smartContractApproveData(signMsg);
-        String signAddress = sigMsgmap.get("signAddress").toString();
-        List<String> pubkeys = (List<String>) sigMsgmap.get("pubkeys");
+        String signAddress = sigMsgmap.get("address").toString();
+        List<String> pubkeys = (List<String>) sigMsgmap.get("pubkeyList");
         List<String> signList = (List<String>) sigMsgmap.get("signList");
 
         //审核

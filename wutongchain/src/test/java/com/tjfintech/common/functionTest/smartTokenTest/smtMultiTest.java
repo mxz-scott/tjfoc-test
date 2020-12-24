@@ -92,7 +92,7 @@ public class smtMultiTest {
 
         //发行
         tokenType = stc.beforeConfigIssueNewToken("200");
-        String newTokenType = "NEW_" + UtilsClass.Random(10);
+        String newTokenType = "NEW1_" + UtilsClass.Random(10);
 
         //转换
         String transferData = "ADDRESS1 向 MULITADD4 转账10个" + tokenType;
@@ -450,7 +450,6 @@ public class smtMultiTest {
         log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
         stc.verifyAddressHasBalance(ADDRESS1, tokenType, "99.876544");
         stc.verifyAddressHasBalance(MULITADD4, tokenType, "100.123456");
-        sleepAndSaveInfo(2000);
 
         //ADDRESS1回收50.000044
         payList.clear();
@@ -463,7 +462,6 @@ public class smtMultiTest {
         stc.verifyAddressHasBalance(ADDRESS1, tokenType, "49.8765");
         stc.verifyAddressHasBalance(MULITADD4, tokenType, "100.123456");
         stc.verifyAddressHasBalance(ZEROADDRESS, tokenType, "50.000044");
-        sleepAndSaveInfo(2000);
 
         //MULITADD4回收50.023456
         payList.clear();
@@ -476,7 +474,6 @@ public class smtMultiTest {
         stc.verifyAddressHasBalance(ADDRESS1, tokenType, "49.8765");
         stc.verifyAddressHasBalance(MULITADD4, tokenType, "50.1");
         stc.verifyAddressHasBalance(ZEROADDRESS, tokenType, "100.0235");
-        sleepAndSaveInfo(2000);
 
         //ADDRESS1/MULITADD4同时回收20
         payList.clear();
@@ -490,7 +487,6 @@ public class smtMultiTest {
         stc.verifyAddressHasBalance(ADDRESS1, tokenType, "29.8765");
         stc.verifyAddressHasBalance(MULITADD4, tokenType, "30.1");
         stc.verifyAddressHasBalance(ZEROADDRESS, tokenType, "140.0235");
-        sleepAndSaveInfo(2000);
 
         //冻结tokentype
         String freezeResp = st.SmartFreeze(tokenType,"");
