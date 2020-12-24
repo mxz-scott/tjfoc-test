@@ -64,8 +64,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         GDUnitFunc uf = new GDUnitFunc();
         int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
         uf.checkJGHeaderOpVer(blockHeight,endHeight);
-        uf.updateBlockHeightParam(endHeight);
-
+//        uf.updateBlockHeightParam(endHeight);
 
         //中间可能有做过重新赋值 执行完成后恢复原设置值
         account_subject_ref = tempaccount_subject_ref;
@@ -436,8 +435,16 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
 //    @Test
     public  void tet()throws Exception{
-        MinIOOperation minio = new MinIOOperation();
-        String storeData2 = minio.getFileFromMinIO(minIOEP,jgBucket,"fund_a8dee7aa95e94e13baac526782dca87/0","");
+        for(int i =0 ;i<200;i++){
+            TCN014_createAccTestCheckFormat();
+            log.info(i + " ************************************************************************* ");
+            sleepAndSaveInfo(5000);
+
+        }
+
+
+//        MinIOOperation minio = new MinIOOperation();
+//        String storeData2 = minio.getFileFromMinIO(minIOEP,jgBucket,"fund_a8dee7aa95e94e13baac526782dca87/0","");
     }
 
     @Test

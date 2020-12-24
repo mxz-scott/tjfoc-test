@@ -131,6 +131,7 @@ public class UtilsClassGD {
     public static String jgBucket = "my-oss-test";
 
     public static Boolean bRegTxRef = false;
+    public static Boolean bHeaderCalOK = true;
     public static String CNKey = "Eq1";
     public static String uriStoreData = "";
 

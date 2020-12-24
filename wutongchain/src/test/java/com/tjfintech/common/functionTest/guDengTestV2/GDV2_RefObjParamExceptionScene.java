@@ -62,7 +62,7 @@ public class GDV2_RefObjParamExceptionScene {
         tempproduct_issuer_subject_ref = product_issuer_subject_ref;
     }
 
-//    @After
+    @After
     public void calJGDataAfterTx()throws Exception{
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();

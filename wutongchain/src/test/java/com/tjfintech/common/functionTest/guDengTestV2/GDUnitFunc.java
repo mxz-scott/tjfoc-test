@@ -571,6 +571,7 @@ public class GDUnitFunc {
                         fo.appendToFile(sdfSec.format((new Date()).getTime()) + " test case " + testCurMethodName
                                 + "\nblock height " + i + " \nuri " + chkData.get("uri").toString()
                                 + "\n" + chkData.get("JGData").toString() ,saveFile );
+                        bHeaderCalOK = bHeaderCalOK && false;
                     }
                 }
             }
@@ -583,10 +584,13 @@ public class GDUnitFunc {
                     fo.appendToFile(sdfSec.format((new Date()).getTime()) + " test case " + testCurMethodName
                             + "\nblock height " + i + " \nuri " + chkData.get("uri").toString()
                             + "\n" + chkData.get("JGData").toString() ,saveFile );
+                    bHeaderCalOK = bHeaderCalOK && false;
                 }
             }
 
         }
+        updateBlockHeightParam(iEnd);
+        assertEquals("校验header operation & version 规则",true,bHeaderCalOK);
     }
 
     public Map checkBlkUriDataJGPrinciple(String storeData)throws Exception{
@@ -595,6 +599,8 @@ public class GDUnitFunc {
         com.alibaba.fastjson.JSONObject jsonStore = com.alibaba.fastjson.JSONObject.parseObject(storeData);
         String uri = jsonStore.getString("uri");
         String data = mo.getFileFromMinIO(minIOEP,jgBucket,uri,"");
+//        FileOperation g = new FileOperation();
+//        g.appendToFile(data,"chk.txt");
         Boolean bFlag = false;
 
 
@@ -630,7 +636,10 @@ public class GDUnitFunc {
             Map temp = gdCF.findDataInBlock(i, keyWord);
 //            Map temp = findDataInBlock(i, "gdCmpyId01z3k4gF");
             String storeData = temp.get("storeData").toString();
+
             log.info(storeData);
+
+            if(storeData.contains(keyWord)) break;
 
         }
     }

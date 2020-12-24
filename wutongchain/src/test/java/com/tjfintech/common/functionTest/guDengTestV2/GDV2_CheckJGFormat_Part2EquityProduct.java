@@ -83,7 +83,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         GDUnitFunc uf = new GDUnitFunc();
         int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
         uf.checkJGHeaderOpVer(blockHeight,endHeight);
-        uf.updateBlockHeightParam(endHeight);
+//        uf.updateBlockHeightParam(endHeight);
 
         subject_investor_qualification_certifier_ref =tempsubject_investor_qualification_certifier_ref;
         register_transaction_ref = tempregister_transaction_ref;
@@ -114,7 +114,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         //查询投资者信息
         //查询企业股东信息
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
-        assertEquals("200",JSONObject.fromObject(query).getString("state"));
+//        assertEquals("200",JSONObject.fromObject(query).getString("state"));
 
         JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
 
@@ -1340,14 +1340,16 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         String newEquityCode = gdEquityCode + "new" + Random(2);
         String cpnyId = gdCompanyID;
 
-        regNo = "Eq" + "changeboard" + (new Date()).getTime();   //区分不同类型的交易登记以流水号
         List<Map> regList = uf.getAllHolderListReg(gdEquityCode,regNo);
-        registerInfo = gdBF.init05RegInfo();
 
-        Map eqProd = gdBF.init03EquityProductInfo();
-        eqProd.put("product_object_id",oldEquityCode);//20201217 yu
 
-        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,regList,eqProd,null);
+        Map oldEqProd = gdBF.init03EquityProductInfo();
+        oldEqProd.put("product_object_id",oldEquityCode);
+
+        Map newEqProd = gdBF.init03EquityProductInfo();
+        newEqProd.put("product_object_id",oldEquityCode);
+
+        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,regList,oldEqProd,newEqProd);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -1377,47 +1379,40 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         for(int k = 0 ;k < dataShareList.size(); k++) {
             String tempAddr = JSONObject.fromObject(dataShareList.get(k)).getString("address");
             String tempObjId = mapAddrRegObjId.get(tempAddr).toString();
-            String regVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
 
-            //获取链上mini url的存证信息 并检查是否包含uri信息 每个登记都是新的 则都是0
-            String regfileName = conJGFileName(tempObjId,regVer);
-            String chkRegURI = regfileName;
-            assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI));
-            assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
+            Map mapChkKeys = new HashMap();
+            mapChkKeys.put("address","");
+            mapChkKeys.put("txId",txId);
+            mapChkKeys.put("objectid",tempObjId);
+            mapChkKeys.put("version","0");
+            mapChkKeys.put("contentType",regType);
+            mapChkKeys.put("subProdSubType","");
+            mapChkKeys.put("operationType","create");
 
-            //直接从minio上获取报送数据文件信息
-            Map getRegInfo = gdCF.constructJGDataFromStr(regfileName,regType,"");
-
-            Map regInfoInput = gdBF.init05RegInfo();
-            regInfoInput.put("register_registration_object_id",tempObjId);
-            regInfoInput.put("content",gdCF.constructContentTreeMap(regType,tempObjId,regVer,"create",String.valueOf(ts5)));
-
-            log.info("检查登记存证信息内容与传入一致\n" + regInfoInput.toString() + "\n" + getRegInfo.toString());
-            bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(regInfoInput,regType)),replaceCertain(getRegInfo.toString()));
-            assertEquals(tempObjId + "检查发行登记报告数据是否一致" ,true,bSame);
+            assertEquals("检查数据",true,gdCF.bCheckJGParams(mapChkKeys));
         }
         log.info("检查场内转板存证产品格式化及信息内容与传入一致");
 //        String oldProdVer = gdCF.getObjectLatestVer(oldEquityCode);
-        String oldProdVer = String.valueOf(Integer.valueOf(gdCF.getObjectLatestVer(oldEquityCode))-1);
-        String newEqProdVer = gdCF.getObjectLatestVer(oldEquityCode);
+        String oldProdVer = gdCF.getObjectLatestVer(oldEquityCode);
+        String newEqProdVer = gdCF.getObjectLatestVer(newEquityCode);
 
-        assertEquals("3",newEqProdVer);
+        assertEquals("0",newEqProdVer);
 
         //检查历史
         Map getOldProInfo = gdCF.constructJGDataFromStr(conJGFileName(oldEquityCode, oldProdVer), prodType, "1");
-        eqProd.put("product_code",oldEquityCode);
-        eqProd.put("content",gdCF.constructContentTreeMap(prodType, oldEquityCode, oldProdVer, "delete", String.valueOf(ts8)));
-        log.info("检查转板前产品存证信息内容与传入一致\n" + eqProd.toString() + "\n" + getOldProInfo.toString());
-        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(eqProd, prodType)), replaceCertain(getOldProInfo.toString()));
+        oldEqProd.put("product_code",oldEquityCode);
+        oldEqProd.put("content",gdCF.constructContentTreeMap(prodType, oldEquityCode, oldProdVer, "delete", String.valueOf(ts8)));
+        log.info("检查转板前产品存证信息内容与传入一致\n" + oldEqProd.toString() + "\n" + getOldProInfo.toString());
+        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(oldEqProd, prodType)), replaceCertain(getOldProInfo.toString()));
         assertEquals("检查增发产品是否一致" ,true,bSame);
 
         product_issuer_subject_ref = gdCompanyID;
-        eqProd.put("product_code",newEquityCode);
+        newEqProd.put("product_code",newEquityCode);
         //检查新产品
         Map getNewProInfo = gdCF.constructJGDataFromStr(conJGFileName(oldEquityCode, newEqProdVer), prodType, "1");
-        eqProd.put("content",gdCF.constructContentTreeMap(prodType, oldEquityCode, newEqProdVer, "create", String.valueOf(ts3)));
-        log.info("检查转板后产品存证信息内容与传入一致\n" + eqProd.toString() + "\n" + getNewProInfo.toString());
-        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(eqProd, prodType)), replaceCertain(getNewProInfo.toString()));
+        newEqProd.put("content",gdCF.constructContentTreeMap(prodType, oldEquityCode, newEqProdVer, "create", String.valueOf(ts3)));
+        log.info("检查转板后产品存证信息内容与传入一致\n" + newEqProd.toString() + "\n" + getNewProInfo.toString());
+        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(newEqProd, prodType)), replaceCertain(getNewProInfo.toString()));
         assertEquals("检查增发产品是否一致" ,true,bSame);
 
         log.info("================================检查存证数据格式化《结束》================================");

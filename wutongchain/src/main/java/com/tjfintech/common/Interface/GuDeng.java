@@ -31,7 +31,8 @@ public interface GuDeng {
     String GDShareRecycle(String platformKeyId, String equityCode, List<Map> addressList, String remark);
 
 //    String GDShareChangeBoard(String platformKeyId, String companyId, String oldEquityCode, String newEquityCode,Map registerInformation,Map equityProductInfo,Map bondProductInfo);
-    String GDShareChangeBoard(String platformKeyId, String companyId, String oldEquityCode, String newEquityCode,List<Map> regInfoList,Map equityProductInfo,Map bondProductInfo);
+    String GDShareChangeBoard(String platformKeyId, String companyId, String oldEquityCode, String newEquityCode,List<Map> regInfoList,
+                              Map oldProductInfo,Map newProductInfo);
 
     String GDAccountDestroy(String contractAddress, String clientNo,String shareholderClosingDate,List<Map> shareholderClosingCertificate,
                             String fundClosingDate,List<Map> fundClosingCertificate,String name,String number);

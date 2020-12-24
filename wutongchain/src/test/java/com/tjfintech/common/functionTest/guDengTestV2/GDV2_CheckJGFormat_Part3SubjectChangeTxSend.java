@@ -117,7 +117,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
         int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
-//        uf.checkJGHeaderOpVer(blockHeight,endHeight);
+        uf.checkJGHeaderOpVer(blockHeight,endHeight);
 //        uf.updateBlockHeightParam(endHeight);
 
         subject_investor_qualification_certifier_ref = tempsubject_investor_qualification_certifier_ref;
@@ -945,12 +945,12 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
             String storeData2 = minio.getFileFromMinIO(minIOEP,jgBucket,tempObjId + "/" + Integer.valueOf(ver1)+1,"");
             assertEquals("未获取到更新的登记对象版本信息",true,storeData2.contains("错误"));
 
-            assertEquals("RTR011",tempregister_transaction_ref);
+            assertEquals("RTR012",tempregister_transaction_ref);
             register_transaction_ref = tempregister_transaction_ref; //设置登记引用已存在的交易报告对象
 
             regInfo = gdBF.init05RegInfo();
             regInfo.put("register_registration_object_id",tempObjId);
-            bizNo = Random(15);//不应该 但临时测试报送
+//            bizNo = Random(15);//不应该 但临时测试报送
             response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,regInfo,txInfo);
 
         }
@@ -1059,8 +1059,8 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
         String txObjIdUnlock = "4LockObj" + Random(6);
         Map txInfoUnlock = gdBF.init04TxInfo();
-        txInfo.put("transaction_object_id",txObjIdUnlock);
-        txInfo.put("transaction_type",type);//交易报告类型
+        txInfoUnlock.put("transaction_object_id",txObjIdUnlock);
+        txInfoUnlock.put("transaction_type",type);//交易报告类型
 
         register_transaction_ref = txObjIdUnlock; //设置登记引用接口中的交易报告
 
@@ -1116,7 +1116,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
         //交易报告质押融资类型6报送交易报告 否则不报送
         if(type == 7) {
             //交易报告对象检查
-            assertEquals("更新交易报告版本非0", true, gdCF.getObjectLatestVer(txObjId).equals("0"));
+            assertEquals("更新交易报告版本非0", true, gdCF.getObjectLatestVer(tempObjIdUnlock).equals("0"));
             mapChkKeys.clear();
             mapChkKeys.put("address", "");
             mapChkKeys.put("txId", txId);

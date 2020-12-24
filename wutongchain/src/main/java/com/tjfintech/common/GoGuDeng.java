@@ -436,15 +436,15 @@ public  class GoGuDeng implements GuDeng {
      * @return
      */
     public String GDShareChangeBoard(String platformKeyId, String companyId, String oldEquityCode, String newEquityCode,
-                                     List<Map> regInfoList, Map equityProductInfo,Map bondProductInfo){
+                                     List<Map> regInfoList, Map oldProductInfo,Map newProductInfo){
         Map<String, Object> map = new HashMap<>();
         map.put("platformKeyId", platformKeyId);
-        map.put("companyId", companyId);
+//        map.put("companyId", companyId);
         map.put("oldEquityCode", oldEquityCode);
         map.put("newEquityCode", newEquityCode);
         map.put("registerInformationList", regInfoList);
-        map.put("equityProductInfo", equityProductInfo);
-        map.put("bondProductInfo", bondProductInfo);
+        map.put("oldProductInfo", oldProductInfo);
+        map.put("newProductInfo", newProductInfo);
         map.put("oldProductDeleteTime",ts8);
         map.put("newProductCreateTime",ts3);
         map.put("registerInfoCreateTime",ts5);
