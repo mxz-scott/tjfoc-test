@@ -384,8 +384,29 @@ public class GDUnitFunc {
     }
 
     public String enterpriseReg(String eqCode,Boolean bCheckOnchain)throws Exception{
-        long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,eqCode,shareTotals,enterpriseSubjectInfo, equityProductInfo,bondProductInfo,fundProductInfo);
+        Map enSub = gdBF.init01EnterpriseSubjectInfo();
+        Map mapProd = null;
+        String response = "";
+        switch (productType){
+            case "1":
+                mapProd = gdBF.init03EquityProductInfo();
+                response= gd.GDEnterpriseResister(gdContractAddress,eqCode,1000000,enSub, mapProd,null,null);
+                break;
+            case "2":
+                mapProd = gdBF.init03BondProductInfo();
+                response= gd.GDEnterpriseResister(gdContractAddress,eqCode,1000000,enSub, null,mapProd,null);
+                break;
+            case "3":
+                mapProd = gdBF.init03FundProductInfo();
+                response= gd.GDEnterpriseResister(gdContractAddress,eqCode,1000000,enSub, null,null,mapProd);
+                break;
+                default:
+                    //默认股权类
+                    mapProd = gdBF.init03EquityProductInfo();
+                    response= gd.GDEnterpriseResister(gdContractAddress,eqCode,1000000,enSub, mapProd,null,null);
+
+        }
+
 
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);

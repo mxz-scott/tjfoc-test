@@ -34,7 +34,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
     GDCommonFunc gdCF = new GDCommonFunc();
     GDUnitFunc uf = new GDUnitFunc();
     GDBeforeCondition gdBF = new GDBeforeCondition();
-    public static String bizNoTest = "test" + Random(12);
+    public static String bizNoTest = "";
     long issueAmount = 5000;
     long increaseAmount = 1000;
     long lockAmount = 500;
@@ -76,7 +76,8 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
 
         gdEquityCode = CNKey + "Token_" + Random(8);
-
+        gdCompanyID = CNKey + "Sub_" + Random(3);
+        bizNoTest = CNKey + "Lock_" + Random(3);
         gdBF.initRegulationData();//股权代码/产品对象标识 有变更 则重新初始化
 
         List<Map> shareList = gdConstructShareList(gdAccount1,issueAmount,0);
@@ -126,7 +127,8 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
     @Test
     public void shareIssueWithDiffShareProperty() throws Exception {
-        gdEquityCode = CNKey + "Token_" + Random(5);
+        gdCompanyID = CNKey + "Sub2_" + Random(4);
+        gdEquityCode = CNKey + "Token2_" + Random(4);
 
         List<Map> shareList = gdConstructShareList(gdAccount1,issueAmount,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount1,issueAmount,1, shareList);
@@ -211,7 +213,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
     //部分转让给已有账户
     @Test
-    public void shareTransfer_PartOut()throws Exception{
+    public void shareTransfer_PartOut_NoSubmitSubject()throws Exception{
 
         String keyId = gdAccountKeyID1;
         String fromAddr = gdAccount1;
@@ -357,7 +359,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
     //转让全部转出转给已存在的股东 减少一个股东数 存在主体报送
     @Test
-    public void shareTransfer_AllOut()throws Exception{
+    public void shareTransfer_AllOut_SubmitSubject()throws Exception{
 
         String keyId = gdAccountKeyID1;
         String fromAddr = gdAccount1;
@@ -663,7 +665,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
      */
 
     @Test
-    public void IncreaseWithTxReportType1()throws Exception{
+    public void IncreaseWithTxReportType1_SubmitTxReport()throws Exception{
         shareIncreaseSpec(1);
     }
 
@@ -838,7 +840,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
      * 20201222 当前存在bug
      */
     @Test
-    public void IncreaseWithTxReportType0() throws Exception {
+    public void IncreaseWithTxReportType0_NoSubmitTxReport() throws Exception {
         shareIncreaseSpec(0);
     }
 
@@ -848,7 +850,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
      * 20201222 当前存在bug
      */
     @Test
-    public void IncreaseWithTxReportType2() throws Exception {
+    public void IncreaseWithTxReportType2_NoSubmitTxReport() throws Exception {
         shareIncreaseSpec(2);
     }
 
@@ -858,7 +860,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
      * @throws Exception
      */
     @Test
-    public void shareLock_Type6() throws Exception {
+    public void shareLock_Type6_SubmitTxReport() throws Exception {
         shareLockWithType(6);
     }
     /***
@@ -866,7 +868,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
      * @throws Exception
      */
     @Test
-    public void shareLock_Type0() throws Exception {
+    public void shareLock_Type0_NoSubmitTxReport() throws Exception {
         shareLockWithType(0);
     }
 
@@ -875,7 +877,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
      * @throws Exception
      */
     @Test
-    public void shareLock_Type1() throws Exception {
+    public void shareLock_Type1_NoSubmitTxReport() throws Exception {
         shareLockWithType(1);
     }
 
@@ -884,7 +886,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
      * @throws Exception
      */
     @Test
-    public void shareLock_Type2() throws Exception {
+    public void shareLock_Type2_NoSubmitTxReport() throws Exception {
         shareLockWithType(2);
     }
 
@@ -893,7 +895,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
      * @throws Exception
      */
     @Test
-    public void shareLock_Type7() throws Exception {
+    public void shareLock_Type7_NoSubmitTxReport() throws Exception {
         shareLockWithType(7);
     }
 
@@ -929,6 +931,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
         String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,regInfo,txInfo);
 
+        //非报送交易报告场景时 引用的是一个不存在的交易报告对象 因此会失败，失败之后 正确引用或者执行
         if(type !=6){
             assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
@@ -1028,7 +1031,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
      * @throws Exception
      */
     @Test
-    public void shareUnlock_Type7() throws Exception {
+    public void shareUnlock_Type7_SubmitTxReport() throws Exception {
         shareUnlockWithType(7);
     }
     public void shareUnlockWithType(int type) throws Exception {
@@ -1170,7 +1173,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
      * @throws Exception
      */
     @Test
-    public void TC11_shareUnlock_Type123457() throws Exception {
+    public void shareUnlock_Type0_NoSubmitTxReport() throws Exception {
         shareUnlockWithType(0);
     }
 

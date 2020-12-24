@@ -32,6 +32,7 @@ public class GDV2_SceneTest_Issue {
     CommonFunc commonFunc = new CommonFunc();
     public static String bizNoTest = "test" + Random(12);
     GDUnitFunc uf = new GDUnitFunc();
+    String typeProduct = "1";
 
     @Rule
     public TestName tm = new TestName();
@@ -45,6 +46,8 @@ public class GDV2_SceneTest_Issue {
     @Before
     public void IssueEquity()throws Exception{
         bizNoTest = "test" + Random(12);
+        gdCompanyID = CNKey + "Sub2_" + Random(4);
+        gdEquityCode = CNKey + "Token2_" + Random(4);
 
         //重新创建账户
 //        gdAccClientNo1 = "No000" + Random(10);
