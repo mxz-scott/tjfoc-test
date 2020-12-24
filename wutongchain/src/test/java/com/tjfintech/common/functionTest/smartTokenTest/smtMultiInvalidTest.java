@@ -104,15 +104,15 @@ public class smtMultiInvalidTest {
         //转换
         String transferData = "ADDRESS1 向 MULITADD4 转账10个" + tokenType;
         List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", "200", null);
-        String transferResp = stc.smartExchange(tokenType, payList,  newTokenType, "", transferData);
+        String exchangeResp = stc.smartExchange(tokenType, payList,  newTokenType, "", transferData);
 
-        assertEquals("200", JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals("200", JSONObject.fromObject(exchangeResp).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType, SLEEPTIME);
 
         log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
         stc.verifyAddressNoBalance(ADDRESS1, tokenType);
-        stc.verifyAddressHasBalance(MULITADD4, newTokenType, "200");
+        stc.verifyAddressHasBalance(ADDRESS1, newTokenType, "200");
 
 
     }
