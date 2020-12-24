@@ -53,9 +53,9 @@ public  class GoStore implements Store {
      */
 
     public String GetLedger() {
-        String param = "";
-        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/subledger?" + param);
+//        String param = "";
+//        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
+        String result = GetTest.doGet2(SDKADD + "/v2/subledger");
         log.info(result);
         return result;
     }
@@ -160,7 +160,7 @@ public  class GoStore implements Store {
 
         String param = "";
         if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/tx/detail/" + hash + /*"?" +*/ param);
+        String result = GetTest.doGet2(SDKADD + "/v2/tx/detail/" + hash + "?" + param);
         log.info(result);
         return result;
 

@@ -17,18 +17,19 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses(value = {
-        SetDatabaseMysql.class,
+//        SetDatabaseMysql.class,
         SetAccountEmpty.class,
         SetCertSM2.class,
         SetSubLedger.class,
         SetSubLedgerSleepTime.class,
-        BeforeCondition.class,
+//        BeforeCondition.class,
 
-        TestTxType.class,
+//        TestTxType.class,
 
         StoreTest.class,
         PrivateStoreTest.class,
         PrivateStoreTestFastGet.class,
+        CommonInterfaceTest.class,
         NoPriPrivateStoreTest.class,
         StoreInvalidTest.class,
 

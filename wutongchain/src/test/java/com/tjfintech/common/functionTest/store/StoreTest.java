@@ -21,7 +21,6 @@ import static org.junit.Assert.assertThat;
 @Slf4j
 public class StoreTest {
 
-    public   final static int   SHORTSLEEPTIME=3*1000;
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
@@ -51,7 +50,6 @@ public class StoreTest {
     }
 
 
-
     /**
      *TC292-获取存证交易byhash
      * 通过TC05全局变量storeHash用于查询测试
@@ -66,7 +64,7 @@ public class StoreTest {
 
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-        String response2= store.GetStore(storeHash);
+        String response2= store.GetTxDetail(storeHash);
         assertThat(response2, containsString("200"));
         assertThat(response2,containsString("json"));
         JSONObject.fromObject(response2).getString("data");
@@ -355,88 +353,5 @@ public class StoreTest {
         assertThat(response2,containsString("success"));
     }
 
-    @Test
-    public void getPeerlist()throws  Exception{
-
-        String response= store.GetPeerList();
-        assertThat(response,containsString("200"));
-        assertThat(response,containsString("success"));
-        assertThat(response,containsString("data"));
-        assertThat(response,containsString("ip"));
-        assertThat(response,containsString("state"));
-    }
-
-    @Test
-    public void getMemberlist()throws  Exception{
-        String response= store.GetMemberList();
-        assertThat(response,containsString("200"));
-        assertThat(response,containsString("success"));
-        assertThat(response,containsString("memberList"));
-        assertThat(response,containsString("id"));
-        assertThat(response,containsString("addr"));
-        assertThat(response,containsString("version"));
-        assertThat(response,containsString("port"));
-        assertThat(response,containsString("shownName"));
-        assertThat(response,containsString("inAddr"));
-        assertThat(response,containsString("height"));
-        assertThat(response,containsString("hashType"));
-        assertThat(response,containsString("consensus"));
-    }
-
-    @Test
-    public void getSubLedger()throws  Exception{
-        String response= store.GetLedger();
-        assertThat(response,containsString("200"));
-        assertThat(response,containsString("success"));
-        assertThat(response,containsString("number"));
-    }
-
-    @Test
-    public void getAPIHealth()throws  Exception{
-        String response= store.GetApiHealth();
-        assertThat(response,containsString("200"));
-        assertThat(response,containsString("success"));
-    }
-
-    //20200728 代码不再检查重复交易
-//    @Test
-    public void createStoreDupDataString() throws Exception {
-        boolean bWalletEnabled = commonFunc.getSDKWalletEnabled();
-        String Data = "test11234567";
-        long nowTime = (new Date()).getTime();
-        String response= store.CreateStore(Data);
-        String storeHash = JSONObject.fromObject(response).getString("data");
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-
-//        //立即发 不管钱包是否开启 连续发送应该都会报错
-//        String response12 = store.CreateStore(Data);
-//        assertThat(response12,
-//                anyOf(containsString("Duplicate transaction body,tx hash: " + storeHash),
-//                        containsString("transactionFilter exist")));
-
-        //钱包关闭时sdk配置重复检查时间间隔不生效
-        if(bWalletEnabled) {
-            while((new Date()).getTime() - nowTime < 2000 ) {
-                String response13 = store.CreateStore(Data);
-                log.info(response13);
-                assertThat(response13,
-                        anyOf(containsString("Duplicate transaction body,"),
-                                containsString("txId_hex:" + storeHash),
-                                containsString("transactionFilter exist")));
-                sleepAndSaveInfo(400, "waiting......"); //不超过检测时间间隔 模拟手动连续点击发送
-            }
-        }
-        sleepAndSaveInfo(1500,"store on chain waiting"); //超过dup检测时间
-        String response2 = store.CreateStore(Data);
-        assertEquals("200",JSONObject.fromObject(response2).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
-
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("state"));
-
-        String response4= store.GetStore(storeHash);
-        assertEquals("200",JSONObject.fromObject(response4).getString("state"));
-        assertEquals(Data,JSONObject.fromObject(response4).getJSONObject("data").getJSONObject("store").getString("storeData"));
-    }
 
 }
