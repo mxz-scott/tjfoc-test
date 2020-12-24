@@ -1453,9 +1453,10 @@ public class CommonFunc {
         return bSame;
     }
 
-    public void verifyBlockAndTransaction()throws Exception{
+    public void verifyBlockAndTransaction(String toolPath)throws Exception{
 
-        String result = shExeAndReturn(utilsClass.getIPFromStr(SDKADD),"cd " + SDKPATH + ";./verifyBlockTX su -p " + SDKADD);
+        String result = shExeAndReturn(utilsClass.getIPFromStr(SDKADD),
+                "cd " + toolPath + ";./verifyBlockTX su -p " + SDKADD);
         log.info("区块验证结果 **********************************************************************");
         log.info(result);
         String OKMsg = "successfully";
@@ -1466,7 +1467,8 @@ public class CommonFunc {
             assertEquals("交易或区块验证失败",false,true);
         }
         //刨除创世区块验证打印的successfully
-        assertEquals(JSONObject.fromObject(store.GetHeight()).getInt("data"), org.springframework.util.StringUtils.countOccurrencesOf(result,OKMsg)-1);
+        assertEquals(JSONObject.fromObject(store.GetHeight()).getInt("data"),
+                org.springframework.util.StringUtils.countOccurrencesOf(result,OKMsg)-1);
 
     }
 
