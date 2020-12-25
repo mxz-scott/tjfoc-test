@@ -1921,7 +1921,7 @@ public class GDCommonFunc {
             case "settlement" :
                 key = settlement_subject_ref;       certainVer = getObjectLatestVer(key);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
-                key = "settlement_product_ref=" + settlement_product_ref;       certainVer = getObjectLatestVer(key);
+                key = "settlement_product_ref=" + settlement_product_ref;       certainVer = getObjectLatestVer(settlement_product_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
                 key = settlement_transaction_ref;       certainVer = getObjectLatestVer(key);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);

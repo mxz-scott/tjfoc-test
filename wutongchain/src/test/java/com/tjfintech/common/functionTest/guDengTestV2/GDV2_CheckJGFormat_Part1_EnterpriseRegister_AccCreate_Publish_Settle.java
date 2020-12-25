@@ -458,8 +458,18 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
     @Test
     public void TCN16_balanceCount() throws Exception {
+        settlement_product_ref = gdEquityCode;
+        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
+        Map prodInfo = gdBF.init03EquityProductInfo();
+
+        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,enSubInfo,
+                        prodInfo,null,null);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
+        sleepAndSaveInfo(2000);
+
         settleInfo = gdBF.init06SettleInfo();
-        String response= gd.GDCapitalSettlement(settleInfo);
+        response= gd.GDCapitalSettlement(settleInfo);
         net.sf.json.JSONObject jsonObject= net.sf.json.JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
