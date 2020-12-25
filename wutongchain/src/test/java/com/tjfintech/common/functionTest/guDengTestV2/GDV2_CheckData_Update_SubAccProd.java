@@ -145,7 +145,6 @@ public class GDV2_CheckData_Update_SubAccProd {
 //        mapTemp.put("subject_type",1);
 
         //主体信息 主体基本信息 主体通用信息
-        mapTemp.put("subject_id", gdCompanyID);
         mapTemp.put("subject_type", 1);
         mapTemp.put("subject_main_administrative_region", 0);
         mapTemp.put("subject_create_time", time3);
@@ -365,7 +364,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         String fundNo = "fund" + cltNo;
 
         int gdClient = Integer.parseInt(gdCF.getObjectLatestVer(cltNo));//获取当前开户主体最新版本信息
-
+        account_associated_account_ref = shareHolderNo;
         Map tempSHAcc = gdBF.init02ShareholderAccountInfo();
         Map tempFundAcc = gdBF.init02FundAccountInfo();
 
@@ -385,11 +384,11 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapFundInfo.put("createTime", ts2);
         mapFundInfo.put("fundNo",fundNo);
         mapFundInfo.put("accountInfo", tempFundAcc);
+//        mapFundInfo.put("account_associated_account_ref", shareHolderNo);
 
         //构造个人/投资者主体信息
         Map testSub = gdBF.init01PersonalSubjectInfo();
         testSub.put("subject_object_id",cltNo);  //更新对象标识字段
-        testSub.put("subject_id","sid" + cltNo);  //更新主体标识字段
 
         String response = gd.GDCreateAccout(gdContractAddress,cltNo,mapFundInfo,shareHolderInfo, testSub);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -454,7 +453,6 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapTemp.put("subject_object_id", cltNo);
 
         //主体信息 主体基本信息 主体通用信息
-        mapTemp.put("subject_id", cltNo);
         mapTemp.put("subject_type", 2);
         mapTemp.put("subject_main_administrative_region", 1);
         mapTemp.put("subject_create_time", time2);
@@ -557,7 +555,6 @@ public class GDV2_CheckData_Update_SubAccProd {
         //构造个人/投资者主体信息
         Map testSub = gdBF.init01PersonalSubjectInfo();
         testSub.put("subject_object_id",cltNo);  //更新对象标识字段
-        testSub.put("subject_id","sid" + cltNo);  //更新主体标识字段
 
         String response = gd.GDCreateAccout(gdContractAddress,cltNo,mapFundInfo,shareHolderInfo, testSub);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -588,7 +585,6 @@ public class GDV2_CheckData_Update_SubAccProd {
         mapTemp.put("subject_type",0);
 
         //主体信息 主体基本信息 主体通用信息
-        mapTemp.put("subject_id","123456789");
         mapTemp.put("subject_main_administrative_region",2);
         mapTemp.put("subject_create_time","2020/11/06 14:14:00");
 
@@ -610,7 +606,6 @@ public class GDV2_CheckData_Update_SubAccProd {
         Map mapR = new HashMap();
         String key = "subject_object_id"; mapR.put(key,mapTest.get(key));
         key = "subject_type"; mapR.put(key,mapTest.get(key));
-        key = "subject_id"; mapR.put(key,mapTest.get(key));
         key = "subject_main_administrative_region"; mapR.put(key,mapTest.get(key));
         key = "subject_create_time"; mapR.put(key,mapTest.get(key));
         key = "subject_investor_name"; mapR.put(key,mapTest.get(key));
@@ -635,6 +630,7 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         int gdClient = Integer.parseInt(gdCF.getObjectLatestVer(cltNo));//获取当前开户主体最新版本信息
 
+        account_associated_account_ref = shareHolderNo;
         shAccountInfo = gdBF.init02ShareholderAccountInfo();
         fundAccountInfo = gdBF.init02FundAccountInfo();
 
@@ -648,6 +644,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         shareHolderInfo.put("accountInfo", shAccountInfo);
         log.info(shareHolderInfo.toString());
 
+
         //资金账户信息
         fundAccountInfo.put("account_object_id",fundNo);  //更新账户对象标识字段
         Map mapFundInfo = new HashMap();
@@ -658,7 +655,6 @@ public class GDV2_CheckData_Update_SubAccProd {
         //构造个人/投资者主体信息
         Map testSub = gdBF.init01PersonalSubjectInfo();
         testSub.put("subject_object_id",cltNo);  //更新对象标识字段
-        testSub.put("subject_id","sid" + cltNo);  //更新主体标识字段
 
         String response = gd.GDCreateAccout(gdContractAddress,cltNo,mapFundInfo,shareHolderInfo, testSub);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -670,7 +666,6 @@ public class GDV2_CheckData_Update_SubAccProd {
         //更新股权账户信息数据
         updateWord = "udEq02";
         Map mapTemp = gdBF.init02ShareholderAccountInfo();
-
         mapTemp.put("account_object_id", shareHolderNo);
 
         //账户信息 账户基本信息
@@ -718,7 +713,7 @@ public class GDV2_CheckData_Update_SubAccProd {
 
 
         //直接从minio上获取报送数据文件信息
-        Map getSHAccInfo = gdCF.constructJGDataFromStr(shAccfileName,accType,"");
+        Map getSHAccInfo = gdCF.constructJGDataFromStr(shAccfileName,accType,"1");
         Map accSH = mapTemp;
 
         //填充header content 信息
@@ -733,7 +728,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         String[] verForAccSH = new String[]{"/" + personSubVer,"/" + accADrefVer,"/" + accAAARefVer};
 
         log.info("检查股权账户存证信息内容与传入一致\n" + accSH.toString() + "\n" + getSHAccInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(accSH,accType,verForAccSH)),replaceCertain(getSHAccInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(accSH,accType)),replaceCertain(getSHAccInfo.toString()));
     }
 
 
@@ -765,7 +760,6 @@ public class GDV2_CheckData_Update_SubAccProd {
         //构造个人/投资者主体信息
         Map testSub = gdBF.init01PersonalSubjectInfo();
         testSub.put("subject_object_id",cltNo);  //更新对象标识字段
-        testSub.put("subject_id","sid" + cltNo);  //更新主体标识字段
 
         String response = gd.GDCreateAccout(gdContractAddress,cltNo,mapFundInfo,shareHolderInfo, testSub);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -784,6 +778,10 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //查询投资者账户信息
         String query = gd.GDAccountQuery(gdContractAddress,cltNo);
+        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(query,accType));
+        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(query,subjectType));
+
+
         Map mapSHAccGet1 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
                 JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
                         "AccountInfoList").get(0).toString()).getJSONObject(
@@ -829,6 +827,9 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //查询投资者账户信息
         query = gd.GDAccountQuery(gdContractAddress,cltNo);
+        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(query,accType));
+        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(query,subjectType));
+
         Map mapSHAccGet2 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
                 JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
                         "AccountInfoList").get(0).toString()).getJSONObject(
@@ -868,6 +869,7 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         int gdClient = Integer.parseInt(gdCF.getObjectLatestVer(cltNo));//获取当前开户主体最新版本信息
 
+        account_associated_account_ref = shareHolderNo;
         shAccountInfo = gdBF.init02ShareholderAccountInfo();
         fundAccountInfo = gdBF.init02FundAccountInfo();
 
@@ -881,6 +883,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         shareHolderInfo.put("accountInfo", shAccountInfo);
         log.info(shareHolderInfo.toString());
 
+
         //资金账户信息
         fundAccountInfo.put("account_object_id",fundNo);  //更新账户对象标识字段
         Map mapFundInfo = new HashMap();
@@ -891,7 +894,6 @@ public class GDV2_CheckData_Update_SubAccProd {
         //构造个人/投资者主体信息
         Map testSub = gdBF.init01PersonalSubjectInfo();
         testSub.put("subject_object_id",cltNo);  //更新对象标识字段
-        testSub.put("subject_id","sid" + cltNo);  //更新主体标识字段
 
         String response = gd.GDCreateAccout(gdContractAddress,cltNo,mapFundInfo,shareHolderInfo, testSub);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -953,7 +955,7 @@ public class GDV2_CheckData_Update_SubAccProd {
 
 
         //直接从minio上获取报送数据文件信息
-        Map getFundAccInfo = gdCF.constructJGDataFromStr(fundAccfileName,accType,"");
+        Map getFundAccInfo = gdCF.constructJGDataFromStr(fundAccfileName,accType,"2");
 
         Map accFund = mapTemp;
 
@@ -971,7 +973,7 @@ public class GDV2_CheckData_Update_SubAccProd {
         String[] verForAccFund = new String[]{"/" + personSubVer,"/" + accADrefVer,"/" + shAccVer};
 //
         log.info("检查资金账户存证信息内容与传入一致\n" + accFund.toString() + "\n" + getFundAccInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(accFund,accType,verForAccFund)),replaceCertain(getFundAccInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(accFund,accType)),replaceCertain(getFundAccInfo.toString()));
     }
 
 //    @Test
@@ -993,6 +995,8 @@ public class GDV2_CheckData_Update_SubAccProd {
         shareHolderInfo.put("accountInfo", shAccInfo);
         log.info(shareHolderInfo.toString());
 
+        account_associated_account_ref = shareHolderNo;
+
         //资金账户信息
         fundAccInfo.put("account_object_id",fundNo);  //更新账户对象标识字段
         Map mapFundInfo = new HashMap();
@@ -1002,7 +1006,6 @@ public class GDV2_CheckData_Update_SubAccProd {
         //构造个人/投资者主体信息
         Map testSub = gdBF.init01PersonalSubjectInfo();
         testSub.put("subject_object_id",cltNo);  //更新对象标识字段
-        testSub.put("subject_id","sid" + cltNo);  //更新主体标识字段
 
         String response = gd.GDCreateAccout(gdContractAddress,cltNo,mapFundInfo,shareHolderInfo, testSub);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -1021,6 +1024,9 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //查询投资者账户信息
         String query = gd.GDAccountQuery(gdContractAddress,cltNo);
+        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(query,accType));
+        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(query,subjectType));
+
         Map mapSHAccGet1 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
                 JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
                         "AccountInfoList").get(0).toString()).getJSONObject(
@@ -1066,6 +1072,10 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         //查询投资者账户信息
         query = gd.GDAccountQuery(gdContractAddress,cltNo);
+        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(query,accType));
+        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(query,subjectType));
+
+
         Map mapSHAccGet2 = (Map)com.alibaba.fastjson.JSON.parse(JSONObject.fromObject(
                 JSONObject.fromObject(query).getJSONObject("data").getJSONArray(
                         "AccountInfoList").get(0).toString()).getJSONObject(

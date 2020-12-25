@@ -620,6 +620,7 @@ public class GDUnitFunc {
         com.alibaba.fastjson.JSONObject jsonStore = com.alibaba.fastjson.JSONObject.parseObject(storeData);
         String uri = jsonStore.getString("uri");
         String data = mo.getFileFromMinIO(minIOEP,jgBucket,uri,"");
+        log.info(uri + "  " + data);
 //        FileOperation g = new FileOperation();
 //        g.appendToFile(data,"chk.txt");
         Boolean bFlag = false;

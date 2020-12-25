@@ -46,7 +46,7 @@ public class GDV2_CheckJGDataNecessary_SubProd {
         GDUnitFunc uf = new GDUnitFunc();
         int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
         uf.checkJGHeaderOpVer(blockHeight,endHeight);
-        uf.updateBlockHeightParam(endHeight);
+//        uf.updateBlockHeightParam(endHeight);
     }
 
     @Test

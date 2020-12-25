@@ -31,6 +31,7 @@ public class GDV2_AllFlowTest_Bond {
     Store store =testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
+    GDCommonFunc gdCF = new GDCommonFunc();
     GDUnitFunc uf = new GDUnitFunc();
     public static String bizNoTest = "test" + Random(12);
 
@@ -121,6 +122,8 @@ public class GDV2_AllFlowTest_Bond {
         String query2 = gd.GDAccountQuery(gdContractAddress,cltNo);
         assertEquals("200",JSONObject.fromObject(query2).getString("state"));
         assertEquals(true,query2.contains(cltNo));
+        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(query2,accType));
+        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(query2,subjectType));
 
         //查询挂牌企业数据
         //查询投资者信息

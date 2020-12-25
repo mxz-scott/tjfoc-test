@@ -88,7 +88,6 @@ public class GuDengV2_InterfaceTest {
         //构造个人/投资者主体信息
         gdBF.init01PersonalSubjectInfo();
         investorSubjectInfo.put("letter_object_identification",cltNo);  //更新对象标识字段
-        investorSubjectInfo.put("subject_id","sid" + cltNo);  //更新主体标识字段
 
         log.info(" ************************ test fundInfo not must ************************ ");
         String response = gd.GDCreateAccout(gdContractAddress,cltNo,null,shareHolderInfo, investorSubjectInfo);

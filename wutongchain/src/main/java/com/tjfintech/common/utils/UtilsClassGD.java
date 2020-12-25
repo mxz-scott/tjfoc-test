@@ -13,20 +13,17 @@ import static com.tjfintech.common.utils.UtilsClass.testDataPath;
 public class UtilsClassGD {
 
     //gudeng 信息
-//    public static String gdContractAddress = "faa54ef5e71e8f69cb30af684ae9f145b5c099ed4253a49fc1b144db1fe27f3c";
-//    public static String gdPlatfromKeyID = "btguv5bsnk7r259qh85g";
     //10.1.3.161:7779
     public static String gdContractAddress = "018a976954474678a3a100d33200b7f9fd1b34a60118c4cb13cfd79f6f324b5d";
-    public static String gdPlatfromKeyID = "bv2q01d2uehbsbgg4u50";
-    //股登164环境
-//    public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
-//    public static String gdPlatfromKeyID = "bu1qdg1pgfltc7no3hp0";
-    //股登性能测试环境
-//    public static String gdContractAddress = "e0618bd8a18d799e18d6716824e4b767e381d2ce58a49be20c89b48b53cff900";
-//    public static String gdPlatfromKeyID = "bv7h273snk7pq9fpgr70";
+    public static String gdPlatfromKeyID = "bv2q02t2uehbsbgg7a70";
+
     //外网对接
 //    public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
-//    public static String gdPlatfromKeyID = "bv6t8lphdkebd3873ti0";
+//    public static String gdPlatfromKeyID = "bv6t8lphdkebd3874a80";
+
+//    public static String commNo = "1015"; //对接监管环境
+    public static String commNo = "012"; //存oss后会导致 db删除后挂牌会挂不上 1011
+
     public static String gdEquityCode = "gdTokenZ0" + UtilsClass.Random(6);
     public static String gdCompanyID = "gdCmpyId01" + UtilsClass.Random(6);
 //    public static String gdCompanyID = "gdCmpyId0002";
@@ -69,7 +66,7 @@ public class UtilsClassGD {
     public static long end = 0;
     public static int beginHeigh = 0;
     public static int endHeight = 0;
-	public static int blockHeight = 4892;
+	public static int blockHeight = 448;
     public static long timeStamp = (new Date()).getTime();
     public static String testCurMethodName = "";
 
@@ -146,14 +143,14 @@ public class UtilsClassGD {
         //账户
         refInfo.put("account_subject_ref", account_subject_ref);
         refInfo.put("account_depository_ref", account_depository_ref);
-        refInfo.put("account_associated_account_ref", account_associated_account_ref);
+//        refInfo.put("account_associated_account_ref", account_associated_account_ref);
         //产品
         refInfo.put("product_market_subject_ref", product_market_subject_ref);
         refInfo.put("product_issuer_subject_ref", product_issuer_subject_ref);
         refInfo.put("service_provider_subject_ref", service_provider_subject_ref);
         refInfo.put("product_conversion_price_ref", product_conversion_price_ref);
         //交易报告
-        refInfo.put("transaction_custody_product_ref", transaction_custody_product_ref);
+//        refInfo.put("transaction_custody_product_ref", transaction_custody_product_ref);
         refInfo.put("transaction_product_issuer_ref", transaction_product_issuer_ref);
         refInfo.put("transaction_issuer_ref", transaction_issuer_ref);
         refInfo.put("transaction_investor_ref", transaction_investor_ref);
@@ -164,17 +161,17 @@ public class UtilsClassGD {
         refInfo.put("register_subject_ref", register_subject_ref);
         refInfo.put("register_subject_account_ref", register_subject_account_ref);
         refInfo.put("register_transaction_ref", register_transaction_ref);
-        refInfo.put("register_product_ref", register_product_ref);
+//        refInfo.put("register_product_ref", register_product_ref);
         refInfo.put("register_right_recognition_subject_ref", register_right_recognition_subject_ref);
         refInfo.put("register_right_recognition_agent_subject_ref", register_right_recognition_agent_subject_ref);
         refInfo.put("roll_register_subject_ref", roll_register_subject_ref);
-        refInfo.put("roll_register_product_ref", roll_register_product_ref);
+//        refInfo.put("roll_register_product_ref", roll_register_product_ref);
         refInfo.put("register_equity_subject_ref",register_equity_subject_ref);
         refInfo.put("register_debt_holder_ref", register_debt_holder_ref);
         refInfo.put("register_investor_subject_ref", register_investor_subject_ref);
         //资金结算
         refInfo.put("settlement_subject_ref", settlement_subject_ref);
-        refInfo.put("settlement_product_ref", settlement_product_ref);
+//        refInfo.put("settlement_product_ref", settlement_product_ref);
         refInfo.put("settlement_transaction_ref", settlement_transaction_ref);
         refInfo.put("settlement_out_account_object_ref", settlement_out_account_object_ref);
         refInfo.put("settlement_in_account_object_ref", settlement_in_account_object_ref);
@@ -193,20 +190,20 @@ public class UtilsClassGD {
         }
         return refInfoArray;
     }
-    public static String commNo = "011"; //存oss后会导致 db删除后挂牌会挂不上 1011
+
     //主体
     public static String subject_investor_qualification_certifier_ref = "SIQCR" + commNo;// + UtilsClass.Random(8);
     //账户
     public static String account_subject_ref = "ASR" + commNo;// + UtilsClass.Random(8);
     public static String account_depository_ref = "ADR" + commNo;// + UtilsClass.Random(8);
-    public static String account_associated_account_ref = "AAAR" + commNo;// + UtilsClass.Random(8);
+    public static String account_associated_account_ref = "";
     //产品
     public static String product_market_subject_ref = "PMSR" + commNo;// + UtilsClass.Random(8);
     public static String product_issuer_subject_ref = "PISR" + commNo;// + UtilsClass.Random(8);
     public static String service_provider_subject_ref = "SPSR" + commNo;// + UtilsClass.Random(8);
     public static String product_conversion_price_ref = "PCPR" + commNo;// + UtilsClass.Random(8);
     //交易报告
-    public static String transaction_custody_product_ref = "TCPR" + commNo;// + UtilsClass.Random(8);
+    public static String transaction_custody_product_ref = "";//"TCPR" + commNo;// + UtilsClass.Random(8);
     public static String transaction_product_issuer_ref = "TPIR" + commNo;// + UtilsClass.Random(8);
     public static String transaction_issuer_ref = "TIssR" + commNo;// + UtilsClass.Random(8);
     public static String transaction_investor_ref = "TIR" + commNo;// + UtilsClass.Random(8);
@@ -217,11 +214,11 @@ public class UtilsClassGD {
     public static String register_subject_ref = "RSR" + commNo;// + UtilsClass.Random(8);
     public static String register_subject_account_ref = "RSAR" + commNo;// + UtilsClass.Random(8);
     public static String register_transaction_ref = "RTR" + commNo;// + UtilsClass.Random(8);
-    public static String register_product_ref = "RPR" + commNo;// + UtilsClass.Random(8);
+    public static String register_product_ref = "";//"RPR" + commNo;// + UtilsClass.Random(8);
     public static String register_right_recognition_subject_ref = "RRRSR" + commNo;// + UtilsClass.Random(8);
     public static String register_right_recognition_agent_subject_ref = "RRRASR" + commNo;// + UtilsClass.Random(8);
     public static String roll_register_subject_ref = "RRSR" + commNo;// + UtilsClass.Random(8);
-    public static String roll_register_product_ref = "RRPR" + commNo;// + UtilsClass.Random(8);
+    public static String roll_register_product_ref = "";//"RRPR" + commNo;// + UtilsClass.Random(8);
     public static String register_equity_subject_ref = "RESR" + commNo;// + UtilsClass.Random(8);
     public static String register_debt_holder_ref = "RDHR" + commNo;// + UtilsClass.Random(8);
     public static String register_investor_subject_ref = "RISR" + commNo;// + UtilsClass.Random(8);

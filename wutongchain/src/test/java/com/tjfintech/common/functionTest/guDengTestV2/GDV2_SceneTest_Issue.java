@@ -21,6 +21,7 @@ import static com.tjfintech.common.functionTest.guDengTestV2.GDCommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassGD.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
@@ -147,25 +148,18 @@ public class GDV2_SceneTest_Issue {
         gdCompanyID = "sameRegObjIdSub2" + Random(3);
 
         response = uf.shareIssue(gdEquityCode,shareList4,false);
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-        String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
-        //遍历检查所有账户登记及交易存证信息
-        for(int k = 0 ;k < shareList4.size(); k++) {
-            String tempAddr = JSONObject.fromObject(shareList4.get(k)).getString("address");
-            String tempObjId = mapAddrRegObjId.get(tempAddr).toString();
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("%!(EXTRA *errors.errorString=操作类型为[create],但根据对象标识["
+                + mapAddrRegObjId.get(gdAccount1) + "]查询到版本不为0,请检查此对象标识是否已经存在)",
+                JSONObject.fromObject(response).getString("message"));
+//        String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
-            Map mapChkKeys = new HashMap();
-            mapChkKeys.put("address","");
-            mapChkKeys.put("txId",txId);
-            mapChkKeys.put("objectid",tempObjId);
-            mapChkKeys.put("version","1");
-            mapChkKeys.put("contentType",regType);
-            mapChkKeys.put("subProdSubType","");
-            mapChkKeys.put("operationType","update");
+        sleepAndSaveInfo(3000);
 
-            assertEquals("检查数据",true,gdCF.bCheckJGParams(mapChkKeys));
-        }
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+        assertEquals("400",JSONObject.fromObject(query).getString("state"));
+        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
 
     }
     /***

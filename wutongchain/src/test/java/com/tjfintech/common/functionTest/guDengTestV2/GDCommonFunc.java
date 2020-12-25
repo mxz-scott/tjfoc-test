@@ -565,7 +565,7 @@ public class GDCommonFunc {
                 if(subTypeSubProd.equals("1"))     {  mapData = subjectInfoEnterprise(jobjOK);   }
                 else if(subTypeSubProd.equals("2")){  mapData = subjectInfoPerson(jobjOK);       }
                 break;
-            case "account":                 mapData = accountInfo(jobjOK);break;
+            case "account":                 mapData = accountInfo(jobjOK,subTypeSubProd);break;
             case "product":                 mapData = productInfo(jobjOK,subTypeSubProd);break;
             case "transactionreport":       mapData = transInfo(jobjOK);break;
             case "registration":            mapData = regiInfo(jobjOK);break;
@@ -653,7 +653,7 @@ public class GDCommonFunc {
         //schema校验数据格式
         assertEquals("schema校验数据是否匹配",true,
                 cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
-        return accountInfo(jobjOK);
+        return accountInfo(jobjOK,"2");
     }
 
 
@@ -691,7 +691,7 @@ public class GDCommonFunc {
         assertEquals("schema校验数据是否匹配",true,
                 cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,jobjOK.toString(),"2"));
 
-        return accountInfo(jobjOK);
+        return accountInfo(jobjOK,"1");
     }
 
 
@@ -923,7 +923,7 @@ public class GDCommonFunc {
         com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("subject_information");
 //        com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("subject");
         com.alibaba.fastjson.JSONObject objBaseGIS = objInfo.getJSONObject("basic_information_subject").getJSONObject("general_information_subject");
-        key = "subject_id";                          getSubjectInfo.put(key,objBaseGIS.getString(key));
+//        key = "subject_id";                          getSubjectInfo.put(key,objBaseGIS.getString(key));
         key = "subject_type";                               getSubjectInfo.put(key,objBaseGIS.getString(key));
         key = "subject_main_administrative_region";                      getSubjectInfo.put(key,objBaseGIS.getString(key));
         key = "subject_create_time";                        getSubjectInfo.put(key,objBaseGIS.getString(key));
@@ -1014,7 +1014,7 @@ public class GDCommonFunc {
 
         //获取 主体信息 主体基本信息 主体通用信息
         key = "subject_main_administrative_region";         getSubjectInfo.put(key,objSubBaseCommon.getString(key));
-        key = "subject_id";                                 getSubjectInfo.put(key,objSubBaseCommon.getString(key));
+//        key = "subject_id";                                 getSubjectInfo.put(key,objSubBaseCommon.getString(key));
         key = "subject_type";                               getSubjectInfo.put(key,objSubBaseCommon.getString(key));
         key = "subject_create_time";                        getSubjectInfo.put(key,objSubBaseCommon.getString(key));
 
@@ -1054,7 +1054,7 @@ public class GDCommonFunc {
         return getSubjectInfo;
     }
 
-    public Map accountInfo(com.alibaba.fastjson.JSONObject jobj2){
+    public Map accountInfo(com.alibaba.fastjson.JSONObject jobj2,String type){
         com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("account_information");
 
         com.alibaba.fastjson.JSONObject objAccbase = objInfo.getJSONObject("basic_account_information");
@@ -1104,9 +1104,14 @@ public class GDCommonFunc {
         key = "account_thaw_applicant_name";          getSubjectInfo.put(key,objAccLifeUnfreeze.getString(key));
         key = "account_thaw_remark";                  getSubjectInfo.put(key,objAccLifeUnfreeze.getString(key));
 
-        //账户信息 账户关联信息
-        key = "account_association";                  getSubjectInfo.put(key,objAccRela.getString(key));
-        key = "account_associated_account_ref";       getSubjectInfo.put(key,objAccRela.getString(key));
+        //资金账户组 证券账户未组
+        if(type == "2") {
+            //账户信息 账户关联信息
+            key = "account_association";
+            getSubjectInfo.put(key, objAccRela.getString(key));
+            key = "account_associated_account_ref";
+            getSubjectInfo.put(key, objAccRela.getString(key));
+        }
 
         //填充header content字段
          addContent(getSubjectInfo,jobj2);
@@ -1848,7 +1853,7 @@ public class GDCommonFunc {
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
                 key = account_depository_ref;           certainVer = getObjectLatestVer(key);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
-                key = "=" + account_associated_account_ref;   certainVer = getObjectLatestVer(account_associated_account_ref);
+                key = "account_associated_account_ref=" + account_associated_account_ref;   certainVer = getObjectLatestVer(account_associated_account_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
                 break;
@@ -1861,7 +1866,8 @@ public class GDCommonFunc {
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
                 break;
             case "transactionreport" :
-                key =  transaction_custody_product_ref;       certainVer = getObjectLatestVer(key);
+                key =  "transaction_custody_product_ref=" + transaction_custody_product_ref;
+                    certainVer = getObjectLatestVer(transaction_custody_product_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
                 key =  transaction_product_issuer_ref;       certainVer = getObjectLatestVer(key);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
@@ -1887,7 +1893,7 @@ public class GDCommonFunc {
                 key =  "=" + register_transaction_ref;       certainVer = getObjectLatestVer(register_transaction_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
-                key = "=" + register_product_ref;       certainVer = getObjectLatestVer(register_product_ref);
+                key = "register_product_ref=" + register_product_ref;       certainVer = getObjectLatestVer(register_product_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
                 key =  "=" + register_right_recognition_subject_ref;
@@ -1900,7 +1906,7 @@ public class GDCommonFunc {
                 key =  "=" + roll_register_subject_ref;       certainVer = getObjectLatestVer(roll_register_subject_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
-                key = "=" + roll_register_product_ref;       certainVer = getObjectLatestVer(roll_register_product_ref);
+                key = "roll_register_product_ref=" + roll_register_product_ref;       certainVer = getObjectLatestVer(roll_register_product_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
                 key = "=" + register_equity_subject_ref;       certainVer = getObjectLatestVer(register_equity_subject_ref);
@@ -1915,7 +1921,7 @@ public class GDCommonFunc {
             case "settlement" :
                 key = settlement_subject_ref;       certainVer = getObjectLatestVer(key);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
-                key = settlement_product_ref;       certainVer = getObjectLatestVer(key);
+                key = "settlement_product_ref=" + settlement_product_ref;       certainVer = getObjectLatestVer(key);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
                 key = settlement_transaction_ref;       certainVer = getObjectLatestVer(key);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);

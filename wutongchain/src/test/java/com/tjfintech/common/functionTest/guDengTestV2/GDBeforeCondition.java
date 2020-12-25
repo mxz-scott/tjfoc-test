@@ -141,31 +141,30 @@ public class GDBeforeCondition {
 
         //构造股权账户信息
         Map shareHolderInfo = new HashMap();
-        init02ShareholderAccountInfo();
-        shAccountInfo.put("account_object_id", shareHolderNo);  //更新账户对象标识字段
-        shAccountInfo.put("account_subject_ref", cltNo);  //更新账户所属主体引用
-        shAccountInfo.put("account_associated_account_ref", account_associated_account_ref);  //更新账户所属主体引用
+        Map mapSHAcc = init02ShareholderAccountInfo();
+        mapSHAcc.put("account_object_id", shareHolderNo);  //更新账户对象标识字段
+        mapSHAcc.put("account_subject_ref", cltNo);  //更新账户所属主体引用
+
         log.info(shAccountInfo.toString());
         shareHolderInfo.put("createTime", ts2);
         shareHolderInfo.put("shareholderNo", shareHolderNo);
-        shareHolderInfo.put("accountInfo", shAccountInfo);
+        shareHolderInfo.put("accountInfo", mapSHAcc);
         log.info(shareHolderInfo.toString());
 
         //资金账户信息
-        init02FundAccountInfo();
-        fundAccountInfo.put("account_object_id", fundNo);  //更新账户对象标识字段
-        fundAccountInfo.put("account_subject_ref", cltNo);  //更新账户所属主体引用
-        fundAccountInfo.put("account_associated_account_ref", shareHolderNo);  //更新关联账户对象引用
-//        fundAccountInfo.put("account_associated_account_ref", account_associated_account_ref);  //更新关联账户对象引用
+        Map mapFundAcc = init02FundAccountInfo();
+        mapFundAcc.put("account_object_id", fundNo);  //更新账户对象标识字段
+        mapFundAcc.put("account_subject_ref", cltNo);  //更新账户所属主体引用
+        mapFundAcc.put("account_associated_account_ref", shareHolderNo);  //更新关联账户对象引用
+
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("createTime", ts2);
         mapFundInfo.put("fundNo", fundNo);
-        mapFundInfo.put("accountInfo", fundAccountInfo);
+        mapFundInfo.put("accountInfo", mapFundAcc);
 
         //构造个人/投资者主体信息
         init01PersonalSubjectInfo();
         investorSubjectInfo.put("subject_object_id", cltNo);  //更新对象标识字段
-        investorSubjectInfo.put("subject_id", "sid" + cltNo);  //更新主体标识字段
 
         String response = gd.GDCreateAccout(gdContractAddress, cltNo, mapFundInfo, shareHolderInfo, investorSubjectInfo);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
@@ -286,7 +285,7 @@ public class GDBeforeCondition {
 //        mapTemp.put("subject_type",1);
 
         //主体信息 主体基本信息 主体通用信息
-        mapTemp.put("subject_id", "");//地方链信息不填写
+//        mapTemp.put("subject_id", "");//地方链信息不填写
         mapTemp.put("subject_type", 1);
         mapTemp.put("subject_main_administrative_region", 0);
         mapTemp.put("subject_create_time", time3);
@@ -445,7 +444,7 @@ public class GDBeforeCondition {
         mapTemp.put("subject_object_id", "clientNo0001");
 
         //主体信息 主体基本信息 主体通用信息
-        mapTemp.put("subject_id", "");//地方链信息不填写
+//        mapTemp.put("subject_id", "");//地方链信息不填写
         mapTemp.put("subject_type", 2);
         mapTemp.put("subject_main_administrative_region", 0);
         mapTemp.put("subject_create_time", time1);
@@ -526,8 +525,8 @@ public class GDBeforeCondition {
         mapTemp.put("account_thaw_remark", "escription0001"+ updateWord);
 
         //账户信息 账户关联信息
-        mapTemp.put("account_association", 0);
-        mapTemp.put("account_associated_account_ref", account_associated_account_ref);
+//        mapTemp.put("account_association", 0);
+//        mapTemp.put("account_associated_account_ref", account_associated_account_ref);
         return mapTemp;
     }
 
@@ -889,7 +888,7 @@ public class GDBeforeCondition {
 
         //交易报告信息 交易资产信息
         mapTemp.put("transaction_product_custody_status", 0);
-        mapTemp.put("transaction_custody_product_ref", transaction_custody_product_ref);
+        mapTemp.put("transaction_custody_product_ref", gdEquityCode);
         mapTemp.put("transaction_product_name", "交易资产名称CHARACTER");
         mapTemp.put("transaction_product_issuer_ref", transaction_product_issuer_ref);
         mapTemp.put("transaction_product_issuer_name", "交易资产发行主体名称CHARACTER");
@@ -965,7 +964,7 @@ public class GDBeforeCondition {
         mapTemp.put("register_asset_unit", 1);
         mapTemp.put("register_asset_currency", "156");
         mapTemp.put("register_transaction_ref", register_transaction_ref);
-        mapTemp.put("register_product_ref", register_product_ref);
+        mapTemp.put("register_product_ref", gdEquityCode);
         mapTemp.put("register_description", "登记描述信息CHARACTER");
         mapTemp.put("register_create_time", time2);
         mapTemp.put("register_authentic_right_recognition_status", 1);
@@ -1009,7 +1008,7 @@ public class GDBeforeCondition {
 
         //登记信息 名册登记 名册基本信息
         mapTemp.put("register_subject_ref", register_subject_ref);
-        mapTemp.put("register_product_ref", register_product_ref);
+        mapTemp.put("register_product_ref", gdEquityCode);
         mapTemp.put("register_product_name", "产品名称");
         mapTemp.put("register_product_description", "产品描述");
         mapTemp.put("register_list_asset_type", 1);
@@ -1069,7 +1068,7 @@ public class GDBeforeCondition {
         mapTemp.put("settlement_type", 0);
         mapTemp.put("settlement_serial_number", "CH1ktvx01x2e04");
         mapTemp.put("settlement_time", time1);
-        mapTemp.put("settlement_product_ref", settlement_product_ref);
+        mapTemp.put("settlement_product_ref", gdEquityCode);
         mapTemp.put("settlement_transaction_ref", settlement_transaction_ref);
         mapTemp.put("settlement_currency", "156");
         mapTemp.put("settlement_value", 600000);
@@ -1526,14 +1525,14 @@ public class GDBeforeCondition {
         //账户
         account_subject_ref = "ASR" + UtilsClass.Random(9);
         account_depository_ref = "ADR" + UtilsClass.Random(9);
-        account_associated_account_ref = "AAAR" + UtilsClass.Random(9);
+//        account_associated_account_ref = "AAAR" + UtilsClass.Random(9);
         //产品
         product_market_subject_ref = "PMSR" + UtilsClass.Random(9);
         product_issuer_subject_ref = "PISR" + UtilsClass.Random(9);
         service_provider_subject_ref = "SPSR" + UtilsClass.Random(9);
         product_conversion_price_ref = "PCPR" + UtilsClass.Random(9);
         //交易报告
-        transaction_custody_product_ref = "TCPR" + UtilsClass.Random(9);
+        transaction_custody_product_ref = "";//"TCPR" + UtilsClass.Random(9);
         transaction_product_issuer_ref = "TPIR" + UtilsClass.Random(9);
         transaction_issuer_ref = "TIssR" + UtilsClass.Random(9);
         transaction_investor_ref = "TIR" + UtilsClass.Random(9);
@@ -1544,17 +1543,17 @@ public class GDBeforeCondition {
         register_subject_ref = "RSR" + UtilsClass.Random(9);
         register_subject_account_ref = "RSAR" + UtilsClass.Random(9);
         register_transaction_ref = "RTR" + UtilsClass.Random(9);
-        register_product_ref = "RPR" + UtilsClass.Random(9);
+        register_product_ref = "";//"RPR" + UtilsClass.Random(9);
         register_right_recognition_subject_ref = "RRRSR" + UtilsClass.Random(9);
         register_right_recognition_agent_subject_ref = "RRRASR" + UtilsClass.Random(9);
         roll_register_subject_ref = "RRSR" + UtilsClass.Random(9);
-        roll_register_product_ref = "RRPR" + UtilsClass.Random(9);
+        roll_register_product_ref = "";//"RRPR" + UtilsClass.Random(9);
         register_equity_subject_ref = "RESR" + UtilsClass.Random(9);
         register_debt_holder_ref = "RDHR" + UtilsClass.Random(9);
         register_investor_subject_ref = "RISR" + UtilsClass.Random(9);
         //资金结算
         settlement_subject_ref = "SSR" + UtilsClass.Random(9);
-        settlement_product_ref = "SPR" + UtilsClass.Random(9);
+        settlement_product_ref = "";//"SPR" + UtilsClass.Random(9);
         settlement_transaction_ref = "STR" + UtilsClass.Random(9);
         settlement_out_account_object_ref = "SOAOR" + UtilsClass.Random(9);
         settlement_in_account_object_ref = "SIAOR" + UtilsClass.Random(9);

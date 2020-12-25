@@ -134,6 +134,9 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
         assertEquals("200",JSONObject.fromObject(query2).getString("state"));
         assertEquals(true,query2.contains(cltNo));
 
+        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(query2,accType));
+        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(query2,subjectType));
+
         //查询挂牌企业数据
         //查询投资者信息
         //查询企业股东信息

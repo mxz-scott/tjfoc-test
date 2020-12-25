@@ -53,6 +53,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         gdEquityCode = Random(20);
         gdCompanyID = "P1Re" + Random(8);
 
+        settlement_product_ref = gdEquityCode;
+
         tempaccount_subject_ref = account_subject_ref;
         tempaccount_associated_account_ref =account_associated_account_ref;
         tempproduct_issuer_subject_ref = product_issuer_subject_ref;
@@ -114,6 +116,9 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String txDetail = store.GetTxDetail(txId);
         assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
 
+
+        account_associated_account_ref = mapCreate.get("shareholderNo").toString();
+
         //检查各个查询对象返回信息中不包含敏感词
         assertEquals("不包含敏感词",true,
                 gdCF.chkSensitiveWord(txDetail,subjectType));
@@ -158,8 +163,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         //直接从minio上获取报送数据文件信息
         Map getSubInfo = gdCF.constructJGDataFromStr(subfileName,subjectType,"2");
-        Map getFundAccInfo = gdCF.constructJGDataFromStr(fundAccfileName,accType,"1");
-        Map getSHAccInfo = gdCF.constructJGDataFromStr(shAccfileName,accType,"2");
+        Map getFundAccInfo = gdCF.constructJGDataFromStr(fundAccfileName,accType,"2");
+        Map getSHAccInfo = gdCF.constructJGDataFromStr(shAccfileName,accType,"1");
 
         Map enSubInfo = investorSubjectInfo;
         Map accFund = fundAccountInfo;
@@ -184,14 +189,19 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
         assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
 
+        accSH.put("account_object_id",SHObjId);
+        accSH.put("account_subject_ref",cltNo);
         log.info("检查股权账户存证信息内容与传入一致\n" + accSH.toString() + "\n" + getSHAccInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(accSH,accType,verForAccSH)),replaceCertain(getSHAccInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(accSH,accType)),replaceCertain(getSHAccInfo.toString()));
 
         account_associated_account_ref = SHObjId;
         String[] verForAccFund = new String[]{"/" + personSubVer,"/" + accADrefVer,"/" + shAccVer};
 
+        accFund.put("account_object_id",fundObjId);
+        accFund.put("account_subject_ref",cltNo);
+        accFund.put("account_associated_account_ref",SHObjId);
         log.info("检查资金账户存证信息内容与传入一致\n" + accFund.toString() + "\n" + getFundAccInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(accFund,accType,verForAccFund)),replaceCertain(getFundAccInfo.toString()));
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(accFund,accType)),replaceCertain(getFundAccInfo.toString()));
     }
 
 
@@ -228,7 +238,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         Map accSH = gdBC.init02ShareholderAccountInfo();
         Map accFund = gdBC.init02FundAccountInfo();
         accSH.put("account_subject_ref", "");
-        accSH.put("account_associated_account_ref", "");
+//        accSH.put("account_associated_account_ref", "");
 
         accFund.put("account_subject_ref", "");
         accFund.put("account_associated_account_ref", "");
@@ -256,7 +266,6 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
         //构造个人/投资者主体信息
         enSubInfo.put("subject_object_id", cltNo);  //更新对象标识字段
-        enSubInfo.put("subject_id", "sid" + cltNo);  //更新主体标识字段
 
         String response = gd.GDCreateAccout(gdContractAddress, cltNo, mapFundInfo, shareHolderInfo, enSubInfo);
 
