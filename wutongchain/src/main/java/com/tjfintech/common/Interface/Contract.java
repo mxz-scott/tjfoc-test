@@ -13,6 +13,7 @@ public interface Contract {
     String Destroy(String name,String version,String category);
     String Install(String name,String version,String category,String file) throws Exception;
     String Invoke(String name,String version,String category,String method,List<?> args);
+    String GetSmartContractList();
 
 //    String SynInstall(Integer timeout,String name,String version,String category,String file);
 //    String SynDestroy(Integer timeout,String name,String version,String category);

@@ -279,15 +279,19 @@ public class GoContract implements Contract {
         return result;
     }
 
-//    @After
-//    /**
-//     * 每次测试结束后都会执行的测试环境结束内容
-//     * 目前为空
-//     */
-//    public void TestAfter(){
-//
-//    }
+    /**
+     *  获取合约列表信息
+     *
+     * @method GET
+     */
 
+    public String GetSmartContractList() {
+        String param = "";
+        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
+        String result = GetTest.doGet2(SDKADD + "/v2/tx/sc/search/getsmartcontractlist?" + param);
+        log.info(result);
+        return result;
+    }
 
 
 }

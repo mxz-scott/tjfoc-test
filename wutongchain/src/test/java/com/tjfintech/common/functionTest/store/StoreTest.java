@@ -309,6 +309,7 @@ public class StoreTest {
         JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("worldStateRoot");
         JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("transactionRoot");
     }
+
     @Test
     public void TC243_getBlockByHash() {
         String response= store.GetHeight();

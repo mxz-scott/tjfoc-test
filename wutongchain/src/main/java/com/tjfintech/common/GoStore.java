@@ -255,6 +255,8 @@ public  class GoStore implements Store {
         return result;
     }
 
+
+
     /**
      * 按高度获取区块信息
      *
@@ -267,7 +269,20 @@ public  class GoStore implements Store {
         String strHeight = Integer.toString(height);
         if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
         String result = GetTest.doGet2(SDKADD + "/v2/block/detail/" + strHeight + "?" + param);
-//        log.info(result);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 按高度获取区块原始数据（base64编码）
+     */
+
+    public String GetBlockRawDetail(int height) {
+        String param = "";
+        String strHeight = Integer.toString(height);
+        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
+        String result = GetTest.doGet2(SDKADD + "/v2/block/rawdetail/" + strHeight + "?" + param);
+        log.info(result);
         return result;
     }
 

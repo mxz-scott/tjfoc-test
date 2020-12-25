@@ -23,6 +23,7 @@ public interface Store {
     String GetApiHealth();
     String GetLedger();
     String GetMemberList();
+    String GetBlockRawDetail(int height);
 
     String GetLedger(String ledger);
     String GetPeerList();

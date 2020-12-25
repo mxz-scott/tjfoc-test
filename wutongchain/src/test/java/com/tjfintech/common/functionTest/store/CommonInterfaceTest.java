@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.store;
 
 import com.tjfintech.common.CommonFunc;
+import com.tjfintech.common.Interface.Contract;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
@@ -24,6 +25,7 @@ public class CommonInterfaceTest {
     Store store =testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
+    Contract contract=testBuilder.getContract();
 
 
 
@@ -68,6 +70,63 @@ public class CommonInterfaceTest {
         assertThat(response,containsString("200"));
         assertThat(response,containsString("success"));
     }
+
+
+    /**
+     * 获取区块原始数据信息，base64编码
+     */
+    @Test
+    public void getBlockRawDetail() {
+        String response= store.GetHeight();
+        JSONObject jsonObject=JSONObject.fromObject(response);
+        Integer  height=jsonObject.getInt("data");
+        assertThat(response,containsString("200"));
+        int Height=4;
+        String response2= store.GetBlockRawDetail(Height-1);
+        assertThat(response2,containsString("200"));
+        JSONObject.fromObject(response2).getInt("state");
+        JSONObject.fromObject(response2).getString("message");
+        JSONObject.fromObject(response2).getJSONObject("data").getString("extra");
+        JSONObject.fromObject(response2).getJSONObject("data").getString("txs");
+        JSONObject.fromObject(response2).getJSONObject("data").getString("raw");
+        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("version");
+        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("height");
+        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("timestamp");
+        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("blockHash");
+        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("previousHash");
+        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("worldStateRoot");
+        JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("header").getString("transactionRoot");
+
+    }
+
+
+
+    /**
+     * 获取链上合约列表信息
+     */
+    @Test
+    public void getSmartContractList() {
+        String response2= contract.GetSmartContractList();
+        assertThat(response2,containsString("200"));
+        assertThat(response2,containsString("success"));
+        JSONObject.fromObject(response2).getInt("state");
+        JSONObject.fromObject(response2).getString("message");
+        JSONObject.fromObject(response2).getString("data");
+        assertThat(response2,containsString("Name"));
+        assertThat(response2,containsString("Version"));
+        assertThat(response2,containsString("ContractStatus"));
+        assertThat(response2,containsString("Owner"));
+        assertThat(response2,containsString("Src"));
+
+    }
+
+
+
+
+
+
+
+
 
     //@Test
     public void getPeerlist()throws  Exception{
