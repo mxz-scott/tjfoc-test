@@ -114,7 +114,6 @@ public class smtMultiInvalidTest {
         stc.verifyAddressNoBalance(ADDRESS1, tokenType);
         stc.verifyAddressHasBalance(ADDRESS1, newTokenType, "200");
 
-
     }
 
     /**

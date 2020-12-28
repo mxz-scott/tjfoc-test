@@ -1343,7 +1343,6 @@ public class CommonFunc {
      */
     public void verifyTxDetailField(String txId, String txType, String version, String type, String subType){
         String response = store.GetTxDetail(txId);
-//        log.info(response);
 
         assertEquals(JSONObject.fromObject(response).getString("state").equals("200"),true);
         assertEquals(JSONObject.fromObject(response).getString("message").equals("success"),true);
@@ -1383,6 +1382,43 @@ public class CommonFunc {
                 JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("version");
                 JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("args");
                 JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("name");
+                break;
+            case "smt_issue":
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("method");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("caller");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("version");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("args");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("name");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getString("txRecords");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getString("result");
+                break;
+            case "smt_transfer":
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("utxo").getString("txRecords");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("utxo").getString("data");
+                break;
+            case "smt_exchange":
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("utxo").getString("txRecords");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("utxo").getString("data");
+                break;
+            case "smt_destroy":
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("utxo").getString("txRecords");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("utxo").getString("data");
+                break;
+            case "smt_freeze":
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("method");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("caller");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("version");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("args");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("name");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getString("result");
+                break;
+            case "smt_recover":
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("method");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("caller");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("version");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getJSONObject("arg").getString("args");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("name");
+                JSONObject.fromObject(response).getJSONObject("data").getJSONObject("wvm").getString("result");
                 break;
         }
 
