@@ -34,7 +34,6 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
     GDBeforeCondition gdBF = new GDBeforeCondition();
     GDUnitFunc uf = new GDUnitFunc();
     public static String bizNoTest = "test" + Random(12);
-    public int verTemp = 0;
     String tempaccount_subject_ref,tempaccount_associated_account_ref,tempproduct_issuer_subject_ref;
 
     @Rule
@@ -106,7 +105,6 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         GDBeforeCondition gdBC = new GDBeforeCondition();
 
         String cltNo = "tet00" + Random(12);
-
         int gdClient = Integer.parseInt(gdCF.getObjectLatestVer(cltNo));//获取当前开户主体最新版本信息
 
         //执行开户
@@ -129,6 +127,11 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String response = "";
         response = gd.GDGetShareHolderInfo(gdContractAddress,cltNo);
         assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
+
+        //如果未创建过账户1 则赋值
+        if(gdCF.getObjectLatestVer(gdAccClientNo1).equals("-1")) {
+            gdAccClientNo1 = cltNo;
+        }
 
 
         //定义相关对象标识版本变量
@@ -468,8 +471,22 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
         sleepAndSaveInfo(2000);
 
-        settleInfo = gdBF.init06SettleInfo();
-        response= gd.GDCapitalSettlement(settleInfo);
+        //开户
+        if(gdCF.getObjectLatestVer(gdAccClientNo1).equals("-1")){
+            String cltNo = "settleAcc" + Random(6);
+            gdAccClientNo1 = cltNo;
+            //执行开户
+            Map mapCreate = gdBF.gdCreateAccParam(cltNo);
+            String txId = mapCreate.get("txId").toString();
+            commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+            String txDetail = store.GetTxDetail(txId);
+            assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
+            sleepAndSaveInfo(2000);
+        }
+
+        Map testSettleInfo = gdBF.init06SettleInfo();
+        testSettleInfo.put("settlement_in_account_object_ref",gdAccClientNo1);
+        response= gd.GDCapitalSettlement(testSettleInfo);
         net.sf.json.JSONObject jsonObject= net.sf.json.JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -507,11 +524,11 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
 
         //填充header content字段
-        settleInfo.put("content",gdCF.constructContentTreeMap(settleType,newSettleObjId,newDisObjIdVer,"create",String.valueOf(ts6)));
-
-
-        log.info("检查主体存证信息内容与传入一致\n" + settleInfo.toString() + "\n" + getSettleInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(settleInfo,settleType)),replaceCertain(getSettleInfo.toString()));
+        testSettleInfo.put("content",gdCF.constructContentTreeMap(settleType,newSettleObjId,newDisObjIdVer,"create",String.valueOf(ts6)));
+        testSettleInfo.put("settlement_transaction_ref","null");//默认没有携带交易报告对象引用信息
+        settlement_in_account_object_ref = gdAccClientNo1;
+        log.info("检查主体存证信息内容与传入一致\n" + testSettleInfo.toString() + "\n" + getSettleInfo.toString());
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(testSettleInfo,settleType)),replaceCertain(getSettleInfo.toString()));
 
     }
     //挂牌登记模块封装

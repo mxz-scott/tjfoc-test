@@ -1080,7 +1080,7 @@ public class GDBeforeCondition {
         mapTemp.put("settlement_out_bank_code", "CH3e9Vp967INOA");
         mapTemp.put("settlement_out_bank_name", "CH1tY37wB57auz");
         mapTemp.put("settlement_out_bank_account", "CHHe8e3M4j0N8o");
-        mapTemp.put("settlement_out_account_object_ref", "SH" + gdAccount1);
+        mapTemp.put("settlement_out_account_object_ref", "SH" + gdAccClientNo1);
         mapTemp.put("settlement_out_account_name", "CH8tC5aG5om158");
         mapTemp.put("settlement_out_account_balance_before_transfer", 1000000);
         mapTemp.put("settlement_out_account_balance_after_transfer", 1000000);
