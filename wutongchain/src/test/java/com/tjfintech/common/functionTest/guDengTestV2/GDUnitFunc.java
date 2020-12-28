@@ -438,17 +438,18 @@ public class GDUnitFunc {
             String tempAddr = JSONObject.fromObject(holderList.get(i)).getString("address");
             if(tempAddr.equals(zeroAccount)) continue;
             String tempPP = JSONObject.fromObject(holderList.get(i)).getString("shareProperty");
-            log.info("temp index " + i);
-            String tempObjId = mapAccAddr.get(tempAddr).toString();
+            String cltNo = mapAccAddr.get(tempAddr).toString();
+            String tempObjId = cltNo + Random(4);
             log.info("检查发行存证登记格式化及信息内容与传入一致:" + tempObjId);
             Map tempReg =  gdBF.init05RegInfo();
             String regObjId = mapAccAddr.get(tempAddr) + Random(6);
             GDBeforeCondition gdbf = new GDBeforeCondition();
 
             tempReg.put("register_registration_object_id",regObjId);
+            tempReg.put("register_subject_account_ref","SH" + cltNo);
+            tempReg.put("register_product_ref",gdEquityCode);
 
-            mapAddrRegObjId.put(tempAddr,regObjId);//方便后面测试验证
-            tempReg.put("register_nature_of_shares",tempPP);
+            mapAddrRegObjId.put(tempAddr + tempPP,regObjId);//方便后面测试验证
             regList.add(tempReg);
         }
 

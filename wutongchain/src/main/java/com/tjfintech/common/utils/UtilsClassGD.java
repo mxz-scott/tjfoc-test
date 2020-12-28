@@ -15,14 +15,14 @@ public class UtilsClassGD {
     //gudeng 信息
     //10.1.3.161:7779
     public static String gdContractAddress = "018a976954474678a3a100d33200b7f9fd1b34a60118c4cb13cfd79f6f324b5d";
-    public static String gdPlatfromKeyID = "bv2q02t2uehbsbgg7a70";
+    public static String gdPlatfromKeyID = "bvkkh2l2uehcncg6ao70";
 
     //外网对接
 //    public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
 //    public static String gdPlatfromKeyID = "bv6t8lphdkebd3874a80";
 
 //    public static String commNo = "1015"; //对接监管环境
-    public static String commNo = "012"; //存oss后会导致 db删除后挂牌会挂不上 1011
+    public static String commNo = "014"; //存oss后会导致 db删除后挂牌会挂不上 1011
 
     public static String gdEquityCode = "gdTokenZ0" + UtilsClass.Random(6);
     public static String gdCompanyID = "gdCmpyId01" + UtilsClass.Random(6);
@@ -66,7 +66,7 @@ public class UtilsClassGD {
     public static long end = 0;
     public static int beginHeigh = 0;
     public static int endHeight = 0;
-	public static int blockHeight = 448;
+	public static int blockHeight = 467;
     public static long timeStamp = (new Date()).getTime();
     public static String testCurMethodName = "";
 
@@ -124,7 +124,8 @@ public class UtilsClassGD {
 
     public static String minIOUser ="minioadmin";
     public static String minIOPwd ="Pass@7899";
-    public static String minIOEP ="http://b2904236d6.zicp.vip:8098";
+//    public static String minIOEP ="http://b2904236d6.zicp.vip:8098";
+    public static String minIOEP ="http://10.1.5.120:9000";
     public static String jgBucket = "my-oss-test";
 
     public static Boolean bRegTxRef = false;
@@ -132,6 +133,7 @@ public class UtilsClassGD {
     public static String CNKey = "Eq1";
     public static String uriStoreData = "";
     public static String productType = "1";
+    public static String register_event_type = "1";
 
     public static  HashMap<String,String> refInfo = new HashMap<String,String>();
 

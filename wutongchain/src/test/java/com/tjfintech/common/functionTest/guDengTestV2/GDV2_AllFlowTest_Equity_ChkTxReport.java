@@ -360,10 +360,12 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
         testReg1.put("register_registration_serial_number","transfer000001");
         testReg1.put("register_account_obj_id",mapAccAddr.get(fromAddr));
         testReg1.put("register_registration_object_id",regObjId1);
+        testReg1.put("register_subject_account_ref","SH" + gdAccClientNo1);
 
         testReg2.put("register_registration_serial_number","transfer000001");
         testReg2.put("register_account_obj_id",mapAccAddr.get(toAddr));
         testReg2.put("register_registration_object_id",regObjId2);
+        testReg2.put("register_subject_account_ref","SH" + gdAccClientNo5);
 
         txInformation.put("transaction_object_id",mapAccAddr.get(toAddr) + "TrfTx" + Random(6));
 

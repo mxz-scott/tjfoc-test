@@ -952,7 +952,7 @@ public class GDBeforeCondition {
 
         //登记信息 登记基本信息
         mapTemp.put("register_object_type", 1);
-        mapTemp.put("register_event_type", 2);
+        mapTemp.put("register_event_type", register_event_type);//默认托管登记
 
         //登记信息 权利信息 权利基本信息 权利基本信息描述
         mapTemp.put("register_serial_number", "登记流水号CHARACTER");
@@ -963,7 +963,7 @@ public class GDBeforeCondition {
         mapTemp.put("register_asset_type", 1);
         mapTemp.put("register_asset_unit", 1);
         mapTemp.put("register_asset_currency", "156");
-        mapTemp.put("register_transaction_ref", register_transaction_ref);
+        if(register_event_type.equals("2")) mapTemp.put("register_transaction_ref", register_transaction_ref);
         mapTemp.put("register_product_ref", gdEquityCode);
         mapTemp.put("register_description", "登记描述信息CHARACTER");
         mapTemp.put("register_create_time", time2);
@@ -1069,7 +1069,7 @@ public class GDBeforeCondition {
         mapTemp.put("settlement_serial_number", "CH1ktvx01x2e04");
         mapTemp.put("settlement_time", time1);
         mapTemp.put("settlement_product_ref", gdEquityCode);
-        mapTemp.put("settlement_transaction_ref", settlement_transaction_ref);
+//        mapTemp.put("settlement_transaction_ref", settlement_transaction_ref);
         mapTemp.put("settlement_currency", "156");
         mapTemp.put("settlement_value", 600000);
         mapTemp.put("settlement_note", "textemu4AW4U57");
@@ -1080,7 +1080,7 @@ public class GDBeforeCondition {
         mapTemp.put("settlement_out_bank_code", "CH3e9Vp967INOA");
         mapTemp.put("settlement_out_bank_name", "CH1tY37wB57auz");
         mapTemp.put("settlement_out_bank_account", "CHHe8e3M4j0N8o");
-        mapTemp.put("settlement_out_account_object_ref", settlement_out_account_object_ref);
+        mapTemp.put("settlement_out_account_object_ref", "SH" + gdAccount1);
         mapTemp.put("settlement_out_account_name", "CH8tC5aG5om158");
         mapTemp.put("settlement_out_account_balance_before_transfer", 1000000);
         mapTemp.put("settlement_out_account_balance_after_transfer", 1000000);
@@ -1089,7 +1089,7 @@ public class GDBeforeCondition {
         mapTemp.put("settlement_in_bank_code", "CH7YfKps3x65Y2");
         mapTemp.put("settlement_in_bank_name", "CHp42HpuGtf6y3");
         mapTemp.put("settlement_in_bank_account", "CHE0H230A17lu8");
-        mapTemp.put("settlement_in_account_object_ref",settlement_in_account_object_ref);
+        mapTemp.put("settlement_in_account_object_ref","SH" + gdAccount5);
         mapTemp.put("settlement_in_account_name", "CH6FU5bf2N2Y6B");
         mapTemp.put("settlement_in_account_balance_before_transfer", 1000000);
         mapTemp.put("settlement_in_account_balance_after_transfer", 1000000);

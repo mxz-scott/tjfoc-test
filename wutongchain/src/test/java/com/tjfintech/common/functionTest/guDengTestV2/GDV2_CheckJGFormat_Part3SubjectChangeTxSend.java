@@ -953,6 +953,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
             regInfo = gdBF.init05RegInfo();
             regInfo.put("register_registration_object_id",tempObjId);
+            regInfo.remove("register_transaction_ref");
 //            bizNo = Random(15);//不应该 但临时测试报送
             response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,regInfo,txInfo);
 
