@@ -163,10 +163,10 @@ public class GDBeforeCondition {
         mapFundInfo.put("accountInfo", mapFundAcc);
 
         //构造个人/投资者主体信息
-        init01PersonalSubjectInfo();
-        investorSubjectInfo.put("subject_object_id", cltNo);  //更新对象标识字段
+        Map investor = init01PersonalSubjectInfo();
+        investor.put("subject_object_id", cltNo);  //更新对象标识字段
 
-        String response = gd.GDCreateAccout(gdContractAddress, cltNo, mapFundInfo, shareHolderInfo, investorSubjectInfo);
+        String response = gd.GDCreateAccout(gdContractAddress, cltNo, mapFundInfo, shareHolderInfo, investor);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         assertEquals(cltNo, JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("clientNo"));
@@ -1530,7 +1530,7 @@ public class GDBeforeCondition {
         product_market_subject_ref = "PMSR" + UtilsClass.Random(9);
         product_issuer_subject_ref = "PISR" + UtilsClass.Random(9);
         service_provider_subject_ref = "SPSR" + UtilsClass.Random(9);
-        product_conversion_price_ref = "PCPR" + UtilsClass.Random(9);
+
         //交易报告
         transaction_custody_product_ref = "";//"TCPR" + UtilsClass.Random(9);
         transaction_product_issuer_ref = "TPIR" + UtilsClass.Random(9);

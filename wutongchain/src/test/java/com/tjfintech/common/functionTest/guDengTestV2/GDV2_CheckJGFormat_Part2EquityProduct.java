@@ -42,6 +42,8 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
     long transferAmount = 1000;
     Boolean bSame = true;
 
+    Boolean bCheckList = true;
+
     String tempaccount_subject_ref = account_subject_ref;
     String tempsubject_investor_qualification_certifier_ref = subject_investor_qualification_certifier_ref;
     String tempproduct_issuer_subject_ref = product_issuer_subject_ref;
@@ -62,7 +64,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
     @BeforeClass
     public static void Before()throws Exception{
-        gdEquityCode = "fondTest" + Random(12);
+        gdEquityCode = "prodEq" + Random(12);
         register_product_ref = gdEquityCode;
         roll_register_product_ref = gdEquityCode;
         transaction_custody_product_ref = gdEquityCode;
@@ -88,9 +90,8 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         GDUnitFunc uf = new GDUnitFunc();
         int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
         uf.checkJGHeaderOpVer(blockHeight,endHeight);
-//        uf.updateBlockHeightParam(endHeight);
 
-        subject_investor_qualification_certifier_ref =tempsubject_investor_qualification_certifier_ref;
+        subject_investor_qualification_certifier_ref = tempsubject_investor_qualification_certifier_ref;
         register_transaction_ref = tempregister_transaction_ref;
     }
 
@@ -829,6 +830,8 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
         log.info("================================检查存证数据格式化《结束》================================");
 
+        if(!bCheckList) return;
+
         //查询挂牌企业数据
         //查询投资者信息
         //查询企业股东信息
@@ -958,6 +961,7 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
 
         log.info("================================检查存证数据格式化《结束》================================");
 
+        if(!bCheckList) return;
 
         //查询挂牌企业数据
         //查询投资者信息
@@ -1593,5 +1597,81 @@ public class GDV2_CheckJGFormat_Part2EquityProduct {
         log.info("检查资金账户存证信息内容与传入一致\n" + accFund.toString() + "\n" + getFundAccInfo.toString());
         bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(accFund,accType)),replaceCertain(getFundAccInfo.toString()));
         assertEquals("检查销户后股权账户数据",true,bSame);
+    }
+
+
+    @Test
+    public void TCN16_balanceCount() throws Exception {
+        settlement_product_ref = gdEquityCode;
+//        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
+//        Map prodInfo = gdBF.init03EquityProductInfo();
+
+        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
+//        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,enSubInfo,
+//                prodInfo,null,null);
+//        assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
+//        sleepAndSaveInfo(2000);
+
+//        //开户
+//        if(gdCF.getObjectLatestVer(gdAccClientNo1).equals("-1")){
+//            String cltNo = "settleAcc" + Random(6);
+//            gdAccClientNo1 = cltNo;
+//            //执行开户
+//            Map mapCreate = gdBF.gdCreateAccParam(cltNo);
+//            String txId = mapCreate.get("txId").toString();
+//            commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+//            String txDetail = store.GetTxDetail(txId);
+//            assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
+//            sleepAndSaveInfo(2000);
+//        }
+
+        Map testSettleInfo = gdBF.init06SettleInfo();
+        testSettleInfo.put("settlement_in_account_object_ref","SH" + gdAccClientNo1);
+        testSettleInfo.put("settlement_out_account_object_ref","SH" + gdAccClientNo5);
+        String response= gd.GDCapitalSettlement(testSettleInfo);
+        net.sf.json.JSONObject jsonObject= net.sf.json.JSONObject.fromObject(response);
+        String txId = jsonObject.getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        String txDetail = store.GetTxDetail(txId);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+
+        //设置各个主体版本变量
+        String objPrefix = "uri";
+
+        //获取（从交易详情中）链上mini url的存证信息并检查是否包含uri信息 通过前缀信息获取信披对象id
+        String storeData = com.alibaba.fastjson.JSONObject.parseObject(txDetail).getJSONObject(
+                "data").getJSONObject("store").getString("storeData").toString();
+        log.info(storeData);
+        com.alibaba.fastjson.JSONObject objURI = com.alibaba.fastjson.JSONObject.parseObject(
+                com.alibaba.fastjson.JSONObject.parseArray(storeData).get(0).toString());
+        String chkObjURI = objPrefix;
+        assertEquals(true,storeData.contains(chkObjURI));
+        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字
+
+        String objVerTemp =  objURI.getString("uri").trim();
+
+        String newSettleObjId = "";
+        newSettleObjId = objVerTemp.substring(0,objVerTemp.lastIndexOf("/"));
+
+        String newDisObjIdVer = objVerTemp.substring(objVerTemp.lastIndexOf("/") + 1);//gdCF.getObjectLatestVer(newDisObjId);
+        log.info(objVerTemp + " " + newDisObjIdVer);
+
+        String objfileName = conJGFileName(newSettleObjId,newDisObjIdVer);
+
+
+        //直接从minio上通过对象标识+版本号的方式获取指定对象文件
+        Map getSettleInfo = gdCF.constructJGDataFromStr(objfileName,settleType,"");
+
+
+        //填充header content字段
+        testSettleInfo.put("content",gdCF.constructContentTreeMap(settleType,newSettleObjId,newDisObjIdVer,"create",String.valueOf(ts6)));
+        testSettleInfo.put("settlement_transaction_ref","null");//默认没有携带交易报告对象引用信息
+        settlement_in_account_object_ref = "SH" + gdAccClientNo1;
+        settlement_out_account_object_ref = "SH" + gdAccClientNo5;
+        log.info("检查主体存证信息内容与传入一致\n" + testSettleInfo.toString() + "\n" + getSettleInfo.toString());
+        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(testSettleInfo,settleType)),replaceCertain(getSettleInfo.toString()));
+
     }
 }
