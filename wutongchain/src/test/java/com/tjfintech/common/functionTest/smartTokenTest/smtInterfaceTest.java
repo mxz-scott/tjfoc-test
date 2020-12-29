@@ -350,10 +350,6 @@ public class smtInterfaceTest {
         assertEquals("400", JSONObject.fromObject(IssueApplyResp).getString("state"));
         assertEquals(true, IssueApplyResp.contains("可流转层级必须大于1"));
 
-        String IssueApplyResp3 = st.SmartIssueTokenReq(contractAddress, tokenType, expiredDate, toList, activeDate, true, 0, "");
-        assertEquals("400", JSONObject.fromObject(IssueApplyResp3).getString("state"));
-        assertEquals(true, IssueApplyResp3.contains("数字资产接收信息必须至少包含1项"));
-
 
         log.info("数字资产有效期小于数字资产激活日期时间戳");
         BigDecimal expiredDate1 = new BigDecimal(timeStampNow - 12356789);

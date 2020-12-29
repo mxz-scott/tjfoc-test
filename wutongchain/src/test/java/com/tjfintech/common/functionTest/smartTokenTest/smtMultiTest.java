@@ -396,33 +396,30 @@ public class smtMultiTest {
         String newTokenType = "NEW_" + UtilsClass.Random(10);
         String transferData = "ADDRESS1 向 MULITADD4 转换10个" + tokenType;
         List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", "10", null);
-        List<Map> collList = stc.smartConstructTokenList(MULITADD4, "test", "10", null);
-        String transferResp = stc.smartExchange
-                (tokenType, payList,  newTokenType, "", transferData);
+        String exchangeResp = stc.smartExchange(tokenType, payList,  newTokenType, "", transferData);
 
-        assertEquals("200", JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals("200", JSONObject.fromObject(exchangeResp).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType, SLEEPTIME);
 
-        log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转换是否成功");
+        log.info("查询 ADDRESS1余额，判断转换是否成功");
         stc.verifyAddressHasBalance(ADDRESS1, tokenType, "10");
-        stc.verifyAddressNoBalance(MULITADD4, tokenType);
         //解冻
         String recoverResp = st.SmartRecover(tokenType, "");
         assertEquals("200", JSONObject.fromObject(recoverResp).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType, SLEEPTIME);
         //转换
-        String transferResp1 = stc.smartExchange
-                (tokenType, payList,  newTokenType, "", transferData);
+        String exchangeResp1 = stc.smartExchange
+                (tokenType,payList,  newTokenType, "", transferData);
 
-        assertEquals("200", JSONObject.fromObject(transferResp1).getString("state"));
+        assertEquals("200", JSONObject.fromObject(exchangeResp1).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType, SLEEPTIME);
 
-        log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
+        log.info("查询 ADDRESS1 余额，判断转账是否成功");
         stc.verifyAddressNoBalance(ADDRESS1, tokenType);
-        stc.verifyAddressHasBalance(MULITADD4, newTokenType, "10");
+        stc.verifyAddressHasBalance(ADDRESS1, newTokenType, "10");
 
     }
 
