@@ -55,7 +55,7 @@ public  class GoStore implements Store {
     public String GetLedger() {
 //        String param = "";
 //        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/subledger");
+        String result = GetTest.doGet2(SDKADD + "/v2/ledger");
         log.info(result);
         return result;
     }

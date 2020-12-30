@@ -32,8 +32,11 @@ public class CommonInterfaceTest {
     @Test
     public void getMemberlist()throws  Exception{
         String response= store.GetMemberList();
+        assertThat(response,containsString("state"));
         assertThat(response,containsString("200"));
+        assertThat(response,containsString("message"));
         assertThat(response,containsString("success"));
+        assertThat(response,containsString("data"));
         assertThat(response,containsString("memberList"));
         assertThat(response,containsString("id"));
         assertThat(response,containsString("version"));
@@ -43,18 +46,24 @@ public class CommonInterfaceTest {
         assertThat(response,containsString("height"));
         assertThat(response,containsString("hashType"));
         assertThat(response,containsString("consensus"));
+        assertThat(response,containsString("licOutTime"));
+        assertThat(response,containsString("breaked"));
     }
 
     @Test
-    public void getSubLedger()throws  Exception{
+    public void getLedgers()throws  Exception{
         String response= store.GetLedger();
+        assertThat(response,containsString("state"));
         assertThat(response,containsString("200"));
+        assertThat(response,containsString("message"));
         assertThat(response,containsString("success"));
-        assertThat(response,containsString("subLedgers"));
+        assertThat(response,containsString("data"));
+        assertThat(response,containsString("ledgers"));
         assertThat(response,containsString("name"));
         assertThat(response,containsString("memberList"));
         assertThat(response,containsString("id"));
         assertThat(response,containsString("port"));
+        assertThat(response,containsString("shownName"));
         assertThat(response,containsString("inAddr"));
         assertThat(response,containsString("hashType"));
         assertThat(response,containsString("word"));
@@ -81,8 +90,7 @@ public class CommonInterfaceTest {
         JSONObject jsonObject=JSONObject.fromObject(response);
         Integer  height=jsonObject.getInt("data");
         assertThat(response,containsString("200"));
-        int Height=4;
-        String response2= store.GetBlockRawDetail(Height-1);
+        String response2= store.GetBlockRawDetail(height-1);
         assertThat(response2,containsString("200"));
         JSONObject.fromObject(response2).getInt("state");
         JSONObject.fromObject(response2).getString("message");
