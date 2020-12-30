@@ -39,6 +39,8 @@ public class GDV2_CheckJGFormat_Part1_Async {
     public static String bizNoTest = "test" + Random(12);
     String tempaccount_subject_ref,tempaccount_associated_account_ref,tempproduct_issuer_subject_ref;
 
+    Boolean bTest = false;
+
     @Rule
     public TestName tm = new TestName();
 
@@ -82,7 +84,7 @@ public class GDV2_CheckJGFormat_Part1_Async {
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
         int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
-        uf.checkJGHeaderOpVer(blockHeight,endHeight);
+//        uf.checkJGHeaderOpVer(blockHeight,endHeight);
 
         //中间可能有做过重新赋值 执行完成后恢复原设置值
         account_subject_ref = tempaccount_subject_ref;
@@ -91,6 +93,37 @@ public class GDV2_CheckJGFormat_Part1_Async {
 
     }
 
+
+    @Test
+    public void test()throws Exception{
+        for(int i =0;i<5000;i++) {
+            log.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + i);
+            gdEquityCode = Random(20);
+            gdCompanyID = "P1Re" + Random(8);
+
+
+            commNo = Random(5);
+
+            //主体
+            subject_investor_qualification_certifier_ref = "SIQCR" + UtilsClass.Random(9);
+            //账户
+            account_subject_ref = "ASR" + UtilsClass.Random(9);
+            account_depository_ref = "ADR" + UtilsClass.Random(9);
+//        account_associated_account_ref = "AAAR" + UtilsClass.Random(9);
+            //产品
+            product_market_subject_ref = "PMSR" + UtilsClass.Random(9);
+            product_issuer_subject_ref = "PISR" + UtilsClass.Random(9);
+            service_provider_subject_ref = "SPSR" + UtilsClass.Random(9);
+
+            settlement_product_ref = gdEquityCode;
+
+            tempaccount_subject_ref = account_subject_ref;
+            tempaccount_associated_account_ref = account_associated_account_ref;
+            tempproduct_issuer_subject_ref = product_issuer_subject_ref;
+
+            TCN301_enterpriseRegisterEquityCheckFormat();
+        }
+    }
 
     //先创建资质机构 再挂牌登记股权类产品
     @Test
@@ -148,12 +181,16 @@ public class GDV2_CheckJGFormat_Part1_Async {
 
         //开户
         GDBeforeCondition gdBC = new GDBeforeCondition();
+        Map mapCreate = new HashMap();
+        String cltNo ="";
+        for(int i = 0;i<5000000;i++) {
+            log.info("**************************************" + i);
+            cltNo = "tet00" + Random(12);
+//            int gdClient = Integer.parseInt(gdCF.getObjectLatestVer(cltNo));//获取当前开户主体最新版本信息
 
-        String cltNo = "tet00" + Random(12);
-        int gdClient = Integer.parseInt(gdCF.getObjectLatestVer(cltNo));//获取当前开户主体最新版本信息
-
-        //执行开户
-        Map mapCreate = gdBC.gdCreateAccParam(cltNo);
+            //执行开户
+            mapCreate = gdBC.gdCreateAccParam(cltNo);
+        }
         String txId = mapCreate.get("txId").toString();
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         String txDetail = store.GetTxDetail(txId);
@@ -225,7 +262,7 @@ public class GDV2_CheckJGFormat_Part1_Async {
         accFund.put("content",gdCF.constructContentTreeMap(accType,fundObjId,fundAccVer,"create",String.valueOf(ts2)));
         accSH.put("content",gdCF.constructContentTreeMap(accType,SHObjId,shAccVer,"create",String.valueOf(ts2)));
 
-        assertEquals(String.valueOf(gdClient + 1),personSubVer);
+//        assertEquals(String.valueOf(gdClient + 1),personSubVer);
 
         //账户的如下字段默认引用的是开户主体的对象标识
         account_subject_ref = cltNo;
@@ -482,7 +519,7 @@ public class GDV2_CheckJGFormat_Part1_Async {
         Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
         Map prodInfo = null;
 
-        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
+//        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
         String response= "";
 
         //根据产品类型获取产品信息并执行挂牌
@@ -508,6 +545,8 @@ public class GDV2_CheckJGFormat_Part1_Async {
                 break;
             default:    assertEquals("非法类型" + type, false,true);
         }
+
+        if(!bTest) return;
 
         //获取交易hash
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -566,7 +605,7 @@ public class GDV2_CheckJGFormat_Part1_Async {
         product_issuer_subject_ref = gdCompanyID;
 //        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(gdCompanyID));
 
-        assertEquals(String.valueOf(gdCpmIdOldVer + 1),newSubVer);
+//        assertEquals(String.valueOf(gdCpmIdOldVer + 1),newSubVer);
 
         String[] verForSub = new String[]{"/" + subSIQCRefVer };
         String[] verForProd = new String[]{"/" + prodPMSRefVer,"/" + newSubVer,"/" + prodSPSRefVer};

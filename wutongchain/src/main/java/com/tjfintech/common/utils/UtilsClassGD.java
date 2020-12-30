@@ -150,7 +150,6 @@ public class UtilsClassGD {
         refInfo.put("product_market_subject_ref", product_market_subject_ref);
         refInfo.put("product_issuer_subject_ref", product_issuer_subject_ref);
         refInfo.put("service_provider_subject_ref", service_provider_subject_ref);
-        refInfo.put("product_conversion_price_ref", product_conversion_price_ref);
         //交易报告
 //        refInfo.put("transaction_custody_product_ref", transaction_custody_product_ref);
         refInfo.put("transaction_product_issuer_ref", transaction_product_issuer_ref);
@@ -203,7 +202,6 @@ public class UtilsClassGD {
     public static String product_market_subject_ref = "PMSR" + commNo;// + UtilsClass.Random(8);
     public static String product_issuer_subject_ref = "PISR" + commNo;// + UtilsClass.Random(8);
     public static String service_provider_subject_ref = "SPSR" + commNo;// + UtilsClass.Random(8);
-    public static String product_conversion_price_ref = "PCPR" + commNo;// + UtilsClass.Random(8);
     //交易报告
     public static String transaction_custody_product_ref = "";//"TCPR" + commNo;// + UtilsClass.Random(8);
     public static String transaction_product_issuer_ref = "TPIR" + commNo;// + UtilsClass.Random(8);

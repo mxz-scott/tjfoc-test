@@ -71,6 +71,8 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
     @Before
     public void shareIssue() throws Exception {
 
+        register_event_type = "2";
+
         tempsubject_investor_qualification_certifier_ref =subject_investor_qualification_certifier_ref;
         tempregister_transaction_ref = register_transaction_ref;
 
@@ -118,7 +120,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
         int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
-        uf.checkJGHeaderOpVer(blockHeight,endHeight);
+//        uf.checkJGHeaderOpVer(blockHeight,endHeight);
 
         subject_investor_qualification_certifier_ref = tempsubject_investor_qualification_certifier_ref;
         register_transaction_ref = tempregister_transaction_ref;
@@ -153,8 +155,12 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
         //遍历检查所有账户登记及交易存证信息
         for(int k = 0 ;k < dataShareList.size(); k++) {
-            String tempAddr = JSONObject.fromObject(dataShareList.get(k)).getString("address");
-            String tempObjId = mapAddrRegObjId.get(tempAddr).toString();
+            String tempAddr = JSONObject.fromObject(shareList4.get(k)).getString("address");
+            String tempSP = JSONObject.fromObject(dataShareList.get(k)).getString("shareProperty");
+            String tempObjId = mapAddrRegObjId.get(tempAddr + tempSP).toString();
+
+            register_product_ref = gdEquityCode;
+            register_subject_account_ref = "SH" + mapAccAddr.get(tempAddr);
 
             Map mapChkKeys = new HashMap();
             mapChkKeys.put("address","");
@@ -223,13 +229,18 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
         String tempObjIdFrom = "5" + CNKey + mapAccAddr.get(fromAddr).toString() + Random(4);
         String tempObjIdTo = "5" + CNKey + mapAccAddr.get(toAddr).toString() + Random(4);
 
+        transaction_custody_product_ref = gdEquityCode;
+        register_product_ref = gdEquityCode;
+
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
         String txRpObjId = "4" + CNKey + Random(6);
         txInfo.put("transaction_object_id",txRpObjId);
 
         //登记数据
+        register_subject_account_ref = "SH" + mapAccAddr.get(fromAddr);
         Map fromNow = gdBF.init05RegInfo();
+        register_subject_account_ref = "SH" + mapAccAddr.get(toAddr);
         Map toNow = gdBF.init05RegInfo();
 
         register_transaction_ref = txRpObjId;//登记引用的是交易报告的对象标识
@@ -278,6 +289,9 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
         log.info("检查转让from账户登记信息");
         String tempObjId = tempObjIdFrom;
 
+
+        register_subject_account_ref = "SH" + mapAccAddr.get(fromAddr);
+
         Map mapChkKeys = new HashMap();
         mapChkKeys.put("address","");
         mapChkKeys.put("txId",txId);
@@ -290,8 +304,9 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
         assertEquals("检查数据-登记",true,gdCF.bCheckJGParams(mapChkKeys));
 
-        log.info("检查转让from账户登记信息");
+        log.info("检查转让to账户登记信息");
         tempObjId = tempObjIdTo;
+        register_subject_account_ref = "SH" + mapAccAddr.get(toAddr);
 
         mapChkKeys.clear();
         mapChkKeys.put("address","");
@@ -369,13 +384,18 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
         String tempObjIdFrom = "5" + CNKey + mapAccAddr.get(fromAddr).toString() + Random(4);
         String tempObjIdTo = "5" + CNKey + mapAccAddr.get(toAddr).toString() + Random(4);
 
+        transaction_custody_product_ref = gdEquityCode;
+        register_product_ref = gdEquityCode;
+
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
         String txRpObjId = "4" + CNKey + Random(6);
         txInfo.put("transaction_object_id",txRpObjId);
 
         //登记数据
+        register_subject_account_ref = "SH" + mapAccAddr.get(fromAddr);
         Map fromNow = gdBF.init05RegInfo();
+        register_subject_account_ref = "SH" + mapAccAddr.get(toAddr);
         Map toNow = gdBF.init05RegInfo();
 
         register_transaction_ref = txRpObjId;//登记引用的是交易报告的对象标识
@@ -423,7 +443,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
         log.info("================================检查存证数据格式化《开始》================================");
         log.info("检查转让from账户登记信息");
         String tempObjId = tempObjIdFrom;
-
+        register_subject_account_ref = "SH" + mapAccAddr.get(fromAddr);
         Map mapChkKeys = new HashMap();
         mapChkKeys.put("address","");
         mapChkKeys.put("txId",txId);
@@ -436,9 +456,9 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
         assertEquals("检查数据-登记",true,gdCF.bCheckJGParams(mapChkKeys));
 
-        log.info("检查转让from账户登记信息");
+        log.info("检查转让to账户登记信息");
         tempObjId = tempObjIdTo;
-
+        register_subject_account_ref = "SH" + mapAccAddr.get(toAddr);
         mapChkKeys.clear();
         mapChkKeys.put("address","");
         mapChkKeys.put("txId",txId);
@@ -513,13 +533,18 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
         String tempObjIdFrom = "5" + CNKey + mapAccAddr.get(fromAddr).toString() + Random(4);
         String tempObjIdTo = "5" + CNKey + mapAccAddr.get(toAddr).toString() + Random(4);
 
+        transaction_custody_product_ref = gdEquityCode;
+        register_product_ref = gdEquityCode;
+
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
         String txRpObjId = "4" + CNKey + Random(6);
         txInfo.put("transaction_object_id",txRpObjId);
 
         //登记数据
+        register_subject_account_ref = "SH" + mapAccAddr.get(fromAddr);
         Map fromNow = gdBF.init05RegInfo();
+        register_subject_account_ref = "SH" + mapAccAddr.get(toAddr);
         Map toNow = gdBF.init05RegInfo();
 
         register_transaction_ref = txRpObjId;//登记引用的是交易报告的对象标识
@@ -571,6 +596,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
         log.info("检查转让from账户登记信息");
         String tempObjId = tempObjIdFrom;
+        register_subject_account_ref = "SH" + mapAccAddr.get(fromAddr);
 
         Map mapChkKeys = new HashMap();
         mapChkKeys.put("address","");
@@ -591,7 +617,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
         log.info("检查转让from账户登记信息");
         tempObjId = tempObjIdTo;
-
+        register_subject_account_ref = "SH" + mapAccAddr.get(toAddr);
         mapChkKeys.clear();
         mapChkKeys.put("address","");
         mapChkKeys.put("txId",txId);
@@ -745,7 +771,12 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
         //遍历检查所有账户登记及交易存证信息
         for(int k = 0 ;k < shareList4.size(); k++) {
             String tempAddr = JSONObject.fromObject(shareList4.get(k)).getString("address");
-            String tempObjId = mapAddrRegObjId.get(tempAddr).toString();
+            String tempSP = JSONObject.fromObject(dataShareList.get(k)).getString("shareProperty");
+            String tempObjId = mapAddrRegObjId.get(tempAddr + tempSP).toString();
+
+            register_product_ref = gdEquityCode;
+            transaction_custody_product_ref = gdEquityCode;
+            register_subject_account_ref = "SH" + mapAccAddr.get(tempAddr);
 
             Map mapChkKeys = new HashMap();
             mapChkKeys.put("address","");
@@ -755,6 +786,12 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
             mapChkKeys.put("contentType",regType);
             mapChkKeys.put("subProdSubType","");
             mapChkKeys.put("operationType","create");
+
+            Map mapKeyUpdate = new HashMap();
+            mapKeyUpdate.put("register_subject_account_ref","SH" + mapAccAddr.get(tempAddr));
+
+            String json = JSON.toJSONString(mapKeyUpdate);
+            mapChkKeys.put("updateMap",json);
 
             assertEquals("检查数据-登记",true,gdCF.bCheckJGParams(mapChkKeys));
 
@@ -780,7 +817,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
         assertEquals("检查数据-主体",true,gdCF.bCheckJGParams(mapChkKeys));
 
         //产品对象检查
-        assertEquals("更新主体版本非0",false,gdCF.getObjectLatestVer(gdEquityCode).equals("0"));
+        assertEquals("更新产品版本非0",false,gdCF.getObjectLatestVer(gdEquityCode).equals("0"));
         mapChkKeys.clear();
         mapChkKeys.put("address","");
         mapChkKeys.put("txId",txId);
@@ -840,6 +877,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
      */
     @Test
     public void IncreaseWithTxReportType0_NoSubmitTxReport() throws Exception {
+        register_event_type = "2";
         shareIncreaseSpec(0);
     }
 
@@ -850,6 +888,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
      */
     @Test
     public void IncreaseWithTxReportType2_NoSubmitTxReport() throws Exception {
+        register_event_type = "2";
         shareIncreaseSpec(2);
     }
 
@@ -868,6 +907,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
      */
     @Test
     public void shareLock_Type0_NoSubmitTxReport() throws Exception {
+
         shareLockWithType(0);
     }
 
@@ -952,7 +992,8 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
             regInfo = gdBF.init05RegInfo();
             regInfo.put("register_registration_object_id",tempObjId);
-            regInfo.remove("register_transaction_ref");
+            regInfo.put("register_transaction_ref",tempregister_transaction_ref);
+//            regInfo.remove("register_transaction_ref");
 //            bizNo = Random(15);//不应该 但临时测试报送
             response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,regInfo,txInfo);
 
@@ -968,6 +1009,10 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
         assertEquals("不包含登记数据敏感词",true,gdCF.chkSensitiveWord(txDetail,regType));
 
         log.info("================================检查存证数据格式化《开始》================================");
+
+        register_product_ref = gdEquityCode;
+        transaction_custody_product_ref = gdEquityCode;
+        register_subject_account_ref = "SH" + mapAccAddr.get(address);
 
         Map mapChkKeys = new HashMap();
         mapChkKeys.put("address","");
