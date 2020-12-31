@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.BVT.P1_High;
+package com.tjfintech.common.functionTest.BVT.P2_Middle;
 
 import com.tjfintech.common.functionTest.Conditions.*;
 import com.tjfintech.common.functionTest.Conditions.SetSDKPerm999;

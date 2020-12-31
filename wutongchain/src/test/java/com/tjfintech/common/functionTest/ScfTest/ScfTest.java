@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GoScfTest {
+public class ScfTest {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     UtilsClass utilsClass = new UtilsClass();

@@ -61,8 +61,7 @@ public class UtilsClass {
 
     //zhouxianxian env use start -----------
     public static String ADD = "http://10.1.3.164:7310";
-//    public static String subLedger = ""; // 应用链ID
-    public static String subLedger = "9da17ed4830aee8b3d0727d927809cdb525d66dc6e26cad3ad7b950f8fad3c7b"; // 应用链ID
+    public static String subLedger = "f995cf17401f2f9f13a5f634982d19f6afda560a5d64e410c3fc902682345713"; // 应用链ID
 
     public static String SDKADD = ADD;
     public static String rSDKADD = ADD;
@@ -134,7 +133,8 @@ public class UtilsClass {
 ////    //duyuyang env use end -----------
 
 
-    //    public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";
+    public static Boolean syncFlag = false;
+    public static int syncTimeout = 10;
     public static String testResultPath = "testresult/";
     public static String testDataPath = "testdata/";
     public static String srcShellScriptDir = testDataPath + "/configFiles/shell/";
@@ -145,8 +145,6 @@ public class UtilsClass {
     public static String globalResponse = "";
     public static String globalSSHPort = "";
     public static String peerTLSServerName = "tjfoc.com";
-    public static Boolean syncFlag = false;
-    public static int syncTimeout = 7;
     public static String wvmVersion = "";
 
     public static String ipv4 = "/ip4/";
