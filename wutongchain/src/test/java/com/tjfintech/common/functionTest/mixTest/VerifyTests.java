@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.mixTest;
 
+import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
 
+import static com.tjfintech.common.utils.UtilsClass.destShellScriptDir;
 import static com.tjfintech.common.utils.UtilsClass.subLedger;
 import static org.junit.Assert.assertEquals;
 
@@ -20,7 +22,7 @@ public class VerifyTests {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
-
+    CommonFunc commonFunc = new CommonFunc();
 
     /**
      计算链上TPS
@@ -175,6 +177,16 @@ public class VerifyTests {
         assertEquals("同一区块中有重复交易", 0, count2);
 
     }
+
+    /**
+     跨链交易验证
+     */
+    @Test
+    public void VerifyBlocksAndTransactions() throws Exception {
+        commonFunc.verifyBlockAndTransaction(destShellScriptDir);
+    }
+
+
 
     //根据区块高度获取区块中的交易列表
     public String[] getTxsArray(int i) {

@@ -60,8 +60,10 @@ public class UtilsClass {
 //    public static String sLatestLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.2\\";
 
     //zhouxianxian env use start -----------
-    public static String ADD = "http://10.1.3.164:7010";
-//    public static String ADD = "http://121.229.39.12:8060";
+    public static String ADD = "http://10.1.3.164:7310";
+//    public static String subLedger = ""; // 应用链ID
+    public static String subLedger = "9da17ed4830aee8b3d0727d927809cdb525d66dc6e26cad3ad7b950f8fad3c7b"; // 应用链ID
+
     public static String SDKADD = ADD;
     public static String rSDKADD = ADD;
     public static String TOKENADD = ADD;
@@ -69,7 +71,7 @@ public class UtilsClass {
     //设置测试环境使用的节点端口及部署目录信息
     public static String PEER1IP = "10.1.3.162";
     public static String PEER2IP = "10.1.3.163";
-    public static String PEER3IP = "10.1.3.161";
+    public static String PEER3IP = "10.1.5.161";
     public static String PEER4IP = "10.1.3.164";
     public static String PEER1RPCPort = "9300";
     public static String PEER2RPCPort = "9300";
@@ -140,7 +142,6 @@ public class UtilsClass {
     public static String tempWVMDir = testDataPath + "WVM/";
 
     public static String certPath = "cert/" + "SM2"; // 设置签名证书类型，可选值SM2(默认值)，ECDSA，MIX1，MIX2，RSA
-    public static String subLedger = ""; // 修改接口兼容主子链
     public static String globalResponse = "";
     public static String globalSSHPort = "";
     public static String peerTLSServerName = "tjfoc.com";

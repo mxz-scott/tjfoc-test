@@ -48,6 +48,7 @@ public class WVMContractTest {
 
     /***
      * 跨合约调用
+     * 本用例会失败，需要手动操作。
      * @throws Exception
      */
     @Test
@@ -77,6 +78,11 @@ public class WVMContractTest {
 
                 commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        //需要在管理系统上手动操作
+        //给第一个合约的initAccount方法添加第二个合约名，赋予其调用权限。
+        ctHash = "b59a11c33695cfec53d287b0b7c5e7cae45049234baea662267cc8df31554274"; //合约一，根据运行结果修改
+        ctHash2 = "f92be9e2f23b82994d6556fa423554b4c809a8bb94343790d885aa0a42115420"; //合约二，根据运行结果修改
 
         //跨合约调用合约内的正确的方法 initAccount方法
         String response3 = invokeNew(ctHash2,"CrossInitAccount",
