@@ -1492,7 +1492,7 @@ public class CommonFunc {
     public void verifyBlockAndTransaction(String toolPath)throws Exception{
 
         String result = shExeAndReturn(utilsClass.getIPFromStr(SDKADD),
-                "cd " + toolPath + ";./verifyBlockTX su -p " + SDKADD);
+                "cd " + toolPath + ";./verifyBlockTX su -p " + SDKADD + " -l " + subLedger);
         log.info("区块验证结果 **********************************************************************");
         log.info(result);
         String OKMsg = "successfully";

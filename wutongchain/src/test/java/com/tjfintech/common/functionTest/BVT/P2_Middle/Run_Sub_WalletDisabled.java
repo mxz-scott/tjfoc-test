@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.BVT.P1_High;
+package com.tjfintech.common.functionTest.BVT.P2_Middle;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.*;

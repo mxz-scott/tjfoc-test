@@ -1,9 +1,5 @@
 package com.tjfintech.common.functionTest.BVT.P2_Middle;
 
-import com.tjfintech.common.functionTest.BVT.P1_High.Run_Main_Mysql;
-import com.tjfintech.common.functionTest.BVT.P1_High.Run_Sub_Mysql;
-import com.tjfintech.common.functionTest.Conditions.SetSubLedgerSleepTime;
-import com.tjfintech.common.functionTest.mixTestWithConfigChange.AddPeerAndSyncData;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
