@@ -9,8 +9,8 @@ import java.util.Map;
 public class UtilsClassKMS {
     public static String keySpecSm4 = "sm4";
     public static String keySpecSm2 = "sm2";
-    public static String KMSADD = "http://10.1.3.164:6080";
-//    public static String KMSADD = "http://10.1.5.223:8881";
+//    public static String KMSADD = "http://10.1.3.164:6080";
+    public static String KMSADD = "http://117.62.22.95:8001";
     public static String password = "123";
     public static String oldPwd = "Pass7899";
     public static String newPwd = "Pass4321";

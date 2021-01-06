@@ -56,7 +56,7 @@ public class ScfBeforeCondition {
      *
      *
      */
-    //@Test
+//    @Test
     public void B001_createPlatformAccount() throws  Exception {
 
         String response = kms.createKey(keySpecSm2, password, pubFormatSM2);
@@ -77,7 +77,7 @@ public class ScfBeforeCondition {
      *
      *
      */
-    //@Test
+//    @Test
     public void B002_createCoreCompanyAccount() throws  Exception {
 
         String commmets = utilsClassScf.generateMessage();
@@ -99,7 +99,7 @@ public class ScfBeforeCondition {
      *
      *
      */
-    //@Test
+//    @Test
     public void B003_installContracts() throws  Exception {
 
         //安装账户合约
@@ -157,7 +157,7 @@ public class ScfBeforeCondition {
      *
      *
      */
-    //@Test
+//    @Test
     public void B004_createSupplyAccounts() throws  Exception {
 
 //        String commmets = utilsClassScf.generateMessage();

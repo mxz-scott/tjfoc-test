@@ -10,8 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.utils.UtilsClass.SDKADD;
-import static com.tjfintech.common.utils.UtilsClass.subLedger;
+import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassScf.*;
 
 @Slf4j
@@ -30,9 +29,10 @@ public class GoScf implements Scf {
         map.put("comments", comments);
 
         String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
+        if(subLedger!="") param = param +"ledger="+subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/account/create" + param, map);
+        String result = PostTest.postMethod(SDKADD + "/scf/account/create?" + param, map);
         log.info(result);
         return result;
     }
@@ -64,9 +64,10 @@ public class GoScf implements Scf {
         map.put("amount", amount);
 
         String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
+        if(subLedger!="") param = param +"ledger="+subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/issuing/apply", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/issuing/apply?" + param, map);
         log.info(result);
         return result;
     }
@@ -86,9 +87,10 @@ public class GoScf implements Scf {
         map.put("PIN", platformPIN);
 
         String param="";
-        if (subLedger!="") param = param +"ledger"+subLedger;
+        if (subLedger!="") param = param +"ledger="+subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/issuing/approve", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/issuing/approve?" + param, map);
         log.info(result);
         return result;
     }
@@ -113,9 +115,10 @@ public class GoScf implements Scf {
 
 
         String param="";
-        if (subLedger!="") param = param +"ledger"+subLedger;
+        if (subLedger!="") param = param +"ledger="+subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/issuing/cancel", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/issuing/cancel?" + param, map);
         log.info(result);
         return result;
     }
@@ -137,9 +140,10 @@ public class GoScf implements Scf {
         map.put("comments", comments);
 
         String param="";
-        if (subLedger!="") param = param +"ledger"+subLedger;
+        if (subLedger!="") param = param +"ledger="+subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/issuing/confirm", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/issuing/confirm?" + param, map);
         log.info(result);
         return result;
     }
@@ -163,9 +167,9 @@ public class GoScf implements Scf {
         map.put("comments", comments);
 
         String param="";
-        if (subLedger!="") param = param +"ledger"+subLedger;
+        if (subLedger!="") param = param +"ledger="+subLedger;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/issuing/reject", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/issuing/reject?" + param, map);
         log.info(result);
         return result;
     }
@@ -185,9 +189,9 @@ public class GoScf implements Scf {
         map.put("msgdata", msgdata);
 
         String param="";
-        if (subLedger!="") param = param +"ledger"+subLedger;
+        if (subLedger!="") param = param +"ledger="+subLedger;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/func/sendmsg", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/func/sendmsg?" + param, map);
         log.info(result);
         return result;
     }
@@ -203,9 +207,9 @@ public class GoScf implements Scf {
         map.put("tokentype", tokentype);
 
         String param="";
-        if (subLedger!="") param = param +"ledger"+subLedger;
+        if (subLedger!="") param = param +"ledger="+subLedger;
 
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/getowneraddr", map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/stoken/getowneraddr?" + param, map);
         log.info(result);
         return result;
     }
@@ -237,9 +241,10 @@ public class GoScf implements Scf {
         map.put("comments",comments);
 
         String param="";
-        if (subLedger!="") param = param +"ledger"+subLedger;
+        if (subLedger!="") param = param +"ledger="+subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/assignment/apply", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/assignment/apply?" + param, map);
         log.info(result);
         return result;
     }
@@ -263,9 +268,10 @@ public class GoScf implements Scf {
         map.put("comments",comments);
 
         String param="";
-        if (subLedger!="") param = param +"ledger"+subLedger;
+        if (subLedger!="") param = param +"ledger="+subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/assignment/confirm", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/assignment/confirm?" + param, map);
         log.info(result);
         return result;
     }
@@ -285,9 +291,9 @@ public class GoScf implements Scf {
         map.put("comments", comments);
 
         String param = "";
-        if (subLedger != "") param = param + "ledger" + subLedger;
+        if (subLedger != "") param = param + "ledger=" + subLedger;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/assignment/reject", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/assignment/reject?" + param, map);
         log.info(result);
         return result;
     }
@@ -307,9 +313,10 @@ public class GoScf implements Scf {
         map.put("amount", amount);
 
         String param = "";
-        if (subLedger != "") param = param + "&ledger=" + subLedger;
+        if (subLedger != "") param = param + "ledger=" + subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/credit/adjust", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/credit/adjust?" + param, map);
         log.info(result);
         return result;
     }
@@ -328,9 +335,10 @@ public class GoScf implements Scf {
         map.put("subType", subType);
 
         String param = "";
-        if (subLedger != "") param = param + "&ledger=" + subLedger;
+        if (subLedger != "") param = param + "ledger=" + subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/func/getoutputinfo", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/func/getoutputinfo?" + param, map);
         log.info(result);
         return result;
     }
@@ -353,9 +361,10 @@ public class GoScf implements Scf {
         map.put("toAddress",supplyAddress2);
 
         String param="";
-        if (subLedger!="") param = param +"ledger"+subLedger;
+        if (subLedger!="") param = param +"ledger="+subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/finacing/apply", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/finacing/apply?" + param, map);
         log.info(result);
         return result;
     }
@@ -371,9 +380,10 @@ public class GoScf implements Scf {
         map.put("timeLimit",timeLimit);
 
         String param="";
-        if (subLedger!="") param = param +"ledger"+subLedger;
+        if (subLedger!="") param = param +"ledger="+subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/finacing/test", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/finacing/test?" + param, map);
         log.info(result);
         return result;
     }
@@ -390,9 +400,9 @@ public class GoScf implements Scf {
         map.put("comments",comments);
 
         String param="";
-        if (subLedger!="") param = param +"ledger"+subLedger;
+        if (subLedger!="") param = param +"ledger="+subLedger;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/finacing/feedback", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/finacing/feedback?" + param, map);
         log.info(result);
         return result;
     }
@@ -414,9 +424,10 @@ public class GoScf implements Scf {
         map.put("comments",comments);
 
         String param="";
-        if (subLedger!="") param = param +"ledger"+subLedger;
+        if (subLedger!="") param = param +"ledger="+subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/finacing/confirm", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/finacing/confirm?" + param, map);
         log.info(result);
         return result;
     }
@@ -432,9 +443,9 @@ public class GoScf implements Scf {
         map.put("comments",comments);
 
         String param="";
-        if (subLedger!="") param = param +"ledger"+subLedger;
+        if (subLedger!="") param = param +"ledger="+subLedger;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/finacing/cancel", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/finacing/cancel?" + param, map);
         log.info(result);
         return result;
     }
@@ -449,9 +460,10 @@ public class GoScf implements Scf {
         map.put("companyID",companyID1);
 
         String param="";
-        if (subLedger!="") param = param +"ledger"+subLedger;
+        if (subLedger!="") param = param +"ledger="+subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/paying/apply", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/paying/apply?" + param, map);
         log.info(result);
         return result;
     }
@@ -466,9 +478,9 @@ public class GoScf implements Scf {
         map.put("message",message);
 
         String param="";
-        if (subLedger!="") param = param +"ledger"+subLedger;
+        if (subLedger!="") param = param +"ledger="+subLedger;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/paying/notify", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/paying/notify?" + param, map);
         log.info(result);
         return result;
     }
@@ -485,9 +497,10 @@ public class GoScf implements Scf {
         map.put("comments",comments);
 
         String param="";
-        if (subLedger!="") param = param +"ledger"+subLedger;
+        if (subLedger!="") param = param +"ledger="+subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/paying/feedback", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/paying/feedback?" + param, map);
         log.info(result);
         return result;
     }
@@ -506,9 +519,10 @@ public class GoScf implements Scf {
         map.put("comments",comments);
 
         String param="";
-        if (subLedger!="") param = param +"ledger"+subLedger;
+        if (subLedger!="") param = param +"ledger="+subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/paying/confirm", map);
+        String result = PostTest.postMethod(SDKADD + "/scf/paying/confirm?" + param, map);
         log.info(result);
         return result;
     }
