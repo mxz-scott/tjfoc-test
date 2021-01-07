@@ -12,7 +12,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-//import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
+//import static com.tjfintech.common.functionTest.store.StoreTest.SHORTMEOUT;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +34,7 @@ public class StoreInvalidTest {
     public static void beforeConfig() throws Exception {
         BeforeCondition bf = new BeforeCondition();
         bf.updatePubPriKey();
-        Thread.sleep(SLEEPTIME/2);
+        Thread.sleep(SHORTMEOUT/2);
     }
     /**
      * 创建存证交易
@@ -52,7 +52,7 @@ public class StoreInvalidTest {
         privacyhash = JSONObject.fromObject(createstore).getString("data");
         log.info("获取隐私存证交易hash: "+privacyhash);
 
-        Thread.sleep(SLEEPTIME);
+        Thread.sleep(SHORTMEOUT);
     }
 
     /**

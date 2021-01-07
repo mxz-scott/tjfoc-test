@@ -61,7 +61,7 @@ public class UtilsClass {
 
     //zhouxianxian env use start -----------
     public static String ADD = "http://10.1.3.164:7310";
-    public static String subLedger = "f995cf17401f2f9f13a5f634982d19f6afda560a5d64e410c3fc902682345713"; // 应用链ID
+    public static String subLedger = "d933pcknga"; // 应用链ID
 
     public static String SDKADD = ADD;
     public static String rSDKADD = ADD;
@@ -151,9 +151,9 @@ public class UtilsClass {
     public static String tcpProtocol = "/tcp/";
 
     public static Integer  LONGTIMEOUT = 100000;//毫秒
-    public static Integer  SHORTMEOUT = 3000;//毫秒
+    public static Integer  SHORTMEOUT = 3*1000;//毫秒
     public static Integer  UTXOSHORTMEOUT = 4 * 1000;//毫秒
-    public static int  SLEEPTIME = 7*1000;
+    public static int  SLEEPTIME = 10*1000;
     public static int DBSyncTime = 3*1000;
     public static int worldStateUpdTime = 1500;
 

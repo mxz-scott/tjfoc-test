@@ -42,7 +42,7 @@ public class smtMultiTest {
      * 多签正常流程-发币：签名：查询：转账：查询:回收：查询
      */
     @Test
-    public void TC03_multiProgress() throws Exception {
+    public void TC001_multiProgress() throws Exception {
 
         //发行
         tokenType = stc.beforeConfigIssueNewToken("1000.25");
@@ -88,7 +88,7 @@ public class smtMultiTest {
      * 资产类型转换
      */
     @Test
-    public void TC_exchange() throws Exception {
+    public void TC002_exchange() throws Exception {
 
         //发行
         tokenType = stc.beforeConfigIssueNewToken("200");
@@ -114,7 +114,7 @@ public class smtMultiTest {
      * 连续向单签和多签地址转让2次
      */
     @Test
-    public void TC_transferSoloMulti() throws Exception {
+    public void TC003_transferSoloMulti() throws Exception {
 
         //发行
         tokenType = stc.beforeConfigIssueNewToken("200");
@@ -153,7 +153,7 @@ public class smtMultiTest {
 
     @Test
 
-    public void TC_MAXleveltransfer() throws Exception {
+    public void TC004_MAXleveltransfer() throws Exception {
         tokenType = "TB_" + UtilsClass.Random(10);
 
 
@@ -209,59 +209,14 @@ public class smtMultiTest {
 
     }
 
-    /**
-     * 过期资产转让
-     */
-    @Test
-    public void TC_expiredtransfer() throws Exception {
 
-        tokenType = "TB_" + UtilsClass.Random(10);
-        double timeStampNow = System.currentTimeMillis();
-        BigDecimal expiredDate = new BigDecimal(timeStampNow + 60000);
-        BigDecimal activeDate = new BigDecimal(timeStampNow);
-        String contractAddress = smartAccoutContractAddress;
-
-        List<Map> toList = stc.smartConstructTokenList(ADDRESS1, "test", "10.15", null);
-
-        //发行申请
-        String IssueApplyResp9 = st.SmartIssueTokenReq(contractAddress, tokenType, expiredDate, toList, activeDate, true, 0, "");
-        String sigMsg1 = JSONObject.fromObject(IssueApplyResp9).getJSONObject("data").getString("sigMsg");
-        //发行审核
-        String tempSM3Hash = certTool.getSm3Hash(PEER4IP, sigMsg1);
-        String cryptMsg = certTool.sign(PEER4IP, PRIKEY1, "", tempSM3Hash, "hex");
-        String approveResp = st.SmartIssueTokenApprove(sigMsg1, cryptMsg, PUBKEY1);
-        assertEquals("200", JSONObject.fromObject(approveResp).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(approveResp, utilsClass.sdkGetTxHashType21),
-                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-        // 第一次发行查询账户余额
-        log.info("查询发行的账户余额");
-        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "10.15");
-
-        Thread.sleep(180000);//3分钟
-
-        //转让【应该转让不成功】
-        String transferData = "ADDRESS1 向 MULITADD4 转账10个" + tokenType;
-        List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", "10", null);
-        List<Map> collList = stc.smartConstructTokenList(MULITADD4, "test", "10", null);
-
-        String transferResp = stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
-
-        assertEquals("200", JSONObject.fromObject(transferResp).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType, SLEEPTIME);
-
-        log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
-        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "10.15");
-        stc.verifyAddressNoBalance(MULITADD4, tokenType);
-
-    }
 
     /**
      * 增发资产
      */
 
     @Test
-    public void TC_reissedTruetest() throws Exception {
+    public void TC005_reissedTruetest() throws Exception {
 
         String tokenType = "TB_" + UtilsClass.Random(10);
         double timeStampNow = System.currentTimeMillis();
@@ -303,7 +258,7 @@ public class smtMultiTest {
      * 发行 - 冻结 - 转让 - 解冻 - 回收
      */
     @Test
-    public void TC_recovertransfer() throws Exception {
+    public void TC006_recovertransfer() throws Exception {
 
         String transferData = "ADDRESS1 向 MULITADD4 转账10个" + tokenType;
         List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", "10", null);
@@ -367,7 +322,7 @@ public class smtMultiTest {
      * 发行 - 冻结 - 部分回收 - 转换 -解冻 -转换[验证点：冻结后可回收/冻结后不可转换/解冻后可转换]
      */
     @Test
-    public void TC_freezeDestroy() throws Exception {
+    public void TC007_freezeDestroy() throws Exception {
 
         // 发行
         tokenType = stc.beforeConfigIssueNewToken("100.75");
@@ -427,7 +382,7 @@ public class smtMultiTest {
      * 单签回收、多签回收、单多签同时回收、冻结后回收
      */
     @Test
-    public void TC_destroySoloMulti() throws Exception {
+    public void TC008_destroySoloMulti() throws Exception {
 
         //发行
         tokenType = stc.beforeConfigIssueNewToken("200");
@@ -510,7 +465,7 @@ public class smtMultiTest {
      * 多签正常流程-发币：签名：查询：转账：查询:回收：查询
      */
     @Test
-    public void TC_smtProgressVerifyTest() throws Exception {
+    public void TC009_smtProgressVerifyTest() throws Exception {
 
         tokenType = utilsClass.Random(8);
         String newTokenType = "NEW" + utilsClass.Random(8);
@@ -586,6 +541,53 @@ public class smtMultiTest {
         commonFunc.verifyTxDetailField(responseHash,"smt_exchange","1","1","13");
         commonFunc.verifyTxRawField(responseHash, "1","1","13");
         commonFunc.verifyRawFieldMatch(responseHash);
+
+    }
+
+    /**
+     * 过期资产转让
+     */
+    @Test
+    public void TC010_expiredtransfer() throws Exception {
+
+        tokenType = "TB_" + UtilsClass.Random(10);
+        double timeStampNow = System.currentTimeMillis();
+        BigDecimal expiredDate = new BigDecimal(timeStampNow + 60000);
+        BigDecimal activeDate = new BigDecimal(timeStampNow);
+        String contractAddress = smartAccoutContractAddress;
+
+        List<Map> toList = stc.smartConstructTokenList(ADDRESS1, "test", "10.15", null);
+
+        //发行申请
+        String IssueApplyResp9 = st.SmartIssueTokenReq(contractAddress, tokenType, expiredDate, toList, activeDate, true, 0, "");
+        String sigMsg1 = JSONObject.fromObject(IssueApplyResp9).getJSONObject("data").getString("sigMsg");
+        //发行审核
+        String tempSM3Hash = certTool.getSm3Hash(PEER4IP, sigMsg1);
+        String cryptMsg = certTool.sign(PEER4IP, PRIKEY1, "", tempSM3Hash, "hex");
+        String approveResp = st.SmartIssueTokenApprove(sigMsg1, cryptMsg, PUBKEY1);
+        assertEquals("200", JSONObject.fromObject(approveResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(approveResp, utilsClass.sdkGetTxHashType21),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        // 第一次发行查询账户余额
+        log.info("查询发行的账户余额");
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "10.15");
+
+        Thread.sleep(180000);//3分钟
+
+        //转让【应该转让不成功】
+        String transferData = "ADDRESS1 向 MULITADD4 转账10个" + tokenType;
+        List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", "10", null);
+        List<Map> collList = stc.smartConstructTokenList(MULITADD4, "test", "10", null);
+
+        String transferResp = stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
+
+        assertEquals("200", JSONObject.fromObject(transferResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType, SLEEPTIME);
+
+        log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "10.15");
+        stc.verifyAddressNoBalance(MULITADD4, tokenType);
 
     }
 

@@ -5,6 +5,7 @@ import com.tjfintech.common.functionTest.Conditions.SetCertSM2;
 import com.tjfintech.common.functionTest.Conditions.SetURLToSDKAddr;
 import com.tjfintech.common.functionTest.mixTest.VerifyTests;
 import com.tjfintech.common.functionTest.smartTokenTest.smtInterfaceTest;
+import com.tjfintech.common.functionTest.smartTokenTest.smtMultiInvalidTest;
 import com.tjfintech.common.functionTest.smartTokenTest.smtMultiTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -20,8 +21,7 @@ import org.junit.runners.Suite;
 
         smtInterfaceTest.class,
         smtMultiTest.class,
-        smtMultiTest.class,
-
+        smtMultiInvalidTest.class,
         VerifyTests.class,
 
 })

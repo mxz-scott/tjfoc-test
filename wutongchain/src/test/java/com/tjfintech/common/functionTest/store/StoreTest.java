@@ -42,7 +42,7 @@ public class StoreTest {
         JSONObject.fromObject(response).getInt("state");
         JSONObject.fromObject(response).getString("message");
 
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         assertThat(response, containsString("200"));
         assertThat(response, containsString("success"));
@@ -62,7 +62,7 @@ public class StoreTest {
         JSONObject jsonObject=JSONObject.fromObject(response);
         String  storeHash = jsonObject.getString("data");
 
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         String response2= store.GetTxDetail(storeHash);
         assertThat(response2, containsString("200"));
@@ -106,7 +106,7 @@ public class StoreTest {
         String response= store.CreateStore(Data);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         assertThat(response, containsString("200"));
         assertThat(response,containsString("data"));
@@ -183,7 +183,7 @@ public class StoreTest {
 
         assertEquals(response3,globalResponse);
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         //确认交易上链
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(
@@ -204,7 +204,7 @@ public class StoreTest {
        }
        //确认最后一个存证上链
        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-               utilsClass.sdkGetTxDetailType,SLEEPTIME);
+               utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
        for(int i=0;i<list.size();i++){
            assertThat(list.get(i), containsString("200"));
@@ -228,7 +228,7 @@ public class StoreTest {
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getString("data");
 
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         commonFunc.verifyTxDetailField(storeHash,"store", "0", "0", "0");
         commonFunc.verifyTxRawField(storeHash, "0", "0", "0");
@@ -243,7 +243,7 @@ public class StoreTest {
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getString("data");
 
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         commonFunc.verifyTxRawField(storeHash, "0", "0", "0");
         commonFunc.verifyRawFieldMatch(storeHash);
@@ -260,7 +260,7 @@ public class StoreTest {
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getString("data");
 
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         String response2= store.GetTransactionIndex(storeHash);
         JSONObject.fromObject(response2).getInt("state");
@@ -343,7 +343,7 @@ public class StoreTest {
         JSONObject jsonObject=JSONObject.fromObject(response);
         String storeHash = jsonObject.getString("data");
 
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         String response2=store.GetTransactionBlock(storeHash);
         log.info(response2);

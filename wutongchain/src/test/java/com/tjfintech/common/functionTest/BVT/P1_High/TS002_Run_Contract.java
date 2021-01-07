@@ -28,7 +28,7 @@ import org.junit.runners.Suite;
         WVMContractTest.class,
         WVMContractInvalidTest.class,
 
-        VerifyTests.class,
+//        VerifyTests.class,
 
 })
 

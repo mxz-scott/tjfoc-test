@@ -56,7 +56,7 @@ public class PrivateStoreTest {
         JSONObject.fromObject(response1).getInt("state");
         JSONObject.fromObject(response1).getString("message");
 
-        commonFunc.sdkCheckTxOrSleep(StoreHashPwd,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(StoreHashPwd,utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         String response2= store.GetStorePost(StoreHashPwd,PRIKEY1);
         assertThat(response2, containsString("200"));
@@ -99,7 +99,7 @@ public class PrivateStoreTest {
         JSONObject jsonObject=JSONObject.fromObject(response1);
         String StoreHashPwd = jsonObject.getString("data");
 
-        commonFunc.sdkCheckTxOrSleep(StoreHashPwd,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(StoreHashPwd,utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         assertThat(response1, containsString("200"));
         assertThat(response1,containsString("data"));
@@ -127,8 +127,8 @@ public class PrivateStoreTest {
         String storeHash = jsonObject.getString("data");
         String storeHash2 = jsonObject2.getString("data");
 
-        commonFunc.sdkCheckTxOrSleep(storeHash2,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(storeHash2,utilsClass.sdkGetTxDetailType,SHORTMEOUT);
+        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         String response5 = store.GetStorePostPwd(storeHash,PRIKEY6,PWD6);
         String response6 = store.GetStorePost(storeHash2,PRIKEY1);
@@ -154,7 +154,7 @@ public class PrivateStoreTest {
         String response= store.CreatePrivateStore(Data,map);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         JSONObject jsonObject=JSONObject.fromObject(response);
         String hash = jsonObject.getString("data");
@@ -172,7 +172,7 @@ public class PrivateStoreTest {
         JSONObject.fromObject(res1).getString("message");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         assertThat(res1,containsString("200"));
         assertThat(res1,containsString("success"));
@@ -187,7 +187,7 @@ public class PrivateStoreTest {
         String res2 = store.StoreAuthorize(hash, map, PRIKEY1,"");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
 
         assertThat(res2,containsString("200"));
@@ -213,7 +213,7 @@ public class PrivateStoreTest {
         String response= store.CreatePrivateStore(Data,map);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         JSONObject jsonObject=JSONObject.fromObject(response);
         String hash = jsonObject.getString("data");
@@ -228,7 +228,7 @@ public class PrivateStoreTest {
         String res1 = store.StoreAuthorize(hash, map, PRIKEY7,PWD7);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         assertThat(res1,containsString("200"));
         assertThat(res1,containsString("success"));
@@ -243,7 +243,7 @@ public class PrivateStoreTest {
         String res2 = store.StoreAuthorize(hash, map, PRIKEY7,PWD7);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
 
         assertThat(res2,containsString("200"));
@@ -265,7 +265,7 @@ public class PrivateStoreTest {
         String response= store.CreatePrivateStore(Data,map);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         JSONObject jsonObject=JSONObject.fromObject(response);
         String hash = jsonObject.getString("data");
@@ -280,7 +280,7 @@ public class PrivateStoreTest {
         String res2 = store.StoreAuthorize(hash, map, PRIKEY7,PWD7);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         assertThat(res2,containsString("200"));
         assertThat(res2,containsString("success"));
@@ -330,7 +330,7 @@ public class PrivateStoreTest {
         String response= store.CreatePrivateStore(Data,map);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -353,7 +353,7 @@ public class PrivateStoreTest {
         map.put("pubKeys",PUBKEY4);
         String res1 = store.StoreAuthorize(hash, map, PRIKEY1,"");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         assertThat(res1,containsString("200"));
         assertThat(res1,containsString("success"));
@@ -367,7 +367,7 @@ public class PrivateStoreTest {
         String res2 = store.StoreAuthorize(hash, map, PRIKEY2,""); //只有第一个私钥可以授权
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         assertThat(res2,containsString("500"));
         assertThat(res2,containsString("private key is not tx owner"));
@@ -377,7 +377,7 @@ public class PrivateStoreTest {
         res2 = store.StoreAuthorize(hash, map, PRIKEY3,"");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         assertThat(res2,containsString("500"));
         assertThat(res2,containsString("private key is not tx owner")); //只有第一个私钥可以授权
@@ -395,7 +395,7 @@ public class PrivateStoreTest {
         String response= store.CreatePrivateStore(Data,map);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         JSONObject jsonObject=JSONObject.fromObject(response);
         String hash = jsonObject.getString("data");
@@ -414,7 +414,7 @@ public class PrivateStoreTest {
         String res2 = store.StoreAuthorize(hash, map, PRIKEY6, PWD6);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         assertThat(res2,containsString("200"));
         assertThat(res2,containsString("success"));
@@ -443,7 +443,7 @@ public class PrivateStoreTest {
         String response= store.CreatePrivateStore(Data,map);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         JSONObject jsonObject=JSONObject.fromObject(response);
         String hash = jsonObject.getString("data");
@@ -457,7 +457,7 @@ public class PrivateStoreTest {
         String res2 = store.StoreAuthorize(hash, map, PRIKEY6, PWD6);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         assertThat(res2,containsString("200"));
         assertThat(res2,containsString("success"));
@@ -489,7 +489,7 @@ public class PrivateStoreTest {
         String response= store.CreatePrivateStore(Data,map);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         JSONObject jsonObject=JSONObject.fromObject(response);
         String hash = jsonObject.getString("data");
@@ -505,7 +505,7 @@ public class PrivateStoreTest {
         String res1 = store.StoreAuthorize(hash, map, PRIKEY6,PWD6);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         assertThat(res1,containsString("200"));
         assertThat(res1,containsString("success"));
@@ -541,7 +541,7 @@ public class PrivateStoreTest {
         String response= store.CreatePrivateStore(Data,map);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         JSONObject jsonObject=JSONObject.fromObject(response);
         String hash = jsonObject.getString("data");
@@ -557,7 +557,7 @@ public class PrivateStoreTest {
         String res1 = store.StoreAuthorize(hash, map, PRIKEY1,"");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         assertThat(res1,containsString("200"));
         assertThat(res1,containsString("success"));

@@ -81,14 +81,14 @@ public class BeforeCondition {
      */
     @Test
     public void SetPermAndInit() throws Exception {
-        setPermission999();
+//        setPermission999();
         SDKADD = rSDKADD;
         updatePubPriKey();//从文件中根据配置certPath读取指定类型的公私钥对
-        collAddressTest();//添加归集地址发行地址
+//        collAddressTest();//添加归集地址发行地址
 
         SDKADD = TOKENADD;
-        createTokenAccount();
-        tokenAddIssueCollAddr();
+//        createTokenAccount();
+//        tokenAddIssueCollAddr();
     }
 
     @AfterClass

@@ -53,7 +53,7 @@ public class NoPriPrivateStoreTest {
         JSONObject jsonObject=JSONObject.fromObject(response1);
         String StoreHashPwd = jsonObject.get("data").toString();
 
-        commonFunc.sdkCheckTxOrSleep(StoreHashPwd,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(StoreHashPwd,utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         //使用不带密码私钥获取隐私存证
         String response2= priStore.GetPrivacyStore(StoreHashPwd,PUBKEY1);
@@ -101,7 +101,7 @@ public class NoPriPrivateStoreTest {
         String response= store.CreatePrivateStore(Data,map);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
         JSONObject jsonObject=JSONObject.fromObject(response);
         String hash = jsonObject.get("data").toString();
@@ -165,7 +165,7 @@ public class NoPriPrivateStoreTest {
         assertThat(res1,containsString("success"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType01),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
 
     }
