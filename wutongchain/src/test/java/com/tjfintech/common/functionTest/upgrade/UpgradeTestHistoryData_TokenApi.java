@@ -36,6 +36,12 @@ public class UpgradeTestHistoryData_TokenApi {
 
     ArrayList<String> txHashList = new ArrayList<>();
     Map<String, String> txTypeSubType = new HashMap<>();
+    String storeHash = "";
+    String priStoreHash = "";
+    String contractHash = "";
+
+
+
 
 
     @Test
@@ -74,7 +80,7 @@ public class UpgradeTestHistoryData_TokenApi {
                 diffRespList.add(afterUpgrade.get(key));
             }
         }
-        String diffSaveFile = testResultPath + "compare/" + "diff.txt";
+        String diffSaveFile = resourcePath + "diff.txt";
         File diff = new File(diffSaveFile);
         if(diff.exists()) diff.delete();//如果存在则先删除
 
@@ -124,10 +130,10 @@ public class UpgradeTestHistoryData_TokenApi {
             mapTXHashResp.put(txList.get(k),response);//将所有交易hash及根据交易hash查询的txdetail存储
 
             log.info("tx detail ");
-            JSONObject jsonObject = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header");
+            JSONObject jsonObject = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("Header");
 
-            String txType = jsonObject.getString("type");
-            String txSubType = jsonObject.getString("subType");
+            String txType = jsonObject.getString("Type");
+            String txSubType = jsonObject.getString("SubType");
 
             //仅取首个交易类型hash
             if(storeHash.isEmpty() || priStoreHash.isEmpty()) {
@@ -153,9 +159,9 @@ public class UpgradeTestHistoryData_TokenApi {
         SDKADD = rSDKADD;//通过sdk获取所有交易hash
         ArrayList<String> txHashList = new ArrayList<>();
         if (!subLedger.isEmpty()) sleepAndSaveInfo(SLEEPTIME,"start waiting...");
-        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
+        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("Data"));
         for(int i= blockHeight;i>0;i--){
-            JSONArray blockTxArr = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("data").getJSONArray("txs");
+            JSONArray blockTxArr = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("Data").getJSONArray("txs");
             for(int k = 0; k < blockTxArr.size(); k++){
                 txHashList.add(blockTxArr.getString(k));
             }

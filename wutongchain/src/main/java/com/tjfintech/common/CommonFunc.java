@@ -756,7 +756,17 @@ public class CommonFunc {
         shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+2) + "iTLSServerName = \"" + PeerTLSServerName + "\"' " + SDKConfigPath);
     }
 
+    public void setSDKApiCallbackDecrypt(String SDKApiIP ,String Decrypt)throws Exception{
+        setSDKApiConfigValueByShell(SDKApiIP,"CallBack","Decrypt","\"\\\""+ Decrypt + "\"\\\"");
+        assertEquals(true,getTokenApiConfigValueByShell(SDKApiIP,"CallBack","Decrypt").trim().contains(Decrypt));
 
+    }
+
+    public void setSDKApiCallbackLLocalId(String SDKApiIP ,String LocalId)throws Exception{
+        setSDKApiConfigValueByShell(SDKApiIP,"CallBack","LocalId","\"\\\""+ LocalId + "\"\\\"");
+        assertEquals(true,getTokenApiConfigValueByShell(SDKApiIP,"CallBack","LocalId").trim().contains(LocalId));
+
+    }
 
 
     //------------------------------------------------------------------------------------------------------

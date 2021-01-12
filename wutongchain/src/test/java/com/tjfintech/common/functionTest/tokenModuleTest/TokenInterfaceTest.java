@@ -6,6 +6,7 @@ import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Token;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
+import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 //import org.junit.Assert;
@@ -16,11 +17,13 @@ import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.core.AnyOf.anyOf;
 import static org.junit.Assert.assertThat;
 
 @Slf4j
@@ -48,6 +51,7 @@ public class TokenInterfaceTest {
         if(tokenMultiAddr1.isEmpty()) {
             BeforeCondition beforeCondition = new BeforeCondition();
             beforeCondition.createTokenAccount();
+            beforeCondition.updatePubPriKey();
             beforeCondition.tokenAddIssueCollAddr();
         }
     }
@@ -87,20 +91,22 @@ public class TokenInterfaceTest {
         //id为已存在id name也是已存在的 T
         createResp = tokenModule.tokenCreateAccount(entityID,"test","","",listTag);
         assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
-        assertEquals(true,createResp.contains("create account failed: entityID [" + entityID + "] exist!"));
+        assertEquals(true,createResp.contains("Error 1062: Duplicate entry '" + entityID + "' for key 'id'"));
 
-        //id为已存在id 字母的lowercase
+        //id为已存在id 字母的lowercase,20200831改为数据库判断键值，id大小写不敏感
         createResp = tokenModule.tokenCreateAccount(entityID.toLowerCase(),"test"+ UtilsClass.Random(6),"","",listTag);
-        assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
+        assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
+        assertEquals(true,createResp.contains("Error 1062: Duplicate entry '" + entityID.toLowerCase() + "' for key 'id'"));
 
         //id为已存在id 字母的uppercase
         createResp = tokenModule.tokenCreateAccount(entityID.toUpperCase(),"test"+ UtilsClass.Random(6),"","",listTag);
-        assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
+        assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
+        assertEquals(true,createResp.contains("Error 1062: Duplicate entry '" + entityID.toUpperCase() + "' for key 'id'"));
 
         //id为已存在id name不存在 T
         createResp = tokenModule.tokenCreateAccount(entityID,"test"+ UtilsClass.Random(6),"","",listTag);
         assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
-        assertEquals(true,createResp.contains("create account failed: entityID [" + entityID + "] exist!"));
+        assertEquals(true,createResp.contains("Error 1062: Duplicate entry '" + entityID + "' for key 'id'"));
 
         //id长度超过上限 33 F 当前提示不合理
         entityID = UtilsClass.Random(33);
@@ -463,6 +469,337 @@ public class TokenInterfaceTest {
     }
 
     @Test
+    public void createMultiAccountByPubkeyInterfaceTest()throws Exception{
+
+        Map<String, Object> pubkeys = new HashMap<>();
+        String name = "createByPub";
+        int minSignatures = 1;
+        String groupID = "testid";//0324移除groupID
+        String comments = "create multi address";
+        ArrayList<String> listTag = new ArrayList<>();//0324移除tag
+
+        log.info("test parameter pubkey");
+        //pubkeys仅有一个且为空
+        String createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
+        assertEquals(true,createResp.contains("n[0](number of addresses) \\u003c minSignature[1]"));
+
+        //pubkeys 一个地址 单签地址
+        pubkeys.put("1",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount1)).getString("data"));
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
+//        assertEquals(true,createResp.contains("Need more than one address"));
+        assertEquals(true,createResp.contains("创建多签地址的公钥个数或者地址个数不能等于"));
+
+
+        //pubkey 为非api数据库地址公钥
+        pubkeys.clear();
+        pubkeys.put("1",PUBKEY1);
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
+//        assertEquals(true,createResp.contains("address["+tokenMultiAddr1+"] not exist!;error:sql: no rows in result set"));
+        assertEquals(true,createResp.contains("创建多签地址的公钥个数或者地址个数不能等于1"));
+
+
+        //addresses 一个地址 单签地址的一部分
+        pubkeys.clear();
+        pubkeys.put("1",PUBKEY1.substring(10));
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
+        assertEquals(true,createResp.contains("创建多签地址的公钥个数或者地址个数不能等于1!"));
+
+
+        //addresses 两个 两个都为空
+        pubkeys.clear();
+        pubkeys.put("1","");
+        pubkeys.put("2","");
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
+        assertEquals(true,createResp.contains("不能传入相同公钥!"));
+
+        //addresses 两个 其中一个为空 一个为单签地址
+        pubkeys.clear();
+        pubkeys.put("1",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount1)).getString("data"));
+        pubkeys.put("2","");
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
+        assertEquals(true,createResp.contains("空字符串不能作为公钥传入!"));
+
+        //addresses 两个 其中一个为空 一个为多签地址
+        pubkeys.clear();
+        pubkeys.put("1",tokenMultiAddr1);
+        pubkeys.put("2","");
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
+        assertEquals(true,createResp.contains("illegal base64 data at input byte 48"));
+
+
+        //addresses 两个 其中一个单签 一个多签
+        pubkeys.clear();
+        pubkeys.put("1",tokenAccount1);
+        pubkeys.put("2",tokenMultiAddr1);
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
+        assertEquals(true,createResp.contains("illegal base64 data at input byte 48"));
+
+        //addresses 两个 地址相同
+        pubkeys.clear();
+        pubkeys.put("1",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount1)).getString("data"));
+        pubkeys.put("2",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount1)).getString("data"));
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
+        assertEquals(true,createResp.contains("不能传入相同公钥!"));
+
+        //addresses 三个 其中一个为空
+        pubkeys.clear();
+        pubkeys.put("1",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount1)).getString("data"));
+        pubkeys.put("2",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount2)).getString("data"));
+        pubkeys.put("3","");
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
+        assertEquals(true,createResp.contains("空字符串不能作为公钥传入!"));
+
+        //addresses 三个 其中一个为空 一个非法
+        pubkeys.clear();
+        pubkeys.put("1",tokenAccount1);
+        pubkeys.put("2",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount2)).getString("data"));
+        pubkeys.put("3","");
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
+        assertEquals(true,createResp.contains("illegal base64 data at input byte 48"));
+
+
+
+        //addresses 三个 其中两个为空
+        pubkeys.clear();
+        pubkeys.put("1",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount1)).getString("data"));
+        pubkeys.put("2","");
+        pubkeys.put("3","");
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
+        assertEquals(true,createResp.contains("不能传入相同公钥!"));
+
+        //addresses 三个 一个非api公钥 两个api单签地址公钥
+        pubkeys.clear();
+        pubkeys.put("1",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount1)).getString("data"));
+        pubkeys.put("2",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount2)).getString("data"));
+        pubkeys.put("3",PUBKEY1);
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
+
+        //addresses 三个 两个相同
+        pubkeys.clear();
+        pubkeys.put("1",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount1)).getString("data"));
+        pubkeys.put("2",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount1)).getString("data"));
+        pubkeys.put("3",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount2)).getString("data"));
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
+        assertEquals(true,createResp.contains("不能传入相同公钥!"));
+
+
+        //addresses 4个
+        pubkeys.clear();
+        pubkeys.put("1",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount1)).getString("data"));
+        pubkeys.put("2",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount2)).getString("data"));
+        pubkeys.put("3",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount3)).getString("data"));
+        pubkeys.put("4",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount4)).getString("data"));
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
+
+        //addresses 7个
+        pubkeys.clear();
+        pubkeys.put("1",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount1)).getString("data"));
+        pubkeys.put("2",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount2)).getString("data"));
+        pubkeys.put("3",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount3)).getString("data"));
+        pubkeys.put("4",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount4)).getString("data"));
+        pubkeys.put("5",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount5)).getString("data"));
+        pubkeys.put("6",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount6)).getString("data"));
+        pubkeys.put("7",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount7)).getString("data"));
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
+
+        //addresses 10个
+        pubkeys.clear();
+        pubkeys.put("1",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount1)).getString("data"));
+        pubkeys.put("2",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount2)).getString("data"));
+        pubkeys.put("3",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount3)).getString("data"));
+        pubkeys.put("4",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount4)).getString("data"));
+        pubkeys.put("5",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount5)).getString("data"));
+        pubkeys.put("6",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount6)).getString("data"));
+        pubkeys.put("7",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount7)).getString("data"));
+        pubkeys.put("8",JSONObject.fromObject(tokenModule.tokenGetPubkey(JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(Random(6),Random(6),Random(6),"",listTag)).getString("data"))).getString("data"));
+        pubkeys.put("9",JSONObject.fromObject(tokenModule.tokenGetPubkey(JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(Random(6),Random(6),Random(6),"",listTag)).getString("data"))).getString("data"));
+        pubkeys.put("10",JSONObject.fromObject(tokenModule.tokenGetPubkey(JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(Random(6),Random(6),Random(6),"",listTag)).getString("data"))).getString("data"));
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
+
+        //addresses 10个 签名11
+        pubkeys.clear();
+        pubkeys.put("1",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount1)).getString("data"));
+        pubkeys.put("2",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount2)).getString("data"));
+        pubkeys.put("3",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount3)).getString("data"));
+        pubkeys.put("4",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount4)).getString("data"));
+        pubkeys.put("5",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount5)).getString("data"));
+        pubkeys.put("6",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount6)).getString("data"));
+        pubkeys.put("7",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount7)).getString("data"));
+        pubkeys.put("8",JSONObject.fromObject(tokenModule.tokenGetPubkey(JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(Random(6),Random(6),Random(6),"",listTag)).getString("data"))).getString("data"));
+        pubkeys.put("9",JSONObject.fromObject(tokenModule.tokenGetPubkey(JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(Random(6),Random(6),Random(6),"",listTag)).getString("data"))).getString("data"));
+        pubkeys.put("10",JSONObject.fromObject(tokenModule.tokenGetPubkey(JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(Random(6),Random(6),Random(6),"",listTag)).getString("data"))).getString("data"));
+
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,11,groupID,comments,listTag);
+        assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
+        assertEquals("公钥个数[10]不能小于最小签名数[11]!",
+                JSONObject.fromObject(createResp).getString("data"));
+
+        //addresses 11个
+        pubkeys.clear();
+        pubkeys.put("1",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount1)).getString("data"));
+        pubkeys.put("2",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount2)).getString("data"));
+        pubkeys.put("3",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount3)).getString("data"));
+        pubkeys.put("4",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount4)).getString("data"));
+        pubkeys.put("5",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount5)).getString("data"));
+        pubkeys.put("6",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount6)).getString("data"));
+        pubkeys.put("7",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount7)).getString("data"));
+        pubkeys.put("8",JSONObject.fromObject(tokenModule.tokenGetPubkey(JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(Random(6),Random(6),Random(6),"",listTag)).getString("data"))).getString("data"));
+        pubkeys.put("9",JSONObject.fromObject(tokenModule.tokenGetPubkey(JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(Random(6),Random(6),Random(6),"",listTag)).getString("data"))).getString("data"));
+        pubkeys.put("10",JSONObject.fromObject(tokenModule.tokenGetPubkey(JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(Random(6),Random(6),Random(6),"",listTag)).getString("data"))).getString("data"));
+
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
+//        assertEquals("parameter length error;  name(len):1-32  addresses(array len):0-10  comments(len):0-128;",
+//                JSONObject.fromObject(createResp).getString("data"));
+
+
+
+        log.info("test parameter name");
+        //name为空
+        name = "";
+        pubkeys.clear();
+        pubkeys.put("1",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount5)).getString("data"));
+        pubkeys.put("2",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount6)).getString("data"));
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
+
+        //name长度超过上限33位
+        name = "_sT0" + Random(29);
+        pubkeys.clear();
+        pubkeys.put("1",JSONObject.fromObject(tokenModule.tokenGetPubkey(JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(Random(6),Random(6),Random(6),"",listTag)).getString("data"))).getString("data"));
+        pubkeys.put("2",JSONObject.fromObject(tokenModule.tokenGetPubkey(JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(Random(6),Random(6),Random(6),"",listTag)).getString("data"))).getString("data"));
+
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
+        assertEquals(true,createResp.contains("parameter length error;  name(len):1-32  addresses(array len):0-10  comments(len):0-128;"));
+
+
+        log.info("test parameter minSignatures");
+        //minSignatures 为0
+        name = Random(6);
+        pubkeys.clear();
+        pubkeys.put("1",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount3)).getString("data"));
+        pubkeys.put("2",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount2)).getString("data"));
+        minSignatures = 0;
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals(true,createResp.contains("minSignature[0] \\u003c 1"));
+
+        //minSignatures超过地址个数
+        pubkeys.clear();
+        pubkeys.put("1",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount3)).getString("data"));
+        pubkeys.put("2",JSONObject.fromObject(tokenModule.tokenGetPubkey(tokenAccount2)).getString("data"));
+        minSignatures = 3;
+        createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys,name,minSignatures,groupID,comments,listTag);
+        assertEquals(true,createResp.contains("公钥个数[2]不能小于最小签名数[3]!"));
+
+
+
+    }
+
+
+    @Test
+    public void createDuplicateMultiAddr01() throws Exception {
+        String testAccout1 = JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(Random(6),Random(6),Random(6),"",null)
+        ).getString("data");
+
+        String testAccout2 = JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(Random(6),Random(6),Random(6),"",null)
+        ).getString("data");
+
+        String pubkey1 = JSONObject.fromObject(tokenModule.tokenGetPubkey(testAccout1)).getString("data");
+        String pubkey2 = JSONObject.fromObject(tokenModule.tokenGetPubkey(testAccout2)).getString("data");
+
+        Map<String, Object> pubkeys = new HashMap<>();
+        Map<String, Object> addresses = new HashMap<>();
+        String name = "testdup";
+        int minSignatures = 1;
+        String groupID = "testdup";//0324移除groupID
+        String comments = "create multi address for dup";
+        ArrayList<String> listTag = new ArrayList<>();//0324移除tag
+        //addresses 三个 包含一个不存在的地址或者未托管的地址
+        addresses.clear();
+        addresses.put("1", testAccout1);
+        addresses.put("2", testAccout2);
+
+        pubkeys.clear();
+        pubkeys.put("1",pubkey1);
+        pubkeys.put("2",pubkey2);
+
+        String createResp = tokenModule.tokenCreateMultiAddr(addresses, name, minSignatures, groupID, comments, listTag);
+        assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
+
+        String createResp2 = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys, name, minSignatures, groupID, comments, listTag);
+        assertEquals("400",JSONObject.fromObject(createResp2).getString("state"));
+        assertEquals(true, createResp2.contains("mul address has been exist"));
+    }
+
+    @Test
+    public void createDuplicateMultiAddr02() throws Exception {
+        String testAccout1 = JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(Random(6),Random(6),Random(6),"",null)
+                ).getString("data");
+
+        String testAccout2 = JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(Random(6),Random(6),Random(6),"",null)
+        ).getString("data");
+
+        String pubkey1 = JSONObject.fromObject(tokenModule.tokenGetPubkey(testAccout1)).getString("data");
+        String pubkey2 = JSONObject.fromObject(tokenModule.tokenGetPubkey(testAccout2)).getString("data");
+
+        Map<String, Object> pubkeys = new HashMap<>();
+        Map<String, Object> addresses = new HashMap<>();
+        String name = "testdup";
+        int minSignatures = 1;
+        String groupID = "testdup";//0324移除groupID
+        String comments = "create multi address for dup";
+        ArrayList<String> listTag = new ArrayList<>();//0324移除tag
+        //addresses 三个 包含一个不存在的地址或者未托管的地址
+        addresses.clear();
+        addresses.put("1", testAccout1);
+        addresses.put("2", testAccout2);
+
+        pubkeys.clear();
+        pubkeys.put("1",pubkey1);
+        pubkeys.put("2",pubkey2);
+
+        String createResp = tokenModule.tokenCreateMultiAddrByPubkeys(pubkeys, name, minSignatures, groupID, comments, listTag);
+        assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
+
+        String createResp2 = tokenModule.tokenCreateMultiAddr(addresses, name, minSignatures, groupID, comments, listTag);
+        assertEquals("400",JSONObject.fromObject(createResp2).getString("state"));
+        assertEquals(true, createResp2.contains("mul address has been exist"));
+    }
+
+    @Test
     public void createMultiAccountInterfaceTest()throws Exception{
 
         Map<String, Object> addresses = new HashMap<>();
@@ -480,24 +817,27 @@ public class TokenInterfaceTest {
         //addresses 一个地址 单签地址
         addresses.put("1",tokenAccount1);
         createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
-        assertEquals(true,createResp.contains("Need more than one address"));
+//        assertEquals(true,createResp.contains("Need more than one address"));
+        assertEquals(true,createResp.contains("创建多签地址的公钥个数或者地址个数不能等于"));
 
 
         //addresses 一个地址 多签地址
         addresses.put("1",tokenMultiAddr1);
         createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
-        assertEquals(true,createResp.contains("Need more than one address"));
+//        assertEquals(true,createResp.contains("address["+tokenMultiAddr1+"] not exist!;error:sql: no rows in result set"));
+        assertEquals(true,createResp.contains("创建多签地址的公钥个数或者地址个数不能等于1"));
 
         //addresses 一个地址 数据库中不存在的地址
         addresses.put("1",AddrNotInDB);
         createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
-        assertEquals(true,createResp.contains("Need more than one address"));
+//        assertEquals(true,createResp.contains("address["+AddrNotInDB+"] not exist!;error:sql: no rows in result set"));
+        assertEquals(true,createResp.contains("创建多签地址的公钥个数或者地址个数不能等于1"));
 
 
         //addresses 一个地址 单签地址的一部分
         addresses.put("1",tokenAccount1.substring(10));
         createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
-        assertEquals(true,createResp.contains("invalid address"));
+        assertEquals(true,createResp.contains("创建多签地址的公钥个数或者地址个数不能等于1"));
 
 
         //addresses 两个 两个都为空
@@ -518,14 +858,14 @@ public class TokenInterfaceTest {
         addresses.put("1",tokenMultiAddr1);
         addresses.put("2","");
         createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
-        assertEquals(true,createResp.contains("address should not be empty!"));
+        assertEquals(true,createResp.contains("address["+tokenMultiAddr1+"] not exist!;error:sql: no rows in result set"));
 
         //addresses 两个 其中一个单签 一个多签
         addresses.clear();
         addresses.put("1",tokenAccount1);
         addresses.put("2",tokenMultiAddr1);
         createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
-        assertEquals(true,createResp.contains("Must be simple address"));
+        assertEquals(true,createResp.contains("address["+tokenMultiAddr1+"] not exist!;error:sql: no rows in result set"));
 
         //addresses 两个 地址相同
         addresses.clear();
@@ -557,7 +897,7 @@ public class TokenInterfaceTest {
         addresses.put("2",tokenAccount2);
         addresses.put("3",tokenMultiAddr1);
         createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
-        assertEquals(true,createResp.contains("Must be simple address"));
+        assertEquals(true,createResp.contains("address["+tokenMultiAddr1+"] not exist!;error:sql: no rows in result set"));
 
         //addresses 三个 两个相同
         addresses.clear();
@@ -573,11 +913,12 @@ public class TokenInterfaceTest {
         addresses.put("2",tokenAccount2);
         addresses.put("3",AddrNotInDB);
         createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
-        assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
+        assertEquals(true,createResp.contains("address["+AddrNotInDB+"] not exist!;error:sql: no rows in result set"));
+//        assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
 
         //addresses 4个
         addresses.clear();
-        addresses.put("1",tokenAccount1);
+        addresses.put("1",tokenAccount5);
         addresses.put("2",tokenAccount2);
         addresses.put("3",tokenAccount3);
         addresses.put("4",tokenAccount4);
@@ -586,7 +927,8 @@ public class TokenInterfaceTest {
 
         //addresses 7个
         addresses.clear();
-        addresses.put("1",tokenAccount1);
+        addresses.put("1",JSONObject.fromObject(
+                tokenModule.tokenCreateAccount(Random(6),Random(6),Random(6),"",listTag)).getString("data"));
         addresses.put("2",tokenAccount2);
         addresses.put("3",tokenAccount3);
         addresses.put("4",tokenAccount4);
@@ -674,7 +1016,7 @@ public class TokenInterfaceTest {
         name = "";
         addresses.clear();
         addresses.put("1",tokenAccount7);
-        addresses.put("2",tokenAccount2);
+        addresses.put("2",tokenAccount3);
         createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
         assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
 
@@ -682,8 +1024,8 @@ public class TokenInterfaceTest {
         //name为空格
         name = " ";
         addresses.clear();
-        addresses.put("1",tokenAccount6);
-        addresses.put("2",tokenAccount2);
+        addresses.put("1",tokenAccount5);
+        addresses.put("2",tokenAccount3);
         createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
         assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
 
@@ -691,7 +1033,7 @@ public class TokenInterfaceTest {
         name = "0a_T0" + Random(26);
         addresses.clear();
         addresses.put("1",tokenAccount4);
-        addresses.put("2",tokenAccount2);
+        addresses.put("2",tokenAccount6);
         createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
         assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
 
@@ -734,7 +1076,7 @@ public class TokenInterfaceTest {
 //            name = String.valueOf(testchar);
 //            log.info("*********************test char " + name);
             addresses.clear();
-            addresses.put("1",tokenAccount3);
+            addresses.put("1",tokenAccount4);
             addresses.put("2",tokenAccount7);
             createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
             assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
@@ -956,7 +1298,7 @@ public class TokenInterfaceTest {
         minSignatures = 1;
         addresses.put("1",tokenAccount3);
         addresses.put("2",tokenAccount2);
-        addresses.put("3",tokenAccount1);
+        addresses.put("3",tokenAccount4);
         addresses.put("4",tokenAccount7);
         createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
         assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
@@ -972,7 +1314,7 @@ public class TokenInterfaceTest {
         minSignatures = 2;
         addresses.put("1",tokenAccount3);
         addresses.put("2",tokenAccount2);
-        addresses.put("3",tokenAccount1);
+        addresses.put("3",tokenAccount4);
         addresses.put("4",tokenAccount7);
         createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
         assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
@@ -984,7 +1326,7 @@ public class TokenInterfaceTest {
         minSignatures = 3;
         addresses.put("1",tokenAccount3);
         addresses.put("2",tokenAccount2);
-        addresses.put("3",tokenAccount1);
+        addresses.put("3",tokenAccount4);
         addresses.put("4",tokenAccount7);
         createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
         assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
@@ -995,7 +1337,7 @@ public class TokenInterfaceTest {
         minSignatures = 1;
         addresses.put("1",tokenAccount3);
         addresses.put("2",tokenAccount2);
-        addresses.put("3",tokenAccount1);
+        addresses.put("3",tokenAccount4);
         addresses.put("4",tokenAccount6);
         createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
         assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
@@ -1008,7 +1350,7 @@ public class TokenInterfaceTest {
         minSignatures = 1;
         addresses.put("1",tokenAccount3);
         addresses.put("2",tokenAccount2);
-        addresses.put("3",tokenAccount1);
+        addresses.put("3",tokenAccount4);
         addresses.put("4",tokenAccount6);
         createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
         assertEquals("400",JSONObject.fromObject(createResp).getString("state"));
@@ -1021,7 +1363,7 @@ public class TokenInterfaceTest {
         minSignatures = 1;
         addresses.put("1",tokenAccount3);
         addresses.put("2",tokenAccount2);
-        addresses.put("3",tokenAccount1);
+        addresses.put("3",tokenAccount4);
         addresses.put("4",tokenAccount6);
         createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
         assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
@@ -1065,7 +1407,7 @@ public class TokenInterfaceTest {
         //地址为多签地址
         resp = tokenModule.tokenGetPubkey(tokenMultiAddr1);
         assertEquals("400",JSONObject.fromObject(resp).getString("state"));
-        assertEquals("publickey not found",JSONObject.fromObject(resp).getString("data"));
+        assertEquals("该接口只支持单签地址!",JSONObject.fromObject(resp).getString("data"));
 
         //地址为单签地址的一半
         resp = tokenModule.tokenGetPubkey(tokenAccount1.substring(10));
@@ -1113,7 +1455,7 @@ public class TokenInterfaceTest {
          //发行地址设置为空
          issueResp = tokenModule.tokenIssue("",collAddr,stokenType13,issAmount,comments);
          assertEquals("400",JSONObject.fromObject(issueResp).getString("state"));
-         assertEquals(true, issueResp.contains(errInvalidAddr));
+         assertEquals(true, issueResp.contains("parameter length error;  tokenType(len):1-64  comments(len):0-128;"));
 
          String stokenType14 = "ng14Token"+ UtilsClass.Random(3);
          //发行地址非法-原归集地址的一部分
@@ -1346,14 +1688,14 @@ public class TokenInterfaceTest {
         //comments长度上限128位含中文
         comments = "测试" + UtilsClass.Random(126);
         String stokenType52 = "52okToken" + UtilsClass.Random(6);
-        issueResp = tokenModule.tokenIssue(issueAddr,collAddr,stokenType52,issAmount,comments);
-        assertEquals("200",JSONObject.fromObject(issueResp).getString("state"));
+        String issueResp2 = tokenModule.tokenIssue(issueAddr,collAddr,stokenType52,issAmount,comments);
+        assertEquals("200",JSONObject.fromObject(issueResp2).getString("state"));
 
         //comments长度127位
         comments = "中文" + UtilsClass.Random(125);
         String stokenType53 = "53okToken" + UtilsClass.Random(6);
-        issueResp = tokenModule.tokenIssue(issueAddr,collAddr,stokenType53,issAmount,comments);
-        assertEquals("200",JSONObject.fromObject(issueResp).getString("state"));
+        String issueResp3 = tokenModule.tokenIssue(issueAddr,collAddr,stokenType53,issAmount,comments);
+        assertEquals("200",JSONObject.fromObject(issueResp3).getString("state"));
 
         //comments长度129
         comments = UtilsClass.Random(129);
@@ -1373,7 +1715,7 @@ public class TokenInterfaceTest {
 
         //comments使用xss字符串
         comments =  "<SCRIPT SRC=http://***/XSS/xss.js></SCRIPT>";
-        String stokenType56 = "32okToken" + UtilsClass.Random(6);
+        String stokenType56 = "56okToken" + UtilsClass.Random(6);
         issueResp = tokenModule.tokenIssue(issueAddr,collAddr,stokenType56,issAmount,comments);
         assertEquals("200",JSONObject.fromObject(issueResp).getString("state"));
 
@@ -1392,6 +1734,9 @@ public class TokenInterfaceTest {
 
          commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+
+        assertEquals("200", JSONObject.fromObject(issueResp2).getString("state"));
+        assertEquals("200", JSONObject.fromObject(issueResp3).getString("state"));
 //
          String queryBalance = tokenModule.tokenGetBalance(collAddr,"");
          assertEquals(false, queryBalance.contains(stokenType11));
@@ -1697,6 +2042,592 @@ public class TokenInterfaceTest {
         assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+
+    }
+
+    //该用例测试仅针对TDList的正确性做测试
+    @Test
+    public void multiTransferWithIDInterfaceTest()throws Exception{
+        String issueAddr = "";
+        String collAddr = "";
+        String issueToken = "";
+        String issAmount ="";
+
+        //单签地址发行token 5000.999999
+        String stokenType = "tokenID_"+ UtilsClass.Random(8);
+        double sAmount = 5000.9;
+        issueAddr = tokenMultiAddr1;
+        collAddr = tokenMultiAddr1;
+        issueToken =stokenType;
+        issAmount = String.valueOf(sAmount);
+
+        //转账信息
+        String from = collAddr;
+        String to = "";
+        String to1 = tokenMultiAddr2;
+        double trfAmount1 = 100;
+
+        //添加发行地址和归集地址
+        tokenModule.tokenAddMintAddr(issueAddr);
+        tokenModule.tokenAddCollAddr(collAddr);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+
+        log.info("发行地址：" + issueAddr);
+        log.info("归集地址：" + collAddr);
+        String comments = "发行token：" + issueToken + " 数量：" + issAmount;
+        tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+
+        String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
+        assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+
+        //向单签账户转账 不带IDList
+        String transferToken = issueToken;
+        String transferAmount = String.valueOf(trfAmount1);
+        to = to1;
+        comments = "转账token：" + transferToken + " 数量：" + transferAmount;
+        String transferResp = "";
+        transferResp = tokenModule.tokenTransfer(from,to,transferToken,transferAmount,comments);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        assertEquals("4900.9",
+                JSONObject.fromObject(tokenModule.tokenGetBalance(tokenMultiAddr1,transferToken)
+                ).getJSONObject("data").getString(transferToken));
+
+        log.info("test IDList parameter for 3/3 Account...............");
+        //list为空
+        ArrayList<String> idList = new ArrayList<>();
+        List<Map> list = utilsClass.tokenConstructToken(tokenMultiAddr3,transferToken,"100");
+
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        assertEquals("4800.9",
+                JSONObject.fromObject(tokenModule.tokenGetBalance(tokenMultiAddr1,transferToken)
+                ).getJSONObject("data").getString(transferToken));
+
+        //list中的内容为空
+        idList.add("");
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals("传入id个数[1]应等于最小签名数[3]!",JSONObject.fromObject(transferResp).getString("data"));
+
+
+        //list中的内容为空*2
+        idList.add("");
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains("传入id个数[2]应等于最小签名数[3]!"));
+
+        //list中的内容为空*3
+        idList.add("");
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains("空字符串不能作为用户id传入"));
+
+
+        //list中的内容正确的ID1,但个数不正确 仅一个
+        idList.clear();
+        idList.add(userId01);
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains("传入id个数[1]应等于最小签名数[3]!"));
+
+
+        //list中的内容正确的ID 但个数不足
+        idList.add(userId02);
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains("传入id个数[2]应等于最小签名数[3]!"));
+
+        //list中的内容正确的ID 个数正确
+        idList.add(userId03);
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        assertEquals("4700.9",
+                JSONObject.fromObject(tokenModule.tokenGetBalance(tokenMultiAddr1,transferToken)
+                ).getJSONObject("data").getString(transferToken));
+
+        //list中的ID存在不匹配的ID 个数正确
+        idList.clear();
+        idList.add(userId01);
+        idList.add(userId02);
+        idList.add(userId04);
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains(
+                "用户id[" + userId04 + "]对应的地址不是地址["+ tokenMultiAddr1+ "]的组成部分或非本地账户!"));
+
+        //list中的ID重复 开发解释说目前api仅用作浦发用 支持1/2账户 不校验重复性
+        idList.clear();
+        idList.add(userId01);
+        idList.add(userId01);
+        idList.add(userId01);
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+//        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+//        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains(
+//                "用户id[" + userId04 + "]对应的地址不是地址["+ tokenMultiAddr1+ "]的组成部分或非本地账户!"));
+
+        //list中的ID重复 开发解释说目前api仅用作浦发用 支持1/2账户 不校验重复性
+        idList.clear();
+        idList.add(userId01);
+        idList.add(userId01);
+        idList.add(userId02);
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+//        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+//        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains(
+//                "用户id[" + userId04 + "]对应的地址不是地址["+ tokenMultiAddr1+ "]的组成部分或非本地账户!"));
+
+        //list中的ID存在空的id 个数正确
+        idList.clear();
+        idList.add(userId01);
+        idList.add(userId02);
+        idList.add("");
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains(
+                "空字符串不能作为用户id传入"));
+
+        //list中的ID存错误的ID 个数正确
+        idList.clear();
+        idList.add(userId01);
+        idList.add(userId02);
+        idList.add("123ddf");
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains(
+                "用户id[" + "123ddf" + "]对应的地址不是地址["+ tokenMultiAddr1+ "]的组成部分或非本地账户!"));
+
+        //list中的ID存错误的ID*2 个数正确
+        idList.clear();
+        idList.add(userId01);
+        idList.add("tkAc6AoQ5TB1");
+        idList.add("123ddf");
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains(
+                "用户id[" + "tkAc6AoQ5TB1" + "]对应的地址不是地址["+ tokenMultiAddr1+ "]的组成部分或非本地账户!"));
+
+        //list中的ID存错误的ID*3 个数正确
+        idList.clear();
+        idList.add("");
+        idList.add("tkAc6AoQ5TB");
+        idList.add("123ddf");
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains(
+                "空字符串不能作为用户id传入"));
+
+        //list中的ID存错误的ID 个数超出
+        idList.clear();
+        idList.add(userId01);
+        idList.add(userId02);
+        idList.add(userId03);
+        idList.add(userId04);
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains(
+                "传入id个数[4]应等于最小签名数[3]!"));
+
+
+        sleepAndSaveInfo(SLEEPTIME);
+        assertEquals("4600.9",
+                JSONObject.fromObject(tokenModule.tokenGetBalance(tokenMultiAddr1,transferToken)
+                ).getJSONObject("data").getString(transferToken));
+
+        //*********************************************************************************************************//
+        log.info("test IDList parameter for 1/2 Account...............");
+        from = tokenMultiAddr2;
+        assertEquals("100",
+                JSONObject.fromObject(tokenModule.tokenGetBalance(from,transferToken)
+                ).getJSONObject("data").getString(transferToken));
+
+        //list为空
+        list = utilsClass.tokenConstructToken(tokenMultiAddr4,transferToken,"5");
+        idList.clear();
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        assertEquals("95",
+                JSONObject.fromObject(tokenModule.tokenGetBalance(tokenMultiAddr2,transferToken)
+                ).getJSONObject("data").getString(transferToken));
+
+        //list中的内容为空
+        idList.add("");
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains(
+                "空字符串不能作为用户id传入"));
+
+
+        //list中的内容为空*2
+        idList.add("");
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains(
+                "传入id个数[2]应等于最小签名数[1]!"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        assertEquals("95",
+                JSONObject.fromObject(tokenModule.tokenGetBalance(tokenMultiAddr2,transferToken)
+                ).getJSONObject("data").getString(transferToken));
+
+        //list中的内容为空格
+        idList.clear();
+        idList.add(" ");
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains(
+                "用户id[" + " " + "]对应的地址不是地址["+ tokenMultiAddr2+ "]的组成部分或非本地账户!"));
+
+
+        //list中的内容正确的ID1
+        idList.clear();
+        idList.add(userId01);
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        assertEquals("90",
+                JSONObject.fromObject(tokenModule.tokenGetBalance(tokenMultiAddr2,transferToken)
+                ).getJSONObject("data").getString(transferToken));
+
+        //list中的内容正确的ID2
+        idList.clear();
+        idList.add(userId02);
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        assertEquals("85",
+                JSONObject.fromObject(tokenModule.tokenGetBalance(tokenMultiAddr2,transferToken)
+                ).getJSONObject("data").getString(transferToken));
+
+
+        //list中的内容错误的ID 个数正确
+        idList.clear();
+        idList.add(userId03);
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains(
+                "用户id[" + userId03 + "]对应的地址不是地址["+ tokenMultiAddr2+ "]的组成部分或非本地账户!"));
+
+        //list中的ID存在不匹配的ID 个数正确
+        idList.clear();
+        idList.add(userId01);
+        idList.add(userId02);
+        idList.add(userId04);
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains(
+                "传入id个数[3]应等于最小签名数[1]!"));
+
+        //list中的ID存在空的id 个数不对
+        idList.clear();
+        idList.add(userId01);
+        idList.add("");
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains(
+                "传入id个数[2]应等于最小签名数[1]!"));
+
+
+        //list中的ID存错误的ID*1 个数正确
+        idList.clear();
+        idList.add("tkAc6AoQ5TB1");
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains(
+                "用户id[" + "tkAc6AoQ5TB1" + "]对应的地址不是地址["+ tokenMultiAddr2+ "]的组成部分或非本地账户!"));
+
+    }
+
+    //该用例测试仅针对TDList的正确性做测试
+    @Test
+    public void soloTransferWithIDInterfaceTest()throws Exception{
+        String issueAddr = "";
+        String collAddr = "";
+        String issueToken = "";
+        String issAmount ="";
+
+        //单签地址发行token 5000.999999
+        String stokenType = "tokenID_"+ UtilsClass.Random(8);
+        double sAmount = 5000.9;
+        issueAddr = tokenAccount1;
+        collAddr = tokenAccount1;
+        issueToken =stokenType;
+        issAmount = String.valueOf(sAmount);
+
+        //转账信息
+        String from = collAddr;
+        String to = "";
+        String to1 = tokenAccount2;
+        double trfAmount1 = 100;
+
+        //添加发行地址和归集地址
+        tokenModule.tokenAddMintAddr(issueAddr);
+        tokenModule.tokenAddCollAddr(collAddr);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+
+        log.info("发行地址：" + issueAddr);
+        log.info("归集地址：" + collAddr);
+        String comments = "发行token：" + issueToken + " 数量：" + issAmount;
+        tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+
+        String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
+        assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+
+        //向单签账户转账 不带IDList
+        String transferToken = issueToken;
+        String transferAmount = String.valueOf(trfAmount1);
+        to = to1;
+        comments = "转账token：" + transferToken + " 数量：" + transferAmount;
+        String transferResp = "";
+        transferResp = tokenModule.tokenTransfer(from,to,transferToken,transferAmount,comments);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        assertEquals("4900.9",
+                JSONObject.fromObject(tokenModule.tokenGetBalance(tokenAccount1,transferToken)
+                ).getJSONObject("data").getString(transferToken));
+
+        log.info("test IDList parameter for 3/solo Account...............");
+        //list为空
+        ArrayList<String> idList = new ArrayList<>();
+        List<Map> list = utilsClass.tokenConstructToken(tokenAccount3,transferToken,"100");
+
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        assertEquals("4800.9",
+                JSONObject.fromObject(tokenModule.tokenGetBalance(tokenAccount1,transferToken)
+                ).getJSONObject("data").getString(transferToken));
+
+        //list中的内容为空
+        idList.add("");
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains("空字符串不能作为用户id传入"));
+
+
+        //list中的内容为空*2
+        idList.add("");
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains("单签地址不能传入多个id!"));
+
+
+        //list中的内容错误的ID1
+        idList.clear();
+        idList.add(userId02);
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains(
+                "签名id[" + userId02 + "]和地址对应id[" + userId01+ "]不匹配!"));
+
+        //list中的内容为数据库中不存在的错误的ID1
+        idList.clear();
+        idList.add("notexist");
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains(
+                "签名id[" + "notexist" + "]和地址对应id[" + userId01+ "]不匹配!"));
+
+        //list中的ID存在不匹配的ID 个数正确
+        idList.clear();
+        idList.add(userId01);
+        idList.add(userId02);
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,JSONObject.fromObject(transferResp).getString("data").contains(
+                "单签地址不能传入多个id!"));
+
+        //list中的内容正确的ID1
+        idList.clear();
+        idList.add(userId01);
+        transferResp = tokenModule.tokenTransferWithID(from,idList,comments,list);
+        assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        assertEquals("4700.9",
+                JSONObject.fromObject(tokenModule.tokenGetBalance(tokenAccount1,transferToken)
+                ).getJSONObject("data").getString(transferToken));
+    }
+
+    @Test
+    public void transferByUTXOInterfaceTest()throws Exception{
+        String issueAddr = "";
+        String collAddr = "";
+        String issueToken = "";
+        String issAmount ="";
+
+        //单签地址发行token 5000.999999
+        String stokenType = "tokenSo_"+ UtilsClass.Random(8);
+        issueAddr = tokenAccount1;
+        collAddr = tokenAccount1;
+        issueToken =stokenType;
+        issAmount = "5000.999999";
+
+        //转账信息
+        String from = collAddr;
+        String to1 = tokenAccount2;
+        String to2 = tokenAccount3;
+        String trfAmount1 = "100";
+
+        //添加发行地址和归集地址
+        tokenModule.tokenAddMintAddr(issueAddr);
+        tokenModule.tokenAddCollAddr(collAddr);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+
+        log.info("发行地址：" + issueAddr);
+        log.info("归集地址：" + collAddr);
+        String comments = "发行token：" + issueToken + " 数量：" + issAmount;
+        String issueResp = tokenModule.tokenIssue(issueAddr,collAddr,issueToken,issAmount,comments);
+        String utxoHash = JSONObject.fromObject(issueResp).getString("data");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+
+        String queryBalance = tokenModule.tokenGetBalance(collAddr,issueToken);
+        assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+
+        //使用utxo转账
+        String transferToken = issueToken;
+        String transferAmount = trfAmount1;
+        List<Map>listutxo = utilsClass.tokenConstructUTXO(utxoHash,0,transferAmount,to1);
+        String transferResp = tokenModule.tokenTransfer(from,"utxo list transfer",listutxo);
+        String transferHash = JSONObject.fromObject(transferResp).getString("data");
+        JSONObject.fromObject(transferResp).getString("data");
+
+        //新增utxo未花费引用列表功能
+        log.info("test UTXO parameter...............");
+        //utxo.hash为空
+        listutxo.clear();
+        // from = to1;
+        listutxo = utilsClass.tokenConstructUTXO("",1,transferAmount,to1);
+        transferResp = tokenModule.tokenTransfer(from,"utxo.hash为空",listutxo);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,transferResp.contains("get utxo 1 failed! sql: no rows in result set"));
+
+        //utxo.index为null
+
+//        listutxo.clear();
+//        listutxo = utilsClass.tokenConstructUTXO(transferHash,null,transferAmount,to1);
+//        transferResp = tokenModule.tokenTransfer(from,"",listutxo);
+//        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+//        assertEquals(true,transferResp.contains("get utxo 1 failed! sql: no rows in result set"));
+
+        //utxo.amount为空
+        listutxo.clear();
+        listutxo = utilsClass.tokenConstructUTXO(transferHash,1,"",to1);
+        transferResp = tokenModule.tokenTransfer(from,"",listutxo);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,transferResp.contains("amount字段不能为空!"));
+
+        //utxo.address为空
+        listutxo.clear();
+        listutxo = utilsClass.tokenConstructUTXO(transferHash,1,transferAmount,"");
+        transferResp = tokenModule.tokenTransfer(from,"",listutxo);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,transferResp.contains("invalid address"));
+
+        //utxo.hash为异常值
+        listutxo.clear();
+        listutxo = utilsClass.tokenConstructUTXO("123",1,transferAmount,to1);
+        transferResp = tokenModule.tokenTransfer(from,"",listutxo);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,transferResp.contains("get utxo 1 failed! sql: no rows in result set"));
+
+        //utxo.address为异常值
+        listutxo.clear();
+        listutxo = utilsClass.tokenConstructUTXO(transferHash,1,transferAmount,"123");
+        transferResp = tokenModule.tokenTransfer(from,"",listutxo);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,transferResp.contains("invalid address"));
+
+        //utxo.hash和index组不存在
+        listutxo.clear();
+        listutxo = utilsClass.tokenConstructUTXO(transferHash,3,transferAmount,to1);
+        transferResp = tokenModule.tokenTransfer(from,"",listutxo);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,transferResp.contains("get utxo 1 failed! sql: no rows in result set"));
+
+        //utxo第一笔list正确，第二笔list的address和from地址相同
+        listutxo.clear();
+        listutxo = utilsClass.tokenConstructUTXO(transferHash,1,transferAmount,to1);
+        List<Map>listutxo2 = utilsClass.tokenConstructUTXO(transferHash,1,transferAmount,from,listutxo);
+        transferResp = tokenModule.tokenTransfer(from,"",listutxo2);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,transferResp.contains("不能转账给自己!"));
+
+        //utxo第一笔list正确，第二笔list异常
+        listutxo.clear();
+        listutxo2.clear();
+        listutxo = utilsClass.tokenConstructUTXO(transferHash,1,transferAmount,to1);
+        listutxo2 = utilsClass.tokenConstructUTXO("xx123abc",0,transferAmount,to1,listutxo);
+        transferResp = tokenModule.tokenTransfer(from,"",listutxo2);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,transferResp.contains("get utxo 2 failed! sql: no rows in result set"));
+
+
+        //utxo第一笔hash和第二笔hash引用的address与from地址不统一
+        listutxo.clear();
+        listutxo2.clear();
+        listutxo = utilsClass.tokenConstructUTXO(transferHash,1,transferAmount,to2);
+        listutxo2 = utilsClass.tokenConstructUTXO(transferHash,0,transferAmount,to2,listutxo);
+        transferResp = tokenModule.tokenTransfer(from,"",listutxo2);
+        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(true,transferResp.contains("utxo 2 的持有者和 utxo 1的持有者不一致!"));
+
+
+        //utxo为空值,引用to参数
+        List<Map>listto = utilsClass.tokenConstructToken(to1,transferToken,transferAmount);
+        listutxo.clear();
+        transferResp = tokenModule.tokenTransfer(from,"utxo列表为空",listto,listutxo);
+        assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+
+
+        //utxo和to同时正确传参，优先utxo
+        transferHash = JSONObject.fromObject(transferResp).getString("data");
+        listto.clear();
+        listto = utilsClass.tokenConstructToken(to2,transferToken,"222");
+        listutxo = utilsClass.tokenConstructUTXO(transferHash,1,transferAmount,to2);
+        transferResp = tokenModule.tokenTransfer(from,"",listto,listutxo);
+        assertEquals("200",JSONObject.fromObject(transferResp).getString("state"));
+        assertEquals(to2,JSONObject.fromObject(transferResp).getJSONArray("utxo").getJSONObject(0).getString("address"));
+        assertEquals(transferAmount,JSONObject.fromObject(transferResp).getJSONArray("utxo").getJSONObject(0).getString("amount"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+
+        queryBalance = tokenModule.tokenGetBalance(to1,issueToken);
+        assertEquals("200",JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        queryBalance = tokenModule.tokenGetBalance(to2,issueToken);
+        assertEquals(transferAmount,JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+
     }
 
     @Test
@@ -1774,7 +2705,8 @@ public class TokenInterfaceTest {
         //回收地址不在地址数据库中
         destoryResp = tokenModule.tokenDestoryByList(AddrNotInDB,issueToken,"100",comments);
         assertEquals("400",JSONObject.fromObject(destoryResp).getString("state"));
-        assertEquals(true,destoryResp.contains("addr doesn't exist!"));
+//        assertEquals(true,destoryResp.contains("addr doesn't exist!"));
+        assertEquals(true,destoryResp.contains("Insufficient Balance"));
 
 
         for (char testchar : specChar.toCharArray()){
@@ -1970,6 +2902,141 @@ public class TokenInterfaceTest {
         assertEquals("200",JSONObject.fromObject(destoryResp).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+
+    }
+
+    @Test
+    public void destoryByUTXOInterfaceTest()throws Exception {
+
+        String issAmount = "5000.999999";
+        String issueToken = "tokenSo_" + UtilsClass.Random(8);
+        String issueToken2 = "tokenSo_" + UtilsClass.Random(8);
+        HashMap<String, Object> mapSendMsg = new HashMap<>();
+
+        //添加发行地址和归集地址
+        tokenModule.tokenAddMintAddr(tokenAccount1);
+        tokenModule.tokenAddCollAddr(tokenAccount1);
+        tokenModule.tokenAddMintAddr(tokenMultiAddr1);
+        tokenModule.tokenAddCollAddr(tokenMultiAddr1);
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+
+        String comments = "发行token：" + issueToken + " 数量：" + issAmount;
+        String issueResp = tokenModule.tokenIssue(tokenAccount1, tokenAccount1, issueToken, issAmount, comments);
+        String issueResp2 = tokenModule.tokenIssue(tokenMultiAddr1, tokenMultiAddr1, issueToken2, issAmount, comments);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+
+        String queryBalance = tokenModule.tokenGetBalance(tokenAccount1, "");
+        String queryBalance2 = tokenModule.tokenGetBalance(tokenMultiAddr1, "");
+        assertEquals(issAmount, JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        assertEquals(issAmount, JSONObject.fromObject(queryBalance2).getJSONObject("data").getString(issueToken2));
+        String issueHash = JSONObject.fromObject(issueResp).getString("data");
+        String issueHash2 = JSONObject.fromObject(issueResp2).getString("data");
+
+        //验证通过utxo回收接口正确
+        String destoryResp = "";
+        List<Map>listutxo = utilsClass.tokenConstrucDestroytUTXO(issueHash,0,"100");
+        List<Map>listutxo2 = utilsClass.tokenConstrucDestroytUTXO(issueHash2,0,"100",listutxo);
+        List<Map>list = utilsClass.tokenConstructToken(tokenAccount1,issueToken,"200") ;
+        destoryResp = tokenModule.tokenDestoryByList(list,listutxo2,"通过utxo回收",mapSendMsg);
+        assertEquals("200",JSONObject.fromObject(destoryResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+
+        queryBalance = tokenModule.tokenGetBalance(tokenAccount1, "");
+        queryBalance2 = tokenModule.tokenGetBalance(tokenMultiAddr1, "");
+        assertEquals("200",JSONObject.fromObject(queryBalance).getString("state"));
+        assertEquals("4900.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
+        assertEquals("4900.999999", JSONObject.fromObject(queryBalance2).getJSONObject("data").getString(issueToken2));
+        String destoryHash = JSONObject.fromObject(destoryResp).getString("data");
+
+        log.info("test UTXO parameter...............");
+        //utxo.hash为空
+        listutxo.clear();
+        listutxo = utilsClass.tokenConstrucDestroytUTXO("",0,"100");
+        destoryResp = tokenModule.tokenDestoryByList(null,listutxo,"utxo.hash为空",mapSendMsg);
+        assertEquals("400",JSONObject.fromObject(destoryResp).getString("state"));
+        assertEquals(true,destoryResp.contains("no rows in result set"));
+
+        //utxo.index为null
+//        listutxo.clear();
+//        listutxo = utilsClass.tokenConstructUTXO(transferHash,null,transferAmount,to1);
+//        transferResp = tokenModule.tokenTransfer(from,"",listutxo);
+//        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+//        assertEquals(true,transferResp.contains("get utxo 1 failed! sql: no rows in result set"));
+
+        //utxo.amount为空
+        listutxo.clear();
+        listutxo = utilsClass.tokenConstrucDestroytUTXO(destoryHash,1,"");
+        destoryResp = tokenModule.tokenDestoryByList(null,listutxo,"utxo.amount为空",mapSendMsg);
+        assertEquals("400",JSONObject.fromObject(destoryResp).getString("state"));
+        assertEquals(true,destoryResp.contains("Amount must be greater than 0 and less than 18446744073709"));
+
+
+        //utxo.hash为异常值
+        listutxo.clear();
+        listutxo = utilsClass.tokenConstrucDestroytUTXO("123",0,"100");
+        destoryResp = tokenModule.tokenDestoryByList(null,listutxo,"utxo.hash错误",mapSendMsg);
+        assertEquals("400",JSONObject.fromObject(destoryResp).getString("state"));
+        assertEquals(true,destoryResp.contains("no rows in result set"));
+
+
+        //utxo.hash和index组不存在
+        listutxo.clear();
+        listutxo = utilsClass.tokenConstrucDestroytUTXO(destoryHash,10,"100");
+        destoryResp = tokenModule.tokenDestoryByList(null,listutxo,"utxo.hash和index组不存在",mapSendMsg);
+        assertEquals("400",JSONObject.fromObject(destoryResp).getString("state"));
+        assertEquals(true,destoryResp.contains("no rows in result set"));
+
+
+        //utxo第一笔list正确，第二笔list异常
+        listutxo.clear();
+        listutxo2.clear();
+        listutxo = utilsClass.tokenConstrucDestroytUTXO(destoryHash,1,"100");
+        listutxo2 = utilsClass.tokenConstrucDestroytUTXO("123",10,"100");
+        destoryResp = tokenModule.tokenDestoryByList(null,listutxo2,"utxo第一笔list正确，第二笔list异常",mapSendMsg);
+        assertEquals("400",JSONObject.fromObject(destoryResp).getString("state"));
+        assertEquals(true,destoryResp.contains("no rows in result set"));
+
+
+        //已经回收过
+        listutxo.clear();
+        listutxo2.clear();
+        listutxo = utilsClass.tokenConstrucDestroytUTXO(destoryHash,0,"100");
+        listutxo2 = utilsClass.tokenConstrucDestroytUTXO(destoryHash,2,"100");
+        destoryResp = tokenModule.tokenDestoryByList(null,listutxo2,"已经回收过",mapSendMsg);
+        assertEquals("400",JSONObject.fromObject(destoryResp).getString("state"));
+        assertEquals(true,destoryResp.contains("已经被回收"));
+
+        //回收金额大于余额
+        listutxo.clear();
+        listutxo2.clear();
+        listutxo = utilsClass.tokenConstrucDestroytUTXO(destoryHash,1,"10000");
+        listutxo2 = utilsClass.tokenConstrucDestroytUTXO(destoryHash,3,"10000");
+        destoryResp = tokenModule.tokenDestoryByList(null,listutxo2,"回收金额大于余额",mapSendMsg);
+        assertEquals("400",JSONObject.fromObject(destoryResp).getString("state"));
+        assertEquals(true,destoryResp.contains("回收超额"));
+
+        //utxo和list都为空值
+        listutxo.clear();
+        list.clear();
+        destoryResp = tokenModule.tokenDestoryByList(list,listutxo,"utxo和list都为空值",mapSendMsg);
+        assertEquals("400",JSONObject.fromObject(destoryResp).getString("state"));
+        assertEquals(true,destoryResp.contains("utxo列表和回收list 不能同时为空!"));
+
+        //utxo为空引用utxo
+        listutxo.clear();
+        list.clear();
+        list = utilsClass.tokenConstructToken(tokenAccount1,issueToken,"200") ;
+        destoryResp = tokenModule.tokenDestoryByList(list,listutxo,"utxo为空引用utxo",mapSendMsg);
+        assertEquals("200",JSONObject.fromObject(destoryResp).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        queryBalance = tokenModule.tokenGetBalance(tokenAccount1, "");
+        assertEquals("200",JSONObject.fromObject(queryBalance).getString("state"));
+        assertEquals("4700.999999", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(issueToken));
 
     }
 
@@ -2399,8 +3466,10 @@ public class TokenInterfaceTest {
 
         //已添加过的address
         response = tokenModule.tokenAddMintAddr(testAddr);
-        assertEquals(true,response.contains("\"state\":200"));
-        String hash1 = JSONObject.fromObject(response).getString("data");
+//        assertEquals(true,response.contains("\"state\":200"));
+//        String hash1 = JSONObject.fromObject(response).getString("data");
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("rpc error: code = Unknown desc = issue address["+testAddr+"] exist!"));
 
         //address前后加空格
         response = tokenModule.tokenAddMintAddr(" " + testAddr);
@@ -2427,9 +3496,9 @@ public class TokenInterfaceTest {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
-        response = tokenModule.tokenGetTxDetail(hash1);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("failed to find transaction"));
+//        response = tokenModule.tokenGetTxDetail(hash1);
+//        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("failed to find transaction"));
 
     }
 
@@ -2452,17 +3521,19 @@ public class TokenInterfaceTest {
 
         //address为空格
         response = tokenModule.tokenDelMintAddr(" ");
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains(errInvalidAddr));
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("del issue address[ ] not exist!"));
 
         //address数据库中不存在的address
         response = tokenModule.tokenDelMintAddr("31UYzLfbx6DnwbcZR6j2rG2FJabShCbSBx7ZLqDZTCYW7LfTeE");
         assertEquals(true,response.contains("\"state\":200"));
+//        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("rpc error: code = Unknown desc = del issue address[31UYzLfbx6DnwbcZR6j2rG2FJabShCbSBx7ZLqDZTCYW7LfTeE] not exist!"));
 
         //address的一部分
         response = tokenModule.tokenDelMintAddr(testAddr.substring(3));
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains(errInvalidAddr));
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("rpc error: code = Unknown desc = del issue address["+testAddr.substring(3)+"] not exist!"));
 
 
         //已添加过的address
@@ -2472,26 +3543,26 @@ public class TokenInterfaceTest {
 
         //address前后加空格
         response = tokenModule.tokenDelMintAddr(" " + testAddr);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains(errInvalidAddr));
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("rpc error: code = Unknown desc = del issue address[ "+testAddr+"] not exist!"));
 
         response = tokenModule.tokenDelMintAddr(testAddr + " ");
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains(errInvalidAddr));
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("rpc error: code = Unknown desc = del issue address["+testAddr+" ] not exist!"));
 
 
         for(char testChar :specChar.toCharArray()){
             String temp = String.valueOf(testChar);
             log.info("---------------test char " + temp);
             response = tokenModule.tokenDelMintAddr(temp);
-            assertEquals("400",JSONObject.fromObject(response).getString("state"));
-            assertEquals(true,response.contains(errInvalidAddr));
+            assertEquals("500",JSONObject.fromObject(response).getString("state"));
+            assertEquals(true,response.contains(" not exist!"));
         }
 
         //addr为“123”
         response = tokenModule.tokenDelMintAddr("123");
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains(errInvalidAddr));
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("rpc error: code = Unknown desc = del issue address[123] not exist!"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
@@ -2501,13 +3572,15 @@ public class TokenInterfaceTest {
 
         //addr为已删除过的地址
         response = tokenModule.tokenDelMintAddr(testAddr);
-        hash1 = JSONObject.fromObject(response).getString("data");
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("rpc error: code = Unknown desc = del issue address["+testAddr+"] not exist!"));
+//        hash1 = JSONObject.fromObject(response).getString("data");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
-        response = tokenModule.tokenGetTxDetail(hash1);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("failed to find transaction"));
+//        response = tokenModule.tokenGetTxDetail(hash1);
+//        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("failed to find transaction"));
 
     }
 
@@ -2545,8 +3618,10 @@ public class TokenInterfaceTest {
 
         //已添加过的address
         response = tokenModule.tokenAddCollAddr(testAddr);
-        assertEquals(true,response.contains("\"state\":200"));
-        String hash1 = JSONObject.fromObject(response).getString("data");
+//        assertEquals(true,response.contains("\"state\":200"));
+//        String hash1 = JSONObject.fromObject(response).getString("data");
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("Unknown desc = coll address["+testAddr+"] exist!"));
 
         //address前后加空格
         response = tokenModule.tokenAddCollAddr(" " + testAddr);
@@ -2573,9 +3648,9 @@ public class TokenInterfaceTest {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
-        response = tokenModule.tokenGetTxDetail(hash1);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("failed to find transaction"));
+//        response = tokenModule.tokenGetTxDetail(hash1);
+//        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("failed to find transaction"));
 
     }
 
@@ -2598,8 +3673,8 @@ public class TokenInterfaceTest {
 
         //address为空格
         response = tokenModule.tokenDelCollAddr(" ");
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains(errInvalidAddr));
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("rpc error: code = Unknown desc = del coll address[ ] not exist!"));
 
         //address数据库中不存在的address
         response = tokenModule.tokenDelCollAddr("31UYzLfbx6DnwbcZR6j2rG2FJabShCbSBx7ZLqDZTCYW7LfTeE");
@@ -2607,8 +3682,8 @@ public class TokenInterfaceTest {
 
         //address的一部分
         response = tokenModule.tokenDelCollAddr(testAddr.substring(3));
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains(errInvalidAddr));
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("rpc error: code = Unknown desc = del coll address["+testAddr.substring(3)+"] not exist!"));
 
 
         //已添加过的address
@@ -2618,26 +3693,26 @@ public class TokenInterfaceTest {
 
         //address前后加空格
         response = tokenModule.tokenDelCollAddr(" " + testAddr);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains(errInvalidAddr));
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("rpc error: code = Unknown desc = del coll address[ "+testAddr+"] not exist!"));
 
         response = tokenModule.tokenDelCollAddr(testAddr + " ");
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains(errInvalidAddr));
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("rpc error: code = Unknown desc = del coll address["+testAddr+" ] not exist!"));
 
 
         for(char testChar :specChar.toCharArray()){
             String temp = String.valueOf(testChar);
             log.info("---------------test char " + temp);
             response = tokenModule.tokenDelCollAddr(temp);
-            assertEquals("400",JSONObject.fromObject(response).getString("state"));
-            assertEquals(true,response.contains(errInvalidAddr));
+            assertEquals("500",JSONObject.fromObject(response).getString("state"));
+            assertEquals(true,response.contains(" not exist!"));
         }
 
         //addr为“123”
         response = tokenModule.tokenDelCollAddr("123");
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains(errInvalidAddr));
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("rpc error: code = Unknown desc = del coll address[123] not exist!"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
@@ -2647,14 +3722,16 @@ public class TokenInterfaceTest {
 
         //已删除过的address
         response = tokenModule.tokenDelCollAddr(testAddr);
-        assertEquals(true,response.contains("\"state\":200"));
-        hash1 = JSONObject.fromObject(response).getString("data");
+        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("rpc error: code = Unknown desc = del coll address["+testAddr+"] not exist!"));
+//        assertEquals(true,response.contains("\"state\":200"));
+//        hash1 = JSONObject.fromObject(response).getString("data");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
-        response = tokenModule.tokenGetTxDetail(hash1);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("failed to find transaction"));
+//        response = tokenModule.tokenGetTxDetail(hash1);
+//        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("failed to find transaction"));
 
     }
 
@@ -2723,8 +3800,11 @@ public class TokenInterfaceTest {
 
         //tokenType为不存在的tokenType
         resp = tokenModule.tokenRecoverToken("tokenSo_12Gh6uQVIZ");
-        assertEquals("400",JSONObject.fromObject(resp).getString("state"));
-        assertEquals(true,resp.contains("has not been freezed"));
+//        assertEquals("400",JSONObject.fromObject(resp).getString("state"));
+        assertThat(resp,anyOf(containsString("\"state\":400"),containsString("\"state\":500")));
+
+//        assertEquals(true,resp.contains("has not been frozen"));
+        assertEquals(true,resp.contains("not exist"));
 
         //恢复一个未冻结的token
         String tokenType = commonFunc.tokenModule_IssueToken(tokenAccount1,tokenAccount1,"100");
@@ -2735,8 +3815,8 @@ public class TokenInterfaceTest {
         resp = tokenModule.tokenRecoverToken(tokenType);
         String data = JSONObject.fromObject(resp).getString("data");
         String state = JSONObject.fromObject(resp).getString("state");
-        assertEquals("400", state);
-        assertEquals(true, data.contains("has not been freezed"));
+//        assertEquals("400", state);
+//        assertEquals(true, data.contains("has not been frozen"));
 
     }
 }

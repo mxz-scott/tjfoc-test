@@ -124,6 +124,12 @@ public class FileOperation {
 
     }
 
+    //修改合并版SDK API配置项conf/config_api.toml信息
+    public static void setSDKApiConfigValueByShell(String IP,String Section,String Key,String Value){
+        String info = shExeAndReturn(IP,"sh " + destShellScriptDir + "SetConfig.sh " + TokenApiConfigPath + " " + Section + " " + Key + " " + Value);
+        System.out.print(info);
+    }
+
     //读取节点配置项信息
     public static String getPeerBaseValueByShell(String IP, String Section, String Key) throws Exception {
         return shExeAndReturn(IP, "sh " + destShellScriptDir + "GetConfig.sh " + PeerBaseConfigPath + " " + Section + " " + Key);
@@ -149,10 +155,15 @@ public class FileOperation {
         return shExeAndReturn(IP, "sh " + destShellScriptDir + "GetConfig.sh " + SDKZXConfigPath + " " + Section + " " + Key);
     }
 
-    //读取TOKEN API配置项conf/config.toml信息
+    //读取TOKEN API配置项conf/config_api.toml信息
     public static String getTokenApiConfigValueByShell(String IP, String Section, String Key) {
         return shExeAndReturn(IP, "sh " + destShellScriptDir + "GetConfig.sh " + TokenApiConfigPath + " " + Section + " " + Key);
     }
+
+//    //读取合并版SDK API配置项conf/config_api.toml信息
+//    public static String getSDKApiConfigValueByShell(String IP,String Section,String Key){
+//        return shExeAndReturn(IP,"sh " + destShellScriptDir + "GetConfig.sh " + SDKApiConfigPath + " " + Section + " " + Key);
+//    }
 
     public static void uploadFiletoDestDirByssh(String srcFile, String destIP, String destUser, String destPwd, String destDir, String destFileName) {
 

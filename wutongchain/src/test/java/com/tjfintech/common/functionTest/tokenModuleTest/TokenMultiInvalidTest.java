@@ -11,6 +11,8 @@ import org.junit.*;
 import org.junit.runners.MethodSorters;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +54,38 @@ public class TokenMultiInvalidTest {
         assertEquals("100",JSONObject.fromObject(response1).getJSONObject("data").getString(tokenType));
     }
 
+
+    @Test
+    public void TC37_InvalidMultiAddr() throws Exception {
+        String AddrNotInDB = "4AEeTzUkL8g2GN2kcK3GXWdv7nPyNjKR4hxJ5J96nFqxAGAHnB";
+        Map<String, Object> addresses = new HashMap<>();
+        String name = "test";
+        int minSignatures = 2;
+        String groupID = "testid";//0324移除groupID
+        String comments = "create multi address";
+        ArrayList<String> listTag = new ArrayList<>();//0324移除tag
+        //addresses 三个 包含一个不存在的地址或者未托管的地址
+        addresses.clear();
+        addresses.put("1",tokenAccount1);
+        addresses.put("2",tokenAccount2);
+        addresses.put("3",AddrNotInDB);
+        String createResp = tokenModule.tokenCreateMultiAddr(addresses,name,minSignatures,groupID,comments,listTag);
+        assertEquals(true,createResp.contains("address["+AddrNotInDB+"] not exist!;error:sql: no rows in result set"));
+//        assertEquals("200",JSONObject.fromObject(createResp).getString("state"));
+
+//        String temp23Addr = JSONObject.fromObject(createResp).getString("data");
+//        String AddIssueAddr = tokenModule.tokenAddMintAddr(temp23Addr);
+//        String AddCollAddr = tokenModule.tokenAddCollAddr(temp23Addr);
+//
+//
+//        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+//                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+//
+//        String IssueResp = tokenModule.tokenIssue(temp23Addr,temp23Addr,"test","12345","包含未托管地址的多签地址");
+//        assertEquals(true,IssueResp.contains("addr doesn't exist!"));
+//        assertEquals(true,IssueResp.contains(AddrNotInDB));
+//        assertEquals("400",JSONObject.fromObject(IssueResp).getString("state"));
+    }
 
     /**
      * Tc37 归集地址向两个多签地址转账异常测试
@@ -450,9 +484,14 @@ public class TokenMultiInvalidTest {
 
     //重复发行同一个tokentype
     @Test
-    public void issueExistToken(){
+    public void issueExistToken()throws Exception{
         String issueResp = tokenModule.tokenIssue(tokenAccount1,tokenAccount2,tokenType,"100","重复发行");
-        assertEquals(true,issueResp.contains("tokentype has been used"));
+//        assertEquals(true,issueResp.contains("tokentype has been used"));
+        //20200727 代码修改为链上验证
+        sleepAndSaveInfo(SLEEPTIME);
+        String checkOnchain = tokenModule.tokenGetTxDetail(commonFunc.getTxHash(issueResp,utilsClass.tokenApiGetTxHashType));
+        assertEquals("400",JSONObject.fromObject(checkOnchain).getString("state"));
+
     }
 
 
@@ -717,17 +756,19 @@ public class TokenMultiInvalidTest {
         //冻结检查大小写
         log.info("冻结检查大小写");
         String freezeResp = tokenModule.tokenFreezeToken(tokenType.toLowerCase());
-        assertEquals("200",JSONObject.fromObject(freezeResp).getString("state"));
-        String hash1 = JSONObject.fromObject(freezeResp).getString("data");
+        assertEquals("500",JSONObject.fromObject(freezeResp).getString("state"));
+        assertEquals(true,freezeResp.contains("rpc error: code = InvalidArgument desc = token["+tokenType.toLowerCase()+"] not exist!"));
 
-        freezeResp = tokenModule.tokenFreezeToken(tokenType.toUpperCase());
-        assertEquals("200",JSONObject.fromObject(freezeResp).getString("state"));
-        String hash2 = JSONObject.fromObject(freezeResp).getString("data");
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
-                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
-
-        assertEquals("400",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash1)).getString("state"));
-        assertEquals("400",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash2)).getString("state"));
+//        String hash1 = JSONObject.fromObject(freezeResp).getString("data");
+//
+//        freezeResp = tokenModule.tokenFreezeToken(tokenType.toUpperCase());
+//        assertEquals("200",JSONObject.fromObject(freezeResp).getString("state"));
+//        String hash2 = JSONObject.fromObject(freezeResp).getString("data");
+//        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+//                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+//
+//        assertEquals("400",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash1)).getString("state"));
+//        assertEquals("400",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash2)).getString("state"));
 
         //确认tokenType未被冻结
         String transferResp = commonFunc.tokenModule_TransferToken(tokenMultiAddr1,tokenMultiAddr2,tokenType,"10");
@@ -738,9 +779,9 @@ public class TokenMultiInvalidTest {
                 tokenModule.tokenGetBalance(tokenMultiAddr2,tokenType)).getJSONObject("data").getString(tokenType));
 
 
-        String recoverResp = tokenModule.tokenRecoverToken(tokenType);
-        assertEquals("400",JSONObject.fromObject(recoverResp).getString("state"));
-        assertEquals(true,JSONObject.fromObject(recoverResp).getString("data").contains("has not been freezed!"));
+        String recoverResp = tokenModule.tokenRecoverToken(tokenType);//开发修改回链上验证 此处不做校验 20200722
+//        assertEquals("400",JSONObject.fromObject(recoverResp).getString("state"));
+//        assertEquals(true,JSONObject.fromObject(recoverResp).getString("data").contains("has not been frozen!"));
 
         //冻结tokentype测试解除
         String freezeBeforeRecover = tokenModule.tokenFreezeToken(tokenType);
@@ -749,17 +790,26 @@ public class TokenMultiInvalidTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         recoverResp = tokenModule.tokenRecoverToken(tokenType.toUpperCase());
-        assertEquals("400",JSONObject.fromObject(recoverResp).getString("state"));
-        assertEquals(true,JSONObject.fromObject(recoverResp).getString("data").contains("has not been freezed!"));
+//        assertEquals("400",JSONObject.fromObject(recoverResp).getString("state"));
+//        assertEquals(true,JSONObject.fromObject(recoverResp).getString("data").contains("has not been frozen!"));
+        assertEquals("500",JSONObject.fromObject(recoverResp).getString("state"));
+//        assertEquals(true,JSONObject.fromObject(recoverResp).getString("data").contains("not exist"));
+        assertEquals(true,JSONObject.fromObject(recoverResp).getString("message").contains("not exist"));
+
 
         recoverResp = tokenModule.tokenRecoverToken(tokenType.toLowerCase());
-        assertEquals("400",JSONObject.fromObject(recoverResp).getString("state"));
-        assertEquals(true,JSONObject.fromObject(recoverResp).getString("data").contains("has not been freezed!"));
+//        assertEquals("400",JSONObject.fromObject(recoverResp).getString("state"));
+//        assertEquals(true,JSONObject.fromObject(recoverResp).getString("data").contains("has not been frozen!"));
+
+        assertEquals("500",JSONObject.fromObject(recoverResp).getString("state"));
+//        assertEquals(true,JSONObject.fromObject(recoverResp).getString("data").contains("not exist"));
+        assertEquals(true,JSONObject.fromObject(recoverResp).getString("message").contains("not exist"));
 
         //确认tokenType被冻结未被恢复 冻结token无法转账
         transferResp = commonFunc.tokenModule_TransferToken(tokenMultiAddr1,tokenMultiAddr3,tokenType,"10");
-        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
-        assertEquals("toketype(" + tokenType + ") has been freezed!",JSONObject.fromObject(transferResp).getString("data"));
+        //20200903修改为链上报错
+//        assertEquals("400",JSONObject.fromObject(transferResp).getString("state"));
+//        assertEquals("toketype(" + tokenType + ") has been frozen!",JSONObject.fromObject(transferResp).getString("data"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);

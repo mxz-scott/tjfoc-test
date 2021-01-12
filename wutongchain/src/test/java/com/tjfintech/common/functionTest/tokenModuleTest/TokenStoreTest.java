@@ -69,9 +69,11 @@ public class TokenStoreTest {
      * 预期：返回200，data为交易哈希
      * 查询交易上链
      * getstore查询存证数据
+     * 20200724 移除重复校验表的检查
      */
-    @Test
+//    @Test
     public void createStoreDupDataString() throws Exception {
+        if(syncFlag) return;
         SDKADD = TOKENADD;
         String Data = "test11234567";
         long nowTime = (new Date()).getTime();
@@ -252,8 +254,8 @@ public class TokenStoreTest {
         ArrayList<String> hashList = new ArrayList<>();
 
         SDKADD = TOKENADD;
-        String Data = UtilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath +
-                "store/bigsize1.txt");
+        String Data = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath +
+                "bigsize1.txt");
         String response = tokenModule.tokenCreateStore(Data);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
         hashList.add(JSONObject.fromObject(response).getString("data"));
@@ -261,16 +263,16 @@ public class TokenStoreTest {
 
 
 
-        String Data2 = UtilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath
-                + "store/bigsize2.txt");
+        String Data2 = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
+                +  "bigsize2.txt");
         String response2 = tokenModule.tokenCreateStore(Data2);
         assertEquals("200",JSONObject.fromObject(response2).getString("state"));
         hashList.add(JSONObject.fromObject(response2).getString("data"));
         listData.add(Data2);
 
 
-        String Data3 = UtilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath
-                + "store/bigsize3.txt");
+        String Data3 = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
+                + "bigsize3.txt");
         String response3 = tokenModule.tokenCreateStore(Data3);
         assertEquals("400",JSONObject.fromObject(response3).getString("state"));
         assertEquals("The maximum length of the data is 1M",JSONObject.fromObject(response3).getString("data"));

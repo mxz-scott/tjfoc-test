@@ -89,8 +89,9 @@ public class TokenSoloInvalidTest {
 
     /**
      * TC247发行token后, 再发行一笔存证交易，两笔交易的data字段相同
+     * 20200724 移除重复校验功能
      */
-    @Test
+//    @Test
     public void TC247_issueThenStore() throws Exception {
         String response = tokenModule.tokenCreateStore(tokenType);
         Thread.sleep(1*1000);
@@ -112,8 +113,8 @@ public class TokenSoloInvalidTest {
         Thread.sleep(2000);
         String issueInfo2 = tokenModule.tokenIssue(tokenAccount1, tokenAccount3, tokenType, "1000","发行token1");
         String issueInfo3 = tokenModule.tokenIssue(tokenAccount1, tokenAccount2, tokenType, "1000","发行token");
-        assertThat(issueInfo2,containsString("tokentype has been used :" + tokenType));
-        assertThat(issueInfo3,containsString("tokentype has been used :" + tokenType));
+//        assertThat(issueInfo2,containsString("tokentype has been used :" + tokenType));//20200727 代码修改为链上检查
+//        assertThat(issueInfo3,containsString("tokentype has been used :" + tokenType));
 
         log.info("查询归集地址中token余额");
         String response1 = tokenModule.tokenGetBalance(tokenAccount3, tokenType);

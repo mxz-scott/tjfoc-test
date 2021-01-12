@@ -7,13 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static com.tjfintech.common.utils.UtilsClass.SDKADD;
-import static com.tjfintech.common.utils.UtilsClass.subLedger;
+import static com.tjfintech.common.utils.UtilsClass.*;
 
 @Slf4j
 public  class GoToken implements Token {
@@ -38,7 +34,10 @@ public  class GoToken implements Token {
         map.put("comments", comments);
         map.put("tags", tagsArray);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/group/create", map);
+        String param = "";
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/group/create" + "?" + param, map);
         log.info(result);
         return result;
     }
@@ -66,8 +65,36 @@ public  class GoToken implements Token {
         map.put("tags", listTag);
 
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v1/account/create" + param, map);
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/account/create" + "?" + param , map);
+        log.info(result);
+        return result;
+    }
+
+    /** 创建账户(支持数据存证扩展功能)
+     */
+    public String tokenCreateAccount(String entityID, String entityName, String groupID, String comments, ArrayList<String> listTag,
+                                     Map<String, Object> mapSendMsg){
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("entityID", entityID);
+        map.put("entityName", entityName);
+        map.put("groupID", groupID);
+        map.put("comments", comments);
+        map.put("tags", listTag);
+
+        Iterator iter = mapSendMsg.keySet().iterator();
+        while (iter.hasNext()) {
+            Object key = iter.next();
+            map.put(key.toString(),mapSendMsg.get(key));
+        }
+
+        String param = "";
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/account/create" + "?" + param , map);
         log.info(result);
         return result;
     }
@@ -104,8 +131,44 @@ public  class GoToken implements Token {
         map.put("tags", listTag);
 
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v1/account/multiaddr/create" + param, map);
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/account/multiaddr/create" + "?" + param, map);
+        log.info(result);
+        return result;
+    }
+
+    /** 创建多签账户
+     *
+     * @param addresses
+     * @param name
+     * @param minSignatures
+     * @param groupID
+     * @param comments
+     * @param listTag
+     * @return
+     */
+    public String tokenCreateMultiAddrByPubkeys(Map pubkeys, String name, int minSignatures,
+                                       String groupID, String comments, ArrayList<String> listTag){
+
+        List<Object> addressesArray = new ArrayList<>();
+        for (Object value : pubkeys.values()) {
+            addressesArray.add(value);
+        }
+
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("pubkeys", addressesArray);
+        map.put("name", name);
+        map.put("minSignatures", minSignatures);
+        map.put("groupID", groupID);
+        map.put("comments", comments);
+        map.put("tags", listTag);
+
+        String param = "";
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/account/multiaddr/create" + "?" + param, map);
         log.info(result);
         return result;
     }
@@ -123,20 +186,121 @@ public  class GoToken implements Token {
         map.put("comments", comments);
 
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v1/token/transfer" + param, map);
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/token/transfer" + "?" + param, map);
         log.info(result);
         return result;
+    }
+
+    public String tokenTransferWithID(String from,ArrayList<String> IDList,String comments,List<Map>tokenList) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("from", from);
+        map.put("idlist",IDList);
+        map.put("comments", comments);
+        if (String.valueOf(tokenList).contains("index")) {
+            map.put("utxo", tokenList);
+        }else {
+            map.put("to", tokenList);
+        }
+
+        String param = "";
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if(subLedger!="") param = param + "&ledger=" + subLedger;
+
+        String result=PostTest.postMethod(SDKADD + "/v1/token/transfer" + "?" + param, map);
+        log.info(result);
+        return result;
+
     }
 
     public String tokenTransfer(String from,String comments,List<Map>tokenList) {
         Map<String, Object> map = new HashMap<>();
         map.put("from", from);
         map.put("comments", comments);
-        map.put("to", tokenList);
+        if (String.valueOf(tokenList).contains("index")) {
+            map.put("utxo", tokenList);
+        }else {
+            map.put("to", tokenList);
+        }
+
         String param = "";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result=PostTest.postMethod(SDKADD + "/v1/token/transfer" + param, map);
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if(subLedger!="") param = param + "&ledger=" + subLedger;
+
+        String result=PostTest.postMethod(SDKADD + "/v1/token/transfer" + "?" + param, map);
+        log.info(result);
+        return result;
+
+    }
+
+    /**
+     *  转让token（支持指定utxo未花费列表转让）
+     */
+    public String tokenTransfer(String from,String comments,List<Map>tokenList,List<Map>UTXOList) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("from", from);
+        map.put("comments", comments);
+        map.put("to", tokenList);
+        map.put("utxo", UTXOList);
+
+        String param = "";
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if(subLedger!="") param = param + "&ledger=" + subLedger;
+
+        String result=PostTest.postMethod(SDKADD + "/v1/token/transfer" + "?" + param, map);
+        log.info(result);
+        return result;
+
+    }
+
+    /**
+     *  转让token（支持指定utxo未花费列表转让）
+     */
+    public String tokenTransferUTXOMsg(String from,String comments,List<Map>UTXOList,Map<String,Object>mapSendMsg) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("from", from);
+        map.put("comments", comments);
+        map.put("utxo", UTXOList);
+
+        Iterator iter = mapSendMsg.keySet().iterator();
+        while (iter.hasNext()) {
+            Object key = iter.next();
+            map.put(key.toString(),mapSendMsg.get(key));
+        }
+
+
+        String param = "";
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if(subLedger!="") param = param + "&ledger=" + subLedger;
+
+        String result=PostTest.postMethod(SDKADD + "/v1/token/transfer" + "?" + param, map);
+        log.info(result);
+        return result;
+
+    }
+
+    /**
+     *  转让token（支持数据存证扩展功能）
+     */
+    public String tokenTransfer(String from,String comments,List<Map>tokenList,Map<String,Object>mapSendMsg) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("from", from);
+        map.put("comments", comments);
+        map.put("to", tokenList);
+
+        Iterator iter = mapSendMsg.keySet().iterator();
+        while (iter.hasNext()) {
+            Object key = iter.next();
+            map.put(key.toString(),mapSendMsg.get(key));
+        }
+
+        String param = "";
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if(subLedger!="") param = param + "&ledger=" + subLedger;
+
+        String result=PostTest.postMethod(SDKADD + "/v1/token/transfer" + "?" + param, map);
         log.info(result);
         return result;
 
@@ -147,16 +311,19 @@ public  class GoToken implements Token {
         Map<String,Object>map=new HashMap<>();
         map.put("address",address);
         if(tokenType!="") map.put("tt",tokenType);
+
         param= GetTest.ParamtoUrl(map);
         if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result=GetTest.doGet2(SDKADD+"/v1/token/balance?"+param);
+
+        String result=GetTest.doGet2(SDKADD+"/v1/token/balance" + "?" + param);
         log.info(result);
         return result ;
     }
     public String tokenGetDestroyBalance(){
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result=GetTest.doGet2(SDKADD+"/v1/token/balance/destroyed?" + param);
+        if (!subLedger.isEmpty()) param = param + "ledger=" + subLedger;
+
+        String result=GetTest.doGet2(SDKADD+"/v1/token/balance/destroyed" + "?" + param);
         log.info(result);
         return result ;
     }
@@ -168,9 +335,12 @@ public  class GoToken implements Token {
 
         Map<String, Object> map = new HashMap<>();
         map.put("address", address);
+
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v1/setting/mintaddr/add" + param, map);
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/setting/mintaddr/add" + "?" + param, map);
         log.info(result);
         return result;
     }
@@ -183,8 +353,10 @@ public  class GoToken implements Token {
         map.put("address", address);
 
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v1/setting/mintaddr/remove" + param, map);
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/setting/mintaddr/remove" + "?" + param, map);
         log.info(result);
         return result;
 
@@ -197,9 +369,12 @@ public  class GoToken implements Token {
 
         Map<String, Object> map = new HashMap<>();
         map.put("address", address);
+
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v1/setting/colladdress/add" + param, map);
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/setting/colladdress/add" + "?" + param, map);
         log.info(result);
         return result;
 
@@ -214,8 +389,10 @@ public  class GoToken implements Token {
         map.put("address", address);
 
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v1/setting/colladdress/remove" + param, map);
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/setting/colladdress/remove" + "?" + param, map);
         log.info(result);
         return result;
 
@@ -234,8 +411,37 @@ public  class GoToken implements Token {
         map.put("comments", comments);
 
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v1/token/issue" + param, map);
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/token/issue" + "?" + param, map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     *  发行token，（支持数据存证扩展功能）
+     */
+    public String tokenIssue(String address ,String collAddr,String tokenType,String amount,String comments,Map<String, Object>mapSendMsg){
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("address", address);
+        map.put("collAddr", collAddr);
+        map.put("tokenType", tokenType);
+        map.put("amount", amount);
+        map.put("comments", comments);
+
+        Iterator iter = mapSendMsg.keySet().iterator();
+        while (iter.hasNext()) {
+            Object key = iter.next();
+            map.put(key.toString(),mapSendMsg.get(key));
+        }
+
+        String param = "";
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/token/issue" + "?" + param, map);
         log.info(result);
         return result;
     }
@@ -247,9 +453,34 @@ public  class GoToken implements Token {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenType", tokenType);
         map.put("comments", comments);
+
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v1/token/destroy/bytype" + param, map);
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/token/destroy/bytype" + "?" + param, map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     *  token销毁（支持数据存证扩展功能）
+     */
+    public String tokenDestoryByTokenType(String tokenType,String comments,Map<String,Object>mapSendMsg){
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenType", tokenType);
+        map.put("comments", comments);
+
+        Iterator iter = mapSendMsg.keySet().iterator();
+        while (iter.hasNext()) {
+            Object key = iter.next();
+            map.put(key.toString(),mapSendMsg.get(key));
+        }
+        String param = "";
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/token/destroy/bytype" + "?" + param, map);
         log.info(result);
         return result;
     }
@@ -269,8 +500,10 @@ public  class GoToken implements Token {
         map.put("comments", comments);
 
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v1/token/destroy" + param, map);
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/token/destroy" + "?" + param, map);
         log.info(result);
         return result;
     }
@@ -283,8 +516,79 @@ public  class GoToken implements Token {
         map.put("comments",comments);
 
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v1/token/destroy" + param, map);
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/token/destroy" + "?" + param, map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     *  token销毁（支持数据存证扩展功能）
+     */
+    public String tokenDestoryByList(List<Map> tokenList, String comments,Map<String, Object>mapSendMsg){
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", tokenList);
+        map.put("comments",comments);
+
+        Iterator iter = mapSendMsg.keySet().iterator();
+        while (iter.hasNext()) {
+            Object key = iter.next();
+            map.put(key.toString(),mapSendMsg.get(key));
+        }
+
+        String param = "";
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/token/destroy" + "?" + param, map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     *  token销毁（支持通过UTXO回收功能）
+     */
+    public String tokenDestoryByList(List<Map> tokenList,List<Map> utxoList, String comments,Map<String, Object>mapSendMsg){
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", tokenList);
+        map.put("utxo", utxoList);
+        map.put("comments",comments);
+
+        Iterator iter = mapSendMsg.keySet().iterator();
+        while (iter.hasNext()) {
+            Object key = iter.next();
+            map.put(key.toString(),mapSendMsg.get(key));
+        }
+
+        String param = "";
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/token/destroy" + "?" + param, map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 数据存证扩展
+     */
+
+    public String tokenSendMsg(Map<String,Object>mapSendMsg) {
+        Map<String, Object> map = new HashMap<>();
+
+        Iterator iter = mapSendMsg.keySet().iterator();
+        while (iter.hasNext()) {
+            Object key = iter.next();
+            map.put(key.toString(),mapSendMsg.get(key));
+        }
+
+        String param = "";
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/sendmsg" + "?" + param, map);
         log.info(result);
         return result;
     }
@@ -293,8 +597,10 @@ public  class GoToken implements Token {
         Map<String, Object> map = new HashMap<>();
         map.put("Data", Data);
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v1/store" + param, map);
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/store" + "?" + param, map);
         log.info(result);
         return result;
     }
@@ -309,8 +615,10 @@ public  class GoToken implements Token {
         map.put("Data", Data);
         map.put("addresses", addrsObjects);
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v1/store" + param, map);
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/store" + "?" + param, map);
         log.info(result);
         return result;
     }
@@ -320,8 +628,9 @@ public  class GoToken implements Token {
         map.put("address", addr);
         map.put("Hash", Hash);
         String param = "";
-        if (!subLedger.isEmpty()) param = param + "?ledger=" + subLedger;
-        String result = PostTest.postMethod(SDKADD + "/v1/getstore" + param, map);
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/v1/getstore" + "?" + param, map);
         log.info(result);
         return result;
     }
@@ -330,8 +639,10 @@ public  class GoToken implements Token {
         Map<String ,Object>map=new HashMap<>();
         map.put("tokenType",tokenType);
         String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result =PostTest.postMethod(SDKADD+"/v1/token/freeze"+param,map);
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result =PostTest.postMethod(SDKADD+"/v1/token/freeze" + "?" + param,map);
         log.info(result);
         return result;
     }
@@ -340,8 +651,10 @@ public  class GoToken implements Token {
         Map<String ,Object>map=new HashMap<>();
         map.put("TokenType",tokenType);
         String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result =PostTest.postMethod(SDKADD+"/v1/token/recover"+param,map);
+        if(syncFlag)  param = param + "&sync=" + syncFlag + "&timeout=" + syncTimeout;
+        if(subLedger!="") param = param + "&ledger="+subLedger;
+
+        String result =PostTest.postMethod(SDKADD+"/v1/token/recover" + "?" + param,map);
         log.info(result);
         return result;
     }
@@ -350,8 +663,9 @@ public  class GoToken implements Token {
         Map<String ,Object>map=new HashMap<>();
         map.put("address",address);
         String param="";
-        if(subLedger!="") param = param +"?ledger="+subLedger;
-        String result =PostTest.postMethod(SDKADD+"/v1/account/getpublickey" + param,map);
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result =PostTest.postMethod(SDKADD+"/v1/account/getpublickey" + "?" + param,map);
         log.info(result);
         return result;
     }
@@ -363,13 +677,17 @@ public  class GoToken implements Token {
         map.put("hash", hashEncode);
         param = GetTest.ParamtoUrl(map);
         if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+
         String result = GetTest.doGet2(SDKADD + "/v1/gettxdetail" + "?" + param);
         log.info(result);
         return result;
     }
 
     public String tokenGetApiHealth(){
-        String result = GetTest.doGet2(SDKADD + "/v1/apihealth" );
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result = GetTest.doGet2(SDKADD + "/v1/apihealth"+ "?" + param );
         log.info(result);
         return result;
     }

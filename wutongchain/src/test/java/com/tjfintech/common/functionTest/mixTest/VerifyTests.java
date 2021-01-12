@@ -39,7 +39,7 @@ public class VerifyTests {
             startBlockHeight = 1;
         }
         //手动修改起始高度
-//        startBlockHeight = 35584;
+        startBlockHeight = 1090;
         int endBlockHeight = blockHeight;   //手动修改结束高度
 
         int diff = endBlockHeight - startBlockHeight + 1;

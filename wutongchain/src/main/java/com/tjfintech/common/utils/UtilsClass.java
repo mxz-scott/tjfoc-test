@@ -60,77 +60,40 @@ public class UtilsClass {
 //    public static String sLatestLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.2\\";
 
     //zhouxianxian env use start -----------
-    public static String ADD = "http://10.1.3.164:7310";
-    public static String subLedger = "d933pcknga"; // 应用链ID
-
+    public static String subLedger = "6u7mzoc47y"; // 应用链ID
+    public static String ADD = "http://10.1.5.225:7081";
     public static String SDKADD = ADD;
     public static String rSDKADD = ADD;
     public static String TOKENADD = ADD;
 
     //设置测试环境使用的节点端口及部署目录信息
-    public static String PEER1IP = "10.1.3.162";
-    public static String PEER2IP = "10.1.3.163";
-    public static String PEER3IP = "10.1.5.161";
-    public static String PEER4IP = "10.1.3.164";
-    public static String PEER1RPCPort = "9300";
-    public static String PEER2RPCPort = "9300";
-    public static String PEER3RPCPort = "9300";
-    public static String PEER4RPCPort = "9300";
-    public static String PEER1TCPPort = "60030";
-    public static String PEER2TCPPort = "60030";
-    public static String PEER3TCPPort = "60030";
-    public static String PEER4TCPPort = "60030";
+    public static String PEER1IP = "10.1.5.225";
+    public static String PEER2IP = "10.1.5.226";
+    public static String PEER3IP = "10.1.3.161";
+    public static String PEER4IP = "10.1.5.227";
+    public static String PEER1RPCPort = "7201";
+    public static String PEER2RPCPort = "7201";
+    public static String PEER3RPCPort = "7201";
+    public static String PEER4RPCPort = "7201";
+    public static String PEER1TCPPort = "7001";
+    public static String PEER2TCPPort = "7001";
+    public static String PEER3TCPPort = "7001";
+    public static String PEER4TCPPort = "7001";
     //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-    public static String PTPATH = "/root/auto/";
-    public static String SDKPATH = PTPATH + "sdk/";
-    public static String PeerPATH = PTPATH + "peer/";
-    public static String ToolPATH = PTPATH + "toolkit/";
-    public static String TokenApiPATH = PTPATH + "wtfinservice/";
-    public static String PeerTPName = "wtchain";
-    public static String SDKTPName = "wtsdk";
+    public static String PTPATH = "/opt/";
+    public static String SDKPATH = PTPATH + "wtsdkpufa/";
+    public static String PeerPATH = PTPATH + "wtchainpufa/";
+    public static String ToolPATH = PTPATH + "wttool/";
+    public static String TokenApiPATH = PTPATH + "wtsdkpufa/";
+    public static String PeerTPName = "wtchainpufa";
+    public static String SDKTPName = "wtsdkpufa";
     public static String ToolTPName = "wttool";
-    public static String TokenTPName = "wtfinservice";
-    public static String tmuxSessionTokenApi = "tmux send -t api ";
-    public static String tmuxSessionPeer = "tmux send -t peer ";
-    public static String tmuxSessionSDK = "tmux send -t sdk ";
+    public static String TokenTPName = "wtsdkpufa";
+    public static String tmuxSessionTokenApi = "tmux send -t sdk-pufa ";
+    public static String tmuxSessionPeer = "tmux send -t chain-pufa ";
+    public static String tmuxSessionSDK = "tmux send -t sdk-pufa ";
     public static String sReleaseLocalDir = "E:\\gopath\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.3\\";
     public static String sLatestLocalDir = "E:\\test\\2.4.2\\";
-    //zhouxianxian env use end -----------
-
-//    //duyuyang env use start -----------
-//    public static String SDKADD = "http://10.1.5.223:8070";
-//    public static String rSDKADD = "http://10.1.5.223:8070";
-//    public static String TOKENADD = "http://10.1.5.223:8070";
-//
-//    //设置测试环境使用的节点端口及部署目录信息
-//    public static String PEER1IP = "10.1.5.223";
-//    public static String PEER2IP = "10.1.5.224";
-//    public static String PEER3IP = "10.1.5.247";
-//    public static String PEER4IP = "10.1.5.223";
-//    public static String PEER1RPCPort = "8600";
-//    public static String PEER2RPCPort = "8600";
-//    public static String PEER3RPCPort = "8600";
-//    public static String PEER4RPCPort = "8600";
-//    public static String PEER1TCPPort = "8700";
-//    public static String PEER2TCPPort = "8700";
-//    public static String PEER3TCPPort = "8700";
-//    public static String PEER4TCPPort = "8700";
-//    //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-//    public static String PTPATH = "/dyy/";
-//    public static String SDKPATH = PTPATH + "wtsdk/";
-//    public static String PeerPATH = PTPATH + "wtchain/";
-//    public static String ToolPATH = PTPATH + "toolkit/";
-//    public static String TokenApiPATH = PTPATH + "wtfinservice/";
-//    public static String PeerTPName = "wtchain";
-//    public static String SDKTPName = "wtsdk";
-//    public static String ToolTPName = "wttool";
-//    public static String TokenTPName = "wtfinservice";
-//    public static String tmuxSessionTokenApi = "tmux send -t api ";
-//    public static String tmuxSessionPeer = "tmux send -t peer ";
-//    public static String tmuxSessionSDK = "tmux send -t sdk ";
-//    public static String sReleaseLocalDir = "E:\\gopath\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.3\\";
-//    public static String sLatestLocalDir = "E:\\test\\2.4.2\\";
-////    //duyuyang env use end -----------
 
 
     public static Boolean syncFlag = false;
@@ -138,7 +101,7 @@ public class UtilsClass {
     public static String testResultPath = "testresult/";
     public static String testDataPath = "testdata/";
     public static String srcShellScriptDir = testDataPath + "/configFiles/shell/";
-    public static String destShellScriptDir = "/root/tjshell/";
+    public static String destShellScriptDir = "/opt/tjshell/";
     public static String tempWVMDir = testDataPath + "WVM/";
 
     public static String certPath = "cert/" + "SM2"; // 设置签名证书类型，可选值SM2(默认值)，ECDSA，MIX1，MIX2，RSA
@@ -220,8 +183,10 @@ public class UtilsClass {
     public static String PeerMemConfigPath = PeerPATH + "config.toml";//全文件名为config.toml 节点集群信息
     public static String PeerBaseConfigPath = PeerPATH + "conf/base.toml";//全文件名为base.toml 节点运行相关配置
     public static String SDKConfigPath = SDKPATH + "conf/config.toml";//全文件名为config.toml
-    public static String TokenApiConfigPath = TokenApiPATH + "conf/config.toml";//全文件名为config.toml
-    
+    public static String TokenApiConfigPath = TokenApiPATH + "conf/config_api.toml";//全文件名为config.toml
+//    public static String SDKApiConfigPath = SDKPATH + "conf/config_api.toml";//全文件名为config_api.toml
+
+    public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";
 
 //    public static String ccenvPull = "docker pull tjfoc/tjfoc-ccenv:2.1";
     public static String ccenvPull = "docker load < /root/dockerimages/ccenv_2.1.tar";//20191217出现网络慢pull需要很长时间 因此改回本地导入
@@ -310,43 +275,43 @@ public class UtilsClass {
     public static String smartAccoutContractAddress = "";
 
 
-//    /**
-//     * token平台转账TOKEN数组构建方法
-//     * @param toAddr     接收地址
-//     * @param amount      数量
-//     * @return     返回TOKEN的LIST
-//     */
-//    public  List<Map>   smartConstuctIssueToList(String toAddr, String amount){
-//
-//        Map<String,Object>amountMap=new HashMap<>();
-//        amountMap.put("address",toAddr);
-//        amountMap.put("amount",amount);
-//
-//        List<Map>tokenList=new ArrayList<>();
-//        tokenList.add(amountMap);
-//        return tokenList;
-//    }
+    /**
+     * token平台转账TOKEN数组构建方法
+     * @param toAddr     接收地址
+     * @param amount      数量
+     * @return     返回TOKEN的LIST
+     */
+    public  List<Map>   smartConstuctIssueToList(String toAddr, String amount){
+
+        Map<String,Object>amountMap=new HashMap<>();
+        amountMap.put("address",toAddr);
+        amountMap.put("amount",amount);
+
+        List<Map>tokenList=new ArrayList<>();
+        tokenList.add(amountMap);
+        return tokenList;
+    }
 
 
 
-//    /**
-//     * token平台转账TOKEN数组构建方法
-//     * @param toAddr     发送地址
-//     * @param amount      数量
-//     * @return     返回TOKEN的LIST
-//     */
-//    public  List<Map>   smartConstuctIssueToList(String toAddr,String amount, List<Map> list){
-//        List<Map>tokenList=new ArrayList<>();
-//        for(int i = 0 ; i < list.size() ; i++) {
-//            tokenList.add(list.get(i));
-//        }
-//        Map<String,Object>amountMap=new HashMap<>();
-//        amountMap.put("toAddr",toAddr);
-//        amountMap.put("amount",amount);
-//
-//        tokenList.add(amountMap);
-//        return tokenList;
-//    }
+    /**
+     * token平台转账TOKEN数组构建方法
+     * @param toAddr     发送地址
+     * @param amount      数量
+     * @return     返回TOKEN的LIST
+     */
+    public  List<Map>   smartConstuctIssueToList(String toAddr,String amount, List<Map> list){
+        List<Map>tokenList=new ArrayList<>();
+        for(int i = 0 ; i < list.size() ; i++) {
+            tokenList.add(list.get(i));
+        }
+        Map<String,Object>amountMap=new HashMap<>();
+        amountMap.put("toAddr",toAddr);
+        amountMap.put("amount",amount);
+
+        tokenList.add(amountMap);
+        return tokenList;
+    }
 
 
     /**
@@ -384,6 +349,50 @@ public class UtilsClass {
         amountMap.put("address",toAddr);
         amountMap.put("tokenType",tokenType);
         amountMap.put("amount",amount);
+
+        tokenList.add(amountMap);
+        return tokenList;
+    }
+
+    /**
+     * token平台转账utxo数组构建方法
+     * @param hash     引用的交易hash
+     * @param index    交易索引
+     * @param amount   数量
+     * @param address  受让方账户地址
+     * @return     返回TOKEN的LIST
+     */
+    public  List<Map>   tokenConstructUTXO(String hash, int index, String amount, String address){
+
+        Map<String,Object>amountMap=new HashMap<>();
+        amountMap.put("hash",hash);
+        amountMap.put("index",index);
+        amountMap.put("amount",amount);
+        amountMap.put("address",address);
+
+        List<Map>tokenList=new ArrayList<>();
+        tokenList.add(amountMap);
+        return tokenList;
+    }
+
+    /**
+     * token平台转账utxo数组构建方法
+     * @param hash     引用的交易hash
+     * @param index    交易索引
+     * @param amount   数量
+     * @param address  受让方账户地址
+     * @return     返回TOKEN的LIST
+     */
+    public  List<Map>   tokenConstructUTXO(String hash, int index, String amount, String address, List<Map> list){
+        List<Map>tokenList=new ArrayList<>();
+        for(int i = 0 ; i < list.size() ; i++) {
+            tokenList.add(list.get(i));
+        }
+        Map<String,Object>amountMap=new HashMap<>();
+        amountMap.put("hash",hash);
+        amountMap.put("index",index);
+        amountMap.put("amount",amount);
+        amountMap.put("address",address);
 
         tokenList.add(amountMap);
         return tokenList;
@@ -482,6 +491,76 @@ public class UtilsClass {
         List<Map>tokenList=new ArrayList<>();
         tokenList.add(map);
         return tokenList;
+    }
+
+    /**
+     * token平台回收utxo数组构建方法
+     * @param hash     引用的交易hash
+     * @param index    交易索引
+     * @param amount   数量
+     * @return     返回TOKEN的LIST
+     */
+    public  List<Map>   tokenConstrucDestroytUTXO(String hash, int index, String amount){
+
+        Map<String,Object>amountMap=new HashMap<>();
+        amountMap.put("hash",hash);
+        amountMap.put("index",index);
+        amountMap.put("amount",amount);
+
+        List<Map>tokenList=new ArrayList<>();
+        tokenList.add(amountMap);
+        return tokenList;
+    }
+
+    /**
+     * token平台回收utxo数组构建方法
+     * @param hash     引用的交易hash
+     * @param index    交易索引
+     * @param amount   数量
+     * @return     返回TOKEN的LIST
+     */
+    public  List<Map>   tokenConstrucDestroytUTXO(String hash, int index, String amount, List<Map> list){
+        List<Map>tokenList=new ArrayList<>();
+        for(int i = 0 ; i < list.size() ; i++) {
+            tokenList.add(list.get(i));
+        }
+        Map<String,Object>amountMap=new HashMap<>();
+        amountMap.put("hash",hash);
+        amountMap.put("index",index);
+        amountMap.put("amount",amount);
+
+        tokenList.add(amountMap);
+        return tokenList;
+    }
+
+    /**
+     * 消息发送平台转账receiver数组构建方法
+     * @param id     身份标识
+     * @param pubkey  公钥
+     * @return     返回TOKEN的LIST
+     */
+    public  List<Map>   constructReceiver(String id, String pubkey){
+
+        Map<String,Object>receiverMap=new HashMap<>();
+        receiverMap.put("id",id);
+        receiverMap.put("pubkey",pubkey);
+
+        List<Map>receiverList=new ArrayList<>();
+        receiverList.add(receiverMap);
+        return receiverList;
+    }
+
+    public  List<Map>   constructReceiver(String id, String pubkey,List<Map>list){
+        List<Map>receiverList = new ArrayList<>();
+        for (int i = 0; i<list.size(); i++){
+            receiverList.add(list.get(i));
+        }
+        Map<String,Object>receiverMap=new HashMap<>();
+        receiverMap.put("id",id);
+        receiverMap.put("pubkey",pubkey);
+
+        receiverList.add(receiverMap);
+        return receiverList;
     }
 
     /**

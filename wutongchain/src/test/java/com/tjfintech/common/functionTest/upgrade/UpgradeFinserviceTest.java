@@ -8,7 +8,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        SDKToTokenMultiTest.class,
+
         TokenAccurateTest.class,
         TokenInterfaceTest.class,
         TokenMultiInvalidTest.class,
