@@ -101,7 +101,7 @@ public class UtilsClass {
     public static String testResultPath = "testresult/";
     public static String testDataPath = "testdata/";
     public static String srcShellScriptDir = testDataPath + "/configFiles/shell/";
-    public static String destShellScriptDir = "/opt/tjshell/";
+    public static String destShellScriptDir = "/root/tjshell/";
     public static String tempWVMDir = testDataPath + "WVM/";
 
     public static String certPath = "cert/" + "SM2"; // 设置签名证书类型，可选值SM2(默认值)，ECDSA，MIX1，MIX2，RSA
