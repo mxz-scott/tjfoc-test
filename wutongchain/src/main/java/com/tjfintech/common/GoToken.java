@@ -625,7 +625,7 @@ public  class GoToken implements Token {
 
     public String tokenGetPrivateStore(String Hash, String addr) {
         Map<String, Object> map = new HashMap<>();
-        map.put("address", addr);
+        if (!addr.isEmpty()) map.put("address", addr);
         map.put("Hash", Hash);
         String param = "";
         if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
@@ -690,5 +690,18 @@ public  class GoToken implements Token {
         String result = GetTest.doGet2(SDKADD + "/v1/apihealth"+ "?" + param );
         log.info(result);
         return result;
+    }
+
+    public String GetRawTx(String hashData) {
+        String param;
+        String hashEncode = URLEncoder.encode(hashData);
+        Map<String, Object> map = new HashMap<>();
+        map.put("hashData", hashEncode);
+        param = GetTest.ParamtoUrl(map);
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+        String result = GetTest.doGet2(SDKADD + "/getrawtx" + "?" + param);
+        log.info(result);
+        return result;
+
     }
 }

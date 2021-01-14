@@ -547,10 +547,10 @@ public class CommonFunc {
         List<Map> tokenList = new ArrayList<>();
         Map<String,Object> amountMap = new LinkedHashMap<>();
 
-        amountMap.put("\"from\"","\"" + from + "\"");
-        amountMap.put("\"to\"","\"" + to + "\"");
-        amountMap.put("\"tokenType\"","\"" + tokenType + "\"");
-        amountMap.put("\"amount\"","\"" + amount + "\"");
+        amountMap.put("\"From\"","\"" + from + "\"");
+        amountMap.put("\"To\"","\"" + to + "\"");
+        amountMap.put("\"TokenType\"","\"" + tokenType + "\"");
+        amountMap.put("\"Amount\"","\"" + amount + "\"");
 
         tokenList.add(amountMap);
         return tokenList;
@@ -571,10 +571,10 @@ public class CommonFunc {
         }
         Map<String,Object>amountMap=new LinkedHashMap<>();
 
-        amountMap.put("\"from\"","\"" + from + "\"");
-        amountMap.put("\"to\"","\"" + to + "\"");
-        amountMap.put("\"tokenType\"","\"" + tokenType + "\"");
-        amountMap.put("\"amount\"","\"" + amount + "\"");
+        amountMap.put("\"From\"","\"" + from + "\"");
+        amountMap.put("\"To\"","\"" + to + "\"");
+        amountMap.put("\"TokenType\"","\"" + tokenType + "\"");
+        amountMap.put("\"Amount\"","\"" + amount + "\"");
 
         tokenList.add(amountMap);
         return tokenList;

@@ -55,11 +55,11 @@ public class TokenStoreTest {
         assertEquals(Data,JSONObject.fromObject(response3).getString("data"));
 
         SDKADD = rSDKADD;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(storeHash)).getString("State"));
+        assertEquals("200",JSONObject.fromObject(tokenModule.tokenGetTxDetail(storeHash)).getString("state"));
 
-        String response2= store.GetStore(storeHash);
-        assertEquals("200",JSONObject.fromObject(response2).getString("State"));
-        assertEquals(Data,JSONObject.fromObject(response2).getString("Data"));
+        String response2= tokenModule.tokenGetPrivateStore(storeHash,"");
+        assertEquals("200",JSONObject.fromObject(response2).getString("state"));
+        assertEquals(Data,JSONObject.fromObject(response2).getString("data"));
     }
 
 
@@ -288,12 +288,12 @@ public class TokenStoreTest {
         for(int i=0;i<hashList.size();i++){
             String hash = hashList.get(i);
             //确认交易上链
-            assertEquals("200",JSONObject.fromObject(store.GetTxDetail(hash)).getString("State"));
+            assertEquals("200",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash)).getString("state"));
 
             //确认交易可以成功查询
-            String resp= store.GetStore(hash);
-            assertEquals("200",JSONObject.fromObject(resp).getString("State"));
-//            assertEquals(listData.get(i),JSONObject.fromObject(resp).getString("Data"));
+            String resp= tokenModule.tokenGetPrivateStore(hash,"");
+            assertEquals("200",JSONObject.fromObject(resp).getString("state"));
+            assertEquals(listData.get(i),JSONObject.fromObject(resp).getString("data"));
         }
 
     }
@@ -379,12 +379,12 @@ public class TokenStoreTest {
        for(int i=0;i<hashList.size();i++){
            String hash = hashList.get(i);
            //确认交易上链
-           assertEquals("200",JSONObject.fromObject(store.GetTxDetail(hash)).getString("State"));
+           assertEquals("200",JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash)).getString("state"));
 
            //确认交易可以成功查询
-           String response2= store.GetStore(hash);
-           assertEquals("200",JSONObject.fromObject(response2).getString("State"));
-           assertEquals(listData.get(i),JSONObject.fromObject(response2).getString("Data"));
+           String response2= tokenModule.tokenGetPrivateStore(hash,"");
+           assertEquals("200",JSONObject.fromObject(response2).getString("state"));
+           assertEquals(listData.get(i),JSONObject.fromObject(response2).getString("data"));
        }
    }
 }

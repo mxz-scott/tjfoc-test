@@ -49,6 +49,8 @@ public interface Token {
 
     String tokenGetPubkey(String address);
     String tokenGetTxDetail(String hashData);
+    String GetRawTx(String hash);
 
     String tokenGetApiHealth();
+
 }

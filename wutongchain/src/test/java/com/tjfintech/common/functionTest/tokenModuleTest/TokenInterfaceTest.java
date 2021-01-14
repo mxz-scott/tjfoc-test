@@ -3540,6 +3540,8 @@ public class TokenInterfaceTest {
         response = tokenModule.tokenDelMintAddr(testAddr);
         assertEquals(true,response.contains("\"state\":200"));
         String hash1 = JSONObject.fromObject(response).getString("data");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //address前后加空格
         response = tokenModule.tokenDelMintAddr(" " + testAddr);

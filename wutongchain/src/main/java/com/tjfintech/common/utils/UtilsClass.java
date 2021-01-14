@@ -184,7 +184,6 @@ public class UtilsClass {
     public static String PeerBaseConfigPath = PeerPATH + "conf/base.toml";//全文件名为base.toml 节点运行相关配置
     public static String SDKConfigPath = SDKPATH + "conf/config.toml";//全文件名为config.toml
     public static String TokenApiConfigPath = TokenApiPATH + "conf/config_api.toml";//全文件名为config.toml
-//    public static String SDKApiConfigPath = SDKPATH + "conf/config_api.toml";//全文件名为config_api.toml
 
     public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";
 
@@ -193,8 +192,7 @@ public class UtilsClass {
 
     public static String startPeerCmd = "sh "+ destShellScriptDir +"startWithParam.sh \"" + tmuxSessionPeer + "\" " + PeerPATH + " " + PeerTPName;
     public static String startSDKCmd = "sh "+ destShellScriptDir +"startWithParam.sh \""+ tmuxSessionSDK + "\" " + SDKPATH + " " + SDKTPName;
-    public static String startSDKAPICmd = "sh "+ destShellScriptDir +"startWithParam.sh \""+ tmuxSessionSDK + "\" " + SDKPATH + " " + SDKTPName + " api";
-    public static String startTokenApiCmd = "sh "+ destShellScriptDir +"startWithParam.sh \""+ tmuxSessionTokenApi + "\" " + TokenApiPATH + " " + TokenTPName;
+    public static String startTokenApiCmd = "sh "+ destShellScriptDir +"startWithParam.sh \""+ tmuxSessionTokenApi + "\" " + TokenApiPATH + " " + TokenTPName  + " api";
     public static String killPeerCmd = "pkill " + PeerTPName;
     public static String killSDKCmd = "pkill " + SDKTPName;
     public static String killTokenApiCmd = "pkill " + TokenTPName;
