@@ -204,24 +204,21 @@ public class TokenPrivateStoreTest {
         ArrayList<String> hashList = new ArrayList<>();
 
         SDKADD = TOKENADD;
-        String Data = utilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath +
+        String Data = utilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath + "/store/" +
                 "bigsize1.txt");
         String response= tokenModule.tokenCreatePrivateStore(Data,map);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
         hashList.add(JSONObject.fromObject(response).getString("data"));
         listData.add(Data);
 
-
-
-        String Data2 = utilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
+        String Data2 = utilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath + "/store/"
                 +  "bigsize2.txt");
         String response2 = tokenModule.tokenCreatePrivateStore(Data2,map);
         assertEquals("200",JSONObject.fromObject(response2).getString("state"));
         hashList.add(JSONObject.fromObject(response2).getString("data"));
         listData.add(Data2);
 
-
-        String Data3 = utilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
+        String Data3 = utilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath + "/store/"
                 + "bigsize3.txt");
         String response3 = tokenModule.tokenCreatePrivateStore(Data3,map);
         assertEquals("400",JSONObject.fromObject(response3).getString("state"));

@@ -254,7 +254,7 @@ public class TokenStoreTest {
         ArrayList<String> hashList = new ArrayList<>();
 
         SDKADD = TOKENADD;
-        String Data = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath +
+        String Data = UtilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath + "/store/" +
                 "bigsize1.txt");
         String response = tokenModule.tokenCreateStore(Data);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
@@ -263,7 +263,7 @@ public class TokenStoreTest {
 
 
 
-        String Data2 = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
+        String Data2 = UtilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath + "/store/"
                 +  "bigsize2.txt");
         String response2 = tokenModule.tokenCreateStore(Data2);
         assertEquals("200",JSONObject.fromObject(response2).getString("state"));
@@ -271,7 +271,7 @@ public class TokenStoreTest {
         listData.add(Data2);
 
 
-        String Data3 = UtilsClass.Random(10) + utilsClass.readStringFromFile(resourcePath
+        String Data3 = UtilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath + "/store/"
                 + "bigsize3.txt");
         String response3 = tokenModule.tokenCreateStore(Data3);
         assertEquals("400",JSONObject.fromObject(response3).getString("state"));

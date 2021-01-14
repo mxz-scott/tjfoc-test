@@ -84,7 +84,7 @@ public class CallBack {
         CommonFunc commonFunc = new CommonFunc();
         commonFunc.setSDKApiCallbackDecrypt(utilsClass.getIPFromStr(TOKENADD), PRIKEY3);
         commonFunc.setSDKApiCallbackLLocalId(utilsClass.getIPFromStr(TOKENADD), "lucy002李");
-        shellExeCmd(utilsClass.getIPFromStr(TOKENADD), killSDKCmd, startSDKCmd); //重启sdk api
+        shellExeCmd(utilsClass.getIPFromStr(TOKENADD), killSDKCmd, startSDKAPICmd); //重启sdk api
         sleepAndSaveInfo(SLEEPTIME,"等待SDK重启");
 
     }

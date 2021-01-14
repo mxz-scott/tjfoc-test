@@ -757,7 +757,7 @@ public class TokenMultiInvalidTest {
         log.info("冻结检查大小写");
         String freezeResp = tokenModule.tokenFreezeToken(tokenType.toLowerCase());
         assertEquals("500",JSONObject.fromObject(freezeResp).getString("state"));
-        assertEquals(true,freezeResp.contains("rpc error: code = InvalidArgument desc = token["+tokenType.toLowerCase()+"] not exist!"));
+        assertEquals(true,freezeResp.contains("rpc error: code = Unknown desc = token["+tokenType.toLowerCase()+"] not exist!"));
 
 //        String hash1 = JSONObject.fromObject(freezeResp).getString("data");
 //
