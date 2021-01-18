@@ -5,15 +5,10 @@ import com.tjfintech.common.functionTest.Conditions.*;
 import com.tjfintech.common.functionTest.Conditions.Upgrade.SetPeerUpgradeFalse;
 import com.tjfintech.common.functionTest.Conditions.Upgrade.SetSDKUpgradeTrue;
 import com.tjfintech.common.functionTest.Conditions.Upgrade.SetTestVersionRelease;
-import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest_UpgradeTestOnly;
-import com.tjfintech.common.functionTest.mainSubChain.TestMainSubChain_UpgradeTestOnly;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.AddPeerAndSyncData;
-import com.tjfintech.common.functionTest.mixTestWithConfigChange.DynamicChangePeerCluster_ClearDB;
 import com.tjfintech.common.functionTest.store.StoreTest_UpgradeTestOnly;
 import com.tjfintech.common.functionTest.upgrade.UpgradeTestHistoryData;
-import com.tjfintech.common.functionTest.utxoMultiSign.MultiTest;
-import com.tjfintech.common.functionTest.utxoSingleSign.SoloTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -43,7 +38,7 @@ import org.junit.runners.Suite;
 
         AddPeerAndSyncData.class,
 
-        TestMainSubChain_UpgradeTestOnly.class,
+//        TestMainSubChain_UpgradeTestOnly.class,
 
         //升级比对 设置主链 设置升级节点和sdk
         SetMainLedger.class,
@@ -56,7 +51,7 @@ import org.junit.runners.Suite;
         StoreTest_UpgradeTestOnly.class,
         WVMContractTest_UpgradeTestOnly.class,
         AddPeerAndSyncData.class,
-        TestMainSubChain_UpgradeTestOnly.class,
+//        TestMainSubChain_UpgradeTestOnly.class,
 })
 
 //Build Validation Test

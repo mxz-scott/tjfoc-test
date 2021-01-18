@@ -2,7 +2,7 @@ package com.tjfintech.common.functionTest.BVT.P2_Middle;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.*;
-import com.tjfintech.common.functionTest.mainSubChain.*;
+import com.tjfintech.common.functionTest.mainAppChain.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -14,9 +14,9 @@ import org.junit.runners.Suite;
         SetMainLedger.class,
         SetSubLedgerSleepTime.class,
         BeforeCondition.class,
-        TestMainSubChain_Create_01.class,
-        TestMainSubChain_Create_02.class,
-        TestMainSubChain_FRDG.class,
+        TestMainAppChain_Create_01.class,
+        TestMainAppChain_Create_02.class,
+        TestMainAppChain_FRDG.class,
 
 })
 

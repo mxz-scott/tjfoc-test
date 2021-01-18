@@ -4,11 +4,9 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.*;
 import com.tjfintech.common.functionTest.Conditions.Upgrade.*;
 import com.tjfintech.common.functionTest.contract.WVMContractTest_UpgradeTestOnly;
-import com.tjfintech.common.functionTest.mainSubChain.*;
+import com.tjfintech.common.functionTest.mainAppChain.TestMainSubChain_UpgradeTestOnly;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.AddPeerAndSyncData;
 import com.tjfintech.common.functionTest.store.StoreTest_UpgradeTestOnly;
-import com.tjfintech.common.functionTest.utxoMultiSign.*;
-import com.tjfintech.common.functionTest.utxoSingleSign.SoloTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

@@ -337,8 +337,8 @@ public class TestPermission {
         assertEquals("1000",subLedgerCheck());
 
         subLedgerName = "permOl_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些
-        String response = mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerName,
-                " -t sm3", " -w first", " -c raft", ids);
+        String response = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerName,
+                " -t sm3", " -w first", " -c raft", ids,"");
         sleepAndSaveInfo(SLEEPTIME);
 
 

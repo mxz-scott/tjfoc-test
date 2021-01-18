@@ -86,7 +86,7 @@ public class TestAppChainDiffHashType {
 
         sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表 存在其他子链
-        String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
+        String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), true);
 //        assertEquals(resp.contains(glbChain01), true);
@@ -172,12 +172,12 @@ public class TestAppChainDiffHashType {
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
-        String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
+        String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), true);
 
         sleepAndSaveInfo(SLEEPTIME);
-        mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
+        mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
 
         subLedger=chainName;
         beforeCondition.collAddressTest();

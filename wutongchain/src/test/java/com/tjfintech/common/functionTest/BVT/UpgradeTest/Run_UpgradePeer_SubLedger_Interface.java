@@ -5,13 +5,9 @@ import com.tjfintech.common.functionTest.Conditions.*;
 import com.tjfintech.common.functionTest.Conditions.Upgrade.SetPeerUpgradeTrue;
 import com.tjfintech.common.functionTest.Conditions.Upgrade.SetPeerVerRelease;
 import com.tjfintech.common.functionTest.Conditions.Upgrade.SetSDKUpgradeFalse;
-import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest_UpgradeTestOnly;
-import com.tjfintech.common.functionTest.mainSubChain.TestMainSubChain_UpgradeTestOnly;
 import com.tjfintech.common.functionTest.store.StoreTest_UpgradeTestOnly;
 import com.tjfintech.common.functionTest.upgrade.UpgradeTestHistoryData;
-import com.tjfintech.common.functionTest.utxoMultiSign.MultiTest;
-import com.tjfintech.common.functionTest.utxoSingleSign.SoloTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -50,7 +46,7 @@ import org.junit.runners.Suite;
         //升级后简单回归测试
         StoreTest_UpgradeTestOnly.class,
         WVMContractTest_UpgradeTestOnly.class,
-        TestMainSubChain_UpgradeTestOnly.class,
+//        TestMainSubChain_UpgradeTestOnly.class,
 })
 
 //Build Validation Test

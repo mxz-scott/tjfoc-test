@@ -41,7 +41,7 @@ public class TestMainAppChain_Create_01 {
     String ids = " -m "+ id1+","+ id2+","+ id3;
     List<String> listPeer = new ArrayList<>();
 
-    @BeforeClass
+//    @BeforeClass
     public static void clearData()throws Exception{
         BeforeCondition beforeCondition = new BeforeCondition();
         beforeCondition.clearDataSetPerm999();
@@ -96,7 +96,7 @@ public class TestMainAppChain_Create_01 {
         String chainName = "tc1613_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         String word =chainName+" first word";
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3",
-                " -w \""+word+"\""," -c raft",ids, " -n \"" + listPeer.toString() + "\"");
+                " -w \"" + word + "\""," -c raft",ids, " -n \"" + listPeer.toString() + "\"");
         assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME);

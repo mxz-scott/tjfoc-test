@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.mainSubChain;
+package com.tjfintech.common.functionTest.mainAppChain;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.CommonFunc;
@@ -58,19 +58,19 @@ public class TestWithConfigChange_ClearDB {
 
         sleepAndSaveInfo(SLEEPTIME);
         MgToolCmd mgToolCmd = new MgToolCmd();
-        String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
+        String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         if(! resp.contains("\"name\": \""+glbChain01.toLowerCase()+"\"")) {
-            mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01,
-                    " -t sm3", " -w first", " -c raft", ids);
+            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01,
+                    " -t sm3", " -w first", " -c raft", ids,"");
             sleepAndSaveInfo(SLEEPTIME*2);
-            assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01.toLowerCase()+"\""), true);
+            assertEquals(mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01.toLowerCase()+"\""), true);
         }
 
         if(! resp.contains("\"name\": \""+glbChain02+"\"")) {
-            mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + glbChain02,
-                    " -t sm3", " -w first", " -c raft", ids);
+            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + glbChain02,
+                    " -t sm3", " -w first", " -c raft", ids,"");
             sleepAndSaveInfo(SLEEPTIME*2);
-            assertEquals(mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02.toLowerCase()+"\""), true);
+            assertEquals(mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02.toLowerCase()+"\""), true);
         }
     }
 
@@ -81,27 +81,27 @@ public class TestWithConfigChange_ClearDB {
         utilsClass.setAndRestartSDK();
         //创建子链01 包含节点A、B、C
         String chainName1="tc1538_01";
-        String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1,
-                " -t sm3"," -w first"," -c raft",ids);
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName1,
+                " -t sm3"," -w first"," -c raft",ids,"");
         assertEquals(res.contains("send transaction success"), true);
 
         //创建子链02 包含节点A、C
         String chainName2="tc1538_02";
-        String res2 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName2,
-                " -t sm3"," -w first"," -c raft"," -m "+id1+","+id3);
+        String res2 = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName2,
+                " -t sm3"," -w first"," -c raft"," -m "+id1+","+id3,"");
         assertEquals(res2.contains("send transaction success"), true);
 
 
         //创建子链03 包含节点A、B
         String chainName3="tc1538_03";
-        String res3 = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName3,
-                " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2);
+        String res3 = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName3,
+                " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2,"");
         assertEquals(res3.contains("send transaction success"), true);
 
 
         sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表 存在其他子链
-        String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
+        String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName1), true);
         assertEquals(resp.contains(chainName2), true);
@@ -115,15 +115,15 @@ public class TestWithConfigChange_ClearDB {
 
         sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表 存在其他子链
-        resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains(chainName1), true);
         assertEquals(resp.contains(chainName2), true);
         assertEquals(resp.contains(chainName3), true);
 
         //确认包含节点B的子链集群信息无异常
-        resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
         assertEquals(resp.contains(PEER2IP), true);
-        resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName3);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName3);
         assertEquals(resp.contains(PEER2IP), true);
 
         subLedger=chainName1;
@@ -174,9 +174,9 @@ public class TestWithConfigChange_ClearDB {
         assertEquals(3,subLedgerCmd.getLedgerMemNo(glbChain01));//动态加入节点前检查节点集群信息
         //创建子链01 包含节点A、B、C
         String chainName1="tc1537_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1,
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName1,
                 " -t sm3"," -w first",
-                " -c raft",ids+","+getPeerId(PEER3IP,USERNAME,PASSWD));
+                " -c raft",ids+","+getPeerId(PEER3IP,USERNAME,PASSWD),"");
         assertEquals(res.contains("send transaction success"), true);
 
 
@@ -184,7 +184,7 @@ public class TestWithConfigChange_ClearDB {
         assertEquals(4,subLedgerCmd.getLedgerMemNo(chainName1));//动态加入节点前检查节点集群信息
 
         //检查可以获取子链列表 存在其他子链
-        String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
+        String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName1), true);
 
@@ -193,7 +193,7 @@ public class TestWithConfigChange_ClearDB {
 
         sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表 存在其他子链
-        resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName1), true);
 
@@ -214,9 +214,9 @@ public class TestWithConfigChange_ClearDB {
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash4)).getString("state"));  //确认不可以c查询成功
 
         //销毁子链 以便恢复集群（退出动态加入的节点）
-        mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
+        mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
         sleepAndSaveInfo(SLEEPTIME*3/2);
-        resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName1);
         assertEquals(resp.contains(ledgerStateDestroy), true);
 
         //恢复节点
@@ -274,14 +274,14 @@ public class TestWithConfigChange_ClearDB {
         sleepAndSaveInfo(SLEEPTIME);
         //创建子链01 包含节点A、B、C
         String chainName1="tc1659_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName1,
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName1,
                 " -t sm3"," -w first",
-                " -c raft",ids+","+getPeerId(PEER3IP,USERNAME,PASSWD));
+                " -c raft",ids+","+getPeerId(PEER3IP,USERNAME,PASSWD),"");
         assertEquals(res.contains("is not Consensus Node"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
-        String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
+        String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName1), false);
 
@@ -307,13 +307,13 @@ public class TestWithConfigChange_ClearDB {
 //        commonFunc.setAndRestartSDK();
         //创建子链，包含两个节点
         String chainName="tc1523_01";
-        String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,
-                " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2);
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName,
+                " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2,"");
         assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
-        String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
+        String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), true);
         assertEquals(resp.contains(glbChain01.toLowerCase()), true);
@@ -359,13 +359,13 @@ public class TestWithConfigChange_ClearDB {
 
         shExeAndReturn(PEER2IP,killPeerCmd);
         String chainName="tc1726_01";
-        String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,
-                " -t sm3"," -w first"," -c raft",ids);
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName,
+                " -t sm3"," -w first"," -c raft",ids,"");
         assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
-        String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
+        String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains(chainName), true);
 
         shExeAndReturn(PEER2IP,startPeerCmd);

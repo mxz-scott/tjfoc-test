@@ -2,7 +2,6 @@ package com.tjfintech.common.functionTest.BVT.P2_Middle;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
-import com.tjfintech.common.functionTest.mainSubChain.TestWithConfigChange_ClearDB;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -11,7 +10,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         SetDatabaseMysql.class,
         BeforeCondition.class,
-        TestWithConfigChange_ClearDB.class
+//        TestWithConfigChange_ClearDB.class
 })
 
 //Build Validation Test

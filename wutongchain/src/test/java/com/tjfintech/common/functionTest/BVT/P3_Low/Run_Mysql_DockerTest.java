@@ -5,19 +5,10 @@ import com.tjfintech.common.functionTest.Conditions.*;
 import com.tjfintech.common.functionTest.PermissionTest.TestPermission_Docker;
 import com.tjfintech.common.functionTest.contract.DockerContractInvalidTest;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
-import com.tjfintech.common.functionTest.contract.WVMContractTest;
-import com.tjfintech.common.functionTest.mainSubChain.TestMainSubChain_DockerContract;
-import com.tjfintech.common.functionTest.mixTest.TestTxType;
+
 import com.tjfintech.common.functionTest.mixTest.TestTxType_Docker;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.BlockSyncTest_DockerImageFlag_WithContract;
-import com.tjfintech.common.functionTest.store.PrivateStoreTest;
-import com.tjfintech.common.functionTest.store.StoreInvalidTest;
-import com.tjfintech.common.functionTest.store.StoreTest;
-import com.tjfintech.common.functionTest.store.StoreWalletRelatedTest;
-import com.tjfintech.common.functionTest.utxoMultiSign.*;
-import com.tjfintech.common.functionTest.utxoSingleSign.SingleSignInvalidTest;
-import com.tjfintech.common.functionTest.utxoSingleSign.SoloTest;
-import com.tjfintech.common.functionTest.utxoSingleSign.SoloTestInvalid;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -34,8 +25,6 @@ import org.junit.runners.Suite;
 
         TestTxType_Docker.class,
         TestPermission_Docker.class,
-
-        TestMainSubChain_DockerContract.class,
 
         SetSubLedger.class,
         DockerContractTest.class,

@@ -8,13 +8,13 @@ import org.apache.commons.lang.StringUtils;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.tjfintech.common.Interface.ManageTool;
+//import com.tjfintech.common.Interface.ManageTool;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClass.subLedger;
 
 @Slf4j
-public class MgToolCmd implements ManageTool {
+public class MgToolCmd {
     UtilsClass utilsClass = new UtilsClass();
     public String toolExePath  = "cd " + ToolPATH + ";./" + ToolTPName;
     public String licExePath  = "cd " + ToolPATH + ";./license";
@@ -166,70 +166,70 @@ public class MgToolCmd implements ManageTool {
         return shExeAndReturn(shellIP,cmd);
     }
 
-
-    public String createSubChain(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
-                                 String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
-        String mainCmd =" addledger ";
-        String cmd=toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam +
-                hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam;
-        String resp = shExeAndReturn(shellIP,cmd);
-
-        if(resp.contains("transaction success")) {
-
-            chkLedgerExist(shellIP,rpcPort,chainNameParam.replaceAll("-z",""),SLEEPTIME*2);
-
-            subLedger = chainNameParam.trim().split(" ")[1];
-            log.info("**************  set permission 999 for " + subLedger);
-            String resp1 = setPeerPerm(PEER1IP + ":" + PEER1RPCPort, utilsClass.getSDKID(),"999");
-            subLedger = "";
-        }
-        return resp;
-    }
-
-    public String createSubChainNoPerm(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
-                                       String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
-        String mainCmd =" addledger ";
-        String cmd= toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam +
-                hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam;
-
-        return shExeAndReturn(shellIP,cmd);
-    }
-
-    /*
-     * 获取子链信息 包括所有子链及单个子链
-     * */
-    public String getSubChain(String shellIP,String rpcPort,String chainNameParam){
-        String mainCmd =" getledger ";
-        String cmd = toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam;
-        return shExeAndReturn(shellIP,cmd);
-    }
-
-    /*
-     * 冻结子链
-     * */
-    public String freezeSubChain(String shellIP,String rpcPort,String chainNameParam){
-        String mainCmd =" freezeledger ";
-        String cmd = toolExePath + mainCmd + " -p " + rpcPort + chainNameParam;
-        return shExeAndReturn(shellIP,cmd);
-    }
-
-    /*
-     * 恢复子链
-     * */
-    public String recoverSubChain(String shellIP,String rpcPort,String chainNameParam){
-        String mainCmd = " recoverledger ";
-        String cmd = toolExePath + mainCmd + " -p " + rpcPort + chainNameParam;
-        return shExeAndReturn(shellIP,cmd);
-    }
-
-    /*
-     * 销毁子链
-     * */
-    public String destroySubChain(String shellIP,String rpcPort,String chainNameParam){
-        String mainCmd =" destoryledger ";
-        String cmd = toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam;
-        return shExeAndReturn(shellIP,cmd);
-    }
+//
+//    public String createSubChain(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
+//                                 String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
+//        String mainCmd =" addledger ";
+//        String cmd=toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam +
+//                hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam;
+//        String resp = shExeAndReturn(shellIP,cmd);
+//
+//        if(resp.contains("transaction success")) {
+//
+//            chkLedgerExist(shellIP,rpcPort,chainNameParam.replaceAll("-z",""),SLEEPTIME*2);
+//
+//            subLedger = chainNameParam.trim().split(" ")[1];
+//            log.info("**************  set permission 999 for " + subLedger);
+//            String resp1 = setPeerPerm(PEER1IP + ":" + PEER1RPCPort, utilsClass.getSDKID(),"999");
+//            subLedger = "";
+//        }
+//        return resp;
+//    }
+//
+//    public String createSubChainNoPerm(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
+//                                       String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
+//        String mainCmd =" addledger ";
+//        String cmd= toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam +
+//                hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam;
+//
+//        return shExeAndReturn(shellIP,cmd);
+//    }
+//
+//    /*
+//     * 获取子链信息 包括所有子链及单个子链
+//     * */
+//    public String getSubChain(String shellIP,String rpcPort,String chainNameParam){
+//        String mainCmd =" getledger ";
+//        String cmd = toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam;
+//        return shExeAndReturn(shellIP,cmd);
+//    }
+//
+//    /*
+//     * 冻结子链
+//     * */
+//    public String freezeSubChain(String shellIP,String rpcPort,String chainNameParam){
+//        String mainCmd =" freezeledger ";
+//        String cmd = toolExePath + mainCmd + " -p " + rpcPort + chainNameParam;
+//        return shExeAndReturn(shellIP,cmd);
+//    }
+//
+//    /*
+//     * 恢复子链
+//     * */
+//    public String recoverSubChain(String shellIP,String rpcPort,String chainNameParam){
+//        String mainCmd = " recoverledger ";
+//        String cmd = toolExePath + mainCmd + " -p " + rpcPort + chainNameParam;
+//        return shExeAndReturn(shellIP,cmd);
+//    }
+//
+//    /*
+//     * 销毁子链
+//     * */
+//    public String destroySubChain(String shellIP,String rpcPort,String chainNameParam){
+//        String mainCmd =" destoryledger ";
+//        String cmd = toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam;
+//        return shExeAndReturn(shellIP,cmd);
+//    }
 
     public Boolean mgCheckHeightOrSleep(String queryIPPortRefer,String queryIPPortTest,long... sleeptime)throws Exception{
 
@@ -268,11 +268,11 @@ public class MgToolCmd implements ManageTool {
         while((new Date()).getTime() - nowTime < sleeptime && bOK == false){
             //管理工具查询子链是否存在
             log.info("开始时间 " + (new Date()).getTime());
-            String cmd = "cd " + ToolPATH + ";./" + ToolTPName + " getledger -p "+ rpcPort +
-                    " -z " + ledgerName.toLowerCase().trim();
+            String cmd = "cd " + ToolPATH + ";./" + ToolTPName + " ledger get -p "+ rpcPort ;//+" -z " + ledgerName.toLowerCase().trim();
             String resp = shExeAndReturn(shellIP,cmd);
 
-            if(resp.contains(ledgerName.toLowerCase().trim()) && (!resp.contains("not exist"))) bOK = true;
+//            if(resp.contains(ledgerName.toLowerCase().trim()) && (!resp.contains("not exist"))) bOK = true;
+            if(resp.contains(ledgerName.toLowerCase().trim())) bOK = true;
 
             sleepAndSaveInfo(1000,"等待再次查询子链是否存在");
         }
@@ -287,16 +287,15 @@ public class MgToolCmd implements ManageTool {
 
     public String createAppChain(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
                                  String firstBlockInfoParam,String consensusParam,String peeridsParam,String outPeerList)throws Exception{
-        String mainCmd =" addappledger ";
+        String mainCmd =" ledger create ";
         String cmd=toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam +
                 hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam + outPeerList;
         String resp = shExeAndReturn(shellIP,cmd);
 
         if(resp.contains("transaction success")) {
-
+            subLedger = resp.substring(resp.lastIndexOf("")+1).trim();
             resp = chkLedgerExist(shellIP,rpcPort,chainNameParam.replaceAll("-z",""),SLEEPTIME*2);
             if(!resp.contains("not exist")) {
-                subLedger = chainNameParam.trim().split(" ")[1];
                 log.info("**************  set permission 999 for " + subLedger);
                 String resp1 = setPeerPerm(PEER1IP + ":" + PEER1RPCPort, utilsClass.getSDKID(), "999");
                 subLedger = "";
@@ -307,7 +306,7 @@ public class MgToolCmd implements ManageTool {
 
     public String createAppChainNoPerm(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
                                        String firstBlockInfoParam,String consensusParam,String peeridsParam,String outPeerList)throws Exception{
-        String mainCmd =" addappledger ";
+        String mainCmd =" ledger create ";
         String cmd= toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam +
                 hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam + outPeerList;
 
@@ -318,7 +317,7 @@ public class MgToolCmd implements ManageTool {
      * 获取子链信息 包括所有子链及单个子链
      * */
     public String getAppChain(String shellIP,String rpcPort,String chainNameParam){
-        String mainCmd =" getledger ";
+        String mainCmd =" ledger get ";
         String cmd = toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam;
         return shExeAndReturn(shellIP,cmd);
     }
@@ -327,7 +326,7 @@ public class MgToolCmd implements ManageTool {
      * 冻结子链
      * */
     public String freezeAppChain(String shellIP,String rpcPort,String chainNameParam){
-        String mainCmd =" freezeappledger ";
+        String mainCmd =" ledger freeze ";
         String cmd = toolExePath + mainCmd + " -p " + rpcPort + chainNameParam;
         return shExeAndReturn(shellIP,cmd);
     }
@@ -336,7 +335,7 @@ public class MgToolCmd implements ManageTool {
      * 恢复子链
      * */
     public String recoverAppChain(String shellIP,String rpcPort,String chainNameParam){
-        String mainCmd = " recoverappledger ";
+        String mainCmd = " ledger recover ";
         String cmd = toolExePath + mainCmd + " -p " + rpcPort + chainNameParam;
         return shExeAndReturn(shellIP,cmd);
     }
@@ -345,7 +344,7 @@ public class MgToolCmd implements ManageTool {
      * 销毁子链
      * */
     public String destroyAppChain(String shellIP,String rpcPort,String chainNameParam){
-        String mainCmd =" destoryappledger ";
+        String mainCmd =" ledger destory ";
         String cmd = toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam;
         return shExeAndReturn(shellIP,cmd);
     }

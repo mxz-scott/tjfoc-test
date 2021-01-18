@@ -5,7 +5,6 @@ import com.tjfintech.common.functionTest.Conditions.*;
 import com.tjfintech.common.functionTest.PermissionTest.TestPermission_Docker;
 import com.tjfintech.common.functionTest.contract.DockerContractInvalidTest;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
-import com.tjfintech.common.functionTest.mainSubChain.TestMainSubChain_DockerContract;
 import com.tjfintech.common.functionTest.mixTest.TestTxType_Docker;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

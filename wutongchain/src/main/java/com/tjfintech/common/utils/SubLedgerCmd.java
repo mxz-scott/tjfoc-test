@@ -55,7 +55,7 @@ public class SubLedgerCmd {
     }
 
     public int getLedgerMemNo(String ledgerName)throws Exception{
-        String getledgerInfo = mgToolCmd.getSubChain(queryIP,queryPort," -z " + ledgerName);
+        String getledgerInfo = mgToolCmd.getAppChain(queryIP,queryPort," -z " + ledgerName);
         JSONObject jsonObject = JSONObject.fromObject(getledgerInfo.substring(getledgerInfo.indexOf("{")));
         int memNo = JSONObject.fromObject(jsonObject.getJSONArray("subLedgers").getString(0)).getJSONArray("memberList").size();
         log.info(ledgerName + "has " + memNo + "members");
@@ -64,7 +64,7 @@ public class SubLedgerCmd {
 
     public void sendTxToMainActiveChain(String glbChain01, String glbChain02, String data)throws Exception{
         //检查可以执行获取所有子链信息命令
-        assertEquals(mgToolCmd.getSubChain(queryIP,queryPort,"").contains("name"), true);
+        assertEquals(mgToolCmd.getAppChain(queryIP,queryPort,"").contains("name"), true);
 
         //向子链glbChain01发送交易
         subLedger=glbChain01;

@@ -28,8 +28,8 @@ public class SetSubLedger {
        //20200415 子链不支持包含.
 //       String ledger = "sO.l_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些
        String ledger = "sOl_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些
-       mgToolCmd.createSubChain(PEER1IP, PEER1RPCPort, " -z " + ledger,
-               " -t sm3", " -w first", " -c raft", ids);
+       mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + ledger,
+               " -t sm3", " -w first", " -c raft", ids,"");
        Thread.sleep(SLEEPTIME*2);
        subLedger = ledger;
        String response = store.CreateStore("test for ok tx");

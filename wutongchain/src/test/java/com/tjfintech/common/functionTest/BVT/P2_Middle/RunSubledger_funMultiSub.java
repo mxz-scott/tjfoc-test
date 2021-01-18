@@ -3,8 +3,9 @@ package com.tjfintech.common.functionTest.BVT.P2_Middle;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
 import com.tjfintech.common.functionTest.Conditions.SetSubLedgerSleepTime;
-import com.tjfintech.common.functionTest.mainSubChain.TestMultiSubChain;
-import com.tjfintech.common.functionTest.mainSubChain.TestMultiSubChain_02;
+
+import com.tjfintech.common.functionTest.mainAppChain.TestMultiAppChain;
+import com.tjfintech.common.functionTest.mainAppChain.TestMultiAppChain_02;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -14,8 +15,8 @@ import org.junit.runners.Suite;
         SetDatabaseMysql.class,
         BeforeCondition.class,
         SetSubLedgerSleepTime.class,
-        TestMultiSubChain.class,
-        TestMultiSubChain_02.class
+        TestMultiAppChain.class,
+        TestMultiAppChain_02.class
 })
 
 //Build Validation Test

@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.mainSubChain;
+package com.tjfintech.common.functionTest.mainAppChain;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.CommonFunc;
@@ -50,13 +50,13 @@ public class TestDiffHashType {
         Thread.sleep(SLEEPTIME);
         //创建子链，包含三个节点 hashtype 使用sha256 主链使用sm3
         String chainName="tc1649_01";
-        String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,
-                " -t sha256"," -w first"," -c raft",ids);
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName,
+                " -t sha256"," -w first"," -c raft",ids,"");
         assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME*2);
         //检查可以获取子链列表 存在其他子链
-        String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
+        String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), true);
 //        assertEquals(resp.contains(glbChain01), true);
@@ -135,17 +135,18 @@ public class TestDiffHashType {
 
         //创建子链，包含三个节点 hashtype 子链sm3 主链使用sha256
         String chainName="tc1651_01";
-        String res = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3"," -w first"," -c raft",ids);
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName,
+                " -t sm3"," -w first"," -c raft",ids,"");
         assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
-        String resp = mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
+        String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), true);
 
         sleepAndSaveInfo(SLEEPTIME);
-        mgToolCmd.getSubChain(PEER1IP,PEER1RPCPort,"");
+        mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
 
         subLedger=chainName;
         beforeCondition.collAddressTest();
