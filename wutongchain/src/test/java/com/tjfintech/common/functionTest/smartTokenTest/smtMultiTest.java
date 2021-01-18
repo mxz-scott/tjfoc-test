@@ -1,6 +1,7 @@
 package com.tjfintech.common.functionTest.smartTokenTest;
 
 import com.tjfintech.common.*;
+import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -25,6 +26,8 @@ public class smtMultiTest {
     CommonFunc commonFunc = new CommonFunc();
     GoSmartToken st = new GoSmartToken();
     CertTool certTool = new CertTool();
+    TestBuilder testBuilder = TestBuilder.getInstance();
+    Store store = testBuilder.getStore();
 
     private static String tokenType;
 
@@ -462,7 +465,7 @@ public class smtMultiTest {
     }
 
     /**
-     * 多签正常流程-发币：签名：查询：转账：查询:回收：查询
+     * smt接口TxDetail、TxRaw验证测试
      */
     @Test
     public void TC009_smtProgressVerifyTest() throws Exception {
@@ -473,42 +476,53 @@ public class smtMultiTest {
         //发行
         double timeStampNow = System.currentTimeMillis();
         BigDecimal deadline = new BigDecimal(timeStampNow + 12356789);
-        List<Map> list = stc.smartConstructTokenList(ADDRESS1, "test", "200", null);
+        List<Map> list = stc.smartConstructTokenList(ADDRESS1, "test", "200.123456", null);
         String response = stc.smartIssueToken(tokenType, deadline, list, true, 0, "");
         String responseHash = JSONObject.fromObject(response).getString("data");
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(response, utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "200");
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "200.123456");
         commonFunc.verifyTxDetailField(responseHash,"smt_issue","2","3","43");
         commonFunc.verifyTxRawField(responseHash, "2","3","43");
         commonFunc.verifyRawFieldMatch(responseHash);
+        String txDetail = store.GetTxDetail(responseHash);
+        assertEquals("200.123456", JSONObject.fromObject(txDetail).getJSONObject("data").getJSONObject("wvm").
+                getJSONArray("txRecords").getJSONObject(0).getString("amount"));
 
         //转让
-        list = stc.smartConstructTokenList(ADDRESS1, "test", "10", null);
-        List<Map> colllist = stc.smartConstructTokenList(MULITADD4, "test", "10", null);
+        list = stc.smartConstructTokenList(ADDRESS1, "test", "10.12", null);
+        List<Map> colllist = stc.smartConstructTokenList(MULITADD4, "test", "10.12", null);
         response = stc.smartTransfer(tokenType,list,colllist,"","","");
         responseHash = JSONObject.fromObject(response).getString("data");
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(response, utilsClass.sdkGetTxHashType21),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "190");
-        stc.verifyAddressHasBalance(MULITADD4, tokenType, "10");
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "190.003456");
+        stc.verifyAddressHasBalance(MULITADD4, tokenType, "10.12");
         commonFunc.verifyTxDetailField(responseHash,"smt_transfer","1","1","11");
         commonFunc.verifyTxRawField(responseHash, "1","1","11");
         commonFunc.verifyRawFieldMatch(responseHash);
+        txDetail = store.GetTxDetail(responseHash);
+        assertEquals("10.12", JSONObject.fromObject(txDetail).getJSONObject("data").getJSONObject("utxo").
+                getJSONArray("txRecords").getJSONObject(1).getString("amount"));
 
         //销毁
+        list.clear();
+        list = stc.smartConstructTokenList(ADDRESS1, "test", "10.0034", null);
         response = stc.smartDestroy(tokenType, list, "", "");
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         responseHash = JSONObject.fromObject(response).getString("data");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType, SLEEPTIME);
-        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "180");
-        stc.verifyAddressHasBalance(ZEROADDRESS, tokenType, "10");
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "180.000056");
+        stc.verifyAddressHasBalance(ZEROADDRESS, tokenType, "10.0034");
         commonFunc.verifyTxDetailField(responseHash,"smt_destroy","1","1","12");
         commonFunc.verifyTxRawField(responseHash, "1","1","12");
         commonFunc.verifyRawFieldMatch(responseHash);
+        txDetail = store.GetTxDetail(responseHash);
+        assertEquals("10.0034", JSONObject.fromObject(txDetail).getJSONObject("data").getJSONObject("utxo").
+                getJSONArray("txRecords").getJSONObject(0).getString("amount"));
 
         //冻结
         response = st.SmartFreeze(tokenType,"");
@@ -541,6 +555,9 @@ public class smtMultiTest {
         commonFunc.verifyTxDetailField(responseHash,"smt_exchange","1","1","13");
         commonFunc.verifyTxRawField(responseHash, "1","1","13");
         commonFunc.verifyRawFieldMatch(responseHash);
+        txDetail = store.GetTxDetail(responseHash);
+        assertEquals("10.12", JSONObject.fromObject(txDetail).getJSONObject("data").getJSONObject("utxo").
+                getJSONArray("txRecords").getJSONObject(0).getString("amount"));
 
     }
 
