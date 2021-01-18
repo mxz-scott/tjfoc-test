@@ -41,7 +41,7 @@ public class APermfuncSysSetMg {
     public String subLedgerCreate() throws Exception {
         String tempName ="permOl_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些
         String response = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + tempName,
-                " -t sm3", " -w first", " -c raft", ids,"");
+                " -t sm3", " -w first", " -c raft", ids);
 
         if(response.toLowerCase().contains(okMsg))  {
             sleepAndSaveInfo(SLEEPTIME);

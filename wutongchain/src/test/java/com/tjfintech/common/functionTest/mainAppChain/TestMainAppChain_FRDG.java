@@ -88,9 +88,9 @@ public class TestMainAppChain_FRDG {
 
         String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         if(! resp.contains("\"name\": \"" + glbChain01.toLowerCase() + "\"")) {
-            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01,
+            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain01,
                     " -t sm3", " -w first", " -c raft",
-                    ids, " -n \"" + listPeer.toString() + "\"");
+                    ids);
             sleepAndSaveInfo(SLEEPTIME*2);
             assertEquals(
                     mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01.toLowerCase()+"\""),
@@ -98,9 +98,9 @@ public class TestMainAppChain_FRDG {
         }
 
         if(! resp.contains("\"name\": \""+glbChain02.toLowerCase()+"\"")) {
-            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + glbChain02,
+            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain02,
                     " -t sm3", " -w first", " -c raft",
-                    ids," -n \"" + listPeer.toString() + "\"");
+                    ids);
             sleepAndSaveInfo(SLEEPTIME*2);
             assertEquals(
                     mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02.toLowerCase()+"\""),
@@ -115,7 +115,7 @@ public class TestMainAppChain_FRDG {
 
         //创建子链，包含三个节点
         String chainName="tc1515_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3"," -w first"," -c raft",ids, " -n \"" + listPeer.toString() + "\"");
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
@@ -129,24 +129,24 @@ public class TestMainAppChain_FRDG {
         assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
         //冻结子链
-        res = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res.contains("send transaction success"), true);
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
         sleepAndSaveInfo(2000,"等待同步时间");
         //检查子链状态正确
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(resp.contains(ledgerStateFreeze), true);
 
 
         //解除子链
-        res = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res.contains("send transaction success"), true);
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
         sleepAndSaveInfo(2000,"等待同步时间");
         //检查子链状态正确
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         if(resp.contains("state"))  assertEquals(resp.contains(ledgerStateNormal), true);
 
 
@@ -186,13 +186,13 @@ public class TestMainAppChain_FRDG {
 
 
         //解除子链
-        String res = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -z "+glbChain01);
+        String res = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -n "+glbChain01);
         assertEquals(res.contains("send transaction success"), true);
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
         sleepAndSaveInfo(2000,"等待同步时间");
         //检查子链状态正确
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+glbChain01);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+glbChain01);
         if(resp.contains("state"))  assertEquals(resp.contains(ledgerStateNormal), true);
 
 
@@ -215,7 +215,7 @@ public class TestMainAppChain_FRDG {
 
         //创建子链，包含三个节点
         String chainName="tc1517_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName," -t sm3"," -w first"," -c raft",ids, " -n \"" + listPeer.toString() + "\"");
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName," -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
@@ -229,24 +229,24 @@ public class TestMainAppChain_FRDG {
         assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
         //销毁子链
-        res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res.contains("send transaction success"), true);
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
         sleepAndSaveInfo(2000,"等待同步时间");
         //检查被销毁子链状态正确
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(resp.contains(ledgerStateDestroy), true);
 
 
         //解除销毁子链
-        res = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res.contains("send transaction success"), true);
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
         sleepAndSaveInfo(2000,"等待同步时间");
         //检查子链状态正确
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(resp.contains(ledgerStateDestroy), true);
 
 
@@ -273,8 +273,8 @@ public class TestMainAppChain_FRDG {
 
         //创建子链，包含三个节点
         String chainName="tc1522_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName,
-                " -t sm3"," -w first"," -c raft",ids, " -n \"" + listPeer.toString() + "\"");
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
+                " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
@@ -288,35 +288,35 @@ public class TestMainAppChain_FRDG {
         assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
         //冻结子链
-        res = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res.contains("send transaction success"), true);
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
         sleepAndSaveInfo(2000,"等待同步时间");
         //检查被销毁子链状态正确
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(resp.contains(ledgerStateFreeze), true);
 
 
         //解除冻结子链
-        res = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res.contains("send transaction success"), true);
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
         sleepAndSaveInfo(2000,"等待同步时间");
         //检查子链状态正确
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         if(resp.contains("state"))  assertEquals(resp.contains(ledgerStateNormal), true);
 
         //销毁一个被冻结子链
-        res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //检查被销毁子链状态正确
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(resp.contains(ledgerStateDestroy), true);
 
 
@@ -342,8 +342,8 @@ public class TestMainAppChain_FRDG {
 
         //创建子链，包含三个节点
         String chainName="tc1521_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName,
-                " -t sm3"," -w first"," -c raft",ids, " -n \"" + listPeer.toString() + "\"");
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
+                " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
@@ -357,18 +357,18 @@ public class TestMainAppChain_FRDG {
         assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
         //冻结子链
-        res = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res.contains("send transaction success"), true);
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
         sleepAndSaveInfo(2000,"等待同步时间");
 
         //检查被销毁子链状态正确
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(resp.contains(ledgerStateFreeze), true);
 
         //销毁一个被冻结子链
-        res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
@@ -376,7 +376,7 @@ public class TestMainAppChain_FRDG {
         sleepAndSaveInfo(2000,"等待同步时间");
 
         //检查被销毁子链状态正确
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(resp.contains(ledgerStateDestroy), true);
 
 
@@ -403,8 +403,8 @@ public class TestMainAppChain_FRDG {
 
         //创建子链，包含三个节点
         String chainName="tc1622_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName,
-                " -t sm3"," -w first"," -c raft",ids, " -n \"" + listPeer.toString() + "\"");
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
+                " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
@@ -418,26 +418,26 @@ public class TestMainAppChain_FRDG {
         assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
         //第一次销毁一个已存在的活跃子链
-        res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
         sleepAndSaveInfo(2000,"等待同步时间");
         //检查被销毁子链状态正确
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(resp.contains(ledgerStateDestroy), true);
 
 
         //再次销毁已被销毁的子链
-        res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //检查被销毁子链状态正确
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(resp.contains(ledgerStateDestroy), true);
 
         sleepAndSaveInfo(SLEEPTIME/2);
@@ -464,8 +464,8 @@ public class TestMainAppChain_FRDG {
 
         //创建子链，包含三个节点
         String chainName="tc1518_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName,
-                " -t sm3"," -w first"," -c raft",ids, " -n \"" + listPeer.toString() + "\"");
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
+                " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
@@ -478,14 +478,14 @@ public class TestMainAppChain_FRDG {
         assertEquals(resp.contains(chainName), true);
 
         //销毁一个已存在的活跃子链
-        res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res.contains("send transaction success"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
         sleepAndSaveInfo(3000,"等待同步时间");
         //检查被销毁子链状态正确
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(resp.contains(ledgerStateDestroy), true);
         assertEquals(resp.contains("\"name\": \""+chainName+"\""), true);
         assertEquals(resp.contains("\"hashType\": \"sm3\""), true);
@@ -581,7 +581,7 @@ public class TestMainAppChain_FRDG {
         assertEquals(resp.contains(chainName), false);
         assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(resp.contains("not exist"), true);
 
 
@@ -608,8 +608,8 @@ public class TestMainAppChain_FRDG {
     public void TC1494_1495_getFreezeChain()throws Exception{
         String chainName="tc1494_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         //创建一个子链
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName,
-                " -t sm3"," -w first"," -c raft",ids, " -n \"" + listPeer.toString() + "\"");
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
+                " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
 
@@ -625,13 +625,13 @@ public class TestMainAppChain_FRDG {
         assertEquals(resp.contains(chainName), true);
         assertEquals(resp.contains(glbChain01.toLowerCase()), true);
 
-        res = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res.contains("send transaction success"), true);
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
         sleepAndSaveInfo(2000,"等待同步时间");
 
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(resp.contains(ledgerStateFreeze), true);
         assertEquals(resp.contains("\"name\": \""+chainName+"\""), true);
         assertEquals(resp.contains("\"hashType\": \"sm3\""), true);
@@ -649,13 +649,13 @@ public class TestMainAppChain_FRDG {
         subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
 
         //查看恢复子链后的子链状态并向子链发送交易
-        res = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res.contains("send transaction success"), true);
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
         sleepAndSaveInfo(2000,"等待同步时间");
 
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         if(resp.contains("state"))  assertEquals(resp.contains(ledgerStateNormal), true);
         assertEquals(resp.contains("\"name\": \""+chainName+"\""), true);
         assertEquals(resp.contains("\"hashType\": \"sm3\""), true);
@@ -679,8 +679,8 @@ public class TestMainAppChain_FRDG {
 
         //创建子链
         String chainName="tc1609_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z " + chainName," -t sm3",
-                " -w first"," -c raft"," -m "+ id1 + "," + id2, " -n \"" + listPeer.toString() + "\"");
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName," -t sm3",
+                " -w first"," -c raft"," -m "+ id1 + "," + id2);
         assertEquals(res.contains("send transaction success"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
@@ -693,37 +693,37 @@ public class TestMainAppChain_FRDG {
         assertEquals(res2.contains(chainName), true);
 
         //冻结子链
-        String respon = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        String respon = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         hash = commonFunc.getTxHash(respon,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
         sleepAndSaveInfo(2000,"等待同步时间");
 
         //子链信息检查
-        String res3 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        String res3 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res3.contains(ledgerStateFreeze), true);
 
 
         //恢复冻结子链 连续两次恢复
-        String respon1 = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        String respon1 = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         hash = commonFunc.getTxHash(respon1,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
         sleepAndSaveInfo(2000,"等待同步时间");
 
-        respon1 = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        respon1 = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         hash = commonFunc.getTxHash(respon1,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
 
         //子链信息检查
-        String res4 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        String res4 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         if(res4.contains("state"))  assertEquals(res4.contains(ledgerStateNormal), true);
 
         //确认恢复后再次恢复
-        respon1 = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        respon1 = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         hash = commonFunc.getTxHash(respon1,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-        res4 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res4 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         if(res4.contains("state"))  assertEquals(res4.contains(ledgerStateNormal), true);
 
         String Data="1609 ledger1 tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
@@ -752,8 +752,8 @@ public class TestMainAppChain_FRDG {
     public void TC1510_1647_freezeAppChains()throws Exception{
         //创建子链，包含两个节点
         String chainName="tc1510_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName,
-                " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2, " -n \"" + listPeer.toString() + "\"");
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
+                " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2);
         assertEquals(res.contains("send transaction success"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
@@ -771,13 +771,13 @@ public class TestMainAppChain_FRDG {
         sleepAndSaveInfo(SLEEPTIME);
 
         //冻结子链
-        String respon = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        String respon = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         hash = commonFunc.getTxHash(respon,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
         sleepAndSaveInfo(2000,"等待同步时间");
 
         //检查可以获取子链列表
-        String res3 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        String res3 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res3.contains(ledgerStateFreeze), true);
 
 
@@ -805,14 +805,14 @@ public class TestMainAppChain_FRDG {
     public void TC1509_freezeMultiAppChains()throws Exception{
         //创建子链，包含两个节点
         String chainName2="tc1509_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName2,
-                " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2, " -n \"" + listPeer.toString() + "\"");
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName2,
+                " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2);
         assertEquals(res.contains("send transaction success"), true);
 
         //创建子链，包含三个节点
         String chainName3="tc1509_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName3,
-                " -t sm3"," -w first"," -c raft",ids, " -n \"" + listPeer.toString() + "\"");
+        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName3,
+                " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
@@ -826,16 +826,16 @@ public class TestMainAppChain_FRDG {
         assertEquals(res2.contains(chainName3), true);
 
         //冻结两条子链
-        String respon = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -z "+chainName2);
-        String respon2 = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -z "+chainName3);
+        String respon = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -n "+chainName2);
+        String respon2 = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -n "+chainName3);
         hash = commonFunc.getTxHash(respon2,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
         sleepAndSaveInfo(2000,"等待同步时间");
 
         //检查可以获取子链列表
-        String res3 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName2);
+        String res3 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName2);
         assertEquals(res3.contains(ledgerStateFreeze), true);
-        String res4 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName3);
+        String res4 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName3);
         assertEquals(res4.contains(ledgerStateFreeze), true);
 
 
@@ -874,8 +874,8 @@ public class TestMainAppChain_FRDG {
 
         //待发送子链名
         String chainName="tc1511_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName,
-                " -t sm3"," -w first"," -c raft",ids, " -n \"" + listPeer.toString() + "\"");
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
+                " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
@@ -891,14 +891,14 @@ public class TestMainAppChain_FRDG {
         String Data="1511 ledger2 tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
 
         //1.冻结一个子链chainName
-        String respon = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        String respon = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertThat(respon, containsString("send transaction success"));
         hash = commonFunc.getTxHash(respon,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
         sleepAndSaveInfo(3000,"等待同步时间");
 
         //2.查询子链状态为冻结
-        String resp2 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        String resp2 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(resp2.contains(ledgerStateFreeze), true);
 
         subLedger=chainName;
@@ -909,13 +909,13 @@ public class TestMainAppChain_FRDG {
 
 
         //5.再次冻结已冻结的子链
-        String respon1 = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        String respon1 = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertThat(respon1, containsString("send transaction success"));
         hash = commonFunc.getTxHash(respon1,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
         //6.查询子链状态为冻结
-        String resp21 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        String resp21 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(resp21.contains(ledgerStateFreeze), true);
 
         subLedger=chainName;
@@ -943,7 +943,7 @@ public class TestMainAppChain_FRDG {
         String Data="1512 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
 
         //解除一个不存在的子链chainName
-        String respon = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        String respon = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertThat(respon, containsString("not exist"));
 
         //向子链glbChain01/glbChain02和主链发送交易
@@ -966,7 +966,7 @@ public class TestMainAppChain_FRDG {
         String Data="1520 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
 
         //销毁一个不存在的子链chainName
-        String respon = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        String respon = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertThat(respon, containsString("not exist"));
 
         //向子链glbChain01/glbChain02和主链发送交易
@@ -990,7 +990,7 @@ public class TestMainAppChain_FRDG {
         String Data="1585 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
 
         //恢复一个不存在的子链chainName
-        String respon = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        String respon = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertThat(respon, containsString("not exist"));
 
         //向子链glbChain01/glbChain02和主链发送交易

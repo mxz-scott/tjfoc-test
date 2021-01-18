@@ -45,8 +45,8 @@ public class TestMainSubChain_UpgradeTestOnly {
 
         //创建子链，包含三个节点
         String chainName="tc1515_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName,
-                " -t sm3"," -w first"," -c raft",ids,"");
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
+                " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
 //        sleepAndSaveInfo(SLEEPTIME*2);
@@ -56,21 +56,21 @@ public class TestMainSubChain_UpgradeTestOnly {
         assertEquals(resp.contains(chainName.toLowerCase()), true);
 
         //冻结子链
-        res = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res.contains("send transaction success"), true);
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
 //        assertEquals(resp.contains(ledgerStateFreeze), true);
         assertThat(resp,anyOf(containsString(ledgerStateFreeze),containsString(ledgerStateFreeze2)));
 
 
         //解除子链
-        res = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res.contains("send transaction success"), true);
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(resp.contains(ledgerStateFreeze), false);//子链可能默认不显示state
 
 
@@ -93,11 +93,11 @@ public class TestMainSubChain_UpgradeTestOnly {
         assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("state"));
 
         //销毁子链
-        res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(res.contains("send transaction success"), true);
         sleepAndSaveInfo(SLEEPTIME);
         //检查被销毁子链状态正确
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
         assertEquals(resp.contains(ledgerStateDestroy), true);
     }
 }

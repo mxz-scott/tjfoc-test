@@ -57,8 +57,8 @@ public class TestWithConfigChange02_ClearDB {
         String resp = mgToolCmd.getAppChain(PEER1IP, PEER1RPCPort, "");
         assertEquals(true,resp.contains("{}"));
 
-        String mgResp = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01,
-                " -t sm3", " -w first", " -c raft", ids,"");
+        String mgResp = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain01,
+                " -t sm3", " -w first", " -c raft", ids);
 //        sleepAndSaveInfo(SLEEPTIME*2);
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(mgResp,utilsClass.mgGetTxHashType),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME*2);
@@ -70,7 +70,7 @@ public class TestWithConfigChange02_ClearDB {
         dynamicPeerChk(checkStr,0,3,PEER2IP,PEER2RPCPort,PEER2TCPPort);
 
         //冻结子链
-        String respFreeze = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -z " + glbChain01);
+        String respFreeze = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -n " + glbChain01);
         assertEquals(respFreeze.contains("send transaction success"), true);
 //        sleepAndSaveInfo(SLEEPTIME);
 
@@ -78,7 +78,7 @@ public class TestWithConfigChange02_ClearDB {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //检查子链状态正确
-        respFreeze = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z " + glbChain01);
+        respFreeze = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n " + glbChain01);
         assertEquals(respFreeze.contains(ledgerStateFreeze), true);
 
         dynamicPeerChk(checkStr,0,3,PEER2IP,PEER2RPCPort,PEER2TCPPort);
@@ -86,7 +86,7 @@ public class TestWithConfigChange02_ClearDB {
 
 
         //销毁子链 可以退出变更节点
-        String respDestory = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -z " + glbChain01);
+        String respDestory = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -n " + glbChain01);
         assertEquals(respDestory.contains("send transaction success"), true);
 //        sleepAndSaveInfo(SLEEPTIME);
 
@@ -94,7 +94,7 @@ public class TestWithConfigChange02_ClearDB {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //检查子链状态正确
-        respDestory = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z " + glbChain01);
+        respDestory = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n " + glbChain01);
         assertEquals(respDestory.contains(ledgerStateDestroy), true);
 
         checkStr = "success";
@@ -146,14 +146,14 @@ public class TestWithConfigChange02_ClearDB {
         String chain3 = "1735Sub3";//A/B节点将要冻结子链
         String chain4 = "1735Sub4";//A/B节点 活跃子链
 
-        mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + chain1,
-                " -t sm3", " -w first", " -c raft", ids,"");
-        mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + chain2,
-                " -t sm3", " -w first", " -c raft", " -m " + id2 + "," + id3,"");
-        mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + chain3,
-                " -t sm3", " -w first", " -c raft", " -m " + id2 + "," + id1,"");
-        mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + chain4,
-                " -t sm3", " -w first", " -c raft", " -m " + id2 + "," + id1,"");
+        mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + chain1,
+                " -t sm3", " -w first", " -c raft", ids);
+        mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + chain2,
+                " -t sm3", " -w first", " -c raft", " -m " + id2 + "," + id3);
+        mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + chain3,
+                " -t sm3", " -w first", " -c raft", " -m " + id2 + "," + id1);
+        mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + chain4,
+                " -t sm3", " -w first", " -c raft", " -m " + id2 + "," + id1);
         sleepAndSaveInfo(SLEEPTIME);
         String respGetAllledger = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(true,respGetAllledger.contains("\"name\": \"" + chain1.toLowerCase() + "\""));
@@ -162,24 +162,24 @@ public class TestWithConfigChange02_ClearDB {
         assertEquals(true,respGetAllledger.contains("\"name\": \"" + chain4.toLowerCase() + "\""));
 
         //冻结子链
-        String respDestory = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -z " + chain1);
+        String respDestory = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -n " + chain1);
         assertEquals(respDestory.contains("send transaction success"), true);
-        respDestory = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -z " + chain2);
+        respDestory = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -n " + chain2);
         assertEquals(respDestory.contains("send transaction success"), true);
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
-        respDestory = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z " + chain1);
+        respDestory = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n " + chain1);
         assertEquals(respDestory.contains(ledgerStateDestroy), true);
-        respDestory = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z " + chain2);
+        respDestory = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n " + chain2);
         assertEquals(respDestory.contains(ledgerStateDestroy), true);
 
 
         //销毁子链 可以退出变更节点
-        String respFreeze = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -z " + chain3);
+        String respFreeze = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -n " + chain3);
         assertEquals(respFreeze.contains("send transaction success"), true);
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
-        respFreeze = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -z " + chain3);
+        respFreeze = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n " + chain3);
         assertEquals(respFreeze.contains(ledgerStateFreeze), true);
     }
 

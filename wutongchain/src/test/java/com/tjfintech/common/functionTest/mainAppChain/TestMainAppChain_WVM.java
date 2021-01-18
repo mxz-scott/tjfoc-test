@@ -75,9 +75,9 @@ public class TestMainAppChain_WVM {
 
         String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         if(! resp.contains("\"name\": \"" + subLedgerA.toLowerCase() + "\"")) {
-            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerA,
+            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + subLedgerA,
                     " -t sm3", " -w first", " -c raft",
-                    ids, " -n \"" + listPeer.toString() + "\"");
+                    ids);
             sleepAndSaveInfo(SLEEPTIME*2);
             assertEquals(
                     mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+subLedgerA.toLowerCase()+"\""),
@@ -85,9 +85,9 @@ public class TestMainAppChain_WVM {
         }
 
         if(! resp.contains("\"name\": \""+subLedgerB.toLowerCase()+"\"")) {
-            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerB,
+            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + subLedgerB,
                     " -t sm3", " -w first", " -c raft",
-                    ids," -n \"" + listPeer.toString() + "\"");
+                    ids);
             sleepAndSaveInfo(SLEEPTIME*2);
             assertEquals(
                     mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+subLedgerB.toLowerCase()+"\""),

@@ -29,7 +29,7 @@ public class SetSubLedger {
 //       String ledger = "sO.l_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些
        String ledger = "sOl_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些
        mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + ledger,
-               " -t sm3", " -w first", " -c raft", ids,"");
+               " -t sm3", " -w first", " -c raft", ids);
        Thread.sleep(SLEEPTIME*2);
        subLedger = ledger;
        String response = store.CreateStore("test for ok tx");

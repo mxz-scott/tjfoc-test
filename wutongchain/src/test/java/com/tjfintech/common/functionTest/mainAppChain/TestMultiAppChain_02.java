@@ -78,9 +78,9 @@ public class TestMultiAppChain_02 {
 
         String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         if(! resp.contains("\"name\": \"" + glbChain01.toLowerCase() + "\"")) {
-            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01,
+            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain01,
                     " -t sm3", " -w first", " -c raft",
-                    ids, " -n \"" + listPeer.toString() + "\"");
+                    ids);
             sleepAndSaveInfo(SLEEPTIME*2);
             assertEquals(
                     mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01.toLowerCase()+"\""),
@@ -88,9 +88,9 @@ public class TestMultiAppChain_02 {
         }
 
         if(! resp.contains("\"name\": \""+glbChain02.toLowerCase()+"\"")) {
-            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + glbChain02,
+            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain02,
                     " -t sm3", " -w first", " -c raft",
-                    ids," -n \"" + listPeer.toString() + "\"");
+                    ids);
             sleepAndSaveInfo(SLEEPTIME*2);
             assertEquals(
                     mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02.toLowerCase()+"\""),
@@ -108,8 +108,8 @@ public class TestMultiAppChain_02 {
         String mgResp = "";
         for(int i=1;i<10;i++)
         {
-            mgResp = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + chainName+i,
-                    " -t sm3", " -w first", " -c raft", ids, " -n \"" + listPeer.toString() + "\"");
+            mgResp = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + chainName+i,
+                    " -t sm3", " -w first", " -c raft", ids);
         }
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(mgResp,utilsClass.mgGetTxHashType),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME*2);
@@ -159,8 +159,8 @@ public class TestMultiAppChain_02 {
 
         //创建子链01 包含节点A、B、C
         String chainName1="tc1666_01"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChainNoPerm(PEER1IP,PEER1RPCPort," -z "+chainName1,
-                " -t sm3"," -w first"," -c raft",ids, " -n \"" + listPeer.toString() + "\"");
+        String res = mgToolCmd.createAppChainNoPerm(PEER1IP,PEER1RPCPort," -n "+chainName1,
+                " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(res,utilsClass.mgGetTxHashType),
@@ -188,8 +188,8 @@ public class TestMultiAppChain_02 {
 
         //创建子链01 包含节点A、B、C
         String chainName2="tc1660_01"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        res = mgToolCmd.createAppChainNoPerm(PEER1IP,PEER1RPCPort," -z "+chainName2,
-                " -t sm3"," -w first"," -c raft",ids, " -n \"" + listPeer.toString() + "\"");
+        res = mgToolCmd.createAppChainNoPerm(PEER1IP,PEER1RPCPort," -n "+chainName2,
+                " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(res,utilsClass.mgGetTxHashType),
@@ -216,8 +216,8 @@ public class TestMultiAppChain_02 {
 
         //创建子链01 包含节点A、B、C
         String chainName3="tc1660_01"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        res = mgToolCmd.createAppChainNoPerm(PEER1IP,PEER1RPCPort," -z "+chainName3,
-                " -t sm3"," -w first"," -c raft",ids, " -n \"" + listPeer.toString() + "\"");
+        res = mgToolCmd.createAppChainNoPerm(PEER1IP,PEER1RPCPort," -n "+chainName3,
+                " -t sm3"," -w first"," -c raft",ids);
         assertEquals(res.contains("send transaction success"), true);
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(res,utilsClass.mgGetTxHashType),

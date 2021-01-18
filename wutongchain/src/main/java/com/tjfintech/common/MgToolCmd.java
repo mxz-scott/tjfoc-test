@@ -286,10 +286,10 @@ public class MgToolCmd {
 
 
     public String createAppChain(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
-                                 String firstBlockInfoParam,String consensusParam,String peeridsParam,String outPeerList)throws Exception{
+                                 String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
         String mainCmd =" ledger create ";
         String cmd=toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam +
-                hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam + outPeerList;
+                hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam;
         String resp = shExeAndReturn(shellIP,cmd);
 
         if(resp.contains("transaction success")) {
@@ -305,10 +305,10 @@ public class MgToolCmd {
     }
 
     public String createAppChainNoPerm(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
-                                       String firstBlockInfoParam,String consensusParam,String peeridsParam,String outPeerList)throws Exception{
+                                       String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
         String mainCmd =" ledger create ";
         String cmd= toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam +
-                hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam + outPeerList;
+                hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam;
 
         return shExeAndReturn(shellIP,cmd);
     }

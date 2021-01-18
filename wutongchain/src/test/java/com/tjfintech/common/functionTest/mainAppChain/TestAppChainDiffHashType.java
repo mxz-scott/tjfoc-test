@@ -79,9 +79,9 @@ public class TestAppChainDiffHashType {
         Thread.sleep(SLEEPTIME);
         //创建子链，包含三个节点 hashtype 使用sha256 主链使用sm3
         String chainName="tc1649_01";
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName,
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
                 " -t sha256"," -w first"," -c raft",
-                ids," -n \"" + listPeer.toString() + "\"");
+                ids);
         assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME*2);
@@ -165,9 +165,9 @@ public class TestAppChainDiffHashType {
 
         //创建子链，包含三个节点 hashtype 子链sm3 主链使用sha256
         String chainName="tc1651_01";
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -z "+chainName,
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
                 " -t sm3"," -w first"," -c raft",
-                ids," -n \"" + listPeer.toString() + "\"");
+                ids);
         assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
