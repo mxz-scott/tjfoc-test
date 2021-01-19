@@ -94,7 +94,7 @@ public class AppChain_Y_UpgradeTestOnly {
         String Data="1521 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
         String response1 = store.CreateStore(Data);
 
-        sleepAndSaveInfo(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME);
 
         String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType21);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));

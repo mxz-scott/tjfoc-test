@@ -12,6 +12,7 @@ import java.util.Date;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClass.subLedger;
+import static org.junit.Assert.assertEquals;
 
 @Slf4j
 public class MgToolCmd {
@@ -19,9 +20,9 @@ public class MgToolCmd {
     public String toolExePath  = "cd " + ToolPATH + ";./" + ToolTPName;
     public String licExePath  = "cd " + ToolPATH + ";./license";
     
-    public String setPeerPerm(String netPeerIP,String sdkID,String permStr,String...ShowName)throws Exception{
-        String rpcPort = netPeerIP.split(":")[1];//9300
-        String queryIP = netPeerIP.split(":")[0];//10.1.3.240
+    public String setPeerPerm(String queryIPPort,String sdkID,String permStr,String...ShowName)throws Exception{
+        String rpcPort = queryIPPort;//netPeerIP.split(":")[1];//9300
+        String queryIP = queryIPPort.split(":")[0];//10.1.3.240
 
         if(subLedger!="")  rpcPort = rpcPort + " -z " + subLedger;
         if(ShowName.length != 0) rpcPort = rpcPort + " -s "+ShowName[0];
@@ -30,9 +31,9 @@ public class MgToolCmd {
         return shExeAndReturn(queryIP,cmd);
     }
 
-    public String getPeerPerm(String netPeerIP,String sdkID)throws Exception{
-        String rpcPort = netPeerIP.split(":")[1];//9300
-        String queryIP = netPeerIP.split(":")[0];//10.1.3.240
+    public String getPeerPerm(String queryIPPort,String sdkID)throws Exception{
+        String rpcPort = queryIPPort;//netPeerIP.split(":")[1];//9300
+        String queryIP = queryIPPort.split(":")[0];//10.1.3.240
 
         if(subLedger != "")  rpcPort = rpcPort + " -z "+subLedger;
         if(sdkID != "") rpcPort = rpcPort + " -d " + sdkID;
@@ -49,7 +50,7 @@ public class MgToolCmd {
     }
 
     public String addPeer(String addPeerType,String queryIPPort,String joinPeerIP,String joinTcpPort,String joinRpcPort)throws Exception{
-        String queryRpcPort = queryIPPort.split(":")[1];//9300
+        String queryRpcPort = queryIPPort;//queryIPPort.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
 
         String[] temp = joinPeerIP.substring(joinPeerIP.lastIndexOf("/") + 1).split("\\.");
@@ -69,7 +70,7 @@ public class MgToolCmd {
 
 
     public String quitPeer(String queryIPPort,String peerIP)throws Exception{
-        String rpcPort = queryIPPort.split(":")[1];//9300
+        String rpcPort = queryIPPort;//.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
         String peerID = getPeerId(peerIP,USERNAME,PASSWD);
 
@@ -78,7 +79,7 @@ public class MgToolCmd {
     }
 
     public String queryPeerUnconfirmedTx(String queryIPPort)throws Exception{
-        String rpcPort = queryIPPort.split(":")[1];//9300
+        String rpcPort = queryIPPort;//.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
 
         String cmd = toolExePath + " ntx -p " + rpcPort + " -i";
@@ -86,7 +87,7 @@ public class MgToolCmd {
     }
 
     public String queryBlockHeight(String queryIPPort)throws Exception{
-        String rpcPort = queryIPPort.split(":")[1];//9300
+        String rpcPort = queryIPPort;//.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
         if(subLedger!="")  rpcPort = rpcPort + " -z " + subLedger;
         String cmd = toolExePath + " height -p " + rpcPort;
@@ -96,7 +97,7 @@ public class MgToolCmd {
     }
 
     public String queryBlockByHeight(String queryIPPort,String height)throws Exception{
-        String rpcPort = queryIPPort.split(":")[1];//9300
+        String rpcPort = queryIPPort;//.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
         if(subLedger!="")  rpcPort = rpcPort + " -z " + subLedger;
         String cmd = toolExePath + " query -p "+ rpcPort + " -v " + height;
@@ -105,7 +106,7 @@ public class MgToolCmd {
     }
 
     public String sendNewTx(String queryIPPort,String txNo,String txType)throws Exception{
-        String rpcPort = queryIPPort.split(":")[1];//9300
+        String rpcPort = queryIPPort;//.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
 
         String tempTxNo = txNo.isEmpty()?"":" -n " + txNo;
@@ -118,7 +119,7 @@ public class MgToolCmd {
 
     public String checkPeerHealth(String queryIPPort)throws Exception {
 
-        String rpcPort = queryIPPort.split(":")[1];//9300
+        String rpcPort = queryIPPort;//.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
 
         String cmd = toolExePath + " health -p " + rpcPort;
@@ -126,7 +127,7 @@ public class MgToolCmd {
     }
 
     public String getPeerSimpleInfo(String queryIPPort)throws Exception{
-        String rpcPort = queryIPPort.split(":")[1];//9300
+        String rpcPort = queryIPPort;//.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
 
         String cmd = toolExePath + " peer -p " + rpcPort;
@@ -134,7 +135,7 @@ public class MgToolCmd {
     }
 
     public String getPeerDetails(String queryIPPort)throws Exception{
-        String rpcPort = queryIPPort.split(":")[1];//9300
+        String rpcPort = queryIPPort;//.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
 
         String cmd = toolExePath + " peer -p " + rpcPort;//20191105 管理工具不再对外提供 因此去掉simple info的功能
@@ -142,7 +143,7 @@ public class MgToolCmd {
     }
 
     public String queryMemberList(String queryIPPort) throws Exception{
-        String rpcPort = queryIPPort.split(":")[1];//9300
+        String rpcPort = queryIPPort;//.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
 
         String cmd = toolExePath + " mem -p "+rpcPort;
@@ -165,71 +166,6 @@ public class MgToolCmd {
         String cmd = licExePath + " decode" + licPayjSetting;
         return shExeAndReturn(shellIP,cmd);
     }
-
-//
-//    public String createSubChain(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
-//                                 String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
-//        String mainCmd =" addledger ";
-//        String cmd=toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam +
-//                hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam;
-//        String resp = shExeAndReturn(shellIP,cmd);
-//
-//        if(resp.contains("transaction success")) {
-//
-//            chkLedgerExist(shellIP,rpcPort,chainNameParam.replaceAll("-z",""),SLEEPTIME*2);
-//
-//            subLedger = chainNameParam.trim().split(" ")[1];
-//            log.info("**************  set permission 999 for " + subLedger);
-//            String resp1 = setPeerPerm(PEER1IP + ":" + PEER1RPCPort, utilsClass.getSDKID(),"999");
-//            subLedger = "";
-//        }
-//        return resp;
-//    }
-//
-//    public String createSubChainNoPerm(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
-//                                       String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
-//        String mainCmd =" addledger ";
-//        String cmd= toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam +
-//                hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam;
-//
-//        return shExeAndReturn(shellIP,cmd);
-//    }
-//
-//    /*
-//     * 获取子链信息 包括所有子链及单个子链
-//     * */
-//    public String getSubChain(String shellIP,String rpcPort,String chainNameParam){
-//        String mainCmd =" getledger ";
-//        String cmd = toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam;
-//        return shExeAndReturn(shellIP,cmd);
-//    }
-//
-//    /*
-//     * 冻结子链
-//     * */
-//    public String freezeSubChain(String shellIP,String rpcPort,String chainNameParam){
-//        String mainCmd =" freezeledger ";
-//        String cmd = toolExePath + mainCmd + " -p " + rpcPort + chainNameParam;
-//        return shExeAndReturn(shellIP,cmd);
-//    }
-//
-//    /*
-//     * 恢复子链
-//     * */
-//    public String recoverSubChain(String shellIP,String rpcPort,String chainNameParam){
-//        String mainCmd = " recoverledger ";
-//        String cmd = toolExePath + mainCmd + " -p " + rpcPort + chainNameParam;
-//        return shExeAndReturn(shellIP,cmd);
-//    }
-//
-//    /*
-//     * 销毁子链
-//     * */
-//    public String destroySubChain(String shellIP,String rpcPort,String chainNameParam){
-//        String mainCmd =" destoryledger ";
-//        String cmd = toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam;
-//        return shExeAndReturn(shellIP,cmd);
-//    }
 
     public Boolean mgCheckHeightOrSleep(String queryIPPortRefer,String queryIPPortTest,long... sleeptime)throws Exception{
 
@@ -272,13 +208,7 @@ public class MgToolCmd {
             String resp = shExeAndReturn(shellIP,cmd);
 
 //            if(resp.contains(ledgerName.toLowerCase().trim()) && (!resp.contains("not exist"))) bOK = true;
-            if(resp.contains(ledgerName.toLowerCase().trim())) bOK = true;
-            else{
-                log.info("+++++++++++++++++++++++++++++++++++++++");
-                log.info(resp);
-                log.info(ledgerName);
-            }
-
+            if(resp.contains(ledgerName.trim())) bOK = true;
             sleepAndSaveInfo(1000,"等待再次查询子链是否存在");
         }
         log.info("============================= 管理工具查询子链存在 " + bOK + " 等待时间 " +
@@ -297,13 +227,13 @@ public class MgToolCmd {
         String cmd=toolExePath + mainCmd + " -p "+ shellIP + ":" + rpcPort + chainNameParam +
                 hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam;
         String resp = shExeAndReturn(shellIP,cmd);
-
         if(resp.contains("ledgerid")) {
-            subLedger = resp.substring(resp.lastIndexOf(":")+1).trim();
-            resp = chkLedgerExist(shellIP,rpcPort,ledgerName.replaceAll("-z",""),SLEEPTIME);
+            subLedger = resp.substring(resp.lastIndexOf(":") + 1).trim();
+            resp = chkLedgerExist(shellIP,rpcPort,subLedger.replaceAll("-z",""),SLEEPTIME);
             if(!resp.contains("not exist")) {
                 log.info("**************  set permission 999 for " + subLedger);
                 String resp1 = setPeerPerm(PEER1IP + ":" + PEER1RPCPort, utilsClass.getSDKID(), "999 -z " + subLedger);
+                assertEquals(true,resp1.contains("send transaction success"));
             }
         }
         return resp;

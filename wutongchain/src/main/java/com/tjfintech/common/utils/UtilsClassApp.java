@@ -14,6 +14,8 @@ public class UtilsClassApp {
     //10.1.3.161:7779
     public static String globalAppId1 = "123456";
     public static String globalAppId2 = "123457s";
+    public static String tempLedgerId = "";
+
 
 
 }
