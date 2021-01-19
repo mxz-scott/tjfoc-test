@@ -66,34 +66,8 @@ public class AppChain_Create_01 {
      */
     @Before
     public void beforeConfig() throws Exception {
-        log.info("获取所有应用链信息列表");
-        String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
-        //判断是否存在名为 glbChain01的应用链 存在则不需要另外创建 否则赋值globalAppId1
-        if(! resp.contains("\"id\": \"" + globalAppId1 + "\"")) {
-            String respCreate = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain01,
-                    " -t sm3", " -w first", " -c raft",ids);
-            globalAppId1 = subLedger;
-            log.info("id1 " + globalAppId1);
-            sleepAndSaveInfo(SLEEPTIME);
-            assertEquals(
-                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"id\": \""+globalAppId1+"\""),
-                    true);
-        }
-//        else {
-//            //通过链名获取链id
-//            getStrByReg(mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n " + glbChain01),"\"id\":\\s+\"(\\w{10})\"");
-//        }
-
-        if(! resp.contains("\"id\": \"" + globalAppId2 + "\"")) {
-            String respCreate = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain02,
-                    " -t sm3", " -w first", " -c raft",ids);
-            globalAppId2 = subLedger;
-            log.info("id2 " + globalAppId2);
-            sleepAndSaveInfo(SLEEPTIME);
-            assertEquals(
-                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"id\": \""+globalAppId2+"\""),
-                    true);
-        }
+        AppChain_CommonFunc cf = new AppChain_CommonFunc();
+        cf.createTwoAppChain(glbChain01,glbChain02);
     }
 
     @Test

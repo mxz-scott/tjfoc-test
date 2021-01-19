@@ -60,26 +60,8 @@ public class AppChain_WVM {
 
     @Before
     public void beforeConfig() throws Exception {
-        String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
-        if(! resp.contains("\"id\": \"" + globalAppId1 + "\"")) {
-            String respCreate = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain01,
-                    " -t sm3", " -w first", " -c raft",ids);
-            globalAppId1 = respCreate.substring(respCreate.lastIndexOf(":")+1).trim();
-            sleepAndSaveInfo(SLEEPTIME);
-            assertEquals(
-                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"id\": \""+globalAppId1+"\""),
-                    true);
-        }
-
-        if(! resp.contains("\"id\": \""+ globalAppId2+"\"")) {
-            String respCreate = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain02,
-                    " -t sm3", " -w first", " -c raft",ids);
-            globalAppId2 = respCreate.substring(respCreate.lastIndexOf(":")+1).trim();
-            sleepAndSaveInfo(SLEEPTIME);
-            assertEquals(
-                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"id\": \""+globalAppId2+"\""),
-                    true);
-        }
+        AppChain_CommonFunc cf = new AppChain_CommonFunc();
+        cf.createTwoAppChain(glbChain01,glbChain02);
     }
 
     //20200611 wvm合约安装绑定sdk私钥 该用例移除
