@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class TestAppChainWithConfigChange02_ClearDB {
+public class AppChain_Z_ConfigChange02_ClearDB {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();

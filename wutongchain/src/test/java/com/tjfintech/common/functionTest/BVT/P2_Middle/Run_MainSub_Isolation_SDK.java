@@ -14,9 +14,9 @@ import org.junit.runners.Suite;
         SetMainLedger.class,
         SetSubLedgerSleepTime.class,
         BeforeCondition.class,
-//        TestMainAppChain_UTXO.class,
-        TestMainAppChain_WVM.class,
-        TestMainAppChain_Perm.class,
+//        AppChain_UTXO.class,
+        AppChain_WVM.class,
+        AppChain_Perm.class,
         SetURLToSDKAddr.class,
 
 })

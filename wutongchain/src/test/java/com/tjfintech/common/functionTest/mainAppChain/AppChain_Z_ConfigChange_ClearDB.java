@@ -1,10 +1,12 @@
 package com.tjfintech.common.functionTest.mainAppChain;
 
+import com.alibaba.fastjson.JSON;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.functionTest.mixTestWithConfigChange.TestMgTool;
 import com.tjfintech.common.utils.Shell;
 import com.tjfintech.common.utils.SubLedgerCmd;
 import com.tjfintech.common.utils.UtilsClass;
@@ -15,18 +17,16 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
 
-
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-import static com.tjfintech.common.CommonFunc.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.junit.Assert.assertEquals;
 
-import com.tjfintech.common.functionTest.mixTestWithConfigChange.TestMgTool;
-
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class TestWithConfigChange_ClearDB {
+public class AppChain_Z_ConfigChange_ClearDB {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
@@ -43,8 +43,27 @@ public class TestWithConfigChange_ClearDB {
     String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
     String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
     String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
+    String id4 = getPeerId(PEER3IP,USERNAME,PASSWD);
     String ids = " -m "+ id1+","+ id2+","+ id3;
 
+    List<String> listPeer = new ArrayList<>();
+
+    @Before
+    public void initListPeer(){
+        HashMap peer = new HashMap();
+        peer.put("ID",id4);
+        peer.put("ShownName","testName");
+        List inAddr = new ArrayList();
+        List outAddr = new ArrayList();
+        inAddr.add(ipv4 + PEER3IP + tcpProtocol + PEER3TCPPort);
+        outAddr.add("");
+        peer.put("InAddrs",inAddr);
+        peer.put("OutAddrs",outAddr);
+        peer.put("PeerType",2);
+        //        peer.put("RpcPort",Integer.valueOf(PEER3RPCPort));;
+
+        listPeer.add(JSON.toJSONString(peer).replace("\"","\\\""));
+    }
     @BeforeClass
     public static void clearData()throws Exception{
         BeforeCondition beforeCondition = new BeforeCondition();
@@ -54,25 +73,44 @@ public class TestWithConfigChange_ClearDB {
         String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
         String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
         String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
+        String id4 = getPeerId(PEER3IP,USERNAME,PASSWD);
         String ids = " -m "+ id1+","+ id2+","+ id3;
+
+        List<String> listPeer = new ArrayList<>();
+        HashMap peer = new HashMap();
+        peer.put("ID",id4);
+        peer.put("ShownName","testName");
+        List inAddr = new ArrayList();
+        List outAddr = new ArrayList();
+        inAddr.add(ipv4 + PEER3IP + tcpProtocol + PEER3TCPPort);
+        outAddr.add("\"\"");
+        peer.put("InAddrs",inAddr);
+        peer.put("OutAddrs",outAddr);
+        peer.put("PeerType",2);
+        //        peer.put("RpcPort",Integer.valueOf(PEER3RPCPort));;
+
+        listPeer.add(JSON.toJSONString(peer).replace("\"","\\\""));
 
         sleepAndSaveInfo(SLEEPTIME);
         MgToolCmd mgToolCmd = new MgToolCmd();
         String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         if(! resp.contains("\"name\": \""+glbChain01.toLowerCase()+"\"")) {
             mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain01,
-                    " -t sm3", " -w first", " -c raft", ids);
+                    " -t sm3", " -w first", " -c raft",
+                    ids);
             sleepAndSaveInfo(SLEEPTIME*2);
             assertEquals(mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01.toLowerCase()+"\""), true);
         }
 
         if(! resp.contains("\"name\": \""+glbChain02+"\"")) {
             mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain02,
-                    " -t sm3", " -w first", " -c raft", ids);
+                    " -t sm3", " -w first", " -c raft",
+                    ids);
             sleepAndSaveInfo(SLEEPTIME*2);
             assertEquals(mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02.toLowerCase()+"\""), true);
         }
     }
+
 
     @Test
     public void TC1538_quitMainJoinPeer()throws Exception{
@@ -82,20 +120,23 @@ public class TestWithConfigChange_ClearDB {
         //创建子链01 包含节点A、B、C
         String chainName1="tc1538_01";
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1,
-                " -t sm3"," -w first"," -c raft",ids);
+                " -t sm3"," -w first"," -c raft",
+                ids);
         assertEquals(res.contains("send transaction success"), true);
 
         //创建子链02 包含节点A、C
         String chainName2="tc1538_02";
         String res2 = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName2,
-                " -t sm3"," -w first"," -c raft"," -m "+id1+","+id3);
+                " -t sm3"," -w first"," -c raft",
+                " -m "+id1+","+id3);
         assertEquals(res2.contains("send transaction success"), true);
 
 
         //创建子链03 包含节点A、B
         String chainName3="tc1538_03";
         String res3 = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName3,
-                " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2);
+                " -t sm3"," -w first"," -c raft",
+                " -m "+id1+","+id2);
         assertEquals(res3.contains("send transaction success"), true);
 
 
@@ -308,7 +349,8 @@ public class TestWithConfigChange_ClearDB {
         //创建子链，包含两个节点
         String chainName="tc1523_01";
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
-                " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2);
+                " -t sm3"," -w first"," -c raft",
+                " -m "+id1+","+id2);
         assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
@@ -323,7 +365,7 @@ public class TestWithConfigChange_ClearDB {
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));  //确认可以发送成功
 
         sleepAndSaveInfo(SLEEPTIME*2);
-        
+
         String txHash1 =commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType21);;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));  //确认可以c查询成功
 
@@ -360,7 +402,8 @@ public class TestWithConfigChange_ClearDB {
         shExeAndReturn(PEER2IP,killPeerCmd);
         String chainName="tc1726_01";
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
-                " -t sm3"," -w first"," -c raft",ids);
+                " -t sm3"," -w first"," -c raft",
+                ids);
         assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME);

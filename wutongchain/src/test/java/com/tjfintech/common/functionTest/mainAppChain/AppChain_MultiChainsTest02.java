@@ -23,13 +23,15 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClassApp.globalAppId1;
+import static com.tjfintech.common.utils.UtilsClassApp.globalAppId2;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class TestMultiAppChain_02 {
+public class AppChain_MultiChainsTest02 {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
@@ -62,38 +64,24 @@ public class TestMultiAppChain_02 {
     @Before
     public void beforeConfig() throws Exception {
         subLedger="";
-        HashMap peer = new HashMap();
-        peer.put("ID",id4);
-        peer.put("ShownName","testName");
-        List inAddr = new ArrayList();
-        List outAddr = new ArrayList();
-        inAddr.add(ipv4 + PEER3IP + tcpProtocol + PEER3TCPPort);
-        outAddr.add("");
-        peer.put("InAddrs",inAddr);
-        peer.put("OutAddrs",outAddr);
-        peer.put("PeerType",2);
-        //        peer.put("RpcPort",Integer.valueOf(PEER3RPCPort));;
-
-        listPeer.add(JSON.toJSONString(peer).replace("\"","\\\""));
-
         String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
-        if(! resp.contains("\"name\": \"" + glbChain01.toLowerCase() + "\"")) {
-            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain01,
-                    " -t sm3", " -w first", " -c raft",
-                    ids);
-            sleepAndSaveInfo(SLEEPTIME*2);
+        if(! resp.contains("\"id\": \"" + globalAppId1 + "\"")) {
+            String respCreate = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain01,
+                    " -t sm3", " -w first", " -c raft",ids);
+            globalAppId1 = respCreate.substring(respCreate.lastIndexOf(":")+1).trim();
+            sleepAndSaveInfo(SLEEPTIME);
             assertEquals(
-                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01.toLowerCase()+"\""),
+                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"id\": \""+globalAppId1+"\""),
                     true);
         }
 
-        if(! resp.contains("\"name\": \""+glbChain02.toLowerCase()+"\"")) {
-            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain02,
-                    " -t sm3", " -w first", " -c raft",
-                    ids);
-            sleepAndSaveInfo(SLEEPTIME*2);
+        if(! resp.contains("\"id\": \""+ globalAppId2+"\"")) {
+            String respCreate = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain02,
+                    " -t sm3", " -w first", " -c raft",ids);
+            globalAppId2 = respCreate.substring(respCreate.lastIndexOf(":")+1).trim();
+            sleepAndSaveInfo(SLEEPTIME);
             assertEquals(
-                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02.toLowerCase()+"\""),
+                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"id\": \""+globalAppId2+"\""),
                     true);
         }
     }

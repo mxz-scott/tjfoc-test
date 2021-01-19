@@ -268,11 +268,16 @@ public class MgToolCmd {
         while((new Date()).getTime() - nowTime < sleeptime && bOK == false){
             //管理工具查询子链是否存在
             log.info("开始时间 " + (new Date()).getTime());
-            String cmd = "cd " + ToolPATH + ";./" + ToolTPName + " ledger get -p "+ rpcPort ;//+" -z " + ledgerName.toLowerCase().trim();
+            String cmd = "cd " + ToolPATH + ";./" + ToolTPName + " ledger get -p " + shellIP + ":" + rpcPort ;//+" -z " + ledgerName.toLowerCase().trim();
             String resp = shExeAndReturn(shellIP,cmd);
 
 //            if(resp.contains(ledgerName.toLowerCase().trim()) && (!resp.contains("not exist"))) bOK = true;
             if(resp.contains(ledgerName.toLowerCase().trim())) bOK = true;
+            else{
+                log.info("+++++++++++++++++++++++++++++++++++++++");
+                log.info(resp);
+                log.info(ledgerName);
+            }
 
             sleepAndSaveInfo(1000,"等待再次查询子链是否存在");
         }
@@ -287,18 +292,18 @@ public class MgToolCmd {
 
     public String createAppChain(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
                                  String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
+        String ledgerName = chainNameParam.trim().split(" ")[1];
         String mainCmd =" ledger create ";
-        String cmd=toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam +
+        String cmd=toolExePath + mainCmd + " -p "+ shellIP + ":" + rpcPort + chainNameParam +
                 hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam;
         String resp = shExeAndReturn(shellIP,cmd);
 
-        if(resp.contains("transaction success")) {
-            subLedger = resp.substring(resp.lastIndexOf("")+1).trim();
-            resp = chkLedgerExist(shellIP,rpcPort,chainNameParam.replaceAll("-z",""),SLEEPTIME*2);
+        if(resp.contains("ledgerid")) {
+            subLedger = resp.substring(resp.lastIndexOf(":")+1).trim();
+            resp = chkLedgerExist(shellIP,rpcPort,ledgerName.replaceAll("-z",""),SLEEPTIME);
             if(!resp.contains("not exist")) {
                 log.info("**************  set permission 999 for " + subLedger);
-                String resp1 = setPeerPerm(PEER1IP + ":" + PEER1RPCPort, utilsClass.getSDKID(), "999");
-                subLedger = "";
+                String resp1 = setPeerPerm(PEER1IP + ":" + PEER1RPCPort, utilsClass.getSDKID(), "999 -z " + subLedger);
             }
         }
         return resp;
@@ -307,7 +312,7 @@ public class MgToolCmd {
     public String createAppChainNoPerm(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
                                        String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
         String mainCmd =" ledger create ";
-        String cmd= toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam +
+        String cmd= toolExePath + mainCmd + " -p " + shellIP + ":" + rpcPort + chainNameParam +
                 hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam;
 
         return shExeAndReturn(shellIP,cmd);
@@ -318,7 +323,7 @@ public class MgToolCmd {
      * */
     public String getAppChain(String shellIP,String rpcPort,String chainNameParam){
         String mainCmd =" ledger get ";
-        String cmd = toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam;
+        String cmd = toolExePath + mainCmd + " -p "+ shellIP + ":" + rpcPort + chainNameParam;
         return shExeAndReturn(shellIP,cmd);
     }
 
@@ -327,7 +332,7 @@ public class MgToolCmd {
      * */
     public String freezeAppChain(String shellIP,String rpcPort,String chainNameParam){
         String mainCmd =" ledger freeze ";
-        String cmd = toolExePath + mainCmd + " -p " + rpcPort + chainNameParam;
+        String cmd = toolExePath + mainCmd + " -p " + shellIP + ":" + rpcPort + chainNameParam;
         return shExeAndReturn(shellIP,cmd);
     }
 
@@ -336,7 +341,7 @@ public class MgToolCmd {
      * */
     public String recoverAppChain(String shellIP,String rpcPort,String chainNameParam){
         String mainCmd = " ledger recover ";
-        String cmd = toolExePath + mainCmd + " -p " + rpcPort + chainNameParam;
+        String cmd = toolExePath + mainCmd + " -p " + shellIP + ":" + rpcPort + chainNameParam;
         return shExeAndReturn(shellIP,cmd);
     }
 
@@ -344,8 +349,8 @@ public class MgToolCmd {
      * 销毁子链
      * */
     public String destroyAppChain(String shellIP,String rpcPort,String chainNameParam){
-        String mainCmd =" ledger destory ";
-        String cmd = toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam;
+        String mainCmd =" ledger destroy ";
+        String cmd = toolExePath + mainCmd + " -p " + shellIP + ":" +  rpcPort + chainNameParam;
         return shExeAndReturn(shellIP,cmd);
     }
 }

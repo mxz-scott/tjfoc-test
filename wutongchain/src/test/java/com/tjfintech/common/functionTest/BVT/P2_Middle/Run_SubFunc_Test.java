@@ -14,9 +14,9 @@ import org.junit.runners.Suite;
         SetMainLedger.class,
         SetSubLedgerSleepTime.class,
         BeforeCondition.class,
-        TestMainAppChain_Create_01.class,
-        TestMainAppChain_Create_02.class,
-        TestMainAppChain_FRDG.class,
+        AppChain_Create_01.class,
+        AppChain_Create_02.class,
+        AppChain_FRDG.class,
 
 })
 

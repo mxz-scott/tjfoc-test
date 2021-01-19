@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.mainAppChain;
 
+import com.alibaba.fastjson.JSON;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.SoloSign;
@@ -8,14 +9,19 @@ import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.functionTest.Conditions.SetHashTypeSHA256;
 import com.tjfintech.common.functionTest.Conditions.SetHashTypeSM3;
-import com.tjfintech.common.utils.SubLedgerCmd;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import static com.tjfintech.common.CommonFunc.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -23,7 +29,7 @@ import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class TestDiffHashType {
+public class AppChain_Z_DiffHashType {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
@@ -37,7 +43,17 @@ public class TestDiffHashType {
     String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
     String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
     String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
+    String id4 = getPeerId(PEER3IP,USERNAME,PASSWD);
     String ids = " -m "+ id1+","+ id2+","+ id3;
+    List<String> listPeer = new ArrayList<>();
+
+//    @Before
+    public void clearData()throws Exception{
+        BeforeCondition beforeCondition = new BeforeCondition();
+        beforeCondition.clearDataSetPerm999();
+        sleepAndSaveInfo(SLEEPTIME);
+
+    }
 
     @Test
     public void TC1649_1650_HashChange()throws Exception{
@@ -51,7 +67,8 @@ public class TestDiffHashType {
         //创建子链，包含三个节点 hashtype 使用sha256 主链使用sm3
         String chainName="tc1649_01";
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
-                " -t sha256"," -w first"," -c raft",ids);
+                " -t sha256"," -w first"," -c raft",
+                ids);
         assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME*2);
@@ -136,7 +153,8 @@ public class TestDiffHashType {
         //创建子链，包含三个节点 hashtype 子链sm3 主链使用sha256
         String chainName="tc1651_01";
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
-                " -t sm3"," -w first"," -c raft",ids);
+                " -t sm3"," -w first"," -c raft",
+                ids);
         assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME);

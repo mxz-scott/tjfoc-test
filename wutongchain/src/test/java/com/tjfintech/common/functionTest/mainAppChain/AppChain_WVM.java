@@ -22,16 +22,18 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClassApp.globalAppId1;
+import static com.tjfintech.common.utils.UtilsClassApp.globalAppId2;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class TestMainAppChain_WVM {
+public class AppChain_WVM {
     TestBuilder testBuilder = TestBuilder.getInstance();
-    private static String subLedgerA = "Leg5";
-    private static String subLedgerB = "Leg6";
+    private static String glbChain01 = "Leg5";
+    private static String glbChain02 = "Leg6";
     MgToolCmd mgToolCmd = new MgToolCmd();
     BeforeCondition beforeCondition = new BeforeCondition();
     WVMContractTest wvmContractTest = new WVMContractTest();
@@ -58,39 +60,24 @@ public class TestMainAppChain_WVM {
 
     @Before
     public void beforeConfig() throws Exception {
-
-        HashMap peer = new HashMap();
-        peer.put("ID",id4);
-        peer.put("ShownName","testName");
-        List inAddr = new ArrayList();
-        List outAddr = new ArrayList();
-        inAddr.add(ipv4 + PEER3IP + tcpProtocol + PEER3TCPPort);
-        outAddr.add("");
-        peer.put("InAddrs",inAddr);
-        peer.put("OutAddrs",outAddr);
-        peer.put("PeerType",2);
-        //        peer.put("RpcPort",Integer.valueOf(PEER3RPCPort));;
-
-        listPeer.add(JSON.toJSONString(peer).replace("\"","\\\""));
-
         String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
-        if(! resp.contains("\"name\": \"" + subLedgerA.toLowerCase() + "\"")) {
-            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + subLedgerA,
-                    " -t sm3", " -w first", " -c raft",
-                    ids);
-            sleepAndSaveInfo(SLEEPTIME*2);
+        if(! resp.contains("\"id\": \"" + globalAppId1 + "\"")) {
+            String respCreate = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain01,
+                    " -t sm3", " -w first", " -c raft",ids);
+            globalAppId1 = respCreate.substring(respCreate.lastIndexOf(":")+1).trim();
+            sleepAndSaveInfo(SLEEPTIME);
             assertEquals(
-                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+subLedgerA.toLowerCase()+"\""),
+                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"id\": \""+globalAppId1+"\""),
                     true);
         }
 
-        if(! resp.contains("\"name\": \""+subLedgerB.toLowerCase()+"\"")) {
-            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + subLedgerB,
-                    " -t sm3", " -w first", " -c raft",
-                    ids);
-            sleepAndSaveInfo(SLEEPTIME*2);
+        if(! resp.contains("\"id\": \""+ globalAppId2+"\"")) {
+            String respCreate = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain02,
+                    " -t sm3", " -w first", " -c raft",ids);
+            globalAppId2 = respCreate.substring(respCreate.lastIndexOf(":")+1).trim();
+            sleepAndSaveInfo(SLEEPTIME);
             assertEquals(
-                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+subLedgerB.toLowerCase()+"\""),
+                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"id\": \""+globalAppId2+"\""),
                     true);
         }
     }
@@ -141,7 +128,7 @@ public class TestMainAppChain_WVM {
 //
 //
 //        //子链上安装合约使用PRIKEY2
-//        subLedger = subLedgerA;
+//        subLedger = globalAppId1;
 //        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
 //        String response11 = wvmContractTest.wvmInstallTest(wvmContractTest.wvmFile +"_temp.txt",PRIKEY2);
 //        String txHash12 = commonFunc.getTxHash(response11,utilsClass.sdkGetTxHashType20);
@@ -150,7 +137,7 @@ public class TestMainAppChain_WVM {
 //        sleepAndSaveInfo(SLEEPTIME);
 //        //目前未加入子链信息，此部分先注释
 ////        String res1 = shExeAndReturn(PEER1IP,"find " + PeerPATH + " -name " + ctHash);
-////        assertEquals(true,res1.contains(subLedgerA));
+////        assertEquals(true,res1.contains(globalAppId1));
 //
 //        //调用合约内的交易
 //        String response12 = wvmContractTest.invokeNew(ctHash12,"initAccount",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
@@ -235,7 +222,7 @@ public class TestMainAppChain_WVM {
 
 
         //子链上安装合约使用PRIKEY2
-        subLedger = subLedgerA;
+        subLedger = globalAppId1;
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response11 = wvmContractTest.wvmInstallTest(wvmContractTest.wvmFile +"_temp.txt",PRIKEY1);
         String txHash12 = commonFunc.getTxHash(response11,utilsClass.sdkGetTxHashType20);
@@ -243,7 +230,7 @@ public class TestMainAppChain_WVM {
 
         sleepAndSaveInfo(SLEEPTIME);
 //        String res1 = shExeAndReturn(PEER1IP,"find " + PeerPATH + " -name " + ctHash);
-//        assertEquals(true,res1.contains(subLedgerA));
+//        assertEquals(true,res1.contains(globalAppId1));
         //调用合约内的交易
         String response12 = wvmContractTest.invokeNew(ctHash12,"initAccount",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
         sleepAndSaveInfo(SLEEPTIME);
@@ -307,7 +294,7 @@ public class TestMainAppChain_WVM {
         sleepAndSaveInfo(SLEEPTIME);
 
         //子链上安装合约使用PRIKEY2
-        subLedger = subLedgerA;
+        subLedger = globalAppId1;
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmContractTest.wvmInstallTest(wvmContractTest.wvmFile +"_temp.txt",PRIKEY1);
         String txHash2 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType20);
@@ -325,7 +312,7 @@ public class TestMainAppChain_WVM {
         assertEquals(Integer.toString(wvmContractTest.amountB + wvmContractTest.transfer),JSONObject.fromObject(resp18).getJSONObject("data").getString("result"));
 
         //查询子链上A、B账户余额 应为0
-        subLedger = subLedgerA;
+        subLedger = globalAppId1;
 
         String response17 = wvmContractTest.query(ctHash,"BalanceTest",wvmContractTest.accountA);//子链获取账户A账户余额
         assertEquals("0",JSONObject.fromObject(response17).getJSONObject("data").getString("result"));
@@ -343,7 +330,7 @@ public class TestMainAppChain_WVM {
         assertThat(JSONObject.fromObject(response10).getString("message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
 
         //进行子链相关交易
-        subLedger = subLedgerA;
+        subLedger = globalAppId1;
         //调用合约内的交易
         String response2 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountA,wvmContractTest.amountA);//初始化账户A 账户余额50
         String response3 = wvmContractTest.invokeNew(ctHash,"initAccount",wvmContractTest.accountB,wvmContractTest.amountB);//初始化账户B 账户余额60
@@ -375,7 +362,7 @@ public class TestMainAppChain_WVM {
         fileOper.replace(tempWVMDir + wvmContractTest.wvmFile + ".txt", wvmContractTest.orgName, ctName);
 
         //子链上安装wvm合约 使用PRIKEY1
-        subLedger = subLedgerA;
+        subLedger = globalAppId1;
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String resp1 = wvmContractTest.wvmInstallTest(wvmContractTest.wvmFile +"_temp.txt",PRIKEY1);
         String txHash1 = JSONObject.fromObject(resp1).getJSONObject("data").getString("txId");
@@ -404,7 +391,7 @@ public class TestMainAppChain_WVM {
         sleepAndSaveInfo(SLEEPTIME);
 
         //查询子链上A、B账户余额
-        subLedger = subLedgerA;
+        subLedger = globalAppId1;
 
         String resp17 = wvmContractTest.query(ctHash,"BalanceTest",wvmContractTest.accountA);//子链获取账户A账户余额
         assertEquals(Integer.toString(wvmContractTest.amountA - wvmContractTest.transfer),JSONObject.fromObject(resp17).getJSONObject("data").getString("result"));
@@ -423,7 +410,7 @@ public class TestMainAppChain_WVM {
 
 
         //子链销毁wvm合约
-        subLedger = subLedgerA;
+        subLedger = globalAppId1;
         String resp9 = wvmContractTest.wvmDestroyTest(ctHash);
         String txHash9 = JSONObject.fromObject(resp9).getJSONObject("data").getString("txId");
         sleepAndSaveInfo(SLEEPTIME);

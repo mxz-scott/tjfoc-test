@@ -25,13 +25,15 @@ import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClassApp.globalAppId1;
+import static com.tjfintech.common.utils.UtilsClassApp.globalAppId2;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class TestMainAppChain_FRDG {
+public class AppChain_FRDG {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
@@ -59,7 +61,7 @@ public class TestMainAppChain_FRDG {
     String ids = " -m "+ id1+","+ id2+","+ id3;
     List<String> listPeer = new ArrayList<>();
 
-    @BeforeClass
+//    @BeforeClass
     public static void clearData()throws Exception{
         BeforeCondition beforeCondition = new BeforeCondition();
         beforeCondition.clearDataSetPerm999();
@@ -72,38 +74,24 @@ public class TestMainAppChain_FRDG {
 
     @Before
     public void beforeConfig() throws Exception {
-        HashMap peer = new HashMap();
-        peer.put("ID",id4);
-        peer.put("ShownName","testName");
-        List inAddr = new ArrayList();
-        List outAddr = new ArrayList();
-        inAddr.add(ipv4 + PEER3IP + tcpProtocol + PEER3TCPPort);
-        outAddr.add("");
-        peer.put("InAddrs",inAddr);
-        peer.put("OutAddrs",outAddr);
-        peer.put("PeerType",2);
-        //        peer.put("RpcPort",Integer.valueOf(PEER3RPCPort));;
-
-        listPeer.add(JSON.toJSONString(peer).replace("\"","\\\""));
-
         String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
-        if(! resp.contains("\"name\": \"" + glbChain01.toLowerCase() + "\"")) {
-            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain01,
-                    " -t sm3", " -w first", " -c raft",
-                    ids);
-            sleepAndSaveInfo(SLEEPTIME*2);
+        if(! resp.contains("\"id\": \"" + globalAppId1 + "\"")) {
+            String respCreate = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain01,
+                    " -t sm3", " -w first", " -c raft",ids);
+            globalAppId1 = respCreate.substring(respCreate.lastIndexOf(":")+1).trim();
+            sleepAndSaveInfo(SLEEPTIME);
             assertEquals(
-                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01.toLowerCase()+"\""),
+                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"id\": \""+globalAppId1+"\""),
                     true);
         }
 
-        if(! resp.contains("\"name\": \""+glbChain02.toLowerCase()+"\"")) {
-            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain02,
-                    " -t sm3", " -w first", " -c raft",
-                    ids);
-            sleepAndSaveInfo(SLEEPTIME*2);
+        if(! resp.contains("\"id\": \""+ globalAppId2+"\"")) {
+            String respCreate = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain02,
+                    " -t sm3", " -w first", " -c raft",ids);
+            globalAppId2 = respCreate.substring(respCreate.lastIndexOf(":")+1).trim();
+            sleepAndSaveInfo(SLEEPTIME);
             assertEquals(
-                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02.toLowerCase()+"\""),
+                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"id\": \""+globalAppId2+"\""),
                     true);
         }
     }
@@ -115,8 +103,9 @@ public class TestMainAppChain_FRDG {
 
         //创建子链，包含三个节点
         String chainName="tc1515_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName," -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+ chainName,
+                " -t sm3"," -w first"," -c raft",ids);
+        assertEquals(res.contains("ledgerid"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
@@ -216,7 +205,7 @@ public class TestMainAppChain_FRDG {
         //创建子链，包含三个节点
         String chainName="tc1517_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName," -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
+        assertEquals(res.contains("ledgerid"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
@@ -275,7 +264,7 @@ public class TestMainAppChain_FRDG {
         String chainName="tc1522_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
                 " -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
+        assertEquals(res.contains("ledgerid"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
@@ -344,7 +333,7 @@ public class TestMainAppChain_FRDG {
         String chainName="tc1521_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
                 " -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
+        assertEquals(res.contains("ledgerid"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
@@ -405,7 +394,7 @@ public class TestMainAppChain_FRDG {
         String chainName="tc1622_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
                 " -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
+        assertEquals(res.contains("ledgerid"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
@@ -610,7 +599,7 @@ public class TestMainAppChain_FRDG {
         //创建一个子链
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
                 " -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
+        assertEquals(res.contains("ledgerid"), true);
 
 
         log.info("+++++++++++++++: " + res);
@@ -681,7 +670,7 @@ public class TestMainAppChain_FRDG {
         String chainName="tc1609_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName," -t sm3",
                 " -w first"," -c raft"," -m "+ id1 + "," + id2);
-        assertEquals(res.contains("send transaction success"), true);
+        assertEquals(res.contains("ledgerid"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
@@ -754,7 +743,7 @@ public class TestMainAppChain_FRDG {
         String chainName="tc1510_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
                 " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2);
-        assertEquals(res.contains("send transaction success"), true);
+        assertEquals(res.contains("ledgerid"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
@@ -807,13 +796,13 @@ public class TestMainAppChain_FRDG {
         String chainName2="tc1509_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName2,
                 " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2);
-        assertEquals(res.contains("send transaction success"), true);
+        assertEquals(res.contains("ledgerid"), true);
 
         //创建子链，包含三个节点
         String chainName3="tc1509_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName3,
                 " -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
+        assertEquals(res.contains("ledgerid"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
@@ -876,7 +865,7 @@ public class TestMainAppChain_FRDG {
         String chainName="tc1511_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
                 " -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
+        assertEquals(res.contains("ledgerid"), true);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME*2);
