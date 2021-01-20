@@ -58,8 +58,8 @@ public class CallBack {
 
     String jsondata = "{\"state\":400,\"message\":\"error\",\"data\":\"check\"}";
     String filedata = "";
-    //    String msgdatafile = resourcePath + "callBackData\\msgData.txt";
-    String msgdatafile = System.getProperty("user.dir") + "\\callBackData.txt";
+    String msgdatafile = resourcePath + "SendMsgTestFiles\\callBackData.txt";
+//    String msgdatafile = System.getProperty("user.dir") + "\\callBackData.txt";
 
 
     @BeforeClass

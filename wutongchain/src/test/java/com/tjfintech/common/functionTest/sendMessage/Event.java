@@ -48,8 +48,8 @@ public class Event {
 
     String jsondata = "{\"state\":400,\"message\":\"error\",\"data\":\"check\"}";
     String filedata = "";
-//    String msgdatafile = resourcePath + "SendMsgTestFiles\\eventData.txt";
-    String msgdatafile = System.getProperty("user.dir") + "\\eventData.txt";//自动化启动进程后文件的位置
+    String msgdatafile = resourcePath + "SendMsgTestFiles\\eventData.txt";
+//    String msgdatafile = System.getProperty("user.dir") + "\\eventData.txt";//自动化启动进程后文件的位置
 
 
 
@@ -67,11 +67,11 @@ public class Event {
             beforeCondition.tokenAddIssueCollAddr();
         }
 
-        if(StringUtils.isEmpty(ADDRESS1)) {
-            BeforeCondition beforeCondition = new BeforeCondition();
-            beforeCondition.createAddresses();
-            beforeCondition.collAddressTest();
-        }
+//        if(StringUtils.isEmpty(ADDRESS1)) {
+//            BeforeCondition beforeCondition = new BeforeCondition();
+//            beforeCondition.createAddresses();
+//            beforeCondition.collAddressTest();
+//        }
     }
 
 
@@ -372,50 +372,50 @@ public class Event {
 
 
 
-    @Test
-    public void WVMContractEventTest() throws Exception {
-
-        String category = "wvm";
-        String prikey = PRIKEY1;
-        String wvmfilepath = resourcePath + "SendMsgTestFiles\\Identity.wlang";
-        String contractname = "";
-
-
-        //安装合约，当前版本会自动调init方法，会发一笔交易事件一笔合约事件
-        clearMsgDateForFile(msgdatafile);
-        String data = utilsClass.encryptBASE64(utilsClass.readInput(wvmfilepath).toString().getBytes());
-        String response = contract.InstallWVM(data,prikey,category);
-        assertEquals("200", JSONObject.fromObject(response).getString("State"));
-        filedata = updateMsgDate(msgdatafile);
-        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getJSONObject("Data").getString("Figure")),
-                containsString("onchain"),containsString("txevent")));
-        assertThat(filedata,allOf(containsString("init"),containsString("scevent")));
-        contractname = JSONObject.fromObject(response).getJSONObject("Data").getString("Name");
-
-
-        //调用合约，成功后发一笔交易事件一笔合约事件
-        clearMsgDateForFile(msgdatafile);
-//        response = wvmContractTest.invokeNew(contractname,"AddUserInfo",
-//                "\"Name\":\"lcuy\",\"ID\":\"12333\",\"Age\":\"111\"","3046022100c8494c97496c7a3030be82beddb873de3d66df87c377b971115c78b6c8ef9221022100e5819d553a77c4598b5a683de9dd065b5da419b085e56d12f5d34175a1e56d7f");
-        response = wvmContractTest.invokeNew(contractname,"GetUserInfo",
-                "123");
-        assertEquals("200", JSONObject.fromObject(response).getString("State"));
-        filedata = updateMsgDate(msgdatafile);
-        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getJSONObject("Data").getString("Figure")),
-                containsString("onchain"),containsString("txevent")));
-//        assertThat(filedata,allOf(containsString("You have no permission to add [userInfo]!"),
-//                containsString("scevent"),containsString("Message")));
-        assertThat(filedata,allOf(containsString("scevent"),containsString("123")));
-
-        //销毁合约，成功后发送一笔交易事件
-        clearMsgDateForFile(msgdatafile);
-        response = contract.DestroyWVM(contractname,category);
-        assertEquals("200", JSONObject.fromObject(response).getString("State"));
-        filedata = updateMsgDate(msgdatafile);
-        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getJSONObject("Data").getString("Figure")),
-                containsString("onchain"),containsString("txevent")));
-
-    }
+//    @Test
+//    public void WVMContractEventTest() throws Exception {
+//
+//        String category = "wvm";
+//        String prikey = PRIKEY1;
+//        String wvmfilepath = resourcePath + "SendMsgTestFiles\\Identity.wlang";
+//        String contractname = "";
+//
+//
+//        //安装合约，当前版本会自动调init方法，会发一笔交易事件一笔合约事件
+//        clearMsgDateForFile(msgdatafile);
+//        String data = utilsClass.encryptBASE64(utilsClass.readInput(wvmfilepath).toString().getBytes());
+//        String response = contract.InstallWVM(data,prikey,category);
+//        assertEquals("200", JSONObject.fromObject(response).getString("State"));
+//        filedata = updateMsgDate(msgdatafile);
+//        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getJSONObject("Data").getString("Figure")),
+//                containsString("onchain"),containsString("txevent")));
+//        assertThat(filedata,allOf(containsString("init"),containsString("scevent")));
+//        contractname = JSONObject.fromObject(response).getJSONObject("Data").getString("Name");
+//
+//
+//        //调用合约，成功后发一笔交易事件一笔合约事件
+//        clearMsgDateForFile(msgdatafile);
+////        response = wvmContractTest.invokeNew(contractname,"AddUserInfo",
+////                "\"Name\":\"lcuy\",\"ID\":\"12333\",\"Age\":\"111\"","3046022100c8494c97496c7a3030be82beddb873de3d66df87c377b971115c78b6c8ef9221022100e5819d553a77c4598b5a683de9dd065b5da419b085e56d12f5d34175a1e56d7f");
+//        response = wvmContractTest.invokeNew(contractname,"GetUserInfo",
+//                "123");
+//        assertEquals("200", JSONObject.fromObject(response).getString("State"));
+//        filedata = updateMsgDate(msgdatafile);
+//        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getJSONObject("Data").getString("Figure")),
+//                containsString("onchain"),containsString("txevent")));
+////        assertThat(filedata,allOf(containsString("You have no permission to add [userInfo]!"),
+////                containsString("scevent"),containsString("Message")));
+//        assertThat(filedata,allOf(containsString("scevent"),containsString("123")));
+//
+//        //销毁合约，成功后发送一笔交易事件
+//        clearMsgDateForFile(msgdatafile);
+//        response = contract.DestroyWVM(contractname,category);
+//        assertEquals("200", JSONObject.fromObject(response).getString("State"));
+//        filedata = updateMsgDate(msgdatafile);
+//        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getJSONObject("Data").getString("Figure")),
+//                containsString("onchain"),containsString("txevent")));
+//
+//    }
 
 //    @AfterClass
     public static void KillMainExe()throws Exception{
