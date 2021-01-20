@@ -1,19 +1,11 @@
-package com.tjfintech.common.functionTest.mainAppChain;
+package com.tjfintech.common.functionTest.appChainTest;
 
-import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
-import org.apache.commons.lang.math.RandomUtils;
-import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Test;
 import org.junit.runners.MethodSorters;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassApp.*;
@@ -24,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 public class AppChain_CommonFunc {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
-    Store store =testBuilder.getStore();
+    Store store = testBuilder.getStore();
     MgToolCmd mgToolCmd = new MgToolCmd();
 
 
@@ -60,7 +52,7 @@ public class AppChain_CommonFunc {
             log.info("id2 " + globalAppId2);
             sleepAndSaveInfo(SLEEPTIME);
             assertEquals(
-                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"id\": \""+globalAppId2+"\""),
+                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"id\": \"" + globalAppId2 + "\""),
                     true);
         }
     }

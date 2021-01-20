@@ -1,6 +1,5 @@
-package com.tjfintech.common.functionTest.mainAppChain;
+package com.tjfintech.common.functionTest.appChainTest;
 
-import com.alibaba.fastjson.JSON;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
@@ -19,7 +18,6 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.tjfintech.common.utils.UtilsClass.*;

@@ -1,7 +1,5 @@
-package com.tjfintech.common.functionTest.mainAppChain;
+package com.tjfintech.common.functionTest.appChainTest;
 
-import com.alibaba.fastjson.JSON;
-import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
@@ -14,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -33,9 +30,7 @@ import static org.junit.Assert.assertThat;
 public class AppChain_FRDG {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
-    Store store =testBuilder.getStore();
-    SoloSign soloSign = testBuilder.getSoloSign();
-    MultiSign multiSign = testBuilder.getMultiSign();
+    Store store = testBuilder.getStore();
     MgToolCmd mgToolCmd = new MgToolCmd();
     SubLedgerCmd subLedgerCmd = new SubLedgerCmd();
     CommonFunc commonFunc = new CommonFunc();
@@ -55,7 +50,7 @@ public class AppChain_FRDG {
     public void TC1515_1514_1648_recoverFreezeChain03()throws Exception{
 
         //创建应用链，包含三个节点
-        String chainName="tc1515_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
+        String chainName = "tc1515_" + sdf.format(dt) + RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+ chainName,
                 " -t sm3"," -w first"," -c raft",ids);
 
@@ -98,7 +93,7 @@ public class AppChain_FRDG {
 
 
         //发送交易测试
-        String Data="1521 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
+        String Data = "1521 ledger tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
         //向新建应用链chainName发送交易
         String response1 = store.CreateStore(Data);
 
@@ -143,7 +138,7 @@ public class AppChain_FRDG {
 
 
         //发送交易测试
-        String Data="1521 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
+        String Data = "1521 ledger tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
 
         //向应用链glbChain01/glbChain02发送交易
         subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
@@ -154,7 +149,7 @@ public class AppChain_FRDG {
     public void TC1517_recoverDestroyChain01()throws Exception{
 
         //创建应用链，包含三个节点
-        String chainName="tc1517_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
+        String chainName = "tc1517_" + sdf.format(dt) + RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName,
                 " -t sm3"," -w first"," -c raft",ids);
 
@@ -194,7 +189,7 @@ public class AppChain_FRDG {
         assertEquals(resp.contains("name"), true);
 
         //发送交易测试
-        String Data="1517 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
+        String Data = "1517 ledger tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
         //向新建应用链chainName发送交易
         String response1 = store.CreateStore(Data);
         assertThat(response1, containsString(stateDestroyed));
@@ -208,7 +203,7 @@ public class AppChain_FRDG {
     public void TC1522_destroyChain04()throws Exception{
 
         //创建应用链，包含三个节点
-        String chainName="tc1522_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
+        String chainName = "tc1522_" + sdf.format(dt) + RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName,
                 " -t sm3"," -w first"," -c raft",ids);
 
@@ -259,7 +254,7 @@ public class AppChain_FRDG {
 
 
         //发送交易测试
-        String Data="1522 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
+        String Data = "1522 ledger tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
         //向新建应用链chainName发送交易
         String response1 = store.CreateStore(Data);
         assertThat(response1, containsString(stateDestroyed));
@@ -272,7 +267,7 @@ public class AppChain_FRDG {
     public void TC1521_destroyChain03()throws Exception{
 
         //创建应用链，包含三个节点
-        String chainName="tc1521_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        String chainName = "tc1521_" + sdf.format(dt) + RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName,
                 " -t sm3"," -w first"," -c raft",ids);
 
@@ -314,7 +309,7 @@ public class AppChain_FRDG {
 
 
         //发送交易测试
-        String Data="1521 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
+        String Data = "1521 ledger tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
         //向新建应用链chainName发送交易
         String response1 = store.CreateStore(Data);
         assertThat(response1, containsString(stateDestroyed));
@@ -328,7 +323,7 @@ public class AppChain_FRDG {
     public void TC1622_destroyChain02()throws Exception{
 
         //创建应用链，包含三个节点
-        String chainName="tc1622_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        String chainName = "tc1622_" + sdf.format(dt) + RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName,
                 " -t sm3"," -w first"," -c raft",ids);
 
@@ -368,7 +363,7 @@ public class AppChain_FRDG {
 
 
         //发送交易测试
-        String Data="1622 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
+        String Data = "1622 ledger tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
 
         //向新建应用链chainName发送交易
         String response1 = store.CreateStore(Data);
@@ -383,7 +378,7 @@ public class AppChain_FRDG {
     public void TC1518_1519_1496_1646_destroyChain01()throws Exception{
 
         //创建应用链，包含三个节点
-        String chainName="tc1518_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        String chainName = "tc1518_" + sdf.format(dt) + RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName,
                 " -t sm3"," -w first"," -c raft",ids);
 
@@ -410,12 +405,12 @@ public class AppChain_FRDG {
         assertEquals(resp.contains("\"cons\": \"raft\""), true);
         assertEquals(resp.contains("\"word\": \"first\""), true);
 
-        String Data="1518 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
+        String Data = "1518 ledger tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
 
         //向新建应用链chainName发送交易
         storeTypeSupportCheck("destroy");
 
-        Data="1518 ledger2 tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
+        Data = "1518 ledger2 tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
         //向应用链glbChain01/glbChain02发送交易
         subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
     }
@@ -424,36 +419,36 @@ public class AppChain_FRDG {
         PRIKEY1 = utilsClass.getKeyPairsFromFile(certPath + "/keys1/key.pem");
         PUBKEY1 = utilsClass.getKeyPairsFromFile(certPath + "/keys1/pubkey.pem");
 
-        String txHash1 ="de1600ecb828b8c524a7d650cc9498b35e3b78414fc4ae8677ae165d2ef029a6";
-        String txHash2 ="de1600ecb828b8c524a7d650cc9498b35e3b78414fc4ae8677ae165d2ef029a6";
-        String blockHash ="24bf6ca3cabf7963f356480bf3f3397d21a647a17c18d164a8d6c848ec6f266a";
+        String txHash1 = "de1600ecb828b8c524a7d650cc9498b35e3b78414fc4ae8677ae165d2ef029a6";
+        String txHash2 = "de1600ecb828b8c524a7d650cc9498b35e3b78414fc4ae8677ae165d2ef029a6";
+        String blockHash = "24bf6ca3cabf7963f356480bf3f3397d21a647a17c18d164a8d6c848ec6f266a";
         //String notSupport=notSupport;
         //String notSupport="doesn't exist";
         boolean bCheck1 = false;//上链类交易返回校验字符串
         boolean bCheck2 = false;//查询类交易返回校验字符串
 
-        Map<String,Object> map=new HashMap<>();
+        Map<String,Object> map = new HashMap<>();
         map.put("pubKeys",PUBKEY1);
         //map.put("pubkeys",PUBKEY6);
 
         if(type=="normal"){
-            txHash1=JSONObject.fromObject(store.CreateStore("test")).getString("data");
-            txHash2=JSONObject.fromObject(store.CreatePrivateStore("test",map)).getString("data");
-            bCheck1=false;
-            bCheck2=false;
-            blockHash=JSONObject.fromObject(store.GetBlockByHeight(1)).getJSONObject("data").getJSONObject("header").getString("blockId");
+            txHash1 = JSONObject.fromObject(store.CreateStore("test")).getString("data");
+            txHash2 = JSONObject.fromObject(store.CreatePrivateStore("test",map)).getString("data");
+            bCheck1 = false;
+            bCheck2 = false;
+            blockHash = JSONObject.fromObject(store.GetBlockByHeight(1)).getJSONObject("data").getJSONObject("header").getString("blockId");
             sleepAndSaveInfo(SLEEPTIME);
         }
-        else if(type=="freeze"){
-            notSupport=stateFreezed;
-            bCheck1=true;
-            bCheck2=false;
-            blockHash=JSONObject.fromObject(store.GetBlockByHeight(1)).getJSONObject("data").getJSONObject("header").getString("blockId");
+        else if(type == "freeze"){
+            notSupport = stateFreezed;
+            bCheck1 = true;
+            bCheck2 = false;
+            blockHash = JSONObject.fromObject(store.GetBlockByHeight(1)).getJSONObject("data").getJSONObject("header").getString("blockId");
         }
-        else if(type=="destroy"){
-            notSupport=stateDestroyed;
-            bCheck1=true;
-            bCheck2=true;
+        else if(type == "destroy"){
+            notSupport = stateDestroyed;
+            bCheck1 = true;
+            bCheck2 = true;
         }
         else {
             log.info("type string is illegal,please check");
@@ -487,7 +482,7 @@ public class AppChain_FRDG {
     public void TC1497_1536_getNoExistChain()throws Exception{
 
         //应用链
-        String chainName="tc1497_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        String chainName = "tc1497_" + sdf.format(dt) + RandomUtils.nextInt(1000);
 
 //        sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取应用链列表 存在其他应用链
@@ -504,7 +499,7 @@ public class AppChain_FRDG {
         resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
 
-        String Data="1475 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
+        String Data = "1475 ledger tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
 
         //向不存在的应用链chainName发送交易
         subLedger = "notexist";
@@ -587,7 +582,7 @@ public class AppChain_FRDG {
     public void TC1609_recoverRecoverChains()throws Exception{
 
         //创建应用链
-        String chainName="tc1609_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        String chainName = "tc1609_" + sdf.format(dt) + RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName," -t sm3",
                 " -w first"," -c raft"," -m "+ id1 + "," + id2);
 
@@ -631,7 +626,7 @@ public class AppChain_FRDG {
         res4 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -c " + subLedger);
         if(res4.contains("state"))  assertEquals(res4.contains(ledgerStateNormal), true);
 
-        String Data="1609 ledger1 tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
+        String Data = "1609 ledger1 tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
 
         //向新建应用链chainName发送交易
         String txHash1 = JSONObject.fromObject(store.CreateStore(Data)).get("data").toString();
@@ -652,9 +647,10 @@ public class AppChain_FRDG {
     @Test
     public void TC1510_1647_freezeAppChains()throws Exception{
         //创建应用链，包含两个节点
-        String chainName ="tc1510_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        String chainName = "tc1510_" + sdf.format(dt) + RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName,
-                " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2);
+                " -t sm3"," -w first",
+                " -c raft"," -m " + id1 + "," + id2);
 
         hash = commonFunc.getTxHash(res,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
@@ -681,7 +677,7 @@ public class AppChain_FRDG {
         assertEquals(res3.contains(ledgerStateFreeze), true);
 
         //向冻结应用链chainName2发送交易
-        String Data="1510 ledger1 tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
+        String Data = "1510 ledger1 tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
         String response1 = store.CreateStore(Data);
         assertEquals(true,response1.contains(stateFreezed));
 
@@ -739,14 +735,14 @@ public class AppChain_FRDG {
         assertEquals(res4.contains(ledgerStateFreeze), true);
 
 
-        String Data="1509 ledger1 tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
+        String Data = "1509 ledger1 tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
 
         //向新建应用链chainName2发送交易
         subLedger = tempLedgerId1;
         String response1 = store.CreateStore(Data);
         assertThat(response1, containsString(stateFreezed));
 
-        Data="1509 ledger2 tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
+        Data = "1509 ledger2 tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
         //向新建应用链chainName3发送交易
         subLedger = tempLedgerId2;
         String response2 = store.CreateStore(Data);
@@ -827,7 +823,7 @@ public class AppChain_FRDG {
         assertEquals(resp.contains(chainName), false);
         assertEquals(resp.contains(globalAppId1), true);
 
-        String Data="1512 ledger tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
+        String Data = "1512 ledger tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
 
         //解除一个不存在的应用链chainName
         String respon = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -c " + chainName);
@@ -864,7 +860,7 @@ public class AppChain_FRDG {
     public void TC1585_recoverNoExistChain()throws Exception{
 
         //待发送应用链名
-        String chainName="tc1585_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        String chainName = "tc1585_" + sdf.format(dt) + RandomUtils.nextInt(1000);
 
         //检查可以获取应用链列表 存在其他应用链
         String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
@@ -872,7 +868,7 @@ public class AppChain_FRDG {
         assertEquals(resp.contains(chainName), false);
         assertEquals(resp.contains(globalAppId1), true);
 
-        String Data="1585 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
+        String Data = "1585 ledger tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
 
         //恢复一个不存在的应用链chainName
         String respon = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -c " + chainName);

@@ -2,7 +2,7 @@ package com.tjfintech.common.functionTest.BVT.P2_Middle;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.*;
-import com.tjfintech.common.functionTest.mainAppChain.*;
+import com.tjfintech.common.functionTest.appChainTest.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

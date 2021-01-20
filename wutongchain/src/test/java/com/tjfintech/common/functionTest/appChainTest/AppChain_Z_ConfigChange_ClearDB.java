@@ -1,4 +1,4 @@
-package com.tjfintech.common.functionTest.mainAppChain;
+package com.tjfintech.common.functionTest.appChainTest;
 
 import com.alibaba.fastjson.JSON;
 import com.tjfintech.common.BeforeCondition;

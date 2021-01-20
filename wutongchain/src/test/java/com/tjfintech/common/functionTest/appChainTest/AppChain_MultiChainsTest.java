@@ -1,7 +1,5 @@
-package com.tjfintech.common.functionTest.mainAppChain;
+package com.tjfintech.common.functionTest.appChainTest;
 
-import com.alibaba.fastjson.JSON;
-import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.Store;
@@ -13,14 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassApp.*;
@@ -48,56 +41,63 @@ public class AppChain_MultiChainsTest {
     @Test
     public void TC1589_createMultiChains()throws Exception{
         //创建子链，包含两个节点
-        String chainName2="tc1589_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName2,
-                " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2);
-        assertEquals(res.contains("send transaction success"), true);
+        String chainName2 = "tc1589_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName2,
+                " -t sm3"," -w first",
+                " -c raft"," -m " + id1 + "," + id2);
+
+        tempLedgerId1 = subLedger;
 
         //创建子链，包含三个节点
-        String chainName3="tc1589_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName3,
+        String chainName3 = "tc1589_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName3,
                 " -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
 
-        sleepAndSaveInfo(SLEEPTIME);
+        tempLedgerId2 = subLedger;
+
+        sleepAndSaveInfo(2000);
         //检查可以获取子链列表
         String res2 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
         assertEquals(res2.contains(chainName2), true);
         assertEquals(res2.contains(chainName3), true);
 
-        String Data="1589 ledger1 tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
+        String Data = "1589 ledger1 tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
 
         //向子链chainName2发送交易
-        subLedger=chainName2;
+        subLedger = tempLedgerId1;
         String response1 = store.CreateStore(Data);
-        sleepAndSaveInfo(SLEEPTIME);
 
-        Data="1589 ledger2 tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
+        Data = "1589 ledger2 tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
         //向子链chainName3发送交易
-        subLedger=chainName3;
+        subLedger = tempLedgerId2;
         String response2 = store.CreateStore(Data);
         sleepAndSaveInfo(SLEEPTIME);
 
-        Data="1589 main tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
-        //向主链发送交易
-        subLedger="";
+        Data = "1589 main tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
+        subLedger = globalAppId1;
         String response3 = store.CreateStore(Data);
 
-        sleepAndSaveInfo(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME);
 
         String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType21);
         String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType21);
         String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType21);
 
-        subLedger=chainName2;
+        subLedger = tempLedgerId1;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));
 
-        subLedger=chainName3;
+        subLedger = tempLedgerId2;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));
 
-        subLedger="";
+        subLedger = globalAppId1;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));
+        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
 
         //检查可以获取子链列表
         String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
@@ -109,18 +109,21 @@ public class AppChain_MultiChainsTest {
     @Test
     public void TC1556_TC1557_createSameStoreInMainAppChains()throws Exception{
         //创建子链，包含两个节点
-        String chainName2="tc1589_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName2,
-                " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2);
-        assertEquals(res.contains("send transaction success"), true);
+        String chainName2 = "tc1589_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName2,
+                " -t sm3"," -w first",
+                " -c raft"," -m " + id1 + "," + id2);
+
+        tempLedgerId1 = subLedger;
 
         //创建子链，包含三个节点
-        String chainName3="tc1589_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName3,
+        String chainName3="tc1589_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName3,
                 " -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
 
-        sleepAndSaveInfo(SLEEPTIME*2);
+        tempLedgerId2 = subLedger;
+
+        sleepAndSaveInfo(4000);
 
         //检查可以获取子链列表
         String res2 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
@@ -128,18 +131,18 @@ public class AppChain_MultiChainsTest {
         assertEquals(res2.contains(chainName2), true);
         assertEquals(res2.contains(chainName3), true);
 
-        String Data="1589 ledger1 tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
+        String Data = "1589 ledger1 tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
 
         //向子链chainName2发送交易
-        subLedger=chainName2;
+        subLedger = tempLedgerId1;
         String response1 = store.CreateStore(Data);
 
         //向子链chainName3发送交易
-        subLedger=chainName3;
+        subLedger = tempLedgerId2;
         String response2 = store.CreateStore(Data);
 
         //向主链发送交易
-        subLedger="";
+        subLedger = globalAppId1;
         String response3 = store.CreateStore(Data);
 
         sleepAndSaveInfo(SLEEPTIME);
@@ -148,13 +151,13 @@ public class AppChain_MultiChainsTest {
         String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType21);
         String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType21);
 
-        subLedger=chainName2;
+        subLedger = tempLedgerId1;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
 
-        subLedger=chainName3;
+        subLedger = tempLedgerId2;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));
 
-        subLedger="";
+        subLedger = globalAppId1;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));
 
         //检查可以获取子链列表
@@ -168,26 +171,27 @@ public class AppChain_MultiChainsTest {
     @Test
     public void TC1592_1484_1477_1525_1528_1531_1524_createMultiChains()throws Exception{
         //创建子链，包含一个节点
-        String chainName1="tc1592_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1,
-                " -t sm3"," -w first"," -c raft"," -m "+id1);
-        assertEquals(res.contains("requires at least two ids"), true);
+        String chainName1="tc1592_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1,
+                " -t sm3"," -w first"," -c raft"," -m " + id1);
+        assertEquals(res.contains("2 nodes is required for the memberList"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
         //创建子链，包含两个节点 为主链中的一个共识节点和一个非共识节点
-        String chainName2="tc1592_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName2,
-                " -t sm3"," -w first"," -c raft"," -m "+id1+","+id3);
-        assertEquals(res.contains("send transaction success"), true);
+        String chainName2="tc1592_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName2,
+                " -t sm3"," -w first",
+                " -c raft"," -m " + id1 + "," + id3);
+        tempLedgerId1 = subLedger;
 
-        sleepAndSaveInfo(SLEEPTIME);
+        sleepAndSaveInfo(2000);
         //创建子链，包含三个节点
-        String chainName3="tc1592_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName3,
+        String chainName3="tc1592_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName3,
                 " -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
+        tempLedgerId2 = subLedger;
 
-        sleepAndSaveInfo(SLEEPTIME*2);
+        sleepAndSaveInfo(2000);
         //检查可以获取子链列表
         String res2 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
@@ -197,19 +201,19 @@ public class AppChain_MultiChainsTest {
         assertEquals(chainName2.contains(chainName3), false);
 
 
-        String Data="1592 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
+        String Data = "1592 ledger tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
         //向子链chainName2发送交易
-        subLedger=chainName2;
+        subLedger = tempLedgerId1;
         String response1 = store.CreateStore(Data);
 
-        Data="1592 ledger2 tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
+        Data = "1592 ledger2 tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
         //向子链chainName3发送交易
-        subLedger=chainName3;
+        subLedger = tempLedgerId2;
         String response2 = store.CreateStore(Data);
 
-        Data="1592 main tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
+        Data = "1592 main tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
         //向主链发送交易
-        subLedger="";
+        subLedger = globalAppId1;
         String response3 = store.CreateStore(Data);
 
         sleepAndSaveInfo(SLEEPTIME);
@@ -219,23 +223,22 @@ public class AppChain_MultiChainsTest {
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName2), true);
         assertEquals(resp.contains(chainName3), true);
-        sleepAndSaveInfo(SLEEPTIME);
 
         String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType21);
         String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType21);
         String txHash3 = commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType21);
 
-        subLedger=chainName2;
+        subLedger = tempLedgerId1;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
         assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));
         assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));
 
-        subLedger=chainName3;
+        subLedger = tempLedgerId2;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));
         assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
         assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));
 
-        subLedger="";
+        subLedger = globalAppId1;
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));
         assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));
         assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
@@ -247,24 +250,29 @@ public class AppChain_MultiChainsTest {
     public void TC1593_createMultiChains()throws Exception{
 
         //创建子链，包含三个节点
-        String chainName3="tc1593_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName3,
+        String chainName3 = "tc1593_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        String res = "";
+        mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName3,
                 " -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
+
+        tempLedgerId1 = subLedger;
 
         //创建子链，包含两个节点
-        String chainName2="tc1593_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName2,
-                " -t sm3"," -w first"," -c raft"," -m "+id1+","+id2);
-        assertEquals(res.contains("send transaction success"), true);
+        String chainName2="tc1593_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName2,
+                " -t sm3"," -w first",
+                " -c raft"," -m " + id1 + "," + id2);
+
+        tempLedgerId2 = subLedger;
 
         //创建子链，包含一个节点
-        String chainName1="tc1593_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1,
-                " -t sm3"," -w first"," -c raft"," -m "+id1);
-        assertEquals(res.contains("send transaction success"), false);
+        String chainName1="tc1593_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1,
+                " -t sm3"," -w first",
+                " -c raft"," -m " + id1);
+        assertEquals(res.contains("2 nodes is required for the memberList"), true);
 
-        sleepAndSaveInfo(SLEEPTIME);
+        sleepAndSaveInfo(2000);
         //检查可以获取子链列表
         String res2 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
@@ -273,7 +281,7 @@ public class AppChain_MultiChainsTest {
         assertEquals(res2.contains(chainName3), true);
 
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMultiActiveChain("1593 tx",globalAppId1,globalAppId2);
+        subLedgerCmd.sendTxToMultiActiveChain("1593 tx",globalAppId1,globalAppId2,tempLedgerId1,tempLedgerId2);
     }
 
 }
