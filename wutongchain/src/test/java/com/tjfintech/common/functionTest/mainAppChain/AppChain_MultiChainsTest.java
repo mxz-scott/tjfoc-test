@@ -23,8 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static com.tjfintech.common.utils.UtilsClassApp.globalAppId1;
-import static com.tjfintech.common.utils.UtilsClassApp.globalAppId2;
+import static com.tjfintech.common.utils.UtilsClassApp.*;
 import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -38,26 +37,6 @@ public class AppChain_MultiChainsTest {
     MgToolCmd mgToolCmd = new MgToolCmd();
     CommonFunc commonFunc = new CommonFunc();
     UtilsClass utilsClass = new UtilsClass();
-
-
-    String glbChain01= "glbCh1";
-    String glbChain02= "glbCh2";
-    String noPerm="not found";
-
-    String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
-    String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
-    String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
-    String id4 = getPeerId(PEER3IP,USERNAME,PASSWD);
-    String ids = " -m "+ id1+","+ id2+","+ id3;
-    List<String> listPeer = new ArrayList<>();
-
-    @BeforeClass
-    public static void clearData()throws Exception{
-        BeforeCondition beforeCondition = new BeforeCondition();
-        beforeCondition.clearDataSetPerm999();
-//        beforeCondition.createAdd();
-        sleepAndSaveInfo(SLEEPTIME);
-    }
 
     @Before
     public void beforeConfig() throws Exception {

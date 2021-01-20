@@ -16,8 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static com.tjfintech.common.utils.UtilsClassApp.globalAppId1;
-import static com.tjfintech.common.utils.UtilsClassApp.globalAppId2;
+import static com.tjfintech.common.utils.UtilsClassApp.*;
 import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -28,19 +27,6 @@ public class AppChain_CommonFunc {
     Store store =testBuilder.getStore();
     MgToolCmd mgToolCmd = new MgToolCmd();
 
-    String glbChain01= "glbCh1";
-    String glbChain02= "glbCh2";
-
-    String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
-    String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
-    String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
-    String id4 = getPeerId(PEER3IP,USERNAME,PASSWD);
-//    String id1 = "";
-//    String id2 = "";
-//    String id3 = "";
-//    String id4 = "";
-    String ids = " -m "+ id1+","+ id2+","+ id3;
-    List<String> listPeer = new ArrayList<>();
 
     /**
      * 创建两个应用链 与globalAppId1 globalAppId2 对应

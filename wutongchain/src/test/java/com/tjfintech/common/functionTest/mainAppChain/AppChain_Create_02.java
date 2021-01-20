@@ -15,13 +15,8 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static com.tjfintech.common.utils.UtilsClassApp.globalAppId1;
-import static com.tjfintech.common.utils.UtilsClassApp.globalAppId2;
+import static com.tjfintech.common.utils.UtilsClassApp.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -35,17 +30,6 @@ public class AppChain_Create_02 {
     SubLedgerCmd subLedgerCmd = new SubLedgerCmd();
     MgToolCmd mgToolCmd = new MgToolCmd();
 
-    String stateDestroyed = "off-time not support service";//"has been destroyed";
-
-    String glbChain01= "glbCh1";
-    String glbChain02= "glbCh2";
-
-    String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
-    String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
-    String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
-    String id4 = getPeerId(PEER3IP,USERNAME,PASSWD);
-    String ids = " -m "+ id1+","+ id2+","+ id3;
-    List<String> listPeer = new ArrayList<>();
 
 //    @BeforeClass
     public static void clearData()throws Exception{

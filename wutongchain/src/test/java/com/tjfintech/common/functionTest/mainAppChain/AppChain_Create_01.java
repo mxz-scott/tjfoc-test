@@ -16,9 +16,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassApp.*;
@@ -32,19 +29,6 @@ public class AppChain_Create_01 {
     Store store =testBuilder.getStore();
     MgToolCmd mgToolCmd = new MgToolCmd();
 
-    String glbChain01= "glbCh1";
-    String glbChain02= "glbCh2";
-
-    String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
-    String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
-    String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
-    String id4 = getPeerId(PEER3IP,USERNAME,PASSWD);
-//    String id1 = "";
-//    String id2 = "";
-//    String id3 = "";
-//    String id4 = "";
-    String ids = " -m "+ id1+","+ id2+","+ id3;
-    List<String> listPeer = new ArrayList<>();
 
 //    @BeforeClass
     public static void clearData()throws Exception{
@@ -196,14 +180,13 @@ public class AppChain_Create_01 {
     public void TC1471_CreateAndCheck()throws Exception{
         //获取单个子链信息
         String res1 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -c "+ globalAppId1);
-        assertEquals(res1.contains(glbChain01), true);
         assertEquals(res1.contains(id1), true);
         assertEquals(res1.contains(id2), true);
         assertEquals(res1.contains(id3), true);
 
         //获取系统所有子链信息
         String res2 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
-        assertEquals(res2.contains(glbChain01), true);
+        assertEquals(res2.contains(globalAppId1), true);
         assertEquals(res2.contains(id1), true);
         assertEquals(res2.contains(id2), true);
         assertEquals(res2.contains(id3), true);

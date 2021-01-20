@@ -954,10 +954,12 @@ public class CommonFunc {
 
         assertEquals(false,hashData.isEmpty());//先检查hash是否为空，为空则不执行
         log.info("query hash  " + hashData);
-        Boolean bWallet = true;
-        if(type.equals(utilsClass.sdkGetTxDetailType)){
-            bWallet = getSDKWalletEnabled();//获取sdk 钱包是否开启
-        }
+
+        //20210120 3.1 sdk使用默认数据库非mysql 即不存在配置项
+//        Boolean bWallet = true;
+//        if(type.equals(utilsClass.sdkGetTxDetailType)){
+//            bWallet = getSDKWalletEnabled();//获取sdk 钱包是否开启
+//        }
         long internal = 0;
 
         Boolean bOK = false;
@@ -992,43 +994,7 @@ public class CommonFunc {
         if(bOK){
             sleepAndSaveInfo(2000,"============================= 等待数据库同步数据");
         }
-        //如果确认交易上链 则去数据库查询或者确认节点高度是否一致，交易在指定时间内未查询到上链则不进行更多的检查
-//        if(bOK) {
-//            //需要排除sdk 钱包关闭场景
-//            //钱包开启则查询数据库中是否已经同步区块
-//            long nowTimeDB = (new Date()).getTime();
-//            if(bWallet) {
-//                while ((new Date()).getTime() - nowTimeDB < DBSyncTime && bInlocal == false) {
-//                    bInlocal = checkDataInMysqlDB(rSDKADD, "tx_finish", "hash", hashData);
-//                    Thread.sleep(500);
-//                }
-//                log.info("============================= 查询数据库更新 " + bInlocal + " 等待时间 "
-//                        + hashData + " " + ((new Date()).getTime() - nowTimeDB));
-////                assertEquals("数据库在未同步到已上链交易",true,bInlocal);
-//
-//                if(type.equals(utilsClass.tokenApiGetTxDetailTType)){
-//                    sleepAndSaveInfo(1000,"============================= 等待 token api数据库同步数据");
-//                }
-//            }
-//            if(!bWallet || type.equals(utilsClass.tokenApiGetTxDetailTType)){
-            if(!bWallet){
-                //检查节点高度是否一致
-                //如果是钱包关闭场景 及 token api场景下不支持数据库是否同步到交易的查询
-                Boolean bEqual = false;
-                //确认所有节点均同步
-                long nowTimeSync = (new Date()).getTime();
-                bEqual = mgToolCmd.mgCheckHeightOrSleep(
-                        PEER1IP + ":" + PEER1RPCPort,PEER2IP + ":" + PEER2RPCPort,
-                        30*1000,300);
-//                if(!bEqual) log.info("============================= 等待节点同步区块时间 " + ((new Date()).getTime() - nowTimeSync));
-//                assertEquals("高度检查不一致",true,bEqual);
-                bEqual = mgToolCmd.mgCheckHeightOrSleep(
-                        PEER1IP + ":" + PEER1RPCPort,PEER4IP + ":" + PEER4RPCPort,
-                        30*1000,300);
-                log.info("============================= 等待节点同步区块时间 " + ((new Date()).getTime() - nowTimeSync));
-//                assertEquals("高度检查不一致",true,bEqual);
-            }
-//        }
+
 
 //        return hashData + " " + ((new Date()).getTime() - nowTime);
         return "";
@@ -1499,7 +1465,7 @@ public class CommonFunc {
         return bSame;
     }
 
-    public void verifyBlockAndTransaction(String toolPath)throws Exception{
+    public void verifyBlockAndTransaction(String toolPath){
 
         String result = shExeAndReturn(utilsClass.getIPFromStr(SDKADD),
                 "cd " + toolPath + ";./verifyBlockTX su -p " + SDKADD + " -l " + subLedger);
@@ -1512,9 +1478,8 @@ public class CommonFunc {
         if(result.contains(BlockErr) || result.contains(TXErr)){
             assertEquals("交易或区块验证失败",false,true);
         }
-        //刨除创世区块验证打印的successfully
-        assertEquals(JSONObject.fromObject(store.GetHeight()).getInt("data"),
-                org.springframework.util.StringUtils.countOccurrencesOf(result,OKMsg)-1);
+
+        assertEquals(true,result.contains("All blocks verified successfully"));
 
     }
 
