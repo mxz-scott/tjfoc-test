@@ -104,11 +104,20 @@ public class TokenTxTypeTest_Token {
         JSONObject jsonObject = checkDataHeaderMsg(txHash1,versionStore,typeStore,subTypeStore);
         checkDataStore(jsonObject,Data);
 
+        //检查普通存证交易原始数据详情
+        JSONObject rawJsonObject = checkRawDataHeaderMsg(txHash1,versionStore,typeStore,subTypeStore);
+        checkRawDataStore(rawJsonObject,Data);
+
         //检查隐私存证信息
         JSONObject jsonObjectPri = checkDataHeaderMsg(txHash2,versionStore,typeStore,subTypePriStore);
         String getDetailData = jsonObjectPri.getJSONObject("data").getJSONObject("Store").getString("StoreData");
         assertEquals(false,getDetailData.contains(Data));
         assertEquals(true,jsonObjectPri.getJSONObject("data").getJSONObject("Store").getJSONObject("Extra").isNullObject());//检查合约extra
+
+        //检查隐私存证交易原始数据详情
+        JSONObject rawJsonObjectPri = checkRawDataHeaderMsg(txHash2,versionStore,typeStore,subTypePriStore);
+        String getRawData = rawJsonObjectPri.getJSONObject("Data").getJSONObject("Data").getString("Data");
+        assertEquals(false,getRawData.contains(Data));
     }
 
     @Test
@@ -122,11 +131,19 @@ public class TokenTxTypeTest_Token {
         SDKADD = TOKENADD; //设置sdk为token模块sdk
 
         BeforeCondition beforeCondition = new BeforeCondition();
-        beforeCondition.tokenAddIssueCollAddr();
+
+        if(tokenAccount1.isEmpty()) {
+            beforeCondition.createTokenAccount();
+            beforeCondition.tokenAddIssueCollAddr();
+        }
 
         //UTXO类交易 Type 1 SubType 10 11 12
 
         //单签发行给自己
+        tokenModule.tokenAddMintAddr(tokenAccount1);
+        tokenModule.tokenAddCollAddr(tokenAccount1);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         String tokenTypeS1 = "TxTypeSOLOTC_"+ UtilsClass.Random(6);
         log.info("发行地址" + tokenAccount1);
         log.info("归集地址" + tokenAccount1);
@@ -267,12 +284,23 @@ public class TokenTxTypeTest_Token {
         assertEquals(1,uxtoJson.getJSONArray("Records").size());
         checkFromTo(uxtoJson,tokenAccount1,tokenAccount2,tokenTypeS2,amount2,0);
 
+        //检查单签发行交易原始数据详情
+        jsonObject = checkRawDataHeaderMsg(singleIssHash1,versionSUTXO,typeUTXO,subTypeIssue);
+        assertEquals(siData1,jsonObject.getJSONObject("Data").getString("Extra"));
+
+        jsonObject.clear();
+        jsonObject = checkRawDataHeaderMsg(singleIssHash2,versionSUTXO,typeUTXO,subTypeIssue);
+        assertEquals(siData2,jsonObject.getJSONObject("Data").getString("Extra"));
+
 
         //检查单签转账交易信息
         JSONObject jsonObject1 = checkDataHeaderMsg(soTransfHash,versionSUTXO,typeUTXO,subTypeTransfer);
         assertEquals(tranferSdata,jsonObject1.getJSONObject("data").getJSONObject("UTXO").getString("Data"));
-
         commonFunc.checkListArray(listST4,jsonObject1.getJSONObject("data").getJSONObject("UTXO").getJSONArray("Records"));
+
+        //检查单签转账交易原始数据详情
+        jsonObject1 = checkRawDataHeaderMsg(soTransfHash,versionSUTXO,typeUTXO,subTypeTransfer);
+        assertEquals(tranferSdata,jsonObject1.getJSONObject("Data").getString("Extra"));
 
 
         //检查多签发行交易信息
@@ -283,13 +311,21 @@ public class TokenTxTypeTest_Token {
         assertEquals(1,uxtoJson.getJSONArray("Records").size());
         checkFromTo(uxtoJson,tokenMultiAddr1,tokenMultiAddr1,tokenTypeM1,amountM1,0);
 
-
         jsonObject2 = checkDataHeaderMsg(multiIssHashM2,versionMUTXO,typeUTXO,subTypeIssue);
         uxtoJson.clear();
         uxtoJson= jsonObject2.getJSONObject("data").getJSONObject("UTXO");
         assertEquals(mulDataM2,uxtoJson.getString("Data"));
         assertEquals(1,uxtoJson.getJSONArray("Records").size());
         checkFromTo(uxtoJson,tokenMultiAddr1,tokenMultiAddr2,tokenTypeM2,amountM2,0);
+
+
+        //检查多签发行交易原始数据详情
+        jsonObject2 = checkRawDataHeaderMsg(multiIssHashM1,versionMUTXO,typeUTXO,subTypeIssue);
+        assertEquals(mulDataM1,jsonObject2.getJSONObject("Data").getString("Extra"));
+
+        jsonObject2.clear();
+        jsonObject2 = checkRawDataHeaderMsg(multiIssHashM2,versionMUTXO,typeUTXO,subTypeIssue);
+        assertEquals(mulDataM2,jsonObject2.getJSONObject("Data").getString("Extra"));
 
 
         //检查多签转账交易信息
@@ -299,30 +335,32 @@ public class TokenTxTypeTest_Token {
         assertEquals(transferData,uxtoJson.getString("Data"));
         commonFunc.checkListArray(listMT4,uxtoJson.getJSONArray("Records"));
 
+        //检查多签转账交易原始数据详情
+        jsonObject3 = checkRawDataHeaderMsg(muTransfHash,versionMUTXO,typeUTXO,subTypeTransfer);
+        assertEquals(transferData,jsonObject3.getJSONObject("Data").getString("Extra"));
+
 
         //检查单签回收交易信息
         JSONObject jsonObject4 = checkDataHeaderMsg(soDesHash,versionMUTXO,typeUTXO,subTypeRecycle);
         uxtoJson.clear();
-        log.info("****************");
         uxtoJson = jsonObject4.getJSONObject("data").getJSONObject("UTXO");
         log.info("list array:" + listSD4.toString()) ;
         commonFunc.checkListArray(listSD4,uxtoJson.getJSONArray("Records"));
+
+        //检查单签回收交易原始数据详情
+        jsonObject4 = checkRawDataHeaderMsg(soDesHash,versionMUTXO,typeUTXO,subTypeRecycle);
+        assertEquals(desInfo1,jsonObject4.getJSONObject("Data").getString("Extra"));
 
         //检查多签回收交易信息
         JSONObject jsonObject5 = checkDataHeaderMsg(muDesHash,versionMUTXO,typeUTXO,subTypeRecycle);
         uxtoJson.clear();
         uxtoJson= jsonObject5.getJSONObject("data").getJSONObject("UTXO");
         commonFunc.checkListArray(listMD2,uxtoJson.getJSONArray("Records"));
+
+        //检查多签回收交易原始数据详情
+        jsonObject5 = checkRawDataHeaderMsg(muDesHash,versionMUTXO,typeUTXO,subTypeRecycle);
+        assertEquals(desInfo2,jsonObject5.getJSONObject("Data").getString("Extra"));
     }
-
-    public void checkFromTo(JSONObject jsonObject,String from,String to,String TokenType,String amount,int index)throws Exception{
-        assertEquals(from,jsonObject.getJSONArray("Records").getJSONObject(index).getString("From"));
-        assertEquals(to,jsonObject.getJSONArray("Records").getJSONObject(index).getString("To"));
-        assertEquals(TokenType,jsonObject.getJSONArray("Records").getJSONObject(index).getString("TokenType"));
-        assertEquals(amount,jsonObject.getJSONArray("Records").getJSONObject(index).getString("Amount"));
-    }
-
-
 
     @Test
     public void checkAdminTx()throws Exception{
@@ -365,30 +403,59 @@ public class TokenTxTypeTest_Token {
         JSONObject jsonObject2 = checkDataHeaderMsg(txHash10,versionAdmin,typeAdmin,subTypeAddColl);
         checkAdmin(jsonObject2,"CollAddress",tokenAccount1);
 
+        //添加归集地址交易原始数据详情
+        jsonObject2 = checkRawDataHeaderMsg(txHash10,versionAdmin,typeAdmin,subTypeAddColl);
+        checkRawAdmin(jsonObject2,"CollAddress",tokenAccount1);
+
         //添加发行地址交易信息检查
         String txHash11 = JSONObject.fromObject(response11).getString("data");
         JSONObject jsonObject3 = checkDataHeaderMsg(txHash11,versionAdmin,typeAdmin,subTypeAddIssue);
         checkAdmin(jsonObject3,"IssueAddress",tokenAccount1);
+
+        //添加发行地址交易原始数据详情
+        txHash11 = JSONObject.fromObject(response11).getString("data");
+        jsonObject3 = checkRawDataHeaderMsg(txHash11,versionAdmin,typeAdmin,subTypeAddIssue);
+        checkRawAdmin(jsonObject3,"IssueAddress",tokenAccount1);
 
         //检查删除归集地址交易信息
         String txHash12 = JSONObject.fromObject(response12).getString("data");
         JSONObject jsonObject = checkDataHeaderMsg(txHash12,versionAdmin,typeAdmin,subTypeDelColl);
         checkAdmin(jsonObject,"CollAddress",tokenAccount1);
 
+        //检查删除归集地址交易原始数据详情
+        txHash12 = JSONObject.fromObject(response12).getString("data");
+        jsonObject = checkRawDataHeaderMsg(txHash12,versionAdmin,typeAdmin,subTypeDelColl);
+        checkRawAdmin(jsonObject,"CollAddress",tokenAccount1);
+
         //检查删除发行地址交易信息
         String txHash13 = JSONObject.fromObject(response13).getString("data");
         JSONObject jsonObject1 = checkDataHeaderMsg(txHash13,versionAdmin,typeAdmin,subTypeDelIssue);
         checkAdmin(jsonObject1,"IssueAddress",tokenAccount1);
+
+        //检查删除发行地址交易原始数据详情
+        txHash13 = JSONObject.fromObject(response13).getString("data");
+        jsonObject1 = checkRawDataHeaderMsg(txHash13,versionAdmin,typeAdmin,subTypeDelIssue);
+        checkRawAdmin(jsonObject1,"IssueAddress",tokenAccount1);
 
         //冻结token交易信息检查
         String txHash31 = JSONObject.fromObject(response14).getString("data");
         JSONObject jsonObject4 = checkDataHeaderMsg(txHash31,versionAdmin,typeAdmin,subTypeFreezeToken);
         assertEquals(issueToken,jsonObject4.getJSONObject("data").getJSONObject("Admin").getString("FreezeToken"));
 
+        //冻结token交易原始数据详情
+        txHash31 = JSONObject.fromObject(response14).getString("data");
+        jsonObject4 = checkRawDataHeaderMsg(txHash31,versionAdmin,typeAdmin,subTypeFreezeToken);
+        assertEquals(issueToken,jsonObject4.getJSONObject("Data").getJSONObject("Data").getString("FreezeToken"));
+
         //解除冻结token
         String txHash41 = JSONObject.fromObject(response15).getString("data");
         JSONObject jsonObject5 = checkDataHeaderMsg(txHash41,versionAdmin,typeAdmin,subTypeRecoverToken);
         assertEquals(issueToken,jsonObject5.getJSONObject("data").getJSONObject("Admin").getString("RecoverToken"));
+
+        //解除冻结token交易原始数据详情
+        txHash41 = JSONObject.fromObject(response15).getString("data");
+        jsonObject5 = checkRawDataHeaderMsg(txHash41,versionAdmin,typeAdmin,subTypeRecoverToken);
+        assertEquals(issueToken,jsonObject5.getJSONObject("Data").getJSONObject("Data").getString("RecoverToken"));
 
     }
 
@@ -398,6 +465,20 @@ public class TokenTxTypeTest_Token {
         
         JSONObject objectDetail = JSONObject.fromObject(tokenModule.tokenGetTxDetail(hash));
         JSONObject jsonObject = objectDetail.getJSONObject("data").getJSONObject("Header");
+
+        assertEquals(version,jsonObject.getString("Version"));
+        assertEquals(type,jsonObject.getString("Type"));
+        assertEquals(subType,jsonObject.getString("SubType"));
+        assertEquals(hash,jsonObject.getString("TransactionHash"));
+
+        return objectDetail;
+    }
+
+    public JSONObject checkRawDataHeaderMsg(String hash,String version,String type,String subType)throws Exception{
+        log.info("hash:"+hash);
+
+        JSONObject objectDetail = JSONObject.fromObject(tokenModule.GetRawTx(hash));
+        JSONObject jsonObject = objectDetail.getJSONObject("Data").getJSONObject("Header");
 
         assertEquals(version,jsonObject.getString("Version"));
         assertEquals(type,jsonObject.getString("Type"));
@@ -422,6 +503,18 @@ public class TokenTxTypeTest_Token {
 
     }
 
+    public void checkRawDataStore(JSONObject jsonDetail,String storeData)throws Exception{
+        assertEquals(storeData,jsonDetail.getJSONObject("Data").getJSONObject("Data").getString("Data"));//检查存证数据
+
+
+        assertEquals(true,jsonDetail.getJSONObject("Data").getJSONObject("Contract").isNullObject());
+        assertEquals(true,jsonDetail.getJSONObject("Data").getJSONObject("Store9").isNullObject());
+        assertEquals(true,jsonDetail.getJSONObject("Data").getJSONObject("UTXO").isNullObject());
+        assertEquals(true,jsonDetail.getJSONObject("Data").getJSONObject("Admin").isNullObject());
+        assertEquals(true,jsonDetail.getJSONObject("Data").getJSONObject("WVM").isNullObject());
+
+    }
+
     public void checkAdmin(JSONObject jsonObject,String keywordTxdetail,String checkstr)throws Exception{
 
         JSONObject jsonObjectOrg2 =jsonObject.getJSONObject("data");
@@ -434,6 +527,27 @@ public class TokenTxTypeTest_Token {
         assertEquals(true,jsonObjectOrg2.getJSONObject("UTXO").isNullObject());
         assertEquals(true,jsonObjectOrg2.getJSONObject("Store").isNullObject());
         assertEquals(true,jsonObjectOrg2.getJSONObject("WVM").isNullObject());
+    }
+
+    public void checkRawAdmin(JSONObject jsonObject,String keywordTxdetail,String checkstr)throws Exception{
+
+        JSONObject jsonObjectOrg2 =jsonObject.getJSONObject("Data");
+        assertThat(jsonObjectOrg2.getJSONObject("Data").getJSONArray(keywordTxdetail).getString(0),containsString(checkstr));
+        assertEquals(true,jsonObjectOrg2.getJSONObject("Data").getJSONObject("extra").isNullObject());//检查extra
+
+        //检查其他字段为空
+        assertEquals(true,jsonObjectOrg2.getJSONObject("Contract").isNullObject());
+        assertEquals(true,jsonObjectOrg2.getJSONObject("Store9").isNullObject());
+        assertEquals(true,jsonObjectOrg2.getJSONObject("UTXO").isNullObject());
+        assertEquals(true,jsonObjectOrg2.getJSONObject("Store").isNullObject());
+        assertEquals(true,jsonObjectOrg2.getJSONObject("WVM").isNullObject());
+    }
+
+    public void checkFromTo(JSONObject jsonObject,String from,String to,String TokenType,String amount,int index)throws Exception{
+        assertEquals(from,jsonObject.getJSONArray("Records").getJSONObject(index).getString("From"));
+        assertEquals(to,jsonObject.getJSONArray("Records").getJSONObject(index).getString("To"));
+        assertEquals(TokenType,jsonObject.getJSONArray("Records").getJSONObject(index).getString("TokenType"));
+        assertEquals(amount,jsonObject.getJSONArray("Records").getJSONObject(index).getString("Amount"));
     }
 
     //@AfterClass
