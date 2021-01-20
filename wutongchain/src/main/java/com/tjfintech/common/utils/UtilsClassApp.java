@@ -15,6 +15,8 @@ public class UtilsClassApp {
     public static String globalAppId1 = "5jl5q6n1vc";
     public static String globalAppId2 = "mfifxsnf06";
     public static String tempLedgerId = "";
+    public static String tempLedgerId1 = "";
+    public static String tempLedgerId2 = "";
     public static String glbChain01= "glbCh1";
     public static String glbChain02= "glbCh2";
 

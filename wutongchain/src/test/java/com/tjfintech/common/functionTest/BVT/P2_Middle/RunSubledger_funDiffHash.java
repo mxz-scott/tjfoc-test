@@ -4,7 +4,7 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
 import com.tjfintech.common.functionTest.Conditions.SetMgToolHashTypeSM3;
 import com.tjfintech.common.functionTest.Conditions.SetSubLedgerSleepTime;
-import com.tjfintech.common.functionTest.mainAppChain.AppChain_Z_DiffHashType;
+import com.tjfintech.common.functionTest.appChainTest.AppChain_Z_DiffHashType;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

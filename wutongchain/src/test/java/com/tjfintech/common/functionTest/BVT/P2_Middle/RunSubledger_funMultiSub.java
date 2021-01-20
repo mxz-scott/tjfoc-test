@@ -4,8 +4,8 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
 import com.tjfintech.common.functionTest.Conditions.SetSubLedgerSleepTime;
 
-import com.tjfintech.common.functionTest.mainAppChain.AppChain_MultiChainsTest;
-import com.tjfintech.common.functionTest.mainAppChain.AppChain_MultiChainsTest02;
+import com.tjfintech.common.functionTest.appChainTest.AppChain_MultiChainsTest;
+import com.tjfintech.common.functionTest.appChainTest.AppChain_MultiChainsTest02;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

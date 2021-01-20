@@ -4,7 +4,7 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.*;
 import com.tjfintech.common.functionTest.Conditions.Upgrade.*;
 import com.tjfintech.common.functionTest.contract.WVMContractTest_UpgradeTestOnly;
-import com.tjfintech.common.functionTest.mainAppChain.AppChain_Y_UpgradeTestOnly;
+import com.tjfintech.common.functionTest.appChainTest.AppChain_Y_UpgradeTestOnly;
 import com.tjfintech.common.functionTest.mixTestWithConfigChange.AddPeerAndSyncData;
 import com.tjfintech.common.functionTest.store.StoreTest_UpgradeTestOnly;
 import org.junit.runner.RunWith;
