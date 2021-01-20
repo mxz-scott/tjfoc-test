@@ -142,7 +142,7 @@ public class AppChain_FRDG {
 
         storeTypeSupportCheck("normal");
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
+        subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
     }
 
 
@@ -177,7 +177,7 @@ public class AppChain_FRDG {
         String Data="1521 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
 
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
+        subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
 
     }
 
@@ -235,7 +235,7 @@ public class AppChain_FRDG {
         assertThat(response1, containsString(stateDestroyed));
 
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
+        subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
     }
 
 
@@ -305,7 +305,7 @@ public class AppChain_FRDG {
         assertThat(response1, containsString(stateDestroyed));
 
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
+        subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
     }
 
     @Test
@@ -366,7 +366,7 @@ public class AppChain_FRDG {
 
 
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
+        subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
     }
 
     @Test
@@ -426,7 +426,7 @@ public class AppChain_FRDG {
         assertThat(response1,containsString(stateDestroyed));
 
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
+        subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
     }
 
 
@@ -471,7 +471,7 @@ public class AppChain_FRDG {
 
         Data="1518 ledger2 tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
+        subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
     }
 
     public void storeTypeSupportCheck(String type)throws Exception{
@@ -569,7 +569,7 @@ public class AppChain_FRDG {
         assertThat(response1, containsString("doesn't exist"));
 
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
+        subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
     }
 
 
@@ -617,7 +617,8 @@ public class AppChain_FRDG {
         String response1 = store.CreateStore(Data);
         assertThat(response1, containsString(stateFreezed));
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
+        subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
+
 
         //查看恢复子链后的子链状态并向子链发送交易
         res = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
@@ -641,7 +642,7 @@ public class AppChain_FRDG {
 //        sleepAndSaveInfo(SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
+        subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
     }
 
 
@@ -714,7 +715,7 @@ public class AppChain_FRDG {
 
 
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
+        subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
     }
 
 
@@ -769,7 +770,7 @@ public class AppChain_FRDG {
         assertThat(response1, containsString(stateFreezed));
         storeTypeSupportCheck("freeze");
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
+        subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
     }
 
     @Test
@@ -836,7 +837,7 @@ public class AppChain_FRDG {
         assertThat(response2, containsString(stateFreezed));
 
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
+        subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
 
     }
 
@@ -895,7 +896,7 @@ public class AppChain_FRDG {
         assertThat(response11, containsString(stateFreezed));
 
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
+        subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
     }
 
     @Test
@@ -918,7 +919,7 @@ public class AppChain_FRDG {
         assertThat(respon, containsString("not exist"));
 
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
+        subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
     }
 
     @Test
@@ -941,7 +942,7 @@ public class AppChain_FRDG {
         assertThat(respon, containsString("not exist"));
 
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
+        subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
     }
 
 
@@ -965,7 +966,7 @@ public class AppChain_FRDG {
         assertThat(respon, containsString("not exist"));
 
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
+        subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2);
     }
 
     @Test

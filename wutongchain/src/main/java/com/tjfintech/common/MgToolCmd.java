@@ -232,8 +232,8 @@ public class MgToolCmd {
             resp = chkLedgerExist(shellIP,rpcPort,subLedger.replaceAll("-z",""),SLEEPTIME);
             if(!resp.contains("not exist")) {
                 log.info("**************  set permission 999 for " + subLedger);
-                String resp1 = setPeerPerm(PEER1IP + ":" + PEER1RPCPort, utilsClass.getSDKID(), "999 -z " + subLedger);
-                assertEquals(true,resp1.contains("send transaction success"));
+                resp = setPeerPerm(PEER1IP + ":" + PEER1RPCPort, utilsClass.getSDKID(), "999 -z " + subLedger);
+//                assertEquals(true,resp.contains("send transaction success"));
             }
         }
         return resp;
@@ -242,10 +242,11 @@ public class MgToolCmd {
     public String createAppChainNoPerm(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
                                        String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
         String mainCmd =" ledger create ";
-        String cmd= toolExePath + mainCmd + " -p " + shellIP + ":" + rpcPort + chainNameParam +
+        String cmd = toolExePath + mainCmd + " -p " + shellIP + ":" + rpcPort + chainNameParam +
                 hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam;
-
-        return shExeAndReturn(shellIP,cmd);
+        String response = shExeAndReturn(shellIP,cmd);
+        if(response.contains("ledgerid")) subLedger = response.substring(response.lastIndexOf(":") + 1).trim();;
+        return response;
     }
 
     /*

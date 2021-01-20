@@ -6,6 +6,7 @@ import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.SubLedgerCmd;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Before;
@@ -34,7 +35,7 @@ public class AppChain_Create_02 {
     SubLedgerCmd subLedgerCmd = new SubLedgerCmd();
     MgToolCmd mgToolCmd = new MgToolCmd();
 
-    String stateDestroyed ="has been destroyed";
+    String stateDestroyed = "off-time not support service";//"has been destroyed";
 
     String glbChain01= "glbCh1";
     String glbChain02= "glbCh2";
@@ -46,7 +47,7 @@ public class AppChain_Create_02 {
     String ids = " -m "+ id1+","+ id2+","+ id3;
     List<String> listPeer = new ArrayList<>();
 
-    @BeforeClass
+//    @BeforeClass
     public static void clearData()throws Exception{
         BeforeCondition beforeCondition = new BeforeCondition();
         beforeCondition.clearDataSetPerm999(); //清空数据库 目的是让当前系统存在的子链少一些
@@ -54,26 +55,8 @@ public class AppChain_Create_02 {
 
     @Before
     public void beforeConfig() throws Exception {
-        String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
-        if(! resp.contains("\"id\": \"" + globalAppId1 + "\"")) {
-            String respCreate = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain01,
-                    " -t sm3", " -w first", " -c raft",ids);
-            globalAppId1 = respCreate.substring(respCreate.lastIndexOf(":")+1).trim();
-            sleepAndSaveInfo(SLEEPTIME);
-            assertEquals(
-                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"id\": \""+globalAppId1+"\""),
-                    true);
-        }
-
-        if(! resp.contains("\"id\": \""+ globalAppId2+"\"")) {
-            String respCreate = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain02,
-                    " -t sm3", " -w first", " -c raft",ids);
-            globalAppId2 = respCreate.substring(respCreate.lastIndexOf(":")+1).trim();
-            sleepAndSaveInfo(SLEEPTIME);
-            assertEquals(
-                    mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"id\": \""+globalAppId2+"\""),
-                    true);
-        }
+        AppChain_CommonFunc cf = new AppChain_CommonFunc();
+        cf.createTwoAppChain(glbChain01,glbChain02);
     }
 
 
@@ -82,109 +65,100 @@ public class AppChain_Create_02 {
 
         //创建子链01 包含节点A、B、C
         String chainName1="tc1658_01"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1,
+        String res = "";
+        mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1,
                 " -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
-        assertEquals(resp.contains(chainName1.toLowerCase()), true);
+        assertEquals(resp.contains(chainName1), true);
 
         //冻结子链
-        res = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1);
+        res = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -c " + subLedger);
         assertEquals(res.contains("send transaction success"), true);
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -c " + subLedger);
         assertEquals(resp.contains(ledgerStateFreeze), true);
 
 
         //解除子链
-        res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1);
+        res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -c "+ subLedger);
         assertEquals(res.contains("send transaction success"), true);
         sleepAndSaveInfo(SLEEPTIME);
         //检查子链状态正确
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -c "+ subLedger);
         assertEquals(resp.contains(ledgerStateDestroy), true);
 
-        String chainName2="tc1658_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName2,
+        String chainName2 = "tc1658_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName2,
                 " -t sm3"," -w first"," -c raft",ids);
         sleepAndSaveInfo(SLEEPTIME);
         String chainName3="tc1658_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName3,
+        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName3,
                 " -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
-        assertEquals(resp.contains(chainName2.toLowerCase()), true);
-        assertEquals(resp.contains(chainName3.toLowerCase()), true);
+        assertEquals(resp.contains(chainName2), true);
+        assertEquals(resp.contains(chainName3), true);
 
-        //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"tc1656 tx data2");
+        //向子链glbChain01/glbChain02发送交易
+        subLedgerCmd.sendTxToMultiActiveChain("tc1656 tx data2",globalAppId1,globalAppId2,subLedger);
     }
 
     @Test
     public void TC1702_TC1703_createSpecMainNameChain()throws Exception{
 
         //创建一个名称为main的子链（与链上主链标识一致）
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+"main"," -t sm3",
+        String res = mgToolCmd.createAppChainNoPerm(PEER1IP,PEER1RPCPort," -n " + "main"," -t sm3",
                 " -w first"," -c raft",ids);
-        assertEquals(res.contains("exist"), true);
+        assertEquals(res.contains("ledgerid"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 中无main子链
         String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
-        assertEquals(resp.contains("\"name\": \"main\""), false);
-
-        assertEquals(resp.contains("\"name\": \"wtchain\""), false);//wtchain 为节点配置文件中ledger字段后的内容
-
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n wtchain");
-        assertEquals(resp.contains("not exist"), true);
-
+        assertEquals(resp.contains("\"name\": \"main\""), true);
 
     }
 
+    /**
+     * 当前允许使用相同的链名创建应用链 只应用链的ledgerid不会相同
+     */
     @Test
     public void TC1475_1493_createExistChain()throws Exception{
 
-        String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+ glbChain01);
+        String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -c " + globalAppId1);
         if(resp.contains("state"))  assertEquals(resp.contains(ledgerStateNormal), true);
-        assertEquals(resp.contains("\"name\": \""+ glbChain01.toLowerCase() +"\""), true);
-        assertEquals(resp.contains("\"hashType\": \"sm3\""), true);
-        assertEquals(resp.contains("\"cons\": \"raft\""), true);
-        assertEquals(resp.contains("\"word\": \"first\""), true);
+        assertEquals(resp.contains("\"id\": \"" + globalAppId1 + "\""), true);
 
 
         //创建一个已存在的活跃子链glbChain01
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+glbChain01,
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + glbChain01,
                 " -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("has exist"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链 确认异常操作后系统无异常
         resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
 
-        //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"1475 data");
+        //向子链glbChain01/glbChain02和临时创建的链发送交易
+        subLedgerCmd.sendTxToMultiActiveChain("1475 data",globalAppId1,globalAppId2,subLedger);
     }
 
     @Test
     public void TC1476_createExistDestroyChain()throws Exception{
 
         //创建子链，包含三个节点
-        String chainName="tc1476_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
+        String chainName = "tc1476_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        String res = "";
+        mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName,
                 " -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
-
         sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
@@ -193,41 +167,36 @@ public class AppChain_Create_02 {
 
 
         //销毁一个已存在的活跃子链
-        res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -n "+chainName);
+        res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -c "+ subLedger);
         assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
+
+        //向销毁应用链chainName发送交易
+        String response1 = store.CreateStore("test");
+        assertThat(response1, containsString(stateDestroyed));
 
         //检查可以获取子链列表 存在其他子链 确认异常操作后系统无异常
         resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
 
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
+        //使用相同链名创建不会报错
+        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName,
                 " -t sm3"," -w first"," -c raft",ids);
-        assertEquals(res.contains("has exist"), true);
-//        String txHash = res.substring(res.lastIndexOf(":")+1).trim();
-//        sleepAndSaveInfo(SLEEPTIME);
-//        assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash)).getString("state"));
 
-        String Data="1475 ledger tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
-
-        //向子链chainName发送交易
-        subLedger=chainName;
-        String response1 = store.CreateStore(Data);
-        Data="1476 main tx store "+sdf.format(dt)+ RandomUtils.nextInt(100000);
-        assertThat(response1, containsString(stateDestroyed));
-
-        //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,Data);
+        sleepAndSaveInfo(SLEEPTIME/2);
+        String Data = "1475 ledger tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
+        //向子链glbChain01/glbChain02和临时创建链发送交易
+        subLedgerCmd.sendTxToMultiActiveChain(Data,globalAppId1,globalAppId2,subLedger);
     }
 
 
     @Test
     public void TC1492_createUnsupportCons()throws Exception{
         //创建子链，共识算法为不支持的算法
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n 1",
+        String res = mgToolCmd.createAppChainNoPerm(PEER1IP,PEER1RPCPort," -n 1",
                 " -t sm3"," -w first"," -c test",ids);
-        assertEquals(res.contains("unsupported"), true);
+        assertEquals(res.contains("not support consensus algorithms"), true);
 
         //检查可以获取子链列表
         String res2 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
@@ -239,31 +208,35 @@ public class AppChain_Create_02 {
         //创建子链，hash不支持的hash算法
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n 1"," -t s3",
                 " -w first"," -c raft",ids);
-        assertEquals(res.contains("unsupported"), true);
+        assertEquals(res.contains("unsupport"), true);
 
         //创建子链，hash不支持的hash算法
         res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n 1",
                 " -t sh"," -w first"," -c raft",ids);
-        assertEquals(res.contains("unsupported"), true);
+        assertEquals(res.contains("unsupport"), true);
 
         //检查可以获取子链列表
         String res2 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
     }
 
+    /**
+     * 2021/1/19 当前链上未报错
+     * @throws Exception
+     */
     @Test
     public void TC1483_createSameId()throws Exception{
-        String chainName="tc1483_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
+        String chainName="tc1483_" + sdf.format(dt) + RandomUtils.nextInt(1000);
         //创建子链，id重复
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName," -t sm3",
-                " -w first"," -c raft"," -m "+id1+","+id1+","+id1);
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName," -t sm3",
+                " -w first"," -c raft"," -m " + id1 + "," + id1 + "," + id1);
         assertEquals(res.contains("id repeat"), true);
 
         sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
         String res2 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
-        assertEquals(res2.contains(" \"name\": \""+chainName+"\""), false);
+        assertEquals(res2.contains(" \"name\": \"" + chainName + "\""), false);
     }
 
     @Test
@@ -280,7 +253,10 @@ public class AppChain_Create_02 {
         assertEquals(res2.contains("name"), true);
         assertEquals(res2.contains(chainName1), false);
     }
-
+    /**
+     * 2021/1/19 当前链上未报错
+     * @throws Exception
+     */
     @Test
     public void TC1481_createErrorPeerid()throws Exception{
         String chainName1="tc1481_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
@@ -307,90 +283,81 @@ public class AppChain_Create_02 {
     public void TC1480_createNoPeerid()throws Exception{
         String chainName1="tc1480_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
         //创建子链，id格式错误 非集群中的id
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1," -t sm3",
-                " -w first"," -c raft"," -m 1,"+id2+","+id3);
-        assertEquals(res.contains("not exist"), true);
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1," -t sm3",
+                " -w first"," -c raft"," -m " + id4 + "," + id3);
+        assertEquals(res.contains("2 nodes is required for the memberList"), true);
 
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1," -t sm3",
-                " -w first"," -c raft"," -m "+id1+",1,"+id3);
-        assertEquals(res.contains("not exist"), true);
+        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1," -t sm3",
+                " -w first"," -c raft"," -m " + id4 + "," + id2 + "," + id3);
+        assertEquals(res.contains("ledger not found:"), true);
 
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1," -t sm3",
-                " -w first"," -c raft"," -m "+id1+","+id2+",1");
-        assertEquals(res.contains("not found peerId"), true);
 
-        sleepAndSaveInfo(SLEEPTIME/2);
-        //检查可以获取子链列表
-        String res2 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
-        assertEquals(res2.contains("name"), true);
     }
 
     @Test
     public void TC1611_createLongName()throws Exception{
         //长度24
         String chainName1="tc1611_12345678901234567";
-        //创建子链子链名长度24
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1," -t sm3",
+        String res = "";
+        mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1," -t sm3",
                 " -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
 
         //长度25
         String chainName2="tc1611_123456789012345678";
-        //创建子链子链子链名长度25
         res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName2," -t sm3",
                 " -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), true);
-
 
         //长度26
         String chainName3="tc1611_1234567890123456789";
-        //创建子链子链子链名长度25
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName3," -t sm3",
+        res = mgToolCmd.createAppChainNoPerm(PEER1IP,PEER1RPCPort," -n "+chainName3," -t sm3",
                 " -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), false);
+        assertEquals(res.contains("ledgerid"), false);
 
         //长度128
         String chainName4="tc1611_1234567890123456789011234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
-        //创建子链子链子链名长度25
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName4," -t sm3",
+        res = mgToolCmd.createAppChainNoPerm(PEER1IP,PEER1RPCPort," -n "+chainName4," -t sm3",
                 " -w first"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), false);
+        assertEquals(res.contains("ledgerid"), false);
 
         sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
         String res2 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
+        assertEquals(true,res2.contains(chainName1));
+        assertEquals(true,res2.contains(chainName2));
+        assertEquals(false,res2.contains(chainName3));
+        assertEquals(false,res2.contains(chainName4));
     }
 
     @Test
     public void TC1486_TC1480_createParamCheck()throws Exception{
 
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n 1",
+        String res = mgToolCmd.createAppChainNoPerm(PEER1IP,PEER1RPCPort," -n 1",
                 " -t sm3"," -w first"," -c ",ids);
-        assertEquals(res.contains("unsupported"), true);
+        assertEquals(res.contains("not support"), true);
 
         //testcase 1486
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n 1",
+        res = mgToolCmd.createAppChainNoPerm(PEER1IP,PEER1RPCPort," -n 1",
                 " -t sm3"," -w "," -c raft",ids);
         assertEquals(res.contains("err:"), true);
 
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n 1",
+        res = mgToolCmd.createAppChainNoPerm(PEER1IP,PEER1RPCPort," -n 1",
                 " -t "," -w 566"," -c raft",ids);
-        assertEquals(res.contains("send transaction success"), false);
+        assertEquals(res.contains("ledgerid"), false);
 
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n ",
+        res = mgToolCmd.createAppChainNoPerm(PEER1IP,PEER1RPCPort," -n ",
                 " -t sm3"," -w 566"," -c raft",ids);
         assertEquals(res.contains("Invalid"), true);
 
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," ",
+        res = mgToolCmd.createAppChainNoPerm(PEER1IP,PEER1RPCPort," ",
                 " -t sm3"," -w 566"," -c raft",ids);
         assertEquals(res.contains("management addledger"), true);
 
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n test",
+        res = mgToolCmd.createAppChainNoPerm(PEER1IP,PEER1RPCPort," -n test",
                 " -t sm3"," -w 566"," -c raft"," -m ");
         assertEquals(res.contains("management addledger"), true);
 
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n test",
+        res = mgToolCmd.createAppChainNoPerm(PEER1IP,PEER1RPCPort," -n test",
                 " -t sm3"," -w 566"," -c raft"," ");
         assertEquals(res.contains("requires at least two ids"), true);
 
@@ -405,28 +372,28 @@ public class AppChain_Create_02 {
     public void TC1478_creatInvalidName()throws Exception{
         //创建子链，子链名称非法
         String chainName1="#123";
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1," -t sm3",
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1," -t sm3",
                 " -w first"," -c raft",ids);
-        assertEquals(res.contains("management addappledger"), true);
+        assertEquals(res.contains("management ledger"), true);
 
 
-        String chainName2="a$";
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName2," -t sm3",
-                " -w first"," -c raft",ids);
-        assertEquals(res.contains("Invalid ledger name"), true);
+//        String chainName2="a$";
+//        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName2," -t sm3",
+//                " -w first"," -c raft",ids);
+//        assertEquals(res.contains("Invalid ledger name"), true);
 
         String chainName3="1*";
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName3," -t sm3",
+        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName3," -t sm3",
                 " -w first"," -c raft",ids);
         assertEquals(res.contains("Invalid ledger name"), true);
 
         String chainName4="Q-";
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName4," -t sm3",
+        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName4," -t sm3",
                 " -w first"," -c raft",ids);
         assertEquals(res.contains("Invalid ledger name"), true);
 
         String chainName5=" ";
-        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName5," -t sm3",
+        res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName5," -t sm3",
                 " -w first"," -c raft",ids);
         assertEquals(res.contains("Invalid ledger name"), true);
 
@@ -488,7 +455,7 @@ public class AppChain_Create_02 {
         assertEquals(res2.contains("\"name\": \""+chainName5+"\""), false);
         assertEquals(res2.contains(" \"name\": \""+chainName4+"\""), false);
         assertEquals(res2.contains(" \"name\": \""+chainName3+"\""), false);
-        assertEquals(res2.contains(" \"name\": \""+chainName2+"\""), false);
+//        assertEquals(res2.contains(" \"name\": \""+chainName2+"\""), false);
         assertEquals(res2.contains(" \"name\": \""+chainName1+"\""), false);
 
     }

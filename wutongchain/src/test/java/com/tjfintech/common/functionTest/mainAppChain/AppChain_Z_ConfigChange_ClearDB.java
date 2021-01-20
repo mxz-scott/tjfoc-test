@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
+import static com.tjfintech.common.utils.UtilsClassApp.globalAppId1;
+import static com.tjfintech.common.utils.UtilsClassApp.globalAppId2;
 import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -299,7 +301,7 @@ public class AppChain_Z_ConfigChange_ClearDB {
         assertEquals(PEER2RPCPort,testMgTool.parseMemInfo(meminfo,PEER2IP,"port"));
         assertEquals(ipv4 + PEER2IP + tcpProtocol + PEER2TCPPort,testMgTool.parseMemInfo(meminfo,PEER2IP,"inAddr"));
 
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"1771 data");
+        subLedgerCmd.sendTxToMultiActiveChain("test1112222",globalAppId1,globalAppId2);
 
     }
 
@@ -335,8 +337,7 @@ public class AppChain_Z_ConfigChange_ClearDB {
         ArrayList<String> stdout = shell.getStandardOutput();
         log.info(StringUtils.join(stdout,"\n"));
 
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"1659 data");
-
+        subLedgerCmd.sendTxToMultiActiveChain("1659 data",globalAppId1,globalAppId2);
     }
 
 
@@ -391,7 +392,7 @@ public class AppChain_Z_ConfigChange_ClearDB {
     @Test
     public void TC1608_1620_restartPeer()throws Exception{
         utilsClass.setAndRestartPeerList();
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"tc1608 data");
+        subLedgerCmd.sendTxToMultiActiveChain("tc1608 data",globalAppId1,globalAppId2);
     }
 
     //测试子链包含的节点在子链创建前停止能否正常创建子链

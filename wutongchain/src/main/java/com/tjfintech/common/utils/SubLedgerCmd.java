@@ -9,6 +9,9 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClass.ToolTPName;
 import static org.junit.Assert.assertEquals;
@@ -62,37 +65,28 @@ public class SubLedgerCmd {
         return memNo;
     }
 
-    public void sendTxToMainActiveChain(String glbChain01, String glbChain02, String data)throws Exception{
+    public void sendTxToMultiActiveChain( String data,String... chainIdList)throws Exception{
         //检查可以执行获取所有子链信息命令
         assertEquals(mgToolCmd.getAppChain(queryIP,queryPort,"").contains("name"), true);
 
-        //向子链glbChain01发送交易
-        subLedger=glbChain01;
-        String response1 = store.CreateStore(data);
+        Map ledgerHash = new HashMap<>();
 
-        subLedger=glbChain02;
-        String response2 = store.CreateStore(data);
+        for(int i=0;i< chainIdList.length;i++) {
+            //向子链glbChain01发送交易
+            subLedger = chainIdList[i];
+            String response = store.CreateStore(data);
+            String txHash = JSONObject.fromObject(response).getString("data");
+            ledgerHash.put(chainIdList[i],txHash);
+        }
 
-        //向主链发送交易
-        subLedger="";
-        String response3 = store.CreateStore(data);
+        sleepAndSaveInfo(SLEEPTIME);
 
-        sleepAndSaveInfo(SLEEPTIME*2);
-        String txHash1 = JSONObject.fromObject(response1).getString("data");
-        String txHash2 = JSONObject.fromObject(response2).getString("data");
-        String txHash3 = JSONObject.fromObject(response3).getString("data");
-
-        subLedger=glbChain01;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
-        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("state"));
-
-        subLedger=glbChain02;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));
-        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("state"));
-
-        subLedger="";
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));
-        assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("state"));
-
+        for(int i=0;i< chainIdList.length;i++) {
+            //向子链glbChain01发送交易
+            subLedger = chainIdList[i];
+            String txHash = ledgerHash.get(chainIdList[i]).toString();
+            assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash)).getString("state"));
+            assertEquals("200",JSONObject.fromObject(store.GetHeight()).getString("state"));
+        }
     }
 }

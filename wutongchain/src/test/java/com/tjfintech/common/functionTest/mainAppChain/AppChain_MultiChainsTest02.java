@@ -198,17 +198,12 @@ public class AppChain_MultiChainsTest02 {
         assertEquals(resp.contains(chainName3), true);
 
         //获取子链权限列表指定sdk为空 测试发送交易无权限
-        subLedger=chainName3;
         assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), "[0]");
         sleepAndSaveInfo(SLEEPTIME);
         assertThat(store.CreateStore("tc1666 no permission tx data").toLowerCase(),containsString(noPerm));
 
-        subLedger="";
-        //设置主链权限为999,确认主链sdk权限恢复
-        sleepAndSaveInfo(SLEEPTIME);
-        assertEquals(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()), fullPerm);
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"tc1656 tx data2");
+        subLedgerCmd.sendTxToMultiActiveChain("tc1656 tx data2",globalAppId1,globalAppId2);
     }
 
 

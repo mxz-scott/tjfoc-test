@@ -126,7 +126,7 @@ public class AppChain_Perm {
         assertThat(utilsClass.getCertainPermissionList(PEER1IP,PEER1RPCPort,utilsClass.getSDKID()),
                 anyOf(containsString(fullPerm), containsString(fullPerm2)));
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"tc1661 with permission 999 tx data2");
+        subLedgerCmd.sendTxToMultiActiveChain("tc1661 with permission 999 tx data2",globalAppId1,globalAppId2);
     }
 
 
@@ -197,7 +197,7 @@ public class AppChain_Perm {
                 anyOf(containsString(fullPerm), containsString(fullPerm2)));
 
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"tc1662 with permission 999 tx data2");
+        subLedgerCmd.sendTxToMultiActiveChain("tc1662 with permission 999 tx data2",globalAppId1,globalAppId2);
     }
 
     @Test
@@ -269,6 +269,6 @@ public class AppChain_Perm {
         //mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,utilsClass.getSDKID(),"999");
         //sleepAndSaveInfo(SLEEPTIME);
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"tc1663 with permission 999 tx data2");
+        subLedgerCmd.sendTxToMultiActiveChain("tc1663 with permission 999 tx data2",globalAppId1,globalAppId2);
     }
 }

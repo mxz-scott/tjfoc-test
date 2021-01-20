@@ -294,7 +294,7 @@ public class AppChain_MultiChainsTest {
         assertEquals(res2.contains(chainName3), true);
 
         //向子链glbChain01/glbChain02和主链发送交易
-        subLedgerCmd.sendTxToMainActiveChain(glbChain01,glbChain02,"1593 tx");
+        subLedgerCmd.sendTxToMultiActiveChain("1593 tx",globalAppId1,globalAppId2);
     }
 
 }

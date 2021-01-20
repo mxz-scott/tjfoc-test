@@ -12,8 +12,8 @@ public class UtilsClassApp {
 
     //应用链 信息
     //10.1.3.161:7779
-    public static String globalAppId1 = "123456";
-    public static String globalAppId2 = "123457s";
+    public static String globalAppId1 = "wc37s67lf2";
+    public static String globalAppId2 = "113933wech";
     public static String tempLedgerId = "";
 
 
