@@ -12,13 +12,14 @@ public class UtilsClassApp {
 
     //应用链 信息
     //10.1.3.161:7779
-    public static String globalAppId1 = "5jl5q6n1vc";
-    public static String globalAppId2 = "mfifxsnf06";
+    public static String globalAppId1 = "o2umea1lct";
+    public static String globalAppId2 = "gi5h1r8tul";
     public static String tempLedgerId = "";
     public static String tempLedgerId1 = "";
     public static String tempLedgerId2 = "";
     public static String glbChain01= "glbCh1";
     public static String glbChain02= "glbCh2";
+    public static String noPerm = "no permission";
 
     public static String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
     public static String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);

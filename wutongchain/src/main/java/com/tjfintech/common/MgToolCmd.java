@@ -24,7 +24,7 @@ public class MgToolCmd {
         String rpcPort = queryIPPort;//netPeerIP.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
 
-        if(subLedger!="")  rpcPort = rpcPort + " -z " + subLedger;
+        if(subLedger != "")  rpcPort = rpcPort + " -z " + subLedger;
         if(ShowName.length != 0) rpcPort = rpcPort + " -s "+ShowName[0];
 
         String cmd = toolExePath  + " permission -p " + rpcPort + " -d "+ sdkID + " -m " + permStr;
