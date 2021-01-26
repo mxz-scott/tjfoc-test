@@ -103,7 +103,7 @@ contract STAccountAPI {
         string CompanyID //指定资金方的唯一标识
     }
     //发行数字资产之前的验证签名操作
-    public string beforIssue(string pubkey,string tokenJsonTmp,string argsJson){
+    public string beforeIssue(string pubkey,string tokenJsonTmp,string argsJson){
          print("argsJson:"+argsJson)
         return "success"
     }
@@ -126,8 +126,8 @@ contract STAccountAPI {
         string Msg          //通知信息
     }
     //融资才需要的打款证明验证
-    // public string beforTransfer(string ID,string contractAddr){
-    public string beforTransfer(string tokenJsonTmp,string argsJson ){
+    // public string beforeTransfer(string ID,string contractAddr){
+    public string beforeTransfer(string tokenJsonTmp,string argsJson ){
          print("argsJson:"+argsJson)
         return "success"
         //转账自定义业务逻辑验证/通知
@@ -145,7 +145,7 @@ contract STAccountAPI {
         string CompanyID    //指定资金方的唯一标识
     }
     //回收之前验证打款证明
-    public string beforRecycle(string tokenJsonTmp,string argsJson){
+    public string beforeRecycle(string tokenJsonTmp,string argsJson){
      print("argsJson:"+argsJson)
         return "success"
     }
@@ -157,7 +157,7 @@ contract STAccountAPI {
     }
 
     //转场前验证
-    public string beforExchange(string tokenJsonTmp,string argsJson){
+    public string beforeExchange(string tokenJsonTmp,string argsJson){
         print("argsJson:"+argsJson)
         return "success"
     }
