@@ -58,8 +58,10 @@ public class CallBack {
 
     String jsondata = "{\"state\":400,\"message\":\"error\",\"data\":\"check\"}";
     String filedata = "";
-    String msgdatafile = resourcePath + "SendMsgTestFiles\\callBackData.txt";
-//    String msgdatafile = System.getProperty("user.dir") + "\\callBackData.txt";
+//    String msgdatafile = resourcePath + "SendMsgTestFiles\\callBackData.txt";
+    String msgdatafile = System.getProperty("user.dir") + "\\callBackData.txt";
+//    String msgdatafile = testDataPath + "SendMsgTestFiles\\callBackData.txt";
+
 
 
     @BeforeClass
@@ -67,7 +69,7 @@ public class CallBack {
         //启动main.exe 事件通知及回调信息接收客户端
         WinExeOperation winExeOperation = new WinExeOperation();
         if (!winExeOperation.findProcess("main.exe"))
-            winExeOperation.startProc(resourcePath + "SendMsgTestFiles\\main.exe");
+            winExeOperation.startProc(testDataPath + "SendMsgTestFiles\\main.exe");
 
         if (StringUtils.isEmpty(PUBKEY1)) {
             BeforeCondition beforeCondition = new BeforeCondition();
@@ -124,7 +126,7 @@ public class CallBack {
             winExeOperation.killProc("mainError.exe");
 
         if (!winExeOperation.findProcess("mainSuccess.exe"))
-            winExeOperation.startProc(resourcePath + "SendMsgTestFiles\\mainSuccess.exe");
+            winExeOperation.startProc(testDataPath + "SendMsgTestFiles\\mainSuccess.exe");
 
         String issueAddr = tokenMultiAddr1;
         String collAddr = tokenMultiAddr1;
@@ -154,7 +156,7 @@ public class CallBack {
         winExeOperation.killProc("mainSuccess.exe");
 
         if (!winExeOperation.findProcess("mainError.exe"))
-            winExeOperation.startProc(resourcePath + "SendMsgTestFiles\\mainError.exe");
+            winExeOperation.startProc(testDataPath + "SendMsgTestFiles\\mainError.exe");
         String tokentype2 = "token2" + utilsClass.Random(6);
         issueeResp = tokenModule.tokenIssue(issueAddr, collAddr, tokentype1, issAmount, comments, mapSendMsg);
         assertEquals("200", JSONObject.fromObject(issueeResp).getString("state"));
@@ -170,7 +172,7 @@ public class CallBack {
         assertEquals("500", JSONObject.fromObject(queryBalance).getString("state"));
         winExeOperation.killProc("mainError.exe");
         if (!winExeOperation.findProcess("main.exe"))
-            winExeOperation.startProc(resourcePath + "SendMsgTestFiles\\main.exe");
+            winExeOperation.startProc(testDataPath + "SendMsgTestFiles\\main.exe");
 
     }
 

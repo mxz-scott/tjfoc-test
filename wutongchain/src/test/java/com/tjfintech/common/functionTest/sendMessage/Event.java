@@ -48,19 +48,19 @@ public class Event {
 
     String jsondata = "{\"state\":400,\"message\":\"error\",\"data\":\"check\"}";
     String filedata = "";
-    String msgdatafile = resourcePath + "SendMsgTestFiles\\eventData.txt";
-//    String msgdatafile = System.getProperty("user.dir") + "\\eventData.txt";//自动化启动进程后文件的位置
-
+//    String msgdatafile = resourcePath + "SendMsgTestFiles\\eventData.txt";
+    String msgdatafile = System.getProperty("user.dir") + "\\eventData.txt";//自动化启动进程后文件的位置
+//    String msgdatafile = testDataPath + "SendMsgTestFiles\\eventData.txt";
 
 
     @BeforeClass
     public static void init() throws Exception {
         //启动main.exe 事件通知及回调信息接收客户端
         WinExeOperation winExeOperation = new WinExeOperation();
-        if(!winExeOperation.findProcess("main.exe"))
-            winExeOperation.startProc(resourcePath + "SendMsgTestFiles\\main.exe");
+        if (!winExeOperation.findProcess("main.exe"))
+            winExeOperation.startProc(testDataPath + "SendMsgTestFiles\\main.exe");
 
-        if(StringUtils.isEmpty(PUBKEY1)) {
+        if (StringUtils.isEmpty(PUBKEY1)) {
             BeforeCondition beforeCondition = new BeforeCondition();
             beforeCondition.updatePubPriKey();
             beforeCondition.createTokenAccount();
@@ -76,12 +76,12 @@ public class Event {
 
 
     public static void clearMsgDateForFile(String fileName) {
-        File file =new File(fileName);
+        File file = new File(fileName);
         try {
-            if(!file.exists()) {
+            if (!file.exists()) {
                 file.createNewFile();
             }
-            FileWriter fileWriter =new FileWriter(file);
+            FileWriter fileWriter = new FileWriter(file);
             fileWriter.write("");
             fileWriter.flush();
             fileWriter.close();
@@ -91,9 +91,9 @@ public class Event {
     }
 
 
-    public  String updateMsgDate(String fileName) throws Exception {
+    public String updateMsgDate(String fileName) throws Exception {
 
-        sleepAndSaveInfo(4000,"update file.......");
+        sleepAndSaveInfo(4000, "update file.......");
         String filedata = utilsClass.readInput(fileName).toString();
         log.info(filedata);
         return filedata;
@@ -108,45 +108,45 @@ public class Event {
         String response = tokenModule.tokenCreateStore(jsondata);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         filedata = updateMsgDate(msgdatafile);
-        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getString("data")),
-                containsString("onchain"),containsString("txevent")));
+        assertThat(filedata, allOf(containsString(JSONObject.fromObject(response).getString("data")),
+                containsString("onchain"), containsString("txevent")));
 
 
         //隐私存证交易
         clearMsgDateForFile(msgdatafile);
-        Map<String,Object> map = new HashMap<>();
-        map.put("address1",tokenAccount1);
-        map.put("address2",tokenAccount2);
-        response = tokenModule.tokenCreatePrivateStore(jsondata,map);
+        Map<String, Object> map = new HashMap<>();
+        map.put("address1", tokenAccount1);
+        map.put("address2", tokenAccount2);
+        response = tokenModule.tokenCreatePrivateStore(jsondata, map);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         filedata = updateMsgDate(msgdatafile);
-        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getString("data")),
-                containsString("onchain"),containsString("txevent")));
+        assertThat(filedata, allOf(containsString(JSONObject.fromObject(response).getString("data")),
+                containsString("onchain"), containsString("txevent")));
 
 
         //数据存证扩展交易
         clearMsgDateForFile(msgdatafile);
         HashMap<String, Object> mapSendMsg = new HashMap<>();
-        List<Map> receiverList = utilsClass.constructReceiver("","");
+        List<Map> receiverList = utilsClass.constructReceiver("", "");
         mapSendMsg.clear();
         mapSendMsg.put("msgcode", "msgcode");
         mapSendMsg.put("sender", "sender001测试");
-        mapSendMsg.put("receivers",receiverList);
+        mapSendMsg.put("receivers", receiverList);
         mapSendMsg.put("msgdata", "msgdata001测试");
         mapSendMsg.put("reftx", "msgcode为空值，不发消息存证");
         response = tokenModule.tokenSendMsg(mapSendMsg);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         filedata = updateMsgDate(msgdatafile);
-        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getString("data")),
-                containsString("onchain"),containsString("txevent")));
+        assertThat(filedata, allOf(containsString(JSONObject.fromObject(response).getString("data")),
+                containsString("onchain"), containsString("txevent")));
 
         //移除发行地址
         clearMsgDateForFile(msgdatafile);
         response = tokenModule.tokenDelMintAddr(tokenAccount1);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         filedata = updateMsgDate(msgdatafile);
-        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getString("data")),
-                containsString("onchain"),containsString("txevent")));
+        assertThat(filedata, allOf(containsString(JSONObject.fromObject(response).getString("data")),
+                containsString("onchain"), containsString("txevent")));
 
 
         //移除归集地址
@@ -154,8 +154,8 @@ public class Event {
         response = tokenModule.tokenDelCollAddr(tokenAccount1);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         filedata = updateMsgDate(msgdatafile);
-        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getString("data")),
-                containsString("onchain"),containsString("txevent")));
+        assertThat(filedata, allOf(containsString(JSONObject.fromObject(response).getString("data")),
+                containsString("onchain"), containsString("txevent")));
 
 
         //添加发行地址
@@ -163,8 +163,8 @@ public class Event {
         response = tokenModule.tokenAddMintAddr(tokenAccount1);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         filedata = updateMsgDate(msgdatafile);
-        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getString("data")),
-                containsString("onchain"),containsString("txevent")));
+        assertThat(filedata, allOf(containsString(JSONObject.fromObject(response).getString("data")),
+                containsString("onchain"), containsString("txevent")));
 
 
         //添加归集地址
@@ -172,34 +172,34 @@ public class Event {
         response = tokenModule.tokenAddCollAddr(tokenAccount1);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         filedata = updateMsgDate(msgdatafile);
-        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getString("data")),
-                containsString("onchain"),containsString("txevent")));
+        assertThat(filedata, allOf(containsString(JSONObject.fromObject(response).getString("data")),
+                containsString("onchain"), containsString("txevent")));
 
         //发行token
         clearMsgDateForFile(msgdatafile);
         String token = utilsClass.Random(6);
-        response = tokenModule.tokenIssue(tokenAccount1,tokenAccount1,token,"1000","");
+        response = tokenModule.tokenIssue(tokenAccount1, tokenAccount1, token, "1000", "");
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         filedata = updateMsgDate(msgdatafile);
-        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getString("data")),
-                containsString("onchain"),containsString("txevent")));
+        assertThat(filedata, allOf(containsString(JSONObject.fromObject(response).getString("data")),
+                containsString("onchain"), containsString("txevent")));
 
         //转让token
         clearMsgDateForFile(msgdatafile);
-        response = tokenModule.tokenTransfer(tokenAccount1,tokenAccount2,token,"100","");
+        response = tokenModule.tokenTransfer(tokenAccount1, tokenAccount2, token, "100", "");
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         filedata = updateMsgDate(msgdatafile);
-        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getString("data")),
-                containsString("onchain"),containsString("txevent")));
+        assertThat(filedata, allOf(containsString(JSONObject.fromObject(response).getString("data")),
+                containsString("onchain"), containsString("txevent")));
 
 
         //回收token（按账户地址）
         clearMsgDateForFile(msgdatafile);
-        response = tokenModule.tokenDestoryByList(tokenAccount2,token,"100","");
+        response = tokenModule.tokenDestoryByList(tokenAccount2, token, "100", "");
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         filedata = updateMsgDate(msgdatafile);
-        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getString("data")),
-                containsString("onchain"),containsString("txevent")));
+        assertThat(filedata, allOf(containsString(JSONObject.fromObject(response).getString("data")),
+                containsString("onchain"), containsString("txevent")));
 
 
         //冻结token
@@ -207,8 +207,8 @@ public class Event {
         response = tokenModule.tokenFreezeToken(token);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         filedata = updateMsgDate(msgdatafile);
-        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getString("data")),
-                containsString("onchain"),containsString("txevent")));
+        assertThat(filedata, allOf(containsString(JSONObject.fromObject(response).getString("data")),
+                containsString("onchain"), containsString("txevent")));
 
 
         //解冻token
@@ -216,17 +216,17 @@ public class Event {
         response = tokenModule.tokenRecoverToken(token);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         filedata = updateMsgDate(msgdatafile);
-        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getString("data")),
-                containsString("onchain"),containsString("txevent")));
+        assertThat(filedata, allOf(containsString(JSONObject.fromObject(response).getString("data")),
+                containsString("onchain"), containsString("txevent")));
 
 
         //回收token（按类型）
         clearMsgDateForFile(msgdatafile);
-        response = tokenModule.tokenDestoryByTokenType(token,"");
+        response = tokenModule.tokenDestoryByTokenType(token, "");
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         filedata = updateMsgDate(msgdatafile);
-        assertThat(filedata,allOf(containsString(JSONObject.fromObject(response).getJSONObject("data").getString("hash")),
-                containsString("onchain"),containsString("txevent")));
+        assertThat(filedata, allOf(containsString(JSONObject.fromObject(response).getJSONObject("data").getString("hash")),
+                containsString("onchain"), containsString("txevent")));
 
 
     }
@@ -371,7 +371,6 @@ public class Event {
 //    }
 
 
-
 //    @Test
 //    public void WVMContractEventTest() throws Exception {
 //
@@ -417,8 +416,8 @@ public class Event {
 //
 //    }
 
-//    @AfterClass
-    public static void KillMainExe()throws Exception{
+    //    @AfterClass
+    public static void KillMainExe() throws Exception {
         //测试结束关闭main.exe 事件通知及回调信息接收客户端
         WinExeOperation winExeOperation = new WinExeOperation();
         winExeOperation.killProc("main.exe");

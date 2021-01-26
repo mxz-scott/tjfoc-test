@@ -66,7 +66,7 @@ public class CommonInterfaceTest {
         assertThat(response,containsString("shownName"));
         assertThat(response,containsString("inAddr"));
         assertThat(response,containsString("hashType"));
-        assertThat(response,containsString("word"));
+//        assertThat(response,containsString("word"));
         assertThat(response,containsString("cons"));
         assertThat(response,containsString("timeStamp"));
         assertThat(response,containsString("id"));
