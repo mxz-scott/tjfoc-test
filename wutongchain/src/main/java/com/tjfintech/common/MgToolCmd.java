@@ -24,7 +24,7 @@ public class MgToolCmd {
         String rpcPort = queryIPPort;//netPeerIP.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
 
-        if(subLedger != "")  rpcPort = rpcPort + " -z " + subLedger;
+        if(subLedger != "")  rpcPort = rpcPort + " -c " + subLedger;
         if(ShowName.length != 0) rpcPort = rpcPort + " -s "+ShowName[0];
 
         String cmd = toolExePath  + " permission -p " + rpcPort + " -d "+ sdkID + " -m " + permStr;
@@ -35,7 +35,7 @@ public class MgToolCmd {
         String rpcPort = queryIPPort;//netPeerIP.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
 
-        if(subLedger != "")  rpcPort = rpcPort + " -z "+subLedger;
+        if(subLedger != "")  rpcPort = rpcPort + " -c "+subLedger;
         if(sdkID != "") rpcPort = rpcPort + " -d " + sdkID;
 
         String cmd = toolExePath + " getpermission -p " + rpcPort + " -d " + sdkID;
@@ -64,17 +64,17 @@ public class MgToolCmd {
 //        String cmd = toolExePath + " " + addPeerType + " -p " + queryRpcPort + " -n " + peerID + " -s " + peerName
 //                + " -l " + peerIPlan + " -w " + peerIPwan + " -r " + joinRpcPort;
         String cmd = toolExePath + " " + addPeerType + " -p " + queryRpcPort + " -n " + peerID + " -s " + peerName
-                + " -l " + peerIPlan + " -w " + peerIPwan;
+                + " -l " + peerIPlan + " -w " + peerIPwan + " -c " + subLedger;
         return shExeAndReturn(queryIP,cmd);
     }
 
 
-    public String quitPeer(String queryIPPort,String peerIP)throws Exception{
+    public String quitPeer(String queryIPPort,String quitIP)throws Exception{
         String rpcPort = queryIPPort;//.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
-        String peerID = getPeerId(peerIP,USERNAME,PASSWD);
+        String peerID = getPeerId(quitIP,USERNAME,PASSWD);
 
-        String cmd = toolExePath + " quit -p " + rpcPort + " -n " + peerID;
+        String cmd = toolExePath + " quit -p " + rpcPort + " -n " + peerID + " -c " + subLedger;
         return shExeAndReturn(queryIP,cmd);
     }
 
@@ -89,7 +89,7 @@ public class MgToolCmd {
     public String queryBlockHeight(String queryIPPort)throws Exception{
         String rpcPort = queryIPPort;//.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
-        if(subLedger!="")  rpcPort = rpcPort + " -z " + subLedger;
+        if(subLedger!="")  rpcPort = rpcPort + " -c " + subLedger;
         String cmd = toolExePath + " height -p " + rpcPort;
         String resp = shExeAndReturn(queryIP,cmd);
         //管理工具加入执行时间打印，高度值需要处理后返回
@@ -99,7 +99,7 @@ public class MgToolCmd {
     public String queryBlockByHeight(String queryIPPort,String height)throws Exception{
         String rpcPort = queryIPPort;//.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
-        if(subLedger!="")  rpcPort = rpcPort + " -z " + subLedger;
+        if(subLedger!="")  rpcPort = rpcPort + " -c " + subLedger;
         String cmd = toolExePath + " query -p "+ rpcPort + " -v " + height;
 
         return shExeAndReturn(queryIP,cmd);
@@ -112,7 +112,7 @@ public class MgToolCmd {
         String tempTxNo = txNo.isEmpty()?"":" -n " + txNo;
         String tempTxType = txType.isEmpty() ? "" : " -t " + txType;
         String temp = tempTxNo + tempTxType;
-        if(subLedger!="")  rpcPort = rpcPort + " -z " + subLedger;
+        if(subLedger!="")  rpcPort = rpcPort + " -c " + subLedger;
         String cmd = toolExePath + " newtx -p "+ rpcPort + temp;
         return shExeAndReturn(queryIP,cmd);
     }
@@ -146,7 +146,7 @@ public class MgToolCmd {
         String rpcPort = queryIPPort;//.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
 
-        String cmd = toolExePath + " mem -p "+rpcPort;
+        String cmd = toolExePath + " mem -p " + rpcPort;
         return shExeAndReturn(queryIP,cmd);
     }
 
@@ -204,7 +204,9 @@ public class MgToolCmd {
         while((new Date()).getTime() - nowTime < sleeptime && bOK == false){
             //管理工具查询子链是否存在
             log.info("开始时间 " + (new Date()).getTime());
-            String cmd = "cd " + ToolPATH + ";./" + ToolTPName + " ledger get -p " + shellIP + ":" + rpcPort ;//+" -z " + ledgerName.toLowerCase().trim();
+            //传入IP:Port 则直接作为参数 否则与shellIp拼接成IP:Port格式
+            if (!rpcPort.contains(":"))  rpcPort = shellIP + ":" + rpcPort;
+            String cmd = "cd " + ToolPATH + ";./" + ToolTPName + " ledger get -p " + rpcPort ;//+" -c " + ledgerName.toLowerCase().trim();
             String resp = shExeAndReturn(shellIP,cmd);
 
 //            if(resp.contains(ledgerName.toLowerCase().trim()) && (!resp.contains("not exist"))) bOK = true;
@@ -224,15 +226,17 @@ public class MgToolCmd {
                                  String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
         String ledgerName = chainNameParam.trim().split(" ")[1];
         String mainCmd =" ledger create ";
-        String cmd=toolExePath + mainCmd + " -p "+ shellIP + ":" + rpcPort + chainNameParam +
+        //传入IP:Port 则直接作为参数 否则与shellIp拼接成IP:Port格式
+        if (!rpcPort.contains(":"))  rpcPort = shellIP + ":" + rpcPort;
+        String cmd=toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam +
                 hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam;
         String resp = shExeAndReturn(shellIP,cmd);
         if(resp.contains("ledgerid")) {
             subLedger = resp.substring(resp.lastIndexOf(":") + 1).trim();
-            resp = chkLedgerExist(shellIP,rpcPort,subLedger.replaceAll("-z",""),SLEEPTIME);
+            resp = chkLedgerExist(shellIP,rpcPort,subLedger.replaceAll("-c",""),SLEEPTIME);
             if(!resp.contains("not exist")) {
                 log.info("**************  set permission 999 for " + subLedger);
-                resp = setPeerPerm(PEER1IP + ":" + PEER1RPCPort, utilsClass.getSDKID(), "999 -z " + subLedger);
+                resp = setPeerPerm(PEER1IP + ":" + PEER1RPCPort, utilsClass.getSDKID(), "999 -c " + subLedger);
 //                assertEquals(true,resp.contains("send transaction success"));
             }
         }
@@ -242,7 +246,8 @@ public class MgToolCmd {
     public String createAppChainNoPerm(String shellIP,String rpcPort,String chainNameParam,String hashTypeParam,
                                        String firstBlockInfoParam,String consensusParam,String peeridsParam)throws Exception{
         String mainCmd =" ledger create ";
-        String cmd = toolExePath + mainCmd + " -p " + shellIP + ":" + rpcPort + chainNameParam +
+        if (!rpcPort.contains(":"))  rpcPort = shellIP + ":" + rpcPort;
+        String cmd = toolExePath + mainCmd + " -p " + rpcPort + chainNameParam +
                 hashTypeParam + firstBlockInfoParam + consensusParam + peeridsParam;
         String response = shExeAndReturn(shellIP,cmd);
         if(response.contains("ledgerid")) subLedger = response.substring(response.lastIndexOf(":") + 1).trim();;
@@ -254,7 +259,10 @@ public class MgToolCmd {
      * */
     public String getAppChain(String shellIP,String rpcPort,String chainNameParam){
         String mainCmd =" ledger get ";
-        String cmd = toolExePath + mainCmd + " -p "+ shellIP + ":" + rpcPort + chainNameParam;
+        //传入IP:Port 则直接作为参数 否则与shellIp拼接成IP:Port格式
+        if (!rpcPort.contains(":"))  rpcPort = shellIP + ":" + rpcPort;
+        String cmd = toolExePath + mainCmd + " -p "+ rpcPort + chainNameParam;
+
         return shExeAndReturn(shellIP,cmd);
     }
 
@@ -263,7 +271,9 @@ public class MgToolCmd {
      * */
     public String freezeAppChain(String shellIP,String rpcPort,String chainNameParam){
         String mainCmd =" ledger freeze ";
-        String cmd = toolExePath + mainCmd + " -p " + shellIP + ":" + rpcPort + chainNameParam;
+        //传入IP:Port 则直接作为参数 否则与shellIp拼接成IP:Port格式
+        if (!rpcPort.contains(":"))  rpcPort = shellIP + ":" + rpcPort;
+        String cmd = toolExePath + mainCmd + " -p " + rpcPort + chainNameParam;
         return shExeAndReturn(shellIP,cmd);
     }
 
@@ -272,7 +282,9 @@ public class MgToolCmd {
      * */
     public String recoverAppChain(String shellIP,String rpcPort,String chainNameParam){
         String mainCmd = " ledger recover ";
-        String cmd = toolExePath + mainCmd + " -p " + shellIP + ":" + rpcPort + chainNameParam;
+        //传入IP:Port 则直接作为参数 否则与shellIp拼接成IP:Port格式
+        if (!rpcPort.contains(":"))  rpcPort = shellIP + ":" + rpcPort;
+        String cmd = toolExePath + mainCmd + " -p " + rpcPort + chainNameParam;
         return shExeAndReturn(shellIP,cmd);
     }
 
@@ -281,7 +293,9 @@ public class MgToolCmd {
      * */
     public String destroyAppChain(String shellIP,String rpcPort,String chainNameParam){
         String mainCmd =" ledger destroy ";
-        String cmd = toolExePath + mainCmd + " -p " + shellIP + ":" +  rpcPort + chainNameParam;
+        //传入IP:Port 则直接作为参数 否则与shellIp拼接成IP:Port格式
+        if (!rpcPort.contains(":"))  rpcPort = shellIP + ":" + rpcPort;
+        String cmd = toolExePath + mainCmd + " -p " + rpcPort + chainNameParam;
         return shExeAndReturn(shellIP,cmd);
     }
 }

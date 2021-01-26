@@ -163,7 +163,7 @@ public class TestMgTool {
 
     }
     
-    @Test
+//    @Test
     public void testFunc() throws Exception{
 
         ExeToolCmdAndChk(PEER1IP,"./" + ToolTPName + " peer -p","flag needs an argument: 'p' in -p");
@@ -355,7 +355,7 @@ public class TestMgTool {
 
     public void chkPeerSimInfoOK(String queryIPPort,String tcpPort,String version,String Type)throws Exception{
 
-        String rpcPort=queryIPPort.split(":")[1];//9300
+        String rpcPort=queryIPPort;//.split(":")[1];//9300
         String queryIP=queryIPPort.split(":")[0];//10.1.3.240
         String[] temp = queryIP.split("\\.");
         String tcpIP=queryIP+tcpProtocol+tcpPort; //10.1.3.240:60030
@@ -401,7 +401,7 @@ public class TestMgTool {
 //     */
     public void chkPeerDetailsOK(String queryIPPort,String...checkinfo)throws Exception{
 
-        String rpcPort=queryIPPort.split(":")[1];//9300
+        String rpcPort=queryIPPort;//.split(":")[1];//9300
         String queryIP=queryIPPort.split(":")[0];//10.1.3.240
         String[] temp = queryIP.split("\\.");
         String tcpIP=queryIP+tcpProtocol+checkinfo[0]; //10.1.3.240:60030
@@ -433,10 +433,10 @@ public class TestMgTool {
         Thread.sleep(1500);
         String tempCmd="";
 
-        String rpcPort=queryIPPort.split(":")[1];//9300
-        String queryIP=queryIPPort.split(":")[0];//10.1.3.240
+        String rpcPort = queryIPPort;//.split(":")[1];//9300
+        String queryIP = queryIPPort.split(":")[0];//10.1.3.240
 
-        tempCmd=toolPath+"./"+ ToolTPName + " mem -p "+rpcPort;
+        tempCmd=toolPath+"./"+ ToolTPName + " mem -p " + rpcPort + " -c " + subLedger;
 
         Shell shell1=new Shell(queryIP,USERNAME,PASSWD);
         shell1.execute(tempCmd);

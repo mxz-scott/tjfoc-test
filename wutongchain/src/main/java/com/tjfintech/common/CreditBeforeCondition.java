@@ -37,7 +37,7 @@ public class CreditBeforeCondition {
 
         SDKID = utilsClass.getSDKID();
         String ledger = "";
-        ledger = (subLedger != "") ? " -z " + subLedger : "";
+        ledger = (subLedger != "") ? " -c " + subLedger : "";
         String preCmd = toolPath + exeCmd + "-p " + PEER1RPCPort + " -s SDK " + ledger + " -d " + SDKID + " -m ";
         String getPerm = toolPath + "./" + ToolTPName + " getpermission -p " + PEER1RPCPort + " -d " + SDKID + ledger;
 

@@ -492,7 +492,7 @@ public class AppChain_FRDG {
         assertEquals(resp.contains(globalAppId1), true);
 
         resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -c " + chainName);
-        assertEquals(resp.contains("error"), true);
+        assertEquals(resp.contains("{}"), true);
 
 
         //检查可以获取应用链列表 存在其他应用链 确认异常操作后系统无异常

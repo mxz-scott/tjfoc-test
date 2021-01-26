@@ -85,7 +85,7 @@ public class TestPermission {
 
 
     String toolPath="cd " + ToolPATH + ";";
-    String ledger = (subLedger!="")?" -z " + subLedger:"";
+    String ledger = (subLedger!="")?" -c " + subLedger:"";
     String exeCmd="./" + ToolTPName + " permission " + ledger;
 
     String peerIP=PEER1RPCPort;
@@ -337,7 +337,7 @@ public class TestPermission {
         assertEquals("1000",subLedgerCheck());
 
         subLedgerName = "permOl_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些
-        String response = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + subLedgerName,
+        String response = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -c " + subLedgerName,
                 " -t sm3", " -w first", " -c raft", ids);
         sleepAndSaveInfo(SLEEPTIME);
 

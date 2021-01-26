@@ -64,7 +64,7 @@ public class TokenTestMultiSubChain_Store {
         mgToolCmd.setPeerPerm(PEER1IP+":"+PEER1RPCPort,utilsClass.getSDKID(),"999");
         String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         if(! resp.contains("\"name\": \""+glbChain01.toLowerCase()+"\"")) {
-            respWithHash = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + glbChain01,
+            respWithHash = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -c " + glbChain01,
                     " -t sm3", " -w first", " -c raft", ids);
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(respWithHash,utilsClass.mgGetTxHashType),
                     utilsClass.tokenApiGetTxDetailTType,SLEEPTIME*2);
@@ -73,7 +73,7 @@ public class TokenTestMultiSubChain_Store {
         }
 
         if(! resp.contains("\"name\": \""+glbChain02.toLowerCase()+"\"")) {
-            respWithHash = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + glbChain02,
+            respWithHash = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -c " + glbChain02,
                     " -t sm3", " -w first", " -c raft", ids);
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(respWithHash,utilsClass.mgGetTxHashType),
                     utilsClass.tokenApiGetTxDetailTType,SLEEPTIME*2);

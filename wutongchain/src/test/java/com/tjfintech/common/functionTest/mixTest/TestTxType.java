@@ -204,7 +204,7 @@ public class TestTxType {
         //注释旧版本子链创建相关交易测试 修改为应用链 数据结构变更 20200915
 //        //创建子链交易
 //        String chainName="tx_"+sdf.format(dt)+ RandomUtils.nextInt(10000);
-//        String addLedgerResp = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -z "+chainName,
+//        String addLedgerResp = mgToolCmd.createSubChain(PEER1IP,PEER1RPCPort," -c "+chainName,
 //                " -t sm3"," -w first"," -c raft",ids);
 //        assertEquals(addLedgerResp.contains("send transaction success"), true);
 //
@@ -231,7 +231,7 @@ public class TestTxType {
 //                jsonObjectAddLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("member").replaceAll("\"",""));
 //
 //        //冻结子链交易
-//        String freezeLedgerResp = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+//        String freezeLedgerResp = mgToolCmd.freezeSubChain(PEER1IP,PEER1RPCPort," -c "+chainName);
 //        assertEquals(freezeLedgerResp.contains("send transaction success"), true);
 //
 //        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(freezeLedgerResp,utilsClass.mgGetTxHashType),
@@ -256,7 +256,7 @@ public class TestTxType {
 //
 //        //恢复冻结子链交易
 //
-//        String recoverLedgerResp = mgToolCmd.recoverSubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+//        String recoverLedgerResp = mgToolCmd.recoverSubChain(PEER1IP,PEER1RPCPort," -c "+chainName);
 //        assertEquals(recoverLedgerResp.contains("send transaction success"), true);
 //
 //        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(recoverLedgerResp,utilsClass.mgGetTxHashType),
@@ -280,7 +280,7 @@ public class TestTxType {
 //                jsonObjectRecoverLedger.getJSONObject("data").getJSONObject("system").getJSONObject("subLedgerTransaction").getString("member").replaceAll("\"",""));
 //
 //        //销毁子链交易
-//        String destroyLedgerResp = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -z "+chainName);
+//        String destroyLedgerResp = mgToolCmd.destroySubChain(PEER1IP,PEER1RPCPort," -c "+chainName);
 //        assertEquals(destroyLedgerResp.contains("send transaction success"), true);
 //
 //        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(destroyLedgerResp,utilsClass.mgGetTxHashType),

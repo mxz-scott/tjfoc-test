@@ -58,7 +58,7 @@ public class SubLedgerCmd {
     }
 
     public int getLedgerMemNo(String ledgerName)throws Exception{
-        String getledgerInfo = mgToolCmd.getAppChain(queryIP,queryPort," -z " + ledgerName);
+        String getledgerInfo = mgToolCmd.getAppChain(queryIP,queryPort," -c " + ledgerName);
         JSONObject jsonObject = JSONObject.fromObject(getledgerInfo.substring(getledgerInfo.indexOf("{")));
         int memNo = JSONObject.fromObject(jsonObject.getJSONArray("subLedgers").getString(0)).getJSONArray("memberList").size();
         log.info(ledgerName + "has " + memNo + "members");

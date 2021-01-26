@@ -43,7 +43,7 @@ public class BeforeCondition {
 
         SDKID = utilsClass.getSDKID();
         String ledger = "";
-        ledger = (subLedger != "") ? " -z " + subLedger : "";
+        ledger = (subLedger != "") ? " -c " + subLedger : "";
         String preCmd = toolPath + exeCmd + "-p " + PEER1RPCPort + " -s SDK " + ledger + " -d " + SDKID + " -m ";
         String getPerm = toolPath + "./" + ToolTPName + " getpermission -p " + PEER1RPCPort + " -d " + SDKID + ledger;
 
@@ -56,8 +56,8 @@ public class BeforeCondition {
 //        }
     }
 
+    //3.1版本sdk不再另外配置数据库
     public void clearDataSetPerm999() throws Exception {
-        utilsClass.delDataBase();//清空sdk当前使用数据库数据
         //设置节点 清空db数据 并重启
         utilsClass.setAndRestartPeerList(clearPeerDB, resetPeerBase);
         //重启SDK

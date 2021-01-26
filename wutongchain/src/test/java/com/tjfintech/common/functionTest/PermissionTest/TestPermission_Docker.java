@@ -48,7 +48,7 @@ public class TestPermission_Docker {
 
 
     String toolPath="cd " + ToolPATH + ";";
-    String ledger = (subLedger!="")?" -z " + subLedger:"";
+    String ledger = (subLedger!="")?" -c " + subLedger:"";
     String exeCmd="./" + ToolTPName + " permission " + ledger;
 
     String peerIP=PEER1RPCPort;

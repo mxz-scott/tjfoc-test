@@ -48,7 +48,7 @@ public class CommonFunc {
     //-----------------------------------------------------------------------------------------------------------
     public void setPermAndCheckResp(String peerIP,String peerPort,String remoteId,String permList)throws Exception{
         String toolPath = "cd " + ToolPATH + ";";
-        String ledger = (subLedger != "") ? " -z " + subLedger:"";
+        String ledger = (subLedger != "") ? " -c " + subLedger:"";
         String exeCmd = "./" + ToolTPName + " permission " + ledger;
         String permSetResp1 = shExeAndReturn(peerIP,toolPath + exeCmd + " -p " + peerPort + " -d " + remoteId + " -m " + permList);
         assertEquals(true,permSetResp1.contains("send transaction success"));
@@ -909,7 +909,7 @@ public class CommonFunc {
         String exeCmd="./" + ToolTPName + " permission ";
 
         String ledger = "";
-        ledger = (subLedger!="") ? " -z " + subLedger : "";
+        ledger = (subLedger!="") ? " -c " + subLedger : "";
         String preCmd = toolPath + exeCmd + "-p " + PEER1RPCPort + " -s tokenapi " + ledger + " -d " + id + " -m ";
         String getCertainPerm = toolPath + "./" + ToolTPName + " getpermission -p " + PEER1RPCPort + " -d " + id + ledger;
 

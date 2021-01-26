@@ -205,7 +205,7 @@ public class AppChain_Create_02 {
         //创建子链，id重复
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName," -t sm3",
                 " -w first"," -c raft"," -m " + id1 + "," + id1 + "," + id1);
-        assertEquals(res.contains("id repeat"), true);
+        assertEquals(res.contains("memberList peer illegal"), true);
 
         sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
@@ -260,16 +260,16 @@ public class AppChain_Create_02 {
         //创建子链，id格式错误 非集群中的id
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1," -t sm3",
                 " -w first"," -c raft"," -m " + id4 + "," + id3);
-        assertEquals(res.contains("2 nodes is required for the memberList"), true);
+        assertEquals(res.contains("memberList peer illegal"), true);
 
         res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1," -t sm3",
                 " -w first"," -c raft"," -m " + id4 + "," + id2 + "," + id3);
-        assertEquals(res.contains("ledger not found:"), true);
+        assertEquals(res.contains("memberList peer illegal"), true);
 
 
     }
-
-    @Test
+//20210126 确认不再做名称校验
+//    @Test
     public void TC1611_createLongName()throws Exception{
         //长度24
         String chainName1 = "tc1611_12345678901234567";
@@ -342,8 +342,8 @@ public class AppChain_Create_02 {
         assertEquals(res2.contains("name"), true);
     }
 
-
-    @Test
+    //20210126 开发确认不对应用名做校验
+//    @Test
     public void TC1478_creatInvalidName()throws Exception{
         //创建子链，子链名称非法
         String chainName1="#123";
@@ -448,13 +448,14 @@ public class AppChain_Create_02 {
         //创建子链，word名称超过80
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1," -t sm3",
                 " -w " + wordValue,"",ids);
-        assertEquals(res.contains("Character Length Over 80"), true);
+        assertEquals(res.contains("ledgerId"), true);
+//        assertEquals(res.contains("Character Length Over 80"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
 
         //检查子链列表中存在刚创建的两条子链 以及各个子链的共识算法为默认raft
         String res2 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
-        assertEquals(res2.contains(chainName1), false);
+        assertEquals(res2.contains(chainName1), true);
 
     }
 

@@ -40,7 +40,7 @@ public class APermfuncSysSetMg {
 
     public String subLedgerCreate() throws Exception {
         String tempName ="permOl_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些
-        String response = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -z " + tempName,
+        String response = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -c " + tempName,
                 " -t sm3", " -w first", " -c raft", ids);
 
         if(response.toLowerCase().contains(okMsg))  {
@@ -53,17 +53,17 @@ public class APermfuncSysSetMg {
 
 
     public String subLedgerFreeze(String chainName) throws Exception {
-        String res = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -z " + chainName);
+        String res = mgToolCmd.freezeAppChain(PEER1IP,PEER1RPCPort," -c " + chainName);
         return retAllow(res);
     }
 
     public String subLedgerRecover(String chainName) throws Exception {
-        String res = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -z " + chainName);
+        String res = mgToolCmd.recoverAppChain(PEER1IP,PEER1RPCPort," -c " + chainName);
         return retAllow(res);
     }
 
     public String subLedgerDestroy(String chainName) throws Exception {
-        String res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -z " + chainName);
+        String res = mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -c " + chainName);
         return retAllow(res);
     }
 

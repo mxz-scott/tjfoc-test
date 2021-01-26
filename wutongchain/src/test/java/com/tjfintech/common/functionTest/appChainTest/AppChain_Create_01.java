@@ -132,7 +132,8 @@ public class AppChain_Create_01 {
    //此用例在执行后进检查可以使用 不检查是否成功创建
     //移除支持 . 不再支持 . 20200420
    //20191106 规则测试有变更 首字母仅允许数字字母（大小写）
-    @Test
+    //20210126 开发确认不对应用名做校验
+//    @Test
     public void TC1472_CreateNameValid()throws Exception{
 
         //创建子链，名称为"1"
