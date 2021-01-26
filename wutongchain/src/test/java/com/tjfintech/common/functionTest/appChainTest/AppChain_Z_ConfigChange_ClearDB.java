@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static com.tjfintech.common.utils.UtilsClassApp.globalAppId1;
-import static com.tjfintech.common.utils.UtilsClassApp.globalAppId2;
+import static com.tjfintech.common.utils.UtilsClassApp.*;
+import static com.tjfintech.common.utils.UtilsClassApp.glbChain02;
 import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -39,78 +39,11 @@ public class AppChain_Z_ConfigChange_ClearDB {
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
 
-    public static String glbChain01= "glbCh1";
-    public static String glbChain02= "glbCh2";
-
-    String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
-    String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
-    String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
-    String id4 = getPeerId(PEER3IP,USERNAME,PASSWD);
-    String ids = " -m "+ id1+","+ id2+","+ id3;
-
-    List<String> listPeer = new ArrayList<>();
 
     @Before
-    public void initListPeer(){
-        HashMap peer = new HashMap();
-        peer.put("ID",id4);
-        peer.put("ShownName","testName");
-        List inAddr = new ArrayList();
-        List outAddr = new ArrayList();
-        inAddr.add(ipv4 + PEER3IP + tcpProtocol + PEER3TCPPort);
-        outAddr.add("");
-        peer.put("InAddrs",inAddr);
-        peer.put("OutAddrs",outAddr);
-        peer.put("PeerType",2);
-        //        peer.put("RpcPort",Integer.valueOf(PEER3RPCPort));;
-
-        listPeer.add(JSON.toJSONString(peer).replace("\"","\\\""));
-    }
-    @BeforeClass
-    public static void clearData()throws Exception{
-        BeforeCondition beforeCondition = new BeforeCondition();
-        beforeCondition.clearDataSetPerm999();
-//        beforeCondition.setPermission999();
-
-        String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
-        String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
-        String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
-        String id4 = getPeerId(PEER3IP,USERNAME,PASSWD);
-        String ids = " -m "+ id1+","+ id2+","+ id3;
-
-        List<String> listPeer = new ArrayList<>();
-        HashMap peer = new HashMap();
-        peer.put("ID",id4);
-        peer.put("ShownName","testName");
-        List inAddr = new ArrayList();
-        List outAddr = new ArrayList();
-        inAddr.add(ipv4 + PEER3IP + tcpProtocol + PEER3TCPPort);
-        outAddr.add("\"\"");
-        peer.put("InAddrs",inAddr);
-        peer.put("OutAddrs",outAddr);
-        peer.put("PeerType",2);
-        //        peer.put("RpcPort",Integer.valueOf(PEER3RPCPort));;
-
-        listPeer.add(JSON.toJSONString(peer).replace("\"","\\\""));
-
-        sleepAndSaveInfo(SLEEPTIME);
-        MgToolCmd mgToolCmd = new MgToolCmd();
-        String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
-        if(! resp.contains("\"name\": \""+glbChain01.toLowerCase()+"\"")) {
-            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain01,
-                    " -t sm3", " -w first", " -c raft",
-                    ids);
-            sleepAndSaveInfo(SLEEPTIME*2);
-            assertEquals(mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain01.toLowerCase()+"\""), true);
-        }
-
-        if(! resp.contains("\"name\": \""+glbChain02+"\"")) {
-            mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + glbChain02,
-                    " -t sm3", " -w first", " -c raft",
-                    ids);
-            sleepAndSaveInfo(SLEEPTIME*2);
-            assertEquals(mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"").contains("\"name\": \""+glbChain02.toLowerCase()+"\""), true);
-        }
+    public void beforeConfig() throws Exception {
+        AppChain_CommonFunc cf = new AppChain_CommonFunc();
+        cf.createTwoAppChain(glbChain01,glbChain02);
     }
 
 

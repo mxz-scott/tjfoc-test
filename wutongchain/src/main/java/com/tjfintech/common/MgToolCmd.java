@@ -95,6 +95,13 @@ public class MgToolCmd {
         //管理工具加入执行时间打印，高度值需要处理后返回
         return resp.substring(resp.lastIndexOf("Height:")+7).trim();
     }
+    public String queryBlockHeight(String shIP,String queryIPPort)throws Exception{
+        if(subLedger != "")  queryIPPort = queryIPPort + " -c " + subLedger;
+        String cmd = toolExePath + " height -p " + queryIPPort;
+        String resp = shExeAndReturn(shIP,cmd);
+        //管理工具加入执行时间打印，高度值需要处理后返回
+        return resp.substring(resp.lastIndexOf("Height:") + 7).trim();
+    }
 
     public String queryBlockByHeight(String queryIPPort,String height)throws Exception{
         String rpcPort = queryIPPort;//.split(":")[1];//9300

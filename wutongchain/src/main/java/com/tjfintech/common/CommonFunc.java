@@ -831,7 +831,7 @@ public class CommonFunc {
 
         String peerID = getPeerId(addIP,USERNAME,PASSWD);
         String showName = "peer" + addIP.substring(addIP.lastIndexOf(".")+1);
-        String addr = "\\/" + IPformat + "\\/" + addIP +"\\/" + TcpType + "\\/" + Port;
+        String addr =  IPformat + addIP + TcpType + Port;
 
         shExeAndReturn(PeerIP,"sed -i '1i[Members]' " + PeerMemConfigPath);
         shExeAndReturn(PeerIP,"sed -i '2i\n' " + PeerMemConfigPath);
@@ -845,10 +845,12 @@ public class CommonFunc {
     public void addPeerCluster(String PeerIP,String addIP,String Port,String Type,String IPformat,String TcpType){
         //获取第一个[[Peer]]所在行号 后面加入节点集群信息时插入的行号
         String lineNo = shExeAndReturn(PeerIP,"grep -n Type "+ PeerMemConfigPath + " | cut -d \":\" -f 1 |sed -n '$p'");
+        String resp = shExeAndReturn(PeerIP,"cat " + PeerMemConfigPath);
+        if(resp.contains(addIP) && resp.contains(Port)) return;
 
         String peerID = getPeerId(addIP,USERNAME,PASSWD);
         String showName = "peer" + addIP.substring(addIP.lastIndexOf(".")+1);
-        String addr = "\\/" + IPformat + "\\/" + addIP +"\\/" + TcpType + "\\/" + Port;
+        String addr =  IPformat + addIP + TcpType + Port;
         shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+1) + "i\n' " + PeerMemConfigPath);
         shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+2) + "i[[Members.Peers]]' " + PeerMemConfigPath);
         shExeAndReturn(PeerIP,"sed -i '" + (Integer.parseInt(lineNo)+3) + "iId = \"" + peerID + "\"' " + PeerMemConfigPath);

@@ -74,12 +74,7 @@ public class AppChain_Z_ConfigChange02_ClearDB {
      */
     @Test
     public void testClusterPeerWithDestroyAppLedger()throws Exception{
-        //ledgerId1 A/B/C节点 销毁
-        //ledgerId2 B/C节点 销毁
-        //ledgerId3 A/B节点 冻结
-        //ledgerId4 A/B节点 活跃
-        String chain1 = "1735Sub1";//A/B/C节点将要销毁应用链
-
+        String chain1 = "Sub001";
         mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + chain1,
                 " -t sm3", " -w first", " -c raft",
                 ids);
@@ -123,11 +118,7 @@ public class AppChain_Z_ConfigChange02_ClearDB {
      */
     @Test
     public void testClusterPeerWithFrozenAppLedger()throws Exception{
-        //ledgerId1 A/B/C节点 销毁
-        //ledgerId2 B/C节点 销毁
-        //ledgerId3 A/B节点 冻结
-        //ledgerId4 A/B节点 活跃
-        String chain1 = "1735Sub1";//A/B/C节点将要销毁应用链
+        String chain1 = "Sub002";
 
         mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + chain1,
                 " -t sm3", " -w first", " -c raft",
@@ -178,11 +169,7 @@ public class AppChain_Z_ConfigChange02_ClearDB {
      */
     @Test
     public void testClusterPeerWithRecoverFrozenAppLedger()throws Exception{
-        //ledgerId1 A/B/C节点 销毁
-        //ledgerId2 B/C节点 销毁
-        //ledgerId3 A/B节点 冻结
-        //ledgerId4 A/B节点 活跃
-        String chain1 = "1735Sub1";//A/B/C节点将要销毁应用链
+        String chain1 = "Sub003";
 
         mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + chain1,
                 " -t sm3", " -w first", " -c raft",
@@ -241,11 +228,51 @@ public class AppChain_Z_ConfigChange02_ClearDB {
      */
     @Test
     public void testClusterPeerWithActiveAppLedger()throws Exception{
-        //ledgerId1 A/B/C节点 销毁
-        //ledgerId2 B/C节点 销毁
-        //ledgerId3 A/B节点 冻结
-        //ledgerId4 A/B节点 活跃
-        String chain1 = "1735Sub1";//A/B/C节点将要销毁应用链
+        String chain1 = "Sub004";
+
+        mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + chain1,
+                " -t sm3", " -w first", " -c raft",
+                ids);
+        ledgerId1 = subLedger;
+
+        sleepAndSaveInfo(SLEEPTIME/2);
+
+        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,3);
+
+        String checkStr = "success";
+
+        //可退出
+        String respQuit = mgToolCmd.quitPeer(PEER1IP + ":" + PEER1RPCPort,PEER2IP);
+        assertEquals(true,respQuit.contains(checkStr));
+        sleepAndSaveInfo(SLEEPTIME);
+        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,2);
+
+        //不可变更 因区块链网络已经无法完成共识机制 交易无法正常上链
+        String respChange = mgToolCmd.addPeer("observer",PEER1IP + ":" + PEER1RPCPort,
+                ipv4 + PEER2IP,tcpProtocol + PEER2TCPPort,PEER2RPCPort);
+        assertEquals(true,respChange.contains(checkStr));
+        sleepAndSaveInfo(SLEEPTIME);
+
+        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,3);
+
+        //不可变更 因区块链网络已经无法完成共识机制 交易无法正常上链
+        respChange = mgToolCmd.addPeer("join",PEER1IP + ":" + PEER1RPCPort,
+                ipv4 + PEER2IP,tcpProtocol + PEER2TCPPort,PEER2RPCPort);
+        assertEquals(true,respChange.contains(checkStr));
+        sleepAndSaveInfo(SLEEPTIME);
+
+        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,3);
+
+    }
+
+    /***
+     * 只存在两个共识节点时 不允许退出节点或者变更共识节点为数据节点
+     * 应用链活跃
+     * @throws Exception
+     */
+    @Test
+    public void testClusterPeer2WithActiveAppLedger()throws Exception{
+        String chain1 = "Sub005";
 
         mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + chain1,
                 " -t sm3", " -w first", " -c raft",
@@ -256,32 +283,100 @@ public class AppChain_Z_ConfigChange02_ClearDB {
 
         testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,2);
 
-        String checkStr = "success";
+        String checkStr = "error";
 
-        //可退出
+        //不可退出
         String respQuit = mgToolCmd.quitPeer(PEER1IP + ":" + PEER1RPCPort,PEER2IP);
         assertEquals(true,respQuit.contains(checkStr));
         sleepAndSaveInfo(SLEEPTIME/2);
-        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,1);
+        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,2);
 
-        //不可变更 因区块链网络已经无法完成共识机制 交易无法正常上链
+        //不可变更为数据节点
         String respChange = mgToolCmd.addPeer("observer",PEER1IP + ":" + PEER1RPCPort,
                 ipv4 + PEER2IP,tcpProtocol + PEER2TCPPort,PEER2RPCPort);
         assertEquals(true,respChange.contains(checkStr));
         sleepAndSaveInfo(SLEEPTIME/2);
 
-        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,1);
-
-        //不可变更 因区块链网络已经无法完成共识机制 交易无法正常上链
-        respChange = mgToolCmd.addPeer("join",PEER1IP + ":" + PEER1RPCPort,
-                ipv4 + PEER2IP,tcpProtocol + PEER2TCPPort,PEER2RPCPort);
-        assertEquals(true,respChange.contains(checkStr));
-        sleepAndSaveInfo(SLEEPTIME/2);
-
-        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,1);
+        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,2);
 
     }
 
+    /***
+     * 向应用链添加不在节点集群中的节点
+     * 应用链活跃
+     * @throws Exception
+     */
+    @Test
+    public void addPeerNotInMemberList()throws Exception{
+        String chain1 = "Sub005";
+
+        mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + chain1,
+                " -t sm3", " -w first", " -c raft",
+                " -m " + id2 + "," + id1);
+        ledgerId1 = subLedger;
+
+        sleepAndSaveInfo(SLEEPTIME/2);
+
+        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,2);
+
+        String checkStr = "error";
+
+        //添加不在集群中的节点
+        String respChange = mgToolCmd.addPeer("join",PEER1IP + ":" + PEER1RPCPort,
+                ipv4 + PEER3IP,tcpProtocol + PEER3TCPPort,PEER3RPCPort);
+//        assertEquals(true,respChange.contains(checkStr));
+        sleepAndSaveInfo(SLEEPTIME/2);
+
+        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,2);
+
+    }
+
+
+    /***
+     * 修改节点config.toml中的集群信息 添加新节点
+     * 应用链活跃
+     * @throws Exception
+     */
+    @Test
+    public void addPeerAddInMemberList()throws Exception{
+        shExeAndReturn(PEER3IP,killPeerCmd);//停止节点
+        String chain1 = "Sub005";
+
+        mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + chain1,
+                " -t sm3", " -w first", " -c raft",
+                " -m " + id2 + "," + id1);
+        ledgerId1 = subLedger;
+
+        sleepAndSaveInfo(SLEEPTIME/2);
+
+        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,2);
+
+        //修改节点1配置文件 新增节点3的集群信息
+        shExeAndReturn(PEER1IP,killPeerCmd);//停止节点
+        CommonFunc cf = new CommonFunc();
+        cf.addPeerCluster(PEER1IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);//添加第4个节点信息
+        shExeAndReturn(PEER1IP,startCPeerCmd);//配置文件方式启动节点
+
+        sleepAndSaveInfo(SLEEPTIME);
+
+        String checkStr = "success";
+
+        //添加不在集群中的节点
+        String respChange = mgToolCmd.addPeer("join",PEER1IP + ":" + PEER1RPCPort,
+                ipv4 + PEER3IP,tcpProtocol + PEER3TCPPort,PEER3RPCPort);
+        assertEquals(true,respChange.contains(checkStr));
+        sleepAndSaveInfo(SLEEPTIME/2);
+
+        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,3);
+
+
+        shExeAndReturn(PEER3IP,startCPeerCmd);//启动加入的节点
+        sleepAndSaveInfo(SLEEPTIME*2);
+
+        String heightPeer1 = mgToolCmd.queryBlockHeight(PEER1IP+ ":" + PEER1RPCPort);
+        String heightPeer3 = mgToolCmd.queryBlockHeight(PEER1IP,PEER3IP + ":" + PEER3RPCPort);
+        assertEquals(heightPeer1,heightPeer3);
+    }
 
 
     public void createComplexSubledgers()throws Exception{
