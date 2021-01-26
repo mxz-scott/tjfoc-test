@@ -42,122 +42,101 @@ public class AppChain_Z_ConfigChange_ClearDB {
 
     @Before
     public void beforeConfig() throws Exception {
+        //设置节点 清空db数据 并重启
+        utilsClass.setAndRestartPeerList(clearPeerDB);
+        //重启SDK
+        utilsClass.setAndRestartSDK();
+
+
         AppChain_CommonFunc cf = new AppChain_CommonFunc();
         cf.createTwoAppChain(glbChain01,glbChain02);
+
+        commonFunc.setPeerConfig(PEER1IP);
+        commonFunc.setPeerConfig(PEER3IP);
+    }
+
+    @AfterClass
+    public static void afterTestReset() throws Exception {
+        CommonFunc commonFunc = new CommonFunc();
+        commonFunc.setPeerConfig(PEER1IP);
+        commonFunc.setPeerConfig(PEER3IP);
+
+        shExeAndReturn(PEER3IP,killPeerCmd);
+        shExeAndReturn(PEER1IP,killPeerCmd);
+        shExeAndReturn(PEER1IP,startCPeerCmd);
+        sleepAndSaveInfo(SLEEPTIME);
     }
 
 
+
+    /***
+     * 修改节点config.toml中的集群信息 添加新节点
+     * 应用链活跃
+     * @throws Exception
+     */
     @Test
-    public void TC1538_quitMainJoinPeer()throws Exception{
-        //配置sdk节点集群仅为Peer1并重启sdk
-        commonFunc.setSDKOnePeer(utilsClass.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true",peerTLSServerName);
-        utilsClass.setAndRestartSDK();
-        //创建子链01 包含节点A、B、C
-        String chainName1="tc1538_01";
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1,
-                " -t sm3"," -w first"," -c raft",
-                ids);
-        assertEquals(res.contains("send transaction success"), true);
+    public void addPeerAddInMemberList()throws Exception{
+        shExeAndReturn(PEER3IP,killPeerCmd);//停止节点
+        String chain1 = "Sub005";
 
-        //创建子链02 包含节点A、C
-        String chainName2="tc1538_02";
-        String res2 = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName2,
-                " -t sm3"," -w first"," -c raft",
-                " -m "+id1+","+id3);
-        assertEquals(res2.contains("send transaction success"), true);
+        mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + chain1,
+                " -t sm3", " -w first", " -c raft",
+                " -m " + id2 + "," + id1);
+//        tempLedgerId1 = subLedger;
 
+        sleepAndSaveInfo(SLEEPTIME/2);
 
-        //创建子链03 包含节点A、B
-        String chainName3="tc1538_03";
-        String res3 = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName3,
-                " -t sm3"," -w first"," -c raft",
-                " -m "+id1+","+id2);
-        assertEquals(res3.contains("send transaction success"), true);
+        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,2);
 
+        //修改节点1配置文件 新增节点3的集群信息
+        shExeAndReturn(PEER1IP,killPeerCmd);//停止节点
+        CommonFunc cf = new CommonFunc();
+        cf.addPeerCluster(PEER1IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);//添加第4个节点信息
+        shExeAndReturn(PEER1IP,startCPeerCmd);//配置文件方式启动节点
 
-        sleepAndSaveInfo(SLEEPTIME*2);
-        //检查可以获取子链列表 存在其他子链
-        String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
-        assertEquals(resp.contains("name"), true);
-        assertEquals(resp.contains(chainName1), true);
-        assertEquals(resp.contains(chainName2), true);
-        assertEquals(resp.contains(chainName3), true);
-
-
-        String Data = "tc1538 tx1 test";
-        //动态删除节点B，因已有子链使用 无法成功删除
-        String respQuit = mgToolCmd.quitPeer(PEER1IP+":"+PEER1RPCPort,PEER2IP);
-        assertEquals(respQuit.contains("quit failed:some ledger is using this peer"), true);
-
-        sleepAndSaveInfo(SLEEPTIME*2);
-        //检查可以获取子链列表 存在其他子链
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
-        assertEquals(resp.contains(chainName1), true);
-        assertEquals(resp.contains(chainName2), true);
-        assertEquals(resp.contains(chainName3), true);
-
-        //确认包含节点B的子链集群信息无异常
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1);
-        assertEquals(resp.contains(PEER2IP), true);
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName3);
-        assertEquals(resp.contains(PEER2IP), true);
-
-        subLedger=chainName1;
-        String response1=store.CreateStore(Data);
-        String txHash1= commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType21);
-
-        subLedger=chainName2;
-        Data = "tc1538 tx2 test";
-        String response2=store.CreateStore(Data);
-        String txHash2= commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType21);
-
-        subLedger=chainName3;
-        Data = "tc1538 tx3 test";
-        String response3=store.CreateStore(Data);
-        String txHash3= commonFunc.getTxHash(response3,utilsClass.sdkGetTxHashType21);
-
-
-        subLedger="";
-        Data = "tc1538 tx4 test";
-        String response4=store.CreateStore(Data);
-        String txHash4= commonFunc.getTxHash(response4,utilsClass.sdkGetTxHashType21);
-
-        sleepAndSaveInfo(SLEEPTIME*2);
-        subLedger=chainName1;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));  //确认可以c查询成功
-        subLedger=chainName2;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));  //确认可以c查询成功
-        subLedger=chainName3;
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash3)).getString("state"));  //确认可以c查询成功
-        subLedger="";
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash4)).getString("state"));  //确认不可以c查询成功
-    }
-
-
-    //测试动态加入节点后，使用动态加入的节点创建子链
-    @Test
-    public void TC1537_2144_createChainWithJoinPeer()throws Exception{
-        assertEquals(3,subLedgerCmd.getLedgerMemNo(glbChain01));//动态加入节点前检查节点集群信息
-
-        commonFunc.setPeerConfig(PEER3IP);//设置Peer3 config.toml文件为不包含自己节点信息的配置文件 20191219确认不用配置自己的信息
-        commonFunc.addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
-        //动态加入节点168
-        String resp2 = mgToolCmd.addPeer("join",PEER1IP+":"+PEER1RPCPort,
-                ipv4+PEER3IP,tcpProtocol + PEER3TCPPort,PEER3RPCPort);
-        assertEquals(true,resp2.contains("success"));
         sleepAndSaveInfo(SLEEPTIME);
 
-        assertEquals(3,subLedgerCmd.getLedgerMemNo(glbChain01));//动态加入节点前检查节点集群信息
+        String checkStr = "success";
+
+        //添加不在集群中的节点
+        String respChange = mgToolCmd.addPeer("join",PEER1IP + ":" + PEER1RPCPort,
+                ipv4 + PEER3IP,tcpProtocol + PEER3TCPPort,PEER3RPCPort);
+        assertEquals(true,respChange.contains(checkStr));
+        sleepAndSaveInfo(SLEEPTIME/2);
+
+        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,3);
+
+
+        shExeAndReturn(PEER3IP,startCPeerCmd);//启动加入的节点
+        sleepAndSaveInfo(SLEEPTIME);
+
+        String heightPeer1 = mgToolCmd.queryBlockHeight(PEER1IP+ ":" + PEER1RPCPort);
+        String heightPeer3 = mgToolCmd.queryBlockHeight(PEER1IP,PEER3IP + ":" + PEER3RPCPort);
+        assertEquals(heightPeer1,heightPeer3);
+    }
+
+
+    //加入节点后，使用新节点创建新的应用链
+    @Test
+    public void createAppChainWithLaterPeer()throws Exception{
+        assertEquals(3,subLedgerCmd.getLedgerMemNo(""));//加入节点前检查节点集群信息
+        shExeAndReturn(PEER1IP,killPeerCmd);
+        commonFunc.addPeerCluster(PEER1IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
+
+        //启动节点1和新加入节点3
+        shExeAndReturn(PEER1IP,startCPeerCmd);
+        shExeAndReturn(PEER3IP,startPeerCmd);
+        sleepAndSaveInfo(SLEEPTIME);
+
+        assertEquals(4,subLedgerCmd.getLedgerMemNo(""));//动态加入节点前检查节点集群信息
         //创建子链01 包含节点A、B、C
-        String chainName1="tc1537_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1,
+        String chainName1 = "tc1537_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1,
                 " -t sm3"," -w first",
-                " -c raft",ids+","+getPeerId(PEER3IP,USERNAME,PASSWD));
-        assertEquals(res.contains("send transaction success"), true);
+                " -c raft",ids + "," + getPeerId(PEER3IP,USERNAME,PASSWD));
 
-
-        sleepAndSaveInfo(SLEEPTIME*2);
-        assertEquals(4,subLedgerCmd.getLedgerMemNo(chainName1));//动态加入节点前检查节点集群信息
+        sleepAndSaveInfo(SLEEPTIME/2);
+        assertEquals(4,subLedgerCmd.getLedgerMemNo(subLedger));//动态加入节点前检查节点集群信息
 
         //检查可以获取子链列表 存在其他子链
         String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
@@ -173,104 +152,69 @@ public class AppChain_Z_ConfigChange_ClearDB {
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName1), true);
 
-        subLedger=chainName1;
         String response1=store.CreateStore(Data);
         String txHash1= commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType21);
 
-
-        subLedger="";
-        Data = "tc1538 tx4 test";
-        String response4=store.CreateStore(Data);
-        String txHash4= commonFunc.getTxHash(response4,utilsClass.sdkGetTxHashType21);
-
-        sleepAndSaveInfo(SLEEPTIME*2);
-        subLedger=chainName1;
+        sleepAndSaveInfo(SLEEPTIME/2);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));  //确认可以c查询成功
-        subLedger="";
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash4)).getString("state"));  //确认不可以c查询成功
+
 
         //销毁子链 以便恢复集群（退出动态加入的节点）
-        mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1);
-        sleepAndSaveInfo(SLEEPTIME*3/2);
-        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1);
+        mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -c " + subLedger);
+        sleepAndSaveInfo(SLEEPTIME/2);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -c " + subLedger);
         assertEquals(resp.contains(ledgerStateDestroy), true);
 
-        //恢复节点
-        mgToolCmd.quitPeer(PEER1IP+":"+PEER1RPCPort,PEER3IP);
-        //停止节点id3
-        Shell shell=new Shell(PEER3IP,USERNAME,PASSWD);
-        shell.execute(killPeerCmd);
-        ArrayList<String> stdout = shell.getStandardOutput();
-        log.info(StringUtils.join(stdout,"\n"));
-
     }
 
-    //测试节点变更与子链的关系
-    //若节点存在与非销毁的子链中时是不允许动态变更
+    //测试使用数据节点作为子链集群节点时是否能够创建 预期是能创建
     @Test
-    public void TC1771_changePeerInfo()throws Exception{
-        //所有信息不变更，重复join，提示变更失败，因节点B参与子链
-        String resp2 = mgToolCmd.addPeer("join",PEER1IP + ":" + PEER1RPCPort,
-                ipv4 + PEER2IP,tcpProtocol + PEER2TCPPort,String.valueOf(Integer.valueOf(PEER2RPCPort) + 1));
-        assertEquals(true,resp2.contains("join failed:some ledger is using this peer"));
+    public void createChainWithDataPeer()throws Exception{
+        assertEquals(3,subLedgerCmd.getLedgerMemNo(""));//加入节点前检查节点集群信息
+        shExeAndReturn(PEER1IP,killPeerCmd);
+        commonFunc.addPeerCluster(PEER1IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
 
-        //变更节点B为数据节点，提示变更失败，因节点B参与子链
-        resp2 = mgToolCmd.addPeer("observer",PEER1IP + ":" + PEER1RPCPort,
-                ipv4 + PEER2IP,tcpProtocol + PEER2TCPPort,PEER2RPCPort);
-        assertEquals(true,resp2.contains("join failed:some ledger is using this peer"));
-
-        //变更节点B tcp端口信息，提示变更失败，因节点B参与子链
-        resp2 = mgToolCmd.addPeer("join",PEER1IP + ":" + PEER1RPCPort,
-                ipv4 + PEER2IP,"/tcp/60015",PEER2RPCPort);
-        assertEquals(true,resp2.contains("join failed:some ledger is using this peer"));
-
-        //变更节点B rpc端口信息，提示变更失败，因节点B参与子链
-        resp2 = mgToolCmd.addPeer("join",PEER1IP + ":" + PEER1RPCPort,
-                ipv4 + PEER2IP,tcpProtocol + PEER2TCPPort,String.valueOf(Integer.valueOf(PEER2RPCPort) + 1));
-        assertEquals(true,resp2.contains("join failed:some ledger is using this peer"));
-
-        String meminfo = mgToolCmd.queryMemberList(PEER1IP + ":" + PEER1RPCPort);
-        assertEquals("",testMgTool.parseMemInfo(meminfo,PEER2IP,"typ"));
-        assertEquals(PEER2RPCPort,testMgTool.parseMemInfo(meminfo,PEER2IP,"port"));
-        assertEquals(ipv4 + PEER2IP + tcpProtocol + PEER2TCPPort,testMgTool.parseMemInfo(meminfo,PEER2IP,"inAddr"));
-
-        subLedgerCmd.sendTxToMultiActiveChain("test1112222",globalAppId1,globalAppId2);
-
-    }
-
-    //测试使用数据节点作为子链集群节点时是否能够创建 预期是不能创建
-    @Test
-    public void TC1659_1655_createChainWithDataPeer()throws Exception{
-        commonFunc.setPeerConfig(PEER3IP);//设置Peer3 config.toml文件为不包含自己节点信息的配置文件 20191219确认不用配置自己的信息
-        commonFunc.addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
-        //动态加入节点168
-        String resp2 = mgToolCmd.addPeer("observer",PEER1IP+":"+PEER1RPCPort,
-                ipv4+PEER3IP,tcpProtocol + PEER3TCPPort,PEER3RPCPort);
-        assertEquals(true,resp2.contains("success"));
+        //启动节点1和新加入节点3
+        shExeAndReturn(PEER1IP,startCPeerCmd);
+        shExeAndReturn(PEER3IP,startPeerCmd);
         sleepAndSaveInfo(SLEEPTIME);
+
+        assertEquals(4,subLedgerCmd.getLedgerMemNo(""));//动态加入节点前检查节点集群信息
         //创建子链01 包含节点A、B、C
-        String chainName1="tc1659_"+sdf.format(dt)+ RandomUtils.nextInt(1000);
-        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName1,
+        String chainName1 = "tc1537_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1,
                 " -t sm3"," -w first",
-                " -c raft",ids+","+getPeerId(PEER3IP,USERNAME,PASSWD));
-        assertEquals(res.contains("is not Consensus Node"), true);
+                " -c raft",ids + "," + getPeerId(PEER3IP,USERNAME,PASSWD));
 
-        sleepAndSaveInfo(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME/2);
+        assertEquals(4,subLedgerCmd.getLedgerMemNo(subLedger));//动态加入节点前检查节点集群信息
+
         //检查可以获取子链列表 存在其他子链
         String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
-        assertEquals(resp.contains(chainName1), false);
+        assertEquals(resp.contains(chainName1), true);
 
 
-        //恢复节点
-        mgToolCmd.quitPeer(PEER1IP+":"+PEER1RPCPort,PEER3IP);
-        //停止节点id3
-        Shell shell=new Shell(PEER3IP,USERNAME,PASSWD);
-        shell.execute(killPeerCmd);
-        ArrayList<String> stdout = shell.getStandardOutput();
-        log.info(StringUtils.join(stdout,"\n"));
+        String Data = "tx1 test";
 
-        subLedgerCmd.sendTxToMultiActiveChain("1659 data",globalAppId1,globalAppId2);
+        sleepAndSaveInfo(SLEEPTIME/2);
+        //检查可以获取子链列表 存在其他子链
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
+        assertEquals(resp.contains("name"), true);
+        assertEquals(resp.contains(chainName1), true);
+
+        String response1=store.CreateStore(Data);
+        String txHash1= commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType21);
+
+        sleepAndSaveInfo(SLEEPTIME/2);
+        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));  //确认可以c查询成功
+
+
+        //销毁子链 以便恢复集群（退出动态加入的节点）
+        mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -c " + subLedger);
+        sleepAndSaveInfo(SLEEPTIME/2);
+        resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -c " + subLedger);
+        assertEquals(resp.contains(ledgerStateDestroy), true);
     }
 
 
@@ -281,43 +225,37 @@ public class AppChain_Z_ConfigChange_ClearDB {
 //        setSDKOnePeer(utilsClass.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true");
 //        commonFunc.setAndRestartSDK();
         //创建子链，包含两个节点
-        String chainName="tc1523_01";
+        String chainName = "tc1523_01";
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
                 " -t sm3"," -w first"," -c raft",
-                " -m "+id1+","+id2);
-        assertEquals(res.contains("send transaction success"), true);
+                " -m " + id1 + "," + id2);
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
         String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName), true);
-        assertEquals(resp.contains(glbChain01.toLowerCase()), true);
+        assertEquals(resp.contains(glbChain01), true);
 
-        subLedger=chainName;
         String response1 = store.CreateStore("tc1523 data");
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));  //确认可以发送成功
 
-        sleepAndSaveInfo(SLEEPTIME*2);
+        sleepAndSaveInfo(SLEEPTIME/2);
 
-        String txHash1 =commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType21);;
+        String txHash1 = commonFunc.getTxHash(response1,utilsClass.sdkGetTxHashType21);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));  //确认可以c查询成功
 
         //停止节点id2
-        Shell shell=new Shell(PEER2IP,USERNAME,PASSWD);
-        shell.execute(killPeerCmd);
-        ArrayList<String> stdout = shell.getStandardOutput();
-        log.info(StringUtils.join(stdout,"\n"));
-//        return StringUtils.join(stdout,"\n");
+       shExeAndReturn(PEER2IP,killPeerCmd);
 
         sleepAndSaveInfo(SLEEPTIME);
         String response2 = store.CreateStore("tc1523 data2");
         assertEquals("200",JSONObject.fromObject(response2).getString("state"));  //确认可以发送成功
         sleepAndSaveInfo(SLEEPTIME);
-        String txHash2 =commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType21);
+        String txHash2 = commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType21);
         assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));  //确认不可以c查询成功
 
-        shell.execute(startPeerCmd);
+        shExeAndReturn(PEER2IP,startPeerCmd);
     }
 
     //重启之后确认主子链是否可以正常发送交易
@@ -331,14 +269,13 @@ public class AppChain_Z_ConfigChange_ClearDB {
     //测试子链包含的节点在子链创建前停止能否正常创建子链
     @Test
     public void TC1726_createWithStopPeer()throws Exception{
-        testMgTool.queryPeerListNo(PEER1IP+":"+PEER1RPCPort,3);
+        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,3);
 
         shExeAndReturn(PEER2IP,killPeerCmd);
-        String chainName="tc1726_01";
+        String chainName = "tc1726_01";
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n "+chainName,
                 " -t sm3"," -w first"," -c raft",
                 ids);
-        assertEquals(res.contains("send transaction success"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
         //检查可以获取子链列表 存在其他子链
@@ -347,12 +284,5 @@ public class AppChain_Z_ConfigChange_ClearDB {
 
         shExeAndReturn(PEER2IP,startPeerCmd);
 
-    }
-
-
-    @After
-    public void resetPeerAndSDK()throws  Exception {
-        utilsClass.setAndRestartPeerList(resetPeerBase);
-        utilsClass.setAndRestartSDK(resetSDKConfig);
     }
 }

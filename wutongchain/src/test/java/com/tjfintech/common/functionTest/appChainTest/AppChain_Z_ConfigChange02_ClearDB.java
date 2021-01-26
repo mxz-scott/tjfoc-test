@@ -332,53 +332,6 @@ public class AppChain_Z_ConfigChange02_ClearDB {
     }
 
 
-    /***
-     * 修改节点config.toml中的集群信息 添加新节点
-     * 应用链活跃
-     * @throws Exception
-     */
-    @Test
-    public void addPeerAddInMemberList()throws Exception{
-        shExeAndReturn(PEER3IP,killPeerCmd);//停止节点
-        String chain1 = "Sub005";
-
-        mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + chain1,
-                " -t sm3", " -w first", " -c raft",
-                " -m " + id2 + "," + id1);
-        ledgerId1 = subLedger;
-
-        sleepAndSaveInfo(SLEEPTIME/2);
-
-        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,2);
-
-        //修改节点1配置文件 新增节点3的集群信息
-        shExeAndReturn(PEER1IP,killPeerCmd);//停止节点
-        CommonFunc cf = new CommonFunc();
-        cf.addPeerCluster(PEER1IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);//添加第4个节点信息
-        shExeAndReturn(PEER1IP,startCPeerCmd);//配置文件方式启动节点
-
-        sleepAndSaveInfo(SLEEPTIME);
-
-        String checkStr = "success";
-
-        //添加不在集群中的节点
-        String respChange = mgToolCmd.addPeer("join",PEER1IP + ":" + PEER1RPCPort,
-                ipv4 + PEER3IP,tcpProtocol + PEER3TCPPort,PEER3RPCPort);
-        assertEquals(true,respChange.contains(checkStr));
-        sleepAndSaveInfo(SLEEPTIME/2);
-
-        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,3);
-
-
-        shExeAndReturn(PEER3IP,startCPeerCmd);//启动加入的节点
-        sleepAndSaveInfo(SLEEPTIME*2);
-
-        String heightPeer1 = mgToolCmd.queryBlockHeight(PEER1IP+ ":" + PEER1RPCPort);
-        String heightPeer3 = mgToolCmd.queryBlockHeight(PEER1IP,PEER3IP + ":" + PEER3RPCPort);
-        assertEquals(heightPeer1,heightPeer3);
-    }
-
-
     public void createComplexSubledgers()throws Exception{
         String chain1 = "1735Sub1";//A/B/C节点将要销毁应用链
         String chain2 = "1735Sub2";//B/C节点将要销毁应用链
