@@ -302,12 +302,15 @@ public class AppChain_Z_ConfigChange02_ClearDB {
     }
 
     /***
-     * 向应用链添加不在节点集群中的节点
+     * 向应用链添加不在节点集群中的节点 可以添加成功
      * 应用链活跃
      * @throws Exception
      */
     @Test
     public void addPeerNotInMemberList()throws Exception{
+        shellExeCmd(PEER3IP,clearPeerDB,killPeerCmd);
+        clearData();//清空数据重启
+
         String chain1 = "Sub005";
 
         mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + chain1,
@@ -327,7 +330,7 @@ public class AppChain_Z_ConfigChange02_ClearDB {
 //        assertEquals(true,respChange.contains(checkStr));
         sleepAndSaveInfo(SLEEPTIME/2);
 
-        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,2);
+        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,3);
 
     }
 
