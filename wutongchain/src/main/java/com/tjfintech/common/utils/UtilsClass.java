@@ -191,6 +191,7 @@ public class UtilsClass {
     public static String ccenvPull = "docker load < /root/dockerimages/ccenv_2.1.tar";//20191217出现网络慢pull需要很长时间 因此改回本地导入
 
     public static String startPeerCmd = "sh "+ destShellScriptDir +"startWithParam.sh \"" + tmuxSessionPeer + "\" " + PeerPATH + " " + PeerTPName;
+    public static String startCPeerCmd = "sh "+ destShellScriptDir +"startWithParam.sh \"" + tmuxSessionPeer + "\" " + PeerPATH + " " + PeerTPName + " start -c";
     public static String startSDKCmd = "sh "+ destShellScriptDir +"startWithParam.sh \""+ tmuxSessionSDK + "\" " + SDKPATH + " " + SDKTPName;
     public static String startTokenApiCmd = "sh "+ destShellScriptDir +"startWithParam.sh \""+ tmuxSessionTokenApi + "\" " + TokenApiPATH + " " + TokenTPName  + " api";
     public static String killPeerCmd = "pkill " + PeerTPName;
