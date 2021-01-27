@@ -182,7 +182,7 @@ public class UtilsClass {
     public static String fullPerm2 ="[1 2 3 4 5 6 7 8 9 10 11 21 22 23 24 25 26 27 211 212 221 222 223 224 226 227 228 231 232 233 235 236 251 252 253 254 255 256 261 262 270 271 272 281 282 283 284]";
     public static String PeerMemConfigPath = PeerPATH + "config.toml";//全文件名为config.toml 节点集群信息
     public static String PeerBaseConfigPath = PeerPATH + "conf/base.toml";//全文件名为base.toml 节点运行相关配置
-    public static String SDKConfigPath = SDKPATH + "conf/config.toml";//全文件名为config.toml
+    public static String SDKConfigPath = SDKPATH + "conf/base.toml";//全文件名为config.toml  3.1版本修改为base.toml
     public static String TokenApiConfigPath = TokenApiPATH + "conf/config_api.toml";//全文件名为config.toml
 
     public static String resourcePath = System.getProperty("user.dir") + "/src/main/resources/";

@@ -14,19 +14,14 @@ public class SetHashTypeSHA256 {
     CommonFunc commonFunc = new CommonFunc();
    @Test
     public void setHashSHA256()throws Exception{
-       //设置SDK 使用SHA256 清空数据库
-       shellExeCmd(utilsClass.getIPFromStr(SDKADD),resetSDKConfig,"sed -i 's/sm3/sha256/g' " + SDKConfigPath,killSDKCmd);
-       utilsClass.delDataBase();//清空sdk当前使用数据库数据
+       //设置SDK 使用 sha256 清空数据库
+       String sdkIP = utilsClass.getIPFromStr(SDKADD);
+       shellExeCmd(sdkIP,killSDKCmd);
 
-       //设置节点使用sha256 清空db数据 并重启
-       commonFunc.setPeerCluster();//设置节点集群默认全部共识节点 1/2/4
-       utilsClass.setAndRestartPeerList(clearPeerDB,resetPeerBase,"sed -i 's/sm3/sha256/g' " + PeerBaseConfigPath);
-
-       SetAllPeersDockerImagesClear setAllPeersDockerImagesClear = new SetAllPeersDockerImagesClear();
-       setAllPeersDockerImagesClear.clearAllPeersDockerImages();
-
+       //设置sdk hash算法为 sha256
+       shellExeCmd(sdkIP,"sed -i 's/\\\"sm3\\\"/\\\"sha256\\\"/g' " + SDKConfigPath);
        //重启SDK
-      shellExeCmd(utilsClass.getIPFromStr(SDKADD),startSDKCmd);
+       utilsClass.setAndRestartSDK();
 
        //检查节点及sdk启动无异常
        commonFunc.checkProgramActive(PEER1IP,PeerTPName);
@@ -34,8 +29,8 @@ public class SetHashTypeSHA256 {
        commonFunc.checkProgramActive(PEER4IP,PeerTPName);
        commonFunc.checkProgramActive(PEER1IP,SDKTPName);
 
-       //设置管理工具hashtype为sha256
-       shellExeCmd(PEER1IP,"sed -i 's/sm3/sha256/g' " + ToolPATH + "conf/base.toml");
+       //设置管理工具hashtype为 sha256
+       shellExeCmd(PEER1IP,"sed -i 's/\\\"sm3\\\"/\\\"sha256\\\"/g' " + ToolPATH + "conf/base.toml");
     }
 
 }

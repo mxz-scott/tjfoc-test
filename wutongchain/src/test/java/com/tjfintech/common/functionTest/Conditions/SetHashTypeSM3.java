@@ -15,16 +15,12 @@ public class SetHashTypeSM3 {
    @Test
     public void setHashsm3()throws Exception{
        //设置SDK 使用sm3 清空数据库
-       shellExeCmd(utilsClass.getIPFromStr(SDKADD),resetSDKConfig,killSDKCmd);
-       utilsClass.delDataBase();//清空sdk当前使用数据库数据
+      String sdkIP = utilsClass.getIPFromStr(SDKADD);
+       shellExeCmd(sdkIP,killSDKCmd);
+//       utilsClass.delDataBase();//清空sdk当前使用数据库数据 //3.1 sdk不再使用外部单独数据库
 
-       //设置节点使用sm3 清空db数据 并重启
-       commonFunc.setPeerCluster();//设置节点集群默认全部共识节点 1/2/4
-       utilsClass.setAndRestartPeerList(clearPeerDB,resetPeerBase);
-
-       SetAllPeersDockerImagesClear setAllPeersDockerImagesClear = new SetAllPeersDockerImagesClear();
-       setAllPeersDockerImagesClear.clearAllPeersDockerImages();
-
+      //设置sdk hash算法为sm3
+      shellExeCmd(sdkIP,"sed -i 's/\\\"sha256\\\"/\\\"sm3\\\"/g' " + SDKConfigPath);
        //重启SDK
        utilsClass.setAndRestartSDK();
 
@@ -35,7 +31,7 @@ public class SetHashTypeSM3 {
        commonFunc.checkProgramActive(PEER1IP,SDKTPName);
 
        //设置管理工具hashtype为sm3
-       shellExeCmd(PEER1IP,"cp " + ToolPATH + "conf/baseOK.toml " + ToolPATH + "conf/base.toml");
+       shellExeCmd(PEER1IP,"sed -i 's/\\\"sha256\\\"/\\\"sm3\\\"/g' " + ToolPATH + "conf/base.toml");
     }
 
 }
