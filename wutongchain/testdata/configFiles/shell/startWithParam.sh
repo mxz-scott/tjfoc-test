@@ -3,4 +3,4 @@
     #tmux send -t M2 'cd /root/zll/chain2.0.1/peer' ENTER
     #tmux send -t M2 './Mp' ENTER
     $1 'cd '$2'' ENTER
-    $1 './'$3' '$4'' ENTER
+    $1 './'$3' '$4' '$5'' ENTER
