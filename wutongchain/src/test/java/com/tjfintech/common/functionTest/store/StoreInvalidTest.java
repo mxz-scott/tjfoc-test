@@ -52,7 +52,7 @@ public class StoreInvalidTest {
         privacyhash = JSONObject.fromObject(createstore).getString("data");
         log.info("获取隐私存证交易hash: "+privacyhash);
 
-        Thread.sleep(SHORTMEOUT);
+        Thread.sleep(SLEEPTIME);
     }
 
     /**

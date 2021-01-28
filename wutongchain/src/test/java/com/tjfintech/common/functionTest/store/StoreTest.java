@@ -203,8 +203,8 @@ public class StoreTest {
            list.add(store.CreateStore("cx"+UtilsClass.Random(4)));
        }
        //确认最后一个存证上链
-       commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
-               utilsClass.sdkGetTxDetailType,SHORTMEOUT);
+       commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType21),
+               utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
        for(int i=0;i<list.size();i++){
            assertThat(list.get(i), containsString("200"));

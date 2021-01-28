@@ -1,6 +1,5 @@
 package com.tjfintech.common;
 
-import com.tjfintech.common.Interface.ManageTool;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 
