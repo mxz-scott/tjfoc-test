@@ -39,7 +39,7 @@ public class VerifyTests {
             startBlockHeight = 1;
         }
         //手动修改起始高度
-        startBlockHeight = 1090;
+//        startBlockHeight = 1090;
         int endBlockHeight = blockHeight;   //手动修改结束高度
 
         int diff = endBlockHeight - startBlockHeight + 1;
@@ -82,8 +82,6 @@ public class VerifyTests {
 
         log.info(Integer.toString(blockHeight));
         ArrayList<String> errBlock = new ArrayList<>();
-
-//        int count1 = 0;
 
         for (int i = 1; i <= blockHeight; i++) {
             //打印区块的时间戳
@@ -186,7 +184,22 @@ public class VerifyTests {
         commonFunc.verifyBlockAndTransaction(destShellScriptDir);
     }
 
+    public int CalculatetotalTxs(int startBlockHeight, int endBlockHeight) throws Exception {
 
+        int count = 0, total = 0;
+
+        for (int i = startBlockHeight + 1; i <= endBlockHeight; i++) {
+            //获取区块中的交易个数
+            String[] txs = getTxsArray(i);
+            count = txs.length;
+
+            total = total + count;
+        }
+
+
+        log.info("交易总数：" + total);
+        return total;
+    }
 
     //根据区块高度获取区块中的交易列表
     public String[] getTxsArray(int i) {

@@ -60,41 +60,78 @@ public class UtilsClass {
 //    public static String sLatestLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.2\\";
 
     //zhouxianxian env use start -----------
-    public static String subLedger = "6u7mzoc47y"; // 应用链ID
-    public static String ADD = "http://10.1.5.225:7081";
+    public static String ADD = "http://10.1.3.164:7310";
+    public static String subLedger = "e28ekpi3ek"; // 应用链ID
     public static String SDKADD = ADD;
     public static String rSDKADD = ADD;
     public static String TOKENADD = ADD;
 
     //设置测试环境使用的节点端口及部署目录信息
-    public static String PEER1IP = "10.1.5.225";
-    public static String PEER2IP = "10.1.5.226";
+    public static String PEER1IP = "10.1.3.162";
+    public static String PEER2IP = "10.1.3.163";
     public static String PEER3IP = "10.1.3.161";
-    public static String PEER4IP = "10.1.5.227";
-    public static String PEER1RPCPort = "7201";
-    public static String PEER2RPCPort = "7201";
-    public static String PEER3RPCPort = "7201";
-    public static String PEER4RPCPort = "7201";
-    public static String PEER1TCPPort = "7001";
-    public static String PEER2TCPPort = "7001";
-    public static String PEER3TCPPort = "7001";
-    public static String PEER4TCPPort = "7001";
+    public static String PEER4IP = "10.1.3.164";
+    public static String PEER1RPCPort = "9300";
+    public static String PEER2RPCPort = "9300";
+    public static String PEER3RPCPort = "9300";
+    public static String PEER4RPCPort = "9300";
+    public static String PEER1TCPPort = "60030";
+    public static String PEER2TCPPort = "60030";
+    public static String PEER3TCPPort = "60030";
+    public static String PEER4TCPPort = "60030";
     //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-    public static String PTPATH = "/opt/";
-    public static String SDKPATH = PTPATH + "wtsdkpufa/";
-    public static String PeerPATH = PTPATH + "wtchainpufa/";
-    public static String ToolPATH = PTPATH + "wttool/";
-    public static String TokenApiPATH = PTPATH + "wtsdkpufa/";
-    public static String PeerTPName = "wtchainpufa";
-    public static String SDKTPName = "wtsdkpufa";
+    public static String PTPATH = "/root/auto/";
+    public static String SDKPATH = PTPATH + "sdk/";
+    public static String PeerPATH = PTPATH + "peer/";
+    public static String ToolPATH = PTPATH + "toolkit/";
+    public static String TokenApiPATH = PTPATH + "wtfinservice/";
+    public static String PeerTPName = "wtchain";
+    public static String SDKTPName = "wtsdk";
     public static String ToolTPName = "wttool";
-    public static String TokenTPName = "wtsdkpufa";
-    public static String tmuxSessionTokenApi = "tmux send -t sdk-pufa ";
-    public static String tmuxSessionPeer = "tmux send -t chain-pufa ";
-    public static String tmuxSessionSDK = "tmux send -t sdk-pufa ";
+    public static String TokenTPName = "wtfinservice";
+    public static String tmuxSessionTokenApi = "tmux send -t api ";
+    public static String tmuxSessionPeer = "tmux send -t peer ";
+    public static String tmuxSessionSDK = "tmux send -t sdk ";
     public static String sReleaseLocalDir = "E:\\gopath\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.3\\";
     public static String sLatestLocalDir = "E:\\test\\2.4.2\\";
+    //zhouxianxian env use end -----------
 
+
+    //lilu env use start -----------
+//    public static String ADD = "http://10.1.5.225:7081";
+//    public static String SDKADD = ADD;
+//    public static String rSDKADD = ADD;
+//    public static String TOKENADD = ADD;
+//
+//    //设置测试环境使用的节点端口及部署目录信息
+//    public static String PEER1IP = "10.1.5.225";
+//    public static String PEER2IP = "10.1.5.226";
+//    public static String PEER3IP = "10.1.3.161";
+//    public static String PEER4IP = "10.1.5.227";
+//    public static String PEER1RPCPort = "7201";
+//    public static String PEER2RPCPort = "7201";
+//    public static String PEER3RPCPort = "7201";
+//    public static String PEER4RPCPort = "7201";
+//    public static String PEER1TCPPort = "7001";
+//    public static String PEER2TCPPort = "7001";
+//    public static String PEER3TCPPort = "7001";
+//    public static String PEER4TCPPort = "7001";
+//    //节点、SDK、Toolkit对等目录放置于PTPATH目录下
+//    public static String PTPATH = "/opt/";
+//    public static String SDKPATH = PTPATH + "wtsdkpufa/";
+//    public static String PeerPATH = PTPATH + "wtchainpufa/";
+//    public static String ToolPATH = PTPATH + "wttool/";
+//    public static String TokenApiPATH = PTPATH + "wtsdkpufa/";
+//    public static String PeerTPName = "wtchainpufa";
+//    public static String SDKTPName = "wtsdkpufa";
+//    public static String ToolTPName = "wttool";
+//    public static String TokenTPName = "wtsdkpufa";
+//    public static String tmuxSessionTokenApi = "tmux send -t sdk-pufa ";
+//    public static String tmuxSessionPeer = "tmux send -t chain-pufa ";
+//    public static String tmuxSessionSDK = "tmux send -t sdk-pufa ";
+//    public static String sReleaseLocalDir = "E:\\gopath\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.3\\";
+//    public static String sLatestLocalDir = "E:\\test\\2.4.2\\";
+    //lilu env use end -----------
 
     public static Boolean syncFlag = false;
     public static int syncTimeout = 10;

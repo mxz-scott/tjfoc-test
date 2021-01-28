@@ -269,7 +269,7 @@ public  class GoStore implements Store {
         String strHeight = Integer.toString(height);
         if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
         String result = GetTest.doGet2(SDKADD + "/v2/block/detail/" + strHeight + "?" + param);
-        log.info(result);
+//        log.info(result);
         return result;
     }
 
