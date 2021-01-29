@@ -140,7 +140,7 @@ public  class GoToken implements Token {
 
     /** 创建多签账户
      *
-     * @param addresses
+     * @param pubkeys
      * @param name
      * @param minSignatures
      * @param groupID
