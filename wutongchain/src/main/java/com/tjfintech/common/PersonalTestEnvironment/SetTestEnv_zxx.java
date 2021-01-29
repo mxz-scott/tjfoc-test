@@ -10,30 +10,29 @@ public class SetTestEnv_zxx {
 
    @Test
     public void setEnvParam(){
-     SDKADD = "http://10.1.3.246:8080";
-     rSDKADD = "http://10.1.3.246:8080";
-     TOKENADD = "http://10.1.3.246:9090";
+
        //设置测试环境使用的节点端口及部署目录信息
-      PEER1IP="10.1.3.240";
-      PEER2IP="10.1.3.246";
-      PEER3IP="10.1.5.168";
-      PEER4IP="10.1.3.247";
-      PEER1RPCPort="9000";
-      PEER2RPCPort="9000";
-      PEER3RPCPort="9000";
-      PEER4RPCPort="9000";
-      PEER1TCPPort="60000";
-      PEER2TCPPort="60000";
-      PEER3TCPPort="60000";
-      PEER4TCPPort="60000";
+      PEER1IP="10.1.3.162";
+      PEER2IP="10.1.3.163";
+      PEER4IP="10.1.3.164";
+      PEER3IP="10.1.5.161";
+      PEER1RPCPort="9300";
+      PEER2RPCPort="9300";
+      PEER3RPCPort="9300";
+      PEER4RPCPort="9300";
+      PEER1TCPPort="60030";
+      PEER2TCPPort="60030";
+      PEER3TCPPort="60030";
+      PEER4TCPPort="60030";
       //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-      PTPATH="/root/zxx/";
-      SDKPATH = PTPATH + "wtsdk/";
-      PeerPATH = PTPATH + "wtchain/";
+      PTPATH="/root/auto/";
+      SDKPATH = PTPATH + "sdk/";
+      PeerPATH = PTPATH + "peer/";
       ToolPATH = PTPATH + "wttool/";
-      PeerTPName="wtyp";
-      SDKTPName="wtys";
+      PeerTPName="wtchain";
+      SDKTPName="wtsdk";
       ToolTPName="wttool";
+
     }
 
 }

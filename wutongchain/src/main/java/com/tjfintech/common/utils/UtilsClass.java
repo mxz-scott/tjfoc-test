@@ -19,18 +19,16 @@ import java.util.regex.Pattern;
 import static com.tjfintech.common.utils.FileOperation.*;
 import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 
-
 @Slf4j
 public class UtilsClass {
 
     public static String subLedger = "e28ekpi3ek"; // 应用链ID
+    public static String SDKADD = "http://10.1.3.164:7310";//sdk/tokenapi/中间件服务地址 http://IP:Port
+    public static String TOKENADD = SDKADD;
+    public static String rSDKADD = SDKADD;
 
-    public static String ADD = "http://10.1.255.255:7779";
-    public static String SDKADD = "http://10.1.255.255:7779";//sdk/tokenapi/中间件服务地址 http://IP:Port
-    public static String rSDKADD = "";
-    public static String TOKENADD = "";
     //设置测试环境使用的节点端口及部署目录信息
-    public static String PEER1IP,PEER2IP,PEER3IP,PEER4IP = "10.1.255.255"; //各个节点服务器IP地址
+    public static String PEER1IP,PEER2IP,PEER3IP,PEER4IP = "10.1.5.255"; //各个节点服务器IP地址
     public static String PEER1RPCPort,PEER2RPCPort,PEER3RPCPort,PEER4RPCPort = "9000";//各个节点服务器RPC端口号
     public static String PEER1TCPPort,PEER2TCPPort,PEER3TCPPort,PEER4TCPPort = "60000";//各个节点服务器TCP端口号
     //节点、SDK、Toolkit对等目录放置于PTPATH目录下
@@ -70,11 +68,8 @@ public class UtilsClass {
     public static String ipv4 = "/ip4/";
     public static String tcpProtocol = "/tcp/";
 
-    public static Integer  LONGTIMEOUT = 100000;//毫秒
     public static Integer  SHORTMEOUT = 3*1000;//毫秒
-    public static Integer  UTXOSHORTMEOUT = 4 * 1000;//毫秒
     public static int  SLEEPTIME = 10*1000;
-    public static int DBSyncTime = 3*1000;
     public static int worldStateUpdTime = 1500;
 
 

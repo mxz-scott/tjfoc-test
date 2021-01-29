@@ -47,45 +47,43 @@ public class StableAutoTest {
 
 
     /**
-     * 稳定性测试
+     *  稳定性测试
      */
     @Test
     public  void stableTest()throws Exception{
         int i = 0;
-        int total = 2500 * 6;
+        int number = 6;  // 单次循环发送的交易数
+        int total = 2500 * number; // 发送的交易总数
         int interval = 1000; //交易时间间隔
 
-        int start = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
+        int start = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data")); // 开始区块高度
         String timestamp = JSONObject.fromObject(store.GetBlockByHeight(start)).getJSONObject("data").getJSONObject("header").getString("timestamp");
-        long blkTimeStamp1 = Long.parseLong(timestamp);
+        long blkTimeStamp1 = Long.parseLong(timestamp); // 开始时间
 
         while( i < total ){
 
             storeTest();
-            i++;
+            i++;    //交易数+1
 
             priStoreTest();
-            i++;
+            i++;    //交易数+1
 
             smartTokenTest();
-            i = i+ 4;
-            Thread.sleep(interval);
-
+            i = i+ 4;    //交易数+4
         }
 
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
-        int end = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
+        int end = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data")); // 结束区块高度
         timestamp = JSONObject.fromObject(store.GetBlockByHeight(end)).getJSONObject("data").getJSONObject("header").getString("timestamp");
-        long blkTimeStamp2 = Long.parseLong(timestamp);
-        long timeDiff = (blkTimeStamp2 - blkTimeStamp1) / 1000 / 60;
-
-        int totalOnChain = vt.CalculatetotalTxs(start, end);
+        long blkTimeStamp2 = Long.parseLong(timestamp); // 结束时间
+        long timeDiff = (blkTimeStamp2 - blkTimeStamp1) / 1000 / 60 ;   // 按分钟计时
 
         log.info("测试时长：" + timeDiff + "分钟");
         log.info("区块数：" + (end - start));
-        log.info("发送交易数：" + total);
-        log.info("链上交易数：" + totalOnChain);
+        int totalOnChain = vt.CalculatetotalTxs(start, end);  // 上链交易数
+        log.info("发送交易总数：" + total);
+        log.info("上链交易总数：" + totalOnChain);
         assertEquals("交易丢了", total,totalOnChain);
 
     }
