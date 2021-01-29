@@ -438,7 +438,7 @@ public class TokenTwoApiMultiTest {
     @Test
     public void TC31_transferSoloMulti()throws  Exception{
 
-        List<Map>list=utilsClass.tokenConstructToken(tokenAccount1,tokenType,"10");
+        List<Map>list=utilsClass.tokenConstructToken(tokenMultiAddr21,tokenType,"10");
         List<Map>list2=utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType2,"10",list);
         List<Map>list3=utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType,"10",list);
 
@@ -456,7 +456,7 @@ public class TokenTwoApiMultiTest {
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);//UTXO关系，两笔交易之间需要休眠
 
         log.info("查询余额判断转账是否成功");
-        String queryInfo= tokenModule.tokenGetBalance(tokenAccount1,"");
+        String queryInfo= tokenModule.tokenGetBalance(tokenMultiAddr21,"");
         String queryInfo2= tokenModule.tokenGetBalance(tokenMultiAddr2,"");
         assertEquals("200",JSONObject.fromObject(queryInfo).getString("state"));
         assertEquals("200",JSONObject.fromObject(queryInfo2).getString("state"));
@@ -482,7 +482,7 @@ public class TokenTwoApiMultiTest {
         String recycleInfo = commonFunc.tokenModule_DestoryToken(tokenMultiAddr12, tokenType, amount1);
         SDKADD = TOKENADD;
         String recycleInfo2 = commonFunc.tokenModule_DestoryToken(tokenMultiAddr12, tokenType2, amount2);
-        String recycleInfo3 = commonFunc.tokenModule_DestoryToken(tokenAccount1, tokenType, "20");
+        String recycleInfo3 = commonFunc.tokenModule_DestoryToken(tokenMultiAddr21, tokenType, "20");
         String recycleInfo4 = commonFunc.tokenModule_DestoryToken(tokenMultiAddr2, tokenType, "10");
         String recycleInfo5 = commonFunc.tokenModule_DestoryToken(tokenMultiAddr2, tokenType2, "10");
 
@@ -499,7 +499,7 @@ public class TokenTwoApiMultiTest {
 
         log.info("查询余额判断回收成功与否");
         String queryInfo3= tokenModule.tokenGetBalance(tokenMultiAddr12,"");
-        String queryInfo4= tokenModule.tokenGetBalance(tokenAccount1,"");
+        String queryInfo4= tokenModule.tokenGetBalance(tokenMultiAddr21,"");
         String queryInfo5= tokenModule.tokenGetBalance(tokenMultiAddr2,"");
         assertEquals("200",JSONObject.fromObject(queryInfo3).getString("state"));
         assertEquals("200",JSONObject.fromObject(queryInfo4).getString("state"));
