@@ -223,7 +223,7 @@ public class MgToolCmd {
         log.info("============================= 管理工具查询子链存在 " + bOK + " 等待时间 " +
                 ledgerName + " " + ((new Date()).getTime() - nowTime));
 
-        sleepAndSaveInfo(3000,"============================= 等待SDK同步数据");
+        sleepAndSaveInfo(2000,"============================= 等待SDK同步数据");
         if(bOK) return "exist";
         else return "not exist";
     }

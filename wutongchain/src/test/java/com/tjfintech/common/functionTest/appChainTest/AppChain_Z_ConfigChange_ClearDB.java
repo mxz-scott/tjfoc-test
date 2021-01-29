@@ -226,7 +226,7 @@ public class AppChain_Z_ConfigChange_ClearDB {
     @Test
     public void TC1608_1620_restartPeer()throws Exception{
         utilsClass.setAndRestartPeerList();
-        sleepAndSaveInfo(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME*2);
         subLedgerCmd.sendTxToMultiActiveChain("tc1608 data",globalAppId1,globalAppId2);
     }
 

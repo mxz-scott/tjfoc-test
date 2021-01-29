@@ -174,7 +174,7 @@ public class AppChain_MultiChainsTest {
         String chainName1="tc1592_" + sdf.format(dt) + RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1,
                 " -t sm3"," -w first"," -c raft"," -m " + id1);
-        assertEquals(res.contains("2 nodes is required for the memberList"), true);
+        assertEquals(res.contains("peer illegal"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
         //创建子链，包含两个节点 为主链中的一个共识节点和一个非共识节点
@@ -270,7 +270,7 @@ public class AppChain_MultiChainsTest {
         res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1,
                 " -t sm3"," -w first",
                 " -c raft"," -m " + id1);
-        assertEquals(res.contains("2 nodes is required for the memberList"), true);
+        assertEquals(res.contains("peer illegal"), true);
 
         sleepAndSaveInfo(2000);
         //检查可以获取子链列表

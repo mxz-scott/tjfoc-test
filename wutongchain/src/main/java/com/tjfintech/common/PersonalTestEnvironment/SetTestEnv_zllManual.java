@@ -1,14 +1,14 @@
-package com.tjfintech.common.functionTest.Conditions.PersonalTestEnvironment;
+package com.tjfintech.common.PersonalTestEnvironment;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 @Slf4j
-public class SetTestEnv_DirzllManual {
+public class SetTestEnv_zllManual {
 
    @Test
-    public void test(){
+    public void setEnvParam(){
      SDKADD = "http://10.1.5.240:7779";
      rSDKADD = "http://10.1.5.240:7779";
      TOKENADD = "http://10.1.5.240:9190";

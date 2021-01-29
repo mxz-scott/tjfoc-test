@@ -1,5 +1,6 @@
 package com.tjfintech.common.utils;
 
+import com.tjfintech.common.PersonalTestEnvironment.*;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -22,116 +23,35 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 @Slf4j
 public class UtilsClass {
 
-////    public static String ADD = "http://121.229.44.232:7779";
-////    public static String ADD = "http://10.1.3.164:6001";
-////    public static String ADD = "http://121.229.39.12:59090";
-//    public static String ADD = "http://10.1.3.161:7770";
-////        public static String ADD = "http://10.1.11.50:8888";
-//    public static String SDKADD = ADD;
-//    public static String rSDKADD = ADD;
-//    public static String TOKENADD = ADD;
-//    //设置测试环境使用的节点端口及部署目录信息
-//    public static String PEER1IP = "10.1.3.160";
-//    public static String PEER2IP = "10.1.5.240";
-//    public static String PEER3IP = "10.1.5.168";
-//    public static String PEER4IP = "10.1.3.161";
-//    public static String PEER1RPCPort = "9800";
-//    public static String PEER2RPCPort = "9800";
-//    public static String PEER3RPCPort = "9800";
-//    public static String PEER4RPCPort = "9800";
-//    public static String PEER1TCPPort = "60080";
-//    public static String PEER2TCPPort = "60080";
-//    public static String PEER3TCPPort = "60080";
-//    public static String PEER4TCPPort = "60080";
-//    //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-//    public static String PTPATH = "/root/zll/auto/";
-//    public static String SDKPATH = PTPATH + "sdk/";
-//    public static String PeerPATH = PTPATH + "peer/";
-//    public static String ToolPATH = PTPATH + "toolkit/";
-//    public static String TokenApiPATH = PTPATH + "wtfinservice/";
-//    public static String PeerTPName = "Autop";
-//    public static String SDKTPName = "Autos";
-//    public static String ToolTPName = "Autokit";
-//    public static String TokenTPName = "Autot";
-//    public static String tmuxSessionTokenApi = "tmux send -t auto_t ";
-//    public static String tmuxSessionPeer = "tmux send -t auto ";
-//    public static String tmuxSessionSDK = "tmux send -t auto_s ";
-//    public static String sReleaseLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.1\\2.1.3\\";
-//    public static String sLatestLocalDir = "D:\\GoWorks\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.2\\";
-
-    //zhouxianxian env use start -----------
-    public static String ADD = "http://10.1.3.164:7310";
     public static String subLedger = "e28ekpi3ek"; // 应用链ID
-    public static String SDKADD = ADD;
-    public static String rSDKADD = ADD;
-    public static String TOKENADD = ADD;
 
+    public static String ADD = "http://10.1.255.255:7779";
+    public static String SDKADD = "http://10.1.255.255:7779";//sdk/tokenapi/中间件服务地址 http://IP:Port
+    public static String rSDKADD = "";
+    public static String TOKENADD = "";
     //设置测试环境使用的节点端口及部署目录信息
-    public static String PEER1IP = "10.1.3.162";
-    public static String PEER2IP = "10.1.3.163";
-    public static String PEER3IP = "10.1.3.161";
-    public static String PEER4IP = "10.1.3.164";
-    public static String PEER1RPCPort = "9300";
-    public static String PEER2RPCPort = "9300";
-    public static String PEER3RPCPort = "9300";
-    public static String PEER4RPCPort = "9300";
-    public static String PEER1TCPPort = "60030";
-    public static String PEER2TCPPort = "60030";
-    public static String PEER3TCPPort = "60030";
-    public static String PEER4TCPPort = "60030";
+    public static String PEER1IP,PEER2IP,PEER3IP,PEER4IP = "10.1.255.255"; //各个节点服务器IP地址
+    public static String PEER1RPCPort,PEER2RPCPort,PEER3RPCPort,PEER4RPCPort = "9000";//各个节点服务器RPC端口号
+    public static String PEER1TCPPort,PEER2TCPPort,PEER3TCPPort,PEER4TCPPort = "60000";//各个节点服务器TCP端口号
     //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-    public static String PTPATH = "/root/auto/";
-    public static String SDKPATH = PTPATH + "sdk/";
-    public static String PeerPATH = PTPATH + "peer/";
-    public static String ToolPATH = PTPATH + "toolkit/";
-    public static String TokenApiPATH = PTPATH + "wtfinservice/";
-    public static String PeerTPName = "wtchain";
-    public static String SDKTPName = "wtsdk";
-    public static String ToolTPName = "wttool";
-    public static String TokenTPName = "wtfinservice";
-    public static String tmuxSessionTokenApi = "tmux send -t api ";
-    public static String tmuxSessionPeer = "tmux send -t peer ";
-    public static String tmuxSessionSDK = "tmux send -t sdk ";
-    public static String sReleaseLocalDir = "E:\\gopath\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.3\\";
-    public static String sLatestLocalDir = "E:\\test\\2.4.2\\";
-    //zhouxianxian env use end -----------
+    public static String PTPATH,SDKPATH,PeerPATH,ToolPATH,TokenApiPATH = "/root"; //各个服务部署目录
+    public static String PeerTPName,SDKTPName,ToolTPName,TokenTPName = "wtchain";//各个服务进程名称
+    public static String tmuxSessionPeer,tmuxSessionSDK,tmuxSessionTokenApi = "tmux send -t s ";//各个服务所在tmux会话进入命令
+    public static String sReleaseLocalDir,sLatestLocalDir = "D:\\";//升级前后版本目录
 
-
-    //lilu env use start -----------
-//    public static String ADD = "http://10.1.5.225:7081";
-//    public static String SDKADD = ADD;
-//    public static String rSDKADD = ADD;
-//    public static String TOKENADD = ADD;
-//
-//    //设置测试环境使用的节点端口及部署目录信息
-//    public static String PEER1IP = "10.1.5.225";
-//    public static String PEER2IP = "10.1.5.226";
-//    public static String PEER3IP = "10.1.3.161";
-//    public static String PEER4IP = "10.1.5.227";
-//    public static String PEER1RPCPort = "7201";
-//    public static String PEER2RPCPort = "7201";
-//    public static String PEER3RPCPort = "7201";
-//    public static String PEER4RPCPort = "7201";
-//    public static String PEER1TCPPort = "7001";
-//    public static String PEER2TCPPort = "7001";
-//    public static String PEER3TCPPort = "7001";
-//    public static String PEER4TCPPort = "7001";
-//    //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-//    public static String PTPATH = "/opt/";
-//    public static String SDKPATH = PTPATH + "wtsdkpufa/";
-//    public static String PeerPATH = PTPATH + "wtchainpufa/";
-//    public static String ToolPATH = PTPATH + "wttool/";
-//    public static String TokenApiPATH = PTPATH + "wtsdkpufa/";
-//    public static String PeerTPName = "wtchainpufa";
-//    public static String SDKTPName = "wtsdkpufa";
-//    public static String ToolTPName = "wttool";
-//    public static String TokenTPName = "wtsdkpufa";
-//    public static String tmuxSessionTokenApi = "tmux send -t sdk-pufa ";
-//    public static String tmuxSessionPeer = "tmux send -t chain-pufa ";
-//    public static String tmuxSessionSDK = "tmux send -t sdk-pufa ";
-//    public static String sReleaseLocalDir = "E:\\gopath\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.3\\";
-//    public static String sLatestLocalDir = "E:\\test\\2.4.2\\";
-    //lilu env use end -----------
+    public static String envNo = "0";
+    static{
+        log.info("自定义环境参数");
+        switch (envNo){
+            case "1":  SetTestEnv_zxx envSet01 = new SetTestEnv_zxx(); envSet01.setEnvParam(); break;
+            case "2":  SetTestEnv_lilu envSet02 = new SetTestEnv_lilu(); envSet02.setEnvParam(); break;
+            case "3":  SetTestEnv_dyy envSet03 = new SetTestEnv_dyy(); envSet03.setEnvParam(); break;
+            case "4":  SetTestEnv_hff envSet04 = new SetTestEnv_hff(); envSet04.setEnvParam(); break;
+            case "5":  SetTestEnv_zllauto envSet05 = new SetTestEnv_zllauto(); envSet05.setEnvParam(); break;
+            case "6":  SetTestEnv_zllManual envSet06 = new SetTestEnv_zllManual(); envSet06.setEnvParam(); break;
+            default: log.info("使用初始化默认参数");
+        }
+    }
 
     public static Boolean syncFlag = false;
     public static int syncTimeout = 10;
@@ -309,6 +229,8 @@ public class UtilsClass {
     public static String  NoPermErrCode = "500";
 
     public static String smartAccoutContractAddress = "";
+
+
 
 
     /**
@@ -697,7 +619,7 @@ public class UtilsClass {
             }
         }
         log.info("SDK " + sdkIP + " ID:\n" + SDKID);
-        return SDKID;
+        return SDKID.trim();
     }
 
     public String getToolID(String IP) {
@@ -849,16 +771,17 @@ public class UtilsClass {
     public String getCertainPermissionList(String netPeerIP,String netRpcPort,String id)throws Exception{
         //权限更新后查询检查生效与否
         Shell shell1=new Shell(netPeerIP,USERNAME,PASSWD);
+        if(!netRpcPort.contains(":")) netRpcPort = netPeerIP + ":" + netRpcPort;
         //String cmd1="cd zll;ls";//替换为权限命令
-        String ledger = (subLedger!="")?" -z "+subLedger:"";
+        String ledger = (subLedger != "") ? " -c " + subLedger : "";
         shell1.execute("cd "+ ToolPATH + ";./" + ToolTPName + " getpermission "+ ledger + " -p "+ netRpcPort);
         ArrayList<String> stdout = shell1.getStandardOutput();
         String resp = StringUtils.join(stdout,"\n");
         log.info(resp);
-        int index=0;
+        int index = 0;
         boolean bflag = false;
         for(String line:stdout){
-            if(line.contains(id)) {
+            if(line.contains(id.trim())) {
                 log.info("permission contain id ok");
                 bflag=true;
                 break;
@@ -866,7 +789,7 @@ public class UtilsClass {
             index++;
         }
         if( !bflag ) return "[0]";
-        return stdout.get(index+2).substring(stdout.get(index+2).lastIndexOf(":")+1).trim();
+        return stdout.get(index + 2).substring(stdout.get(index + 2).lastIndexOf(":") + 1).trim();
     }
 
     public String getIPFromStr(String src) {
