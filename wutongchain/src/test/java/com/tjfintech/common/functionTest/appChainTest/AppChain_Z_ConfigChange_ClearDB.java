@@ -40,6 +40,15 @@ public class AppChain_Z_ConfigChange_ClearDB {
     CommonFunc commonFunc = new CommonFunc();
 
 
+    @BeforeClass
+    public static void clearPeerDB()throws Exception{
+        UtilsClass utilsClass = new UtilsClass();
+        //设置节点 清空db数据 并重启
+        utilsClass.setAndRestartPeerList(clearPeerDB);
+        //重启SDK
+        utilsClass.setAndRestartSDK();
+    }
+
     @Before
     public void beforeConfig() throws Exception {
         //设置节点 清空db数据 并重启
