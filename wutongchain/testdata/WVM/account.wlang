@@ -1,11 +1,10 @@
 contract AccountAPI {
-    
     //平台方账号
     string Platform = "PlatformPubkey"
-    
-    //核心企业账号   
+
+    //核心企业账号
     string CoreEnterprise = "CoreEnterprisePubkey"
-   
+
     //发行地址信息
     struct Account {
         int MinNum          //最小签名数
@@ -78,7 +77,7 @@ contract AccountAPI {
         db_set(accountKey,json)
         return "success"
     }
-  
+
 
     //设置账户信息
     public string SetAccountInfo(string json){
@@ -96,6 +95,12 @@ contract AccountAPI {
         string accountJson = db_get<string>(accountKey)
         return accountJson
     }
+
+    //授权结构体
+	struct Authority{
+		string Key
+		string SecurityKey
+	}
 
     struct IssueArg {
         string ToAddress //一级供应商地址
@@ -181,10 +186,12 @@ contract AccountAPI {
     }
 
     struct TransferArg {
+        string PlatFormAddress // 平台方合约地址
         string ID           //融资编号
         string Challenge    //解密标签
         string ContractAddr //资金方合约地址
         string Msg          //通知信息
+        string AuthorityJson //对应关系
     }
     //融资才需要的打款证明验证
     // public string beforTransfer(string ID,string contractAddr){
@@ -200,8 +207,9 @@ contract AccountAPI {
                 string args = "[\""+arg.ID+"\"]"
                 print(contractAddr)
                 string res = invoke(contractAddr,"GetProofInfo",args)
+                print(res)
                 if(res==""||res=="0"){
-                    return "error" 
+                    return "error"
                 }
             }
         }
@@ -234,7 +242,23 @@ contract AccountAPI {
                 print("账户可用余额不足")
             }
         }
-       
+        string authJson = arg.AuthorityJson
+        if(authJson!=""){
+            string platformAddr = arg.PlatFormAddress
+            print(platformAddr)
+            if (platformAddr!=""){
+                string authJson1 = createFinalAuth(authJson)
+                string authJson2 = quote(authJson1)
+                string args = "["+authJson2+"]"
+                print(args)
+                string res = invoke(platformAddr,"CreateAuthoritys",args)
+                print(res)
+                if(res!="success"){
+                    return "error"
+                }
+            }
+
+        }
         return "success"
         //转账自定义业务逻辑验证/通知
     }
@@ -248,17 +272,20 @@ contract AccountAPI {
     }
 
     struct RecycleArg {
+        string PlatFormAddress // 平台方合约地址
         string ID           //兑付编号
         string ContractAddr //清分机构合约地址
         string Msg          //通知信息
         string CompanyID    //指定资金方的唯一标识
+        string AuthorityJson //对应关系
     }
     //回收之前验证打款证明
     public string beforRecycle(string tokenJsonTmp,string argsJson){
         print(argsJson)
         print("回收验证")
+        RecycleArg arg
         if(argsJson!=""){
-            RecycleArg arg = json_to_obj<RecycleArg>(argsJson)
+            arg = json_to_obj<RecycleArg>(argsJson)
             string contractAddr = arg.ContractAddr
             if(contractAddr!=""){
                 string id = arg.ID
@@ -267,7 +294,23 @@ contract AccountAPI {
                 string res = invoke(contractAddr,"GetProofInfo",args)
                 print(res)
                 if(res==""||res=="0"){
-                    return "error" 
+                    return "error"
+                }
+            }
+        }
+        string authJson = arg.AuthorityJson
+        print(authJson)
+        if(authJson!=""){
+            string platformAddr = arg.PlatFormAddress
+            print(platformAddr)
+            if (platformAddr!=""){
+                string authJson1 = createFinalAuth(authJson)
+                string authJson2 = quote(authJson1)
+                string args = "["+authJson2+"]"
+                string res = invoke(platformAddr,"CreateAuthoritys",args)
+                print(res)
+                if(res!="success"){
+                    return "error"
                 }
             }
         }
@@ -294,7 +337,7 @@ contract AccountAPI {
                     db_set(key,f)
                 }
             }
-            
+
             event("topicRecycle",arg.Msg)
         }
         return "success"
@@ -302,7 +345,7 @@ contract AccountAPI {
 
     //修改受信额度
     public string ChangeAccountQuota(uint64 quota,string companyID){
-       
+
         Fund f
         string key = "f_" + companyID
         if(db_exist(key)!=true){
@@ -310,14 +353,14 @@ contract AccountAPI {
         }else{
             f = db_get<Fund>(key)
         }
-        
+
         f.Quota = quota
         db_set(key,f)
 
 
         string tmp = Platform+CoreEnterprise
         accountKey = hash(tmp)
-       
+
         string accountJson = db_get<string>(accountKey)
         Account acc = json_to_obj<Account>(accountJson)
         acc.Quota = quota
@@ -361,7 +404,7 @@ contract AccountAPI {
     public string Apply(string json,string comments){
         LockInfo lockInfo
         lockInfo = json_to_obj<LockInfo>(json)
-        
+
         string proof = lockInfo.Proof
         TokenTypeList[] TKList = lockInfo.TKList
         string addr = lockInfo.Address
@@ -371,7 +414,7 @@ contract AccountAPI {
             if(addr==""){
                 addr = tmp.Address
             }
-            
+
             string tk = tmp.TokenType
             string stype = tmp.SubType
             uint64 amount = tmp.Amount
@@ -433,4 +476,33 @@ contract AccountAPI {
         string json = db_get<string>(challenge)
         return json
     }
+
+    public string createFinalAuth(string argjson){
+        Authority[] list
+        list =  json_to_obj<array(Authority)>(argjson)
+        int i = len(list)
+        print(i)
+        Authority auth
+        for(int j=0;j<i;j++){
+            auth = list[j]
+			string key = auth.Key
+            // string pub = replace(Platform," ","",-1)
+            string bpub = stringToBase64(Platform)
+			if (key == bpub){
+                string txid = getTxID()
+                print(txid)
+			    string str = txid + key
+                key = hash(str)
+                Authority[1] result
+                auth.Key = key
+                result[0] = auth
+                string authJson  = obj_to_json(result)
+                print("create success")
+                return authJson
+            }
+		}
+        return "error"
+    }
 }
+
+

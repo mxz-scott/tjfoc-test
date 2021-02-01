@@ -56,7 +56,7 @@ public class ScfBeforeCondition {
      *
      *
      */
-//    @Test
+    @Test
     public void B001_createPlatformAccount() throws  Exception {
 
         String response = kms.createKey(keySpecSm2, password, pubFormatSM2);
@@ -65,10 +65,12 @@ public class ScfBeforeCondition {
         platformKeyID = JSONObject.fromObject(response).getJSONObject("data").getString("keyId");
         platformPubkey = JSONObject.fromObject(response).getJSONObject("data").getString("publicKey");
 
+
         platformPubkeyPem = utilsClassScf.decodeBase64(platformPubkey);
 
         log.info(platformKeyID);
         log.info(platformPubkeyPem);
+        log.info(platformPubkey);
 
     }
 
@@ -77,12 +79,22 @@ public class ScfBeforeCondition {
      *
      *
      */
-//    @Test
+    @Test
     public void B002_createCoreCompanyAccount() throws  Exception {
+
+        //安装平台方合约
+        String response1 = wvm.wvmInstallTest("platform.wlang","use sdk prikey");
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+        utilsClassScf.PlatformAddress = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        wvm.chkTxDetailRsp("200",txHash1);
 
         String commmets = utilsClassScf.generateMessage();
 
-        String response = scf.AccountCreate(platformKeyID, PIN, "", commmets);
+        String response = scf.AccountCreate( PlatformAddress, platformKeyID, PIN, "", commmets);
         assertThat(response, containsString("200"));
 
         coreCompanyKeyID = JSONObject.fromObject(response).getString("keyID");
@@ -99,8 +111,10 @@ public class ScfBeforeCondition {
      *
      *
      */
-//    @Test
+    @Test
     public void B003_installContracts() throws  Exception {
+
+
 
         //安装账户合约
 
@@ -119,15 +133,7 @@ public class ScfBeforeCondition {
 
         wvm.chkTxDetailRsp("200",txHash1);
 
-        //安装平台方合约
-        response1 = wvm.wvmInstallTest("platform.wlang","use sdk prikey");
-        txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
-        utilsClassScf.PlatformAddress = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-        wvm.chkTxDetailRsp("200",txHash1);
 
         //安装清分机构合约
         response1 = wvm.wvmInstallTest("QFJG.wlang","use sdk prikey");
@@ -157,21 +163,35 @@ public class ScfBeforeCondition {
      *
      *
      */
-//    @Test
+    @Test
     public void B004_createSupplyAccounts() throws  Exception {
 
 //        String commmets = utilsClassScf.generateMessage();
 
-        String response1 = scf.AccountCreate(platformKeyID, PIN, "","");
+        String response1 = scf.AccountCreate(PlatformAddress, platformKeyID, PIN, "","");
         supplyAddress1 = JSONObject.fromObject(response1).getString("data");
         supplyID1 = JSONObject.fromObject(response1).getString("keyID");
 
-        String response2 = scf.AccountCreate(platformKeyID, PIN, "","");
+        String response2 = scf.AccountCreate(PlatformAddress, platformKeyID, PIN, "","");
         supplyAddress2 = JSONObject.fromObject(response2).getString("data");
         supplyID2 = JSONObject.fromObject(response2).getString("keyID");
 
-        String response3 = scf.AccountCreate(platformKeyID, PIN, "","");
+        String response3 = scf.AccountCreate(PlatformAddress,platformKeyID, PIN, "","");
         supplyAddress3 = JSONObject.fromObject(response3).getString("data");
         supplyID3 = JSONObject.fromObject(response3).getString("keyID");
     }
+    /***
+     * 获取comments
+     *
+     *
+     */
+    public void Getcomments() throws  Exception {
+
+        List<Map> list = new ArrayList<>(10);
+        List<Map> list1 = UtilsClassScf.Sendmsg("1", platformPubkey, list);
+        String comments0 = scf.SendMsg("finance","abc", platformKeyID,list1,"","","123");
+        comments = JSONObject.fromObject(comments0).getString("data");
+
+    }
+
 }

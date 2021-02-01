@@ -41,7 +41,7 @@ public class UtilsClassScf {
     public static String QFJGAddress = ""; //清分机构合约，需要赋予everyone权限
     public static String ZJFAddress = ""; //资金方合约，需要赋予everyone权限
     public static String pubFormatSM2 = "sm2_pem";
-    public static String comments = "BwAAAGZpbmFuY2UKAAAAdGVzdFNlbmRlcgENAAAAdGVzdFJlY2VpdmVycwAAAAAAAAAAAQAAADEAAAAADAAAAOa1i+ivlea2iOaBrw==";
+    public static String comments = "";
 
 
     /**
@@ -69,7 +69,7 @@ public class UtilsClassScf {
         receiversMap.put("pubkey", "");
         receiversList.add(receiversMap);
 
-        String Data = scf.SendMsg("finance", "testSender", receiversList, "1", "", "测试消息");
+        String Data = scf.SendMsg("finance", "testSender",platformKeyID, receiversList, "1", "", "测试消息");
 
         return JSONObject.fromObject(Data).getString("data");
     }
@@ -136,5 +136,26 @@ public class UtilsClassScf {
         byte[] decoded = Base64.getDecoder().decode(s);
         return String.format("%040x", new BigInteger(1, decoded));
     }
+
+    /**
+     * 消息加解密list
+     * @param id
+     * @param pubkey
+     * @param list
+     * @return
+     */
+    public static List<Map> Sendmsg(String id, String pubkey, List<Map> list) {
+        List<Map> tokenList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            tokenList.add(list.get(i));
+        }
+        Map<String, Object> amountMap = new HashMap<>();
+        amountMap.put("id", id);
+        amountMap.put("pubkey", pubkey);
+
+        tokenList.add(amountMap);
+        return tokenList;
+    }
+
 }
 

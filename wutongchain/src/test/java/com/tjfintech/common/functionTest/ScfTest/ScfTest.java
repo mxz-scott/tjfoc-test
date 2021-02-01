@@ -35,16 +35,19 @@ public class ScfTest {
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
     Scf scf = testBuilder.getScf();
+    Store store = testBuilder.getStore();
     public static long expireDate = System.currentTimeMillis() + 100000000;
     Kms kms = testBuilder.getKms();
 
-//    @BeforeClass
+
+    @BeforeClass
     public static void beforeConfig() throws Exception {
         ScfBeforeCondition bf = new ScfBeforeCondition();
         bf.B001_createPlatformAccount();
         bf.B002_createCoreCompanyAccount();
         bf.B003_installContracts();
         bf.B004_createSupplyAccounts();
+        bf.Getcomments();
         Thread.sleep(5000);
     }
     /**
@@ -71,7 +74,12 @@ public class ScfTest {
         assertThat(response2, containsString("data"));
         Thread.sleep(5000);
         //开立签收
-        String response3 = scf.IssuingConfirm(coreCompanyKeyID, tokenType, PIN, comments);
+//        List<Map> list = new ArrayList<>(10);
+//        List<Map> list1 = UtilsClassScf.Sendmsg("1", platformPubkey, list);
+//        String comments = scf.SendMsg("finance","abc", platformKeyID,list1,"","","123");
+//        String comments1 = JSONObject.fromObject(comments).getString("data");
+
+        String response3 = scf.IssuingConfirm(PlatformAddress, coreCompanyKeyID, tokenType, PIN, comments);
         System.out.println("response3 = " + response3);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("success"));
@@ -83,9 +91,10 @@ public class ScfTest {
         System.out.println("KLQSstoreHash = " + KLQSstoreHash);
 
         commonFunc.sdkCheckTxOrSleep(KLQSstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-
-        assertThat(response3, containsString("200"));
-        assertThat(response3,containsString("success"));
+        //验证上链返回值
+        String checking = store.GetTxDetail(KLQSstoreHash);
+        assertThat(checking, containsString("200"));
+        assertThat(checking,containsString("success"));
 
         //查询tokentype资产
 //        String response5 = scf.getowneraddr(tokenType);
@@ -176,7 +185,7 @@ public class ScfTest {
         assertThat(response2, containsString("data"));
         Thread.sleep(5000);
         //开立签收
-        String response3 = scf.IssuingConfirm(coreCompanyKeyID, tokenType, PIN, comments);
+        String response3 = scf.IssuingConfirm(PlatformAddress, coreCompanyKeyID, tokenType, PIN, comments);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("success"));
         assertThat(response3, containsString("data"));
@@ -187,19 +196,20 @@ public class ScfTest {
         System.out.println("KLQSstoreHash = " + KLQSstoreHash);
 
         commonFunc.sdkCheckTxOrSleep(KLQSstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-
-        assertThat(response3, containsString("200"));
-        assertThat(response3,containsString("success"));
+        //验证上链返回值
+        String  checking= store.GetTxDetail(KLQSstoreHash);
+        assertThat(checking, containsString("200"));
+        assertThat(checking,containsString("success"));
         //资产转让申请
         List<Map> list = new ArrayList<>(10);
         List<Map> list1 = UtilsClassScf.Assignment("1", "0", list);
-        String response4 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, proof, tokenType, list1, newSubType, supplyAddress2, comments);
+        String response4 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, proof, tokenType, list1, newSubType, supplyAddress2);
         assertThat(response4, containsString("200"));
         assertThat(response4, containsString("success"));
         assertThat(response4, containsString("data"));
         Thread.sleep(5000);
         //资产转让签收
-        String response5 = scf.AssignmentConfirm(supplyID1, PIN, challenge, tokenType, comments);
+        String response5 = scf.AssignmentConfirm(PlatformAddress, supplyID1, PIN, challenge, tokenType, comments);
         assertThat(response5, containsString("200"));
         assertThat(response5, containsString("success"));
         assertThat(response5, containsString("data"));
@@ -210,9 +220,10 @@ public class ScfTest {
         System.out.println("ZRQSstoreHash = " + ZRQSstoreHash);
 
         commonFunc.sdkCheckTxOrSleep(ZRQSstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        String checking1= store.GetTxDetail(ZRQSstoreHash);
 
-        assertThat(response5, containsString("200"));
-        assertThat(response5, containsString("success"));
+        assertThat(checking1, containsString("200"));
+        assertThat(checking1, containsString("success"));
 
         //查询tokentype资产
 //        String response6 = scf.getowneraddr(tokenType);
@@ -249,7 +260,7 @@ public class ScfTest {
          assertThat(response2, containsString("data"));
          Thread.sleep(5000);
          //开立签收
-         String response3 = scf.IssuingConfirm(coreCompanyKeyID, tokenType, PIN, comments);
+         String response3 = scf.IssuingConfirm(PlatformAddress,coreCompanyKeyID, tokenType, PIN, comments);
          assertThat(response3, containsString("200"));
          assertThat(response3, containsString("success"));
          assertThat(response3, containsString("data"));
@@ -260,20 +271,20 @@ public class ScfTest {
          System.out.println("KLQSstoreHash = " + KLQSstoreHash);
 
          commonFunc.sdkCheckTxOrSleep(KLQSstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-
-         assertThat(response3, containsString("200"));
-         assertThat(response3,containsString("success"));
+         String checking = store.GetTxDetail(KLQSstoreHash);
+         assertThat(checking, containsString("200"));
+         assertThat(checking,containsString("success"));
 
          //资产转让申请
          List<Map> list = new ArrayList<>(10);
          List<Map> list1 = UtilsClassScf.Assignment("1", "0", list);
-         String response4 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, proof, tokenType, list1, newSubType, supplyAddress2, comments);
+         String response4 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, proof, tokenType, list1, newSubType, supplyAddress2);
          assertThat(response4, containsString("200"));
          assertThat(response4, containsString("success"));
          assertThat(response4, containsString("data"));
          Thread.sleep(5000);
         //资产转让拒收
-         String response5 = scf.AssignmentReject(challenge, tokenType, comments);
+         String response5 = scf.AssignmentReject(challenge, tokenType);
          assertThat(response5, containsString("200"));
          assertThat(response5, containsString("success"));
          assertThat(response5, containsString("data"));
@@ -304,7 +315,7 @@ public class ScfTest {
         assertThat(response2, containsString("data"));
         Thread.sleep(5000);
         //开立签收
-        String response3 = scf.IssuingConfirm(coreCompanyKeyID, tokenType, PIN, comments);
+        String response3 = scf.IssuingConfirm(PlatformAddress,coreCompanyKeyID, tokenType, PIN, comments);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("success"));
         assertThat(response3, containsString("data"));
@@ -315,9 +326,9 @@ public class ScfTest {
         System.out.println("KLQSstoreHash = " + KLQSstoreHash);
 
         commonFunc.sdkCheckTxOrSleep(KLQSstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-
-        assertThat(response3, containsString("200"));
-        assertThat(response3,containsString("success"));
+        String checking = store.GetTxDetail(KLQSstoreHash);
+        assertThat(checking, containsString("200"));
+        assertThat(checking,containsString("success"));
         //融资申请
         String newFromSubType = "0";
         String newToSubType = "b";
@@ -335,13 +346,14 @@ public class ScfTest {
         //融资申请反馈
         String applyNo = "7777";
         String state = "1";
-        String response6 = scf.FinacingFeedback(ZJFAddress, applyNo, state, comments);
+        String msg = "receive";
+        String response6 = scf.FinacingFeedback(ZJFAddress, applyNo, state, comments, msg);
         assertThat(response6, containsString("200"));
         assertThat(response6, containsString("success"));
         assertThat(response6, containsString("data"));
         Thread.sleep(5000);
         //融资签收
-        String response7 = scf.FinacingConfirm(applyNo, ZJFAddress, supplyID1, companyID1, PIN, tokenType, supplyAddress2, challenge, comments);
+        String response7 = scf.FinacingConfirm(PlatformAddress, applyNo, ZJFAddress, supplyID1, companyID1, PIN, tokenType, supplyAddress2, challenge, comments);
         assertThat(response7, containsString("200"));
         assertThat(response7, containsString("success"));
         assertThat(response7, containsString("data"));
@@ -352,9 +364,9 @@ public class ScfTest {
         System.out.println("RZQSstoreHash = " + RZQSstoreHash);
 
         commonFunc.sdkCheckTxOrSleep(RZQSstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-
-        assertThat(response7, containsString("200"));
-        assertThat(response7,containsString("success"));
+        String checking1 = store.GetTxDetail(RZQSstoreHash);
+        assertThat(checking1, containsString("200"));
+        assertThat(checking1,containsString("success"));
     }
 
     /**
@@ -366,8 +378,8 @@ public class ScfTest {
         String amount = "1";
         String subType = "0";
         String response = kms.genRandom(size);
-        String proof = "123456";
-        String challenge = "123456";
+        String proof = "1234567";
+        String challenge = "1234567";
         String tokenType = UtilsClassScf.gettokenType(response);
         //资产开立申请
         String response1 = scf.IssuingApply(AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
@@ -382,7 +394,7 @@ public class ScfTest {
         assertThat(response2, containsString("data"));
         Thread.sleep(5000);
         //开立签收
-        String response3 = scf.IssuingConfirm(coreCompanyKeyID, tokenType, PIN, comments);
+        String response3 = scf.IssuingConfirm(PlatformAddress, coreCompanyKeyID, tokenType, PIN, comments);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("success"));
         assertThat(response3, containsString("data"));
@@ -393,11 +405,11 @@ public class ScfTest {
         System.out.println("KLQSstoreHash = " + KLQSstoreHash);
 
         commonFunc.sdkCheckTxOrSleep(KLQSstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-
-        assertThat(response3, containsString("200"));
-        assertThat(response3,containsString("success"));
+        String checking = store.GetTxDetail(KLQSstoreHash);
+        assertThat(checking, containsString("200"));
+        assertThat(checking,containsString("success"));
         //融资申请
-        String newFromSubType = "a";
+        String newFromSubType = "0";
         String newToSubType = "b";
         String response4 = scf.FinacingApply(supplyAddress1, supplyID1, PIN, proof, tokenType, amount, subType, newFromSubType, newToSubType, supplyAddress2);
         assertThat(response4, containsString("200"));
@@ -412,12 +424,13 @@ public class ScfTest {
         //融资申请反馈
         String applyNo = "7777";
         String state = "1";
-        String response6 = scf.FinacingFeedback(ZJFAddress, applyNo, state, comments);
+        String msg = "remove";
+        String response6 = scf.FinacingFeedback(ZJFAddress, applyNo, state, comments, msg);
         assertThat(response6, containsString("200"));
         assertThat(response6, containsString("success"));
         assertThat(response6, containsString("data"));
         //融资取消
-        String response7 = scf.FinacingCancel(challenge, tokenType, comments);
+        String response7 = scf.FinacingCancel(challenge, tokenType);
         assertThat(response7, containsString("200"));
         assertThat(response7, containsString("success"));
         assertThat(response7, containsString("data"));
@@ -446,7 +459,7 @@ public class ScfTest {
         assertThat(response2, containsString("data"));
         Thread.sleep(5000);
         //开立签收
-        String response3 = scf.IssuingConfirm(coreCompanyKeyID, tokenType, PIN, comments);
+        String response3 = scf.IssuingConfirm( PlatformAddress,coreCompanyKeyID, tokenType, PIN, comments);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("success"));
         assertThat(response3, containsString("data"));
@@ -457,9 +470,9 @@ public class ScfTest {
         System.out.println("KLQSstoreHash = " + KLQSstoreHash);
 
         commonFunc.sdkCheckTxOrSleep(KLQSstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-
-        assertThat(response3, containsString("200"));
-        assertThat(response3,containsString("success"));
+        String checking = store.GetTxDetail(KLQSstoreHash);
+        assertThat(checking, containsString("200"));
+        assertThat(checking,containsString("success"));
 
         //兑付申请
         String response4 = scf.PayingApply(tokenType, companyID1);
@@ -484,7 +497,7 @@ public class ScfTest {
         //兑付确认
         List<Map> list = new ArrayList<>(10);
         List<Map> list1 = UtilsClassScf.paying(supplyAddress1, supplyID1, "0", "100", list);
-        String response9 = scf.PayingConfirm(QFJGAddress, companyID1, list1, platformKeyID, platformPIN, tokenType, comments);
+        String response9 = scf.PayingConfirm(PlatformAddress, QFJGAddress, companyID1, list1, platformKeyID, platformPIN, tokenType, comments);
         assertThat(response9, containsString("200"));
         assertThat(response9, containsString("success"));
         assertThat(response9, containsString("data"));
@@ -495,9 +508,10 @@ public class ScfTest {
         System.out.println("DFQRstoreHash = " + DFQRstoreHash);
 
         commonFunc.sdkCheckTxOrSleep(DFQRstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        String checking1 = store.GetTxDetail(DFQRstoreHash);
 
-        assertThat(response9, containsString("200"));
-        assertThat(response9,containsString("success"));
+        assertThat(checking1, containsString("200"));
+        assertThat(checking1,containsString("success"));
 
 //        String response10 = scf.getowneraddr(tokenType);
 //        assertThat(response10, containsString("200"));
@@ -531,7 +545,7 @@ public class ScfTest {
         assertThat(response2, containsString("data"));
         Thread.sleep(5000);
         //开立签收
-        String response3 = scf.IssuingConfirm(coreCompanyKeyID, tokenType, PIN, comments);
+        String response3 = scf.IssuingConfirm(PlatformAddress, coreCompanyKeyID, tokenType, PIN, comments);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("success"));
         assertThat(response3, containsString("data"));
@@ -542,19 +556,20 @@ public class ScfTest {
         System.out.println("KLQSstoreHash = " + KLQSstoreHash);
 
         commonFunc.sdkCheckTxOrSleep(KLQSstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        assertThat(response3, containsString("200"));
-        assertThat(response3,containsString("success"));
+        String checking = store.GetTxDetail(KLQSstoreHash);
+        assertThat(checking, containsString("200"));
+        assertThat(checking,containsString("success"));
 
         //资产转让申请
         List<Map> list = new ArrayList<>(10);
         List<Map> list1 = UtilsClassScf.Assignment("1", "0", list);
-        String response4 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, proof, tokenType, list1, newSubType, supplyAddress2, comments);
+        String response4 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, proof, tokenType, list1, newSubType, supplyAddress2);
         assertThat(response4, containsString("200"));
         assertThat(response4, containsString("success"));
         assertThat(response4, containsString("data"));
         Thread.sleep(5000);
         //资产转让签收
-        String response5 = scf.AssignmentConfirm(supplyID1, PIN, challenge, tokenType, comments);
+        String response5 = scf.AssignmentConfirm(PlatformAddress, supplyID1, PIN, challenge, tokenType, comments);
         assertThat(response5, containsString("200"));
         assertThat(response5, containsString("success"));
         assertThat(response5, containsString("data"));
@@ -565,8 +580,9 @@ public class ScfTest {
         System.out.println("ZRQSstoreHash = " + ZRQSstoreHash);
 
         commonFunc.sdkCheckTxOrSleep(ZRQSstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        assertThat(response5, containsString("200"));
-        assertThat(response5,containsString("success"));
+        String checking1 = store.GetTxDetail(ZRQSstoreHash);
+        assertThat(checking1, containsString("200"));
+        assertThat(checking1,containsString("success"));
         //资产兑付申请
         String response6 = scf.PayingApply(tokenType, companyID1);
         assertThat(response6, containsString("200"));
@@ -590,7 +606,7 @@ public class ScfTest {
         //兑付确认
         List<Map> list2 = UtilsClassScf.paying(supplyAddress1, supplyID1, "0", "99", list);
         List<Map> list3 = UtilsClassScf.paying(supplyAddress2, supplyID2, "n", "1", list2);
-        String response9 = scf.PayingConfirm(QFJGAddress, companyID1, list3, platformKeyID, platformPIN, tokenType, comments);
+        String response9 = scf.PayingConfirm(PlatformAddress, QFJGAddress, companyID1, list3, platformKeyID, platformPIN, tokenType, comments);
         assertThat(response9, containsString("200"));
         assertThat(response9, containsString("success"));
         assertThat(response9, containsString("data"));
@@ -601,9 +617,11 @@ public class ScfTest {
         System.out.println("DFQRstoreHash = " + DFQRstoreHash);
 
         commonFunc.sdkCheckTxOrSleep(DFQRstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        String checking2= store.GetTxDetail(DFQRstoreHash);
+        assertThat(checking2, containsString("200"));
+        assertThat(checking2,containsString("success"));
 
-        assertThat(response9, containsString("200"));
-        assertThat(response9,containsString("success"));
+
 
 //        String response10 = scf.getowneraddr(tokenType);
 //        assertThat(response10, containsString("200"));
@@ -638,7 +656,7 @@ public class ScfTest {
         assertThat(response2, containsString("data"));
         Thread.sleep(5000);
         //开立签收
-        String response3 = scf.IssuingConfirm(coreCompanyKeyID, tokenType, PIN, comments);
+        String response3 = scf.IssuingConfirm(PlatformAddress, coreCompanyKeyID, tokenType, PIN, comments);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("success"));
         assertThat(response3, containsString("data"));
@@ -649,9 +667,9 @@ public class ScfTest {
         System.out.println("KLQSstoreHash = " + KLQSstoreHash);
 
         commonFunc.sdkCheckTxOrSleep(KLQSstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-
-        assertThat(response3, containsString("200"));
-        assertThat(response3,containsString("success"));
+        String checking = store.GetTxDetail(KLQSstoreHash);
+        assertThat(checking, containsString("200"));
+        assertThat(checking,containsString("success"));
         //融资申请，开立给供应商1的金额，全部融资给供应商2
         String newFromSubType = "0";
         String newToSubType = "b";
@@ -668,13 +686,14 @@ public class ScfTest {
         assertThat(response5, containsString("data"));
         //融资申请反馈
         String applyNo = "7777";
-        String response6 = scf.FinacingFeedback(ZJFAddress, applyNo, state, comments);
+        String msg = "receive";
+        String response6 = scf.FinacingFeedback(ZJFAddress, applyNo, state, comments, msg);
         assertThat(response6, containsString("200"));
         assertThat(response6, containsString("success"));
         assertThat(response6, containsString("data"));
         Thread.sleep(5000);
         //融资签收
-        String response7 = scf.FinacingConfirm(applyNo, ZJFAddress, supplyID1, companyID1, PIN, tokenType, supplyAddress2, challenge, comments);
+        String response7 = scf.FinacingConfirm(PlatformAddress,applyNo, ZJFAddress, supplyID1, companyID1, PIN, tokenType, supplyAddress2, challenge, comments);
         assertThat(response7, containsString("200"));
         assertThat(response7, containsString("success"));
         assertThat(response7, containsString("data"));
@@ -685,9 +704,9 @@ public class ScfTest {
         System.out.println("RZQSstoreHash = " + RZQSstoreHash);
 
         commonFunc.sdkCheckTxOrSleep(RZQSstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-
-        assertThat(response7, containsString("200"));
-        assertThat(response7,containsString("success"));
+        String checking1 = store.GetTxDetail(RZQSstoreHash);
+        assertThat(checking1, containsString("200"));
+        assertThat(checking1,containsString("success"));
 
         //资产兑付申请
         String response8 = scf.PayingApply(tokenType, companyID1);
@@ -711,7 +730,7 @@ public class ScfTest {
         //兑付确认
         List<Map> list = new ArrayList<>(10);
         List<Map> list2 = UtilsClassScf.paying(supplyAddress2, supplyID2, "b", "10", list);
-        String response11 = scf.PayingConfirm(QFJGAddress, companyID1, list2, platformKeyID, platformPIN, tokenType, comments);
+        String response11 = scf.PayingConfirm(PlatformAddress,QFJGAddress, companyID1, list2, platformKeyID, platformPIN, tokenType, comments);
         assertThat(response11, containsString("200"));
         assertThat(response11, containsString("success"));
         assertThat(response11, containsString("data"));
@@ -722,9 +741,9 @@ public class ScfTest {
         System.out.println("DFQRstoreHash = " + DFQRstoreHash);
 
         commonFunc.sdkCheckTxOrSleep(DFQRstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-
-        assertThat(response11, containsString("200"));
-        assertThat(response11,containsString("success"));
+        String checking2 = store.GetTxDetail(DFQRstoreHash);
+        assertThat(checking2, containsString("200"));
+        assertThat(checking2,containsString("success"));
 
 //        String response12 = scf.getowneraddr(tokenType);
 //        assertThat(response12, containsString("200"));
@@ -762,7 +781,7 @@ public class ScfTest {
          assertThat(response2, containsString("data"));
          Thread.sleep(5000);
          //开立签收
-         String response3 = scf.IssuingConfirm(coreCompanyKeyID, tokenType, PIN, comments);
+         String response3 = scf.IssuingConfirm(PlatformAddress, coreCompanyKeyID, tokenType, PIN, comments);
          assertThat(response3, containsString("200"));
          assertThat(response3, containsString("success"));
          assertThat(response3, containsString("data"));
@@ -773,19 +792,20 @@ public class ScfTest {
          System.out.println("KLQSstoreHash = " + KLQSstoreHash);
 
          commonFunc.sdkCheckTxOrSleep(KLQSstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-         assertThat(response3, containsString("200"));
-         assertThat(response3,containsString("success"));
+         String checking = store.GetTxDetail(KLQSstoreHash);
+         assertThat(checking, containsString("200"));
+         assertThat(checking,containsString("success"));
 
          //资产转让申请
          List<Map> list = new ArrayList<>(10);
          List<Map> list1 = UtilsClassScf.Assignment("99", "0", list);
-         String response4 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, proof, tokenType, list1, newSubType, supplyAddress2, comments);
+         String response4 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, proof, tokenType, list1, newSubType, supplyAddress2);
          assertThat(response4, containsString("200"));
          assertThat(response4, containsString("success"));
          assertThat(response4, containsString("data"));
          Thread.sleep(5000);
          //资产转让签收
-         String response5 = scf.AssignmentConfirm(supplyID1, PIN, challenge, tokenType, comments);
+         String response5 = scf.AssignmentConfirm(PlatformAddress, supplyID1, PIN, challenge, tokenType, comments);
          assertThat(response5, containsString("200"));
          assertThat(response5, containsString("success"));
          assertThat(response5, containsString("data"));
@@ -795,8 +815,9 @@ public class ScfTest {
          System.out.println("ZRQSstoreHash = " + ZRQSstoreHash);
 
          commonFunc.sdkCheckTxOrSleep(ZRQSstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-         assertThat(response5, containsString("200"));
-         assertThat(response5,containsString("success"));
+         String checking1 = store.GetTxDetail(ZRQSstoreHash);
+         assertThat(checking1, containsString("200"));
+         assertThat(checking1,containsString("success"));
          //融资申请
          String newFromSubType = "0";
          String newToSubType = "b";
@@ -813,13 +834,14 @@ public class ScfTest {
          assertThat(response7, containsString("data"));
          //融资申请反馈
          String applyNo = "7777";
-         String response8 = scf.FinacingFeedback(ZJFAddress, applyNo, state, comments);
+         String msg = "receive";
+         String response8 = scf.FinacingFeedback(ZJFAddress, applyNo, state, comments, msg);
          assertThat(response8, containsString("200"));
          assertThat(response8, containsString("success"));
          assertThat(response8, containsString("data"));
          Thread.sleep(5000);
          //融资签收
-         String response9 = scf.FinacingConfirm(applyNo, ZJFAddress, supplyID2, companyID1, PIN, tokenType, supplyAddress3, rzchallenge, comments);
+         String response9 = scf.FinacingConfirm(PlatformAddress, applyNo, ZJFAddress, supplyID2, companyID1, PIN, tokenType, supplyAddress3, rzchallenge, comments);
          assertThat(response9, containsString("200"));
          assertThat(response9, containsString("success"));
          assertThat(response9, containsString("data"));
@@ -830,9 +852,10 @@ public class ScfTest {
          System.out.println("RZQSstoreHash = " + RZQSstoreHash);
 
          commonFunc.sdkCheckTxOrSleep(RZQSstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+         String checking2 = store.GetTxDetail(RZQSstoreHash);
 
-         assertThat(response9, containsString("200"));
-         assertThat(response9,containsString("success"));
+         assertThat(checking2, containsString("200"));
+         assertThat(checking2,containsString("success"));
 
          //资产兑付申请
          String response10 = scf.PayingApply(tokenType, companyID1);
@@ -855,7 +878,7 @@ public class ScfTest {
          List<Map> list2 = UtilsClassScf.paying(supplyAddress1, supplyID1, "0", "1", list);
          List<Map> list3 = UtilsClassScf.paying(supplyAddress2, supplyID2, "0", "89", list2);
          List<Map> list4 = UtilsClassScf.paying(supplyAddress3, supplyID3, "b", "10", list3);
-         String response13 = scf.PayingConfirm(QFJGAddress, companyID1, list4, platformKeyID, platformPIN, tokenType, comments);
+         String response13 = scf.PayingConfirm(PlatformAddress, QFJGAddress, companyID1, list4, platformKeyID, platformPIN, tokenType, comments);
          assertThat(response13, containsString("200"));
          assertThat(response13, containsString("success"));
          assertThat(response13, containsString("data"));
@@ -865,9 +888,9 @@ public class ScfTest {
          System.out.println("DFQRstoreHash = " + DFQRstoreHash);
 
          commonFunc.sdkCheckTxOrSleep(DFQRstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-
-         assertThat(response13, containsString("200"));
-         assertThat(response13,containsString("success"));
+         String checking3 = store.GetTxDetail(DFQRstoreHash);
+         assertThat(checking3, containsString("200"));
+         assertThat(checking3,containsString("success"));
 
 //         String response14 = scf.getowneraddr(tokenType);
 //         assertThat(response14, containsString("200"));

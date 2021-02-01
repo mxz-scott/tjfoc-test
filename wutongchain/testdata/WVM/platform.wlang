@@ -1,5 +1,4 @@
 contract platform {
-
     // 合约结构体
     struct Contract {
         // 类型 C:清分机构合约 O:核心企业合约 A:资金方合约
@@ -7,7 +6,7 @@ contract platform {
         // 合约地址
         string address
     }
-    
+
     // 初始化
     public string init(){
         // 保存清分机构合约地址
@@ -80,5 +79,44 @@ contract platform {
         }else{
             return "param error"
         }
+    }
+
+    //授权结构体
+	struct Authority{
+		string Key
+		string SecurityKey
+	}
+
+    //创建权限
+	public string CreateAuthoritys(string json){
+        print("CreateAuthoritys")
+		Authority[] auths
+        auths = json_to_obj<array(Authority)>(json)
+		int i = len(auths)
+        print(i)
+        Authority auth
+		for(int j=0;j<i;j++){
+            auth = auths[j]
+            string key = auth.Key
+			string securityKey = auth.SecurityKey
+            print(auth)
+            // print(key)
+			// print(securityKey)
+            // auth = auths[j]
+			// key = auth.Key
+			// securityKey = auth.SecurityKey
+			print(key)
+			print(securityKey)
+			db_set(key,securityKey)
+		}
+		return "success"
+	}
+
+    public string GetSecurityKey(string key){
+		string k = db_get<string>(key)
+		if(k!=""){
+			return k
+		}
+		return "error"
     }
 }

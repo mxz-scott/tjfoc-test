@@ -1,6 +1,7 @@
 package com.tjfintech.common;
 
 import com.tjfintech.common.Interface.Scf;
+import com.tjfintech.common.utils.GetTest;
 import com.tjfintech.common.utils.PostTest;
 //import com.tjfoc.sdk.SDK_TjfocSDK_WalletSDK;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +21,10 @@ public class GoScf implements Scf {
      * 创建账户（地址）
      *
      */
-    public String AccountCreate(String platformKeyID, String PIN,String pubkey, String comments) {
+    public String AccountCreate(String PlatformAddress,String platformKeyID, String PIN,String pubkey, String comments) {
 
         Map<String, Object> map = new HashMap<>();
+        map.put("contractAddress", PlatformAddress);
         map.put("platformKeyID", platformKeyID);
         if (PIN !="")   map.put("PIN", PIN);
         if (pubkey !="")   map.put("pubkey", pubkey);
@@ -125,15 +127,17 @@ public class GoScf implements Scf {
 
     /**
      * 开立签收
+     * @param PlatformAddress
      * @param coreCompanyKeyID
      * @param tokenType
      * @param PIN
      * @param comments
      * @return
      */
-    public String IssuingConfirm(String coreCompanyKeyID, String tokenType, String PIN, String comments) {
+    public String IssuingConfirm( String PlatformAddress, String coreCompanyKeyID, String tokenType, String PIN, String comments) {
         Map<String, Object> map = new HashMap<>();
 
+        map.put("platFormAddress", PlatformAddress);
         map.put("keyID", coreCompanyKeyID);
         map.put("tokenType", tokenType);
         map.put("PIN", PIN);
@@ -178,10 +182,11 @@ public class GoScf implements Scf {
      * 发送存证扩展消息
      *
      */
-    public String SendMsg(String msgcode, String sender, List<Map> list, String mode, String reftx, String msgdata) {
+    public String SendMsg(String msgcode, String sender, String platformKeyID, List<Map> list, String mode, String reftx, String msgdata) {
         Map<String, Object> map = new HashMap<>();
 
         map.put("msgcode", msgcode);
+        map.put("platformKeyID", platformKeyID);
         map.put("sender", sender);
         map.put("receivers", list);
         map.put("mode", mode);
@@ -224,12 +229,12 @@ public class GoScf implements Scf {
      * @param list1
      * @param newSubType
      * @param supplyAddress2
-     * @param comments
      * @return
      */
-    public String AssignmentApply(String supplyAddress1, String supplyID1, String PIN, String proof, String tokenType, List<Map> list1,String newSubType, String supplyAddress2, String comments) {
+    public String AssignmentApply(String supplyAddress1, String supplyID1, String PIN, String proof, String tokenType, List<Map> list1,String newSubType, String supplyAddress2) {
 
         Map<String, Object> map = new HashMap<>();
+
         map.put("fromAddress", supplyAddress1);
         map.put("keyID", supplyID1);
         map.put("PIN", PIN);
@@ -238,7 +243,7 @@ public class GoScf implements Scf {
         map.put("tokenList",list1);
         map.put("newSubType",newSubType);
         map.put("toAddress",supplyAddress2);
-        map.put("comments",comments);
+
 
         String param="";
         if (subLedger!="") param = param +"ledger="+subLedger;
@@ -258,9 +263,10 @@ public class GoScf implements Scf {
      * @param comments
      * @return
      */
-    public String AssignmentConfirm(String supplyID1, String PIN, String challenge, String tokenType, String comments) {
+    public String AssignmentConfirm(String PlatformAddress, String supplyID1, String PIN, String challenge, String tokenType, String comments) {
         Map<String, Object> map = new HashMap<>();
 
+        map.put("platFormAddress",PlatformAddress );
         map.put("keyID", supplyID1);
         map.put("PIN",PIN);
         map.put("challenge",challenge);
@@ -280,15 +286,14 @@ public class GoScf implements Scf {
      * 转让资产拒收
      * @param challenge
      * @param tokenType
-     * @param comments
      * @return
      */
-    public String AssignmentReject(String challenge, String tokenType, String comments) {
+    public String AssignmentReject(String challenge, String tokenType) {
         Map<String, Object> map = new HashMap<>();
 
         map.put("challenge", challenge);
         map.put("tokenType", tokenType);
-        map.put("comments", comments);
+
 
         String param = "";
         if (subLedger != "") param = param + "ledger=" + subLedger;
@@ -391,13 +396,14 @@ public class GoScf implements Scf {
     /**
      * 融资申请反馈
      */
-    public String FinacingFeedback(String ZJFAddress, String applyNo, String state, String comments) {
+    public String FinacingFeedback(String ZJFAddress, String applyNo, String state, String comments, String msg) {
         Map<String, Object> map = new HashMap<>();
 
         map.put("contractAddress",ZJFAddress);
         map.put("applyNo",applyNo);
         map.put("state",state);
         map.put("comments",comments);
+        map.put("msg",msg);
 
         String param="";
         if (subLedger!="") param = param +"ledger="+subLedger;
@@ -410,9 +416,10 @@ public class GoScf implements Scf {
     /**
      * 融资签收
      */
-    public String FinacingConfirm(String applyNo, String ZJFAddress, String supplyID, String companyID1, String PIN, String tokenType, String supplyAddress2, String rzchallenge, String comments) {
+    public String FinacingConfirm(String PlatformAddress, String applyNo, String ZJFAddress, String supplyID, String companyID1, String PIN, String tokenType, String supplyAddress2, String rzchallenge, String comments) {
         Map<String, Object> map = new HashMap<>();
 
+        map.put("platFormAddress",PlatformAddress);
         map.put("applyNo",applyNo);
         map.put("contractAddress",ZJFAddress);
         map.put("keyID",supplyID);
@@ -435,12 +442,11 @@ public class GoScf implements Scf {
     /**
      * 融资取消
      */
-    public String FinacingCancel(String challenge, String tokenType, String comments) {
+    public String FinacingCancel(String challenge, String tokenType) {
         Map<String, Object> map = new HashMap<>();
 
         map.put("challenge",challenge);
         map.put("tokenType",tokenType);
-        map.put("comments",comments);
 
         String param="";
         if (subLedger!="") param = param +"ledger="+subLedger;
@@ -508,8 +514,9 @@ public class GoScf implements Scf {
     /**
      * 兑付确认
      */
-    public String PayingConfirm(String QFJGAddress, String companyID1, List<Map> list4, String platformKeyID, String platformPIN, String tokenType, String comments) {
+    public String PayingConfirm( String PlatformAddress, String QFJGAddress, String companyID1, List<Map> list4, String platformKeyID, String platformPIN, String tokenType, String comments) {
         Map<String, Object> map = new HashMap<>();
+        map.put("platFormAddress",PlatformAddress);
         map.put("contractAddress",QFJGAddress);
         map.put("companyID",companyID1);
         map.put("accounts",list4);
@@ -526,6 +533,16 @@ public class GoScf implements Scf {
         log.info(result);
         return result;
     }
+    /**
+     * 获取交易详情。
+     */
+    public String GetTxDetail(String hash) {
+        String param = "";
+        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
+        String result = GetTest.doGet2(SDKADD + "/v2/tx/detail/" + hash + "?" + param);
+        log.info(result);
+        return result;
 
+    }
 
 }
