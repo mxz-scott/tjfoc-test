@@ -8,6 +8,7 @@ import com.tjfintech.common.functionTest.mixTest.VerifyTests;
 import com.tjfintech.common.functionTest.smartTokenTest.SmartTokenCommon;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -34,7 +35,8 @@ public class StableAutoTest {
     SmartTokenCommon stc = new SmartTokenCommon();
 
     private static String tokenType;
-    @BeforeClass
+
+//    @BeforeClass
     public static void beforeConfig() throws Exception {
         if (MULITADD2.isEmpty()) {
             BeforeCondition bf = new BeforeCondition();
@@ -51,45 +53,79 @@ public class StableAutoTest {
      */
     @Test
     public  void stableTest()throws Exception{
-        int i = 0;
-        int number = 6;  // 单次循环发送的交易数
-        int total = 2500 * number; // 发送的交易总数
-        int interval = 1000; //交易时间间隔
 
-        int start = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data")); // 开始区块高度
-        String timestamp = JSONObject.fromObject(store.GetBlockByHeight(start)).getJSONObject("data").getJSONObject("header").getString("timestamp");
-        long blkTimeStamp1 = Long.parseLong(timestamp); // 开始时间
+//        String[] ids = {"ra0erdvwpd"};
+        String[] ids = getLedgerIDs();
+        int ledgerNumber = ids.length;
 
-        while( i < total ){
-
-            storeTest();
-            i++;    //交易数+1
-
-            priStoreTest();
-            i++;    //交易数+1
-
-            smartTokenTest();
-            i = i+ 4;    //交易数+4
+        for (int j = 0; j < ledgerNumber; j++) {
+            subLedger = ids[j];
+            BeforeCondition bf = new BeforeCondition();
+            bf.updatePubPriKey();
+//            bf.createSTAddresses();
+//            bf.installSmartAccountContract("account_simple.wlang");
         }
 
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SHORTMEOUT);
+        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        Thread.sleep(SLEEPTIME);
 
-        int end = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data")); // 结束区块高度
-        timestamp = JSONObject.fromObject(store.GetBlockByHeight(end)).getJSONObject("data").getJSONObject("header").getString("timestamp");
-        long blkTimeStamp2 = Long.parseLong(timestamp); // 结束时间
-        long timeDiff = (blkTimeStamp2 - blkTimeStamp1) / 1000 / 60 ;   // 按分钟计时
+        int i = 0;
+        int number = 2;  // 单链单次循环发送的交易数
+        int loop = 5000 ; // 循环次数
+        int total = loop * number ; // 循环次数
 
-        log.info("测试时长：" + timeDiff + "分钟");
-        log.info("区块数：" + (end - start));
-        int totalOnChain = vt.CalculatetotalTxs(start, end);  // 上链交易数
-        log.info("发送交易总数：" + total);
-        log.info("上链交易总数：" + totalOnChain);
-        assertEquals("交易丢了", total,totalOnChain);
+        long[] startTimestamps = getTimestamps(ids);
+        int[] startHeights = getHeights(ids);
+
+        while( i < loop ){
+
+            for (int j = 0; j < ledgerNumber; j++){
+                storeTest(ids[j]);
+            }
+
+            for (int j = 0; j < ledgerNumber; j++){
+                 priStoreTest(ids[j]);
+            }
+
+//            for (int j = 0; j < ledgerNumber; j++){
+//                smartTokenTest(ids[j]);
+//            }
+
+           i++;
+
+        }
+
+        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        Thread.sleep(SLEEPTIME);
+
+        long[] endTimestamps = getTimestamps(ids);
+        int[] endHeights = getHeights(ids);
+
+        int count = 0;
+
+        for (int k = 0 ; k < ids.length; k++){
+            log.info("*****************************************************************");
+            int totalOnChain = vt.CalculatetotalTxs(ids[k], startHeights[k], endHeights[k]);  // 上链交易数
+            log.info("应用链ID：" + ids[k]);
+            long timeDiff = (endTimestamps[k] - startTimestamps[k]) / 1000 / 60 ;   // 按分钟计时
+            log.info("测试时长：" + timeDiff + "分钟");
+            log.info("区块数：" + (endHeights[k] - startHeights[k]));
+            log.info("发送交易总数：" + total );
+            log.info("上链交易总数：" + totalOnChain);
+            if (total != totalOnChain){
+                count++;
+                log.error("交易丢了!");
+            }
+            log.info("*****************************************************************");
+        }
+
+        assertEquals("交易丢了", 0,count);
 
     }
 
     // 普通存证
-    public void storeTest()throws Exception{
+    public void storeTest(String id)throws Exception{
+        subLedger = id;
         JSONObject fileInfo = new JSONObject();
         JSONObject data = new JSONObject();
 
@@ -119,7 +155,8 @@ public class StableAutoTest {
     }
 
     // 隐私存证
-    public void priStoreTest() throws Exception {
+    public void priStoreTest(String id) throws Exception {
+        subLedger = id;
         String data = "Testcx-" + UtilsClass.Random(2);
         Map<String,Object>map=new HashMap<>();
         map.put("pubKeys",PUBKEY1);
@@ -133,8 +170,8 @@ public class StableAutoTest {
     /**
      * 多签正常流程-发行：签名：查询：转账：查询:回收：查询
      */
-    public void smartTokenTest() throws Exception {
-
+    public void smartTokenTest(String id) throws Exception {
+        subLedger = id;
         //发行
         tokenType = stc.beforeConfigIssueNewToken("1000.25");
 
@@ -163,4 +200,53 @@ public class StableAutoTest {
     }
 
 
+    //获取应用链ID数组
+    public  String[] getLedgerIDs()throws Exception{
+
+        JSONObject ledgers = JSONObject.fromObject(store.GetLedger());
+        int number = ledgers.getJSONObject("data").getInt("number");
+
+        String[] ids = new String[number];
+
+
+        JSONArray ledgersInfo = ledgers.getJSONObject("data").getJSONArray("ledgers");
+
+       for (int i = 0; i < number; i++){
+           String id =  ledgersInfo.getJSONObject(i).getString("id");
+           ids[i] = id;
+       }
+
+       return ids;
+
+    }
+
+    //获取应用链时间戳
+    public  long[] getTimestamps(String[] ids)throws Exception{
+
+        long[] ts = new long[ids.length];
+
+        for (int i =0; i < ids.length; i++){
+            subLedger = ids[i];
+            int start = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data")); // 区块高度
+            String timestamp = JSONObject.fromObject(store.GetBlockByHeight(start)).getJSONObject("data").getJSONObject("header").getString("timestamp");
+            ts[i] = Long.parseLong(timestamp); // 开始时间
+        }
+
+        return ts;
+
+    }
+
+    //获取应用链区块高度
+    public  int[] getHeights(String[] ids)throws Exception{
+
+        int[] hs = new int[ids.length];
+
+        for (int i =0; i < ids.length; i++){
+            subLedger = ids[i];
+            hs[i] = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data")); // 区块高度
+         }
+
+        return hs;
+
+    }
 }

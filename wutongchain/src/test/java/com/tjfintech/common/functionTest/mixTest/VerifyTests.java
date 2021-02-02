@@ -184,8 +184,9 @@ public class VerifyTests {
         commonFunc.verifyBlockAndTransaction(destShellScriptDir);
     }
 
-    public int CalculatetotalTxs(int startBlockHeight, int endBlockHeight) throws Exception {
+    public int CalculatetotalTxs(String id, int startBlockHeight, int endBlockHeight) throws Exception {
 
+        subLedger = id;
         int count = 0, total = 0;
 
         for (int i = startBlockHeight + 1; i <= endBlockHeight; i++) {
