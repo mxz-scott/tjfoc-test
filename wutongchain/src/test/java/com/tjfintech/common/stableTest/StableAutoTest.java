@@ -60,22 +60,23 @@ public class StableAutoTest {
 
         for (int j = 0; j < ledgerNumber; j++) {
             subLedger = ids[j];
+            storeTest(ids[j]);
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
 //            bf.createSTAddresses();
 //            bf.installSmartAccountContract("account_simple.wlang");
         }
 
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
-        Thread.sleep(SLEEPTIME);
-
         int i = 0;
         int number = 2;  // 单链单次循环发送的交易数
-        int loop = 5000 ; // 循环次数
+        int loop = 100000 ; // 循环次数
         int total = loop * number ; // 循环次数
 
+        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        Thread.sleep(SLEEPTIME);
         long[] startTimestamps = getTimestamps(ids);
         int[] startHeights = getHeights(ids);
+
 
         while( i < loop ){
 
@@ -109,6 +110,8 @@ public class StableAutoTest {
             log.info("应用链ID：" + ids[k]);
             long timeDiff = (endTimestamps[k] - startTimestamps[k]) / 1000 / 60 ;   // 按分钟计时
             log.info("测试时长：" + timeDiff + "分钟");
+            log.info("开始区块高度：" + startHeights[k]);
+            log.info("结束区块高度：" + endHeights[k]);
             log.info("区块数：" + (endHeights[k] - startHeights[k]));
             log.info("发送交易总数：" + total );
             log.info("上链交易总数：" + totalOnChain);
