@@ -22,76 +22,35 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 @Slf4j
 public class UtilsClass {
 
-//    //duyuyang env use start -----------
-//    public static String SDKADD = "http://10.1.5.162:8777";
-//    public static String rSDKADD = "http://10.1.5.162:8777";
-//    public static String TOKENADD = "http://10.1.5.162:8777";
-//    public static String subLedger = "2p03wvgh6y";//应用链
-//
-//    //设置测试环境使用的节点端口及部署目录信息
-//    public static String PEER1IP = "10.1.5.162";
-//    public static String PEER2IP = "10.1.5.243";
-//    public static String PEER3IP = "10.1.5.162";
-//    public static String PEER4IP = "10.1.5.243";
-//    public static String PEER1RPCPort = "9009";
-//    public static String PEER2RPCPort = "9009";
-//    public static String PEER3RPCPort = "9009";
-//    public static String PEER4RPCPort = "9009";
-//    public static String PEER1TCPPort = "60009";
-//    public static String PEER2TCPPort = "60009";
-//    public static String PEER3TCPPort = "60009";
-//    public static String PEER4TCPPort = "60009";
-//    //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-//    public static String PTPATH = "/mnt/dyy/";
-//    public static String SDKPATH = PTPATH + "wtsdk/";
-//    public static String PeerPATH = PTPATH + "wtchain/";
-//    public static String ToolPATH = PTPATH + "wttool/";
-//    public static String TokenApiPATH = PTPATH + "wtfinservice/";
-//    public static String PeerTPName = "wtchain";
-//    public static String SDKTPName = "wtsdk";
-//    public static String ToolTPName = "wttool";
-//    public static String TokenTPName = "wtfinservice";
-//    public static String tmuxSessionTokenApi = "tmux at -t wtsdk_dyy ";
-//    public static String tmuxSessionPeer = "tmux at -t wtchain_dyy ";
-//    public static String tmuxSessionSDK = "tmux at -t wtsdk_dyy ";
-//    public static String sReleaseLocalDir = "E:\\gopath\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.3\\";
-//    public static String sLatestLocalDir = "E:\\test\\2.4.2\\";
-//    ////    //duyuyang env use end -----------
-//hff env use start -----------
-    public static String SDKADD = "http://117.62.22.95:8888";
-    public static String rSDKADD = "http://117.62.22.95:8888";
-    public static String TOKENADD = "http://117.62.22.95:8888";
-    public static String subLedger = "main";//应用链
+    public static String subLedger = "e28ekpi3ek"; // 应用链ID
+    public static String SDKADD = "http://10.1.3.164:7310";//sdk/tokenapi/中间件服务地址 http://IP:Port
+    public static String TOKENADD = SDKADD;
+    public static String rSDKADD = SDKADD;
 
     //设置测试环境使用的节点端口及部署目录信息
-    public static String PEER1IP = "117.62.22.95";
-    public static String PEER2IP = "117.62.22.95";
-    public static String PEER3IP = "117.62.22.95";
-    public static String PEER4IP = "117.62.22.95";
-    public static String PEER1RPCPort = "9301";
-    public static String PEER2RPCPort = "9302";
-    public static String PEER3RPCPort = "9301";
-    public static String PEER4RPCPort = "9302";
-    public static String PEER1TCPPort = "60031";
-    public static String PEER2TCPPort = "60032";
-    public static String PEER3TCPPort = "60031";
-    public static String PEER4TCPPort = "60032";
+    public static String PEER1IP,PEER2IP,PEER3IP,PEER4IP = "10.1.5.255"; //各个节点服务器IP地址
+    public static String PEER1RPCPort,PEER2RPCPort,PEER3RPCPort,PEER4RPCPort = "9000";//各个节点服务器RPC端口号
+    public static String PEER1TCPPort,PEER2TCPPort,PEER3TCPPort,PEER4TCPPort = "60000";//各个节点服务器TCP端口号
     //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-    public static String PTPATH = "/root/wutongchain/";
-    public static String SDKPATH = PTPATH + "sdk1/";
-    public static String PeerPATH = PTPATH + "peer1/";
-    public static String ToolPATH = PTPATH + "wttool/";
-    public static String TokenApiPATH = PTPATH + "wtfinservice/";
-    public static String PeerTPName = "wtchain";
-    public static String SDKTPName = "sdk";
-    public static String ToolTPName = "wttool";
-    public static String TokenTPName = "wtfinservice";
-    public static String tmuxSessionTokenApi = "tmux at -t sdk ";
-    public static String tmuxSessionPeer = "tmux at -t peer1 ";
-    public static String tmuxSessionSDK = "tmux at -t sdk ";
-    public static String sReleaseLocalDir = "E:\\gopath\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.3\\";
-    public static String sLatestLocalDir = "E:\\test\\2.4.2\\";
-////    //hff env use end -----------
+    public static String PTPATH,SDKPATH,PeerPATH,ToolPATH,TokenApiPATH = "/root"; //各个服务部署目录
+    public static String PeerTPName,SDKTPName,ToolTPName,TokenTPName = "wtchain";//各个服务进程名称
+    public static String tmuxSessionPeer,tmuxSessionSDK,tmuxSessionTokenApi = "tmux send -t s ";//各个服务所在tmux会话进入命令
+    public static String sReleaseLocalDir,sLatestLocalDir = "D:\\";//升级前后版本目录
+
+    public static String envNo = "0";
+    static{
+        log.info("自定义环境参数");
+        switch (envNo){
+            case "1":  SetTestEnv_zxx envSet01 = new SetTestEnv_zxx(); envSet01.setEnvParam(); break;
+            case "2":  SetTestEnv_lilu envSet02 = new SetTestEnv_lilu(); envSet02.setEnvParam(); break;
+            case "3":  SetTestEnv_dyy envSet03 = new SetTestEnv_dyy(); envSet03.setEnvParam(); break;
+            case "4":  SetTestEnv_hff envSet04 = new SetTestEnv_hff(); envSet04.setEnvParam(); break;
+            case "5":  SetTestEnv_zllauto envSet05 = new SetTestEnv_zllauto(); envSet05.setEnvParam(); break;
+            case "6":  SetTestEnv_zllManual envSet06 = new SetTestEnv_zllManual(); envSet06.setEnvParam(); break;
+            default: log.info("使用初始化默认参数");
+        }
+    }
+
     public static Boolean syncFlag = false;
     public static int syncTimeout = 10;
     public static String testResultPath = "testresult/";
