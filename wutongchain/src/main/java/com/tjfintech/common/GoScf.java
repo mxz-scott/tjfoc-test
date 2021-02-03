@@ -459,11 +459,12 @@ public class GoScf implements Scf {
     /**
      * 兑付申请
      */
-    public String PayingApply(String tokenType, String companyID1) {
+    public String PayingApply(String tokenType, String companyID1,String comments) {
         Map<String, Object> map = new HashMap<>();
 
         map.put("tokenType",tokenType);
         map.put("companyID",companyID1);
+        map.put("comments",comments);
 
         String param="";
         if (subLedger!="") param = param +"ledger="+subLedger;

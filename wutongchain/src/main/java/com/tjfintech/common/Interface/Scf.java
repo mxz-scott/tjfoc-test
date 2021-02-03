@@ -19,7 +19,7 @@ public interface Scf {
     String FinacingFeedback(String ZJFAddress, String applyNo, String state, String comments, String msg);
     String FinacingConfirm(String PlatformAddress, String applyNo, String ZJFAddress, String supplyID1, String companyID1, String PIN, String tokenType, String supplyAddress2, String rzchallenge, String comments);
     String FinacingCancel(String challenge,String tokenType );
-    String PayingApply(String tokenType, String companyID1);
+    String PayingApply(String tokenType, String companyID1,String comments);
     String PayingNotify(String AccountAddress, String message);
     String PayingFeedback(String QFJGAddress, String tokenType, String state, String comments);
     String PayingConfirm(String PlatformAddress, String QFJGAddress, String companyID1, List<Map> list2, String platformKeyID, String platformPIN, String tokenType, String comments);

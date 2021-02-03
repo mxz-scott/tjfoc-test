@@ -44,10 +44,12 @@ public class ScfTest {
     public static void beforeConfig() throws Exception {
         ScfBeforeCondition bf = new ScfBeforeCondition();
         bf.B001_createPlatformAccount();
+        bf.Getcomments();
         bf.B002_createCoreCompanyAccount();
         bf.B003_installContracts();
+
         bf.B004_createSupplyAccounts();
-        bf.Getcomments();
+
         Thread.sleep(5000);
     }
     /**
@@ -475,7 +477,7 @@ public class ScfTest {
         assertThat(checking,containsString("success"));
 
         //兑付申请
-        String response4 = scf.PayingApply(tokenType, companyID1);
+        String response4 = scf.PayingApply(tokenType, companyID1, comments);
         assertThat(response4, containsString("200"));
         assertThat(response4, containsString("success"));
         assertThat(response4, containsString("data"));
@@ -584,7 +586,7 @@ public class ScfTest {
         assertThat(checking1, containsString("200"));
         assertThat(checking1,containsString("success"));
         //资产兑付申请
-        String response6 = scf.PayingApply(tokenType, companyID1);
+        String response6 = scf.PayingApply(tokenType, companyID1, comments);
         assertThat(response6, containsString("200"));
         assertThat(response6, containsString("success"));
         assertThat(response6, containsString("data"));
@@ -709,7 +711,7 @@ public class ScfTest {
         assertThat(checking1,containsString("success"));
 
         //资产兑付申请
-        String response8 = scf.PayingApply(tokenType, companyID1);
+        String response8 = scf.PayingApply(tokenType, companyID1,comments);
         assertThat(response8, containsString("200"));
         assertThat(response8, containsString("success"));
         assertThat(response8, containsString("data"));
@@ -858,7 +860,7 @@ public class ScfTest {
          assertThat(checking2,containsString("success"));
 
          //资产兑付申请
-         String response10 = scf.PayingApply(tokenType, companyID1);
+         String response10 = scf.PayingApply(tokenType, companyID1,comments);
          assertThat(response10, containsString("200"));
          assertThat(response10, containsString("success"));
          assertThat(response10, containsString("data"));

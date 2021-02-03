@@ -92,9 +92,9 @@ public class ScfBeforeCondition {
 
         wvm.chkTxDetailRsp("200",txHash1);
 
-        String commmets = utilsClassScf.generateMessage();
+        //String commmets = utilsClassScf.generateMessage();
 
-        String response = scf.AccountCreate( PlatformAddress, platformKeyID, PIN, "", commmets);
+        String response = scf.AccountCreate( PlatformAddress, platformKeyID, PIN, "",comments);
         assertThat(response, containsString("200"));
 
         coreCompanyKeyID = JSONObject.fromObject(response).getString("keyID");
@@ -168,15 +168,15 @@ public class ScfBeforeCondition {
 
 //        String commmets = utilsClassScf.generateMessage();
 
-        String response1 = scf.AccountCreate(PlatformAddress, platformKeyID, PIN, "","");
+        String response1 = scf.AccountCreate(PlatformAddress, platformKeyID, PIN, "",comments);
         supplyAddress1 = JSONObject.fromObject(response1).getString("data");
         supplyID1 = JSONObject.fromObject(response1).getString("keyID");
 
-        String response2 = scf.AccountCreate(PlatformAddress, platformKeyID, PIN, "","");
+        String response2 = scf.AccountCreate(PlatformAddress, platformKeyID, PIN, "",comments);
         supplyAddress2 = JSONObject.fromObject(response2).getString("data");
         supplyID2 = JSONObject.fromObject(response2).getString("keyID");
 
-        String response3 = scf.AccountCreate(PlatformAddress,platformKeyID, PIN, "","");
+        String response3 = scf.AccountCreate(PlatformAddress,platformKeyID, PIN, "",comments);
         supplyAddress3 = JSONObject.fromObject(response3).getString("data");
         supplyID3 = JSONObject.fromObject(response3).getString("keyID");
     }
@@ -188,6 +188,7 @@ public class ScfBeforeCondition {
     public void Getcomments() throws  Exception {
 
         List<Map> list = new ArrayList<>(10);
+        log.info("$$$$$$$$$$$$$$$$$$$$"+platformPubkey);
         List<Map> list1 = UtilsClassScf.Sendmsg("1", platformPubkey, list);
         String comments0 = scf.SendMsg("finance","abc", platformKeyID,list1,"","","123");
         comments = JSONObject.fromObject(comments0).getString("data");
