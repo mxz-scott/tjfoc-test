@@ -59,7 +59,7 @@ public class CallBackSyncTest {
         //启动main.exe 事件通知及回调信息接收客户端
         WinExeOperation winExeOperation = new WinExeOperation();
         if(!winExeOperation.findProcess("main.exe"))
-            winExeOperation.startProc(resourcePath + "SendMsgTestFiles\\main.exe");
+            winExeOperation.startProc(testDataPath + "SendMsgTestFiles\\main.exe");
 
         syncFlag = true;
         if (StringUtils.isEmpty(PUBKEY1)) {
