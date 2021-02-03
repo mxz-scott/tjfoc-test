@@ -92,6 +92,8 @@ public class AppChain_Z_ConfigChange_ClearDB {
         assertEquals(true,respChange.contains(checkStr));
         sleepAndSaveInfo(SLEEPTIME/2);
 
+
+
         testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,3);
 
         String heightPeer1 = mgToolCmd.queryBlockHeight(PEER1IP+ ":" + PEER1RPCPort);
@@ -109,7 +111,7 @@ public class AppChain_Z_ConfigChange_ClearDB {
         sleepAndSaveInfo(SLEEPTIME);
 
         //创建应用链01 包含节点A、B、C
-        String chainName1 = "tc1537_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        String chainName1 = "tc1537_B" + sdf.format(dt) + RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1,
                 " -t sm3"," -w first",
                 " -c raft",ids + "," + getPeerId(PEER3IP,USERNAME,PASSWD));
@@ -148,15 +150,15 @@ public class AppChain_Z_ConfigChange_ClearDB {
 
     //测试使用数据节点作为应用链集群节点时是否能够创建 预期是能创建
     @Test
-    public void createChainWithDataPeer()throws Exception{
+    public void appChainWithDataPeer()throws Exception{
 
         //启动新加入节点3
-        commonFunc.addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"1",ipv4,tcpProtocol);
+        commonFunc.addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
         shExeAndReturn(PEER3IP,startPeerCmd);
         sleepAndSaveInfo(SLEEPTIME);
 
         //创建应用链01 包含节点A、B、C
-        String chainName1 = "tc1537_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        String chainName1 = "tc1537_A" + sdf.format(dt) + RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1,
                 " -t sm3"," -w first",
                 " -c raft",ids + "," + getPeerId(PEER3IP,USERNAME,PASSWD));
@@ -164,11 +166,17 @@ public class AppChain_Z_ConfigChange_ClearDB {
         sleepAndSaveInfo(SLEEPTIME/2);
         assertEquals(4,subLedgerCmd.getLedgerMemNo(subLedger));//动态加入节点前检查节点集群信息
 
+
+        mgToolCmd.addPeer("observer",PEER1IP + ":" + PEER1RPCPort,
+                ipv4 + PEER3IP,tcpProtocol + PEER3TCPPort,PEER3RPCPort);
+        sleepAndSaveInfo(SLEEPTIME);
+
         //检查可以获取应用链列表 存在其他应用链
         String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(resp.contains("name"), true);
         assertEquals(resp.contains(chainName1), true);
 
+        testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,4);
 
         String Data = "tx1 test";
 
@@ -232,7 +240,7 @@ public class AppChain_Z_ConfigChange_ClearDB {
 
     //重启之后确认主应用链是否可以正常发送交易
     //旨在测试应用链是否能够正常启动
-    @Test
+//    @Test
     public void TC1608_1620_restartPeer()throws Exception{
         utilsClass.setAndRestartPeerList();
         sleepAndSaveInfo(SLEEPTIME*2);
@@ -240,7 +248,7 @@ public class AppChain_Z_ConfigChange_ClearDB {
     }
 
     //测试应用链包含的节点在应用链创建前停止能否正常创建应用链
-    @Test
+//    @Test
     public void TC1726_createWithStopPeer()throws Exception{
 
         shExeAndReturn(PEER2IP,killPeerCmd);

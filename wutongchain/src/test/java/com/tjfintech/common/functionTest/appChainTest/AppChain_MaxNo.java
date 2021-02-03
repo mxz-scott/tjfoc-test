@@ -5,10 +5,8 @@ import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.FileOperation;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -18,7 +16,6 @@ import java.util.Date;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassApp.*;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -42,12 +39,13 @@ public class AppChain_MaxNo {
 @Test
 public void testAddApp()throws Exception{
     FileOperation fileOperation = new FileOperation();
+    fileOperation.appendToFile("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n","mem.txt");
     recordTimeSysMemFreeInfo(fileOperation);
 //    recordTimeSysInfo(fileOperation,"4",true);
 
     for(int i =0;i<70;i++){
         log.info("+++++++++++++++++++++++++++++++++++++ " + i);
-        TC1613_createWordMultiStr();
+        createWordMultiStr();
         appNo = i + 1;
         listLedgerId.add(subLedger);
         recordTimeSysMemFreeInfo(fileOperation);
@@ -112,9 +110,9 @@ public void testAddApp()throws Exception{
 
     }
     @Test
-    public void TC1613_createWordMultiStr()throws Exception{
+    public void createWordMultiStr()throws Exception{
         //创建子链，-w "first word"
-        String chainName = "tc1613_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        String chainName = "tc1613_" + appNo + "_" + sdf.format(dt) + RandomUtils.nextInt(1000);
         String word = chainName + " first word";
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName," -t sm3",
                 " -w \"" + word + "\""," -c raft",ids);
