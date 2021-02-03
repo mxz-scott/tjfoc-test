@@ -30,7 +30,7 @@ public class AppChain_MaxNo {
     public static int appNo = 0;
 
 
-    @After
+//    @After
     public void  recordFinishSysInfo()throws Exception{
         FileOperation fileOperation = new FileOperation();
         recordTimeSysMemFreeInfo(fileOperation);
@@ -38,12 +38,13 @@ public class AppChain_MaxNo {
     }
 @Test
 public void testAddApp()throws Exception{
+        int No = 10;
     FileOperation fileOperation = new FileOperation();
     fileOperation.appendToFile("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n","mem.txt");
     recordTimeSysMemFreeInfo(fileOperation);
 //    recordTimeSysInfo(fileOperation,"4",true);
 
-    for(int i =0;i<70;i++){
+    for(int i =0;i< No;i++){
         log.info("+++++++++++++++++++++++++++++++++++++ " + i);
         createWordMultiStr();
         appNo = i + 1;
@@ -51,6 +52,15 @@ public void testAddApp()throws Exception{
         recordTimeSysMemFreeInfo(fileOperation);
 //        recordTimeSysInfo(fileOperation,"",false);
     }
+//    recordTimeSysMemFreeInfo(fileOperation);
+//    for(int i =0;i< No;i++){
+//        log.info("+++++++++++++++++++++++++++++++++++++ " + i);
+//        appNo = i + 1;
+//        subLedger = listLedgerId.get(i).toString();
+//        mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort,subLedger);
+//    }
+
+    recordTimeSysMemFreeInfo(fileOperation);
 
 
 //    for(int i=0;i<2000;i++){
