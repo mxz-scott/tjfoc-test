@@ -71,7 +71,6 @@ public class AppChain_MultiThreadSampleTest {
             Thread myThread4 = new AppChain_MultiThread();
             ((AppChain_MultiThread) myThread4).ledgerID = tempLedgerId2;
 
-
             myThread1.start();
             myThread2.start();
             myThread3.start();
@@ -83,7 +82,4 @@ public class AppChain_MultiThreadSampleTest {
             myThread4.run();
         }
     }
-
-
-
 }

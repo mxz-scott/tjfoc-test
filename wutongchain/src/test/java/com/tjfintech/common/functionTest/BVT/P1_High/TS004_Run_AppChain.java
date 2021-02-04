@@ -16,6 +16,7 @@ import org.junit.runners.Suite;
         AppChain_FRDG.class,
         AppChain_MultiChainsTest.class,
         AppChain_MultiChainsTest02.class,
+        AppChain_MultiThreadSampleTest.class,
         AppChain_WVM.class,
         AppChain_Perm.class,
         AppChain_Y_UpgradeTestOnly.class,
