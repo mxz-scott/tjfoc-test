@@ -4,6 +4,7 @@ import com.tjfintech.common.*;
 import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.SoloSign;
 import com.tjfintech.common.Interface.Store;
+import com.tjfintech.common.Interface.Token;
 import com.tjfintech.common.functionTest.mixTest.VerifyTests;
 import com.tjfintech.common.functionTest.smartTokenTest.SmartTokenCommon;
 import com.tjfintech.common.utils.UtilsClass;
@@ -29,6 +30,7 @@ public class StableAutoTest {
     Store store =testBuilder.getStore();
     MultiSign multiSign=testBuilder.getMultiSign();
     SoloSign soloSign=testBuilder.getSoloSign();
+    Token tokenModule = testBuilder.getToken();
     UtilsClass utilsClass=new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
     VerifyTests vt = new VerifyTests();
@@ -36,15 +38,19 @@ public class StableAutoTest {
 
     private static String tokenType;
 
-//    @BeforeClass
+    @BeforeClass
     public static void beforeConfig() throws Exception {
-        if (MULITADD2.isEmpty()) {
-            BeforeCondition bf = new BeforeCondition();
-            bf.updatePubPriKey();
-            bf.createSTAddresses();
-            bf.installSmartAccountContract("account_simple.wlang");
+//        if (MULITADD2.isEmpty()) {
+//            BeforeCondition bf = new BeforeCondition();
+//            bf.updatePubPriKey();
+//            bf.createSTAddresses();
+//            bf.installSmartAccountContract("account_simple.wlang");
+//        }
+        if(tokenAccount1.isEmpty()) {
+            BeforeCondition beforeCondition = new BeforeCondition();
+            beforeCondition.createTokenAccount();
+            Thread.sleep(SLEEPTIME);
         }
-        Thread.sleep(SLEEPTIME);
     }
 
 
@@ -98,6 +104,83 @@ public class StableAutoTest {
 
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
         Thread.sleep(SLEEPTIME);
+
+        long[] endTimestamps = getTimestamps(ids);
+        int[] endHeights = getHeights(ids);
+
+        int count = 0;
+
+        for (int k = 0 ; k < ids.length; k++){
+            log.info("*****************************************************************");
+            int totalOnChain = vt.CalculatetotalTxs(ids[k], startHeights[k], endHeights[k]);  // 上链交易数
+            log.info("应用链ID：" + ids[k]);
+            long timeDiff = (endTimestamps[k] - startTimestamps[k]) / 1000 / 60 ;   // 按分钟计时
+            log.info("测试时长：" + timeDiff + "分钟");
+            log.info("开始区块高度：" + startHeights[k]);
+            log.info("结束区块高度：" + endHeights[k]);
+            log.info("区块数：" + (endHeights[k] - startHeights[k]));
+            log.info("发送交易总数：" + total );
+            log.info("上链交易总数：" + totalOnChain);
+            if (total != totalOnChain){
+                count++;
+                log.error("交易丢了!");
+            }
+            log.info("*****************************************************************");
+        }
+
+        assertEquals("交易丢了", 0,count);
+
+    }
+
+    /**
+     *  token api稳定性测试
+     */
+    @Test
+    public  void tokenStableTest()throws Exception{
+
+//        String[] ids = {"ra0erdvwpd"};
+        String[] ids = getLedgerIDs();
+        int ledgerNumber = ids.length;
+
+        for (int j = 0; j < ledgerNumber; j++) {
+            subLedger = ids[j];
+            BeforeCondition bf = new BeforeCondition();
+            bf.updatePubPriKey();
+            bf.tokenAddIssueCollAddr();
+        }
+
+        int i = 0;
+        int number = 1;  // 单链单次循环发送的交易数
+        int loop = 2 ; // 循环次数
+        int total = loop * number ; // 循环次数
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+
+        long[] startTimestamps = getTimestamps(ids);
+        int[] startHeights = getHeights(ids);
+
+
+        while( i < loop ){
+
+            for (int j = 0; j < ledgerNumber; j++){
+                tokenIssueTest(ids[j]);
+            }
+//
+//            for (int j = 0; j < ledgerNumber; j++){
+//                priStoreTest(ids[j]);
+//            }
+
+//            for (int j = 0; j < ledgerNumber; j++){
+//                smartTokenTest(ids[j]);
+//            }
+
+            i++;
+
+        }
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         long[] endTimestamps = getTimestamps(ids);
         int[] endHeights = getHeights(ids);
@@ -199,6 +282,23 @@ public class StableAutoTest {
 
         assertEquals("200", JSONObject.fromObject(destroyResp1).getString("state"));
         assertEquals("200", JSONObject.fromObject(destroyResp2).getString("state"));
+
+    }
+
+    // token发行
+    public void tokenIssueTest(String id)throws Exception{
+
+        subLedger = id;
+        tokenType = "tokenErr_"+ UtilsClass.Random(8);
+        //发行失败交易
+        String issueResponse = tokenModule.tokenIssue(tokenAccount7,tokenAccount7,tokenType,"1000","");
+        assertEquals("200",JSONObject.fromObject(issueResponse).getString("state"));
+
+        //发行成功交易
+        tokenType = "tokenSoMU_"+ UtilsClass.Random(8);
+        issueResponse = tokenModule.tokenIssue(tokenAccount1,tokenAccount1,tokenType,"1000","");
+        assertEquals("200",JSONObject.fromObject(issueResponse).getString("state"));
+
 
     }
 
