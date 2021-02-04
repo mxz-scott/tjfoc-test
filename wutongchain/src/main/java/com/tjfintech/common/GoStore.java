@@ -24,9 +24,8 @@ public  class GoStore implements Store {
      */
 
     public String GetApiHealth() {
-        String param = "";
-        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/chain/apihealth?" + param);
+
+        String result = GetTest.doGet2(SDKADD + "/v2/chain/apihealth?" + SetURLExtParams(""));
         log.info(result);
         return result;
 
@@ -39,9 +38,7 @@ public  class GoStore implements Store {
      */
 
     public String GetLedger(String ledger) {
-        String param = "";
-        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/xxxxxxxxxx?" + param);
+        String result = GetTest.doGet2(SDKADD + "/xxxxxxxxxx?" + SetURLExtParams(""));
         log.info(result);
         return result;
     }
@@ -53,8 +50,6 @@ public  class GoStore implements Store {
      */
 
     public String GetLedger() {
-//        String param = "";
-//        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
         String result = GetTest.doGet2(SDKADD + "/v2/ledger");
         log.info(result);
         return result;
@@ -67,9 +62,7 @@ public  class GoStore implements Store {
      */
 
     public String GetMemberList() {
-        String param = "";
-        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/memberlist?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/memberlist?" + SetURLExtParams(""));
         log.info(result);
         return result;
     }
@@ -79,9 +72,7 @@ public  class GoStore implements Store {
      * 获取交易详情。
      */
     public String GetTxDetail(String hash) {
-        String param = "";
-        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/tx/detail/" + hash + "?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/tx/detail/" + hash + "?" + SetURLExtParams(""));
         log.info(result);
         return result;
 
@@ -91,9 +82,7 @@ public  class GoStore implements Store {
      * 获取交易raw data
      */
     public String GetTxRaw(String hash) {
-        String param = "";
-        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/tx/raw/" + hash + "?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/tx/raw/" + hash + "?" + SetURLExtParams(""));
         log.info(result);
         return result;
 
@@ -112,11 +101,7 @@ public  class GoStore implements Store {
         Map<String, Object> map = new HashMap<>();
         map.put("data", Data);
 
-        String param="";
-        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/store?" + param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/store?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -140,11 +125,7 @@ public  class GoStore implements Store {
         map.put("data", Data);
         map.put("pubKeys", PubkeysObjects);
 
-        String param="";
-        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/store?" + param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/store?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -157,10 +138,7 @@ public  class GoStore implements Store {
      * @method GET
      */
     public String GetStore(String hash) {
-
-        String param = "";
-        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/tx/detail/" + hash + "?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/tx/detail/" + hash + "?" + SetURLExtParams(""));
         log.info(result);
         return result;
 
@@ -174,8 +152,7 @@ public  class GoStore implements Store {
         Map<String, Object> map = new HashMap<>();
         map.put("hash", hashEncode);
         param = GetTest.ParamtoUrl(map);
-        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/getstore2" + "?" + param);
+        String result = GetTest.doGet2(SDKADD + "/getstore2" + "?" + SetURLExtParams(param));
 //        log.info(result);
         return result;
     }
@@ -192,10 +169,7 @@ public  class GoStore implements Store {
         map.put("priKey", priKey);
         map.put("txId", Hash);
 
-        String param = "";
-        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/query?" + param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/query?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -214,11 +188,7 @@ public  class GoStore implements Store {
         map.put("txId", Hash);
         map.put("password", keyPwd);
 
-        String param="";
-//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/query?" + param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/query?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
 
@@ -232,10 +202,7 @@ public  class GoStore implements Store {
      * @method POST
      */
     public String GetTransactionIndex(String hash) {
-
-        String param = "";
-        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/block/tx/index/" + hash + "?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/block/tx/index/" + hash + "?" + SetURLExtParams(""));
         log.info(result);
         return result;
 
@@ -248,9 +215,7 @@ public  class GoStore implements Store {
      * @method GET
      */
     public String GetHeight() {
-        String param = "";
-        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/block/height" + "?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/block/height" + "?" + SetURLExtParams(""));
         log.info(result);
         return result;
     }
@@ -265,10 +230,8 @@ public  class GoStore implements Store {
      * @method GET
      */
     public String GetBlockByHeight(int height) {
-        String param = "";
         String strHeight = Integer.toString(height);
-        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/block/detail/" + strHeight + "?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/block/detail/" + strHeight + "?" + SetURLExtParams(""));
 //        log.info(result);
         return result;
     }
@@ -278,10 +241,8 @@ public  class GoStore implements Store {
      */
 
     public String GetBlockRawDetail(int height) {
-        String param = "";
         String strHeight = Integer.toString(height);
-        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/block/rawdetail/" + strHeight + "?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/block/rawdetail/" + strHeight + "?" + SetURLExtParams(""));
         log.info(result);
         return result;
     }
@@ -294,9 +255,7 @@ public  class GoStore implements Store {
      * @method GET
      */
     public String GetBlockByHash(String hash) {
-        String param = "";
-        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/block/detail/" + hash + "?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/block/detail/" + hash + "?" + SetURLExtParams(""));
 //        log.info(result);
         return result;
     }
@@ -310,9 +269,7 @@ public  class GoStore implements Store {
      * @method GET
      */
     public String GetTransactionBlock(String hash) {
-        String param = "";
-        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/block/height/" + hash + "?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/block/height/" + hash + "?" + SetURLExtParams(""));
         log.info(result);
         return result;
     }
@@ -326,9 +283,7 @@ public  class GoStore implements Store {
      * @method Get
      */
     public String GetInlocal(String hash) {
-        String param = "";
-        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/tx/inlocal/" + hash + "?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/tx/inlocal/" + hash + "?" + SetURLExtParams(""));
         log.info(result);
         return result;
     }
@@ -343,9 +298,7 @@ public  class GoStore implements Store {
      */
     @Override
     public String GetPeerList() {
-        String param = "";
-        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/peerlist?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/peerlist?" + SetURLExtParams(""));
         log.info(result);
         return result;
     }
@@ -366,11 +319,7 @@ public  class GoStore implements Store {
         map.put("priKey", toPriKey);
         if(!pwd.isEmpty())  map.put("password", pwd);
 
-        String param="";
-        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/authorize?" + param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/authorize?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -389,11 +338,7 @@ public  class GoStore implements Store {
         map.put("pubKeys", PubkeysObjects);
         map.put("priKey", toPriKey);
 
-        String param="";
-        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-
-        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/authorize?" + param, map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/store/authorize?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }

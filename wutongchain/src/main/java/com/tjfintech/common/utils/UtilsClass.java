@@ -23,6 +23,7 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 public class UtilsClass {
 
     public static String subLedger = "e28ekpi3ek"; // 应用链ID
+    public static String urlAddr = ""; // 向指定节点发请求
     public static String SDKADD = "http://10.1.3.164:7310";//sdk/tokenapi/中间件服务地址 http://IP:Port
     public static String TOKENADD = SDKADD;
     public static String rSDKADD = SDKADD;
@@ -617,6 +618,12 @@ public class UtilsClass {
         return SDKID.trim();
     }
 
+    public static String SetURLExtParams(String param){
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
+        if (!urlAddr.isEmpty()) param = param + "&address=" + urlAddr;
+        return param;
+    }
     public String getToolID(String IP) {
         Shell shellSDK=new Shell(IP,USERNAME,PASSWD);
         String toolID ="";
@@ -684,11 +691,15 @@ public class UtilsClass {
         peerList.clear();
         peerList.add(PEER1IP);
         peerList.add(PEER2IP);
+        peerList.add(PEER3IP);
         peerList.add(PEER4IP);
 
         //重启节点集群
         sendCmdPeerList(peerList,killPeerCmd);
         sendCmdPeerList(peerList,cmdList);
+
+        peerList.remove(PEER3IP);
+
         sendCmdPeerList(peerList,startPeerCmd);
 
         Thread.sleep(SLEEPTIME);
