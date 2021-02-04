@@ -61,6 +61,8 @@ public class AppChain_Z_ConfigChange_ClearDB {
 
         commonFunc.setPeerConfig(PEER3IP);
         shExeAndReturn(PEER3IP,killPeerCmd);
+
+        urlAddr = "";
     }
 
     /***
@@ -217,6 +219,8 @@ public class AppChain_Z_ConfigChange_ClearDB {
         assertEquals(resp.contains(chainName), true);
         assertEquals(resp.contains(glbChain01), true);
 
+        urlAddr = PEER1IP + ":" + PEER1RPCPort;//仅向应用链中存在的节点发送交易  否则交易可能会发向应用链中不包含的节点
+
         String response1 = store.CreateStore("tc1523 data");
         assertEquals("200",JSONObject.fromObject(response1).getString("state"));  //确认可以发送成功
 
@@ -236,6 +240,8 @@ public class AppChain_Z_ConfigChange_ClearDB {
         assertEquals("404",JSONObject.fromObject(store.GetTxDetail(txHash2)).getString("state"));  //确认不可以c查询成功
 
         shExeAndReturn(PEER2IP,startPeerCmd);
+
+        urlAddr = "";
     }
 
     //重启之后确认主应用链是否可以正常发送交易
