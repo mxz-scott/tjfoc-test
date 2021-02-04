@@ -34,16 +34,12 @@ public class GoContract implements Contract {
      * @throws Exception
      */
     public String InstallWVM(String file,String category,String prikey) throws Exception{
-        Map<String,Object>map=new HashMap<>();
+        Map<String,Object>map = new HashMap<>();
         map.put("category","wvm");
         if(!wvmVersion.isEmpty())       map.put("Version",wvmVersion);
         map.put("file",file);
 
-        String param="";
-        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-
-        String result=PostTest.postMethod(SDKADD+"/v2/tx/sc/install?"+param,map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/sc/install?" + SetURLExtParams(""),map);
         log.info(result);
         return result ;
     }
@@ -62,11 +58,7 @@ public class GoContract implements Contract {
         map.put("Category",category);
         map.put("File",file);
 
-        String param="";
-        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-
-        String result=PostTest.postMethod(SDKADD+"/v2/tx/sc/install?"+param,map);
+        String result = PostTest.postMethod(SDKADD + "/v2/tx/sc/install?" + SetURLExtParams(""),map);
         log.info(result);
         return result ;
     }
@@ -105,11 +97,7 @@ public class GoContract implements Contract {
         map.put("Version",version);
         map.put("Category",category);
 
-        String param="";
-        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-
-        String result=PostTest.sendPostToJson(SDKADD+"/contract/destroy?"+param,map);
+        String result = PostTest.sendPostToJson(SDKADD + "/contract/destroy?" + SetURLExtParams(""),map);
         log.info(result);
         return result ;
     }
@@ -120,15 +108,11 @@ public class GoContract implements Contract {
      * @return
      */
     public String DestroyWVM(String name,String category){
-        Map<String,Object>map=new HashMap<>();
+        Map<String,Object>map = new HashMap<>();
         map.put("name",name);
         map.put("category",category);
 
-        String param = "";
-        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-
-        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/destroy?"+param,map);
+        String result = PostTest.sendPostToJson(SDKADD + "/v2/tx/sc/destroy?" + SetURLExtParams(""),map);
         log.info(result);
         return result ;
     }
@@ -160,17 +144,13 @@ public class GoContract implements Contract {
      * @return
      */
     public String CreateNewTransaction(String name,String version,String method,List<?> args){
-        Map<String,Object>map=new HashMap<>();
+        Map<String,Object>map = new HashMap<>();
         map.put("Name",name);
         if(!version.isEmpty())       map.put("Version",version);
         map.put("Method",method);
         map.put("Args",args);
 
-        String param="";
-        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-
-        String result=PostTest.sendPostToJson(SDKADD+"/createnewtransaction?"+param,map);
+        String result = PostTest.sendPostToJson(SDKADD+"/createnewtransaction?" + SetURLExtParams(""),map);
         log.info(result);
         return result ;
     }
@@ -183,25 +163,21 @@ public class GoContract implements Contract {
      * @return
      */
     public String Invoke(String name,String version,String category,String method,List<?> args){
-        Map<String,Object>map=new HashMap<>();
+        Map<String,Object>map = new HashMap<>();
         map.put("Name",name);
         if(!version.isEmpty())       map.put("Version",version);
         map.put("Category",category);
         map.put("Method",method);
         map.put("Args",args);
 
-        String param="";
-        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-
-        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/invoke?"+param,map);
+        String result = PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/invoke?" + SetURLExtParams(""),map);
         log.info(result);
         return result ;
     }
 
     //此函数兼容wvm和docker两种类型
     public String Invoke(String name,String version,String category,String method,String caller,List<?> args){
-        Map<String,Object>map=new HashMap<>();
+        Map<String,Object>map = new HashMap<>();
         map.put("Name",name);
         if(!version.isEmpty())       map.put("Version",version);
         map.put("Category",category);
@@ -209,18 +185,14 @@ public class GoContract implements Contract {
         map.put("Caller",caller);
         map.put("Args",args);
 
-        String param="";
-        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-
-        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/invoke?"+param,map);
+        String result = PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/invoke?" + SetURLExtParams(""),map);
         log.info(result);
         return result ;
     }
 
     //此函数为WVM接口，支持执行合约内交易，但交易不会上链 同invoke，只是交易不会上链
     public String QueryWVM(String name,String version,String category,String method,String caller,List<?> args){
-        Map<String,Object>map=new HashMap<>();
+        Map<String,Object>map = new HashMap<>();
         map.put("Name",name);
         if(!version.isEmpty())       map.put("Version",version);
         map.put("Category",category);
@@ -228,11 +200,7 @@ public class GoContract implements Contract {
         map.put("Caller",caller);
         map.put("Args",args);
 
-        String param="";
-//        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-
-        String result=PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/query?"+param,map);
+        String result = PostTest.sendPostToJson(SDKADD+"/v2/tx/sc/query?" + SetURLExtParams(""),map);
         log.info(result);
         return result ;
     }
@@ -263,18 +231,16 @@ public class GoContract implements Contract {
 
     @Override
     public String SearchByKey(String key, String contractName) {
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String result=GetTest.SendGetTojson(SDKADD+"/v2/tx/sc/search/bykey"+"?key="+key+"&cn="+contractName+param);
+        String result=GetTest.SendGetTojson(SDKADD+"/v2/tx/sc/search/bykey?"
+                + "key=" + key + "&cn=" + contractName + SetURLExtParams(""));
         log.info(result);
         return result;
     }
 
     @Override
     public String SearchByPrefix(String prefix, String contractName) {
-        String param="";
-        if(subLedger!="") param = param +"&ledger="+subLedger;
-        String result=GetTest.SendGetTojson(SDKADD+"/v2/tx/sc/search/byprefix"+"?prefix="+prefix+"&cn="+contractName+param);
+        String result=GetTest.SendGetTojson(SDKADD+"/v2/tx/sc/search/byprefix?"
+                + "prefix=" + prefix + "&cn=" + contractName + SetURLExtParams(""));
         log.info(result);
         return result;
     }
@@ -286,9 +252,7 @@ public class GoContract implements Contract {
      */
 
     public String GetSmartContractList() {
-        String param = "";
-        if (!subLedger.isEmpty()) param = "&ledger=" + subLedger;
-        String result = GetTest.doGet2(SDKADD + "/v2/tx/sc/search/getsmartcontractlist?" + param);
+        String result = GetTest.doGet2(SDKADD + "/v2/tx/sc/search/getsmartcontractlist?" + SetURLExtParams(""));
         log.info(result);
         return result;
     }

@@ -62,13 +62,17 @@ public class WVMContractTest_UpgradeTestOnly {
         fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-        String response1 = wvmInstallTest(wvmFile +"_temp.txt","");
+        String response1 = wvmInstallTest(wvmFile +"_temp.txt",PRIKEY1);
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
         String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
+
+        commonFunc.verifyTxDetailField(txHash1,"wvm_install", "2", "3", "40");
+        commonFunc.verifyTxRawField(txHash1, "2", "3", "40");
+        commonFunc.verifyRawFieldMatch(txHash1);
 
         //调用合约内的交易
         String response2 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
@@ -78,13 +82,17 @@ public class WVMContractTest_UpgradeTestOnly {
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        commonFunc.verifyTxDetailField(txHash2,"wvm_invoke", "2", "3", "42");
+        commonFunc.verifyTxRawField(txHash2, "2", "3", "42");
+        commonFunc.verifyRawFieldMatch(txHash2);
 
         String response4 = invokeNew(ctHash,"transfer",accountA,accountB,transfer);//A向B转30
         String txHash4 = JSONObject.fromObject(response4).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //查询余额invoke接口
         String response5 = invokeNew(ctHash,"BalanceTest",accountA);//获取账户A账户余额
@@ -94,7 +102,7 @@ public class WVMContractTest_UpgradeTestOnly {
         String txHash6 = JSONObject.fromObject(response6).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //查询余额query接口 交易不上链 //query接口不再显示交易hash
         String response7 = query(ctHash,"BalanceTest",accountA);//获取转账后账户A账户余额
@@ -109,13 +117,34 @@ public class WVMContractTest_UpgradeTestOnly {
         String txHash9 = JSONObject.fromObject(response9).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailType,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
+
+        commonFunc.verifyTxDetailField(txHash9,"wvm_destroy", "2", "3", "41");
+        commonFunc.verifyTxRawField(txHash9, "2", "3", "41");
+        commonFunc.verifyRawFieldMatch(txHash9);
 
         String response10 = query(ctHash,"BalanceTest",accountB);//获取账户B账户余额 报错
-        assertThat(JSONObject.fromObject(response10).getString("message"),containsString("no such file or directory")); //销毁后会提示找不到合约文件 500 error code
 
-        chkTxDetailRsp("200",txHash1,txHash2,txHash3,txHash4,txHash5,txHash6,txHash9);
-//        chkTxDetailRsp("404",txHash7);
+        int state = JSONObject.fromObject(response10).getInt("state");
+
+        if (state == 500 || state == 400){
+            assertThat("500 or 400, both ok", containsString("500 or 400, both ok"));
+        } else{
+            assertThat("wrong state", containsString("500 or 400, both ok"));
+        }
+
+        if (wvmVersion != ""){
+            assertThat(JSONObject.fromObject(response10).getString("message"),containsString("This version[1.0.0] of the smart contract is destroyed"));
+        }else{
+            assertThat(JSONObject.fromObject(response10).getString("message"),containsString("This smart contract is destroyed"));
+        }
+
+        // 销毁后会提示找不到合约文件 500 error code
+
+        chkTxDetailRsp("200",txHash1,txHash2,txHash3,txHash4,txHash9);
+        chkTxDetailRsp("404",txHash5,txHash6);  //因合约实际实现并未返回success 20200907 开发确认针对此规则交易不再上链，故做此检查
+
     }
 
 
