@@ -5,6 +5,8 @@ import com.tjfintech.common.Interface.Scf;
 import com.tjfintech.common.TestBuilder;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.checkerframework.common.value.qual.StaticallyExecutable;
+import org.junit.Test;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -30,6 +32,9 @@ public class UtilsClassScf {
     public static String supplyID1 = "";//供应商ID1
     public static String supplyID2 = "";//供应商ID2
     public static String supplyID3 = "";//供应商ID3
+    public static String supplierMsg1 = "";//供应商1返回txid
+    public static String supplierMsg2 = "";//供应商2返回txid
+    public static String supplierMsg3 = "";//供应商3返回txid
 
     public static String companyID1 = "001";//资金方ID01
     public static String companyID2 = "002";//资金方ID02
@@ -156,6 +161,24 @@ public class UtilsClassScf {
         tokenList.add(amountMap);
         return tokenList;
     }
+//    /**
+//     * 授权供应商数组list
+//     * @throws  Exception
+//
+//     */
+//
+//    public void AuthorizedSupplier() throws Exception{
+//        ArrayList< String> listTag = new ArrayList<>();
+//
+//        listTag.add("1");
+//        listTag.add("2");
+//        return;
+//        log.info();
+//
+//    }
+
+
+
 
 }
 

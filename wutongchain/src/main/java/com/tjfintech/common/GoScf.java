@@ -438,6 +438,33 @@ public class GoScf implements Scf {
         log.info(result);
         return result;
     }
+    /**
+     * 抹账
+     * @param PlatformAddress
+     * @param PlartformKeyID
+     * @param PIN
+     * @param KeyID
+     * @param txID
+     * @param comments
+     * @return
+     */
+    public String FinacingBack(String PlatformAddress,String  PlartformKeyID,String PIN, String KeyID, String txID, String comments) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("PlatformAddress",PlatformAddress);
+        map.put("PlartformKeyID",PlartformKeyID);
+        map.put("PIN",platformPIN);
+        map.put("KeyID",supplyID2);
+        map.put("txID",txID);
+        map.put("comments",comments);
+
+        String param="";
+        if (subLedger!="") param = param +"ledger="+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/finacing/back?" + param, map);
+        log.info(result);
+        return result;
+    }
 
     /**
      * 融资取消
@@ -544,6 +571,48 @@ public class GoScf implements Scf {
         log.info(result);
         return result;
 
+    }
+    /**
+     * 抹账
+     * @param txID
+     * @return
+     */
+    public String FuncGethistory(String txID) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("txID",txID);
+        String param="";
+        if (subLedger!="") param = param +"ledger="+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/func/gethistory?" + param, map);
+        log.info(result);
+        return result;
+    }
+    /**
+     * 授权
+     * @param AccountAddress
+     * @param supplierMsg
+     * @param financeTxID
+     * @param kIDList
+     * @param platformKeyID
+     * @param PIN
+     * @return
+     */
+    public String FuncAuthorization(String AccountAddress, String supplierMsg,String financeTxID,  ArrayList<String> kIDList, String platformKeyID, String PIN ) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("contractAddress",AccountAddress);
+        map.put("supplierMsg",supplierMsg);
+        map.put("financeTxID",financeTxID);
+        map.put("kIDList",kIDList);
+        map.put("platformKeyID",platformKeyID);
+        map.put("PIN",PIN);
+        String param="";
+        if (subLedger!="") param = param +"ledger="+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/func/authorization?" + param, map);
+        log.info(result);
+        return result;
     }
 
 }

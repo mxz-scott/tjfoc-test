@@ -1,5 +1,6 @@
 package com.tjfintech.common.Interface;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public interface Scf {
     String FinacingCancel(String challenge,String tokenType );
     String PayingApply(String tokenType, String companyID1,String comments);
     String PayingNotify(String AccountAddress, String message);
-    String PayingFeedback(String QFJGAddress, String tokenType, String state, String comments);
+    String PayingFeedback(String QFJGAddress, String tokenType, String state,String comments);
     String PayingConfirm(String PlatformAddress, String QFJGAddress, String companyID1, List<Map> list2, String platformKeyID, String platformPIN, String tokenType, String comments);
 
 
@@ -29,5 +30,8 @@ public interface Scf {
     String SendMsg(String msgcode, String sender, String platformKeyID, List<Map> list, String mode, String reftx, String msgdata);
     String CreditAdjust(String AccountAddress, String companyID2, String amount);
     String FuncGetoutputinfo(String supplyAddress1, String tokenType, String subtype);
-    //String gettxdetail();
+    String FinacingBack(String PlartformAddress, String  platformKeyID, String PIN, String KeyID, String txID, String comments);
+    String FuncGethistory(String txID);
+    String FuncAuthorization(String AccountAddress, String supplierMsg, String financeTxID, ArrayList<String> kIDList, String platformKeyID, String PIN);
+
 }
