@@ -34,15 +34,15 @@ public class CalculateAverageTPS {
 
         int startBlockHeight;
 //        startBlockHeight = 23047;
-        startBlockHeight = blockHeight - 20;  // 计算最后20个区块的TPS
 
-        int endBlockHeight = blockHeight;   //手动修改结束高度
+        // 计算中间20个区块的TPS
+        startBlockHeight = blockHeight - 25;
+        int endBlockHeight = blockHeight - 5;   //不计算最后5个区块，交易可能不满
 
         int diff = endBlockHeight - startBlockHeight + 1;
         int count = 0, total = 0;
 
         for (int i = startBlockHeight; i <= endBlockHeight; i++) {
-
 
             //获取区块中的交易个数
             String[] txs = commonFunc.getTxsArray(i);
@@ -51,7 +51,6 @@ public class CalculateAverageTPS {
             total = total + count;
 
         }
-
 
         String timestamp = JSONObject.fromObject(store.GetBlockByHeight(startBlockHeight)).getJSONObject("data").getJSONObject("header").getString("timestamp");
         long blkTimeStamp1 = Long.parseLong(timestamp);
