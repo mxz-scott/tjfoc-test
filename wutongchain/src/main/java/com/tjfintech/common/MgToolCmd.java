@@ -305,4 +305,33 @@ public class MgToolCmd {
         String cmd = toolExePath + mainCmd + " -p " + rpcPort + chainNameParam;
         return shExeAndReturn(shellIP,cmd);
     }
+
+    /**
+     *
+     * @param shellIP  执行shell的远程主机IP
+     * @param rpcPort  -p 参数 即工具向那个节点发命令
+     * @param chainName 操作的应用链
+     * @param contractName  待给其他方/合约赋调用方法权限的合约名
+     * @param contractVersion 上述合约的版本 如果创建时未填版本 则可以不用填写
+     * @param contractMethod 待赋给其他方/合约调用的方法
+     * @param permitStr  允许调用的其他方/合约 若是SDK则需要填写sdk的id  合约则填写合约名
+     * @return
+     */
+    public String contractFuncPermit(String shellIP,String rpcPort,String chainName,
+                                     String contractName,String contractVersion,String contractMethod,
+                                     String permitStr){
+        String mainCmd =" contract modifyfunc ";
+        //传入IP:Port 则直接作为参数 否则与shellIp拼接成IP:Port格式
+        if (!rpcPort.contains(":"))  rpcPort = shellIP + ":" + rpcPort;
+        String versionParam = "";
+        String chainNameParam = " -c " + chainName;
+        String contractNameParam = " -m " + contractName;
+        if(!contractVersion.isEmpty()) versionParam = " -v " + contractVersion;
+        String contractMethodParam = " -f " + contractMethod;
+        String permitStrParam = " -a " + "everyone";//默认
+        if(!permitStr.isEmpty()) permitStrParam = " -a " + permitStr;
+        String cmd = toolExePath + mainCmd + " -p " + rpcPort + chainNameParam +
+                contractNameParam + versionParam + contractMethodParam + permitStrParam;
+        return shExeAndReturn(shellIP,cmd);
+    }
 }
