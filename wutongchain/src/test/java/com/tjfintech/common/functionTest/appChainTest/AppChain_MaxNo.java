@@ -11,6 +11,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -52,6 +53,29 @@ public void testAddApp()throws Exception{
         recordTimeSysMemFreeInfo(fileOperation);
 //        recordTimeSysInfo(fileOperation,"",false);
     }
+    long end = Long.parseLong("1612488600000");
+//    BigDecimal endtime = new BigDecimal("1612488600000");
+    int iStoreNo =0;
+    while ((new Date()).getTime() < end){
+        log.info("************************************* " + iStoreNo);
+        for(int k=0;k < No;k++) {
+            subLedger = listLedgerId.get(k).toString();
+            String response1 = store.CreateStore("testdata");
+//            assertEquals("200", JSONObject.fromObject(response1).getString("state"));
+
+            //检查可以获取子链列表
+            String res2 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
+            assertEquals(res2.contains("name"), true);
+
+            res2 = mgToolCmd.getAppChain(PEER1IP,PEER2IP + ":" + PEER2RPCPort,"");
+            assertEquals(res2.contains("name"), true);
+
+            res2 = mgToolCmd.getAppChain(PEER1IP,PEER4IP + ":" + PEER4RPCPort,"");
+            assertEquals(res2.contains("name"), true);
+        }
+
+        iStoreNo ++;
+    }
 //    recordTimeSysMemFreeInfo(fileOperation);
 //    for(int i =0;i< No;i++){
 //        log.info("+++++++++++++++++++++++++++++++++++++ " + i);
@@ -63,14 +87,17 @@ public void testAddApp()throws Exception{
     recordTimeSysMemFreeInfo(fileOperation);
 
 
-//    for(int i=0;i<2000;i++){
-//        log.info("************************************* " + i);
-//        for(int k=0;k<40;k++) {
-//            subLedger = listLedgerId.get(k).toString();
-//            String response1 = store.CreateStore("testdata");
-////            assertEquals("200", JSONObject.fromObject(response1).getString("state"));
-//        }
-//    }
+    for(int i=0;i<15000;i++){
+        log.info("************************************* " + i);
+        for(int k=0;k < No;k++) {
+            subLedger = listLedgerId.get(k).toString();
+            String response1 = store.CreateStore("testdata");
+//            assertEquals("200", JSONObject.fromObject(response1).getString("state"));
+        }
+//        sleepAndSaveInfo(3000);
+    }
+
+    recordTimeSysMemFreeInfo(fileOperation);
 }
 //    public void recordTimeSysInfo(FileOperation fileOperation,Boolean bFirst)throws Exception {
 //        String cmd = "vmstat|tail -1";
