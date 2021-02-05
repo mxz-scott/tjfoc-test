@@ -28,8 +28,6 @@ import org.junit.runners.Suite;
         WVMContractTest.class,
         WVMContractInvalidTest.class,
 
-//        VerifyTests.class,
-
 })
 
 //Build Validation Test

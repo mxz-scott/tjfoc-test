@@ -112,7 +112,7 @@ public class StableAutoTest {
 
         for (int k = 0 ; k < ids.length; k++){
             log.info("*****************************************************************");
-            int totalOnChain = vt.CalculatetotalTxs(ids[k], startHeights[k], endHeights[k]);  // 上链交易数
+            int totalOnChain = commonFunc.CalculatetotalTxs(ids[k], startHeights[k], endHeights[k]);  // 上链交易数
             log.info("应用链ID：" + ids[k]);
             long timeDiff = (endTimestamps[k] - startTimestamps[k]) / 1000 / 60 ;   // 按分钟计时
             log.info("测试时长：" + timeDiff + "分钟");
@@ -189,7 +189,7 @@ public class StableAutoTest {
 
         for (int k = 0 ; k < ids.length; k++){
             log.info("*****************************************************************");
-            int totalOnChain = vt.CalculatetotalTxs(ids[k], startHeights[k], endHeights[k]);  // 上链交易数
+            int totalOnChain = commonFunc.CalculatetotalTxs(ids[k], startHeights[k], endHeights[k]);  // 上链交易数
             log.info("应用链ID：" + ids[k]);
             long timeDiff = (endTimestamps[k] - startTimestamps[k]) / 1000 / 60 ;   // 按分钟计时
             log.info("测试时长：" + timeDiff + "分钟");
