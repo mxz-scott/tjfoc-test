@@ -584,7 +584,7 @@ public class GoScf implements Scf {
         String param="";
         if (subLedger!="") param = param +"ledger="+subLedger;
 
-        String result = PostTest.postMethod(SDKADD + "/scf/func/gethistory?" + param, map);
+        String result = PostTest.postMethod(SDKADD + "/scf/func/gethistory/txid?" + param, map);
         log.info(result);
         return result;
     }

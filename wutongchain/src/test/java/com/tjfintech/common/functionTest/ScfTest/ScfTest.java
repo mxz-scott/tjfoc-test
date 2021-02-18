@@ -229,16 +229,6 @@ public class ScfTest {
         assertThat(checking1, containsString("200"));
         assertThat(checking1, containsString("success"));
 
-
-
-
-
-
-
-
-
-
-
         //查询tokentype资产
 //        String response6 = scf.getowneraddr(tokenType);
 //        assertThat(response6, containsString("200"));
@@ -298,6 +288,16 @@ public class ScfTest {
          assertThat(authorization, containsString("200"));
          assertThat(authorization, containsString("success"));
          assertThat(authorization, containsString("data"));
+
+         JSONObject SHjsonObject = JSONObject.fromObject(response3);
+         String SHstoreHash = SHjsonObject.getString("data");
+         String SHQSstoreHash = UtilsClassScf.strToHex(SHstoreHash);
+         System.out.println("SHQSstoreHash = " + SHQSstoreHash);
+
+         commonFunc.sdkCheckTxOrSleep(KLQSstoreHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+         String checking1 = store.GetTxDetail(SHQSstoreHash);
+         assertThat(checking1, containsString("200"));
+         assertThat(checking1,containsString("success"));
 
          //资产转让申请
          List<Map> list = new ArrayList<>(10);

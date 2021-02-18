@@ -161,21 +161,6 @@ public class UtilsClassScf {
         tokenList.add(amountMap);
         return tokenList;
     }
-//    /**
-//     * 授权供应商数组list
-//     * @throws  Exception
-//
-//     */
-//
-//    public void AuthorizedSupplier() throws Exception{
-//        ArrayList< String> listTag = new ArrayList<>();
-//
-//        listTag.add("1");
-//        listTag.add("2");
-//        return;
-//        log.info();
-//
-//    }
 
 
 
