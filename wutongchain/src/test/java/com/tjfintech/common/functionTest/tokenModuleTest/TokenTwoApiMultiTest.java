@@ -187,18 +187,17 @@ public class TokenTwoApiMultiTest {
 
     /**
      * 多签发行token。接收地址不为本身。指定其他多签地址
-     * @throws Exception
      */
      @Test
      public void multiToMultiIssue()throws Exception {
 
          SDKADD = TOKENADD2;
-         tokenType = commonFunc.tokenModule_IssueToken(tokenMultiAddr12, tokenMultiAddr2,"1000");
+         tokenType = commonFunc.tokenModule_IssueToken(tokenMultiAddr12, tokenMultiAddr21,"1000");
          SDKADD = TOKENADD;
          tokenType2 = commonFunc.tokenModule_IssueToken(tokenMultiAddr12, tokenMultiAddr2,"1000");
          commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
-         String response1 = tokenModule.tokenGetBalance(tokenMultiAddr2,tokenType);
+         String response1 = tokenModule.tokenGetBalance(tokenMultiAddr21,tokenType);
          String response2 = tokenModule.tokenGetBalance(tokenMultiAddr2,tokenType2);
          assertEquals("200",JSONObject.fromObject(response1).getString("state"));
          assertEquals("1000",JSONObject.fromObject(response1).getJSONObject("data").getString(tokenType));
@@ -215,7 +214,8 @@ public class TokenTwoApiMultiTest {
         // tokenMultiAddr1 + "向" + tokenMultiAddr3 + "转账10个" + tokenType;
         SDKADD = TOKENADD2;
         List<Map> list = utilsClass.tokenConstructToken(token2Account1,tokenType,"10");
-        String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr12,list);
+        List<Map> list2= utilsClass.tokenConstructToken(tokenMultiAddr21,tokenType,"10",list);
+        String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr12,list2);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
@@ -224,35 +224,43 @@ public class TokenTwoApiMultiTest {
         String amount1;
 
         if (UtilsClass.PRECISION == 10) {
-            amount1 = "990.1234567891";
+            amount1 = "980.1234567891";
         }else {
-            amount1 = "990.123456";
+            amount1 = "980.123456";
         }
 
-        log.info("查询"+ tokenMultiAddr12 +"和" + token2Account1 + "余额，判断转账是否成功");
+        log.info("查询"+ tokenMultiAddr12 +"和" + token2Account1 +"和" + tokenMultiAddr21 + "余额，判断转账是否成功");
         String queryInfo = tokenModule.tokenGetBalance(tokenMultiAddr12, tokenType);
         String queryInfo2 = tokenModule.tokenGetBalance(token2Account1, tokenType);
+        String queryInfo3 = tokenModule.tokenGetBalance(tokenMultiAddr21, tokenType);
         assertEquals("200",JSONObject.fromObject(queryInfo).getString("state"));
         assertEquals(amount1,JSONObject.fromObject(queryInfo).getJSONObject("data").getString(tokenType));
         assertEquals("200",JSONObject.fromObject(queryInfo2).getString("state"));
         assertEquals("10",JSONObject.fromObject(queryInfo2).getJSONObject("data").getString(tokenType));
+        assertEquals("200",JSONObject.fromObject(queryInfo3).getString("state"));
+        assertEquals("10",JSONObject.fromObject(queryInfo3).getJSONObject("data").getString(tokenType));
 
         //回收
-        log.info(tokenMultiAddr12 +"和" + token2Account1 + "回收" + tokenType);
+        log.info(tokenMultiAddr12 +"和" + token2Account1 +"和" + tokenMultiAddr21 + "回收" + tokenType);
         String recycleInfo = commonFunc.tokenModule_DestoryToken(tokenMultiAddr12,tokenType, amount1);
         String recycleInfo2 = commonFunc.tokenModule_DestoryToken(token2Account1,tokenType, "10");
+        String recycleInfo3 = commonFunc.tokenModule_DestoryToken(tokenMultiAddr21,tokenType, "10");
         assertEquals("200",JSONObject.fromObject(recycleInfo).getString("state"));
         assertEquals("200",JSONObject.fromObject(recycleInfo2).getString("state"));
+        assertEquals("200",JSONObject.fromObject(recycleInfo3).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         log.info("查询回收后账户余额是否为0");
-        String queryInfo3 = tokenModule.tokenGetBalance(tokenMultiAddr12,tokenType);
-        String queryInfo4 = tokenModule.tokenGetBalance(token2Account1,tokenType);
-        assertEquals("200",JSONObject.fromObject(queryInfo3).getString("state"));
-        assertEquals(false,queryInfo3.contains(tokenType));
+        String queryInfo4 = tokenModule.tokenGetBalance(tokenMultiAddr12,tokenType);
+        String queryInfo5 = tokenModule.tokenGetBalance(token2Account1,tokenType);
+        String queryInfo6 = tokenModule.tokenGetBalance(tokenMultiAddr21,tokenType);
         assertEquals("200",JSONObject.fromObject(queryInfo4).getString("state"));
         assertEquals(false,queryInfo4.contains(tokenType));
+        assertEquals("200",JSONObject.fromObject(queryInfo5).getString("state"));
+        assertEquals(false,queryInfo5.contains(tokenType));
+        assertEquals("200",JSONObject.fromObject(queryInfo6).getString("state"));
+        assertEquals(false,queryInfo6.contains(tokenType));
     }
 
 
@@ -269,6 +277,7 @@ public class TokenTwoApiMultiTest {
         SDKADD = TOKENADD2;
         log.info("锁定待转账Token: " + tokenType);
         String resp = tokenModule.tokenFreezeToken(tokenType);
+        assertEquals("200",JSONObject.fromObject(resp).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
@@ -281,12 +290,8 @@ public class TokenTwoApiMultiTest {
         log.info("冻结后转账，分别转冻结token和未冻结token");
         List<Map> list = utilsClass.tokenConstructToken(token2Account1,tokenType,"10");
         List<Map> list2 = utilsClass.tokenConstructToken(token2Account1,tokenType2,"10",list);
-        String transferInfo= commonFunc.tokenModule_TransferTokenList(tokenMultiAddr12,list2); //同时转账锁定和不锁定的两种token
+        String transferInfo= commonFunc.tokenModule_TransferTokenList(tokenMultiAddr12,list2);
 
-//        assertEquals("400",JSONObject.fromObject(transferInfo).getString("state"));
-//        assertEquals(true,transferInfo.contains("has been frozen"));
-//        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
-//                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         log.info("查询余额判断转账是否成功");
         String queryInfo= tokenModule.tokenGetBalance(token2Account1,"");
@@ -560,7 +565,6 @@ public class TokenTwoApiMultiTest {
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //M21>>T1分别转账100的token1\token2，M21>>M3转账100的token2
-        SDKADD = TOKENADD;
         List<Map>list4 = utilsClass.tokenConstructUTXO(transferInfoHash1,3,"100",tokenAccount1);
         List<Map>list5 = utilsClass.tokenConstructUTXO(hash2,0,"100",tokenAccount1,list4);
         List<Map>list6 = utilsClass.tokenConstructUTXO(hash2,0,"100",tokenMultiAddr3,list5);
@@ -571,14 +575,15 @@ public class TokenTwoApiMultiTest {
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
         //M1>>T1转账100的token1
+        SDKADD = TOKENADD;
         List<Map>list7 = utilsClass.tokenConstructUTXO(transferInfoHash1,0,"100",tokenAccount1);
         String transferInfo3 = tokenModule.tokenTransfer(tokenMultiAddr1,"to和utxo同时传参优先utxo",listforto,list7);
         assertEquals("200",JSONObject.fromObject(transferInfo3).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
 
-        //T1-token1余额200，M1-token1余额100,M2-token1余额200,M3-token1余额200
-        // T1-token2余额100，M21-token2余额300.123456,M21-token2余额800.876543,M3-token2余额100
+        //T1-token1余额200，M1-token1余额100,M2-token1余额200,M3-token1余额200,M21-token1余额300.123456
+        // T1-token2余额100，,M21-token2余额800.876543,M3-token2余额100
         String queryBalance = tokenModule.tokenGetBalance(tokenAccount1,"");
         String queryBalance1= tokenModule.tokenGetBalance(tokenMultiAddr1,"");
         String queryBalance2 = tokenModule.tokenGetBalance(tokenMultiAddr2,"");
@@ -616,7 +621,7 @@ public class TokenTwoApiMultiTest {
     public void destroyByUTXO()throws Exception{
 
         HashMap<String, Object> mapSendMsg = new HashMap<>();
-        //T1>T1发行1000.123456的token1，M1>M2发行1000.876543的token2
+        //M12>T21发行1000.123456的token1，M12>M21发行1000.876543的token2
         SDKADD = TOKENADD2;
         tokenType = utilsClass.Random(6);
         tokenType2 = UtilsClass.Random(6);
@@ -679,8 +684,8 @@ public class TokenTwoApiMultiTest {
         //"归集地址向" + PUBKEY3 + "转账3000个" + tokenType+",并向"+PUBKEY4+"转账";
         SDKADD = TOKENADD2;
         List<Map> list = utilsClass.tokenConstructToken(tokenAccount3,tokenType2,"300");
-        List<Map> list2= utilsClass.tokenConstructToken(tokenAccount3,tokenType,"400",list);
-        List<Map> list3 = utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType,"300",list2);
+        List<Map> list2= utilsClass.tokenConstructToken(token2Account1,tokenType,"400",list);
+        List<Map> list3 = utilsClass.tokenConstructToken(tokenMultiAddr21,tokenType,"300",list2);
         List<Map> list4 = utilsClass.tokenConstructToken(tokenMultiAddr2,tokenType2,"400",list3);
         String transferInfo = commonFunc.tokenModule_TransferTokenList(tokenMultiAddr12, list4);
         assertEquals("200",JSONObject.fromObject(transferInfo).getString("state"));
@@ -696,9 +701,8 @@ public class TokenTwoApiMultiTest {
             amount2 = "300.876543";
         }
         //此部分与list-list4保持一致
-        SDKADD = TOKENADD;
-        List<Map> listR = commonFunc.ConstructDesByTokenRespList(tokenAccount3,"400");
-        List<Map> listR2= commonFunc.ConstructDesByTokenRespList(tokenMultiAddr2,"300",listR);
+        List<Map> listR = commonFunc.ConstructDesByTokenRespList(token2Account1,"400");
+        List<Map> listR2= commonFunc.ConstructDesByTokenRespList(tokenMultiAddr21,"300",listR);
         List<Map> listR3= commonFunc.ConstructDesByTokenRespList(tokenMultiAddr12,amount1,listR2);
 
         List<Map> list1R = commonFunc.ConstructDesByTokenRespList(tokenAccount3,"300");
@@ -719,6 +723,7 @@ public class TokenTwoApiMultiTest {
         String getZeroAc = tokenModule.tokenGetDestroyBalance();
         assertEquals(actualAmount1,JSONObject.fromObject(getZeroAc).getJSONObject("data").getString(tokenType));
 
+        SDKADD = TOKENADD;
         desInfo = commonFunc.tokenModule_DestoryTokenByTokenType(tokenType2);
         assertEquals("200",JSONObject.fromObject(desInfo).getString("state"));
         assertEquals(actualAmount2,JSONObject.fromObject(desInfo).getJSONObject("data").getString("total"));
@@ -736,8 +741,10 @@ public class TokenTwoApiMultiTest {
         assertEquals(actualAmount2,JSONObject.fromObject(getZeroAc).getJSONObject("data").getString(tokenType2));
 
         String queryInfo1 = tokenModule.tokenGetBalance(tokenAccount3,"");
-        String queryInfo2 = tokenModule.tokenGetBalance(tokenMultiAddr1,"");
+        String queryInfo2 = tokenModule.tokenGetBalance(tokenMultiAddr12,"");
         String queryInfo3 = tokenModule.tokenGetBalance(tokenMultiAddr2,"");
+        String queryInfo4 = tokenModule.tokenGetBalance(token2Account1,"");
+        String queryInfo5 = tokenModule.tokenGetBalance(tokenMultiAddr21,"");
 
         assertEquals(false,queryInfo1.contains(tokenType2));
         assertEquals(false,queryInfo1.contains(tokenType));
@@ -745,6 +752,10 @@ public class TokenTwoApiMultiTest {
         assertEquals(false,queryInfo2.contains(tokenType));
         assertEquals(false,queryInfo3.contains(tokenType2));
         assertEquals(false,queryInfo3.contains(tokenType));
+        assertEquals(false,queryInfo4.contains(tokenType2));
+        assertEquals(false,queryInfo4.contains(tokenType));
+        assertEquals(false,queryInfo5.contains(tokenType2));
+        assertEquals(false,queryInfo5.contains(tokenType));
 
 
     }

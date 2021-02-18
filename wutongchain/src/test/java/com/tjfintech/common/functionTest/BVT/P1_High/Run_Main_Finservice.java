@@ -36,6 +36,7 @@ import org.junit.runners.Suite;
         TokenSoloInvalidTest.class,
 
         TokenTxTypeTest_Token.class,
+        TokenTwoApiMultiTest.class,  //需要部署第二个api并且配置在该class的TOKENADD2参数
 
 })
 

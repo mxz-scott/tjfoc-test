@@ -24,8 +24,6 @@ import org.junit.runners.Suite;
         NoPriPrivateStoreTest.class,
         StoreInvalidTest.class,
 
-//        VerifyTests.class,
-
 })
 
 //Build Validation Test

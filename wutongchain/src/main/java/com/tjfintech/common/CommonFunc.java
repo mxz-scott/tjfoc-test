@@ -1485,4 +1485,22 @@ public class CommonFunc {
 
     }
 
+    public int CalculatetotalTxs(String id, int startBlockHeight, int endBlockHeight) throws Exception {
+
+        subLedger = id;
+        int count = 0, total = 0;
+
+        for (int i = startBlockHeight + 1; i <= endBlockHeight; i++) {
+            //获取区块中的交易个数
+            String[] txs = getTxsArray(i);
+            count = txs.length;
+
+            total = total + count;
+        }
+
+
+        log.info("交易总数：" + total);
+        return total;
+    }
+
 }

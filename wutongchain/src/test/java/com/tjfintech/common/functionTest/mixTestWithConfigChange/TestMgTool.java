@@ -436,7 +436,7 @@ public class TestMgTool {
         String rpcPort = queryIPPort;//.split(":")[1];//9300
         String queryIP = queryIPPort.split(":")[0];//10.1.3.240
 
-        tempCmd=toolPath+"./"+ ToolTPName + " mem -p " + rpcPort + " -c " + subLedger;
+        tempCmd = toolPath + "./" + ToolTPName + " mem -p " + rpcPort + " -c " + subLedger;
 
         Shell shell1=new Shell(queryIP,USERNAME,PASSWD);
         shell1.execute(tempCmd);
@@ -444,11 +444,17 @@ public class TestMgTool {
         ArrayList<String> stdout = shell1.getStandardOutput();
         for(String str :stdout)
         {
-            if(str.contains("shownName"))
+            if(str.contains("shownName")) {
+                Boolean bContain = str.contains(getPeerId(PEER1IP,USERNAME,PASSWD)) ||
+                        str.contains(getPeerId(PEER2IP,USERNAME,PASSWD))||
+                        str.contains(getPeerId(PEER3IP,USERNAME,PASSWD))||
+                        str.contains(getPeerId(PEER4IP,USERNAME,PASSWD));
+                assertEquals(subLedger + " 集群列表中的节点shownName为节点Id，非常规peer name",false,bContain);
                 No++;
+            }
         }
         String response = StringUtils.join(stdout,"\n");
-        log.info("\n"+response);
+        log.info("\n" + response);
         assertEquals(peerNo,No);
         //assertEquals(response.contains("isLeader"), true);
 

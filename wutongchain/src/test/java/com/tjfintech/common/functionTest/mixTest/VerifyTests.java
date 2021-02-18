@@ -24,6 +24,7 @@ public class VerifyTests {
     Store store =testBuilder.getStore();
     CommonFunc commonFunc = new CommonFunc();
 
+
     /**
      计算链上TPS
      */
@@ -34,13 +35,13 @@ public class VerifyTests {
         int startBlockHeight;
 
         if (blockHeight > 100) {
-            startBlockHeight = blockHeight - 20;
+            startBlockHeight = blockHeight - 99;
         }else {
             startBlockHeight = 1;
         }
         //手动修改起始高度
-       //startBlockHeight = 392;
-        int endBlockHeight = blockHeight - 1;   //手动修改结束高度
+//        startBlockHeight = 1090;
+        int endBlockHeight = blockHeight;   //手动修改结束高度
 
         int diff = endBlockHeight - startBlockHeight + 1;
         int count = 0, total = 0;
@@ -49,7 +50,7 @@ public class VerifyTests {
 
 
             //获取区块中的交易个数
-            String[] txs = getTxsArray(i);
+            String[] txs = commonFunc.getTxsArray(i);
             count = txs.length;
 
             total = total + count;
@@ -70,6 +71,7 @@ public class VerifyTests {
         log.info("链上TPS：" + total / timeDiff);
 
     }
+
 
 
     /**
@@ -142,8 +144,8 @@ public class VerifyTests {
         for (int i = 2; i <= blockHeight; i++) {
 
             //获取交易列表
-            String[] txsPrevious = getTxsArray(i-1);
-            String[] txsCurrent = getTxsArray(i);
+            String[] txsPrevious = commonFunc.getTxsArray(i-1);
+            String[] txsCurrent = commonFunc.getTxsArray(i);
 
             for (String txp : txsPrevious) {
                 for (String txc : txsCurrent) {
@@ -184,34 +186,7 @@ public class VerifyTests {
         commonFunc.verifyBlockAndTransaction(destShellScriptDir);
     }
 
-    public int CalculatetotalTxs(String id, int startBlockHeight, int endBlockHeight) throws Exception {
 
-        subLedger = id;
-        int count = 0, total = 0;
-
-        for (int i = startBlockHeight + 1; i <= endBlockHeight; i++) {
-            //获取区块中的交易个数
-            String[] txs = getTxsArray(i);
-            count = txs.length;
-
-            total = total + count;
-        }
-
-
-        log.info("交易总数：" + total);
-        return total;
-    }
-
-    //根据区块高度获取区块中的交易列表
-    public String[] getTxsArray(int i) {
-        String txsList = JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("data").getString("txs");
-        txsList = txsList.substring(2);
-        txsList = StringUtils.substringBefore(txsList, "\"]");
-//        log.info(txsList);
-
-        String[] txs = txsList.split("\",\"");
-        return txs;
-    }
 
 
 }

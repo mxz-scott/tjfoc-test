@@ -298,7 +298,7 @@ public class ScfTest {
          assertThat(authorization, containsString("200"));
          assertThat(authorization, containsString("success"));
          assertThat(authorization, containsString("data"));
-         
+
          //资产转让申请
          List<Map> list = new ArrayList<>(10);
          List<Map> list1 = UtilsClassScf.Assignment("1", "0", list);
