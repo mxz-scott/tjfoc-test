@@ -663,7 +663,7 @@ public class AppChain_FRDG {
         assertEquals(res2.contains("name"), true);
         assertEquals(res2.contains(chainName), true);
 
-        urlAddr = PEER1IP;
+        urlAddr = PEER1IP+  ":" + PEER1RPCPort;
         //冻结前发送一笔交易
         String response = store.CreateStore("tttttt");
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
@@ -741,7 +741,7 @@ public class AppChain_FRDG {
 
         //向新建应用链chainName2发送交易
         subLedger = tempLedgerId1;
-        urlAddr = PEER1IP;
+        urlAddr = PEER1IP +  ":" + PEER1RPCPort;
         String response1 = store.CreateStore(Data);
         assertThat(response1, containsString(stateFreezed));
 
