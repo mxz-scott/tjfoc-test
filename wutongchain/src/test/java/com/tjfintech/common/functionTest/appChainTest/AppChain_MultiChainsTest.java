@@ -56,7 +56,7 @@ public class AppChain_MultiChainsTest {
 
         tempLedgerId2 = subLedger;
 
-        sleepAndSaveInfo(2000);
+        sleepAndSaveInfo(4000);
         //检查可以获取子链列表
         String res2 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
@@ -69,16 +69,19 @@ public class AppChain_MultiChainsTest {
         subLedger = tempLedgerId1;
         urlAddr = PEER1IP +  ":" + PEER1RPCPort;
         String response1 = store.CreateStore(Data);
+        assertEquals("200",JSONObject.fromObject(response1).getString("state"));
 
         Data = "1589 ledger2 tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
         //向子链chainName3发送交易
         subLedger = tempLedgerId2;
         String response2 = store.CreateStore(Data);
+        assertEquals("200",JSONObject.fromObject(response2).getString("state"));
         sleepAndSaveInfo(SLEEPTIME);
 
         Data = "1589 main tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
         subLedger = globalAppId1;
         String response3 = store.CreateStore(Data);
+        assertEquals("200",JSONObject.fromObject(response3).getString("state"));
 
         sleepAndSaveInfo(SLEEPTIME);
 
@@ -208,16 +211,19 @@ public class AppChain_MultiChainsTest {
         //向子链chainName2发送交易
         subLedger = tempLedgerId1;
         String response1 = store.CreateStore(Data);
+        assertEquals("200",JSONObject.fromObject(response1).getString("state"));
 
         Data = "1592 ledger2 tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
         //向子链chainName3发送交易
         subLedger = tempLedgerId2;
         String response2 = store.CreateStore(Data);
+        assertEquals("200",JSONObject.fromObject(response2).getString("state"));
 
         Data = "1592 main tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
         //向主链发送交易
         subLedger = globalAppId1;
         String response3 = store.CreateStore(Data);
+        assertEquals("200",JSONObject.fromObject(response3).getString("state"));
 
         sleepAndSaveInfo(SLEEPTIME);
 
@@ -269,13 +275,13 @@ public class AppChain_MultiChainsTest {
         tempLedgerId2 = subLedger;
 
         //创建子链，包含一个节点
-        String chainName1="tc1593_" + sdf.format(dt) + RandomUtils.nextInt(1000);
+        String chainName1 = "tc1593_" + sdf.format(dt) + RandomUtils.nextInt(1000);
         res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1,
                 " -t sm3"," -w first",
                 " -c raft"," -m " + id1);
         assertEquals(res.contains("peer illegal"), true);
 
-        sleepAndSaveInfo(2000);
+        sleepAndSaveInfo(4000);
         //检查可以获取子链列表
         String res2 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
