@@ -23,7 +23,7 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 public class UtilsClass {
 
     public static String subLedger = "e28ekpi3ek"; // 应用链ID
-    public static String urlAddr = ""; // 向指定节点发请求
+    public static String urlAddr = ""; // 向指定节点发请求 格式 IP:RPCPort
     public static String SDKADD = "http://10.1.3.164:7310";//sdk/tokenapi/中间件服务地址 http://IP:Port
     public static String TOKENADD = SDKADD;
     public static String rSDKADD = SDKADD;
