@@ -35,6 +35,7 @@ public class AppChain_MultiChainsTest {
     public void beforeConfig() throws Exception {
         AppChain_CommonFunc cf = new AppChain_CommonFunc();
         cf.createTwoAppChain(glbChain01,glbChain02);
+        urlAddr = "";
     }
 
 
@@ -66,6 +67,7 @@ public class AppChain_MultiChainsTest {
 
         //向子链chainName2发送交易
         subLedger = tempLedgerId1;
+        urlAddr = PEER1IP;
         String response1 = store.CreateStore(Data);
 
         Data = "1589 ledger2 tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
@@ -134,6 +136,7 @@ public class AppChain_MultiChainsTest {
         String Data = "1589 ledger1 tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
 
         //向子链chainName2发送交易
+        urlAddr = PEER1IP;
         subLedger = tempLedgerId1;
         String response1 = store.CreateStore(Data);
 
@@ -141,7 +144,7 @@ public class AppChain_MultiChainsTest {
         subLedger = tempLedgerId2;
         String response2 = store.CreateStore(Data);
 
-        //向主链发送交易
+        //向子链chainName2
         subLedger = globalAppId1;
         String response3 = store.CreateStore(Data);
 
@@ -280,6 +283,7 @@ public class AppChain_MultiChainsTest {
         assertEquals(res2.contains(chainName2), true);
         assertEquals(res2.contains(chainName3), true);
 
+        urlAddr = PEER2IP;
         //向子链glbChain01/glbChain02和主链发送交易
         subLedgerCmd.sendTxToMultiActiveChain("1593 tx",globalAppId1,globalAppId2,tempLedgerId1,tempLedgerId2);
     }
