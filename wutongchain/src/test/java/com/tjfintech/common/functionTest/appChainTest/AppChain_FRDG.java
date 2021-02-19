@@ -11,6 +11,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -888,5 +889,10 @@ public class AppChain_FRDG {
         //检查可以获取应用链列表
         String res2 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
+    }
+
+    @AfterClass
+    public static void reset(){
+        urlAddr = "";
     }
 }

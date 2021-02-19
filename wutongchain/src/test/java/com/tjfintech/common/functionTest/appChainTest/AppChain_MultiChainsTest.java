@@ -10,6 +10,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -294,4 +295,8 @@ public class AppChain_MultiChainsTest {
         subLedgerCmd.sendTxToMultiActiveChain("1593 tx",globalAppId1,globalAppId2,tempLedgerId1,tempLedgerId2);
     }
 
+    @AfterClass
+    public static void reset(){
+        urlAddr = "";
+    }
 }
