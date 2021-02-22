@@ -276,7 +276,7 @@ public class BeforeCondition {
         String constFileName = "account_simple.wlang";
         String contractFileName = "account_simple.wlang";
         //如果smartAccoutCtHash为空或者contractFileName不为constFileName 即"wvm\\account_simple.wlang" 时会重新安装
-        if (smartAccoutContractAddress.equals("") || (!contractFileName.equals(constFileName))) {
+//        if (smartAccoutContractAddress.equals("") || (!contractFileName.equals(constFileName))) {
             //安装
             String filePath = testDataPath + "wvm/" + abfileName;
             log.info("filepath " + filePath);
@@ -287,7 +287,7 @@ public class BeforeCondition {
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(response, utilsClass.sdkGetTxHashType20),
                     utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
             smartAccoutContractAddress = JSONObject.fromObject(response).getJSONObject("data").getString("name");
-        }
+//        }
     }
 
     /**

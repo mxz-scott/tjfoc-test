@@ -46,11 +46,11 @@ public class StableAutoTest {
 //            bf.createSTAddresses();
 //            bf.installSmartAccountContract("account_simple.wlang");
 //        }
-        if(tokenAccount1.isEmpty()) {
-            BeforeCondition beforeCondition = new BeforeCondition();
-            beforeCondition.createTokenAccount();
-            Thread.sleep(SLEEPTIME);
-        }
+//        if(tokenAccount1.isEmpty()) {
+//            BeforeCondition beforeCondition = new BeforeCondition();
+//            beforeCondition.createTokenAccount();
+//            Thread.sleep(SLEEPTIME);
+//        }
     }
 
 
@@ -69,13 +69,13 @@ public class StableAutoTest {
             storeTest(ids[j]);
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
-//            bf.createSTAddresses();
-//            bf.installSmartAccountContract("account_simple.wlang");
+            bf.createSTAddresses();
+            bf.installSmartAccountContract("account_simple.wlang");
         }
 
         int i = 0;
-        int number = 2;  // 单链单次循环发送的交易数
-        int loop = 100000 ; // 循环次数
+        int number = 6;  // 单链单次循环发送的交易数
+        int loop = 1000 ; // 循环次数
         int total = loop * number ; // 循环次数
 
         commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
@@ -94,9 +94,9 @@ public class StableAutoTest {
                  priStoreTest(ids[j]);
             }
 
-//            for (int j = 0; j < ledgerNumber; j++){
-//                smartTokenTest(ids[j]);
-//            }
+            for (int j = 0; j < ledgerNumber; j++){
+                smartTokenTest(ids[j]);
+            }
 
            i++;
 
@@ -123,7 +123,7 @@ public class StableAutoTest {
             log.info("上链交易总数：" + totalOnChain);
             if (total != totalOnChain){
                 count++;
-                log.error("交易丢了!");
+                log.info(ids[k] + " 交易丢了!");
             }
             log.info("*****************************************************************");
         }

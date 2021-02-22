@@ -1023,7 +1023,7 @@ public class CommonFunc {
             if(state.equals("200"))
                 bOK = true;
             else
-                sleepAndSaveInfo(100,"等待再次检查交易是否上链时间");
+                sleepAndSaveInfo(250,"等待再次检查交易是否上链时间");
         }
         long internal = (new Date()).getTime() - nowTime;
         log.info("============================= 查询交易上链 " + bOK + " 等待时间 " +

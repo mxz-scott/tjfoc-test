@@ -99,7 +99,7 @@ public class PrivateStoreTest {
         JSONObject jsonObject=JSONObject.fromObject(response1);
         String StoreHashPwd = jsonObject.getString("data");
 
-        commonFunc.sdkCheckTxOrSleep(StoreHashPwd,utilsClass.sdkGetTxDetailType,SHORTMEOUT);
+        commonFunc.sdkCheckTxOrSleep(StoreHashPwd,utilsClass.sdkGetTxDetailType,SHORTMEOUT*2);
 
         assertThat(response1, containsString("200"));
         assertThat(response1,containsString("data"));

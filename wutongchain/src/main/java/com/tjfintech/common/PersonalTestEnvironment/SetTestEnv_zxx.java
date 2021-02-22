@@ -28,7 +28,7 @@ public class SetTestEnv_zxx {
       PTPATH="/root/auto/";
       SDKPATH = PTPATH + "sdk/";
       PeerPATH = PTPATH + "peer/";
-      ToolPATH = PTPATH + "wttool/";
+      ToolPATH = PTPATH + "toolkit/";
       PeerTPName="wtchain";
       SDKTPName="wtsdk";
       ToolTPName="wttool";
