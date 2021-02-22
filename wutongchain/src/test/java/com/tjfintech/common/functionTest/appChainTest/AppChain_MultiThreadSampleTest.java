@@ -25,13 +25,9 @@ public class AppChain_MultiThreadSampleTest {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
-    MultiSign multiSign =testBuilder.getMultiSign();
-    SubLedgerCmd subLedgerCmd = new SubLedgerCmd();
     MgToolCmd mgToolCmd = new MgToolCmd();
-    CommonFunc commonFunc = new CommonFunc();
-    UtilsClass utilsClass = new UtilsClass();
 
-    @Before
+//    @Before
     public void beforeConfig() throws Exception {
         AppChain_CommonFunc cf = new AppChain_CommonFunc();
         cf.createTwoAppChain(glbChain01,glbChain02);
@@ -39,6 +35,9 @@ public class AppChain_MultiThreadSampleTest {
 
     @Test
     public void createMultiChains_4Thread30Txs()throws Exception{
+
+        beforeConfig();
+
         //创建子链，包含两个节点
         String chainName2 = "tc1589_" + sdf.format(dt) + RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName2,

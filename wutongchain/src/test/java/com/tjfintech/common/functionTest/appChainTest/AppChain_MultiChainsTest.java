@@ -198,7 +198,7 @@ public class AppChain_MultiChainsTest {
                 " -t sm3"," -w first"," -c raft",ids);
         tempLedgerId2 = subLedger;
 
-        sleepAndSaveInfo(2000);
+        sleepAndSaveInfo(4000);
         //检查可以获取子链列表
         String res2 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
         assertEquals(res2.contains("name"), true);
@@ -207,6 +207,8 @@ public class AppChain_MultiChainsTest {
         assertEquals(res2.contains(chainName3), true);
         assertEquals(chainName2.contains(chainName3), false);
 
+        //向指定节点发送交易
+        urlAddr = PEER1IP +  ":" + PEER1RPCPort;
 
         String Data = "1592 ledger tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
         //向子链chainName2发送交易
