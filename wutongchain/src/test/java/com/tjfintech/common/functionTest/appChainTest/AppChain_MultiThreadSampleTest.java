@@ -104,4 +104,17 @@ public class AppChain_MultiThreadSampleTest {
             myThread4.run();
         }
     }
+
+
+    //    @Test
+    public void createMultiChainsWithExisted1AppChain()throws Exception{
+
+        for(int i =0 ;i<3000;i++) {
+            Thread myThread1 = new AppChain_MultiThread();
+            ((AppChain_MultiThread) myThread1).ledgerID = "awyujny9c0";
+
+            myThread1.start();
+            myThread1.run();
+        }
+    }
 }

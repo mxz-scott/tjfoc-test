@@ -38,7 +38,8 @@ public class AppChain_MultiThread extends Thread{
         subLedger = ledgerID;
 //        for(int i=0;i<20;i++) {
             String Data = "1521 ledger tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
-            store.CreateStore(Data);
+            String resp = store.CreateStore(Data);
+
 //        }
     }
 
