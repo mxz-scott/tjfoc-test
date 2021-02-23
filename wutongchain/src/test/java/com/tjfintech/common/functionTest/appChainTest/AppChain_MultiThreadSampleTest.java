@@ -5,6 +5,7 @@ import com.tjfintech.common.Interface.MultiSign;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.SubLedgerCmd;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
@@ -115,6 +116,19 @@ public class AppChain_MultiThreadSampleTest {
 
             myThread1.start();
             myThread1.run();
+        }
+    }
+
+//    @Test
+    public void getBlockTxs()throws Exception{
+        subLedger = "9ce1gylo9s";
+        FileOperation fileOperation = new FileOperation();
+
+        int height = JSONObject.fromObject(store.GetHeight()).getInt("data");
+        for(int i =1 ;i<height;i++) {
+            String log = "height " + i + " txs size " +
+                    JSONObject.fromObject(store.GetBlockByHeight(i)).getJSONObject("data").getJSONArray("txs").size();
+            fileOperation.appendToFile(log,"height.txt");
         }
     }
 }
