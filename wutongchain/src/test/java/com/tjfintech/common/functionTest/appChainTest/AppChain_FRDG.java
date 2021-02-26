@@ -615,7 +615,7 @@ public class AppChain_FRDG {
         hash = commonFunc.getTxHash(respon1,utilsClass.mgGetTxHashType);
         hashTime = commonFunc.sdkCheckTxOrSleep(hash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
 
-
+        urlAddr = PEER1IP+  ":" + PEER1RPCPort;
         //应用链信息检查
         String res4 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -c " + subLedger);
         if(res4.contains("state"))  assertEquals(res4.contains(ledgerStateNormal), true);
@@ -737,7 +737,7 @@ public class AppChain_FRDG {
         String res4 = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -c " + tempLedgerId2);
         assertEquals(res4.contains(ledgerStateFreeze), true);
 
-
+        urlAddr = PEER1IP+  ":" + PEER1RPCPort;
         String Data = "1509 ledger1 tx store " + sdf.format(dt) + RandomUtils.nextInt(100000);
 
         //向新建应用链chainName2发送交易
