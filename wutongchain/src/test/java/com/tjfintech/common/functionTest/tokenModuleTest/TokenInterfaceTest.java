@@ -3159,12 +3159,21 @@ public class TokenInterfaceTest {
         assertEquals("200",JSONObject.fromObject(destoryResp).getString("state"));
 
         //comments长度上限128位含中文
+        issueToken = "tokenSo_" + UtilsClass.Random(8);
+        tokenModule.tokenIssue(issueAddr, collAddr, issueToken, issAmount, comments);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
         comments = "测试" + UtilsClass.Random(126);
         destoryResp = tokenModule.tokenDestoryByTokenType(issueToken,comments);
         assertEquals("200",JSONObject.fromObject(destoryResp).getString("state"));
 
         //comments长度127位
         comments = "中文" + UtilsClass.Random(125);
+        destoryResp = tokenModule.tokenDestoryByTokenType(issueToken,comments);
+        assertEquals("200",JSONObject.fromObject(destoryResp).getString("state"));
+
+        //comments使用xss字符串
+        comments =  "<SCRIPT SRC=http://***/XSS/xss.js></SCRIPT>";
         destoryResp = tokenModule.tokenDestoryByTokenType(issueToken,comments);
         assertEquals("200",JSONObject.fromObject(destoryResp).getString("state"));
 
@@ -3181,11 +3190,6 @@ public class TokenInterfaceTest {
         assertEquals("400",JSONObject.fromObject(destoryResp).getString("state"));
         assertEquals("parameter length error;  tokenType(len):1-64  comments(len):0-128;",
                 JSONObject.fromObject(destoryResp).getString("data"));
-
-        //comments使用xss字符串
-        comments =  "<SCRIPT SRC=http://***/XSS/xss.js></SCRIPT>";
-        destoryResp = tokenModule.tokenDestoryByTokenType(issueToken,comments);
-        assertEquals("200",JSONObject.fromObject(destoryResp).getString("state"));
 
         //comments为空  tokentype为已回收过的类型
         comments = "";

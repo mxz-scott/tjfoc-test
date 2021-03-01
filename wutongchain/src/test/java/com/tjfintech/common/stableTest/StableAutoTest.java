@@ -26,12 +26,12 @@ import static org.junit.Assert.assertThat;
 
 @Slf4j
 public class StableAutoTest {
-    TestBuilder testBuilder= TestBuilder.getInstance();
-    Store store =testBuilder.getStore();
-    MultiSign multiSign=testBuilder.getMultiSign();
-    SoloSign soloSign=testBuilder.getSoloSign();
+    TestBuilder testBuilder = TestBuilder.getInstance();
+    Store store = testBuilder.getStore();
+    MultiSign multiSign = testBuilder.getMultiSign();
+    SoloSign soloSign = testBuilder.getSoloSign();
     Token tokenModule = testBuilder.getToken();
-    UtilsClass utilsClass=new UtilsClass();
+    UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
     VerifyTests vt = new VerifyTests();
     SmartTokenCommon stc = new SmartTokenCommon();
@@ -55,10 +55,10 @@ public class StableAutoTest {
 
 
     /**
-     *  稳定性测试
+     * 稳定性测试
      */
     @Test
-    public  void stableTest()throws Exception{
+    public void stableTest() throws Exception {
 
 //        String[] ids = {"ra0erdvwpd"};
         String[] ids = getLedgerIDs();
@@ -75,34 +75,34 @@ public class StableAutoTest {
 
         int i = 0;
         int number = 6;  // 单链单次循环发送的交易数
-        int loop = 1000 ; // 循环次数
-        int total = loop * number ; // 循环次数
+        int loop = 1000; // 循环次数
+        int total = loop * number; // 循环次数
 
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
         Thread.sleep(SLEEPTIME);
         long[] startTimestamps = getTimestamps(ids);
         int[] startHeights = getHeights(ids);
 
 
-        while( i < loop ){
+        while (i < loop) {
 
-            for (int j = 0; j < ledgerNumber; j++){
+            for (int j = 0; j < ledgerNumber; j++) {
                 storeTest(ids[j]);
             }
 
-            for (int j = 0; j < ledgerNumber; j++){
-                 priStoreTest(ids[j]);
+            for (int j = 0; j < ledgerNumber; j++) {
+                priStoreTest(ids[j]);
             }
 
-            for (int j = 0; j < ledgerNumber; j++){
+            for (int j = 0; j < ledgerNumber; j++) {
                 smartTokenTest(ids[j]);
             }
 
-           i++;
+            i++;
 
         }
 
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
         Thread.sleep(SLEEPTIME);
 
         long[] endTimestamps = getTimestamps(ids);
@@ -110,35 +110,40 @@ public class StableAutoTest {
 
         int count = 0;
 
-        for (int k = 0 ; k < ids.length; k++){
+        for (int k = 0; k < ids.length; k++) {
             log.info("*****************************************************************");
             int totalOnChain = commonFunc.CalculatetotalTxs(ids[k], startHeights[k], endHeights[k]);  // 上链交易数
             log.info("应用链ID：" + ids[k]);
-            long timeDiff = (endTimestamps[k] - startTimestamps[k]) / 1000 / 60 ;   // 按分钟计时
+            long timeDiff = (endTimestamps[k] - startTimestamps[k]) / 1000 / 60;   // 按分钟计时
             log.info("测试时长：" + timeDiff + "分钟");
             log.info("开始区块高度：" + startHeights[k]);
             log.info("结束区块高度：" + endHeights[k]);
             log.info("区块数：" + (endHeights[k] - startHeights[k]));
-            log.info("发送交易总数：" + total );
+            log.info("发送交易总数：" + total);
             log.info("上链交易总数：" + totalOnChain);
-            if (total != totalOnChain){
+            if (total != totalOnChain) {
                 count++;
                 log.info(ids[k] + " 交易丢了!");
             }
             log.info("*****************************************************************");
         }
 
-        assertEquals("交易丢了", 0,count);
+        assertEquals("交易丢了", 0, count);
 
     }
 
     /**
-     *  token api稳定性测试
+     * token api稳定性测试
      */
     @Test
-    public  void tokenStableTest()throws Exception{
+    public void tokenStableTest() throws Exception {
 
-//        String[] ids = {"ra0erdvwpd"};
+        if (tokenAccount1.isEmpty()) {
+            BeforeCondition beforeCondition = new BeforeCondition();
+            beforeCondition.createTokenAccount();
+            Thread.sleep(SLEEPTIME);
+        }
+
         String[] ids = getLedgerIDs();
         int ledgerNumber = ids.length;
 
@@ -151,66 +156,61 @@ public class StableAutoTest {
 
         int i = 0;
         int number = 1;  // 单链单次循环发送的交易数
-        int loop = 2 ; // 循环次数
-        int total = loop * number ; // 循环次数
+        int loop = 2; // 循环次数
+        int total = loop * number; // 循环次数
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
-                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
 
         long[] startTimestamps = getTimestamps(ids);
         int[] startHeights = getHeights(ids);
 
 
-        while( i < loop ){
+        while (i < loop) {
 
-            for (int j = 0; j < ledgerNumber; j++){
+            for (int j = 0; j < ledgerNumber; j++) {
                 tokenIssueTest(ids[j]);
             }
-//
-//            for (int j = 0; j < ledgerNumber; j++){
-//                priStoreTest(ids[j]);
-//            }
 
-//            for (int j = 0; j < ledgerNumber; j++){
-//                smartTokenTest(ids[j]);
-//            }
+            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
+                    utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
 
             i++;
 
         }
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
-                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
 
         long[] endTimestamps = getTimestamps(ids);
         int[] endHeights = getHeights(ids);
 
         int count = 0;
 
-        for (int k = 0 ; k < ids.length; k++){
+        for (int k = 0; k < ids.length; k++) {
             log.info("*****************************************************************");
             int totalOnChain = commonFunc.CalculatetotalTxs(ids[k], startHeights[k], endHeights[k]);  // 上链交易数
             log.info("应用链ID：" + ids[k]);
-            long timeDiff = (endTimestamps[k] - startTimestamps[k]) / 1000 / 60 ;   // 按分钟计时
+            long timeDiff = (endTimestamps[k] - startTimestamps[k]) / 1000 / 60;   // 按分钟计时
             log.info("测试时长：" + timeDiff + "分钟");
             log.info("开始区块高度：" + startHeights[k]);
             log.info("结束区块高度：" + endHeights[k]);
             log.info("区块数：" + (endHeights[k] - startHeights[k]));
-            log.info("发送交易总数：" + total );
+            log.info("发送交易总数：" + total);
             log.info("上链交易总数：" + totalOnChain);
-            if (total != totalOnChain){
+            if (total != totalOnChain) {
                 count++;
                 log.error("交易丢了!");
             }
             log.info("*****************************************************************");
         }
 
-        assertEquals("交易丢了", 0,count);
+        assertEquals("交易丢了", 0, count);
 
     }
 
     // 普通存证
-    public void storeTest(String id)throws Exception{
+    public void storeTest(String id) throws Exception {
         subLedger = id;
         JSONObject fileInfo = new JSONObject();
         JSONObject data = new JSONObject();
@@ -234,9 +234,9 @@ public class StableAutoTest {
         data.put("waybillNo", "y201911041032");
         String Data = data.toString();
 
-        String response= store.CreateStore(Data);
+        String response = store.CreateStore(Data);
         assertThat(response, containsString("200"));
-        assertThat(response,containsString("data"));
+        assertThat(response, containsString("data"));
 
     }
 
@@ -244,12 +244,12 @@ public class StableAutoTest {
     public void priStoreTest(String id) throws Exception {
         subLedger = id;
         String data = "Testcx-" + UtilsClass.Random(2);
-        Map<String,Object>map=new HashMap<>();
-        map.put("pubKeys",PUBKEY1);
-        map.put("pubkeys",PUBKEY6);
-        String response = store.CreatePrivateStore(data,map);
+        Map<String, Object> map = new HashMap<>();
+        map.put("pubKeys", PUBKEY1);
+        map.put("pubkeys", PUBKEY6);
+        String response = store.CreatePrivateStore(data, map);
         assertThat(response, containsString("200"));
-        assertThat(response,containsString("data"));
+        assertThat(response, containsString("data"));
 
     }
 
@@ -286,25 +286,25 @@ public class StableAutoTest {
     }
 
     // token发行
-    public void tokenIssueTest(String id)throws Exception{
+    public void tokenIssueTest(String id) throws Exception {
 
         subLedger = id;
-        tokenType = "tokenErr_"+ UtilsClass.Random(8);
+        tokenType = "tokenErr_" + UtilsClass.Random(8);
         //发行失败交易
-        String issueResponse = tokenModule.tokenIssue(tokenAccount7,tokenAccount7,tokenType,"1000","");
-        assertEquals("200",JSONObject.fromObject(issueResponse).getString("state"));
+        String issueResponse = tokenModule.tokenIssue(tokenAccount7, tokenAccount7, tokenType, "1000", "");
+        assertEquals("200", JSONObject.fromObject(issueResponse).getString("state"));
 
         //发行成功交易
-        tokenType = "tokenSoMU_"+ UtilsClass.Random(8);
-        issueResponse = tokenModule.tokenIssue(tokenAccount1,tokenAccount1,tokenType,"1000","");
-        assertEquals("200",JSONObject.fromObject(issueResponse).getString("state"));
+        tokenType = "tokenSoMU_" + UtilsClass.Random(8);
+        issueResponse = tokenModule.tokenIssue(tokenAccount1, tokenAccount1, tokenType, "1000", "");
+        assertEquals("200", JSONObject.fromObject(issueResponse).getString("state"));
 
 
     }
 
 
     //获取应用链ID数组
-    public  String[] getLedgerIDs()throws Exception{
+    public String[] getLedgerIDs() throws Exception {
 
         JSONObject ledgers = JSONObject.fromObject(store.GetLedger());
         int number = ledgers.getJSONObject("data").getInt("number");
@@ -314,21 +314,21 @@ public class StableAutoTest {
 
         JSONArray ledgersInfo = ledgers.getJSONObject("data").getJSONArray("ledgers");
 
-       for (int i = 0; i < number; i++){
-           String id =  ledgersInfo.getJSONObject(i).getString("id");
-           ids[i] = id;
-       }
+        for (int i = 0; i < number; i++) {
+            String id = ledgersInfo.getJSONObject(i).getString("id");
+            ids[i] = id;
+        }
 
-       return ids;
+        return ids;
 
     }
 
     //获取应用链时间戳
-    public  long[] getTimestamps(String[] ids)throws Exception{
+    public long[] getTimestamps(String[] ids) throws Exception {
 
         long[] ts = new long[ids.length];
 
-        for (int i =0; i < ids.length; i++){
+        for (int i = 0; i < ids.length; i++) {
             subLedger = ids[i];
             int start = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data")); // 区块高度
             String timestamp = JSONObject.fromObject(store.GetBlockByHeight(start)).getJSONObject("data").getJSONObject("header").getString("timestamp");
@@ -340,14 +340,14 @@ public class StableAutoTest {
     }
 
     //获取应用链区块高度
-    public  int[] getHeights(String[] ids)throws Exception{
+    public int[] getHeights(String[] ids) throws Exception {
 
         int[] hs = new int[ids.length];
 
-        for (int i =0; i < ids.length; i++){
+        for (int i = 0; i < ids.length; i++) {
             subLedger = ids[i];
             hs[i] = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data")); // 区块高度
-         }
+        }
 
         return hs;
 

@@ -8,6 +8,7 @@ import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.Interface.Token;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.WinExeOperation;
+import com.tjfintech.common.stableTest.StableAutoTest;
 import com.tjfintech.common.utils.UtilsClass;
 import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
@@ -68,8 +69,16 @@ public class CallBack {
     public static void init() throws Exception {
         //启动main.exe 事件通知及回调信息接收客户端
         WinExeOperation winExeOperation = new WinExeOperation();
+        if (winExeOperation.findProcess("main.exe"))
+            winExeOperation.killProc("main.exe");
+        if (winExeOperation.findProcess("mainSuccess.exe"))
+            winExeOperation.killProc("mainSuccess.exe");
+        if (winExeOperation.findProcess("mainError.exe"))
+            winExeOperation.killProc("mainError.exe");
+
         if (!winExeOperation.findProcess("main.exe"))
             winExeOperation.startProc(testDataPath + "SendMsgTestFiles\\main.exe");
+        sleepAndSaveInfo(5000, "wait.......");
 
         if (StringUtils.isEmpty(PUBKEY1)) {
             BeforeCondition beforeCondition = new BeforeCondition();
@@ -127,6 +136,7 @@ public class CallBack {
 
         if (!winExeOperation.findProcess("mainSuccess.exe"))
             winExeOperation.startProc(testDataPath + "SendMsgTestFiles\\mainSuccess.exe");
+        sleepAndSaveInfo(5000, "wait.......");
 
         String issueAddr = tokenMultiAddr1;
         String collAddr = tokenMultiAddr1;
@@ -157,6 +167,7 @@ public class CallBack {
 
         if (!winExeOperation.findProcess("mainError.exe"))
             winExeOperation.startProc(testDataPath + "SendMsgTestFiles\\mainError.exe");
+        sleepAndSaveInfo(5000, "wait.......");
         String tokentype2 = "token2" + utilsClass.Random(6);
         issueeResp = tokenModule.tokenIssue(issueAddr, collAddr, tokentype1, issAmount, comments, mapSendMsg);
         assertEquals("200", JSONObject.fromObject(issueeResp).getString("state"));
@@ -173,6 +184,7 @@ public class CallBack {
         winExeOperation.killProc("mainError.exe");
         if (!winExeOperation.findProcess("main.exe"))
             winExeOperation.startProc(testDataPath + "SendMsgTestFiles\\main.exe");
+        sleepAndSaveInfo(5000, "wait.......");
 
     }
 
@@ -287,6 +299,7 @@ public class CallBack {
         assertEquals(true, filedata.contains(sendMsgResphash));
         assertEquals(true, filedata.contains("receivers.pubkey为空，msgdata为明文"));
         assertEquals(true, filedata.contains("reftx001测试"));
+        assertEquals(true, filedata.contains(subLedger));
 
 
         //receivers.id为空，不调回调接口
@@ -347,6 +360,7 @@ public class CallBack {
         assertEquals(false, filedata.contains("msgdata为密文"));
         assertEquals(true, filedata.contains(sendMsgResphash));
         assertEquals(true, filedata.contains("reftx001测试"));
+        assertEquals(true, filedata.contains(subLedger));
 
 
         //多个receivers时，一个公钥传值一个未传值
@@ -376,6 +390,7 @@ public class CallBack {
         filedata = updateMsgDate(msgdatafile);
         assertEquals(true, filedata.contains("配置文件配置私钥，请求传输对应公钥，消息发送明文"));
         assertEquals(true, filedata.contains(sendMsgResphash));
+        assertEquals(true, filedata.contains(subLedger));
 
 
     }
@@ -470,6 +485,7 @@ public class CallBack {
         assertEquals(true, filedata.contains("配置文件配置私钥，请求传输对应公钥，消息发送明文"));
         assertEquals(true, filedata.contains("reftx001测试"));
         assertEquals(true, filedata.contains(JSONObject.fromObject(createResp).getString("exthash")));
+        assertEquals(true, filedata.contains(subLedger));
 
     }
 
@@ -566,6 +582,7 @@ public class CallBack {
         assertEquals(true, filedata.contains("配置文件配置私钥，请求传输对应公钥，消息发送明文"));
         assertEquals(true, filedata.contains(JSONObject.fromObject(issueeResp).getString("data")));
         assertEquals(true, filedata.contains(JSONObject.fromObject(issueeResp).getString("exthash")));
+        assertEquals(true, filedata.contains(subLedger));
 
     }
 
@@ -644,6 +661,7 @@ public class CallBack {
         assertEquals(true, filedata.contains(JSONObject.fromObject(transferResp).getString("exthash")));
         assertEquals(true, filedata.contains(JSONObject.fromObject(transferResp).getString("data")));
         assertEquals(true, filedata.contains("配置文件配置私钥，请求传输对应公钥，消息发送明文"));
+        assertEquals(true, filedata.contains(subLedger));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
@@ -762,6 +780,7 @@ public class CallBack {
         assertEquals(true, filedata.contains(JSONObject.fromObject(transferInfo4).getString("exthash")));
         assertEquals(true, filedata.contains(JSONObject.fromObject(transferInfo4).getString("data")));
         assertEquals(true, filedata.contains("配置文件配置私钥，请求传输对应公钥，消息发送明文"));
+        assertEquals(true, filedata.contains(subLedger));
         String transferInfoHash4 = JSONObject.fromObject(transferInfo4).getString("data");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
@@ -848,6 +867,7 @@ public class CallBack {
         assertEquals(true, filedata.contains(JSONObject.fromObject(transferInfo).getString("exthash")));
         assertEquals(true, filedata.contains(JSONObject.fromObject(transferInfo).getString("data")));
         assertEquals(true, filedata.contains("配置文件配置私钥，请求传输对应公钥，消息发送明文"));
+        assertEquals(true, filedata.contains(subLedger));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
@@ -868,7 +888,6 @@ public class CallBack {
         assertEquals(actualAmount2,JSONObject.fromObject(queryZeroBalance).getJSONObject("data").getString(tokenType2));
 
     }
-
 
     @Test
     public void destorySendMsgTest() throws Exception {
@@ -961,6 +980,7 @@ public class CallBack {
         assertEquals(true, filedata.contains(JSONObject.fromObject(destoryResp).getString("exthash")));
         assertEquals(true, filedata.contains(JSONObject.fromObject(destoryResp).getString("data")));
         assertEquals(true, filedata.contains("配置文件配置私钥，请求传输对应公钥，消息发送明文"));
+        assertEquals(true, filedata.contains(subLedger));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
@@ -1082,6 +1102,7 @@ public class CallBack {
         assertEquals(true, filedata.contains(JSONObject.fromObject(destroyInfo).getString("exthash")));
         assertEquals(true, filedata.contains(JSONObject.fromObject(destroyInfo).getString("data")));
         assertEquals(true, filedata.contains("配置文件配置私钥，请求传输对应公钥，消息发送明文"));
+        assertEquals(true, filedata.contains(subLedger));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
@@ -1100,7 +1121,6 @@ public class CallBack {
         assertEquals("900.876543",JSONObject.fromObject(queryBalance4).getJSONObject("data").getString(tokenType2));
 
     }
-
 
     @Test
     public void destoryByTokenSendMsgTest() throws Exception {
@@ -1191,6 +1211,106 @@ public class CallBack {
         assertEquals(true, filedata.contains(JSONObject.fromObject(destoryResp).getJSONObject("data").getString("exthash")));
         assertEquals(true, filedata.contains(JSONObject.fromObject(destoryResp).getJSONObject("data").getString("hash")));
         assertEquals(true, filedata.contains("配置文件配置私钥，请求传输对应公钥，消息发送明文"));
+        assertEquals(true, filedata.contains(subLedger));
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashTypeDesByType),
+                utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
+        String destroyBalance = tokenModule.tokenGetDestroyBalance();
+        assertThat(destroyBalance, allOf(containsString(token20), containsString(token21), containsString(token22), containsString(token23)));
+
+
+    }
+
+    @Test
+    public void SendMsgTest() throws Exception {
+
+        String token20 = commonFunc.tokenModule_IssueToken(tokenAccount1, tokenAccount1, "5000.999999");
+        String token21 = commonFunc.tokenModule_IssueToken(tokenAccount1, tokenAccount1, "5000.999999");
+        String token22 = commonFunc.tokenModule_IssueToken(tokenAccount1, tokenAccount1, "5000.999999");
+        String token23 = commonFunc.tokenModule_IssueToken(tokenAccount1, tokenAccount1, "5000.999999");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
+        String comments = "destory by token send msg test";
+
+        //msgcode为空值，不发消息存证
+        clearMsgDateForFile(msgdatafile);
+        mapSendMsg.clear();
+        mapSendMsg.put("msgcode", "");
+        mapSendMsg.put("sender", "sender001测试");
+        mapSendMsg.put("receivers", receiverLists);
+        mapSendMsg.put("msgdata", "msgdata001测试");
+        mapSendMsg.put("reftx", "msgcode为空值，不发消息存证");
+
+        String destoryResp = tokenModule.tokenDestoryByTokenType(token20, comments, mapSendMsg);
+        assertEquals("200", JSONObject.fromObject(destoryResp).getString("state"));
+        assertEquals(false, destoryResp.contains("exthash"));
+        filedata = updateMsgDate(msgdatafile);
+        assertEquals(false, filedata.contains(JSONObject.fromObject(destoryResp).getString("data")));
+
+
+        //不传参msgcode，不发消息存证
+        clearMsgDateForFile(msgdatafile);
+        mapSendMsg.clear();
+        mapSendMsg.put("sender", "sender001测试");
+        mapSendMsg.put("receivers", receiverLists);
+        mapSendMsg.put("msgdata", "msgdata001测试");
+        mapSendMsg.put("reftx", "不传参msgcode，不发消息存证");
+
+        destoryResp = tokenModule.tokenDestoryByTokenType(token21, comments, mapSendMsg);
+        assertEquals("200", JSONObject.fromObject(destoryResp).getString("state"));
+        assertEquals(false, destoryResp.contains("exthash"));
+        filedata = updateMsgDate(msgdatafile);
+        assertEquals(false, filedata.contains(JSONObject.fromObject(destoryResp).getString("data")));
+
+
+        //多个receivers时，一个公钥传值一个未传值
+        clearMsgDateForFile(msgdatafile);
+        mapSendMsg.clear();
+        mapSendMsg.put("msgcode", "msgcode001测试");
+        mapSendMsg.put("sender", "sender001测试");
+        mapSendMsg.put("receivers", receiverListsInconformity);
+        mapSendMsg.put("msgdata", "msgdata001测试密文");
+        mapSendMsg.put("reftx", "reftx001测试");
+        destoryResp = tokenModule.tokenDestoryByTokenType(token22, comments, mapSendMsg);
+        assertEquals("400", JSONObject.fromObject(destoryResp).getString("state"));
+        assertEquals(true, destoryResp.contains("所有的接收者的公钥是否传入应该保持一致!"));
+
+
+        //发消息存证,接口返回参数增加exthash，消息内容reftx为回收交易哈希data数据，TxHash为exthash数据
+        clearMsgDateForFile(msgdatafile);
+        mapSendMsg.clear();
+        mapSendMsg.put("msgcode", "msgcode001测试");
+        mapSendMsg.put("sender", "sender001测试");
+        mapSendMsg.put("receivers", receiverLists);
+        mapSendMsg.put("msgdata", "msgdata001测试");
+        mapSendMsg.put("reftx", "reftx001测试");
+
+        destoryResp = tokenModule.tokenDestoryByTokenType(token22, comments, mapSendMsg);
+        assertEquals("200", JSONObject.fromObject(destoryResp).getString("state"));
+        assertEquals(true, destoryResp.contains("exthash"));
+        filedata = updateMsgDate(msgdatafile);
+        assertEquals(true, filedata.contains(JSONObject.fromObject(destoryResp).getJSONObject("data").getString("exthash")));
+        assertEquals(true, filedata.contains(JSONObject.fromObject(destoryResp).getJSONObject("data").getString("hash")));
+        assertEquals(false, filedata.contains("msgdata001测试"));
+
+
+        //配置文件配置私钥，请求传输对应公钥，消息发送明文
+        clearMsgDateForFile(msgdatafile);
+        mapSendMsg.clear();
+        mapSendMsg.put("msgcode", "msgcode001测试");
+        mapSendMsg.put("sender", "sender001测试");
+        mapSendMsg.put("receivers", receiverDecryptList);
+        mapSendMsg.put("msgdata", "配置文件配置私钥，请求传输对应公钥，消息发送明文");
+        mapSendMsg.put("reftx", "reftx001测试");
+
+        destoryResp = tokenModule.tokenDestoryByTokenType(token23, comments, mapSendMsg);
+        assertEquals("200", JSONObject.fromObject(destoryResp).getString("state"));
+        assertEquals(true, destoryResp.contains("exthash"));
+        filedata = updateMsgDate(msgdatafile);
+        assertEquals(true, filedata.contains(JSONObject.fromObject(destoryResp).getJSONObject("data").getString("exthash")));
+        assertEquals(true, filedata.contains(JSONObject.fromObject(destoryResp).getJSONObject("data").getString("hash")));
+        assertEquals(true, filedata.contains("配置文件配置私钥，请求传输对应公钥，消息发送明文"));
+        assertEquals(true, filedata.contains(subLedger));
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashTypeDesByType),
                 utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
