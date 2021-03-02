@@ -59,10 +59,9 @@ public class CallBack {
 
     String jsondata = "{\"state\":400,\"message\":\"error\",\"data\":\"check\"}";
     String filedata = "";
-//    String msgdatafile = resourcePath + "SendMsgTestFiles\\callBackData.txt";
+    //    String msgdatafile = resourcePath + "SendMsgTestFiles\\callBackData.txt";
     String msgdatafile = System.getProperty("user.dir") + "\\callBackData.txt";
 //    String msgdatafile = testDataPath + "SendMsgTestFiles\\callBackData.txt";
-
 
 
     @BeforeClass
@@ -85,7 +84,7 @@ public class CallBack {
             beforeCondition.updatePubPriKey();
         }
 
-        if(tokenMultiAddr1.isEmpty()) {
+        if (tokenMultiAddr1.isEmpty()) {
             BeforeCondition beforeCondition = new BeforeCondition();
             beforeCondition.createTokenAccount();
             beforeCondition.tokenAddIssueCollAddr();
@@ -95,8 +94,9 @@ public class CallBack {
         CommonFunc commonFunc = new CommonFunc();
         commonFunc.setSDKApiCallbackDecrypt(utilsClass.getIPFromStr(TOKENADD), PRIKEY3);
         commonFunc.setSDKApiCallbackLLocalId(utilsClass.getIPFromStr(TOKENADD), "lucy002李");
-        shellExeCmd(utilsClass.getIPFromStr(TOKENADD), killSDKCmd, startTokenApiCmd); //重启sdk api
-        sleepAndSaveInfo(SLEEPTIME,"等待SDK重启");
+        commonFunc.setSDKApiOneLedger(utilsClass.getIPFromStr(TOKENADD), subLedger, "[\"http://10.1.4.19:9300/callback\"]");
+        shellExeCmd(utilsClass.getIPFromStr(TOKENADD), killSDKCmd, startTokenApiCmd + " -i true"); //重启sdk api
+        sleepAndSaveInfo(SLEEPTIME, "等待SDK重启");
 
     }
 
@@ -169,7 +169,7 @@ public class CallBack {
             winExeOperation.startProc(testDataPath + "SendMsgTestFiles\\mainError.exe");
         sleepAndSaveInfo(5000, "wait.......");
         String tokentype2 = "token2" + utilsClass.Random(6);
-        issueeResp = tokenModule.tokenIssue(issueAddr, collAddr, tokentype1, issAmount, comments, mapSendMsg);
+        issueeResp = tokenModule.tokenIssue(issueAddr, collAddr, tokentype2, issAmount, comments, mapSendMsg);
         assertEquals("200", JSONObject.fromObject(issueeResp).getString("state"));
         assertEquals(true, issueeResp.contains("exthash"));
         filedata = updateMsgDate(msgdatafile);
@@ -242,6 +242,7 @@ public class CallBack {
 
         //msgcode、sender、msgdata、reftx均为json格式数据
         clearMsgDateForFile(msgdatafile);
+        log.info(msgdatafile);
         mapSendMsg.clear();
         mapSendMsg.put("msgcode", jsondata);
         mapSendMsg.put("sender", jsondata);
@@ -690,10 +691,10 @@ public class CallBack {
         //T1>T1发行1000.123456的token1，M1>M2发行1000.876543的token2
         String tokenType = utilsClass.Random(6);
         String tokenType2 = UtilsClass.Random(6);
-        String response1 = tokenModule.tokenIssue(tokenAccount1,tokenAccount1,tokenType,"1000.123456","发行token/1000.123456");
-        String response2 = tokenModule.tokenIssue(tokenMultiAddr1,tokenMultiAddr2,tokenType2,"1000.876543","发行token2/1000.876543");
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
-                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        String response1 = tokenModule.tokenIssue(tokenAccount1, tokenAccount1, tokenType, "1000.123456", "发行token/1000.123456");
+        String response2 = tokenModule.tokenIssue(tokenMultiAddr1, tokenMultiAddr2, tokenType2, "1000.876543", "发行token2/1000.876543");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
         String hash1 = JSONObject.fromObject(response1).getString("data");
         String hash2 = JSONObject.fromObject(response2).getString("data");
 
@@ -706,16 +707,16 @@ public class CallBack {
         mapSendMsg.put("msgdata", "msgcode为空值，不发消息存证");
         mapSendMsg.put("reftx", "msgcode为空值，不发消息存证");
         //T1>>M1\M2\M3分别转账200的token1
-        List<Map> list = utilsClass.tokenConstructUTXO(hash1,0,"200",tokenMultiAddr1);
-        List<Map> list2 = utilsClass.tokenConstructUTXO(hash1,0,"200",tokenMultiAddr2,list);
-        List<Map> list3 = utilsClass.tokenConstructUTXO(hash1,0,"200",tokenMultiAddr3,list2);
-        String transferInfo1 = tokenModule.tokenTransferUTXOMsg(tokenAccount1,comments,list3,mapSendMsg);
+        List<Map> list = utilsClass.tokenConstructUTXO(hash1, 0, "200", tokenMultiAddr1);
+        List<Map> list2 = utilsClass.tokenConstructUTXO(hash1, 0, "200", tokenMultiAddr2, list);
+        List<Map> list3 = utilsClass.tokenConstructUTXO(hash1, 0, "200", tokenMultiAddr3, list2);
+        String transferInfo1 = tokenModule.tokenTransferUTXOMsg(tokenAccount1, comments, list3, mapSendMsg);
         assertEquals("200", JSONObject.fromObject(transferInfo1).getString("state"));
         assertEquals(false, transferInfo1.contains("exthash"));
         filedata = updateMsgDate(msgdatafile);
         assertEquals(false, filedata.contains(JSONObject.fromObject(transferInfo1).getString("data")));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
-                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
         String transferInfoHash1 = JSONObject.fromObject(transferInfo1).getString("data");
 
         //不传参msgcode，不发消息存证
@@ -729,16 +730,16 @@ public class CallBack {
         list.clear();
         list2.clear();
         list3.clear();
-        list = utilsClass.tokenConstructUTXO(hash2,0,"200",tokenAccount1);
-        list2 = utilsClass.tokenConstructUTXO(hash2,0,"200",tokenMultiAddr1,list);
-        list3 = utilsClass.tokenConstructUTXO(hash2,0,"200",tokenMultiAddr3,list2);
-        String transferInfo2 = tokenModule.tokenTransferUTXOMsg(tokenMultiAddr2,comments,list3,mapSendMsg);
+        list = utilsClass.tokenConstructUTXO(hash2, 0, "200", tokenAccount1);
+        list2 = utilsClass.tokenConstructUTXO(hash2, 0, "200", tokenMultiAddr1, list);
+        list3 = utilsClass.tokenConstructUTXO(hash2, 0, "200", tokenMultiAddr3, list2);
+        String transferInfo2 = tokenModule.tokenTransferUTXOMsg(tokenMultiAddr2, comments, list3, mapSendMsg);
         assertEquals("200", JSONObject.fromObject(transferInfo1).getString("state"));
         assertEquals(false, transferInfo1.contains("exthash"));
         filedata = updateMsgDate(msgdatafile);
         assertEquals(false, filedata.contains(JSONObject.fromObject(transferInfo2).getString("data")));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
-                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
         String transferInfoHash2 = JSONObject.fromObject(transferInfo2).getString("data");
 
 
@@ -752,8 +753,8 @@ public class CallBack {
         mapSendMsg.put("reftx", "reftx001测试");
         //T1>>\M3分别转账200的token1
         list.clear();
-        list = utilsClass.tokenConstructUTXO(transferInfoHash1,3,"200",tokenMultiAddr3);
-        String transferInfo3 = tokenModule.tokenTransferUTXOMsg(tokenAccount1,comments,list,mapSendMsg);
+        list = utilsClass.tokenConstructUTXO(transferInfoHash1, 3, "200", tokenMultiAddr3);
+        String transferInfo3 = tokenModule.tokenTransferUTXOMsg(tokenAccount1, comments, list, mapSendMsg);
         assertEquals("200", JSONObject.fromObject(transferInfo3).getString("state"));
         assertEquals(true, transferInfo3.contains("exthash"));
         filedata = updateMsgDate(msgdatafile);
@@ -772,8 +773,8 @@ public class CallBack {
         mapSendMsg.put("reftx", "reftx001测试");
         //M2>>\M3分别转账200的token2
         list.clear();
-        list = utilsClass.tokenConstructUTXO(transferInfoHash2,3,"200",tokenMultiAddr3);
-        String transferInfo4 = tokenModule.tokenTransferUTXOMsg(tokenMultiAddr2,comments,list,mapSendMsg);
+        list = utilsClass.tokenConstructUTXO(transferInfoHash2, 3, "200", tokenMultiAddr3);
+        String transferInfo4 = tokenModule.tokenTransferUTXOMsg(tokenMultiAddr2, comments, list, mapSendMsg);
         assertEquals("200", JSONObject.fromObject(transferInfo4).getString("state"));
         assertEquals(true, transferInfo4.contains("exthash"));
         filedata = updateMsgDate(msgdatafile);
@@ -785,7 +786,7 @@ public class CallBack {
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
-        String queryBalance = tokenModule.tokenGetBalance(tokenMultiAddr3,"" );
+        String queryBalance = tokenModule.tokenGetBalance(tokenMultiAddr3, "");
         assertEquals("400", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType));
         assertEquals("400", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType2));
 
@@ -799,8 +800,8 @@ public class CallBack {
         mapSendMsg.put("msgdata", "msgdata001测试密文");
         mapSendMsg.put("reftx", "reftx001测试");
         list.clear();
-        list = utilsClass.tokenConstructUTXO(transferInfoHash4,0,"200",tokenMultiAddr2);
-        String transferInfo5 = tokenModule.tokenTransferUTXOMsg(tokenMultiAddr3,comments,list,mapSendMsg);
+        list = utilsClass.tokenConstructUTXO(transferInfoHash4, 0, "200", tokenMultiAddr2);
+        String transferInfo5 = tokenModule.tokenTransferUTXOMsg(tokenMultiAddr3, comments, list, mapSendMsg);
         assertEquals("400", JSONObject.fromObject(transferInfo5).getString("state"));
         assertEquals(true, transferInfo5.contains("所有的接收者的公钥是否传入应该保持一致!"));
 
@@ -817,15 +818,15 @@ public class CallBack {
         //T1>M2发行1000.123456的token1，M1>M2发行1000.876543的token2
         String tokenType = utilsClass.Random(6);
         String tokenType2 = UtilsClass.Random(6);
-        String response1 = tokenModule.tokenIssue(tokenAccount1,tokenMultiAddr2,tokenType,actualAmount1,"发行token/1000.123456");
-        String response2 = tokenModule.tokenIssue(tokenMultiAddr1,tokenMultiAddr2,tokenType2,actualAmount2,"发行token2/1000.876543");
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
-                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        String response1 = tokenModule.tokenIssue(tokenAccount1, tokenMultiAddr2, tokenType, actualAmount1, "发行token/1000.123456");
+        String response2 = tokenModule.tokenIssue(tokenMultiAddr1, tokenMultiAddr2, tokenType2, actualAmount2, "发行token2/1000.876543");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
         String hash1 = JSONObject.fromObject(response1).getString("data");
         String hash2 = JSONObject.fromObject(response2).getString("data");
         tokenModule.tokenFreezeToken(tokenType);
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
-                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
 
         //发消息存证,接口返回参数增加exthash，消息内容reftx为转账交易哈希data数据，TxHash为exthash数据
         clearMsgDateForFile(msgdatafile);
@@ -836,9 +837,9 @@ public class CallBack {
         mapSendMsg.put("msgdata", "msgdata001测试");
         mapSendMsg.put("reftx", "reftx001测试");
         //T1通过utxo转账200的token1到0地址做回收交易
-        List<Map> list = utilsClass.tokenConstructUTXO(hash1,0,"100",DBZeroAccout);
-        List<Map> list2 = utilsClass.tokenConstructUTXO(hash2,0,"900.876543",DBZeroAccout,list);
-        String transferInfo = tokenModule.tokenTransferUTXOMsg(tokenMultiAddr2,comments,list2,mapSendMsg);
+        List<Map> list = utilsClass.tokenConstructUTXO(hash1, 0, "100", DBZeroAccout);
+        List<Map> list2 = utilsClass.tokenConstructUTXO(hash2, 0, "900.876543", DBZeroAccout, list);
+        String transferInfo = tokenModule.tokenTransferUTXOMsg(tokenMultiAddr2, comments, list2, mapSendMsg);
         assertEquals("200", JSONObject.fromObject(transferInfo).getString("state"));
         assertEquals(true, transferInfo.contains("exthash"));
         filedata = updateMsgDate(msgdatafile);
@@ -858,9 +859,9 @@ public class CallBack {
         //M2通过utxo转账200的token1到0地址做回收交易
         list.clear();
         list2.clear();
-        list = utilsClass.tokenConstructToken(DBZeroAccout,tokenType,"900.123456");
-        list2 = utilsClass.tokenConstructToken(DBZeroAccout,tokenType2,"100",list);
-        transferInfo = tokenModule.tokenTransfer(tokenMultiAddr2,comments,list2,mapSendMsg);
+        list = utilsClass.tokenConstructToken(DBZeroAccout, tokenType, "900.123456");
+        list2 = utilsClass.tokenConstructToken(DBZeroAccout, tokenType2, "100", list);
+        transferInfo = tokenModule.tokenTransfer(tokenMultiAddr2, comments, list2, mapSendMsg);
         assertEquals("200", JSONObject.fromObject(transferInfo).getString("state"));
         assertEquals(true, transferInfo.contains("exthash"));
         filedata = updateMsgDate(msgdatafile);
@@ -873,19 +874,19 @@ public class CallBack {
                 utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
 
         log.info("交易上链后查询转出账户是否仍有token");
-        String query = tokenModule.tokenGetBalance(tokenMultiAddr2,"");
-        assertEquals(false,query.contains(tokenType));
-        assertEquals(false,query.contains(tokenType2));
+        String query = tokenModule.tokenGetBalance(tokenMultiAddr2, "");
+        assertEquals(false, query.contains(tokenType));
+        assertEquals(false, query.contains(tokenType2));
 
         log.info("交易上链后检查回收账户地址余额，使用两种方式");
-        String queryDBZeroAcc = tokenModule.tokenGetBalance(DBZeroAccout,"");
+        String queryDBZeroAcc = tokenModule.tokenGetBalance(DBZeroAccout, "");
         String queryZeroBalance = tokenModule.tokenGetDestroyBalance();
 
-        assertEquals(actualAmount1,JSONObject.fromObject(queryDBZeroAcc).getJSONObject("data").getString(tokenType));
-        assertEquals(actualAmount2,JSONObject.fromObject(queryDBZeroAcc).getJSONObject("data").getString(tokenType2));
+        assertEquals(actualAmount1, JSONObject.fromObject(queryDBZeroAcc).getJSONObject("data").getString(tokenType));
+        assertEquals(actualAmount2, JSONObject.fromObject(queryDBZeroAcc).getJSONObject("data").getString(tokenType2));
 
-        assertEquals(actualAmount1,JSONObject.fromObject(queryZeroBalance).getJSONObject("data").getString(tokenType));
-        assertEquals(actualAmount2,JSONObject.fromObject(queryZeroBalance).getJSONObject("data").getString(tokenType2));
+        assertEquals(actualAmount1, JSONObject.fromObject(queryZeroBalance).getJSONObject("data").getString(tokenType));
+        assertEquals(actualAmount2, JSONObject.fromObject(queryZeroBalance).getJSONObject("data").getString(tokenType2));
 
     }
 
@@ -996,22 +997,22 @@ public class CallBack {
         //T1>T1发行1000.123456的token1，M1>M2发行1000.876543的token2
         String tokenType = utilsClass.Random(6);
         String tokenType2 = UtilsClass.Random(6);
-        String response1 = tokenModule.tokenIssue(tokenAccount1,tokenAccount1,tokenType,"1000.123456","发行token/1000.123456");
-        String response2 = tokenModule.tokenIssue(tokenMultiAddr1,tokenMultiAddr2,tokenType2,"1000.876543","发行token2/1000.876543");
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
-                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        String response1 = tokenModule.tokenIssue(tokenAccount1, tokenAccount1, tokenType, "1000.123456", "发行token/1000.123456");
+        String response2 = tokenModule.tokenIssue(tokenMultiAddr1, tokenMultiAddr2, tokenType2, "1000.876543", "发行token2/1000.876543");
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
         String hash1 = JSONObject.fromObject(response1).getString("data");
         String hash2 = JSONObject.fromObject(response2).getString("data");
         String comments = "destory by utxo send msg test";
 
         //T1>>M1\M2\M3分别转账200的token1
-        List<Map> list = utilsClass.tokenConstructUTXO(hash1,0,"200",tokenMultiAddr1);
-        List<Map> list2 = utilsClass.tokenConstructUTXO(hash1,0,"200",tokenMultiAddr2,list);
-        List<Map> list3 = utilsClass.tokenConstructUTXO(hash1,0,"200",tokenMultiAddr3,list2);
-        String transferInfo1 = commonFunc.tokenModule_TransferTokenList(tokenAccount1,list3);
+        List<Map> list = utilsClass.tokenConstructUTXO(hash1, 0, "200", tokenMultiAddr1);
+        List<Map> list2 = utilsClass.tokenConstructUTXO(hash1, 0, "200", tokenMultiAddr2, list);
+        List<Map> list3 = utilsClass.tokenConstructUTXO(hash1, 0, "200", tokenMultiAddr3, list2);
+        String transferInfo1 = commonFunc.tokenModule_TransferTokenList(tokenAccount1, list3);
         String transferInfoHash1 = JSONObject.fromObject(transferInfo1).getString("data");
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.tokenApiGetTxHashType),
-                utilsClass.tokenApiGetTxDetailTType,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
 
         //msgcode为空值，不发消息存证
         clearMsgDateForFile(msgdatafile);
@@ -1023,8 +1024,8 @@ public class CallBack {
         mapSendMsg.put("reftx", "msgcode为空值，不发消息存证");
         //M1通过utxo回收100的token1
         list.clear();
-        list = utilsClass.tokenConstrucDestroytUTXO(transferInfoHash1,0,"100");
-        String destroyInfo = tokenModule.tokenDestoryByList(null,list,comments,mapSendMsg);
+        list = utilsClass.tokenConstrucDestroytUTXO(transferInfoHash1, 0, "100");
+        String destroyInfo = tokenModule.tokenDestoryByList(null, list, comments, mapSendMsg);
         assertEquals("200", JSONObject.fromObject(destroyInfo).getString("state"));
         assertEquals(false, destroyInfo.contains("exthash"));
         filedata = updateMsgDate(msgdatafile);
@@ -1040,8 +1041,8 @@ public class CallBack {
         mapSendMsg.put("reftx", "不传参msgcode，不发消息存证");
         //M2通过utxo回收100的token1
         list.clear();
-        list = utilsClass.tokenConstrucDestroytUTXO(transferInfoHash1,1,"100");
-        destroyInfo = tokenModule.tokenDestoryByList(null,list,comments,mapSendMsg);
+        list = utilsClass.tokenConstrucDestroytUTXO(transferInfoHash1, 1, "100");
+        destroyInfo = tokenModule.tokenDestoryByList(null, list, comments, mapSendMsg);
         assertEquals("200", JSONObject.fromObject(destroyInfo).getString("state"));
         assertEquals(false, destroyInfo.contains("exthash"));
         filedata = updateMsgDate(msgdatafile);
@@ -1058,8 +1059,8 @@ public class CallBack {
         mapSendMsg.put("reftx", "reftx001测试");
         //M3通过utxo回收100的token1,交易失败
         list.clear();
-        list = utilsClass.tokenConstrucDestroytUTXO(transferInfoHash1,2,"100");
-        destroyInfo = tokenModule.tokenDestoryByList(null,list,comments,mapSendMsg);
+        list = utilsClass.tokenConstrucDestroytUTXO(transferInfoHash1, 2, "100");
+        destroyInfo = tokenModule.tokenDestoryByList(null, list, comments, mapSendMsg);
         assertEquals("400", JSONObject.fromObject(destroyInfo).getString("state"));
         assertEquals(true, destroyInfo.contains("所有的接收者的公钥是否传入应该保持一致!"));
 
@@ -1074,8 +1075,8 @@ public class CallBack {
         mapSendMsg.put("reftx", "reftx001测试");
         //T1通过utxo回收100的token1
         list.clear();
-        list = utilsClass.tokenConstrucDestroytUTXO(transferInfoHash1,3,"100");
-        destroyInfo = tokenModule.tokenDestoryByList(null,list,comments,mapSendMsg);
+        list = utilsClass.tokenConstrucDestroytUTXO(transferInfoHash1, 3, "100");
+        destroyInfo = tokenModule.tokenDestoryByList(null, list, comments, mapSendMsg);
         assertEquals("200", JSONObject.fromObject(destroyInfo).getString("state"));
         assertEquals(true, destroyInfo.contains("exthash"));
         filedata = updateMsgDate(msgdatafile);
@@ -1094,8 +1095,8 @@ public class CallBack {
         mapSendMsg.put("reftx", "reftx001测试");
         //M2通过utxo回收100的token2
         list.clear();
-        list = utilsClass.tokenConstrucDestroytUTXO(hash2,0,"100");
-        destroyInfo = tokenModule.tokenDestoryByList(null,list,comments,mapSendMsg);
+        list = utilsClass.tokenConstrucDestroytUTXO(hash2, 0, "100");
+        destroyInfo = tokenModule.tokenDestoryByList(null, list, comments, mapSendMsg);
         assertEquals("200", JSONObject.fromObject(destroyInfo).getString("state"));
         assertEquals(true, destroyInfo.contains("exthash"));
         filedata = updateMsgDate(msgdatafile);
@@ -1108,17 +1109,17 @@ public class CallBack {
                 utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
 
         //余额查询
-        String queryBalance = tokenModule.tokenGetBalance(tokenAccount1,tokenType);
-        String queryBalance1 = tokenModule.tokenGetBalance(tokenMultiAddr1,tokenType);
-        String queryBalance2 = tokenModule.tokenGetBalance(tokenMultiAddr2,tokenType);
-        String queryBalance3 = tokenModule.tokenGetBalance(tokenMultiAddr3,tokenType);
-        String queryBalance4 = tokenModule.tokenGetBalance(tokenMultiAddr2,tokenType2);
+        String queryBalance = tokenModule.tokenGetBalance(tokenAccount1, tokenType);
+        String queryBalance1 = tokenModule.tokenGetBalance(tokenMultiAddr1, tokenType);
+        String queryBalance2 = tokenModule.tokenGetBalance(tokenMultiAddr2, tokenType);
+        String queryBalance3 = tokenModule.tokenGetBalance(tokenMultiAddr3, tokenType);
+        String queryBalance4 = tokenModule.tokenGetBalance(tokenMultiAddr2, tokenType2);
 
-        assertEquals("300.123456",JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType));
-        assertEquals("100",JSONObject.fromObject(queryBalance1).getJSONObject("data").getString(tokenType));
-        assertEquals("100",JSONObject.fromObject(queryBalance2).getJSONObject("data").getString(tokenType));
-        assertEquals("200",JSONObject.fromObject(queryBalance3).getJSONObject("data").getString(tokenType));
-        assertEquals("900.876543",JSONObject.fromObject(queryBalance4).getJSONObject("data").getString(tokenType2));
+        assertEquals("300.123456", JSONObject.fromObject(queryBalance).getJSONObject("data").getString(tokenType));
+        assertEquals("100", JSONObject.fromObject(queryBalance1).getJSONObject("data").getString(tokenType));
+        assertEquals("100", JSONObject.fromObject(queryBalance2).getJSONObject("data").getString(tokenType));
+        assertEquals("200", JSONObject.fromObject(queryBalance3).getJSONObject("data").getString(tokenType));
+        assertEquals("900.876543", JSONObject.fromObject(queryBalance4).getJSONObject("data").getString(tokenType2));
 
     }
 
@@ -1222,61 +1223,17 @@ public class CallBack {
     }
 
     @Test
-    public void SendMsgTest() throws Exception {
+    public void ledgersSendMsgTest() throws Exception {
 
-        String token20 = commonFunc.tokenModule_IssueToken(tokenAccount1, tokenAccount1, "5000.999999");
-        String token21 = commonFunc.tokenModule_IssueToken(tokenAccount1, tokenAccount1, "5000.999999");
-        String token22 = commonFunc.tokenModule_IssueToken(tokenAccount1, tokenAccount1, "5000.999999");
-        String token23 = commonFunc.tokenModule_IssueToken(tokenAccount1, tokenAccount1, "5000.999999");
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
-                utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
-        String comments = "destory by token send msg test";
+        StableAutoTest stableAutoTest = new StableAutoTest();
+        String ledger = stableAutoTest.getLedgerIDs()[0];
 
-        //msgcode为空值，不发消息存证
-        clearMsgDateForFile(msgdatafile);
-        mapSendMsg.clear();
-        mapSendMsg.put("msgcode", "");
-        mapSendMsg.put("sender", "sender001测试");
-        mapSendMsg.put("receivers", receiverLists);
-        mapSendMsg.put("msgdata", "msgdata001测试");
-        mapSendMsg.put("reftx", "msgcode为空值，不发消息存证");
-
-        String destoryResp = tokenModule.tokenDestoryByTokenType(token20, comments, mapSendMsg);
-        assertEquals("200", JSONObject.fromObject(destoryResp).getString("state"));
-        assertEquals(false, destoryResp.contains("exthash"));
-        filedata = updateMsgDate(msgdatafile);
-        assertEquals(false, filedata.contains(JSONObject.fromObject(destoryResp).getString("data")));
-
-
-        //不传参msgcode，不发消息存证
-        clearMsgDateForFile(msgdatafile);
-        mapSendMsg.clear();
-        mapSendMsg.put("sender", "sender001测试");
-        mapSendMsg.put("receivers", receiverLists);
-        mapSendMsg.put("msgdata", "msgdata001测试");
-        mapSendMsg.put("reftx", "不传参msgcode，不发消息存证");
-
-        destoryResp = tokenModule.tokenDestoryByTokenType(token21, comments, mapSendMsg);
-        assertEquals("200", JSONObject.fromObject(destoryResp).getString("state"));
-        assertEquals(false, destoryResp.contains("exthash"));
-        filedata = updateMsgDate(msgdatafile);
-        assertEquals(false, filedata.contains(JSONObject.fromObject(destoryResp).getString("data")));
-
-
-        //多个receivers时，一个公钥传值一个未传值
-        clearMsgDateForFile(msgdatafile);
-        mapSendMsg.clear();
-        mapSendMsg.put("msgcode", "msgcode001测试");
-        mapSendMsg.put("sender", "sender001测试");
-        mapSendMsg.put("receivers", receiverListsInconformity);
-        mapSendMsg.put("msgdata", "msgdata001测试密文");
-        mapSendMsg.put("reftx", "reftx001测试");
-        destoryResp = tokenModule.tokenDestoryByTokenType(token22, comments, mapSendMsg);
-        assertEquals("400", JSONObject.fromObject(destoryResp).getString("state"));
-        assertEquals(true, destoryResp.contains("所有的接收者的公钥是否传入应该保持一致!"));
-
-
-        //发消息存证,接口返回参数增加exthash，消息内容reftx为回收交易哈希data数据，TxHash为exthash数据
+        //正确配置该应用链消息回调，消息发送成功,API数据同步成功
+        String issueAddr = tokenMultiAddr1;
+        String collAddr = tokenMultiAddr1;
+        String issAmount = "5000.999999";
+        String comments = "issue send msg test";
+        //发消息存证,接口返回参数增加exthash，消息内容reftx为发行交易哈希data数据，TxHash为exthash数据
         clearMsgDateForFile(msgdatafile);
         mapSendMsg.clear();
         mapSendMsg.put("msgcode", "msgcode001测试");
@@ -1284,39 +1241,58 @@ public class CallBack {
         mapSendMsg.put("receivers", receiverLists);
         mapSendMsg.put("msgdata", "msgdata001测试");
         mapSendMsg.put("reftx", "reftx001测试");
-
-        destoryResp = tokenModule.tokenDestoryByTokenType(token22, comments, mapSendMsg);
-        assertEquals("200", JSONObject.fromObject(destoryResp).getString("state"));
-        assertEquals(true, destoryResp.contains("exthash"));
+        String tokentype = "token" + utilsClass.Random(6);
+        String issueeResp = tokenModule.tokenIssue(issueAddr, collAddr, tokentype, issAmount, comments, mapSendMsg);
+        assertEquals("200", JSONObject.fromObject(issueeResp).getString("state"));
+        assertEquals(true, issueeResp.contains("exthash"));
         filedata = updateMsgDate(msgdatafile);
-        assertEquals(true, filedata.contains(JSONObject.fromObject(destoryResp).getJSONObject("data").getString("exthash")));
-        assertEquals(true, filedata.contains(JSONObject.fromObject(destoryResp).getJSONObject("data").getString("hash")));
+        assertEquals(true, filedata.contains(JSONObject.fromObject(issueeResp).getString("exthash")));
+        assertEquals(true, filedata.contains(JSONObject.fromObject(issueeResp).getString("data")));
         assertEquals(false, filedata.contains("msgdata001测试"));
 
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
+                utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
+        String queryBalance = tokenModule.tokenGetBalance(collAddr, "");
+        assertThat(queryBalance, allOf(containsString(tokentype), containsString(tokentype), containsString(tokentype)));
 
-        //配置文件配置私钥，请求传输对应公钥，消息发送明文
+        //删除该应用链消息回调配置，消息发送成功,API数据同步失败
+        commonFunc.setSDKApiOneLedger(utilsClass.getIPFromStr(TOKENADD), "", "");
+        shellExeCmd(utilsClass.getIPFromStr(TOKENADD), killSDKCmd, startTokenApiCmd); //重启sdk api
+        sleepAndSaveInfo(SLEEPTIME, "等待SDK重启");
         clearMsgDateForFile(msgdatafile);
         mapSendMsg.clear();
         mapSendMsg.put("msgcode", "msgcode001测试");
         mapSendMsg.put("sender", "sender001测试");
-        mapSendMsg.put("receivers", receiverDecryptList);
-        mapSendMsg.put("msgdata", "配置文件配置私钥，请求传输对应公钥，消息发送明文");
+        mapSendMsg.put("receivers", receiverLists);
+        mapSendMsg.put("msgdata", "msgdata001测试");
         mapSendMsg.put("reftx", "reftx001测试");
-
-        destoryResp = tokenModule.tokenDestoryByTokenType(token23, comments, mapSendMsg);
-        assertEquals("200", JSONObject.fromObject(destoryResp).getString("state"));
-        assertEquals(true, destoryResp.contains("exthash"));
+        tokentype = "token" + utilsClass.Random(6);
+        issueeResp = tokenModule.tokenIssue(issueAddr, collAddr, tokentype, issAmount, comments, mapSendMsg);
+        assertEquals("200", JSONObject.fromObject(issueeResp).getString("state"));
+        assertEquals(true, issueeResp.contains("exthash"));
         filedata = updateMsgDate(msgdatafile);
-        assertEquals(true, filedata.contains(JSONObject.fromObject(destoryResp).getJSONObject("data").getString("exthash")));
-        assertEquals(true, filedata.contains(JSONObject.fromObject(destoryResp).getJSONObject("data").getString("hash")));
-        assertEquals(true, filedata.contains("配置文件配置私钥，请求传输对应公钥，消息发送明文"));
-        assertEquals(true, filedata.contains(subLedger));
+        assertEquals(false, filedata.contains(JSONObject.fromObject(issueeResp).getString("exthash")));
+        assertEquals(false, filedata.contains(JSONObject.fromObject(issueeResp).getString("data")));
+        assertEquals(false, filedata.contains("msgdata001测试"));
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashTypeDesByType),
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
-        String destroyBalance = tokenModule.tokenGetDestroyBalance();
-        assertThat(destroyBalance, allOf(containsString(token20), containsString(token21), containsString(token22), containsString(token23)));
+        queryBalance = tokenModule.tokenGetBalance(collAddr, "");
+        assertEquals("500", JSONObject.fromObject(queryBalance).getString("state"));
 
+        //正常重启API，不同步上一笔异常数据
+        commonFunc.setSDKApiOneLedger(utilsClass.getIPFromStr(TOKENADD), subLedger, "[\"http://10.1.4.19:9300/callback\"]");
+        shellExeCmd(utilsClass.getIPFromStr(TOKENADD), killSDKCmd, startTokenApiCmd); //重启sdk api
+        sleepAndSaveInfo(SLEEPTIME, "等待SDK重启");
+        queryBalance = tokenModule.tokenGetBalance(collAddr, "");
+        assertEquals("500", JSONObject.fromObject(queryBalance).getString("state"));
+
+        //使用./wtsdk API -i true 重启，同步上一笔异常数据
+        commonFunc.setSDKApiOneLedger(utilsClass.getIPFromStr(TOKENADD), subLedger, "[\"http://10.1.4.19:9300/callback\"]");
+        shellExeCmd(utilsClass.getIPFromStr(TOKENADD), killSDKCmd, startTokenApiCmd + " -i true"); //重启sdk api
+        sleepAndSaveInfo(SLEEPTIME, "等待SDK重启");
+        queryBalance = tokenModule.tokenGetBalance(collAddr, "");
+        assertThat(queryBalance, allOf(containsString(tokentype), containsString(tokentype), containsString(tokentype)));
 
     }
 

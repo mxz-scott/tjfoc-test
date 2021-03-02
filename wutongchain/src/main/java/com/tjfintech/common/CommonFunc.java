@@ -746,6 +746,23 @@ public class CommonFunc {
         shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+3) + "iTLSServerName = \"" + PeerTLSServerName  + "\"' " +  SDKConfigPath);
     }
 
+    public void setSDKApiOneLedger(String SDKIP,String ledger,String urls){
+        //获取第一个[[ledgers]]所在行号 后面加入节点集群信息时插入的行号
+        String lineNo = shExeAndReturn(SDKIP,"grep -n ledgers "+ TokenApiConfigPath + " | cut -d \":\" -f 1 |sed -n '1p'");
+        //先删除conf/config_api.toml文件中的所有ledgers
+        shExeAndReturn(SDKIP,"sed -i '/ledgers/d' " + TokenApiConfigPath);
+        shExeAndReturn(SDKIP,"sed -i '/Ledger/d' " + TokenApiConfigPath);
+        shExeAndReturn(SDKIP,"sed -i '/urls/d' " + TokenApiConfigPath);
+
+        shExeAndReturn(SDKIP,"sed -i '" + Integer.parseInt(lineNo) + "i[[ledgers]]' " + TokenApiConfigPath);
+
+        if (ledger!= ""){
+            shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+1) + "iLedger = \"" + ledger + "\"' " + TokenApiConfigPath);
+            shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+2) + "iurls = " + urls + "' " + TokenApiConfigPath);
+        }
+
+    }
+
     public void addSDKPeerCluster(String SDKIP,String PeerIPPort,String TLSEnabled,String PeerTLSServerName){
         //获取第一个Rpc所在行号 前一行插入节点集群信息
         String lineNo = shExeAndReturn(SDKIP,"grep -n Rpc "+ SDKConfigPath + " | cut -d \":\" -f 1 |sed -n '$p'");
