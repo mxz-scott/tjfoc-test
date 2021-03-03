@@ -240,7 +240,7 @@ public class ScfTest {
     }
 
     /**
-     * 开立-审核-签收- 授权供应商信息和贸易背景-转让-拒收
+     * 开立-审核-签收- 授权供应商信息和贸易背景-查看信息-转让-拒收
      */
      @Test
     public void Test005_AssignmentReject() throws Exception  {
@@ -299,19 +299,27 @@ public class ScfTest {
          assertThat(checking1, containsString("200"));
          assertThat(checking1,containsString("success"));
 
-         //资产转让申请
-         List<Map> list = new ArrayList<>(10);
-         List<Map> list1 = UtilsClassScf.Assignment("1", "0", list);
-         String response4 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, proof, tokenType, list1, newSubType, supplyAddress2);
+         //查看授权信息
+         ArrayList<String> Msglist = new ArrayList<>();
+         Msglist.add(supplierMsg1);
+         String response4 = scf.FunGethistoryinfo(PlatformAddress,Msglist,platformKeyID, platformPIN);
          assertThat(response4, containsString("200"));
          assertThat(response4, containsString("success"));
          assertThat(response4, containsString("data"));
-         Thread.sleep(5000);
-        //资产转让拒收
-         String response5 = scf.AssignmentReject(challenge, tokenType);
+
+         //资产转让申请
+         List<Map> list = new ArrayList<>(10);
+         List<Map> list1 = UtilsClassScf.Assignment("1", "0", list);
+         String response5 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, proof, tokenType, list1, newSubType, supplyAddress2);
          assertThat(response5, containsString("200"));
          assertThat(response5, containsString("success"));
          assertThat(response5, containsString("data"));
+         Thread.sleep(5000);
+        //资产转让拒收
+         String response6 = scf.AssignmentReject(challenge, tokenType);
+         assertThat(response6, containsString("200"));
+         assertThat(response6, containsString("success"));
+         assertThat(response6, containsString("data"));
      }
 
     /**
@@ -966,5 +974,56 @@ public class ScfTest {
         assertThat(response1, containsString("400"));
         assertThat(response1, containsString("error"));
         assertThat(response1, containsString(""));
+    }
+
+    /**
+     * 创建账户-修改账户信息-开立-审核-签收
+     */
+    @Test
+    public void Test014_AccountInform() throws Exception {
+        int levelLimit = 5;
+        String amount = "100";
+        String response = kms.genRandom(size);
+        String tokenType = UtilsClassScf.gettokenType(response);
+
+        String response1 = scf.AccountCreate(PlatformAddress, platformKeyID, PIN, "",comments);
+
+        assertThat(response1, containsString("200"));
+        assertThat(response1, containsString("success"));
+        assertThat(response1, containsString("data"));
+
+        String response2 = scf.AccountInform(PlatformAddress, comments);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("success"));
+        assertThat(response2, containsString("data"));
+        //资产开立申请
+        String response3 = scf.IssuingApply(AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
+        assertThat(response3, containsString("200"));
+        assertThat(response3, containsString("success"));
+        assertThat(response3, containsString("data"));
+        Thread.sleep(5000);
+        //开立审核
+        String response4 = scf.IssuingApprove(platformKeyID, tokenType, platformPIN);
+        assertThat(response4, containsString("200"));
+        assertThat(response4, containsString("success"));
+        assertThat(response4, containsString("data"));
+        Thread.sleep(5000);
+        //开立签收
+        String response5 = scf.IssuingConfirm(PlatformAddress, coreCompanyKeyID, tokenType, PIN, comments);
+        assertThat(response5, containsString("200"));
+        assertThat(response5, containsString("success"));
+        assertThat(response5, containsString("data"));
+    }
+
+    /**
+     * 发送事件通知
+     */
+    @Test
+    public void Test015_Send() {
+        String response1 = scf.Send(comments);
+
+        assertThat(response1, containsString("200"));
+        assertThat(response1, containsString("success"));
+        assertThat(response1, containsString("data"));
     }
 }

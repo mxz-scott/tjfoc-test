@@ -10,32 +10,32 @@ public class SetTestEnv_dyy {
 
    @Test
     public void setEnvParam(){
-      SDKADD = "http://10.1.3.161:7779";
-      rSDKADD = "http://10.1.3.161:7779";
-      TOKENADD = "http://10.1.3.161:9190";
+      SDKADD = "http://10.1.5.162:8777";
+      rSDKADD = "http://10.1.5.162:8777";
+      TOKENADD = "http://10.1.5.162:8777";
       //设置测试环境使用的节点端口及部署目录信息
-      PEER1IP = "10.1.3.160";
-      PEER2IP = "10.1.5.240";
-      PEER3IP = "10.1.5.168";
-      PEER4IP = "10.1.3.161";
-      PEER1RPCPort = "9800";
-      PEER2RPCPort = "9800";
-      PEER3RPCPort = "9800";
-      PEER4RPCPort = "9800";
-      PEER1TCPPort = "60080";
-      PEER2TCPPort = "60080";
-      PEER3TCPPort = "60080";
-      PEER4TCPPort = "60080";
+      PEER1IP = "10.1.5.162";
+      PEER2IP = "10.1.5.243";
+      PEER3IP = "10.1.5.162";
+      PEER4IP = "10.1.5.162";
+      PEER1RPCPort = "9009";
+      PEER2RPCPort = "9009";
+      PEER3RPCPort = "9009";
+      PEER4RPCPort = "9009";
+      PEER1TCPPort = "60009";
+      PEER2TCPPort = "60009";
+      PEER3TCPPort = "60009";
+      PEER4TCPPort = "60009";
       //节点、SDK、Toolkit对等目录放置于PTPATH目录下
-      PTPATH = "/root/zll/auto/";
-      SDKPATH = PTPATH + "sdk/";
-      PeerPATH = PTPATH + "peer/";
+      PTPATH = "/mnt/dyy/";
+      SDKPATH = PTPATH + "wtsdk/";
+      PeerPATH = PTPATH + "wtchain/";
       ToolPATH = PTPATH + "toolkit/";
       TokenApiPATH = PTPATH + "wtfinservice/";
-      PeerTPName = "Autop";
-      SDKTPName = "Autos";
-      ToolTPName = "Autokit";
-      TokenTPName = "Autot";
+      PeerTPName = "wtchain";
+      SDKTPName = "wtsdk";
+      ToolTPName = "toolkit";
+      TokenTPName = "wtsdk";
       tmuxSessionTokenApi = "tmux send -t auto_t ";
       tmuxSessionPeer = "tmux send -t auto ";
       tmuxSessionSDK = "tmux send -t auto_s ";

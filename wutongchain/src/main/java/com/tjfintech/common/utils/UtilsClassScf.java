@@ -112,6 +112,23 @@ public class UtilsClassScf {
     }
 
     /**
+     *查看信息list
+     * @param list
+     * @return
+     */
+    public static List<Map> Msg(String supplierMsg, List<Map> list) {
+        List<Map> MsgList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            MsgList.add(list.get(i));
+        }
+        Map<String, Object> amountMap = new HashMap<>();
+
+        MsgList.add(amountMap);
+        return MsgList;
+    }
+
+
+    /**
      * 兑付list
      * @param address
      * @param keyID
@@ -162,8 +179,19 @@ public class UtilsClassScf {
         return tokenList;
     }
 
+    /**
+     * 查看信息List
+     */
+    public static List<Map> Send(String id, List<Map> list) {
+        List<Map> txIDList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            txIDList.add(list.get(i));
+        }
+        Map<String, Object> amountMap = new HashMap<>();
+        amountMap.put("id", id);
 
-
-
+        txIDList.add(amountMap);
+        return txIDList;
+    }
 }
 

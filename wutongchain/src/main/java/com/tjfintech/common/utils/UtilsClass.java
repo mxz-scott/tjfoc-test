@@ -22,14 +22,14 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 @Slf4j
 public class UtilsClass {
 
-    public static String subLedger = "e28ekpi3ek"; // 应用链ID
+    public static String subLedger = "sw01cchzap"; // 应用链ID
     public static String urlAddr = ""; // 向指定节点发请求 格式 IP:RPCPort
-    public static String SDKADD = "http://10.1.3.164:7310";//sdk/tokenapi/中间件服务地址 http://IP:Port
+    public static String SDKADD = "http://10.1.5.162:8777";//sdk/tokenapi/中间件服务地址 http://IP:Port
     public static String TOKENADD = SDKADD;
     public static String rSDKADD = SDKADD;
 
     //设置测试环境使用的节点端口及部署目录信息
-    public static String PEER1IP,PEER2IP,PEER3IP,PEER4IP = "10.1.5.255"; //各个节点服务器IP地址
+    public static String PEER1IP,PEER2IP,PEER3IP,PEER4IP = "10.1.5.162"; //各个节点服务器IP地址
     public static String PEER1RPCPort,PEER2RPCPort,PEER3RPCPort,PEER4RPCPort = "9000";//各个节点服务器RPC端口号
     public static String PEER1TCPPort,PEER2TCPPort,PEER3TCPPort,PEER4TCPPort = "60000";//各个节点服务器TCP端口号
     //节点、SDK、Toolkit对等目录放置于PTPATH目录下
@@ -38,7 +38,7 @@ public class UtilsClass {
     public static String tmuxSessionPeer,tmuxSessionSDK,tmuxSessionTokenApi = "tmux send -t s ";//各个服务所在tmux会话进入命令
     public static String sReleaseLocalDir,sLatestLocalDir = "D:\\";//升级前后版本目录
 
-    public static String envNo = "0";
+    public static String envNo = "3";
     static{
         log.info("自定义环境参数");
         switch (envNo){

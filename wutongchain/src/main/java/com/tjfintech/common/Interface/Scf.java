@@ -34,4 +34,9 @@ public interface Scf {
     String FuncGethistory(String txID);
     String FuncAuthorization(String AccountAddress, String supplierMsg, String financeTxID, ArrayList<String> kIDList, String platformKeyID, String PIN);
 
+    String AccountInform(String AccountAddress, String comments);
+    String FuncGetsubtype(String txID, String index);
+    String AddressGen(String pubkey);
+    String Send(String comments);
+    String FunGethistoryinfo(String AccountAddress, ArrayList<String> Msglist, String platformKeyID, String PIN);
 }

@@ -598,7 +598,7 @@ public class GoScf implements Scf {
      * @param PIN
      * @return
      */
-    public String FuncAuthorization(String AccountAddress, String supplierMsg,String financeTxID,  ArrayList<String> kIDList, String platformKeyID, String PIN ) {
+    public String FuncAuthorization(String AccountAddress, String supplierMsg, String financeTxID,  ArrayList<String> kIDList, String platformKeyID, String PIN ) {
         Map<String, Object> map = new HashMap<>();
 
         map.put("contractAddress",AccountAddress);
@@ -615,4 +615,88 @@ public class GoScf implements Scf {
         return result;
     }
 
+    /**
+     * 修改账户信息
+     */
+     public String AccountInform(String AccountAddress, String comments) {
+         Map<String, Object> map = new HashMap<>();
+
+         map.put("contractAddress",AccountAddress);
+         map.put("comments",comments);
+
+         String param="";
+         if (subLedger!="") param = param +"ledger="+subLedger;
+
+         String result = PostTest.postMethod(SDKADD + "/scf/account/inform?" + param, map);
+         log.info(result);
+         return result;
+     }
+
+    /**
+     * 获取subtokentype
+     */
+    public String FuncGetsubtype(String txID, String index) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("txID",txID);
+        map.put("index",index);
+
+        String param="";
+        if (subLedger!="") param = param +"ledger="+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/func/getsubtype?" + param, map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 生成utxo账户
+     */
+    public String AddressGen(String pubkey) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("pubkey",pubkey);
+
+        String param="";
+        if (subLedger!="") param = param +"ledger="+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/address/gen?" + param, map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 发送事件通知
+     */
+    public String Send(String comments) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("comments",comments);
+
+        String param="";
+        if (subLedger!="") param = param +"ledger="+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/send?" + param, map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 查看信息
+     */
+    public String FunGethistoryinfo(String AccountAddress, ArrayList<String> Msglist, String platformKeyID, String PIN) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("contractAddress",AccountAddress);
+        map.put("supplierMsg",Msglist);
+        map.put("KID",platformKeyID);
+        map.put("PIN",PIN);
+
+        String param = "";
+        if (subLedger != "") param = param + "ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/func/gethistory/info?" + param, map);
+        log.info(result);
+        return result;
+    }
 }
