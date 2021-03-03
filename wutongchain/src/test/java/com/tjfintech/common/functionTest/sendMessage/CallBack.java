@@ -1253,6 +1253,7 @@ public class CallBack {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
                 utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
         String queryBalance = tokenModule.tokenGetBalance(collAddr, "");
+        assertEquals("200", JSONObject.fromObject(queryBalance).getString("state"));
         assertThat(queryBalance, allOf(containsString(tokentype), containsString(tokentype), containsString(tokentype)));
 
         //删除该应用链消息回调配置，消息发送成功,API数据同步失败
@@ -1292,6 +1293,7 @@ public class CallBack {
         shellExeCmd(utilsClass.getIPFromStr(TOKENADD), killSDKCmd, startTokenApiCmd + " -i true"); //重启sdk api
         sleepAndSaveInfo(SLEEPTIME, "等待SDK重启");
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");
+        assertEquals("200", JSONObject.fromObject(queryBalance).getString("state"));
         assertThat(queryBalance, allOf(containsString(tokentype), containsString(tokentype), containsString(tokentype)));
 
     }

@@ -750,13 +750,20 @@ public class CommonFunc {
         //获取第一个[[ledgers]]所在行号 后面加入节点集群信息时插入的行号
         String lineNo = shExeAndReturn(SDKIP,"grep -n ledgers "+ TokenApiConfigPath + " | cut -d \":\" -f 1 |sed -n '1p'");
         //先删除conf/config_api.toml文件中的所有ledgers
-        shExeAndReturn(SDKIP,"sed -i '/ledgers/d' " + TokenApiConfigPath);
-        shExeAndReturn(SDKIP,"sed -i '/Ledger/d' " + TokenApiConfigPath);
-        shExeAndReturn(SDKIP,"sed -i '/urls/d' " + TokenApiConfigPath);
-
-        shExeAndReturn(SDKIP,"sed -i '" + Integer.parseInt(lineNo) + "i[[ledgers]]' " + TokenApiConfigPath);
-
+        if (lineNo!= ""){
+            shExeAndReturn(SDKIP,"sed -i '/ledgers/d' " + TokenApiConfigPath);
+            shExeAndReturn(SDKIP,"sed -i '/Ledger/d' " + TokenApiConfigPath);
+            shExeAndReturn(SDKIP,"sed -i '/urls/d' " + TokenApiConfigPath);
+            shExeAndReturn(SDKIP,"echo [[ledgers]] >>"+ TokenApiConfigPath );
+        }
+        //如果没有配置过[[ledgers]],先添加配置，获取行号
+        else {
+            shExeAndReturn(SDKIP,"echo [[ledgers]] >>"+ TokenApiConfigPath );
+            lineNo = shExeAndReturn(SDKIP,"grep -n ledgers "+ TokenApiConfigPath + " | cut -d \":\" -f 1 |sed -n '1p'");
+        }
+        //添加应用链信息和回调地址配置
         if (ledger!= ""){
+            shExeAndReturn(SDKIP,"sed -i '" + Integer.parseInt(lineNo) + "i[[ledgers]]' " + TokenApiConfigPath);
             shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+1) + "iLedger = \"" + ledger + "\"' " + TokenApiConfigPath);
             shExeAndReturn(SDKIP,"sed -i '" + (Integer.parseInt(lineNo)+2) + "iurls = " + urls + "' " + TokenApiConfigPath);
         }
