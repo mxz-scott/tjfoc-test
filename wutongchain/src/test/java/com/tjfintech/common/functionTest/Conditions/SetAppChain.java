@@ -11,10 +11,11 @@ import org.junit.Test;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClass.SLEEPTIME;
+import static com.tjfintech.common.utils.UtilsClassApp.ids;
 import static org.junit.Assert.assertEquals;
 
 @Slf4j
-public class SetSubLedger {
+public class SetAppChain {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Store store =testBuilder.getStore();
 
@@ -25,15 +26,12 @@ public class SetSubLedger {
        String id3 = getPeerId(PEER4IP,USERNAME,PASSWD);
        String ids = " -m "+ id1+","+ id2+","+ id3;
        MgToolCmd mgToolCmd = new MgToolCmd();
-       //20200415 子链不支持包含.
-//       String ledger = "sO.l_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些
-       String ledger = "sOl_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些
-       mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -c " + ledger,
-               " -t sm3", " -w first", " -c raft", ids);
-       Thread.sleep(SLEEPTIME*2);
-       subLedger = ledger;
+       String chainName1 = "sOl_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些
+       String respCreate = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + chainName1,
+               " -t sm3", " -w first", " -c raft",ids);
+       Thread.sleep(SLEEPTIME);
        String response = store.CreateStore("test for ok tx");
-       Thread.sleep(SLEEPTIME*2);
+       Thread.sleep(SLEEPTIME);
        String txHash1 = JSONObject.fromObject(response).getString("data");
        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
 

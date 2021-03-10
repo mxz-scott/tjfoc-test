@@ -5,7 +5,7 @@ import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
-import com.tjfintech.common.functionTest.Conditions.SetSubLedger;
+import com.tjfintech.common.functionTest.Conditions.SetAppChain;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +65,7 @@ public class TestTxType_Docker {
     String subTypeDestroyLedger = "7";
 
     String zeroAddr="0000000000000000";
-    SetSubLedger setSubLedger = new SetSubLedger();
+    SetAppChain setSubLedger = new SetAppChain();
 
    @Before
     public void beforeConfig() throws Exception {

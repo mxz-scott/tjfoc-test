@@ -28,7 +28,7 @@ import org.junit.runners.Suite;
         CallBackSyncTest.class,
 
 //        SetSubLedgerSleepTime.class,
-//        SetSubLedger.class,
+//        SetAppChain.class,
 //        SetSyncTestSleepTime.class,
 //
 //        BeforeCondition.class,

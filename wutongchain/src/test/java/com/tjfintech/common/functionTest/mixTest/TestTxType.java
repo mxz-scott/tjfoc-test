@@ -8,8 +8,8 @@ import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 
+import com.tjfintech.common.functionTest.Conditions.SetAppChain;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
-import com.tjfintech.common.functionTest.Conditions.SetSubLedger;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.utils.FileOperation;
@@ -90,7 +90,7 @@ public class TestTxType {
     String subTypeDestroyLedger = "7";
 
     String zeroAddr="0000000000000000";
-    SetSubLedger setSubLedger = new SetSubLedger();
+    SetAppChain setSubLedger = new SetAppChain();
 
     String id1 = getPeerId(PEER1IP,USERNAME,PASSWD);
     String id2 = getPeerId(PEER2IP,USERNAME,PASSWD);
