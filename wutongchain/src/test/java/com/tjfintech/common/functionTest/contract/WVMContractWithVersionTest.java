@@ -9,16 +9,14 @@ import com.tjfintech.common.functionTest.Conditions.SetSDKPerm999;
 import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runners.MethodSorters;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import static com.tjfintech.common.utils.FileOperation.setSDKConfigByShell;
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -31,7 +29,7 @@ import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class WVMContractTest {
+public class WVMContractWithVersionTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Contract contract=testBuilder.getContract();
     Store store=testBuilder.getStore();
@@ -51,11 +49,10 @@ public class WVMContractTest {
 
     @BeforeClass
     public static void setVersion(){
-        if(!wvmVersion.isEmpty()){
-            wvmVersion = "";
+        if(wvmVersion.isEmpty()){
+            wvmVersion = "2.0.0";
         }
     }
-
 
     /***
      * 跨合约调用 权限赋值时仅赋给SDK和另一个调用的合约
@@ -64,9 +61,9 @@ public class WVMContractTest {
      */
     @Test
     public void TestCrossInvoke_PermitSDKAndContract() throws Exception{
-        if(!wvmVersion.isEmpty())  {
-            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
-            return;}
+//        if(!wvmVersion.isEmpty())  {
+//            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
+//            return;}
         String ctName = "L_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
@@ -132,9 +129,9 @@ public class WVMContractTest {
 
     @Test
     public void TestCrossInvoke_PermitEveryone() throws Exception{
-        if(!wvmVersion.isEmpty())  {
-            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
-            return;}
+//        if(!wvmVersion.isEmpty())  {
+//            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
+//            return;}
         String ctName = "L_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
@@ -199,9 +196,9 @@ public class WVMContractTest {
      */
     @Test
     public void TestCrossInvoke_PermitSDKOnly() throws Exception{
-        if(!wvmVersion.isEmpty())  {
-            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
-            return;}
+//        if(!wvmVersion.isEmpty())  {
+//            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
+//            return;}
         String ctName = "L_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
@@ -240,10 +237,11 @@ public class WVMContractTest {
      */
     @Test
     public void TestCrossInvoke_PermitContractOnly() throws Exception{
-        if(!wvmVersion.isEmpty())  {
-            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
-            return;}
+//        if(!wvmVersion.isEmpty())  {
+//            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
+//            return;}
         String ctName = "L_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
+        wvmVersion = "1.0.1." + Random(3);
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
         fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
@@ -269,7 +267,7 @@ public class WVMContractTest {
         //使用管理工具给第一个合约的initAccount方法添加第二个合约名，赋予其调用权限。
         MgToolCmd mgToolCmd = new MgToolCmd();
         String permitStr = ctHash2;
-        mgToolCmd.contractFuncPermit(PEER1IP,PEER1RPCPort,subLedger,ctHash,"","initAccount",permitStr);
+        mgToolCmd.contractFuncPermit(PEER1IP,PEER1RPCPort,subLedger,ctHash,wvmVersion,"initAccount",permitStr);
         sleepAndSaveInfo(SLEEPTIME/2);
 
         //跨合约调用合约内的正确的方法 initAccount方法 合约无调用权限故交易失败不会上链
@@ -362,17 +360,9 @@ public class WVMContractTest {
 
         int state = JSONObject.fromObject(response10).getInt("state");
 
-        if (state == 500 || state == 400){
-            assertThat("500 or 400, both ok", containsString("500 or 400, both ok"));
-        } else{
-            assertThat("wrong state", containsString("500 or 400, both ok"));
-        }
-
-        if (wvmVersion != ""){
-            assertThat(JSONObject.fromObject(response10).getString("message"),containsString("This version[1.0.0] of the smart contract is destroyed"));
-        }else{
-            assertThat(JSONObject.fromObject(response10).getString("message"),containsString("This smart contract is destroyed"));
-        }
+        assertEquals("400",JSONObject.fromObject(response10).getString("state"));
+        assertThat(JSONObject.fromObject(response10).getString("message"),
+                containsString("This version[" + wvmVersion +  "] of the smart contract is destroyed"));
 
         // 销毁后会提示找不到合约文件 500 error code
 
@@ -381,7 +371,7 @@ public class WVMContractTest {
     }
 
     @Test
-    public void TC1779_SamePriDiffCt() throws Exception{
+    public void TC1779_DiffInternalContractName() throws Exception{
         String ctName = "B_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
 
         String ctHash1 = installInitTransfer(ctName,"","initAccount","transfer","BalanceTest");
@@ -393,59 +383,8 @@ public class WVMContractTest {
         assertEquals(false,ctHash1.equals(ctHash2)); //确认两个hash不相同
     }
 
-//    @Test
-//    public void TC1780_DiffPriDiffCt() throws Exception{
-//        String ctName = "C_" +sdf.format(dt)+ RandomUtils.nextInt(100000);
-//
-//        String ctHash1 = installInitTransfer(ctName,"","initAccount","transfer","BalanceTest");
-//
-//        //再安装一个不同合约名 相同合约内容的合约
-//        ctName = "C_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
-//        wvmFile = "wvm2";
-//        orgName = "Test";
-//        String ctHash2 =installInitTransfer(ctName,PRIKEY2,"initBAccount","transferB","BalanceTestB");
-//        assertEquals(false,ctHash1.equals(ctHash2)); //确认两个hash不相同
-//
-//    }
-
-    //此用例后续要考虑升级操作
-//    @Test
-//    public void TC1802_TestDiffTypePriKey() throws Exception{
-//        String ctName = "D_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
-//        String priKey = utilsClass.getKeyPairsFromFile("SM2/keys1/key.pem");
-//        //使用SM2类型私钥
-//        String ctName1 = installInitTransfer(ctName,priKey,"initAccount","transfer","BalanceTest");
-//        log.info("ctName1:" + ctName1);
-//
-//        //使用ECDSA私钥
-//        String priKey2 = utilsClass.getKeyPairsFromFile("ECDSA/keys1/key.pem");
-//        String ctName2 =installInitTransfer(ctName,priKey2,"initAccount","transfer","BalanceTest");
-//        log.info("ctName2:" + ctName2);
-//        assertEquals(false,ctName1.equals(ctName2));
-//
-//
-//        //使用RSA私钥
-//        String priKey3 = utilsClass.getKeyPairsFromFile("RSA/keys1/key.pem");
-//        String ctName3 =installInitTransfer(ctName,priKey3,"initAccount","transfer","BalanceTest");
-//        log.info("ctName3:" + ctName3);
-//        assertEquals(false,ctName1.equals(ctName3));
-//        assertEquals(false,ctName2.equals(ctName3));
-//    }
-
-//    @Test
-//    public void TC1781_DiffPriSameCt() throws Exception{
-//        String ctName = "E_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
-//
-//        String ctHash1 = installInitTransfer(ctName,"","initAccount","transfer","BalanceTest");
-//
-//        //使用不同私钥安装相同合约及内容的合约
-//        String ctHash2 =installInitTransfer(ctName,PRIKEY2,"initAccount","transfer","BalanceTest");
-//
-//        assertEquals(false,ctHash1.equals(ctHash2)); //确认两个hash不相同
-//    }
-
     @Test
-    public void TC1775_InstallSameNoInvoke() throws Exception{
+    public void TC1775_InstallContractWithSameVersion() throws Exception{
         String ctName = "F_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
 
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
@@ -461,81 +400,60 @@ public class WVMContractTest {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         chkTxDetailRsp("200",txHash1); //确认安装合约交易上链
-        //第二次安装
-        //使用不同私钥安装相同合约及内容的合约
-        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
+        //重复使用同一个版本号进行合约安装 会安装失败
         String response2 = wvmInstallTest(wvmFile + "_temp.txt","");
-        assertEquals(true,ctHash1.equals(JSONObject.fromObject(response2).getJSONObject("data").getString("name"))); //确认两个hash不相同
-        //调用合约内的方法 getBalance方法查询余额query接口 交易不上链
-        String response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
-        assertEquals(Integer.toString(0),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
+        assertEquals(true,JSONObject.fromObject(response2).getString("message").contains("This contract is exist"));
     }
 
     @Test
-    public void TC1776_InstallSame() throws Exception{
+    public void TC1776_InstallSameVersionAfterInvokeTransaction() throws Exception{
         String ctName = "G_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         //第一次安装 并调用init transfer接口
         String ctHash1 = installInitTransfer(ctName,"","initAccount","transfer","BalanceTest");
 
         //再次安装合约
         String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
-        assertEquals(true,ctHash1.equals(JSONObject.fromObject(response1).getJSONObject("data").getString("name"))); //确认两个hash相同
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
-
-        chkTxDetailRsp("200",txHash1); //确认安装合约交易上链
-        //调用合约内的方法 getBalance方法查询余额query接口 交易不上链
-        String response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
-        assertEquals(Integer.toString(amountA-transfer),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
+        assertEquals(true,JSONObject.fromObject(response1).getString("message").contains("This contract is exist"));
     }
 
     @Test
-    public void TC1777_InstallDestroyContract() throws Exception{
+    public void TC1777_InstallDestroyedContract() throws Exception{
         String ctName = "H_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
 
         //安装及销毁合约 未执行过合约内交易
         String ctHash1 = installDestroy(ctName,"");
 
-        //再次安装合约后会得到合约hash：由Prikey和ctName进行运算得到
+        //销毁后再次使用相同的版本号进行合约安装 执行失败
         String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
-        assertEquals(true,ctHash1.equals(JSONObject.fromObject(response1).getJSONObject("data").getString("name"))); //确认两个hash相同
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+        assertEquals(true,JSONObject.fromObject(response1).getString("message").contains("This contract is exist"));
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-        chkTxDetailRsp("200",txHash1); //确认安装合约交易上链
-        //调用合约内的方法 getBalance方法查询余额query接口 交易不上链
-        String response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
-        assertEquals(Integer.toString(0),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
+        //使用新的版本进行合约安装
+        wvmVersion = "1.0.2." + Random(3);
+        installDestroy(ctName,"");
     }
 
     @Test
-    public void TC1778_MultiInstallDestroyContract() throws Exception{
-        String ctName = "I_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
+    public void TC1778_MultiInstallDestroyedContract() throws Exception {
+        String ctName = "I_" + sdf.format(dt) + RandomUtils.nextInt(100000);
         fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
-        String ctHash1 = "";
-        //安装及销毁合约 未执行过合约内交易
-        //20190813 当前存在销毁bug
-        for(int i = 0; i<3; i++) {
-            ctHash1 = installDestroy(ctName, "");
+
+        for (int i = 0; i < 6; i++) {
+            wvmVersion = "1.0.3." + i;
+            installDestroy(ctName, "");
         }
 
-        //再次安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-        String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
-        assertEquals(true,ctHash1.equals(JSONObject.fromObject(response1).getJSONObject("data").getString("name"))); //确认两个hash相同
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+        //多次安装销毁后再次多次多版本安装
+        for (int i = 0; i < 6; i++) {
+            wvmVersion = "1.0.3." + i;
+            //再次安装合约后会得到合约hash：由Prikey和ctName进行运算得到
+            String response1 = wvmInstallTest(wvmFile + "_temp.txt", "");
+            assertEquals(true, JSONObject.fromObject(response1).getString("message").contains("This contract is exist"));
+        }
 
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-        chkTxDetailRsp("200",txHash1); //确认安装合约交易上链
-        //调用合约内的方法 getBalance方法查询余额query接口 交易不上链
-        String response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
-        assertEquals(Integer.toString(0),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
+        wvmVersion = "1.0.4";
+        //使用新版本进行安装合约
+        String response1 = wvmInstallTest(wvmFile + "_temp.txt", "");
+        assertEquals("200", JSONObject.fromObject(response1).getString("state"));
     }
 
     @Test
@@ -549,6 +467,35 @@ public class WVMContractTest {
 
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
         chkTxDetailRsp("404",txHash1);
+    }
+
+    @Test
+    public void TestDestroyVersionNotExistContract() throws Exception{
+        String ctName = "J_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
+        // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
+        // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
+        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
+
+        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
+        String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+        String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
+
+        chkTxDetailRsp("200",txHash1);
+
+        //版本号设置为不存在的版本号
+        wvmVersion  = wvmVersion + ".1";
+
+        //销毁合约
+        response1 = wvmDestroyTest(ctHash);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+        chkTxDetailRsp("200",txHash1);
     }
 
     @Test
@@ -601,11 +548,17 @@ public class WVMContractTest {
         String ctName = "K_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         String ctHash1 = installInitTransfer(ctName,"","initAccount","transfer","BalanceTest");
 
-        //升级合约
+        String wvmVerOld = wvmVersion;
+
+        //升级合约 版本号变更
         wvmFile ="wvm_update";
+
+
+        wvmVersion = wvmVersion.substring(0,wvmVersion.lastIndexOf("."))
+                + (Integer.valueOf(wvmVersion.substring(wvmVersion.lastIndexOf(".") + 1)) + 1);
         fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
 
-        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
+        //安装合约
         String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
         String ctHash2 = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
@@ -627,6 +580,10 @@ public class WVMContractTest {
 
         String response8 = query(ctHash1,"BalanceTest",accountB);//获取账户A账户余额
         assertEquals(Integer.toString(amountB+transfer+transfer/2),JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
+
+        wvmVersion = wvmVerOld;
+        response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
+        assertEquals(Integer.toString(amountA-transfer-transfer/2),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
 
     }
     @Test
@@ -696,21 +653,11 @@ public class WVMContractTest {
 
         for(String ctHash : ctHashList){
             String response1 = query(ctHash,"BalanceTest",accountA);//获取账户A账户余额
-            //销毁后会提示找不到合约文件 500 error code
+            assertEquals("400",JSONObject.fromObject(response1).getString("state"));
 
-            int state = JSONObject.fromObject(response1).getInt("state");
+            assertThat(JSONObject.fromObject(response1).getString("message"),
+                    containsString("This version[" + wvmVersion + "] of the smart contract is destroyed"));
 
-            if (state == 500 || state == 400){
-                assertThat("500 or 400, both ok", containsString("500 or 400, both ok"));
-            } else{
-                assertThat("wrong state", containsString("500 or 400, both ok"));
-            }
-
-            if (wvmVersion != ""){
-                assertThat(JSONObject.fromObject(response1).getString("message"),containsString("This version[1.0.0] of the smart contract is destroyed"));
-            }else{
-                assertThat(JSONObject.fromObject(response1).getString("message"),containsString("This smart contract is destroyed"));
-            }
         }
     }
 
@@ -886,14 +833,8 @@ public class WVMContractTest {
         } else{
             assertThat("wrong state", containsString("500 or 400, both ok"));
         }
-
-        if (wvmVersion != ""){
-            assertThat(JSONObject.fromObject(response10).getString("message"),containsString("This version[1.0.0] of the smart contract is destroyed"));
-        }else{
-            assertThat(JSONObject.fromObject(response10).getString("message"),containsString("This smart contract is destroyed"));
-        }
-
-
+        assertThat(JSONObject.fromObject(response10).getString("message"),
+                containsString("This version[" + wvmVersion + "] of the smart contract is destroyed"));
         return ctHash1;
     }
 

@@ -1,11 +1,7 @@
 package com.tjfintech.common.functionTest.BVT.P1_High;
 
-import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.*;
-import com.tjfintech.common.functionTest.contract.WVMContractInvalidTest;
-import com.tjfintech.common.functionTest.contract.WVMContractTest;
-import com.tjfintech.common.functionTest.contract.WVMContractTest_withVersionUpgradeTest;
-import com.tjfintech.common.functionTest.mixTest.VerifyTests;
+import com.tjfintech.common.functionTest.contract.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -15,14 +11,16 @@ import org.junit.runners.Suite;
 
         SetAppChain.class,
 
-        SetWVMversion1.class,
-        WVMContractTest.class,
-        WVMContractInvalidTest.class,
-        WVMContractTest_withVersionUpgradeTest.class,
-
 //        SetWVMversionEmpty.class,
 //        WVMContractTest.class,
 //        WVMContractInvalidTest.class,
+
+        //测试带版本号合约
+        SetWVMversion1.class,
+
+        WVMContractWithVersionTest.class,
+        WVMContractWithVersionInvalidTest.class,
+        WVMContractWithVersionTest_UpgradeTestOnly.class,
 
 })
 

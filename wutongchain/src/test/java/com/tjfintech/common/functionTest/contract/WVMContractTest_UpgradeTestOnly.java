@@ -47,9 +47,10 @@ public class WVMContractTest_UpgradeTestOnly {
     public String wvmFile = "wvm";
 
     @BeforeClass
-    public  static void setPermFull()throws Exception{
-        BeforeCondition beforeCondition = new BeforeCondition();
-        beforeCondition.updatePubPriKey();
+    public static void setVersion(){
+        if(!wvmVersion.isEmpty()){
+            wvmVersion = "";
+        }
     }
 
     @Test
@@ -62,7 +63,7 @@ public class WVMContractTest_UpgradeTestOnly {
         fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
 
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-        String response1 = wvmInstallTest(wvmFile +"_temp.txt",PRIKEY1);
+        String response1 = wvmInstallTest(wvmFile +"_temp.txt","");
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
         String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
