@@ -11,9 +11,9 @@ import org.junit.runners.Suite;
 
         SetAppChain.class,
 
-//        SetWVMversionEmpty.class,
-//        WVMContractTest.class,
-//        WVMContractInvalidTest.class,
+        SetWVMversionEmpty.class,
+        WVMContractTest.class,
+        WVMContractInvalidTest.class,
 
         //测试带版本号合约
         SetWVMversion1.class,

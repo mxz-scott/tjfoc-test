@@ -59,11 +59,11 @@ public class WVMContractWithVersionTest {
      * 管理工具命令 contract modifyfunc 来进程调用权限修改
      * @throws Exception
      */
-    @Test
+//    @Test
     public void TestCrossInvoke_PermitSDKAndContract() throws Exception{
-//        if(!wvmVersion.isEmpty())  {
-//            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
-//            return;}
+        if(!wvmVersion.isEmpty())  {
+            log.info("20210310 20200805当前不支持带版本号的跨合约调用，问题单1003270");
+            return;}
         String ctName = "L_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
@@ -127,11 +127,11 @@ public class WVMContractWithVersionTest {
 //        chkTxDetailRsp("404",txHash5);
     }
 
-    @Test
+//    @Test
     public void TestCrossInvoke_PermitEveryone() throws Exception{
-//        if(!wvmVersion.isEmpty())  {
-//            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
-//            return;}
+        if(!wvmVersion.isEmpty())  {
+            log.info("20210310 20200805当前不支持带版本号的跨合约调用，问题单1003270");
+            return;}
         String ctName = "L_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
@@ -194,11 +194,11 @@ public class WVMContractWithVersionTest {
      * 默认合约仅给sdk有调用权限 合约无权限
      * @throws Exception
      */
-    @Test
+//    @Test
     public void TestCrossInvoke_PermitSDKOnly() throws Exception{
-//        if(!wvmVersion.isEmpty())  {
-//            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
-//            return;}
+        if(!wvmVersion.isEmpty())  {
+            log.info("20210310 20200805当前不支持带版本号的跨合约调用，问题单1003270");
+            return;}
         String ctName = "L_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
@@ -235,11 +235,11 @@ public class WVMContractWithVersionTest {
      * 默认合约仅给合约调用权限 sdk无权限
      * @throws Exception
      */
-    @Test
+//    @Test
     public void TestCrossInvoke_PermitContractOnly() throws Exception{
-//        if(!wvmVersion.isEmpty())  {
-//            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
-//            return;}
+        if(!wvmVersion.isEmpty())  {
+            log.info("20210310 20200805当前不支持带版本号的跨合约调用，问题单1003270");
+            return;}
         String ctName = "L_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         wvmVersion = "1.0.1." + Random(3);
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题

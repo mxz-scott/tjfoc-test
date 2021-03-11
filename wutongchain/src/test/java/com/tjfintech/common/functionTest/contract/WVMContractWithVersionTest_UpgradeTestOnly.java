@@ -55,7 +55,7 @@ public class WVMContractWithVersionTest_UpgradeTestOnly {
 
     //调用不存在的版本合约
     @Test
-    public void crossVersionTest() throws Exception{
+    public void invokeNotExistVerWVMTest() throws Exception{
         wvmVersion = "1.0";
         String ctName="A_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
 
@@ -98,7 +98,9 @@ public class WVMContractWithVersionTest_UpgradeTestOnly {
 
     }
 
-    @Test
+    //与下面的用例case重复
+
+//    @Test
     public void upgradeWVMContractWithVersion()throws Exception{
         wvmVersion = "1.1";
         String ctName = "K_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
@@ -127,16 +129,19 @@ public class WVMContractWithVersionTest_UpgradeTestOnly {
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
         String response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
-        assertEquals(Integer.toString(amountA-transfer-transfer/2),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
+        assertEquals(Integer.toString(amountA - transfer - transfer/2),
+                JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
 
         String response8 = query(ctHash1,"BalanceTest",accountB);//获取账户A账户余额
-        assertEquals(Integer.toString(amountB+transfer+transfer/2),JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
+        assertEquals(Integer.toString(amountB + transfer + transfer/2),
+                JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
 
         String response5 = wvmDestroyTest(ctHash1);//销毁
     }
 
     @Test
     public void upgradeWVMContractWithVersion02()throws Exception{
+        //20210311 与开发确认 带版本的合约 如果升级后 则不允许使用非最新版本的合约 进行任何上链和非上链操作
         wvmVersion = "2.1";
         String ctName = "K_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
         String ctHash1 = installInitTransfer(ctName,"","initAccount","transfer","BalanceTest");
@@ -157,26 +162,59 @@ public class WVMContractWithVersionTest_UpgradeTestOnly {
 
         chkTxDetailRsp("200",txHash1);
 
-        wvmVersion = "2.1";
-        //调用升级前合约内的方法 transfer方法 A->B转transfer
-        String response4 = invokeNew(ctHash2,"transfer",accountA,accountB,transfer);//A向B转15
+
+        wvmVersion = "2.2";
+        //调用升级后合约内的方法 transfer方法 A->B转transferAmount/2
+        String response5 = invokeNew(ctHash2,"transfer",accountA,accountB,transfer);//A向B转15
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
-        String response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
-        assertEquals(Integer.toString(amountA-transfer-transfer),JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
+        String response = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
+        assertEquals(Integer.toString(amountA - transfer - transfer/2),
+                JSONObject.fromObject(response).getJSONObject("data").getString("result"));
 
         String response8 = query(ctHash1,"BalanceTest",accountB);//获取账户A账户余额
-        assertEquals(Integer.toString(amountB+transfer+transfer),JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
-        String response5 = wvmDestroyTest(ctHash1);//销毁
+        assertEquals(Integer.toString(amountB + transfer + transfer/2),
+                JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
+
+        wvmVersion = "2.1";
+        //调用升级前合约内的方法 transfer方法 A->B转transfer
+        String response4 = invokeNew(ctHash2,"transfer",accountA,accountB,transfer);//A向B转15
+        assertEquals("400",JSONObject.fromObject(response4).getString("state"));
+        assertEquals(true,JSONObject.fromObject(response4).getString("message").contains(
+                "This version[" + wvmVersion + "] is not newest"));
+
+        String response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
+        assertEquals("400",JSONObject.fromObject(response7).getString("state"));
+        assertEquals(true,JSONObject.fromObject(response7).getString("message").contains(
+                "This version[" + wvmVersion + "] is not newest"));
+
+
+
+        wvmVersion = "2.2";
+        
+        response = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
+        assertEquals(Integer.toString(amountA - transfer - transfer/2),
+                JSONObject.fromObject(response).getJSONObject("data").getString("result"));
+
+        response8 = query(ctHash1,"BalanceTest",accountB);//获取账户A账户余额
+        assertEquals(Integer.toString(amountB + transfer + transfer/2),
+                JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
+        String response10 = wvmDestroyTest(ctHash1);//销毁
     }
 
+    /***
+     * //20210311 与开发确认 带版本的合约 如果升级后 则不允许使用非最新版本的合约 进行任何上链和非上链操作
+     * 不孕多版本并发
+     * @throws Exception
+     */
     @Test
     public void ConcurrentTransferWithDiffVersion() throws Exception{
         wvmVersion = "3.1";
         String ctName = "K_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
+        //A 50 B 60   A->B 10 A 40 B 70
         String ctHash1 = installInitTransfer(ctName,"","initAccount","transfer","BalanceTest");
 
         //升级合约
@@ -197,21 +235,33 @@ public class WVMContractWithVersionTest_UpgradeTestOnly {
 
         wvmVersion = "3.1";
         //调用升级前合约内的方法 transfer方法 A->B转transfer
+        String response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
         String response4 = invokeNew(ctHash2,"transfer",accountA,accountB,transfer);//A向B转15
+
         wvmVersion = "3.2";
-        //调用升级前合约内的方法 transfer方法 A->B转transfer
+        //调用升级后合约内的方法 transfer方法 A->B转transferAmount/2
         String response5 = invokeNew(ctHash2,"transfer",accountA,accountB,transfer);//A向B转15
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
-        String response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
-        assertEquals(Integer.toString(amountA-transfer-transfer-transfer/2),
-                JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
+        //检查旧版本不支持调用
+        assertEquals("400",JSONObject.fromObject(response7).getString("state"));
+        assertEquals(true,JSONObject.fromObject(response7).getString("message").contains(
+                "This version[" + wvmVersion + "] is not newest"));
+
+        assertEquals("400",JSONObject.fromObject(response4).getString("state"));
+        assertEquals(true,JSONObject.fromObject(response4).getString("message").contains(
+                "This version[" + wvmVersion + "] is not newest"));
+
+
+        String response = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
+        assertEquals(Integer.toString(amountA - transfer - transfer/2),
+                JSONObject.fromObject(response).getJSONObject("data").getString("result"));
 
         String response8 = query(ctHash1,"BalanceTest",accountB);//获取账户A账户余额
-        assertEquals(Integer.toString(amountB+transfer+transfer+transfer/2),
+        assertEquals(Integer.toString(amountB + transfer + transfer/2),
                 JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
         String response10 = wvmDestroyTest(ctHash1);//销毁
     }

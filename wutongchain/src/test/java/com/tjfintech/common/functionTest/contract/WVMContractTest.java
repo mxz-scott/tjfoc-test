@@ -51,8 +51,8 @@ public class WVMContractTest {
 
     @BeforeClass
     public static void setVersion(){
-        if(!wvmVersion.isEmpty()){
-            wvmVersion = "";
+        if(wvmVersion.isEmpty()){
+            wvmVersion = "1.0.4";
         }
     }
 
