@@ -1,7 +1,6 @@
 package com.tjfintech.common.functionTest.BVT.UTimeOnchainTest;
 
-import com.tjfintech.common.functionTest.Conditions.SetMainLedger;
-import com.tjfintech.common.functionTest.Conditions.SetSubLedger;
+import com.tjfintech.common.functionTest.Conditions.SetAppChain;
 import com.tjfintech.common.functionTest.mixTest.TimeofTxOnChain;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -20,7 +19,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        SetSubLedger.class,
+        SetAppChain.class,
         TimeofTxOnChain.class
 })
 

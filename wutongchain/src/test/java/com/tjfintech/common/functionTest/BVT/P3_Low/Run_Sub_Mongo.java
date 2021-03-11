@@ -1,9 +1,8 @@
 package com.tjfintech.common.functionTest.BVT.P3_Low;
 
 import com.tjfintech.common.BeforeCondition;
+import com.tjfintech.common.functionTest.Conditions.SetAppChain;
 import com.tjfintech.common.functionTest.Conditions.SetDatabaseMongo;
-import com.tjfintech.common.functionTest.Conditions.SetDatabaseMysql;
-import com.tjfintech.common.functionTest.Conditions.SetSubLedger;
 import com.tjfintech.common.functionTest.contract.DockerContractInvalidTest;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
@@ -22,7 +21,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses(value = {
         SetDatabaseMongo.class,
-        SetSubLedger.class,
+        SetAppChain.class,
         BeforeCondition.class,
 
         StoreTest.class,

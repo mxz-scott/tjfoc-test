@@ -32,7 +32,7 @@ import org.junit.runners.Suite;
         SetPeerVerRelease.class,
         BeforeCondition.class,
 
-        SetSubLedger.class,
+        SetAppChain.class,
         BeforeCondition.class,
 
         StoreTest_UpgradeTestOnly.class,

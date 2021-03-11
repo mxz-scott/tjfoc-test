@@ -26,7 +26,7 @@ import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class WVMContractInvalidTest {
+public class WVMContractWithVersionInvalidTest {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Contract contract=testBuilder.getContract();
     Store store=testBuilder.getStore();
@@ -48,8 +48,8 @@ public class WVMContractInvalidTest {
 
     @BeforeClass
     public static void setVersion(){
-        if(!wvmVersion.isEmpty()){
-            wvmVersion = "";
+        if(wvmVersion.isEmpty()){
+            wvmVersion = "2.0.0";
         }
     }
 

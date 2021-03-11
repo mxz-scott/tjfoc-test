@@ -12,16 +12,16 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 
-        SetCertSM2.class,
+//        SetCertSM2.class,
 //        PeerStartNoPermTest.class,
-        BeforeCondition.class,
-        SetURLToSDKAddr.class,
+//        BeforeCondition.class,
+//        SetURLToSDKAddr.class,
 
         StoreTest.class,
         PrivateStoreTest.class,
         PrivateStoreTestFastGet.class,
-        CommonInterfaceTest.class,
-        NoPriPrivateStoreTest.class,
+//        CommonInterfaceTest.class,
+//        NoPriPrivateStoreTest.class,
         StoreInvalidTest.class,
 
 })

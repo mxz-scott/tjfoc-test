@@ -23,15 +23,16 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 public class UtilsClass {
 
     public static String subLedger = "sw01cchzap"; // 应用链ID
+//public static String subLedger = "";
     public static String urlAddr = ""; // 向指定节点发请求 格式 IP:RPCPort
-    public static String SDKADD = "http://10.1.5.162:8777";//sdk/tokenapi/中间件服务地址 http://IP:Port
+    public static String SDKADD = "http://10.1.5.243:8777";//sdk/tokenapi/中间件服务地址 http://IP:Port
     public static String TOKENADD = SDKADD;
     public static String rSDKADD = SDKADD;
 
     //设置测试环境使用的节点端口及部署目录信息
     public static String PEER1IP,PEER2IP,PEER3IP,PEER4IP = "10.1.5.162"; //各个节点服务器IP地址
-    public static String PEER1RPCPort,PEER2RPCPort,PEER3RPCPort,PEER4RPCPort = "9000";//各个节点服务器RPC端口号
-    public static String PEER1TCPPort,PEER2TCPPort,PEER3TCPPort,PEER4TCPPort = "60000";//各个节点服务器TCP端口号
+    public static String PEER1RPCPort,PEER2RPCPort,PEER3RPCPort,PEER4RPCPort = "9009";//各个节点服务器RPC端口号
+    public static String PEER1TCPPort,PEER2TCPPort,PEER3TCPPort,PEER4TCPPort = "60009";//各个节点服务器TCP端口号
     //节点、SDK、Toolkit对等目录放置于PTPATH目录下
     public static String PTPATH,SDKPATH,PeerPATH,ToolPATH,TokenApiPATH = "/root"; //各个服务部署目录
     public static String PeerTPName,SDKTPName,ToolTPName,TokenTPName = "wtchain";//各个服务进程名称

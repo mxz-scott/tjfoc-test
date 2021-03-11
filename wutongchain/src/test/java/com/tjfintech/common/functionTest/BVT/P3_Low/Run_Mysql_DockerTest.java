@@ -26,7 +26,7 @@ import org.junit.runners.Suite;
         TestTxType_Docker.class,
         TestPermission_Docker.class,
 
-        SetSubLedger.class,
+        SetAppChain.class,
         DockerContractTest.class,
         DockerContractInvalidTest.class,
 

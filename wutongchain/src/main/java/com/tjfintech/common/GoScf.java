@@ -604,7 +604,7 @@ public class GoScf implements Scf {
         map.put("contractAddress",AccountAddress);
         map.put("supplierMsg",supplierMsg);
         map.put("financeTxID",financeTxID);
-        map.put("kIDList",kIDList);
+        map.put("KeyIDList",kIDList);
         map.put("platformKeyID",platformKeyID);
         map.put("PIN",PIN);
         String param="";
@@ -689,7 +689,7 @@ public class GoScf implements Scf {
 
         map.put("contractAddress",AccountAddress);
         map.put("supplierMsg",Msglist);
-        map.put("KID",platformKeyID);
+        map.put("KeyID",platformKeyID);
         map.put("PIN",PIN);
 
         String param = "";

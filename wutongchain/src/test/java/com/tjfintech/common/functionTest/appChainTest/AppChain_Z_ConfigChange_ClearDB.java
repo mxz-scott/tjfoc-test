@@ -151,6 +151,7 @@ public class AppChain_Z_ConfigChange_ClearDB {
     }
 
     //测试使用数据节点作为应用链集群节点时是否能够创建 预期是能创建
+    //bug未修复 3.2迭代修复
     @Test
     public void appChainWithDataPeer()throws Exception{
 

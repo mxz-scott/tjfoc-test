@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.After;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -27,7 +28,7 @@ import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class WVMContractTest_withVersionUpgradeTest {
+public class WVMContractWithVersionTest_UpgradeTestOnly {
     TestBuilder testBuilder= TestBuilder.getInstance();
     Contract contract=testBuilder.getContract();
     Store store=testBuilder.getStore();
@@ -44,6 +45,13 @@ public class WVMContractTest_withVersionUpgradeTest {
     public int amountB = 60;
     public int transfer = 10;
     public String wvmFile = "wvm";
+
+    @BeforeClass
+    public static void setVersion(){
+        if(wvmVersion.isEmpty()){
+            wvmVersion = "2.0.0";
+        }
+    }
 
     //调用不存在的版本合约
     @Test

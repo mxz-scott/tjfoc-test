@@ -2,10 +2,8 @@ package com.tjfintech.common.functionTest.BVT.P3_Low;
 
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.*;
-import com.tjfintech.common.functionTest.PermissionTest.TestPermission_Docker;
 import com.tjfintech.common.functionTest.contract.DockerContractInvalidTest;
 import com.tjfintech.common.functionTest.contract.DockerContractTest;
-import com.tjfintech.common.functionTest.mixTest.TestTxType_Docker;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -21,7 +19,7 @@ import org.junit.runners.Suite;
         DockerContractTest.class,
         DockerContractInvalidTest.class,
 
-        SetSubLedger.class,
+        SetAppChain.class,
         DockerContractTest.class,
         DockerContractInvalidTest.class,
 
