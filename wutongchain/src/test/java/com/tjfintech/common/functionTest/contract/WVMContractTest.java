@@ -52,239 +52,12 @@ public class WVMContractTest {
     @BeforeClass
     public static void setVersion(){
         if(wvmVersion.isEmpty()){
-            wvmVersion = "1.0.4";
+            wvmVersion = "";
         }
     }
 
 
-    /***
-     * 跨合约调用 权限赋值时仅赋给SDK和另一个调用的合约
-     * 管理工具命令 contract modifyfunc 来进程调用权限修改
-     * @throws Exception
-     */
-    @Test
-    public void TestCrossInvoke_PermitSDKAndContract() throws Exception{
-        if(!wvmVersion.isEmpty())  {
-            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
-            return;}
-        String ctName = "L_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
-        // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
-        // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
-        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
 
-        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-        String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
-        String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-        chkTxDetailRsp("200",txHash1);
-
-        //安装需要跨合约调用的合约 wvm_cross.txt
-        String response2 = wvmInstallTest("wvm_cross.txt","");
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
-        String ctHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("name");
-
-                commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-        //使用管理工具给第一个合约的initAccount方法添加第二个合约名，赋予其及SDK调用权限。
-        MgToolCmd mgToolCmd = new MgToolCmd();
-        String permitStr = utilsClass.getSDKID().trim() + "," + ctHash2;
-        mgToolCmd.contractFuncPermit(PEER1IP,PEER1RPCPort,subLedger,ctHash,"","initAccount",permitStr);
-        sleepAndSaveInfo(SLEEPTIME/2);
-
-        //跨合约调用合约内的正确的方法 initAccount方法
-        String response3 = invokeNew(ctHash2,"CrossInitAccount",
-                ctHash,"initAccount","\"[\"C\",123]\"");//初始化账户A 账户余额50
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("data").getString("txId");
-
-
-        commonFunc.sdkCheckTxOrSleep(txHash3,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        chkTxDetailRsp("200",txHash3);
-        String response7 = query(ctHash,"BalanceTest","C");//获取账户A账户余额
-        assertEquals("123",JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
-
-
-        //跨合约调用，被调用合约内的不存在的方法，正确的参数格式
-        String response4 = invokeNew(ctHash2,"CrossInitAccount",
-                ctHash,"initAnt","\"[\"C\",123]\"");//初始化账户A 账户余额50
-        String txHash4 = JSONObject.fromObject(response4).getJSONObject("data").getString("txId");
-
-
-        commonFunc.sdkCheckTxOrSleep(txHash4,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        chkTxDetailRsp("404",txHash4);
-
-        //跨合约调用合约内的存在的方法，错误的参数格式
-        String response5 = invokeNew(ctHash2,"CrossInitAccount",
-                ctHash,"initAccount","[\"C\",123]");//初始化账户A 账户余额50
-
-        //pp分支 v2 会直接返回错误提示
-        assertEquals(true,response5.contains("不支持的合约参数格式"));
-//        String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("txId");
-//
-//
-//        commonFunc.sdkCheckTxOrSleep(txHash5,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-//        chkTxDetailRsp("404",txHash5);
-    }
-
-    @Test
-    public void TestCrossInvoke_PermitEveryone() throws Exception{
-        if(!wvmVersion.isEmpty())  {
-            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
-            return;}
-        String ctName = "L_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
-        // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
-        // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
-        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
-
-        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-        String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
-        String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-        chkTxDetailRsp("200",txHash1);
-
-        //安装需要跨合约调用的合约 wvm_cross.txt
-        String response2 = wvmInstallTest("wvm_cross.txt","");
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
-        String ctHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("name");
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-        //使用管理工具给第一个合约的initAccount方法添加第二个合约名，赋予everyone调用权限。
-        MgToolCmd mgToolCmd = new MgToolCmd();
-        String permitStr = "";
-        mgToolCmd.contractFuncPermit(PEER1IP,PEER1RPCPort,subLedger,ctHash,"","initAccount",permitStr);
-        sleepAndSaveInfo(SLEEPTIME/2);
-
-        //跨合约调用合约内的正确的方法 initAccount方法
-        String response3 = invokeNew(ctHash2,"CrossInitAccount",
-                ctHash,"initAccount","\"[\"C\",123]\"");//初始化账户A 账户余额50
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("data").getString("txId");
-
-
-        commonFunc.sdkCheckTxOrSleep(txHash3,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        chkTxDetailRsp("200",txHash3);
-        String response7 = query(ctHash,"BalanceTest","C");//获取账户A账户余额
-        assertEquals("123",JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
-
-
-        //跨合约调用，被调用合约内的不存在的方法，正确的参数格式
-        String response4 = invokeNew(ctHash2,"CrossInitAccount",
-                ctHash,"initAnt","\"[\"C\",123]\"");//初始化账户A 账户余额50
-        String txHash4 = JSONObject.fromObject(response4).getJSONObject("data").getString("txId");
-
-
-        commonFunc.sdkCheckTxOrSleep(txHash4,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        chkTxDetailRsp("404",txHash4);
-
-        //跨合约调用合约内的存在的方法，错误的参数格式
-        String response5 = invokeNew(ctHash2,"CrossInitAccount",
-                ctHash,"initAccount","[\"C\",123]");//初始化账户A 账户余额50
-
-        //pp分支 v2 会直接返回错误提示
-        assertEquals(true,response5.contains("不支持的合约参数格式"));
-    }
-
-    /**
-     * 默认合约仅给sdk有调用权限 合约无权限
-     * @throws Exception
-     */
-    @Test
-    public void TestCrossInvoke_PermitSDKOnly() throws Exception{
-        if(!wvmVersion.isEmpty())  {
-            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
-            return;}
-        String ctName = "L_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
-        // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
-        // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
-        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
-
-        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-        String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
-        String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-        chkTxDetailRsp("200",txHash1);
-
-        //安装需要跨合约调用的合约 wvm_cross.txt
-        String response2 = wvmInstallTest("wvm_cross.txt","");
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
-        String ctHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("name");
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-        //跨合约调用合约内的正确的方法 initAccount方法 合约无调用权限故交易失败不会上链
-        String response3 = invokeNew(ctHash2,"CrossInitAccount",
-                ctHash,"initAccount","\"[\"C\",123]\"");//初始化账户A 账户余额50
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("data").getString("txId");
-
-        commonFunc.sdkCheckTxOrSleep(txHash3,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        chkTxDetailRsp("404",txHash3);
-    }
-
-    /**
-     * 默认合约仅给合约调用权限 sdk无权限
-     * @throws Exception
-     */
-    @Test
-    public void TestCrossInvoke_PermitContractOnly() throws Exception{
-        if(!wvmVersion.isEmpty())  {
-            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
-            return;}
-        String ctName = "L_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
-        // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
-        // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
-        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
-
-        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
-        String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
-        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
-        String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-        chkTxDetailRsp("200",txHash1);
-
-        //安装需要跨合约调用的合约 wvm_cross.txt
-        String response2 = wvmInstallTest("wvm_cross.txt","");
-        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
-        String ctHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("name");
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-
-        //使用管理工具给第一个合约的initAccount方法添加第二个合约名，赋予其调用权限。
-        MgToolCmd mgToolCmd = new MgToolCmd();
-        String permitStr = ctHash2;
-        mgToolCmd.contractFuncPermit(PEER1IP,PEER1RPCPort,subLedger,ctHash,"","initAccount",permitStr);
-        sleepAndSaveInfo(SLEEPTIME/2);
-
-        //跨合约调用合约内的正确的方法 initAccount方法 合约无调用权限故交易失败不会上链
-        String response3 = invokeNew(ctHash2,"CrossInitAccount",
-                ctHash,"initAccount","\"[\"C\",123]\"");//初始化账户A 账户余额50
-        String txHash3 = JSONObject.fromObject(response3).getJSONObject("data").getString("txId");
-
-        commonFunc.sdkCheckTxOrSleep(txHash3,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        chkTxDetailRsp("200",txHash3);
-
-        //原合约SDK调用合约内的交易
-        String response4 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
-        assertEquals("400", JSONObject.fromObject(response4).getString("state"));
-        assertEquals(true, JSONObject.fromObject(response4).getString("message").contains("You don't have permission to call this method"));
-    }
 
     @Test
     public void TC1774_1784_1786_testContract() throws Exception{
@@ -328,15 +101,15 @@ public class WVMContractTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
-        //查询余额invoke接口
-        String response5 = invokeNew(ctHash,"BalanceTest",accountA);//获取账户A账户余额
-        String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("txId");
+        //查询余额invoke接口  BalanceTest方法不会上链
+//        String response5 = invokeNew(ctHash,"BalanceTest",accountA);//获取账户A账户余额
+//        String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("txId");
+//
+//        String response6 = invokeNew(ctHash,"BalanceTest",accountB);//获取账户A账户余额
+//        String txHash6 = JSONObject.fromObject(response6).getJSONObject("data").getString("txId");
 
-        String response6 = invokeNew(ctHash,"BalanceTest",accountB);//获取账户A账户余额
-        String txHash6 = JSONObject.fromObject(response6).getJSONObject("data").getString("txId");
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+//        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+//                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //查询余额query接口 交易不上链 //query接口不再显示交易hash
         String response7 = query(ctHash,"BalanceTest",accountA);//获取转账后账户A账户余额
@@ -369,7 +142,8 @@ public class WVMContractTest {
         }
 
         if (wvmVersion != ""){
-            assertThat(JSONObject.fromObject(response10).getString("message"),containsString("This version[1.0.0] of the smart contract is destroyed"));
+            assertThat(JSONObject.fromObject(response10).getString("message"),
+                    containsString("This version[" + wvmVersion + "] of the smart contract is destroyed"));
         }else{
             assertThat(JSONObject.fromObject(response10).getString("message"),containsString("This smart contract is destroyed"));
         }
@@ -377,7 +151,7 @@ public class WVMContractTest {
         // 销毁后会提示找不到合约文件 500 error code
 
         chkTxDetailRsp("200",txHash1,txHash2,txHash3,txHash4,txHash9);
-        chkTxDetailRsp("404",txHash5,txHash6);  //因合约实际实现并未返回success 20200907 开发确认针对此规则交易不再上链，故做此检查
+//        chkTxDetailRsp("404",txHash5,txHash6);  //因合约实际实现并未返回success 20200907 开发确认针对此规则交易不再上链，故做此检查
     }
 
     @Test
@@ -446,7 +220,7 @@ public class WVMContractTest {
 
     @Test
     public void TC1775_InstallSameNoInvoke() throws Exception{
-        String ctName = "F_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
+        String ctName = "FD_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
 
         // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
         // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
@@ -657,7 +431,7 @@ public class WVMContractTest {
 
         //调用合约内的方法 transfer方法
         String response4 = invokeNew(ctHash,"transfer",accountA,accountB,transfer);//A向B转30
-        String response5 = invokeNew(ctHash,"transfer",accountA,accountB,transfer+1);//A向B转30
+        String response5 = invokeNew(ctHash,"transfer",accountA,accountB,transfer+1);//A向B转31
         String txHash4 = JSONObject.fromObject(response4).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
@@ -712,6 +486,235 @@ public class WVMContractTest {
                 assertThat(JSONObject.fromObject(response1).getString("message"),containsString("This smart contract is destroyed"));
             }
         }
+    }
+
+    /***
+     * 跨合约调用 权限赋值时仅赋给SDK和另一个调用的合约
+     * 管理工具命令 contract modifyfunc 来进程调用权限修改
+     * @throws Exception
+     */
+    @Test
+    public void TestCrossInvoke_PermitSDKAndContract() throws Exception{
+        if(!wvmVersion.isEmpty())  {
+            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
+            return;}
+        String ctName = "L_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
+        // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
+        // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
+        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
+
+        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
+        String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+        String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        chkTxDetailRsp("200",txHash1);
+
+        //安装需要跨合约调用的合约 wvm_cross.txt
+        String response2 = wvmInstallTest("wvm_cross.txt","");
+        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
+        String ctHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("name");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        //使用管理工具给第一个合约的initAccount方法添加第二个合约名，赋予其及SDK调用权限。
+        MgToolCmd mgToolCmd = new MgToolCmd();
+        String permitStr = utilsClass.getSDKID().trim() + "," + ctHash2;
+        mgToolCmd.contractFuncPermit(PEER1IP,PEER1RPCPort,subLedger,ctHash,"","initAccount",permitStr);
+        sleepAndSaveInfo(SLEEPTIME/2);
+
+        //跨合约调用合约内的正确的方法 initAccount方法
+        String response3 = invokeNew(ctHash2,"CrossInitAccount",
+                ctHash,"initAccount","\"[\"C\",123]\"");//初始化账户A 账户余额50
+        String txHash3 = JSONObject.fromObject(response3).getJSONObject("data").getString("txId");
+
+
+        commonFunc.sdkCheckTxOrSleep(txHash3,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        chkTxDetailRsp("200",txHash3);
+        String response7 = query(ctHash,"BalanceTest","C");//获取账户A账户余额
+        assertEquals("123",JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
+
+
+        //跨合约调用，被调用合约内的不存在的方法，正确的参数格式
+        String response4 = invokeNew(ctHash2,"CrossInitAccount",
+                ctHash,"initAnt","\"[\"C\",123]\"");//初始化账户A 账户余额50
+        String txHash4 = JSONObject.fromObject(response4).getJSONObject("data").getString("txId");
+
+
+        commonFunc.sdkCheckTxOrSleep(txHash4,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        chkTxDetailRsp("404",txHash4);
+
+        //跨合约调用合约内的存在的方法，错误的参数格式
+        String response5 = invokeNew(ctHash2,"CrossInitAccount",
+                ctHash,"initAccount","[\"C\",123]");//初始化账户A 账户余额50
+
+        //pp分支 v2 会直接返回错误提示
+        assertEquals(true,response5.contains("不支持的合约参数格式"));
+//        String txHash5 = JSONObject.fromObject(response5).getJSONObject("data").getString("txId");
+//
+//
+//        commonFunc.sdkCheckTxOrSleep(txHash5,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+//        chkTxDetailRsp("404",txHash5);
+    }
+
+    @Test
+    public void TestCrossInvoke_PermitEveryone() throws Exception{
+        if(!wvmVersion.isEmpty())  {
+            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
+            return;}
+        String ctName = "L_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
+        // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
+        // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
+        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
+
+        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
+        String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+        String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        chkTxDetailRsp("200",txHash1);
+
+        //安装需要跨合约调用的合约 wvm_cross.txt
+        String response2 = wvmInstallTest("wvm_cross.txt","");
+        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
+        String ctHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("name");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        //使用管理工具给第一个合约的initAccount方法添加第二个合约名，赋予everyone调用权限。
+        MgToolCmd mgToolCmd = new MgToolCmd();
+        String permitStr = "";
+        mgToolCmd.contractFuncPermit(PEER1IP,PEER1RPCPort,subLedger,ctHash,"","initAccount",permitStr);
+        sleepAndSaveInfo(SLEEPTIME/2);
+
+        //跨合约调用合约内的正确的方法 initAccount方法
+        String response3 = invokeNew(ctHash2,"CrossInitAccount",
+                ctHash,"initAccount","\"[\"C\",123]\"");//初始化账户A 账户余额50
+        String txHash3 = JSONObject.fromObject(response3).getJSONObject("data").getString("txId");
+
+
+        commonFunc.sdkCheckTxOrSleep(txHash3,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        chkTxDetailRsp("200",txHash3);
+        String response7 = query(ctHash,"BalanceTest","C");//获取账户A账户余额
+        assertEquals("123",JSONObject.fromObject(response7).getJSONObject("data").getString("result"));
+
+
+        //跨合约调用，被调用合约内的不存在的方法，正确的参数格式
+        String response4 = invokeNew(ctHash2,"CrossInitAccount",
+                ctHash,"initAnt","\"[\"C\",123]\"");//初始化账户A 账户余额50
+        String txHash4 = JSONObject.fromObject(response4).getJSONObject("data").getString("txId");
+
+
+        commonFunc.sdkCheckTxOrSleep(txHash4,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        chkTxDetailRsp("404",txHash4);
+
+        //跨合约调用合约内的存在的方法，错误的参数格式
+        String response5 = invokeNew(ctHash2,"CrossInitAccount",
+                ctHash,"initAccount","[\"C\",123]");//初始化账户A 账户余额50
+
+        //pp分支 v2 会直接返回错误提示
+        assertEquals(true,response5.contains("不支持的合约参数格式"));
+    }
+
+    /**
+     * 默认合约仅给sdk有调用权限 合约无权限
+     * @throws Exception
+     */
+    @Test
+    public void TestCrossInvoke_PermitSDKOnly() throws Exception{
+        if(!wvmVersion.isEmpty())  {
+            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
+            return;}
+        String ctName = "L_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
+        // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
+        // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
+        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
+
+        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
+        String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+        String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        chkTxDetailRsp("200",txHash1);
+
+        //安装需要跨合约调用的合约 wvm_cross.txt
+        String response2 = wvmInstallTest("wvm_cross.txt","");
+        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
+        String ctHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("name");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        //跨合约调用合约内的正确的方法 initAccount方法 合约无调用权限故交易失败不会上链
+        String response3 = invokeNew(ctHash2,"CrossInitAccount",
+                ctHash,"initAccount","\"[\"C\",123]\"");//初始化账户A 账户余额50
+        String txHash3 = JSONObject.fromObject(response3).getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txHash3,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        chkTxDetailRsp("404",txHash3);
+    }
+
+    /**
+     * 默认合约仅给合约调用权限 sdk无权限
+     * @throws Exception
+     */
+    @Test
+    public void TestCrossInvoke_PermitContractOnly() throws Exception{
+        if(!wvmVersion.isEmpty())  {
+            log.info("20200805当前不支持带版本号的跨合约调用，问题单1003270");
+            return;}
+        String ctName = "L_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
+        // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
+        // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
+        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
+
+        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
+        String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+        String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        chkTxDetailRsp("200",txHash1);
+
+        //安装需要跨合约调用的合约 wvm_cross.txt
+        String response2 = wvmInstallTest("wvm_cross.txt","");
+        String txHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
+        String ctHash2 = JSONObject.fromObject(response2).getJSONObject("data").getString("name");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+
+        //使用管理工具给第一个合约的initAccount方法添加第二个合约名，赋予其调用权限。
+        MgToolCmd mgToolCmd = new MgToolCmd();
+        String permitStr = ctHash2;
+        mgToolCmd.contractFuncPermit(PEER1IP,PEER1RPCPort,subLedger,ctHash,"","initAccount",permitStr);
+        sleepAndSaveInfo(SLEEPTIME/2);
+
+        //跨合约调用合约内的正确的方法 initAccount方法 合约无调用权限故交易失败不会上链
+        String response3 = invokeNew(ctHash2,"CrossInitAccount",
+                ctHash,"initAccount","\"[\"C\",123]\"");//初始化账户A 账户余额50
+        String txHash3 = JSONObject.fromObject(response3).getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txHash3,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        chkTxDetailRsp("200",txHash3);
+
+        //原合约SDK调用合约内的交易
+        String response4 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
+        assertEquals("400", JSONObject.fromObject(response4).getString("state"));
+        assertEquals(true, JSONObject.fromObject(response4).getString("message").contains("You don't have permission to call this method"));
     }
 
 //    @Test

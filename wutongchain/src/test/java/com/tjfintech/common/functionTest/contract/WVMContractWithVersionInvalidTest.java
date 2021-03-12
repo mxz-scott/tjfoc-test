@@ -49,7 +49,7 @@ public class WVMContractWithVersionInvalidTest {
     @BeforeClass
     public static void setVersion(){
         if(wvmVersion.isEmpty()){
-            wvmVersion = "2.0.0";
+            wvmVersion = "2.0.1";
         }
     }
 
