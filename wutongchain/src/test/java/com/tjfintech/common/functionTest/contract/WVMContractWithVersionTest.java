@@ -402,7 +402,8 @@ public class WVMContractWithVersionTest {
         chkTxDetailRsp("200",txHash1); //确认安装合约交易上链
         //重复使用同一个版本号进行合约安装 会安装失败
         String response2 = wvmInstallTest(wvmFile + "_temp.txt","");
-        assertEquals(true,JSONObject.fromObject(response2).getString("message").contains("This contract is exist"));
+        assertEquals(true,JSONObject.fromObject(response2).getString("message").contains(
+                "This contract verion[" + wvmVersion  + "] is exist"));
     }
 
     @Test
@@ -413,7 +414,8 @@ public class WVMContractWithVersionTest {
 
         //再次安装合约
         String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
-        assertEquals(true,JSONObject.fromObject(response1).getString("message").contains("This contract is exist"));
+        assertEquals(true,JSONObject.fromObject(response1).getString("message").contains(
+                "This contract verion[" + wvmVersion  + "] is exist"));
     }
 
     @Test
@@ -425,7 +427,8 @@ public class WVMContractWithVersionTest {
 
         //销毁后再次使用相同的版本号进行合约安装 执行失败
         String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
-        assertEquals(true,JSONObject.fromObject(response1).getString("message").contains("This contract is exist"));
+        assertEquals(true,JSONObject.fromObject(response1).getString("message").contains(
+                "This contract verion[" + wvmVersion  + "] is exist"));
 
         //使用新的版本进行合约安装
         wvmVersion = "1.0.2." + Random(3);
@@ -447,7 +450,8 @@ public class WVMContractWithVersionTest {
             wvmVersion = "1.0.3." + i;
             //再次安装合约后会得到合约hash：由Prikey和ctName进行运算得到
             String response1 = wvmInstallTest(wvmFile + "_temp.txt", "");
-            assertEquals(true, JSONObject.fromObject(response1).getString("message").contains("This contract is exist"));
+            assertEquals(true, JSONObject.fromObject(response1).getString("message").contains(
+                    "This contract verion[" + wvmVersion  + "] is exist"));
         }
 
         wvmVersion = "1.0.4";
