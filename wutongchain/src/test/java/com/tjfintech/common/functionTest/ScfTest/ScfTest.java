@@ -24,6 +24,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,9 @@ public class ScfTest {
     CommonFunc commonFunc = new CommonFunc();
     Scf scf = testBuilder.getScf();
     Store store = testBuilder.getStore();
-    public static long expireDate = System.currentTimeMillis() + 100000000;
+    public static double timeStampNow = System.currentTimeMillis();
+    public static BigDecimal expireDate = new BigDecimal(timeStampNow + 12356789);
+    //public static long expireDate = System.currentTimeMillis() + 100000000;
     Kms kms = testBuilder.getKms();
 
 

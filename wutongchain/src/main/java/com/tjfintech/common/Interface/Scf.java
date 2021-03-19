@@ -1,5 +1,6 @@
 package com.tjfintech.common.Interface;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -7,7 +8,7 @@ import java.util.Map;
 public interface Scf {
 
     String AccountCreate(String PlatformAddress,String platformKeyID, String PIN, String pubkey, String comments);
-    String IssuingApply(String AccountAddress, String companyID1, String coreCompanyKeyID, String PIN, String tokenType, int levelLimit, long expireDate, String supplyAddress1, String amount);
+    String IssuingApply(String AccountAddress, String companyID1, String coreCompanyKeyID, String PIN, String tokenType, int levelLimit, BigDecimal expireDate, String supplyAddress1, String amount);
     String IssuingApprove(String platformKeyID, String tokenType, String platformPIN);
     String IssuingCancel(String tokenType, String companyID1, String keyID, String PIN, String comments);
     String IssuingConfirm(String PlatformAddress, String coreCompanyKeyID, String tokenType, String PIN, String comments);

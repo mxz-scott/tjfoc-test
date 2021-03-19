@@ -6,6 +6,7 @@ import com.tjfintech.common.utils.PostTest;
 //import com.tjfoc.sdk.SDK_TjfocSDK_WalletSDK;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +53,7 @@ public class GoScf implements Scf {
      * @param amount
      * @return
      */
-    public String IssuingApply(String AccountAddress, String companyID1, String coreCompanyKeyID, String PIN, String tokenType, int levelLimit, long expireDate, String supplyAddress1, String amount) {
+    public String IssuingApply(String AccountAddress, String companyID1, String coreCompanyKeyID, String PIN, String tokenType, int levelLimit, BigDecimal expireDate, String supplyAddress1, String amount) {
         Map<String, Object> map = new HashMap<>();
 
         map.put("contractAddress", AccountAddress);
