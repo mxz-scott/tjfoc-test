@@ -17,9 +17,7 @@ import org.junit.runners.Suite;
         SetSyncTestSleepTime.class,     //同步测试必须将交易上链查询及等待时间设置为0 即 不等待 复用之前用例
         SetSyncFlagTrue.class,
 
-//        SetURLToSDKAddr.class,
         BeforeCondition.class,
-
         TokenMultiTest.class,
         TokenPrivateStoreTest.class,
         TokenSoloTest.class,
@@ -27,18 +25,6 @@ import org.junit.runners.Suite;
         TokenSyncShortTimeoutTest.class,
         CallBackSyncTest.class,
 
-//        SetSubLedgerSleepTime.class,
-//        SetAppChain.class,
-//        SetSyncTestSleepTime.class,
-//
-//        BeforeCondition.class,
-//
-//        TokenMultiTest.class,
-//        TokenPrivateStoreTest.class,
-//        TokenSoloTest.class,
-//        TokenStoreTest.class,
-
-//        SetURLToSDKAddr.class,
         SetSyncFlagFalse.class,
         SetNormalTestSleepTime.class,
         SetEventClientStop.class,   // 关闭事件通知消息客户端
