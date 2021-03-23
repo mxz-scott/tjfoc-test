@@ -140,9 +140,9 @@ public class ScfMultiInvalidTest {
         List<Map> list = new ArrayList<>(10);
         List<Map> list1 = UtilsClassScf.Assignment("1", "0", list);
         String response4 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, "123456", tokenType, list1, "n", supplyAddress2);
-        assertThat(response4, containsString("200"));
+        assertThat(response4, containsString("400"));
         assertThat(response4, containsString("success"));
-        assertThat(response4, containsString("data"));
+        assertThat(response4, containsString("Failed! Err:资产不在有效期内"));
         Thread.sleep(5000);
         //资产转让签收
         String response5 = scf.AssignmentConfirm(PlatformAddress, supplyID1, PIN, "123456", tokenType, comments);
@@ -162,8 +162,9 @@ public class ScfMultiInvalidTest {
         assertThat(checking1, containsString("success"));
 
     }
+
     /**
-     *资产流转层级限制levelLimit
+     * 资产流转层级限制levelLimit
      */
     @Test
     public void TC003_MAXleveltransfer() throws Exception {
@@ -217,4 +218,69 @@ public class ScfMultiInvalidTest {
 
     }
 
+    /**
+     * 发起融资申请后转让//融资申请后资产相当于冻结应该无法转让
+     */
+    @Test
+    public void TC004_transfer() throws Exception {
+        int levelLimit = 5;
+        String response = kms.genRandom(size);
+        String tokenType = UtilsClassScf.gettokenType(response);
+        BigDecimal expireDate = new BigDecimal(timeStampNow + 60000);
+        //资产开立申请
+        String response1 = scf.IssuingApply(AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
+        assertThat(response1, containsString("200"));
+        assertThat(response1, containsString("success"));
+        assertThat(response1, containsString("data"));
+        Thread.sleep(5000);
+        //开立审核
+        String response2 = scf.IssuingApprove(platformKeyID, tokenType, platformPIN);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("success"));
+        assertThat(response2, containsString("data"));
+        Thread.sleep(5000);
+        //开立签收
+        String response3 = scf.IssuingConfirm(PlatformAddress, coreCompanyKeyID, tokenType, PIN, comments);
+        assertThat(response3, containsString("200"));
+        assertThat(response3, containsString("success"));
+        assertThat(response3, containsString("data"));
+
+        JSONObject KLjsonObject = JSONObject.fromObject(response3);
+        String KLstoreHash = KLjsonObject.getString("data");
+        String KLQSstoreHash = UtilsClassScf.strToHex(KLstoreHash);
+        System.out.println("KLQSstoreHash = " + KLQSstoreHash);
+        commonFunc.sdkCheckTxOrSleep(KLQSstoreHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
+        //验证上链返回值
+        String checking = store.GetTxDetail(KLQSstoreHash);
+        assertThat(checking, containsString("200"));
+        assertThat(checking, containsString("success"));
+
+        //融资申请
+        String newFromSubType = "2";
+        String newToSubType = "1";
+        String rzamount = "10";
+        String proof = "123456";
+        String subType = "0";
+        String response4 = scf.FinacingApply(supplyAddress1, supplyID1, PIN, proof, tokenType, rzamount, subType, newFromSubType,newToSubType, supplyAddress2);
+        assertThat(response4, containsString("200"));
+        assertThat(response4, containsString("success"));
+        assertThat(response4, containsString("data"));
+
+
+        //资产转让申请
+        List<Map> list = new ArrayList<>(10);
+        List<Map> list1 = UtilsClassScf.Assignment("10", "0", list);
+        String response5 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, "123456", tokenType, list1, "1", supplyAddress2);
+        assertThat(response5, containsString("200"));
+        assertThat(response5, containsString("success"));
+        assertThat(response5, containsString("data"));
+        Thread.sleep(5000);
+        //资产转让签收
+        String response6 = scf.AssignmentConfirm(PlatformAddress, supplyID1, PIN, "123456", tokenType, comments);
+//        assertThat(response6, containsString("400"));
+//        assertThat(response6, containsString("error"));
+//        assertThat(response6, containsString("error"));
+
+
+    }
 }

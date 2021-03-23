@@ -25,6 +25,7 @@ import static com.tjfintech.common.utils.UtilsClassScf.*;
 import static com.tjfintech.common.utils.UtilsClassScf.comments;
 import static com.tjfintech.common.utils.UtilsClassScf.supplyAddress1;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 
@@ -84,24 +85,24 @@ public class ScfInterfaceTest {
         assertThat(response3, containsString("error"));
         assertThat(response3, containsString("Key: 'CompanyID' Error:Field validation for 'CompanyID' failed on the 'required' tag"));
 
-        log.info("资金方commpanyid不存在");
-        String response4 = scf.IssuingApply(AccountAddress, "008", coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
-        assertThat(response4, containsString("400"));
-        assertThat(response4, containsString("error"));
-        assertThat(response4, containsString("Err:账号合约验证失败"));
+        //log.info("资金方commpanyid不存在");
+        //String response4 = scf.IssuingApply(AccountAddress, "008", coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
+       // assertThat(response4, containsString("400"));
+        //assertThat(response4, containsString("error"));
+        //assertThat(response4, containsString("Err:账号合约验证失败"));
 
-        log.info("错误的核心企业id");
-        String response5 = scf.IssuingApply(AccountAddress, companyID1, "c02jbhbsnk7pq9fsojfg", PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
-        assertThat(response5, containsString("400"));
-        assertThat(response5, containsString("error"));
-        assertThat(response5, containsString("pin码与密钥不匹配,或请稍后再试"));
-
-
-        log.info("核心企业id为空");
-        String response6= scf.IssuingApply(AccountAddress, companyID1, "", PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
-        assertThat(response6, containsString("400"));
-        assertThat(response6, containsString("error"));
-        assertThat(response6, containsString("Key: 'KeyID' Error:Field validation for 'KeyID' failed on the 'len' tag"));
+//        log.info("错误的核心企业id");
+//        String response5 = scf.IssuingApply(AccountAddress, companyID1, "c02jbhbsnk7pq9fsojfg", PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
+//        assertThat(response5, containsString("400"));
+//        assertThat(response5, containsString("error"));
+//        assertThat(response5, containsString("pin码与密钥不匹配,或请稍后再试"));
+//
+//
+//        log.info("核心企业id为空");
+//        String response6= scf.IssuingApply(AccountAddress, companyID1, "", PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
+//        assertThat(response6, containsString("400"));
+//        assertThat(response6, containsString("error"));
+//        assertThat(response6, containsString("Key: 'KeyID' Error:Field validation for 'KeyID' failed on the 'len' tag"));
         log.info("pin码为空");
         String response7 = scf.IssuingApply(AccountAddress, companyID1, coreCompanyKeyID, "", tokenType, levelLimit, expireDate, supplyAddress1, amount);
         assertThat(response7, containsString("400"));
@@ -146,7 +147,7 @@ public class ScfInterfaceTest {
         assertThat(response14, containsString("error"));
         assertThat(response14, containsString("Err:合约配额已经耗尽"));
 
-        log.info("数值炒股奥小数点后6位");
+        log.info("数值超过小数点后6位");
         String response15= scf.IssuingApply(AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "100.123456789");
         assertThat(response15, containsString("503"));
         assertThat(response15, containsString("error"));
@@ -585,7 +586,7 @@ public class ScfInterfaceTest {
 
         log.info("转让额度为0");
         List<Map> list3 = UtilsClassScf.Assignment("0", "0", list);
-        response4 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, proof, tokenType, list1, newSubType, supplyAddress2);
+        response4 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, proof, tokenType, list3, newSubType, supplyAddress2);
         assertThat(response4, containsString("400"));
         assertThat(response4, containsString("error"));
         assertThat(response4, containsString("Incoming value should not be 0"));
@@ -972,7 +973,7 @@ public class ScfInterfaceTest {
          assertThat(response14, containsString("400"));
          assertThat(response14, containsString("error"));
          assertThat(response14, containsString("strconv.ParseUint: parsing \\\"-1\\\": invalid syntax"));
-         log.info("融资进而超过资产总金额");
+         log.info("融资金额超过资产总金额");
          String response15 = scf.FinacingApply(supplyAddress1, supplyID1, PIN, proof, tokenType, "1000000", subType, newFromSubType, newToSubType, supplyAddress2);
          assertThat(response15, containsString("400"));
          assertThat(response15, containsString("error"));
@@ -1224,52 +1225,52 @@ public class ScfInterfaceTest {
          assertThat(response14, containsString("400"));
          assertThat(response14, containsString("error"));
          assertThat(response14, containsString("Key: 'KeyID' Error:Field validation for 'KeyID' failed on the 'len' tag"));
-         //输入错误资金方id
+         log.info("资金方id不匹配/错误");
 //         String response15 = scf.FinacingConfirm(PlatformAddress, applyNo, ZJFAddress, supplyID1, "1238", PIN, tokenType, supplyAddress2, challenge, comments);
 //         assertThat(response15, containsString("200"));
 //         assertThat(response15, containsString("success"));
 //         assertThat(response15, containsString("data"));
-         //输入空资金方id
+         log.info("资金方id为空");
 //         String response16 = scf.FinacingConfirm(PlatformAddress, applyNo, ZJFAddress, supplyID1, "", PIN, tokenType, supplyAddress2, challenge, comments);
 //         assertThat(response16, containsString("400"));
 //         assertThat(response16, containsString("error"));
 //         assertThat(response16, containsString("has been spent"));
-         //输入错误pin码
+         log.info("pin码 不匹配");
          String response17 = scf.FinacingConfirm(PlatformAddress, applyNo, ZJFAddress, supplyID1, companyID1, "65465", tokenType, supplyAddress2, challenge, comments);
          assertThat(response17, containsString("400"));
          assertThat(response17, containsString("error"));
          assertThat(response17, containsString("pin码与密钥不匹配,或请稍后再试"));
-         //输入空pin码
+         log.info("pin码为空");
          String response18 = scf.FinacingConfirm(PlatformAddress, applyNo, ZJFAddress, supplyID1, companyID1, "", tokenType, supplyAddress2, challenge, comments);
          assertThat(response18, containsString("400"));
          assertThat(response18, containsString("error"));
          assertThat(response18, containsString("Key: 'PIN' Error:Field validation for 'PIN' failed on the 'required' tag"));
-         //输入错误接收方地址
+         log.info("接受地址错误");
 //         String response19 = scf.FinacingConfirm(PlatformAddress, applyNo, ZJFAddress, supplyID1, companyID1, PIN, tokenType, "08a969370898876d08b4314cba416ec26fa6ce1857fd4f6335c68eaf", challenge, comments);
 //         assertThat(response19, containsString("200"));
 //         assertThat(response19, containsString("success"));
 //         assertThat(response19, containsString("data"));
-         //输入空接收方地址
+         log.info("接收地址为空");
 //         String response20 = scf.FinacingConfirm(PlatformAddress, applyNo, ZJFAddress, supplyID1, companyID1, PIN, tokenType, "", challenge, comments);
 //         assertThat(response20, containsString("400"));
 //         assertThat(response20, containsString("error"));
 //         assertThat(response20, containsString("invalid character 's' looking for beginning of value"));
-         //输入错误challenge
+         log.info("challenge不匹配/错误");
          String response21 = scf.FinacingConfirm(PlatformAddress, applyNo, ZJFAddress, supplyID1, companyID1, PIN, tokenType, supplyAddress2, "qweqcas", comments);
          assertThat(response21, containsString("400"));
          assertThat(response21, containsString("error"));
          assertThat(response21, containsString("unexpected end of JSON input"));
-         //输入空challenge
+         log.info("challenge为空");
          String response22 = scf.FinacingConfirm(PlatformAddress, applyNo, ZJFAddress, supplyID1, companyID1, PIN, tokenType, supplyAddress2, "", comments);
          assertThat(response22, containsString("400"));
          assertThat(response22, containsString("error"));
          assertThat(response22, containsString("Key: 'Challenge' Error:Field validation for 'Challenge' failed on the 'required' tag"));
-         //输入错误comments
+         log.info("comments不匹配/错误");
 //         String response23 = scf.FinacingConfirm(PlatformAddress, applyNo, ZJFAddress, supplyID1, companyID1, PIN, tokenType, supplyAddress2, challenge, "asdeadfascasdsafasfvdvdfssgv");
 //         assertThat(response23, containsString("200"));
 //         assertThat(response23, containsString("success"));
 //         assertThat(response23, containsString("data"));
-         //输入空comments
+         log.info("comments为空");
 //         String response24 = scf.FinacingConfirm(PlatformAddress, applyNo, ZJFAddress, supplyID1, companyID1, PIN, tokenType, supplyAddress2, challenge, "");
 //         assertThat(response24, containsString("200"));
 //         assertThat(response24, containsString("success"));
@@ -1338,22 +1339,22 @@ public class ScfInterfaceTest {
         assertThat(response6, containsString("success"));
         assertThat(response6, containsString("data"));
         //融资取消
-        //输入错误challenge
+        log.info("challenge不匹配");
         String response7 = scf.FinacingCancel("123sss", tokenType);
         assertThat(response7, containsString("400"));
         assertThat(response7, containsString("error"));
         assertThat(response7, containsString("wvm invoke err"));
-        //输入空challenge
+        log.info("challenge为空");
         String response8 = scf.FinacingCancel("", tokenType);
         assertThat(response8, containsString("400"));
         assertThat(response8, containsString("error"));
         assertThat(response8, containsString("Key: 'Challenge' Error:Field validation for 'Challenge' failed on the 'min' tag"));
-        //输入错误tokentype
+        log.info("tokentype不匹配/错误");
         String response9 = scf.FinacingCancel(challenge, "sadasdasc");
         assertThat(response9, containsString("400"));
         assertThat(response9, containsString("error"));
         assertThat(response9, containsString("tokentype未发行!"));
-        //输入空tokentype
+        log.info("tokentype为空");
         String response10 = scf.FinacingCancel(challenge, "");
         assertThat(response10, containsString("400"));
         assertThat(response10, containsString("error"));
@@ -1398,32 +1399,32 @@ public class ScfInterfaceTest {
         assertThat(checking, containsString("success"));
 
         //兑付申请
-        //输入错误tokenType
+        log.info("tokentype不匹配");
         String response4 = scf.PayingApply("123ccasd", companyID1, comments);
         assertThat(response4, containsString("400"));
         assertThat(response4, containsString("error"));
         assertThat(response4, containsString("wvm invoke err"));
-        //输入空tokentype
+        log.info("tokentype为空");
         String response5 = scf.PayingApply("", companyID1, comments);
         assertThat(response5, containsString("400"));
         assertThat(response5, containsString("error"));
         assertThat(response5, containsString("Key: 'TokenType' Error:Field validation for 'TokenType' failed on the 'min' tag"));
-        //输入错误companyID1
+        log.info("commpanyID错误");
 //        String response6 = scf.PayingApply(tokenType, "0010", comments);
 //        assertThat(response6, containsString("200"));
 //        assertThat(response6, containsString("success"));
 //        assertThat(response6, containsString("data"));
-        //输入空companyID1
+        log.info("commpanyid为空");
 //        String response7 = scf.PayingApply(tokenType, "", comments);
 //        assertThat(response7, containsString("200"));
 //        assertThat(response7, containsString("success"));
 //        assertThat(response7, containsString("data"));
-        //输入错误comments
+        log.info("comments不匹配");
 //        String response8 = scf.PayingApply(tokenType, companyID1, "dasdacajoncasocnoan");
 //        assertThat(response8, containsString("200"));
 //        assertThat(response8, containsString("success"));
 //        assertThat(response8, containsString("data"));
-        //输入空comments
+        log.info("comments为空");
         String response9 = scf.PayingApply(tokenType, companyID1, "");
         assertThat(response9, containsString("400"));
         assertThat(response9, containsString("error"));
@@ -1732,69 +1733,6 @@ public class ScfInterfaceTest {
         assertThat(response9, containsString("销毁申请失败： Insufficient Balance!"));
 
     }
-//    @Test
-//    public void Test0024_PayingConfirm() throws Exception {
-//        int levelLimit = 5;
-//        String amount = "100.0";
-//        String response = kms.genRandom(size);
-//        String tokenType = UtilsClassScf.gettokenType(response);
-//        //资产开立申请
-//        String response1 = scf.IssuingApply(AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
-//        assertThat(response1, containsString("200"));
-//        assertThat(response1, containsString("success"));
-//        assertThat(response1, containsString("data"));
-//        Thread.sleep(5000);
-//        //开立审核
-//        String response2 = scf.IssuingApprove(platformKeyID, tokenType, platformPIN);
-//        assertThat(response2, containsString("200"));
-//        assertThat(response2, containsString("success"));
-//        assertThat(response2, containsString("data"));
-//        Thread.sleep(5000);
-//        //开立签收
-//        String response3 = scf.IssuingConfirm(PlatformAddress, coreCompanyKeyID, tokenType, PIN, comments);
-//        assertThat(response3, containsString("200"));
-//        assertThat(response3, containsString("success"));
-//        assertThat(response3, containsString("data"));
-//
-//        JSONObject KLjsonObject = JSONObject.fromObject(response3);
-//        String KLstoreHash = KLjsonObject.getString("data");
-//        String KLQSstoreHash = UtilsClassScf.strToHex(KLstoreHash);
-//        System.out.println("KLQSstoreHash = " + KLQSstoreHash);
-//
-//        commonFunc.sdkCheckTxOrSleep(KLQSstoreHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
-//        String checking = store.GetTxDetail(KLQSstoreHash);
-//        assertThat(checking, containsString("200"));
-//        assertThat(checking, containsString("success"));
-//
-//        //兑付申请
-//        String response4 = scf.PayingApply(tokenType, companyID1, comments);
-//        assertThat(response4, containsString("200"));
-//        assertThat(response4, containsString("success"));
-//        assertThat(response4, containsString("data"));
-//        Thread.sleep(5000);
-//        //兑付通知
-//        String message = "资产兑付申请通知";
-//        String response5 = scf.PayingNotify(AccountAddress, message);
-//        assertThat(response5, containsString("200"));
-//        assertThat(response5, containsString("success"));
-//        assertThat(response5, containsString("data"));
-//        Thread.sleep(5000);
-//        //兑付反馈
-//        String state = "1";
-//        String response6 = scf.PayingFeedback(QFJGAddress, tokenType, state, comments);
-//        assertThat(response6, containsString("200"));
-//        assertThat(response6, containsString("success"));
-//        assertThat(response6, containsString("data"));
-//        Thread.sleep(5000);
-//        //兑付确认
-//        //输入错误供应商地址
-//        List<Map> list = new ArrayList<>(10);
-//        List<Map> list1 = UtilsClassScf.paying("", supplyID1, "0", "100", list);
-//        String response9 = scf.PayingConfirm(PlatformAddress, QFJGAddress, companyID1, list1, platformKeyID, platformPIN, tokenType, comments);
-//        assertThat(response9, containsString("400"));
-//        assertThat(response9, containsString("error"));
-//        assertThat(response9, containsString("销毁申请失败： Insufficient Balance!"));
-//    }
 
 
     /**
@@ -1985,7 +1923,7 @@ public class ScfInterfaceTest {
         assertThat(response6, containsString("data"));
         Thread.sleep(5000);
         //兑付确认
-        log.info("兑付金额为空");
+        log.info("兑付金额为空,应用平台卡控，不可以兑付");
         List<Map> list = new ArrayList<>(10);
         List<Map> list1 = UtilsClassScf.paying(supplyAddress1, supplyID1, "0", "", list);
         String response9 = scf.PayingConfirm(PlatformAddress, QFJGAddress, companyID1, list1, platformKeyID, platformPIN, tokenType, comments);
@@ -2009,9 +1947,112 @@ public class ScfInterfaceTest {
         assertThat(response9, containsString("error"));
         assertThat(response9, containsString("销毁申请失败：strconv.ParseUint: parsing \\\"-10\\\": invalid syntax"));
 
+    }
+    /**
+     *抹账接口必填参数验证//ff
+     */
+    @Test
+    public void Test0029_Finacingback() throws Exception {
+
+        log.info("txid为空");
+        String response10 = scf.FinacingBack(PlatformAddress, platformKeyID, PIN, supplyID2, "", comments);
+        assertEquals("400", JSONObject.fromObject(response10).getString("state"));
+        assertEquals(true, response10.contains("'TxId' Error:Field validation for 'TxId' failed on the 'required' tag"));
+
+        log.info("PlatformAddress为空");
+        response10 = scf.FinacingBack("", platformKeyID, PIN, supplyID2, "dPvql1mJ/ubwpTsPiP6fUzSjSIg6KmasC8htnpSIlrQ=", comments);
+        assertEquals("400", JSONObject.fromObject(response10).getString("state"));
+        assertEquals(true, response10.contains("'PlatFormAddress' Error:Field validation for 'PlatFormAddress' failed on the 'required' tag"));
+
+        log.info("PlatformkeyID为空");
+        response10 = scf.FinacingBack(PlatformAddress, "", PIN, supplyID2, "aaaaa", comments);
+        assertEquals("400", JSONObject.fromObject(response10).getString("state"));
+        assertEquals(true, response10.contains("'PlartformKeyID' Error:Field validation for 'PlartformKeyID' failed on the 'len' tag"));
+
+        log.info("PIN为空");
+        response10 = scf.FinacingBack(PlatformAddress,platformKeyID, "", supplyID2, "dPvql1mJ/ubwpTsPiP6fUzSjSIg6KmasC8htnpSIlrQ=", comments);
+        assertEquals("400", JSONObject.fromObject(response10).getString("state"));
+        assertEquals(true, response10.contains("'PIN' Error:Field validation for 'PIN' failed on the 'required' tag"));
+
+        log.info("keyid为空");
+        response10 = scf.FinacingBack(PlatformAddress, platformKeyID, PIN, "", "dPvql1mJ/ubwpTsPiP6fUzSjSIg6KmasC8htnpSIlrQ=", comments);
+        assertEquals("400", JSONObject.fromObject(response10).getString("state"));
+        assertEquals(true, response10.contains("'KeyID' Error:Field validation for 'KeyID' failed on the 'len' tag"));
+
+        log.info("Comments为空");
+        response10 = scf.FinacingBack(PlatformAddress, platformKeyID, PIN, supplyID2, "dPvql1mJ/ubwpTsPiP6fUzSjSIg6KmasC8htnpSIlrQ=", "");
+        assertEquals("400", JSONObject.fromObject(response10).getString("state"));
+        assertEquals(true, response10.contains("'Comments' Error:Field validation for 'Comments' failed on the 'required' tag"));
+
+    }
+    /**
+     *修改账户信息通知接口必填参数验证//ff
+     */
+    @Test
+    public void Test0030_AccountInform() throws Exception {
+
+        log.info("contractAddress为空");
+        String response10 = scf.AccountInform("","BwAAAGZpbmFuY2UDAAAAYWJjAgQAAABzenRq8AAAAExTMHRMUzFDUlVkSlRpQlFWVUp NU1VNZ1MwVlpMUzB0TFMwS1");
+        assertEquals("400", JSONObject.fromObject(response10).getString("state"));
+        assertEquals(true, response10.contains("'ContractAddress' Error:Field validation for 'ContractAddress' failed on the 'required' tag"));
+
+        log.info("comments为空");
+        response10 = scf.AccountInform(PlatformAddress,"");
+        assertEquals("400", JSONObject.fromObject(response10).getString("state"));
+        assertEquals(true, response10.contains("'Comments' Error:Field validation for 'Comments' failed on the 'required' tag"));
 
     }
 
+    /**
+     *授信二度调整必填参数验证//ff
+     */
+    @Test
+    public void Test0030_C() throws Exception {
 
+        log.info("contractAddress为空");
+        String response10 = scf.CreditAdjust("",companyID1,"1000000");
+        assertEquals("400", JSONObject.fromObject(response10).getString("state"));
+        assertEquals(true, response10.contains("'ContractAddress' Error:Field validation for 'ContractAddress' failed on the 'required' tag"));
+
+        log.info("companyID为空");
+        response10 = scf.CreditAdjust(AccountAddress,"","1000000");
+        assertEquals("400", JSONObject.fromObject(response10).getString("state"));
+        assertEquals(true, response10.contains("'CompanyID' Error:Field validation for 'CompanyID' failed on the 'required' tag"));
+
+        log.info("amount为空");
+        response10 = scf.CreditAdjust(AccountAddress,companyID1,"");
+        assertEquals("400", JSONObject.fromObject(response10).getString("state"));
+        assertEquals(true, response10.contains("'Amount' Error:Field validation for 'Amount' failed on the 'min' tag"));
+
+    }
+
+    /**
+     *发送事件通知必填参数验证//ff
+     */
+    @Test
+    public void Test0031_send() throws Exception {
+
+        log.info("comments空");
+        String response10 = scf.Send("");
+        assertEquals("500", JSONObject.fromObject(response10).getString("state"));
+        assertEquals(true, response10.contains("'Comments' Error:Field validation for 'Comments' failed on the 'required' tag"));
+
+        log.info("comment不合法//格式不正确//不是由接口加密生成");
+        response10 = scf.Send("1234");
+        assertEquals("500", JSONObject.fromObject(response10).getString("state"));
+        assertEquals(true, response10.contains("comments不合法!(需要通过post http://ip:port/scf/func/sendmsg生成的数据!)"));
+    }
+
+    /**
+     *获取历史交易交易id必填参数验证//ff
+     */
+    @Test
+    public void Test0031_FuncGethistory() throws Exception {
+
+        log.info("Txid不存在//不匹配utxo交易");
+        String response10 = scf.FuncGethistory("1234345");
+        assertEquals("500", JSONObject.fromObject(response10).getString("state"));
+        assertEquals(true, response10.contains("invalid txId illegal base64 data at input byte 4"));
+    }
 }
 

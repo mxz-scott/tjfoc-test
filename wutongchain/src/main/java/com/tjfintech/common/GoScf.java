@@ -307,15 +307,15 @@ public class GoScf implements Scf {
     /**
      * 开立额度调整
      * @param AccountAddress
-     * @param companyID1
+     * @param companyID
      * @param amount
      * @return
      */
-    public String CreditAdjust(String AccountAddress, String companyID1, String amount) {
+    public String CreditAdjust(String AccountAddress, String companyID, String amount) {
         Map<String, Object> map = new HashMap<>();
 
         map.put("contractAddress", AccountAddress);
-        map.put("companyID", companyID2);
+        map.put("companyID", companyID);
         map.put("amount", amount);
 
         String param = "";
@@ -455,7 +455,8 @@ public class GoScf implements Scf {
         map.put("PlatformAddress",PlatformAddress);
         map.put("PlartformKeyID",PlartformKeyID);
         map.put("PIN",platformPIN);
-        map.put("KeyID",supplyID2);
+        map.put("PIN",PIN);
+        map.put("KeyID",KeyID);
         map.put("txID",txID);
         map.put("comments",comments);
 
