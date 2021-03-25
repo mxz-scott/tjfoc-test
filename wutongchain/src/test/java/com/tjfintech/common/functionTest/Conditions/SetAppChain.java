@@ -29,9 +29,9 @@ public class SetAppChain {
        String chainName1 = "sOl_"+sdf.format(dt).substring(4)+ RandomUtils.nextInt(1000);//尽量将子链名称构造复杂一些
        String respCreate = mgToolCmd.createAppChain(PEER1IP, PEER1RPCPort, " -n " + chainName1,
                " -t sm3", " -w first", " -c raft",ids);
-       Thread.sleep(SLEEPTIME);
+       Thread.sleep(SLEEPTIME/2);
        String response = store.CreateStore("test for ok tx");
-       Thread.sleep(SLEEPTIME);
+       Thread.sleep(SLEEPTIME/2);
        String txHash1 = JSONObject.fromObject(response).getString("data");
        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));
 
