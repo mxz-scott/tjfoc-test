@@ -20,8 +20,8 @@ import org.junit.runners.Suite;
         StoreTest.class,
         PrivateStoreTest.class,
         PrivateStoreTestFastGet.class,
-//        CommonInterfaceTest.class,
-//        NoPriPrivateStoreTest.class,
+        CommonInterfaceTest.class,
+        NoPriPrivateStoreTest.class,
         StoreInvalidTest.class,
 
 })

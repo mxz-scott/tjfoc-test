@@ -207,7 +207,7 @@ public class WVMContractWithVersionTest_UpgradeTestOnly {
 
     /***
      * //20210311 与开发确认 带版本的合约 如果升级后 则不允许使用非最新版本的合约 进行任何上链和非上链操作
-     * 不孕多版本并发
+     * 不允许多版本并发
      * @throws Exception
      */
     @Test

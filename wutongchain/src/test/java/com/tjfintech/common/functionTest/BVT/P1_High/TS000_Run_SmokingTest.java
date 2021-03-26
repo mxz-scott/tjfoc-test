@@ -3,11 +3,12 @@ package com.tjfintech.common.functionTest.BVT.P1_High;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetCertSM2;
 import com.tjfintech.common.functionTest.Conditions.SetURLToSDKAddr;
-import com.tjfintech.common.functionTest.Conditions.SetWVMversionEmpty;
-import com.tjfintech.common.functionTest.mixTest.VerifyTests;
+import com.tjfintech.common.functionTest.contract.WVMContractTest;
 import com.tjfintech.common.functionTest.smartTokenTest.smtInterfaceTest;
 import com.tjfintech.common.functionTest.smartTokenTest.smtMultiInvalidTest;
 import com.tjfintech.common.functionTest.smartTokenTest.smtMultiTest;
+import com.tjfintech.common.functionTest.store.PrivateStoreTest;
+import com.tjfintech.common.functionTest.store.StoreTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -16,20 +17,18 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 
         SetCertSM2.class,
-//        PeerStartNoPermTest.class,
         BeforeCondition.class,
         SetURLToSDKAddr.class,
 
-        SetWVMversionEmpty.class,
-        smtInterfaceTest.class,
+        StoreTest.class,
+        PrivateStoreTest.class,
+        WVMContractTest.class,
         smtMultiTest.class,
-        smtMultiInvalidTest.class,
-        VerifyTests.class,
 
 })
 
 //Build Validation Test
-public class TS003_Run_SmartToken {
+public class TS000_Run_SmokingTest {
     //执行这个类将执行suiteClass中的测试项
 
 }
