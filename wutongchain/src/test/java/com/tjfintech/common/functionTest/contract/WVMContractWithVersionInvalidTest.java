@@ -179,7 +179,7 @@ public class WVMContractWithVersionInvalidTest {
         response1 = wvmContractTest.wvmInstallTest(wvmFile + "_temp.txt","");
         assertEquals("400",JSONObject.fromObject(response1).getString("state"));
         assertEquals(true,response1.contains("" +
-                "The contract without version has been installed, so, this installation cannot carry the version"));
+                "no version required"));
 
 
         ctName = "Err_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
@@ -196,7 +196,7 @@ public class WVMContractWithVersionInvalidTest {
         response2 = wvmContractTest.wvmInstallTest(wvmFile + "_temp.txt","");
         assertEquals("400",JSONObject.fromObject(response2).getString("state"));
         assertEquals(true,response2.contains(
-                "The contract with version has been installed, so, this installation should carry the version"));
+                "contract version required"));
 
     }
     //@Test

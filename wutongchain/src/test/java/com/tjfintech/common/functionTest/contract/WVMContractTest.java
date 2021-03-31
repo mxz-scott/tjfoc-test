@@ -509,7 +509,7 @@ public class WVMContractTest {
         String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,20000);//同步默认超时时间
 
         chkTxDetailRsp("200",txHash1);
 
