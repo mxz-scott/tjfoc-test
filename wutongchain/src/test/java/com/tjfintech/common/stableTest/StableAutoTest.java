@@ -7,6 +7,7 @@ import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.Interface.Token;
 import com.tjfintech.common.functionTest.mixTest.VerifyTests;
 import com.tjfintech.common.functionTest.smartTokenTest.SmartTokenCommon;
+import com.tjfintech.common.utils.GetTest;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
@@ -14,6 +15,8 @@ import net.sf.json.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +40,7 @@ public class StableAutoTest {
     SmartTokenCommon stc = new SmartTokenCommon();
 
     private static String tokenType;
+    List<String>listurl = new ArrayList();
 
     @BeforeClass
     public static void beforeConfig() throws Exception {
@@ -156,7 +160,7 @@ public class StableAutoTest {
 
         int i = 0;
         int number = 1;  // 单链单次循环发送的交易数
-        int loop = 2; // 循环次数
+        int loop = 500; // 循环次数
         int total = loop * number; // 循环次数
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
@@ -164,7 +168,6 @@ public class StableAutoTest {
 
         long[] startTimestamps = getTimestamps(ids);
         int[] startHeights = getHeights(ids);
-
 
         while (i < loop) {
 
@@ -201,6 +204,12 @@ public class StableAutoTest {
             if (total != totalOnChain) {
                 count++;
                 log.error("交易丢了!");
+                for (int M = 0; M < listurl.size(); M++){
+                    String response = GetTest.doGet2(SDKADD + "/v1/gettxdetail" + "?" + listurl.get(M));
+                    if ((JSONObject.fromObject(response).getString("state").equals("400"))){
+                        log.error("#################交易丢了"+listurl.get(M));
+                    }
+                }
             }
             log.info("*****************************************************************");
         }
@@ -298,8 +307,11 @@ public class StableAutoTest {
         tokenType = "tokenSoMU_" + UtilsClass.Random(8);
         issueResponse = tokenModule.tokenIssue(tokenAccount1, tokenAccount1, tokenType, "1000", "");
         assertEquals("200", JSONObject.fromObject(issueResponse).getString("state"));
-
-
+        String issueHash = JSONObject.fromObject(issueResponse).getString("data");
+        String issueHashUrl = URLEncoder.encode(issueHash);
+        String url = "hash="+issueHashUrl +"&ledger="+subLedger;
+        listurl.add(url);
+        System.out.println(listurl);
     }
 
 
