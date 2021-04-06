@@ -360,7 +360,7 @@ public class WVMContractWithVersionTest {
 
         int state = JSONObject.fromObject(response10).getInt("state");
 
-        assertEquals("400",JSONObject.fromObject(response10).getString("state"));
+        assertEquals("500",JSONObject.fromObject(response10).getString("state"));
         assertThat(JSONObject.fromObject(response10).getString("message"),
                 containsString("This version[" + wvmVersion +  "] of the smart contract is destroyed"));
 
@@ -402,6 +402,7 @@ public class WVMContractWithVersionTest {
         chkTxDetailRsp("200",txHash1); //确认安装合约交易上链
         //重复使用同一个版本号进行合约安装 会安装失败
         String response2 = wvmInstallTest(wvmFile + "_temp.txt","");
+        assertEquals("500",JSONObject.fromObject(response2).getString("state"));
         assertEquals(true,JSONObject.fromObject(response2).getString("message").contains(
                 "This contract verion[" + wvmVersion  + "] is exist"));
     }
@@ -414,6 +415,7 @@ public class WVMContractWithVersionTest {
 
         //再次安装合约
         String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
+        assertEquals("500",JSONObject.fromObject(response1).getString("state"));
         assertEquals(true,JSONObject.fromObject(response1).getString("message").contains(
                 "This contract verion[" + wvmVersion  + "] is exist"));
     }
@@ -427,6 +429,7 @@ public class WVMContractWithVersionTest {
 
         //销毁后再次使用相同的版本号进行合约安装 执行失败
         String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
+        assertEquals("500",JSONObject.fromObject(response1).getString("state"));
         assertEquals(true,JSONObject.fromObject(response1).getString("message").contains(
                 "This contract verion[" + wvmVersion  + "] is exist"));
 
@@ -450,6 +453,7 @@ public class WVMContractWithVersionTest {
             wvmVersion = "1.0.3." + i;
             //再次安装合约后会得到合约hash：由Prikey和ctName进行运算得到
             String response1 = wvmInstallTest(wvmFile + "_temp.txt", "");
+            assertEquals("500",JSONObject.fromObject(response1).getString("state"));
             assertEquals(true, JSONObject.fromObject(response1).getString("message").contains(
                     "This contract verion[" + wvmVersion  + "] is exist"));
         }
@@ -657,7 +661,7 @@ public class WVMContractWithVersionTest {
 
         for(String ctHash : ctHashList){
             String response1 = query(ctHash,"BalanceTest",accountA);//获取账户A账户余额
-            assertEquals("400",JSONObject.fromObject(response1).getString("state"));
+            assertEquals("500",JSONObject.fromObject(response1).getString("state"));
 
             assertThat(JSONObject.fromObject(response1).getString("message"),
                     containsString("This version[" + wvmVersion + "] of the smart contract is destroyed"));
