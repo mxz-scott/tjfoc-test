@@ -15,14 +15,15 @@ public class UtilsClassGD {
     //gudeng 信息
     //10.1.3.161:7779
     public static String gdContractAddress = "018a976954474678a3a100d33200b7f9fd1b34a60118c4cb13cfd79f6f324b5d";
-    public static String gdPlatfromKeyID = "bvkkh2l2uehcncg6ao70";
+    public static String gdPlatfromKeyID = "c1db5552uehbfnle5v00";
 
     //外网对接
 //    public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
-//    public static String gdPlatfromKeyID = "bv6t8lphdkebd3874a80";
+//    public static String gdPlatfromKeyID = "bv6t8lphdkebd3874vv0";
 
-//    public static String commNo = "1015"; //对接监管环境
-    public static String commNo = "014"; //存oss后会导致 db删除后挂牌会挂不上 1011
+//    public static String commNo = "1018"; //对接监管环境
+//    public static String commNo = "514"; //存oss后会导致 db删除后挂牌会挂不上 1011  10.1.5.120
+    public static String commNo = "624"; //存oss后会导致 db删除后挂牌会挂不上 1011
 
     public static String gdEquityCode = "gdTokenZ0" + UtilsClass.Random(6);
     public static String gdCompanyID = "gdCmpyId01" + UtilsClass.Random(6);
@@ -66,12 +67,12 @@ public class UtilsClassGD {
     public static long end = 0;
     public static int beginHeigh = 0;
     public static int endHeight = 0;
-	public static int blockHeight = 467;
+	public static int blockHeight = 129;
     public static long timeStamp = (new Date()).getTime();
     public static String testCurMethodName = "";
 
     public static String gdJGModelProtocol = "上海区域股权市场跨链监管业务数据模型";
-    public static String gdJGModelVersion = "2.0.0-alpha3";
+    public static String gdJGModelVersion = "2.0.0";
 
     public static String subjectType = "subject";
     public static String accType = "account";
@@ -112,7 +113,7 @@ public class UtilsClassGD {
     public static long ts8 = 1888934400;
 
 
-    public static String gdSchema = "Schema-v2.0.0-Alpha4.2.json" ;
+    public static String gdSchema = "Schema-Alpha.json" ;
     public static String gdTestData = "test.json";
     public static String chkSchemaToolName = "gojsonschema.exe";
     public static String dirSchemaData = System.getProperty("user.dir") + "/" + testDataPath + "schemavalidate/";
@@ -123,10 +124,13 @@ public class UtilsClassGD {
     public static Integer disclosureType = 1;
 
     public static String minIOUser ="minioadmin";
-    public static String minIOPwd ="Pass@7899";
-//    public static String minIOEP ="http://b2904236d6.zicp.vip:8098";
-    public static String minIOEP ="http://10.1.5.120:9000";
-    public static String jgBucket = "my-oss-test";
+    public static String minIOPwd ="minioadmin";
+    public static String minIOEP ="http://10.1.5.168:9000";//"http://b2904236d6.zicp.vip:8098";
+//    public static String minIOPwd ="Pass@7899";
+//    public static String minIOEP ="http://10.1.5.120:9000";//"http://b2904236d6.zicp.vip:8098";
+//    public static String minIOPwd ="minioadmin";  //天翼云服务器
+//    public static String minIOEP ="http://121.224.59.167:9000";//天翼云服务器
+    public static String jgBucket = "124";
 
     public static Boolean bRegTxRef = false;
     public static Boolean bHeaderCalOK = true;
@@ -135,7 +139,17 @@ public class UtilsClassGD {
     public static String productType = "1";
     public static String register_event_type = "1";
 
+    public static Boolean bSaveBuff = false;
+    public static String indexReg = "";
+    public static Boolean bUriMapExist = false;
+    public static  Map mapURI = new HashMap<String,String>();
+    public static Boolean bChangeRegSN = false;
+
     public static  HashMap<String,String> refInfo = new HashMap<String,String>();
+
+    public static String busUUID = "";
+    public static String tempUUID = "";
+    public static Boolean bUseUUID = true;
 
     //获取引用信息初始值放入数组
     public static  String[] refData() {

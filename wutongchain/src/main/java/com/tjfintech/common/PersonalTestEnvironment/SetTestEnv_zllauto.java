@@ -10,9 +10,9 @@ public class SetTestEnv_zllauto {
 
    @Test
     public void setEnvParam(){
-      SDKADD = "http://10.1.3.161:7779";
-      rSDKADD = "http://10.1.3.161:7779";
-      TOKENADD = "http://10.1.3.161:9190";
+      SDKADD = "http://10.1.3.161:7789";
+      rSDKADD = "http://10.1.3.161:7789";
+      TOKENADD = "http://10.1.3.161:7789";
       //设置测试环境使用的节点端口及部署目录信息
       PEER1IP = "10.1.3.160";
       PEER2IP = "10.1.5.240";
