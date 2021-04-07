@@ -509,7 +509,7 @@ public class WVMContractTest {
         String ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+                utilsClass.sdkGetTxDetailTypeV2,20000);//同步默认超时时间
 
         chkTxDetailRsp("200",txHash1);
 
@@ -713,7 +713,7 @@ public class WVMContractTest {
 
         //原合约SDK调用合约内的交易
         String response4 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
-        assertEquals("400", JSONObject.fromObject(response4).getString("state"));
+        assertEquals("500", JSONObject.fromObject(response4).getString("state"));
         assertEquals(true, JSONObject.fromObject(response4).getString("message").contains("You don't have permission to call this method"));
     }
 

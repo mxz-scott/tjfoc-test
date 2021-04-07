@@ -44,11 +44,17 @@ public class GDV2_SceneTest_02 {
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
+        register_event_type = "1";
     }
 
     @Before
     public void IssueEquity()throws Exception{
         bizNoTest = "test" + Random(12);
+
+        gdCompanyID = CNKey + "Sub4_" + Random(4);
+        gdEquityCode = CNKey + "Token4_" + Random(4);
+
+        register_product_ref = gdEquityCode;
 
         if(!bCreateAccOnce) {
             //重新创建账户
@@ -79,11 +85,11 @@ public class GDV2_SceneTest_02 {
         GDUnitFunc uf = new GDUnitFunc();
         int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
         uf.checkJGHeaderOpVer(blockHeight,endHeight);
-        uf.updateBlockHeightParam(endHeight);
+//        uf.updateBlockHeightParam(endHeight);
     }
 
 
-    @After
+//    @After
     public void DestroyEquityAndAcc()throws Exception{
 
         calJGDataAfterTx();

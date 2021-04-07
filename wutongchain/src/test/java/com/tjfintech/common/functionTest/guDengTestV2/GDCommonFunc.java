@@ -4,6 +4,7 @@ import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.MinIOOperation;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
@@ -135,6 +136,7 @@ public class GDCommonFunc {
         for (int i = 0; i < txArr.size(); i++) {
 //            log.info("区块交易数 " + txArr.size());
             String txdetail = store.GetTxDetail(txArr.get(i).toString());
+//            log.info(txArr.get(i).toString() + "\n " + txdetail);
 
             com.alibaba.fastjson.JSONObject object2 = com.alibaba.fastjson.JSONObject.parseObject(txdetail);
             String storeData2 = "";
@@ -219,13 +221,22 @@ public class GDCommonFunc {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static List<Map> gdConstructShareList(String address, double amount, int shareProperty){
-        String regObjId = "5" + mapAccAddr.get(address) + Random(6);
+        register_product_ref = gdEquityCode;
+
+        String regObjId = "5" + mapAccAddr.get(address) + Random(6);// + "_" + indexReg;
+//        try {
+//            FileOperation fileOperation = new FileOperation();
+//            fileOperation.appendToFile(regObjId, "regobj.txt");
+//        }catch (Exception e){
+//            log.info("error");
+//        }
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
         tempReg.put("register_registration_object_id",regObjId);
         tempReg.put("register_subject_account_ref","SH" + mapAccAddr.get(address));
+        if(bChangeRegSN) tempReg.put("register_serial_number", regObjId);//区分同一账户多次登记
 
-        mapAddrRegObjId.put(address + shareProperty,regObjId);//方便后面测试验证
+        mapAddrRegObjId.put(address + shareProperty + indexReg,regObjId);//方便后面测试验证
 
 //        Map tempTxInfo = gdbf.init04TxInfo();
 //        tempTxInfo.put("transaction_original_owner_subject_ref",mapAccAddr.get(address));
@@ -244,13 +255,20 @@ public class GDCommonFunc {
     }
 
     public static List<Map> gdConstructShareList(String address, double amount, int shareProperty,List<Map> list){
-        String regObjId = "5" + mapAccAddr.get(address) + Random(6);
+        String regObjId = "5" + mapAccAddr.get(address) + Random(6);// + "_" + indexReg;
+//        try {
+//            FileOperation fileOperation = new FileOperation();
+//            fileOperation.appendToFile(regObjId, "regobj.txt");
+//        }catch (Exception e){
+//            log.info("error");
+//        }
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
         tempReg.put("register_registration_object_id",regObjId);
         tempReg.put("register_subject_account_ref","SH" + mapAccAddr.get(address));
+        if(bChangeRegSN) tempReg.put("register_serial_number", regObjId);//区分同一账户多次登记
 
-        mapAddrRegObjId.put(address + shareProperty,regObjId);//方便后面测试验证
+        mapAddrRegObjId.put(address + shareProperty + indexReg,regObjId);//方便后面测试验证
 
 
         List<Map> shareList = new ArrayList<>();
@@ -264,6 +282,36 @@ public class GDCommonFunc {
         shares.put("createTime",ts5);
         shares.put("registerInformation",tempReg);
 //        shares.put("transactionReport",tempTxInfo);
+
+        shareList.add(shares);
+        return shareList;
+    }
+
+
+    public static List<Map> gdConstructShareListWithRegMap(String address, double amount, int shareProperty,Map regMap){
+        Map<String,Object> shares = new HashMap<>();
+        shares.put("address",address);
+        shares.put("amount",amount);
+        shares.put("shareProperty",shareProperty);
+        shares.put("createTime",ts5);
+        shares.put("registerInformation",regMap);
+
+        List<Map> shareList = new ArrayList<>();
+        shareList.add(shares);
+        return shareList;
+    }
+
+    public static List<Map> gdConstructShareListWithRegMap(String address, double amount, int shareProperty,Map regMap,List<Map> list){
+        List<Map> shareList = new ArrayList<>();
+        for(int i = 0 ; i < list.size() ; i++) {
+            shareList.add(list.get(i));
+        }
+        Map<String,Object> shares = new HashMap<>();
+        shares.put("address",address);
+        shares.put("amount",amount);
+        shares.put("shareProperty",shareProperty);
+        shares.put("createTime",ts5);
+        shares.put("registerInformation",regMap);
 
         shareList.add(shares);
         return shareList;
@@ -356,6 +404,43 @@ public class GDCommonFunc {
         return shareList;
     }
 
+    public static List<Map> gdConstructShareListN(String address, double amount, int shareProperty){
+        GDBeforeConditionN gdbf = new GDBeforeConditionN();
+        Map tempReg = gdbf.init05RegInfo();
+        tempReg.remove("register_registration_object_id");
+
+        Map<String,Object> shares = new HashMap<>();
+        shares.put("address",address);
+        shares.put("amount",amount);
+        shares.put("shareProperty",shareProperty);
+        shares.put("createTime",ts5);
+        shares.put("registerInformation",tempReg);
+
+        List<Map> shareList = new ArrayList<>();
+        shareList.add(shares);
+        return shareList;
+    }
+
+    public static List<Map> gdConstructShareListN(String address, double amount, int shareProperty,List<Map> list){
+        GDBeforeConditionN gdbf = new GDBeforeConditionN();
+        Map tempReg = gdbf.init05RegInfo();
+        tempReg.remove("register_registration_object_id");
+
+        List<Map> shareList = new ArrayList<>();
+        for(int i = 0 ; i < list.size() ; i++) {
+            shareList.add(list.get(i));
+        }
+        Map<String,Object> shares = new HashMap<>();
+        shares.put("address",address);
+        shares.put("amount",amount);
+        shares.put("shareProperty",shareProperty);
+        shares.put("createTime",ts5);
+        shares.put("registerInformation",tempReg);
+
+        shareList.add(shares);
+        return shareList;
+    }
+
 
 
     public static List<Map> getShareListFromQueryNoZeroAcc(JSONArray dataShareList)throws Exception {
@@ -383,9 +468,9 @@ public class GDCommonFunc {
         tempReg.put("register_account_obj_id",mapAccAddr.get(address));
         tempReg.put("register_nature_of_shares",shareProperty);
 
-        //处理交易
-        Map tempTxInfo = gdbf.init04TxInfo();
-        tempTxInfo.put("transaction_original_owner_subject_ref",mapAccAddr.get(address));
+//        //处理交易
+//        Map tempTxInfo = gdbf.init04TxInfo();
+//        tempTxInfo.put("transaction_original_owner_subject_ref",mapAccAddr.get(address));
 
         List<Map> shareList = new ArrayList<>();
         for(int i = 0 ; i < list.size() ; i++) {
@@ -398,7 +483,7 @@ public class GDCommonFunc {
         shares.put("shareProperty",shareProperty);
         shares.put("sharePropertyCN",sharePropertyCN);
         shares.put("registerInformation",tempReg);
-        shares.put("transactionReport",tempTxInfo);
+//        shares.put("transactionReport",tempTxInfo);
 
         shareList.add(shares);
         return shareList;
@@ -2097,24 +2182,28 @@ public class GDCommonFunc {
         }
 
 
-
         //检查各个交易详情信息中不包含敏感词
 //        assertEquals("不包含敏感词",true,chkSensitiveWord(store.GetTxDetail(tempTxId),contentType));
-
         //获取链上的uri存证信息所在交易hash 不是从链上取版本
-        Map uriInfo = getJGURIStoreHash(tempTxId,conJGFileName(tempObjId,tempObjVer),1);
-        log.info(uriInfo.toString());
+        Map uriInfo = new HashMap();
+        if(bUriMapExist){
+            uriInfo = mapURI;
+        }
+        else {
+            uriInfo = getJGURIStoreHash(tempTxId,conJGFileName(tempObjId,tempObjVer),1);
+            assertEquals(true,bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
+            mapURI = uriInfo;
+        }
+//        log.info(uriInfo.toString());
         String storeData = uriInfo.get("storeData").toString();
         //获取链上mini url的存证信息 并检查是否包含uri信息 每个登记都是新的 则都是0
         String storeFileName = conJGFileName(tempObjId,tempObjVer);
         String chkStoreURI = storeFileName;
-        log.info(storeData + "\n检查存证信息是否包含" + chkStoreURI);
+//        log.info("uri StoreData" + storeData + "\n检查存证信息是否包含" + chkStoreURI);
+        log.info("检查存证信息是否包含" + chkStoreURI);
         assertEquals(true,uriInfo.get("storeData").toString().contains(chkStoreURI));
-        assertEquals(true,bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
-
         //直接从minio上获取报送数据文件信息
         Map getRegInfo = constructJGDataFromStr(storeFileName,contentType,subProdSubType);
-
         //重组的入参信息 即对比信息
         Map mapParam = null;
 
@@ -2172,7 +2261,6 @@ public class GDCommonFunc {
 
         }
         assertEquals("检查参数map不为空",false,mapParam.equals(null));
-
         if(!(update == null)) {
             //更新其他字段信息
             Iterator iter = update.keySet().iterator();

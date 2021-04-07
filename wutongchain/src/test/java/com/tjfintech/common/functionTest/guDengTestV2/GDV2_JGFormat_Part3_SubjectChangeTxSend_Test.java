@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
+public class GDV2_JGFormat_Part3_SubjectChangeTxSend_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
@@ -70,6 +70,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
     @Before
     public void shareIssue() throws Exception {
+        busUUID = "";
 
         register_event_type = "2";
 
@@ -117,6 +118,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
     @After
     public void calJGDataAfterTx()throws Exception{
+        busUUID = "";
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
         int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
@@ -697,6 +699,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
     public void shareIncreaseSpec(int type) throws Exception {
 
+        String query4 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
         mapAddrRegObjId.clear();
         log.info("增发前查询机构主体信息");
         String query3 = gd.GDObjectQueryByVer(gdEquityCode,-1);
@@ -727,12 +730,22 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
         List<Map> shareList4 = gdConstructShareList(gdAccount6,increaseAmount,0, shareList);
 
         //引用接口中的交易报告 因不会报送 故会直接报错
-        String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, eqProd,txInfo);
+        String response = gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, eqProd,txInfo);
+        busUUID = tempUUID;
         if(type != 1){
             assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
             sleepAndSaveInfo(4000);
+            //20210322 增加uniqueId作为判定是否执行合约交易的标识 因此合约可以执行成功 但是数据报送会失败
             String ver2 = gdCF.getObjectLatestVer(gdCompanyID);
+            assertEquals(6,JSONObject.fromObject(gd.GDGetEnterpriseShareInfo(gdEquityCode)).getJSONArray("data").size());
+            String query5 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
+//            assertEquals("判断增发底层链操作实际不成功",true,query5.equals(query4));
+            assertEquals(gdAccClientNo5,JSONObject.fromObject(query5).getJSONObject("data").getString("clientNo"));
+            assertEquals(true,query5.contains("\"shareholderNo\":\"SH" + gdAccClientNo5 + "\""));
+            assertEquals(true,query5.contains("\"address\":\"" + gdAccount5 + "\""));
+            assertEquals(true,query5.contains("{\"equityCode\":\"" + gdEquityCode +
+                    "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":" + increaseAmount + ",\"lockAmount\":0}"));
 
             assertEquals("主体版本变更",true,ver1.equals(ver2));//应该不要变更
             //直接从minio上获取报送数据文件信息
@@ -847,7 +860,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
             assertEquals("不包含交易报告数据",false,uriStoreData.contains(txObjId));
         }
 
-        assertEquals("增发后股东总数",totalMembers + 2,totalMembersAft);
+//        assertEquals("增发后股东总数",totalMembers + 2,totalMembersAft);
         log.info("================================检查存证数据格式化《结束》================================");
 
 
@@ -959,7 +972,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
         register_transaction_ref = txObjId; //设置登记引用接口中的交易报告
 
 
-
+        register_subject_account_ref = "SH" + mapAccAddr.get(address);
         //登记数据
         Map regInfo = gdBF.init05RegInfo();
         String tempObjId = "5LockOBJ" + mapAccAddr.get(gdAccount1).toString() + Random(5);
@@ -969,6 +982,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
         assertEquals("-1",ver1);
 
         String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,regInfo,txInfo);
+        busUUID = tempUUID;
 
         //非报送交易报告场景时 引用的是一个不存在的交易报告对象 因此会失败，失败之后 正确引用或者执行
         if(type !=6){
@@ -987,7 +1001,7 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
             String storeData2 = minio.getFileFromMinIO(minIOEP,jgBucket,tempObjId + "/" + Integer.valueOf(ver1)+1,"");
             assertEquals("未获取到更新的登记对象版本信息",true,storeData2.contains("错误"));
 
-            assertEquals("RTR012",tempregister_transaction_ref);
+            assertEquals(false,tempregister_transaction_ref.equals(txObjId));
             register_transaction_ref = tempregister_transaction_ref; //设置登记引用已存在的交易报告对象
 
             regInfo = gdBF.init05RegInfo();
@@ -1124,6 +1138,8 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
         //解除冻结
         response= gd.GDShareUnlock(bizNo,eqCode,amount,regInfoUnlock,txInfoUnlock);
+        busUUID = tempUUID;
+
         if(type != 7){
             assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
@@ -1163,6 +1179,8 @@ public class GDV2_CheckJGFormat_Part3SubjectChangeTxSend {
 
         //交易报告质押融资类型6报送交易报告 否则不报送
         if(type == 7) {
+
+            transaction_custody_product_ref = gdEquityCode;
             //交易报告对象检查
             assertEquals("更新交易报告版本非0", true, gdCF.getObjectLatestVer(tempObjIdUnlock).equals("0"));
             mapChkKeys.clear();

@@ -13,6 +13,7 @@ import net.sf.json.JSONObject;
 import org.junit.*;
 import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -24,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDV2_CheckData_Update_SubAccProd {
+public class GDV2_JGData_Update_SubAccProd_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
@@ -245,9 +246,19 @@ public class GDV2_CheckData_Update_SubAccProd {
         String resp2 = gd.GDUpdateSubjectInfo(gdContractAddress, 0, mapTemp);
         txId = JSONObject.fromObject(resp2).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-        assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        response = store.GetTxDetail(txId);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
         sleepAndSaveInfo(2000);
+
+        //检查uri存证交易详情
+        JSONObject jsonObject1 = JSONObject.fromObject(response).getJSONObject("data");
+        assertEquals("0",jsonObject1.getJSONObject("header").getString("version"));
+        assertEquals("0",jsonObject1.getJSONObject("header").getString("type"));
+        assertEquals("0",jsonObject1.getJSONObject("header").getString("subType"));
+
+        assertEquals(false,response.contains(gdEquityCode));
+        assertEquals(true,response.contains(gdCompanyID));
 
 
         //设置各个主体版本变量
@@ -488,9 +499,21 @@ public class GDV2_CheckData_Update_SubAccProd {
         String resp2 = gd.GDUpdateSubjectInfo(gdContractAddress,1,mapTemp);
         txId = JSONObject.fromObject(resp2).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        response = store.GetTxDetail(txId);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
         sleepAndSaveInfo(2000);
+
+        //检查uri存证交易详情
+        JSONObject jsonObject1 = JSONObject.fromObject(response).getJSONObject("data");
+        assertEquals("0",jsonObject1.getJSONObject("header").getString("version"));
+        assertEquals("0",jsonObject1.getJSONObject("header").getString("type"));
+        assertEquals("0",jsonObject1.getJSONObject("header").getString("subType"));
+
+        assertEquals(true,response.contains(cltNo));
+        assertEquals(false,response.contains("SH" + cltNo));
+        assertEquals(false,response.contains("fund" + cltNo));
+
 
         //定义相关对象标识版本变量
 
@@ -675,15 +698,28 @@ public class GDV2_CheckData_Update_SubAccProd {
         txId = JSONObject.fromObject(upResp).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        String txDetail = store.GetTxDetail(txId);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-//        String storeData = com.alibaba.fastjson.JSONObject.parseArray(com.alibaba.fastjson.JSONObject.parseObject(txDetail).getJSONObject(
-//                "data").getJSONObject("store").getString("storeData")).get(0).toString();
+        response = store.GetTxDetail(txId);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+
+        //检查uri存证交易详情
+        JSONObject jsonObject1 = JSONObject.fromObject(response).getJSONObject("data");
+        assertEquals("0",jsonObject1.getJSONObject("header").getString("version"));
+        assertEquals("0",jsonObject1.getJSONObject("header").getString("type"));
+        assertEquals("0",jsonObject1.getJSONObject("header").getString("subType"));
+
+        assertEquals(1, StringUtils.countOccurrencesOf(response,"data_type"));
+        assertEquals(true,response.contains("SH" + cltNo));
+        assertEquals(false,response.contains("fund" + cltNo));
 
 
+        //查交易详情
+        response = store.GetTxDetail(
+                JSONObject.fromObject(store.GetBlockByHeight(
+                        JSONObject.fromObject(store.GetHeight()).getInt("data") -1)
+                ).getJSONObject("data").getJSONArray("txs").getString(0));
         //检查各个查询对象返回信息中不包含敏感词
         assertEquals("不包含敏感词",true,
-                gdCF.chkSensitiveWord(txDetail,accType));
+                gdCF.chkSensitiveWord(response,accType));
 
         //查询投资者账户信息
         response = gd.GDGetShareHolderInfo(gdContractAddress,cltNo);
@@ -916,14 +952,29 @@ public class GDV2_CheckData_Update_SubAccProd {
         txId = JSONObject.fromObject(upResp).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        String txDetail = store.GetTxDetail(txId);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        response = store.GetTxDetail(txId);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
 
+        //检查uri存证交易详情
+        JSONObject jsonObject1 = JSONObject.fromObject(response).getJSONObject("data");
+        assertEquals("0",jsonObject1.getJSONObject("header").getString("version"));
+        assertEquals("0",jsonObject1.getJSONObject("header").getString("type"));
+        assertEquals("0",jsonObject1.getJSONObject("header").getString("subType"));
 
+        assertEquals(1, StringUtils.countOccurrencesOf(response,"data_type"));
+        assertEquals(false,response.contains("SH" + cltNo));
+        assertEquals(true,response.contains("fund" + cltNo));
+
+
+        //查交易详情
+        response = store.GetTxDetail(
+                JSONObject.fromObject(store.GetBlockByHeight(
+                        JSONObject.fromObject(store.GetHeight()).getInt("data") -1)
+                ).getJSONObject("data").getJSONArray("txs").getString(0));
         //检查各个查询对象返回信息中不包含敏感词
         assertEquals("不包含敏感词",true,
-                gdCF.chkSensitiveWord(txDetail,accType));
+                gdCF.chkSensitiveWord(response,accType));
 
         //查询投资者账户信息
         response = gd.GDGetShareHolderInfo(gdContractAddress,cltNo);
@@ -1138,12 +1189,25 @@ public class GDV2_CheckData_Update_SubAccProd {
 
         txId = net.sf.json.JSONObject.fromObject(updateProd).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        String txDetail = store.GetTxDetail(txId);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-        String storeData = com.alibaba.fastjson.JSONObject.parseArray(com.alibaba.fastjson.JSONObject.parseObject(txDetail).getJSONObject(
-                "data").getJSONObject("store").getString("storeData")).get(0).toString();
+        response = store.GetTxDetail(txId);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
-        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(txDetail,prodType));
+
+        //检查uri存证交易详情
+        JSONObject jsonObject1 = JSONObject.fromObject(response).getJSONObject("data");
+        assertEquals("0",jsonObject1.getJSONObject("header").getString("version"));
+        assertEquals("0",jsonObject1.getJSONObject("header").getString("type"));
+        assertEquals("0",jsonObject1.getJSONObject("header").getString("subType"));
+
+        assertEquals(false,response.contains(gdCompanyID));
+        assertEquals(true,response.contains(gdEquityCode));
+
+        //查合约交易详情
+        response = store.GetTxDetail(
+                JSONObject.fromObject(store.GetBlockByHeight(
+                        JSONObject.fromObject(store.GetHeight()).getInt("data") -1)
+                ).getJSONObject("data").getJSONArray("txs").getString(0));
+        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(response,prodType));
 
 
         //检查产品信息是否是更新后的信息
@@ -1163,8 +1227,6 @@ public class GDV2_CheckData_Update_SubAccProd {
         //获取链上mini url的存证信息并检查是否包含uri信息
         String prodfileName = conJGFileName(gdEquityCode,newEqProdVer);
         String chkProdURI = prodfileName;
-        assertEquals(true,storeData.contains(chkProdURI));
-        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字
 
 
         //直接从minio上通过对象标识+版本号的方式获取指定对象文件

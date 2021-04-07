@@ -23,7 +23,11 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDV2_AllDataCheckJGHeaderPrinciple {
+
+/***
+ * 2021/1/7 确认异步场景下需要确认交易上链后才能正确判断预期 连续执行时不会报错 此部分考虑由业务端控制
+ */
+public class GDV2_JGData_CheckJGHeaderPrinciple_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
@@ -52,14 +56,14 @@ public class GDV2_AllDataCheckJGHeaderPrinciple {
         gdEquityCode = "updateTest" + Random(12);
     }
 
-//    @Before
+    @Before
     public void reset()throws Exception{
         gdCompanyID = "PrincipleSub" + Random(5);
         gdEquityCode = "PrincipleProd" + Random(5);
     }
 
 
-//    @After
+    @After
     public void calJGDataAfterTx()throws Exception{
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
@@ -100,13 +104,20 @@ public class GDV2_AllDataCheckJGHeaderPrinciple {
                 prodInfo,null,null);
         assertEquals("200", com.alibaba.fastjson.JSONObject.parseObject(response).getString("state"));
 
+        sleepAndSaveInfo(3000);
+
         gdCompanyID = "errSame" +  Random(6);
         enSubInfo = gdBF.init01EnterpriseSubjectInfo();
         response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,enSubInfo,
                 prodInfo,null,null);
         assertEquals("400", com.alibaba.fastjson.JSONObject.parseObject(response).getString("state"));
-        assertEquals("此产品对象标识[" + gdEquityCode + "]对应的产品在系统中已经存在",
-                com.alibaba.fastjson.JSONObject.parseObject(response).getString("message"));
+        Boolean bResult = response.contains("%!(EXTRA *errors.errorString=操作类型为[create],但根据对象标识[" + gdEquityCode +
+                "]查询到版本不为0,请检查此对象标识是否已经存在") ||
+                response.contains("此产品对象标识[" + gdEquityCode + "]对应的产品在系统中已经存在");
+        assertEquals("检查返回信息是否包含以上两种之一",true,bResult);
+
+//        assertEquals("此产品对象标识[" + gdEquityCode + "]对应的产品在系统中已经存在",
+//                com.alibaba.fastjson.JSONObject.parseObject(response).getString("message"));
     }
 
     @Test
@@ -131,10 +142,12 @@ public class GDV2_AllDataCheckJGHeaderPrinciple {
 
         //构造资金账户信息
         accFund.put("account_object_id", fundNo);  //更新账户对象标识字段
+        accFund.put("account_associated_account_ref", shareHolderNo);
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("createTime", ts2);
         mapFundInfo.put("fundNo", fundNo);
         mapFundInfo.put("accountInfo", accFund);
+
 
         //构造个人/投资者主体信息
         enSubInfo.put("subject_object_id", cltNo);  //更新对象标识字段
@@ -143,6 +156,7 @@ public class GDV2_AllDataCheckJGHeaderPrinciple {
         String response = gd.GDCreateAccout(gdContractAddress, cltNo, mapFundInfo, shareHolderInfo, enSubInfo);
         assertEquals("200", com.alibaba.fastjson.JSONObject.parseObject(response).getString("state"));
 
+        sleepAndSaveInfo(3000);
 
         cltNo = "accOBJ0" + Random(5);
         enSubInfo.put("subject_object_id", cltNo);  //更新对象标识字段
@@ -172,6 +186,7 @@ public class GDV2_AllDataCheckJGHeaderPrinciple {
 
         //构造资金账户信息
         accFund.put("account_object_id", fundNo);  //更新账户对象标识字段
+        accFund.put("account_associated_account_ref", shareHolderNo);
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("createTime", ts2);
         mapFundInfo.put("fundNo", fundNo);
@@ -184,6 +199,8 @@ public class GDV2_AllDataCheckJGHeaderPrinciple {
         String response = gd.GDCreateAccout(gdContractAddress, cltNo, mapFundInfo, shareHolderInfo, enSubInfo);
         assertEquals("200", com.alibaba.fastjson.JSONObject.parseObject(response).getString("state"));
 
+        sleepAndSaveInfo(3000);
+
         //变更股权账户对象标识
         shareHolderNo = shareHolderNo + "12";
         accSH.put("account_object_id", shareHolderNo);  //更新账户对象标识字段
@@ -192,8 +209,10 @@ public class GDV2_AllDataCheckJGHeaderPrinciple {
         shareHolderInfo.put("accountInfo", accSH);
         response = gd.GDCreateAccout(gdContractAddress, cltNo, mapFundInfo, shareHolderInfo, enSubInfo);
         assertEquals("400", com.alibaba.fastjson.JSONObject.parseObject(response).getString("state"));
-        assertEquals("资金账号对象标识[" + fundNo + "]在系统中已经存在",
-                com.alibaba.fastjson.JSONObject.parseObject(response).getString("message"));
+        Boolean bResult = response.contains("%!(EXTRA *errors.errorString=操作类型为[create],但根据对象标识[" +
+                fundNo + "]查询到版本不为0,请检查此对象标识是否已经存在)") ||
+                response.contains("资金账号对象标识[" + fundNo + "]在系统中已经存在");
+        assertEquals("检查返回信息是否包含以上两种之一",true,bResult);
     }
 
     @Test
@@ -218,6 +237,7 @@ public class GDV2_AllDataCheckJGHeaderPrinciple {
 
         //构造资金账户信息
         accFund.put("account_object_id", fundNo);  //更新账户对象标识字段
+        accFund.put("account_associated_account_ref", shareHolderNo);
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("createTime", ts2);
         mapFundInfo.put("fundNo", fundNo);
@@ -230,6 +250,8 @@ public class GDV2_AllDataCheckJGHeaderPrinciple {
         String response = gd.GDCreateAccout(gdContractAddress, cltNo, mapFundInfo, shareHolderInfo, enSubInfo);
         assertEquals("200", com.alibaba.fastjson.JSONObject.parseObject(response).getString("state"));
 
+        sleepAndSaveInfo(3000);
+
         //变更资金账户对象标识
         fundNo = fundNo + "12";
         accFund.put("account_object_id", fundNo);  //更新账户对象标识字段
@@ -238,8 +260,14 @@ public class GDV2_AllDataCheckJGHeaderPrinciple {
         mapFundInfo.put("accountInfo", accFund);
         response = gd.GDCreateAccout(gdContractAddress, cltNo, mapFundInfo, shareHolderInfo, enSubInfo);
         assertEquals("400", com.alibaba.fastjson.JSONObject.parseObject(response).getString("state"));
-        assertEquals("股东账号对象标识[" + shareHolderNo + "]在系统中已经存在",
-                com.alibaba.fastjson.JSONObject.parseObject(response).getString("message"));
+
+        Boolean bResult = response.contains("%!(EXTRA *errors.errorString=操作类型为[create],但根据对象标识["+ shareHolderNo +
+                "]查询到版本不为0,请检查此对象标识是否已经存在") ||
+                response.contains("股东账号对象标识[" + shareHolderNo + "]在系统中已经存在");
+        assertEquals("检查返回信息是否包含以上两种之一",true,bResult);
+
+//        assertEquals("股东账号对象标识[" + shareHolderNo + "]在系统中已经存在",
+//                com.alibaba.fastjson.JSONObject.parseObject(response).getString("message"));
         //此处需增加报送数据规则校验
     }
 
@@ -265,6 +293,7 @@ public class GDV2_AllDataCheckJGHeaderPrinciple {
 
         //构造资金账户信息
         accFund.put("account_object_id", fundNo);  //更新账户对象标识字段
+        accFund.put("account_associated_account_ref", shareHolderNo);
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("createTime", ts2);
         mapFundInfo.put("fundNo", fundNo);
@@ -277,6 +306,7 @@ public class GDV2_AllDataCheckJGHeaderPrinciple {
         String response = gd.GDCreateAccout(gdContractAddress, cltNo, mapFundInfo, shareHolderInfo, enSubInfo);
         assertEquals("200", com.alibaba.fastjson.JSONObject.parseObject(response).getString("state"));
 
+        sleepAndSaveInfo(3000);
 
         //变更资金账户和股权账户对象标识
         shareHolderNo = shareHolderNo + "12";

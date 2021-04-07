@@ -73,11 +73,9 @@ public class GDUnitFunc {
         String regObjId2 = mapAccAddr.get(address) + "CProp2" + Random(6);
         testReg1.put("register_account_obj_id",mapAccAddr.get(address));
         testReg1.put("register_registration_object_id",regObjId1);
-        testReg1.put("register_nature_of_shares", oldProperty);
 
         testReg2.put("register_account_obj_id",mapAccAddr.get(address));
         testReg2.put("register_registration_object_id",regObjId2);
-        testReg2.put("register_nature_of_shares", newProperty);
 
         List<Map> regListInfo = new ArrayList<>();
         regListInfo.add(testReg1);
@@ -115,12 +113,13 @@ public class GDUnitFunc {
         log.info("股权代码过户转让");
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
-        String txRpObjId = "txReport" + Random(6);
+        String txRpObjId = "txReport" + Random(10);
         txInfo.put("transaction_object_id",txRpObjId);
+//        txInfo.remove("transaction_object_id");
 
         //登记数据
-        String tempObjIdFrom = "reg" + mapAccAddr.get(gdAccount1).toString() + Random(3);
-        String tempObjIdTo = "reg" + mapAccAddr.get(gdAccount5).toString() + Random(3);
+        String tempObjIdFrom = "reg" + mapAccAddr.get(gdAccount1).toString() + Random(9);
+        String tempObjIdTo = "reg" + mapAccAddr.get(gdAccount5).toString() + Random(9);
 
         register_transaction_ref = txRpObjId;//登记引用的是交易报告的对象标识
 
@@ -129,6 +128,9 @@ public class GDUnitFunc {
 
         fromNow.put("register_registration_object_id",tempObjIdFrom);
         toNow.put("register_registration_object_id",tempObjIdTo);
+
+//        fromNow.remove("register_registration_object_id");
+//        toNow.remove("register_registration_object_id");
 
         String response= gd.GDShareTransfer(keyID,fromAddr,amount,toAddr,shareProperty,eqCode,txInfo, fromNow,toNow);
 
@@ -147,25 +149,29 @@ public class GDUnitFunc {
     }
 
     public void commonIssuePP0(long amount)throws Exception{
+//        gdEquityCode = "gdEC" + Random(12);
+
         List<Map> shareList = gdConstructShareList(gdAccount1,amount,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,amount,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,amount,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,amount,0, shareList3);
 
         //发行
-        gdEquityCode = "gdEC" + Random(12);
         shareIssue(gdEquityCode, shareList4, true);
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
     }
 
     public void commonIssuePP01(long amount)throws Exception{
+//        gdEquityCode = "gdEC" + Random(12);
+        register_product_ref = gdEquityCode;
+
         List<Map> shareList = gdConstructShareList(gdAccount1,amount,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,amount,1, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,amount,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,amount,1, shareList3);
 
         //发行
-        gdEquityCode = "gdEC" + Random(12);
+
         shareIssue(gdEquityCode, shareList4, true);
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
     }
@@ -187,8 +193,10 @@ public class GDUnitFunc {
             JSONObject jsonObject = JSONObject.fromObject(response);
             String txId = jsonObject.getJSONObject("data").getString("txId");
 
-            commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-            assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+            sleepAndSaveInfo(3000);
+
+//            commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+//            assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
 //            gd.GDGetEnterpriseShareInfo(eqCode);
             return result;
@@ -310,8 +318,13 @@ public class GDUnitFunc {
      */
     public String changeBoard(String oldEquityCode,String newEquityCode,boolean bCheckOnchain) throws Exception{
         log.info("场内转板");
+        product_issuer_subject_ref = gdCompanyID;
+        Map mapOldProd = gdBF.init03EquityProductInfo();
+        mapOldProd.put("product_object_id",oldEquityCode);
+        Map mapNewProd = gdBF.init03EquityProductInfo();
+        mapNewProd.put("product_object_id",newEquityCode);
         List<Map> regListTemp = getAllHolderListReg(oldEquityCode,"cbSpec" + Random(10));
-        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,gdCompanyID,oldEquityCode,newEquityCode,regListTemp, equityProductInfo,bondProductInfo);
+        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,gdCompanyID,oldEquityCode,newEquityCode,regListTemp, mapOldProd,mapNewProd);
 
         if(bCheckOnchain) {
             JSONObject jsonObject = JSONObject.fromObject(response);
@@ -660,9 +673,12 @@ public class GDUnitFunc {
 //            Map temp = findDataInBlock(i, "gdCmpyId01z3k4gF");
             String storeData = temp.get("storeData").toString();
 
-            log.info(storeData);
+//            log.info(storeData);
 
-            if(storeData.contains(keyWord)) break;
+            if(storeData.contains(keyWord)) {
+                log.info(storeData);
+//                break;
+            }
 
         }
     }

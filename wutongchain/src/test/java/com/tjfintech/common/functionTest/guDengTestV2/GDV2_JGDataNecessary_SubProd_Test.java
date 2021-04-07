@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDV2_CheckJGDataNecessary_SubProd {
+public class GDV2_JGDataNecessary_SubProd_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
@@ -50,7 +50,7 @@ public class GDV2_CheckJGDataNecessary_SubProd {
     }
 
     @Test
-    public void subjectInfo_Must_Test()throws Exception{
+    public void EnterpriseSubjectInfo_Must_Test()throws Exception{
         gdEquityCode = "nece" + Random(12);
         //挂牌企业登记
         long shareTotals = 1000000;
@@ -101,14 +101,7 @@ public class GDV2_CheckJGDataNecessary_SubProd {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
-        testSub = gdBF.init01EnterpriseSubjectInfo();
-        key = "subject_document_information";
-        log.info("测试字段 " + key);
-        testSub.remove(key);
-        response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,testSub,
-                testEquityProdInfo,null,null);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+
 
         testSub = gdBF.init01EnterpriseSubjectInfo();
         key = "subject_investor_name";
@@ -117,25 +110,16 @@ public class GDV2_CheckJGDataNecessary_SubProd {
         response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,testSub,
                 testEquityProdInfo,null,null);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
-//        assertEquals("400",JSONObject.fromObject(response).getString("state"));
 
+        gdCompanyID = "mustId" + Random(3);
+        gdEquityCode = "must" + Random(3);
         testSub = gdBF.init01EnterpriseSubjectInfo();
         key = "subject_id_type";
         log.info("测试字段 " + key);
         testSub.remove(key);
         response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,testSub,
-                testEquityProdInfo,null,null);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-
-        testSub = gdBF.init01EnterpriseSubjectInfo();
-        key = "subject_id_number";
-        log.info("测试字段 " + key);
-        testSub.remove(key);
-        response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,testSub,
-                testEquityProdInfo,null,null);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+                null,null,null);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
     }
 

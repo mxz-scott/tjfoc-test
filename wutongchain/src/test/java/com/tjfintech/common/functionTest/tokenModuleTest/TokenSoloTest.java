@@ -48,7 +48,7 @@ public class TokenSoloTest {
             beforeCondition.tokenAddIssueCollAddr();
         }
         if (syncFlag) {
-            SLEEPTIME = 0;
+            SLEEPTIME = 2000;
         }
     }
 

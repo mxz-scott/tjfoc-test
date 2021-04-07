@@ -9,8 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.utils.UtilsClass.SDKADD;
-import static com.tjfintech.common.utils.UtilsClass.ccenvPull;
+import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassGD.*;
 
 @Slf4j
@@ -81,6 +80,14 @@ public  class GoGuDeng implements GuDeng {
         map.put("contractAddress", contractAddress);
         map.put("equityCode", equityCode);
         map.put("shareList", shareList);
+        if(bSaveBuff) map.put("temStore",bSaveBuff);
+
+        if(bUseUUID) {
+            //20210319 新增业务唯一标识
+            tempUUID = Random(26);
+            if (!busUUID.isEmpty()) tempUUID = busUUID;
+            map.put("uniqueId", tempUUID);
+        }
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/issue", map);
         log.info(result);
@@ -109,6 +116,13 @@ public  class GoGuDeng implements GuDeng {
         map.put("newShareProperty", newShareProperty);
         map.put("registerInformationList", registerInformationList);
         map.put("updateTime",ts5);
+
+        if(bUseUUID) {
+            //20210319 新增业务唯一标识
+            tempUUID = Random(26);
+            if (!busUUID.isEmpty()) tempUUID = busUUID;
+            map.put("uniqueId", tempUUID);
+        }
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/change", map);
         log.info(result);
@@ -152,6 +166,13 @@ public  class GoGuDeng implements GuDeng {
         map.put("subjectObjectId",gdCompanyID);
         map.put("subjectUpdateTime",ts1);
 
+        if(bUseUUID) {
+            //20210319 新增业务唯一标识
+            tempUUID = Random(26);
+            if (!busUUID.isEmpty()) tempUUID = busUUID;
+            map.put("uniqueId", tempUUID);
+        }
+
         String result = PostTest.postMethod(SDKADD + "/equity/share/transfer", map);
         log.info(result);
         return result;
@@ -187,6 +208,13 @@ public  class GoGuDeng implements GuDeng {
         map.put("productUpdateTime",ts3);
         map.put("txCreateTime",ts4);
 
+        if(bUseUUID) {
+            //20210319 新增业务唯一标识
+            tempUUID = Random(26);
+            if (!busUUID.isEmpty()) tempUUID = busUUID;
+            map.put("uniqueId", tempUUID);
+        }
+
         String result = PostTest.postMethod(SDKADD + "/equity/share/increase", map);
         log.info(result);
         return result;
@@ -212,6 +240,13 @@ public  class GoGuDeng implements GuDeng {
         map.put("productUpdateTime",ts3);
         map.put("txCreateTime",ts4);
         map.put("subjectUpdateTime",ts1);
+
+        if(bUseUUID) {
+            //20210319 新增业务唯一标识
+            tempUUID = Random(26);
+            if (!busUUID.isEmpty()) tempUUID = busUUID;
+            map.put("uniqueId", tempUUID);
+        }
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/increase", map);
         log.info(result);
@@ -245,6 +280,13 @@ public  class GoGuDeng implements GuDeng {
         map.put("transactionReport", txInfo);
         map.put("txCreateTime",ts4);
 
+        if(bUseUUID) {
+            //20210319 新增业务唯一标识
+            tempUUID = Random(26);
+            if (!busUUID.isEmpty()) tempUUID = busUUID;
+            map.put("uniqueId", tempUUID);
+        }
+
         String result = PostTest.postMethod(SDKADD + "/equity/share/lock", map);
         log.info(result);
         return result;
@@ -275,6 +317,13 @@ public  class GoGuDeng implements GuDeng {
         map.put("registerInformation", registerInformation);
         map.put("registerInfoUpdateTime",ts5);
 
+        if(bUseUUID) {
+            //20210319 新增业务唯一标识
+            tempUUID = Random(26);
+            if (!busUUID.isEmpty()) tempUUID = busUUID;
+            map.put("uniqueId", tempUUID);
+        }
+
         String result = PostTest.postMethod(SDKADD + "/equity/share/lock", map);
         log.info(result);
         return result;
@@ -298,6 +347,13 @@ public  class GoGuDeng implements GuDeng {
         map.put("txCreateTime",ts4);
         map.put("registerInfoUpdateTime",ts5);
 
+        if(bUseUUID) {
+            //20210319 新增业务唯一标识
+            tempUUID = Random(26);
+            if (!busUUID.isEmpty()) tempUUID = busUUID;
+            map.put("uniqueId", tempUUID);
+        }
+
         String result = PostTest.postMethod(SDKADD + "/equity/share/unlock", map);
         log.info(result);
         return result;
@@ -318,6 +374,13 @@ public  class GoGuDeng implements GuDeng {
         map.put("amount", amount);
         map.put("registerInformation", registerInformation);
         map.put("registerInfoUpdateTime",ts5);
+
+        if(bUseUUID) {
+            //20210319 新增业务唯一标识
+            tempUUID = Random(26);
+            if (!busUUID.isEmpty()) tempUUID = busUUID;
+            map.put("uniqueId", tempUUID);
+        }
 
         String result = PostTest.postMethod(SDKADD + "/equity/share/unlock", map);
         log.info(result);
@@ -341,6 +404,12 @@ public  class GoGuDeng implements GuDeng {
         map.put("subjectUpdateTime",ts1);
         map.put("subjectObjectId",gdCompanyID);
 
+        if(bUseUUID) {
+            //20210319 新增业务唯一标识
+            tempUUID = Random(26);
+            if (!busUUID.isEmpty()) tempUUID = busUUID;
+            map.put("uniqueId", tempUUID);
+        }
         String result = PostTest.postMethod(SDKADD + "/equity/share/recycle", map);
         log.info(result);
         return result;
@@ -448,6 +517,15 @@ public  class GoGuDeng implements GuDeng {
         map.put("oldProductDeleteTime",ts8);
         map.put("newProductCreateTime",ts3);
         map.put("registerInfoCreateTime",ts5);
+
+
+        if(bUseUUID) {
+            //20210319 新增业务唯一标识
+            tempUUID = Random(26);
+            if (!busUUID.isEmpty()) tempUUID = busUUID;
+            map.put("uniqueId", tempUUID);
+        }
+
         String result = PostTest.postMethod(SDKADD + "/equity/share/changeboard", map);
         log.info(result);
         return result;

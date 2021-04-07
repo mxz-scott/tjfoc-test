@@ -35,15 +35,15 @@ public class GDV2_AuxTool {
     public TestName tm = new TestName();
 
 
-    @Test
+//    @Test
     public void checkOperationAndVersion()throws Exception{
         uf.checkJGHeaderOpVer(1,JSONObject.fromObject(store.GetHeight()).getInt("data"));
     }
 
-    @Test
+//    @Test
     public void searchKey()throws Exception{
-        uf.storeDataCheckKeyWord(1,554,"DAR1011");
-        uf.storeDataCheckKeyWord(1,554,"DIR1011");
+        uf.storeDataCheckKeyWord(13114,13319,"uri");
+//        uf.storeDataCheckKeyWord(1,554,"DIR1011");
     }
 
     @Test
@@ -56,7 +56,7 @@ public class GDV2_AuxTool {
      * 通过关键字查找区块或者交易
      * @throws Exception
      */
-    @Test
+//    @Test
     public void check2()throws Exception{
         int iHeightStart = 500;
         int iHeightEnd = 554;

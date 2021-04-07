@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDV2_AllFlowTest_Equity_TxDetail {
+public class GDV2_AllFlowTest_Equity_WVMTxDetail {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
@@ -64,7 +64,6 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         GDUnitFunc uf = new GDUnitFunc();
         int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
         uf.checkJGHeaderOpVer(blockHeight,endHeight);
-        uf.updateBlockHeightParam(endHeight);
     }
 
     @Test
@@ -80,6 +79,11 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         response = store.GetTxDetail(txId);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
+        //查交易详情
+        response = store.GetTxDetail(
+                JSONObject.fromObject(store.GetBlockByHeight(
+                        JSONObject.fromObject(store.GetHeight()).getInt("data") -1)
+                ).getJSONObject("data").getJSONArray("txs").getString(0));
 
         //检查交易详情
         JSONObject jsonObject1 = JSONObject.fromObject(response).getJSONObject("data");
@@ -116,6 +120,13 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         String response = store.GetTxDetail(mapAcc.get("txId"));
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
+
+        //查交易详情
+        response = store.GetTxDetail(
+                JSONObject.fromObject(store.GetBlockByHeight(
+                        JSONObject.fromObject(store.GetHeight()).getInt("data") -1)
+                ).getJSONObject("data").getJSONArray("txs").getString(0));
+
         //检查交易详情
         JSONObject jsonObject1 = JSONObject.fromObject(response).getJSONObject("data");
         assertEquals("2",jsonObject1.getJSONObject("header").getString("version"));
@@ -146,6 +157,12 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         response = store.GetTxDetail(txId);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
+
+        //查交易详情
+        response = store.GetTxDetail(
+                JSONObject.fromObject(store.GetBlockByHeight(
+                        JSONObject.fromObject(store.GetHeight()).getInt("data") -1)
+                ).getJSONObject("data").getJSONArray("txs").getString(0));
 
         //检查交易详情
         JSONObject jsonObject1 = JSONObject.fromObject(response).getJSONObject("data");
@@ -209,6 +226,12 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         response = store.GetTxDetail(txId);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
+        //查交易详情
+        response = store.GetTxDetail(
+                JSONObject.fromObject(store.GetBlockByHeight(
+                        JSONObject.fromObject(store.GetHeight()).getInt("data") -1)
+                ).getJSONObject("data").getJSONArray("txs").getString(0));
+
         //检查交易详情
         JSONObject jsonObject1 = JSONObject.fromObject(response).getJSONObject("data");
         assertEquals("1",jsonObject1.getJSONObject("header").getString("version"));
@@ -227,31 +250,44 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
     public void TC08_shareTransfer()throws Exception{
         String keyId = gdAccountKeyID1;
         String fromAddr = gdAccount1;
-        long amount = 1000;
         String toAddr = gdAccount5;
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        register_subject_account_ref = gdCompanyID;
-        Map testReg1 = gdBF.init05RegInfo();
-        Map testReg2 = gdBF.init05RegInfo();
-        String regObjId1 = mapAccAddr.get(fromAddr) + "Trf1" + Random(6);
-        String regObjId2 = mapAccAddr.get(toAddr) + "Trf2" + Random(6);
+        register_event_type = "2";//交易登记
+        //交易报告数据
+        Map txInfo = gdBF.init04TxInfo();
+        String txRpObjId = "txReport" + Random(6);
+        txInfo.put("transaction_object_id",txRpObjId);
+//        txInfo.put("transaction_custody_product_ref",gdEquityCode);
 
-        testReg1.put("register_registration_serial_number","transfer000001");
-        testReg1.put("register_account_obj_id",mapAccAddr.get(fromAddr));
-        testReg1.put("register_registration_object_id",regObjId1);
+        //登记数据
+        String tempObjIdFrom = "reg" + mapAccAddr.get(gdAccount1).toString() + Random(3);
+        String tempObjIdTo = "reg" + mapAccAddr.get(gdAccount5).toString() + Random(3);
 
-        testReg2.put("register_registration_serial_number","transfer000001");
-        testReg2.put("register_account_obj_id",mapAccAddr.get(toAddr));
-        testReg2.put("register_registration_object_id",regObjId2);
+        register_transaction_ref = txRpObjId;//登记引用的是交易报告的对象标识
+        transaction_custody_product_ref = gdEquityCode;
+        register_product_ref = gdEquityCode;
 
-        txInformation.put("transaction_object_id",mapAccAddr.get(toAddr) + "TrfTx" + Random(6));
+        Map fromNow = gdBF.init05RegInfo();
+        Map toNow = gdBF.init05RegInfo();
 
-        List<Map> regInfoList = new ArrayList<>();
-        regInfoList.add(testReg1);
-        regInfoList.add(testReg2);
-        String response= gd.GDShareTransfer(keyId,fromAddr,amount,toAddr,shareProperty,eqCode,txInformation,testReg1,testReg2);
+        fromNow.put("register_registration_object_id",tempObjIdFrom);
+        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);
+
+        toNow.put("register_registration_object_id",tempObjIdTo);
+        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);
+
+//        fromNow.put("register_transaction_ref",txRpObjId);
+//        toNow.put("register_transaction_ref",txRpObjId);
+
+
+        String tempObj = gdCompanyID;
+
+        String query2 = gd.GDObjectQueryByVer(gdCompanyID,-1);
+
+        //执行交易
+        String response= gd.GDShareTransfer(keyId,fromAddr,1000,toAddr,shareProperty,eqCode,txInfo,fromNow,toNow);
 
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
@@ -259,6 +295,12 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         response = store.GetTxDetail(txId);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
+
+        //查交易详情
+        response = store.GetTxDetail(
+                JSONObject.fromObject(store.GetBlockByHeight(
+                        JSONObject.fromObject(store.GetHeight()).getInt("data") -1)
+                ).getJSONObject("data").getJSONArray("txs").getString(0));
 
         //检查交易详情
         JSONObject jsonObject1 = JSONObject.fromObject(response).getJSONObject("data");
@@ -298,6 +340,12 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         response = store.GetTxDetail(txId);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
+
+        //查交易详情
+        response = store.GetTxDetail(
+                JSONObject.fromObject(store.GetBlockByHeight(
+                        JSONObject.fromObject(store.GetHeight()).getInt("data") -1)
+                ).getJSONObject("data").getJSONArray("txs").getString(0));
 
         //检查交易详情
         JSONObject jsonObject1 = JSONObject.fromObject(response).getJSONObject("data");
@@ -353,6 +401,12 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         response = store.GetTxDetail(txId);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
+        //查交易详情
+        response = store.GetTxDetail(
+                JSONObject.fromObject(store.GetBlockByHeight(
+                        JSONObject.fromObject(store.GetHeight()).getInt("data") -1)
+                ).getJSONObject("data").getJSONArray("txs").getString(0));
+
         //检查交易详情
         JSONObject jsonObject1 = JSONObject.fromObject(response).getJSONObject("data");
         assertEquals("2",jsonObject1.getJSONObject("header").getString("version"));
@@ -399,6 +453,12 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         response = store.GetTxDetail(txId);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
+        //查交易详情
+        response = store.GetTxDetail(
+                JSONObject.fromObject(store.GetBlockByHeight(
+                        JSONObject.fromObject(store.GetHeight()).getInt("data") -1)
+                ).getJSONObject("data").getJSONArray("txs").getString(0));
+
         //检查交易详情
         JSONObject jsonObject1 = JSONObject.fromObject(response).getJSONObject("data");
         assertEquals("2",jsonObject1.getJSONObject("header").getString("version"));
@@ -409,8 +469,9 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         assertEquals("ShareUnlock",jsonObjectWVM.getJSONObject("arg").getString("method"));
         assertEquals(gdContractAddress,jsonObjectWVM.getString("name"));
         String args = jsonObjectWVM.getJSONObject("arg").toString();
+        log.info(args);
         assertEquals(true,args.contains(bizNo));
-        assertEquals(true,args.contains("\"EquityCode\":\"" + gdEquityCode + "\""));
+        assertEquals(true,response.contains( gdEquityCode));
         assertEquals(true,args.contains(amount + "000000"));
         assertEquals(true,response.contains("DBSet"));
     }
@@ -434,6 +495,12 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         response = store.GetTxDetail(txId);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
+
+        //查交易详情
+        response = store.GetTxDetail(
+                JSONObject.fromObject(store.GetBlockByHeight(
+                        JSONObject.fromObject(store.GetHeight()).getInt("data") -1)
+                ).getJSONObject("data").getJSONArray("txs").getString(0));
 
         //检查交易详情
         JSONObject jsonObject1 = JSONObject.fromObject(response).getJSONObject("data");
@@ -474,6 +541,12 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         response = store.GetTxDetail(txId);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
+        //查交易详情
+        response = store.GetTxDetail(
+                JSONObject.fromObject(store.GetBlockByHeight(
+                        JSONObject.fromObject(store.GetHeight()).getInt("data") -1)
+                ).getJSONObject("data").getJSONArray("txs").getString(0));
+
         //检查交易详情
         JSONObject jsonObject1 = JSONObject.fromObject(response).getJSONObject("data");
         assertEquals("1",jsonObject1.getJSONObject("header").getString("version"));
@@ -507,29 +580,35 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
     public void TC13_shareChangeBoard() throws Exception {
 
         String oldEquityCode = gdEquityCode;
-        String newEquityCode = gdEquityCode + Random(5);
+        String newEquityCode = "newCode" + Random(5);
         String cpnyId = gdCompanyID;
 
-        gd.GDObjectQueryByVer("" + newEquityCode,-1);
+        gdEquityCode = newEquityCode;
+        List<Map> regList = uf.getAllHolderListReg(oldEquityCode,regNo);
 
-        mapAddrRegObjId.clear();
 
-        Map eqProd = gdBF.init03EquityProductInfo();
-        eqProd.put("product_object_id","new" + newEquityCode);
+        product_issuer_subject_ref = gdCompanyID;
+        Map oldEqProd = gdBF.init03EquityProductInfo();
+        oldEqProd.put("product_object_id",oldEquityCode);
 
-        gd.GDObjectQueryByVer(oldEquityCode,-1);
-        gd.GDObjectQueryByVer("new" + newEquityCode,-1);
+        gdEquityCode = newEquityCode;
+        product_issuer_subject_ref = gdCompanyID;
+        Map newEqProd = gdBF.init03EquityProductInfo();
+        newEqProd.put("product_object_id",newEquityCode);
 
-        String flowNo = "changeboard000001";
-        List<Map> regList = uf.getAllHolderListReg(gdEquityCode,flowNo);
-
-        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,regList,eqProd,null);
+        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,regList,oldEqProd,newEqProd);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         response = store.GetTxDetail(txId);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
+
+        //查交易详情
+        response = store.GetTxDetail(
+                JSONObject.fromObject(store.GetBlockByHeight(
+                        JSONObject.fromObject(store.GetHeight()).getInt("data") -1)
+                ).getJSONObject("data").getJSONArray("txs").getString(0));
 
         //检查交易详情
         JSONObject jsonObject1 = JSONObject.fromObject(response).getJSONObject("data");
@@ -580,6 +659,12 @@ public class GDV2_AllFlowTest_Equity_TxDetail {
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         response = store.GetTxDetail(txId);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
+
+        //查交易详情
+        response = store.GetTxDetail(
+                JSONObject.fromObject(store.GetBlockByHeight(
+                        JSONObject.fromObject(store.GetHeight()).getInt("data") -1)
+                ).getJSONObject("data").getJSONArray("txs").getString(0));
 
 
         //检查交易详情

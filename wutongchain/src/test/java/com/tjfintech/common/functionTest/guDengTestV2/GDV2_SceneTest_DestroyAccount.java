@@ -38,11 +38,13 @@ public class GDV2_SceneTest_DestroyAccount {
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
+        register_event_type = "1";
     }
 
     @Before
     public void IssueEquity()throws Exception{
-        bizNoTest = "test" + Random(12);
+//        bizNoTest = "test" + Random(12);
+        gdEquityCode = "test_des" + Random(6);
 
         //重新创建账户
 //        gdAccClientNo1 = "No000" + Random(10);

@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.guDengTestV2;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
@@ -7,23 +8,25 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.MinIOOperation;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
-//import net.sf.json.JSONObject;
 import org.junit.*;
 import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
-import com.alibaba.fastjson.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.tjfintech.common.functionTest.guDengTestV2.GDCommonFunc.*;
+import static com.tjfintech.common.functionTest.guDengTestV2.GDCommonFunc.conJGFileName;
+import static com.tjfintech.common.functionTest.guDengTestV2.GDCommonFunc.replaceCertain;
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassGD.*;
 import static org.junit.Assert.assertEquals;
 
+//import net.sf.json.JSONObject;
+
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settle {
+public class GDV2_JGFormat_Async2Interface_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
@@ -36,15 +39,18 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
     public static String bizNoTest = "test" + Random(12);
     String tempaccount_subject_ref,tempaccount_associated_account_ref,tempproduct_issuer_subject_ref;
 
+    Boolean bTest = false;
+
     @Rule
     public TestName tm = new TestName();
 
 
     @BeforeClass
     public static void Before()throws Exception{
-        GDBeforeCondition gdBefore = new GDBeforeCondition();
+
+//        GDBeforeCondition gdBefore = new GDBeforeCondition();
 //        gdBefore.gdCreateAccout();
-        gdBefore.initRegulationData();
+//        gdBefore.initRegulationData();
     }
 
     @Before
@@ -52,11 +58,31 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         gdEquityCode = Random(20);
         gdCompanyID = "P1Re" + Random(8);
 
+
+        commNo = Random(5);
+
+        //主体
+        subject_investor_qualification_certifier_ref = "SIQCR" + UtilsClass.Random(9);
+        //账户
+        account_subject_ref = "ASR" + UtilsClass.Random(9);
+        account_depository_ref = "ADR" + UtilsClass.Random(9);
+//        account_associated_account_ref = "AAAR" + UtilsClass.Random(9);
+        //产品
+        product_market_subject_ref = "PMSR" + UtilsClass.Random(9);
+        product_issuer_subject_ref = "PISR" + UtilsClass.Random(9);
+        service_provider_subject_ref = "SPSR" + UtilsClass.Random(9);
+
+        disclosure_display_platform_ref = "DDPR" + UtilsClass.Random(9);
+
+        disclosure_auditor_ref = "DAR" + UtilsClass.Random(9);
+
         settlement_product_ref = gdEquityCode;
 
         tempaccount_subject_ref = account_subject_ref;
         tempaccount_associated_account_ref =account_associated_account_ref;
         tempproduct_issuer_subject_ref = product_issuer_subject_ref;
+
+
     }
 
     @After
@@ -64,7 +90,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
         int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
-        uf.checkJGHeaderOpVer(blockHeight,endHeight);
+//        uf.checkJGHeaderOpVer(blockHeight,endHeight);
 
         //中间可能有做过重新赋值 执行完成后恢复原设置值
         account_subject_ref = tempaccount_subject_ref;
@@ -74,40 +100,108 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
     }
 
 
-    //企业 股权类 登记
+//    @Test
+    public void test()throws Exception{
+        for(int i =0;i<5000;i++) {
+            log.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + i);
+            gdEquityCode = Random(20);
+            gdCompanyID = "P1Re" + Random(8);
+
+
+            commNo = Random(5);
+
+            //主体
+            subject_investor_qualification_certifier_ref = "SIQCR" + UtilsClass.Random(9);
+            //账户
+            account_subject_ref = "ASR" + UtilsClass.Random(9);
+            account_depository_ref = "ADR" + UtilsClass.Random(9);
+//        account_associated_account_ref = "AAAR" + UtilsClass.Random(9);
+            //产品
+            product_market_subject_ref = "PMSR" + UtilsClass.Random(9);
+            product_issuer_subject_ref = "PISR" + UtilsClass.Random(9);
+            service_provider_subject_ref = "SPSR" + UtilsClass.Random(9);
+
+            settlement_product_ref = gdEquityCode;
+
+            tempaccount_subject_ref = account_subject_ref;
+            tempaccount_associated_account_ref = account_associated_account_ref;
+            tempproduct_issuer_subject_ref = product_issuer_subject_ref;
+
+            TCN301_enterpriseRegisterEquityCheckFormat();
+        }
+    }
+
+    //先创建资质机构 再挂牌登记股权类产品
     @Test
-    public void TCN011_enterpriseRegisterEquityCheckFormat() throws Exception {
+    public void TCN301_enterpriseRegisterEquityCheckFormat() throws Exception {
+        //主体 适当性认证方主体引用
+        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
+        ArrayList aSqi = new ArrayList();
+        enSubInfo.put("subject_qualification_information",aSqi);
+        enSubInfo.put("subject_object_id",subject_investor_qualification_certifier_ref);
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,enSubInfo,
+                null,null,null);
+
+        //产品 交易场所主体引用  服务方主体引用
+        enSubInfo.put("subject_object_id",product_market_subject_ref);
+        response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,enSubInfo,
+                null,null,null);
+        enSubInfo.put("subject_object_id",service_provider_subject_ref);
+        response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,enSubInfo,
+                null,null,null);
+
         regTestUnit("1",false);
     }
 
-    //企业 债券类 登记
-    @Test
-    public void TCN012_enterpriseRegisterBondCheckFormat() throws Exception {
-        regTestUnit("2",false);
-    }
-
-    //企业 基金类 登记
-    @Test
-    public void TCN013_enterpriseRegisterFundCheckFormat() throws Exception {
-        regTestUnit("3",false);
-    }
-
-    //机构会员登记
+    //先登记引用对象 机构会员登记
     @Test
     public void TCN014_enterpriseRegisterMemberCheckFormat() throws Exception {
+        //主体 适当性认证方主体引用
+        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
+        ArrayList aSqi = new ArrayList();
+        enSubInfo.put("subject_qualification_information",aSqi);
+        enSubInfo.put("subject_object_id",subject_investor_qualification_certifier_ref);
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,enSubInfo,
+                null,null,null);
+
         regTestUnit("4",false);
     }
 
-
+    //先登记引用对象 再开户
     @Test
     public void TCN014_createAccTestCheckFormat() throws Exception {
+        //主体 适当性认证方主体引用
+        Map enSubInfoRef = gdBF.init01EnterpriseSubjectInfo();
+        ArrayList aSqi = new ArrayList();
+        enSubInfoRef.put("subject_qualification_information",aSqi);
+        enSubInfoRef.put("subject_object_id",subject_investor_qualification_certifier_ref);
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,enSubInfoRef,
+                null,null,null);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
+
+        sleepAndSaveInfo(1000);
+        enSubInfoRef.put("subject_qualification_information",aSqi);
+        enSubInfoRef.put("subject_object_id",account_depository_ref);
+        response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,enSubInfoRef,
+                null,null,null);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
+
+        //开户
         GDBeforeCondition gdBC = new GDBeforeCondition();
+        Map mapCreate = new HashMap();
+        String cltNo ="";
+//        for(int i = 0;i<5000000;i++) {
+        for(int i = 0;i<5;i++) {
+            log.info("**************************************" + i);
+            cltNo = "tet00" + Random(12);
+//            int gdClient = Integer.parseInt(gdCF.getObjectLatestVer(cltNo));//获取当前开户主体最新版本信息
 
-        String cltNo = "tet00" + Random(12);
-        int gdClient = Integer.parseInt(gdCF.getObjectLatestVer(cltNo));//获取当前开户主体最新版本信息
+            //执行开户
+            mapCreate = gdBC.gdCreateAccParam(cltNo);
 
-        //执行开户
-        Map mapCreate = gdBC.gdCreateAccParam(cltNo);
+            assertEquals("200", net.sf.json.JSONObject.fromObject(
+                    store.GetTxDetail(mapCreate.get("txId").toString())).getString("state"));
+        }
         String txId = mapCreate.get("txId").toString();
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         String txDetail = store.GetTxDetail(txId);
@@ -123,7 +217,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
                 gdCF.chkSensitiveWord(txDetail,accType));
 
         //查询投资者账户信息
-        String response = "";
+        response = "";
         response = gd.GDGetShareHolderInfo(gdContractAddress,cltNo);
         assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
 
@@ -179,7 +273,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         accFund.put("content",gdCF.constructContentTreeMap(accType,fundObjId,fundAccVer,"create",String.valueOf(ts2)));
         accSH.put("content",gdCF.constructContentTreeMap(accType,SHObjId,shAccVer,"create",String.valueOf(ts2)));
 
-        assertEquals(String.valueOf(gdClient + 1),personSubVer);
+//        assertEquals(String.valueOf(gdClient + 1),personSubVer);
 
         //账户的如下字段默认引用的是开户主体的对象标识
         account_subject_ref = cltNo;
@@ -208,161 +302,64 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
     }
 
 
-    //企业 股权类 登记
-    //产品主体引用置为空
-    @Test
-    public void TCN021_enterpriseRegisterEquityEmpty() throws Exception {
-        regTestUnit("1",true);
-
-    }
-
-
-    //企业 债券类 登记
-    //产品主体引用置为空
-    @Test
-    public void TCN022_enterpriseRegisterBondEmpty() throws Exception {
-        regTestUnit("2",true);
-    }
-
-    //企业 基金类 登记
-    //产品主体引用置为空
-    @Test
-    public void TCN023_enterpriseRegisterFundEmpty() throws Exception {
-        regTestUnit("3",true);
-    }
-
-
-    //开户
-    //对象标识为空
-//    @Test  当前不会自动关联
-    public void TC023_createAccTestEmpty() throws Exception {
-        GDBeforeCondition gdBC = new GDBeforeCondition();
-        Map enSubInfo = gdBC.init01PersonalSubjectInfo();
-        Map accSH = gdBC.init02ShareholderAccountInfo();
-        Map accFund = gdBC.init02FundAccountInfo();
-        accSH.put("account_subject_ref", "");
-//        accSH.put("account_associated_account_ref", "");
-
-        accFund.put("account_subject_ref", "");
-        accFund.put("account_associated_account_ref", "");
-
-
-        String cltNo = "test00" + Random(12);
-        String shareHolderNo = "SH" + cltNo;
-        String fundNo = "fund" + cltNo;
-
-        int gdClient = -1; //Integer.parseInt(gdCF.getObjectLatestVer(cltNo));//获取当前开户主体最新版本信息
-
-        //构造股权账户信息
-        Map shareHolderInfo = new HashMap();
-        accSH.put("account_object_id", shareHolderNo);  //更新账户对象标识字段
-        shareHolderInfo.put("createTime", ts2);
-        shareHolderInfo.put("shareholderNo", shareHolderNo);
-        shareHolderInfo.put("accountInfo", accSH);
-
-        //构造资金账户信息
-        accFund.put("account_object_id", fundNo);  //更新账户对象标识字段
-        Map mapFundInfo = new HashMap();
-        mapFundInfo.put("createTime", ts2);
-        mapFundInfo.put("fundNo", fundNo);
-        mapFundInfo.put("accountInfo", accFund);
-
-        //构造个人/投资者主体信息
-        enSubInfo.put("subject_object_id", cltNo);  //更新对象标识字段
-
-        String response = gd.GDCreateAccout(gdContractAddress, cltNo, mapFundInfo, shareHolderInfo, enSubInfo);
-
-        commonFunc.sdkCheckTxOrSleep(net.sf.json.JSONObject.fromObject(response).getJSONObject("data"
-        ).getString("txId"), utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-
-        String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
-
-
-
-        //补足引用字段
-        accSH.put("account_subject_ref", investorSubjectInfo.get("subject_object_id"));
-//        shAccountInfo.put("account_associated_account_ref",investorSubjectInfo.get("subject_object_id"));//当前未自动填入
-
-        accFund.put("account_subject_ref", investorSubjectInfo.get("subject_object_id"));
-        accFund.put("account_associated_account_ref", shareHolderInfo.get("subject_object_id"));
-
-        //定义相关对象标识版本变量
-        String accASrefVer = gdCF.getObjectLatestVer(account_subject_ref);
-        String accADrefVer =  gdCF.getObjectLatestVer(account_depository_ref);
-        String accAAARefVer =  gdCF.getObjectLatestVer(account_associated_account_ref);
-
-        String shAccVer =  gdCF.getObjectLatestVer("SH" + cltNo);
-        String fundAccVer =  gdCF.getObjectLatestVer("fund" + cltNo);
-        String personSubVer =  gdCF.getObjectLatestVer(cltNo);
-
-        String subSIQCRefVer = gdCF.getObjectLatestVer(subject_investor_qualification_certifier_ref);
-
-        String fundObjId = fundNo;
-        String SHObjId = shareHolderNo;
-        //获取链上mini url的存证信息 并检查是否包含uri信息
-        String subfileName = conJGFileName(cltNo,personSubVer);
-        String shAccfileName = conJGFileName(SHObjId,shAccVer);
-        String fundAccfileName = conJGFileName(fundObjId,fundAccVer);
-
-        Map uriInfo = gdCF.getJGURIStoreHash(txId,subfileName,1);
-        String chkSubURI = subfileName;
-        String chkSHAccURI = shAccfileName;
-        String chkFundAccURI = fundAccfileName;
-//        log.info(uriInfo.get("storeData").toString());
-//        log.info(chkSubURI);
-        assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
-        assertEquals(true,uriInfo.get("storeData").toString().contains(chkSHAccURI));
-        assertEquals(true,uriInfo.get("storeData").toString().contains(chkFundAccURI));
-        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
-
-        //直接从minio上获取报送数据文件信息
-        Map getSubInfo = gdCF.constructJGDataFromStr(subfileName,subjectType,"2");
-        Map getFundAccInfo = gdCF.constructJGDataFromStr(fundAccfileName,accType,"1");
-        Map getSHAccInfo = gdCF.constructJGDataFromStr(shAccfileName,accType,"2");
-
-
-        //填充header content 信息
-        enSubInfo.put("content",gdCF.constructContentTreeMap(subjectType,cltNo,personSubVer,"create",String.valueOf(ts1)));
-        accFund.put("content",gdCF.constructContentTreeMap(accType,fundObjId,fundAccVer,"create",String.valueOf(ts2)));
-        accSH.put("content",gdCF.constructContentTreeMap(accType,SHObjId,shAccVer,"create",String.valueOf(ts2)));
-
-        assertEquals(String.valueOf(gdClient + 1),personSubVer);
-
-        //账户的如下字段默认引用的是开户主体的对象标识
-        account_subject_ref = cltNo;
-
-        //需要将比较的对象标识增加版本号信息
-        String[] verForSub = new String[]{"/" + subSIQCRefVer};
-        String[] verForAccSH = new String[]{"/" + personSubVer,"/" + accADrefVer,"/" + accAAARefVer};
-
-
-        log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
-
-        log.info("检查股权账户存证信息内容与传入一致\n" + accSH.toString() + "\n" + getSHAccInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(accSH,accType,verForAccSH)),replaceCertain(getSHAccInfo.toString()));
-
-        account_associated_account_ref = SHObjId;
-        String[] verForAccFund = new String[]{"/" + personSubVer,"/" + accADrefVer,"/" + shAccVer};
-
-        log.info("检查资金账户存证信息内容与传入一致\n" + accFund.toString() + "\n" + getFundAccInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer(accFund,accType,verForAccFund)),replaceCertain(getFundAccInfo.toString()));
-
-    }
-
 
 
     @Test
-    public void TCN15_9Types_infodisclosurePublishAndGet() throws Exception {
+    public void TCN1501_Type1_infodisclosurePublishAndGet() throws Exception {
+        //主体 信披对应主体引用 提报来源主体引用 展示场所主体引用
+        Map enSubInfoRef = gdBF.init01EnterpriseSubjectInfo();
+        ArrayList aSqi = new ArrayList();
+        enSubInfoRef.put("subject_qualification_information",aSqi);
+        enSubInfoRef.put("subject_object_id",disclosure_subject_ref);
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,enSubInfoRef,
+                null,null,null);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
+
+        enSubInfoRef.put("subject_object_id",disclosure_referer_subject_ref);
+        response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,enSubInfoRef,
+                null,null,null);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
+
+        enSubInfoRef.put("subject_object_id",disclosure_display_platform_ref);
+        response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,enSubInfoRef,
+                null,null,null);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
+
+        sleepAndSaveInfo(2000);
+
         infodisclosurePublishAndGetByType(1);
-        infodisclosurePublishAndGetByType(3);
-        infodisclosurePublishAndGetByType(4);
-        infodisclosurePublishAndGetByType(5);
-        infodisclosurePublishAndGetByType(6);
+    }
+
+    @Test
+    public void TCN1502_Type7_infodisclosurePublishAndGet() throws Exception {
+        //主体 信披对应主体引用 提报来源主体引用 认定方主体标识引用 鉴定方主体标识引用
+
+        Map enSubInfoRef = gdBF.init01EnterpriseSubjectInfo();
+        ArrayList aSqi = new ArrayList();
+        enSubInfoRef.put("subject_qualification_information",aSqi);
+        enSubInfoRef.put("subject_object_id",disclosure_subject_ref);
+        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,enSubInfoRef,
+                null,null,null);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
+
+        enSubInfoRef.put("subject_object_id",disclosure_referer_subject_ref);
+        response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,enSubInfoRef,
+                null,null,null);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
+
+        enSubInfoRef.put("subject_object_id",disclosure_identifier_ref);
+        response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,enSubInfoRef,
+                null,null,null);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
+
+        enSubInfoRef.put("subject_object_id",disclosure_auditor_ref);
+        response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000,enSubInfoRef,
+                null,null,null);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
+
+        sleepAndSaveInfo(2000);
+
         infodisclosurePublishAndGetByType(7);
-        infodisclosurePublishAndGetByType(8);
-        infodisclosurePublishAndGetByType(9);
-        infodisclosurePublishAndGetByType(10);
     }
 
     public void infodisclosurePublishAndGetByType(int type) throws Exception {
@@ -400,11 +397,11 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String objPrefix = "letter_";
 
         //获取（从交易详情中）链上mini url的存证信息并检查是否包含uri信息 通过前缀信息获取信披对象id
-        String storeData = com.alibaba.fastjson.JSONObject.parseObject(txDetail).getJSONObject(
+        String storeData = JSONObject.parseObject(txDetail).getJSONObject(
                 "data").getJSONObject("store").getString("storeData").toString();
         log.info(storeData);
-        com.alibaba.fastjson.JSONObject objURI = com.alibaba.fastjson.JSONObject.parseObject(
-                com.alibaba.fastjson.JSONObject.parseArray(storeData).get(0).toString());
+        JSONObject objURI = JSONObject.parseObject(
+                JSONObject.parseArray(storeData).get(0).toString());
         String chkObjURI = objPrefix;
         assertEquals(true,storeData.contains(chkObjURI));
         assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字
@@ -499,11 +496,11 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         String objPrefix = "uri";
 
         //获取（从交易详情中）链上mini url的存证信息并检查是否包含uri信息 通过前缀信息获取信披对象id
-        String storeData = com.alibaba.fastjson.JSONObject.parseObject(txDetail).getJSONObject(
+        String storeData = JSONObject.parseObject(txDetail).getJSONObject(
                 "data").getJSONObject("store").getString("storeData").toString();
         log.info(storeData);
-        com.alibaba.fastjson.JSONObject objURI = com.alibaba.fastjson.JSONObject.parseObject(
-                com.alibaba.fastjson.JSONObject.parseArray(storeData).get(0).toString());
+        JSONObject objURI = JSONObject.parseObject(
+                JSONObject.parseArray(storeData).get(0).toString());
         String chkObjURI = objPrefix;
         assertEquals(true,storeData.contains(chkObjURI));
         assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字
@@ -537,7 +534,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
         Map prodInfo = null;
 
-        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
+//        int gdCpmIdOldVer = Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID));//获取当前挂牌主体最新版本信息
         String response= "";
 
         //根据产品类型获取产品信息并执行挂牌
@@ -563,6 +560,8 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
                 break;
             default:    assertEquals("非法类型" + type, false,true);
         }
+
+        if(!bTest) return;
 
         //获取交易hash
         String txId = net.sf.json.JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -621,7 +620,7 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
         product_issuer_subject_ref = gdCompanyID;
 //        assertEquals(String.valueOf(gdCpmIdOldVer + 1),gdCF.getObjectLatestVer(gdCompanyID));
 
-        assertEquals(String.valueOf(gdCpmIdOldVer + 1),newSubVer);
+//        assertEquals(String.valueOf(gdCpmIdOldVer + 1),newSubVer);
 
         String[] verForSub = new String[]{"/" + subSIQCRefVer };
         String[] verForProd = new String[]{"/" + prodPMSRefVer,"/" + newSubVer,"/" + prodSPSRefVer};
@@ -672,11 +671,11 @@ public class GDV2_CheckJGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Settl
 
 
         //获取（从交易详情中）链上mini url的存证信息并检查是否包含uri信息 通过前缀信息获取信披对象id
-        String storeData = com.alibaba.fastjson.JSONObject.parseObject(txDetail).getJSONObject(
+        String storeData = JSONObject.parseObject(txDetail).getJSONObject(
                 "data").getJSONObject("store").getString("storeData").toString();
         log.info(storeData);
-        com.alibaba.fastjson.JSONObject objURI = com.alibaba.fastjson.JSONObject.parseObject(
-                com.alibaba.fastjson.JSONObject.parseArray(storeData).get(0).toString());
+        JSONObject objURI = JSONObject.parseObject(
+                JSONObject.parseArray(storeData).get(0).toString());
         String chkObjURI = objPrefix;
         assertEquals(true,storeData.contains(chkObjURI));
         assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字

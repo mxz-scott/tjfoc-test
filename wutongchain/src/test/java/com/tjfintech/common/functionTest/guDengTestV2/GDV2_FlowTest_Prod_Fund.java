@@ -12,8 +12,8 @@ import org.junit.*;
 import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -24,144 +24,69 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDV2_AllFlowTest_Fund {
-
+public class GDV2_FlowTest_Prod_Fund {
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
     Store store =testBuilder.getStore();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
+    GDBeforeCondition gdBF = new GDBeforeCondition();
     GDCommonFunc gdCF = new GDCommonFunc();
     GDUnitFunc uf = new GDUnitFunc();
-    public static String bizNoTest = "test" + Random(12);
+    public static String bizNoTest = "TxRp" + Random(12);
+    Boolean bNotCheck = false;
+    public static String oldEquity = "";
+    public static String newEquity = "";
 
+    //    long start = (new Date()).getTime();
+//    long end = 0;
+//    int beginHeigh = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
+//    int endHeight = 0;
     @Rule
     public TestName tm = new TestName();
 
     @BeforeClass
     public static void Before()throws Exception{
+        TestBuilder tbTemp = TestBuilder.getInstance();
+        Store storeTemp =tbTemp.getStore();
+        beginHeigh = Integer.parseInt(JSONObject.fromObject(storeTemp.GetHeight()).getString("data"));
+        start = (new Date()).getTime();
+
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
-//        gdBefore.initRegulationData();
-        gdEquityCode = "fondTest" + Random(12);
-        equityProductInfo = null;
+        gdBefore.initRegulationData();
         bondProductInfo = null;
-        fundProductInfo = gdBefore.init03FundProductInfo();
+        equityProductInfo = gdBefore.init03EquityProductInfo();
+        fundProductInfo = null;
+        gdCompanyID = "BMainSub" + Random(5);
+        gdEquityCode = "BProd" + Random(12);
+        oldEquity = gdEquityCode;
     }
 
     @After
     public void calJGDataAfterTx()throws Exception{
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
-        int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
+        int endHeight = JSONObject.fromObject(store.GetHeight()).getInt("data");
         uf.checkJGHeaderOpVer(blockHeight,endHeight);
         uf.updateBlockHeightParam(endHeight);
     }
 
-    @Test
-    public void TC01_enterpriseRegister() throws Exception {
-        long shareTotals = 1000000;
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enterpriseSubjectInfo,
-                equityProductInfo,bondProductInfo,fundProductInfo);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String txId = jsonObject.getJSONObject("data").getString("txId");
-
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
-        //查询挂牌企业主体数据
-        response = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-
-        Map jsonMap = JSONObject.fromObject(response).getJSONObject("data");
-        jsonMap.put("subject_object_id",gdCompanyID);
-
-
-        //查询投资者信息
-        //查询企业股东信息
-        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
-        assertEquals("400",JSONObject.fromObject(query).getString("state"));
-        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
-
-        //查询股东持股情况 无当前股权代码信息
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-    }
-
-
-    @Test
-    public void TC03_createAccout() throws Exception {
-        GDBeforeCondition gdBC = new GDBeforeCondition();
-
-        String cltNo = "testclientNo" + Random(6);
-        Map<String,String> mapAcc = gdBC.gdCreateAccParam(cltNo);
-        log.info(mapAcc.toString());
-        assertEquals(cltNo,JSONObject.fromObject(mapAcc.get("response")).getJSONObject("data").getJSONObject("accountList").getString("clientNo"));
-        assertEquals("SH" + cltNo,JSONObject.fromObject(mapAcc.get("response")).getJSONObject("data").getJSONObject("accountList").getString("shareholderNo"));
-        String keyId = mapAcc.get("keyId");
-        String address = mapAcc.get("address");
-
-        commonFunc.sdkCheckTxOrSleep(mapAcc.get("txId").toString(),utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(mapAcc.get("txId").toString())).getString("state"));
-
-        String query2 = gd.GDAccountQuery(gdContractAddress,cltNo);
-        assertEquals("200",JSONObject.fromObject(query2).getString("state"));
-        assertEquals(true,query2.contains(cltNo));
-
-        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(query2,accType));
-        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(query2,subjectType));
-
-        //查询挂牌企业数据
-        //查询投资者信息
-        //查询企业股东信息
-        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
-        assertEquals("400",JSONObject.fromObject(query).getString("state"));
-        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
-
-        //查询股东持股情况 无当前股权代码信息
-        query = gd.GDGetShareHolderInfo(gdContractAddress,cltNo);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
-        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
-
-    }
 
     @Test
     public void TC06_shareIssue() throws Exception {
+        //登记
+        Map eqProd = gdBF.init03FundProductInfo();
+        Map enSub = gdBF.init01EnterpriseSubjectInfo();
+        String response2 = gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,1000000,enSub, null,eqProd,null);
+        JSONObject jsonObject2=JSONObject.fromObject(response2);
+        String txId2 = jsonObject2.getJSONObject("data").getString("txId");
 
-        registerInfo.put("register_registration_serial_number","issue000001");
+        commonFunc.sdkCheckTxOrSleep(txId2,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        response2 = store.GetTxDetail(txId2);
+        assertEquals("200",JSONObject.fromObject(response2).getString("state"));
+
+        //发行
         List<Map> shareList = gdConstructShareList(gdAccount1,5000,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,5000,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,5000,0, shareList2);
@@ -241,6 +166,7 @@ public class GDV2_AllFlowTest_Fund {
     /***
      * 股权性质变更 部分变更
      * 变更后 未变更部分保持原有股权性质不变 P17对应的需求点
+     * 200 0 -> 1
      * @throws Exception
      */
     @Test
@@ -251,10 +177,20 @@ public class GDV2_AllFlowTest_Fund {
         long changeAmount = 500;
         int oldProperty = 0;
         int newProperty = 1;
-        registerInfo.put("register_registration_serial_number","ChangeProperty000001");
+        Map testReg1 = gdBF.init05RegInfo();
+        Map testReg2 = gdBF.init05RegInfo();
+        String regObjId1 = mapAccAddr.get(address) + "BCProp1" + Random(6);
+        String regObjId2 = mapAccAddr.get(address) + "BCProp2" + Random(6);
+        testReg1.put("register_registration_serial_number","ChangeProperty000001");
+        testReg1.put("register_account_obj_id",mapAccAddr.get(address));
+        testReg1.put("register_registration_object_id",regObjId1);
+
+        testReg2.put("register_registration_serial_number","ChangeProperty000001");
+        testReg2.put("register_account_obj_id",mapAccAddr.get(address));
+        testReg2.put("register_registration_object_id",regObjId2);
         List<Map> regListInfo = new ArrayList<>();
-        regListInfo.add(registerInfo);
-        regListInfo.add(registerInfo);
+        regListInfo.add(testReg1);
+        regListInfo.add(testReg2);
 
         String response= gd.GDShareChangeProperty(gdPlatfromKeyID,address,eqCode,changeAmount,oldProperty,newProperty,regListInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
@@ -334,19 +270,43 @@ public class GDV2_AllFlowTest_Fund {
     public void TC08_shareTransfer()throws Exception{
         String keyId = gdAccountKeyID1;
         String fromAddr = gdAccount1;
-        long amount = 1000;
         String toAddr = gdAccount5;
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        registerInfo.put("register_registration_serial_number","transfer000001");
-        String response= gd.GDShareTransfer(keyId,fromAddr,amount,toAddr,shareProperty,eqCode,txInformation,registerInfo,registerInfo);
+        register_event_type = "2";//交易登记
+        //交易报告数据
+        Map txInfo = gdBF.init04TxInfo();
+        String txRpObjId = "txReport" + Random(6);
+        txInfo.put("transaction_object_id",txRpObjId);
+//        txInfo.put("transaction_custody_product_ref",gdEquityCode);
+
+        //登记数据
+        String tempObjIdFrom = "reg" + mapAccAddr.get(gdAccount1).toString() + Random(3);
+        String tempObjIdTo = "reg" + mapAccAddr.get(gdAccount5).toString() + Random(3);
+
+        register_transaction_ref = txRpObjId;//登记引用的是交易报告的对象标识
+        transaction_custody_product_ref = gdEquityCode;
+        register_product_ref = gdEquityCode;
+
+        Map fromNow = gdBF.init05RegInfo();
+        Map toNow = gdBF.init05RegInfo();
+
+        fromNow.put("register_registration_object_id",tempObjIdFrom);
+        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);
+
+        toNow.put("register_registration_object_id",tempObjIdTo);
+        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);
+
+        //执行交易
+        String response= gd.GDShareTransfer(keyId,fromAddr,1000,toAddr,shareProperty,eqCode,txInfo,fromNow,toNow);
 
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        response = store.GetTxDetail(txId);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
 
         //查询挂牌企业数据
@@ -430,14 +390,19 @@ public class GDV2_AllFlowTest_Fund {
         String reason = "司法冻结";
         String cutoffDate = "2022-09-30";
 
-        registerInfo.put("register_registration_serial_number","lock" + bizNo);
+        Map testReg1 = gdBF.init05RegInfo();
+        String regObjId1 = mapAccAddr.get(address) + "lock" + Random(6);
+        testReg1.put("register_registration_serial_number","lock" + bizNo);
+        testReg1.put("register_account_obj_id",mapAccAddr.get(address));
+        testReg1.put("register_registration_object_id",regObjId1);
 
-        String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,registerInfo);
+        String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,testReg1);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        response = store.GetTxDetail(txId);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
 
         //查询挂牌企业数据
@@ -515,18 +480,24 @@ public class GDV2_AllFlowTest_Fund {
     public void TC11_shareUnlock() throws Exception {
         sleepAndSaveInfo(3000);
 
+        String address = gdAccount1; //需要和冻结对应
         String bizNo = bizNoTest;
         String eqCode = gdEquityCode;
         long amount = 500;
 
-        registerInfo.put("register_registration_serial_number","unlock" + bizNo);
+        Map testReg1 = gdBF.init05RegInfo();
+        String regObjId1 = mapAccAddr.get(address) + "Bunlock" + Random(6);
+        testReg1.put("register_registration_serial_number","unlock" + bizNo);
+        testReg1.put("register_account_obj_id",mapAccAddr.get(address));
+        testReg1.put("register_registration_object_id",regObjId1);
 
-        String response= gd.GDShareUnlock(bizNo,eqCode,amount,registerInfo);
+        String response= gd.GDShareUnlock(bizNo,eqCode,amount,testReg1);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        response = store.GetTxDetail(txId);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
 
         //查询挂牌企业数据
@@ -609,8 +580,6 @@ public class GDV2_AllFlowTest_Fund {
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
 //        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
-        registerInfo.put("register_registration_serial_number","recylce000001");
-
         List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
 
         String response= gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList,remark);
@@ -618,7 +587,8 @@ public class GDV2_AllFlowTest_Fund {
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        response = store.GetTxDetail(txId);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
         //查询挂牌企业数据
         //查询投资者信息
@@ -726,7 +696,8 @@ public class GDV2_AllFlowTest_Fund {
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        response = store.GetTxDetail(txId);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
         //查询挂牌企业数据
         //查询投资者信息
@@ -809,23 +780,34 @@ public class GDV2_AllFlowTest_Fund {
 //        assertEquals(totalShares.subtract(new BigDecimal("400")),totalShares2);
     }
 
-    //不支持基金类转板
+    //不支持债权类转板
 //    @Test
     public void TC13_shareChangeBoard() throws Exception {
 
         String oldEquityCode = gdEquityCode;
-        String newEquityCode = gdEquityCode + Random(5);
+        String newEquityCode = "newCode" + Random(5);
         String cpnyId = gdCompanyID;
 
-        String flowNo = "changeboard000001";
-        List<Map> regList = uf.getAllHolderListReg(gdEquityCode,flowNo);
+        gdEquityCode = newEquityCode;
+        List<Map> regList = uf.getAllHolderListReg(oldEquityCode,regNo);
 
-        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,regList, equityProductInfo,bondProductInfo);
+
+        product_issuer_subject_ref = gdCompanyID;
+        Map oldEqProd = gdBF.init03EquityProductInfo();
+        oldEqProd.put("product_object_id",oldEquityCode);
+
+        gdEquityCode = newEquityCode;
+        product_issuer_subject_ref = gdCompanyID;
+        Map newEqProd = gdBF.init03EquityProductInfo();
+        newEqProd.put("product_object_id",newEquityCode);
+
+        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,regList,oldEqProd,newEqProd);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        response = store.GetTxDetail(txId);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
         gdEquityCode = newEquityCode;
 
@@ -910,10 +892,7 @@ public class GDV2_AllFlowTest_Fund {
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdAccClientNo10);
 
         String clntNo = gdAccClientNo10;
-
-        String response= gd.GDAccountDestroy(gdContractAddress,clntNo,date1,getListFileObj(),date2,getListFileObj(),
-                "name4","num04");
-
+        String response= gd.GDAccountDestroy(gdContractAddress,clntNo,date1,getListFileObj(),date2,getListFileObj(),"name1","num01");
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -923,36 +902,6 @@ public class GDV2_AllFlowTest_Fund {
         String query3 = gd.GDMainSubjectQuery(gdContractAddress,gdAccClientNo10);
 
     }
-
-
-    @Test
-    public void TC15_infodisclosurePublishAndGet() throws Exception {
-
-        String response= gd.GDInfoPublish(disclosureInfo);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String txId = jsonObject.getString("data");
-
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
-        String responseGet = gd.GDInfoPublishGet(txId);
-        assertEquals("200",JSONObject.fromObject(responseGet).getString("state"));
-        assertEquals(false,responseGet.contains("\"data\":null"));
-
-    }
-
-    @Test
-    public void TC16_balanceCount() throws Exception {
-
-        String response= gd.GDCapitalSettlement(settleInfo);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String txId = jsonObject.getJSONObject("data").getString("txId");
-
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
-    }
-
 
 //    @After
     public void DestroyEquityAndAcc()throws Exception{

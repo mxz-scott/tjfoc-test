@@ -174,13 +174,8 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
         //查询挂牌企业数据
         //查询投资者信息
         //查询企业股东信息
-        String query = "";
-        for(int i =0 ;i < 20;i++) {
-            query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
-            if(JSONObject.fromObject(query).getString("state").equals("200")) break;
-            sleepAndSaveInfo(100,"等待数据更新");
-        }
-        assertEquals("200",JSONObject.fromObject(query).getString("state"));
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+        sleepAndSaveInfo(100,"等待数据更新");
 
         JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
 
@@ -344,35 +339,48 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
 
     @Test
     public void TC08_shareTransfer()throws Exception{
+
+//        sleepAndSaveInfo(20000);
         String keyId = gdAccountKeyID1;
         String fromAddr = gdAccount1;
-        long amount = 1000;
         String toAddr = gdAccount5;
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        register_subject_account_ref = gdCompanyID;
-        Map testReg1 = gdBF.init05RegInfo();
-        Map testReg2 = gdBF.init05RegInfo();
-        String regObjId1 = mapAccAddr.get(fromAddr) + "Trf1" + Random(6);
-        String regObjId2 = mapAccAddr.get(toAddr) + "Trf2" + Random(6);
+        register_event_type = "2";//交易登记
+        //交易报告数据
+        Map txInfo = gdBF.init04TxInfo();
+        String txRpObjId = "txReport" + Random(6);
+        txInfo.put("transaction_object_id",txRpObjId);
+//        txInfo.put("transaction_custody_product_ref",gdEquityCode);
 
-        testReg1.put("register_registration_serial_number","transfer000001");
-        testReg1.put("register_account_obj_id",mapAccAddr.get(fromAddr));
-        testReg1.put("register_registration_object_id",regObjId1);
-        testReg1.put("register_subject_account_ref","SH" + gdAccClientNo1);
+        //登记数据
+        String tempObjIdFrom = "reg" + mapAccAddr.get(gdAccount1).toString() + Random(3);
+        String tempObjIdTo = "reg" + mapAccAddr.get(gdAccount5).toString() + Random(3);
 
-        testReg2.put("register_registration_serial_number","transfer000001");
-        testReg2.put("register_account_obj_id",mapAccAddr.get(toAddr));
-        testReg2.put("register_registration_object_id",regObjId2);
-        testReg2.put("register_subject_account_ref","SH" + gdAccClientNo5);
+        register_transaction_ref = txRpObjId;//登记引用的是交易报告的对象标识
+        transaction_custody_product_ref = gdEquityCode;
+        register_product_ref = gdEquityCode;
 
-        txInformation.put("transaction_object_id",mapAccAddr.get(toAddr) + "TrfTx" + Random(6));
+        Map fromNow = gdBF.init05RegInfo();
+        Map toNow = gdBF.init05RegInfo();
 
-        List<Map> regInfoList = new ArrayList<>();
-        regInfoList.add(testReg1);
-        regInfoList.add(testReg2);
-        String response= gd.GDShareTransfer(keyId,fromAddr,amount,toAddr,shareProperty,eqCode,txInformation,testReg1,testReg2);
+        fromNow.put("register_registration_object_id",tempObjIdFrom);
+        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);
+
+        toNow.put("register_registration_object_id",tempObjIdTo);
+        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);
+
+//        fromNow.put("register_transaction_ref",txRpObjId);
+//        toNow.put("register_transaction_ref",txRpObjId);
+
+
+        String tempObj = gdCompanyID;
+
+        String query2 = gd.GDObjectQueryByVer(gdCompanyID,-1);
+
+        //执行交易
+        String response= gd.GDShareTransfer(keyId,fromAddr,1000,toAddr,shareProperty,eqCode,txInfo,fromNow,toNow);
 
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
@@ -991,25 +999,24 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
 
     @Test
     public void TC13_shareChangeBoard() throws Exception {
-
         String oldEquityCode = gdEquityCode;
-        String newEquityCode = gdEquityCode + Random(5);
+        String newEquityCode = "newCode" + Random(5);
         String cpnyId = gdCompanyID;
 
-        gd.GDObjectQueryByVer("" + newEquityCode,-1);
+        gdEquityCode = newEquityCode;
+        List<Map> regList = uf.getAllHolderListReg(oldEquityCode,regNo);
 
-        mapAddrRegObjId.clear();
 
-        Map eqProd = gdBF.init03EquityProductInfo();
-        eqProd.put("product_object_id","new" + newEquityCode);
+        product_issuer_subject_ref = gdCompanyID;
+        Map oldEqProd = gdBF.init03EquityProductInfo();
+        oldEqProd.put("product_object_id",oldEquityCode);
 
-        gd.GDObjectQueryByVer(oldEquityCode,-1);
-        gd.GDObjectQueryByVer("new" + newEquityCode,-1);
+        gdEquityCode = newEquityCode;
+        product_issuer_subject_ref = gdCompanyID;
+        Map newEqProd = gdBF.init03EquityProductInfo();
+        newEqProd.put("product_object_id",newEquityCode);
 
-        String flowNo = "changeboard000001";
-        List<Map> regList = uf.getAllHolderListReg(gdEquityCode,flowNo);
-
-        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,regList,eqProd,null);
+        String response= gd.GDShareChangeBoard(gdPlatfromKeyID,cpnyId,oldEquityCode,newEquityCode,regList,oldEqProd,newEqProd);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
@@ -1195,7 +1202,8 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
 
         Boolean bNumOk = true;
         String txType = "投资者开户";
-        if(StringUtils.countOccurrencesOf(response,txType) != 11) {
+        //若在测试集中进行测试时，可能不会再重复开户 所以开户交易的个数是1
+        if((StringUtils.countOccurrencesOf(response,txType) != 11) && (StringUtils.countOccurrencesOf(response,txType) != 1)) {
             log.info(txType + "交易11 缺失：" + StringUtils.countOccurrencesOf(response,txType));
             bNumOk = bNumOk && false;
         }

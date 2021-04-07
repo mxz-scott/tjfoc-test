@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDV2_RefObjParamExceptionScene {
+public class GDV2_JGData_RefObjParamExceptionScene {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
@@ -64,6 +64,7 @@ public class GDV2_RefObjParamExceptionScene {
 
     @After
     public void calJGDataAfterTx()throws Exception{
+        sleepAndSaveInfo(4000);//等待区块打块异步请求
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
         int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
@@ -111,16 +112,19 @@ public class GDV2_RefObjParamExceptionScene {
         assertEquals("-1",verSub);
         assertEquals("-1",verProd);
 
-        //直接从minio上通过对象标识+版本号的方式获取指定对象文件
-        Map getSubInfo = gdCF.constructJGDataFromStr(conJGFileName(gdCompanyID,"0"),subjectType,"1");
-        //填充header content字段
-        enSubInfo.put("content",gdCF.constructContentTreeMap(subjectType,gdCompanyID,"0","create",String.valueOf(ts1)));
-        log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
-        Boolean bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(enSubInfo,subjectType)),replaceCertain(getSubInfo.toString()));
-        assertEquals("1检查数据是否一致" ,true,bSame);
+//        //直接从minio上通过对象标识+版本号的方式获取指定对象文件
+//        Map getSubInfo = gdCF.constructJGDataFromStr(conJGFileName(gdCompanyID,"0"),subjectType,"1");
+//        //填充header content字段
+//        enSubInfo.put("content",gdCF.constructContentTreeMap(subjectType,gdCompanyID,"0","create",String.valueOf(ts1)));
+//        log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
+//        Boolean bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(enSubInfo,subjectType)),replaceCertain(getSubInfo.toString()));
+//        assertEquals("1检查数据是否一致" ,true,bSame);
 
         //检查OSS上存储的主体信息
-        String storeData2 = mo.getFileFromMinIO(minIOEP,jgBucket,gdCompanyID + "/1","");
+        String storeData2 = mo.getFileFromMinIO(minIOEP,jgBucket,gdCompanyID + "/0","");
+        assertEquals("未获取到更新的主体对象版本信息",true,storeData2.contains("错误"));
+
+        storeData2 = mo.getFileFromMinIO(minIOEP,jgBucket,gdCompanyID + "/1","");
         assertEquals("未获取到更新的主体对象版本信息",true,storeData2.contains("错误"));
 
         //检查OSS上存储的产品信息
@@ -143,16 +147,16 @@ public class GDV2_RefObjParamExceptionScene {
         assertEquals("-1",verSub);
         assertEquals("-1",verProd);
 
-        //直接从minio上通过对象标识+版本号的方式获取指定对象文件
-        getSubInfo = gdCF.constructJGDataFromStr(conJGFileName(gdCompanyID,"0"),subjectType,"1");
-        //填充header content字段
-        enSubInfo.put("content",gdCF.constructContentTreeMap(subjectType,gdCompanyID,"0","create",String.valueOf(ts1)));
-        log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
-        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(enSubInfo,subjectType)),replaceCertain(getSubInfo.toString()));
-        assertEquals("1检查数据是否一致" ,true,bSame);
+//        //直接从minio上通过对象标识+版本号的方式获取指定对象文件
+//        Map getSubInfo = gdCF.constructJGDataFromStr(conJGFileName(gdCompanyID,"0"),subjectType,"1");
+//        //填充header content字段
+//        enSubInfo.put("content",gdCF.constructContentTreeMap(subjectType,gdCompanyID,"0","create",String.valueOf(ts1)));
+//        log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
+//        Boolean bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(enSubInfo,subjectType)),replaceCertain(getSubInfo.toString()));
+//        assertEquals("1检查数据是否一致" ,true,bSame);
 
         //检查OSS上存储的主体信息
-        storeData2 = mo.getFileFromMinIO(minIOEP,jgBucket,gdCompanyID + "/1","");
+        storeData2 = mo.getFileFromMinIO(minIOEP,jgBucket,gdCompanyID + "/0","");
         assertEquals("未获取到更新的主体对象版本信息",true,storeData2.contains("错误"));
 
         //检查OSS上存储的产品信息
@@ -167,6 +171,9 @@ public class GDV2_RefObjParamExceptionScene {
                 prodInfo,null,null);
         assertEquals("200",JSONObject.parseObject(response).getString("state"));
         String txId = JSONObject.parseObject(response).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
 
         String verSub2 = gdCF.getObjectLatestVer(gdCompanyID);
         String verProd2 = gdCF.getObjectLatestVer(gdEquityCode);
@@ -218,6 +225,8 @@ public class GDV2_RefObjParamExceptionScene {
         String shareHolderNo = "SH" + cltNo;
         String fundNo = "fund" + cltNo;
 
+        
+
         int gdClient = -1; //Integer.parseInt(gdCF.getObjectLatestVer(cltNo));//获取当前开户主体最新版本信息
 
         //构造股权账户信息
@@ -232,6 +241,7 @@ public class GDV2_RefObjParamExceptionScene {
 
         //第一次删除整个字段
         accFund.remove("account_depository_ref");//先删除开户机构主体引用字段
+        accFund.put("account_associated_account_ref", shareHolderNo);
 
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("createTime", ts2);
@@ -265,13 +275,13 @@ public class GDV2_RefObjParamExceptionScene {
 //        assertEquals("1检查数据是否一致" ,true,bSame);
 
 
-        //直接从minio上获取报送数据文件信息
-        Map getSHAccInfo = gdCF.constructJGDataFromStr(conJGFileName(shareHolderNo,"0"),accType,"1");
-        //填充header content 信息
-        accSH.put("content",gdCF.constructContentTreeMap(accType,shareHolderNo,"0","create",String.valueOf(ts2)));
-        log.info("检查股权账户存证信息内容与传入一致\n" + accSH.toString() + "\n" + getSHAccInfo.toString());
-        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(accSH,accType)),replaceCertain(getSHAccInfo.toString()));
-        assertEquals("检查数据是否一致" ,true,bSame);
+//        //直接从minio上获取报送数据文件信息
+//        Map getSHAccInfo = gdCF.constructJGDataFromStr(conJGFileName(shareHolderNo,"0"),accType,"1");
+//        //填充header content 信息
+//        accSH.put("content",gdCF.constructContentTreeMap(accType,shareHolderNo,"0","create",String.valueOf(ts2)));
+//        log.info("检查股权账户存证信息内容与传入一致\n" + accSH.toString() + "\n" + getSHAccInfo.toString());
+//        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(accSH,accType)),replaceCertain(getSHAccInfo.toString()));
+//        assertEquals("检查数据是否一致" ,true,bSame);
 
         //检查OSS上存储的主体信息
         String storeData2 = mo.getFileFromMinIO(minIOEP,jgBucket,cltNo + "/0","");
@@ -281,7 +291,7 @@ public class GDV2_RefObjParamExceptionScene {
         assertEquals("未获取到更新的主体对象版本信息",true,storeData2.contains("错误"));
 
         //检查OSS上存储的证券账户信息
-        storeData2 = mo.getFileFromMinIO(minIOEP,jgBucket,shareHolderNo + "/1","");
+        storeData2 = mo.getFileFromMinIO(minIOEP,jgBucket,shareHolderNo + "/0","");
         assertEquals("未获取到更新的产品对象版本信息",true,storeData2.contains("错误"));
 
         //检查OSS上存储的资金账户信息
@@ -316,13 +326,13 @@ public class GDV2_RefObjParamExceptionScene {
 //        assertEquals("1检查数据是否一致" ,true,bSame);
 
 
-        //直接从minio上获取报送数据文件信息
-        getSHAccInfo = gdCF.constructJGDataFromStr(conJGFileName(shareHolderNo,"0"),accType,"1");
-        //填充header content 信息
-        accSH.put("content",gdCF.constructContentTreeMap(accType,shareHolderNo,"0","create",String.valueOf(ts2)));
-        log.info("检查股权账户存证信息内容与传入一致\n" + accSH.toString() + "\n" + getSHAccInfo.toString());
-        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(accSH,accType)),replaceCertain(getSHAccInfo.toString()));
-        assertEquals("检查数据是否一致" ,true,bSame);
+//        //直接从minio上获取报送数据文件信息
+//        Map getSHAccInfo = gdCF.constructJGDataFromStr(conJGFileName(shareHolderNo,"0"),accType,"1");
+//        //填充header content 信息
+//        accSH.put("content",gdCF.constructContentTreeMap(accType,shareHolderNo,"0","create",String.valueOf(ts2)));
+//        log.info("检查股权账户存证信息内容与传入一致\n" + accSH.toString() + "\n" + getSHAccInfo.toString());
+//        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(accSH,accType)),replaceCertain(getSHAccInfo.toString()));
+//        assertEquals("检查数据是否一致" ,true,bSame);
 
         //检查OSS上存储的主体信息
         storeData2 = mo.getFileFromMinIO(minIOEP,jgBucket,cltNo + "/0","");
@@ -332,7 +342,7 @@ public class GDV2_RefObjParamExceptionScene {
         assertEquals("未获取到更新的主体对象版本信息",true,storeData2.contains("错误"));
 
         //检查OSS上存储的证券账户信息
-        storeData2 = mo.getFileFromMinIO(minIOEP,jgBucket,shareHolderNo + "/1","");
+        storeData2 = mo.getFileFromMinIO(minIOEP,jgBucket,shareHolderNo + "/0","");
         assertEquals("未获取到更新的产品对象版本信息",true,storeData2.contains("错误"));
 
         //检查OSS上存储的资金账户信息
@@ -340,18 +350,20 @@ public class GDV2_RefObjParamExceptionScene {
         assertEquals("未获取到更新的产品对象版本信息",true,storeData2.contains("错误"));
 
 
-
-
-
         //第三次正确填写后再次执行
         accFund.put("account_depository_ref", account_depository_ref);//正确填写开户机构主体引用字段
+        accFund.put("account_associated_account_ref", "SH" + cltNo);//填写资金账户关联账户引用字段
 
         mapFundInfo.put("accountInfo", accFund);
 
         response = gd.GDCreateAccout(gdContractAddress, cltNo, mapFundInfo, shareHolderInfo, enSubInfo);
         assertEquals("200",JSONObject.parseObject(response).getString("state"));
         String txId = JSONObject.parseObject(response).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
+
+        account_associated_account_ref = "SH" + cltNo;
         //检查涉及的所有对象版本信息
         String verSub2 = gdCF.getObjectLatestVer(cltNo);
         String verSHAcc2 = gdCF.getObjectLatestVer(shareHolderNo);
@@ -426,7 +438,7 @@ public class GDV2_RefObjParamExceptionScene {
         accFund.put("account_object_id", fundNo);  //更新账户对象标识字段
 
         //第一次填写为空
-        accFund.put("account_associated_account_ref","");//先删除开户机构主体引用字段
+        accFund.put("account_associated_account_ref","");//将账户关联账户引用填写为空字符串
 
         Map mapFundInfo = new HashMap();
         mapFundInfo.put("createTime", ts2);
@@ -451,13 +463,13 @@ public class GDV2_RefObjParamExceptionScene {
         assertEquals("-1",verFundAcc);
 
 
-        //直接从minio上获取报送数据文件信息
-        Map getSHAccInfo = gdCF.constructJGDataFromStr(conJGFileName(shareHolderNo,"0"),accType,"1");
-        //填充header content 信息
-        accSH.put("content",gdCF.constructContentTreeMap(accType,shareHolderNo,"0","create",String.valueOf(ts2)));
-        log.info("检查股权账户存证信息内容与传入一致\n" + accSH.toString() + "\n" + getSHAccInfo.toString());
-        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(accSH,accType)),replaceCertain(getSHAccInfo.toString()));
-        assertEquals("检查数据是否一致" ,true,bSame);
+//        //直接从minio上获取报送数据文件信息
+//        Map getSHAccInfo = gdCF.constructJGDataFromStr(conJGFileName(shareHolderNo,"0"),accType,"1");
+//        //填充header content 信息
+//        accSH.put("content",gdCF.constructContentTreeMap(accType,shareHolderNo,"0","create",String.valueOf(ts2)));
+//        log.info("检查股权账户存证信息内容与传入一致\n" + accSH.toString() + "\n" + getSHAccInfo.toString());
+//        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(accSH,accType)),replaceCertain(getSHAccInfo.toString()));
+//        assertEquals("检查数据是否一致" ,true,bSame);
 
         //检查OSS上存储的主体信息
         String storeData2 = mo.getFileFromMinIO(minIOEP,jgBucket,cltNo + "/0","");
@@ -467,7 +479,7 @@ public class GDV2_RefObjParamExceptionScene {
         assertEquals("未获取到更新的主体对象版本信息",true,storeData2.contains("错误"));
 
         //检查OSS上存储的证券账户信息
-        storeData2 = mo.getFileFromMinIO(minIOEP,jgBucket,shareHolderNo + "/1","");
+        storeData2 = mo.getFileFromMinIO(minIOEP,jgBucket,shareHolderNo + "/0","");
         assertEquals("未获取到更新的产品对象版本信息",true,storeData2.contains("错误"));
 
         //检查OSS上存储的资金账户信息
@@ -477,13 +489,17 @@ public class GDV2_RefObjParamExceptionScene {
 
 
         //第二次正确填写后再次执行
-        accFund.put("account_associated_account_ref", account_associated_account_ref);//正确填写开户机构主体引用字段
+        accFund.put("account_associated_account_ref", "SH" + cltNo);//正确填写开户机构主体引用字段
 
         mapFundInfo.put("accountInfo", accFund);
 
         response = gd.GDCreateAccout(gdContractAddress, cltNo, mapFundInfo, shareHolderInfo, enSubInfo);
         assertEquals("200",JSONObject.parseObject(response).getString("state"));
         String txId = JSONObject.parseObject(response).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+        account_associated_account_ref = "SH" + cltNo;
 
         //检查涉及的所有对象版本信息
         String verSub2 = gdCF.getObjectLatestVer(cltNo);

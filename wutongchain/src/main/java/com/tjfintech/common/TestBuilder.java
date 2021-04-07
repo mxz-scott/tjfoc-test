@@ -12,6 +12,7 @@ public class TestBuilder {
     private Kms kms;
     private Scf scf;
     private Credit credit;
+    private SYGT sygt;
     TestBuilder() {
         setGoTest();
     // SetJavaTest();
@@ -44,6 +45,7 @@ public class TestBuilder {
         credit = new GoCredit();
         kms = new GoKms();
         scf = new GoScf();
+        sygt = new GoSYGT();
     }
 
 //    public void SetJavaTest() {
@@ -73,5 +75,8 @@ public class TestBuilder {
     public Scf getScf() {return scf;}
     public Credit getCredit() {
         return credit;
+    }
+    public SYGT getSygt() {
+        return sygt;
     }
 }

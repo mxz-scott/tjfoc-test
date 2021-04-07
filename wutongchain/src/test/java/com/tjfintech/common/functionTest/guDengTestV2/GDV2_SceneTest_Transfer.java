@@ -40,11 +40,14 @@ public class GDV2_SceneTest_Transfer {
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
+        register_event_type = "1";
     }
 
     @Before
     public void IssueEquity()throws Exception{
         bizNoTest = "test" + Random(12);
+        gdEquityCode = "test_trf" + Random(8);
+        register_event_type = "1";
 
         //重新创建账户
 //        gdAccClientNo1 = "No000" + Random(10);
@@ -67,13 +70,12 @@ public class GDV2_SceneTest_Transfer {
         uf.commonIssuePP01(1000);//发行给账户1~4 股权性质对应 0 1 0 1
     }
 
-//    @After
+    @After
     public void calJGDataAfterTx()throws Exception{
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
         int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
         uf.checkJGHeaderOpVer(blockHeight,endHeight);
-        uf.updateBlockHeightParam(endHeight);
     }
 //    @After
     public void DestroyEquityAndAcc()throws Exception{
@@ -120,17 +122,20 @@ public class GDV2_SceneTest_Transfer {
         String response1 = uf.shareTransfer(gdAccountKeyID1,gdAccount1,100,gdAccount5,0,
                 gdEquityCode,false);
         String txId1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+
+        //新版本接口走同步 可能不太容易出现double spend的情况
         String response2 = uf.shareTransfer(gdAccountKeyID1,gdAccount1,200,gdAccount6,0,
                 gdEquityCode,false);
-//        String txId2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
-        assertEquals(true,response2.contains("Err:double spend"));
-        sleepAndSaveInfo(SLEEPTIME);
-
-        //异或判断两种其中只有一个上链
-        assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId1)).getString("state"));
-//        assertEquals(true,JSONObject.fromObject(store.GetTxDetail(txId1)).getString("state").equals("200")
+        if(JSONObject.fromObject(response2).getString("state").equals("200")){
+//            String txId2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
+//            sleepAndSaveInfo(SLEEPTIME/2);
+//            //有时候会执行成功 有时候会失败 根据交易处理时机
+//            assertEquals(true,JSONObject.fromObject(store.GetTxDetail(txId1)).getString("state").equals("200")
 //                ^JSONObject.fromObject(store.GetTxDetail(txId2)).getString("state").equals("200"));
-
+        }
+        else {
+            assertEquals(true,response2.contains("Err:double spend"));
+        }
         gd.GDGetEnterpriseShareInfo(gdEquityCode);
     }
 
@@ -146,11 +151,17 @@ public class GDV2_SceneTest_Transfer {
         String txId1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
         String response2 = uf.shareTransfer(gdAccountKeyID2,gdAccount2,200,gdAccount6,1,
                 gdEquityCode,false);
-        //        String txId2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
-        assertEquals(true,response2.contains("Err:double spend"));
-        sleepAndSaveInfo(SLEEPTIME);
-
-        //异或判断两种其中只有一个上链
+        if(JSONObject.fromObject(response2).getString("state").equals("200")) {
+//            String txId2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
+//            //新版本接口全部走同步 可能会出现double spend 以及成功两种场景
+//            sleepAndSaveInfo(SLEEPTIME / 2);
+//
+//            //异或判断两种其中只有一个上链
+//            assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId2)).getString("state"));
+        }
+        else{
+            assertEquals(true,response2.contains("Err:double spend"));
+        }
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId1)).getString("state"));
 //        assertEquals(true,JSONObject.fromObject(store.GetTxDetail(txId1)).getString("state").equals("200")
 //                ^JSONObject.fromObject(store.GetTxDetail(txId2)).getString("state").equals("200"));
@@ -352,6 +363,83 @@ public class GDV2_SceneTest_Transfer {
         assertEquals(true,JSONObject.fromObject(response).getString("message").contains("查询余额出错"));
     }
 
+
+    /***
+     * 转让账户 引用错长度的交易报告对象标识
+     */
+    @Test
+    public void shareTransfer_txType2ErrorTXObjectLenTest()throws Exception{
+        String response = "";
+        register_event_type = "2";
+        GDBeforeCondition gdBF = new GDBeforeCondition();
+        //交易报告数据
+        Map txInfo = gdBF.init04TxInfo();
+        String txRpObjId = "txReport" + Random(126);
+        txInfo.put("transaction_object_id",txRpObjId);
+        txInfo.put("transaction_type",2);//交易过户类型
+        //登记数据
+        String tempObjIdFrom = "reg" + mapAccAddr.get(gdAccount1).toString() + Random(3);
+        String tempObjIdTo = "reg" + mapAccAddr.get(gdAccount5).toString() + Random(3);
+        register_transaction_ref = txRpObjId;//登记引用的是交易报告的对象标识
+        Map fromNow = gdBF.init05RegInfo();
+        Map toNow = gdBF.init05RegInfo();
+        fromNow.put("register_registration_object_id",tempObjIdFrom);
+        toNow.put("register_registration_object_id",tempObjIdTo);
+
+        response= gd.GDShareTransfer(gdAccountKeyID2,gdAccount2,100,gdAccount5,1,gdEquityCode,txInfo, fromNow,toNow);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+
+        sleepAndSaveInfo(3000);
+
+        //查询股东持股情况 无当前股权代码信息
+        String query = gd.GDGetShareHolderInfo(gdContractAddress, gdAccClientNo5);
+        assertEquals(gdAccClientNo5, JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+
+        assertEquals(true, query.contains("\"shareholderNo\":\"SH" + gdAccClientNo5 + "\""));
+        assertEquals(true, query.contains("\"address\":\"" + gdAccount5 + "\""));
+        assertEquals(true, query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":100,\"lockAmount\":0}"));
+    }
+
+    /***
+     * 转让账户 引用不存在的交易报告对象标识
+     */
+    @Test
+    public void shareTransfer_txType2NotExistTXObjectTest()throws Exception{
+        register_event_type = "2";
+        String response = "";
+
+        GDBeforeCondition gdBF = new GDBeforeCondition();
+        //交易报告数据
+        Map txInfo = gdBF.init04TxInfo();
+        String txRpObjId = "txReport" + Random(12);
+        txInfo.put("transaction_object_id",txRpObjId);
+        txInfo.put("transaction_type",2);//交易过户类型
+        //登记数据
+        String tempObjIdFrom = "reg" + mapAccAddr.get(gdAccount1).toString() + Random(3);
+        String tempObjIdTo = "reg" + mapAccAddr.get(gdAccount5).toString() + Random(3);
+        register_transaction_ref = txRpObjId + "1111";//登记引用的是交易报告的对象标识
+        Map fromNow = gdBF.init05RegInfo();
+        Map toNow = gdBF.init05RegInfo();
+        fromNow.put("register_registration_object_id",tempObjIdFrom);
+        toNow.put("register_registration_object_id",tempObjIdTo);
+
+        response= gd.GDShareTransfer(gdAccountKeyID2,gdAccount2,100,gdAccount5,1,gdEquityCode,txInfo, fromNow,toNow);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+
+        sleepAndSaveInfo(3000);
+
+        //查询股东持股情况 无当前股权代码信息
+        String query = gd.GDGetShareHolderInfo(gdContractAddress, gdAccClientNo5);
+        assertEquals(gdAccClientNo5, JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+
+        assertEquals(true, query.contains("\"shareholderNo\":\"SH" + gdAccClientNo5 + "\""));
+        assertEquals(true, query.contains("\"address\":\"" + gdAccount5 + "\""));
+        assertEquals(true, query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":100,\"lockAmount\":0}"));
+    }
+
+
     /***
      * 冻结后 转让非流通股 交易过户
      * 交易过户不支持非流通股转让 P18需求
@@ -362,18 +450,59 @@ public class GDV2_SceneTest_Transfer {
         String response = "";
 
         log.info("股权代码过户转让非流通股");
-        txInformation.put("transaction_type",2);//配置为交易过户类型
-        response= gd.GDShareTransfer(gdAccountKeyID1,gdAccount2,100,gdAccount5,1,gdEquityCode,txInformation, registerInfo,registerInfo);
+        GDBeforeCondition gdBF = new GDBeforeCondition();
+        //交易报告数据
+        Map txInfo = gdBF.init04TxInfo();
+        String txRpObjId = "txReport" + Random(6);
+        txInfo.put("transaction_object_id",txRpObjId);
+        txInfo.put("transaction_type",3);//交易过户类型
+        //登记数据
+        String tempObjIdFrom = "reg" + mapAccAddr.get(gdAccount1).toString() + Random(3);
+        String tempObjIdTo = "reg" + mapAccAddr.get(gdAccount5).toString() + Random(3);
+        register_transaction_ref = txRpObjId;//登记引用的是交易报告的对象标识
+        Map fromNow = gdBF.init05RegInfo();
+        Map toNow = gdBF.init05RegInfo();
+        fromNow.put("register_registration_object_id",tempObjIdFrom);
+        toNow.put("register_registration_object_id",tempObjIdTo);
+
+        response= gd.GDShareTransfer(gdAccountKeyID2,gdAccount2,100,gdAccount5,1,gdEquityCode,txInfo, fromNow,toNow);
 
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals("交易过户非流通股不可以转让",JSONObject.fromObject(response).getString("message"));
 
-        txInformation.put("transaction_type",1);//配置为交易过户类型1
-        response= gd.GDShareTransfer(gdAccountKeyID2,gdAccount2,100,gdAccount5,1,gdEquityCode,txInformation, registerInfo,registerInfo);
+
+        //交易报告数据
+        txInfo = gdBF.init04TxInfo();
+        txRpObjId = "txReport" + Random(6);
+        txInfo.put("transaction_object_id",txRpObjId);
+        txInfo.put("transaction_type",5);
+        //登记数据
+        tempObjIdFrom = "reg" + mapAccAddr.get(gdAccount1).toString() + Random(3);
+        tempObjIdTo = "reg" + mapAccAddr.get(gdAccount5).toString() + Random(3);
+        register_transaction_ref = txRpObjId;//登记引用的是交易报告的对象标识
+        fromNow = gdBF.init05RegInfo();
+        toNow = gdBF.init05RegInfo();
+        fromNow.put("register_registration_object_id",tempObjIdFrom);
+        toNow.put("register_registration_object_id",tempObjIdTo);
+        response= gd.GDShareTransfer(gdAccountKeyID2,gdAccount2,100,gdAccount5,1,gdEquityCode,txInfo, fromNow,toNow);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
+
+        //交易报告数据
+        txInfo = gdBF.init04TxInfo();
+        txRpObjId = "txReport" + Random(6);
+        txInfo.put("transaction_object_id",txRpObjId);
+        txInfo.put("transaction_type",255);
+        //登记数据
+        tempObjIdFrom = "reg" + mapAccAddr.get(gdAccount1).toString() + Random(3);
+        tempObjIdTo = "reg" + mapAccAddr.get(gdAccount5).toString() + Random(3);
+        register_transaction_ref = txRpObjId;//登记引用的是交易报告的对象标识
+        fromNow = gdBF.init05RegInfo();
+        toNow = gdBF.init05RegInfo();
+        fromNow.put("register_registration_object_id",tempObjIdFrom);
+        toNow.put("register_registration_object_id",tempObjIdTo);
         txInformation.put("transaction_type",4);//配置为交易过户类型1
-        response= gd.GDShareTransfer(gdAccountKeyID4,gdAccount4,100,gdAccount5,1,gdEquityCode,txInformation, registerInfo,registerInfo);
+        response= gd.GDShareTransfer(gdAccountKeyID4,gdAccount4,100,gdAccount5,1,gdEquityCode,txInfo, fromNow,toNow);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
     }
 
@@ -532,22 +661,34 @@ public class GDV2_SceneTest_Transfer {
 
     @Test
     public void shareTransfer_lockMatchEqcode()throws Exception{
-        String EqCode1 = gdEquityCode;
-        String EqCode2 = gdEquityCode + Random(8);
-        String EqCode3 = gdEquityCode + Random(8);
+        String EqCode1 = "trf021_" + Random(6);
+        String EqCode2 = "trf022_" + Random(6);
+        String EqCode3 = "trf023_" + Random(6);
+
 
         String response = "";
+
+        gdEquityCode = EqCode1;
+        List<Map> shareList21 = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList22 = gdConstructShareList(gdAccount2,1000,1, shareList21);
+        List<Map> shareList23 = gdConstructShareList(gdAccount3,1000,0, shareList22);
+        List<Map> shareList24 = gdConstructShareList(gdAccount4,1000,1, shareList23);
+        uf.shareIssue(gdEquityCode,shareList24,true);
+
+        gdEquityCode = EqCode2;
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
-        List<Map> shareList5 = gdConstructShareList(gdAccount5,1000,0);
+        uf.shareIssue(gdEquityCode,shareList4,true);
 
-        uf.shareIssue(EqCode2,shareList4,true);
-        uf.shareIssue(EqCode3,shareList5,true);
+        gdEquityCode = EqCode3;
+        List<Map> shareList5 = gdConstructShareList(gdAccount5,1000,0);
+        uf.shareIssue(gdEquityCode,shareList5,true);
 
         //冻结账户4 EqCode2 * 股权性质1 *100
-        uf.lock(bizNoTest,gdAccount4,EqCode2,100,1,"2032-09-30",true);
+        gdEquityCode = EqCode2;
+        uf.lock(bizNoTest,gdAccount4,gdEquityCode,100,1,"2032-09-30",true);
 
         response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
         assertEquals(false,response.contains("{\"equityCode\":\"" + EqCode3 + "\",\"shareProperty\":0"));
@@ -585,8 +726,11 @@ public class GDV2_SceneTest_Transfer {
         assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode3 +
                 "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
 
-        uf.shareTransfer(gdAccountKeyID4,gdAccount4,1000,gdAccount6,1,EqCode1,true);
-        uf.shareTransfer(gdAccountKeyID5,gdAccount5,1000,gdAccount6,0,EqCode3,true);
+        gdEquityCode = EqCode1;
+        uf.shareTransfer(gdAccountKeyID4,gdAccount4,1000,gdAccount6,1,gdEquityCode,true);
+
+        gdEquityCode = EqCode3;
+        uf.shareTransfer(gdAccountKeyID5,gdAccount5,1000,gdAccount6,0,gdEquityCode,true);
 
         response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
         assertEquals(true,response.contains("{\"equityCode\":\"" + EqCode1 +
@@ -606,12 +750,16 @@ public class GDV2_SceneTest_Transfer {
         //大小写匹配检查
         String response = uf.shareTransfer(gdAccountKeyID1,gdAccount1,1000,gdAccount5,0,
                 gdEquityCode.toLowerCase(),false);
-        assertEquals("500",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,JSONObject.fromObject(response).getString("message").contains("查询余额出错"));
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(response).getString("message"));
+//        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,JSONObject.fromObject(response).getString("message").contains("查询余额出错"));
 
         response = uf.shareTransfer(gdAccountKeyID1,gdAccount1,1000,gdAccount5,0,
                 gdEquityCode.toUpperCase(),false);
-        assertEquals("500",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,JSONObject.fromObject(response).getString("message").contains("查询余额出错"));
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(response).getString("message"));
+//        assertEquals("500",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,JSONObject.fromObject(response).getString("message").contains("查询余额出错"));
     }
 }

@@ -32,6 +32,7 @@ public class GDV2_SceneTest_ChangeProperty {
     CommonFunc commonFunc = new CommonFunc();
     public static String bizNoTest = "test" + Random(12);
     GDUnitFunc uf = new GDUnitFunc();
+    GDBeforeCondition gdBF = new GDBeforeCondition();
 
     @Rule
     public TestName tm = new TestName();
@@ -40,6 +41,7 @@ public class GDV2_SceneTest_ChangeProperty {
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
+        register_event_type = "1";
     }
 
     @Before
@@ -47,6 +49,8 @@ public class GDV2_SceneTest_ChangeProperty {
         bizNoTest = "test" + Random(12);
         gdCompanyID = CNKey + "Sub3_" + Random(4);
         gdEquityCode = CNKey + "Token3_" + Random(4);
+
+        register_product_ref = gdEquityCode;
 
         //重新创建账户
 //        gdAccClientNo1 = "No000" + Random(10);
@@ -66,6 +70,29 @@ public class GDV2_SceneTest_ChangeProperty {
 
         //发行
         uf.commonIssuePP01(1000);//发行给账户1~4 股权性质对应 0 1 0 1
+
+
+
+    }
+
+    public List initRegList(String addr)throws Exception{
+        GDBeforeCondition gdBF = new GDBeforeCondition();
+        Map testReg1 = gdBF.init05RegInfo();
+        Map testReg2 = gdBF.init05RegInfo();
+        String regObjId1 = mapAccAddr.get(addr) + "CProp1" + Random(6);
+        String regObjId2 = mapAccAddr.get(addr) + "CProp2" + Random(6);
+
+        testReg1.put("register_registration_object_id",regObjId1);
+        testReg1.put("register_subject_account_ref","SH" + mapAccAddr.get(addr));
+
+        testReg2.put("register_registration_object_id",regObjId2);
+        testReg2.put("register_subject_account_ref","SH" + mapAccAddr.get(addr));
+
+        List<Map> regListInfo = new ArrayList<>();
+        regListInfo.add(testReg1);
+        regListInfo.add(testReg2);
+
+        return regListInfo;
     }
 
 //    @After
@@ -409,8 +436,6 @@ public class GDV2_SceneTest_ChangeProperty {
         List<Map> shareList3 = gdConstructShareList(gdAccount3,2000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount3,3000,0, shareList3);
 
-        //发行
-        gdEquityCode = "gdEC" + Random(12);
         uf.shareIssue(gdEquityCode,shareList4,true);
 
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
@@ -546,7 +571,7 @@ public class GDV2_SceneTest_ChangeProperty {
         response = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
         assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
                 "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
-        assertEquals(false,response.contains("\"shareProperty\":0"));
+//        assertEquals(false,response.contains("\"shareProperty\":0"));//集成测试场景下 可能会出现账户股权性质0的情况
 
 
     }
@@ -585,6 +610,7 @@ public class GDV2_SceneTest_ChangeProperty {
         List<Map> shareList3 = gdConstructShareList(gdAccount4,1000,3, shareList2);
 
         uf.shareIssue(EqCode2,shareList3,true);
+        sleepAndSaveInfo(2000);
 
 
         //变更股权性质 变更多个
@@ -736,8 +762,8 @@ public class GDV2_SceneTest_ChangeProperty {
      * TC2413
      */
     @Test
-    public void changeProperty_Ex(){
-
+    public void changeProperty_Ex()throws Exception{
+        listRegInfo = initRegList(gdAccount1);
         //数量使用负值
         String response= gd.GDShareChangeProperty(gdPlatfromKeyID,gdAccount1,gdEquityCode,-10,0,2,listRegInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
@@ -755,4 +781,101 @@ public class GDV2_SceneTest_ChangeProperty {
         assertEquals("数字签名出错",JSONObject.fromObject(response).getString("message"));
 
     }
+
+    /***
+     * 股权性质变更 登记对象标识使用超长的ID
+     * @throws Exception
+     */
+    @Test
+    public void shareChangePropertyLongObjectID() throws Exception {
+
+
+        String eqCode = gdEquityCode;
+        String address = gdAccount1;
+
+        int oldProperty = 0;
+        int newProperty = 1;
+
+        Map testReg1 = gdBF.init05RegInfo();
+        Map testReg2 = gdBF.init05RegInfo();
+        String regObjId1 = mapAccAddr.get(address) + "CProp1" + Random(128);
+        String regObjId2 = mapAccAddr.get(address) + "CProp2" + Random(6);
+
+        testReg1.put("register_registration_object_id",regObjId1);
+        testReg1.put("register_subject_account_ref","SH" + gdAccClientNo1);
+
+        testReg2.put("register_registration_object_id",regObjId2);
+        testReg2.put("register_subject_account_ref","SH" + gdAccClientNo1);
+
+        List<Map> regListInfo = new ArrayList<>();
+        regListInfo.add(testReg1);
+        regListInfo.add(testReg2);
+
+        String response= gd.GDShareChangeProperty(gdPlatfromKeyID,address,eqCode,500,oldProperty,newProperty,regListInfo);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("Data too long for column 'object_id'"));
+
+        sleepAndSaveInfo(4000);
+
+        //查询股东持股情况 无当前股权代码信息
+        String query = gd.GDGetShareHolderInfo(gdContractAddress, gdAccClientNo1);
+        assertEquals(gdAccClientNo1, JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+
+        assertEquals(true, query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
+        assertEquals(true, query.contains("\"address\":\"" + gdAccount1 + "\""));
+        assertEquals(true, query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+
+        assertEquals(true, query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+    }
+
+    /***
+     * 股权性质变更 登记对象标识使用超长的ID
+     * @throws Exception
+     */
+    @Test
+    public void shareChangePropertyLongObjectID02() throws Exception {
+
+        String eqCode = gdEquityCode;
+        String address = gdAccount1;
+
+        int oldProperty = 0;
+        int newProperty = 1;
+
+        Map testReg1 = gdBF.init05RegInfo();
+        Map testReg2 = gdBF.init05RegInfo();
+        String regObjId1 = mapAccAddr.get(address) + "CProp1" + Random(6);
+        String regObjId2 = mapAccAddr.get(address) + "CProp2" + Random(128);
+
+        testReg1.put("register_registration_object_id",regObjId1);
+        testReg1.put("register_subject_account_ref","SH" + gdAccClientNo1);
+
+        testReg2.put("register_registration_object_id",regObjId2);
+        testReg2.put("register_subject_account_ref","SH" + gdAccClientNo1);
+
+        List<Map> regListInfo = new ArrayList<>();
+        regListInfo.add(testReg1);
+        regListInfo.add(testReg2);
+
+        String response= gd.GDShareChangeProperty(gdPlatfromKeyID,address,eqCode,500,oldProperty,newProperty,regListInfo);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("Data too long for column 'object_id'"));
+
+        sleepAndSaveInfo(4000);
+
+        //查询股东持股情况 无当前股权代码信息
+        String query = gd.GDGetShareHolderInfo(gdContractAddress, gdAccClientNo1);
+        assertEquals(gdAccClientNo1, JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+
+        assertEquals(true, query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
+        assertEquals(true, query.contains("\"address\":\"" + gdAccount1 + "\""));
+        assertEquals(true, query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+
+        assertEquals(true, query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+
+    }
+
 }

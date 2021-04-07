@@ -4,6 +4,8 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.*;
 
 import com.tjfintech.common.functionTest.Conditions.SetTokenApiPerm999;
+import com.tjfintech.common.functionTest.Conditions.Upgrade.SetTokenApiTransactionLatest;
+import com.tjfintech.common.functionTest.Conditions.Upgrade.SetTokenApiTransactionRelease;
 import com.tjfintech.common.functionTest.sendMessage.CallBack;
 import com.tjfintech.common.functionTest.sendMessage.Event;
 import com.tjfintech.common.functionTest.tokenModuleTest.*;
@@ -37,6 +39,10 @@ import org.junit.runners.Suite;
 
         TokenTxTypeTest_Token.class,
         TokenTwoApiMultiTest.class,  //需要部署第二个api并且配置在该class的TOKENADD2参数，数据库地址和第一个api分离
+
+        //用于UTXO升级测试
+        SetTokenApiTransactionRelease.class, //旧版本执行
+        SetTokenApiTransactionLatest.class //新版本执行
 
 })
 

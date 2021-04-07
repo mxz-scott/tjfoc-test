@@ -177,7 +177,7 @@ public class WVMContractWithVersionInvalidTest {
         //带版本安装相同合约
         wvmVersion = "3.0.1";
         response1 = wvmContractTest.wvmInstallTest(wvmFile + "_temp.txt","");
-        assertEquals("400",JSONObject.fromObject(response1).getString("state"));
+        assertEquals("500",JSONObject.fromObject(response1).getString("state"));
         assertEquals(true,response1.contains("" +
                 "no version required"));
 
@@ -194,7 +194,7 @@ public class WVMContractWithVersionInvalidTest {
         //带版本安装相同合约
         wvmVersion = "";
         response2 = wvmContractTest.wvmInstallTest(wvmFile + "_temp.txt","");
-        assertEquals("400",JSONObject.fromObject(response2).getString("state"));
+        assertEquals("500",JSONObject.fromObject(response2).getString("state"));
         assertEquals(true,response2.contains(
                 "contract version required"));
 

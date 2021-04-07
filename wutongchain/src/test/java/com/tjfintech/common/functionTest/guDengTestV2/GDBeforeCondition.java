@@ -5,15 +5,13 @@ import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.GuDeng;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassGD.*;
@@ -41,9 +39,17 @@ public class GDBeforeCondition {
         //创建第1个账户
         Map mapAcc = new HashMap();
         mapAcc = gdCreateAccParam(cltNo);
+
+        String reStr = mapAcc.get("response").toString();
+        if( reStr.contains("存在")) {
+            log.info("账户已存在 不再重复执行");
+            return;
+        }
+
         gdAccountKeyID1 = mapAcc.get("keyID").toString();
         gdAccount1 = mapAcc.get("accout").toString();
         String txId1 = mapAcc.get("txId").toString();
+
 
         //创建第2个账户
         mapAcc.clear();
@@ -166,24 +172,38 @@ public class GDBeforeCondition {
         Map investor = init01PersonalSubjectInfo();
         investor.put("subject_object_id", cltNo);  //更新对象标识字段
 
-        String response = gd.GDCreateAccout(gdContractAddress, cltNo, mapFundInfo, shareHolderInfo, investor);
-        assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
-        assertEquals(cltNo, JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("clientNo"));
-        assertEquals(shareHolderNo, JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("shareholderNo"));
-        String keyID = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("keyId");
-        String addr = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("address");
-
         Map mapAccInfo = new HashMap();
-        mapAccInfo.put("keyID", keyID);
-        mapAccInfo.put("accout", addr);
-        mapAccInfo.put("txId", txId);
-        mapAccInfo.put("shareholderNo", shareHolderNo);
-        mapAccInfo.put("fundNo", fundNo);
-        mapAccInfo.put("response", response);
+//        long timeNow = (new Date()).getTime();
+        String response = gd.GDCreateAccout(gdContractAddress, cltNo, mapFundInfo, shareHolderInfo, investor);
+//        long timeNow2 = (new Date()).getTime();
+//
+//        FileOperation fileOperation = new FileOperation();
+//        try {
+//            fileOperation.appendToFile(String.valueOf(timeNow2 - timeNow), "time.txt");
+//        }catch (Exception e){
+//
+//        }
+        String state = JSONObject.fromObject(response).getString("state");
+        if(state.equals("200")) {
+//            assertEquals("200", JSONObject.fromObject(response).getString("state"));
+            String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+            assertEquals(cltNo, JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("clientNo"));
+            assertEquals(shareHolderNo, JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("shareholderNo"));
+            String keyID = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("keyId");
+            String addr = JSONObject.fromObject(response).getJSONObject("data").getJSONObject("accountList").getString("address");
 
-        mapAccAddr.put(addr, clientNo);
+            mapAccInfo.put("keyID", keyID);
+            mapAccInfo.put("accout", addr);
+            mapAccInfo.put("txId", txId);
+            mapAccInfo.put("shareholderNo", shareHolderNo);
+            mapAccInfo.put("fundNo", fundNo);
+            mapAccInfo.put("response", response);
 
+            mapAccAddr.put(addr, clientNo);
+        }
+        else
+            mapAccInfo.put("response", response);
+        log.info(mapAccInfo.toString());
         return mapAccInfo;
     }
 
@@ -331,7 +351,7 @@ public class GDBeforeCondition {
         mapTemp.put("subject_city", "注册地所在市CHARACTER");
         mapTemp.put("subject_district", "注册地所在区CHARACTER");
         mapTemp.put("subject_office_address", "办公地址CHARACTER");
-        mapTemp.put("subject_contact_address", "联系地址CHARACTER");
+        mapTemp.put("subject_contact_address", "联系地址CHARACTER512联系地址CHARACTER512联系地址CHARACTER512联系地址CHARACTER512");
         mapTemp.put("subject_contact_number", "联系电话CHARACTER");
         mapTemp.put("subject_fax", "企业传真CHARACTER");
         mapTemp.put("subject_postal_code", "邮政编码CHARACTER");
@@ -942,7 +962,7 @@ public class GDBeforeCondition {
 
     public Map init05RegInfo() {
         Map mapTemp = new HashMap();
-        log.info("初始化05登记数据结构");
+//        log.info("初始化05登记数据结构");
         //05登记
         List<String> listRegFile = new ArrayList<>();
         listRegFile.add("verify.crt");
@@ -1089,7 +1109,7 @@ public class GDBeforeCondition {
         mapTemp.put("settlement_in_bank_code", "CH7YfKps3x65Y2");
         mapTemp.put("settlement_in_bank_name", "CHp42HpuGtf6y3");
         mapTemp.put("settlement_in_bank_account", "CHE0H230A17lu8");
-        mapTemp.put("settlement_in_account_object_ref","SH" + gdAccount5);
+        mapTemp.put("settlement_in_account_object_ref","SH" + gdAccClientNo1);
         mapTemp.put("settlement_in_account_name", "CH6FU5bf2N2Y6B");
         mapTemp.put("settlement_in_account_balance_before_transfer", 1000000);
         mapTemp.put("settlement_in_account_balance_after_transfer", 1000000);

@@ -9,7 +9,7 @@ public class SetSyncTestSleepTime {
 
    @Test
     public void test(){
-        UtilsClass.SLEEPTIME = 0;
+        UtilsClass.SLEEPTIME = 2000;
     }
 
 }

@@ -45,11 +45,17 @@ public class GDV2_SceneTest_01 {
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
+        register_event_type = "1";
     }
 
     @Before
     public void IssueEquity()throws Exception{
         bizNoTest = "test" + Random(12);
+
+        gdCompanyID = CNKey + "Sub4_" + Random(4);
+        gdEquityCode = CNKey + "Token4_" + Random(4);
+
+        register_product_ref = gdEquityCode;
 
         if(!bCreateAccOnce) {
             //重新创建账户
@@ -855,7 +861,9 @@ public class GDV2_SceneTest_01 {
 
         uf.shareIncrease(gdEquityCode,shareList4,true);
 
-        uf.shareRecycle(gdEquityCode,shareList2,true);
+        List<Map> shareList21 = gdConstructShareList(gdAccount1,1000,0);
+        List<Map> shareList22 = gdConstructShareList(gdAccount2,1000,0, shareList21);
+        uf.shareRecycle(gdEquityCode,shareList22,true);
 
         uf.lockAndUnlock(bizNoTest,gdEquityCode,gdAccount1,500,0);
 

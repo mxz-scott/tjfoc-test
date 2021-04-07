@@ -38,11 +38,16 @@ public class GDV2_SceneTest_LockUnLock {
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
+        register_event_type = "1";
     }
 
     @Before
     public void IssueEquity()throws Exception {
         bizNoTest = "test" + Random(12);
+        gdCompanyID = CNKey + "Sub4_" + Random(4);
+        gdEquityCode = CNKey + "Token4_" + Random(4);
+
+        register_product_ref = gdEquityCode;
 
         //重新创建账户
 //        gdAccClientNo1 = "No000" + Random(10);
@@ -71,7 +76,6 @@ public class GDV2_SceneTest_LockUnLock {
         GDUnitFunc uf = new GDUnitFunc();
         int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
         uf.checkJGHeaderOpVer(blockHeight,endHeight);
-        uf.updateBlockHeightParam(endHeight);
     }
 //    @After
     public void DestroyEquityAndAcc()throws Exception{
@@ -153,14 +157,16 @@ public class GDV2_SceneTest_LockUnLock {
         String EqCode2 = gdEquityCode + Random(8);
         String EqCode3 = gdEquityCode + Random(8);
 
+        gdEquityCode = EqCode2;
         String response = "";
         List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
         List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
-        List<Map> shareList5 = gdConstructShareList(gdAccount5,1000,0);
-
         uf.shareIssue(EqCode2,shareList4,true);
+
+        gdEquityCode = EqCode3;
+        List<Map> shareList5 = gdConstructShareList(gdAccount5,1000,0);
         uf.shareIssue(EqCode3,shareList5,true);
 
         //冻结账户4 EqCode2 * 股权性质1 *100
@@ -221,6 +227,72 @@ public class GDV2_SceneTest_LockUnLock {
         assertEquals(true,response.contains("{\"equityCode\":\"" + gdEquityCode +
                 "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
     }
+
+
+    @Test
+    public void lock_LongRegObjectId()throws Exception {
+        String response = "";
+        //查询账户余额  总余额 1000
+
+        GDBeforeCondition gdBF = new GDBeforeCondition();
+
+        //冻结流通股 *500
+        String bizNoTemp = "2000" + Random(12);
+        log.info("股份冻结");
+        String reason = "司法冻结";
+
+        //登记数据
+        Map regInfo = gdBF.init05RegInfo();
+        String tempObjId = mapAccAddr.get(gdAccount1).toString() + Random(128);
+        regInfo.put("register_registration_object_id", tempObjId);
+
+        response = gd.GDShareLock(bizNoTemp, gdAccount1, gdEquityCode, 500, 0, reason, "2021-09-30", regInfo);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("Data too long for column 'object_id'"));
+
+        sleepAndSaveInfo(4000);
+
+        //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress, gdAccClientNo1);
+        assertEquals(true, response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":500}"));
+    }
+
+
+    @Test
+    public void unlock_LongRegObjectId()throws Exception {
+        String response = "";
+        //查询账户余额  总余额 1000
+
+        GDBeforeCondition gdBF = new GDBeforeCondition();
+
+        String bizNoTemp = "2000" + Random(12);
+        uf.lock(bizNoTemp, gdAccount1, gdEquityCode, 500, 0, "2021-09-02", true);
+
+        //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress, gdAccClientNo1);
+        assertEquals(true, response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":500}"));
+
+
+        //登记数据
+        Map regInfo = gdBF.init05RegInfo();
+        String tempObjId = mapAccAddr.get(gdAccount1).toString() + Random(128);
+        regInfo.put("register_registration_object_id",tempObjId);
+
+        response= gd.GDShareUnlock(bizNoTemp,gdEquityCode,200,regInfo);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("Data too long for column 'object_id'"));
+        sleepAndSaveInfo(4000);
+
+        //检查账户余额 总股权无变更
+        response = gd.GDGetShareHolderInfo(gdContractAddress, gdAccClientNo1);
+        assertEquals(true, response.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":300}"));
+
+
+    }
+
 
     /***
      * 股权代码大小写敏感性检查

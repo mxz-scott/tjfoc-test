@@ -61,11 +61,12 @@ public class TimeofTxOnChain {
                 //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
                 String response1 = wvmCt.wvmInstallTest(wvmFile + "_temp.txt","");
                 txHash = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+                ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
                 ctHashList.add(ctHash);
                 break;
 
             case "3"://合约调用
-                String response2 = wvmCt.invokeNew(ctHash,"initAccount","AA","100");//初始化账户A 账户余额50
+                String response2 = wvmCt.invokeNew(ctHash,"initAccount","AA",100);//初始化账户A 账户余额50
                 txHash = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
                 break;
             case "4"://合约销毁
@@ -111,24 +112,24 @@ public class TimeofTxOnChain {
     @Test
     public  void OnChainTimeTest()throws Exception{
         SetAppChain setAppChain = new SetAppChain();
-        setAppChain.createSubledger();
+//        setAppChain.createSubledger();
 
-        for(int i=0;i<1000;i++){
-            log.info("++++++++++++++++++++++++++++++++++++++++++++++++store " + i);
-            searchTxOnChain("1");
-        }
+//        for(int i=0;i<600;i++){
+//            log.info("++++++++++++++++++++++++++++++++++++++++++++++++store " + i);
+//            searchTxOnChain("1");
+//        }
 
-        for(int i=0;i<1000;i++){
-            log.info("++++++++++++++++++++++++++++++++++++++++++++++++wvm install " + i);
-            searchTxOnChain("2");
-        }
-
-        for(int i=0;i<1000;i++){
-            log.info("++++++++++++++++++++++++++++++++++++++++++++++++wvm destory" + i);
-            ctHash = ctHashList.get(i).toString();
-            searchTxOnChain("4");
-        }
-
+//        for(int i=0;i<600;i++){
+//            log.info("++++++++++++++++++++++++++++++++++++++++++++++++wvm install " + i);
+//            searchTxOnChain("2");
+//        }
+//
+//        for(int i=0;i<600;i++){
+//            log.info("++++++++++++++++++++++++++++++++++++++++++++++++wvm destory" + i);
+//            ctHash = ctHashList.get(i).toString();
+//            log.info(ctHash);
+//            searchTxOnChain("4");
+//        }
 
         //合约调用
         String ctName = "ontime_" + sdf.format(dt) + RandomUtils.nextInt(100000);
@@ -139,9 +140,9 @@ public class TimeofTxOnChain {
         //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
         String response1 = wvmCt.wvmInstallTest(wvmFile + "_temp.txt","");
         ctHash = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
-        sleepAndSaveInfo(2000);
+        sleepAndSaveInfo(4000);
 
-        for(int i=0;i<1000;i++){
+        for(int i=0;i<600;i++){
             log.info("++++++++++++++++++++++++++++++++++++++++++++++++wvm " + i);
             searchTxOnChain("3");
         }
