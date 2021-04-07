@@ -53,9 +53,10 @@ public class GoScf implements Scf {
      * @param amount
      * @return
      */
-    public String IssuingApply(String AccountAddress, String companyID1, String coreCompanyKeyID, String PIN, String tokenType, int levelLimit, BigDecimal expireDate, String supplyAddress1, String amount) {
+    public String IssuingApply(String UID, String AccountAddress, String companyID1, String coreCompanyKeyID, String PIN, String tokenType, int levelLimit, BigDecimal expireDate, String supplyAddress1, String amount) {
         Map<String, Object> map = new HashMap<>();
 
+        map.put("UID", UID);
         map.put("contractAddress", AccountAddress);
         map.put("companyID", companyID1);
         map.put("keyID", coreCompanyKeyID);
@@ -82,9 +83,10 @@ public class GoScf implements Scf {
      * @param platformPIN
      * @return
      */
-    public String IssuingApprove(String platformKeyID, String tokenType, String platformPIN) {
+    public String IssuingApprove(String UID, String platformKeyID, String tokenType, String platformPIN) {
         Map<String, Object> map = new HashMap<>();
 
+        map.put("UID",UID);
         map.put("keyID", platformKeyID);
         map.put("tokenType", tokenType);
         map.put("PIN", platformPIN);
@@ -135,9 +137,10 @@ public class GoScf implements Scf {
      * @param comments
      * @return
      */
-    public String IssuingConfirm( String PlatformAddress, String coreCompanyKeyID, String tokenType, String PIN, String comments) {
+    public String IssuingConfirm( String UID, String PlatformAddress, String coreCompanyKeyID, String tokenType, String PIN, String comments) {
         Map<String, Object> map = new HashMap<>();
 
+        map.put("UID",UID);
         map.put("platFormAddress", PlatformAddress);
         map.put("keyID", coreCompanyKeyID);
         map.put("tokenType", tokenType);
@@ -162,9 +165,10 @@ public class GoScf implements Scf {
      * @param comments
      * @return
      */
-    public String IssuingReject(String coreCompanyKeyID, String tokenType, String PIN, String companyID1, String comments) {
+    public String IssuingReject(String UID, String coreCompanyKeyID, String tokenType, String PIN, String companyID1, String comments) {
         Map<String, Object> map = new HashMap<>();
 
+        map.put("UID",UID);
         map.put("keyID", coreCompanyKeyID);
         map.put("tokenType", tokenType);
         map.put("PIN", PIN);
@@ -264,9 +268,10 @@ public class GoScf implements Scf {
      * @param comments
      * @return
      */
-    public String AssignmentConfirm(String PlatformAddress, String supplyID1, String PIN, String challenge, String tokenType, String comments) {
+    public String AssignmentConfirm( String UID,String PlatformAddress, String supplyID1, String PIN, String challenge, String tokenType, String comments) {
         Map<String, Object> map = new HashMap<>();
 
+        map.put("UID",UID);
         map.put("platFormAddress",PlatformAddress );
         map.put("keyID", supplyID1);
         map.put("PIN",PIN);
@@ -289,9 +294,10 @@ public class GoScf implements Scf {
      * @param tokenType
      * @return
      */
-    public String AssignmentReject(String challenge, String tokenType) {
+    public String AssignmentReject(String UID,String challenge, String tokenType) {
         Map<String, Object> map = new HashMap<>();
 
+        map.put("UID",UID);
         map.put("challenge", challenge);
         map.put("tokenType", tokenType);
 
@@ -417,9 +423,10 @@ public class GoScf implements Scf {
     /**
      * 融资签收
      */
-    public String FinacingConfirm(String PlatformAddress, String applyNo, String ZJFAddress, String supplyID, String companyID1, String PIN, String tokenType, String supplyAddress2, String rzchallenge, String comments) {
+    public String FinacingConfirm(String UID, String PlatformAddress, String applyNo, String ZJFAddress, String supplyID, String companyID1, String PIN, String tokenType, String supplyAddress2, String rzchallenge, String comments) {
         Map<String, Object> map = new HashMap<>();
 
+        map.put("UID",UID);
         map.put("platFormAddress",PlatformAddress);
         map.put("applyNo",applyNo);
         map.put("contractAddress",ZJFAddress);
@@ -449,9 +456,10 @@ public class GoScf implements Scf {
      * @param comments
      * @return
      */
-    public String FinacingBack(String PlatformAddress,String  PlartformKeyID,String PIN, String KeyID, String txID, String comments) {
+    public String FinacingBack(String UID,String PlatformAddress,String  PlartformKeyID,String PIN, String KeyID, String txID, String comments) {
         Map<String, Object> map = new HashMap<>();
 
+        map.put("UID",UID);
         map.put("PlatformAddress",PlatformAddress);
         map.put("PlartformKeyID",PlartformKeyID);
         map.put("PIN",platformPIN);
@@ -471,9 +479,11 @@ public class GoScf implements Scf {
     /**
      * 融资取消
      */
-    public String FinacingCancel(String challenge, String tokenType) {
+    public String FinacingCancel( String UID,String challenge, String tokenType) {
         Map<String, Object> map = new HashMap<>();
 
+
+        map.put("UID",UID);
         map.put("challenge",challenge);
         map.put("tokenType",tokenType);
 
@@ -544,8 +554,10 @@ public class GoScf implements Scf {
     /**
      * 兑付确认
      */
-    public String PayingConfirm( String PlatformAddress, String QFJGAddress, String companyID1, List<Map> list4, String platformKeyID, String platformPIN, String tokenType, String comments) {
+    public String PayingConfirm(String UID, String PlatformAddress, String QFJGAddress, String companyID1, List<Map> list4, String platformKeyID, String platformPIN, String tokenType, String comments) {
         Map<String, Object> map = new HashMap<>();
+
+        map.put("UID",UID);
         map.put("platFormAddress",PlatformAddress);
         map.put("contractAddress",QFJGAddress);
         map.put("companyID",companyID1);

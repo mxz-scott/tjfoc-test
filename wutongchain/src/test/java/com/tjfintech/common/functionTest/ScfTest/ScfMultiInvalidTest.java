@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.ScfTest;
 
+import com.jcraft.jsch.jce.Random;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Kms;
 import com.tjfintech.common.Interface.Scf;
@@ -53,26 +54,30 @@ public class ScfMultiInvalidTest {
     }
 
     /**
-     * tokentytpe 增发
+     * tokentytpe 增发///为了接超时逻辑处理，增发资产链上报错，接口返回值返回200，唯一情况不同步。
      */
     @Test
     public void Test001_IssuingApply() throws Exception {
         int levelLimit = 5;
+        String tokentype = "T"+UtilsClass.Random(4);
+        String UID = "a"+UtilsClass.Random(4);
+        String UID1 = "b"+UtilsClass.Random(4);
+        String UID2 = "b"+UtilsClass.Random(4);
 
         //资产开立申请
-        String response1 = scf.IssuingApply(AccountAddress, companyID2, coreCompanyKeyID, PIN, "1111", levelLimit, expireDate, supplyAddress1, "10");
+        String response1 = scf.IssuingApply( UID, AccountAddress, companyID2, coreCompanyKeyID, PIN, tokentype, levelLimit, expireDate, supplyAddress1, "10");
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
         Thread.sleep(5000);
         //开立审核
-        String response2 = scf.IssuingApprove(platformKeyID, "1111", platformPIN);
+        String response2 = scf.IssuingApprove(UID, platformKeyID, tokentype, platformPIN);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("success"));
         assertThat(response2, containsString("data"));
         Thread.sleep(5000);
 
-        String response3 = scf.IssuingConfirm(PlatformAddress, coreCompanyKeyID, "1111", PIN, comments);
+        String response3 = scf.IssuingConfirm(UID1, PlatformAddress, coreCompanyKeyID, tokentype, PIN, comments);
         System.out.println("response3 = " + response3);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("success"));
@@ -89,10 +94,11 @@ public class ScfMultiInvalidTest {
         assertThat(checking, containsString("200"));
         assertThat(checking, containsString("success"));
         //资产开立申请
-        String response4 = scf.IssuingApply(AccountAddress, companyID2, coreCompanyKeyID, PIN, "1111", levelLimit, expireDate, supplyAddress1, "10");
-        assertThat(response4, containsString("400"));
-        assertThat(response4, containsString("error"));
-        assertThat(response4, containsString("Failed! Err:这个数字凭证不可增发"));
+        String response4 = scf.IssuingApply(UID2, AccountAddress, companyID2, coreCompanyKeyID, PIN, tokentype, levelLimit, expireDate, supplyAddress1, "10");
+        assertThat(response4, containsString("200"));
+        //assertThat(response4, containsString("400"));
+//        assertThat(response4, containsString("error"));
+//        assertThat(response4, containsString("Failed! Err:这个数字凭证不可增发"));
 
     }
 
@@ -105,21 +111,24 @@ public class ScfMultiInvalidTest {
         String response = kms.genRandom(size);
         String tokenType = UtilsClassScf.gettokenType(response);
         BigDecimal expireDate = new BigDecimal(timeStampNow + 60000);
+        String UID = "a"+UtilsClass.Random(4);
+        String UID1 = "b"+UtilsClass.Random(4);
+        String UID2 = "c"+UtilsClass.Random(4);
         //资产开立申请
         //资产开立申请
-        String response1 = scf.IssuingApply(AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
+        String response1 = scf.IssuingApply(UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
         Thread.sleep(5000);
         //开立审核
-        String response2 = scf.IssuingApprove(platformKeyID, tokenType, platformPIN);
+        String response2 = scf.IssuingApprove(UID, platformKeyID, tokenType, platformPIN);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("success"));
         assertThat(response2, containsString("data"));
         Thread.sleep(5000);
         //开立签收
-        String response3 = scf.IssuingConfirm(PlatformAddress, coreCompanyKeyID, tokenType, PIN, comments);
+        String response3 = scf.IssuingConfirm(UID1,PlatformAddress, coreCompanyKeyID, tokenType, PIN, comments);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("success"));
         assertThat(response3, containsString("data"));
@@ -140,26 +149,15 @@ public class ScfMultiInvalidTest {
         List<Map> list = new ArrayList<>(10);
         List<Map> list1 = UtilsClassScf.Assignment("1", "0", list);
         String response4 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, "123456", tokenType, list1, "n", supplyAddress2);
-        assertThat(response4, containsString("400"));
-        assertThat(response4, containsString("success"));
-        assertThat(response4, containsString("Failed! Err:资产不在有效期内"));
+        assertThat(response4, containsString("200"));
+//        assertThat(response4, containsString("success"));
+//        assertThat(response4, containsString("Failed! Err:资产不在有效期内"));
         Thread.sleep(5000);
         //资产转让签收
-        String response5 = scf.AssignmentConfirm(PlatformAddress, supplyID1, PIN, "123456", tokenType, comments);
-        assertThat(response5, containsString("200"));
-        assertThat(response5, containsString("success"));
-        assertThat(response5, containsString("data"));
-
-        JSONObject ZRjsonObject = JSONObject.fromObject(response5);
-        String ZRstoreHash = ZRjsonObject.getString("data");
-        String ZRQSstoreHash = UtilsClassScf.strToHex(ZRstoreHash);
-        System.out.println("ZRQSstoreHash = " + ZRQSstoreHash);
-
-        commonFunc.sdkCheckTxOrSleep(ZRQSstoreHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
-        String checking1 = store.GetTxDetail(ZRQSstoreHash);
-
-        assertThat(checking1, containsString("200"));
-        assertThat(checking1, containsString("success"));
+        String response5 = scf.AssignmentConfirm(UID2,PlatformAddress, supplyID1, PIN, "123456", tokenType, comments);
+        assertThat(response5, containsString("400"));
+        assertThat(response5, containsString("error"));
+        assertThat(response5, containsString("Failed"));
 
     }
 
@@ -171,21 +169,24 @@ public class ScfMultiInvalidTest {
         int levelLimit = 2;
         String response = kms.genRandom(size);
         String tokenType = UtilsClassScf.gettokenType(response);
-        BigDecimal expireDate = new BigDecimal(timeStampNow + 60000);
+        BigDecimal expireDate = new BigDecimal(timeStampNow + 6000000);
+        String UID = "a"+UtilsClass.Random(4);
+        String UID1 = "b"+UtilsClass.Random(4);
+        String UID2 = ""+UtilsClass.Random(4);
         //资产开立申请
-        String response1 = scf.IssuingApply(AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
+        String response1 = scf.IssuingApply(UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
         Thread.sleep(5000);
         //开立审核
-        String response2 = scf.IssuingApprove(platformKeyID, tokenType, platformPIN);
+        String response2 = scf.IssuingApprove(UID, platformKeyID, tokenType, platformPIN);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("success"));
         assertThat(response2, containsString("data"));
         Thread.sleep(5000);
         //开立签收
-        String response3 = scf.IssuingConfirm(PlatformAddress, coreCompanyKeyID, tokenType, PIN, comments);
+        String response3 = scf.IssuingConfirm(UID1, PlatformAddress, coreCompanyKeyID, tokenType, PIN, comments);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("success"));
         assertThat(response3, containsString("data"));
@@ -211,7 +212,7 @@ public class ScfMultiInvalidTest {
         assertThat(response4, containsString("data"));
         Thread.sleep(5000);
         //资产转让签收
-        String response5 = scf.AssignmentConfirm(PlatformAddress, supplyID1, PIN, "123456", tokenType, comments);
+        String response5 = scf.AssignmentConfirm(UID2, PlatformAddress, supplyID1, PIN, "123456", tokenType, comments);
         assertThat(response5, containsString("400"));
         assertThat(response5, containsString("error"));
         assertThat(response5, containsString("error"));
@@ -226,21 +227,24 @@ public class ScfMultiInvalidTest {
         int levelLimit = 5;
         String response = kms.genRandom(size);
         String tokenType = UtilsClassScf.gettokenType(response);
-        BigDecimal expireDate = new BigDecimal(timeStampNow + 60000);
+        BigDecimal expireDate = new BigDecimal(timeStampNow + 6000000);
+        String UID = "a"+UtilsClass.Random(4);
+        String UID1 = "b"+UtilsClass.Random(4);
+        String UID2 = ""+UtilsClass.Random(4);
         //资产开立申请
-        String response1 = scf.IssuingApply(AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
+        String response1 = scf.IssuingApply(UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
         Thread.sleep(5000);
         //开立审核
-        String response2 = scf.IssuingApprove(platformKeyID, tokenType, platformPIN);
+        String response2 = scf.IssuingApprove(UID, platformKeyID, tokenType, platformPIN);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("success"));
         assertThat(response2, containsString("data"));
         Thread.sleep(5000);
         //开立签收
-        String response3 = scf.IssuingConfirm(PlatformAddress, coreCompanyKeyID, tokenType, PIN, comments);
+        String response3 = scf.IssuingConfirm(UID1, PlatformAddress, coreCompanyKeyID, tokenType, PIN, comments);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("success"));
         assertThat(response3, containsString("data"));
@@ -276,10 +280,82 @@ public class ScfMultiInvalidTest {
         assertThat(response5, containsString("data"));
         Thread.sleep(5000);
         //资产转让签收
-        String response6 = scf.AssignmentConfirm(PlatformAddress, supplyID1, PIN, "123456", tokenType, comments);
+        String response6 = scf.AssignmentConfirm(UID2, PlatformAddress, supplyID1, PIN, "123456", tokenType, comments);
 //        assertThat(response6, containsString("400"));
 //        assertThat(response6, containsString("error"));
 //        assertThat(response6, containsString("error"));
+
+    }
+    /**
+     * 资产装让时连接超时，模拟【发起了两次请求，模拟第一次交易没有上链】
+     */
+    @Test
+    public void TC005_() throws Exception {
+        int levelLimit = 5;
+        String response = kms.genRandom(size);
+        String tokenType = UtilsClassScf.gettokenType(response);
+        BigDecimal expireDate = new BigDecimal(timeStampNow + 60000);
+        String UID = "abb";
+        String UID1 = "b"+UtilsClass.Random(4);
+        String UID2 = "b"+UtilsClass.Random(4);
+
+        //资产开立申请
+        String response1 = scf.IssuingApply(UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
+        assertThat(response1, containsString("200"));
+        assertThat(response1, containsString("success"));
+        assertThat(response1, containsString("data"));
+        Thread.sleep(5000);
+
+        String response11= scf.IssuingApply(UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
+        assertThat(response11, containsString("200"));
+        assertThat(response11, containsString("success"));
+        assertThat(response11, containsString("data"));
+        //开立审核
+        String response2 = scf.IssuingApprove(UID, platformKeyID, tokenType, platformPIN);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("success"));
+        assertThat(response2, containsString("data"));
+        Thread.sleep(5000);
+        //开立签收
+        String response3 = scf.IssuingConfirm(UID1, PlatformAddress, coreCompanyKeyID, tokenType, PIN, comments);
+        assertThat(response3, containsString("200"));
+        assertThat(response3, containsString("success"));
+        assertThat(response3, containsString("data"));
+
+        String response33 = scf.IssuingConfirm(UID1, PlatformAddress, coreCompanyKeyID, tokenType, PIN, comments);
+        assertThat(response33, containsString("200"));
+        assertThat(response33, containsString("success"));
+        assertThat(response33, containsString("data"));
+
+
+        JSONObject KLjsonObject = JSONObject.fromObject(response3);
+        String KLstoreHash = KLjsonObject.getString("data");
+        String KLQSstoreHash = UtilsClassScf.strToHex(KLstoreHash);
+        System.out.println("KLQSstoreHash = " + KLQSstoreHash);
+        commonFunc.sdkCheckTxOrSleep(KLQSstoreHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
+        //验证上链返回值
+        String checking = store.GetTxDetail(KLQSstoreHash);
+        assertThat(checking, containsString("200"));
+        assertThat(checking, containsString("success"));
+
+
+        //资产转让申请
+        List<Map> list = new ArrayList<>(10);
+        List<Map> list1 = UtilsClassScf.Assignment("10", "0", list);
+        String response5 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, "123456", tokenType, list1, "1", supplyAddress2);
+        assertThat(response5, containsString("200"));
+        assertThat(response5, containsString("success"));
+        assertThat(response5, containsString("data"));
+        Thread.sleep(5000);
+        //资产转让签收
+        String response6 = scf.AssignmentConfirm(UID2, PlatformAddress, supplyID1, PIN, "123456", tokenType, comments);
+        assertThat(response6, containsString("200"));
+        assertThat(response6, containsString("success"));
+        assertThat(response6, containsString("data"));
+        String response7 = scf.AssignmentConfirm(UID2, PlatformAddress, supplyID1, PIN, "123456", tokenType, comments);
+        assertThat(response7, containsString("200"));
+        assertThat(response7, containsString("success"));
+        assertThat(response7, containsString("data"));
 
 
     }
