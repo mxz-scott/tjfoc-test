@@ -55,14 +55,14 @@ public  class GoSYGT implements SYGT {
     /***
      * 提交成员退出申请
      * @param code 机构代码
-     * @param isAgree 机构名称
+     * @param name 机构名称
      * @param serviceEndpoint 隐私服务接入点
      * @return
      */
-    public String SSMemberExitApply(String code, String isAgree,String serviceEndpoint){
+    public String SSMemberExitApply(String code, String name,String serviceEndpoint){
         Map<String, Object> map = new HashMap<>();
         map.put("code", code);
-        map.put("isAgree", isAgree);
+        map.put("name", name);
         map.put("serviceEndpoint", serviceEndpoint);
 
         String result = PostTest.postMethod(SDKADD + "/v1/alliance/exitapply", map);
@@ -119,7 +119,7 @@ public  class GoSYGT implements SYGT {
      * @param desc 简介
      * @return
      */
-    public String SSAssetPublish(String assetID,String scene,String label,String amount,String desc){
+    public String SSAssetPublish(String assetID,String scene,String label,int amount,String desc){
         Map<String, Object> map = new HashMap<>();
         map.put("assetID", assetID);
         map.put("scene", scene);
@@ -141,7 +141,7 @@ public  class GoSYGT implements SYGT {
      * @param desc
      * @return
      */
-    public String SSAssetUpdate(String assetID,String scene,String label,String amount,String desc){
+    public String SSAssetUpdate(String assetID,String scene,String label,int amount,String desc){
         Map<String, Object> map = new HashMap<>();
         map.put("assetID", assetID);
         map.put("scene", scene);
@@ -192,7 +192,7 @@ public  class GoSYGT implements SYGT {
      * @param expireEnd 授权过期时间
      * @return
      */
-    public String SSAssetAuthorize(String assetID,String code,String serviceID,double expireStart,double expireEnd){
+    public String SSAssetAuthorize(String assetID,String code,String serviceID,String expireStart,String expireEnd){
         Map<String, Object> map = new HashMap<>();
         map.put("assetID", assetID);
         map.put("code", code);
@@ -305,7 +305,7 @@ public  class GoSYGT implements SYGT {
      * @param replyDigest 相应结果Hash摘要
      * @return
      */
-    public String SSSingleSafeQuerySourceOnChain(String requestID,String partyA,String partyB,String replyDigest){
+    public String SSSingleSafeQueryComplete(String requestID, String partyA, String partyB, String replyDigest){
         Map<String, Object> map = new HashMap<>();
         map.put("requestID", requestID);
         map.put("partyA", partyA);
@@ -326,7 +326,7 @@ public  class GoSYGT implements SYGT {
      * @param createdOn 查询记录创建时间
      * @return
      */
-    public String SSSingleSafeQueryResultOnChain(String requestID,Boolean hit,int elapsed,String metadata,String createdOn){
+    public String SSSingleSafeQueryReply(String requestID, Boolean hit, int elapsed, String metadata, String createdOn){
         Map<String, Object> map = new HashMap<>();
         map.put("requestID", requestID);
         map.put("hit", hit);
@@ -347,7 +347,7 @@ public  class GoSYGT implements SYGT {
      * @param replyDigest 相应结果Hash摘要
      * @return
      */
-    public String SSMultiSafeQuerySourceOnChain(String requestID,String partyA,String partyB,String replyDigest){
+    public String SSMultiSafeQueryComplete(String requestID, String partyA, String partyB, String replyDigest){
         Map<String, Object> map = new HashMap<>();
         map.put("requestID", requestID);
         map.put("partyA", partyA);
@@ -368,7 +368,7 @@ public  class GoSYGT implements SYGT {
      * @param createdOn 查询记录创建时间
      * @return
      */
-    public String SSMultiSafeQueryResultOnChain(String requestID,Boolean hit,int elapsed,String metadata,String createdOn){
+    public String SSMultiSafeQueryReply(String requestID, Boolean hit, int elapsed, String metadata, String createdOn){
         Map<String, Object> map = new HashMap<>();
         map.put("requestID", requestID);
         map.put("hit", hit);
