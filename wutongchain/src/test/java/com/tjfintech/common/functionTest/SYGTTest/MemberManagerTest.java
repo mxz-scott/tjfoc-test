@@ -564,7 +564,7 @@ public class MemberManagerTest {
         response = sygt.SSMemberJoinApply(code1,name1,endPoint1,account1);
         assertEquals(200, JSONObject.fromObject(response).getString("state"));
 
-        SDKADD = SDKURL1;     //SDK设置为盟主SDK
+        SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
         //盟主审批通过
         response = sygt.SSMemberJoinApprove(code1,true);
         assertEquals(200, JSONObject.fromObject(response).getString("state"));
@@ -628,6 +628,7 @@ public class MemberManagerTest {
         assertEquals(joinNum, StringUtils.countOccurrencesOf(response,"\"join\""));
         assertEquals(exitNum + 1, StringUtils.countOccurrencesOf(response,"\"exit\""));
 
+        SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
         //盟主审批退出拒绝
         response = sygt.SSMemberExitApprove(code1,true);
         assertEquals(200, JSONObject.fromObject(response).getString("state"));
@@ -695,6 +696,7 @@ public class MemberManagerTest {
         assertEquals(joinNum, StringUtils.countOccurrencesOf(response,"\"join\""));
         assertEquals(exitNum + 1, StringUtils.countOccurrencesOf(response,"\"exit\""));
 
+        SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
         //盟主审批退出通过
         response = sygt.SSMemberExitApprove(code1,true);
         assertEquals(200, JSONObject.fromObject(response).getString("state"));
@@ -781,6 +783,7 @@ public class MemberManagerTest {
         assertEquals(joinNum, StringUtils.countOccurrencesOf(response,"\"join\""));
         assertEquals(exitNum + 1, StringUtils.countOccurrencesOf(response,"\"exit\""));
 
+        SDKADD = SDKURL1;     //SDK设置为盟主SDK
         //盟主审批退出通过
         response = sygt.SSMemberExitApprove(code1,true);
         assertEquals(200, JSONObject.fromObject(response).getString("state"));
@@ -799,7 +802,7 @@ public class MemberManagerTest {
         assertEquals(joinNum, StringUtils.countOccurrencesOf(response,"\"join\""));
         assertEquals(exitNum, StringUtils.countOccurrencesOf(response,"\"exit\""));
 
-
+        SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
         //盟主再次审批退出通过
         response = sygt.SSMemberExitApprove(code1,true);
         assertEquals(400, JSONObject.fromObject(response).getString("state"));
@@ -998,6 +1001,320 @@ public class MemberManagerTest {
         response = sygt.SSMemberExitApply(code1,name1,endPoint1);
         assertEquals(200, JSONObject.fromObject(response).getString("state"));
 
+
+    }
+
+
+    /**
+     * 各方查看信息
+     * @throws Exception
+     */
+    @Test
+    public void MemberComplexCheck01() throws Exception {
+
+        SDKADD = SDKURL1;     //SDK设置为盟主SDK
+        //初始确认无待审批列表
+        String response = sygt.SSPendingApplyGet();
+        assertEquals(false, response.contains("join"));
+        assertEquals(false, response.contains("exit"));
+        assertEquals(0, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code1 + "\""));
+        int joinNum = StringUtils.countOccurrencesOf(response,"\"join\"");
+        int exitNum = StringUtils.countOccurrencesOf(response,"\"exit\"");
+
+
+        SDKADD = SDKURLm1;     //SDK设置为成员SDK
+        //提交成员加入申请
+        response = sygt.SSMemberJoinApply(code1,name1,endPoint1,account1);
+        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+
+
+        SDKADD = SDKURL1;     //SDK设置为盟主SDK
+        //检查成员列表 方式1
+        response = sygt.SSMembersGet("");
+        assertEquals(false, response.contains(code1));
+
+        //检查成员列表 方式2
+        response = sygt.SSMembersGet(code1);
+        assertEquals(false, response.contains(code1));
+
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals(1, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code1 + "\""));
+        assertEquals(joinNum + 1, StringUtils.countOccurrencesOf(response,"\"join\""));
+        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,"\"exit\""));
+
+        SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
+        //检查成员列表 方式1
+        response = sygt.SSMembersGet("");
+        assertEquals(false, response.contains(code1));
+
+        //检查成员列表 方式2
+        response = sygt.SSMembersGet(code1);
+        assertEquals(false, response.contains(code1));
+
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals(1, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code1 + "\""));
+        assertEquals(joinNum + 1, StringUtils.countOccurrencesOf(response,"\"join\""));
+        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,"\"exit\""));
+
+
+        SDKADD = SDKURLm1;     //SDK设置为成员SDK
+        //检查成员列表 方式1
+        response = sygt.SSMembersGet("");
+        assertEquals(false, response.contains(code1));
+
+        //检查成员列表 方式2
+        response = sygt.SSMembersGet(code1);
+        assertEquals(false, response.contains(code1));
+
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals(1, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code1 + "\""));
+        assertEquals(joinNum + 1, StringUtils.countOccurrencesOf(response,"\"join\""));
+        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,"\"exit\""));
+
+
+        SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
+        //盟主审批通过
+        response = sygt.SSMemberJoinApprove(code1,true);
+        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+
+        //检查成员列表 方式1
+        response = sygt.SSMembersGet("");
+        assertEquals(true, response.contains(code1));
+
+        //检查成员列表 方式2
+        response = sygt.SSMembersGet(code1);
+        assertEquals(true, response.contains(code1));
+
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals(0, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code1 + "\""));
+        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,"\"join\""));
+        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,"\"exit\""));
+
+        SDKADD = SDKURL1;     //SDK设置为盟主SDK
+        //检查成员列表 方式1
+        response = sygt.SSMembersGet("");
+        assertEquals(true, response.contains(code1));
+
+        //检查成员列表 方式2
+        response = sygt.SSMembersGet(code1);
+        assertEquals(true, response.contains(code1));
+
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals(0, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code1 + "\""));
+        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,"\"join\""));
+        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,"\"exit\""));
+
+        SDKADD = SDKURLm1;     //SDK设置为成员SDK
+        //检查成员列表 方式1
+        response = sygt.SSMembersGet("");
+        assertEquals(true, response.contains(code1));
+
+        //检查成员列表 方式2
+        response = sygt.SSMembersGet(code1);
+        assertEquals(true, response.contains(code1));
+
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals(0, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code1 + "\""));
+        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,"\"join\""));
+        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,"\"exit\""));
+
+
+        SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
+        //盟主退出申请
+        response = sygt.SSMemberExitApply(code1,name1,endPoint1);
+        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals(1, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code1 + "\""));
+        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,"\"join\""));
+        assertEquals(exitNum + 1, StringUtils.countOccurrencesOf(response,"\"exit\""));
+
+        //检查成员列表 方式1
+        response = sygt.SSMembersGet("");
+        assertEquals(true, response.contains(code1));
+
+        //检查成员列表 方式2
+        response = sygt.SSMembersGet(code1);
+        assertEquals(true, response.contains(code1));
+
+        SDKADD = SDKURLm1;     //SDK设置为成员SDK
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals(1, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code1 + "\""));
+        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,"\"join\""));
+        assertEquals(exitNum + 1, StringUtils.countOccurrencesOf(response,"\"exit\""));
+
+        //检查成员列表 方式1
+        response = sygt.SSMembersGet("");
+        assertEquals(true, response.contains(code1));
+
+        //检查成员列表 方式2
+        response = sygt.SSMembersGet(code1);
+        assertEquals(true, response.contains(code1));
+
+
+        SDKADD = SDKURL1;     //SDK设置为盟主SDK
+
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals(1, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code1 + "\""));
+        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,"\"join\""));
+        assertEquals(exitNum + 1, StringUtils.countOccurrencesOf(response,"\"exit\""));
+
+        //检查成员列表 方式1
+        response = sygt.SSMembersGet("");
+        assertEquals(true, response.contains(code1));
+
+        //检查成员列表 方式2
+        response = sygt.SSMembersGet(code1);
+        assertEquals(true, response.contains(code1));
+
+
+        //退出盟主审批通过
+        response = sygt.SSMemberExitApprove(code1,true);
+        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals(0, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code1 + "\""));
+        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,"\"join\""));
+        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,"\"exit\""));
+
+        //检查成员列表 方式1
+        response = sygt.SSMembersGet("");
+        assertEquals(false, response.contains(code1));
+
+        //检查成员列表 方式2
+        response = sygt.SSMembersGet(code1);
+        assertEquals(false, response.contains(code1));
+
+    }
+
+    /**
+     * 各方查看信息
+     * @throws Exception
+     */
+    @Test
+    public void MemberComplexCheck02() throws Exception {
+
+        SDKADD = SDKURL1;     //SDK设置为盟主SDK
+        //初始确认无待审批列表
+        String response = sygt.SSPendingApplyGet();
+        assertEquals(false, response.contains("join"));
+        assertEquals(false, response.contains("exit"));
+        assertEquals(0, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code1 + "\""));
+        int joinNum = StringUtils.countOccurrencesOf(response,"\"join\"");
+        int exitNum = StringUtils.countOccurrencesOf(response,"\"exit\"");
+
+
+        SDKADD = SDKURLm1;     //SDK设置为成员SDK
+        //提交成员加入申请
+        response = sygt.SSMemberJoinApply(code1,name1,endPoint1,account1);
+        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+
+
+        SDKADD = SDKURL1;     //SDK设置为盟主SDK
+        //检查成员列表 方式1
+        response = sygt.SSMembersGet("");
+        assertEquals(false, response.contains(code1));
+
+        //检查成员列表 方式2
+        response = sygt.SSMembersGet(code1);
+        assertEquals(false, response.contains(code1));
+
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals(1, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code1 + "\""));
+        assertEquals(joinNum + 1, StringUtils.countOccurrencesOf(response,"\"join\""));
+        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,"\"exit\""));
+
+        SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
+        //检查成员列表 方式1
+        response = sygt.SSMembersGet("");
+        assertEquals(false, response.contains(code1));
+
+        //检查成员列表 方式2
+        response = sygt.SSMembersGet(code1);
+        assertEquals(false, response.contains(code1));
+
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals(1, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code1 + "\""));
+        assertEquals(joinNum + 1, StringUtils.countOccurrencesOf(response,"\"join\""));
+        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,"\"exit\""));
+
+
+        SDKADD = SDKURLm1;     //SDK设置为成员SDK
+        //检查成员列表 方式1
+        response = sygt.SSMembersGet("");
+        assertEquals(false, response.contains(code1));
+
+        //检查成员列表 方式2
+        response = sygt.SSMembersGet(code1);
+        assertEquals(false, response.contains(code1));
+
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals(1, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code1 + "\""));
+        assertEquals(joinNum + 1, StringUtils.countOccurrencesOf(response,"\"join\""));
+        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,"\"exit\""));
+
+
+        SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
+        //盟主审批通过
+        response = sygt.SSMemberJoinApprove(code1,false);
+        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+
+        //检查成员列表 方式1
+        response = sygt.SSMembersGet("");
+        assertEquals(false, response.contains(code1));
+
+        //检查成员列表 方式2
+        response = sygt.SSMembersGet(code1);
+        assertEquals(false, response.contains(code1));
+
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals(0, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code1 + "\""));
+        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,"\"join\""));
+        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,"\"exit\""));
+
+        SDKADD = SDKURL1;     //SDK设置为盟主SDK
+        //检查成员列表 方式1
+        response = sygt.SSMembersGet("");
+        assertEquals(false, response.contains(code1));
+
+        //检查成员列表 方式2
+        response = sygt.SSMembersGet(code1);
+        assertEquals(false, response.contains(code1));
+
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals(0, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code1 + "\""));
+        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,"\"join\""));
+        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,"\"exit\""));
+
+        SDKADD = SDKURLm1;     //SDK设置为成员SDK
+        //检查成员列表 方式1
+        response = sygt.SSMembersGet("");
+        assertEquals(false, response.contains(code1));
+
+        //检查成员列表 方式2
+        response = sygt.SSMembersGet(code1);
+        assertEquals(false, response.contains(code1));
+
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals(0, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code1 + "\""));
+        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,"\"join\""));
+        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,"\"exit\""));
 
     }
 }
