@@ -21,7 +21,7 @@ public interface SYGT {
     String SSAssetCancelAuthority(String assetID,String code); //资产取消授权
     String SSAssetVeriryAuthority(String assetID,String code); //验证查询授权是否有效
 
-    String SSSettingUpdate(List<String> scene,List<String> label); //更新使用场景和数据标签列表
+    String SSSettingUpdate(List<Map> scene,List<Map> label); //更新使用场景和数据标签列表
     String SSSettingGet(); //获取使用场景和数据标签列表
 
     String SSPointUpdate(String account,String type,String code,int amount); //增加\扣减积分

@@ -1020,72 +1020,118 @@ public class InterfacesTest {
 
     @Test
     public void TC13_SceneLableUpdate() throws Exception {
-        List<String> scenes = new ArrayList<>();
-        List<String> labels = new ArrayList<>();
+        List<Map> scenes = new ArrayList<>();
+        Map mapScene = new HashMap();
+        mapScene.put("code", "1");
+        mapScene.put("name", "反洗钱名单");
+        scenes.add(mapScene);
+        mapScene.put("code", "2");
+        mapScene.put("name", "恶意投诉客户名单");
+        scenes.add(mapScene);
+        mapScene.put("code", "3");
+        mapScene.put("name", "疑似倒买倒卖名单");
+        scenes.add(mapScene);
 
-        scenes.add("123");
-        labels.add("1235");
+        List<Map> labels = new ArrayList<>();
+        Map mapLabel = new HashMap();
+        mapLabel.put("code", "1");
+        mapLabel.put("name", "高风险名单");
+        labels.add(mapLabel);
+        mapLabel.put("code", "2");
+        mapLabel.put("name", "低风险名单");
+        labels.add(mapLabel);
 
         log.info(" +++++++++++++++ 必填字段校验 +++++++++++++++ ");
-        scenes.add("");//存在一个空值元素
-        String response = sygt.SSSettingUpdate(scenes,labels);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("error"));
+        scenes.clear();//存在一个空值元素
+        String response = sygt.SSSettingUpdate(scenes, labels);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("error"));
 
-
-        scenes.add("");//存在多个空值元素
-        response = sygt.SSSettingUpdate(scenes,labels);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("error"));
+        mapScene.put("code", "1");
+        mapScene.put("name", "");
+        scenes.add(mapScene);
+        mapScene.put("code", "2");
+        mapScene.put("name", "");
+        scenes.add(mapScene);
+        response = sygt.SSSettingUpdate(scenes, labels);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("error"));
 
         scenes.clear();//空值
-        response = sygt.SSSettingUpdate(scenes,labels);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("error"));
+        response = sygt.SSSettingUpdate(scenes, labels);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("error"));
 
 
-        scenes.add("test eee");//待空格的元素
-        response = sygt.SSSettingUpdate(scenes,labels);
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+        mapScene.put("code", "2");
+        mapScene.put("name", "恶意投 诉客户名单");
+        scenes.add(mapScene);
+        mapScene.put("code", "3");
+        mapScene.put("name", "疑似倒 买倒卖名单");
+        scenes.add(mapScene);
+        response = sygt.SSSettingUpdate(scenes, labels);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
 
-        labels.add("");//存在一个空值元素
-        response = sygt.SSSettingUpdate(scenes,labels);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("error"));
+        labels.clear();//存在一个空值元素
+        response = sygt.SSSettingUpdate(scenes, labels);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("error"));
 
-        labels.add("");//存在多个空值元素
-        response = sygt.SSSettingUpdate(scenes,labels);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("error"));
+        mapLabel.put("code", "");
+        mapLabel.put("name", "");
+        labels.add(mapLabel);
+        mapLabel.put("code", "");
+        mapLabel.put("name", "低风险名单");
+        labels.add(mapLabel);
+        response = sygt.SSSettingUpdate(scenes, labels);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("error"));
 
         labels.clear();//存在多个空值元素
-        response = sygt.SSSettingUpdate(scenes,labels);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("error"));
+        response = sygt.SSSettingUpdate(scenes, labels);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("error"));
 
-        labels.add("test eee");//待空格的元素
-        response = sygt.SSSettingUpdate(scenes,labels);
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+        mapLabel.put("code", "1");
+        mapLabel.put("name", "高风 险名单");
+        labels.add(mapLabel);
+        mapLabel.put("code", "2");
+        mapLabel.put("name", "低风 险名单");
+        labels.add(mapLabel);
+        response = sygt.SSSettingUpdate(scenes, labels);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
 
         log.info(" +++++++++++++++ list较长 +++++++++++++++ ");
-        for(int i =0;i<50;i++){
-            scenes.add("scene" + i);
-            labels.add("labels" + i);
+        for (int i = 0; i < 50; i++) {
+            mapScene.clear();
+            mapLabel.clear();
+            mapScene.put("code", "" + i);
+            mapScene.put("name", "反洗钱名单");
+            mapLabel.put("code", "" + i);
+            mapLabel.put("name", "低风险名单");
+            scenes.add(mapScene);
+            labels.add(mapLabel);
         }
 
-        response = sygt.SSSettingUpdate(scenes,labels);
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+        response = sygt.SSSettingUpdate(scenes, labels);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
-        for(int i =0;i<500;i++){
-            scenes.add("scene" + i);
-            labels.add("labels" + i);
+        for (int i = 0; i < 500; i++) {
+            mapScene.clear();
+            mapLabel.clear();
+            mapScene.put("code", "" + i);
+            mapScene.put("name", "反洗钱名单");
+            mapLabel.put("code", "" + i);
+            mapLabel.put("name", "低风险名单");
+            scenes.add(mapScene);
+            labels.add(mapLabel);
         }
-        response = sygt.SSSettingUpdate(scenes,labels);
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+        response = sygt.SSSettingUpdate(scenes, labels);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
     }

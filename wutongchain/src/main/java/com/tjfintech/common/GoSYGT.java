@@ -243,7 +243,7 @@ public  class GoSYGT implements SYGT {
      * @param label 数据标签，全量更新
      * @return
      */
-    public String SSSettingUpdate(List<String> scene,List<String> label){
+    public String SSSettingUpdate(List<Map> scene,List<Map> label){
         Map<String, Object> map = new HashMap<>();
         map.put("assetID", scene);
         map.put("account", label);
