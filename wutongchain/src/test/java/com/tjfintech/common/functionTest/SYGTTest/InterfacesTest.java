@@ -1769,24 +1769,24 @@ public class InterfacesTest {
 
         log.info(" +++++++++++++++ 必填字段校验 +++++++++++++++ ");
         inputs.clear();
-        String response  = sygt.SSComplexSafetyQuery(scene,label,inputs);
+        String response  = sygt.SSSafeQueryDo(scene,label,inputs);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         inputs.put("11","");//一笔空值
-        response  = sygt.SSComplexSafetyQuery(scene,label,inputs);
+        response  = sygt.SSSafeQueryDo(scene,label,inputs);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
 
         inputs.put("22","3666");  inputs.put("22","");//多笔空值
-        response  = sygt.SSComplexSafetyQuery(scene,label,inputs);
+        response  = sygt.SSSafeQueryDo(scene,label,inputs);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         inputs.clear();
         inputs.put("22",3666);  //类型错误
-        response  = sygt.SSComplexSafetyQuery(scene,label,inputs);
+        response  = sygt.SSSafeQueryDo(scene,label,inputs);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 

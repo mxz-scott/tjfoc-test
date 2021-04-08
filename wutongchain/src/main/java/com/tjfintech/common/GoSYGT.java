@@ -267,14 +267,16 @@ public  class GoSYGT implements SYGT {
      * 增加/扣减积分
      * @param account 被更新积分的账号
      * @param type 积分操作类型:credit为增加,debit为减少
+     * @param pointType 积分类型:1为平台积分，2为贡献积分
      * @param code 业务代码
      * @param amount 积分数量
      * @return
      */
-    public String SSPointUpdate(String account,String type,String code,int amount){
+    public String SSPointUpdate(String account,String type,int pointType,String code,int amount){
         Map<String, Object> map = new HashMap<>();
         map.put("account", account);
         map.put("type", type);
+        map.put("pointType", pointType);
         map.put("code", code);
         map.put("amount", amount);
 
@@ -288,9 +290,10 @@ public  class GoSYGT implements SYGT {
      * @param account
      * @return
      */
-    public String SSPointQuery(String account){
+    public String SSPointQuery(String account,int pointType){
         Map<String, Object> map = new HashMap<>();
         map.put("account", account);
+        map.put("pointType", pointType);
 
         String result = PostTest.postMethod(SDKADD + "/v1/point/balance", map);
         log.info(result);
@@ -303,16 +306,36 @@ public  class GoSYGT implements SYGT {
      * @param partyA 查询发起方
      * @param partyB 查询响应方
      * @param replyDigest 相应结果Hash摘要
+     * @param createdTime 查询发起时间,格式"yyyy-mm-dd hh:mm:ss"
      * @return
      */
-    public String SSSingleSafeQueryComplete(String requestID, String partyA, String partyB, String replyDigest){
+    public String SSSingleSafeQueryRequest(String requestID, String partyA, String partyB, String replyDigest,String createdTime){
         Map<String, Object> map = new HashMap<>();
         map.put("requestID", requestID);
         map.put("partyA", partyA);
         map.put("partyB", partyB);
         map.put("replyDigest", replyDigest);
+        map.put("createdTime", createdTime);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/safequery/single/complete", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/safequery/single/request", map);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 单笔匿踪查询查询发起方添加完整查询结果记录
+     * @param requestID 查询请求唯一标识
+     * @param respTime 查询响应时间,格式"yyyy-mm-dd hh:mm:ss"
+     * @param replyDigest 相应结果Hash摘要
+     * @return
+     */
+    public String SSSingleSafeQueryReply(String requestID, String respTime,String replyDigest){
+        Map<String, Object> map = new HashMap<>();
+        map.put("requestID", requestID);
+        map.put("respTime", respTime);
+        map.put("replyDigest", replyDigest);
+
+        String result = PostTest.postMethod(SDKADD + "/v1/safequery/single/reply", map);
         log.info(result);
         return result;
     }
@@ -322,61 +345,85 @@ public  class GoSYGT implements SYGT {
      * @param requestID 查询请求唯一标识
      * @param hit 查询是否命中
      * @param elapsed 查询耗时，单位：毫秒
+     * @param errCode 错误码
      * @param metadata 其他查询相关数据信息
-     * @param createdOn 查询记录创建时间
+     * @param completedTime 查询记录创建时间
      * @return
      */
-    public String SSSingleSafeQueryReply(String requestID, Boolean hit, int elapsed, String metadata, String createdOn){
+    public String SSSingleSafeQueryComplete(String requestID, Boolean hit, int elapsed, int errCode,String metadata, String completedTime){
         Map<String, Object> map = new HashMap<>();
         map.put("requestID", requestID);
         map.put("hit", hit);
         map.put("elapsed", elapsed);
+        map.put("errCode", errCode);
         map.put("metadata", metadata);
-        map.put("createdOn", createdOn);
+        map.put("completedTime", completedTime);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/safequery/single/reply", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/safequery/single/complete", map);
         log.info(result);
         return result;
     }
 
     /**
-     * 多笔匿踪查询数据源方添加被查询记录
+     * 批量匿踪查询数据源方添加被查询记录
      * @param requestID 查询请求唯一标识
      * @param partyA 查询发起方
      * @param partyB 查询响应方
      * @param replyDigest 相应结果Hash摘要
+     * @param createdTime 查询发起时间,格式"yyyy-mm-dd hh:mm:ss"
      * @return
      */
-    public String SSMultiSafeQueryComplete(String requestID, String partyA, String partyB, String replyDigest){
+    public String SSMultiSafeQueryRequest(String requestID, String partyA, String partyB, String replyDigest,String createdTime){
         Map<String, Object> map = new HashMap<>();
         map.put("requestID", requestID);
         map.put("partyA", partyA);
         map.put("partyB", partyB);
         map.put("replyDigest", replyDigest);
+        map.put("createdTime", createdTime);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/safequery/multi/complete", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/safequery/multi/request", map);
         log.info(result);
         return result;
     }
 
     /***
-     * 多笔匿踪查询查询发起方添加完整查询结果记录
+     * 批量匿踪查询查询发起方添加完整查询结果记录
+     * @param requestID 查询请求唯一标识
+     * @param respTime 查询响应时间,格式"yyyy-mm-dd hh:mm:ss"
+     * @param replyDigest 相应结果Hash摘要
+     * @return
+     */
+    public String SSMultiSafeQueryReply(String requestID, String respTime,String replyDigest){
+        Map<String, Object> map = new HashMap<>();
+        map.put("requestID", requestID);
+        map.put("respTime", respTime);
+        map.put("replyDigest", replyDigest);
+
+        String result = PostTest.postMethod(SDKADD + "/v1/safequery/multi/reply", map);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 批量匿踪查询查询发起方添加完整查询结果记录
      * @param requestID 查询请求唯一标识
      * @param hit 查询是否命中
      * @param elapsed 查询耗时，单位：毫秒
+     * @param errCode 错误码
      * @param metadata 其他查询相关数据信息
-     * @param createdOn 查询记录创建时间
+     * @param completedTime 查询记录创建时间
      * @return
      */
-    public String SSMultiSafeQueryReply(String requestID, Boolean hit, int elapsed, String metadata, String createdOn){
+    public String SSMultiSafeQueryComplete(String requestID, Boolean hit, int elapsed, int errCode,String metadata, String completedTime){
         Map<String, Object> map = new HashMap<>();
         map.put("requestID", requestID);
         map.put("hit", hit);
         map.put("elapsed", elapsed);
+        map.put("errCode", errCode);
         map.put("metadata", metadata);
-        map.put("createdOn", createdOn);
+        map.put("completedTime", completedTime);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/safequery/multi/reply", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/safequery/multi/complete", map);
         log.info(result);
         return result;
     }
@@ -388,7 +435,7 @@ public  class GoSYGT implements SYGT {
      * @param inputs 查询输⼊参数
      * @return
      */
-    public String SSComplexSafetyQuery(String scene,String label,Map<String,String> inputs){
+    public String SSSafeQueryDo(String scene, String label, Map<String,String> inputs){
         Map<String, Object> map = new HashMap<>();
         map.put("scene", scene);
         map.put("label", label);

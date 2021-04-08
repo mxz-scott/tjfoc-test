@@ -33,4 +33,7 @@ public class UtilsClassSYGT {
     public static int memberJoinPoint = 500;
     public static int leaderJoinPoint = 10000;
 
+    public static int platformPoint = 1;
+    public static int effortPointType = 2;
+
 }

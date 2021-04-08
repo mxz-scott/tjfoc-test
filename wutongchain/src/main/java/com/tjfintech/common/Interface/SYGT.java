@@ -24,15 +24,17 @@ public interface SYGT {
     String SSSettingUpdate(List<Map> scene,List<Map> label); //更新使用场景和数据标签列表
     String SSSettingGet(); //获取使用场景和数据标签列表
 
-    String SSPointUpdate(String account,String type,String code,int amount); //增加\扣减积分
-    String SSPointQuery(String account); //增加\扣减积分
+    String SSPointUpdate(String account,String type,int pointType,String code,int amount); //增加\扣减积分
+    String SSPointQuery(String account,int pointType); //获取积分余额
 
-    String SSSingleSafeQueryComplete(String requestID, String partyA, String partyB, String replyDigest); //单笔匿踪查询数据源方添加被查询记录
-    String SSSingleSafeQueryReply(String requestID, Boolean hit, int elapsed, String metadata, String createdOn); //单笔匿踪查询查询发起方添加完整查询结果记录
+    String SSSingleSafeQueryRequest(String requestID, String partyA, String partyB, String replyDigest,String createdTime); //单笔匿踪查询数据源方添加被查询记录
+    String SSSingleSafeQueryReply(String requestID, String respTime,String replyDigest); //单笔匿踪查询查询发起方添加完整查询结果记录
+    String SSSingleSafeQueryComplete(String requestID, Boolean hit, int elapsed, int errCode,String metadata, String completedTime); //单笔匿踪查询查询发起方添加完整查询结果记录
 
-    String SSMultiSafeQueryComplete(String requestID, String partyA, String partyB, String replyDigest); //批量匿踪查询数据源方添加被查询记录
-    String SSMultiSafeQueryReply(String requestID, Boolean hit, int elapsed, String metadata, String createdOn); //批量匿踪查询查询发起方添加完整查询结果记录
+    String SSMultiSafeQueryRequest(String requestID, String partyA, String partyB, String replyDigest,String createdTime); //批量匿踪查询数据源方添加被查询记录
+    String SSMultiSafeQueryReply(String requestID, String respTime,String replyDigest); //批量匿踪查询查询发起方添加完整查询结果记录
+    String SSMultiSafeQueryComplete(String requestID, Boolean hit, int elapsed, int errCode,String metadata, String completedTime); //批量匿踪查询查询发起方添加完整查询结果记录
 
-    String SSComplexSafetyQuery(String scene,String label,Map<String,String> inputs); //匿踪查询
+    String SSSafeQueryDo(String scene, String label, Map<String,String> inputs); //匿踪查询
 
 }
