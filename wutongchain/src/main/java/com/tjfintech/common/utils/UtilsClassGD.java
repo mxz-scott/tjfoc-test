@@ -15,7 +15,7 @@ public class UtilsClassGD {
     //gudeng 信息
     //10.1.3.161:7779
     public static String gdContractAddress = "018a976954474678a3a100d33200b7f9fd1b34a60118c4cb13cfd79f6f324b5d";
-    public static String gdPlatfromKeyID = "c1db5552uehbfnle5v00";
+    public static String gdPlatfromKeyID = "c1db5552uehbfnle5vfg";
 
     //外网对接
 //    public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
@@ -67,7 +67,7 @@ public class UtilsClassGD {
     public static long end = 0;
     public static int beginHeigh = 0;
     public static int endHeight = 0;
-	public static int blockHeight = 129;
+	public static int blockHeight = 104;
     public static long timeStamp = (new Date()).getTime();
     public static String testCurMethodName = "";
 
