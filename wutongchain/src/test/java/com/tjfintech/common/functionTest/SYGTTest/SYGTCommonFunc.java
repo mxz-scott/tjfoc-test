@@ -38,14 +38,14 @@ public class SYGTCommonFunc {
     public Boolean JoinApproveTwoLeaders(String code,Boolean bAgree1,Boolean bAgree2)throws Exception{
         SDKADD = SDKURL1;     //SDK设置为盟主1 SDK
         String response = sygt.SSMemberJoinApprove(code, bAgree1);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
         response = sygt.SSMemberJoinApprove(code, bAgree2);
         if (bAgree1) {
-            assertEquals(200, JSONObject.fromObject(response).getString("state"));
+            assertEquals("200", JSONObject.fromObject(response).getString("state"));
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                     utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         }
@@ -64,14 +64,14 @@ public class SYGTCommonFunc {
     public Boolean ExitApproveTwoLeaders(String code,Boolean bAgree1,Boolean bAgree2)throws Exception{
         SDKADD = SDKURL1;     //SDK设置为盟主1 SDK
         String response = sygt.SSMemberExitApprove(code, bAgree1);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
         response = sygt.SSMemberExitApprove(code, bAgree2);
         if (bAgree1) {
-            assertEquals(200, JSONObject.fromObject(response).getString("state"));
+            assertEquals("200", JSONObject.fromObject(response).getString("state"));
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                     utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         }
@@ -100,7 +100,7 @@ public class SYGTCommonFunc {
         SDKADD = SDKURLm1;     //SDK设置为成员SDK
         //提交成员加入申请
         response = sygt.SSMemberJoinApply(code,name,endPoint,account1);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
@@ -155,9 +155,12 @@ public class SYGTCommonFunc {
         //盟主退出申请
 
         response = sygt.SSMemberExitApply(code,name,endPoint);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        //如果执行成功 表示存在成员 否则成员不存在 不再进行审批
+        if(JSONObject.fromObject(response).getString("state") == "200") {
+            assertEquals("200", JSONObject.fromObject(response).getString("state"));
+            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
+                    utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        }else return;
 
         //获取审批列表
         response = sygt.SSPendingApplyGet();

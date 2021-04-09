@@ -67,7 +67,7 @@ public class SYGTV1_SafeQueryTest {
         String response = "";
 
         response = sygt.SSSingleSafeQueryRequest(requestID,partyA,partyB,replyDigest,createdTime);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
         String txID = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -76,7 +76,7 @@ public class SYGTV1_SafeQueryTest {
 
 
         response = sygt.SSSingleSafeQueryReply(requestID,respTime,replyDigest);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
         txID = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -84,7 +84,7 @@ public class SYGTV1_SafeQueryTest {
         //检查交易详情
 
         response = sygt.SSSingleSafeQueryComplete(requestID,true,10000,0,"",respTime);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
         txID = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -92,7 +92,7 @@ public class SYGTV1_SafeQueryTest {
         //检查交易详情
 
         response = sygt.SSSingleSafeQueryComplete(requestID,false,10000,0,"",respTime);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
         txID = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -118,7 +118,7 @@ public class SYGTV1_SafeQueryTest {
         String response = "";
 
         response = sygt.SSMultiSafeQueryRequest(requestID,partyA,partyB,replyDigest,createdTime);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
         String txID = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -127,7 +127,7 @@ public class SYGTV1_SafeQueryTest {
 
 
         response = sygt.SSMultiSafeQueryReply(requestID,respTime,replyDigest);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
         txID = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -135,7 +135,7 @@ public class SYGTV1_SafeQueryTest {
         //检查交易详情
 
         response = sygt.SSMultiSafeQueryComplete(requestID,true,10000,0,"",respTime);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
         txID = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -143,7 +143,7 @@ public class SYGTV1_SafeQueryTest {
         //检查交易详情
 
         response = sygt.SSMultiSafeQueryComplete(requestID,false,10000,0,"",respTime);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
         txID = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -199,21 +199,21 @@ public class SYGTV1_SafeQueryTest {
         inputs.put("id","ABC三方0007");
         inputs.put("id","ABC三方0008");
         response = sygt.SSSafeQueryDo(scene,label,inputs);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
         log.info("两方AB数据查询");
         inputs.clear();
         inputs.put("id","AB两方00001");
         inputs.put("id","AB两方00002");
         response = sygt.SSSafeQueryDo(scene,label,inputs);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
         log.info("两方AC数据查询");
         inputs.clear();
         inputs.put("id","AC两方00002");
         inputs.put("id","AC两方00003");
         response = sygt.SSSafeQueryDo(scene,label,inputs);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
         log.info("两方BC数据查询");
         inputs.clear();
@@ -223,27 +223,27 @@ public class SYGTV1_SafeQueryTest {
         inputs.put("id","BC两方00004");
         inputs.put("id","BC两方00005");
         response = sygt.SSSafeQueryDo(scene,label,inputs);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
         log.info("单方A数据查询");
         inputs.clear();
         inputs.put("id","A方000012");
         inputs.put("id","A方000013");
         response = sygt.SSSafeQueryDo(scene,label,inputs);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
         log.info("单方B数据查询");
         inputs.clear();
         inputs.put("id","B方000003");
         inputs.put("id","B方000004");
         response = sygt.SSSafeQueryDo(scene,label,inputs);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
         log.info("单方C数据查询");
         inputs.clear();
         inputs.put("id","C方000001");
         response = sygt.SSSafeQueryDo(scene,label,inputs);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
         log.info("单方*3数据查询");
         inputs.clear();
@@ -253,7 +253,7 @@ public class SYGTV1_SafeQueryTest {
         inputs.put("id","B方000004");
         inputs.put("id","C方000001");
         response = sygt.SSSafeQueryDo(scene,label,inputs);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
 
         log.info("多类型复杂数据查询");
@@ -269,7 +269,7 @@ public class SYGTV1_SafeQueryTest {
         inputs.put("id","B方000004");
         inputs.put("id","C方000001");
         response = sygt.SSSafeQueryDo(scene,label,inputs);
-        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
     }
 
 
