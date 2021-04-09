@@ -183,6 +183,11 @@ public class SYGTV1_SafeQueryTest {
     }
 
     public void safeQueryDo(String sdkurl)throws Exception{
+        //获取初始积分
+        int pointA1 = JSONObject.fromObject(sygt.SSPointQuery(account1,effortPointType)).getJSONObject("data").getInt("balance");
+        int pointB1 = JSONObject.fromObject(sygt.SSPointQuery(account1,effortPointType)).getJSONObject("data").getInt("balance");
+        int pointC1 = JSONObject.fromObject(sygt.SSPointQuery(account1,effortPointType)).getJSONObject("data").getInt("balance");
+
         SDKADD = sdkurl;
         String response = "";
         String scene = "";
@@ -270,6 +275,17 @@ public class SYGTV1_SafeQueryTest {
         inputs.put("id","C方000001");
         response = sygt.SSSafeQueryDo(scene,label,inputs);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
+
+
+        //获取查询结束后积分
+        int pointA2 = JSONObject.fromObject(sygt.SSPointQuery(account1,effortPointType)).getJSONObject("data").getInt("balance");
+        int pointB2 = JSONObject.fromObject(sygt.SSPointQuery(account1,effortPointType)).getJSONObject("data").getInt("balance");
+        int pointC2 = JSONObject.fromObject(sygt.SSPointQuery(account1,effortPointType)).getJSONObject("data").getInt("balance");
+
+        //需要根据积分策略最终确认校验值 暂定如下
+        assertEquals(pointA1 + 10000,pointA2);
+        assertEquals(pointB1 + 10000,pointB2);
+        assertEquals(pointC1 + 10000,pointC2);
     }
 
 
