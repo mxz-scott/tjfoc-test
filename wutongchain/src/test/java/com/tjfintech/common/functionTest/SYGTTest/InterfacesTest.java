@@ -1331,7 +1331,13 @@ public class InterfacesTest {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
-        replyDigest = "摘要信息";
+        replyDigest = "123";
+        createdTime = "";
+        response  = sygt.SSSingleSafeQueryRequest(requestID,partyA,partyB,replyDigest,createdTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        createdTime = "2021-03-21 12:00:00";
 
         log.info(" +++++++++++++++ requestID 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
         requestID = UtilsClass.Random(512);
@@ -1425,6 +1431,19 @@ public class InterfacesTest {
 
         replyDigest = UtilsClass.Random(6);
 
+        log.info(" +++++++++++++++ expireEnd 格式非法 +++++++++++++++ ");//具体长度限制需要开发再确认
+        createdTime = UtilsClass.Random(512);
+        response  = sygt.SSSingleSafeQueryRequest(requestID,partyA,partyB,replyDigest,createdTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        createdTime = "中文";
+        response  = sygt.SSSingleSafeQueryRequest(requestID,partyA,partyB,replyDigest,createdTime);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+
+        createdTime = "2031-03-30 10:00:00";
+
     }
 
     @Test
@@ -1453,6 +1472,7 @@ public class InterfacesTest {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
+        replyDigest = "46666";
 
         log.info(" +++++++++++++++ requestID 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
         requestID = UtilsClass.Random(512);
@@ -1513,6 +1533,120 @@ public class InterfacesTest {
 //        assertEquals(true,response.contains("error"));
 
         respTime = "2031-03-30 10:00:00";
+    }
+
+    @Test
+    public void TC20_SingleSafeComplete() throws Exception {
+        String requestID = "test";
+        String completedTime = "2021-03-30 10:00:00";
+        int elapsed = 2000;
+        int errCode = 0;
+        String metaData = "12222222";
+
+
+        log.info(" +++++++++++++++ 必填字段校验 +++++++++++++++ ");
+
+        requestID = "";
+        String response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        requestID = "123";
+        metaData = "";
+        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        metaData = "123";
+        completedTime = "";
+        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        completedTime = "2021-02-24 15:30:00";
+
+        log.info(" +++++++++++++++ requestID 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
+        requestID = UtilsClass.Random(512);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        requestID = UtilsClass.Random(63);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+
+        requestID = UtilsClass.Random(64);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+
+        requestID = UtilsClass.Random(65);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        requestID = UtilsClass.Random(6);
+
+        log.info(" +++++++++++++++ metadata 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
+
+        metaData = UtilsClass.Random(512);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        metaData = UtilsClass.Random(63);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+
+        metaData = UtilsClass.Random(64);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+
+        metaData = UtilsClass.Random(65);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+
+        log.info(" +++++++++++++++ completedTime 格式非法 +++++++++++++++ ");//具体长度限制需要开发再确认
+        completedTime = UtilsClass.Random(512);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        completedTime = "中文";
+        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+
+        completedTime = "2031-03-30 10:00:00";
+
+        log.info(" +++++++++++++++ elapsed 格式非法 +++++++++++++++ ");//具体长度限制需要开发再确认
+        elapsed = -1;
+        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        elapsed = 0;
+        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+
+        elapsed = 10000;
+
+        log.info(" +++++++++++++++ errCode 格式非法 +++++++++++++++ ");//具体长度限制需要开发再确认
+        errCode = -1;
+        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        errCode = 0;
+        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
     }
 
     @Test
@@ -1548,7 +1682,13 @@ public class InterfacesTest {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
-        replyDigest = "摘要信息";
+        replyDigest = "123";
+        createdTime = "";
+        response  = sygt.SSMultiSafeQueryRequest(requestID,partyA,partyB,replyDigest,createdTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        createdTime = "2021-03-21 12:00:00";
 
         log.info(" +++++++++++++++ requestID 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
         requestID = UtilsClass.Random(512);
@@ -1642,6 +1782,19 @@ public class InterfacesTest {
 
         replyDigest = UtilsClass.Random(6);
 
+        log.info(" +++++++++++++++ expireEnd 格式非法 +++++++++++++++ ");//具体长度限制需要开发再确认
+        createdTime = UtilsClass.Random(512);
+        response  = sygt.SSMultiSafeQueryRequest(requestID,partyA,partyB,replyDigest,createdTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        createdTime = "中文";
+        response  = sygt.SSMultiSafeQueryRequest(requestID,partyA,partyB,replyDigest,createdTime);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+
+        createdTime = "2031-03-30 10:00:00";
+
     }
 
     @Test
@@ -1670,6 +1823,7 @@ public class InterfacesTest {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
+        replyDigest = "46666";
 
         log.info(" +++++++++++++++ requestID 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
         requestID = UtilsClass.Random(512);
@@ -1733,6 +1887,120 @@ public class InterfacesTest {
     }
 
     @Test
+    public void TC23_MultiSafeComplete() throws Exception {
+        String requestID = "test";
+        String completedTime = "2021-03-30 10:00:00";
+        int elapsed = 2000;
+        int errCode = 0;
+        String metaData = "12222222";
+
+
+        log.info(" +++++++++++++++ 必填字段校验 +++++++++++++++ ");
+
+        requestID = "";
+        String response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        requestID = "123";
+        metaData = "";
+        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        metaData = "123";
+        completedTime = "";
+        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        completedTime = "2021-02-24 15:30:00";
+
+        log.info(" +++++++++++++++ requestID 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
+        requestID = UtilsClass.Random(512);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        requestID = UtilsClass.Random(63);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+
+        requestID = UtilsClass.Random(64);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+
+        requestID = UtilsClass.Random(65);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        requestID = UtilsClass.Random(6);
+
+        log.info(" +++++++++++++++ metadata 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
+
+        metaData = UtilsClass.Random(512);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        metaData = UtilsClass.Random(63);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+
+        metaData = UtilsClass.Random(64);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+
+        metaData = UtilsClass.Random(65);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+
+        log.info(" +++++++++++++++ completedTime 格式非法 +++++++++++++++ ");//具体长度限制需要开发再确认
+        completedTime = UtilsClass.Random(512);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        completedTime = "中文";
+        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+
+        completedTime = "2031-03-30 10:00:00";
+
+        log.info(" +++++++++++++++ elapsed 格式非法 +++++++++++++++ ");//具体长度限制需要开发再确认
+        elapsed = -1;
+        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        elapsed = 0;
+        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+
+        elapsed = 10000;
+
+        log.info(" +++++++++++++++ errCode 格式非法 +++++++++++++++ ");//具体长度限制需要开发再确认
+        errCode = -1;
+        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        errCode = 0;
+        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+    }
+
+    @Test
     public void TC24_SafequeryDo() throws Exception {
         String scene = "";
         String label = "";
@@ -1761,5 +2029,49 @@ public class InterfacesTest {
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
+
+        log.info(" +++++++++++++++ scene 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
+        scene = UtilsClass.Random(512);
+        response  = sygt.SSSafeQueryDo(scene,label,inputs);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        scene = UtilsClass.Random(63);
+        response  = sygt.SSSafeQueryDo(scene,label,inputs);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+
+        scene = UtilsClass.Random(64);
+        response  = sygt.SSSafeQueryDo(scene,label,inputs);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+
+        scene = UtilsClass.Random(65);
+        response  = sygt.SSSafeQueryDo(scene,label,inputs);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        scene = "";
+
+        log.info(" +++++++++++++++ label 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
+        label = UtilsClass.Random(512);
+        response  = sygt.SSSafeQueryDo(scene,label,inputs);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
+
+        label = UtilsClass.Random(63);
+        response  = sygt.SSSafeQueryDo(scene,label,inputs);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+
+        label = UtilsClass.Random(64);
+        response  = sygt.SSSafeQueryDo(scene,label,inputs);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("error"));
+
+        label = UtilsClass.Random(65);
+        response  = sygt.SSSafeQueryDo(scene,label,inputs);
+        assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("error"));
     }
 }
