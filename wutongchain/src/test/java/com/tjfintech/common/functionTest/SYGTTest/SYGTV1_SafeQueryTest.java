@@ -33,23 +33,23 @@ public class SYGTV1_SafeQueryTest {
     SYGTCommonFunc sygtCF = new SYGTCommonFunc();
 
 
-    @Before
-    public void updateSceneLables()throws Exception{
-        List<Map> listScenes = new ArrayList<>();
-        Map mapScene = new HashMap();
-        mapScene.put("code","1");mapScene.put("name","反洗钱名单");      listScenes.add(mapScene);
-        mapScene.put("code","2");mapScene.put("name","恶意投诉客户名单");listScenes.add(mapScene);
-        mapScene.put("code","3");mapScene.put("name","疑似倒买倒卖名单");listScenes.add(mapScene);
-
-        List<Map> listLabels = new ArrayList<>();
-        Map mapLabel = new HashMap();
-        mapLabel.put("code","4");mapLabel.put("name","高风险名单");listLabels.add(mapLabel);
-        mapLabel.put("code","5");mapLabel.put("name","低风险名单");listLabels.add(mapLabel);
-
-        sygt.SSSettingUpdate(listScenes,listLabels);
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-    }
+//    @Before
+//    public void updateSceneLables()throws Exception{
+//        List<Map> listScenes = new ArrayList<>();
+//        Map mapScene = new HashMap();
+//        mapScene.put("code","1");mapScene.put("name","反洗钱名单");      listScenes.add(mapScene);
+//        mapScene.put("code","2");mapScene.put("name","恶意投诉客户名单");listScenes.add(mapScene);
+//        mapScene.put("code","3");mapScene.put("name","疑似倒买倒卖名单");listScenes.add(mapScene);
+//
+//        List<Map> listLabels = new ArrayList<>();
+//        Map mapLabel = new HashMap();
+//        mapLabel.put("code","4");mapLabel.put("name","高风险名单");listLabels.add(mapLabel);
+//        mapLabel.put("code","5");mapLabel.put("name","低风险名单");listLabels.add(mapLabel);
+//
+//        sygt.SSSettingUpdate(listScenes,listLabels);
+//        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+//                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+//    }
 
     /**
      * 单笔匿踪查询上链
