@@ -1,5 +1,6 @@
 package com.tjfintech.common.functionTest.tokenModuleTest;
 
+import com.alibaba.fastjson.JSONArray;
 import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.SoloSign;
@@ -287,10 +288,14 @@ public class TokenTxTypeTest_Token {
         //检查单签发行交易原始数据详情
         jsonObject = checkRawDataHeaderMsg(singleIssHash1,versionSUTXO,typeUTXO,subTypeIssue);
         assertEquals(siData1,jsonObject.getJSONObject("Data").getString("Extra"));
+        jsonObject.clear();
+        jsonObject = checkRawDataUTXOMsg(singleIssHash1);
 
         jsonObject.clear();
         jsonObject = checkRawDataHeaderMsg(singleIssHash2,versionSUTXO,typeUTXO,subTypeIssue);
         assertEquals(siData2,jsonObject.getJSONObject("Data").getString("Extra"));
+        jsonObject.clear();
+        jsonObject = checkRawDataUTXOMsg(singleIssHash2);
 
 
         //检查单签转账交易信息
@@ -301,6 +306,8 @@ public class TokenTxTypeTest_Token {
         //检查单签转账交易原始数据详情
         jsonObject1 = checkRawDataHeaderMsg(soTransfHash,versionSUTXO,typeUTXO,subTypeTransfer);
         assertEquals(tranferSdata,jsonObject1.getJSONObject("Data").getString("Extra"));
+        jsonObject.clear();
+        jsonObject = checkRawDataUTXOMsg(soTransfHash);
 
 
         //检查多签发行交易信息
@@ -322,10 +329,14 @@ public class TokenTxTypeTest_Token {
         //检查多签发行交易原始数据详情
         jsonObject2 = checkRawDataHeaderMsg(multiIssHashM1,versionMUTXO,typeUTXO,subTypeIssue);
         assertEquals(mulDataM1,jsonObject2.getJSONObject("Data").getString("Extra"));
+        jsonObject.clear();
+        jsonObject = checkRawDataUTXOMsg(multiIssHashM1);
 
         jsonObject2.clear();
         jsonObject2 = checkRawDataHeaderMsg(multiIssHashM2,versionMUTXO,typeUTXO,subTypeIssue);
         assertEquals(mulDataM2,jsonObject2.getJSONObject("Data").getString("Extra"));
+        jsonObject.clear();
+        jsonObject = checkRawDataUTXOMsg(multiIssHashM2);
 
 
         //检查多签转账交易信息
@@ -338,6 +349,8 @@ public class TokenTxTypeTest_Token {
         //检查多签转账交易原始数据详情
         jsonObject3 = checkRawDataHeaderMsg(muTransfHash,versionMUTXO,typeUTXO,subTypeTransfer);
         assertEquals(transferData,jsonObject3.getJSONObject("Data").getString("Extra"));
+        jsonObject.clear();
+        jsonObject = checkRawDataUTXOMsg(muTransfHash);
 
 
         //检查单签回收交易信息
@@ -350,6 +363,8 @@ public class TokenTxTypeTest_Token {
         //检查单签回收交易原始数据详情
         jsonObject4 = checkRawDataHeaderMsg(soDesHash,versionMUTXO,typeUTXO,subTypeRecycle);
         assertEquals(desInfo1,jsonObject4.getJSONObject("Data").getString("Extra"));
+        jsonObject.clear();
+        jsonObject = checkRawDataUTXOMsg(soDesHash);
 
         //检查多签回收交易信息
         JSONObject jsonObject5 = checkDataHeaderMsg(muDesHash,versionMUTXO,typeUTXO,subTypeRecycle);
@@ -360,6 +375,9 @@ public class TokenTxTypeTest_Token {
         //检查多签回收交易原始数据详情
         jsonObject5 = checkRawDataHeaderMsg(muDesHash,versionMUTXO,typeUTXO,subTypeRecycle);
         assertEquals(desInfo2,jsonObject5.getJSONObject("Data").getString("Extra"));
+        jsonObject.clear();
+        jsonObject = checkRawDataUTXOMsg(muDesHash);
+
     }
 
     @Test
@@ -484,7 +502,24 @@ public class TokenTxTypeTest_Token {
         assertEquals(type,jsonObject.getString("Type"));
         assertEquals(subType,jsonObject.getString("SubType"));
         assertEquals(hash,jsonObject.getString("TransactionHash"));
+        assertEquals(false,jsonObject.getString("Timestamp").isEmpty());
+        return objectDetail;
+    }
 
+
+    public JSONObject checkRawDataUTXOMsg(String hash)throws Exception{
+        log.info("hash:"+hash);
+
+        JSONObject objectDetail = JSONObject.fromObject(tokenModule.GetRawTx(hash));
+        JSONObject jsonObject = objectDetail.getJSONObject("Data").getJSONObject("Data");
+        JSONObject inputsJSONObject = jsonObject.getJSONArray("Inputs").getJSONObject(0);
+        JSONObject outputsJSONObject = jsonObject.getJSONArray("Outputs").getJSONObject(0);
+
+        assertEquals(false,inputsJSONObject.getString("TXId").isEmpty());
+        assertEquals(false,inputsJSONObject.getString("Vout").isEmpty());
+        assertEquals(false,outputsJSONObject.getString("Value").isEmpty());
+        assertEquals(false,outputsJSONObject.getString("TokenType").isEmpty());
+        assertEquals(false,outputsJSONObject.getString("ToAddress").isEmpty());
         return objectDetail;
     }
 

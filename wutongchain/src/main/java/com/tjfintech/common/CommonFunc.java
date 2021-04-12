@@ -792,6 +792,28 @@ public class CommonFunc {
 
     }
 
+    public void setSDKApiCallbackLLocalIds(String SDKApiIP ,String LocalId)throws Exception{
+//        setSDKApiConfigValueByShell(SDKApiIP,"CallBack","LocalId","\"\\\""+ LocalId + "\"\\\"");
+//        assertEquals(true,getTokenApiConfigValueByShell(SDKApiIP,"CallBack","LocalId").trim().contains(LocalId));
+
+        //获取第一个[[ledgers]]所在行号 后面加入节点集群信息时插入的行号
+        String lineNo = shExeAndReturn(SDKApiIP,"grep -n LocalId "+ TokenApiConfigPath + " | cut -d \":\" -f 1 |sed -n '1p'");
+        //先删除conf/config_api.toml文件中的所有ledgers
+        if (lineNo!= ""){
+            shExeAndReturn(SDKApiIP,"sed -i '/LocalId/d' " + TokenApiConfigPath);
+        }
+        //如果没有配置过LocalId,先添加配置，获取行号
+//        else {
+//            shExeAndReturn(SDKApiIP,"echo LocalId >>"+ TokenApiConfigPath );
+//            lineNo = shExeAndReturn(SDKApiIP,"grep -n LocalId "+ TokenApiConfigPath + " | cut -d \":\" -f 1 |sed -n '1p'");
+//        }
+        //添加应用链信息和回调地址配置
+        if (LocalId!= ""){
+            shExeAndReturn(SDKApiIP,"sed -i '" + (Integer.parseInt(lineNo)) + "iLocalId = " + LocalId + "' " + TokenApiConfigPath);
+        }
+
+    }
+
 
     //------------------------------------------------------------------------------------------------------
     //修改节点conf/base.toml文件中的相关配置项信息
