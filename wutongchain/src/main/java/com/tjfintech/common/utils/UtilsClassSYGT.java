@@ -18,13 +18,13 @@ public class UtilsClassSYGT {
     public static String name2 = "m2" + UtilsClass.Random(6); //盟主2
     public static String name3 = "m3" + UtilsClass.Random(6); //成员1
 
-    public static String endPoint1 = "http://www.wutongchain1.com"; //盟主1
-    public static String endPoint2 = "http://www.wutongchain1.com"; //盟主2
-    public static String endPoint3 = "http://www.wutongchain1.com"; //成员1
+    public static String endPoint1 = "http://47.103.164.174:17700"; //盟主1
+    public static String endPoint2 = "http://47.103.164.174:27700"; //盟主2
+    public static String endPoint3 = "http://47.103.164.174:37700"; //成员1
 
-    public static String account1 = "111111111"; //盟主1
-    public static String account2 = "111111111"; //盟主2
-    public static String account3 = "111111111"; //成员1
+    public static String account1 = "3PLyMde9qkEeAvFfxCgW7DGq3L9Cgc39A82CjhY3xQiLUpU1Tm"; //盟主1
+    public static String account2 = "3zwDYB5AwELc2fUjEaUghCPSS91Px1mtrfXjfcD7jDpdgPdoxF"; //盟主2
+    public static String account3 = "3i8P821hZd16AmB82MDdvGs8B7uN7e9hrsMTjg2Eiy1eN3MywX"; //成员1
 
     public static String SDKURL1 = "http://222.93.106.197:38080"; //盟主1
     public static String SDKURL2 = "http://58.208.84.253:38080"; //盟主2
