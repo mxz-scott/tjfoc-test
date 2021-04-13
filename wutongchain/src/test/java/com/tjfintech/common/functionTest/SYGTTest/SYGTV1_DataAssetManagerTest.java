@@ -283,6 +283,7 @@ public class SYGTV1_DataAssetManagerTest {
      * 场景及标签检查
      * 测试全量更新
      * 测试更新后数据信息正确
+     * 20210412 更新策略为 如全量更新时 存在的场景则更新 不存在的则新增
      * @throws Exception
      */
     @Test
@@ -337,11 +338,11 @@ public class SYGTV1_DataAssetManagerTest {
         assertEquals(true,labelsString.contains("\"code\":\"9\",\"name\":\"中风险\""));
 
         //测试全量更新
-        assertEquals(false,scenesString.contains("\"code\":\"1\",\"name\":\"反洗钱名单\""));
-        assertEquals(false,scenesString.contains("\"code\":\"2\",\"name\":\"恶意投诉客户名单\""));
-        assertEquals(false,scenesString.contains("\"code\":\"3\",\"name\":\"疑似倒买倒卖名单\""));
-        assertEquals(false,labelsString.contains("\"code\":\"4\",\"name\":\"高风险名单\""));
-        assertEquals(false,labelsString.contains("\"code\":\"5\",\"name\":\"低风险名单\""));
+        assertEquals(true,scenesString.contains("\"code\":\"1\",\"name\":\"反洗钱名单\""));
+        assertEquals(true,scenesString.contains("\"code\":\"2\",\"name\":\"恶意投诉客户名单\""));
+        assertEquals(true,scenesString.contains("\"code\":\"3\",\"name\":\"疑似倒买倒卖名单\""));
+        assertEquals(true,labelsString.contains("\"code\":\"4\",\"name\":\"高风险名单\""));
+        assertEquals(true,labelsString.contains("\"code\":\"5\",\"name\":\"低风险名单\""));
     }
 
     /***

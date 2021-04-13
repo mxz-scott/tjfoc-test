@@ -11,7 +11,7 @@ import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.Random;
 import static com.tjfintech.common.utils.UtilsClass.SDKADD;
-import static com.tjfintech.common.utils.UtilsClassGD.*;
+import static com.tjfintech.common.utils.UtilsClass.*;
 
 @Slf4j
 public  class GoSYGT implements SYGT {
@@ -31,7 +31,7 @@ public  class GoSYGT implements SYGT {
         map.put("serviceEndpoint", serviceEndpoint);
         map.put("account", account);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/alliance/joinapply", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/alliance/joinapply?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -47,7 +47,7 @@ public  class GoSYGT implements SYGT {
         map.put("code", code);
         map.put("isAgree", isAgree);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/alliance/joinapprove", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/alliance/joinapprove?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -55,17 +55,15 @@ public  class GoSYGT implements SYGT {
     /***
      * 提交成员退出申请
      * @param code 机构代码
-     * @param name 机构名称
-     * @param serviceEndpoint 隐私服务接入点
+     * @param desc 退出原因
      * @return
      */
-    public String SSMemberExitApply(String code, String name,String serviceEndpoint){
+    public String SSMemberExitApply(String code, String desc){
         Map<String, Object> map = new HashMap<>();
         map.put("code", code);
-        map.put("name", name);
-        map.put("serviceEndpoint", serviceEndpoint);
+        map.put("desc", desc);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/alliance/exitapply", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/alliance/exitapply?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -81,7 +79,7 @@ public  class GoSYGT implements SYGT {
         map.put("code", code);
         map.put("isAgree", isAgree);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/alliance/exitapprove", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/alliance/exitapprove?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -95,7 +93,7 @@ public  class GoSYGT implements SYGT {
         Map<String, Object> map = new HashMap<>();
         map.put("code", code);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/alliance/joinapply", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/alliance/joinapply?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -105,7 +103,7 @@ public  class GoSYGT implements SYGT {
      * @return
      */
     public String SSPendingApplyGet(){
-        String result = GetTest.doGet2(SDKADD + "/getpendingapply");
+        String result = GetTest.doGet2(SDKADD + "/getpendingapply?" + SetURLExtParams(""));
         log.info(result);
         return result;
     }
@@ -115,19 +113,19 @@ public  class GoSYGT implements SYGT {
      * @param assetID 数据资产唯一标识
      * @param scene 使用场景代码
      * @param label 数据标签代码
-     * @param amount 数据资产数量
+     * @param qty 数据资产数量
      * @param desc 简介
      * @return
      */
-    public String SSAssetPublish(String assetID,String scene,String label,int amount,String desc){
+    public String SSAssetPublish(String assetID,String scene,String label,int qty,String desc){
         Map<String, Object> map = new HashMap<>();
         map.put("assetID", assetID);
         map.put("scene", scene);
         map.put("label", label);
-        map.put("amount", amount);
+        map.put("qty", qty);
         map.put("desc", desc);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/asset/publish", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/asset/publish?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -137,19 +135,19 @@ public  class GoSYGT implements SYGT {
      * @param assetID
      * @param scene
      * @param label
-     * @param amount
+     * @param qty
      * @param desc
      * @return
      */
-    public String SSAssetUpdate(String assetID,String scene,String label,int amount,String desc){
+    public String SSAssetUpdate(String assetID,String scene,String label,int qty,String desc){
         Map<String, Object> map = new HashMap<>();
         map.put("assetID", assetID);
         map.put("scene", scene);
         map.put("label", label);
-        map.put("amount", amount);
+        map.put("qty", qty);
         map.put("desc", desc);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/asset/update", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/asset/update?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -163,7 +161,7 @@ public  class GoSYGT implements SYGT {
         Map<String, Object> map = new HashMap<>();
         map.put("assetID", assetID);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/asset/off", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/asset/off?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -179,7 +177,7 @@ public  class GoSYGT implements SYGT {
         map.put("scene", scene);
         map.put("label", label);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/asset/query", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/asset/query?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -200,7 +198,7 @@ public  class GoSYGT implements SYGT {
         map.put("expireStart", expireStart);
         map.put("expireEnd", expireEnd);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/asset/authorize", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/asset/authorize?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -208,15 +206,15 @@ public  class GoSYGT implements SYGT {
     /**
      * 资产取消授权
      * @param assetID 数据资产唯一标识
-     * @param code 机构代码
+     * @param account 机构账户
      * @return
      */
-    public String SSAssetCancelAuthority(String assetID,String code){
+    public String SSAssetCancelAuthority(String assetID,String account){
         Map<String, Object> map = new HashMap<>();
         map.put("assetID", assetID);
-        map.put("code", code);
+        map.put("account", account);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/asset/cancelauthorize", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/asset/cancelauthorize?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -232,7 +230,7 @@ public  class GoSYGT implements SYGT {
         map.put("assetID", assetID);
         map.put("account", account);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/asset/verifyauth", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/asset/verifyauth?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -248,7 +246,7 @@ public  class GoSYGT implements SYGT {
         map.put("assetID", scene);
         map.put("account", label);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/asset/verifyauth", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/setting/update?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -258,7 +256,7 @@ public  class GoSYGT implements SYGT {
      * @return
      */
     public String SSSettingGet(){
-        String result = GetTest.doGet2(SDKADD + "/v1/setting/list");
+        String result = GetTest.doGet2(SDKADD + "/v1/setting/list?" + SetURLExtParams(""));
         log.info(result);
         return result;
     }
@@ -280,7 +278,7 @@ public  class GoSYGT implements SYGT {
         map.put("code", code);
         map.put("amount", amount);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/point/update", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/point/update?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -295,7 +293,7 @@ public  class GoSYGT implements SYGT {
         map.put("account", account);
         map.put("pointType", pointType);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/point/balance", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/point/balance?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -305,19 +303,18 @@ public  class GoSYGT implements SYGT {
      * @param requestID 查询请求唯一标识
      * @param partyA 查询发起方
      * @param partyB 查询响应方
-     * @param replyDigest 相应结果Hash摘要
+//     * @param replyDigest 相应结果Hash摘要
      * @param createdTime 查询发起时间,格式"yyyy-mm-dd hh:mm:ss"
      * @return
      */
-    public String SSSingleSafeQueryRequest(String requestID, String partyA, String partyB, String replyDigest,String createdTime){
+    public String SSSingleSafeQueryRequest(String requestID, String partyA, String partyB,String createdTime){
         Map<String, Object> map = new HashMap<>();
         map.put("requestID", requestID);
         map.put("partyA", partyA);
         map.put("partyB", partyB);
-        map.put("replyDigest", replyDigest);
         map.put("createdTime", createdTime);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/safequery/single/request", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/safequery/single/request?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -335,7 +332,7 @@ public  class GoSYGT implements SYGT {
         map.put("respTime", respTime);
         map.put("replyDigest", replyDigest);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/safequery/single/reply", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/safequery/single/reply?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -359,7 +356,7 @@ public  class GoSYGT implements SYGT {
         map.put("metadata", metadata);
         map.put("completedTime", completedTime);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/safequery/single/complete", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/safequery/single/complete?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -369,19 +366,17 @@ public  class GoSYGT implements SYGT {
      * @param requestID 查询请求唯一标识
      * @param partyA 查询发起方
      * @param partyB 查询响应方
-     * @param replyDigest 相应结果Hash摘要
      * @param createdTime 查询发起时间,格式"yyyy-mm-dd hh:mm:ss"
      * @return
      */
-    public String SSMultiSafeQueryRequest(String requestID, String partyA, String partyB, String replyDigest,String createdTime){
+    public String SSMultiSafeQueryRequest(String requestID, String partyA, String partyB,String createdTime){
         Map<String, Object> map = new HashMap<>();
         map.put("requestID", requestID);
         map.put("partyA", partyA);
         map.put("partyB", partyB);
-        map.put("replyDigest", replyDigest);
         map.put("createdTime", createdTime);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/safequery/multi/request", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/safequery/multi/request?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -399,7 +394,7 @@ public  class GoSYGT implements SYGT {
         map.put("respTime", respTime);
         map.put("replyDigest", replyDigest);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/safequery/multi/reply", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/safequery/multi/reply?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -423,7 +418,7 @@ public  class GoSYGT implements SYGT {
         map.put("metadata", metadata);
         map.put("completedTime", completedTime);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/safequery/multi/complete", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/safequery/multi/complete?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -441,7 +436,7 @@ public  class GoSYGT implements SYGT {
         map.put("label", label);
         map.put("inputs", inputs);
 
-        String result = PostTest.postMethod(SDKADD + "/v1/safequery/do", map);
+        String result = PostTest.postMethod(SDKADD + "/v1/safequery/do?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
