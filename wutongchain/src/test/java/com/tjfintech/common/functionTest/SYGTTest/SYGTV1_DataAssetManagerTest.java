@@ -54,7 +54,7 @@ public class SYGTV1_DataAssetManagerTest {
     //执行后退出操作的成员
     @After
     public void exitMember()throws Exception{
-        sygtCF.memberExit(code3,name3,endPoint3);
+        sygtCF.memberExit(code3,"exit");
     }
 
     /**
@@ -818,7 +818,7 @@ public class SYGTV1_DataAssetManagerTest {
 
 
         SDKADD = SDKURL1;   //设置为盟主1 SDK
-        sygtCF.memberExit(code3,name3,endPoint3);
+        sygtCF.memberExit(code3,"exit");
 
         //获取积分  类型2
         response = sygt.SSPointQuery(account,pointType);
@@ -893,7 +893,7 @@ public class SYGTV1_DataAssetManagerTest {
         assertEquals(true,response.contains("\"isValid\": true"));
 
         SDKADD = SDKURL1;   //设置为盟主1 SDK 退出成员
-        sygtCF.memberExit(code3,name3,endPoint3);
+        sygtCF.memberExit(code3,"exit");
 
         //查看授权列表
         response = sygt.SSAssetVeriryAuthority(assetID,account3);

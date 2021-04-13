@@ -29,12 +29,13 @@ public class SYGTV1_MemberManagerTest {
     CommonFunc commonFunc = new CommonFunc();
     SYGT sygt = testBuilder.getSygt();
     SYGTCommonFunc sygtCF = new SYGTCommonFunc();
+    public static String desc = "exit";
 
 
     //执行后退出操作的成员
     @After
     public void exitMember()throws Exception{
-        sygtCF.memberExit(code3,name3,endPoint3);
+        sygtCF.memberExit(code3,desc);
     }
     /**
      * 成员申请加入 查询成员列表 检查审批列表 盟主审批通过 查询成员列表 检查审批列表
@@ -111,7 +112,7 @@ public class SYGTV1_MemberManagerTest {
 
 
         //盟主退出申请
-        response = sygt.SSMemberExitApply(code3,name3,endPoint1);
+        response = sygt.SSMemberExitApply(code3,desc);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -683,7 +684,7 @@ public class SYGTV1_MemberManagerTest {
         assertEquals(true, response.contains(code3));
 
         //盟主提交成员退出申请
-        response = sygt.SSMemberExitApply(code3,name3,endPoint1);
+        response = sygt.SSMemberExitApply(code3,desc);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -726,7 +727,7 @@ public class SYGTV1_MemberManagerTest {
 
 
         //盟主再次提交成员退出申请
-        response = sygt.SSMemberExitApply(code3,name3,endPoint1);
+        response = sygt.SSMemberExitApply(code3,desc);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -813,7 +814,7 @@ public class SYGTV1_MemberManagerTest {
 
 
         //盟主提交成员退出申请
-        response = sygt.SSMemberExitApply(code3,name3,endPoint1);
+        response = sygt.SSMemberExitApply(code3,desc);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -858,7 +859,7 @@ public class SYGTV1_MemberManagerTest {
 
 
         //盟主再次提交成员退出申请
-        response = sygt.SSMemberExitApply(code3,name3,endPoint1);
+        response = sygt.SSMemberExitApply(code3,desc);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //检查成员列表 方式1
@@ -913,7 +914,7 @@ public class SYGTV1_MemberManagerTest {
         assertEquals(true, response.contains(code3));
 
         //盟主提交成员退出申请
-        response = sygt.SSMemberExitApply(code3,name3,endPoint1);
+        response = sygt.SSMemberExitApply(code3,desc);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -1002,7 +1003,7 @@ public class SYGTV1_MemberManagerTest {
         assertEquals(true, response.contains(code3));
 
         //盟主提交成员退出申请
-        response = sygt.SSMemberExitApply(code3,name3,endPoint1);
+        response = sygt.SSMemberExitApply(code3,desc);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -1095,7 +1096,7 @@ public class SYGTV1_MemberManagerTest {
 
         //成员提交成员退出申请
         SDKADD = SDKURLm1;    //设置为成员SDK
-        response = sygt.SSMemberExitApply(code3,name3,endPoint1);
+        response = sygt.SSMemberExitApply(code3,desc);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //检查成员列表 方式1
@@ -1132,7 +1133,7 @@ public class SYGTV1_MemberManagerTest {
 
 
         //盟主提交退出自己申请  待确认
-        response = sygt.SSMemberExitApply(code3,name3,endPoint1);
+        response = sygt.SSMemberExitApply(code3,desc);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
 
@@ -1318,7 +1319,7 @@ public class SYGTV1_MemberManagerTest {
 
         SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
         //盟主退出申请
-        response = sygt.SSMemberExitApply(code3,name3,endPoint1);
+        response = sygt.SSMemberExitApply(code3,desc);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);

@@ -26,9 +26,9 @@ public class UtilsClassSYGT {
     public static String account2 = "111111111"; //盟主2
     public static String account3 = "111111111"; //成员1
 
-    public static String SDKURL1 = "http://10.1.3.160:7888"; //盟主1
-    public static String SDKURL2 = "http://10.1.3.161:7888"; //盟主2
-    public static String SDKURLm1 = "http://10.1.5.240:7888"; //成员1
+    public static String SDKURL1 = "http://222.93.106.197:38080"; //盟主1
+    public static String SDKURL2 = "http://58.208.84.253:38080"; //盟主2
+    public static String SDKURLm1 = "http://121.229.40.124:38080"; //成员1
 
     public static int memberJoinPoint = 500;
     public static int leaderJoinPoint = 10000;

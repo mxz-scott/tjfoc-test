@@ -141,10 +141,9 @@ public class SYGTCommonFunc {
     /**
      * 整合成员退出申请及审批通过
      * @param code  成员机构代码
-     * @param name  成员机构名称
-     * @param endPoint 成员隐私服务接入点
+     * @param desc  退出原因
      */
-    public void memberExit(String code,String name,String endPoint)throws Exception{
+    public void memberExit(String code,String desc)throws Exception{
         //初始确认无待审批列表
         String response = sygt.SSPendingApplyGet();
         assertEquals(false, response.contains("join"));
@@ -154,7 +153,7 @@ public class SYGTCommonFunc {
         int exitNum = StringUtils.countOccurrencesOf(response,"\"exit\"");
         //盟主退出申请
 
-        response = sygt.SSMemberExitApply(code,name,endPoint);
+        response = sygt.SSMemberExitApply(code,desc);
         //如果执行成功 表示存在成员 否则成员不存在 不再进行审批
         if(JSONObject.fromObject(response).getString("state") == "200") {
             assertEquals("200", JSONObject.fromObject(response).getString("state"));

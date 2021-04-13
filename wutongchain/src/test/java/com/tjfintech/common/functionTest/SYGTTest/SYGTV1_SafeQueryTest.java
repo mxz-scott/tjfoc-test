@@ -66,7 +66,7 @@ public class SYGTV1_SafeQueryTest {
 
         String response = "";
 
-        response = sygt.SSSingleSafeQueryRequest(requestID,partyA,partyB,replyDigest,createdTime);
+        response = sygt.SSSingleSafeQueryRequest(requestID,partyA,partyB,createdTime);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         String txID = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
@@ -117,7 +117,7 @@ public class SYGTV1_SafeQueryTest {
 
         String response = "";
 
-        response = sygt.SSMultiSafeQueryRequest(requestID,partyA,partyB,replyDigest,createdTime);
+        response = sygt.SSMultiSafeQueryRequest(requestID,partyA,partyB,createdTime);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         String txID = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
