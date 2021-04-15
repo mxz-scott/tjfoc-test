@@ -80,6 +80,21 @@ public class SYGTCommonFunc {
         return bAgree1 && bAgree2;
     }
 
+    /***
+     * 双盟主审批成员退出
+     * @param sdkurl  退出成员机构代码
+     * @param code  退出成员机构代码
+     * @param bAgree  盟主是否同意
+     * @throws Exception
+     */
+    public void ExitApprove(String sdkurl,String code,Boolean bAgree)throws Exception{
+        SDKADD = sdkurl;
+        String response = sygt.SSMemberExitApprove(code, bAgree);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+    }
+
     /**
      * 整合成员退出申请及审批通过
      * @param code  成员机构代码
@@ -213,4 +228,21 @@ public class SYGTCommonFunc {
         assertEquals(amount,jsonObject.getInt("amount"));
     }
 
+    public void checkMemberInfo(String response,String code,String name,String serviceEndpoint,String account,String status,Boolean isLeader,String jointime){
+        assertEquals(true, response.contains(code));
+
+        JSONObject jsonObject = new JSONObject();
+        for(int i=0;i<JSONObject.fromObject(response).getJSONArray("data").size();i++){
+            if(JSONObject.fromObject(response).getJSONArray("data").get(i).toString().contains(code)){
+                jsonObject = JSONObject.fromObject(JSONObject.fromObject(response).getJSONArray("data").get(i).toString());
+            }
+        }
+
+        assertEquals(code,jsonObject.getString("Code"));
+        assertEquals(name,jsonObject.getString("Name"));
+        assertEquals(serviceEndpoint,jsonObject.getString("ServiceEndpoint"));
+        assertEquals(account,jsonObject.getString("Account"));
+        assertEquals(status,jsonObject.getString("Status"));
+        assertEquals(isLeader,jsonObject.getBoolean("IsLeader"));
+    }
 }
