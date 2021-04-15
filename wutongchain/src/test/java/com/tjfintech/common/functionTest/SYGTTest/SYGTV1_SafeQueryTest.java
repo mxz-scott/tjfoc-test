@@ -107,6 +107,52 @@ public class SYGTV1_SafeQueryTest {
 
     }
 
+    /**
+     * 单笔匿踪查询上链 2 3使用不存在的requestid
+     * @throws Exception
+     */
+    @Test
+    public void onSingleSafeQueryOnChainTest02() throws Exception {
+        String requestID = "12345645" + Random(26);
+        String partyA = account1;
+        String partyB = account3;
+        String replyDigest = "digest" + Random(12);
+        String createdTime = "2021-01-30 12:00:00";
+        String respTime = "2021-01-30 12:00:01";
+
+        int hit = 1;
+
+        String response = "";
+
+        response = sygt.SSSingleSafeQueryRequest(requestID,partyA,partyB,createdTime);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        String txID = commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        response = store.GetTxDetail(txID);
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+        //检查交易详情
+
+        requestID = "12345645" + Random(26);
+        response = sygt.SSSingleSafeQueryReply(requestID,respTime,replyDigest);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        txID = commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        response = store.GetTxDetail(txID);
+        assertEquals("404",JSONObject.fromObject(response).getString("state"));
+        //检查交易详情
+
+        response = sygt.SSSingleSafeQueryComplete(requestID,hit,10000,0,"",respTime);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        txID = commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        response = store.GetTxDetail(txID);
+        assertEquals("404",JSONObject.fromObject(response).getString("state"));
+        //检查交易详情
+
+    }
 
     /**
      * 批量匿踪查询上链
