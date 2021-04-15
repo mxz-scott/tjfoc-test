@@ -15,12 +15,12 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-//        SetDatabaseMysql.class,
-//        SetTokenApiDatabaseMysql.class,
-//        SetMainLedger.class,
-//        BeforeCondition.class,
-//        SetTokenApiPerm999.class,
+
         SetSyncFlagFalse.class,
+        TokenMultiTest.class,
+        TokenSoloTest.class,
+        TokenStoreTest.class,
+        
 //        TokenInterfaceTest.class,
         SetSyncFlagTrue.class,
         SetSyncTestSleepTime.class,     //同步测试将交易上链查询及等待时间设置为2000ms
