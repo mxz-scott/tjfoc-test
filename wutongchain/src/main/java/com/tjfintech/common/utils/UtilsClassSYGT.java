@@ -37,6 +37,7 @@ public class UtilsClassSYGT {
     public static int effortPointType = 2;
 
     public static String accStatusJoinApply = "join-apply";
+    public static String accStatusJoinReview = "join-under-review";
     public static String accStatusJoinSuccess = "join-success";
     public static String accStatusExitApply = "delete-under-review";
 
