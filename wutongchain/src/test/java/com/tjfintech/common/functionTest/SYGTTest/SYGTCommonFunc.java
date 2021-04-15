@@ -218,4 +218,12 @@ public class SYGTCommonFunc {
         assertEquals(status,jsonObject.getString("Status"));
         assertEquals(isLeader,jsonObject.getBoolean("IsLeader"));
     }
+
+    public void checkAssetAuth(String assertID,String account,Boolean bValid){
+        //查看授权情况
+        String response = sygt.SSAssetVeriryAuthority(assertID,account);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(bValid, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+
+    }
 }
