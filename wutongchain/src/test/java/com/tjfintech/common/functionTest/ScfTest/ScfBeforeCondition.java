@@ -2,6 +2,7 @@ package com.tjfintech.common.functionTest.ScfTest;
 
 import com.tjfintech.common.Interface.Kms;
 import com.tjfintech.common.Interface.Scf;
+import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClassKMS;
 import lombok.extern.slf4j.Slf4j;
@@ -154,6 +155,25 @@ public class ScfBeforeCondition {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         wvm.chkTxDetailRsp("200",txHash1);
+
+        //赋予合约调用合约权限
+        MgToolCmd mgToolCmd = new MgToolCmd();
+        String permitStr = "everyone";
+
+        //给清分机构合约中的方法赋予everyone权限
+        mgToolCmd.contractFuncPermit(PEER1IP,PEER1RPCPort,subLedger,utilsClassScf.QFJGAddress,"","GetProofInfo",permitStr);
+        mgToolCmd.contractFuncPermit(PEER1IP,PEER1RPCPort,subLedger,utilsClassScf.QFJGAddress,"","PutFeedback",permitStr);
+
+        //给资金方合约中的方法赋予everyone权限
+        mgToolCmd.contractFuncPermit(PEER1IP,PEER1RPCPort,subLedger,utilsClassScf.ZJFAddress,"","GetProofInfo",permitStr);
+        mgToolCmd.contractFuncPermit(PEER1IP,PEER1RPCPort,subLedger,utilsClassScf.ZJFAddress,"","PutFeedback",permitStr);
+        mgToolCmd.contractFuncPermit(PEER1IP,PEER1RPCPort,subLedger,utilsClassScf.ZJFAddress,"","Test",permitStr);
+
+        //给平台合约中的方法赋予everyone权限
+        mgToolCmd.contractFuncPermit(PEER1IP,PEER1RPCPort,subLedger,utilsClassScf.PlatformAddress,"","CreateAuthoritys",permitStr);
+        mgToolCmd.contractFuncPermit(PEER1IP,PEER1RPCPort,subLedger,utilsClassScf.PlatformAddress,"","GetSecurityKey",permitStr);
+        sleepAndSaveInfo(SLEEPTIME/2);
+
     }
 
 

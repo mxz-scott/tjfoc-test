@@ -12,6 +12,7 @@ public class SetTestEnv_zxx {
     public void setEnvParam(){
 
        //设置测试环境使用的节点端口及部署目录信息
+      SDKADD = "http://10.1.3.164:7310";
       PEER1IP="10.1.3.162";
       PEER2IP="10.1.3.163";
       PEER4IP="10.1.3.164";
