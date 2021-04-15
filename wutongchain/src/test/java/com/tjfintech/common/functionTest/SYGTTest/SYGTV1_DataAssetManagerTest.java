@@ -63,43 +63,6 @@ public class SYGTV1_DataAssetManagerTest {
         sygtCF.memberExit(code3,"exit");
     }
 
-    /**
-     * 非加入成员发布资产
-     * @throws Exception
-     */
-    @Test
-    public void assetPublishNotMember() throws Exception {
-        String scene = "1";//"反洗钱名单";
-        String label = "4";//"高风险名单";
-        String assetID = "asset" + Random(12);
-        int amount = 123456;
-        int point = 2;
-        String account = account1;
-
-        String response = "";
-
-        SDKADD = SDKURL1;
-
-        //获取初始积分
-        response = sygt.SSPointQuery(account,effortPointType);
-//        assertEquals(200, JSONObject.fromObject(response).getString("state"));
-
-
-        //获取积分
-        response = sygt.SSPointQuery(account,effortPointType);
-//        assertEquals("200", JSONObject.fromObject(response).getString("state"));
-//        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
-
-        SDKADD = SDKURLm1;  //SDK设置为成员SDK
-        //成员发布资产
-        response = sygt.SSAssetPublish(assetID,scene,label,amount,scene + label);
-        assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("404", JSONObject.fromObject(
-                store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
-    }
-
 
     /**
      * 发布数据资产后再次发布相同assetID的数据资产
@@ -151,6 +114,92 @@ public class SYGTV1_DataAssetManagerTest {
     }
 
     /**
+     * 取消未授权的授权
+     * @throws Exception
+     */
+    @Test
+    public void unAuthorizeNotExist() throws Exception {
+        String scene = "1";
+        String label = "4";
+        String assetID = "asset" + Random(12);
+        int amount = 123456;
+        int point = 2;
+        String account = account3;
+
+        String response = "";
+
+        //获取积分
+        response = sygt.SSPointQuery(account,effortPointType);
+//        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //成员加入
+//        sygtCF.memberJoin(code1,name1,endPoint1);
+//
+//        //获取积分
+//        response = sygt.SSPointQuery(account,effortPointType);
+//        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+//        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
+
+        SDKADD = SDKURL1;//SDKURLm1;  //SDK设置为成员SDK
+        //成员发布资产
+        response = sygt.SSAssetPublish(assetID,scene,label,amount,scene + label);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200", JSONObject.fromObject(
+                store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
+        //获取积分  具体积分变更待确认
+//        response = sygt.SSPointQuery(account,effortPointType);
+//        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+//        point = JSONObject.fromObject(response).getJSONObject("data").getInt("balance");
+//        assertEquals(true,point > memberJoinPoint);
+//        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
+
+        //查看可用资产
+        response = sygt.SSAssetQuery(scene,label);
+//        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+//        sygtCF.checkAsset(response,assetID,amount,scene+label,code1,name1,account1,endPoint1);
+
+        //查看授权情况
+        response = sygt.SSAssetVeriryAuthority(assetID,account1);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+
+        response = sygt.SSAssetVeriryAuthority(assetID,account2);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+
+        response = sygt.SSAssetVeriryAuthority(assetID,account3);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+
+
+
+        SDKADD = SDKURL1;
+        //取消授权 account2
+        response = sygt.SSAssetCancelAuthority(assetID,account2);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("404", JSONObject.fromObject(
+                store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
+
+        //查看授权情况
+        response = sygt.SSAssetVeriryAuthority(assetID,account1);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+
+        response = sygt.SSAssetVeriryAuthority(assetID,account2);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+
+        response = sygt.SSAssetVeriryAuthority(assetID,account3);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+    }
+
+
+    /**
      * 盟主发布数据资产
      * @throws Exception
      */
@@ -167,7 +216,7 @@ public class SYGTV1_DataAssetManagerTest {
 
         //获取积分
         response = sygt.SSPointQuery(account,effortPointType);
-//        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+//        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //成员加入
 //        sygtCF.memberJoin(code1,name1,endPoint1);
@@ -356,6 +405,68 @@ public class SYGTV1_DataAssetManagerTest {
         assertEquals(false, response.contains(assetID));
 
     }
+    /**
+     * 授权不存在的数据资产
+     * @throws Exception
+     */
+    @Test
+    public void assetAuthorizeNotExist() throws Exception {
+        String scene = "1";
+        String label = "4";
+        String assetID = "asset" + Random(12);
+        int amount = 123456;
+        int point = 2;
+        String account = account3;
+
+        String response = "";
+
+        //获取积分
+        response = sygt.SSPointQuery(account,effortPointType);
+//        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //成员加入
+        sygtCF.memberJoin(code3,name3,endPoint3,account3);
+
+//        //获取积分
+        response = sygt.SSPointQuery(account,effortPointType);
+//        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+//        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
+
+        SDKADD = SDKURLm1;  //SDK设置为成员SDK
+
+        //资产授权 code2
+        String authAccount = account2;
+        String serviceID = "service" + Random(10);
+        String startDate = "2021-03-30 10:00:00";
+        String endDate = "2022-03-30 10:00:00";
+        response = sygt.SSAssetAuthorize(assetID,authAccount,serviceID,startDate,endDate);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("404", JSONObject.fromObject(
+                store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
+
+        //查看授权情况
+        response = sygt.SSAssetVeriryAuthority(assetID,account1);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+
+        response = sygt.SSAssetVeriryAuthority(assetID,account2);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+
+        response = sygt.SSAssetVeriryAuthority(assetID,account3);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+
+        SDKADD = SDKURL2;
+        //查看可用资产
+        response = sygt.SSAssetQuery(scene,label);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(false, response.contains(assetID));
+
+    }
+
 
     /**
      * 成员加入后发布数据资产
@@ -374,10 +485,10 @@ public class SYGTV1_DataAssetManagerTest {
 
         //获取积分
         response = sygt.SSPointQuery(account,effortPointType);
-//        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+//        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //成员加入
-        sygtCF.memberJoin(code3,name3,endPoint3);
+        sygtCF.memberJoin(code3,name3,endPoint3,account3);
 
 //        //获取积分
         response = sygt.SSPointQuery(account,effortPointType);
@@ -416,7 +527,7 @@ public class SYGTV1_DataAssetManagerTest {
 
         response = sygt.SSAssetVeriryAuthority(assetID,account);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        assertEquals(true, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
 
 
         SDKADD = SDKURLm1;  //SDK设置为成员SDK
@@ -495,8 +606,8 @@ public class SYGTV1_DataAssetManagerTest {
 
         //获取积分  确认授权及取消不会变更积分
         response = sygt.SSPointQuery(account,effortPointType);
-        assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        assertEquals(point,JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
+//        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+//        assertEquals(point,JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
         //取消授权 code2
         response = sygt.SSAssetCancelAuthority(assetID,account2);
@@ -541,13 +652,12 @@ public class SYGTV1_DataAssetManagerTest {
 
     }
 
-
     /**
-     * 盟主发布数据资产 授权 下架 查询可用资产
+     * 下架不存在的数据资产
      * @throws Exception
      */
     @Test
-    public void assetPublishy03() throws Exception {
+    public void assetOffNotExist() throws Exception {
         String scene = "1";
         String label = "4";
         String assetID = "asset" + Random(12);
@@ -559,7 +669,76 @@ public class SYGTV1_DataAssetManagerTest {
 
         //获取积分
         response = sygt.SSPointQuery(account,effortPointType);
-//        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+//        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        SDKADD = SDKURL1;//SDKURLm1;  //SDK设置为成员SDK
+
+        //下架数据资产
+        response = sygt.SSAssetOff(assetID);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("404", JSONObject.fromObject(
+                store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
+
+    }
+
+    /**
+     * 非加入成员发布资产
+     * @throws Exception
+     */
+    @Test
+    public void assetPublishNotMember() throws Exception {
+        String scene = "1";//"反洗钱名单";
+        String label = "4";//"高风险名单";
+        String assetID = "asset" + Random(12);
+        int amount = 123456;
+        int point = 2;
+        String account = account1;
+
+        String response = "";
+
+        SDKADD = SDKURL1;
+
+        //获取初始积分
+        response = sygt.SSPointQuery(account,effortPointType);
+//        assertEquals(200, JSONObject.fromObject(response).getString("state"));
+
+
+        //获取积分
+        response = sygt.SSPointQuery(account,effortPointType);
+//        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+//        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
+
+        SDKADD = SDKURLm1;  //SDK设置为成员SDK
+        //成员发布资产
+        response = sygt.SSAssetPublish(assetID,scene,label,amount,scene + label);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("404", JSONObject.fromObject(
+                store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
+    }
+
+
+    /**
+     * 盟主发布数据资产 授权 下架 查询可用资产
+     * @throws Exception
+     */
+    @Test
+    public void assetOffQuery() throws Exception {
+        String scene = "1";
+        String label = "4";
+        String assetID = "asset" + Random(12);
+        int amount = 123456;
+        int point = 2;
+        String account = account3;
+
+        String response = "";
+
+        //获取积分
+        response = sygt.SSPointQuery(account,effortPointType);
+//        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //成员加入
 //        sygtCF.memberJoin(code1,name1,endPoint1);
@@ -615,6 +794,11 @@ public class SYGTV1_DataAssetManagerTest {
 
 
         //查看授权情况
+        //查询可用资产不返回自己发布的数据资产
+        response = sygt.SSAssetQuery(scene,label);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(false, response.contains(assetID));
+
         response = sygt.SSAssetVeriryAuthority(assetID,account1);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
@@ -672,6 +856,10 @@ public class SYGTV1_DataAssetManagerTest {
 
 
         SDKADD = SDKURL2;
+        response = sygt.SSAssetQuery(scene,label);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(false, response.contains(assetID));
+
         //查看授权情况
         response = sygt.SSAssetVeriryAuthority(assetID,account1);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
@@ -685,12 +873,9 @@ public class SYGTV1_DataAssetManagerTest {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
 
-        response = sygt.SSAssetQuery(scene,label);
-        assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        assertEquals(false, response.contains(assetID));
+
 
     }
-
 
     /**
      * 场景及标签检查
@@ -778,10 +963,10 @@ public class SYGTV1_DataAssetManagerTest {
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
-        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //成员加入
-        sygtCF.memberJoin(code1, name1, endPoint1);
+        sygtCF.memberJoin(code3, name3, endPoint3,account3);
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
@@ -819,7 +1004,7 @@ public class SYGTV1_DataAssetManagerTest {
         SDKADD = SDKURLm1;   //设置为成员 SDK
         //更新积分 A001 credit(增加积分) 200
         response = sygt.SSPointUpdate(account, type, pointType, operationCode, amount);
-        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         sleepAndSaveInfo(2000);
 
@@ -878,10 +1063,10 @@ public class SYGTV1_DataAssetManagerTest {
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
-        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //成员加入
-        sygtCF.memberJoin(code1, name1, endPoint1);
+        sygtCF.memberJoin(code3, name3, endPoint3,account3);
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
@@ -919,7 +1104,7 @@ public class SYGTV1_DataAssetManagerTest {
         SDKADD = SDKURLm1;   //设置为成员 SDK
         //更新积分 A001 credit(增加积分) 200
         response = sygt.SSPointUpdate(account, type, pointType, operationCode, amount);
-        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         sleepAndSaveInfo(2000);
 
@@ -978,10 +1163,10 @@ public class SYGTV1_DataAssetManagerTest {
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
-        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //成员加入
-        sygtCF.memberJoin(code1, name1, endPoint1);
+        sygtCF.memberJoin(code3, name3, endPoint3,account3);
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
@@ -1019,7 +1204,7 @@ public class SYGTV1_DataAssetManagerTest {
         SDKADD = SDKURLm1;   //设置为成员 SDK
         //更新积分 A001 credit(增加积分) 200
         response = sygt.SSPointUpdate(account, type, pointType, operationCode, amount);
-        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         sleepAndSaveInfo(2000);
 
@@ -1078,10 +1263,10 @@ public class SYGTV1_DataAssetManagerTest {
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
-        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //成员加入
-        sygtCF.memberJoin(code1, name1, endPoint1);
+        sygtCF.memberJoin(code3, name3, endPoint3,account3);
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
@@ -1120,10 +1305,10 @@ public class SYGTV1_DataAssetManagerTest {
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
-        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //成员加入
-        sygtCF.memberJoin(code1, name1, endPoint1);
+        sygtCF.memberJoin(code3, name3, endPoint3,account3);
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
@@ -1148,7 +1333,7 @@ public class SYGTV1_DataAssetManagerTest {
         SDKADD = SDKURL1;   //设置为盟主1 SDK
         //更新积分 A001 credit(增加积分) 200
         response = sygt.SSPointUpdate(account, type, pointType, operationCode, amount);
-        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         sleepAndSaveInfo(2000);
 
@@ -1161,7 +1346,7 @@ public class SYGTV1_DataAssetManagerTest {
         SDKADD = SDKURLm1;   //设置为成员 SDK
         //更新积分 A001 credit(增加积分) 200
         response = sygt.SSPointUpdate(account, type, pointType, operationCode, amount);
-        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         sleepAndSaveInfo(2000);
 
@@ -1186,13 +1371,13 @@ public class SYGTV1_DataAssetManagerTest {
     }
 
     /***
-     * 成员仍存在数据资产时退出  当前预期可以退出 但会同时下架资产及清理积分 实际待实现
+     * 成员仍存在数据资产时退出
      * @throws Exception
      */
     @Test
     public void exitMemberWithDataAsset()throws Exception {
-        String scene = "反洗钱名单";
-        String label = "高风险名单";
+        String scene = "1";
+        String label = "4";
         String assetID = "asset" + Random(12);
         int amount = 200000;
         int point = 2;
@@ -1205,15 +1390,15 @@ public class SYGTV1_DataAssetManagerTest {
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
-        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+//        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //成员加入
-        sygtCF.memberJoin(code1, name1, endPoint1);
+        sygtCF.memberJoin(code3, name3, endPoint3,account3);
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
-        assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
+//        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+//        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
         SDKADD = SDKURLm1;  //SDK设置为成员SDK
         //成员发布资产
@@ -1221,12 +1406,14 @@ public class SYGTV1_DataAssetManagerTest {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        assertEquals("200", JSONObject.fromObject(
+                store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
         //获取积分  具体积分变更待确认
         response = sygt.SSPointQuery(account,pointType);
-        assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        point = JSONObject.fromObject(response).getJSONObject("data").getInt("balance");
-        assertEquals(true, point > memberJoinPoint);
+//        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+//        point = JSONObject.fromObject(response).getJSONObject("data").getInt("balance");
+//        assertEquals(true, point > memberJoinPoint);
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
 
@@ -1235,15 +1422,15 @@ public class SYGTV1_DataAssetManagerTest {
 
         //获取积分  类型2
         response = sygt.SSPointQuery(account,pointType);
-        assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        assertEquals(0, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
+//        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+//        assertEquals(0, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
         //获取积分 类型1
         pointType = 1;
         response = sygt.SSPointQuery(account,pointType);
-        assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        point = JSONObject.fromObject(response).getJSONObject("data").getInt("balance");
-        assertEquals(0, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
+//        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+//        point = JSONObject.fromObject(response).getJSONObject("data").getInt("balance");
+//        assertEquals(0, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
         //查看数据资产
         response = sygt.SSAssetQuery(scene,label);
@@ -1270,15 +1457,15 @@ public class SYGTV1_DataAssetManagerTest {
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
-        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+//        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //成员加入
-        sygtCF.memberJoin(code1, name1, endPoint1);
+        sygtCF.memberJoin(code3, name3, endPoint3,account3);
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
-        assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
+//        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+//        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
         SDKADD = SDKURL1;  //SDK设置为盟主1 SDK
         //盟主发布资产
@@ -1286,20 +1473,24 @@ public class SYGTV1_DataAssetManagerTest {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        assertEquals("200", JSONObject.fromObject(
+                store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
         //获取积分  具体积分变更待确认
         response = sygt.SSPointQuery(account,pointType);
-        assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        point = JSONObject.fromObject(response).getJSONObject("data").getInt("balance");
-        assertEquals(true, point > memberJoinPoint);
+//        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+//        point = JSONObject.fromObject(response).getJSONObject("data").getInt("balance");
+//        assertEquals(true, point > memberJoinPoint);
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
         //授权给成员
         String servideID = "serviceID" + Random(3);
-        response = sygt.SSAssetAuthorize(assetID,code3,servideID,"2021-03-12 12:00:00","2022-03-12 12:00:00");
+        response = sygt.SSAssetAuthorize(assetID,account3,servideID,"2021-03-12 12:00:00","2022-03-12 12:00:00");
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        assertEquals("200", JSONObject.fromObject(
+                store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
         //查看授权列表
         response = sygt.SSAssetVeriryAuthority(assetID,account3);
@@ -1333,15 +1524,15 @@ public class SYGTV1_DataAssetManagerTest {
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
-        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+//        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //成员加入
-        sygtCF.memberJoin(code1, name1, endPoint1);
+        sygtCF.memberJoin(code3, name3, endPoint3,account3);
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
-        assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
+//        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+//        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
         SDKADD = SDKURL1;  //SDK设置为盟主1 SDK
         //盟主1 发布资产
@@ -1349,6 +1540,8 @@ public class SYGTV1_DataAssetManagerTest {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        assertEquals("200", JSONObject.fromObject(
+                store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
         SDKADD = SDKURL2;  //SDK设置为盟主2 SDK
         //盟主2 授权给成员
@@ -1419,10 +1612,10 @@ public class SYGTV1_DataAssetManagerTest {
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
-        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //成员加入
-        sygtCF.memberJoin(code1, name1, endPoint1);
+        sygtCF.memberJoin(code3, name3, endPoint3,account3);
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
@@ -1505,10 +1698,10 @@ public class SYGTV1_DataAssetManagerTest {
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
-        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //成员加入
-        sygtCF.memberJoin(code1, name1, endPoint1);
+        sygtCF.memberJoin(code3, name3, endPoint3,account3);
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
@@ -1567,10 +1760,10 @@ public class SYGTV1_DataAssetManagerTest {
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);
-        assertEquals(400, JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //成员加入
-        sygtCF.memberJoin(code1, name1, endPoint1);
+        sygtCF.memberJoin(code3, name3, endPoint3,account3);
 
         //获取积分
         response = sygt.SSPointQuery(account,pointType);

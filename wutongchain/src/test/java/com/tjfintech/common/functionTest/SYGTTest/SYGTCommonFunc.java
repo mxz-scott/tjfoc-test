@@ -100,6 +100,8 @@ public class SYGTCommonFunc {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200", JSONObject.fromObject(
+                store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
     }
 
     /**
@@ -108,7 +110,7 @@ public class SYGTCommonFunc {
      * @param name  成员机构名称
      * @param endPoint 成员隐私服务接入点
      */
-    public void memberJoin(String code,String name,String endPoint)throws Exception{
+    public void memberJoin(String code,String name,String endPoint,String account)throws Exception{
         SDKADD = SDKURL1;     //SDK设置为盟主1 SDK
         //初始确认无待审批列表
         String response = sygt.SSPendingApplyGet();
@@ -121,7 +123,7 @@ public class SYGTCommonFunc {
 
         SDKADD = SDKURLm1;     //SDK设置为成员SDK
         //提交成员加入申请
-        response = sygt.SSMemberJoinApply(code,name,endPoint,account1);
+        response = sygt.SSMemberJoinApply(code,name,endPoint,account);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -130,11 +132,11 @@ public class SYGTCommonFunc {
         SDKADD = SDKURL1;     //SDK设置为盟主1 SDK
         //检查成员列表 方式1
         response = sygt.SSMembersGet("");
-        assertEquals(false, response.contains(code));
+        checkMemberInfo(response,code,name,endPoint,account,accStatusJoinApply,false,"");
 
         //检查成员列表 方式2
         response = sygt.SSMembersGet(code);
-        assertEquals(false, response.contains(code));
+        checkMemberInfo(response,code,name,endPoint,account,accStatusJoinApply,false,"");
 
         //获取审批列表
         response = sygt.SSPendingApplyGet();
@@ -147,11 +149,11 @@ public class SYGTCommonFunc {
 
         //检查成员列表 方式1
         response = sygt.SSMembersGet("");
-        assertEquals(true, response.contains(code));
+        checkMemberInfo(response,code,name,endPoint,account,accStatusJoinSuccess,false,"");
 
         //检查成员列表 方式2
         response = sygt.SSMembersGet(code);
-        assertEquals(true, response.contains(code));
+        checkMemberInfo(response,code,name,endPoint,account,accStatusJoinSuccess,false,"");
 
         //获取审批列表
         response = sygt.SSPendingApplyGet();
@@ -167,50 +169,18 @@ public class SYGTCommonFunc {
      */
     public void memberExit(String code,String desc)throws Exception{
         SDKADD = SDKURL1;
-        //初始确认无待审批列表
-        String response = sygt.SSPendingApplyGet();
-//        assertEquals(false, response.contains("join"));
-//        assertEquals(false, response.contains("exit"));
-        assertEquals(0, StringUtils.countOccurrencesOf(response,code));
-        int joinNum = StringUtils.countOccurrencesOf(response,accStatusJoinApply);
-        int exitNum = StringUtils.countOccurrencesOf(response,accStatusExitApply);
         //盟主退出申请
-
-        response = sygt.SSMemberExitApply(code,desc);
+        String response = sygt.SSMemberExitApply(code,desc);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-        //如果执行成功 表示存在成员 否则成员不存在 不再进行审批
-        if(JSONObject.fromObject(store.GetTxDetail(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20)
-        )).getString("state") == "200") {
 
-        }else return;
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinApply));
-        assertEquals(exitNum + 1, StringUtils.countOccurrencesOf(response,accStatusJoinApply));
-
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet("");
-        assertEquals(true, response.contains(code));
-
-        //检查成员列表 方式2
-        response = sygt.SSMembersGet(code);
-        assertEquals(true, response.contains(code));
-
+        String tempState = JSONObject.fromObject(
+                store.GetTxDetail(commonFunc.getTxHash(response,utilsClass.sdkGetTxHashType20))).getString("state");
+        if(tempState == "404") return;
 
         //退出盟主审批通过
         ExitApprove(SDKURL2,code,true);
-
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet("");
-        assertEquals(false, response.contains(code));
-
-        //检查成员列表 方式2
-        response = sygt.SSMembersGet(code);
-        assertEquals(false, response.contains(code));
     }
 
     public void checkAsset(String response,String assetID,int amount,String desc,String code,String name,String account,String endPoint){
