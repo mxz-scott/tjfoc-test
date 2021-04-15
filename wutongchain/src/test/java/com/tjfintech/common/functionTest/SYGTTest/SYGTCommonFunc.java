@@ -114,9 +114,9 @@ public class SYGTCommonFunc {
         String response = sygt.SSPendingApplyGet();
 //        assertEquals(false, response.contains("join"));
 //        assertEquals(false, response.contains("exit"));
-        assertEquals(0, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code + "\""));
-        int joinNum = StringUtils.countOccurrencesOf(response,"\"join-apply\"");
-        int exitNum = StringUtils.countOccurrencesOf(response,"\"exit-apply\"");
+        assertEquals(0, StringUtils.countOccurrencesOf(response,code));
+        int joinNum = StringUtils.countOccurrencesOf(response,accStatusJoinApply);
+        int exitNum = StringUtils.countOccurrencesOf(response,accStatusExitApply);
 
 
         SDKADD = SDKURLm1;     //SDK设置为成员SDK
@@ -139,8 +139,8 @@ public class SYGTCommonFunc {
         //获取审批列表
         response = sygt.SSPendingApplyGet();
 //        assertEquals(1, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code + "\""));
-        assertEquals(joinNum + 1, StringUtils.countOccurrencesOf(response,"\"join-apply\""));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,"\"exit-apply\""));
+        assertEquals(joinNum + 1, StringUtils.countOccurrencesOf(response,accStatusJoinApply));
+        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
 
         //盟主审批通过
         JoinApproveTwoLeaders(code,true,true);
@@ -156,8 +156,8 @@ public class SYGTCommonFunc {
         //获取审批列表
         response = sygt.SSPendingApplyGet();
 //        assertEquals(0, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code + "\""));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,"\"join-apply\""));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,"\"exit-apply\""));
+        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinApply));
+        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
     }
 
     /**
@@ -171,24 +171,26 @@ public class SYGTCommonFunc {
         String response = sygt.SSPendingApplyGet();
 //        assertEquals(false, response.contains("join"));
 //        assertEquals(false, response.contains("exit"));
-        assertEquals(0, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code + "\""));
-        int joinNum = StringUtils.countOccurrencesOf(response,"\"join-apply\"");
-        int exitNum = StringUtils.countOccurrencesOf(response,"\"exit-apply\"");
+        assertEquals(0, StringUtils.countOccurrencesOf(response,code));
+        int joinNum = StringUtils.countOccurrencesOf(response,accStatusJoinApply);
+        int exitNum = StringUtils.countOccurrencesOf(response,accStatusExitApply);
         //盟主退出申请
 
         response = sygt.SSMemberExitApply(code,desc);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         //如果执行成功 表示存在成员 否则成员不存在 不再进行审批
-        if(JSONObject.fromObject(response).getString("state") == "200") {
-            assertEquals("200", JSONObject.fromObject(response).getString("state"));
-            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                    utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        if(JSONObject.fromObject(store.GetTxDetail(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20)
+        )).getString("state") == "200") {
+
         }else return;
 
         //获取审批列表
         response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code + "\""));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,"\"join-apply\""));
-        assertEquals(exitNum + 1, StringUtils.countOccurrencesOf(response,"\"exit-apply\""));
+        assertEquals(1, StringUtils.countOccurrencesOf(response,code));
+        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinApply));
+        assertEquals(exitNum + 1, StringUtils.countOccurrencesOf(response,accStatusJoinApply));
 
         //检查成员列表 方式1
         response = sygt.SSMembersGet("");
@@ -200,13 +202,7 @@ public class SYGTCommonFunc {
 
 
         //退出盟主审批通过
-        ExitApproveTwoLeaders(code,true,true);
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(0, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code + "\""));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,"\"join-apply\""));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,"\"exit-apply\""));
+        ExitApprove(SDKURL2,code,true);
 
         //检查成员列表 方式1
         response = sygt.SSMembersGet("");
