@@ -20,7 +20,7 @@ import org.junit.runners.Suite;
         TokenMultiTest.class,
         TokenSoloTest.class,
         TokenStoreTest.class,
-        
+
 //        TokenInterfaceTest.class,
         SetSyncFlagTrue.class,
         SetSyncTestSleepTime.class,     //同步测试将交易上链查询及等待时间设置为2000ms
@@ -31,8 +31,8 @@ import org.junit.runners.Suite;
         TokenStoreTest.class,
         TokenPrivateStoreTest.class,
         TokenAccurateTest.class,
-        CallBack.class,
         TokenTxTypeTest_Token.class,
+        CallBack.class,
 
 //        Event.class,                 //token api不启用事件通知服务
 //        TokenTwoApiMultiTest.class,  //需要部署第二个api并且配置在该class的TOKENADD2参数，数据库地址和第一个api分离

@@ -2501,7 +2501,7 @@ public class TokenMultiTest {
     }
 
 
-    @AfterClass
+//    @AfterClass
     public static void resetAddr()throws Exception{
         SDKADD = TOKENADD;
         BeforeCondition beforeCondition = new BeforeCondition();

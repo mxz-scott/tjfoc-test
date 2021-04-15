@@ -65,6 +65,8 @@ public class CallBack {
     String msgdatafile = System.getProperty("user.dir") + "\\callBackData.txt";
 //    String msgdatafile = testDataPath + "SendMsgTestFiles\\callBackData.txt";
 
+    public static String callbackUrl = "[\"http://10.1.11.245:9300/callback\"]";
+
 
     @BeforeClass
     public static void init() throws Exception {
@@ -97,7 +99,7 @@ public class CallBack {
         commonFunc.setSDKApiCallbackDecrypt(utilsClass.getIPFromStr(TOKENADD), PRIKEY3);
 //        commonFunc.setSDKApiCallbackLLocalId(utilsClass.getIPFromStr(TOKENADD), "lucy002李");
         commonFunc.setSDKApiCallbackLLocalIds(utilsClass.getIPFromStr(TOKENADD), "[\"lucy002李\",\"lucy003李\"]");
-        commonFunc.setSDKApiOneLedger(utilsClass.getIPFromStr(TOKENADD), subLedger, "[\"http://10.1.4.19:9300/callback\"]");
+        commonFunc.setSDKApiOneLedger(utilsClass.getIPFromStr(TOKENADD), subLedger, callbackUrl);
         shellExeCmd(utilsClass.getIPFromStr(TOKENADD), killSDKCmd, startTokenApiCmd + " -i true"); //重启sdk api
         sleepAndSaveInfo(SLEEPTIME, "等待SDK重启");
 
@@ -1522,14 +1524,14 @@ public class CallBack {
         assertEquals("500", JSONObject.fromObject(queryBalance).getString("state"));
 
         //正常重启API，不同步上一笔异常数据
-        commonFunc.setSDKApiOneLedger(utilsClass.getIPFromStr(TOKENADD), subLedger, "[\"http://10.1.4.19:9300/callback\"]");
+        commonFunc.setSDKApiOneLedger(utilsClass.getIPFromStr(TOKENADD), subLedger, callbackUrl);
         shellExeCmd(utilsClass.getIPFromStr(TOKENADD), killSDKCmd, startTokenApiCmd); //重启sdk api
         sleepAndSaveInfo(SLEEPTIME, "等待SDK重启");
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");
         assertEquals("500", JSONObject.fromObject(queryBalance).getString("state"));
 
         //使用./wtsdk API -i true 重启，同步上一笔异常数据
-        commonFunc.setSDKApiOneLedger(utilsClass.getIPFromStr(TOKENADD), subLedger, "[\"http://10.1.4.19:9300/callback\"]");
+        commonFunc.setSDKApiOneLedger(utilsClass.getIPFromStr(TOKENADD), subLedger, callbackUrl);
         shellExeCmd(utilsClass.getIPFromStr(TOKENADD), killSDKCmd, startTokenApiCmd + " -i true"); //重启sdk api
         sleepAndSaveInfo(SLEEPTIME, "等待SDK重启");
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");
