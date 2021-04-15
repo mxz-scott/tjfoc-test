@@ -29,11 +29,11 @@ public interface SYGT {
 
     String SSSingleSafeQueryRequest(String requestID, String partyA, String partyB,String createdTime); //单笔匿踪查询数据源方添加被查询记录
     String SSSingleSafeQueryReply(String requestID, String respTime,String replyDigest); //单笔匿踪查询查询发起方添加完整查询结果记录
-    String SSSingleSafeQueryComplete(String requestID, Boolean hit, int elapsed, int errCode,String metadata, String completedTime); //单笔匿踪查询查询发起方添加完整查询结果记录
+    String SSSingleSafeQueryComplete(String requestID, int hit, int elapsed, int errCode,String metadata, String completedTime); //单笔匿踪查询查询发起方添加完整查询结果记录
 
     String SSMultiSafeQueryRequest(String requestID, String partyA, String partyB,String createdTime); //批量匿踪查询数据源方添加被查询记录
     String SSMultiSafeQueryReply(String requestID, String respTime,String replyDigest); //批量匿踪查询查询发起方添加完整查询结果记录
-    String SSMultiSafeQueryComplete(String requestID, Boolean hit, int elapsed, int errCode,String metadata, String completedTime); //批量匿踪查询查询发起方添加完整查询结果记录
+    String SSMultiSafeQueryComplete(String requestID, int hit, int elapsed, int errCode,String metadata, String completedTime); //批量匿踪查询查询发起方添加完整查询结果记录
 
     String SSSafeQueryDo(String scene, String label, Map<String,String> inputs); //匿踪查询
 

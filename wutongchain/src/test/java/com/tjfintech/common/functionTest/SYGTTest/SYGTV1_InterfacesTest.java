@@ -1477,24 +1477,25 @@ public class SYGTV1_InterfacesTest {
         int elapsed = 2000;
         int errCode = 0;
         String metaData = "12222222";
+        int hit = 1;
 
 
         log.info(" +++++++++++++++ 必填字段校验 +++++++++++++++ ");
 
         requestID = "";
-        String response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        String response  = sygt.SSSingleSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         requestID = "123";
         metaData = "";
-        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         metaData = "123";
         completedTime = "";
-        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
@@ -1502,22 +1503,22 @@ public class SYGTV1_InterfacesTest {
 
         log.info(" +++++++++++++++ requestID 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
         requestID = UtilsClass.Random(512);
-        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         requestID = UtilsClass.Random(63);
-        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         requestID = UtilsClass.Random(64);
-        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         requestID = UtilsClass.Random(65);
-        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
@@ -1526,34 +1527,34 @@ public class SYGTV1_InterfacesTest {
         log.info(" +++++++++++++++ metadata 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
 
         metaData = UtilsClass.Random(512);
-        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         metaData = UtilsClass.Random(63);
-        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         metaData = UtilsClass.Random(64);
-        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         metaData = UtilsClass.Random(65);
-        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
 
         log.info(" +++++++++++++++ completedTime 格式非法 +++++++++++++++ ");//具体长度限制需要开发再确认
         completedTime = UtilsClass.Random(512);
-        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         completedTime = "中文";
-        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
@@ -1561,12 +1562,12 @@ public class SYGTV1_InterfacesTest {
 
         log.info(" +++++++++++++++ elapsed 格式非法 +++++++++++++++ ");//具体长度限制需要开发再确认
         elapsed = -1;
-        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         elapsed = 0;
-        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
@@ -1574,12 +1575,12 @@ public class SYGTV1_InterfacesTest {
 
         log.info(" +++++++++++++++ errCode 格式非法 +++++++++++++++ ");//具体长度限制需要开发再确认
         errCode = -1;
-        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         errCode = 0;
-        response  = sygt.SSSingleSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSSingleSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
     }
@@ -1798,24 +1799,25 @@ public class SYGTV1_InterfacesTest {
         int elapsed = 2000;
         int errCode = 0;
         String metaData = "12222222";
+        int hit = 1;
 
 
         log.info(" +++++++++++++++ 必填字段校验 +++++++++++++++ ");
 
         requestID = "";
-        String response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        String response  = sygt.SSMultiSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         requestID = "123";
         metaData = "";
-        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         metaData = "123";
         completedTime = "";
-        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
@@ -1823,22 +1825,22 @@ public class SYGTV1_InterfacesTest {
 
         log.info(" +++++++++++++++ requestID 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
         requestID = UtilsClass.Random(512);
-        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         requestID = UtilsClass.Random(63);
-        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         requestID = UtilsClass.Random(64);
-        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         requestID = UtilsClass.Random(65);
-        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
@@ -1847,34 +1849,34 @@ public class SYGTV1_InterfacesTest {
         log.info(" +++++++++++++++ metadata 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
 
         metaData = UtilsClass.Random(512);
-        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         metaData = UtilsClass.Random(63);
-        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         metaData = UtilsClass.Random(64);
-        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         metaData = UtilsClass.Random(65);
-        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
 
         log.info(" +++++++++++++++ completedTime 格式非法 +++++++++++++++ ");//具体长度限制需要开发再确认
         completedTime = UtilsClass.Random(512);
-        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         completedTime = "中文";
-        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
@@ -1882,12 +1884,12 @@ public class SYGTV1_InterfacesTest {
 
         log.info(" +++++++++++++++ elapsed 格式非法 +++++++++++++++ ");//具体长度限制需要开发再确认
         elapsed = -1;
-        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         elapsed = 0;
-        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
@@ -1895,12 +1897,12 @@ public class SYGTV1_InterfacesTest {
 
         log.info(" +++++++++++++++ errCode 格式非法 +++++++++++++++ ");//具体长度限制需要开发再确认
         errCode = -1;
-        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         errCode = 0;
-        response  = sygt.SSMultiSafeQueryComplete(requestID,true,elapsed,errCode,metaData,completedTime);
+        response  = sygt.SSMultiSafeQueryComplete(requestID,hit,elapsed,errCode,metaData,completedTime);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
     }

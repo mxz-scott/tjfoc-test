@@ -93,7 +93,7 @@ public  class GoSYGT implements SYGT {
         Map<String, Object> map = new HashMap<>();
         map.put("code", code);
 
-        String result = PostTest.postMethod(SDKADD + "/dss/v1/alliance/joinapply?" + SetURLExtParams(""), map);
+        String result = PostTest.postMethod(SDKADD + "/dss/v1/alliance/members?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
@@ -103,7 +103,7 @@ public  class GoSYGT implements SYGT {
      * @return
      */
     public String SSPendingApplyGet(){
-        String result = GetTest.doGet2(SDKADD + "/getpendingapply?" + SetURLExtParams(""));
+        String result = GetTest.doGet2(SDKADD + "/dss/v1/alliance/getpendingapply?" + SetURLExtParams(""));
         log.info(result);
         return result;
     }
@@ -243,8 +243,8 @@ public  class GoSYGT implements SYGT {
      */
     public String SSSettingUpdate(List<Map> scene,List<Map> label){
         Map<String, Object> map = new HashMap<>();
-        map.put("assetID", scene);
-        map.put("account", label);
+        map.put("scenes", scene);
+        map.put("labels", label);
 
         String result = PostTest.postMethod(SDKADD + "/dss/v1/setting/update?" + SetURLExtParams(""), map);
         log.info(result);
@@ -347,7 +347,7 @@ public  class GoSYGT implements SYGT {
      * @param completedTime 查询记录创建时间
      * @return
      */
-    public String SSSingleSafeQueryComplete(String requestID, Boolean hit, int elapsed, int errCode,String metadata, String completedTime){
+    public String SSSingleSafeQueryComplete(String requestID, int hit, int elapsed, int errCode,String metadata, String completedTime){
         Map<String, Object> map = new HashMap<>();
         map.put("requestID", requestID);
         map.put("hit", hit);
@@ -409,7 +409,7 @@ public  class GoSYGT implements SYGT {
      * @param completedTime 查询记录创建时间
      * @return
      */
-    public String SSMultiSafeQueryComplete(String requestID, Boolean hit, int elapsed, int errCode,String metadata, String completedTime){
+    public String SSMultiSafeQueryComplete(String requestID, int hit, int elapsed, int errCode,String metadata, String completedTime){
         Map<String, Object> map = new HashMap<>();
         map.put("requestID", requestID);
         map.put("hit", hit);
