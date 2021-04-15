@@ -193,7 +193,7 @@ public  class GoSYGT implements SYGT {
     public String SSAssetAuthorize(String assetID,String code,String serviceID,String expireStart,String expireEnd){
         Map<String, Object> map = new HashMap<>();
         map.put("assetID", assetID);
-        map.put("code", code);
+        map.put("account", code);
         map.put("serviceID", serviceID);
         map.put("expireStart", expireStart);
         map.put("expireEnd", expireEnd);
