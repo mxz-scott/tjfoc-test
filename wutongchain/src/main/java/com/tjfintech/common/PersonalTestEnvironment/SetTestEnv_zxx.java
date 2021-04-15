@@ -32,7 +32,7 @@ public class SetTestEnv_zxx {
       PeerTPName="wtchain";
       SDKTPName="wtsdk";
       ToolTPName="wttool";
-
+     destShellScriptDir = "/root/tjshell/";
     }
 
 }
