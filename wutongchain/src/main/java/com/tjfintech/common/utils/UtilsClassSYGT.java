@@ -10,8 +10,8 @@ import static com.tjfintech.common.utils.UtilsClass.testDataPath;
 @Slf4j
 public class UtilsClassSYGT {
 
-    public static String code1 = "shanghai-bank"; //盟主1
-    public static String code2 = "gtja"; //盟主2
+    public static String code1 = "BOS"; //盟主1
+    public static String code2 = "GTJA"; //盟主2
     public static String code3 = "m3" + UtilsClass.Random(6); //成员1
 
     public static String name1 = "上海银行"; //盟主1
