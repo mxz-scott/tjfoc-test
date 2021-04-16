@@ -36,10 +36,13 @@ public class UtilsClassSYGT {
     public static int platformPoint = 1;
     public static int effortPointType = 2;
 
-    public static String accStatusJoinApply = "join-apply";
-    public static String accStatusJoinReview = "join-under-review";
-    public static String accStatusJoinSuccess = "join-success";
-    public static String accStatusExitApply = "delete-under-review";
+    public static String accStatusJoinApply = "New";
+    public static String accStatusJoinReview = "JoinPending";
+    public static String accStatusJoinSuccess = "Actived";
+    public static String accStatusJoinReject = "JoinReject";
+    public static String accStatusExitApply = "RemovePending";
+    public static String accStatusExitSuccess = "Removed";
+
 
 
 }
