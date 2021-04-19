@@ -299,35 +299,36 @@ public class SYGTV1_InterfacesTest {
 
     }
 
-    @Test
+    //20210419 修改为Get接口
+//    @Test
     public void TC05_MemberGet() throws Exception {
         String code = "test";
 
         log.info(" +++++++++++++++ 必填字段校验 +++++++++++++++ ");
         code = "";
-        String response  = sygt.SSMembersGet(code);
+        String response  = sygt.SSMembersGet();
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
 
         log.info(" +++++++++++++++ code 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
         code = UtilsClass.Random(512);
-        response  = sygt.SSMembersGet(code);
+        response  = sygt.SSMembersGet();
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         code = UtilsClass.Random(63);
-        response  = sygt.SSMembersGet(code);
+        response  = sygt.SSMembersGet();
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         code = UtilsClass.Random(64);
-        response  = sygt.SSMembersGet(code);
+        response  = sygt.SSMembersGet();
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         code = UtilsClass.Random(65);
-        response  = sygt.SSMembersGet(code);
+        response  = sygt.SSMembersGet();
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 

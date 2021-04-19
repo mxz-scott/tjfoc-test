@@ -117,7 +117,7 @@ public class SYGTCommonFunc {
 //        assertEquals(false, response.contains("join"));
 //        assertEquals(false, response.contains("exit"));
         assertEquals(0, StringUtils.countOccurrencesOf(response,code));
-        int joinNum = StringUtils.countOccurrencesOf(response,accStatusJoinApply);
+        int joinNum = StringUtils.countOccurrencesOf(response,accStatusJoinReview);
         int exitNum = StringUtils.countOccurrencesOf(response,accStatusExitApply);
 
 
@@ -131,34 +131,34 @@ public class SYGTCommonFunc {
 
         SDKADD = SDKURL1;     //SDK设置为盟主1 SDK
         //检查成员列表 方式1
-        response = sygt.SSMembersGet("");
+        response = sygt.SSMembersGet();
         checkMemberInfo(response,code,name,endPoint,account,accStatusJoinApply,false,"");
 
         //检查成员列表 方式2
-        response = sygt.SSMembersGet(code);
+        response = sygt.SSMembersGet();
         checkMemberInfo(response,code,name,endPoint,account,accStatusJoinApply,false,"");
 
         //获取审批列表
         response = sygt.SSPendingApplyGet();
 //        assertEquals(1, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code + "\""));
-        assertEquals(joinNum + 1, StringUtils.countOccurrencesOf(response,accStatusJoinApply));
+        assertEquals(joinNum + 1, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
         assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
 
         //盟主审批通过
         JoinApproveTwoLeaders(code,true,true);
 
         //检查成员列表 方式1
-        response = sygt.SSMembersGet("");
+        response = sygt.SSMembersGet();
         checkMemberInfo(response,code,name,endPoint,account,accStatusJoinSuccess,false,"");
 
         //检查成员列表 方式2
-        response = sygt.SSMembersGet(code);
+        response = sygt.SSMembersGet();
         checkMemberInfo(response,code,name,endPoint,account,accStatusJoinSuccess,false,"");
 
         //获取审批列表
         response = sygt.SSPendingApplyGet();
 //        assertEquals(0, StringUtils.countOccurrencesOf(response,"\"code\":\"" + code + "\""));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinApply));
+        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
         assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
     }
 
@@ -211,19 +211,37 @@ public class SYGTCommonFunc {
             }
         }
 
-        assertEquals(code,jsonObject.getString("Code"));
-        assertEquals(name,jsonObject.getString("Name"));
-        assertEquals(serviceEndpoint,jsonObject.getString("ServiceEndpoint"));
-        assertEquals(account,jsonObject.getString("Account"));
-        assertEquals(status,jsonObject.getString("Status"));
-        assertEquals(isLeader,jsonObject.getBoolean("IsLeader"));
+        assertEquals(code,jsonObject.getString("code"));
+        assertEquals(name,jsonObject.getString("name"));
+        assertEquals(serviceEndpoint,jsonObject.getString("serviceEndpoint"));
+        assertEquals(account,jsonObject.getString("account"));
+        assertEquals(status,jsonObject.getString("status"));
+        assertEquals(isLeader,jsonObject.getBoolean("isLeader"));
+    }
+
+    public void checkApplyInfo(String response,String code,String name,String serviceEndpoint,String account,String status,String approveAccount){
+        assertEquals(true, response.contains(code));
+
+        JSONObject jsonObject = new JSONObject();
+        for(int i=0;i<JSONObject.fromObject(response).getJSONArray("data").size();i++){
+            if(JSONObject.fromObject(response).getJSONArray("data").get(i).toString().contains(code)){
+                jsonObject = JSONObject.fromObject(JSONObject.fromObject(response).getJSONArray("data").get(i).toString());
+            }
+        }
+
+        assertEquals(code,jsonObject.getString("code"));
+        assertEquals(name,jsonObject.getString("name"));
+        assertEquals(serviceEndpoint,jsonObject.getString("serviceEndpoint"));
+        assertEquals(account,jsonObject.getString("account"));
+        assertEquals(status,jsonObject.getString("status"));
+        assertEquals(approveAccount,jsonObject.getBoolean("approveAccount"));
     }
 
     public void checkAssetAuth(String assertID,String account,Boolean bValid){
         //查看授权情况
         String response = sygt.SSAssetVeriryAuthority(assertID,account);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        assertEquals(bValid, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+        assertEquals(bValid, JSONObject.fromObject(response).getJSONObject("data").getBoolean("isValid"));
 
     }
 }

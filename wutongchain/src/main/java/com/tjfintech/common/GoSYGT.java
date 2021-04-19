@@ -29,7 +29,6 @@ public  class GoSYGT implements SYGT {
         map.put("code", code);
         map.put("name", name);
         map.put("serviceEndpoint", serviceEndpoint);
-        map.put("account", account);
 
         String result = PostTest.postMethod(SDKADD + "/dss/v1/alliance/joinapply?" + SetURLExtParams(""), map);
         log.info(result);
@@ -86,14 +85,13 @@ public  class GoSYGT implements SYGT {
 
     /***
      * 获取成员列表
-     * @param code 某成员的名称，不填则查询所有成员
      * @return
      */
-    public String SSMembersGet(String code){
+    public String SSMembersGet(){
         Map<String, Object> map = new HashMap<>();
-        map.put("code", code);
+//        map.put("code", code);
 
-        String result = PostTest.postMethod(SDKADD + "/dss/v1/alliance/members?" + SetURLExtParams(""), map);
+        String result = GetTest.doGet2(SDKADD + "/dss/v1/alliance/members?" + SetURLExtParams(""));
         log.info(result);
         return result;
     }
@@ -103,6 +101,7 @@ public  class GoSYGT implements SYGT {
      * @return
      */
     public String SSPendingApplyGet(){
+//        String result = GetTest.doGet2(SDKADD + "/dss/v1/alliance/members?" + SetURLExtParams(""));
         String result = GetTest.doGet2(SDKADD + "/dss/v1/alliance/getpendingapply?" + SetURLExtParams(""));
         log.info(result);
         return result;
@@ -142,8 +141,6 @@ public  class GoSYGT implements SYGT {
     public String SSAssetUpdate(String assetID,String scene,String label,int qty,String desc){
         Map<String, Object> map = new HashMap<>();
         map.put("assetID", assetID);
-        map.put("scene", scene);
-        map.put("label", label);
         map.put("qty", qty);
         map.put("desc", desc);
 

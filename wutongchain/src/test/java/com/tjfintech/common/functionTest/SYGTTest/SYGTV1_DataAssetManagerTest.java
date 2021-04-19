@@ -44,7 +44,7 @@ public class SYGTV1_DataAssetManagerTest {
         Map mapScene3 = new HashMap();
         mapScene.put("code","1");mapScene.put("name","反洗钱名单");      listScenes.add(mapScene);
         mapScene2.put("code","2");mapScene2.put("name","恶意投诉客户名单");listScenes.add(mapScene2);
-        mapScene3.put("code","3");mapScene2.put("name","疑似倒买倒卖名单");listScenes.add(mapScene3);
+        mapScene3.put("code","3");mapScene3.put("name","疑似倒买倒卖名单");listScenes.add(mapScene3);
 
         List<Map> listLabels = new ArrayList<>();
         Map mapLabel = new HashMap();
@@ -71,7 +71,7 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void assetPublishy011() throws Exception {
+    public void TC01_assetPublishy011() throws Exception {
         String scene = "1";
         String label = "4";
         String assetID = "asset" + Random(12);
@@ -304,7 +304,7 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void assetPublishyMulti01() throws Exception {
+    public void TC03_assetPublishyMulti01() throws Exception {
         String scene = "1";
         String label = "4";
         String assetID = "asset" + Random(12);
@@ -444,7 +444,7 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void assetPublishy012() throws Exception {
+    public void TC02_assetPublishy012() throws Exception {
         String scene = "1";
         String label = "4";
         String assetID = "asset" + Random(12);
@@ -592,7 +592,7 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void assetUpdate01() throws Exception {
+    public void TC04_assetUpdate01() throws Exception {
         String scene = "1";
         String label = "4";
         String assetID = "asset" + Random(12);
@@ -691,7 +691,7 @@ public class SYGTV1_DataAssetManagerTest {
         response = sygt.SSAssetQuery(scene,label);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains(assetID));
-        assertEquals(true, response.contains("\"Qty\":" + (amount + 100)));
+        assertEquals(true, response.contains("\"qty\":" + (amount + 100)));
 
         SDKADD = SDKURLm1;
         //查看授权情况
@@ -752,7 +752,7 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void assetUpdate02() throws Exception {
+    public void TC05_assetUpdate02() throws Exception {
         String scene = "1";
         String label = "4";
         String assetID = "asset" + Random(12);
@@ -844,7 +844,7 @@ public class SYGTV1_DataAssetManagerTest {
         response = sygt.SSAssetQuery(scene,label);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains(assetID));
-        assertEquals(true, response.contains("\"Qty\":" + (amount + 100)));
+        assertEquals(true, response.contains("\"qty\":" + (amount + 100)));
 
         SDKADD = SDKURLm1;
         //查看授权情况
@@ -1073,6 +1073,7 @@ public class SYGTV1_DataAssetManagerTest {
     }
     /**
      * 非加入成员发布资产
+     * 如果已经存在account的话 此用例可能测试会失败
      * @throws Exception
      */
     @Test
@@ -1926,9 +1927,10 @@ public class SYGTV1_DataAssetManagerTest {
 
     /***
      * 成员仍存在某数据资产的授权时退出  当前预期可以退出 但会同时更新授权列表
+     * 当前测试 会重复利用第三个账户 测试用例 无法正确有效执行
      * @throws Exception
      */
-    @Test
+//    @Test
     public void exitMemberWithAssetAuthority()throws Exception {
         String scene = "反洗钱名单";
         String label = "高风险名单";
@@ -1980,14 +1982,14 @@ public class SYGTV1_DataAssetManagerTest {
 
         //查看授权列表
         response = sygt.SSAssetVeriryAuthority(assetID,account3);
-        assertEquals(true, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+        assertEquals(true, JSONObject.fromObject(response).getJSONObject("data").getBoolean("isValid"));
 
         SDKADD = SDKURL1;   //设置为盟主1 SDK 退出成员
         sygtCF.memberExit(code3,"exit");
 
         //查看授权列表
         response = sygt.SSAssetVeriryAuthority(assetID,account3);
-        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("isValid"));
     }
 
 
@@ -2049,10 +2051,10 @@ public class SYGTV1_DataAssetManagerTest {
 
         //查看授权列表
         response = sygt.SSAssetVeriryAuthority(assetID,account1);
-        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("isValid"));
 
         response = sygt.SSAssetVeriryAuthority(assetID,account2);
-        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("isValid"));
 
 
         //正常授权
@@ -2070,10 +2072,10 @@ public class SYGTV1_DataAssetManagerTest {
 
         //查看授权列表
         response = sygt.SSAssetVeriryAuthority(assetID,account3);
-        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("isValid"));
 
         response = sygt.SSAssetVeriryAuthority(assetID,account1);
-        assertEquals(true, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+        assertEquals(true, JSONObject.fromObject(response).getJSONObject("data").getBoolean("isValid"));
 
     }
 
@@ -2136,10 +2138,10 @@ public class SYGTV1_DataAssetManagerTest {
 
         //查看授权列表
         response = sygt.SSAssetVeriryAuthority(assetID,account3);
-        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("isValid"));
 
         response = sygt.SSAssetVeriryAuthority(assetID,account2);
-        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("isValid"));
 
 
         //正常授权
@@ -2157,10 +2159,10 @@ public class SYGTV1_DataAssetManagerTest {
 
         //查看授权列表
         response = sygt.SSAssetVeriryAuthority(assetID,account3);
-        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("isValid"));
 
         response = sygt.SSAssetVeriryAuthority(assetID,account2);
-        assertEquals(true, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+        assertEquals(true, JSONObject.fromObject(response).getJSONObject("data").getBoolean("isValid"));
 
     }
 
@@ -2206,7 +2208,7 @@ public class SYGTV1_DataAssetManagerTest {
         SDKADD = SDKURLm1;  //SDK设置为成员
         //成员 授权给盟主1  过去时间
         String servideID = "serviceID" + Random(3);
-        response = sygt.SSAssetAuthorize(assetID,code1,servideID,"2001-03-02 12:00:00","2002-03-12 12:00:00");
+        response = sygt.SSAssetAuthorize(assetID,account1,servideID,"2001-03-02 12:00:00","2002-03-12 12:00:00");
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
@@ -2225,10 +2227,10 @@ public class SYGTV1_DataAssetManagerTest {
 
         //查看授权列表
         response = sygt.SSAssetVeriryAuthority(assetID,account1);
-        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("isValid"));
 
         response = sygt.SSAssetVeriryAuthority(assetID,account2);
-        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("IsValid"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("isValid"));
 
     }
 
