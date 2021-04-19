@@ -267,7 +267,7 @@ public  class GoSYGT implements SYGT {
      * @param amount 积分数量
      * @return
      */
-    public String SSPointUpdate(String account,String type,int pointType,String code,int amount){
+    public String SSPointUpdate(String account,String type,String pointType,String code,int amount){
         Map<String, Object> map = new HashMap<>();
         map.put("account", account);
         map.put("type", type);
@@ -285,7 +285,7 @@ public  class GoSYGT implements SYGT {
      * @param account
      * @return
      */
-    public String SSPointQuery(String account,int pointType){
+    public String SSPointQuery(String account,String pointType){
         Map<String, Object> map = new HashMap<>();
         map.put("account", account);
         map.put("pointType", pointType);

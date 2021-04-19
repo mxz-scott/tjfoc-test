@@ -94,7 +94,7 @@ public class SYGTV1_DataAssetManagerTest {
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
         SDKADD = SDKURL1;//SDKURLm1;  //SDK设置为成员SDK
-        //成员发布资产
+        //盟主1发布资产
         response = sygt.SSAssetPublish(assetID,scene,label,amount,scene + label);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
@@ -220,7 +220,7 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void assetPublishyMulti02() throws Exception {
+    public void TC04_assetPublishyMulti02() throws Exception {
         String scene = "1";
         String label = "4";
         String assetID = "asset" + Random(12);
@@ -592,7 +592,7 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void TC04_assetUpdate01() throws Exception {
+    public void TC05_assetUpdate01() throws Exception {
         String scene = "1";
         String label = "4";
         String assetID = "asset" + Random(12);
@@ -752,7 +752,7 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void TC05_assetUpdate02() throws Exception {
+    public void TC06_assetUpdate02() throws Exception {
         String scene = "1";
         String label = "4";
         String assetID = "asset" + Random(12);
@@ -903,7 +903,7 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void assetAuthDuplicate() throws Exception {
+    public void TCInvalid01_assetAuthDuplicate() throws Exception {
         String scene = "1";
         String label = "4";
         String assetID = "asset" + Random(12);
@@ -991,7 +991,7 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void assetOffNotExist() throws Exception {
+    public void TCInvalid01_assetOffNotExist() throws Exception {
         String scene = "1";
         String label = "4";
         String assetID = "asset" + Random(12);
@@ -1023,7 +1023,7 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void assetAuthorizeNotExist() throws Exception {
+    public void TCInvalid01_assetAuthorizeNotExist() throws Exception {
         String scene = "1";
         String label = "4";
         String assetID = "asset" + Random(12);
@@ -1077,7 +1077,7 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void assetPublishNotMember() throws Exception {
+    public void TCInvalid01_assetPublishNotMember() throws Exception {
         String scene = "1";//"反洗钱名单";
         String label = "4";//"高风险名单";
         String assetID = "asset" + Random(12);
@@ -1115,7 +1115,7 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void assetOffQuery() throws Exception {
+    public void TC07_assetOffQuery() throws Exception {
         String scene = "1";
         String label = "4";
         String assetID = "asset" + Random(12);
@@ -1234,7 +1234,7 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void assetPublishy02_SameAssetID() throws Exception {
+    public void TCInvalid01_assetPublishy02_SameAssetID() throws Exception {
         String scene = "1";//"反洗钱名单";
         String label = "4";//"高风险名单";
         String assetID = "asset" + Random(12);
@@ -1283,7 +1283,7 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void updateAssetNotExist() throws Exception {
+    public void TCInvalid01_updateAssetNotExist() throws Exception {
         String scene = "1";
         String label = "4";
         String assetID = "asset" + Random(12);
@@ -1308,7 +1308,7 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void cancelAuthorizeNotExist() throws Exception {
+    public void TCInvalid01_cancelAuthorizeNotExist() throws Exception {
         String scene = "1";
         String label = "4";
         String assetID = "asset" + Random(12);
@@ -1435,14 +1435,14 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
 //    @Test
-    public void testPointUpdate01()throws Exception {
+    public void TC30_testPointUpdate01()throws Exception {
         String scene = "反洗钱名单";
         String label = "高风险名单";
         String assetID = "asset" + Random(12);
         int amount = 256;
         int point = 2;
         String type = "credit";
-        int pointType = effortPointType;
+        String pointType = effortPointType;
         String operationCode = "A001";
         String account = account3;
 
@@ -1535,14 +1535,14 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
 //    @Test
-    public void testPointUpdate02()throws Exception {
+    public void TC31_testPointUpdate02()throws Exception {
         String scene = "反洗钱名单";
         String label = "高风险名单";
         String assetID = "asset" + Random(12);
         int amount = 256;
         int point = 2;
         String type = "credit";
-        int pointType = effortPointType;
+        String pointType = effortPointType;
         String operationCode = "A001";
         String account = account3;
 
@@ -1635,14 +1635,14 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
 //    @Test
-    public void testPointUpdate03()throws Exception {
+    public void TC33testPointUpdate03()throws Exception {
         String scene = "反洗钱名单";
         String label = "高风险名单";
         String assetID = "asset" + Random(12);
         int amount = 256;
         int point = 2;
         String type = "credit";
-        int pointType = effortPointType;
+        String pointType = effortPointType;
         String operationCode = "A001";
         String account = account3;
 
@@ -1735,14 +1735,14 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
 //    @Test
-    public void testPointUpdate04()throws Exception {
+    public void TC3Invalid01_testPointUpdate04()throws Exception {
         String scene = "反洗钱名单";
         String label = "高风险名单";
         String assetID = "asset" + Random(12);
         int amount = 256;
         int point = 2;
         String type = "credit";
-        int pointType = effortPointType;
+        String pointType = effortPointType;
         String operationCode = "A001";
         String account = account3;
 
@@ -1777,14 +1777,14 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
 //    @Test
-    public void testPointUpdateNotEnough()throws Exception {
+    public void TC3Invalid_testPointUpdateNotEnough()throws Exception {
         String scene = "反洗钱名单";
         String label = "高风险名单";
         String assetID = "asset" + Random(12);
         int amount = 200000;
         int point = 2;
         String type = "debit";
-        int pointType = 2;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
+        String pointType = platformPoint;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
         String operationCode = "A001";
         String account = account3;
 
@@ -1862,14 +1862,14 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void exitMemberWithDataAsset()throws Exception {
+    public void TC091_exitMemberWithDataAsset()throws Exception {
         String scene = "1";
         String label = "4";
         String assetID = "asset" + Random(12);
         int amount = 200000;
         int point = 2;
         String type = "debit";
-        int pointType = 2;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
+        String pointType = platformPoint;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
         String operationCode = "A001";
         String account = account3;
 
@@ -1913,7 +1913,7 @@ public class SYGTV1_DataAssetManagerTest {
 //        assertEquals(0, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
         //获取积分 类型1
-        pointType = 1;
+        pointType = effortPointType;
         response = sygt.SSPointQuery(account,pointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        point = JSONObject.fromObject(response).getJSONObject("data").getInt("balance");
@@ -1931,14 +1931,14 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
 //    @Test
-    public void exitMemberWithAssetAuthority()throws Exception {
+    public void TC092_exitMemberWithAssetAuthority()throws Exception {
         String scene = "反洗钱名单";
         String label = "高风险名单";
         String assetID = "asset" + Random(12);
         int amount = 200000;
         int point = 2;
         String type = "debit";
-        int pointType = 2;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
+        String pointType = platformPoint;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
         String account = account3;
 
         String response = "";
@@ -1998,14 +1998,14 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void authorizeNotOwner01()throws Exception {
+    public void TCInvalid01_authorizeNotOwner01()throws Exception {
         String scene = "反洗钱名单";
         String label = "高风险名单";
         String assetID = "asset" + Random(12);
         int amount = 200000;
         int point = 2;
         String type = "debit";
-        int pointType = 2;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
+        String pointType = platformPoint;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
         String account = account3;
 
         String response = "";
@@ -2085,14 +2085,14 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void authorizeNotOwner02()throws Exception {
+    public void TCInvalid01_authorizeNotOwner02()throws Exception {
         String scene = "反洗钱名单";
         String label = "高风险名单";
         String assetID = "asset" + Random(12);
         int amount = 200000;
         int point = 2;
         String type = "debit";
-        int pointType = 2;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
+        String pointType = platformPoint;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
         String account = account3;
 
         String response = "";
@@ -2171,14 +2171,14 @@ public class SYGTV1_DataAssetManagerTest {
      * @throws Exception
      */
     @Test
-    public void authorizeInFutureDate()throws Exception {
+    public void TCInvalid01_authorizeInFutureDate()throws Exception {
         String scene = "反洗钱名单";
         String label = "高风险名单";
         String assetID = "asset" + Random(12);
         int amount = 200000;
         int point = 2;
         String type = "debit";
-        int pointType = 2;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
+        String pointType = platformPoint;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
         String account = account3;
 
         String response = "";

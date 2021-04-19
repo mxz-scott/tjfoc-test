@@ -1108,7 +1108,7 @@ public class SYGTV1_InterfacesTest {
         String type = "credit";
         String code = "A001";
         int amount = 30;
-        int pointType = effortPointType;
+        String pointType = effortPointType;
 
         log.info(" +++++++++++++++ 必填字段校验 +++++++++++++++ ");
         account = "";
@@ -1228,7 +1228,7 @@ public class SYGTV1_InterfacesTest {
     @Test
     public void TC16_PointQuery() throws Exception {
         String account = "test";
-        int pointType = effortPointType;
+        String pointType = effortPointType;
 
         log.info(" +++++++++++++++ 必填字段校验 +++++++++++++++ ");
 
