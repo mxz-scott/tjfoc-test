@@ -135,10 +135,10 @@ public class SYGTV1_DataAssetManagerTest {
         SDKADD = SDKURL1;
         //资产授权 account2
         String authAccount = account2;
-        String serviceID = "service" + Random(10);
+        String authID = "auth" + Random(10);
         String startDate = "2021-03-30 10:00:00";
         String endDate = "2022-03-30 10:00:00";
-        response = sygt.SSAssetAuthorize(assetID,authAccount,serviceID,startDate,endDate);
+        response = sygt.SSAssetAuthorize(assetID,authAccount,authID,startDate,endDate);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -273,10 +273,10 @@ public class SYGTV1_DataAssetManagerTest {
             SDKADD = SDKURL1;
             //资产授权 account2
             String authAccount = account2;
-            String serviceID = "service" + Random(10);
+            String authID = "auth" + Random(10);
             String startDate = "2021-03-30 10:00:00";
             String endDate = "2022-03-30 10:00:00";
-            response = sygt.SSAssetAuthorize(assetID, authAccount, serviceID, startDate, endDate);
+            response = sygt.SSAssetAuthorize(assetID, authAccount, authID, startDate, endDate);
             assertEquals("200", JSONObject.fromObject(response).getString("state"));
             commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                     utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
@@ -354,10 +354,10 @@ public class SYGTV1_DataAssetManagerTest {
         SDKADD = SDKURL1;
         //资产授权 account2
         String authAccount = account2;
-        String serviceID = "service" + Random(10);
+        String authID = "auth" + Random(10);
         String startDate = "2021-03-30 10:00:00";
         String endDate = "2022-03-30 10:00:00";
-        response = sygt.SSAssetAuthorize(assetID,authAccount,serviceID,startDate,endDate);
+        response = sygt.SSAssetAuthorize(assetID,authAccount,authID,startDate,endDate);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -410,8 +410,8 @@ public class SYGTV1_DataAssetManagerTest {
         SDKADD = SDKURL1;
         //资产授权 account3 此处可能是因为重复加入过第三方 所以account3 是存在在成员列表中的
         authAccount = account3;
-        String serviceID2 = "service" + Random(10);
-        response = sygt.SSAssetAuthorize(assetID2,authAccount,serviceID2,startDate,endDate);
+        String authID2 = "auth" + Random(10);
+        response = sygt.SSAssetAuthorize(assetID2,authAccount,authID2,startDate,endDate);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -501,10 +501,10 @@ public class SYGTV1_DataAssetManagerTest {
         SDKADD = SDKURLm1;  //SDK设置为成员SDK
         //资产授权 code1
         String authAccount = account1;
-        String serviceID = "service" + Random(10);
+        String authID = "auth" + Random(10);
         String startDate = "2021-03-30 10:00:00";
         String endDate = "2022-03-30 10:00:00";
-        response = sygt.SSAssetAuthorize(assetID,authAccount,serviceID,startDate,endDate);
+        response = sygt.SSAssetAuthorize(assetID,authAccount,authID,startDate,endDate);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -519,10 +519,10 @@ public class SYGTV1_DataAssetManagerTest {
 
         //资产授权 code2
         authAccount = account2;
-        serviceID = "service" + Random(10);
+        authID = "auth" + Random(10);
         startDate = "2021-03-30 10:00:00";
         endDate = "2022-03-30 10:00:00";
-        response = sygt.SSAssetAuthorize(assetID,authAccount,serviceID,startDate,endDate);
+        response = sygt.SSAssetAuthorize(assetID,authAccount,authID,startDate,endDate);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -669,10 +669,10 @@ public class SYGTV1_DataAssetManagerTest {
         SDKADD = SDKURL1;
         //资产授权 account2
         String authAccount = account2;
-        String serviceID = "service" + Random(10);
+        String authID = "auth" + Random(10);
         String startDate = "2021-03-30 10:00:00";
         String endDate = "2022-03-30 10:00:00";
-        response = sygt.SSAssetAuthorize(assetID,authAccount,serviceID,startDate,endDate);
+        response = sygt.SSAssetAuthorize(assetID,authAccount,authID,startDate,endDate);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -830,10 +830,10 @@ public class SYGTV1_DataAssetManagerTest {
         SDKADD = SDKURL1;
         //资产授权 account2
         String authAccount = account2;
-        String serviceID = "service" + Random(10);
+        String authID = "auth" + Random(10);
         String startDate = "2021-03-30 10:00:00";
         String endDate = "2022-03-30 10:00:00";
-        response = sygt.SSAssetAuthorize(assetID,authAccount,serviceID,startDate,endDate);
+        response = sygt.SSAssetAuthorize(assetID,authAccount,authID,startDate,endDate);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -962,10 +962,10 @@ public class SYGTV1_DataAssetManagerTest {
         SDKADD = SDKURL1;
         //资产授权 account2
         String authAccount = account2;
-        String serviceID = "service" + Random(10);
+        String authID = "auth" + Random(10);
         String startDate = "2021-03-30 10:00:00";
         String endDate = "2022-03-30 10:00:00";
-        response = sygt.SSAssetAuthorize(assetID, authAccount, serviceID, startDate, endDate);
+        response = sygt.SSAssetAuthorize(assetID, authAccount, authID, startDate, endDate);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
@@ -973,7 +973,7 @@ public class SYGTV1_DataAssetManagerTest {
                 store.GetTxDetail(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20))).getString("state"));
 
 
-        response = sygt.SSAssetAuthorize(assetID, authAccount, serviceID, startDate, endDate);
+        response = sygt.SSAssetAuthorize(assetID, authAccount, authID, startDate, endDate);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
@@ -1064,10 +1064,10 @@ public class SYGTV1_DataAssetManagerTest {
 
         //资产授权 code2
         String authAccount = account2;
-        String serviceID = "service" + Random(10);
+        String authID = "auth" + Random(10);
         String startDate = "2021-03-30 10:00:00";
         String endDate = "2022-03-30 10:00:00";
-        response = sygt.SSAssetAuthorize(assetID,authAccount,serviceID,startDate,endDate);
+        response = sygt.SSAssetAuthorize(assetID,authAccount,authID,startDate,endDate);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -1180,10 +1180,10 @@ public class SYGTV1_DataAssetManagerTest {
         SDKADD = SDKURL1;
         //资产授权 account2
         String authAccount = account2;
-        String serviceID = "service" + Random(10);
+        String authID = "auth" + Random(10);
         String startDate = "2021-03-30 10:00:00";
         String endDate = "2022-03-30 10:00:00";
-        response = sygt.SSAssetAuthorize(assetID,authAccount,serviceID,startDate,endDate);
+        response = sygt.SSAssetAuthorize(assetID,authAccount,authID,startDate,endDate);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
@@ -2044,7 +2044,7 @@ public class SYGTV1_DataAssetManagerTest {
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
         //授权给成员
-        String servideID = "serviceID" + Random(3);
+        String servideID = "authID" + Random(3);
         response = sygt.SSAssetAuthorize(assetID,account3,servideID,"2021-03-12 12:00:00","2022-03-12 12:00:00");
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
@@ -2105,7 +2105,7 @@ public class SYGTV1_DataAssetManagerTest {
 
         SDKADD = SDKURL2;  //SDK设置为盟主2 SDK
         //盟主2 授权给成员
-        String servideID = "serviceID" + Random(3);
+        String servideID = "authID" + Random(3);
         response = sygt.SSAssetAuthorize(assetID,account1,servideID,"2021-03-12 12:00:00","2022-03-12 12:00:00");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
@@ -2114,7 +2114,7 @@ public class SYGTV1_DataAssetManagerTest {
 
         SDKADD = SDKURL1;  //SDK设置为盟主2 SDK
         //盟主2 授权给成员
-        servideID = "serviceID" + Random(3);
+        servideID = "authID" + Random(3);
         response = sygt.SSAssetAuthorize(assetID,account2,servideID,"2021-03-12 12:00:00","2022-03-12 12:00:00");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
@@ -2132,7 +2132,7 @@ public class SYGTV1_DataAssetManagerTest {
         //正常授权
         SDKADD = SDKURLm1;
         //盟主1 授权给成员
-        servideID = "serviceID" + Random(3);
+        servideID = "authID" + Random(3);
         response = sygt.SSAssetAuthorize(assetID,account1,servideID,"2021-03-12 12:00:00","2022-03-12 12:00:00");
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
@@ -2192,7 +2192,7 @@ public class SYGTV1_DataAssetManagerTest {
 
         SDKADD = SDKURL2;  //SDK设置为盟主2 SDK
         //盟主2 授权给成员
-        String servideID = "serviceID" + Random(3);
+        String servideID = "authID" + Random(3);
         response = sygt.SSAssetAuthorize(assetID,account3,servideID,"2021-03-12 12:00:00","2022-03-12 12:00:00");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
@@ -2201,7 +2201,7 @@ public class SYGTV1_DataAssetManagerTest {
 
         SDKADD = SDKURLm1;  //SDK设置为成员 SDK
         //成员授权给盟主2
-        servideID = "serviceID" + Random(3);
+        servideID = "authID" + Random(3);
         response = sygt.SSAssetAuthorize(assetID,account2,servideID,"2021-03-12 12:00:00","2022-03-12 12:00:00");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
@@ -2219,7 +2219,7 @@ public class SYGTV1_DataAssetManagerTest {
         //正常授权
         SDKADD = SDKURL1;
         //盟主1 授权给成员
-        servideID = "serviceID" + Random(3);
+        servideID = "authID" + Random(3);
         response = sygt.SSAssetAuthorize(assetID,account2,servideID,"2021-03-12 12:00:00","2022-03-12 12:00:00");
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
@@ -2279,7 +2279,7 @@ public class SYGTV1_DataAssetManagerTest {
         //正常授权
         SDKADD = SDKURLm1;  //SDK设置为成员
         //成员 授权给盟主1  过去时间
-        String servideID = "serviceID" + Random(3);
+        String servideID = "authID" + Random(3);
         response = sygt.SSAssetAuthorize(assetID,account1,servideID,"2001-03-02 12:00:00","2002-03-12 12:00:00");
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
@@ -2288,7 +2288,7 @@ public class SYGTV1_DataAssetManagerTest {
                 store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
         //成员 授权给盟主2 将来时间
-        servideID = "serviceID" + Random(3);
+        servideID = "authID" + Random(3);
         response = sygt.SSAssetAuthorize(assetID,account2,servideID,"2031-03-02 12:00:00","2032-03-12 12:00:00");
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),

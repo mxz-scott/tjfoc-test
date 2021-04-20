@@ -17,7 +17,8 @@ public interface SYGT {
     String SSAssetOff(String assetID); //下架数据资产
     String SSAssetQuery(String scene,String label); //查询可用数据资产
 
-    String SSAssetAuthorize(String assetID,String code,String serviceID,String expireStart,String expireEnd); //资产授权
+    String SSAssetService(String assetID,String serviceID,String authID); //资产服务发布
+    String SSAssetAuthorize(String assetID,String code,String authID,String expireStart,String expireEnd); //资产授权
     String SSAssetCancelAuthority(String assetID,String account); //资产取消授权
     String SSAssetVeriryAuthority(String assetID,String account); //验证查询授权是否有效
 

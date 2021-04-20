@@ -179,19 +179,31 @@ public  class GoSYGT implements SYGT {
         return result;
     }
 
+    public String SSAssetService(String assetID,String serviceID,String authID){
+        Map<String, Object> map = new HashMap<>();
+        map.put("assetID", assetID);
+        map.put("serviceID", serviceID);
+        map.put("authID", authID);
+
+        String result = PostTest.postMethod(SDKADD + "/dss/v1/asset/addservice?" + SetURLExtParams(""), map);
+        log.info(result);
+        return result;
+    }
+
     /***
      * 资产授权
      * @param assetID 数据资产唯一标识
      * @param code 机构代码
+     * @param authID 授权ID
      * @param expireStart 授权起始时间
      * @param expireEnd 授权过期时间
      * @return
      */
-    public String SSAssetAuthorize(String assetID,String code,String serviceID,String expireStart,String expireEnd){
+    public String SSAssetAuthorize(String assetID,String code,String authID,String expireStart,String expireEnd){
         Map<String, Object> map = new HashMap<>();
         map.put("assetID", assetID);
         map.put("account", code);
-        map.put("serviceID", serviceID);
+        map.put("authID", authID);
         map.put("expireStart", expireStart);
         map.put("expireEnd", expireEnd);
 
