@@ -534,6 +534,14 @@ public class SYGTV1_DataAssetManagerTest {
         sygtCF.checkAssetAuth(assetID,account2,true);
         sygtCF.checkAssetAuth(assetID,account3,false);
 
+        SDKADD = SDKURL2;
+        //查看可用资产  当前仅显示被授权的数据资产
+        response = sygt.SSAssetQuery(scene,label);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains(assetID));
+
+
+        SDKADD = SDKURLm1;  //SDK设置为成员SDK
         //取消授权 code1
         response = sygt.SSAssetCancelAuthority(assetID,account1);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
@@ -1235,6 +1243,33 @@ public class SYGTV1_DataAssetManagerTest {
 
     }
 
+    /***
+     * 测试目的 检查场景和标签code不可以相同
+     * @throws Exception
+     */
+    @Test
+    public void TC08_sameCodeForSceneAndLabel()throws Exception{
+
+        List<Map> listScenes = new ArrayList<>();
+        Map mapScene = new HashMap();
+        Map mapScene2 = new HashMap();
+        Map mapScene3 = new HashMap();
+        mapScene.put("code","1");mapScene.put("name","反洗钱名单");      listScenes.add(mapScene);
+        mapScene3.put("code","3");mapScene3.put("name","疑似倒买倒卖名单");listScenes.add(mapScene3);
+
+        List<Map> listLabels = new ArrayList<>();
+        Map mapLabel = new HashMap();
+        Map mapLabel2 = new HashMap();
+        mapLabel.put("code","1");mapLabel.put("name","高风险名单");listLabels.add(mapLabel);
+        mapLabel2.put("code","5");mapLabel2.put("name","低风险名单");listLabels.add(mapLabel2);
+
+        String response = sygt.SSSettingUpdate(listScenes,listLabels);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("404", JSONObject.fromObject(
+                store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
+    }
 
     /**
      * 发布数据资产后再次发布相同assetID的数据资产
@@ -1872,7 +1907,7 @@ public class SYGTV1_DataAssetManagerTest {
      * 成员仍存在数据资产时退出
      * @throws Exception
      */
-//    @Test
+    @Test
     public void TC091_exitMemberWithDataAsset()throws Exception {
         String scene = "1";
         String label = "4";
@@ -1930,9 +1965,36 @@ public class SYGTV1_DataAssetManagerTest {
 //        point = JSONObject.fromObject(response).getJSONObject("data").getInt("balance");
 //        assertEquals(0, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
-        //查看数据资产
-        response = sygt.SSAssetQuery(scene,label);
-        assertEquals(false,response.contains(assetID));
+        response = sygt.SSMembersGet();
+        mapMem.clear();
+        mapMem.put("code",code3);
+        mapMem.put("name",name3);
+        mapMem.put("serviceEndpoint",endPoint3);
+        mapMem.put("account",account3);
+        mapMem.put("status",accStatusExitSuccess);
+        mapMem.put("isLeader",false);
+        mapMem.put("joinDate","");
+        mapMem.put("isSelf",false);
+        mapMem.put("joinCheckDetail",account1 + "," + account2);
+        mapMem.put("exitCheckDetail",account1 + "," + account2);
+
+        sygtCF.checkMemberInfo(response,mapMem);
+
+        SDKADD = SDKURLm1;//自己查询自己
+        response = sygt.SSMembersGet();
+        mapMem.clear();
+        mapMem.put("code",code3);
+        mapMem.put("name",name3);
+        mapMem.put("serviceEndpoint",endPoint3);
+        mapMem.put("account",account3);
+        mapMem.put("status",accStatusExitSuccess);
+        mapMem.put("isLeader",false);
+        mapMem.put("joinDate","");
+        mapMem.put("isSelf",true);
+        mapMem.put("joinCheckDetail",account1 + "," + account2);
+        mapMem.put("exitCheckDetail",account1 + "," + account2);
+
+        sygtCF.checkMemberInfo(response,mapMem);
     }
 
 
@@ -1941,7 +2003,7 @@ public class SYGTV1_DataAssetManagerTest {
      * 当前测试 会重复利用第三个账户 测试用例 无法正确有效执行
      * @throws Exception
      */
-//    @Test
+    @Test
     public void TC092_exitMemberWithAssetAuthority()throws Exception {
         String scene = "反洗钱名单";
         String label = "高风险名单";

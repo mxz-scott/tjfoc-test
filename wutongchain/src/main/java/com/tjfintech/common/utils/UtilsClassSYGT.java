@@ -43,6 +43,8 @@ public class UtilsClassSYGT {
     public static String accStatusExitApply = "RemovePending";
     public static String accStatusExitSuccess = "Removed";
 
+    public static Map mapMem = new HashMap();
+    public static String joinDate = "";
 
 
 }

@@ -12,6 +12,8 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.util.StringUtils;
 
+import java.util.Map;
+
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassSYGT.*;
 import static com.tjfintech.common.utils.UtilsClassSYGT.code1;
@@ -234,7 +236,29 @@ public class SYGTCommonFunc {
         assertEquals(serviceEndpoint,jsonObject.getString("serviceEndpoint"));
         assertEquals(account,jsonObject.getString("account"));
         assertEquals(status,jsonObject.getString("status"));
-        assertEquals(approveAccount,jsonObject.getBoolean("approveAccount"));
+        assertEquals(approveAccount,jsonObject.getString("approveAccount"));
+    }
+
+    public void checkMemberInfo(String response, Map mapMem){
+        assertEquals(true, response.contains(mapMem.get("code").toString()));
+
+        JSONObject jsonObject = new JSONObject();
+        for(int i=0;i<JSONObject.fromObject(response).getJSONArray("data").size();i++){
+            if(JSONObject.fromObject(response).getJSONArray("data").get(i).toString().contains(mapMem.get("code").toString())){
+                jsonObject = JSONObject.fromObject(JSONObject.fromObject(response).getJSONArray("data").get(i).toString());
+            }
+        }
+
+        assertEquals(mapMem.get("code").toString(),jsonObject.getString("code"));
+        assertEquals(mapMem.get("name").toString(),jsonObject.getString("name"));
+        assertEquals(mapMem.get("serviceEndpoint").toString(),jsonObject.getString("serviceEndpoint"));
+        assertEquals(mapMem.get("account").toString(),jsonObject.getString("account"));
+        assertEquals(mapMem.get("status").toString(),jsonObject.getString("status"));
+        assertEquals(mapMem.get("isLeader").toString(),jsonObject.getString("isLeader"));
+        assertEquals(mapMem.get("joinDate").toString(),jsonObject.getString("joinDate"));
+        assertEquals(mapMem.get("isSelf").toString(),jsonObject.getString("isSelf"));
+        assertEquals(mapMem.get("joinCheckDetail").toString(),jsonObject.getString("joinCheckDetail"));
+        assertEquals(mapMem.get("exitCheckDetail").toString(),jsonObject.getString("exitCheckDetail"));
     }
 
     public void checkAssetAuth(String assertID,String account,Boolean bValid){
@@ -243,5 +267,145 @@ public class SYGTCommonFunc {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(bValid, JSONObject.fromObject(response).getJSONObject("data").getBoolean("isValid"));
 
+    }
+
+    public void checkMemInfoInAllSDK(String code,String name,String endPoint,String account,String status,Boolean isLeader,
+                                    String joinDate,String joinCheckDetail,String exitCheckDetail,
+                                     Boolean isSelf1,Boolean isSelf2,Boolean isSelf3){
+        SDKADD = SDKURL1;
+        String response = sygt.SSMembersGet();
+        mapMem.clear();
+        mapMem.put("code",code);
+        mapMem.put("name",name);
+        mapMem.put("serviceEndpoint",endPoint);
+        mapMem.put("account",account);
+        mapMem.put("status",status);
+        mapMem.put("isLeader",isLeader);
+        mapMem.put("joinDate",joinDate);
+        mapMem.put("isSelf",isSelf1);
+        mapMem.put("joinCheckDetail",joinCheckDetail);
+        mapMem.put("exitCheckDetail",exitCheckDetail);
+        checkMemberInfo(response,mapMem);
+
+        SDKADD = SDKURL2;
+        response = sygt.SSMembersGet();
+        mapMem.clear();
+        mapMem.put("code",code);
+        mapMem.put("name",name);
+        mapMem.put("serviceEndpoint",endPoint);
+        mapMem.put("account",account);
+        mapMem.put("status",status);
+        mapMem.put("isLeader",isLeader);
+        mapMem.put("joinDate",joinDate);
+        mapMem.put("isSelf",isSelf2);
+        mapMem.put("joinCheckDetail",joinCheckDetail);
+        mapMem.put("exitCheckDetail",exitCheckDetail);
+        checkMemberInfo(response,mapMem);
+
+        SDKADD = SDKURLm1;
+        response = sygt.SSMembersGet();
+        mapMem.clear();
+        mapMem.put("code",code);
+        mapMem.put("name",name);
+        mapMem.put("serviceEndpoint",endPoint);
+        mapMem.put("account",account);
+        mapMem.put("status",status);
+        mapMem.put("isLeader",isLeader);
+        mapMem.put("joinDate",joinDate);
+        mapMem.put("isSelf",isSelf3);
+        mapMem.put("joinCheckDetail",joinCheckDetail);
+        mapMem.put("exitCheckDetail",exitCheckDetail);
+        checkMemberInfo(response,mapMem);
+    }
+
+    public void checkJoinApplyInfoInAllSDK(String code,String name,String endPoint,String account,String approveAccount,
+                                           int joinPendingNum,int exitPendingNum){
+        SDKADD = SDKURL1;     //SDK设置为盟主1 SDK
+        //获取审批列表
+        String response = sygt.SSPendingApplyGet();
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(1, StringUtils.countOccurrencesOf(response,code));
+        assertEquals(joinPendingNum + 1, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
+        assertEquals(exitPendingNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
+        checkApplyInfo(response,code,name,endPoint,account,accStatusJoinReview,approveAccount);
+
+        SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(1, StringUtils.countOccurrencesOf(response,code));
+        assertEquals(joinPendingNum + 1, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
+        assertEquals(exitPendingNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
+        checkApplyInfo(response,code,name,endPoint,account,accStatusJoinReview,approveAccount);
+
+        SDKADD = SDKURLm1;     //SDK设置为成员SDK
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(1, StringUtils.countOccurrencesOf(response,code));
+        assertEquals(joinPendingNum + 1, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
+        assertEquals(exitPendingNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
+        checkApplyInfo(response,code,name,endPoint,account,accStatusJoinReview,approveAccount);
+    }
+
+    public void checkNoApplyInfoInAllSDK(String code,int joinPendingNum,int exitPendingNum){
+        SDKADD = SDKURL1;     //SDK设置为盟主1 SDK
+        //获取审批列表
+        String response = sygt.SSPendingApplyGet();
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(0, StringUtils.countOccurrencesOf(response,code));
+        assertEquals(joinPendingNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
+        assertEquals(exitPendingNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
+        assertEquals(false, response.contains(code));
+
+
+        SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(0, StringUtils.countOccurrencesOf(response,code));
+        assertEquals(joinPendingNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
+        assertEquals(exitPendingNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
+        assertEquals(false, response.contains(code));
+
+        SDKADD = SDKURLm1;     //SDK设置为成员SDK
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(0, StringUtils.countOccurrencesOf(response,code));
+        assertEquals(joinPendingNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
+        assertEquals(exitPendingNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
+        assertEquals(false, response.contains(code));
+    }
+
+    public void checkExitApplyInfoInAllSDK(String code,String name,String endPoint,String account,String approveAccount,
+                                           int joinPendingNum,int exitPendingNum){
+        SDKADD = SDKURL1;     //SDK设置为盟主1 SDK
+        //获取审批列表
+        String response = sygt.SSPendingApplyGet();
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(1, StringUtils.countOccurrencesOf(response,code));
+        assertEquals(joinPendingNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
+        assertEquals(exitPendingNum + 1, StringUtils.countOccurrencesOf(response,accStatusExitApply));
+        checkApplyInfo(response,code,name,endPoint,account,accStatusExitApply,approveAccount);
+
+
+        SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(1, StringUtils.countOccurrencesOf(response,code));
+        assertEquals(joinPendingNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
+        assertEquals(exitPendingNum + 1, StringUtils.countOccurrencesOf(response,accStatusExitApply));
+        checkApplyInfo(response,code,name,endPoint,account,accStatusExitApply,approveAccount);
+
+        SDKADD = SDKURLm1;     //SDK设置为成员SDK
+        //获取审批列表
+        response = sygt.SSPendingApplyGet();
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(1, StringUtils.countOccurrencesOf(response,code));
+        assertEquals(joinPendingNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
+        assertEquals(exitPendingNum + 1, StringUtils.countOccurrencesOf(response,accStatusExitApply));
+        checkApplyInfo(response,code,name,endPoint,account,accStatusExitApply,approveAccount);
     }
 }

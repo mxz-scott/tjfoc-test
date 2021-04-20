@@ -483,43 +483,12 @@ public class SYGTV1_MemberManagerTest {
         assertEquals("200", JSONObject.fromObject(
                 store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
-        SDKADD = SDKURL1;     //SDK设置为盟主1 SDK
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusJoinApply,false,"");
+        //在各个SDK上检查成员列表中的加入成员信息 一次 SDK1 SDK2 SDKm1（盟主1 盟主2 第三方成员）
+        sygtCF.checkMemInfoInAllSDK(code3,name3,endPoint3,account3,accStatusJoinApply,false,joinDate,
+                "","",false,false,true);
+        //在各个SDK上检查成员列表中的加入成员信息 检查审批列表及信息
+        sygtCF.checkJoinApplyInfoInAllSDK(code3,name3,endPoint3,account3,"",joinNum,exitNum);
 
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum + 1, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-        sygtCF.checkApplyInfo(response,code3,name3,endPoint3,account3,accStatusJoinReview,"");
-
-        assertEquals("200", JSONObject.fromObject(response).getString("state"));
-
-        SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusJoinApply,false,"");
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum + 1, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-
-
-        SDKADD = SDKURLm1;     //SDK设置为成员SDK
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusJoinApply,false,"");
-
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum + 1, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
 
 
         //盟主1 审批通过
@@ -538,29 +507,11 @@ public class SYGTV1_MemberManagerTest {
         response = sygt.SSPointQuery(account3,effortPointType);
 //        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusJoinReview,false,"");
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code3));
-//        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(joinReviewNum + 1, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-        sygtCF.checkApplyInfo(response,code3,name3,endPoint3,account3,accStatusJoinReview,account1);
-        SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusJoinReview,false,"");
-
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code3));
-//        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(joinReviewNum + 1, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
+        //在各个SDK上检查成员列表中的加入成员信息 一次 SDK1 SDK2 SDKm1（盟主1 盟主2 第三方成员）
+        sygtCF.checkMemInfoInAllSDK(code3,name3,endPoint3,account3,accStatusJoinReview,false,joinDate,
+                account1,"",false,false,true);
+        //在各个SDK上检查成员列表中的加入成员信息 检查审批列表及信息
+        sygtCF.checkJoinApplyInfoInAllSDK(code3,name3,endPoint3,account3,"",joinNum,exitNum);
 
 
         SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
@@ -568,44 +519,20 @@ public class SYGTV1_MemberManagerTest {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200", JSONObject.fromObject(
+                store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
         //获取积分
         response = sygt.SSPointQuery(account3,effortPointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusJoinSuccess,false,"");
+        //在各个SDK上检查成员列表中的加入成员信息 一次 SDK1 SDK2 SDKm1（盟主1 盟主2 第三方成员）
+        sygtCF.checkMemInfoInAllSDK(code3,name3,endPoint3,account3,accStatusJoinSuccess,false,joinDate,
+                account1 + "," + account2,"",false,false,true);
 
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(0, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-
-        SDKADD = SDKURL1;     //SDK设置为盟主1 SDK
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusJoinSuccess,false,"");
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(0, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-
-        SDKADD = SDKURLm1;     //SDK设置为成员SDK
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusJoinSuccess,false,"");
-
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(0, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
+        //在各个SDK上检查成员列表中的加入成员信息 检查审批列表及信息
+        sygtCF.checkNoApplyInfoInAllSDK(code3,joinNum,exitNum);
 
         //获取积分
         response = sygt.SSPointQuery(account3,effortPointType);
@@ -619,44 +546,14 @@ public class SYGTV1_MemberManagerTest {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200", JSONObject.fromObject(
+                store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum + 1, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusExitApply,false,"");
-
-        SDKADD = SDKURLm1;     //SDK设置为成员SDK
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum + 1, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusExitApply,false,"");
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum + 1, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-
-        SDKADD = SDKURL1;     //SDK设置为盟主1 SDK
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusExitApply,false,"");
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum + 1, StringUtils.countOccurrencesOf(response,accStatusExitApply));
+        //在各个SDK上检查成员列表中的成员信息 一次 SDK1 SDK2 SDKm1（盟主1 盟主2 第三方成员）
+        sygtCF.checkMemInfoInAllSDK(code3,name3,endPoint3,account3,accStatusExitApply,false,joinDate,
+                account1 + "," + account2,account2,false,false,true);
+        //在各个SDK上检查成员列表中的加入成员信息 检查审批列表及信息
+        sygtCF.checkExitApplyInfoInAllSDK(code3,name3,endPoint3,account3,"",joinNum,exitNum);
 
 
 
@@ -673,39 +570,11 @@ public class SYGTV1_MemberManagerTest {
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusExitSuccess,false,"");
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(0, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-
-
-        SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusExitSuccess,false,"");
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(0, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-
-
-        SDKADD = SDKURLm1;     //SDK设置为成员SDK
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusExitSuccess,false,"");
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(0, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
+        //在各个SDK上检查成员列表中的成员信息 一次 SDK1 SDK2 SDKm1（盟主1 盟主2 第三方成员）
+        sygtCF.checkMemInfoInAllSDK(code3,name3,endPoint3,account3,accStatusExitSuccess,false,joinDate,
+                account1 + "," + account2,account2 + "," + account1,false,false,true);
+        //在各个SDK上检查成员列表中的加入成员信息 检查审批列表及信息
+        sygtCF.checkNoApplyInfoInAllSDK(code3,joinNum,exitNum);
 
     }
 
@@ -734,43 +603,11 @@ public class SYGTV1_MemberManagerTest {
         assertEquals("200", JSONObject.fromObject(
                 store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
-        SDKADD = SDKURL1;     //SDK设置为盟主1 SDK
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusJoinApply,false,"");
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum + 1, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-        sygtCF.checkApplyInfo(response,code3,name3,endPoint3,account3,accStatusJoinReview,"");
-
-        SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusJoinApply,false,"");
-
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum + 1, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-
-
-        SDKADD = SDKURLm1;     //SDK设置为成员SDK
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusJoinApply,false,"");
-
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum + 1, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-
+        //在各个SDK上检查成员列表中的加入成员信息 一次 SDK1 SDK2 SDKm1（盟主1 盟主2 第三方成员）
+        sygtCF.checkMemInfoInAllSDK(code3,name3,endPoint3,account3,accStatusJoinApply,false,joinDate,
+                "","",false,false,true);
+        //在各个SDK上检查成员列表中的加入成员信息 检查审批列表及信息
+        sygtCF.checkJoinApplyInfoInAllSDK(code3,name3,endPoint3,account3,"",joinNum,exitNum);
 
         //盟主2 审批通过
         SDKADD = SDKURL2;     //SDK设置为盟主2 SDK
@@ -778,6 +615,8 @@ public class SYGTV1_MemberManagerTest {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200", JSONObject.fromObject(
+                store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
         //获取积分
 //        response = sygt.SSPointQuery(account3,effortPointType);
@@ -786,30 +625,11 @@ public class SYGTV1_MemberManagerTest {
         response = sygt.SSPointQuery(account3,effortPointType);
 //        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusJoinReview,false,"");
-
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code3));
-//        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(joinReviewNum + 1, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-        sygtCF.checkApplyInfo(response,code3,name3,endPoint3,account3,accStatusJoinReview,account2);
-
-        SDKADD = SDKURL1;     //SDK设置为盟主2 SDK
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusJoinReview,false,"");
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code3));
-//        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(joinReviewNum + 1, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
+        //在各个SDK上检查成员列表中的加入成员信息 一次 SDK1 SDK2 SDKm1（盟主1 盟主2 第三方成员）
+        sygtCF.checkMemInfoInAllSDK(code3,name3,endPoint3,account3,accStatusJoinReview,false,joinDate,
+                account2,"",false,false,true);
+        //在各个SDK上检查成员列表中的加入成员信息 检查审批列表及信息
+        sygtCF.checkJoinApplyInfoInAllSDK(code3,name3,endPoint3,account3,"",joinNum,exitNum);
 
 
         SDKADD = SDKURL1;     //SDK设置为盟主1 SDK
@@ -817,43 +637,19 @@ public class SYGTV1_MemberManagerTest {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200", JSONObject.fromObject(
+                store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
         //获取积分
         response = sygt.SSPointQuery(account3,effortPointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusJoinSuccess,false,"");
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(0, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-
-        SDKADD = SDKURL2;     //SDK设置为盟主1 SDK
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusJoinSuccess,false,"");
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(0, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-
-        SDKADD = SDKURLm1;     //SDK设置为成员SDK
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusJoinSuccess,false,"");
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(0, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
+        //在各个SDK上检查成员列表中的加入成员信息 一次 SDK1 SDK2 SDKm1（盟主1 盟主2 第三方成员）
+        sygtCF.checkMemInfoInAllSDK(code3,name3,endPoint3,account3,accStatusJoinSuccess,false,joinDate,
+                account2 + "," + account1,"",false,false,true);
+        //在各个SDK上检查成员列表中的加入成员信息 检查审批列表及信息
+        sygtCF.checkNoApplyInfoInAllSDK(code3,joinNum,exitNum);
 
         //获取积分
         response = sygt.SSPointQuery(account3,effortPointType);
@@ -867,46 +663,14 @@ public class SYGTV1_MemberManagerTest {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        assertEquals("200", JSONObject.fromObject(
+                store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum + 1, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusExitApply,false,"");
-
-        SDKADD = SDKURLm1;     //SDK设置为成员SDK
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum + 1, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusExitApply,false,"");
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum + 1, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-
-        SDKADD = SDKURL1;     //SDK设置为盟主1 SDK
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusExitApply,false,"");
-
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(1, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum + 1, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-
+        //在各个SDK上检查成员列表中的成员信息 一次 SDK1 SDK2 SDKm1（盟主1 盟主2 第三方成员）
+        sygtCF.checkMemInfoInAllSDK(code3,name3,endPoint3,account3,accStatusExitApply,false,joinDate,
+                account2 + "," + account1,account1,false,false,true);
+        //在各个SDK上检查成员列表中的加入成员信息 检查审批列表及信息
+        sygtCF.checkExitApplyInfoInAllSDK(code3,name3,endPoint3,account3,"",joinNum,exitNum);
 
 
         //退出盟主2审批通过
@@ -921,41 +685,11 @@ public class SYGTV1_MemberManagerTest {
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusExitSuccess,false,"");
-
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(0, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-
-
-        SDKADD = SDKURL1;     //SDK设置为盟主2 SDK
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusExitSuccess,false,"");
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(0, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
-
-
-        SDKADD = SDKURLm1;     //SDK设置为成员SDK
-        //检查成员列表 方式1
-        response = sygt.SSMembersGet();
-        sygtCF.checkMemberInfo(response,code3,name3,endPoint3,account3,accStatusExitSuccess,false,"");
-
-
-        //获取审批列表
-        response = sygt.SSPendingApplyGet();
-        assertEquals(0, StringUtils.countOccurrencesOf(response,code3));
-        assertEquals(joinNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
-        assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
+        //在各个SDK上检查成员列表中的成员信息 一次 SDK1 SDK2 SDKm1（盟主1 盟主2 第三方成员）
+        sygtCF.checkMemInfoInAllSDK(code3,name3,endPoint3,account3,accStatusExitSuccess,false,joinDate,
+                account2 + "," + account1,account1 + "," + account2,false,false,true);
+        //在各个SDK上检查成员列表中的加入成员信息 检查审批列表及信息
+        sygtCF.checkNoApplyInfoInAllSDK(code3,joinNum,exitNum);
 
     }
 
