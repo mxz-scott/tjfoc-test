@@ -1,5 +1,6 @@
 package com.tjfintech.common.utils;
 
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -45,6 +46,27 @@ public class UtilsClassSYGT {
 
     public static Map mapMem = new HashMap();
     public static String joinDate = "";
+
+    public static String leaderAddCode = "A001";
+    public static String memberAddCode = "A002";
+    public static String memberExitCode = "A003";
+    public static String assetPublishCode = "A004";
+    public static String assetUpdateCode = "A005";
+    public static Map<String, Integer> mapPointOP = ImmutableMap.of(
+            "credit", 1,  //增加
+            "debit", -1); //减少
+    public static Map<String, Integer> mapPlatformPoint = ImmutableMap.of(
+            "A001", 10000,  //盟主加入
+            "A002", 500, //成员加入
+            "A003", 0,//成员退出
+            "A004",100,//发布资产
+            "A005",100);//更新资产
+    public static Map<String, Integer> mapContributionPoint = ImmutableMap.of(
+            "A001", 10000,  //盟主加入
+            "A002", 500, //成员加入
+            "A003", 0,//成员退出
+            "A004",100,//发布资产
+            "A005",100);//更新资产
 
 
 }

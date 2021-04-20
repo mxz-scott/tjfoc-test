@@ -276,16 +276,15 @@ public  class GoSYGT implements SYGT {
      * @param type 积分操作类型:credit为增加,debit为减少
      * @param pointType 积分类型:1为平台积分，2为贡献积分
      * @param code 业务代码
-     * @param amount 积分数量
      * @return
      */
-    public String SSPointUpdate(String account,String type,String pointType,String code,int amount){
+    public String SSPointUpdate(String account,String type,String pointType,String code){
         Map<String, Object> map = new HashMap<>();
         map.put("account", account);
         map.put("type", type);
         map.put("pointType", pointType);
         map.put("code", code);
-        map.put("amount", amount);
+//        map.put("amount", amount);
 
         String result = PostTest.postMethod(SDKADD + "/dss/v1/point/update?" + SetURLExtParams(""), map);
         log.info(result);

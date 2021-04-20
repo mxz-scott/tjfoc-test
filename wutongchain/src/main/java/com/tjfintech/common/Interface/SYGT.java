@@ -25,7 +25,7 @@ public interface SYGT {
     String SSSettingUpdate(List<Map> scene,List<Map> label); //更新使用场景和数据标签列表
     String SSSettingGet(); //获取使用场景和数据标签列表
 
-    String SSPointUpdate(String account,String type,String pointType,String code,int amount); //增加\扣减积分
+    String SSPointUpdate(String account,String type,String pointType,String code); //增加\扣减积分
     String SSPointQuery(String account,String pointType); //获取积分余额
 
     String SSSingleSafeQueryRequest(String requestID, String partyA, String partyB,String createdTime); //单笔匿踪查询数据源方添加被查询记录
