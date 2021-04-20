@@ -7,14 +7,11 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.util.StringUtils;
-
-import java.util.Random;
 
 import static com.tjfintech.common.utils.UtilsClassSYGT.*;
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -55,7 +52,7 @@ public class SYGTV1_MemberManagerTest {
         String response = "";
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         SDKADD = SDKURL1;     //SDK设置为盟主1 SDK
@@ -78,7 +75,7 @@ public class SYGTV1_MemberManagerTest {
                 store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
         //获取积分 无积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         SDKADD = SDKURL1;     //SDK设置为盟主1 SDK
@@ -96,7 +93,7 @@ public class SYGTV1_MemberManagerTest {
         sygtCF.JoinApproveTwoLeaders(code3,true,true);
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -119,7 +116,7 @@ public class SYGTV1_MemberManagerTest {
         assertEquals("200", JSONObject.fromObject(
                 store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -138,7 +135,7 @@ public class SYGTV1_MemberManagerTest {
 //        sygtCF.ExitApproveTwoLeaders(code3,true,true);
         sygtCF.ExitApprove(SDKURL2,code3,true);
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(0, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -190,9 +187,9 @@ public class SYGTV1_MemberManagerTest {
         sygtCF.JoinApproveTwoLeaders(code3,false,false);
 
         //获取积分 不存在账户
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("400", JSONObject.fromObject(response).getString("state"));
-//        response = sygt.SSPointQuery(account3,effortPointType);
+//        response = sygt.SSPointQuery(account3,contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(0, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -240,7 +237,7 @@ public class SYGTV1_MemberManagerTest {
         assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -284,9 +281,9 @@ public class SYGTV1_MemberManagerTest {
         sygtCF.JoinApproveTwoLeaders(code3,true,false);
 
         //获取积分 不存在账户
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("400", JSONObject.fromObject(response).getString("state"));
-//        response = sygt.SSPointQuery(account3,effortPointType);
+//        response = sygt.SSPointQuery(account3,contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(0, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -334,7 +331,7 @@ public class SYGTV1_MemberManagerTest {
         assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -368,7 +365,7 @@ public class SYGTV1_MemberManagerTest {
         sygtCF.JoinApproveTwoLeaders(code3,true,true);
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -398,7 +395,7 @@ public class SYGTV1_MemberManagerTest {
         sygtCF.ExitApprove(SDKURL1,code3,false);
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -423,7 +420,7 @@ public class SYGTV1_MemberManagerTest {
                 store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -442,7 +439,7 @@ public class SYGTV1_MemberManagerTest {
         sygtCF.ExitApprove(SDKURL1,code3,true);
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(0, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -501,10 +498,10 @@ public class SYGTV1_MemberManagerTest {
                 store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
         //获取积分
-//        response = sygt.SSPointQuery(account3,effortPointType);
+//        response = sygt.SSPointQuery(account3,contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //在各个SDK上检查成员列表中的加入成员信息 一次 SDK1 SDK2 SDKm1（盟主1 盟主2 第三方成员）
@@ -523,7 +520,7 @@ public class SYGTV1_MemberManagerTest {
                 store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -535,7 +532,7 @@ public class SYGTV1_MemberManagerTest {
         sygtCF.checkNoApplyInfoInAllSDK(code3,joinNum,exitNum);
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -566,7 +563,7 @@ public class SYGTV1_MemberManagerTest {
         assertEquals("200", JSONObject.fromObject(
                 store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -619,10 +616,10 @@ public class SYGTV1_MemberManagerTest {
                 store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
         //获取积分
-//        response = sygt.SSPointQuery(account3,effortPointType);
+//        response = sygt.SSPointQuery(account3,contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //在各个SDK上检查成员列表中的加入成员信息 一次 SDK1 SDK2 SDKm1（盟主1 盟主2 第三方成员）
@@ -641,7 +638,7 @@ public class SYGTV1_MemberManagerTest {
                 store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -652,7 +649,7 @@ public class SYGTV1_MemberManagerTest {
         sygtCF.checkNoApplyInfoInAllSDK(code3,joinNum,exitNum);
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -681,7 +678,7 @@ public class SYGTV1_MemberManagerTest {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -732,7 +729,7 @@ public class SYGTV1_MemberManagerTest {
 
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -767,7 +764,7 @@ public class SYGTV1_MemberManagerTest {
 
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -802,7 +799,7 @@ public class SYGTV1_MemberManagerTest {
         sygtCF.JoinApproveTwoLeaders(code3,true,true);
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -833,7 +830,7 @@ public class SYGTV1_MemberManagerTest {
         sygtCF.ExitApprove(SDKURL2,code3,true);
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(0, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -898,7 +895,7 @@ public class SYGTV1_MemberManagerTest {
         sygtCF.JoinApproveTwoLeaders(code3,true,true);
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -959,7 +956,7 @@ public class SYGTV1_MemberManagerTest {
                 store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(0, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -993,7 +990,7 @@ public class SYGTV1_MemberManagerTest {
         sygtCF.JoinApproveTwoLeaders(code3,true,true);
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -1022,7 +1019,7 @@ public class SYGTV1_MemberManagerTest {
         sygtCF.ExitApprove(SDKURL2,code3,false);
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -1119,7 +1116,7 @@ public class SYGTV1_MemberManagerTest {
         sygtCF.JoinApproveTwoLeaders(code3,true,true);
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -1177,7 +1174,7 @@ public class SYGTV1_MemberManagerTest {
 
 
         //获取积分
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
@@ -1274,11 +1271,11 @@ public class SYGTV1_MemberManagerTest {
 
 
         //获取积分
-//        response = sygt.SSPointQuery(account3,effortPointType);
+//        response = sygt.SSPointQuery(account3,contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
     }
@@ -1363,10 +1360,10 @@ public class SYGTV1_MemberManagerTest {
         assertEquals(exitNum, StringUtils.countOccurrencesOf(response,accStatusExitApply));
 
         //获取积分
-//        response = sygt.SSPointQuery(account3,effortPointType);
+//        response = sygt.SSPointQuery(account3,contributePointType);
 //        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
-        response = sygt.SSPointQuery(account3,effortPointType);
+        response = sygt.SSPointQuery(account3, contributePointType);
 //        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
     }

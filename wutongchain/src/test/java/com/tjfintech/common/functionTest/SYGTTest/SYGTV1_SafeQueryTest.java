@@ -7,14 +7,11 @@ import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -242,9 +239,9 @@ public class SYGTV1_SafeQueryTest {
 
     public void safeQueryDo(String sdkurl)throws Exception{
         //获取初始积分
-        int pointA1 = JSONObject.fromObject(sygt.SSPointQuery(account1,effortPointType)).getJSONObject("data").getInt("balance");
-        int pointB1 = JSONObject.fromObject(sygt.SSPointQuery(account1,effortPointType)).getJSONObject("data").getInt("balance");
-        int pointC1 = JSONObject.fromObject(sygt.SSPointQuery(account1,effortPointType)).getJSONObject("data").getInt("balance");
+        int pointA1 = JSONObject.fromObject(sygt.SSPointQuery(account1, contributePointType)).getJSONObject("data").getInt("balance");
+        int pointB1 = JSONObject.fromObject(sygt.SSPointQuery(account1, contributePointType)).getJSONObject("data").getInt("balance");
+        int pointC1 = JSONObject.fromObject(sygt.SSPointQuery(account1, contributePointType)).getJSONObject("data").getInt("balance");
 
         SDKADD = sdkurl;
         String response = "";
@@ -336,9 +333,9 @@ public class SYGTV1_SafeQueryTest {
 
 
         //获取查询结束后积分
-        int pointA2 = JSONObject.fromObject(sygt.SSPointQuery(account1,effortPointType)).getJSONObject("data").getInt("balance");
-        int pointB2 = JSONObject.fromObject(sygt.SSPointQuery(account1,effortPointType)).getJSONObject("data").getInt("balance");
-        int pointC2 = JSONObject.fromObject(sygt.SSPointQuery(account1,effortPointType)).getJSONObject("data").getInt("balance");
+        int pointA2 = JSONObject.fromObject(sygt.SSPointQuery(account1, contributePointType)).getJSONObject("data").getInt("balance");
+        int pointB2 = JSONObject.fromObject(sygt.SSPointQuery(account1, contributePointType)).getJSONObject("data").getInt("balance");
+        int pointC2 = JSONObject.fromObject(sygt.SSPointQuery(account1, contributePointType)).getJSONObject("data").getInt("balance");
 
         //需要根据积分策略最终确认校验值 暂定如下
         assertEquals(pointA1 + 10000,pointA2);

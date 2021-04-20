@@ -8,7 +8,6 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.FixMethodOrder;
-import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.util.StringUtils;
 
@@ -16,7 +15,6 @@ import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassSYGT.*;
-import static com.tjfintech.common.utils.UtilsClassSYGT.code1;
 import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -407,5 +405,15 @@ public class SYGTCommonFunc {
         assertEquals(joinPendingNum, StringUtils.countOccurrencesOf(response,accStatusJoinReview));
         assertEquals(exitPendingNum + 1, StringUtils.countOccurrencesOf(response,accStatusExitApply));
         checkApplyInfo(response,code,name,endPoint,account,accStatusExitApply,approveAccount);
+    }
+
+    public void checkAccPoint(String SDK,String account,int pointPlatform,int pointContribute){
+        SDKADD = SDK;
+        String response = sygt.SSPointQuery(account,platformPoint);
+        assertEquals(pointPlatform,JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
+
+        response = sygt.SSPointQuery(account, contributePointType);
+        assertEquals(pointContribute,JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
+
     }
 }

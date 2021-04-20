@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.utils.UtilsClassSYGT.effortPointType;
+import static com.tjfintech.common.utils.UtilsClassSYGT.contributePointType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -1108,7 +1108,7 @@ public class SYGTV1_InterfacesTest {
         String type = "credit";
         String code = "A001";
         int amount = 30;
-        String pointType = effortPointType;
+        String pointType = contributePointType;
 
         log.info(" +++++++++++++++ 必填字段校验 +++++++++++++++ ");
         account = "";
@@ -1228,7 +1228,7 @@ public class SYGTV1_InterfacesTest {
     @Test
     public void TC16_PointQuery() throws Exception {
         String account = "test";
-        String pointType = effortPointType;
+        String pointType = contributePointType;
 
         log.info(" +++++++++++++++ 必填字段校验 +++++++++++++++ ");
 
