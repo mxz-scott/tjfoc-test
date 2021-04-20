@@ -1252,16 +1252,15 @@ public class SYGTV1_DataAssetManagerTest {
 
         List<Map> listScenes = new ArrayList<>();
         Map mapScene = new HashMap();
-        Map mapScene2 = new HashMap();
         Map mapScene3 = new HashMap();
-        mapScene.put("code","1");mapScene.put("name","反洗钱名单");      listScenes.add(mapScene);
-        mapScene3.put("code","3");mapScene3.put("name","疑似倒买倒卖名单");listScenes.add(mapScene3);
+        mapScene.put("code","11");mapScene.put("name","反洗钱名单");      listScenes.add(mapScene);
+        mapScene3.put("code","13");mapScene3.put("name","疑似倒买倒卖名单");listScenes.add(mapScene3);
 
         List<Map> listLabels = new ArrayList<>();
         Map mapLabel = new HashMap();
         Map mapLabel2 = new HashMap();
-        mapLabel.put("code","1");mapLabel.put("name","高风险名单");listLabels.add(mapLabel);
-        mapLabel2.put("code","5");mapLabel2.put("name","低风险名单");listLabels.add(mapLabel2);
+        mapLabel.put("code","11");mapLabel.put("name","高风险名单");listLabels.add(mapLabel);
+        mapLabel2.put("code","15");mapLabel2.put("name","低风险名单");listLabels.add(mapLabel2);
 
         String response = sygt.SSSettingUpdate(listScenes,listLabels);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
