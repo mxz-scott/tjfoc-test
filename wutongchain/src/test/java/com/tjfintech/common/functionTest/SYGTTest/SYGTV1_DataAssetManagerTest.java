@@ -1508,7 +1508,7 @@ public class SYGTV1_DataAssetManagerTest {
         int amount = 256;
         int point = 2;
         String type = "credit";
-        String pointType = contributePointType;
+        String pointType = platformPoint;
         String operationCode = memberAddCode;
         String account = account3;
 
@@ -2063,7 +2063,7 @@ public class SYGTV1_DataAssetManagerTest {
         mapMem.put("account",account3);
         mapMem.put("status",accStatusExitSuccess);
         mapMem.put("isLeader",false);
-        mapMem.put("joinDate","");
+        mapMem.put("joinApplyApproveDate","");
         mapMem.put("isSelf",false);
         mapMem.put("joinCheckDetail",account1 + "," + account2);
         mapMem.put("exitCheckDetail",account1 + "," + account2);
@@ -2079,7 +2079,7 @@ public class SYGTV1_DataAssetManagerTest {
         mapMem.put("account",account3);
         mapMem.put("status",accStatusExitSuccess);
         mapMem.put("isLeader",false);
-        mapMem.put("joinDate","");
+        mapMem.put("joinApplyApproveDate","");
         mapMem.put("isSelf",true);
         mapMem.put("joinCheckDetail",account1 + "," + account2);
         mapMem.put("exitCheckDetail",account1 + "," + account2);

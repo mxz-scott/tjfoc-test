@@ -253,7 +253,7 @@ public class SYGTCommonFunc {
         assertEquals(mapMem.get("account").toString(),jsonObject.getString("account"));
         assertEquals(mapMem.get("status").toString(),jsonObject.getString("status"));
         assertEquals(mapMem.get("isLeader").toString(),jsonObject.getString("isLeader"));
-        assertEquals(mapMem.get("joinDate").toString(),jsonObject.getString("joinDate"));
+//        assertEquals(mapMem.get("joinApplyApproveDate").toString(),jsonObject.getString("joinApplyApproveDate"));
         assertEquals(mapMem.get("isSelf").toString(),jsonObject.getString("isSelf"));
         assertEquals(mapMem.get("joinCheckDetail").toString(),jsonObject.getString("joinCheckDetail"));
         assertEquals(mapMem.get("exitCheckDetail").toString(),jsonObject.getString("exitCheckDetail"));
@@ -279,7 +279,7 @@ public class SYGTCommonFunc {
         mapMem.put("account",account);
         mapMem.put("status",status);
         mapMem.put("isLeader",isLeader);
-        mapMem.put("joinDate",joinDate);
+        mapMem.put("joinApplyApproveDate",joinDate);
         mapMem.put("isSelf",isSelf1);
         mapMem.put("joinCheckDetail",joinCheckDetail);
         mapMem.put("exitCheckDetail",exitCheckDetail);
@@ -294,7 +294,7 @@ public class SYGTCommonFunc {
         mapMem.put("account",account);
         mapMem.put("status",status);
         mapMem.put("isLeader",isLeader);
-        mapMem.put("joinDate",joinDate);
+        mapMem.put("joinApplyApproveDate",joinDate);
         mapMem.put("isSelf",isSelf2);
         mapMem.put("joinCheckDetail",joinCheckDetail);
         mapMem.put("exitCheckDetail",exitCheckDetail);
@@ -309,7 +309,7 @@ public class SYGTCommonFunc {
         mapMem.put("account",account);
         mapMem.put("status",status);
         mapMem.put("isLeader",isLeader);
-        mapMem.put("joinDate",joinDate);
+        mapMem.put("joinApplyApproveDate",joinDate);
         mapMem.put("isSelf",isSelf3);
         mapMem.put("joinCheckDetail",joinCheckDetail);
         mapMem.put("exitCheckDetail",exitCheckDetail);

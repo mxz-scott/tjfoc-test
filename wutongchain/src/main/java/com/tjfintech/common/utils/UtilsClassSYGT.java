@@ -34,8 +34,8 @@ public class UtilsClassSYGT {
     public static int memberJoinPoint = 500;
     public static int leaderJoinPoint = 10000;
 
-    public static String platformPoint = "1";
-    public static String contributePointType = "2";
+    public static String platformPoint = "platform";
+    public static String contributePointType = "contribute";
 
     public static String accStatusJoinApply = "New";
     public static String accStatusJoinReview = "JoinPending";
