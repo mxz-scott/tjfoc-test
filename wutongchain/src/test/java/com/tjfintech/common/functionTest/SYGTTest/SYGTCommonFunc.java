@@ -409,7 +409,7 @@ public class SYGTCommonFunc {
 
     public void checkAccPoint(String SDK,String account,int pointPlatform,int pointContribute){
         SDKADD = SDK;
-        String response = sygt.SSPointQuery(account,platformPoint);
+        String response = sygt.SSPointQuery(account, platformPointType);
         assertEquals(pointPlatform,JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
 
         response = sygt.SSPointQuery(account, contributePointType);

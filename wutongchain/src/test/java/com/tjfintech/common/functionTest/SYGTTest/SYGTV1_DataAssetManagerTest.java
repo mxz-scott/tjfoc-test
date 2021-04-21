@@ -75,9 +75,11 @@ public class SYGTV1_DataAssetManagerTest {
         String scene = "1";
         String label = "4";
         String assetID = "asset" + Random(12);
+        String account = account1;
         int amount = 123456;
-        int point = 2;
-        String account = account3;
+        int pointPlatform = JSONObject.fromObject(sygt.SSPointQuery(account, platformPointType)).getJSONObject("data").getInt("balance");
+        int pointContribute = JSONObject.fromObject(sygt.SSPointQuery(account, contributePointType)).getJSONObject("data").getInt("balance");
+
 
         String response = "";
 
@@ -86,13 +88,12 @@ public class SYGTV1_DataAssetManagerTest {
 //        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //成员加入
-//        sygtCF.memberJoin(code1,name1,endPoint1);
+        sygtCF.memberJoin(code3,name3,endPoint3,account3);
 //
         //获取积分
         if(bCheckPoint) {
-            response = sygt.SSPointQuery(account, contributePointType);
-            assertEquals("200", JSONObject.fromObject(response).getString("state"));
-            assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
+            sygtCF.checkAccPoint(SDKURL1,account1,pointPlatform,pointContribute);
+            sygtCF.checkAccPoint(SDKURL1,account3,500,1000);
         }
 
         SDKADD = SDKURL1;//SDKURLm1;  //SDK设置为成员SDK
@@ -106,11 +107,8 @@ public class SYGTV1_DataAssetManagerTest {
 
         //获取积分  具体积分变更待确认
         if(bCheckPoint) {
-            response = sygt.SSPointQuery(account, contributePointType);
-            assertEquals("200", JSONObject.fromObject(response).getString("state"));
-            point = JSONObject.fromObject(response).getJSONObject("data").getInt("balance");
-            assertEquals(true, point > memberJoinPoint);
-            assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
+            sygtCF.checkAccPoint(SDKURL1,account1,pointPlatform + 100,pointContribute + 200);
+            sygtCF.checkAccPoint(SDKURL1,account3,500,1000);
         }
 
 
@@ -145,6 +143,12 @@ public class SYGTV1_DataAssetManagerTest {
         assertEquals("200", JSONObject.fromObject(
                 store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
 
+        //查看积分
+        if(bCheckPoint) {
+            sygtCF.checkAccPoint(SDKURL1,account1,pointPlatform + 100,pointContribute + 200);
+            sygtCF.checkAccPoint(SDKURL1,account3,500,1000);
+        }
+
         //查看授权情况
         sygtCF.checkAssetAuth(assetID,account1,false);
         sygtCF.checkAssetAuth(assetID,account2,true);
@@ -171,12 +175,6 @@ public class SYGTV1_DataAssetManagerTest {
         sygtCF.checkAssetAuth(assetID,account2,true);
         sygtCF.checkAssetAuth(assetID,account3,false);
 
-        //获取积分  确认授权及取消不会变更积分
-        if(bCheckPoint) {
-            response = sygt.SSPointQuery(account, contributePointType);
-            assertEquals("200", JSONObject.fromObject(response).getString("state"));
-            assertEquals(point, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
-        }
 
         SDKADD = SDKURL1;
         //取消授权 account2
@@ -186,6 +184,11 @@ public class SYGTV1_DataAssetManagerTest {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200", JSONObject.fromObject(
                 store.GetTxDetail(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType20))).getString("state"));
+
+        if(bCheckPoint) {
+            sygtCF.checkAccPoint(SDKURL1,account1,pointPlatform + 100,pointContribute + 200);
+            sygtCF.checkAccPoint(SDKURL1,account3,500,1000);
+        }
 
         //查看授权情况
         sygtCF.checkAssetAuth(assetID,account1,false);
@@ -211,9 +214,8 @@ public class SYGTV1_DataAssetManagerTest {
 
         //获取积分  积分恢复到初始加入时的积分
         if(bCheckPoint) {
-            response = sygt.SSPointQuery(account, contributePointType);
-            assertEquals("200", JSONObject.fromObject(response).getString("state"));
-            assertEquals(memberJoinPoint, JSONObject.fromObject(response).getJSONObject("data").getInt("balance"));
+            sygtCF.checkAccPoint(SDKURL1,account1,pointPlatform,pointContribute);
+            sygtCF.checkAccPoint(SDKURL1,account3,500,1000);
         }
 
         //查看可用资产
@@ -1508,7 +1510,7 @@ public class SYGTV1_DataAssetManagerTest {
         int amount = 256;
         int point = 2;
         String type = "credit";
-        String pointType = platformPoint;
+        String pointType = platformPointType;
         String operationCode = memberAddCode;
         String account = account3;
 
@@ -1913,7 +1915,7 @@ public class SYGTV1_DataAssetManagerTest {
         int amount = 200000;
         int point = 2;
         String type = "debit";
-        String pointType = platformPoint;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
+        String pointType = platformPointType;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
         String operationCode = "A001";
         String account = account3;
 
@@ -2001,7 +2003,7 @@ public class SYGTV1_DataAssetManagerTest {
         int amount = 200000;
         int point = 2;
         String type = "debit";
-        String pointType = platformPoint;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
+        String pointType = platformPointType;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
         String operationCode = "A001";
         String account = account3;
 
@@ -2101,7 +2103,7 @@ public class SYGTV1_DataAssetManagerTest {
         int amount = 200000;
         int point = 2;
         String type = "debit";
-        String pointType = platformPoint;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
+        String pointType = platformPointType;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
         String account = account3;
 
         String response = "";
@@ -2172,7 +2174,7 @@ public class SYGTV1_DataAssetManagerTest {
         int amount = 200000;
         int point = 2;
         String type = "debit";
-        String pointType = platformPoint;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
+        String pointType = platformPointType;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
         String account = account3;
 
         String response = "";
@@ -2260,7 +2262,7 @@ public class SYGTV1_DataAssetManagerTest {
         int amount = 200000;
         int point = 2;
         String type = "debit";
-        String pointType = platformPoint;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
+        String pointType = platformPointType;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
         String account = account3;
 
         String response = "";
@@ -2335,7 +2337,7 @@ public class SYGTV1_DataAssetManagerTest {
         int amount = 200000;
         int point = 2;
         String type = "debit";
-        String pointType = platformPoint;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
+        String pointType = platformPointType;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
         String account = account3;
 
         String response = "";
@@ -2423,7 +2425,7 @@ public class SYGTV1_DataAssetManagerTest {
         int amount = 200000;
         int point = 2;
         String type = "debit";
-        String pointType = platformPoint;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
+        String pointType = platformPointType;//创始盟主 成员加入、退出 数据资产发布、下架 为变更贡献积分；查询及被查则变更平台交易积分
         String account = account3;
 
         String response = "";
