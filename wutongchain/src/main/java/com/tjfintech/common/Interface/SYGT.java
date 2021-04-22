@@ -13,7 +13,7 @@ public interface SYGT {
     String SSPendingApplyGet();//获取待处理的成员申请列表
 
     String SSAssetPublish(String assetID,String scene,String label,int qty,String desc); //发布数据资产
-    String SSAssetUpdate(String assetID,String scene,String label,int qty,String desc); //更新数据资产
+    String SSAssetUpdate(String assetID,int qty,String desc); //更新数据资产
     String SSAssetOff(String assetID); //下架数据资产
     String SSAssetQuery(String scene,String label); //查询可用数据资产
 
