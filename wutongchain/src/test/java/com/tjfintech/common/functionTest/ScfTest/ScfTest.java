@@ -108,19 +108,6 @@ public class ScfTest {
         assertThat(historyid, containsString("200"));
         assertThat(historyid, containsString("200"));
 
-
-        //查询tokentype资产
-//        String response5 = scf.getowneraddr(tokenType);
-//        assertThat(response5, containsString("200"));
-//        assertThat(response5, containsString("success"));
-//        assertThat(response5, containsString("\"address\":\""+ supplyAddress1));
-//        assertThat(response5, containsString("\"value\":100"));
-//        //获取output的交易id和index
-//        String response6 = scf.FuncGetoutputinfo(supplyAddress1, tokenType, subType);
-//        assertThat(response6, containsString("200"));
-//        assertThat(response6, containsString("success"));
-//        assertThat(response6, containsString("data"));
-//        assertThat(response6, containsString("\"index\":0"));
     }
 
     /**
@@ -171,7 +158,7 @@ public class ScfTest {
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
         //开立取消
-        String response2 = scf.IssuingCancel(tokenType, companyID1, platformKeyID, platformPIN, comments);
+        String response2 = scf.IssuingCancel(tokenType,platformKeyID, platformPIN);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("success"));
         assertThat(response2, containsString("data"));
@@ -245,14 +232,6 @@ public class ScfTest {
         assertThat(checking1, containsString("200"));
         assertThat(checking1, containsString("success"));
 
-        //查询tokentype资产
-//        String response6 = scf.getowneraddr(tokenType);
-//        assertThat(response6, containsString("200"));
-//        assertThat(response6, containsString("success"));
-//        assertThat(response6, containsString("\"address\":\""+ supplyAddress2));
-//        assertThat(response6, containsString("\"value\":1"));
-//        assertThat(response6, containsString("\"address\":\""+ supplyAddress1));
-//        assertThat(response6, containsString("\"value\":99"));
     }
 
     /**
@@ -596,11 +575,6 @@ public class ScfTest {
         assertThat(checking1, containsString("200"));
         assertThat(checking1, containsString("success"));
 
-//        String response10 = scf.getowneraddr(tokenType);
-//        assertThat(response10, containsString("200"));
-//        assertThat(response10, containsString("success"));
-//        assertThat(response10, containsString("\"address\":\"0000000000000000\""));
-//        assertThat(response10, containsString("\"value\":100"));
     }
 
     /**
@@ -708,16 +682,10 @@ public class ScfTest {
         assertThat(checking2, containsString("200"));
         assertThat(checking2, containsString("success"));
 
-
-//        String response10 = scf.getowneraddr(tokenType);
-//        assertThat(response10, containsString("200"));
-//        assertThat(response10, containsString("success"));
-//        assertThat(response10, containsString("\"address\":\"0000000000000000\""));
-//        assertThat(response10, containsString("\"value\":100"));
     }
 
     /**
-     * 开立-审核-签收-融资-融资试算-融资申请反馈-融资签收-兑付申请-兑付通知-兑付反馈-兑付确认
+     * 开立-审核-签收-融资-融资试算-融资申请反馈-融资签收-兑付申请-兑付通知-兑付反馈-兑付确认-获取账户未使用余额
      */
     @Test
     public void Test010_PayingConfirm2() throws Exception {
@@ -836,11 +804,11 @@ public class ScfTest {
         assertThat(checking2, containsString("200"));
         assertThat(checking2, containsString("success"));
 
-//        String response12 = scf.getowneraddr(tokenType);
-//        assertThat(response12, containsString("200"));
-//        assertThat(response12, containsString("success"));
-//        assertThat(response12, containsString("\"address\":\"0000000000000000\""));
-//        assertThat(response12, containsString("\"value\":1"));
+        String response12 = scf.FunBalanceunused(AccountAddress);
+        assertThat(response12, containsString("200"));
+        assertThat(response12, containsString("success"));
+        assertThat(response12, containsString("52410"));
+
     }
 
     /**
@@ -1176,7 +1144,7 @@ public class ScfTest {
         //转账
         //资产转让申请
         List<Map> list = new ArrayList<>(10);
-        List<Map> list1 = UtilsClassScf.Assignment("1", "0", list);
+        List<Map> list1 = UtilsClassScf.Assignment("1", "b", list);
         String response8 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, proof, tokenType, list1, "1", supplyAddress2);
         assertThat(response8, containsString("200"));
         assertThat(response8, containsString("success"));
@@ -1198,7 +1166,6 @@ public class ScfTest {
 
         assertThat(checking3, containsString("200"));
         assertThat(checking3, containsString("success"));
-
 
     }
 

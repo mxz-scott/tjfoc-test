@@ -103,21 +103,16 @@ public class GoScf implements Scf {
     /**
      * 开立取消
      * @param tokenType
-     * @param companyID1
      * @param keyID
      * @param PIN
-     * @param comments
      * @return
      */
-    public String IssuingCancel(String tokenType, String companyID1, String keyID, String PIN, String comments) {
+    public String IssuingCancel(String tokenType, String keyID, String PIN) {
         Map<String, Object> map = new HashMap<>();
 
         map.put("tokenType", tokenType);
-        map.put("companyID", companyID1);
         map.put("keyID", keyID);
         map.put("PIN", PIN);
-        map.put("comments", comments);
-
 
         String param="";
         if (subLedger!="") param = param +"ledger="+subLedger;
@@ -710,6 +705,22 @@ public class GoScf implements Scf {
         if (subLedger != "") param = param + "ledger=" + subLedger;
 
         String result = PostTest.postMethod(SDKADD + "/scf/func/gethistory/info?" + param, map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 获取账号合约可用余额
+     */
+    public String FunBalanceunused(String AccountAddress) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("contractAddress",AccountAddress);
+
+        String param = "";
+        if (subLedger != "") param = param + "ledger=" + subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/func/balance/unused?" + param, map);
         log.info(result);
         return result;
     }

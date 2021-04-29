@@ -1,512 +1,639 @@
 contract AccountAPI {
     //平台方账号
     string Platform = "-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEB30FhXXPngjgNPX3wt1DffN2ulmr
-33MiW8xCnaja9ahvx4TDGAC9o4LPAJRW0dgG7iJAd3d+2q/JsTl4+i44WQ==
+MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEjiHwFnegqxQ/xVsC4zjOm3HNY26S
+lPNkfo3DUh8RAQsBuu3TMBdNw2yRSG4hHLKOQwoZPKjdG47Af6iqZMBK9g==
 -----END PUBLIC KEY-----
 "
 
     //核心企业账号
     string CoreEnterprise = "CoreEnterprisePubkey"
 
-    //发行地址信息
-    struct Account {
-        int MinNum          //最小签名数
-        uint64 Quota        //受信额度
-        uint64 UsedQuota    //已用配额
-        bool Recycle        //是否可以循环受信
-        int64 EffectiveDate //生效日期时间戳
-        int64 ExpiryDate    //授信有效期时间戳
-        string Remark       //备注信息
-        bool Cancel         //授信是否被取消
-        string[] MemberList //发行参与方名称
-    }
-
-    //资金方信息
-    struct Fund {
-        string CompanyID    //资金方ID
-        uint64 Quota        //受信额度
-        uint64 UsedQuota    //已用配额
-    }
-
-    //数字资产
-    struct Token {
-        string Type     //类型/编号
-        string Status   //状态：Normal、Frozen
-        int64 ActiveDate//激活日期
-        int64 ExpireDate//有效日期
-        int Level       //可流转层级
-        uint64 Amount   //数字资产金额
-        bool CanAdd     //是否可增发
-    }
-
-    string accountKey
-
-    //初始化账户信息
-    public string init(){
-        string tmp = Platform+CoreEnterprise
-        accountKey = hash(tmp)
-        string accountJson = db_get<string>(accountKey)
-        if(accountJson!=""){
-            print("账户已存在")
-            return "error"
+    string ucres = "tx was on chain:"
+        //发行地址信息
+        struct Account {
+            int MinNum          //最小签名数
+            uint64 Quota        //受信额度
+            uint64 UsedQuota    //已用配额
+            bool Recycle        //是否可以循环受信
+            int64 EffectiveDate //生效日期时间戳
+            int64 ExpiryDate    //授信有效期时间戳
+            string Remark       //备注信息
+            bool Cancel         //授信是否被取消
+            string[] MemberList //发行参与方名称
         }
 
-        Fund f1
-        f1.CompanyID = "001"
-        f1.Quota = 50000000000
-        string key = "f_"+f1.CompanyID
-        db_set(key,f1)
-
-        Fund f2
-        f2.CompanyID = "002"
-        f2.Quota = 1000000000
-        key = "f_"+f2.CompanyID
-        db_set(key,f2)
-
-        Fund f3
-        f3.CompanyID = "003"
-        f3.Quota = 1500000000
-        key = "f_"+f3.CompanyID
-        db_set(key,f3)
-
-        Account account
-        account.MinNum = 2
-        account.Quota = f3.Quota+f2.Quota+f1.Quota
-        account.UsedQuota= 0
-        account.Recycle = true
-        string[]memberList = {""}
-        account.MemberList = memberList
-        string json = obj_to_json(account)
-        db_set(accountKey,json)
-        return "success"
-    }
-
-
-    //设置账户信息
-    public string SetAccountInfo(string json){
-        print(json)
-        string tmp = Platform+CoreEnterprise
-        accountKey = hash(tmp)
-        db_set(accountKey,json)
-        return "success"
-    }
-    //获取账号信息
-    public string GetAccountInfo(){
-        string tmp = Platform+CoreEnterprise
-        accountKey = hash(tmp)
-        //返回账号信息
-        string accountJson = db_get<string>(accountKey)
-        return accountJson
-    }
-
-    //授权结构体
-	struct Authority{
-		string Key
-		string SecurityKey
-	}
-
-    struct IssueArg {
-        string ToAddress //一级供应商地址
-        string Data      //扩展数据
-        string CompanyID //指定资金方的唯一标识
-    }
-    //发行数字资产之前的验证签名操作
-    public string beforIssue(string pubkey,string tokenJsonTmp,string argsJson){
-        string outputHash = hash(tokenJsonTmp)
-        Token tk = json_to_obj<Token>(tokenJsonTmp)
-        if(argsJson==""){
-            print("用户扩展字段[argsJson]不可为空")
-            return "error"
+        //资金方信息
+        struct Fund {
+            string CompanyID    //资金方ID
+            uint64 Quota        //受信额度
+            uint64 UsedQuota    //已用配额
         }
-        IssueArg arg = json_to_obj<IssueArg>(argsJson)
-        int signNum = 0
-        //1.验证核心方是否已经签名
-        if(db_exist(outputHash+"_"+CoreEnterprise)==false){
-            //2.若未签名，则验证本次签名是否为核心方所签，若不是，直接返回无权限发起数字资产发行
-            if (contains(CoreEnterprise,pubkey)==false){
-                print("The first signature shall be initiated by the CoreEnterprise")
+
+        //数字资产
+        struct Token {
+            string Type     //类型/编号
+            string Status   //状态：Normal、Frozen
+            int64 ActiveDate//激活日期
+            int64 ExpireDate//有效日期
+            int Level       //可流转层级
+            uint64 Amount   //数字资产金额
+            bool CanAdd     //是否可增发
+        }
+
+        string accountKey
+
+        //初始化账户信息
+        public string init(){
+            string tmp = Platform+CoreEnterprise
+            accountKey = hash(tmp)
+            string accountJson = db_get<string>(accountKey)
+            if(accountJson!=""){
+                print("账户已存在")
                 return "error"
+            }
+
+            Fund f1
+            f1.CompanyID = "001"
+            f1.Quota = 50000000000
+            string key = "f_"+f1.CompanyID
+            db_set(key,f1)
+
+            Fund f2
+            f2.CompanyID = "002"
+            f2.Quota = 1000000000
+            key = "f_"+f2.CompanyID
+            db_set(key,f2)
+
+            Fund f3
+            f3.CompanyID = "003"
+            f3.Quota = 1500000000
+            key = "f_"+f3.CompanyID
+            db_set(key,f3)
+
+            Account account
+            account.MinNum = 2
+            account.Quota = f3.Quota+f2.Quota+f1.Quota
+            account.UsedQuota= 0
+            account.Recycle = true
+            string[]memberList = {""}
+            account.MemberList = memberList
+            string json = obj_to_json(account)
+            db_set(accountKey,json)
+            return "success"
+        }
+
+
+        //设置账户信息
+        public string SetAccountInfo(string json){
+            print(json)
+            string tmp = Platform+CoreEnterprise
+            accountKey = hash(tmp)
+            db_set(accountKey,json)
+            return "success"
+        }
+        //获取账号信息
+        public string GetAccountInfo(){
+            string tmp = Platform+CoreEnterprise
+            accountKey = hash(tmp)
+            //返回账号信息
+            string accountJson = db_get<string>(accountKey)
+            return accountJson
+        }
+
+        //授权结构体
+    	struct Authority{
+    		string Key
+    		string SecurityKey
+    	}
+
+        struct IssueArg {
+            string UID  // 唯一标识，用来确定超时的合约交易是否成功
+            string ToAddress //一级供应商地址
+            string Data      //扩展数据
+            string CompanyID //指定资金方的唯一标识
+
+        }
+        //发行数字资产之前的验证签名操作
+        public string beforIssue(string pubkey,string tokenJsonTmp,string argsJson){
+            string outputHash = hash(tokenJsonTmp)
+            Token tk = json_to_obj<Token>(tokenJsonTmp)
+            if(argsJson==""){
+                print("用户扩展字段[argsJson]不可为空")
+                return "error"
+            }
+            IssueArg arg = json_to_obj<IssueArg>(argsJson)
+            string uid = arg.UID
+            string res
+            if (contains(CoreEnterprise,pubkey)==true){
+                res = GUid(uid,"one")
             }else{
-                string id = arg.CompanyID
-                string key = "f_"+id
-                Fund f = db_get<Fund>(key)
-                print(key)
-                print(f)
-                uint64 balance = f.Quota - f.UsedQuota
-                if(balance<tk.Amount){
-                    print("资金方授信额度不足")
+                res = GUid(uid,"two")
+            }
+            if (res != "failed"){
+                string resp =ucres+res
+                return resp
+            }
+            int signNum = 0
+            //1.验证核心方是否已经签名
+            if(db_exist(outputHash+"_"+CoreEnterprise)==false){
+                //2.若未签名，则验证本次签名是否为核心方所签，若不是，直接返回无权限发起数字资产发行
+                if (contains(CoreEnterprise,pubkey)==false){
+                    print("The first signature shall be initiated by the CoreEnterprise")
+                    return "error"
+                }else{
+
+                    string id = arg.CompanyID
+                    string key = "f_"+id
+                    Fund f = db_get<Fund>(key)
+                    print(key)
+                    print(f)
+                    uint64 balance = f.Quota - f.UsedQuota
+                    if(balance<tk.Amount){
+                        print("资金方授信额度不足")
+                        return "error"
+                    }
+                    string data = arg.Data
+                    string addr = arg.ToAddress
+                    string tokenType = tk.Type
+                    db_set("ext_"+outputHash,data)
+                    db_set("addr_"+tokenType,addr)
+                    db_set(outputHash+"_"+CoreEnterprise,"signed")
+                    signNum = signNum+1
+                }
+            }else{
+                // string res = GUid(uid,"two")
+                // print(res)
+                // if (res != "failed"){
+
+                //     string resp =ucres+res
+                //     return resp
+
+                // }
+                signNum = signNum + 1
+                bool id
+                // if(Platform == pubkey){
+                if(contains(Platform,pubkey)==true){
+                    id = true
+                }
+                if(id == false){
+                    print("签名公钥不正确，需使用平台公钥审核")
                     return "error"
                 }
-                string data = arg.Data
-                string addr = arg.ToAddress
-                string tokenType = tk.Type
-                db_set("ext_"+outputHash,data)
-                db_set("addr_"+tokenType,addr)
-                db_set(outputHash+"_"+CoreEnterprise,"signed")
                 signNum = signNum+1
             }
-        }else{
-            signNum = signNum + 1
-            bool id
-            // if(Platform == pubkey){
-            if(contains(Platform,pubkey)==true){
-                id = true
+            string accountJson = GetAccountInfo()
+            Account acc = json_to_obj<Account>(accountJson)
+            //6.统计收集到签名是否满足最小签名数
+            print(signNum)
+            if(signNum<acc.MinNum){
+                print("签名数量不足")
+                // print(uid)
+                string re = SetIssUid(uid,"one")
+                print(re)
+                return "continue"
             }
-            if(id == false){
-                print("签名公钥不正确，需使用平台公钥审核")
-                return "error"
+            string key = "f_"+arg.CompanyID
+            Fund f = db_get<Fund>(key)
+            f.UsedQuota = f.UsedQuota + tk.Amount
+            db_set(key,f)
+            SetIssUid(uid,"two")
+            //7.满足则返回收集到的签名和原文，不满足则返回相应提示
+            return "success"
+        }
+
+        //记录外带数据
+        public string afterIssue(string pubkey,string tokenJsonTmp,string argsJson){
+            string outputHash = hash(tokenJsonTmp)
+            string data = db_get<string>("ext_"+outputHash)
+            string txID = getTxID()
+            IssueArg arg = json_to_obj<IssueArg>(argsJson)
+            db_set(txID,data)
+            return "success"
+        }
+        //获取外带数据
+        public string GetData(string hash){
+            string data = db_get<string>(hash)
+            return data
+        }
+
+        struct TransferArg {
+            string PlatFormAddress // 平台方合约地址
+            string ID           //融资编号
+            string Challenge    //解密标签
+            string ContractAddr //资金方合约地址
+            string Msg          //通知信息
+            string AuthorityJson //对应关系
+            string UID              // 唯一标识，用来确定超时的合约交易是否成功
+        }
+        //融资才需要的打款证明验证
+        // public string beforTransfer(string ID,string contractAddr){
+        public string beforTransfer(string tokenJsonTmp,string argsJson ){
+            print("转账验证")
+            TransferArg arg
+            print(argsJson)
+            if(argsJson!=""){
+                arg = json_to_obj<TransferArg>(argsJson)
+                print(arg)
+                string contractAddr = arg.ContractAddr
+                if(contractAddr!=""){
+                    string args = "[\""+arg.ID+"\"]"
+                    print(contractAddr)
+                    string res = invoke(contractAddr,"GetProofInfo",args)
+                    print(res)
+                    if(res==""||res=="0"){
+                        return "error"
+                    }
+                }
             }
-            signNum = signNum+1
-        }
-        string accountJson = GetAccountInfo()
-        Account acc = json_to_obj<Account>(accountJson)
-        //6.统计收集到签名是否满足最小签名数
-        print(signNum)
-        if(signNum<acc.MinNum){
-            print("签名数量不足")
-            return "continue"
-        }
-        string key = "f_"+arg.CompanyID
-        Fund f = db_get<Fund>(key)
-        f.UsedQuota = f.UsedQuota + tk.Amount
-        db_set(key,f)
-        //7.满足则返回收集到的签名和原文，不满足则返回相应提示
-        return "success"
-    }
-
-    //记录外带数据
-    public string afterIssue(string pubkey,string tokenJsonTmp,string argsJson){
-        string outputHash = hash(tokenJsonTmp)
-        string data = db_get<string>("ext_"+outputHash)
-        string txID = getTxID()
-        db_set(txID,data)
-        return "success"
-    }
-    //获取外带数据
-    public string GetData(string hash){
-        string data = db_get<string>(hash)
-        return data
-    }
-
-    struct TransferArg {
-        string PlatFormAddress // 平台方合约地址
-        string ID           //融资编号
-        string Challenge    //解密标签
-        string ContractAddr //资金方合约地址
-        string Msg          //通知信息
-        string AuthorityJson //对应关系
-    }
-    //融资才需要的打款证明验证
-    // public string beforTransfer(string ID,string contractAddr){
-    public string beforTransfer(string tokenJsonTmp,string argsJson ){
-        print("转账验证")
-        TransferArg arg
-        print(argsJson)
-        if(argsJson!=""){
-            arg = json_to_obj<TransferArg>(argsJson)
-            print(arg)
-            string contractAddr = arg.ContractAddr
-            if(contractAddr!=""){
-                string args = "[\""+arg.ID+"\"]"
-                print(contractAddr)
-                string res = invoke(contractAddr,"GetProofInfo",args)
-                print(res)
-                if(res==""||res=="0"){
+            string uid = arg.UID
+            if (uid!= ""){
+                string ifpass = GetUId(uid)
+                if (ifpass!="failed"){
+                    string resp = ucres+ifpass
+                    return resp
+                }
+            }
+            string challenge = arg.Challenge
+            if(challenge!=""){
+                string res = Challenge(challenge,"")
+                if(res != "success"){
+                    print("输入的解冻标识不正确")
                     return "error"
                 }
             }
-        }
-        string challenge = arg.Challenge
-        if(challenge!=""){
-            string res = Challenge(challenge,"")
-            if(res != "success"){
-                print("输入的解冻标识不正确")
-                return "error"
+            UTXO utxo = tx.UTXO
+            Transfer[] transferList = utxo.TransferList
+            print(transferList)
+            int loop = len(transferList)
+            print(loop)
+            for(int i = 0;i<loop;i++){
+                Transfer transfer = transferList[i]
+                string fromAddr = transfer.Address
+                string tkType = transfer.TokenType
+                string subType = transfer.SubType
+                uint64 val = transfer.Value
+                uint64 balance = getAddressBalance(fromAddr,tkType,subType)
+                string fKey = "fzId_"+fromAddr+"_"+tkType+"_"+subType
+                uint64 amount = db_get<uint64>(fKey)
+                print(val)
+                print(balance)
+                print(amount)
+                if(val>balance-amount){
+                    print("账户可用余额不足")
+                }
             }
-        }
-        UTXO utxo = tx.UTXO
-        Transfer[] transferList = utxo.TransferList
-        print(transferList)
-        int loop = len(transferList)
-        print(loop)
-        for(int i = 0;i<loop;i++){
-            Transfer transfer = transferList[i]
-            string fromAddr = transfer.Address
-            string tkType = transfer.TokenType
-            string subType = transfer.SubType
-            uint64 val = transfer.Value
-            uint64 balance = getAddressBalance(fromAddr,tkType,subType)
-            string fKey = "fzId_"+fromAddr+"_"+tkType+"_"+subType
-            uint64 amount = db_get<uint64>(fKey)
-            print(val)
-            print(balance)
-            print(amount)
-            if(val>balance-amount){
-                print("账户可用余额不足")
+            string authJson = arg.AuthorityJson
+            if(authJson!=""){
+                string platformAddr = arg.PlatFormAddress
+                print(platformAddr)
+                if (platformAddr!=""){
+                    string authJson1 = createFinalAuth(authJson)
+                    string authJson2 = quote(authJson1)
+                    string args = "["+authJson2+"]"
+                    print(args)
+                    string res = invoke(platformAddr,"CreateAuthoritys",args)
+                    print(res)
+                    if(res!="success"){
+                        return "error"
+                    }
+                }
+
             }
+            return "success"
+            //转账自定义业务逻辑验证/通知
         }
-        string authJson = arg.AuthorityJson
-        if(authJson!=""){
-            string platformAddr = arg.PlatFormAddress
-            print(platformAddr)
-            if (platformAddr!=""){
-                string authJson1 = createFinalAuth(authJson)
-                string authJson2 = quote(authJson1)
-                string args = "["+authJson2+"]"
-                print(args)
-                string res = invoke(platformAddr,"CreateAuthoritys",args)
-                print(res)
-                if(res!="success"){
-                    return "error"
+
+        public string afterTransfer(string tokenJsonTmp,string argsJson){
+            if(argsJson!=""){
+                TransferArg arg = json_to_obj<TransferArg>(argsJson)
+                event("topicTransfer",arg.Msg)
+                string uid = arg.UID
+                SetUId(uid)
+            }
+            return "success"
+        }
+
+        struct RecycleArg {
+            string PlatFormAddress // 平台方合约地址
+            string ID           //兑付编号
+            string ContractAddr //清分机构合约地址
+            string Msg          //通知信息
+            string CompanyID    //指定资金方的唯一标识
+            string AuthorityJson //对应关系
+            string UID         // 超时交易唯一标识
+        }
+        //回收之前验证打款证明
+        public string beforRecycle(string tokenJsonTmp,string argsJson){
+            print(argsJson)
+            print("回收验证")
+            RecycleArg arg
+            if(argsJson!=""){
+                arg = json_to_obj<RecycleArg>(argsJson)
+                string contractAddr = arg.ContractAddr
+                if(contractAddr!=""){
+                    string id = arg.ID
+                    string args = "[\""+id+"\"]"
+                    print(args)
+                    string res = invoke(contractAddr,"GetProofInfo",args)
+                    print(res)
+                    if(res==""||res=="0"){
+                        return "error"
+                    }
+                }
+            }
+            string uid = arg.UID
+            if (uid!= ""){
+                string ifpass = GetUId(uid)
+                if (ifpass!="failed"){
+                    string resp = ucres+ifpass
+                    return resp
+                }
+            }
+            string authJson = arg.AuthorityJson
+            print(authJson)
+            if(authJson!=""){
+                string platformAddr = arg.PlatFormAddress
+                print(platformAddr)
+                if (platformAddr!=""){
+                    string authJson1 = createFinalAuth(authJson)
+                    string authJson2 = quote(authJson1)
+                    string args = "["+authJson2+"]"
+                    string res = invoke(platformAddr,"CreateAuthoritys",args)
+                    print(res)
+                    if(res!="success"){
+                        return "error"
+                    }
+                }
+            }
+            return "success"
+        }
+
+        //回收之后验证
+        public string afterRecycle(string tokenJsonTmp,string argsJson){
+            print("回收之后")
+            print(argsJson)
+            if(argsJson!=""){
+                RecycleArg arg = json_to_obj<RecycleArg>(argsJson)
+                UTXO u = tx.UTXO
+                Output[] outlist = u.Outputs
+                int loop = len(outlist)
+                for(int j = 0;j<loop;j++){
+                    Output out = outlist[j]
+                    string ToAddress = out.Address
+                    if(ToAddress=="osEoy933LkHyyBcgjE7vCivfsX"){
+                        uint64 amount = out.Value
+                        string key = "f_"+arg.CompanyID
+                        Fund f = db_get<Fund>(key)
+                        f.UsedQuota = f.UsedQuota + amount
+                        db_set(key,f)
+                    }
+                }
+                string uid = arg.UID
+                SetUId(uid)
+                event("topicRecycle",arg.Msg)
+            }
+            return "success"
+        }
+
+        //修改受信额度
+        public string ChangeAccountQuota(uint64 quota,string companyID){
+
+            Fund f
+            string key = "f_" + companyID
+            if(db_exist(key)!=true){
+                f.CompanyID = companyID
+            }else{
+                f = db_get<Fund>(key)
+            }
+
+            f.Quota = quota
+            db_set(key,f)
+
+
+            string tmp = Platform+CoreEnterprise
+            accountKey = hash(tmp)
+
+            string accountJson = db_get<string>(accountKey)
+            Account acc = json_to_obj<Account>(accountJson)
+            acc.Quota = quota
+            accountJson = obj_to_json(acc)
+            db_set(accountKey,accountJson)
+            return "success"
+        }
+
+        //获取核心企业公钥
+        public string GetCoreEnterprise(){
+            return CoreEnterprise
+        }
+
+        //获取平台公钥
+        public string GetPlatform(){
+            return Platform
+        }
+
+        public string GetToAddress(string tokenType){
+            string addr=db_get<string>("addr_"+tokenType)
+            return addr
+        }
+        struct LockInfo{
+            string Proof
+            string Address
+            TokenTypeList[] TKList
+            int64 ExpireDate
+        }
+
+        struct TokenTypeList{
+            string NewFromSubType
+            string NewToSubType
+            string Address
+            string TokenType
+            string SubType
+            uint64 Amount
+            string ToAddr
+        }
+
+        //转让申请时，冻结资产
+        public string Apply(string json,string comments){
+            LockInfo lockInfo
+            lockInfo = json_to_obj<LockInfo>(json)
+
+            string proof = lockInfo.Proof
+            TokenTypeList[] TKList = lockInfo.TKList
+            string addr = lockInfo.Address
+            int loop = len(TKList)
+            for(int i = 0;i<loop;i++){
+                TokenTypeList tmp = TKList[i]
+                if(addr==""){
+                    addr = tmp.Address
+                }
+
+                string tk = tmp.TokenType
+                string stype = tmp.SubType
+                uint64 amount = tmp.Amount
+
+                //获取对应资产的余额
+                uint64 balance = getAddressBalance(addr,tk,stype)
+                print(tmp)
+                print(balance)
+                print(amount)
+                if(balance<amount){
+                    print("可使用余额不足")
+                    return "可使用余额不足"
+                }
+                string key = "fr_"+addr+tk+stype
+                db_set(key,amount)
+            }
+            db_set(proof,json)
+            if(comments!=""){
+                event("apply",comments)
+            }
+            return "success"
+        }
+        struct ChallengeArgs{
+            string Comments
+            string UID
+        }
+        //解冻资产
+        public string Challenge(string challenge,string argsJson){
+            ChallengeArgs arg
+            string comments
+            string uid
+            if (argsJson!=""){
+                arg = json_to_obj<ChallengeArgs>(argsJson)
+                comments = arg.Comments
+                uid = arg.UID
+                if( uid !=""){
+                    string  resp =  GetUId(uid)
+                    if (resp!="failed"){
+                        print(resp)
+                        return "success"
+                    }
                 }
             }
 
-        }
-        return "success"
-        //转账自定义业务逻辑验证/通知
-    }
+            string json = db_get<string>(challenge)
+            if(json == ""){
+                return "failed"
+            }else if (json == "success"){
+                print("不可反复解冻")
+                return "failed"
+            }
+            LockInfo lockInfo
+            lockInfo = json_to_obj<LockInfo>(json)
 
-    public string afterTransfer(string tokenJsonTmp,string argsJson){
-        if(argsJson!=""){
-            TransferArg arg = json_to_obj<TransferArg>(argsJson)
-            event("topicTransfer",arg.Msg)
-        }
-        return "success"
-    }
+            TokenTypeList[] TKList = lockInfo.TKList
 
-    struct RecycleArg {
-        string PlatFormAddress // 平台方合约地址
-        string ID           //兑付编号
-        string ContractAddr //清分机构合约地址
-        string Msg          //通知信息
-        string CompanyID    //指定资金方的唯一标识
-        string AuthorityJson //对应关系
-    }
-    //回收之前验证打款证明
-    public string beforRecycle(string tokenJsonTmp,string argsJson){
-        print(argsJson)
-        print("回收验证")
-        RecycleArg arg
-        if(argsJson!=""){
-            arg = json_to_obj<RecycleArg>(argsJson)
-            string contractAddr = arg.ContractAddr
-            if(contractAddr!=""){
-                string id = arg.ID
-                string args = "[\""+id+"\"]"
-                print(args)
-                string res = invoke(contractAddr,"GetProofInfo",args)
-                print(res)
-                if(res==""||res=="0"){
-                    return "error"
+            int loop = len(TKList)
+            for(int i = 0;i<loop;i++){
+                TokenTypeList tmp = TKList[i]
+                string addr = tmp.Address
+                string tk = tmp.TokenType
+                string stype = tmp.SubType
+
+                uint64 amount = tmp.Amount
+                string key = "fr_"+addr+tk+stype
+                uint64 i = 0
+                db_set(key,i)
+            }
+            db_set(challenge,"success")
+            if(comments!=""){
+                event("topic",comments)
+            }
+            if(uid!=""){
+                SetUId(uid)
+            }
+            return "success"
+        }
+
+        //获取冻结的待转让数字资产
+        public string GetTransferList(string challenge){
+            string json = db_get<string>(challenge)
+            return json
+        }
+
+        public string createFinalAuth(string argjson){
+            Authority[] list
+            list =  json_to_obj<array(Authority)>(argjson)
+            int i = len(list)
+            Authority auth
+            for(int j=0;j<i;j++){
+                auth = list[j]
+    			string key = auth.Key
+                // string pub = replace(Platform," ","",-1)
+                string bpub = stringToBase64(Platform)
+    			if (key == bpub){
+                    string txid = getTxID()
+                    print(txid)
+    			    string str = txid + key
+                    key = hash(str)
+                    Authority[1] result
+                    auth.Key = key
+                    result[0] = auth
+                    string authJson  = obj_to_json(result)
+                    return authJson
                 }
-            }
+    		}
+            return "error"
         }
-        string authJson = arg.AuthorityJson
-        print(authJson)
-        if(authJson!=""){
-            string platformAddr = arg.PlatFormAddress
-            print(platformAddr)
-            if (platformAddr!=""){
-                string authJson1 = createFinalAuth(authJson)
-                string authJson2 = quote(authJson1)
-                string args = "["+authJson2+"]"
-                string res = invoke(platformAddr,"CreateAuthoritys",args)
-                print(res)
-                if(res!="success"){
-                    return "error"
+
+        public string SetIssUid(string uid,string num){
+            print("SetIssUid")
+            print(num)
+            print(uid)
+            if (uid!=""){
+                print("uid is not nil")
+                string key  = "out_"+uid
+                print(key)
+                string val = getTxID()
+                val = num + "_"+ val
+                print(val)
+                db_set(key,val)
+            }
+            print("uid is nil")
+            return "success"
+        }
+        public string GUid(string uid,string num){
+            print(num)
+            string suc = GetUId(uid)
+            // int i = len(suc)
+            string res
+            print(suc)
+            if (suc != "failed"){
+                string[] li
+                li = spilt(suc,"_")
+                string n = li[0]
+                if (n!=num){
+                    return "failed"
                 }
+                res = li[1]
+                return res
             }
-        }
-        return "success"
-    }
-
-    //回收之后验证
-    public string afterRecycle(string tokenJsonTmp,string argsJson){
-        print("回收之后")
-        print(argsJson)
-        if(argsJson!=""){
-            RecycleArg arg = json_to_obj<RecycleArg>(argsJson)
-            UTXO u = tx.UTXO
-            Output[] outlist = u.Outputs
-            int loop = len(outlist)
-            for(int j = 0;j<loop;j++){
-                Output out = outlist[j]
-                string ToAddress = out.Address
-                if(ToAddress=="osEoy933LkHyyBcgjE7vCivfsX"){
-                    uint64 amount = out.Value
-                    string key = "f_"+arg.CompanyID
-                    Fund f = db_get<Fund>(key)
-                    f.UsedQuota = f.UsedQuota + amount
-                    db_set(key,f)
-                }
-            }
-
-            event("topicRecycle",arg.Msg)
-        }
-        return "success"
-    }
-
-    //修改受信额度
-    public string ChangeAccountQuota(uint64 quota,string companyID){
-
-        Fund f
-        string key = "f_" + companyID
-        if(db_exist(key)!=true){
-            f.CompanyID = companyID
-        }else{
-            f = db_get<Fund>(key)
-        }
-
-        f.Quota = quota
-        db_set(key,f)
-
-
-        string tmp = Platform+CoreEnterprise
-        accountKey = hash(tmp)
-
-        string accountJson = db_get<string>(accountKey)
-        Account acc = json_to_obj<Account>(accountJson)
-        acc.Quota = quota
-        accountJson = obj_to_json(acc)
-        db_set(accountKey,accountJson)
-        return "success"
-    }
-
-    //获取核心企业公钥
-    public string GetCoreEnterprise(){
-        return CoreEnterprise
-    }
-
-    //获取平台公钥
-    public string GetPlatform(){
-        return Platform
-    }
-
-    public string GetToAddress(string tokenType){
-        string addr=db_get<string>("addr_"+tokenType)
-        return addr
-    }
-    struct LockInfo{
-        string Proof
-        string Address
-        TokenTypeList[] TKList
-        int64 ExpireDate
-    }
-
-    struct TokenTypeList{
-        string NewFromSubType
-        string NewToSubType
-        string Address
-        string TokenType
-        string SubType
-        uint64 Amount
-        string ToAddr
-    }
-
-    //转让申请时，冻结资产
-    public string Apply(string json,string comments){
-        LockInfo lockInfo
-        lockInfo = json_to_obj<LockInfo>(json)
-
-        string proof = lockInfo.Proof
-        TokenTypeList[] TKList = lockInfo.TKList
-        string addr = lockInfo.Address
-        int loop = len(TKList)
-        for(int i = 0;i<loop;i++){
-            TokenTypeList tmp = TKList[i]
-            if(addr==""){
-                addr = tmp.Address
-            }
-
-            string tk = tmp.TokenType
-            string stype = tmp.SubType
-            uint64 amount = tmp.Amount
-
-            //获取对应资产的余额
-            uint64 balance = getAddressBalance(addr,tk,stype)
-            print(tmp)
-            print(balance)
-            print(amount)
-            if(balance<amount){
-                print("可使用余额不足")
-                return "error"
-            }
-            string key = "fr_"+addr+tk+stype
-            db_set(key,amount)
-        }
-        db_set(proof,json)
-        if(comments!=""){
-            event("apply",comments)
-        }
-        return "success"
-    }
-
-    //解冻资产
-    public string Challenge(string challenge,string comments){
-        string json = db_get<string>(challenge)
-        if(json == ""){
             return "failed"
-        }else if (json == "success"){
-            print("不可反复解冻")
-            return "failed"
         }
-        LockInfo lockInfo
-        lockInfo = json_to_obj<LockInfo>(json)
-
-        TokenTypeList[] TKList = lockInfo.TKList
-
-        int loop = len(TKList)
-        for(int i = 0;i<loop;i++){
-            TokenTypeList tmp = TKList[i]
-            string addr = tmp.Address
-            string tk = tmp.TokenType
-            string stype = tmp.SubType
-
-            uint64 amount = tmp.Amount
-            string key = "fr_"+addr+tk+stype
-            uint64 i = 0
-            db_set(key,i)
-        }
-        db_set(challenge,"success")
-        if(comments!=""){
-            event("topic",comments)
-        }
-        return "success"
-    }
-
-    //获取冻结的待转让数字资产
-    public string GetTransferList(string challenge){
-        string json = db_get<string>(challenge)
-        return json
-    }
-
-    public string createFinalAuth(string argjson){
-        Authority[] list
-        list =  json_to_obj<array(Authority)>(argjson)
-        int i = len(list)
-        print(i)
-        Authority auth
-        for(int j=0;j<i;j++){
-            auth = list[j]
-			string key = auth.Key
-            // string pub = replace(Platform," ","",-1)
-            string bpub = stringToBase64(Platform)
-			if (key == bpub){
-                string txid = getTxID()
-                print(txid)
-			    string str = txid + key
-                key = hash(str)
-                Authority[1] result
-                auth.Key = key
-                result[0] = auth
-                string authJson  = obj_to_json(result)
-                print("create success")
-                return authJson
+        public string SetUId(string s){
+            print("setuid")
+            if (s == ""){
+                return "success"
             }
-		}
-        return "error"
-    }
+            string key = "out_" + s
+            print(key)
+            string val = getTxID()
+            db_set(key,val)
+            return "success"
+        }
+
+        public string GetUId (string s){
+            print("getuid")
+            string key  = "out_" + s
+            print(key)
+            string suc = db_get<string>(key)
+            if (suc == ""){
+                print("超时交易未成功上链")
+                return "failed"
+            }
+            return suc
+        }
 }
 
 
