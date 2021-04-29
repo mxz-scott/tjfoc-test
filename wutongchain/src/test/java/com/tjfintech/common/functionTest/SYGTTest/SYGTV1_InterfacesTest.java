@@ -480,128 +480,69 @@ public class SYGTV1_InterfacesTest {
 
         log.info(" +++++++++++++++ 必填字段校验 +++++++++++++++ ");
         assetID = "";
-        String response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        String response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         assetID = "123";
         scene = "";
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         scene = "123";
         label = "";
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         //非必填字段检查
         desc = "";
         label = "123";
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
 
         log.info(" +++++++++++++++ assetID 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
         assetID = UtilsClass.Random(512);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         assetID = UtilsClass.Random(63);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         assetID = UtilsClass.Random(64);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         assetID = UtilsClass.Random(65);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         assetID = UtilsClass.Random(8);
 
-        log.info(" +++++++++++++++ scene 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
-        scene = UtilsClass.Random(512);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("error"));
-
-        scene = UtilsClass.Random(63);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-//        assertEquals(true,response.contains("error"));
-
-        scene = UtilsClass.Random(64);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-//        assertEquals(true,response.contains("error"));
-
-        scene = UtilsClass.Random(65);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("error"));
-
-        scene = UtilsClass.Random(6);
-
-        log.info(" +++++++++++++++ label 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
-        label = UtilsClass.Random(512);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("error"));
-
-        label = UtilsClass.Random(63);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-//        assertEquals(true,response.contains("error"));
-
-        label = UtilsClass.Random(64);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-//        assertEquals(true,response.contains("error"));
-
-        label = UtilsClass.Random(65);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("error"));
-
-        label = UtilsClass.Random(6);
-
-        log.info(" +++++++++++++++ amount 检查 +++++++++++++++ ");//具体长度限制需要开发再确认
-        amount = 0;
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("error"));
-
-        amount = -1;
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("error"));
-
-        amount = 20;
-
         log.info(" +++++++++++++++ desc 检查 +++++++++++++++ ");//具体长度限制需要开发再确认
         desc = UtilsClass.Random(1028);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         desc = UtilsClass.Random(513);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         desc = UtilsClass.Random(512);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
         desc = UtilsClass.Random(511);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
     }

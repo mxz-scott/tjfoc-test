@@ -138,7 +138,7 @@ public  class GoSYGT implements SYGT {
      * @param desc
      * @return
      */
-    public String SSAssetUpdate(String assetID,String scene,String label,int qty,String desc){
+    public String SSAssetUpdate(String assetID,int qty,String desc){
         Map<String, Object> map = new HashMap<>();
         map.put("assetID", assetID);
         map.put("qty", qty);
