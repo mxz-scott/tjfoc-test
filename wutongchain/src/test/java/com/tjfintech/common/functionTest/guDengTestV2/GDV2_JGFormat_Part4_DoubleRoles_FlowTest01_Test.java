@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
+public class GDV2_JGFormat_Part4_DoubleRoles_FlowTest01_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
@@ -48,6 +48,10 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
     String tempsubject_investor_qualification_certifier_ref = subject_investor_qualification_certifier_ref;
     String tempproduct_issuer_subject_ref = product_issuer_subject_ref;
     String tempregister_transaction_ref = register_transaction_ref;
+
+    public static Map accountInfo = new HashMap();
+    int issueSubVer = -1;
+
 
     @Rule
     public TestName tm = new TestName();
@@ -80,8 +84,6 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
 
     @Before
     public void resetVar(){
-
-
         register_event_type = "1";//非交易登记
         tempsubject_investor_qualification_certifier_ref =subject_investor_qualification_certifier_ref;
         tempregister_transaction_ref = register_transaction_ref;
@@ -91,11 +93,22 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
     public void calJGDataAfterTx()throws Exception{
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
-        int endHeight = net.sf.json.JSONObject.fromObject(store.GetHeight()).getInt("data");
+        int endHeight = JSONObject.fromObject(store.GetHeight()).getInt("data");
 //        uf.checkJGHeaderOpVer(blockHeight,endHeight);
 
         subject_investor_qualification_certifier_ref = tempsubject_investor_qualification_certifier_ref;
         register_transaction_ref = tempregister_transaction_ref;
+    }
+
+    @Test
+    public void TC05_EnterpriseRegAndCreateAcc() throws Exception {
+        //确认初始主体版本为-1 即无主体对象标识存在
+        assertEquals(issueSubVer,Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID)));
+
+        accountInfo = uf.regTestUnit_ThenCreateAcc("1",false);
+
+        //确认主体版本为1 即挂牌登记 0 开户1
+        assertEquals(1,Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID)));
     }
 
     @Test
@@ -108,14 +121,17 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
         List<Map> shareList3 = gdConstructShareList(gdAccount3,issueAmount,0, shareList2);
         List<Map> shareList4 = gdConstructShareList(gdAccount4,issueAmount,0,shareList3);
 
-        String response= uf.shareIssue(gdEquityCode,shareList4,false);
-        JSONObject jsonObject=JSONObject.fromObject(response);
-        String txId = jsonObject.getJSONObject("data").getString("txId");
+        String response= gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
 
+        JSONObject jsonObject = JSONObject.fromObject(response);
+        String txId = jsonObject.getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
+
 
         String txDetail = store.GetTxDetail(txId);
-        assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
+        assertEquals("200", JSONObject.fromObject(txDetail).getString("state"));
 
         //检查各个查询对象返回信息中不包含敏感词
         assertEquals("不包含敏感词",true,
@@ -247,9 +263,11 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+
 
         String txDetail = store.GetTxDetail(txId);
-        assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
+        assertEquals("200", JSONObject.fromObject(txDetail).getString("state"));
 
         //检查各个查询对象返回信息中不包含敏感词
         assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(txDetail,regType));
@@ -363,6 +381,9 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
     @Test
     public void TC08_shareTransfer()throws Exception{
 
+        //确认主体版本为1 即挂牌登记 0 开户1
+        assertEquals(1,Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID)));
+
         String keyId = gdAccountKeyID1;
         String fromAddr = gdAccount1;
         String toAddr = gdAccount5;
@@ -405,9 +426,11 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
         //执行交易
         String response= gd.GDShareTransfer(keyId,fromAddr,transferAmount,toAddr,shareProperty,eqCode,txInfo,fromNow,toNow);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+
         commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+
         String txDetail = store.GetTxDetail(txId);
-        assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
+        assertEquals("200", JSONObject.fromObject(txDetail).getString("state"));
 
         //检查各个查询对象返回信息中不包含敏感词
         assertEquals("不包含主体数据敏感词",true,gdCF.chkSensitiveWord(txDetail,subjectType));
@@ -454,6 +477,9 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
         String regVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
         String txRpVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
         String subVer = gdCF.getObjectLatestVer(gdCompanyID);
+
+        //确认主体版本为2 即挂牌登记 0 开户1 转让给新账户触发主体报送2
+        assertEquals(2,Integer.parseInt(subVer));
 
         //获取链上mini url的存证信息 并检查是否包含uri信息 每个登记都是新的 则都是0
         String regfileName1 = conJGFileName(tempObjIdFrom,regVer);
@@ -596,6 +622,9 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
 //        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
+        //确认主体版本为2 即挂牌登记 0 开户1 转让给新账户触发主体报送2
+        assertEquals(2,Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID)));
+
         register_event_type = "2";//非交易登记
 
         String eqCode = gdEquityCode;
@@ -616,9 +645,11 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
 
         String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, eqProd,txInfo);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+
         commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+
         String txDetail = store.GetTxDetail(txId);
-        assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
+        assertEquals("200", JSONObject.fromObject(txDetail).getString("state"));
 
         //检查各个查询对象返回信息中不包含敏感词
         assertEquals("不包含登记数据敏感词",true,gdCF.chkSensitiveWord(txDetail,subjectType));
@@ -632,6 +663,9 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
         assertEquals("200",JSONObject.fromObject(query).getString("state"));
 
         JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
+
+        //确认主体版本为3 即挂牌登记 0 开户1 转让给新账户触发主体报送2  增发触发主体报送 3
+        assertEquals(3,Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID)));
 
         log.info("================================检查存证数据格式化《开始》================================");
 
@@ -804,9 +838,11 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
         String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,regInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
+
         commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+
         String txDetail = store.GetTxDetail(txId);
-        assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
+        assertEquals("200", JSONObject.fromObject(txDetail).getString("state"));
 
         //检查各个查询对象返回信息中不包含敏感词
         assertEquals("不包含登记数据敏感词",true,gdCF.chkSensitiveWord(txDetail,regType));
@@ -939,9 +975,11 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
         String response= gd.GDShareUnlock(bizNo,eqCode,amount,regInfo);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
+
         commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+
         String txDetail = store.GetTxDetail(txId);
-        assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
+        assertEquals("200", JSONObject.fromObject(txDetail).getString("state"));
 
         //检查各个查询对象返回信息中不包含敏感词
         assertEquals("不包含登记数据敏感词",true,gdCF.chkSensitiveWord(txDetail,regType));
@@ -1054,6 +1092,9 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
     public void TC1201_shareRecycleOneAcc() throws Exception {
         log.info("发行主体版本  " + gdCF.getObjectLatestVer(gdCompanyID));
 
+        //确认主体版本为3 即挂牌登记 0 开户1 转让给新账户触发主体报送2  增发触发主体报送 3
+        assertEquals(3,Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID)));
+
         String eqCode = gdEquityCode;
         String remark = "777777";
 
@@ -1073,6 +1114,7 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
         String response= gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList,remark);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
+
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
@@ -1083,6 +1125,9 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
         ).getInt("subject_shareholders_number");
 
         assertEquals(totalMembers,totalMembersAft);//总数无变更
+
+        //确认主体版本为4 即挂牌登记 0 开户1 转让给新账户触发主体报送2  增发触发主体报送 3 回收一次触发主体报送4
+        assertEquals(4,Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID)));
 
         //查询挂牌企业数据
         //查询投资者信息
@@ -1243,6 +1288,9 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
         ).getInt("subject_shareholders_number");
 
         assertEquals(totalMembers,totalMembersAft);//总数无变更
+
+        //确认主体版本为5 即挂牌登记 0 开户1 转让给新账户触发主体报送2  增发触发主体报送 3 回收一次触发主体报送4 再一次回收触发主体报送5
+        assertEquals(5,Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID)));
 
         log.info("================================检查存证数据格式化《开始》================================");
 
@@ -1532,6 +1580,500 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
         assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
     }
 
+    @Test
+    public void TC14_DoubleRoleAccoutOperation_TransferRollIn() throws Exception{
+        String accout = accountInfo.get("accout").toString();
+        String keyID = accountInfo.get("keyID").toString();
+
+        //Account1转让token给挂牌企业账户
+
+        //确认主体版本为5 即挂牌登记 0 开户1
+        assertEquals(5,Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID)));
+
+        String keyId = gdAccountKeyID1;
+        String fromAddr = gdAccount1;
+        String toAddr = accout;
+        int shareProperty = 0;
+        String eqCode = gdEquityCode;
+
+        register_event_type = "2";//交易登记
+        //交易报告数据
+        Map txInfo = gdBF.init04TxInfo();
+        String txRpObjId = "txReport" + Random(6);
+        txInfo.put("transaction_object_id",txRpObjId);
+//        txInfo.put("transaction_custody_product_ref",gdEquityCode);
+
+        //登记数据
+        String tempObjIdFrom = "reg" + mapAccAddr.get(fromAddr).toString() + Random(3);
+        String tempObjIdTo = "reg" + mapAccAddr.get(accout).toString() + Random(3);
+
+        register_transaction_ref = txRpObjId;//登记引用的是交易报告的对象标识
+        transaction_custody_product_ref = gdEquityCode;
+        register_product_ref = gdEquityCode;
+
+        Map fromNow = gdBF.init05RegInfo();
+        Map toNow = gdBF.init05RegInfo();
+
+        fromNow.put("register_registration_object_id",tempObjIdFrom);
+        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);
+
+        toNow.put("register_registration_object_id",tempObjIdTo);
+        toNow.put("register_subject_account_ref","SH" + gdCompanyID);  //挂牌登记机构开户股权账户
+
+//        fromNow.put("register_transaction_ref",txRpObjId);
+//        toNow.put("register_transaction_ref",txRpObjId);
+
+
+
+        String tempObj = gdCompanyID;
+
+        String query2 = gd.GDObjectQueryByVer(gdCompanyID,-1);
+
+        //执行交易
+        String response= gd.GDShareTransfer(keyId,fromAddr,transferAmount,toAddr,shareProperty,eqCode,txInfo,fromNow,toNow);
+        String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+
+        String txDetail = store.GetTxDetail(txId);
+        assertEquals("200", JSONObject.fromObject(txDetail).getString("state"));
+
+        //检查各个查询对象返回信息中不包含敏感词
+        assertEquals("不包含主体数据敏感词",true,gdCF.chkSensitiveWord(txDetail,subjectType));
+        assertEquals("不包含登记数据敏感词",true,gdCF.chkSensitiveWord(txDetail,regType));
+        assertEquals("不包含交易报告敏感词",true,gdCF.chkSensitiveWord(txDetail,txrpType));
+
+        //获取上链交易时间戳
+        long onChainTS = JSONObject.fromObject(store.GetTxDetail(txId)).getJSONObject("data").getJSONObject("header").getLong("timestamp");
+
+        String getTotal = enterpriseSubjectInfo.get("subject_shareholders_number").toString();
+        int oldTotal = Integer.parseInt(getTotal);
+        enterpriseSubjectInfo.put("subject_shareholders_number",oldTotal + 1);     //变更总股东数 + 1 转给新的账户
+
+        //查询挂牌企业数据
+        //查询投资者信息
+        //查询企业股东信息
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+        assertEquals("200", JSONObject.fromObject(query).getString("state"));
+
+        JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
+
+        log.info("================================检查存证数据格式化《开始》================================");
+
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        String sd = sdf.format(new Date(onChainTS)); // 时间戳转换日期
+        log.info("检查过户转让存证登记格式化及信息内容与传入一致:" + tempObjIdFrom);
+//        fromNow.put("register_rights_change_amount","-" + transferAmount);
+//        fromNow.put("register_time",txInformation.get("transaction_close_time").toString());
+//        fromNow.put("register_available_balance",issueAmount - changeAmount - transferAmount);
+//        fromNow.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
+
+//        toNow.put("register_rights_change_amount",transferAmount);
+//        toNow.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
+//        toNow.put("register_time",txInformation.get("transaction_close_time").toString());
+//        toNow.put("register_available_balance",transferAmount);
+
+
+        log.info("================================检查存证数据格式化《开始》================================");
+
+        Map uriInfo = gdCF.getJGURIStoreHash(txId,conJGFileName(tempObjIdFrom,"0"),1);
+
+        log.info("检查股权性质变更存证登记格式化及信息内容与传入一致");
+        String regVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
+        String txRpVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
+        String subVer = gdCF.getObjectLatestVer(gdCompanyID);
+
+        //确认主体版本为6
+        assertEquals(6,Integer.parseInt(subVer));
+
+        //获取链上mini url的存证信息 并检查是否包含uri信息 每个登记都是新的 则都是0
+        String regfileName1 = conJGFileName(tempObjIdFrom,regVer);
+        String regfileName2 = conJGFileName(tempObjIdTo,regVer);
+        String txfileName = conJGFileName(txRpObjId,txRpVer);
+        String subfileName = conJGFileName(gdCompanyID,subVer);
+
+        String chkRegURI1 =  regfileName1;
+        String chkRegURI2 = regfileName2;
+        String chkTxRpURI = txfileName;
+        String chkSubURI = subfileName;
+
+        log.info(uriInfo.get("storeData").toString());
+        log.info(chkRegURI1 + "      " + chkRegURI2);
+        assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI1));
+        assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI2));
+        assertEquals(true,uriInfo.get("storeData").toString().contains(chkTxRpURI));
+        assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
+
+        //直接从minio上获取报送数据文件信息
+        Map getRegInfo1 = gdCF.constructJGDataFromStr(regfileName1,regType,"");
+        Map getRegInfo2 = gdCF.constructJGDataFromStr(regfileName2,regType,"");
+        Map getTxRpInfo = gdCF.constructJGDataFromStr(txfileName,txrpType,"");
+        Map getSubInfo = gdCF.constructJGDataFromStr(subfileName,subjectType,"1");
+
+
+        register_subject_account_ref = "SH" + gdAccClientNo1;
+        //填充header content字段
+        fromNow.put("content",gdCF.constructContentTreeMap(regType,tempObjIdFrom,regVer,"create",String.valueOf(ts5)));
+        log.info("检查登记存证信息内容与传入一致\n" + fromNow.toString() + "\n" + getRegInfo1.toString());
+        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(fromNow,regType)),replaceCertain(getRegInfo1.toString()));
+        assertEquals("from检查数据是否一致" ,true,bSame);
+//        log.info("from登记检查数据是否一致" + bSame);
+
+        register_subject_account_ref = "SH" + gdCompanyID;
+        //填充header content字段
+        toNow.put("content",gdCF.constructContentTreeMap(regType,tempObjIdTo,regVer,"create",String.valueOf(ts5)));
+        log.info("检查登记存证信息内容与传入一致\n" + toNow.toString() + "\n" + getRegInfo1.toString());
+        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(toNow,regType)),replaceCertain(getRegInfo2.toString()));
+        assertEquals("from检查数据是否一致" ,true,bSame);
+//        log.info("to登记检查数据是否一致" + bSame);
+
+        //填充header content字段
+        txInfo.put("content",gdCF.constructContentTreeMap(txrpType,txRpObjId,txRpVer,"create",String.valueOf(ts4)));
+        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(txInfo,txrpType)),replaceCertain(getTxRpInfo.toString()));
+        assertEquals("检查转让交易报告数据是否一致" ,true,bSame);
+//        log.info("交易报告检查数据是否一致" + bSame);
+
+
+        query2 = gd.GDObjectQueryByVer(gdCompanyID,-1);
+        int totalMembers = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject("body"
+        ).getJSONObject("subject_information").getJSONObject("organization_subject_information"
+        ).getJSONObject("basic_information_of_enterprise").getJSONObject("basic_information_description"
+        ).getInt("subject_shareholders_number");
+
+        //填充header content字段
+        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
+
+        //更新股东数量 非用户传入的数据 而是依据前面转让给新账户后的股东数
+        enSubInfo.put("subject_shareholders_number",totalMembers);
+
+        log.info("+++++++++++++++++++++++++++++++++++++++++++++++++++");
+        log.info(getSubInfo.toString());
+        Map mapContent = gdCF.constructContentTreeMap(subjectType,gdCompanyID,subVer,"update",String.valueOf(ts1));
+        enSubInfo.put("content",mapContent);
+        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(enSubInfo,subjectType)),replaceCertain(getSubInfo.toString()));
+        assertEquals("检查转让主体数据是否一致" ,true,bSame);
+
+
+        log.info("================================检查存证数据格式化《结束》================================");
+
+        //实际应该持股情况信息
+        List<Map> respShareList = new ArrayList<>();
+        respShareList = gdConstructQueryShareList(gdAccount1,3300,0,0,mapShareENCN().get("0"),respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount1,500,1,0,mapShareENCN().get("1"),respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount5,1000,0,0,mapShareENCN().get("0"),respShareList);
+        respShareList = gdConstructQueryShareList(accout,1000,0,0,mapShareENCN().get("0"),respShareList);
+        List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,5900,0,0,mapShareENCN().get("0"), respShareList);
+        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,5900,0,0,mapShareENCN().get("0"), respShareList2);
+        List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,5900,0,0,mapShareENCN().get("0"), respShareList3);
+
+
+
+        //检查存在余额的股东列表
+        assertEquals(respShareList4.size(),dataShareList.size());
+
+        List<Map> getShareList = getShareListFromQueryNoZeroAcc(dataShareList);
+
+        assertEquals(respShareList4.size(),getShareList.size());
+        assertEquals(true,respShareList4.containsAll(getShareList) && getShareList.containsAll(respShareList4));
+
+
+        //查询股东持股情况 无当前股权代码信息
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(gdAccClientNo1,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":3300,\"lockAmount\":0}"));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo2 + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + gdAccount2 + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5900,\"lockAmount\":0}"));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
+        assertEquals(gdAccClientNo3,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo3 + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + gdAccount3 + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5900,\"lockAmount\":0}"));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
+        assertEquals(gdAccClientNo4,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo4 + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + gdAccount4 + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5900,\"lockAmount\":0}"));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
+        assertEquals(gdAccClientNo5,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo5 + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + gdAccount5 + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdCompanyID);
+        assertEquals(gdCompanyID,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdCompanyID + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + accout + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+    }
+
+
+    @Test
+    public void TC15_DoubleRoleAccoutOperation_TransferRollOut() throws Exception{
+        String accout = accountInfo.get("accout").toString();
+        String keyID = accountInfo.get("keyID").toString();
+
+        //Account1转让token给挂牌企业账户
+
+        //确认主体版本为6
+        assertEquals(6,Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID)));
+
+        String keyId = keyID;
+        String fromAddr = accout;
+        String toAddr = gdAccount2;
+        int shareProperty = 0;
+        String eqCode = gdEquityCode;
+
+        register_event_type = "2";//交易登记
+        //交易报告数据
+        Map txInfo = gdBF.init04TxInfo();
+        String txRpObjId = "txReport" + Random(6);
+        txInfo.put("transaction_object_id",txRpObjId);
+//        txInfo.put("transaction_custody_product_ref",gdEquityCode);
+
+        //登记数据
+        String tempObjIdFrom = "reg" + mapAccAddr.get(fromAddr).toString() + Random(3);
+        String tempObjIdTo = "reg" + mapAccAddr.get(accout).toString() + Random(3);
+
+        register_transaction_ref = txRpObjId;//登记引用的是交易报告的对象标识
+        transaction_custody_product_ref = gdEquityCode;
+        register_product_ref = gdEquityCode;
+
+        Map fromNow = gdBF.init05RegInfo();
+        Map toNow = gdBF.init05RegInfo();
+
+        fromNow.put("register_registration_object_id",tempObjIdFrom);
+        fromNow.put("register_subject_account_ref","SH" + gdCompanyID);
+
+        toNow.put("register_registration_object_id",tempObjIdTo);
+        toNow.put("register_subject_account_ref","SH" + gdAccClientNo2);  //挂牌登记机构开户股权账户
+
+//        fromNow.put("register_transaction_ref",txRpObjId);
+//        toNow.put("register_transaction_ref",txRpObjId);
+
+
+
+        String tempObj = gdCompanyID;
+
+        String query2 = gd.GDObjectQueryByVer(gdCompanyID,-1);
+
+        //执行交易
+        String response= gd.GDShareTransfer(keyId,fromAddr,transferAmount,toAddr,shareProperty,eqCode,txInfo,fromNow,toNow);
+        String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+
+        String txDetail = store.GetTxDetail(txId);
+        assertEquals("200", JSONObject.fromObject(txDetail).getString("state"));
+
+        //检查各个查询对象返回信息中不包含敏感词
+        assertEquals("不包含主体数据敏感词",true,gdCF.chkSensitiveWord(txDetail,subjectType));
+        assertEquals("不包含登记数据敏感词",true,gdCF.chkSensitiveWord(txDetail,regType));
+        assertEquals("不包含交易报告敏感词",true,gdCF.chkSensitiveWord(txDetail,txrpType));
+
+        //获取上链交易时间戳
+        long onChainTS = JSONObject.fromObject(store.GetTxDetail(txId)).getJSONObject("data").getJSONObject("header").getLong("timestamp");
+
+        String getTotal = enterpriseSubjectInfo.get("subject_shareholders_number").toString();
+        int oldTotal = Integer.parseInt(getTotal);
+        enterpriseSubjectInfo.put("subject_shareholders_number",oldTotal + 1);     //变更总股东数 + 1 转给新的账户
+
+        //查询挂牌企业数据
+        //查询投资者信息
+        //查询企业股东信息
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+        assertEquals("200", JSONObject.fromObject(query).getString("state"));
+
+        JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
+
+        log.info("================================检查存证数据格式化《开始》================================");
+
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        String sd = sdf.format(new Date(onChainTS)); // 时间戳转换日期
+        log.info("检查过户转让存证登记格式化及信息内容与传入一致:" + tempObjIdFrom);
+//        fromNow.put("register_rights_change_amount","-" + transferAmount);
+//        fromNow.put("register_time",txInformation.get("transaction_close_time").toString());
+//        fromNow.put("register_available_balance",issueAmount - changeAmount - transferAmount);
+//        fromNow.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
+
+//        toNow.put("register_rights_change_amount",transferAmount);
+//        toNow.put("register_rights_frozen_balance", 0);   //当前冻结余额修改为实际冻结数
+//        toNow.put("register_time",txInformation.get("transaction_close_time").toString());
+//        toNow.put("register_available_balance",transferAmount);
+
+
+        log.info("================================检查存证数据格式化《开始》================================");
+
+        Map uriInfo = gdCF.getJGURIStoreHash(txId,conJGFileName(tempObjIdFrom,"0"),1);
+
+        log.info("检查股权性质变更存证登记格式化及信息内容与传入一致");
+        String regVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
+        String txRpVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
+        String subVer = gdCF.getObjectLatestVer(gdCompanyID);
+
+        //确认主体版本为6
+        assertEquals(7,Integer.parseInt(subVer));
+
+        //获取链上mini url的存证信息 并检查是否包含uri信息 每个登记都是新的 则都是0
+        String regfileName1 = conJGFileName(tempObjIdFrom,regVer);
+        String regfileName2 = conJGFileName(tempObjIdTo,regVer);
+        String txfileName = conJGFileName(txRpObjId,txRpVer);
+        String subfileName = conJGFileName(gdCompanyID,subVer);
+
+        String chkRegURI1 =  regfileName1;
+        String chkRegURI2 = regfileName2;
+        String chkTxRpURI = txfileName;
+        String chkSubURI = subfileName;
+
+        log.info(uriInfo.get("storeData").toString());
+        log.info(chkRegURI1 + "      " + chkRegURI2);
+        assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI1));
+        assertEquals(true,uriInfo.get("storeData").toString().contains(chkRegURI2));
+        assertEquals(true,uriInfo.get("storeData").toString().contains(chkTxRpURI));
+        assertEquals(true,uriInfo.get("storeData").toString().contains(chkSubURI));
+        assertEquals(true,gdCF.bContainJGFlag(uriInfo.get("storeData").toString()));//确认meta信息包含监管关键字
+
+        //直接从minio上获取报送数据文件信息
+        Map getRegInfo1 = gdCF.constructJGDataFromStr(regfileName1,regType,"");
+        Map getRegInfo2 = gdCF.constructJGDataFromStr(regfileName2,regType,"");
+        Map getTxRpInfo = gdCF.constructJGDataFromStr(txfileName,txrpType,"");
+        Map getSubInfo = gdCF.constructJGDataFromStr(subfileName,subjectType,"1");
+
+
+        register_subject_account_ref = "SH" + gdCompanyID;
+        //填充header content字段
+        fromNow.put("content",gdCF.constructContentTreeMap(regType,tempObjIdFrom,regVer,"create",String.valueOf(ts5)));
+        log.info("检查登记存证信息内容与传入一致\n" + fromNow.toString() + "\n" + getRegInfo1.toString());
+        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(fromNow,regType)),replaceCertain(getRegInfo1.toString()));
+        assertEquals("from检查数据是否一致" ,true,bSame);
+//        log.info("from登记检查数据是否一致" + bSame);
+
+        register_subject_account_ref = "SH" + gdAccClientNo2;
+        //填充header content字段
+        toNow.put("content",gdCF.constructContentTreeMap(regType,tempObjIdTo,regVer,"create",String.valueOf(ts5)));
+        log.info("检查登记存证信息内容与传入一致\n" + toNow.toString() + "\n" + getRegInfo1.toString());
+        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(toNow,regType)),replaceCertain(getRegInfo2.toString()));
+        assertEquals("from检查数据是否一致" ,true,bSame);
+//        log.info("to登记检查数据是否一致" + bSame);
+
+        //填充header content字段
+        txInfo.put("content",gdCF.constructContentTreeMap(txrpType,txRpObjId,txRpVer,"create",String.valueOf(ts4)));
+        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(txInfo,txrpType)),replaceCertain(getTxRpInfo.toString()));
+        assertEquals("检查转让交易报告数据是否一致" ,true,bSame);
+//        log.info("交易报告检查数据是否一致" + bSame);
+
+
+        query2 = gd.GDObjectQueryByVer(gdCompanyID,-1);
+        int totalMembers = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject("body"
+        ).getJSONObject("subject_information").getJSONObject("organization_subject_information"
+        ).getJSONObject("basic_information_of_enterprise").getJSONObject("basic_information_description"
+        ).getInt("subject_shareholders_number");
+
+        //填充header content字段
+        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
+
+        //更新股东数量 非用户传入的数据 而是依据前面转让给新账户后的股东数
+        enSubInfo.put("subject_shareholders_number",totalMembers);
+
+        log.info("+++++++++++++++++++++++++++++++++++++++++++++++++++");
+        log.info(getSubInfo.toString());
+        Map mapContent = gdCF.constructContentTreeMap(subjectType,gdCompanyID,subVer,"update",String.valueOf(ts1));
+        enSubInfo.put("content",mapContent);
+        bSame = commonFunc.compareTwoStr(replaceCertain(gdCF.matchRefMapCertVer2(enSubInfo,subjectType)),replaceCertain(getSubInfo.toString()));
+        assertEquals("检查转让主体数据是否一致" ,true,bSame);
+
+
+        log.info("================================检查存证数据格式化《结束》================================");
+
+        //实际应该持股情况信息
+        List<Map> respShareList = new ArrayList<>();
+        respShareList = gdConstructQueryShareList(gdAccount1,3300,0,0,mapShareENCN().get("0"),respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount1,500,1,0,mapShareENCN().get("1"),respShareList);
+        respShareList = gdConstructQueryShareList(gdAccount5,1000,0,0,mapShareENCN().get("0"),respShareList);
+        List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,6900,0,0,mapShareENCN().get("0"), respShareList);
+        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,5900,0,0,mapShareENCN().get("0"), respShareList2);
+        List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,5900,0,0,mapShareENCN().get("0"), respShareList3);
+
+
+
+        //检查存在余额的股东列表
+        assertEquals(respShareList4.size(),dataShareList.size());
+
+        List<Map> getShareList = getShareListFromQueryNoZeroAcc(dataShareList);
+
+        assertEquals(respShareList4.size(),getShareList.size());
+        assertEquals(true,respShareList4.containsAll(getShareList) && getShareList.containsAll(respShareList4));
+
+
+        //查询股东持股情况 无当前股权代码信息
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);
+        assertEquals(gdAccClientNo1,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo1 + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + gdAccount1 + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":3300,\"lockAmount\":0}"));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":500,\"lockAmount\":0}"));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo2);
+        assertEquals(gdAccClientNo2,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo2 + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + gdAccount2 + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":6900,\"lockAmount\":0}"));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo3);
+        assertEquals(gdAccClientNo3,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo3 + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + gdAccount3 + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5900,\"lockAmount\":0}"));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo4);
+        assertEquals(gdAccClientNo4,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo4 + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + gdAccount4 + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":5900,\"lockAmount\":0}"));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
+        assertEquals(gdAccClientNo5,JSONObject.fromObject(query).getJSONObject("data").getString("clientNo"));
+        assertEquals(true,query.contains("\"shareholderNo\":\"SH" + gdAccClientNo5 + "\""));
+        assertEquals(true,query.contains("\"address\":\"" + gdAccount5 + "\""));
+        assertEquals(true,query.contains("{\"equityCode\":\"" + gdEquityCode +
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo6);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+
+        query = gd.GDGetShareHolderInfo(gdContractAddress,gdCompanyID);
+        assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
+    }
+
 
     @Test
     public void TC205_accountDestroy() throws Exception {
@@ -1547,7 +2089,7 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         String txDetail = store.GetTxDetail(txId);
-        assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
+        assertEquals("200", JSONObject.fromObject(txDetail).getString("state"));
 
         //检查各个查询对象返回信息中不包含敏感词
         assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(txDetail,accType));
@@ -1646,12 +2188,12 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
         testSettleInfo.put("settlement_in_account_object_ref","SH" + gdAccClientNo1);
         testSettleInfo.put("settlement_out_account_object_ref","SH" + gdAccClientNo5);
         String response= gd.GDCapitalSettlement(testSettleInfo);
-        net.sf.json.JSONObject jsonObject= net.sf.json.JSONObject.fromObject(response);
+        JSONObject jsonObject= JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         String txDetail = store.GetTxDetail(txId);
-        assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
+        assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
 
 
         //设置各个主体版本变量

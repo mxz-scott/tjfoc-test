@@ -10,7 +10,8 @@ public class SetTestEnv_zllauto {
 
    @Test
     public void setEnvParam(){
-      SDKADD = "http://10.1.3.161:7789";
+      subLedger = "";
+      SDKADD = "http://10.1.3.161:7889";
       rSDKADD = "http://10.1.3.161:7789";
       TOKENADD = "http://10.1.3.161:7789";
       //设置测试环境使用的节点端口及部署目录信息
@@ -32,8 +33,8 @@ public class SetTestEnv_zllauto {
       PeerPATH = PTPATH + "peer/";
       ToolPATH = PTPATH + "toolkit/";
       TokenApiPATH = PTPATH + "wtfinservice/";
-      PeerTPName = "Autop";
-      SDKTPName = "Autos";
+      PeerTPName = "wtchain302";
+      SDKTPName = "wtsdk_gd";
       ToolTPName = "Autokit";
       TokenTPName = "Autot";
       tmuxSessionTokenApi = "tmux send -t auto_t ";

@@ -1514,9 +1514,10 @@ public class CommonFunc {
     }
 
     public void verifyBlockAndTransaction(String toolPath){
-
+        String ledgerParam = " -l " + subLedger;
+        if(subLedger.equals("")) ledgerParam = "";
         String result = shExeAndReturn(utilsClass.getIPFromStr(SDKADD),
-                "cd " + toolPath + ";./verifyBlockTX su -p " + SDKADD + " -l " + subLedger);
+                "cd " + toolPath + ";./verifyBlockTX su -p " + SDKADD + ledgerParam);
         log.info("区块验证结果 **********************************************************************");
         log.info(result);
         String OKMsg = "successfully";

@@ -152,7 +152,7 @@ public class GDV2_JGData_NonEssentialParamTest {
         String response= uf.shareIssue(gdEquityCode,shareList4,false);
         net.sf.json.JSONObject jsonObject= net.sf.json.JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
-
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         String txDetail = store.GetTxDetail(txId);
         assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
 
