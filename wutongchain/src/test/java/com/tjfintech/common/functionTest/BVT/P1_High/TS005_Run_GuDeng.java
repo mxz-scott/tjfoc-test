@@ -15,6 +15,12 @@ import org.junit.runners.Suite;
         GDV2_AllFlowTest_Equity_ChkTxReport.class,
         GDV2_AllFlowTest_Equity_URIStoreTxDetail.class,
         GDV2_AllFlowTest_Equity_WVMTxDetail.class,
+
+        GDV2_JGFormat_Part4_DoubleRoles_EnterpriseRegisterThenAccCreate.class,
+        GDV2_JGFormat_Part4_DoubleRoles_FlowTest01_Test.class,
+        GDV2_JGFormat_Part4_DoubleRoles_FlowTest02_Test.class,
+        GDV2_JGFormat_Part4_DoubleRoles_Update_SubAccProd_Test.class,
+
         GDV2_FlowTest_Prod_Bond.class,
         GDV2_FlowTest_Prod_Fund.class,
         GDV2_JGData_CheckJGHeaderPrinciple_Test.class,

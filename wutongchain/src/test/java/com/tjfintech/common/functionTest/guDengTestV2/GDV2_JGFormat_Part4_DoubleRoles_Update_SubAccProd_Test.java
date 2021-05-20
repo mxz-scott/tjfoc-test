@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
-public class GDV2_JGData_DoubleRoles_Update_SubAccProd_Test {
+public class GDV2_JGFormat_Part4_DoubleRoles_Update_SubAccProd_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();
