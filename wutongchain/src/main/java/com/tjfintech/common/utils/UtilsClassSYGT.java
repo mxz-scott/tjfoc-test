@@ -21,7 +21,7 @@ public class UtilsClassSYGT {
 
     public static String endPoint1 = "http://47.103.164.174:17700"; //盟主1
     public static String endPoint2 = "http://47.103.164.174:27700"; //盟主2
-    public static String endPoint3 = "http://47.103.164.174:37700"; //成员1
+    public static String endPoint3 = "http://47.103.164.174:37600;http://47.103.164.174:37700;10.12.0.174:7305"; //成员1
 
     public static String account1 = "3PLyMde9qkEeAvFfxCgW7DGq3L9Cgc39A82CjhY3xQiLUpU1Tm"; //盟主1
     public static String account2 = "3zwDYB5AwELc2fUjEaUghCPSS91Px1mtrfXjfcD7jDpdgPdoxF"; //盟主2
