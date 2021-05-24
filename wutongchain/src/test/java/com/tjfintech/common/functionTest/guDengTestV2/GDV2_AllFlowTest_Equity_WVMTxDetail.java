@@ -56,6 +56,7 @@ public class GDV2_AllFlowTest_Equity_WVMTxDetail {
         equityProductInfo = gdBefore.init03EquityProductInfo();
         fundProductInfo = null;
         gdEquityCode = "fondTest" + Random(12);
+        sleepAndSaveInfo(3000);//确认前置步骤可能执行到的交易和后续交易不打在同一个区块中
     }
 
     @After
@@ -71,36 +72,36 @@ public class GDV2_AllFlowTest_Equity_WVMTxDetail {
         long shareTotals = 1000000;
         Map eqProd = gdBF.init03EquityProductInfo();
         Map enSub = gdBF.init01EnterpriseSubjectInfo();
-        String response= gd.GDEnterpriseResister(gdContractAddress,gdEquityCode,shareTotals,enSub, eqProd,bondProductInfo,fundProductInfo);
-        JSONObject jsonObject=JSONObject.fromObject(response);
+        String response = gd.GDEnterpriseResister(gdContractAddress, gdEquityCode, shareTotals, enSub, eqProd, bondProductInfo, fundProductInfo);
+        JSONObject jsonObject = JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         response = store.GetTxDetail(txId);
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
         //查交易详情
         response = store.GetTxDetail(
                 JSONObject.fromObject(store.GetBlockByHeight(
-                        JSONObject.fromObject(store.GetHeight()).getInt("data") -1)
+                        JSONObject.fromObject(store.GetHeight()).getInt("data") - 1)
                 ).getJSONObject("data").getJSONArray("txs").getString(0));
 
         //检查交易详情
         JSONObject jsonObject1 = JSONObject.fromObject(response).getJSONObject("data");
-        assertEquals("2",jsonObject1.getJSONObject("header").getString("version"));
-        assertEquals("3",jsonObject1.getJSONObject("header").getString("type"));
-        assertEquals("42",jsonObject1.getJSONObject("header").getString("subType"));
+        assertEquals("2", jsonObject1.getJSONObject("header").getString("version"));
+        assertEquals("3", jsonObject1.getJSONObject("header").getString("type"));
+        assertEquals("42", jsonObject1.getJSONObject("header").getString("subType"));
 
         JSONObject jsonObjectWVM = jsonObject1.getJSONObject("wvm").getJSONObject("wvmContractTx");
-        assertEquals("AddListedCompany",jsonObjectWVM.getJSONObject("arg").getString("method"));
-        assertEquals(gdContractAddress,jsonObjectWVM.getString("name"));
+        assertEquals("AddListedCompany", jsonObjectWVM.getJSONObject("arg").getString("method"));
+        assertEquals(gdContractAddress, jsonObjectWVM.getString("name"));
 
         String args = jsonObjectWVM.getJSONObject("arg").getJSONArray("args").get(0).toString();
 
         log.info(args);
-        assertEquals(true,args.contains("\"EquityCode\":\"" + gdEquityCode + "\""));
-        assertEquals(true,args.contains("\"TotalShares\":" + shareTotals + ""));
-        assertEquals(true,response.contains("DBSet"));
+        assertEquals(true, args.contains("\"EquityCode\":\"" + gdEquityCode + "\""));
+        assertEquals(true, args.contains("\"TotalShares\":" + shareTotals + ""));
+        assertEquals(true, response.contains("DBSet"));
     }
 
 

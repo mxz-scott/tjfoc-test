@@ -47,7 +47,7 @@ public class GDV2_ShareIssue_UniqueId_Test {
     MinIOOperation minio = new MinIOOperation();
     MysqlOperation mysql =  new MysqlOperation();
 
-    String dbStr = utilsClass.getSDKWalletDBConfig();
+//    String dbStr = utilsClass.getSDKWalletDBConfig();
 
     @Rule
     public TestName tm = new TestName();
@@ -219,6 +219,7 @@ public class GDV2_ShareIssue_UniqueId_Test {
 
 
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         String txDetail = store.GetTxDetail(txId);
         assertEquals("200", JSONObject.fromObject(txDetail).getString("state"));
 
@@ -454,6 +455,7 @@ public class GDV2_ShareIssue_UniqueId_Test {
         tempReg1.put("register_time",time2); //设置register_time正常 使得报送可以成功
         response = gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList4);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         String txDetail = store.GetTxDetail(txId);
         assertEquals("200", JSONObject.fromObject(txDetail).getString("state"));
 
@@ -684,6 +686,7 @@ public class GDV2_ShareIssue_UniqueId_Test {
 
 
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         String txDetail = store.GetTxDetail(txId);
         assertEquals("200", JSONObject.fromObject(txDetail).getString("state"));
 
@@ -802,7 +805,7 @@ public class GDV2_ShareIssue_UniqueId_Test {
         String response = uf.shareIssue(gdEquityCode,shareList4,false);
         JSONObject jsonObject = JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
-
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         String txDetail = store.GetTxDetail(txId);
         assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
 
@@ -856,7 +859,7 @@ public class GDV2_ShareIssue_UniqueId_Test {
         String response = uf.shareIssue(gdEquityCode,shareList4,false);
         JSONObject jsonObject = JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
-
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         String txDetail = store.GetTxDetail(txId);
         assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
 
