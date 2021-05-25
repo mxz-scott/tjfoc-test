@@ -186,7 +186,7 @@ public class ScfTest {
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
         //开立取消
-        String response2 = scf.IssuingCancel(tokenType, companyID1, platformKeyID, platformPIN, comments);
+        String response2 = scf.IssuingCancel(tokenType, platformKeyID, platformPIN);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("success"));
         assertThat(response2, containsString("data"));
