@@ -286,6 +286,8 @@ public class GDV2_SceneTest_Issue {
         assertEquals("200",JSONObject.fromObject(resp).getString("state"));
         String txId = JSONObject.fromObject(resp).getJSONObject("data").getString("txId");
 
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+
         List<Map> shareListTotal = new ArrayList<>();
         for(int i = 0;i<shareList2.size();i++){
             shareListTotal.add(shareList2.get(i));
@@ -409,6 +411,8 @@ public class GDV2_SceneTest_Issue {
         assertEquals("200",JSONObject.fromObject(resp).getString("state"));
         String txId = JSONObject.fromObject(resp).getJSONObject("data").getString("txId");
 
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+
         shareList2.add(shareList3.get(0));
 
         for(Object value: mapAddrRegObjId.values()) {
@@ -459,6 +463,7 @@ public class GDV2_SceneTest_Issue {
         resp = gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList13);
         assertEquals("200",JSONObject.fromObject(resp).getString("state"));
         String txId2 = JSONObject.fromObject(resp).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId2, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
         for(Object value: mapAddrRegObjId.values()) {
             list2.add(value.toString());
@@ -510,6 +515,8 @@ public class GDV2_SceneTest_Issue {
         resp = gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList23);
         assertEquals("200",JSONObject.fromObject(resp).getString("state"));
         String txId3 = JSONObject.fromObject(resp).getJSONObject("data").getString("txId");
+
+        commonFunc.sdkCheckTxOrSleep(txId3, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
         for(Object value: mapAddrRegObjId.values()) {
             list3.add(value.toString());
@@ -686,6 +693,8 @@ public class GDV2_SceneTest_Issue {
         //发行已经发行过的股权代码
         String response = gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList3);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        assertEquals("交易hash不为空",false,txId.equals(""));
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
         for(int size=0;size<shareList3.size();size++) {
             shareList2.add(shareList3.get(size));
@@ -757,6 +766,7 @@ public class GDV2_SceneTest_Issue {
         //发行已经发行过的股权代码
         String response = gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList3);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
         for(int size=0;size<shareList3.size();size++) {
             shareList2.add(shareList3.get(size));
@@ -806,6 +816,7 @@ public class GDV2_SceneTest_Issue {
         //发行已经发行过的股权代码
         String response = gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList3);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
         for(int size=0;size<shareList3.size();size++) {
             shareList2.add(shareList3.get(size));
@@ -832,6 +843,7 @@ public class GDV2_SceneTest_Issue {
         String response= uf.shareIssue(gdEquityCode,shareList2,false);
         JSONObject jsonObject=JSONObject.fromObject(response);
         String txId = jsonObject.getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
         //遍历检查所有账户登记及交易存证信息
         for(int k = 0 ;k < shareList2.size(); k++) {

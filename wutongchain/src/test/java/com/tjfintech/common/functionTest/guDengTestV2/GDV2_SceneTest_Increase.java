@@ -341,7 +341,6 @@ public class GDV2_SceneTest_Increase {
 
             String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareListIn4,reason, eqProd,txInfo);
             String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
-
             commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
             assertEquals("200", JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
             txList.add(JSONObject.fromObject(response).getJSONObject("data").getString("txId"));
@@ -444,13 +443,14 @@ public class GDV2_SceneTest_Increase {
 
         String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList,reason, eqProd,txInfo);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         String txDetail = store.GetTxDetail(txId);
         assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
     }
 
     @Test
     public void IncreaseToNewAccount()throws Exception{
-        register_event_type = "2";//非交易登记
+        register_event_type = "1";//非交易登记
 
         log.info("多个回收前查询机构主体信息");
         String query2 = gd.GDObjectQueryByVer(gdCompanyID,-1);
@@ -481,7 +481,7 @@ public class GDV2_SceneTest_Increase {
 
         assertEquals(totalMembersBf -1,totalMembers02);//回收一个账户
 
-
+        register_event_type = "2";//非交易登记
         String eqCode = gdEquityCode;
         String reason = "股份分红";
         String txObjId = "4increaseObj" + Random(6);
@@ -502,10 +502,9 @@ public class GDV2_SceneTest_Increase {
 
         response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList,reason, eqProd,txInfo);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         String txDetail = store.GetTxDetail(txId);
         assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
-
-        sleepAndSaveInfo(2000);
 
         query2 = gd.GDObjectQueryByVer(gdCompanyID,-1);
         int totalMembersAft = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject("body"
@@ -542,10 +541,9 @@ public class GDV2_SceneTest_Increase {
 
         String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList,reason, eqProd,txInfo);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         String txDetail = store.GetTxDetail(txId);
         assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
-
-        sleepAndSaveInfo(2000);
 
         query2 = gd.GDObjectQueryByVer(gdCompanyID,-1);
         int totalMembersAft = JSONObject.fromObject(query2).getJSONObject("data").getJSONObject("body"
@@ -577,6 +575,7 @@ public class GDV2_SceneTest_Increase {
 
         String response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList,reason, eqProd,txInfo);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         String txDetail = store.GetTxDetail(txId);
         assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
     }

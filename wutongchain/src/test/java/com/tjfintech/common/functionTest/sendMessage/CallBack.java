@@ -65,6 +65,8 @@ public class CallBack {
     String msgdatafile = System.getProperty("user.dir") + "\\callBackData.txt";
 //    String msgdatafile = testDataPath + "SendMsgTestFiles\\callBackData.txt";
 
+    public static String callbackUrl = "[\"http://10.1.11.245:9300/callback\"]";
+
 
     @BeforeClass
     public static void init() throws Exception {
@@ -97,7 +99,7 @@ public class CallBack {
         commonFunc.setSDKApiCallbackDecrypt(utilsClass.getIPFromStr(TOKENADD), PRIKEY3);
 //        commonFunc.setSDKApiCallbackLLocalId(utilsClass.getIPFromStr(TOKENADD), "lucy002李");
         commonFunc.setSDKApiCallbackLLocalIds(utilsClass.getIPFromStr(TOKENADD), "[\"lucy002李\",\"lucy003李\"]");
-        commonFunc.setSDKApiOneLedger(utilsClass.getIPFromStr(TOKENADD), subLedger, "[\"http://10.1.4.19:9300/callback\"]");
+        commonFunc.setSDKApiOneLedger(utilsClass.getIPFromStr(TOKENADD), subLedger, callbackUrl);
         shellExeCmd(utilsClass.getIPFromStr(TOKENADD), killSDKCmd, startTokenApiCmd + " -i true"); //重启sdk api
         sleepAndSaveInfo(SLEEPTIME, "等待SDK重启");
 
@@ -622,6 +624,26 @@ public class CallBack {
         assertEquals(true, filedata.contains(subLedger));
 
 
+        //同步接口失败，不发消息存证
+        ArrayList<String> listTag = new ArrayList<>();
+        String response = tokenModule.tokenCreateAccount
+                (utilsClass.Random(6),utilsClass.Random(6),"","",listTag);
+        String address = JSONObject.fromObject(response).getString("data");
+        clearMsgDateForFile(msgdatafile);
+        mapSendMsg.clear();
+        mapSendMsg.put("sender", "sender001测试");
+        mapSendMsg.put("receivers", receiverLists);
+        mapSendMsg.put("msgdata", "msgdata001测试");
+        mapSendMsg.put("reftx", "同步接口失败，不发消息存证");
+
+        String tokentype5 = "token5"+utilsClass.Random(6);
+        issueeResp = tokenModule.tokenIssue(address,address,tokentype5,issAmount,comments,mapSendMsg);
+        assertEquals("400",JSONObject.fromObject(issueeResp).getString("state"));
+        assertEquals(false,issueeResp.contains("exthash"));
+        filedata = updateMsgDate(msgdatafile);
+        assertEquals(false,filedata.contains("同步接口失败，不发消息存证"));
+
+
         //配置文件localID支持配置数组，支持向多个ID发送消息
         clearMsgDateForFile(msgdatafile);
         mapSendMsg.clear();
@@ -630,8 +652,8 @@ public class CallBack {
         mapSendMsg.put("receivers", receiverList2);
         mapSendMsg.put("msgdata", "配置文件配置私钥，请求传输对应公钥，消息发送明文");
         mapSendMsg.put("reftx", "reftx001测试");
-        String tokentype5 = "token5" + utilsClass.Random(6);
-        issueeResp = tokenModule.tokenIssue(issueAddr, collAddr, tokentype5, issAmount, comments, mapSendMsg);
+        String tokentype6 = "token6" + utilsClass.Random(6);
+        issueeResp = tokenModule.tokenIssue(issueAddr, collAddr, tokentype6, issAmount, comments, mapSendMsg);
         assertEquals("200", JSONObject.fromObject(issueeResp).getString("state"));
         filedata = updateMsgDate(msgdatafile);
         assertEquals(true, filedata.contains("配置文件配置私钥，请求传输对应公钥，消息发送明文"));
@@ -1502,14 +1524,14 @@ public class CallBack {
         assertEquals("500", JSONObject.fromObject(queryBalance).getString("state"));
 
         //正常重启API，不同步上一笔异常数据
-        commonFunc.setSDKApiOneLedger(utilsClass.getIPFromStr(TOKENADD), subLedger, "[\"http://10.1.4.19:9300/callback\"]");
+        commonFunc.setSDKApiOneLedger(utilsClass.getIPFromStr(TOKENADD), subLedger, callbackUrl);
         shellExeCmd(utilsClass.getIPFromStr(TOKENADD), killSDKCmd, startTokenApiCmd); //重启sdk api
         sleepAndSaveInfo(SLEEPTIME, "等待SDK重启");
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");
         assertEquals("500", JSONObject.fromObject(queryBalance).getString("state"));
 
         //使用./wtsdk API -i true 重启，同步上一笔异常数据
-        commonFunc.setSDKApiOneLedger(utilsClass.getIPFromStr(TOKENADD), subLedger, "[\"http://10.1.4.19:9300/callback\"]");
+        commonFunc.setSDKApiOneLedger(utilsClass.getIPFromStr(TOKENADD), subLedger, callbackUrl);
         shellExeCmd(utilsClass.getIPFromStr(TOKENADD), killSDKCmd, startTokenApiCmd + " -i true"); //重启sdk api
         sleepAndSaveInfo(SLEEPTIME, "等待SDK重启");
         queryBalance = tokenModule.tokenGetBalance(collAddr, "");

@@ -184,7 +184,7 @@ public class GDV2_SceneTest_Recycle {
         List<Map> shareList = gdConstructShareList(gdAccount1,100,0);
         uf.shareRecycle(gdEquityCode,shareList,true);
 
-        sleepAndSaveInfo(2000);
+        sleepAndSaveInfo(3000);
         //当前可用余额500 回收大于可用余额
         shareList = gdConstructShareList(gdAccount1,500,0);
         response = uf.shareRecycle(gdEquityCode,shareList,false);
@@ -550,7 +550,8 @@ public class GDV2_SceneTest_Recycle {
         log.info("====================================================================================");
         String response= gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList4,remark);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
-
+        String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         sleepAndSaveInfo(2000);
 
         gd.GDGetEnterpriseShareInfo(gdEquityCode);
@@ -564,7 +565,7 @@ public class GDV2_SceneTest_Recycle {
 
         assertEquals(totalMembers - 1,totalMembersAft);//判断主体数据更新
 
-        String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         log.info("================================检查存证数据格式化《开始》================================");
 
@@ -720,7 +721,8 @@ public class GDV2_SceneTest_Recycle {
         List<Map> shareList14 = gdConstructShareList(gdAccount4,100,1,shareList13);
         response= gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList14,remark);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
-
+        String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         sleepAndSaveInfo(2000);
 
         gd.GDGetEnterpriseShareInfo(gdEquityCode);
@@ -758,7 +760,7 @@ public class GDV2_SceneTest_Recycle {
 
 
 
-        String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 //
 //        log.info("================================检查存证数据格式化《开始》================================");
 //
@@ -886,7 +888,8 @@ public class GDV2_SceneTest_Recycle {
         log.info("====================================================================================");
         String response= gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList4,remark);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
-
+        String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         sleepAndSaveInfo(2000);
 
         gd.GDGetEnterpriseShareInfo(gdEquityCode);
@@ -900,7 +903,7 @@ public class GDV2_SceneTest_Recycle {
 
         assertEquals(totalMembers - 2,totalMembersAft);//判断主体数据更新
 
-        String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
 
         log.info("================================检查存证数据格式化《开始》================================");
 

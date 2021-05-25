@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.tjfintech.common.utils.UtilsClassSYGT.effortPointType;
+import static com.tjfintech.common.utils.UtilsClassSYGT.contributePointType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -299,35 +299,36 @@ public class SYGTV1_InterfacesTest {
 
     }
 
-    @Test
+    //20210419 修改为Get接口
+//    @Test
     public void TC05_MemberGet() throws Exception {
         String code = "test";
 
         log.info(" +++++++++++++++ 必填字段校验 +++++++++++++++ ");
         code = "";
-        String response  = sygt.SSMembersGet(code);
+        String response  = sygt.SSMembersGet();
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
 
         log.info(" +++++++++++++++ code 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
         code = UtilsClass.Random(512);
-        response  = sygt.SSMembersGet(code);
+        response  = sygt.SSMembersGet();
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         code = UtilsClass.Random(63);
-        response  = sygt.SSMembersGet(code);
+        response  = sygt.SSMembersGet();
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         code = UtilsClass.Random(64);
-        response  = sygt.SSMembersGet(code);
+        response  = sygt.SSMembersGet();
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         code = UtilsClass.Random(65);
-        response  = sygt.SSMembersGet(code);
+        response  = sygt.SSMembersGet();
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
@@ -479,128 +480,69 @@ public class SYGTV1_InterfacesTest {
 
         log.info(" +++++++++++++++ 必填字段校验 +++++++++++++++ ");
         assetID = "";
-        String response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        String response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         assetID = "123";
         scene = "";
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         scene = "123";
         label = "";
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         //非必填字段检查
         desc = "";
         label = "123";
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
 
         log.info(" +++++++++++++++ assetID 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
         assetID = UtilsClass.Random(512);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         assetID = UtilsClass.Random(63);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         assetID = UtilsClass.Random(64);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         assetID = UtilsClass.Random(65);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         assetID = UtilsClass.Random(8);
 
-        log.info(" +++++++++++++++ scene 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
-        scene = UtilsClass.Random(512);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("error"));
-
-        scene = UtilsClass.Random(63);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-//        assertEquals(true,response.contains("error"));
-
-        scene = UtilsClass.Random(64);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-//        assertEquals(true,response.contains("error"));
-
-        scene = UtilsClass.Random(65);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("error"));
-
-        scene = UtilsClass.Random(6);
-
-        log.info(" +++++++++++++++ label 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
-        label = UtilsClass.Random(512);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("error"));
-
-        label = UtilsClass.Random(63);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-//        assertEquals(true,response.contains("error"));
-
-        label = UtilsClass.Random(64);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-//        assertEquals(true,response.contains("error"));
-
-        label = UtilsClass.Random(65);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("error"));
-
-        label = UtilsClass.Random(6);
-
-        log.info(" +++++++++++++++ amount 检查 +++++++++++++++ ");//具体长度限制需要开发再确认
-        amount = 0;
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("error"));
-
-        amount = -1;
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("error"));
-
-        amount = 20;
-
         log.info(" +++++++++++++++ desc 检查 +++++++++++++++ ");//具体长度限制需要开发再确认
         desc = UtilsClass.Random(1028);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         desc = UtilsClass.Random(513);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         desc = UtilsClass.Random(512);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
         desc = UtilsClass.Random(511);
-        response  = sygt.SSAssetUpdate(assetID,scene,label,amount,desc);
+        response  = sygt.SSAssetUpdate(assetID,amount,desc);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
     }
@@ -1107,46 +1049,46 @@ public class SYGTV1_InterfacesTest {
         String type = "credit";
         String code = "A001";
         int amount = 30;
-        int pointType = effortPointType;
+        String pointType = contributePointType;
 
         log.info(" +++++++++++++++ 必填字段校验 +++++++++++++++ ");
         account = "";
-        String response = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        String response = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
 
         account = "366666";
         type = "";
-        response = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        response = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
 
         type = "debit";
         code = "";
-        response = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        response = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         log.info(" +++++++++++++++ account 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
         account = UtilsClass.Random(512);
-        response  = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        response  = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         account = UtilsClass.Random(63);
-        response  = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        response  = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         account = UtilsClass.Random(64);
-        response  = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        response  = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         account = UtilsClass.Random(65);
-        response  = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        response  = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
@@ -1154,27 +1096,27 @@ public class SYGTV1_InterfacesTest {
 
         log.info(" +++++++++++++++ type 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
         type = UtilsClass.Random(512);
-        response  = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        response  = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         type = UtilsClass.Random(63);
-        response  = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        response  = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         type = UtilsClass.Random(64);
-        response  = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        response  = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         type = UtilsClass.Random(65);
-        response  = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        response  = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         type = "add";//非法字段值
-        response  = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        response  = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
@@ -1182,28 +1124,28 @@ public class SYGTV1_InterfacesTest {
 
         log.info(" +++++++++++++++ code 长度检查 +++++++++++++++ ");//具体长度限制需要开发再确认
         code = UtilsClass.Random(512);
-        response  = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        response  = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         code = UtilsClass.Random(63);
-        response  = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        response  = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         code = UtilsClass.Random(64);
-        response  = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        response  = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true,response.contains("error"));
 
         code = UtilsClass.Random(65);
-        response  = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        response  = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         log.info("需要考虑是否存在code非法的情况，待需求文档确认");
         code = UtilsClass.Random(6);
-        response  = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        response  = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
@@ -1211,12 +1153,12 @@ public class SYGTV1_InterfacesTest {
 
         log.info(" +++++++++++++++ amount 检查 +++++++++++++++ ");//具体长度限制需要开发再确认
         amount = 0;
-        response  = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        response  = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
         amount = -1;
-        response  = sygt.SSPointUpdate(account,type,pointType,code,amount);
+        response  = sygt.SSPointUpdate(account,type,pointType,code);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
         assertEquals(true,response.contains("error"));
 
@@ -1227,7 +1169,7 @@ public class SYGTV1_InterfacesTest {
     @Test
     public void TC16_PointQuery() throws Exception {
         String account = "test";
-        int pointType = effortPointType;
+        String pointType = contributePointType;
 
         log.info(" +++++++++++++++ 必填字段校验 +++++++++++++++ ");
 

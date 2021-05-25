@@ -29,7 +29,6 @@ public  class GoSYGT implements SYGT {
         map.put("code", code);
         map.put("name", name);
         map.put("serviceEndpoint", serviceEndpoint);
-        map.put("account", account);
 
         String result = PostTest.postMethod(SDKADD + "/dss/v1/alliance/joinapply?" + SetURLExtParams(""), map);
         log.info(result);
@@ -86,14 +85,13 @@ public  class GoSYGT implements SYGT {
 
     /***
      * 获取成员列表
-     * @param code 某成员的名称，不填则查询所有成员
      * @return
      */
-    public String SSMembersGet(String code){
+    public String SSMembersGet(){
         Map<String, Object> map = new HashMap<>();
-        map.put("code", code);
+//        map.put("code", code);
 
-        String result = PostTest.postMethod(SDKADD + "/dss/v1/alliance/members?" + SetURLExtParams(""), map);
+        String result = GetTest.doGet2(SDKADD + "/dss/v1/alliance/members?" + SetURLExtParams(""));
         log.info(result);
         return result;
     }
@@ -103,6 +101,7 @@ public  class GoSYGT implements SYGT {
      * @return
      */
     public String SSPendingApplyGet(){
+//        String result = GetTest.doGet2(SDKADD + "/dss/v1/alliance/members?" + SetURLExtParams(""));
         String result = GetTest.doGet2(SDKADD + "/dss/v1/alliance/getpendingapply?" + SetURLExtParams(""));
         log.info(result);
         return result;
@@ -139,11 +138,9 @@ public  class GoSYGT implements SYGT {
      * @param desc
      * @return
      */
-    public String SSAssetUpdate(String assetID,String scene,String label,int qty,String desc){
+    public String SSAssetUpdate(String assetID,int qty,String desc){
         Map<String, Object> map = new HashMap<>();
         map.put("assetID", assetID);
-        map.put("scene", scene);
-        map.put("label", label);
         map.put("qty", qty);
         map.put("desc", desc);
 
@@ -182,19 +179,31 @@ public  class GoSYGT implements SYGT {
         return result;
     }
 
+    public String SSAssetService(String assetID,String serviceID,String authID){
+        Map<String, Object> map = new HashMap<>();
+        map.put("assetID", assetID);
+        map.put("serviceID", serviceID);
+        map.put("authID", authID);
+
+        String result = PostTest.postMethod(SDKADD + "/dss/v1/asset/addservice?" + SetURLExtParams(""), map);
+        log.info(result);
+        return result;
+    }
+
     /***
      * 资产授权
      * @param assetID 数据资产唯一标识
      * @param code 机构代码
+     * @param authID 授权ID
      * @param expireStart 授权起始时间
      * @param expireEnd 授权过期时间
      * @return
      */
-    public String SSAssetAuthorize(String assetID,String code,String serviceID,String expireStart,String expireEnd){
+    public String SSAssetAuthorize(String assetID,String code,String authID,String expireStart,String expireEnd){
         Map<String, Object> map = new HashMap<>();
         map.put("assetID", assetID);
-        map.put("code", code);
-        map.put("serviceID", serviceID);
+        map.put("account", code);
+        map.put("authID", authID);
         map.put("expireStart", expireStart);
         map.put("expireEnd", expireEnd);
 
@@ -267,16 +276,15 @@ public  class GoSYGT implements SYGT {
      * @param type 积分操作类型:credit为增加,debit为减少
      * @param pointType 积分类型:1为平台积分，2为贡献积分
      * @param code 业务代码
-     * @param amount 积分数量
      * @return
      */
-    public String SSPointUpdate(String account,String type,int pointType,String code,int amount){
+    public String SSPointUpdate(String account,String type,String pointType,String code){
         Map<String, Object> map = new HashMap<>();
         map.put("account", account);
         map.put("type", type);
         map.put("pointType", pointType);
         map.put("code", code);
-        map.put("amount", amount);
+//        map.put("amount", amount);
 
         String result = PostTest.postMethod(SDKADD + "/dss/v1/point/update?" + SetURLExtParams(""), map);
         log.info(result);
@@ -288,7 +296,7 @@ public  class GoSYGT implements SYGT {
      * @param account
      * @return
      */
-    public String SSPointQuery(String account,int pointType){
+    public String SSPointQuery(String account,String pointType){
         Map<String, Object> map = new HashMap<>();
         map.put("account", account);
         map.put("pointType", pointType);
