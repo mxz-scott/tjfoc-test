@@ -79,7 +79,13 @@ public class GDV2_JGFormat_Part4_DoubleRoles_FlowTest01_Test {
         equityProductInfo = gdBefore.init03EquityProductInfo();
         bondProductInfo = null;
         fundProductInfo = null;
+        bMultiRole = true;
 
+    }
+
+    @AfterClass
+    public static void resetRole(){
+        bMultiRole = false;
     }
 
     @Before

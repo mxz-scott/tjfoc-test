@@ -48,6 +48,12 @@ public class GDV2_JGFormat_Part4_DoubleRoles_EnterpriseRegisterThenAccCreate {
         GDBeforeCondition gdBefore = new GDBeforeCondition();
 //        gdBefore.gdCreateAccout();
         gdBefore.initRegulationData();
+        bMultiRole = true;
+    }
+
+    @AfterClass
+    public static void resetRole(){
+        bMultiRole = false;
     }
 
     @Before

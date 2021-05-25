@@ -49,6 +49,12 @@ public class GDV2_JGFormat_Part4_DoubleRoles_Update_SubAccProd_Test {
 //        gdBefore.gdCreateAccout();
         gdBefore.initRegulationData();
         gdEquityCode = "updateTest" + Random(12);
+        bMultiRole = true;
+    }
+
+    @AfterClass
+    public static void resetRole(){
+        bMultiRole = false;
     }
 
     @Before
