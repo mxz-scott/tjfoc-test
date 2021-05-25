@@ -101,12 +101,27 @@ public class ScfTest {
         String checking = store.GetTxDetail(KLQSstoreHash);
         assertThat(checking, containsString("200"));
         assertThat(checking, containsString("success"));
+        //获取output交易和id和index
+        String putinfo = scf.FuncGetsubtype(KLstoreHash, "0");
+        assertThat(putinfo, containsString("200"));
+        assertThat(putinfo, containsString("success"));
+
+
 
         //获取历史交易id
         String txID = KLstoreHash;
         String historyid = scf.FuncGethistory(txID);
         assertThat(historyid, containsString("200"));
         assertThat(historyid, containsString("200"));
+
+//        //获取output交易和id和index
+//        String putinfo = scf.FuncGetoutputinfo(supplyAddress1, tokenType,"0");
+//        assertThat(putinfo, containsString("200"));
+//        assertThat(putinfo, containsString("success"));
+//        JSONObject putinfo = JSONObject.fromObject(response3);
+//        String KLstoreHash = KLjsonObject.getString("data");
+//        String KLQSstoreHash = UtilsClassScf.strToHex(KLstoreHash);
+//        System.out.println("KLQSstoreHash = " + KLQSstoreHash);
 
 
         //查询tokentype资产
@@ -244,6 +259,11 @@ public class ScfTest {
 
         assertThat(checking1, containsString("200"));
         assertThat(checking1, containsString("success"));
+
+        //获取output交易和id和index
+        String putinfo = scf.FuncGetsubtype(ZRstoreHash, "1");
+        assertThat(putinfo, containsString("200"));
+        assertThat(putinfo, containsString("success"));
 
         //查询tokentype资产
 //        String response6 = scf.getowneraddr(tokenType);

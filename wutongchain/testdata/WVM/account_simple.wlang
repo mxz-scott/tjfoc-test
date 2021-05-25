@@ -93,6 +93,8 @@ contract STAccountAPI {
         string tmp = Platform+CoreEnterprise
         accountKey = hash(tmp)
         //返回账号信息
+        print("acount key")
+        print(accountKey)
         string accountJson = db_get<string>(accountKey)
         return accountJson
     }
@@ -140,7 +142,7 @@ contract STAccountAPI {
     struct RecycleArg {
         string ID           //兑付编号
         string ContractAddr //清分机构合约地址
-        string Msg          //通知信息
+        string Msg          //通知信息E
         string CompanyID    //指定资金方的唯一标识
     }
     //回收之前验证打款证明
@@ -225,6 +227,7 @@ contract STAccountAPI {
 
     //转让申请时，冻结资产
     public string Apply(string json,string comments){
+        print("=================apply===========================================")
         LockInfo lockInfo
         lockInfo = json_to_obj<LockInfo>(json)
 

@@ -287,7 +287,7 @@ public class ScfMultiInvalidTest {
 
     }
     /**
-     * 资产装让时连接超时，模拟【发起了两次请求，模拟第一次交易没有上链】
+     * 资产转让时连接超时，模拟【发起了两次请求，模拟第一次交易没有上链】
      */
     @Test
     public void TC005_() throws Exception {
@@ -295,10 +295,9 @@ public class ScfMultiInvalidTest {
         String response = kms.genRandom(size);
         String tokenType = UtilsClassScf.gettokenType(response);
         BigDecimal expireDate = new BigDecimal(timeStampNow + 60000);
-        String UID = "abb";
+        String UID = "a"+UtilsClass.Random(4);
         String UID1 = "b"+UtilsClass.Random(4);
-        String UID2 = "b"+UtilsClass.Random(4);
-
+        String UID2 = "c"+UtilsClass.Random(4);
         //资产开立申请
         String response1 = scf.IssuingApply(UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
         assertThat(response1, containsString("200"));
@@ -310,6 +309,7 @@ public class ScfMultiInvalidTest {
         assertThat(response11, containsString("200"));
         assertThat(response11, containsString("success"));
         assertThat(response11, containsString("data"));
+        Thread.sleep(5000);
         //开立审核
         String response2 = scf.IssuingApprove(UID, platformKeyID, tokenType, platformPIN);
         assertThat(response2, containsString("200"));

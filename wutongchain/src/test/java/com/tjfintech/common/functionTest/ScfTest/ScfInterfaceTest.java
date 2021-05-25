@@ -1970,13 +1970,13 @@ public class ScfInterfaceTest {
         assertThat(response6, containsString("data"));
         Thread.sleep(5000);
         //兑付确认
-        log.info("兑付金额为空,应用平台卡控，不可以兑付");
+        log.info("兑付金额为空,");
         List<Map> list = new ArrayList<>(10);
         List<Map> list1 = UtilsClassScf.paying(supplyAddress1, supplyID1, "0", "", list);
         String response9 = scf.PayingConfirm(UID2, PlatformAddress, QFJGAddress, companyID1, list1, platformKeyID, platformPIN, tokenType, comments);
-        assertThat(response9, containsString("200"));
-        assertThat(response9, containsString("success"));
-        assertThat(response9, containsString("data"));
+        assertThat(response9, containsString("400"));
+        assertThat(response9, containsString("error"));
+        assertThat(response9, containsString("invalid amount"));
 
         log.info("兑付金额超过开立额度");
 
@@ -1992,7 +1992,7 @@ public class ScfInterfaceTest {
         response9 = scf.PayingConfirm(UID2,PlatformAddress, QFJGAddress, companyID1, list3, platformKeyID, platformPIN, tokenType, comments);
         assertThat(response9, containsString("400"));
         assertThat(response9, containsString("error"));
-        assertThat(response9, containsString("销毁申请失败：strconv.ParseUint: parsing \\\"-10\\\": invalid syntax"));
+        assertThat(response9, containsString("aomunt must be more than 0"));
 
     }
     /**

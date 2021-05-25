@@ -6,15 +6,18 @@ import com.tjfintech.common.Interface.Kms;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.TjParseEncryptionKey;
 import com.tjfintech.common.utils.UtilsClassKMS;
+import com.tjfintech.common.utils.UtilsClassScf;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import sun.security.util.Password;
 
 import java.util.Base64;
 import java.util.Map;
 
+import static com.tjfintech.common.utils.UtilsClass.SLEEPTIME;
 import static com.tjfintech.common.utils.UtilsClassKMS.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -371,6 +374,150 @@ public class GoKmsTest {
 
         assertThat(response, containsString("200"));
         assertThat(response, containsString("OK"));
+    }
+//sm9创建密钥-加密-解密 -成功
+    @Test
+    public void Test013_ibcEncrypt() throws Exception {
+
+        String userId = "18896808089";
+        String response = kms.createKey_sm9(keySpecSm9, password, userId);
+
+        assertThat(response, containsString("200"));
+        assertThat(response, containsString("data"));
+        Map key = JSON.parseObject(response, Map.class);
+        Map key1 = JSON.parseObject(key.get("data").toString(), Map.class);
+        String keyId = key1.get("keyId").toString();
+        //System.out.println(keyId);
+        //加密
+        String response2 = kms.ibcEncrypt(userId, plainText);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("data"));
+
+        String cipherText = UtilsClassKMS.getCipherText(response2);
+
+        //解密
+        String response3 = kms.decrypt(keyId,password, cipherText );
+        assertThat(response3, containsString("200"));
+        assertThat(response3, containsString("data"));
+        assertThat(response3, containsString(plainText));
+
+    }
+    //sm9创建密钥-加密-解密 -失败
+    @Test
+    public void Test014_ibcEncrypt() throws Exception {
+
+        String userId = "test2";
+        String response = kms.createKey_sm9(keySpecSm9, password, userId);
+
+        assertThat(response, containsString("200"));
+        assertThat(response, containsString("data"));
+        Map key = JSON.parseObject(response, Map.class);
+        Map key1 = JSON.parseObject(key.get("data").toString(), Map.class);
+        String keyId = key1.get("keyId").toString();
+        //System.out.println(keyId);
+        //加密
+        String response2 = kms.ibcEncrypt("test3", plainText);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("data"));
+
+        String cipherText = UtilsClassKMS.getCipherText(response2);
+
+        //解密
+        String response3 = kms.decrypt(keyId,password, cipherText );
+        assertEquals("400", JSONObject.fromObject(response3).getString("status"));
+        assertEquals(true, response3.contains("decrypt error:Invalid pkcs7 padding (unpadding \\u003e BlockSize || unpadding == 0"));
+
+
+        //加密（验证pin码不匹配）
+        response2 = kms.ibcEncrypt("test2", plainText);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("data"));
+
+
+        //解密(解密失败)
+        response3 = kms.decrypt(keyId,"000", cipherText );
+        assertEquals("400", JSONObject.fromObject(response3).getString("status"));
+        assertEquals(true, response3.contains("pin码与密钥不匹配,或请稍后再试"));
+
+
+    }
+
+    //abe创建密钥-加密-解密(3个属性3分之二覆盖策略 2/3且满足2of2)
+    @Test
+    public void Test015_abeEncrypt() throws Exception {
+
+        String attribute = "u1:foo v2:bar w3:baf";
+        String response = kms.createKey_abe(keySpecabe, password, attribute);
+
+        assertThat(response, containsString("200"));
+        assertThat(response, containsString("data"));
+        Map key = JSON.parseObject(response, Map.class);
+        Map key1 = JSON.parseObject(key.get("data").toString(), Map.class);
+        String keyId = key1.get("keyId").toString();
+        //System.out.println(keyId);
+        //加密
+        String policy = "u1:foo v2:fim v2:bar 2of3 w3:baf 2of2";
+        String response2 = kms.abeEncrypt(policy, plainText);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("data"));
+
+        String cipherText = UtilsClassKMS.getCipherText(response2);
+
+        //解密
+        String response3 = kms.decrypt(keyId,password, cipherText );
+        assertThat(response3, containsString("200"));
+        assertThat(response3, containsString("data"));
+        assertThat(response3, containsString(plainText));
+
+    }
+    //abe创建密钥-加密-解密(5个属性,5分之3覆盖策略，1/5解密失败。2/5解密失败.3/5且不满足2of2 解密失败。)
+    @Test
+    public void Test016_abeEncrypt() throws Exception {
+
+        String attribute = "u1:foo v2:bar u2:456 u3:ooeec u4:cwdf w3:bade";
+        String response = kms.createKey_abe(keySpecabe, password, attribute);
+
+        assertThat(response, containsString("200"));
+        assertThat(response, containsString("data"));
+        Map key = JSON.parseObject(response, Map.class);
+        Map key1 = JSON.parseObject(key.get("data").toString(), Map.class);
+        String keyId = key1.get("keyId").toString();
+        //System.out.println(keyId);
+        //加密
+
+        //加密 1/5
+        String policy1 = "u1:foo v2:ba u2:456 v2:fim u4:ctesc 3of5 w3:bade 2of2";
+        String response2 = kms.abeEncrypt(policy1, plainText);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("data"));
+        String cipherText = UtilsClassKMS.getCipherText(response2);
+        //解密
+        String response3 = kms.decrypt(keyId,password, cipherText );
+        assertEquals("400", JSONObject.fromObject(response3).getString("status"));
+        assertEquals(true, response3.contains("cannot decrypt, attributes in key do not satisfy policy"));
+
+        //加密 2/5
+        String policy2 = "u1:foo v2:ba u2:456 v2:fim u4:ctesc 3of5 w3:bade 2of2";
+        response2 = kms.abeEncrypt(policy2, plainText);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("data"));
+        cipherText = UtilsClassKMS.getCipherText(response2);
+        //解密
+        response3 = kms.decrypt(keyId,password, cipherText );
+        assertEquals("400", JSONObject.fromObject(response3).getString("status"));
+        assertEquals(true, response3.contains("cannot decrypt, attributes in key do not satisfy policy"));
+
+        //加密3/5但不满足2of2
+        String policy3 = "u1:foo v2:bar u2:456 v2:fim u4:ctesc 3of5 w3:bad 2of2";
+        response2 = kms.abeEncrypt(policy2, plainText);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("data"));
+        cipherText = UtilsClassKMS.getCipherText(response2);
+        //解密
+        response3 = kms.decrypt(keyId,password, cipherText );
+        assertEquals("400", JSONObject.fromObject(response3).getString("status"));
+        assertEquals(true, response3.contains("cannot decrypt, attributes in key do not satisfy policy"));
+
     }
 
 }

@@ -53,6 +53,44 @@ public class GoKms implements Kms {
         log.info(result);
         return result;
     }
+    /***
+     * 生成ibc算法密钥
+     * @param keySpec
+     * @param password
+     *  @param userId
+     * @return
+     */
+    public String createKey_sm9(String keySpec, String password, String userId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("keySpec", keySpec);
+        map.put("password", password);
+        map.put("userId", userId);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result = PostTest.postMethod(KMSADD + "/v1/createKey", map);
+        log.info(result);
+        return result;
+    }
+    /***
+     * 生成ibc算法密钥
+     * @param keySpec
+     * @param password
+     *  @param attribute
+     * @return
+     */
+    public String createKey_abe(String keySpec, String password, String attribute) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("keySpec", keySpec);
+        map.put("password", password);
+        map.put("attribute", attribute);
+        String param="";
+        if(subLedger!="") param = param +"&ledger="+subLedger;
+
+        String result = PostTest.postMethod(KMSADD + "/v1/createKey", map);
+        log.info(result);
+        return result;
+    }
 
 
     /***
@@ -259,6 +297,41 @@ public class GoKms implements Kms {
         String param = "";
         if (!subLedger.isEmpty()) param = param + "&ledger=" + subLedger;
         String result = GetTest.SendGetTojson(KMSADD + "/v1/apihealth?" + param);
+        log.info(result);
+        return result;
+    }
+    /***
+     * ibcEncrypt算法加密
+     * @param userId
+     * @param plainText
+
+     * @return
+     */
+    public String ibcEncrypt(String userId, String plainText) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("userId", userId);
+        map.put("plainText", plainText);
+
+        String result = PostTest.postMethod(KMSADD + "/v1/ibcEncrypt", map);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * abeEncrypt算法加密
+     * @param policy
+     * @param plainText
+
+     * @return
+     */
+    public String abeEncrypt(String policy, String plainText) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("policy", policy);
+        map.put("plainText", plainText);
+
+        String result = PostTest.postMethod(KMSADD + "/v1/abeEncrypt", map);
         log.info(result);
         return result;
     }
