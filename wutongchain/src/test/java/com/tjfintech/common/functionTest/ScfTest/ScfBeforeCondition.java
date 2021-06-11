@@ -218,4 +218,15 @@ public class ScfBeforeCondition {
 
     }
 
+    /***
+     * 获取commentsV2
+     */
+    public void GetcommentsV2() throws  Exception {
+        List<Map> list = new ArrayList<>(10);
+        log.info("$$$$$$$$$$$$$$$$$$$$"+platformPubkey);
+        List<Map> list1 = UtilsClassScf.Sendmsg("sztj", platformPubkey, list);
+        String comments0 = scf.SendMsgV2("aaa","sztj",platformKeyID,list,"123");
+        comments = JSONObject.fromObject(comments0).getString("data");
+    }
+
 }

@@ -12,7 +12,7 @@ public class UtilsClassKMS {
     public static  String keySpecSm9 ="sm9_enc";
     public static  String keySpecabe ="cp_abe";
     public static String KMSADD = "http://10.1.5.243:6080";
-    //public static String KMSADD = "http://117.62.22.95:8001";
+//    public static String KMSADD = "http://117.62.22.95:8001";
     public static String password = "123";
     public static String oldPwd = "Pass7899";
     public static String newPwd = "Pass4321";

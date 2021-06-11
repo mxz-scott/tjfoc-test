@@ -22,7 +22,7 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 @Slf4j
 public class UtilsClass {
 
-    public static String subLedger = "7u5au2p4q4"; // 应用链ID
+    public static String subLedger = "ubgcgynf1x"; // 应用链ID
 //public static String subLedger = "";
     public static String urlAddr = ""; // 向指定节点发请求 格式 IP:RPCPort
     public static String SDKADD = "http://10.1.5.162:8089";//sdk/tokenapi/中间件服务地址 http://IP:Port
@@ -39,7 +39,7 @@ public class UtilsClass {
     public static String tmuxSessionPeer,tmuxSessionSDK,tmuxSessionTokenApi = "tmux send -t s ";//各个服务所在tmux会话进入命令
     public static String sReleaseLocalDir,sLatestLocalDir = "D:\\";//升级前后版本目录
 
-    public static String envNo = "4";
+    public static String envNo = "3";
     static{
         log.info("自定义环境参数");
         switch (envNo){

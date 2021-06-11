@@ -1196,8 +1196,8 @@ public class ScfTest {
         //转账
         //资产转让申请
         List<Map> list = new ArrayList<>(10);
-        List<Map> list1 = UtilsClassScf.Assignment("1", "0", list);
-        String response8 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, proof, tokenType, list1, "1", supplyAddress2);
+        List<Map> list1 = UtilsClassScf.Assignment("1", "b", list);
+        String response8 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, proof, tokenType, list1, "2", supplyAddress2);
         assertThat(response8, containsString("200"));
         assertThat(response8, containsString("success"));
         assertThat(response8, containsString("data"));

@@ -201,6 +201,8 @@ public class GoScf implements Scf {
         return result;
     }
 
+
+
     /**
      * 查询token资产
      * @param tokentype
@@ -721,6 +723,104 @@ public class GoScf implements Scf {
         if (subLedger != "") param = param + "ledger=" + subLedger;
 
         String result = PostTest.postMethod(SDKADD + "/scf/func/balance/unused?" + param, map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 发送存证扩展消息V2
+     *
+     */
+    public String SendMsgV2(String msgcode, String sender, String platformKeyID, List<Map> list, String msgdata) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("msgcode", msgcode);
+        map.put("platformKeyID", platformKeyID);
+        map.put("sender", sender);
+        map.put("receivers", list);
+        map.put("msgdata", msgdata);
+
+        String param="";
+        if (subLedger!="") param = param +"ledger="+subLedger;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/func/msg/decrypt?" + param, map);
+        log.info(result);
+        return result;
+    }
+
+
+    /**
+     * 资产转让申请V2
+     * @param supplyAddress1
+     * @param proof
+     * @param tokenType
+     * @param list1
+     * @param newSubType
+     * @param supplyAddress2
+     * @return
+     */
+    public String AssignmentApplyV2(String supplyAddress1, String proof, String tokenType, List<Map> list1,String newSubType, String supplyAddress2) {
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("fromAddress", supplyAddress1);
+        map.put("proof", proof);
+        map.put("tokenType", tokenType);
+        map.put("tokenList",list1);
+        map.put("newSubType",newSubType);
+        map.put("toAddress",supplyAddress2);
+
+
+        String param="";
+        if (subLedger!="") param = param +"ledger="+subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/assignment/apply?" + param, map);
+        log.info(result);
+        return result;
+    }
+
+
+    /**
+     * 融资申请V2
+     */
+    public String FinacingApplyV2(String supplyAddress1, String rzproof, String tokenType, String rzamount, String subType, String newFromSubType, String newToSubType, String supplyAddress2) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("fromAddress",supplyAddress1);
+        map.put("proof",rzproof);
+        map.put("tokenType",tokenType);
+        map.put("amount",rzamount);
+        map.put("subType",subType);
+        map.put("newFromSubType",newFromSubType);
+        map.put("newToSubType",newToSubType);
+        map.put("toAddress",supplyAddress2);
+
+        String param="";
+        if (subLedger!="") param = param +"ledger="+subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/finacing/apply?" + param, map);
+        log.info(result);
+        return result;
+    }
+
+
+
+    /**
+     * 兑付申请
+     */
+    public String PayingApplyV2(String tokenType, String comments) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("tokenType",tokenType);
+        map.put("comments",comments);
+
+        String param="";
+        if (subLedger!="") param = param +"ledger="+subLedger;
+        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+
+        String result = PostTest.postMethod(SDKADD + "/scf/paying/apply?" + param, map);
         log.info(result);
         return result;
     }

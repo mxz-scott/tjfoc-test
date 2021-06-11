@@ -40,4 +40,11 @@ public interface Scf {
     String Send(String comments);
     String FunGethistoryinfo(String AccountAddress, ArrayList<String> Msglist, String platformKeyID, String PIN);
     String FunBalanceunused(String AccountAddress);
+
+    //供应链金融0526新增电信接口
+    String SendMsgV2(String msgcode, String sender, String platformKeyID, List<Map> list, String msgdata);
+    String AssignmentApplyV2(String supplyAddress1, String proof, String tokenType, List<Map> list1,String newSubType, String supplyAddress2);
+    String FinacingApplyV2(String supplyAddress1, String rzproof, String tokenType, String rzamount, String subType, String newFromSubType, String newToSubType, String supplyAddress2);
+    String PayingApplyV2(String tokenType, String comments);
 }
+

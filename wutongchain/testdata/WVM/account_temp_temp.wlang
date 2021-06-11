@@ -7,7 +7,11 @@ MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEVq/ChyaM7EOK+BFVqmjjvWD48KLx
 "
 
     //核心企业账号
-    string CoreEnterprise = "CoreEnterprisePubkey"
+    string CoreEnterprise = "-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEJt8FL+0NEG5gcW2Ycd0GtnZfxFJo
+aiTBP4DcKJXCM/suZZG93KmkAo5EyeRxlMUkicCj5QesbGom/deudE0lUg==
+-----END PUBLIC KEY-----
+"
 
     string ucres = "tx was on chain:"
         //发行地址信息
