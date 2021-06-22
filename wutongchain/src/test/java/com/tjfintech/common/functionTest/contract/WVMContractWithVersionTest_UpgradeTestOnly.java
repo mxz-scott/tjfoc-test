@@ -171,18 +171,19 @@ public class WVMContractWithVersionTest_UpgradeTestOnly {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
-        String response = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
+        String response = query(ctHash2,"BalanceTest",accountA);//获取账户A账户余额
         assertEquals(Integer.toString(amountA - transfer - transfer/2),
                 JSONObject.fromObject(response).getJSONObject("data").getString("result"));
 
-        String response8 = query(ctHash1,"BalanceTest",accountB);//获取账户A账户余额
+        String response8 = query(ctHash2,"BalanceTest",accountB);//获取账户A账户余额
         assertEquals(Integer.toString(amountB + transfer + transfer/2),
                 JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
 
-        wvmVersion = "2.1";
+
         //调用升级前合约内的方法 transfer方法 A->B转transfer
-        String response4 = invokeNew(ctHash2,"transfer",accountA,accountB,transfer);//A向B转15
-        assertEquals("400",JSONObject.fromObject(response4).getString("state"));
+        wvmVersion = "2.1";
+        String response4 = invokeNew(ctHash1,"transfer",accountA,accountB,transfer);//A向B转15
+        assertEquals("500",JSONObject.fromObject(response4).getString("state"));
         assertEquals(true,JSONObject.fromObject(response4).getString("message").contains(
                 "This version[" + wvmVersion + "] is not newest"));
 
@@ -192,9 +193,6 @@ public class WVMContractWithVersionTest_UpgradeTestOnly {
                 "This version[" + wvmVersion + "] is not newest"));
 
 
-
-        wvmVersion = "2.2";
-        
         response = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
         assertEquals(Integer.toString(amountA - transfer - transfer/2),
                 JSONObject.fromObject(response).getJSONObject("data").getString("result"));
@@ -202,7 +200,9 @@ public class WVMContractWithVersionTest_UpgradeTestOnly {
         response8 = query(ctHash1,"BalanceTest",accountB);//获取账户A账户余额
         assertEquals(Integer.toString(amountB + transfer + transfer/2),
                 JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
-        String response10 = wvmDestroyTest(ctHash1);//销毁
+
+        //销毁
+        String response10 = wvmDestroyTest(ctHash1);
     }
 
     /***
@@ -233,10 +233,7 @@ public class WVMContractWithVersionTest_UpgradeTestOnly {
 
         chkTxDetailRsp("200",txHash1);
 
-        wvmVersion = "3.1";
-        //调用升级前合约内的方法 transfer方法 A->B转transfer
-        String response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
-        String response4 = invokeNew(ctHash2,"transfer",accountA,accountB,transfer);//A向B转15
+
 
         wvmVersion = "3.2";
         //调用升级后合约内的方法 transfer方法 A->B转transferAmount/2
@@ -246,23 +243,27 @@ public class WVMContractWithVersionTest_UpgradeTestOnly {
                 utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         sleepAndSaveInfo(worldStateUpdTime,"等待worldstate更新");
 
-        //检查旧版本不支持调用
-        assertEquals("400",JSONObject.fromObject(response7).getString("state"));
-        assertEquals(true,JSONObject.fromObject(response7).getString("message").contains(
-                "This version[" + wvmVersion + "] is not newest"));
+        String response = query(ctHash2,"BalanceTest",accountA);//获取账户A账户余额
+        assertEquals(Integer.toString(amountA - transfer - transfer/2),
+                JSONObject.fromObject(response).getJSONObject("data").getString("result"));
 
+        String response8 = query(ctHash2,"BalanceTest",accountB);//获取账户A账户余额
+        assertEquals(Integer.toString(amountB + transfer + transfer/2),
+                JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
+
+        //检查旧版本不支持调用
+        wvmVersion = "3.1";
+        //调用升级前合约内的方法 transfer方法 A->B转transfer
+        String response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
+        String response4 = invokeNew(ctHash1,"transfer",accountA,accountB,transfer);//A向B转15
         assertEquals("400",JSONObject.fromObject(response4).getString("state"));
         assertEquals(true,JSONObject.fromObject(response4).getString("message").contains(
                 "This version[" + wvmVersion + "] is not newest"));
 
+        assertEquals("400",JSONObject.fromObject(response7).getString("state"));
+        assertEquals(true,JSONObject.fromObject(response7).getString("message").contains(
+                "This version[" + wvmVersion + "] is not newest"));
 
-        String response = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
-        assertEquals(Integer.toString(amountA - transfer - transfer/2),
-                JSONObject.fromObject(response).getJSONObject("data").getString("result"));
-
-        String response8 = query(ctHash1,"BalanceTest",accountB);//获取账户A账户余额
-        assertEquals(Integer.toString(amountB + transfer + transfer/2),
-                JSONObject.fromObject(response8).getJSONObject("data").getString("result"));
         String response10 = wvmDestroyTest(ctHash1);//销毁
     }
 

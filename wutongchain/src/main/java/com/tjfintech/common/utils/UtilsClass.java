@@ -38,6 +38,7 @@ public class UtilsClass {
     public static String PeerTPName,SDKTPName,ToolTPName,TokenTPName = "wtchain";//各个服务进程名称
     public static String tmuxSessionPeer,tmuxSessionSDK,tmuxSessionTokenApi = "tmux send -t s ";//各个服务所在tmux会话进入命令
     public static String sReleaseLocalDir,sLatestLocalDir = "D:\\";//升级前后版本目录
+    public static String destShellScriptDir = "/root/tjshell/";
 
     public static String envNo = "3";
     static{
@@ -58,9 +59,7 @@ public class UtilsClass {
     public static String testResultPath = "testresult/";
     public static String testDataPath = "testdata/";
     public static String srcShellScriptDir = testDataPath + "/configFiles/shell/";
-    public static String destShellScriptDir = "/root/tjshell/";
     public static String tempWVMDir = testDataPath + "WVM/";
-
     public static String certPath = "cert/" + "SM2"; // 设置签名证书类型，可选值SM2(默认值)，ECDSA，MIX1，MIX2，RSA
     public static String globalResponse = "";
     public static String globalSSHPort = "";

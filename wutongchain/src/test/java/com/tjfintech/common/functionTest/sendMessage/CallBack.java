@@ -65,7 +65,7 @@ public class CallBack {
     String msgdatafile = System.getProperty("user.dir") + "\\callBackData.txt";
 //    String msgdatafile = testDataPath + "SendMsgTestFiles\\callBackData.txt";
 
-    public static String callbackUrl = "[\"http://10.1.11.245:9300/callback\"]";
+    public static String callbackUrl = "[\"http://10.1.11.12:9300/callback\"]";
 
 
     @BeforeClass

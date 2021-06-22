@@ -88,6 +88,7 @@ public class SetTestEnv_lilu {
      tmuxSessionSDK = "tmux send -t wt-sdk ";
      sReleaseLocalDir = "E:\\\\test\\\\2.3\\\\";
      sLatestLocalDir = "E:\\\\test\\\\2.4.2\\\\";
+     destShellScriptDir = "/opt/tjshell/";
 
 
      //**********************************************************************pufa****************************************************************************
