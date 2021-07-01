@@ -210,6 +210,9 @@ public class BeforeCondition {
         log.info("PRIKEY2 :" + PRIKEY4);
         log.info("PUBKEY2 :" + PUBKEY4);
 
+        log.info("PRIKEY3 :" + PRIKEY3);
+        log.info("PUBKEY3 :" + PUBKEY3);
+
         log.info("PRIKEY6 :" + PRIKEY6);
         log.info("PUBKEY6 :" + PUBKEY6);
 

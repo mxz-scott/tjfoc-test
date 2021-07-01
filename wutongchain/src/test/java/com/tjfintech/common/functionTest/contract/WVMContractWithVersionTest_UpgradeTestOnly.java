@@ -188,7 +188,7 @@ public class WVMContractWithVersionTest_UpgradeTestOnly {
                 "This version[" + wvmVersion + "] is not newest"));
 
         String response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
-        assertEquals("400",JSONObject.fromObject(response7).getString("state"));
+        assertEquals("500",JSONObject.fromObject(response7).getString("state"));
         assertEquals(true,JSONObject.fromObject(response7).getString("message").contains(
                 "This version[" + wvmVersion + "] is not newest"));
 
@@ -256,11 +256,11 @@ public class WVMContractWithVersionTest_UpgradeTestOnly {
         //调用升级前合约内的方法 transfer方法 A->B转transfer
         String response7 = query(ctHash1,"BalanceTest",accountA);//获取账户A账户余额
         String response4 = invokeNew(ctHash1,"transfer",accountA,accountB,transfer);//A向B转15
-        assertEquals("400",JSONObject.fromObject(response4).getString("state"));
+        assertEquals("500",JSONObject.fromObject(response4).getString("state"));
         assertEquals(true,JSONObject.fromObject(response4).getString("message").contains(
                 "This version[" + wvmVersion + "] is not newest"));
 
-        assertEquals("400",JSONObject.fromObject(response7).getString("state"));
+        assertEquals("500",JSONObject.fromObject(response7).getString("state"));
         assertEquals(true,JSONObject.fromObject(response7).getString("message").contains(
                 "This version[" + wvmVersion + "] is not newest"));
 

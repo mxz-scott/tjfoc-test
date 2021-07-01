@@ -4,6 +4,7 @@ import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.functionTest.Conditions.SetCertSM2;
 import com.tjfintech.common.functionTest.Conditions.SetURLToSDKAddr;
 import com.tjfintech.common.functionTest.contract.WVMContractTest;
+import com.tjfintech.common.functionTest.mixTest.VerifyTests;
 import com.tjfintech.common.functionTest.smartTokenTest.smtInterfaceTest;
 import com.tjfintech.common.functionTest.smartTokenTest.smtMultiInvalidTest;
 import com.tjfintech.common.functionTest.smartTokenTest.smtMultiTest;
@@ -24,7 +25,7 @@ import org.junit.runners.Suite;
         PrivateStoreTest.class,
         WVMContractTest.class,
         smtMultiTest.class,
-
+        VerifyTests.class,
 })
 
 //Build Validation Test

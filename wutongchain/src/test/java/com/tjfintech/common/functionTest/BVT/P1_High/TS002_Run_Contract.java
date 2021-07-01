@@ -9,7 +9,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 
-        SetAppChain.class,
+//        SetAppChain.class,
 
         SetWVMversionEmpty.class,
         WVMContractTest.class,

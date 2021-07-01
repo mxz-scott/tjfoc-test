@@ -55,7 +55,7 @@ public class SetTestEnv_lilu {
 //     public static String tempWVMDir = testDataPath + "WVM/";
 //
 //
-//     //***************************************************************应用链**********************************************************************************
+     //***************************************************************应用链**********************************************************************************
      SDKADD = "http://10.1.5.225:7088";
      rSDKADD = "http://10.1.5.225:7088";
      TOKENADD = "http://10.1.5.225:7088";
@@ -124,7 +124,7 @@ public class SetTestEnv_lilu {
 //       tmuxSessionSDK = "tmux send -t sdk-pufa ";
 //       sReleaseLocalDir = "E:\\test\\2.3\\";
 //       sLatestLocalDir = "E:\\test\\2.4.2\\";
-
+//      destShellScriptDir = "/opt/tjshell/";
 
    }
 
