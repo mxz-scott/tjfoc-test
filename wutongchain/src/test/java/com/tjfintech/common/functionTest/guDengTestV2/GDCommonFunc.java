@@ -2282,4 +2282,14 @@ public class GDCommonFunc {
 
         return bResult;
     }
+
+    public void checkHeaderContentInfo(String objectID,int version,String objType,String operationType){
+        String queryInfo = gd.GDObjectQueryByVer(objectID,version);
+        assertEquals("{}",JSONObject.fromObject(queryInfo).getJSONObject("data").getString("body"));
+        JSONObject objHeaderContent = JSONObject.fromObject(queryInfo).getJSONObject("data").getJSONObject("header").getJSONObject("content");
+        assertEquals(objectID,objHeaderContent.getString("object_id"));
+        assertEquals(operationType,objHeaderContent.getString("operation"));
+        assertEquals(version,objHeaderContent.getInt("version"));
+        assertEquals(objType,objHeaderContent.getString("type"));
+    }
 }

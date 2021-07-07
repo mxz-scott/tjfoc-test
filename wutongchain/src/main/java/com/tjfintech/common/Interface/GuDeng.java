@@ -57,4 +57,7 @@ public interface GuDeng {
     String GDUpdateProductInfo(String contractAddress,Map productInfo);
     String GDGetTxReportInfo(String type, String value,String beginTime,String endTime);
 
+
+    String GDEquitySuperviseInfoDelete(String objectId, int version,String type);
+    String GDEquitySuperviseInfoUpdate(String objectId,String type,long updateTime,Map objectInfo);
 }

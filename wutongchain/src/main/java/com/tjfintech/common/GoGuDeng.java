@@ -659,4 +659,24 @@ public  class GoGuDeng implements GuDeng {
         log.info(result);
         return result;
     }
+
+    public String GDEquitySuperviseInfoDelete(String objectId, int version,String type){
+        Map<String, Object> map = new HashMap<>();
+        map.put("objectId", objectId);
+        map.put("version", version);
+        map.put("type", type);
+        String result = PostTest.postMethod(SDKADD + "/equity/superviseinfo/delete", map);
+        log.info(result);
+        return result;
+    }
+    public String GDEquitySuperviseInfoUpdate(String objectId,String type,long updateTime,Map objectInfo){
+        Map<String, Object> map = new HashMap<>();
+        map.put("objectId", objectId);
+        map.put("type", type);
+        map.put("info", objectInfo);
+        map.put("updateTime", updateTime);
+        String result = PostTest.postMethod(SDKADD + "/equity/superviseinfo/update", map);
+        log.info(result);
+        return result;
+    }
 }

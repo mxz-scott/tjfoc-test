@@ -52,7 +52,7 @@ public class MinIOOperation {
 
     }
 
-    public String getFileFromMinIO(String endPoint,String bucket,String targetFile,String saveFile) throws Exception{
+    public String getFileFromMinIOMO(String endPoint,String bucket,String targetFile,String saveFile) throws Exception{
         InputStream isGet = null;
         String strGet = "";
         try {
@@ -99,5 +99,14 @@ public class MinIOOperation {
             System.out.println("错误: " + e);
         }
         return strGet;
+    }
+
+    public String getFileFromMinIO(String endPoint,String bucket,String targetFile,String saveFile) throws Exception{
+
+        UtilsClass utilsClass = new UtilsClass();
+        String filePath = "/home/data/" + bucket + "/" + targetFile;
+        String fileContent = utilsClass.shExeAndReturn(utilsClass.getIPFromStr(endPoint),"cat " + filePath);
+        if(fileContent.contains(ossErrMsg)) fileContent = "错误";
+        return fileContent;
     }
 }

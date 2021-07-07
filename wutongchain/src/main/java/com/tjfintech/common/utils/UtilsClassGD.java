@@ -15,7 +15,7 @@ public class UtilsClassGD {
     //gudeng 信息
     //10.1.3.161:7779
     public static String gdContractAddress = "018a976954474678a3a100d33200b7f9fd1b34a60118c4cb13cfd79f6f324b5d";
-    public static String gdPlatfromKeyID = "c1db5552uehbfnle5vfg";
+    public static String gdPlatfromKeyID = "c1db5652uehbfnle6qrg";
 
     //外网对接
 //    public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
@@ -67,7 +67,7 @@ public class UtilsClassGD {
     public static long end = 0;
     public static int beginHeigh = 0;
     public static int endHeight = 0;
-	public static int blockHeight = 8341;
+	public static int blockHeight = 6114;
     public static long timeStamp = (new Date()).getTime();
     public static String testCurMethodName = "";
 
@@ -82,6 +82,8 @@ public class UtilsClassGD {
     public static String regType = "registration";
     public static String settleType = "settlement";
     public static String infoType = "infodisclosure";
+
+    public static String ossErrMsg = "No such file or directory";
 
 //    public static String time1 = "2017/12/16 13:40:00";
 //    public static String time2 = "2020/12/16 12:00:25";
@@ -130,7 +132,7 @@ public class UtilsClassGD {
 //    public static String minIOEP ="http://10.1.5.120:9000";//"http://b2904236d6.zicp.vip:8098";
 //    public static String minIOPwd ="minioadmin";  //天翼云服务器
 //    public static String minIOEP ="http://121.224.59.167:9000";//天翼云服务器
-    public static String jgBucket = "124";
+    public static String jgBucket = "125";
 
     public static Boolean bRegTxRef = false;
     public static Boolean bHeaderCalOK = true;

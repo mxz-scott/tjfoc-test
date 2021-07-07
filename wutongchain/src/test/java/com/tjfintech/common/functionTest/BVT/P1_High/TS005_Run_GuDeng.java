@@ -16,6 +16,9 @@ import org.junit.runners.Suite;
         GDV2_AllFlowTest_Equity_URIStoreTxDetail.class,
         GDV2_AllFlowTest_Equity_WVMTxDetail.class,
 
+        GDV2_JGFormat_Part5_Superviseinfo_Delete_Update_Test01.class,
+        GDV2_JGFormat_Part5_Superviseinfo_Delete_Update_Test02.class,
+
         GDV2_JGFormat_Part4_DoubleRoles_EnterpriseRegisterThenAccCreate.class,
         GDV2_JGFormat_Part4_DoubleRoles_FlowTest01_Test.class,
         GDV2_JGFormat_Part4_DoubleRoles_FlowTest02_Test.class,

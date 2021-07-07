@@ -211,7 +211,7 @@ public class GDBeforeCondition {
     public void initRegulationData() {
         updateWord = "";
         //更新系统合约
-        gd.GDEquitySystemInit(gdContractAddress, gdPlatfromKeyID);
+        //gd.GDEquitySystemInit(gdContractAddress, gdPlatfromKeyID);
 
         refData();
 

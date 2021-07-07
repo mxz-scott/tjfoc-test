@@ -722,6 +722,7 @@ public class GDV2_JGFormat_Part3_SubjectChangeTxSend_Test {
         Map txInfo = gdBF.init04TxInfo();
         txInfo.put("transaction_object_id",txObjId);
         txInfo.put("transaction_type",type);//交易报告类型
+
         register_transaction_ref = txObjId; //此处为发行融资 设置登记引用接口中的交易报告
 
         String ver1 = gdCF.getObjectLatestVer(gdCompanyID);
@@ -738,14 +739,7 @@ public class GDV2_JGFormat_Part3_SubjectChangeTxSend_Test {
             sleepAndSaveInfo(4000);
             //20210322 增加uniqueId作为判定是否执行合约交易的标识 因此合约可以执行成功 但是数据报送会失败
             String ver2 = gdCF.getObjectLatestVer(gdCompanyID);
-            assertEquals(6,JSONObject.fromObject(gd.GDGetEnterpriseShareInfo(gdEquityCode)).getJSONArray("data").size());
-            String query5 = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo5);
-//            assertEquals("判断增发底层链操作实际不成功",true,query5.equals(query4));
-            assertEquals(gdAccClientNo5,JSONObject.fromObject(query5).getJSONObject("data").getString("clientNo"));
-            assertEquals(true,query5.contains("\"shareholderNo\":\"SH" + gdAccClientNo5 + "\""));
-            assertEquals(true,query5.contains("\"address\":\"" + gdAccount5 + "\""));
-            assertEquals(true,query5.contains("{\"equityCode\":\"" + gdEquityCode +
-                    "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":" + increaseAmount + ",\"lockAmount\":0}"));
+            assertEquals(4,JSONObject.fromObject(gd.GDGetEnterpriseShareInfo(gdEquityCode)).getJSONArray("data").size());
 
             assertEquals("主体版本变更",true,ver1.equals(ver2));//应该不要变更
             //直接从minio上获取报送数据文件信息

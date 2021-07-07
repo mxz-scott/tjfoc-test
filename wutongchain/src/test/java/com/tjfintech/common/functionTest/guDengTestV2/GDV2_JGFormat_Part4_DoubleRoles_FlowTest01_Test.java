@@ -2135,6 +2135,9 @@ public class GDV2_JGFormat_Part4_DoubleRoles_FlowTest01_Test {
         accFund.put("account_object_id",fundObjId);
         accSH.put("account_object_id",SHObjId);
 
+        accFund.put("account_status",2);//2是销户
+        accSH.put("account_status",2);//2是销户
+
         accFund.put("account_associated_account_ref",SHObjId);
 
         accFund.put("account_closing_agent_name",name);

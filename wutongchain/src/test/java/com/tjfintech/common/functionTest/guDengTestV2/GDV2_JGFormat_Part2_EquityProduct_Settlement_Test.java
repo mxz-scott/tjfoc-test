@@ -110,6 +110,7 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
 
         String response= uf.shareIssue(gdEquityCode,shareList4,false);
         JSONObject jsonObject=JSONObject.fromObject(response);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(response).getString("state"));
         String txId = jsonObject.getJSONObject("data").getString("txId");
 
         commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
@@ -666,6 +667,9 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
 
         log.info(uriInfo.get("storeData").toString());
         product_issuer_subject_ref = gdCompanyID;
+
+        log.info("主体版本信息 " + gdCF.getObjectLatestVer(gdCompanyID));
+        log.info("产品版本信息 " +  gdEquityCode +  newEqProdVer );
 
         Map getProInfo = gdCF.constructJGDataFromStr(conJGFileName(gdEquityCode, newEqProdVer), prodType, "1");
         eqProd.put("content",gdCF.constructContentTreeMap(prodType, gdEquityCode, newEqProdVer, "update", String.valueOf(ts3)));
