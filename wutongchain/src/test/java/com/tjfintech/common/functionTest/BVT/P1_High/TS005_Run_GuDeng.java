@@ -11,6 +11,9 @@ import org.junit.runners.Suite;
 
         GDV2_JGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Test.class,
         GDV2_JGFormat_Part2_EquityProduct_Settlement_Test.class,
+
+        GDV2_InitUpdateTest.class,
+
         GDV2_JGFormat_Part3_SubjectChangeTxSend_Test.class,
         GDV2_AllFlowTest_Equity_ChkTxReport.class,
         GDV2_AllFlowTest_Equity_URIStoreTxDetail.class,
