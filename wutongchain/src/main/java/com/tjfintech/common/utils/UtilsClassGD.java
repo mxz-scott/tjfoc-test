@@ -67,7 +67,7 @@ public class UtilsClassGD {
     public static long end = 0;
     public static int beginHeigh = 0;
     public static int endHeight = 0;
-	public static int blockHeight = 6114;
+	public static int blockHeight = 9680;
     public static long timeStamp = (new Date()).getTime();
     public static String testCurMethodName = "";
 
@@ -154,6 +154,7 @@ public class UtilsClassGD {
     public static Boolean bUseUUID = true;
 
     public static Boolean bMultiRole = false;
+    public static Boolean bNotStoreSuperviseInfo = false;
 
     //获取引用信息初始值放入数组
     public static  String[] refData() {

@@ -19,6 +19,8 @@ import org.junit.runners.Suite;
         GDV2_AllFlowTest_Equity_URIStoreTxDetail.class,
         GDV2_AllFlowTest_Equity_WVMTxDetail.class,
 
+        GDV2_JGFormat_Part6_TransferNotSendData_Test.class,
+
         GDV2_JGFormat_Part5_Superviseinfo_Delete_Update_Test01.class,
         GDV2_JGFormat_Part5_Superviseinfo_Delete_Update_Test02.class,
 
@@ -35,9 +37,7 @@ import org.junit.runners.Suite;
         GDV2_JGData_RefObjParamExceptionScene.class,
         GDV2_JGData_NonEssentialParamTest.class,
 
-        GDV2_SceneTest_01.class,
-        GDV2_SceneTest_02.class,
-        GDV2_SceneTest_Issue.class,
+
         GDV2_SceneTest_ChangeProperty.class,
         GDV2_SceneTest_Transfer.class,
         GDV2_SceneTest_Increase.class,
@@ -54,6 +54,10 @@ import org.junit.runners.Suite;
         GDV2_ShareIncrease_UniqueId_Test.class,
         GDV2_ShareRecycle_UniqueId_Test.class,
         GDV2_ShareChangeBoard_UniqueId_Test.class,
+
+        GDV2_SceneTest_01.class,
+        GDV2_SceneTest_02.class,
+        GDV2_SceneTest_Issue.class,
 
         GuDengV2_InterfaceTest.class,
         GDV2_TestIssueStop.class,

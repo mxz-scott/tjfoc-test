@@ -166,6 +166,8 @@ public  class GoGuDeng implements GuDeng {
         map.put("subjectObjectId",gdCompanyID);
         map.put("subjectUpdateTime",ts1);
 
+        if(bNotStoreSuperviseInfo) map.put("notStoreSuperviseInfo",bNotStoreSuperviseInfo);
+
         if(bUseUUID) {
             //20210319 新增业务唯一标识
             tempUUID = Random(26);
