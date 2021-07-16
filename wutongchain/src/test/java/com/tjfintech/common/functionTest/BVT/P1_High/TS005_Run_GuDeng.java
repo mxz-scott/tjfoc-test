@@ -43,7 +43,7 @@ import org.junit.runners.Suite;
         GDV2_SceneTest_Increase.class,
         GDV2_SceneTest_LockUnLock.class,
         GDV2_SceneTest_Recycle.class,
-        GDV2_SceneTest_ChangeBoard.class,
+//        GDV2_SceneTest_ChangeBoard.class,
         GDV2_SceneTest_DestroyAccount.class,
 
         GDV2_ShareIssue_UniqueId_Test.class,
@@ -53,7 +53,7 @@ import org.junit.runners.Suite;
         GDV2_ShareUnlock_UniqueId_Test.class,
         GDV2_ShareIncrease_UniqueId_Test.class,
         GDV2_ShareRecycle_UniqueId_Test.class,
-        GDV2_ShareChangeBoard_UniqueId_Test.class,
+//        GDV2_ShareChangeBoard_UniqueId_Test.class,
 
         GDV2_SceneTest_01.class,
         GDV2_SceneTest_02.class,

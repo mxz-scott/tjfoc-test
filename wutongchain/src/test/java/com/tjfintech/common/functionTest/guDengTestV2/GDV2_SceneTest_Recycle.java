@@ -505,14 +505,14 @@ public class GDV2_SceneTest_Recycle {
 
         String response = uf.shareRecycle(gdEquityCode,shareList,false);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("Data too long for column 'object_id'"));
+        assertEquals(true,response.contains("header.content.object_id: String length must be less than or equal to 128"));
 
         sleepAndSaveInfo(4000);
 
-        //检查账户余额 总股权无变更
+        //检查账户余额
         response = gd.GDGetShareHolderInfo(gdContractAddress, gdAccClientNo1);
         assertEquals(true, response.contains("{\"equityCode\":\"" + gdEquityCode +
-                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":900,\"lockAmount\":0}"));
+                "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
     }
 
 

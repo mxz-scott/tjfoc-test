@@ -155,6 +155,8 @@ public class GDV2_ShareIncrease_UniqueId_Test {
 
         String response = gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, eqProd,txInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("监管数据校验失败",true,JSONObject.fromObject(response).getString("message").contains("数据格式校验失败"));
+
         busUUID = tempUUID;
 
         sleepAndSaveInfo(4000);
@@ -409,6 +411,8 @@ public class GDV2_ShareIncrease_UniqueId_Test {
 
         String response = gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, eqProd,txInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("监管数据校验失败",true,JSONObject.fromObject(response).getString("message").contains("数据格式校验失败"));
+
         busUUID = tempUUID;
 
         sleepAndSaveInfo(4000);
@@ -653,6 +657,8 @@ public class GDV2_ShareIncrease_UniqueId_Test {
 
         String response = gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, eqProd,txInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("监管数据校验失败",true,JSONObject.fromObject(response).getString("message").contains("数据格式校验失败"));
+
         busUUID = tempUUID;
 
         sleepAndSaveInfo(4000);
@@ -902,6 +908,8 @@ public class GDV2_ShareIncrease_UniqueId_Test {
 
         String response = gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList4,reason, eqProd,txInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("监管数据校验失败",true,JSONObject.fromObject(response).getString("message").contains("Data too long for column 'object_id' at row 1"));
+
         busUUID = tempUUID;
 
         sleepAndSaveInfo(4000);

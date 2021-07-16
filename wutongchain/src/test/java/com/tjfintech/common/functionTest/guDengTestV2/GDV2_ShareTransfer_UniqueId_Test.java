@@ -156,18 +156,19 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         //执行交易 合约交易执行成功 但报送数据异常
         String response= gd.GDShareTransfer(keyId,fromAddr,transferAmount,toAddr,shareProperty,eqCode,txInfo,fromNow,toNow);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        assertEquals("监管数据校验失败",true,JSONObject.fromObject(response).getString("message").contains("数据格式校验失败"));
 
         int afterBlockHeight = JSONObject.fromObject(store.GetHeight()).getInt("data");
-        assertEquals("区块高度仅增加1，无存证上链",beforeBlockHeight + 1,afterBlockHeight);
+        assertEquals("区块高度不增加，无存证上链",beforeBlockHeight,afterBlockHeight);
 
-        String blockDetail = store.GetBlockByHeight(afterBlockHeight);
-        assertEquals("区块仅有一笔交易",1,JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").size());
-        //确认交易是发行交易
-        String getTXDetails = store.GetTxDetail(JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").getString(0));
-        JSONObject jsonObject1 = JSONObject.fromObject(getTXDetails).getJSONObject("data");
-        assertEquals("1",jsonObject1.getJSONObject("header").getString("version"));
-        assertEquals("1",jsonObject1.getJSONObject("header").getString("type"));
-        assertEquals("11",jsonObject1.getJSONObject("header").getString("subType"));
+//        String blockDetail = store.GetBlockByHeight(afterBlockHeight);
+//        assertEquals("区块仅有一笔交易",1,JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").size());
+//        //确认交易是发行交易
+//        String getTXDetails = store.GetTxDetail(JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").getString(0));
+//        JSONObject jsonObject1 = JSONObject.fromObject(getTXDetails).getJSONObject("data");
+//        assertEquals("1",jsonObject1.getJSONObject("header").getString("version"));
+//        assertEquals("1",jsonObject1.getJSONObject("header").getString("type"));
+//        assertEquals("11",jsonObject1.getJSONObject("header").getString("subType"));
 
 
         //5.判断uuid是否存在合约中 方法待确认
@@ -176,7 +177,7 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         assertEquals("错误",minio.getFileFromMinIO(minIOEP,jgBucket,txRpObjId + "/0",""));
         assertEquals("错误",minio.getFileFromMinIO(minIOEP,jgBucket,tempObjIdFrom + "/0",""));
         assertEquals("错误",minio.getFileFromMinIO(minIOEP,jgBucket,tempObjIdTo + "/0",""));
-        assertEquals(true,minio.getFileFromMinIO(minIOEP,jgBucket,
+        assertEquals(false,minio.getFileFromMinIO(minIOEP,jgBucket,
                 gdCompanyID + "/" + (Integer.valueOf(subVerInit)+1),"").contains("body"));
 
 
@@ -385,18 +386,19 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         //执行交易 合约交易执行成功 但报送数据异常
         String response= gd.GDShareTransfer(keyId,fromAddr,transferAmount,toAddr,shareProperty,eqCode,txInfo,fromNow,toNow);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        assertEquals("监管数据校验失败",true,JSONObject.fromObject(response).getString("message").contains("数据格式校验失败"));
 
         int afterBlockHeight = JSONObject.fromObject(store.GetHeight()).getInt("data");
-        assertEquals("区块高度仅增加1，无存证上链",beforeBlockHeight + 1,afterBlockHeight);
+        assertEquals("区块高度不增加，无存证上链",beforeBlockHeight,afterBlockHeight);
 
-        String blockDetail = store.GetBlockByHeight(afterBlockHeight);
-        assertEquals("区块仅有一笔交易",1,JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").size());
-        //确认交易是发行交易
-        String getTXDetails = store.GetTxDetail(JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").getString(0));
-        JSONObject jsonObject1 = JSONObject.fromObject(getTXDetails).getJSONObject("data");
-        assertEquals("1",jsonObject1.getJSONObject("header").getString("version"));
-        assertEquals("1",jsonObject1.getJSONObject("header").getString("type"));
-        assertEquals("11",jsonObject1.getJSONObject("header").getString("subType"));
+//        String blockDetail = store.GetBlockByHeight(afterBlockHeight);
+//        assertEquals("区块仅有一笔交易",1,JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").size());
+//        //确认交易是发行交易
+//        String getTXDetails = store.GetTxDetail(JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").getString(0));
+//        JSONObject jsonObject1 = JSONObject.fromObject(getTXDetails).getJSONObject("data");
+//        assertEquals("1",jsonObject1.getJSONObject("header").getString("version"));
+//        assertEquals("1",jsonObject1.getJSONObject("header").getString("type"));
+//        assertEquals("11",jsonObject1.getJSONObject("header").getString("subType"));
 
 
         //5.判断uuid是否存在合约中 方法待确认
@@ -405,7 +407,7 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         assertEquals("错误",minio.getFileFromMinIO(minIOEP,jgBucket,txRpObjId + "/0",""));
         assertEquals("错误",minio.getFileFromMinIO(minIOEP,jgBucket,tempObjIdFrom + "/0",""));
         assertEquals("错误",minio.getFileFromMinIO(minIOEP,jgBucket,tempObjIdTo + "/0",""));
-        assertEquals(true,minio.getFileFromMinIO(minIOEP,jgBucket,
+        assertEquals(false,minio.getFileFromMinIO(minIOEP,jgBucket,
                 gdCompanyID + "/" + (Integer.valueOf(subVerInit)+1),"").contains("body"));
 
 
@@ -419,7 +421,7 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         sleepAndSaveInfo(2000);
 
         afterBlockHeight = JSONObject.fromObject(store.GetHeight()).getInt("data");
-        assertEquals("区块高度无增加，无存证上链",beforeBlockHeight + 1,afterBlockHeight);
+        assertEquals("区块高度无增加，无存证上链",beforeBlockHeight,afterBlockHeight);
 
         //6.判断所有登记对象ID是否存在OSS中
         assertEquals("错误",minio.getFileFromMinIO(minIOEP,jgBucket,txRpObjId + "/0",""));
@@ -633,18 +635,19 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         //执行交易 合约交易执行成功 但报送数据异常
         String response= gd.GDShareTransfer(keyId,fromAddr,transferAmount,toAddr,shareProperty,eqCode,txInfo,fromNow,toNow);
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        assertEquals("监管数据校验失败",true,JSONObject.fromObject(response).getString("message").contains("Data too long for column 'object_id' at row 1"));
 
         int afterBlockHeight = JSONObject.fromObject(store.GetHeight()).getInt("data");
-        assertEquals("区块高度仅增加1，无存证上链",beforeBlockHeight + 1,afterBlockHeight);
+        assertEquals("区块高度不增加，无存证上链",beforeBlockHeight,afterBlockHeight);
 
-        String blockDetail = store.GetBlockByHeight(afterBlockHeight);
-        assertEquals("区块仅有一笔交易",1,JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").size());
-        //确认交易是发行交易
-        String getTXDetails = store.GetTxDetail(JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").getString(0));
-        JSONObject jsonObject1 = JSONObject.fromObject(getTXDetails).getJSONObject("data");
-        assertEquals("1",jsonObject1.getJSONObject("header").getString("version"));
-        assertEquals("1",jsonObject1.getJSONObject("header").getString("type"));
-        assertEquals("11",jsonObject1.getJSONObject("header").getString("subType"));
+//        String blockDetail = store.GetBlockByHeight(afterBlockHeight);
+//        assertEquals("区块仅有一笔交易",1,JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").size());
+//        //确认交易是发行交易
+//        String getTXDetails = store.GetTxDetail(JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").getString(0));
+//        JSONObject jsonObject1 = JSONObject.fromObject(getTXDetails).getJSONObject("data");
+//        assertEquals("1",jsonObject1.getJSONObject("header").getString("version"));
+//        assertEquals("1",jsonObject1.getJSONObject("header").getString("type"));
+//        assertEquals("11",jsonObject1.getJSONObject("header").getString("subType"));
 
 
         //5.判断uuid是否存在合约中 方法待确认
@@ -653,7 +656,7 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         assertEquals("错误",minio.getFileFromMinIO(minIOEP,jgBucket,txRpObjId + "/0",""));
         assertEquals("错误",minio.getFileFromMinIO(minIOEP,jgBucket,tempObjIdFrom + "/0",""));
         assertEquals("错误",minio.getFileFromMinIO(minIOEP,jgBucket,tempObjIdTo + "/0",""));
-        assertEquals(true,minio.getFileFromMinIO(minIOEP,jgBucket,
+        assertEquals(false,minio.getFileFromMinIO(minIOEP,jgBucket,
                 gdCompanyID + "/" + (Integer.valueOf(subVerInit)+1),"").contains("body"));
 
 

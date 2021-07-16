@@ -153,6 +153,8 @@ public class GDV2_ShareChangeProperty_UniqueId_Test {
 
         String response = gd.GDShareChangeProperty(gdPlatfromKeyID,address,eqCode,changeAmount,oldProperty,newProperty,regListInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("监管数据校验失败",true,JSONObject.fromObject(response).getString("message").contains("数据格式校验失败"));
+
 
         busUUID = tempUUID;
 
@@ -166,30 +168,30 @@ public class GDV2_ShareChangeProperty_UniqueId_Test {
         List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,5000,0,0,mapShareENCN().get("0"), respShareList3);
 
         int afterBlockHeight = JSONObject.fromObject(store.GetHeight()).getInt("data");
-        assertEquals("区块高度仅增加1，无存证上链",beforeBlockHeight + 1,afterBlockHeight);
+        assertEquals("区块高度不增加，无存证上链",beforeBlockHeight,afterBlockHeight);
 
-        String blockDetail = store.GetBlockByHeight(afterBlockHeight);
-        assertEquals("区块仅有一笔交易",1,JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").size());
-        //确认交易是股份性质变更交易
-        String getTXDetails = store.GetTxDetail(JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").getString(0));
-        JSONObject jsonObject1 = JSONObject.fromObject(getTXDetails).getJSONObject("data");
-        assertEquals("1",jsonObject1.getJSONObject("header").getString("version"));
-        assertEquals("1",jsonObject1.getJSONObject("header").getString("type"));
-        assertEquals("11",jsonObject1.getJSONObject("header").getString("subType"));
-
-        assertEquals(true,getTXDetails.contains("{\"from\":\"" + address + "\",\"to\":\"" + address
-                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"500\",\"subType\":\"0\",\"newSubType\":\"1\"}"));
-        assertEquals(true,getTXDetails.contains("{\"from\":\"" + address + "\",\"to\":\"" + address
-                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"4500\",\"subType\":\"0\"}"));
-
-        //4.判断股东列表有变更
-        String queryList = gd.GDGetEnterpriseShareInfo(gdEquityCode);
-        assertEquals("200",JSONObject.fromObject(queryList).getString("state"));
-        JSONArray dataShareListNow = JSONObject.fromObject(queryList).getJSONArray("data");
-        assertEquals(respShareList4.size(),dataShareListNow.size());
-        List<Map> getShareListNow = getShareListFromQueryNoZeroAcc(dataShareListNow);
-        assertEquals(respShareList4.size(),getShareListNow.size());
-        assertEquals(true,respShareList4.containsAll(getShareListNow) && getShareListNow.containsAll(respShareList4));
+//        String blockDetail = store.GetBlockByHeight(afterBlockHeight);
+//        assertEquals("区块仅有一笔交易",1,JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").size());
+//        //确认交易是股份性质变更交易
+//        String getTXDetails = store.GetTxDetail(JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").getString(0));
+//        JSONObject jsonObject1 = JSONObject.fromObject(getTXDetails).getJSONObject("data");
+//        assertEquals("1",jsonObject1.getJSONObject("header").getString("version"));
+//        assertEquals("1",jsonObject1.getJSONObject("header").getString("type"));
+//        assertEquals("11",jsonObject1.getJSONObject("header").getString("subType"));
+//
+//        assertEquals(true,getTXDetails.contains("{\"from\":\"" + address + "\",\"to\":\"" + address
+//                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"500\",\"subType\":\"0\",\"newSubType\":\"1\"}"));
+//        assertEquals(true,getTXDetails.contains("{\"from\":\"" + address + "\",\"to\":\"" + address
+//                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"4500\",\"subType\":\"0\"}"));
+//
+//        //4.判断股东列表有变更
+//        String queryList = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+//        assertEquals("200",JSONObject.fromObject(queryList).getString("state"));
+//        JSONArray dataShareListNow = JSONObject.fromObject(queryList).getJSONArray("data");
+//        assertEquals(respShareList4.size(),dataShareListNow.size());
+//        List<Map> getShareListNow = getShareListFromQueryNoZeroAcc(dataShareListNow);
+//        assertEquals(respShareList4.size(),getShareListNow.size());
+//        assertEquals(true,respShareList4.containsAll(getShareListNow) && getShareListNow.containsAll(respShareList4));
 
         //5.判断uuid是否存在合约中 方法待确认
 
@@ -358,7 +360,7 @@ public class GDV2_ShareChangeProperty_UniqueId_Test {
 
         String response = gd.GDShareChangeProperty(gdPlatfromKeyID,address,eqCode,changeAmount,oldProperty,newProperty,regListInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-
+        assertEquals("监管数据校验失败",true,JSONObject.fromObject(response).getString("message").contains("数据格式校验失败"));
         busUUID = tempUUID;
 
         sleepAndSaveInfo(4000);
@@ -371,30 +373,30 @@ public class GDV2_ShareChangeProperty_UniqueId_Test {
         List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,5000,0,0,mapShareENCN().get("0"), respShareList3);
 
         int afterBlockHeight = JSONObject.fromObject(store.GetHeight()).getInt("data");
-        assertEquals("区块高度仅增加1，无存证上链",beforeBlockHeight + 1,afterBlockHeight);
+        assertEquals("区块高度不增加，无存证上链",beforeBlockHeight,afterBlockHeight);
 
-        String blockDetail = store.GetBlockByHeight(afterBlockHeight);
-        assertEquals("区块仅有一笔交易",1,JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").size());
-        //确认交易是股份性质变更交易
-        String getTXDetails = store.GetTxDetail(JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").getString(0));
-        JSONObject jsonObject1 = JSONObject.fromObject(getTXDetails).getJSONObject("data");
-        assertEquals("1",jsonObject1.getJSONObject("header").getString("version"));
-        assertEquals("1",jsonObject1.getJSONObject("header").getString("type"));
-        assertEquals("11",jsonObject1.getJSONObject("header").getString("subType"));
-
-        assertEquals(true,getTXDetails.contains("{\"from\":\"" + address + "\",\"to\":\"" + address
-                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"500\",\"subType\":\"0\",\"newSubType\":\"1\"}"));
-        assertEquals(true,getTXDetails.contains("{\"from\":\"" + address + "\",\"to\":\"" + address
-                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"4500\",\"subType\":\"0\"}"));
-
-        //4.判断股东列表有变更
-        String queryList = gd.GDGetEnterpriseShareInfo(gdEquityCode);
-        assertEquals("200",JSONObject.fromObject(queryList).getString("state"));
-        JSONArray dataShareListNow = JSONObject.fromObject(queryList).getJSONArray("data");
-        assertEquals(respShareList4.size(),dataShareListNow.size());
-        List<Map> getShareListNow = getShareListFromQueryNoZeroAcc(dataShareListNow);
-        assertEquals(respShareList4.size(),getShareListNow.size());
-        assertEquals(true,respShareList4.containsAll(getShareListNow) && getShareListNow.containsAll(respShareList4));
+//        String blockDetail = store.GetBlockByHeight(afterBlockHeight);
+//        assertEquals("区块仅有一笔交易",1,JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").size());
+//        //确认交易是股份性质变更交易
+//        String getTXDetails = store.GetTxDetail(JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").getString(0));
+//        JSONObject jsonObject1 = JSONObject.fromObject(getTXDetails).getJSONObject("data");
+//        assertEquals("1",jsonObject1.getJSONObject("header").getString("version"));
+//        assertEquals("1",jsonObject1.getJSONObject("header").getString("type"));
+//        assertEquals("11",jsonObject1.getJSONObject("header").getString("subType"));
+//
+//        assertEquals(true,getTXDetails.contains("{\"from\":\"" + address + "\",\"to\":\"" + address
+//                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"500\",\"subType\":\"0\",\"newSubType\":\"1\"}"));
+//        assertEquals(true,getTXDetails.contains("{\"from\":\"" + address + "\",\"to\":\"" + address
+//                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"4500\",\"subType\":\"0\"}"));
+//
+//        //4.判断股东列表有变更
+//        String queryList = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+//        assertEquals("200",JSONObject.fromObject(queryList).getString("state"));
+//        JSONArray dataShareListNow = JSONObject.fromObject(queryList).getJSONArray("data");
+//        assertEquals(respShareList4.size(),dataShareListNow.size());
+//        List<Map> getShareListNow = getShareListFromQueryNoZeroAcc(dataShareListNow);
+//        assertEquals(respShareList4.size(),getShareListNow.size());
+//        assertEquals(true,respShareList4.containsAll(getShareListNow) && getShareListNow.containsAll(respShareList4));
 
         //5.判断uuid是否存在合约中 方法待确认
 
@@ -417,7 +419,7 @@ public class GDV2_ShareChangeProperty_UniqueId_Test {
 
         sleepAndSaveInfo(4000);
         afterBlockHeight = JSONObject.fromObject(store.GetHeight()).getInt("data");
-        assertEquals("区块高度无增加，无存证上链",beforeBlockHeight + 1,afterBlockHeight);
+        assertEquals("区块高度无增加，无存证上链",beforeBlockHeight,afterBlockHeight);
 
         //6.判断所有登记对象ID是否存在OSS中
         assertEquals("错误",minio.getFileFromMinIO(minIOEP,jgBucket,regObjId1 + "/0",""));
@@ -578,6 +580,8 @@ public class GDV2_ShareChangeProperty_UniqueId_Test {
 
         String response = gd.GDShareChangeProperty(gdPlatfromKeyID,address,eqCode,changeAmount,oldProperty,newProperty,regListInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("监管数据校验失败",true,JSONObject.fromObject(response).getString("message").contains("Data too long for column 'object_id' at row 1"));
+
 
         busUUID = tempUUID;
 
@@ -591,30 +595,30 @@ public class GDV2_ShareChangeProperty_UniqueId_Test {
         List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,5000,0,0,mapShareENCN().get("0"), respShareList3);
 
         int afterBlockHeight = JSONObject.fromObject(store.GetHeight()).getInt("data");
-        assertEquals("区块高度仅增加1，无存证上链",beforeBlockHeight + 1,afterBlockHeight);
+        assertEquals("区块高度不增加，无存证上链",beforeBlockHeight,afterBlockHeight);
 
-        String blockDetail = store.GetBlockByHeight(afterBlockHeight);
-        assertEquals("区块仅有一笔交易",1,JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").size());
-        //确认交易是股份性质变更交易
-        String getTXDetails = store.GetTxDetail(JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").getString(0));
-        JSONObject jsonObject1 = JSONObject.fromObject(getTXDetails).getJSONObject("data");
-        assertEquals("1",jsonObject1.getJSONObject("header").getString("version"));
-        assertEquals("1",jsonObject1.getJSONObject("header").getString("type"));
-        assertEquals("11",jsonObject1.getJSONObject("header").getString("subType"));
-
-        assertEquals(true,getTXDetails.contains("{\"from\":\"" + address + "\",\"to\":\"" + address
-                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"500\",\"subType\":\"0\",\"newSubType\":\"1\"}"));
-        assertEquals(true,getTXDetails.contains("{\"from\":\"" + address + "\",\"to\":\"" + address
-                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"4500\",\"subType\":\"0\"}"));
-
-        //4.判断股东列表有变更
-        String queryList = gd.GDGetEnterpriseShareInfo(gdEquityCode);
-        assertEquals("200",JSONObject.fromObject(queryList).getString("state"));
-        JSONArray dataShareListNow = JSONObject.fromObject(queryList).getJSONArray("data");
-        assertEquals(respShareList4.size(),dataShareListNow.size());
-        List<Map> getShareListNow = getShareListFromQueryNoZeroAcc(dataShareListNow);
-        assertEquals(respShareList4.size(),getShareListNow.size());
-        assertEquals(true,respShareList4.containsAll(getShareListNow) && getShareListNow.containsAll(respShareList4));
+//        String blockDetail = store.GetBlockByHeight(afterBlockHeight);
+//        assertEquals("区块仅有一笔交易",1,JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").size());
+//        //确认交易是股份性质变更交易
+//        String getTXDetails = store.GetTxDetail(JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").getString(0));
+//        JSONObject jsonObject1 = JSONObject.fromObject(getTXDetails).getJSONObject("data");
+//        assertEquals("1",jsonObject1.getJSONObject("header").getString("version"));
+//        assertEquals("1",jsonObject1.getJSONObject("header").getString("type"));
+//        assertEquals("11",jsonObject1.getJSONObject("header").getString("subType"));
+//
+//        assertEquals(true,getTXDetails.contains("{\"from\":\"" + address + "\",\"to\":\"" + address
+//                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"500\",\"subType\":\"0\",\"newSubType\":\"1\"}"));
+//        assertEquals(true,getTXDetails.contains("{\"from\":\"" + address + "\",\"to\":\"" + address
+//                + "\",\"tokenType\":\"" + gdEquityCode + "\",\"amount\":\"4500\",\"subType\":\"0\"}"));
+//
+//        //4.判断股东列表有变更
+//        String queryList = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+//        assertEquals("200",JSONObject.fromObject(queryList).getString("state"));
+//        JSONArray dataShareListNow = JSONObject.fromObject(queryList).getJSONArray("data");
+//        assertEquals(respShareList4.size(),dataShareListNow.size());
+//        List<Map> getShareListNow = getShareListFromQueryNoZeroAcc(dataShareListNow);
+//        assertEquals(respShareList4.size(),getShareListNow.size());
+//        assertEquals(true,respShareList4.containsAll(getShareListNow) && getShareListNow.containsAll(respShareList4));
 
         //5.判断uuid是否存在合约中 方法待确认
 

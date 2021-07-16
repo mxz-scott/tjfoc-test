@@ -132,22 +132,24 @@ public class GDV2_ShareLock_UniqueId_Test {
 
         String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,regInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("监管数据校验失败",true,JSONObject.fromObject(response).getString("message").contains("数据格式校验失败"));
+
 
         sleepAndSaveInfo(3000);
 
         int afterBlockHeight = JSONObject.fromObject(store.GetHeight()).getInt("data");
-        assertEquals("区块高度仅增加1，无存证上链",beforeBlockHeight + 1,afterBlockHeight);
+        assertEquals("区块高度不增加，无存证上链",beforeBlockHeight,afterBlockHeight);
 
-        String blockDetail = store.GetBlockByHeight(afterBlockHeight);
-        assertEquals("区块仅有一笔交易",1,JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").size());
-        //确认交易是发行交易
-        String getTXDetails = store.GetTxDetail(JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").getString(0));
-        JSONObject jsonObject1 = JSONObject.fromObject(getTXDetails).getJSONObject("data");
-        assertEquals("2",jsonObject1.getJSONObject("header").getString("version"));
-        assertEquals("3",jsonObject1.getJSONObject("header").getString("type"));
-        assertEquals("42",jsonObject1.getJSONObject("header").getString("subType"));
-        JSONObject jsonObjectWVM = jsonObject1.getJSONObject("wvm").getJSONObject("wvmContractTx");
-        assertEquals("ShareLock",jsonObjectWVM.getJSONObject("arg").getString("method"));
+//        String blockDetail = store.GetBlockByHeight(afterBlockHeight);
+//        assertEquals("区块仅有一笔交易",1,JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").size());
+//        //确认交易是发行交易
+//        String getTXDetails = store.GetTxDetail(JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").getString(0));
+//        JSONObject jsonObject1 = JSONObject.fromObject(getTXDetails).getJSONObject("data");
+//        assertEquals("2",jsonObject1.getJSONObject("header").getString("version"));
+//        assertEquals("3",jsonObject1.getJSONObject("header").getString("type"));
+//        assertEquals("42",jsonObject1.getJSONObject("header").getString("subType"));
+//        JSONObject jsonObjectWVM = jsonObject1.getJSONObject("wvm").getJSONObject("wvmContractTx");
+//        assertEquals("ShareLock",jsonObjectWVM.getJSONObject("arg").getString("method"));
 
 
         //5.判断uuid是否存在合约中 方法待确认
@@ -289,22 +291,24 @@ public class GDV2_ShareLock_UniqueId_Test {
 
         String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,regInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("监管数据校验失败",true,JSONObject.fromObject(response).getString("message").contains("数据格式校验失败"));
+
 
         sleepAndSaveInfo(3000);
 
         int afterBlockHeight = JSONObject.fromObject(store.GetHeight()).getInt("data");
-        assertEquals("区块高度仅增加1，无存证上链",beforeBlockHeight + 1,afterBlockHeight);
+        assertEquals("区块高度不增加，无存证上链",beforeBlockHeight,afterBlockHeight);
 
-        String blockDetail = store.GetBlockByHeight(afterBlockHeight);
-        assertEquals("区块仅有一笔交易",1,JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").size());
-        //确认交易是发行交易
-        String getTXDetails = store.GetTxDetail(JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").getString(0));
-        JSONObject jsonObject1 = JSONObject.fromObject(getTXDetails).getJSONObject("data");
-        assertEquals("2",jsonObject1.getJSONObject("header").getString("version"));
-        assertEquals("3",jsonObject1.getJSONObject("header").getString("type"));
-        assertEquals("42",jsonObject1.getJSONObject("header").getString("subType"));
-        JSONObject jsonObjectWVM = jsonObject1.getJSONObject("wvm").getJSONObject("wvmContractTx");
-        assertEquals("ShareLock",jsonObjectWVM.getJSONObject("arg").getString("method"));
+//        String blockDetail = store.GetBlockByHeight(afterBlockHeight);
+//        assertEquals("区块仅有一笔交易",1,JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").size());
+//        //确认交易是发行交易
+//        String getTXDetails = store.GetTxDetail(JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").getString(0));
+//        JSONObject jsonObject1 = JSONObject.fromObject(getTXDetails).getJSONObject("data");
+//        assertEquals("2",jsonObject1.getJSONObject("header").getString("version"));
+//        assertEquals("3",jsonObject1.getJSONObject("header").getString("type"));
+//        assertEquals("42",jsonObject1.getJSONObject("header").getString("subType"));
+//        JSONObject jsonObjectWVM = jsonObject1.getJSONObject("wvm").getJSONObject("wvmContractTx");
+//        assertEquals("ShareLock",jsonObjectWVM.getJSONObject("arg").getString("method"));
 
 
         //5.判断uuid是否存在合约中 方法待确认
@@ -322,7 +326,7 @@ public class GDV2_ShareLock_UniqueId_Test {
         sleepAndSaveInfo(3000);
 
         afterBlockHeight = JSONObject.fromObject(store.GetHeight()).getInt("data");
-        assertEquals("区块高度不增加，无存证上链",beforeBlockHeight + 1,afterBlockHeight);
+        assertEquals("区块高度不增加，无存证上链",beforeBlockHeight,afterBlockHeight);
 
 
 
@@ -455,22 +459,24 @@ public class GDV2_ShareLock_UniqueId_Test {
 
         String response= gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,regInfo);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
+        assertEquals("监管数据校验失败",true,JSONObject.fromObject(response).getString("message").contains("Data too long for column 'object_id' at row 1"));
+
 
         sleepAndSaveInfo(3000);
 
         int afterBlockHeight = JSONObject.fromObject(store.GetHeight()).getInt("data");
-        assertEquals("区块高度仅增加1，无存证上链",beforeBlockHeight + 1,afterBlockHeight);
+        assertEquals("区块高度不增加，无存证上链",beforeBlockHeight,afterBlockHeight);
 
-        String blockDetail = store.GetBlockByHeight(afterBlockHeight);
-        assertEquals("区块仅有一笔交易",1,JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").size());
-        //确认交易是发行交易
-        String getTXDetails = store.GetTxDetail(JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").getString(0));
-        JSONObject jsonObject1 = JSONObject.fromObject(getTXDetails).getJSONObject("data");
-        assertEquals("2",jsonObject1.getJSONObject("header").getString("version"));
-        assertEquals("3",jsonObject1.getJSONObject("header").getString("type"));
-        assertEquals("42",jsonObject1.getJSONObject("header").getString("subType"));
-        JSONObject jsonObjectWVM = jsonObject1.getJSONObject("wvm").getJSONObject("wvmContractTx");
-        assertEquals("ShareLock",jsonObjectWVM.getJSONObject("arg").getString("method"));
+//        String blockDetail = store.GetBlockByHeight(afterBlockHeight);
+//        assertEquals("区块仅有一笔交易",1,JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").size());
+//        //确认交易是发行交易
+//        String getTXDetails = store.GetTxDetail(JSONObject.fromObject(blockDetail).getJSONObject("data").getJSONArray("txs").getString(0));
+//        JSONObject jsonObject1 = JSONObject.fromObject(getTXDetails).getJSONObject("data");
+//        assertEquals("2",jsonObject1.getJSONObject("header").getString("version"));
+//        assertEquals("3",jsonObject1.getJSONObject("header").getString("type"));
+//        assertEquals("42",jsonObject1.getJSONObject("header").getString("subType"));
+//        JSONObject jsonObjectWVM = jsonObject1.getJSONObject("wvm").getJSONObject("wvmContractTx");
+//        assertEquals("ShareLock",jsonObjectWVM.getJSONObject("arg").getString("method"));
 
 
         //5.判断uuid是否存在合约中 方法待确认

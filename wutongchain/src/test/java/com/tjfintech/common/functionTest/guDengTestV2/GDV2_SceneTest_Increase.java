@@ -194,7 +194,7 @@ public class GDV2_SceneTest_Increase {
 
         assertEquals(true, query.contains("\"shareholderNo\":\"SH" + gdAccClientNo5 + "\""));
         assertEquals(true, query.contains("\"address\":\"" + gdAccount5 + "\""));
-        assertEquals(true, query.contains("{\"equityCode\":\"" + gdEquityCode +
+        assertEquals(false, query.contains("{\"equityCode\":\"" + gdEquityCode +
                 "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":0}"));
 
     }
@@ -292,7 +292,7 @@ public class GDV2_SceneTest_Increase {
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         JSONArray jsonArrayGet = JSONObject.fromObject(query).getJSONArray("data");
 
-        assertEquals("12000",getTotalAmountFromShareList(jsonArrayGet));//报送数据验证失败 但合约交易会执行
+        assertEquals("8000",getTotalAmountFromShareList(jsonArrayGet));//报送数据验证失败 但合约交易会执行
     }
 
 

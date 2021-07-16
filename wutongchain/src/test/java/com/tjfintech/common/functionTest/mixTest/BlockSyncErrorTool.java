@@ -3,6 +3,7 @@ package com.tjfintech.common.functionTest.mixTest;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
+import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -11,6 +12,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import javax.mail.Address;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,69 +34,41 @@ public class BlockSyncErrorTool {
      */
     @Test
     public void checkPeerBlockTx() throws Exception {
+        String IP1 = "172.16.50.11:6310";
+        String IP2 = "172.16.50.14:6310";
+        String IP3 = "172.16.50.12:6310";
+        getPeerBlockTx(IP1,332,true);
+        getPeerBlockTx(IP1,331,true);
+        getPeerBlockTx(IP2,332,true);
+        getPeerBlockTx(IP2,331,true);
+        getPeerBlockTx(IP3,331,true);
+    }
 
-        //获取第一个节点的区块及交易详情信息
-        CommonFunc cf = new CommonFunc();
-        UtilsClass uc = new UtilsClass();
-        cf.setSDKOnePeer(uc.getIPFromStr(SDKADD),PEER1IP + ":" + PEER1RPCPort,"true","tjfoc.com");
-        uc.setAndRestartSDK();//重启SDK
 
-        int blockHeight = 35;
+    public void getPeerBlockTx(String peerIPPort,int queryHeight,boolean bResultOnly) throws Exception {
+        urlAddr = peerIPPort;
+        FileOperation fo = new FileOperation();
+        int blockHeight = queryHeight;
         String blockDetail1 = store.GetBlockByHeight(blockHeight);
-        log.info(blockDetail1);
-        Map<String,String> mapHashDetail = new HashMap<>();
-        Map<String,String> mapHashRaw = new HashMap<>();
 
-        log.info(PEER2IP + " check height: " + blockHeight);
+        log.info(urlAddr + " check height: " + blockHeight);
         String[] txs = getTxsArray(blockHeight);
 
         log.info("区块交易个数 " + txs.length);
         for (int i = 0; i < txs.length; i++) {
-            mapHashDetail.put(txs[i],store.GetTxDetail(txs[i]));
-            mapHashRaw.put(txs[i],store.GetTxRaw(txs[i]));
-        }
+//            String respTxDetail = store.GetTxDetail(txs[i]);
+            String respTxRaw = store.GetTxRaw(txs[i]);
 
-        //设置第二个节点
-        cf.setSDKOnePeer(uc.getIPFromStr(SDKADD),PEER3IP + ":" + PEER3RPCPort,"true","tjfoc.com");
-        uc.setAndRestartSDK();//重启SDK
+            String write2 = respTxRaw;
+            if(bResultOnly){
+                write2 = JSONObject.fromObject(respTxRaw).getJSONObject("data").getString("result");
+            }
 
-        String blockDetail2 = store.GetBlockByHeight(blockHeight);
-        log.info(blockDetail2);
-        Map<String,String> mapHashDetail2 = new HashMap<>();
-        Map<String,String> mapHashRaw2 = new HashMap<>();
-
-        log.info(PEER3IP + " check height: " + blockHeight);
-        String[] txs2 = getTxsArray(blockHeight);
-
-        log.info("区块交易个数 " + txs2.length);
-
-        for (int i = 0; i < txs2.length; i++) {
-            mapHashDetail2.put(txs2[i],store.GetTxDetail(txs2[i]));
-            mapHashRaw2.put(txs2[i],store.GetTxRaw(txs2[i]));
+            fo.appendToFile(write2,
+                    urlAddr.replace(".","").replace(":","") + blockHeight + "_txraw.txt");
         }
 
 
-        log.info("**********************************************************");
-        //比较区块详情
-        if(blockDetail1.trim().equals(blockDetail2.trim()))  {
-            log.info("区块详情一致");
-        }else {
-            log.info("区块详情不一致");
-            log.info(blockDetail1);
-            log.info(blockDetail2);
-        }
-
-        //比较区块内的交易个数是否一致
-        if(txs.length == txs2.length)  log.info("区块交易个数一致");
-        else log.info("区块交易个数不一致 " + PEER1IP + " 交易个数 " + txs.length +  " " + PEER2IP + " 交易个数 " + txs2.length);
-
-        //比较交易详情
-        Boolean detailSame = cf.compareHashMap(mapHashDetail,mapHashDetail2,"交易详情");
-        //比较交易raw data
-        Boolean rawSame =cf.compareHashMap(mapHashRaw,mapHashRaw2,"交易原始数据");
-
-        log.info("交易详情是否一致 " + detailSame);
-        log.info("交易raw是否一致 " + rawSame);
     }
 
     //根据区块高度获取区块中的交易列表

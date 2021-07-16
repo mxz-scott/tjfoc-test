@@ -254,7 +254,7 @@ public class GDV2_SceneTest_LockUnLock {
 
         //检查账户余额 总股权无变更
         response = gd.GDGetShareHolderInfo(gdContractAddress, gdAccClientNo1);
-        assertEquals(true, response.contains("{\"equityCode\":\"" + gdEquityCode +
+        assertEquals(false, response.contains("{\"equityCode\":\"" + gdEquityCode +
                 "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":500}"));
     }
 
@@ -287,7 +287,7 @@ public class GDV2_SceneTest_LockUnLock {
 
         //检查账户余额 总股权无变更
         response = gd.GDGetShareHolderInfo(gdContractAddress, gdAccClientNo1);
-        assertEquals(true, response.contains("{\"equityCode\":\"" + gdEquityCode +
+        assertEquals(false, response.contains("{\"equityCode\":\"" + gdEquityCode +
                 "\",\"shareProperty\":0,\"sharePropertyCN\":\"" + mapShareENCN().get("0") + "\",\"totalAmount\":1000,\"lockAmount\":300}"));
 
 

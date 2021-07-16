@@ -397,7 +397,7 @@ public class GDV2_SceneTest_Transfer {
 
         assertEquals(true, query.contains("\"shareholderNo\":\"SH" + gdAccClientNo5 + "\""));
         assertEquals(true, query.contains("\"address\":\"" + gdAccount5 + "\""));
-        assertEquals(true, query.contains("{\"equityCode\":\"" + gdEquityCode +
+        assertEquals(false, query.contains("{\"equityCode\":\"" + gdEquityCode +
                 "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":100,\"lockAmount\":0}"));
     }
 
@@ -435,7 +435,7 @@ public class GDV2_SceneTest_Transfer {
 
         assertEquals(true, query.contains("\"shareholderNo\":\"SH" + gdAccClientNo5 + "\""));
         assertEquals(true, query.contains("\"address\":\"" + gdAccount5 + "\""));
-        assertEquals(true, query.contains("{\"equityCode\":\"" + gdEquityCode +
+        assertEquals(false, query.contains("{\"equityCode\":\"" + gdEquityCode +
                 "\",\"shareProperty\":1,\"sharePropertyCN\":\"" + mapShareENCN().get("1") + "\",\"totalAmount\":100,\"lockAmount\":0}"));
     }
 
