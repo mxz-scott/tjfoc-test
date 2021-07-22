@@ -117,7 +117,7 @@ public class GDV2_SceneTest_DestroyAccount {
 
         response = uf.destroyAcc(gdAccClientNo1,false);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("账户还有余额，不可以销户",JSONObject.fromObject(response).getString("message"));
+        assertEquals("账户还有余额,不可以销户",JSONObject.fromObject(response).getString("message"));
 
     }
 
@@ -167,7 +167,7 @@ public class GDV2_SceneTest_DestroyAccount {
 
         response = uf.destroyAcc(gdAccClientNo1,false);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("账户还有余额，不可以销户",JSONObject.fromObject(response).getString("message"));
+        assertEquals("账户还有余额,不可以销户",JSONObject.fromObject(response).getString("message"));
 
     }
 

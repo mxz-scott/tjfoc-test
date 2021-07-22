@@ -77,28 +77,37 @@ public class GDV2_SceneTest_Issue {
     }
 
     /***
-     * 重复发行同一个股权代码  允许 与另外一个case重复
+     * 发行数量超过1000000
      */
 
-//    @Test
-    public void issueSameEquityCode()throws Exception{
+    @Test
+    public void issueBigAmount()throws Exception{
 
-        List<Map> shareList = gdConstructShareList(gdAccount1,1000,0);
-        List<Map> shareList2 = gdConstructShareList(gdAccount2,1000,1, shareList);
+        List<Map> shareList = gdConstructShareList(gdAccount1,1000002,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,9000000,0, shareList);
         List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
-        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,1, shareList3);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
 
-        String response = uf.shareIssue(gdEquityCode,shareList4,false);
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+        String response = uf.shareIssue(gdEquityCode,shareList4,true);
 
-        shareList = gdConstructShareList(gdAccount1,1000,0);
-        response=   gd.GDShareIssue(gdContractAddress,gdPlatfromKeyID,gdEquityCode,shareList);
+        //实际应该持股情况信息
+        List<Map> respShareList = new ArrayList<>();
+        respShareList = gdConstructQueryShareList(gdAccount1,1000002,0,0,mapShareENCN().get("0"),respShareList);
+        List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,9000000,0,0,mapShareENCN().get("0"), respShareList);
+        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,1000,0,0,mapShareENCN().get("0"), respShareList2);
+        List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,1000,0,0,mapShareENCN().get("0"), respShareList3);
 
-        assertEquals("200",JSONObject.fromObject(response).getString("state"));
-        assertEquals("该股权代码已经初始登记过，不可以再次调用",JSONObject.fromObject(response).getString("message"));
-//        Boolean bMsg = JSONObject.fromObject(response).getString("message").contains("该股权代码已经初始登记过，不可以再次调用")
-//                || JSONObject.fromObject(response).getString("message").contains("此产品对象标识[" + gdEquityCode + "]对应的产品在系统中已经存在");
-//        assertEquals(true,bMsg);
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+//        assertEquals("200",JSONObject.fromObject(query).getString("state"));
+
+        JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
+        //检查存在余额的股东列表
+        assertEquals(respShareList4.size(),dataShareList.size());
+
+        List<Map> getShareList = getShareListFromQueryNoZeroAcc(dataShareList);
+
+        assertEquals(respShareList4.size(),getShareList.size());
+        assertEquals(true,respShareList4.containsAll(getShareList) && getShareList.containsAll(respShareList4));
 
     }
 
@@ -137,8 +146,8 @@ public class GDV2_SceneTest_Issue {
         sleepAndSaveInfo(3000);
 
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
-        assertEquals("200",JSONObject.fromObject(query).getString("state"));
-//        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
+        assertEquals("400",JSONObject.fromObject(query).getString("state"));
+        assertEquals("股权代码还未发行或者已经转场",JSONObject.fromObject(query).getString("message"));
 
     }
     /***

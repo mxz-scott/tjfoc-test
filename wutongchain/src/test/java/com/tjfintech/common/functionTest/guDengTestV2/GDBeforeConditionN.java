@@ -268,6 +268,9 @@ public class GDBeforeConditionN {
         mapTemp.put("subject_investor_name", "zhangsan");
         mapTemp.put("subject_id_type", 0);
         mapTemp.put("subject_id_number", "个人身份证件号CHARACTER");
+
+        ArrayList listEmpty = new ArrayList();
+        mapTemp.put("subject_qualification_information", listEmpty);
         return mapTemp;
     }
 
@@ -289,6 +292,14 @@ public class GDBeforeConditionN {
         mapTemp.put("account_status", 1);
         mapTemp.put("account_create_time", time1);
 
+        ArrayList listEmpty = new ArrayList();
+        mapTemp.put("account_opening_doc",listEmpty);
+        mapTemp.put("account_thaw_doc", listEmpty);
+        mapTemp.put("account_frozen_doc", listEmpty);
+        mapTemp.put("account_opening_doc", listEmpty);
+        mapTemp.put("account_closing_doc", listEmpty);
+//        mapTemp.put("account_thaw_date", "");
+
         return mapTemp;
     }
 
@@ -309,6 +320,13 @@ public class GDBeforeConditionN {
         mapTemp.put("account_purpose", type);
         mapTemp.put("account_status", 1);
         mapTemp.put("account_create_time", time1);
+
+        ArrayList listEmpty = new ArrayList();
+        mapTemp.put("account_opening_doc",listEmpty);
+        mapTemp.put("account_thaw_doc", listEmpty);
+        mapTemp.put("account_frozen_doc", listEmpty);
+        mapTemp.put("account_opening_doc", listEmpty);
+        mapTemp.put("account_closing_doc", listEmpty);
 
         return mapTemp;
     }

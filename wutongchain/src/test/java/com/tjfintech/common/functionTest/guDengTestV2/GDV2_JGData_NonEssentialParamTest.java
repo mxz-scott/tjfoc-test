@@ -271,13 +271,13 @@ public class GDV2_JGData_NonEssentialParamTest {
 
     @Test
     public void TCN014_createAccTestCheckFormat() throws Exception {
-        GDBeforeCondition gdBC = new GDBeforeCondition();
+//        GDBeforeCondition gdBC = new GDBeforeCondition();
 
         String cltNo = "tet00" + Random(12);
         int gdClient = Integer.parseInt(gdCF.getObjectLatestVer(cltNo));//获取当前开户主体最新版本信息
 
         //执行开户
-        Map mapCreate = gdBC.gdCreateAccParam(cltNo);
+        Map mapCreate = gdBF.gdCreateAccParam(cltNo);
         String txId = mapCreate.get("txId").toString();
         commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         String txDetail = store.GetTxDetail(txId);
@@ -292,6 +292,12 @@ public class GDV2_JGData_NonEssentialParamTest {
         assertEquals("不包含敏感词",true,
                 gdCF.chkSensitiveWord(txDetail,accType));
 
+        String name = "销户代理人姓名2";
+        String number = "销户代理人电话2";
+        //销户
+        String respDes = gd.GDAccountDestroy(gdContractAddress,cltNo,date4,getListFileObj(),date4,getListFileObj(),
+                name,number);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(respDes).getString("state"));
 //        //查询投资者账户信息
 //        String response = "";
 //        response = gd.GDGetShareHolderInfo(gdContractAddress,cltNo);

@@ -1259,6 +1259,15 @@ public class GDV2_AllFlowTest_Equity_ChkTxReport {
     }
 
     @Test
+    public void TC40_RestartSDK_ChkTxReport()throws Exception{
+        //重启sdk
+        utilsClass.setAndRestartSDK();
+        sleepAndSaveInfo(2000);
+        //再次检查
+        TC30_txReportQueryTest_ByTime();
+    }
+
+    @Test
     public void TC31_txReportQueryTest_ByClientNo()throws Exception{
 
         log.info("通过客户号查询");

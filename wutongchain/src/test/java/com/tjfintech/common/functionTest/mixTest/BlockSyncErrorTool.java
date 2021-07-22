@@ -13,7 +13,9 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import javax.mail.Address;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +44,21 @@ public class BlockSyncErrorTool {
         getPeerBlockTx(IP2,332,true);
         getPeerBlockTx(IP2,331,true);
         getPeerBlockTx(IP3,331,true);
+    }
+
+    /**
+     获取指定区块中的所有交易详情及raw data
+     */
+    @Test
+    public void getBlockTime() throws Exception {
+        SDKADD="http://211.144.193.246:60002";
+        FileOperation fo = new FileOperation();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+        for(int i=52466;i<=57730;i++){
+            String blockDetail1 = store.GetBlockByHeight(i);
+            String timeStamp = sdf.format(new Date(JSONObject.fromObject(blockDetail1).getJSONObject("data").getJSONObject("header").getLong("timestamp")));
+            fo.appendToFile(i + " " + timeStamp,"gdSH_blocktime2.txt");
+        }
     }
 
 
