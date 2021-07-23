@@ -404,7 +404,7 @@ public class WVMContractWithVersionTest {
         String response2 = wvmInstallTest(wvmFile + "_temp.txt","");
         assertEquals("500",JSONObject.fromObject(response2).getString("state"));
         assertEquals(true,JSONObject.fromObject(response2).getString("message").contains(
-                "This contract verion[" + wvmVersion  + "] is exist"));
+                "This contract verion[" + wvmVersion  + "] already exist"));
     }
 
     @Test
@@ -417,7 +417,7 @@ public class WVMContractWithVersionTest {
         String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
         assertEquals("500",JSONObject.fromObject(response1).getString("state"));
         assertEquals(true,JSONObject.fromObject(response1).getString("message").contains(
-                "This contract verion[" + wvmVersion  + "] is exist"));
+                "This contract verion[" + wvmVersion  + "] already exist"));
     }
 
     @Test
@@ -431,7 +431,7 @@ public class WVMContractWithVersionTest {
         String response1 = wvmInstallTest(wvmFile + "_temp.txt","");
         assertEquals("500",JSONObject.fromObject(response1).getString("state"));
         assertEquals(true,JSONObject.fromObject(response1).getString("message").contains(
-                "This contract verion[" + wvmVersion  + "] is exist"));
+                "This contract verion[" + wvmVersion  + "] already exist"));
 
         //使用新的版本进行合约安装
         wvmVersion = "1.0.2." + Random(3);
@@ -455,7 +455,7 @@ public class WVMContractWithVersionTest {
             String response1 = wvmInstallTest(wvmFile + "_temp.txt", "");
             assertEquals("500",JSONObject.fromObject(response1).getString("state"));
             assertEquals(true, JSONObject.fromObject(response1).getString("message").contains(
-                    "This contract verion[" + wvmVersion  + "] is exist"));
+                    "This contract verion[" + wvmVersion  + "] already exist"));
         }
 
         wvmVersion = "1.0.4";
