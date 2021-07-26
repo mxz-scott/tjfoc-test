@@ -2,13 +2,14 @@
   <library name="Maven: ch.qos.logback:logback-classic:1.2.3">
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/ch/qos/logback/logback-classic/1.2.3/logback-classic-1.2.3.jar!/" />
-      <root url="file://$PROJECT_DIR$/wutongchain/src/main/resources" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/ch/qos/logback/logback-classic/1.2.3/logback-classic-1.2.3-javadoc.jar!/" />
+    </JAVADOC>
     <SOURCES>
       <root url="file://$PROJECT_DIR$/wutongchain/src/main/resources" />
+      <root url="jar://$MAVEN_REPOSITORY$/ch/qos/logback/logback-classic/1.2.3/logback-classic-1.2.3-sources.jar!/" />
     </SOURCES>
-    <jarDirectory url="file://$PROJECT_DIR$/wutongchain/src/main/resources" recursive="false" />
     <jarDirectory url="file://$PROJECT_DIR$/wutongchain/src/main/resources" recursive="false" type="SOURCES" />
   </library>
 </component>

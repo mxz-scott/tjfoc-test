@@ -28,8 +28,8 @@ public class SetTestEnv_dyy {
       PEER4TCPPort = "60009";
       //节点、SDK、Toolkit对等目录放置于PTPATH目录下
       PTPATH = "/mnt/dyy/";
-      SDKPATH = PTPATH + "wtchain/";
-      PeerPATH = PTPATH + "wtsdk/";
+      SDKPATH = PTPATH + "wtsdk/";
+      PeerPATH = PTPATH + "wtchain/";
       ToolPATH = PTPATH + "toolkit/";
       TokenApiPATH = PTPATH + "wtfinservice/";
       PeerTPName = "wtchain";
