@@ -5,10 +5,8 @@ import com.tjfintech.common.Interface.Jml;
 import com.tjfintech.common.TestBuilder;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigInteger;
+import java.util.*;
 
 @Slf4j
 public class UtilsClassJml {
@@ -49,6 +47,20 @@ public class UtilsClassJml {
         Object data = parse.get("data");
         Map<String, Object> dataMap = JSON.parseObject(data.toString(), Map.class);
         Object authId = dataMap.get("authId");
+
+        return authId.toString();
+    }
+
+    /**
+     * 获取txId
+     * @param response1
+     * @return
+     */
+    public static String gettxId(String response1) {
+        Map<String, Object> parse = JSON.parseObject(response1, Map.class);
+        Object data = parse.get("data");
+        Map<String, Object> dataMap = JSON.parseObject(data.toString(), Map.class);
+        Object authId = dataMap.get("txId");
 
         return authId.toString();
     }
