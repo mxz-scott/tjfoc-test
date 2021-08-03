@@ -185,11 +185,21 @@ public class StoreTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
                 utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
+        String Data4 = UtilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath
+                + "store/bigsize4.txt");
+        String response4 = store.CreateStore(Data4);
+        assertThat(response4, containsString("200"));
+        assertThat(response4, containsString("data"));
+
+        assertEquals(response4,globalResponse);
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse,utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType,SHORTMEOUT);
+
         //确认交易上链
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(
                 commonFunc.getTxHash(response,utilsClass.sdkGetTxHashType00))).getString("state"));
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(
-                commonFunc.getTxHash(response2,utilsClass.sdkGetTxHashType00))).getString("state"));
+                commonFunc.getTxHash(response4,utilsClass.sdkGetTxHashType00))).getString("state"));
     }
 
      /**
