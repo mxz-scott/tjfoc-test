@@ -83,6 +83,10 @@ public class AppChain_Z_ConfigChange_ClearDB {
 
         testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,2);
 
+        //设置被添加新节点config.toml包含自己的信息
+        commonFunc.setPeerConfig(PEER3IP);
+        commonFunc.addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
+
         shExeAndReturn(PEER3IP,startPeerCmd);//启动新节点
         sleepAndSaveInfo(SLEEPTIME);
 
