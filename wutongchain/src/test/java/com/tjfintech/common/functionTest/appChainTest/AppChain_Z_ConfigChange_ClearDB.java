@@ -171,12 +171,14 @@ public class AppChain_Z_ConfigChange_ClearDB {
                 " -c raft",ids + "," + getPeerId(PEER3IP,USERNAME,PASSWD));
 
         sleepAndSaveInfo(SLEEPTIME/2);
-        assertEquals(4,subLedgerCmd.getLedgerMemNo(subLedger));//动态加入节点前检查节点集群信息
+        assertEquals(3,subLedgerCmd.getLedgerMemNo(subLedger));//动态加入节点前检查节点集群信息
 
 
         mgToolCmd.addPeer("observer",PEER1IP + ":" + PEER1RPCPort,
                 ipv4 + PEER3IP,tcpProtocol + PEER3TCPPort,PEER3RPCPort);
         sleepAndSaveInfo(SLEEPTIME);
+        //加入后节点集群信息检查
+        assertEquals(4,subLedgerCmd.getLedgerMemNo(subLedger));//动态加入节点前检查节点集群信息
 
         //检查可以获取应用链列表 存在其他应用链
         String resp = mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort,"");
@@ -199,6 +201,9 @@ public class AppChain_Z_ConfigChange_ClearDB {
         sleepAndSaveInfo(SLEEPTIME/2);
         assertEquals("200",JSONObject.fromObject(store.GetTxDetail(txHash1)).getString("state"));  //确认可以c查询成功
 
+        String heightPeer1 = mgToolCmd.queryBlockHeight(PEER1IP+ ":" + PEER1RPCPort);
+        String heightPeer3 = mgToolCmd.queryBlockHeight(PEER1IP,PEER3IP + ":" + PEER3RPCPort);
+        assertEquals(heightPeer1,heightPeer3);
 
         //销毁应用链
         mgToolCmd.destroyAppChain(PEER1IP,PEER1RPCPort," -c " + subLedger);
