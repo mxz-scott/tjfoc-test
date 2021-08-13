@@ -129,7 +129,7 @@ public class SYGTV1_Aux_Tool {
     @Test
     public void checkAvailableInfoMatchQueryResult() throws Exception {
         subLedger = "aepnt01eop";
-        String scene = "SH005";
+        String scene = "SH004";
         String curSDK1 = "http://121.229.39.12:38080";
         String curSDK2 = "http://121.229.47.197:38080";
         String curSDK3 = "http://121.229.44.152:38080";
@@ -160,6 +160,25 @@ public class SYGTV1_Aux_Tool {
                 String json = dataList.getJSONObject(i).toString();
                 String assetID = JSONObject.fromObject(json).getString("assetID");
 
+                int assetNo = StringUtils.countOccurrencesOf(json, "assetID");
+                int authIdNo = StringUtils.countOccurrencesOf(json, "AuthId");
+                int serviceIdNo = StringUtils.countOccurrencesOf(json, "ServiceId");
+                if(assetNo > 0 && authIdNo > 0 && serviceIdNo > 0) {
+                    if (assetNo == authIdNo) {
+                        //单个查询字段场景
+                        assertEquals("确认一致 数据资产数 授权数 服务数", assetNo, serviceIdNo);
+                        log.info("确认一致 数据资产数 授权数 服务数");
+                    } else {
+                        //多个查询字段场景
+                        assertEquals("确认一致 授权数 服务数", authIdNo, serviceIdNo);
+                        log.info("确认一致 授权数 服务数");
+                    }
+                }
+                else if(serviceIdNo == 0){
+                    log.info(json);
+                    continue;
+                }
+
                 com.alibaba.fastjson.JSONArray queryIDList = com.alibaba.fastjson.JSONObject.parseArray(
                         JSONObject.fromObject(json).getString("ServiceList"));
                 for (int j = 0; j < queryIDList.size(); j++) {
@@ -172,19 +191,6 @@ public class SYGTV1_Aux_Tool {
                     } else {
                         queryIDNo.put(queryID, 1);
                     }
-                }
-
-                int assetNo = StringUtils.countOccurrencesOf(json, "assetID");
-                int authIdNo = StringUtils.countOccurrencesOf(json, "AuthId");
-                int serviceIdNo = StringUtils.countOccurrencesOf(json, "ServiceId");
-                if (assetNo == authIdNo) {
-                    //单个查询字段场景
-                    assertEquals("确认一致 数据资产数 授权数 服务数", assetNo, serviceIdNo);
-                    log.info("确认一致 数据资产数 授权数 服务数");
-                } else {
-                    //多个查询字段场景
-                    assertEquals("确认一致 授权数 服务数", authIdNo, serviceIdNo);
-                    log.info("确认一致 授权数 服务数");
                 }
             }
         }
