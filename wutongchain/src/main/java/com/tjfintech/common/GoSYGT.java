@@ -132,8 +132,6 @@ public  class GoSYGT implements SYGT {
     /**
      * 更新数据资产
      * @param assetID
-     * @param scene
-     * @param label
      * @param qty
      * @param desc
      * @return
@@ -164,7 +162,7 @@ public  class GoSYGT implements SYGT {
     }
 
     /**
-     * 查询可用资产
+     * 查询被授权的可用资产
      * @param scene
      * @param label
      * @return
@@ -175,6 +173,22 @@ public  class GoSYGT implements SYGT {
         map.put("label", label);
 
         String result = PostTest.postMethod(SDKADD + "/dss/v1/asset/query?" + SetURLExtParams(""), map);
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 查询所有资产 包括被授权及自己的
+     * @param scene
+     * @param label
+     * @return
+     */
+    public String SSAssetQueryAll(String scene,String label){
+        Map<String, Object> map = new HashMap<>();
+        map.put("scene", scene);
+        map.put("label", label);
+
+        String result = PostTest.postMethod(SDKADD + "/dss/v1/asset/allquery?" + SetURLExtParams(""), map);
         log.info(result);
         return result;
     }
