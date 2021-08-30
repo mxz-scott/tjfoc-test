@@ -114,7 +114,7 @@ public class AppChain_Z_ConfigChange_ClearDB {
         //启动新加入节点3
         commonFunc.addPeerCluster(PEER3IP,PEER3IP,PEER3TCPPort,"0",ipv4,tcpProtocol);
         shExeAndReturn(PEER3IP,startPeerCmd);
-        sleepAndSaveInfo(SLEEPTIME);
+        sleepAndSaveInfo(SLEEPTIME*2);
 
         //创建应用链01 包含节点A、B、C
         String chainName1 = "tc1537_B" + sdf.format(dt) + RandomUtils.nextInt(1000);
@@ -122,7 +122,7 @@ public class AppChain_Z_ConfigChange_ClearDB {
                 " -t sm3"," -w first",
                 " -c raft",ids + "," + getPeerId(PEER3IP,USERNAME,PASSWD));
 
-        sleepAndSaveInfo(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME);
         assertEquals(4,subLedgerCmd.getLedgerMemNo(subLedger));//动态加入节点前检查节点集群信息
 
         //检查可以获取应用链列表 存在其他应用链

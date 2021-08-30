@@ -37,6 +37,14 @@ public class AppChain_Perm {
     SubLedgerCmd subLedgerCmd = new SubLedgerCmd();
 
 
+//    @BeforeClass
+    public static void clearPeerDB()throws Exception{
+        UtilsClass utilsClass = new UtilsClass();
+        //设置节点 清空db数据 并重启
+        utilsClass.setAndRestartPeerList(clearPeerDB);
+        //重启SDK
+        utilsClass.setAndRestartSDK();
+    }
 
     @Before
     public void beforeConfig() throws Exception {

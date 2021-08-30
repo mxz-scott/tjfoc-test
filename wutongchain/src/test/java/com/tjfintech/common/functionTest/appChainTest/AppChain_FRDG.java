@@ -11,10 +11,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runners.MethodSorters;
 
 import java.util.HashMap;
@@ -39,6 +36,15 @@ public class AppChain_FRDG {
 
     String hash = "";
     String hashTime = "";
+
+//    @BeforeClass
+    public static void clearPeerDB()throws Exception{
+        UtilsClass utilsClass = new UtilsClass();
+        //设置节点 清空db数据 并重启
+        utilsClass.setAndRestartPeerList(clearPeerDB);
+        //重启SDK
+        utilsClass.setAndRestartSDK();
+    }
 
 
     @Before

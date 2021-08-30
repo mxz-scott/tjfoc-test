@@ -9,6 +9,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -44,6 +45,15 @@ public class AppChain_Y_UpgradeTestOnly {
         BeforeCondition beforeCondition = new BeforeCondition();
         beforeCondition.clearDataSetPerm999();
         sleepAndSaveInfo(SLEEPTIME);
+    }
+
+//    @BeforeClass
+    public static void clearPeerDB()throws Exception{
+        UtilsClass utilsClass = new UtilsClass();
+        //设置节点 清空db数据 并重启
+        utilsClass.setAndRestartPeerList(clearPeerDB);
+        //重启SDK
+        utilsClass.setAndRestartSDK();
     }
 
     @Test

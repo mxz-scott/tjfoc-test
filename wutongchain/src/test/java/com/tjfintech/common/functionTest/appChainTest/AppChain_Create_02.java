@@ -5,9 +5,11 @@ import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
 import com.tjfintech.common.TestBuilder;
 import com.tjfintech.common.utils.SubLedgerCmd;
+import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -27,6 +29,15 @@ public class AppChain_Create_02 {
     SubLedgerCmd subLedgerCmd = new SubLedgerCmd();
     MgToolCmd mgToolCmd = new MgToolCmd();
 
+
+//    @BeforeClass
+    public static void clearPeerDB()throws Exception{
+        UtilsClass utilsClass = new UtilsClass();
+        //设置节点 清空db数据 并重启
+        utilsClass.setAndRestartPeerList(clearPeerDB);
+        //重启SDK
+        utilsClass.setAndRestartSDK();
+    }
 
     @Before
     public void beforeConfig() throws Exception {
@@ -205,7 +216,7 @@ public class AppChain_Create_02 {
         //创建子链，id重复
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName," -t sm3",
                 " -w first"," -c raft"," -m " + id1 + "," + id1 + "," + id1);
-        assertEquals(res.contains("memberList peer illegal"), true);
+        assertEquals(res.contains("memberList count illegal"), true);
 
         sleepAndSaveInfo(SLEEPTIME/2);
         //检查可以获取子链列表
@@ -260,11 +271,11 @@ public class AppChain_Create_02 {
         //创建子链，id格式错误 非集群中的id
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1," -t sm3",
                 " -w first"," -c raft"," -m " + id4 + "," + id3);
-        assertEquals(res.contains("memberList peer illegal"), true);
+        assertEquals(res.contains("memberList count illegal"), true);
 
         res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1," -t sm3",
                 " -w first"," -c raft"," -m " + id4 + "," + id2 + "," + id3);
-//        assertEquals(res.contains("memberList peer illegal"), true);
+//        assertEquals(res.contains("memberList count illegal"), true);
 
 
     }
