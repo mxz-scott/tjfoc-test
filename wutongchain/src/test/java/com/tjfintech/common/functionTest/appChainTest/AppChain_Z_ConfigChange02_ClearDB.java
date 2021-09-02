@@ -201,7 +201,7 @@ public class AppChain_Z_ConfigChange02_ClearDB {
         //可退出
         String respQuit = mgToolCmd.quitPeer(PEER1IP + ":" + PEER1RPCPort,PEER2IP);
         assertEquals(true,respQuit.contains(checkStr));
-        sleepAndSaveInfo(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME);
         testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,2);
 
         //可变更
