@@ -797,6 +797,7 @@ public class GDV2_ShareRecycle_UniqueId_Test {
         response= gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList4,remark);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
+        sleepAndSaveInfo(1000);//理论上不需要加这个时间
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         String txDetail = store.GetTxDetail(txId);
         assertEquals("200", JSONObject.fromObject(txDetail).getString("state"));
