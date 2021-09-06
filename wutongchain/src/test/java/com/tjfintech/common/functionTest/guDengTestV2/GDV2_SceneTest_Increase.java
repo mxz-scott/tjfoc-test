@@ -43,12 +43,12 @@ public class GDV2_SceneTest_Increase {
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
-        register_event_type = "1";
+        register_event_type = 1;
     }
 
     @Before
     public void IssueEquity()throws Exception{
-        register_event_type = "1";
+        register_event_type = 1;
         bizNoTest = "test" + Random(12);
         tempregister_transaction_ref = register_transaction_ref;
         gdCompanyID = CNKey + "Sub2_" + Random(4);
@@ -76,7 +76,7 @@ public class GDV2_SceneTest_Increase {
 
     @After
     public void calJGDataAfterTx()throws Exception{
-        register_event_type = "1";
+        register_event_type = 1;
         register_transaction_ref = tempregister_transaction_ref;
         testCurMethodName = tm.getMethodName();
         GDUnitFunc uf = new GDUnitFunc();
@@ -166,7 +166,7 @@ public class GDV2_SceneTest_Increase {
     //增发时交易报告对象长度超长
     @Test
     public void TC09_shareIncreaseLongObjectId() throws Exception {
-        register_event_type = "2";
+        register_event_type = 2;
         log.info("增发前查询机构主体信息");
         String query2 = gd.GDMainSubjectQuery(gdContractAddress, gdCompanyID);
 //        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
@@ -425,7 +425,7 @@ public class GDV2_SceneTest_Increase {
 
     @Test
     public void Increase200()throws Exception{
-        register_event_type = "2";//非交易登记
+        register_event_type = 2;//非交易登记
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";
@@ -450,7 +450,7 @@ public class GDV2_SceneTest_Increase {
 
     @Test
     public void IncreaseToNewAccount()throws Exception{
-        register_event_type = "1";//非交易登记
+        register_event_type = 1;//非交易登记
 
         log.info("多个回收前查询机构主体信息");
         String query2 = gd.GDObjectQueryByVer(gdCompanyID,-1);
@@ -481,7 +481,7 @@ public class GDV2_SceneTest_Increase {
 
         assertEquals(totalMembersBf -1,totalMembers02);//回收一个账户
 
-        register_event_type = "2";//非交易登记
+        register_event_type = 2;//非交易登记
         String eqCode = gdEquityCode;
         String reason = "股份分红";
         String txObjId = "4increaseObj" + Random(6);
@@ -518,7 +518,7 @@ public class GDV2_SceneTest_Increase {
 
     @Test
     public void IncreaseToNewAccount02()throws Exception{
-        register_event_type = "2";//非交易登记
+        register_event_type = 2;//非交易登记
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";
@@ -557,7 +557,7 @@ public class GDV2_SceneTest_Increase {
 
     @Test
     public void Increase12()throws Exception{
-        register_event_type = "2";//非交易登记
+        register_event_type = 2;//非交易登记
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";

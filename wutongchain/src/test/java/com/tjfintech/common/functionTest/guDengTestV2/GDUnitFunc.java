@@ -461,7 +461,8 @@ public class GDUnitFunc {
             GDBeforeCondition gdbf = new GDBeforeCondition();
 
             tempReg.put("register_registration_object_id",regObjId);
-            tempReg.put("register_subject_account_ref","SH" + cltNo);
+            if(regObjType == 1){
+            tempReg.put("register_subject_account_ref","SH" + cltNo);}
             tempReg.put("register_product_ref",gdEquityCode);
 
             mapAddrRegObjId.put(tempAddr + tempPP,regObjId);//方便后面测试验证

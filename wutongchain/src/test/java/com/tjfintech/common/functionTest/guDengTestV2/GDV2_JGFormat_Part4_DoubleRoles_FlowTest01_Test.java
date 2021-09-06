@@ -90,7 +90,7 @@ public class GDV2_JGFormat_Part4_DoubleRoles_FlowTest01_Test {
 
     @Before
     public void resetVar(){
-        register_event_type = "1";//非交易登记
+        register_event_type = 1;//非交易登记
         tempsubject_investor_qualification_certifier_ref =subject_investor_qualification_certifier_ref;
         tempregister_transaction_ref = register_transaction_ref;
     }
@@ -396,7 +396,7 @@ public class GDV2_JGFormat_Part4_DoubleRoles_FlowTest01_Test {
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        register_event_type = "2";//交易登记
+        register_event_type = 2;//交易登记
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
         String txRpObjId = "txReport" + Random(6);
@@ -631,7 +631,7 @@ public class GDV2_JGFormat_Part4_DoubleRoles_FlowTest01_Test {
         //确认主体版本为2 即挂牌登记 0 开户1 转让给新账户触发主体报送2
         assertEquals(2,Integer.parseInt(gdCF.getObjectLatestVer(gdCompanyID)));
 
-        register_event_type = "2";//非交易登记
+        register_event_type = 2;//非交易登记
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";
@@ -1602,7 +1602,7 @@ public class GDV2_JGFormat_Part4_DoubleRoles_FlowTest01_Test {
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        register_event_type = "2";//交易登记
+        register_event_type = 2;//交易登记
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
         String txRpObjId = "txReport" + Random(6);
@@ -1852,7 +1852,7 @@ public class GDV2_JGFormat_Part4_DoubleRoles_FlowTest01_Test {
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        register_event_type = "2";//交易登记
+        register_event_type = 2;//交易登记
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
         String txRpObjId = "txReport" + Random(6);

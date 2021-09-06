@@ -67,7 +67,7 @@ public class UtilsClassGD {
     public static long end = 0;
     public static int beginHeigh = 0;
     public static int endHeight = 0;
-	public static int blockHeight = 19352;
+	public static int blockHeight = 24059;
     public static long timeStamp = (new Date()).getTime();
     public static String testCurMethodName = "";
 
@@ -139,7 +139,7 @@ public class UtilsClassGD {
     public static String CNKey = "Eq1";
     public static String uriStoreData = "";
     public static String productType = "1";
-    public static String register_event_type = "1";
+    public static Integer register_event_type = 1;//1托管登记 不引用交易报告 2交易登记 引用交易报告
 
     public static Boolean bSaveBuff = false;
     public static String indexReg = "";
@@ -155,6 +155,8 @@ public class UtilsClassGD {
 
     public static Boolean bMultiRole = false;
     public static Boolean bNotStoreSuperviseInfo = false;
+
+    public static Integer regObjType = 1; //1权利登记 2名册登记
 
     //获取引用信息初始值放入数组
     public static  String[] refData() {

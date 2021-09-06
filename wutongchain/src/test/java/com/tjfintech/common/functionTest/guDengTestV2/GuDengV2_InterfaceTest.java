@@ -35,7 +35,7 @@ public class GuDengV2_InterfaceTest {
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
-        register_event_type = "1";
+        register_event_type = 1;
         bUseUUID = true;
     }
 
@@ -492,20 +492,20 @@ public class GuDengV2_InterfaceTest {
         log.info(" ************************ test txInformation must ************************ ");
         response= gd.GDShareTransfer(keyId,fromAddr,transferAmount,toAddr,shareProperty,eqCode,null,fromNow,toNow);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("无效的参数:Key: 'SharesTransfer.TxInformation' Error:Field validation for 'TxInformation' failed on the 'required' tag",
+        assertEquals("交易报告信息、转出方登记信息和接受方登记信息不可以为空",
                 JSONObject.fromObject(response).getString("message"));
 
         log.info(" ************************ test fromRegisterInformation must ************************ ");
         response= gd.GDShareTransfer(keyId,fromAddr,transferAmount,toAddr,shareProperty,eqCode,txInformation,null,toNow);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("无效的参数:Key: 'SharesTransfer.FromRegisterInformation' Error:Field validation for 'FromRegisterInformation' failed on the 'required' tag",
+        assertEquals("交易报告信息、转出方登记信息和接受方登记信息不可以为空",
                 JSONObject.fromObject(response).getString("message"));
 
 
         log.info(" ************************ test toRegisterInformation must ************************ ");
         response= gd.GDShareTransfer(keyId,fromAddr,transferAmount,toAddr,shareProperty,eqCode,txInformation,fromNow,null);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("无效的参数:Key: 'SharesTransfer.ToRegisterInformation' Error:Field validation for 'ToRegisterInformation' failed on the 'required' tag",
+        assertEquals("交易报告信息、转出方登记信息和接受方登记信息不可以为空",
                 JSONObject.fromObject(response).getString("message"));
 
 

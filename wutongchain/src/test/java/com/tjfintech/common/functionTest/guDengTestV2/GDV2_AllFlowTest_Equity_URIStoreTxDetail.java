@@ -202,7 +202,7 @@ public class GDV2_AllFlowTest_Equity_URIStoreTxDetail {
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        register_event_type = "2";//交易登记
+        register_event_type = 2;//交易登记
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
         String txRpObjId = "txReport" + Random(6);

@@ -90,7 +90,7 @@ public class GDV2_JGFormat_Part6_TransferNotSendData_Test {
     public void resetVar(){
 
 
-        register_event_type = "1";//非交易登记
+        register_event_type = 1;//非交易登记
         tempsubject_investor_qualification_certifier_ref =subject_investor_qualification_certifier_ref;
         tempregister_transaction_ref = register_transaction_ref;
     }
@@ -234,7 +234,7 @@ public class GDV2_JGFormat_Part6_TransferNotSendData_Test {
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        register_event_type = "2";//交易登记
+        register_event_type = 2;//交易登记
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
         String txRpObjId = "txReport" + Random(6);
@@ -382,7 +382,7 @@ public class GDV2_JGFormat_Part6_TransferNotSendData_Test {
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        register_event_type = "2";//交易登记
+        register_event_type = 2;//交易登记
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
         String txRpObjId = "txReport" + Random(6);

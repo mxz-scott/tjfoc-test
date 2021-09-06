@@ -62,7 +62,7 @@ public class GDV2_JGData_NonEssentialParamTest {
         gdEquityCode = Random(20);
         gdCompanyID = "P1Re" + Random(8);
 
-        register_event_type = "1";//非交易登记
+        register_event_type = 1;//非交易登记
 
         settlement_product_ref = gdEquityCode;
 
@@ -92,7 +92,8 @@ public class GDV2_JGData_NonEssentialParamTest {
 
         Map tempReg = gdBF.init05RegInfo();
         tempReg.put("register_registration_object_id",regObjId);
-        tempReg.put("register_subject_account_ref","SH" + mapAccAddr.get(address));
+        if(regObjType == 1){
+        tempReg.put("register_subject_account_ref","SH" + mapAccAddr.get(address));}
 
         mapAddrRegObjId.put(address + shareProperty,regObjId);//方便后面测试验证
 
@@ -117,7 +118,8 @@ public class GDV2_JGData_NonEssentialParamTest {
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
         tempReg.put("register_registration_object_id",regObjId);
-        tempReg.put("register_subject_account_ref","SH" + mapAccAddr.get(address));
+        if(regObjType == 1){
+        tempReg.put("register_subject_account_ref","SH" + mapAccAddr.get(address));}
 
         mapAddrRegObjId.put(address + shareProperty,regObjId);//方便后面测试验证
 
@@ -171,7 +173,7 @@ public class GDV2_JGData_NonEssentialParamTest {
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        register_event_type = "2";//交易登记
+        register_event_type = 2;//交易登记
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
         String txRpObjId = "txReport" + Random(6);
@@ -191,11 +193,13 @@ public class GDV2_JGData_NonEssentialParamTest {
         Map toNow = gdBF.init05RegInfo();
 
         fromNow.put("register_registration_object_id",tempObjIdFrom);
-        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);
+        if(regObjType == 1){
+        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);}
         fromNow.put("register_transaction_ref",txRpObjId);
 
         toNow.put("register_registration_object_id",tempObjIdTo);
-        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);
+        if(regObjType == 1){
+        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);}
         toNow.put("register_transaction_ref",txRpObjId);
 
         String query2 = gd.GDObjectQueryByVer(gdCompanyID,-1);

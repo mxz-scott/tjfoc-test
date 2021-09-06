@@ -87,7 +87,7 @@ public class GDV2_ShareUnlock_UniqueId_Test {
         transaction_custody_product_ref = gdEquityCode;
 
         bizNoTest = "UUID" + Random(12);
-        register_event_type = "1";//非交易登记
+        register_event_type = 1;//非交易登记
         tempsubject_investor_qualification_certifier_ref =subject_investor_qualification_certifier_ref;
         tempregister_transaction_ref = register_transaction_ref;
 

@@ -450,24 +450,26 @@ public class GDBeforeConditionN {
         mapTemp.put("register_registration_object_id", "regid00001");
 
         //登记信息 登记基本信息
-        mapTemp.put("register_object_type", 1);
+        mapTemp.put("register_object_type", regObjType);
         mapTemp.put("register_event_type", register_event_type);//默认托管登记
 
-        //登记信息 权利信息 权利基本信息 权利基本信息描述
-        mapTemp.put("register_time", time2);
-        mapTemp.put("register_subject_ref",register_subject_ref);
-        mapTemp.put("register_subject_type", 1);
-        mapTemp.put("register_subject_account_ref", register_subject_account_ref);
-        mapTemp.put("register_asset_type", 1);
-        mapTemp.put("register_asset_unit", 1);
-        mapTemp.put("register_asset_currency", "156");
-        mapTemp.put("register_create_time", time2);
-        mapTemp.put("register_product_ref", gdEquityCode);
-
-        mapTemp.put("register_source_type", 0);
-        mapTemp.put("register_shareholders",listRegFile);
-        mapTemp.put("fund_investors",listRegFile);
-        mapTemp.put("register_creditors",listRegFile);
+        if(regObjType == 1) {
+            //登记信息 权利信息 权利基本信息 权利基本信息描述
+            mapTemp.put("register_time", time2);
+            mapTemp.put("register_subject_ref", register_subject_ref);
+            mapTemp.put("register_subject_type", 1);
+            mapTemp.put("register_subject_account_ref", register_subject_account_ref);
+            mapTemp.put("register_asset_type", 1);
+            mapTemp.put("register_asset_unit", 1);
+            mapTemp.put("register_asset_currency", "156");
+            mapTemp.put("register_create_time", time2);
+            mapTemp.put("register_product_ref", gdEquityCode);
+            mapTemp.put("register_source_type", 0);
+        }else if(regObjType == 2) {
+            mapTemp.put("register_shareholders", listRegFile);
+            mapTemp.put("fund_investors", listRegFile);
+            mapTemp.put("register_creditors", listRegFile);
+        }
 
         return mapTemp;
     }

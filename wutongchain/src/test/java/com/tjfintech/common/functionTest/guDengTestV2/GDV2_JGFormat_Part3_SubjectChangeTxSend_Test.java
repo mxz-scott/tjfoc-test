@@ -72,7 +72,7 @@ public class GDV2_JGFormat_Part3_SubjectChangeTxSend_Test {
     public void shareIssue() throws Exception {
         busUUID = "";
 
-        register_event_type = "2";
+        register_event_type = 2;
 
         tempsubject_investor_qualification_certifier_ref =subject_investor_qualification_certifier_ref;
         tempregister_transaction_ref = register_transaction_ref;
@@ -884,7 +884,7 @@ public class GDV2_JGFormat_Part3_SubjectChangeTxSend_Test {
      */
     @Test
     public void IncreaseWithTxReportType0_NoSubmitTxReport() throws Exception {
-        register_event_type = "2";
+        register_event_type = 2;
         shareIncreaseSpec(0);
     }
 
@@ -895,7 +895,7 @@ public class GDV2_JGFormat_Part3_SubjectChangeTxSend_Test {
      */
     @Test
     public void IncreaseWithTxReportType2_NoSubmitTxReport() throws Exception {
-        register_event_type = "2";
+        register_event_type = 2;
         shareIncreaseSpec(2);
     }
 

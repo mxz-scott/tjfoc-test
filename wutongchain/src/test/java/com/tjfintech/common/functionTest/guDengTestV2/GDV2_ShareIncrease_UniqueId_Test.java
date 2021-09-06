@@ -85,7 +85,7 @@ public class GDV2_ShareIncrease_UniqueId_Test {
         roll_register_product_ref = gdEquityCode;
         transaction_custody_product_ref = gdEquityCode;
 
-        register_event_type = "1";//非交易登记
+        register_event_type = 1;//非交易登记
         tempsubject_investor_qualification_certifier_ref =subject_investor_qualification_certifier_ref;
         tempregister_transaction_ref = register_transaction_ref;
 
@@ -130,7 +130,7 @@ public class GDV2_ShareIncrease_UniqueId_Test {
 
         String subVerInit = gdCF.getObjectLatestVer(gdCompanyID);//获取初始主体版本
 
-        register_event_type = "2";//非交易登记
+        register_event_type = 2;//非交易登记
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";
@@ -386,7 +386,7 @@ public class GDV2_ShareIncrease_UniqueId_Test {
         ).getJSONObject("subject_information").getJSONObject("organization_subject_information"
         ).getJSONObject("basic_information_of_enterprise").getJSONObject("basic_information_description"
         ).getInt("subject_shareholders_number");
-        register_event_type = "2";//非交易登记
+        register_event_type = 2;//非交易登记
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";
@@ -632,7 +632,7 @@ public class GDV2_ShareIncrease_UniqueId_Test {
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
 //        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
-        register_event_type = "2";//非交易登记
+        register_event_type = 2;//非交易登记
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";
@@ -885,7 +885,7 @@ public class GDV2_ShareIncrease_UniqueId_Test {
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
 //        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
-        register_event_type = "2";//非交易登记
+        register_event_type = 2;//非交易登记
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";
@@ -1133,7 +1133,7 @@ public class GDV2_ShareIncrease_UniqueId_Test {
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
 //        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
-        register_event_type = "2";//非交易登记
+        register_event_type = 2;//非交易登记
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";
@@ -1207,7 +1207,7 @@ public class GDV2_ShareIncrease_UniqueId_Test {
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
 //        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
-        register_event_type = "2";//非交易登记
+        register_event_type = 2;//非交易登记
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";

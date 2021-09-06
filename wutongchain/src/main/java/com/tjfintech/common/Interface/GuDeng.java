@@ -60,4 +60,7 @@ public interface GuDeng {
 
     String GDEquitySuperviseInfoDelete(String objectId, int version,String type);
     String GDEquitySuperviseInfoUpdate(String objectId,String type,long updateTime,Map objectInfo);
+
+    String GDEquitySuperviseInfoRepair(String id, int version,String type);
+
 }
