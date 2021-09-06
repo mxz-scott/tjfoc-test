@@ -84,11 +84,11 @@ public class GDV2_JGFormat_Part7_RepairData_Test {
     @AfterClass
     public static void reset(){
         bNotStoreSuperviseInfo = false;//将报送flag重置为默认值
+        regObjType = 1;//权利登记
     }
 
     @Before
     public void resetVar(){
-
         gdEquityCode = "prodEq" + Random(12);
         gdCompanyID = "P1Re" + Random(8);
         register_product_ref = gdEquityCode;
@@ -366,8 +366,6 @@ public class GDV2_JGFormat_Part7_RepairData_Test {
 
         }
         log.info("================================检查存证数据格式化《结束》================================");
-
-
 
     }
 
