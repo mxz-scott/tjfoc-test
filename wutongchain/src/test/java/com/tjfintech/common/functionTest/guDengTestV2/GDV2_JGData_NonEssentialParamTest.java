@@ -227,7 +227,10 @@ public class GDV2_JGData_NonEssentialParamTest {
         log.info("检查股权性质变更存证登记格式化及信息内容与传入一致");
         String regVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
         String txRpVer = "0" ;//gdCF.getObjectLatestVer(account_subject_ref);
+//        sleepAndSaveInfo(500);//等待500ms 理论上不需要此步骤
         String subVer = gdCF.getObjectLatestVer(gdCompanyID);
+
+        assertEquals("主体版本变更为1","1",subVer);
 
         //获取链上mini url的存证信息 并检查是否包含uri信息 每个登记都是新的 则都是0
         String regfileName1 = conJGFileName(tempObjIdFrom,regVer);
