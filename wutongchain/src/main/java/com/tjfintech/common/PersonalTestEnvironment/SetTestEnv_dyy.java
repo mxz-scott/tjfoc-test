@@ -10,9 +10,9 @@ public class SetTestEnv_dyy {
 
    @Test
     public void setEnvParam(){
-      SDKADD = "http://10.1.5.162:8777";
-      rSDKADD = "http://10.1.5.162:8777";
-      TOKENADD = "http://10.1.5.162:8777";
+      SDKADD = "http://dev-env.wutongchain.com:48090";
+      rSDKADD = "http://dev-env.wutongchain.com:48090";
+      TOKENADD = "http://dev-env.wutongchain.com:48090";
       //设置测试环境使用的节点端口及部署目录信息
       PEER1IP = "10.1.5.162";
       PEER2IP = "10.1.5.243";
@@ -32,10 +32,10 @@ public class SetTestEnv_dyy {
       PeerPATH = PTPATH + "wtchain/";
       ToolPATH = PTPATH + "toolkit/";
       TokenApiPATH = PTPATH + "wtfinservice/";
-      PeerTPName = "wtchain";
-      SDKTPName = "wtsdk";
+      PeerTPName = "wtchain32";
+      SDKTPName = "wtsdkdyy";
       ToolTPName = "toolkit";
-      TokenTPName = "wtsdk";
+      TokenTPName = "wtsdkdyy";
       tmuxSessionTokenApi = "tmux send -t auto_t ";
       tmuxSessionPeer = "tmux send -t auto ";
       tmuxSessionSDK = "tmux send -t auto_s ";
