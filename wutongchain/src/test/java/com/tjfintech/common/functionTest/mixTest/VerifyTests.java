@@ -24,56 +24,6 @@ public class VerifyTests {
     Store store =testBuilder.getStore();
     CommonFunc commonFunc = new CommonFunc();
 
-
-    /**
-     计算链上TPS
-     */
-    @Test
-    public void CalculateAverageTPS() throws Exception {
-
-        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
-        int startBlockHeight;
-
-        if (blockHeight > 100) {
-            startBlockHeight = blockHeight - 99;
-        }else {
-            startBlockHeight = 1;
-        }
-        //手动修改起始高度
-//        startBlockHeight = 1090;
-        int endBlockHeight = blockHeight;   //手动修改结束高度
-
-        int diff = endBlockHeight - startBlockHeight + 1;
-        int count = 0, total = 0;
-
-        for (int i = startBlockHeight; i <= endBlockHeight; i++) {
-
-
-            //获取区块中的交易个数
-            String[] txs = commonFunc.getTxsArray(i);
-            count = txs.length;
-
-            total = total + count;
-
-        }
-
-
-            String timestamp = JSONObject.fromObject(store.GetBlockByHeight(startBlockHeight)).getJSONObject("data").getJSONObject("header").getString("timestamp");
-            long blkTimeStamp1 = Long.parseLong(timestamp);
-            timestamp = JSONObject.fromObject(store.GetBlockByHeight(endBlockHeight)).getJSONObject("data").getJSONObject("header").getString("timestamp");
-            long blkTimeStamp2 = Long.parseLong(timestamp);
-
-            long timeDiff = (blkTimeStamp2 - blkTimeStamp1) / 1000;
-
-        log.info("区块数：" + diff);
-        log.info("交易总数：" + total);
-        log.info("测试时长：" + timeDiff + "秒");
-        log.info("链上TPS：" + total / timeDiff);
-
-    }
-
-
-
     /**
      校验区块时间戳与交易时间戳的差值，为了验证之前可能存在的交易几个小时后才打包问题。
      */
@@ -111,8 +61,8 @@ public class VerifyTests {
                 if (txts.length() ==13)  checkInterval = checkInterval*1000;
                 if (diff > checkInterval) {
 //                    count1++;
-                    errBlock.add(subLedger + " Block height " + i + "，区块与交易时间差：" + diff
-                            + " 区块时间：" + timestamp +  "，交易时间：" + txts + " 交易hash " + tx);
+                    errBlock.add(subLedger + " Block height " + i + "，区块与交易时间差：" + diff / 1000
+                            + "秒, 区块时间：" + timestamp +  "，交易时间：" + txts + " 交易hash " + tx);
 //                    log.error("Block time and tx time in big difference, please check!");
 //                    log.info("Block height: " + i + "，时间差：" + diff);
 //                    log.info("区块时间：" + timestamp +  "，交易时间：" + txts);
@@ -141,7 +91,7 @@ public class VerifyTests {
         int count1 = 0;
         int count2 = 0;
 
-        for (int i = 2; i <= blockHeight; i++) {
+        for (int i = 1; i <= blockHeight; i++) {
 
             //获取交易列表
             String[] txsPrevious = commonFunc.getTxsArray(i-1);

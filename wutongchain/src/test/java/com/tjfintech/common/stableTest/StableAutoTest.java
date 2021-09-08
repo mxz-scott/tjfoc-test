@@ -45,8 +45,8 @@ public class StableAutoTest {
     @BeforeClass
     public static void beforeConfig() throws Exception {
 //        if (MULITADD2.isEmpty()) {
-//            BeforeCondition bf = new BeforeCondition();
-//            bf.updatePubPriKey();
+            BeforeCondition bf = new BeforeCondition();
+            bf.updatePubPriKey();
 //            bf.createSTAddresses();
 //            bf.installSmartAccountContract("account_simple.wlang");
 //        }
@@ -64,7 +64,6 @@ public class StableAutoTest {
     @Test
     public void stableTest() throws Exception {
 
-//        String[] ids = {"ra0erdvwpd"};
         String[] ids = getLedgerIDs();
         int ledgerNumber = ids.length;
 
@@ -72,14 +71,13 @@ public class StableAutoTest {
             subLedger = ids[j];
             storeTest(ids[j]);
             BeforeCondition bf = new BeforeCondition();
-            bf.updatePubPriKey();
-//            bf.createSTAddresses();
-//            bf.installSmartAccountContract("account_simple.wlang");
+            bf.createSTAddresses();
+            bf.installSmartAccountContract("account_simple.wlang");
         }
 
         int i = 0;
         int number = 6;  // 单链单次循环发送的交易数
-        int loop = 10; // 循环次数
+        int loop = 1000; // 循环次数
         int total = loop * number; // 循环次数
 
         commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
@@ -98,9 +96,9 @@ public class StableAutoTest {
                 priStoreTest(ids[j]);
             }
 
-//            for (int j = 0; j < ledgerNumber; j++) {
-//                smartTokenTest(ids[j]);
-//            }
+            for (int j = 0; j < ledgerNumber; j++) {
+                smartTokenTest(ids[j]);
+            }
 
             i++;
 
@@ -112,11 +110,17 @@ public class StableAutoTest {
         long[] endTimestamps = getTimestamps(ids);
         int[] endHeights = getHeights(ids);
 
+        int[] totalOnChains = new int[ids.length];
+
+        for (i = 0; i < ids.length; i++) {
+            subLedger = ids[i];
+            totalOnChains[i] = commonFunc.CalculatetotalTxs(ids[i], startHeights[i], endHeights[i]);  // 上链交易数
+        }
+
         int count = 0;
 
         for (int k = 0; k < ids.length; k++) {
             log.info("*****************************************************************");
-            int totalOnChain = commonFunc.CalculatetotalTxs(ids[k], startHeights[k], endHeights[k]);  // 上链交易数
             log.info("应用链ID：" + ids[k]);
             long timeDiff = (endTimestamps[k] - startTimestamps[k]) / 1000 / 60;   // 按分钟计时
             log.info("测试时长：" + timeDiff + "分钟");
@@ -124,21 +128,21 @@ public class StableAutoTest {
             log.info("结束区块高度：" + endHeights[k]);
             log.info("区块数：" + (endHeights[k] - startHeights[k]));
             log.info("发送交易总数：" + total);
-            log.info("上链交易总数：" + totalOnChain);
-            if (total != totalOnChain) {
+            log.info("上链交易总数：" + totalOnChains[k]);
+            if (total != totalOnChains[k]) {
                 count++;
-                log.info(ids[k] + " 交易丢了!");
+                log.info(ids[k] + " 发送交易数与上链交易数不一致!");
             }
             log.info("*****************************************************************");
         }
 
-        assertEquals("交易丢了", 0, count);
+        assertEquals("发送交易数与上链交易数不一致", 0, count);
 
     }
 
 
     /**
-     * 是否丢交易测试
+     * 稳定性测试， 是否丢交易测试
      */
     @Test
     public void TxLostTest() throws Exception {
@@ -148,16 +152,11 @@ public class StableAutoTest {
         for (int j = 0; j < ledgerNumber; j++) {
             subLedger = ids[j];
             storeTest(ids[j]);
-            BeforeCondition bf = new BeforeCondition();
-            bf.updatePubPriKey();
         }
 
         int i = 0;
-        int number = 2;  // 单链单次循环发送的交易数
-
-        int loop = 10000; // 循环次数
-
-        int total = loop * number; // 循环次数
+        int loop = 10; // 循环次数
+        int[] total = new int[ids.length];
 
         commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
         Thread.sleep(SLEEPTIME);
@@ -167,15 +166,20 @@ public class StableAutoTest {
         while (i < loop) {
 
             for (int j = 0; j < ledgerNumber; j++) {
-                storeTest(ids[j]);
+                if ( storeTest(ids[j]) == 200 ){
+                    total[j]++;
+                };
             }
 
             for (int j = 0; j < ledgerNumber; j++) {
-                priStoreTest(ids[j]);
+                if( priStoreTest(ids[j]) == 200 ){
+                    total[j]++;
+                };
             }
 
             i++;
 
+            Thread.sleep(200);
         }
 
         commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
@@ -183,28 +187,80 @@ public class StableAutoTest {
 
         long[] endTimestamps = getTimestamps(ids);
         int[] endHeights = getHeights(ids);
+        int[] totalOnChains = new int[ids.length];
+
+        for (i = 0; i < ids.length; i++) {
+            subLedger = ids[i];
+            totalOnChains[i] = commonFunc.CalculatetotalTxs(ids[i], startHeights[i], endHeights[i]);  // 上链交易数
+        }
 
         int count = 0;
 
         for (int k = 0; k < ids.length; k++) {
             log.info("*****************************************************************");
-            int totalOnChain = commonFunc.CalculatetotalTxs(ids[k], startHeights[k], endHeights[k]);  // 上链交易数
             log.info("应用链ID：" + ids[k]);
             long timeDiff = (endTimestamps[k] - startTimestamps[k]) / 1000 / 60;   // 按分钟计时
             log.info("测试时长：" + timeDiff + "分钟");
             log.info("开始区块高度：" + startHeights[k]);
             log.info("结束区块高度：" + endHeights[k]);
             log.info("区块数：" + (endHeights[k] - startHeights[k]));
-            log.info("发送交易总数：" + total);
-            log.info("上链交易总数：" + totalOnChain);
-            if (total != totalOnChain) {
+            log.info("发送交易总数：" + total[k]);
+            log.info("上链交易总数：" + totalOnChains[k]);
+            if (total[k] != totalOnChains[k]) {
                 count++;
-                log.info(ids[k] + " 交易丢了!");
+                log.info(ids[k] + " 发送交易数与上链交易数不一致!");
             }
             log.info("*****************************************************************");
         }
 
-        assertEquals("交易丢了", 0, count);
+        assertEquals("发送交易数与上链交易数不一致", 0, count);
+
+    }
+
+    /**
+     计算链上TPS
+     */
+    @Test
+    public void CalculateAverageTPS() throws Exception {
+
+        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
+        int startBlockHeight;
+
+        if (blockHeight > 100) {
+            startBlockHeight = blockHeight - 99;
+        }else {
+            startBlockHeight = 1;
+        }
+        //手动修改起始高度
+//        startBlockHeight = 1090;
+        int endBlockHeight = blockHeight;   //手动修改结束高度
+
+        int diff = endBlockHeight - startBlockHeight + 1;
+        int count = 0, total = 0;
+
+        for (int i = startBlockHeight; i <= endBlockHeight; i++) {
+
+
+            //获取区块中的交易个数
+            String[] txs = commonFunc.getTxsArray(i);
+            count = txs.length;
+
+            total = total + count;
+
+        }
+
+
+        String timestamp = JSONObject.fromObject(store.GetBlockByHeight(startBlockHeight)).getJSONObject("data").getJSONObject("header").getString("timestamp");
+        long blkTimeStamp1 = Long.parseLong(timestamp);
+        timestamp = JSONObject.fromObject(store.GetBlockByHeight(endBlockHeight)).getJSONObject("data").getJSONObject("header").getString("timestamp");
+        long blkTimeStamp2 = Long.parseLong(timestamp);
+
+        long timeDiff = (blkTimeStamp2 - blkTimeStamp1) / 1000;
+
+        log.info("区块数：" + diff);
+        log.info("交易总数：" + total);
+        log.info("测试时长：" + timeDiff + "秒");
+        log.info("链上TPS：" + total / timeDiff);
 
     }
 
@@ -291,7 +347,7 @@ public class StableAutoTest {
     }
 
     // 普通存证
-    public void storeTest(String id) throws Exception {
+    public int storeTest(String id) throws Exception {
         subLedger = id;
         JSONObject fileInfo = new JSONObject();
         JSONObject data = new JSONObject();
@@ -316,21 +372,20 @@ public class StableAutoTest {
         String Data = data.toString();
 
         String response = store.CreateStore(Data);
-        assertThat(response, containsString("200"));
-        assertThat(response, containsString("data"));
 
+        return JSONObject.fromObject(response).getInt("state");
     }
 
     // 隐私存证
-    public void priStoreTest(String id) throws Exception {
+    public int priStoreTest(String id) throws Exception {
         subLedger = id;
         String data = "Testcx-" + UtilsClass.Random(2);
         Map<String, Object> map = new HashMap<>();
         map.put("pubKeys", PUBKEY1);
         map.put("pubkeys", PUBKEY6);
         String response = store.CreatePrivateStore(data, map);
-        assertThat(response, containsString("200"));
-        assertThat(response, containsString("data"));
+
+        return JSONObject.fromObject(response).getInt("state");
 
     }
 
@@ -436,4 +491,6 @@ public class StableAutoTest {
         return hs;
 
     }
+
+
 }

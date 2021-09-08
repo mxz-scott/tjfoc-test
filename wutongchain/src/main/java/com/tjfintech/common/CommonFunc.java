@@ -1546,7 +1546,7 @@ public class CommonFunc {
         }
 
 
-        log.info("交易总数：" + total);
+        log.info("上链交易总数：" + total);
         return total;
     }
 
