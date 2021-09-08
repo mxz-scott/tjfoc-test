@@ -10,10 +10,7 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.RandomUtils;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runners.MethodSorters;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
@@ -31,6 +28,15 @@ public class AppChain_MultiChainsTest {
     MgToolCmd mgToolCmd = new MgToolCmd();
     CommonFunc commonFunc = new CommonFunc();
     UtilsClass utilsClass = new UtilsClass();
+
+//    @BeforeClass
+    public static void clearPeerDB()throws Exception{
+        UtilsClass utilsClass = new UtilsClass();
+        //设置节点 清空db数据 并重启
+        utilsClass.setAndRestartPeerList(clearPeerDB);
+        //重启SDK
+        utilsClass.setAndRestartSDK();
+    }
 
     @Before
     public void beforeConfig() throws Exception {
@@ -181,7 +187,7 @@ public class AppChain_MultiChainsTest {
         String chainName1="tc1592_" + sdf.format(dt) + RandomUtils.nextInt(1000);
         String res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1,
                 " -t sm3"," -w first"," -c raft"," -m " + id1);
-        assertEquals(res.contains("peer illegal"), true);
+        assertEquals(res.contains("memberList count illegal"), true);
 
         sleepAndSaveInfo(SLEEPTIME);
         //创建子链，包含两个节点 为主链中的一个共识节点和一个非共识节点
@@ -282,7 +288,7 @@ public class AppChain_MultiChainsTest {
         res = mgToolCmd.createAppChain(PEER1IP,PEER1RPCPort," -n " + chainName1,
                 " -t sm3"," -w first",
                 " -c raft"," -m " + id1);
-        assertEquals(res.contains("peer illegal"), true);
+        assertEquals(res.contains("memberList count illegal"), true);
 
         sleepAndSaveInfo(4000);
         //检查可以获取子链列表

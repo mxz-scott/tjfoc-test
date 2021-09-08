@@ -38,7 +38,7 @@ public class GDV2_SceneTest_DestroyAccount {
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
-        register_event_type = "1";
+        register_event_type = 1;
     }
 
     @Before

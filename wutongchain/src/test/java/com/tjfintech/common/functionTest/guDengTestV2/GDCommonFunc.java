@@ -219,7 +219,6 @@ public class GDCommonFunc {
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     public static List<Map> gdConstructShareList(String address, double amount, int shareProperty){
         register_product_ref = gdEquityCode;
 
@@ -233,7 +232,44 @@ public class GDCommonFunc {
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
         tempReg.put("register_registration_object_id",regObjId);
-        tempReg.put("register_subject_account_ref","SH" + mapAccAddr.get(address));
+        if(regObjType == 1) {
+            tempReg.put("register_subject_account_ref", "SH" + mapAccAddr.get(address));
+        }
+        if(bChangeRegSN) tempReg.put("register_serial_number", regObjId);//区分同一账户多次登记
+
+        mapAddrRegObjId.put(address + shareProperty + indexReg,regObjId);//方便后面测试验证
+
+//        Map tempTxInfo = gdbf.init04TxInfo();
+//        tempTxInfo.put("transaction_original_owner_subject_ref",mapAccAddr.get(address));
+
+        Map<String,Object> shares = new HashMap<>();
+        shares.put("address",address);
+        shares.put("amount",amount);
+        shares.put("shareProperty",shareProperty);
+        shares.put("createTime",ts5);
+        shares.put("registerInformation",tempReg);
+//        shares.put("transactionReport",tempTxInfo);
+
+        List<Map> shareList = new ArrayList<>();
+        shareList.add(shares);
+        return shareList;
+    }
+
+    //测试登记带全部参数场景
+    public static List<Map> gdConstructShareListFull(String address, double amount, int shareProperty){
+        register_product_ref = gdEquityCode;
+
+        String regObjId = "5" + mapAccAddr.get(address) + Random(6);// + "_" + indexReg;
+//        try {
+//            FileOperation fileOperation = new FileOperation();
+//            fileOperation.appendToFile(regObjId, "regobj.txt");
+//        }catch (Exception e){
+//            log.info("error");
+//        }
+        GDBeforeCondition gdbf = new GDBeforeCondition();
+        Map tempReg = gdbf.init05RegInfoFull();
+        tempReg.put("register_registration_object_id",regObjId);
+        tempReg.put("register_subject_account_ref", "SH" + mapAccAddr.get(address));
         if(bChangeRegSN) tempReg.put("register_serial_number", regObjId);//区分同一账户多次登记
 
         mapAddrRegObjId.put(address + shareProperty + indexReg,regObjId);//方便后面测试验证
@@ -265,7 +301,9 @@ public class GDCommonFunc {
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
         tempReg.put("register_registration_object_id",regObjId);
-        tempReg.put("register_subject_account_ref","SH" + mapAccAddr.get(address));
+        if(regObjType == 1) {
+            tempReg.put("register_subject_account_ref", "SH" + mapAccAddr.get(address));
+        }
         if(bChangeRegSN) tempReg.put("register_serial_number", regObjId);//区分同一账户多次登记
 
         mapAddrRegObjId.put(address + shareProperty + indexReg,regObjId);//方便后面测试验证
@@ -337,72 +375,72 @@ public class GDCommonFunc {
 //        return shareList;
 //    }
 
-    public static List<Map> gdConstructShareList2(String address, double amount, int shareProperty){
-        String regObjId = "5" + mapAccAddr.get(address) + Random(6);
-        GDBeforeCondition gdbf = new GDBeforeCondition();
-        Map tempReg = gdbf.init05RegInfo();
-//        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
-//        tempReg.put("register_nature_of_shares",shareProperty);
-        tempReg.put("register_registration_object_id",regObjId);
-        tempReg.put("register_subject_account_ref","SH" + mapAccAddr.get(address));
-
-        mapAddrRegObjId.put(address + shareProperty,regObjId);//方便后面测试验证
-
-        //不填写如下字段
-        tempReg.remove("register_rights_change_amount");
-        tempReg.remove("register_rights_frozen_balance");
-        tempReg.remove("register_available_balance");
-        tempReg.remove("register_creditor_subscription_count");
-        tempReg.remove("register_rights_frozen_change_amount");
-
-
-        Map<String,Object> shares = new HashMap<>();
-        shares.put("address",address);
-        shares.put("amount",amount);
-        shares.put("shareProperty",shareProperty);
-        shares.put("createTime",ts5);
-        shares.put("registerInformation",tempReg);
-//        shares.put("transactionReport",tempTxInfo);
-
-        List<Map> shareList = new ArrayList<>();
-        shareList.add(shares);
-        return shareList;
-    }
-
-    public static List<Map> gdConstructShareList2(String address, double amount, int shareProperty,List<Map> list){
-        String regObjId = "5" + mapAccAddr.get(address) + Random(6);
-        GDBeforeCondition gdbf = new GDBeforeCondition();
-        Map tempReg = gdbf.init05RegInfo();
-//        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
-//        tempReg.put("register_nature_of_shares",shareProperty);
-        tempReg.put("register_registration_object_id",regObjId);
-        tempReg.put("register_subject_account_ref","SH" + mapAccAddr.get(address));
-
-        mapAddrRegObjId.put(address + shareProperty,regObjId);//方便后面测试验证
-
-        //不填写如下字段
-        tempReg.remove("register_rights_change_amount");
-        tempReg.remove("register_rights_frozen_balance");
-        tempReg.remove("register_available_balance");
-        tempReg.remove("register_creditor_subscription_count");
-        tempReg.remove("register_rights_frozen_change_amount");
-
-
-        List<Map> shareList = new ArrayList<>();
-        for(int i = 0 ; i < list.size() ; i++) {
-            shareList.add(list.get(i));
-        }
-        Map<String,Object> shares = new HashMap<>();
-        shares.put("address",address);
-        shares.put("amount",amount);
-        shares.put("shareProperty",shareProperty);
-        shares.put("createTime",ts5);
-        shares.put("registerInformation",tempReg);
-//        shares.put("transactionReport",tempTxInfo);
-
-        shareList.add(shares);
-        return shareList;
-    }
+//    public static List<Map> gdConstructShareList2(String address, double amount, int shareProperty){
+//        String regObjId = "5" + mapAccAddr.get(address) + Random(6);
+//        GDBeforeCondition gdbf = new GDBeforeCondition();
+//        Map tempReg = gdbf.init05RegInfo();
+////        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
+////        tempReg.put("register_nature_of_shares",shareProperty);
+//        tempReg.put("register_registration_object_id",regObjId);
+//        tempReg.put("register_subject_account_ref","SH" + mapAccAddr.get(address));
+//
+//        mapAddrRegObjId.put(address + shareProperty,regObjId);//方便后面测试验证
+//
+//        //不填写如下字段
+//        tempReg.remove("register_rights_change_amount");
+//        tempReg.remove("register_rights_frozen_balance");
+//        tempReg.remove("register_available_balance");
+//        tempReg.remove("register_creditor_subscription_count");
+//        tempReg.remove("register_rights_frozen_change_amount");
+//
+//
+//        Map<String,Object> shares = new HashMap<>();
+//        shares.put("address",address);
+//        shares.put("amount",amount);
+//        shares.put("shareProperty",shareProperty);
+//        shares.put("createTime",ts5);
+//        shares.put("registerInformation",tempReg);
+////        shares.put("transactionReport",tempTxInfo);
+//
+//        List<Map> shareList = new ArrayList<>();
+//        shareList.add(shares);
+//        return shareList;
+//    }
+//
+//    public static List<Map> gdConstructShareList2(String address, double amount, int shareProperty,List<Map> list){
+//        String regObjId = "5" + mapAccAddr.get(address) + Random(6);
+//        GDBeforeCondition gdbf = new GDBeforeCondition();
+//        Map tempReg = gdbf.init05RegInfo();
+////        tempReg.put("register_account_obj_id",mapAccAddr.get(address));
+////        tempReg.put("register_nature_of_shares",shareProperty);
+//        tempReg.put("register_registration_object_id",regObjId);
+//        tempReg.put("register_subject_account_ref","SH" + mapAccAddr.get(address));
+//
+//        mapAddrRegObjId.put(address + shareProperty,regObjId);//方便后面测试验证
+//
+//        //不填写如下字段
+//        tempReg.remove("register_rights_change_amount");
+//        tempReg.remove("register_rights_frozen_balance");
+//        tempReg.remove("register_available_balance");
+//        tempReg.remove("register_creditor_subscription_count");
+//        tempReg.remove("register_rights_frozen_change_amount");
+//
+//
+//        List<Map> shareList = new ArrayList<>();
+//        for(int i = 0 ; i < list.size() ; i++) {
+//            shareList.add(list.get(i));
+//        }
+//        Map<String,Object> shares = new HashMap<>();
+//        shares.put("address",address);
+//        shares.put("amount",amount);
+//        shares.put("shareProperty",shareProperty);
+//        shares.put("createTime",ts5);
+//        shares.put("registerInformation",tempReg);
+////        shares.put("transactionReport",tempTxInfo);
+//
+//        shareList.add(shares);
+//        return shareList;
+//    }
 
     public static List<Map> gdConstructShareListN(String address, double amount, int shareProperty){
         GDBeforeConditionN gdbf = new GDBeforeConditionN();
@@ -643,8 +681,8 @@ public class GDCommonFunc {
         String storeData2 = minio.getFileFromMinIO(minIOEP,jgBucket,miniofileName,"");
 
         //schema校验数据格式
-        assertEquals("schema校验数据是否匹配",true,
-                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,storeData2,"2"));
+//        assertEquals("schema校验数据是否匹配",true,
+//                cf.schemaCheckData(dirSchemaData,chkSchemaToolName,gdSchema,storeData2,"2"));
 
         com.alibaba.fastjson.JSONObject jobjOK = com.alibaba.fastjson.JSONObject.parseObject(storeData2);
 
@@ -1526,11 +1564,7 @@ public class GDCommonFunc {
 
     public Map regiInfo(com.alibaba.fastjson.JSONObject jobj2){
         com.alibaba.fastjson.JSONObject objInfo = jobj2.getJSONObject("body").getJSONObject("registration_information");
-        com.alibaba.fastjson.JSONObject objRegBase = objInfo.getJSONObject("register_basic_infomation");
-
-        com.alibaba.fastjson.JSONObject objRegRights = objInfo.getJSONObject("registration_rights");
-        com.alibaba.fastjson.JSONObject objRegRigBase = objRegRights.getJSONObject("basic_information_rights");
-
+        com.alibaba.fastjson.JSONObject objRegBase = objInfo.getJSONObject("register_basic_information");
 
         Map getSubjectInfo = new HashMap();
 
@@ -1542,86 +1576,138 @@ public class GDCommonFunc {
         key = "register_object_type";        getSubjectInfo.put(key,objRegBase.getString(key));
         key = "register_event_type";       getSubjectInfo.put(key,objRegBase.getString(key));
         log.info(getSubjectInfo.toString());
-        //登记信息 权利登记 权利基本信息 权利登记基本信息描述
-        com.alibaba.fastjson.JSONObject objRegRigBaseDesp = objRegRigBase.getJSONObject("basic_information_description");
 
-        key = "register_serial_number";getSubjectInfo.put(key,objRegRigBaseDesp.getString(key));
-        key = "register_time";getSubjectInfo.put(key,objRegRigBaseDesp.getString(key));
-        key = "register_subject_ref";getSubjectInfo.put(key,objRegRigBaseDesp.getString(key));
-        key = "register_subject_type";getSubjectInfo.put(key,objRegRigBaseDesp.getString(key));
-        key = "register_subject_account_ref";getSubjectInfo.put(key,objRegRigBaseDesp.getString(key));
-        key = "register_asset_type";getSubjectInfo.put(key,objRegRigBaseDesp.getString(key));
-        key = "register_asset_unit";getSubjectInfo.put(key,objRegRigBaseDesp.getString(key));
-        key = "register_asset_currency";getSubjectInfo.put(key,objRegRigBaseDesp.getString(key));
-        if(register_event_type.equals("2")) {
-            key = "register_transaction_ref";
+        if(regObjType == 1) {
+            com.alibaba.fastjson.JSONObject objRegRights = objInfo.getJSONObject("registration_rights");
+            com.alibaba.fastjson.JSONObject objRegRigBase = objRegRights.getJSONObject("basic_information_rights");
+            //登记信息 权利登记 权利基本信息 权利登记基本信息描述
+            com.alibaba.fastjson.JSONObject objRegRigBaseDesp = objRegRigBase.getJSONObject("basic_information_description");
+
+            key = "register_serial_number";
             getSubjectInfo.put(key, objRegRigBaseDesp.getString(key));
+            key = "register_time";
+            getSubjectInfo.put(key, objRegRigBaseDesp.getString(key));
+            key = "register_subject_ref";
+            getSubjectInfo.put(key, objRegRigBaseDesp.getString(key));
+            key = "register_subject_type";
+            getSubjectInfo.put(key, objRegRigBaseDesp.getString(key));
+            key = "register_subject_account_ref";
+            getSubjectInfo.put(key, objRegRigBaseDesp.getString(key));
+            key = "register_asset_type";
+            getSubjectInfo.put(key, objRegRigBaseDesp.getString(key));
+            key = "register_asset_unit";
+            getSubjectInfo.put(key, objRegRigBaseDesp.getString(key));
+            key = "register_asset_currency";
+            getSubjectInfo.put(key, objRegRigBaseDesp.getString(key));
+            if (register_event_type == 2) {
+                key = "register_transaction_ref";
+                getSubjectInfo.put(key, objRegRigBaseDesp.getString(key));
+            }
+            log.info(getSubjectInfo.toString());
+            key = "register_product_ref";
+            getSubjectInfo.put(key, objRegRigBaseDesp.getString(key));
+            key = "register_description";
+            getSubjectInfo.put(key, objRegRigBaseDesp.getString(key));
+            key = "register_create_time";
+            getSubjectInfo.put(key, objRegRigBaseDesp.getString(key));
+            key = "register_authentic_right_recognition_status";
+            getSubjectInfo.put(key, objRegRigBaseDesp.getString(key));
+
+            //登记信息 权利登记 权利基本信息 确权记录
+            com.alibaba.fastjson.JSONObject objRegRigBaseAuth = objRegRigBase.getJSONObject("authentic_right_record");
+
+            key = "register_authentic_right_recognition_date";
+            getSubjectInfo.put(key, objRegRigBaseAuth.getString(key));
+            key = "register_right_recognition_mode";
+            getSubjectInfo.put(key, objRegRigBaseAuth.getString(key));
+            key = "register_right_recognition_subject_ref";
+            getSubjectInfo.put(key, objRegRigBaseAuth.getString(key));
+            key = "register_right_recognition_subject_name";
+            getSubjectInfo.put(key, objRegRigBaseAuth.getString(key));
+            key = "register_right_recognition_agent_subject_ref";
+            getSubjectInfo.put(key, objRegRigBaseAuth.getString(key));
+            key = "register_right_recognition_agent_subject_name";
+            getSubjectInfo.put(key, objRegRigBaseAuth.getString(key));
+            key = "register_right_recognition_doc";
+            getSubjectInfo.put(key, objRegRigBaseAuth.getString(key));
+            key = "register_right_recognition_description";
+            getSubjectInfo.put(key, objRegRigBaseAuth.getString(key));
+
+            //登记信息 权利登记 权利基本信息 可用登记
+            com.alibaba.fastjson.JSONObject objRegRigBaseAvail = objRegRigBase.getJSONObject("available_registration");
+            key = "register_asset_balance_change";
+            getSubjectInfo.put(key, objRegRigBaseAvail.getString(key));
+            key = "register_asset_balance_before";
+            getSubjectInfo.put(key, objRegRigBaseAvail.getString(key));
+            key = "register_asset_balance_after";
+            getSubjectInfo.put(key, objRegRigBaseAvail.getString(key));
+
+            //登记信息 权利登记 权利基本信息 质押登记
+            com.alibaba.fastjson.JSONObject objRegRigBasePledge = objRegRigBase.getJSONObject("pledge_registration");
+            key = "register_pledge_balance_change";
+            getSubjectInfo.put(key, objRegRigBasePledge.getString(key));
+            key = "register_pledge_balance_before";
+            getSubjectInfo.put(key, objRegRigBasePledge.getString(key));
+            key = "register_pledge_balance_after";
+            getSubjectInfo.put(key, objRegRigBasePledge.getString(key));
+
+            //登记信息 权利登记 权利基本信息 冻结登记
+            com.alibaba.fastjson.JSONObject objRegRigBaseFreeze = objRegRigBase.getJSONObject("freezing_registration");
+            key = "register_frozen_balance_change";
+            getSubjectInfo.put(key, objRegRigBaseFreeze.getString(key));
+            key = "register_frozen_balance";
+            getSubjectInfo.put(key, objRegRigBaseFreeze.getString(key));
+            key = "register_frozen_balance_after";
+            getSubjectInfo.put(key, objRegRigBaseFreeze.getString(key));
+            key = "register_thaw_doc";
+            getSubjectInfo.put(key, objRegRigBaseFreeze.getString(key));
+            key = "register_thaw_description";
+            getSubjectInfo.put(key, objRegRigBaseFreeze.getString(key));
+
+            //登记信息 权利登记 权利基本信息 状态信息描述
+            com.alibaba.fastjson.JSONObject objRegRigBaseStatus = objRegRigBase.getJSONObject("description_status_information");
+            key = "register_asset_holding_status";
+            getSubjectInfo.put(key, objRegRigBaseStatus.getString(key));
+            key = "register_asset_holding_status_description";
+            getSubjectInfo.put(key, objRegRigBaseStatus.getString(key));
+            key = "register_asset_holding_nature";
+            getSubjectInfo.put(key, objRegRigBaseStatus.getString(key));
+            key = "register_asset_equity_type";
+            getSubjectInfo.put(key, objRegRigBaseStatus.getString(key));
+            key = "register_source_type";
+            getSubjectInfo.put(key, objRegRigBaseStatus.getString(key));
+            key = "register_asset_note";
+            getSubjectInfo.put(key, objRegRigBaseStatus.getString(key));
+            key = "register_asset_verification_doc";
+            getSubjectInfo.put(key, objRegRigBaseStatus.getString(key));
+        }else if(regObjType == 2) {
+            //名册登记 名册基本信息
+            com.alibaba.fastjson.JSONObject objRollRecords = objInfo.getJSONObject("roll_records");
+            com.alibaba.fastjson.JSONObject objRollBase = objRollRecords.getJSONObject("basic_information_roster");
+
+            key = "register_subject_ref";
+            getSubjectInfo.put(key, objRollBase.getString(key));
+            key = "register_product_ref";
+            getSubjectInfo.put(key, objRollBase.getString(key));
+            key = "register_product_name";
+            getSubjectInfo.put(key, objRollBase.getString(key));
+            key = "register_product_description";
+            getSubjectInfo.put(key, objRollBase.getString(key));
+            key = "register_list_asset_type";
+            getSubjectInfo.put(key, objRollBase.getString(key));
+            key = "register_list_date";
+            getSubjectInfo.put(key, objRollBase.getString(key));
+
+            //名册登记 股东名册
+            key = "register_shareholders";
+            getSubjectInfo.put(key, objRollRecords.getString(key));
+            //名册登记 债权人名册
+            key = "register_creditors";
+            getSubjectInfo.put(key, objRollRecords.getString(key));
+            //名册登记 基金投资人名册
+            key = "fund_investors";
+            getSubjectInfo.put(key, objRollRecords.getString(key));
         }
-        log.info(getSubjectInfo.toString());
-        key = "register_product_ref";getSubjectInfo.put(key,objRegRigBaseDesp.getString(key));
-        key = "register_description";getSubjectInfo.put(key,objRegRigBaseDesp.getString(key));
-        key = "register_create_time";getSubjectInfo.put(key,objRegRigBaseDesp.getString(key));
-        key = "register_authentic_right_recognition_status";getSubjectInfo.put(key,objRegRigBaseDesp.getString(key));
-
-        //登记信息 权利登记 权利基本信息 确权记录
-        com.alibaba.fastjson.JSONObject objRegRigBaseAuth = objRegRigBase.getJSONObject("authentic_right_record");
-
-        key = "register_authentic_right_recognition_date";getSubjectInfo.put(key,objRegRigBaseAuth.getString(key));
-        key = "register_right_recognition_mode";getSubjectInfo.put(key,objRegRigBaseAuth.getString(key));
-        key = "register_right_recognition_subject_ref";getSubjectInfo.put(key,objRegRigBaseAuth.getString(key));
-        key = "register_right_recognition_subject_name";getSubjectInfo.put(key,objRegRigBaseAuth.getString(key));
-        key = "register_right_recognition_agent_subject_ref";getSubjectInfo.put(key,objRegRigBaseAuth.getString(key));
-        key = "register_right_recognition_agent_subject_name";getSubjectInfo.put(key,objRegRigBaseAuth.getString(key));
-        key = "register_right_recognition_doc";getSubjectInfo.put(key,objRegRigBaseAuth.getString(key));
-        key = "register_right_recognition_description";getSubjectInfo.put(key,objRegRigBaseAuth.getString(key));
-
-        //登记信息 权利登记 权利基本信息 可用登记
-        com.alibaba.fastjson.JSONObject objRegRigBaseAvail = objRegRigBase.getJSONObject("available_registration");
-        key = "register_asset_balance_change";getSubjectInfo.put(key,objRegRigBaseAvail.getString(key));
-        key = "register_asset_balance_before";getSubjectInfo.put(key,objRegRigBaseAvail.getString(key));
-        key = "register_asset_balance_after";getSubjectInfo.put(key,objRegRigBaseAvail.getString(key));
-
-        //登记信息 权利登记 权利基本信息 质押登记
-        com.alibaba.fastjson.JSONObject objRegRigBasePledge = objRegRigBase.getJSONObject("pledge_registration");
-        key = "register_pledge_balance_change";getSubjectInfo.put(key,objRegRigBasePledge.getString(key));
-        key = "register_pledge_balance_before";getSubjectInfo.put(key,objRegRigBasePledge.getString(key));
-        key = "register_pledge_balance_after";getSubjectInfo.put(key,objRegRigBasePledge.getString(key));
-
-        //登记信息 权利登记 权利基本信息 冻结登记
-        com.alibaba.fastjson.JSONObject objRegRigBaseFreeze = objRegRigBase.getJSONObject("freezing_registration");
-        key = "register_frozen_balance_change";getSubjectInfo.put(key,objRegRigBaseFreeze.getString(key));
-        key = "register_frozen_balance";getSubjectInfo.put(key,objRegRigBaseFreeze.getString(key));
-        key = "register_frozen_balance_after";getSubjectInfo.put(key,objRegRigBaseFreeze.getString(key));
-        key = "register_thaw_doc";getSubjectInfo.put(key,objRegRigBaseFreeze.getString(key));
-        key = "register_thaw_description";getSubjectInfo.put(key,objRegRigBaseFreeze.getString(key));
-
-        //登记信息 权利登记 权利基本信息 状态信息描述
-        com.alibaba.fastjson.JSONObject objRegRigBaseStatus = objRegRigBase.getJSONObject("description_status_information");
-        key = "register_asset_holding_status";getSubjectInfo.put(key,objRegRigBaseStatus.getString(key));
-        key = "register_asset_holding_status_description";getSubjectInfo.put(key,objRegRigBaseStatus.getString(key));
-        key = "register_asset_holding_nature";getSubjectInfo.put(key,objRegRigBaseStatus.getString(key));
-        key = "register_asset_equity_type";getSubjectInfo.put(key,objRegRigBaseStatus.getString(key));
-        key = "register_source_type";getSubjectInfo.put(key,objRegRigBaseStatus.getString(key));
-        key = "register_asset_note";getSubjectInfo.put(key,objRegRigBaseStatus.getString(key));
-        key = "register_asset_verification_doc";getSubjectInfo.put(key,objRegRigBaseStatus.getString(key));
-
-        //名册登记 名册基本信息
-        com.alibaba.fastjson.JSONObject objRollRecords = objInfo.getJSONObject("roll_records");
-        com.alibaba.fastjson.JSONObject objRollBase = objRollRecords.getJSONObject("basic_information_roster");
-
-        key = "register_subject_ref";getSubjectInfo.put(key,objRollBase.getString(key));
-        key = "register_product_ref";getSubjectInfo.put(key,objRollBase.getString(key));
-        key = "register_product_name";getSubjectInfo.put(key,objRollBase.getString(key));
-        key = "register_product_description";getSubjectInfo.put(key,objRollBase.getString(key));
-        key = "register_list_asset_type";getSubjectInfo.put(key,objRollBase.getString(key));
-        key = "register_list_date";getSubjectInfo.put(key,objRollBase.getString(key));
-
-        //名册登记 股东名册
-        key = "register_shareholders";getSubjectInfo.put(key,objRollRecords.getString(key));
-        //名册登记 债权人名册
-        key = "register_creditors";getSubjectInfo.put(key,objRollRecords.getString(key));
-        //名册登记 基金投资人名册
-        key = "fund_investors";getSubjectInfo.put(key,objRollRecords.getString(key));
 
         //填充header content字段
          addContent(getSubjectInfo,jobj2);
@@ -1985,37 +2071,47 @@ public class GDCommonFunc {
                 key =  "=" + register_subject_ref;       certainVer = getObjectLatestVer(register_subject_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
-                key =  "register_subject_account_ref=" + register_subject_account_ref;       certainVer = getObjectLatestVer(register_subject_account_ref);
-                log.info("++++++++++++++++++++++" + key + certainVer);
-                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
-
-                key =  "register_transaction_ref=" + register_transaction_ref;       certainVer = getObjectLatestVer(register_transaction_ref);
-                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
-
                 key = "register_product_ref=" + register_product_ref;       certainVer = getObjectLatestVer(register_product_ref);
                 tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
-                key =  "=" + register_right_recognition_subject_ref;
-                certainVer = getObjectLatestVer(register_right_recognition_subject_ref);
-                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                if(regObjType == 1) {
+                    key = "register_subject_account_ref=" + register_subject_account_ref;
+                    certainVer = getObjectLatestVer(register_subject_account_ref);
+                    log.info("++++++++++++++++++++++" + key + certainVer);
+                    tempStr = tempStr.replaceAll(key, key + "/" + certainVer);
 
-                key =  register_right_recognition_agent_subject_ref;       certainVer = getObjectLatestVer(key);
-                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
-                key =  "=" + roll_register_subject_ref;       certainVer = getObjectLatestVer(roll_register_subject_ref);
-                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                    key = "register_transaction_ref=" + register_transaction_ref;
+                    certainVer = getObjectLatestVer(register_transaction_ref);
+                    tempStr = tempStr.replaceAll(key, key + "/" + certainVer);
 
-                key = "roll_register_product_ref=" + roll_register_product_ref;       certainVer = getObjectLatestVer(roll_register_product_ref);
-                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                    key = "=" + register_right_recognition_subject_ref;
+                    certainVer = getObjectLatestVer(register_right_recognition_subject_ref);
+                    tempStr = tempStr.replaceAll(key, key + "/" + certainVer);
 
-                key = "=" + register_equity_subject_ref;       certainVer = getObjectLatestVer(register_equity_subject_ref);
-                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                    key = register_right_recognition_agent_subject_ref;
+                    certainVer = getObjectLatestVer(key);
+                    tempStr = tempStr.replaceAll(key, key + "/" + certainVer);
 
-                key =  "=" + register_debt_holder_ref;       certainVer = getObjectLatestVer(register_debt_holder_ref);
-                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
 
-                key =  "=" + register_investor_subject_ref;       certainVer = getObjectLatestVer(register_investor_subject_ref);
-                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                }else if(regObjType == 2){
+                    key = "=" + register_equity_subject_ref;       certainVer = getObjectLatestVer(register_equity_subject_ref);
+                    tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+
+                    key =  "=" + register_debt_holder_ref;       certainVer = getObjectLatestVer(register_debt_holder_ref);
+                    tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+
+                    key =  "=" + register_investor_subject_ref;       certainVer = getObjectLatestVer(register_investor_subject_ref);
+                    tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+                }
+
+//                key =  "=" + roll_register_subject_ref;       certainVer = getObjectLatestVer(roll_register_subject_ref);
+//                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+
+//                key = "roll_register_product_ref=" + roll_register_product_ref;       certainVer = getObjectLatestVer(roll_register_product_ref);
+//                tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+
+
                 break;
             case "settlement" :
                 key = settlement_subject_ref;       certainVer = getObjectLatestVer(key);
@@ -2057,7 +2153,7 @@ public class GDCommonFunc {
         return tempStr;
     }
 
-    public String replaceObjIdKey2(String srcStr,String objectName){
+    public String replaceObjIdKey2(String srcStr,String objectName) {
         String certainVer = "";
         String tempStr = srcStr;
         log.info("/*/*/////////////////////////////////////////////");
@@ -2066,7 +2162,7 @@ public class GDCommonFunc {
         key = objectName + "=" + refInfo.get(objectName);
         log.info(key);
         certainVer = getObjectLatestVer(refInfo.get(objectName));
-        tempStr = tempStr.replaceAll(key,key + "/" + certainVer);
+        tempStr = tempStr.replaceAll(key, key + "/" + certainVer);
         log.info(tempStr);
 
         return tempStr;
@@ -2164,6 +2260,10 @@ public class GDCommonFunc {
         CommonFunc commonFunc = new CommonFunc();
 
         Boolean bResult = true;
+//        非权利登记移除 代码最小改动
+//        if(regObjType != 1){
+//            mapKeyWod.remove("register_subject_account_ref");
+//        }
 
         String tempAddr = mapKeyWod.get("address").toString();
         String tempTxId = mapKeyWod.get("txId").toString();
@@ -2179,8 +2279,11 @@ public class GDCommonFunc {
         if(mapKeyWod.containsKey("updateMap") && (!mapKeyWod.get("updateMap").equals(null)))
         {
             update = com.alibaba.fastjson.JSONObject.parseObject(mapKeyWod.get("updateMap").toString(), Map.class);
+            if(regObjType != 1){
+                update.remove("register_subject_account_ref");
+                assertEquals(false,update.containsKey("register_subject_account_ref"));//确认已移除
+            }
         }
-
 
         //检查各个交易详情信息中不包含敏感词
 //        assertEquals("不包含敏感词",true,chkSensitiveWord(store.GetTxDetail(tempTxId),contentType));

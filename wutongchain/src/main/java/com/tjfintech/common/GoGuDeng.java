@@ -681,4 +681,14 @@ public  class GoGuDeng implements GuDeng {
         log.info(result);
         return result;
     }
+
+    public String GDEquitySuperviseInfoRepair(String id, int version,String type){
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("version", version);
+        map.put("type", type);
+        String result = PostTest.postMethod(SDKADD + "/equity/object/repair", map);
+        log.info(result);
+        return result;
+    }
 }

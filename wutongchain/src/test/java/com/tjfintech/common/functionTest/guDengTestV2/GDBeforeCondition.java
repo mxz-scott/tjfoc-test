@@ -1181,19 +1181,139 @@ public class GDBeforeCondition {
         mapTemp.put("register_registration_object_id", "regid00001");
 
         //登记信息 登记基本信息
-        mapTemp.put("register_object_type", 1);
+        mapTemp.put("register_object_type", regObjType);
+        mapTemp.put("register_event_type", register_event_type);//默认托管登记
+
+        if (regObjType == 1) {
+            //登记信息 权利信息 权利基本信息 权利基本信息描述
+            mapTemp.put("register_serial_number", "登记流水号CHARACTER");
+            mapTemp.put("register_time", time2);
+            mapTemp.put("register_subject_ref", register_subject_ref);
+            mapTemp.put("register_subject_type", 1);
+            mapTemp.put("register_subject_account_ref", register_subject_account_ref);
+            mapTemp.put("register_asset_type", 1);
+            mapTemp.put("register_asset_unit", 1);
+            mapTemp.put("register_asset_currency", "156");
+            if (register_event_type == 2) mapTemp.put("register_transaction_ref", register_transaction_ref);
+            mapTemp.put("register_product_ref", gdEquityCode);
+            mapTemp.put("register_description", "登记描述信息CHARACTER");
+            mapTemp.put("register_create_time", time2);
+            mapTemp.put("register_authentic_right_recognition_status", 1);
+
+            //登记信息 权利登记 权利基本信息 确权记录
+            mapTemp.put("register_authentic_right_recognition_date", date3);
+            mapTemp.put("register_right_recognition_mode", 1);
+            mapTemp.put("register_right_recognition_subject_ref", register_right_recognition_subject_ref);
+            mapTemp.put("register_right_recognition_subject_name", "确权方主体名称CHARACTER");
+            mapTemp.put("register_right_recognition_agent_subject_ref", register_right_recognition_agent_subject_ref);
+            mapTemp.put("register_right_recognition_agent_subject_name", "确权代理方主体名称CHARACTER");
+            mapTemp.put("register_right_recognition_doc", getListFileObj());
+            mapTemp.put("register_right_recognition_description", "确权描述信息CHARACTER");
+
+            //登记信息 权利登记 权利基本信息 可用登记
+            mapTemp.put("register_asset_balance_change", 1000);
+            mapTemp.put("register_asset_balance_before", 2000);
+            mapTemp.put("register_asset_balance_after", 3000);
+
+            //登记信息 权利登记 权利基本信息 质押登记
+            mapTemp.put("register_pledge_balance_change", 1000);
+            mapTemp.put("register_pledge_balance_before", 1000);
+            mapTemp.put("register_pledge_balance_after", 5000);
+
+            //登记信息 权利登记 权利基本信息 冻结登记
+            mapTemp.put("register_frozen_balance_change", 500);
+            mapTemp.put("register_frozen_balance", 1000);
+            mapTemp.put("register_frozen_balance_after", 5000);
+            mapTemp.put("register_thaw_doc", getListFileObj());
+            mapTemp.put("register_thaw_description", "冻结/解冻说明信息TEXT");
+
+            //登记信息 权利登记 权利基本信息 状态信息描述
+            mapTemp.put("register_asset_holding_status", 1);
+            mapTemp.put("register_asset_holding_status_description", "持有状态说明TEXT");
+            mapTemp.put("register_asset_holding_nature", 1);
+            mapTemp.put("register_asset_equity_type", 1);
+            mapTemp.put("register_source_type", 0);
+            mapTemp.put("register_asset_note", "登记说明TEXT");
+            mapTemp.put("register_asset_verification_doc", getListFileObj());
+
+        } else if (regObjType == 2) {
+            //登记信息 名册登记 名册基本信息
+            mapTemp.put("register_subject_ref", register_subject_ref);
+            mapTemp.put("register_product_ref", gdEquityCode);
+            mapTemp.put("register_product_name", "产品名称");
+            mapTemp.put("register_product_description", "产品描述");
+            mapTemp.put("register_list_asset_type", 1);
+            mapTemp.put("register_list_date", date3);
+
+
+            //登记信息 名册登记 股东名册
+            List<Map> listRSH = new ArrayList<>();
+            Map mapRSH = new HashMap();
+            mapRSH.put("register_equity_subject_ref", register_equity_subject_ref);
+            mapRSH.put("register_equity_subject_type", 1);
+            mapRSH.put("register_equity_shareholding", 10);
+            mapRSH.put("register_equity_capital", 200);
+            mapRSH.put("register_equity_capital_paidin", 30000);
+            mapRSH.put("register_equity_number", 20);
+            mapRSH.put("register_equity_type", 1);
+            listRSH.add(mapRSH);
+            mapTemp.put("register_shareholders", listRSH);
+
+            //登记信息 名册登记 债权人名册
+            List<Map> listRC = new ArrayList<>();
+            Map mapRC = new HashMap();
+            mapRC.put("register_debt_holder_ref", register_debt_holder_ref);
+            mapRC.put("register_debt_holder_type", 1);
+            mapRC.put("register_debt_holder_subscription_quantity", 1000);
+
+            mapRC.put("register_debt_holder_contact_number", "债权人联系方式CHARACTER");
+            mapRC.put("register_debt_holder_subscription_price", 10000);
+
+            listRC.add(mapRC);
+            mapTemp.put("register_creditors", listRC);
+
+            //登记信息 名册登记 基金投资人名册
+            List<Map> listFi = new ArrayList<>();
+            Map mapFI = new HashMap();
+            mapFI.put("register_investor_subject_ref", register_investor_subject_ref);
+            mapFI.put("register_investor_name", "投资人主体名称CHARACTER");
+            mapFI.put("register_subscription_amount", 1000);
+            mapFI.put("register_subscription_number", 2000);
+            mapFI.put("register_fund_investors_classification", 1);
+
+            listFi.add(mapFI);
+            mapTemp.put("fund_investors", listFi);
+        } else {
+            assertEquals("regObjType只允许1或2 1权利登记 2 名册登记", true, false);
+        }
+
+        return mapTemp;
+    }
+
+    public Map init05RegInfoFull() {
+        Map mapTemp = new HashMap();
+//        log.info("初始化05登记数据结构");
+        //05登记
+        List<String> listRegFile = new ArrayList<>();
+        listRegFile.add("verify.crt");
+        mapTemp.clear();
+        //对象标识
+        mapTemp.put("register_registration_object_id", "regid00001");
+
+        //登记信息 登记基本信息
+        mapTemp.put("register_object_type", regObjType);
         mapTemp.put("register_event_type", register_event_type);//默认托管登记
 
         //登记信息 权利信息 权利基本信息 权利基本信息描述
         mapTemp.put("register_serial_number", "登记流水号CHARACTER");
         mapTemp.put("register_time", time2);
-        mapTemp.put("register_subject_ref",register_subject_ref);
+        mapTemp.put("register_subject_ref", register_subject_ref);
         mapTemp.put("register_subject_type", 1);
         mapTemp.put("register_subject_account_ref", register_subject_account_ref);
         mapTemp.put("register_asset_type", 1);
         mapTemp.put("register_asset_unit", 1);
         mapTemp.put("register_asset_currency", "156");
-        if(register_event_type.equals("2")) mapTemp.put("register_transaction_ref", register_transaction_ref);
+        if (register_event_type == 2) mapTemp.put("register_transaction_ref", register_transaction_ref);
         mapTemp.put("register_product_ref", gdEquityCode);
         mapTemp.put("register_description", "登记描述信息CHARACTER");
         mapTemp.put("register_create_time", time2);

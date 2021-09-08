@@ -40,14 +40,14 @@ public class GDV2_SceneTest_Transfer {
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
-        register_event_type = "1";
+        register_event_type = 1;
     }
 
     @Before
     public void IssueEquity()throws Exception{
         bizNoTest = "test" + Random(12);
         gdEquityCode = "test_trf" + Random(8);
-        register_event_type = "1";
+        register_event_type = 1;
 
         //重新创建账户
 //        gdAccClientNo1 = "No000" + Random(10);
@@ -370,7 +370,7 @@ public class GDV2_SceneTest_Transfer {
     @Test
     public void shareTransfer_txType2ErrorTXObjectLenTest()throws Exception{
         String response = "";
-        register_event_type = "2";
+        register_event_type = 2;
         GDBeforeCondition gdBF = new GDBeforeCondition();
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
@@ -406,7 +406,7 @@ public class GDV2_SceneTest_Transfer {
      */
     @Test
     public void shareTransfer_txType2NotExistTXObjectTest()throws Exception{
-        register_event_type = "2";
+        register_event_type = 2;
         String response = "";
 
         GDBeforeCondition gdBF = new GDBeforeCondition();

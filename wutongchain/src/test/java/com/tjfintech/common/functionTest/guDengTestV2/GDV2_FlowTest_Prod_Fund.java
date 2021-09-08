@@ -274,7 +274,7 @@ public class GDV2_FlowTest_Prod_Fund {
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        register_event_type = "2";//交易登记
+        register_event_type = 2;//交易登记
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
         String txRpObjId = "txReport" + Random(6);
@@ -293,10 +293,12 @@ public class GDV2_FlowTest_Prod_Fund {
         Map toNow = gdBF.init05RegInfo();
 
         fromNow.put("register_registration_object_id",tempObjIdFrom);
-        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);
+        if(regObjType == 1){
+        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);}
 
         toNow.put("register_registration_object_id",tempObjIdTo);
-        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);
+        if(regObjType == 1){
+        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);}
 
         //执行交易
         String response= gd.GDShareTransfer(keyId,fromAddr,1000,toAddr,shareProperty,eqCode,txInfo,fromNow,toNow);

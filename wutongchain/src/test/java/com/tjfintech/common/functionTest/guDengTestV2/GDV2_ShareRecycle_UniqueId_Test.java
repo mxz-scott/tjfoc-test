@@ -129,7 +129,8 @@ public class GDV2_ShareRecycle_UniqueId_Test {
         String regObjId1 = "5" + mapAccAddr.get(gdAccount1) + Random(6);// + "_" + indexReg;
         Map tempReg1 = gdBF.init05RegInfo();
         tempReg1.put("register_registration_object_id",regObjId1);
-        tempReg1.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount1));
+        if(regObjType == 1){
+        tempReg1.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount1));}
         if(bChangeRegSN) tempReg1.put("register_serial_number", regObjId1);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount1 + "0" + indexReg,regObjId1);//方便后面测试验证
 
@@ -137,21 +138,24 @@ public class GDV2_ShareRecycle_UniqueId_Test {
         String regObjId2 = "5" + mapAccAddr.get(gdAccount2) + Random(6);// + "_" + indexReg;
         Map tempReg2 = gdBF.init05RegInfo();
         tempReg2.put("register_registration_object_id",regObjId2);
-        tempReg2.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount2));
+        if(regObjType == 1){
+        tempReg2.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount2));}
         if(bChangeRegSN) tempReg2.put("register_serial_number", regObjId2);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount2 + "0" + indexReg,regObjId2);//方便后面测试验证
 
         String regObjId3 = "5" + mapAccAddr.get(gdAccount3) + Random(6);// + "_" + indexReg;
         Map tempReg3 = gdBF.init05RegInfo();
         tempReg3.put("register_registration_object_id",regObjId3);
-        tempReg3.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount3));
+        if(regObjType == 1){
+        tempReg3.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount3));}
         if(bChangeRegSN) tempReg3.put("register_serial_number", regObjId3);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount3 + "0" + indexReg,regObjId3);//方便后面测试验证
 
         String regObjId4 = "5" + mapAccAddr.get(gdAccount4) + Random(6);// + "_" + indexReg;
         Map tempReg4 = gdBF.init05RegInfo();
         tempReg4.put("register_registration_object_id",regObjId4);
-        tempReg4.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount4));
+        if(regObjType == 1){
+        tempReg4.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount4));}
         if(bChangeRegSN) tempReg4.put("register_serial_number", regObjId4);//区分同一账户多次登记
         mapAddrRegObjId.put(gdAccount4 + "0" + indexReg,regObjId4);//方便后面测试验证
 
@@ -384,7 +388,8 @@ public class GDV2_ShareRecycle_UniqueId_Test {
         String regObjId1 = "5" + mapAccAddr.get(gdAccount1) + Random(6);// + "_" + indexReg;
         Map tempReg1 = gdBF.init05RegInfo();
         tempReg1.put("register_registration_object_id",regObjId1);
-        tempReg1.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount1));
+        if(regObjType == 1){
+        tempReg1.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount1));}
         if(bChangeRegSN) tempReg1.put("register_serial_number", regObjId1);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount1 + "0" + indexReg,regObjId1);//方便后面测试验证
 
@@ -392,21 +397,24 @@ public class GDV2_ShareRecycle_UniqueId_Test {
         String regObjId2 = "5" + mapAccAddr.get(gdAccount2) + Random(6);// + "_" + indexReg;
         Map tempReg2 = gdBF.init05RegInfo();
         tempReg2.put("register_registration_object_id",regObjId2);
-        tempReg2.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount2));
+        if(regObjType == 1){
+        tempReg2.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount2));}
         if(bChangeRegSN) tempReg2.put("register_serial_number", regObjId2);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount2 + "0" + indexReg,regObjId2);//方便后面测试验证
 
         String regObjId3 = "5" + mapAccAddr.get(gdAccount3) + Random(6);// + "_" + indexReg;
         Map tempReg3 = gdBF.init05RegInfo();
         tempReg3.put("register_registration_object_id",regObjId3);
-        tempReg3.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount3));
+        if(regObjType == 1){
+        tempReg3.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount3));}
         if(bChangeRegSN) tempReg3.put("register_serial_number", regObjId3);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount3 + "0" + indexReg,regObjId3);//方便后面测试验证
 
         String regObjId4 = "5" + mapAccAddr.get(gdAccount4) + Random(6);// + "_" + indexReg;
         Map tempReg4 = gdBF.init05RegInfo();
         tempReg4.put("register_registration_object_id",regObjId4);
-        tempReg4.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount4));
+        if(regObjType == 1){
+        tempReg4.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount4));}
         if(bChangeRegSN) tempReg4.put("register_serial_number", regObjId4);//区分同一账户多次登记
         mapAddrRegObjId.put(gdAccount4 + "0" + indexReg,regObjId4);//方便后面测试验证
 
@@ -656,7 +664,8 @@ public class GDV2_ShareRecycle_UniqueId_Test {
         String regObjId1 = "5" + mapAccAddr.get(gdAccount1) + Random(128);// + "_" + indexReg;
         Map tempReg1 = gdBF.init05RegInfo();
         tempReg1.put("register_registration_object_id",regObjId1);
-        tempReg1.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount1));
+        if(regObjType == 1){
+        tempReg1.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount1));}
         if(bChangeRegSN) tempReg1.put("register_serial_number", regObjId1);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount1 + "0" + indexReg,regObjId1);//方便后面测试验证
 
@@ -664,21 +673,24 @@ public class GDV2_ShareRecycle_UniqueId_Test {
         String regObjId2 = "5" + mapAccAddr.get(gdAccount2) + Random(6);// + "_" + indexReg;
         Map tempReg2 = gdBF.init05RegInfo();
         tempReg2.put("register_registration_object_id",regObjId2);
-        tempReg2.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount2));
+        if(regObjType == 1){
+        tempReg2.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount2));}
         if(bChangeRegSN) tempReg2.put("register_serial_number", regObjId2);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount2 + "0" + indexReg,regObjId2);//方便后面测试验证
 
         String regObjId3 = "5" + mapAccAddr.get(gdAccount3) + Random(6);// + "_" + indexReg;
         Map tempReg3 = gdBF.init05RegInfo();
         tempReg3.put("register_registration_object_id",regObjId3);
-        tempReg3.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount3));
+        if(regObjType == 1){
+        tempReg3.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount3));}
         if(bChangeRegSN) tempReg3.put("register_serial_number", regObjId3);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount3 + "0" + indexReg,regObjId3);//方便后面测试验证
 
         String regObjId4 = "5" + mapAccAddr.get(gdAccount4) + Random(6);// + "_" + indexReg;
         Map tempReg4 = gdBF.init05RegInfo();
         tempReg4.put("register_registration_object_id",regObjId4);
-        tempReg4.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount4));
+        if(regObjType == 1){
+        tempReg4.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount4));}
         if(bChangeRegSN) tempReg4.put("register_serial_number", regObjId4);//区分同一账户多次登记
         mapAddrRegObjId.put(gdAccount4 + "0" + indexReg,regObjId4);//方便后面测试验证
 
@@ -769,20 +781,23 @@ public class GDV2_ShareRecycle_UniqueId_Test {
         //重复执行 使用上次的uuid
         regObjId1 = "5" + mapAccAddr.get(gdAccount1) + Random(6); //设置id长度正常 使得报送可以成功
         tempReg1.put("register_registration_object_id",regObjId1);
-        tempReg1.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount1));
+        if(regObjType == 1){
+        tempReg1.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount1));}
         if(bChangeRegSN) tempReg1.put("register_serial_number", regObjId1);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount1 + "0" + indexReg,regObjId1);//方便后面测试验证
 
         //更新数据
         regObjId2 = "5" + mapAccAddr.get(gdAccount2) + Random(6);// + "_" + indexReg;
         tempReg2.put("register_registration_object_id",regObjId2);
-        tempReg2.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount2));
+        if(regObjType == 1){
+        tempReg2.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount2));}
         if(bChangeRegSN) tempReg2.put("register_serial_number", regObjId2);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount2 + "0" + indexReg,regObjId2);//方便后面测试验证
 
         response= gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList4,remark);
         assertEquals("200",JSONObject.fromObject(response).getString("state"));
 
+        sleepAndSaveInfo(1000);//理论上不需要加这个时间
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         String txDetail = store.GetTxDetail(txId);
         assertEquals("200", JSONObject.fromObject(txDetail).getString("state"));
@@ -938,7 +953,8 @@ public class GDV2_ShareRecycle_UniqueId_Test {
         String regObjId1 = "5" + mapAccAddr.get(gdAccount1) + Random(128);// + "_" + indexReg;
         Map tempReg1 = gdBF.init05RegInfo();
         tempReg1.put("register_registration_object_id",regObjId1);
-        tempReg1.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount1));
+        if(regObjType == 1){
+        tempReg1.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount1));}
         if(bChangeRegSN) tempReg1.put("register_serial_number", regObjId1);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount1 + "0" + indexReg,regObjId1);//方便后面测试验证
 
@@ -946,21 +962,24 @@ public class GDV2_ShareRecycle_UniqueId_Test {
         String regObjId2 = "5" + mapAccAddr.get(gdAccount2) + Random(6);// + "_" + indexReg;
         Map tempReg2 = gdBF.init05RegInfo();
         tempReg2.put("register_registration_object_id",regObjId2);
-        tempReg2.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount2));
+        if(regObjType == 1){
+        tempReg2.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount2));}
         if(bChangeRegSN) tempReg2.put("register_serial_number", regObjId2);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount2 + "0" + indexReg,regObjId2);//方便后面测试验证
 
         String regObjId3 = "5" + mapAccAddr.get(gdAccount3) + Random(6);// + "_" + indexReg;
         Map tempReg3 = gdBF.init05RegInfo();
         tempReg3.put("register_registration_object_id",regObjId3);
-        tempReg3.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount3));
+        if(regObjType == 1){
+        tempReg3.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount3));}
         if(bChangeRegSN) tempReg3.put("register_serial_number", regObjId3);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount3 + "0" + indexReg,regObjId3);//方便后面测试验证
 
         String regObjId4 = "5" + mapAccAddr.get(gdAccount4) + Random(6);// + "_" + indexReg;
         Map tempReg4 = gdBF.init05RegInfo();
         tempReg4.put("register_registration_object_id",regObjId4);
-        tempReg4.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount4));
+        if(regObjType == 1){
+        tempReg4.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount4));}
         if(bChangeRegSN) tempReg4.put("register_serial_number", regObjId4);//区分同一账户多次登记
         mapAddrRegObjId.put(gdAccount4 + "0" + indexReg,regObjId4);//方便后面测试验证
 
@@ -1044,14 +1063,16 @@ public class GDV2_ShareRecycle_UniqueId_Test {
         //重复执行 使用上次的uuid
         regObjId1 = "5" + mapAccAddr.get(gdAccount1) + Random(6); //设置id长度正常 使得报送可以成功
         tempReg1.put("register_registration_object_id",regObjId1);
-        tempReg1.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount1));
+        if(regObjType == 1){
+        tempReg1.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount1));}
         if(bChangeRegSN) tempReg1.put("register_serial_number", regObjId1);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount1 + "0" + indexReg,regObjId1);//方便后面测试验证
 
         //更新数据
         regObjId2 = "5" + mapAccAddr.get(gdAccount2) + Random(6);// + "_" + indexReg;
         tempReg2.put("register_registration_object_id",regObjId2);
-        tempReg2.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount2));
+        if(regObjType == 1){
+        tempReg2.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount2));}
         if(bChangeRegSN) tempReg2.put("register_serial_number", regObjId2);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount2 + "0" + indexReg,regObjId2);//方便后面测试验证
 
@@ -1215,7 +1236,8 @@ public class GDV2_ShareRecycle_UniqueId_Test {
         String regObjId1 = "5" + mapAccAddr.get(gdAccount1) + Random(6);// + "_" + indexReg;
         Map tempReg1 = gdBF.init05RegInfo();
         tempReg1.put("register_registration_object_id",regObjId1);
-        tempReg1.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount1));
+        if(regObjType == 1){
+        tempReg1.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount1));}
         if(bChangeRegSN) tempReg1.put("register_serial_number", regObjId1);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount1 + "0" + indexReg,regObjId1);//方便后面测试验证
 
@@ -1223,21 +1245,24 @@ public class GDV2_ShareRecycle_UniqueId_Test {
         String regObjId2 = "5" + mapAccAddr.get(gdAccount2) + Random(6);// + "_" + indexReg;
         Map tempReg2 = gdBF.init05RegInfo();
         tempReg2.put("register_registration_object_id",regObjId2);
-        tempReg2.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount2));
+        if(regObjType == 1){
+        tempReg2.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount2));}
         if(bChangeRegSN) tempReg2.put("register_serial_number", regObjId2);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount2 + "0" + indexReg,regObjId2);//方便后面测试验证
 
         String regObjId3 = "5" + mapAccAddr.get(gdAccount3) + Random(6);// + "_" + indexReg;
         Map tempReg3 = gdBF.init05RegInfo();
         tempReg3.put("register_registration_object_id",regObjId3);
-        tempReg3.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount3));
+        if(regObjType == 1){
+        tempReg3.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount3));}
         if(bChangeRegSN) tempReg3.put("register_serial_number", regObjId3);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount3 + "0" + indexReg,regObjId3);//方便后面测试验证
 
         String regObjId4 = "5" + mapAccAddr.get(gdAccount4) + Random(6);// + "_" + indexReg;
         Map tempReg4 = gdBF.init05RegInfo();
         tempReg4.put("register_registration_object_id",regObjId4);
-        tempReg4.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount4));
+        if(regObjType == 1){
+        tempReg4.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount4));}
         if(bChangeRegSN) tempReg4.put("register_serial_number", regObjId4);//区分同一账户多次登记
         mapAddrRegObjId.put(gdAccount4 + "0" + indexReg,regObjId4);//方便后面测试验证
 
@@ -1333,7 +1358,8 @@ public class GDV2_ShareRecycle_UniqueId_Test {
         String regObjId1 = "5" + mapAccAddr.get(gdAccount1) + Random(6);// + "_" + indexReg;
         Map tempReg1 = gdBF.init05RegInfo();
         tempReg1.put("register_registration_object_id",regObjId1);
-        tempReg1.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount1));
+        if(regObjType == 1){
+        tempReg1.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount1));}
         if(bChangeRegSN) tempReg1.put("register_serial_number", regObjId1);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount1 + "0" + indexReg,regObjId1);//方便后面测试验证
 
@@ -1341,21 +1367,24 @@ public class GDV2_ShareRecycle_UniqueId_Test {
         String regObjId2 = "5" + mapAccAddr.get(gdAccount2) + Random(6);// + "_" + indexReg;
         Map tempReg2 = gdBF.init05RegInfo();
         tempReg2.put("register_registration_object_id",regObjId2);
-        tempReg2.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount2));
+        if(regObjType == 1){
+        tempReg2.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount2));}
         if(bChangeRegSN) tempReg2.put("register_serial_number", regObjId2);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount2 + "0" + indexReg,regObjId2);//方便后面测试验证
 
         String regObjId3 = "5" + mapAccAddr.get(gdAccount3) + Random(6);// + "_" + indexReg;
         Map tempReg3 = gdBF.init05RegInfo();
         tempReg3.put("register_registration_object_id",regObjId3);
-        tempReg3.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount3));
+        if(regObjType == 1){
+        tempReg3.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount3));}
         if(bChangeRegSN) tempReg3.put("register_serial_number", regObjId3);//区分同一账户多次登记//
         mapAddrRegObjId.put(gdAccount3 + "0" + indexReg,regObjId3);//方便后面测试验证
 
         String regObjId4 = "5" + mapAccAddr.get(gdAccount4) + Random(6);// + "_" + indexReg;
         Map tempReg4 = gdBF.init05RegInfo();
         tempReg4.put("register_registration_object_id",regObjId4);
-        tempReg4.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount4));
+        if(regObjType == 1){
+        tempReg4.put("register_subject_account_ref","SH" + mapAccAddr.get(gdAccount4));}
         if(bChangeRegSN) tempReg4.put("register_serial_number", regObjId4);//区分同一账户多次登记
         mapAddrRegObjId.put(gdAccount4 + "0" + indexReg,regObjId4);//方便后面测试验证
 

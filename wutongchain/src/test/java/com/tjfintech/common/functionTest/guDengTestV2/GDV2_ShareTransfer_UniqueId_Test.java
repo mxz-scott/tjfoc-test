@@ -117,7 +117,7 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        register_event_type = "2";//交易登记
+        register_event_type = 2;//交易登记
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
         String txRpObjId = "txReport" + Random(6);
@@ -136,10 +136,12 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         Map toNow = gdBF.init05RegInfo();
 
         fromNow.put("register_registration_object_id",tempObjIdFrom);
-        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);
+        if(regObjType == 1){
+        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);}
 
         toNow.put("register_registration_object_id",tempObjIdTo);
-        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);
+        if(regObjType == 1){
+        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);}
 
 //        fromNow.put("register_transaction_ref",txRpObjId);
 //        toNow.put("register_transaction_ref",txRpObjId);
@@ -347,7 +349,7 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        register_event_type = "2";//交易登记
+        register_event_type = 2;//交易登记
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
         String txRpObjId = "txReport" + Random(6);
@@ -366,10 +368,12 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         Map toNow = gdBF.init05RegInfo();
 
         fromNow.put("register_registration_object_id",tempObjIdFrom);
-        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);
+        if(regObjType == 1){
+        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);}
 
         toNow.put("register_registration_object_id",tempObjIdTo);
-        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);
+        if(regObjType == 1){
+        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);}
 
 //        fromNow.put("register_transaction_ref",txRpObjId);
 //        toNow.put("register_transaction_ref",txRpObjId);
@@ -597,7 +601,7 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        register_event_type = "2";//交易登记
+        register_event_type = 2;//交易登记
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
         String txRpObjId = "txReport" + Random(128);
@@ -616,10 +620,12 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         Map toNow = gdBF.init05RegInfo();
 
         fromNow.put("register_registration_object_id",tempObjIdFrom);
-        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);
+        if(regObjType == 1){
+        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);}
 
         toNow.put("register_registration_object_id",tempObjIdTo);
-        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);
+        if(regObjType == 1){
+        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);}
 
 //        fromNow.put("register_transaction_ref",txRpObjId);
 //        toNow.put("register_transaction_ref",txRpObjId);
@@ -669,9 +675,11 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         fromNow = gdBF.init05RegInfo();
         toNow = gdBF.init05RegInfo();
         fromNow.put("register_registration_object_id",tempObjIdFrom);
-        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);
+        if(regObjType == 1){
+        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);}
         toNow.put("register_registration_object_id",tempObjIdTo);
-        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);
+        if(regObjType == 1){
+        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);}
 
         response= gd.GDShareTransfer(keyId,fromAddr,transferAmount,toAddr,shareProperty,eqCode,txInfo,fromNow,toNow);
         String txId = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
@@ -836,7 +844,7 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        register_event_type = "2";//交易登记
+        register_event_type = 2;//交易登记
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
         String txRpObjId = "txReport" + Random(6);
@@ -855,10 +863,12 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         Map toNow = gdBF.init05RegInfo();
 
         fromNow.put("register_registration_object_id",tempObjIdFrom);
-        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);
+        if(regObjType == 1){
+        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);}
 
         toNow.put("register_registration_object_id",tempObjIdTo);
-        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);
+        if(regObjType == 1){
+        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);}
 
 //        fromNow.put("register_transaction_ref",txRpObjId);
 //        toNow.put("register_transaction_ref",txRpObjId);
@@ -958,7 +968,7 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        register_event_type = "2";//交易登记
+        register_event_type = 2;//交易登记
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
         String txRpObjId = "txReport" + Random(6);
@@ -977,10 +987,12 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         Map toNow = gdBF.init05RegInfo();
 
         fromNow.put("register_registration_object_id",tempObjIdFrom);
-        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);
+        if(regObjType == 1){
+        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);}
 
         toNow.put("register_registration_object_id",tempObjIdTo);
-        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);
+        if(regObjType == 1){
+        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);}
 
 //        fromNow.put("register_transaction_ref",txRpObjId);
 //        toNow.put("register_transaction_ref",txRpObjId);
@@ -1030,9 +1042,11 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         fromNow = gdBF.init05RegInfo();
         toNow = gdBF.init05RegInfo();
         fromNow.put("register_registration_object_id",tempObjIdFrom);
-        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);
+        if(regObjType == 1){
+        fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);}
         toNow.put("register_registration_object_id",tempObjIdTo);
-        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);
+        if(regObjType == 1){
+        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);}
 
         response = gd.GDShareTransfer(keyId,fromAddr,transferAmount,toAddr,shareProperty,eqCode,txInfo,fromNow,toNow);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));

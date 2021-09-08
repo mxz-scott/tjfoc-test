@@ -38,7 +38,7 @@ public class GDV2_SceneTest_LockUnLock {
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
-        register_event_type = "1";
+        register_event_type = 1;
     }
 
     @Before
@@ -267,7 +267,7 @@ public class GDV2_SceneTest_LockUnLock {
         GDBeforeCondition gdBF = new GDBeforeCondition();
 
         String bizNoTemp = "2000" + Random(12);
-        uf.lock(bizNoTemp, gdAccount1, gdEquityCode, 500, 0, "2021-09-02", true);
+        uf.lock(bizNoTemp, gdAccount1, gdEquityCode, 500, 0, "2025-09-02", true);
 
         //检查账户余额 总股权无变更
         response = gd.GDGetShareHolderInfo(gdContractAddress, gdAccClientNo1);

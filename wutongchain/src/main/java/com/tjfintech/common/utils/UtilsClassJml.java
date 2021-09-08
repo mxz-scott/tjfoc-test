@@ -13,7 +13,7 @@ public class UtilsClassJml {
     TestBuilder testBuilder = TestBuilder.getInstance();
     Jml jml = testBuilder.getJml();
 
-    public static String JMLADD = "http://dev-env.wutongchain.com:57626";
+    public static String JMLADD = "http://dev-env.wutongchain.com:48090";
 
     public static String subjectType = "natural";//自然人
     public static String bankId = "";

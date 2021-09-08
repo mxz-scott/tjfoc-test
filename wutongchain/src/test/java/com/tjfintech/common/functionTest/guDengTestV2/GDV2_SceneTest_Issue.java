@@ -46,7 +46,7 @@ public class GDV2_SceneTest_Issue {
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();
         gdBefore.gdCreateAccout();
-        register_event_type = "1";
+        register_event_type = 1;
     }
     @AfterClass
     public static void endSet()throws Exception{
@@ -327,7 +327,8 @@ public class GDV2_SceneTest_Issue {
             mapChkKeys.put("operationType","create");
 
             Map mapKeyUpdate = new HashMap();
-            mapKeyUpdate.put("register_subject_account_ref","SH" + mapAccAddr.get(tempAddr));
+            if(regObjType == 1){
+            mapKeyUpdate.put("register_subject_account_ref","SH" + mapAccAddr.get(tempAddr));}
 
             String json = JSON.toJSONString(mapKeyUpdate);
             mapChkKeys.put("updateMap",json);
@@ -454,7 +455,8 @@ public class GDV2_SceneTest_Issue {
             mapChkKeys.put("operationType","create");
 
             Map mapKeyUpdate = new HashMap();
-            mapKeyUpdate.put("register_subject_account_ref","SH" + mapAccAddr.get(tempAddr));
+            if(regObjType == 1){
+            mapKeyUpdate.put("register_subject_account_ref","SH" + mapAccAddr.get(tempAddr));}
 
             String json = JSON.toJSONString(mapKeyUpdate);
             mapChkKeys.put("updateMap",json);
@@ -507,7 +509,8 @@ public class GDV2_SceneTest_Issue {
             mapChkKeys.put("operationType","create");
 
             Map mapKeyUpdate = new HashMap();
-            mapKeyUpdate.put("register_subject_account_ref","SH" + mapAccAddr.get(tempAddr));
+            if(regObjType == 1){
+            mapKeyUpdate.put("register_subject_account_ref","SH" + mapAccAddr.get(tempAddr));}
 
             String json = JSON.toJSONString(mapKeyUpdate);
             mapChkKeys.put("updateMap",json);
@@ -748,7 +751,7 @@ public class GDV2_SceneTest_Issue {
     @Test
     public void issueStepTimesWithoutRegObjectID()throws Exception{
         int nRegTimes = 100;//100
-        int nRegStep = 200;//200
+        int nRegStep = 5;//200
         int yRegStep =1;
         store.GetHeight();
         mapAddrRegObjId.clear(); //先清空map 这样后面map中拿到的就是此次发行的登记对象标识

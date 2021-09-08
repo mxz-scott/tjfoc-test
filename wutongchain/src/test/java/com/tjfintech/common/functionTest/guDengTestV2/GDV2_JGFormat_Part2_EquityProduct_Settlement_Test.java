@@ -82,7 +82,7 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
     public void resetVar(){
 
 
-        register_event_type = "1";//非交易登记
+        register_event_type = 1;//非交易登记
         tempsubject_investor_qualification_certifier_ref =subject_investor_qualification_certifier_ref;
         tempregister_transaction_ref = register_transaction_ref;
     }
@@ -370,7 +370,7 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
         int shareProperty = 0;
         String eqCode = gdEquityCode;
 
-        register_event_type = "2";//交易登记
+        register_event_type = 2;//交易登记
         //交易报告数据
         Map txInfo = gdBF.init04TxInfo();
         String txRpObjId = "txReport" + Random(6);
@@ -597,7 +597,7 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
         String query2 = gd.GDMainSubjectQuery(gdContractAddress,gdCompanyID);
 //        BigDecimal totalShares = new BigDecimal(JSONObject.fromObject(query2).getJSONObject("data").getString("subject_total_share_capital"));
 
-        register_event_type = "2";//非交易登记
+        register_event_type = 2;//非交易登记
 
         String eqCode = gdEquityCode;
         String reason = "股份分红";

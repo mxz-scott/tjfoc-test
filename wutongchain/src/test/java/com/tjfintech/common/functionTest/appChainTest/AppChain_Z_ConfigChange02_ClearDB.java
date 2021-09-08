@@ -1,7 +1,5 @@
 package com.tjfintech.common.functionTest.appChainTest;
 
-import com.alibaba.fastjson.JSON;
-import com.tjfintech.common.BeforeCondition;
 import com.tjfintech.common.CommonFunc;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.MgToolCmd;
@@ -10,15 +8,9 @@ import com.tjfintech.common.functionTest.mixTestWithConfigChange.TestMgTool;
 import com.tjfintech.common.utils.SubLedgerCmd;
 import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassApp.*;
@@ -41,6 +33,15 @@ public class AppChain_Z_ConfigChange02_ClearDB {
     public static String ledgerId2 = "";
     public static String ledgerId3 = "";
     public static String ledgerId4 = "";
+
+//    @BeforeClass
+    public static void clearPeerDB()throws Exception{
+        UtilsClass utilsClass = new UtilsClass();
+        //设置节点 清空db数据 并重启
+        utilsClass.setAndRestartPeerList(clearPeerDB);
+        //重启SDK
+        utilsClass.setAndRestartSDK();
+    }
 
 //    @Before
     public void clearData()throws Exception{
@@ -141,7 +142,7 @@ public class AppChain_Z_ConfigChange02_ClearDB {
         //可退出
         String respQuit = mgToolCmd.quitPeer(PEER1IP + ":" + PEER1RPCPort,PEER2IP);
         assertEquals(true,respQuit.contains(checkStr));
-        sleepAndSaveInfo(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME);
         testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,2);
 
         //可变更
@@ -200,7 +201,7 @@ public class AppChain_Z_ConfigChange02_ClearDB {
         //可退出
         String respQuit = mgToolCmd.quitPeer(PEER1IP + ":" + PEER1RPCPort,PEER2IP);
         assertEquals(true,respQuit.contains(checkStr));
-        sleepAndSaveInfo(SLEEPTIME/2);
+        sleepAndSaveInfo(SLEEPTIME);
         testMgTool.queryPeerListNo(PEER1IP + ":" + PEER1RPCPort,2);
 
         //可变更
