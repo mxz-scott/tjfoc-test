@@ -59,7 +59,7 @@ public class StableAutoTest {
 
 
     /**
-     * 稳定性测试
+     * 稳定性测试，节点内存是否溢出测试
      */
     @Test
     public void stableTest() throws Exception {
@@ -142,7 +142,7 @@ public class StableAutoTest {
 
 
     /**
-     * 稳定性测试， 是否丢交易测试
+     * 是否丢交易测试，节点内存是否溢出测试
      */
     @Test
     public void TxLostTest() throws Exception {
@@ -155,7 +155,7 @@ public class StableAutoTest {
         }
 
         int i = 0;
-        int loop = 10; // 循环次数
+        int loop = 10000; // 循环次数
         int[] total = new int[ids.length];
 
         commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
@@ -217,53 +217,7 @@ public class StableAutoTest {
 
     }
 
-    /**
-     计算链上TPS
-     */
-    @Test
-    public void CalculateAverageTPS() throws Exception {
-
-        int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
-        int startBlockHeight;
-
-        if (blockHeight > 100) {
-            startBlockHeight = blockHeight - 99;
-        }else {
-            startBlockHeight = 1;
-        }
-        //手动修改起始高度
-//        startBlockHeight = 1090;
-        int endBlockHeight = blockHeight;   //手动修改结束高度
-
-        int diff = endBlockHeight - startBlockHeight + 1;
-        int count = 0, total = 0;
-
-        for (int i = startBlockHeight; i <= endBlockHeight; i++) {
-
-
-            //获取区块中的交易个数
-            String[] txs = commonFunc.getTxsArray(i);
-            count = txs.length;
-
-            total = total + count;
-
-        }
-
-
-        String timestamp = JSONObject.fromObject(store.GetBlockByHeight(startBlockHeight)).getJSONObject("data").getJSONObject("header").getString("timestamp");
-        long blkTimeStamp1 = Long.parseLong(timestamp);
-        timestamp = JSONObject.fromObject(store.GetBlockByHeight(endBlockHeight)).getJSONObject("data").getJSONObject("header").getString("timestamp");
-        long blkTimeStamp2 = Long.parseLong(timestamp);
-
-        long timeDiff = (blkTimeStamp2 - blkTimeStamp1) / 1000;
-
-        log.info("区块数：" + diff);
-        log.info("交易总数：" + total);
-        log.info("测试时长：" + timeDiff + "秒");
-        log.info("链上TPS：" + total / timeDiff);
-
-    }
-
+ 
     /**
      * token api稳定性测试
      */
@@ -349,28 +303,8 @@ public class StableAutoTest {
     // 普通存证
     public int storeTest(String id) throws Exception {
         subLedger = id;
-        JSONObject fileInfo = new JSONObject();
-        JSONObject data = new JSONObject();
-
-        fileInfo.put("fileName", "201911041058.jpg");
-        fileInfo.put("fileSize", "298KB");
-        fileInfo.put("fileModel", "iphoneXR");
-        fileInfo.put("fileLongitude", 123.45784545);
-        fileInfo.put("fileStartTime", "1571901219");
-        fileInfo.put("fileFormat", "jpg");
-        fileInfo.put("fileLatitude", 31.25648);
-
-        data.put("projectCode", UtilsClass.Random(10));
-        data.put("waybillId", "1260");
-        data.put("fileInfo", fileInfo);
-        data.put("fileUrl", "/var/mobile/containers/data/111");
-        data.put("projectName", "测试006");
-        data.put("projectId", "1234");
-        data.put("fileType", "2");
-        data.put("fileId", "");
-        data.put("waybillNo", "y201911041032");
-        String Data = data.toString();
-
+        String Data = UtilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath
+                + "store/bigsize3.txt");
         String response = store.CreateStore(Data);
 
         return JSONObject.fromObject(response).getInt("state");
