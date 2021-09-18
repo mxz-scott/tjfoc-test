@@ -59,10 +59,10 @@ public class StableAutoTest {
 
 
     /**
-     * 稳定性测试，节点内存是否溢出测试
+     *  系统稳定性测试
      */
     @Test
-    public void stableTest() throws Exception {
+    public void SystemStableTest() throws Exception {
 
         String[] ids = getLedgerIDs();
         int ledgerNumber = ids.length;
@@ -145,7 +145,7 @@ public class StableAutoTest {
      * 是否丢交易测试，节点内存是否溢出测试
      */
     @Test
-    public void TxLostTest() throws Exception {
+    public void TxLost_OutOfMemoryTest() throws Exception {
         String[] ids = getLedgerIDs();
         int ledgerNumber = ids.length;
 
@@ -155,7 +155,7 @@ public class StableAutoTest {
         }
 
         int i = 0;
-        int loop = 10000; // 循环次数
+        int loop = 1000; // 循环次数
         int[] total = new int[ids.length];
 
         commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
@@ -166,20 +166,12 @@ public class StableAutoTest {
         while (i < loop) {
 
             for (int j = 0; j < ledgerNumber; j++) {
-                if ( storeTest(ids[j]) == 200 ){
+//                if ( storeTest(ids[j]) == 200 ){
+                if ( bigStoreTest(ids[j]) == 200 ){
                     total[j]++;
-                };
+                }
             }
-
-            for (int j = 0; j < ledgerNumber; j++) {
-                if( priStoreTest(ids[j]) == 200 ){
-                    total[j]++;
-                };
-            }
-
             i++;
-
-            Thread.sleep(200);
         }
 
         commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
@@ -217,7 +209,62 @@ public class StableAutoTest {
 
     }
 
- 
+
+
+    /**
+     *  节点内存是否溢出测试
+     */
+    @Test
+    public void tmp() throws Exception {
+
+        int i = 0;
+        int loop = 10000; // 循环次数
+
+        while (i < loop) {
+            bigStoreTest("") ;
+            i++;
+        }
+    }
+
+    /**
+     * 事件稳定性测试
+     */
+    @Test
+    public void EventStableTest() throws Exception {
+        String[] ids = getLedgerIDs();
+        int ledgerNumber = ids.length;
+
+        for (int j = 0; j < ledgerNumber; j++) {
+            subLedger = ids[j];
+        }
+
+        int i = 0;
+        int loop = 10000; // 循环次数
+        int[] total = new int[ids.length];
+
+        while (i < loop) {
+
+            for (int j = 0; j < ledgerNumber; j++) {
+                if ( storeTest(ids[j]) == 200 ){
+                    total[j]++;
+                };
+            }
+            i++;
+
+            Thread.sleep(250);
+            if ( i % 10 == 0) {
+                utilsClass.setAndRestartPeer(PEER4IP);
+            }
+        }
+
+        commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
+        Thread.sleep(SLEEPTIME);
+
+        syncFlag = true;
+        assertEquals("事件不稳定", storeTest(ids[0]), 200);
+
+    }
+
     /**
      * token api稳定性测试
      */
@@ -301,12 +348,41 @@ public class StableAutoTest {
     }
 
     // 普通存证
-    public int storeTest(String id) throws Exception {
+    public int bigStoreTest(String id) throws Exception {
         subLedger = id;
         String Data = UtilsClass.Random(10) + utilsClass.readStringFromFile(testDataPath
                 + "store/bigsize3.txt");
         String response = store.CreateStore(Data);
 
+        return JSONObject.fromObject(response).getInt("state");
+    }
+
+    // 普通存证
+    public int storeTest(String id) throws Exception {
+        subLedger = id;
+        JSONObject fileInfo = new JSONObject();
+        JSONObject data = new JSONObject();
+
+        fileInfo.put("fileName", "201911041058.jpg");
+        fileInfo.put("fileSize", "298KB");
+        fileInfo.put("fileModel", "iphoneXR");
+        fileInfo.put("fileLongitude", 123.45784545);
+        fileInfo.put("fileStartTime", "1571901219");
+        fileInfo.put("fileFormat", "jpg");
+        fileInfo.put("fileLatitude", 31.25648);
+
+        data.put("projectCode", UtilsClass.Random(10));
+        data.put("waybillId", "1260");
+        data.put("fileInfo", fileInfo);
+        data.put("fileUrl", "/var/mobile/containers/data/111");
+        data.put("projectName", "钰翔供应链测试006");
+        data.put("projectId", "1234");
+        data.put("fileType", "2");
+        data.put("fileId", "");
+        data.put("waybillNo", "y201911041032");
+        String Data = data.toString();
+
+        String response = store.CreateStore(Data);
         return JSONObject.fromObject(response).getInt("state");
     }
 
