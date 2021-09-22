@@ -10,9 +10,12 @@ public class SetTestEnv_dyy {
 
    @Test
     public void setEnvParam(){
-      SDKADD = "http://dev-env.wutongchain.com:48090";
-      rSDKADD = "http://dev-env.wutongchain.com:48090";
-      TOKENADD = "http://dev-env.wutongchain.com:48090";
+//      SDKADD = "http://dev-env.wutongchain.com:48090";
+//      rSDKADD = "http://dev-env.wutongchain.com:48090";
+//      TOKENADD = "http://dev-env.wutongchain.com:48090";
+      SDKADD = "http://10.1.5.162:8777";
+      rSDKADD = "http://10.1.5.162:8777";
+      TOKENADD = "http://10.1.5.162:8777";
       //设置测试环境使用的节点端口及部署目录信息
       PEER1IP = "10.1.5.162";
       PEER2IP = "10.1.5.243";

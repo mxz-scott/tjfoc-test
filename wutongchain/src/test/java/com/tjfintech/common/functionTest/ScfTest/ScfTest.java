@@ -49,7 +49,7 @@ public class ScfTest {
     public static void beforeConfig() throws Exception {
         ScfBeforeCondition bf = new ScfBeforeCondition();
         bf.B001_createPlatformAccount();
-        bf.Getcomments();
+//        bf.GetcommentsV2();
         bf.B002_createCoreCompanyAccount();
         bf.B003_installContracts();
 
@@ -73,7 +73,7 @@ public class ScfTest {
         String UID = "a"+UtilsClass.Random(4);
         String UID1 = "b"+UtilsClass.Random(4);
         //资产开立申请
-        String response1 = scf.IssuingApply(UID,AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
+        String response1 = scf.IssuingApply(UID,AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
@@ -152,7 +152,7 @@ public class ScfTest {
         String UID = "a"+UtilsClass.Random(4);
         String UID1 = "b"+UtilsClass.Random(4);
         //资产开立申请
-        String response1 = scf.IssuingApply(UID,AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
+        String response1 = scf.IssuingApply(UID,AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
@@ -181,7 +181,7 @@ public class ScfTest {
         String tokenType = UtilsClassScf.gettokenType(response);
         String UID = "a"+UtilsClass.Random(4);
         //资产开立
-        String response1 = scf.IssuingApply(UID,AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
+        String response1 = scf.IssuingApply(UID,AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
@@ -208,7 +208,7 @@ public class ScfTest {
         String UID1 = "b"+UtilsClass.Random(4);
         String UID2 = "c"+UtilsClass.Random(4);
         //资产开立申请
-        String response1 = scf.IssuingApply( UID,AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
+        String response1 = scf.IssuingApply( UID,AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
@@ -291,7 +291,7 @@ public class ScfTest {
         String UID1 = "b"+UtilsClass.Random(4);
         String UID2 = "c"+UtilsClass.Random(4);
         //资产开立申请
-        String response1 = scf.IssuingApply( UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
+        String response1 = scf.IssuingApply( UID, AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
@@ -319,14 +319,14 @@ public class ScfTest {
         assertThat(checking, containsString("success"));
 
         //授权供应商背景和贸易信息
-        String financeTxID = KLstoreHash;
-        ArrayList<String> kIDlist = new ArrayList<>();
-        kIDlist.add(supplyID1);
-        kIDlist.add(supplyID2);
-        String authorization = scf.FuncAuthorization(PlatformAddress, supplierMsg1, financeTxID, kIDlist, platformKeyID, platformPIN);
-        assertThat(authorization, containsString("200"));
-        assertThat(authorization, containsString("success"));
-        assertThat(authorization, containsString("data"));
+//        String financeTxID = KLstoreHash;
+//        ArrayList<String> kIDlist = new ArrayList<>();
+//        kIDlist.add(supplyID1);
+//        kIDlist.add(supplyID2);
+//        String authorization = scf.FuncAuthorization(PlatformAddress, supplierMsg1, financeTxID, kIDlist, platformKeyID, platformPIN);
+//        assertThat(authorization, containsString("200"));
+//        assertThat(authorization, containsString("success"));
+//        assertThat(authorization, containsString("data"));
 
         JSONObject SHjsonObject = JSONObject.fromObject(response3);
         String SHstoreHash = SHjsonObject.getString("data");
@@ -339,12 +339,12 @@ public class ScfTest {
         assertThat(checking1, containsString("success"));
 
         //查看授权信息
-        ArrayList<String> Msglist = new ArrayList<>();
-        Msglist.add(supplierMsg1);
-        String response4 = scf.FunGethistoryinfo(PlatformAddress, Msglist, platformKeyID, platformPIN);
-        assertThat(response4, containsString("200"));
-        assertThat(response4, containsString("success"));
-        assertThat(response4, containsString("data"));
+//        ArrayList<String> Msglist = new ArrayList<>();
+//        Msglist.add(supplierMsg1);
+//        String response4 = scf.FunGethistoryinfo(PlatformAddress, Msglist, platformKeyID, platformPIN);
+//        assertThat(response4, containsString("200"));
+//        assertThat(response4, containsString("success"));
+//        assertThat(response4, containsString("data"));
 
         //资产转让申请
         List<Map> list = new ArrayList<>(10);
@@ -378,7 +378,7 @@ public class ScfTest {
         String UID2 = "c"+UtilsClass.Random(4);
         String UID3 = "d"+UtilsClass.Random(4);
         //资产开立申请
-        String response1 = scf.IssuingApply( UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
+        String response1 = scf.IssuingApply( UID, AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
@@ -408,16 +408,16 @@ public class ScfTest {
         String newFromSubType = "0";
         String newToSubType = "b";
         String rzamount = "1";
-        String response4 = scf.FinacingApply(supplyAddress1, supplyID1, PIN, proof, tokenType, rzamount, subType, newFromSubType, newToSubType, supplyAddress2);
+        String response4 = scf.FinacingApply(supplyAddress1, supplyID1,companyID1, PIN, proof, tokenType, rzamount, subType, newFromSubType, newToSubType, supplyAddress2);
         assertThat(response4, containsString("200"));
         assertThat(response4, containsString("success"));
         assertThat(response4, containsString("data"));
         //融资试算
-        String timeLimit = "10";
-        String response5 = scf.FinacingTest(ZJFAddress, rzamount, timeLimit);
-        assertThat(response5, containsString("200"));
-        assertThat(response5, containsString("success"));
-        assertThat(response5, containsString("data"));
+//        String timeLimit = "10";
+//        String response5 = scf.FinacingTest(ZJFAddress, rzamount, timeLimit);
+//        assertThat(response5, containsString("200"));
+//        assertThat(response5, containsString("success"));
+//        assertThat(response5, containsString("data"));
         //融资申请反馈
         String applyNo = "7777";
         String state = "1";
@@ -482,7 +482,7 @@ public class ScfTest {
         String UID1 = "b"+UtilsClass.Random(4);
         String UID2 = "c"+UtilsClass.Random(4);
         //资产开立申请
-        String response1 = scf.IssuingApply(UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
+        String response1 = scf.IssuingApply(UID, AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
@@ -511,16 +511,16 @@ public class ScfTest {
         //融资申请
         String newFromSubType = "0";
         String newToSubType = "b";
-        String response4 = scf.FinacingApply(supplyAddress1, supplyID1, PIN, proof, tokenType, amount, subType, newFromSubType, newToSubType, supplyAddress2);
+        String response4 = scf.FinacingApply(supplyAddress1, supplyID1, companyID1, PIN, proof, tokenType, amount, subType, newFromSubType, newToSubType, supplyAddress2);
         assertThat(response4, containsString("200"));
         assertThat(response4, containsString("success"));
         assertThat(response4, containsString("data"));
         //融资试算
-        String timeLimit = "10";
-        String response5 = scf.FinacingTest(ZJFAddress, amount, timeLimit);
-        assertThat(response5, containsString("200"));
-        assertThat(response5, containsString("success"));
-        assertThat(response5, containsString("data"));
+//        String timeLimit = "10";
+//        String response5 = scf.FinacingTest(ZJFAddress, amount, timeLimit);
+//        assertThat(response5, containsString("200"));
+//        assertThat(response5, containsString("success"));
+//        assertThat(response5, containsString("data"));
         //融资申请反馈
         String applyNo = "7777";
         String state = "1";
@@ -538,7 +538,6 @@ public class ScfTest {
 
     /**
      * 开立-审核-签收-兑付申请-兑付试算-兑付反馈-兑付确认
-     * 兑付需要给清分机构和资金方合约里的方法everyone调用权限。
      */
     @Test
     public void Test008_PayingConfirm() throws Exception {
@@ -550,7 +549,7 @@ public class ScfTest {
         String UID1 = "b"+UtilsClass.Random(4);
         String UID2 = "c"+UtilsClass.Random(4);
         //资产开立申请
-        String response1 = scf.IssuingApply(UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
+        String response1 = scf.IssuingApply(UID, AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
@@ -578,7 +577,7 @@ public class ScfTest {
         assertThat(checking, containsString("success"));
 
         //兑付申请
-        String response4 = scf.PayingApply(tokenType, companyID1, comments);
+        String response4 = scf.PayingApply(tokenType, comments);
         assertThat(response4, containsString("200"));
         assertThat(response4, containsString("success"));
         assertThat(response4, containsString("data"));
@@ -600,7 +599,7 @@ public class ScfTest {
         //兑付确认
         List<Map> list = new ArrayList<>(10);
         List<Map> list1 = UtilsClassScf.paying(supplyAddress1, supplyID1, "0", "100", list);
-        String response9 = scf.PayingConfirm(UID2, PlatformAddress, QFJGAddress, companyID1, list1, platformKeyID, platformPIN, tokenType, comments);
+        String response9 = scf.PayingConfirmV2(UID2, PlatformAddress, QFJGAddress, list1, platformKeyID, platformPIN, tokenType, comments);
         assertThat(response9, containsString("200"));
         assertThat(response9, containsString("success"));
         assertThat(response9, containsString("data"));
@@ -616,11 +615,6 @@ public class ScfTest {
         assertThat(checking1, containsString("200"));
         assertThat(checking1, containsString("success"));
 
-//        String response10 = scf.getowneraddr(tokenType);
-//        assertThat(response10, containsString("200"));
-//        assertThat(response10, containsString("success"));
-//        assertThat(response10, containsString("\"address\":\"0000000000000000\""));
-//        assertThat(response10, containsString("\"value\":100"));
     }
 
     /**
@@ -640,7 +634,7 @@ public class ScfTest {
         String UID2 = "c"+UtilsClass.Random(4);
         String UID3 = "d"+UtilsClass.Random(4);
         //资产开立申请
-        String response1 = scf.IssuingApply(UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
+        String response1 = scf.IssuingApply(UID, AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
@@ -691,7 +685,7 @@ public class ScfTest {
         assertThat(checking1, containsString("200"));
         assertThat(checking1, containsString("success"));
         //资产兑付申请
-        String response6 = scf.PayingApply(tokenType, companyID1, comments);
+        String response6 = scf.PayingApply(tokenType,  comments);
         assertThat(response6, containsString("200"));
         assertThat(response6, containsString("success"));
         assertThat(response6, containsString("data"));
@@ -713,7 +707,7 @@ public class ScfTest {
         //兑付确认
         List<Map> list2 = UtilsClassScf.paying(supplyAddress1, supplyID1, "0", "99", list);
         List<Map> list3 = UtilsClassScf.paying(supplyAddress2, supplyID2, "n", "1", list2);
-        String response9 = scf.PayingConfirm(UID3, PlatformAddress, QFJGAddress, companyID1, list3, platformKeyID, platformPIN, tokenType, comments);
+        String response9 = scf.PayingConfirmV2(UID3, PlatformAddress, QFJGAddress, list3, platformKeyID, platformPIN, tokenType, comments);
         assertThat(response9, containsString("200"));
         assertThat(response9, containsString("success"));
         assertThat(response9, containsString("data"));
@@ -728,12 +722,6 @@ public class ScfTest {
         assertThat(checking2, containsString("200"));
         assertThat(checking2, containsString("success"));
 
-
-//        String response10 = scf.getowneraddr(tokenType);
-//        assertThat(response10, containsString("200"));
-//        assertThat(response10, containsString("success"));
-//        assertThat(response10, containsString("\"address\":\"0000000000000000\""));
-//        assertThat(response10, containsString("\"value\":100"));
     }
 
     /**
@@ -754,7 +742,7 @@ public class ScfTest {
         String UID2 = "c"+UtilsClass.Random(4);
         String UID3 = "d"+UtilsClass.Random(4);
         //资产开立申请,金额为1
-        String response1 = scf.IssuingApply(UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
+        String response1 = scf.IssuingApply(UID, AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
@@ -785,16 +773,16 @@ public class ScfTest {
         String newFromSubType = "0";
         String newToSubType = "b";
         String rzamount = "10";
-        String response4 = scf.FinacingApply(supplyAddress1, supplyID1, PIN, proof, tokenType, rzamount, subType, newFromSubType, newToSubType, supplyAddress2);
+        String response4 = scf.FinacingApply(supplyAddress1, supplyID1, companyID1, PIN, proof, tokenType, rzamount, subType, newFromSubType, newToSubType, supplyAddress2);
         assertThat(response4, containsString("200"));
         assertThat(response4, containsString("success"));
         assertThat(response4, containsString("data"));
         //融资试算
-        String timeLimit = "10";
-        String response5 = scf.FinacingTest(ZJFAddress, rzamount, timeLimit);
-        assertThat(response5, containsString("200"));
-        assertThat(response5, containsString("success"));
-        assertThat(response5, containsString("data"));
+//        String timeLimit = "10";
+//        String response5 = scf.FinacingTest(ZJFAddress, rzamount, timeLimit);
+//        assertThat(response5, containsString("200"));
+//        assertThat(response5, containsString("success"));
+//        assertThat(response5, containsString("data"));
         //融资申请反馈
         String applyNo = "7777";
         String msg = "receive";
@@ -820,7 +808,7 @@ public class ScfTest {
         assertThat(checking1, containsString("success"));
 
         //资产兑付申请
-        String response8 = scf.PayingApply(tokenType, companyID1, comments);
+        String response8 = scf.PayingApply(tokenType, comments);
         assertThat(response8, containsString("200"));
         assertThat(response8, containsString("success"));
         assertThat(response8, containsString("data"));
@@ -856,11 +844,6 @@ public class ScfTest {
         assertThat(checking2, containsString("200"));
         assertThat(checking2, containsString("success"));
 
-//        String response12 = scf.getowneraddr(tokenType);
-//        assertThat(response12, containsString("200"));
-//        assertThat(response12, containsString("success"));
-//        assertThat(response12, containsString("\"address\":\"0000000000000000\""));
-//        assertThat(response12, containsString("\"value\":1"));
     }
 
     /**
@@ -885,7 +868,7 @@ public class ScfTest {
         String UID3 = "d"+UtilsClass.Random(4);
         String UID4 = "e"+UtilsClass.Random(4);
         //资产开立申请
-        String response1 = scf.IssuingApply(UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
+        String response1 = scf.IssuingApply(UID, AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
@@ -938,16 +921,16 @@ public class ScfTest {
         String newFromSubType = "0";
         String newToSubType = "b";
         String rzamount = "10";
-        String response6 = scf.FinacingApply(supplyAddress2, supplyID2, PIN, rzproof, tokenType, rzamount, subType, newFromSubType, newToSubType, supplyAddress3);
+        String response6 = scf.FinacingApply(supplyAddress2, supplyID2, companyID1, PIN, rzproof, tokenType, rzamount, subType, newFromSubType, newToSubType, supplyAddress3);
         assertThat(response6, containsString("200"));
         assertThat(response6, containsString("success"));
         assertThat(response6, containsString("data"));
         //融资试算
-        String timeLimit = "10";
-        String response7 = scf.FinacingTest(ZJFAddress, rzamount, timeLimit);
-        assertThat(response7, containsString("200"));
-        assertThat(response7, containsString("success"));
-        assertThat(response7, containsString("data"));
+//        String timeLimit = "10";
+//        String response7 = scf.FinacingTest(ZJFAddress, rzamount, timeLimit);
+//        assertThat(response7, containsString("200"));
+//        assertThat(response7, containsString("success"));
+//        assertThat(response7, containsString("data"));
         //融资申请反馈
         String applyNo = "7777";
         String msg = "receive";
@@ -974,7 +957,7 @@ public class ScfTest {
         assertThat(checking2, containsString("success"));
 
         //资产兑付申请
-        String response10 = scf.PayingApply(tokenType, companyID1, comments);
+        String response10 = scf.PayingApply(tokenType, comments);
         assertThat(response10, containsString("200"));
         assertThat(response10, containsString("success"));
         assertThat(response10, containsString("data"));
@@ -1008,11 +991,6 @@ public class ScfTest {
         assertThat(checking3, containsString("200"));
         assertThat(checking3, containsString("success"));
 
-//         String response14 = scf.getowneraddr(tokenType);
-//         assertThat(response14, containsString("200"));
-//         assertThat(response14, containsString("success"));
-//         assertThat(response14, containsString("\"address\":\"0000000000000000\""));
-//         assertThat(response14, containsString("\"value\":100"));
     }
 
     /**
@@ -1021,7 +999,7 @@ public class ScfTest {
     @Test
     public void Test012_CreditAdjust() {
         String amount = "30000000.0";
-        String response1 = scf.CreditAdjust(AccountAddress, companyID2, amount);
+        String response1 = scf.CreditAdjust(AccountAddress, companyID1, amount);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
@@ -1064,7 +1042,7 @@ public class ScfTest {
         assertThat(response2, containsString("success"));
         assertThat(response2, containsString("data"));
         //资产开立申请
-        String response3 = scf.IssuingApply(UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
+        String response3 = scf.IssuingApply(UID, AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("success"));
         assertThat(response3, containsString("data"));
@@ -1112,7 +1090,7 @@ public class ScfTest {
         String UID3 = "b"+UtilsClass.Random(4);
         String UID4 = "b"+UtilsClass.Random(4);
         //资产开立申请
-        String response1 = scf.IssuingApply(UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
+        String response1 = scf.IssuingApply(UID, AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, amount);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
@@ -1142,7 +1120,7 @@ public class ScfTest {
         String newFromSubType = "0";
         String newToSubType = "b";
         String rzamount = "1";
-        String response4 = scf.FinacingApply(supplyAddress1, supplyID1, PIN, proof, tokenType, rzamount, subType, newFromSubType, newToSubType, supplyAddress2);
+        String response4 = scf.FinacingApply(supplyAddress1, supplyID1, companyID1, PIN, proof, tokenType, rzamount, subType, newFromSubType, newToSubType, supplyAddress2);
         assertThat(response4, containsString("200"));
         assertThat(response4, containsString("success"));
         assertThat(response4, containsString("data"));

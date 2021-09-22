@@ -130,7 +130,39 @@ public class JmlInterfaceTest {
         assertThat(response9, containsString("400"));
         assertThat(response9, containsString("查询用途只能为【放款审查、贷后审查、担保审查】"));
         assertThat(response9, containsString("null"));
-        
+
+    }
+
+    @Test
+    public void Test005_CreditloanFeedback () throws Exception {
+        //新增授权用户
+        Map subject = UtilsClassJml.subject("321027197508106015", "尹平");
+        String response1 = jml.AuthorizeAdd(subjectType, bankId, endTime, fileHash, subject);
+        assertThat(response1, containsString("200"));
+        assertThat(response1, containsString("success"));
+        assertThat(response1, containsString("data"));
+        String txId = gettxId(response1);
+        System.out.println("txId = " + txId);
+        //获取新增授权用户上链信息
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailType, SLEEPTIME);
+        String checking = store.GetTxDetail(txId);
+        assertThat(checking, containsString("200"));
+        assertThat(checking, containsString("success"));
+        //查询数据接口,requestId为空
+        String authId = getValueByKey(response1);
+        System.out.println("authId = " + authId);
+        String response2 = jml.CreditdataQuery(requestId, authId, personId, personName, purpose);
+        assertThat(response2, containsString("200"));
+        assertThat(response2, containsString("success"));
+        assertThat(response2, containsString("\"itemName\":\"网格数据\""));
+        assertThat(response2, containsString("\"itemName\":\"婚姻数据\""));
+        assertThat(response2, containsString("\"itemName\":\"户籍信息\""));
+        assertThat(response2, containsString("\"itemName\":\"用气信息\""));
+        assertThat(response2, containsString("\"itemName\":\"用水信息\""));
+        assertThat(response2, containsString("\"itemName\":\"车辆信息\""));
+        assertThat(response2, containsString("\"itemName\":\"社保缴纳\""));
+        assertThat(response2, containsString("\"itemName\":\"房屋权属\""));
+        assertThat(response2, containsString("\"itemName\":\"严重失信\""));
     }
 
 

@@ -1,5 +1,5 @@
 contract ZJFContract{
-    
+
     public string PutFeedback(string ID,string Data,string Msg){
         db_set(ID,Data)
         event("financingFeedback",Msg)
@@ -13,9 +13,9 @@ contract ZJFContract{
     }
 
     //融资试算
-    public double Test(double amount,double timeLimit){
-        double Num = 0.05*amount*timeLimit/365
-        print(Num)
-        return Num
-    }
+    // public double Test(double amount,double timeLimit){
+    //     double Num = 0.05*amount*timeLimit/365
+    //     print(Num)
+    //     return Num
+    // }
 }

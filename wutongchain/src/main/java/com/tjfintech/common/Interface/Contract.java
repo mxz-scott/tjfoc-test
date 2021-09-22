@@ -5,6 +5,7 @@ import java.util.Map;
 
 public interface Contract {
     String InstallWVM(String file,String category,String prikey) throws Exception;
+    String ScfInstallWVM(String file,String category,String prikey) throws Exception;
     String QueryWVM(String name,String version,String category,String method,String caller,List<?> args);
     String DestroyWVM(String name,String category)throws Exception;
     String SearchByKey(String key,String contractName);
