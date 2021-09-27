@@ -798,6 +798,17 @@ public class GDUnitFunc {
     }
 
 
+    //开户后挂牌登记模块封装
+    public void CreateAcc_ThenRegTestUnit(String type,Boolean bSetEmpty)throws Exception{
+                //挂牌机构开户
+//        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();
+//        createAccForEnterpriseSub(gdCompanyID,enSubInfo);
+        createAcc(gdCompanyID,true);
+
+        //机构挂牌登记
+        regTestUnit(type,bSetEmpty,gdCompanyID);
+    }
+
     //挂牌登记后开户模块封装
     public Map regTestUnit_ThenCreateAcc(String type,Boolean bSetEmpty)throws Exception{
         //机构挂牌登记

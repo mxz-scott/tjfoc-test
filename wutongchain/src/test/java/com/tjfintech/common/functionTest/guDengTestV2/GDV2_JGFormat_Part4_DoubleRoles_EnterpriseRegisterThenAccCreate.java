@@ -101,6 +101,12 @@ public class GDV2_JGFormat_Part4_DoubleRoles_EnterpriseRegisterThenAccCreate {
         uf.regTestUnit_ThenCreateAcc("4",false);
     }
 
+    //开户后登记
+    @Test
+    public void TCN021_CreateAccThenEnterpriseRegisterCheckFormat() throws Exception {
+        uf.CreateAcc_ThenRegTestUnit("4",false);
+    }
+
     public void TCN020_updateDoubleRolesSubInfo()throws Exception{
 
     }
