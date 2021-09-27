@@ -1,8 +1,8 @@
 contract AccountAPI {
     //平台方账号
     string Platform = "-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEtMRCo35CeNNyQ3M7HGnFkI9Ghcx1
-q8tQH+b2I3ahLnDzrMsN4rn8mdWPuctb+bu1UJm9Ie+g2/txgWUws2FKLg==
+MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEaX37pKpO7x6MuaD1PxRPqObpGnKN
+Pe3H6zWJrxMxKVg0fAw14PLTBPFangCqoiDAUC42hXyhCNvlf921BXgjLg==
 -----END PUBLIC KEY-----
 "
 

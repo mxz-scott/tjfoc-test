@@ -1,15 +1,15 @@
 contract AccountAPI {
     //平台方账号
     string Platform = "-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEtMRCo35CeNNyQ3M7HGnFkI9Ghcx1
-q8tQH+b2I3ahLnDzrMsN4rn8mdWPuctb+bu1UJm9Ie+g2/txgWUws2FKLg==
+MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEaX37pKpO7x6MuaD1PxRPqObpGnKN
+Pe3H6zWJrxMxKVg0fAw14PLTBPFangCqoiDAUC42hXyhCNvlf921BXgjLg==
 -----END PUBLIC KEY-----
 "
 
     //核心企业账号
     string CoreEnterprise = "-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEEp+3b/rYurTyXviuR3O41Rr4emGA
-0m5pxKzcgIEmFVbnxfWQphtr6yiyh4EQssGydlVpVN4I2YauI+vh71HI5Q==
+MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEp8N2a4bVuxtrtUkyLzdQfv1B+yhL
++XNKtQfznoljqBIXF+awKfNVQozvPrMn9bShtqNXfZ0Bn1XtziKcSuku+g==
 -----END PUBLIC KEY-----
 "
 

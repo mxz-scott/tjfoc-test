@@ -20,8 +20,8 @@ public class UtilsClassJml {
     public static String fileHash = "sdds1c7a6305fa3b2a979bf81d760aec3fca866";
     public static String endTime = "2022-07-23 23:59:59";
     public static String requestId = "4a60b99d-fd0d-4dd9-a4c6-821eb14fa3bb";
-    public static String personId = "321088198905290028";
-    public static String personName = "张琪";
+    public static String personId = "";
+    public static String personName = "";
     public static String purpose = "放款审查";
 
 
