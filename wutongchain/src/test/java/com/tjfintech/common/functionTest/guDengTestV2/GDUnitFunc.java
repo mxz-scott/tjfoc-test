@@ -472,6 +472,44 @@ public class GDUnitFunc {
         return regList;
     }
 
+    public List<Map> getAllHolderListRegWithExistRegObjID(String equityCode ,String flowNo){
+        List<Map> regList = new ArrayList<>();
+        GDBeforeCondition gdBF = new GDBeforeCondition();
+
+        //获取股东列表
+        String Qry = gd.GDGetEnterpriseShareInfo(equityCode);
+        if(!JSONObject.fromObject(Qry).getString("state").equals("200")){
+//            regList.add(registerInfo);
+            return  regList;
+        }
+//        assertEquals("200",JSONObject.fromObject(Qry).getString("state"));
+
+        JSONArray holderList = JSONObject.fromObject(Qry).getJSONArray("data");
+
+        for(int i = 0;i < holderList.size(); i ++){
+            String tempAddr = JSONObject.fromObject(holderList.get(i)).getString("address");
+            if(tempAddr.equals(zeroAccount)) continue;
+            String tempPP = JSONObject.fromObject(holderList.get(i)).getString("shareProperty");
+            String cltNo = mapAccAddr.get(tempAddr).toString();
+//            String tempObjId = cltNo + Random(4);
+//            log.info("检查发行存证登记格式化及信息内容与传入一致:" + tempObjId);
+            Map tempReg =  gdBF.init05RegInfo();
+            log.info(tempAddr + tempPP);
+            String regObjId = mapAddrRegObjId.get(tempAddr + tempPP).toString();//获取已存在的
+//            GDBeforeCondition gdbf = new GDBeforeCondition();
+
+            tempReg.put("register_registration_object_id",regObjId);
+            if(regObjType == 1){
+                tempReg.put("register_subject_account_ref","SH" + cltNo);}
+            tempReg.put("register_product_ref",gdEquityCode);
+
+            mapAddrRegObjId.put(tempAddr + tempPP,regObjId);//方便后面测试验证
+            regList.add(tempReg);
+        }
+
+        return regList;
+    }
+
     public void calJGData()throws Exception{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String sdStart = sdf.format((new Date()).getTime()); // 时间戳转换日期

@@ -219,7 +219,65 @@ public class GDCommonFunc {
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static List<Map> gdConstructShareList(String address, double amount, int shareProperty){
+    public static List<Map> gdConstructShareListWithObjID(String address, long amount, int shareProperty,String regObjID){
+        register_product_ref = gdEquityCode;
+
+        String regObjId = regObjID;// + "_" + indexReg;
+        GDBeforeCondition gdbf = new GDBeforeCondition();
+        Map tempReg = gdbf.init05RegInfo();
+        tempReg.put("register_registration_object_id",regObjId);
+        if(regObjType == 1) {
+            tempReg.put("register_subject_account_ref", "SH" + mapAccAddr.get(address));
+        }
+        if(bChangeRegSN) tempReg.put("register_serial_number", regObjId);//区分同一账户多次登记
+
+        mapAddrRegObjId.put(address + shareProperty + indexReg,regObjId);//方便后面测试验证
+
+//        Map tempTxInfo = gdbf.init04TxInfo();
+//        tempTxInfo.put("transaction_original_owner_subject_ref",mapAccAddr.get(address));
+
+        Map<String,Object> shares = new HashMap<>();
+        shares.put("address",address);
+        shares.put("amount",amount);
+        shares.put("shareProperty",shareProperty);
+        shares.put("createTime",ts5);
+        shares.put("registerInformation",tempReg);
+//        shares.put("transactionReport",tempTxInfo);
+
+        List<Map> shareList = new ArrayList<>();
+        shareList.add(shares);
+        return shareList;
+    }
+    public static List<Map> gdConstructShareListWithObjID(String address, long amount, int shareProperty,String regObjID,List<Map> list){
+        String regObjId = regObjID;// + "_" + indexReg;
+        GDBeforeCondition gdbf = new GDBeforeCondition();
+        Map tempReg = gdbf.init05RegInfo();
+        tempReg.put("register_registration_object_id",regObjId);
+        if(regObjType == 1) {
+            tempReg.put("register_subject_account_ref", "SH" + mapAccAddr.get(address));
+        }
+        if(bChangeRegSN) tempReg.put("register_serial_number", regObjId);//区分同一账户多次登记
+
+        mapAddrRegObjId.put(address + shareProperty + indexReg,regObjId);//方便后面测试验证
+
+
+        List<Map> shareList = new ArrayList<>();
+        for(int i = 0 ; i < list.size() ; i++) {
+            shareList.add(list.get(i));
+        }
+        Map<String,Object> shares = new HashMap<>();
+        shares.put("address",address);
+        shares.put("amount",amount);
+        shares.put("shareProperty",shareProperty);
+        shares.put("createTime",ts5);
+        shares.put("registerInformation",tempReg);
+//        shares.put("transactionReport",tempTxInfo);
+
+        shareList.add(shares);
+        return shareList;
+    }
+
+    public static List<Map> gdConstructShareList(String address, long amount, int shareProperty){
         register_product_ref = gdEquityCode;
 
         String regObjId = "5" + mapAccAddr.get(address) + Random(6);// + "_" + indexReg;
@@ -256,7 +314,7 @@ public class GDCommonFunc {
     }
 
     //测试登记带全部参数场景
-    public static List<Map> gdConstructShareListFull(String address, double amount, int shareProperty){
+    public static List<Map> gdConstructShareListFull(String address, long amount, int shareProperty){
         register_product_ref = gdEquityCode;
 
         String regObjId = "5" + mapAccAddr.get(address) + Random(6);// + "_" + indexReg;
@@ -290,7 +348,7 @@ public class GDCommonFunc {
         return shareList;
     }
 
-    public static List<Map> gdConstructShareList(String address, double amount, int shareProperty,List<Map> list){
+    public static List<Map> gdConstructShareList(String address, long amount, int shareProperty,List<Map> list){
         String regObjId = "5" + mapAccAddr.get(address) + Random(6);// + "_" + indexReg;
 //        try {
 //            FileOperation fileOperation = new FileOperation();
@@ -326,7 +384,7 @@ public class GDCommonFunc {
     }
 
 
-    public static List<Map> gdConstructShareListWithRegMap(String address, double amount, int shareProperty,Map regMap){
+    public static List<Map> gdConstructShareListWithRegMap(String address, long amount, int shareProperty,Map regMap){
         Map<String,Object> shares = new HashMap<>();
         shares.put("address",address);
         shares.put("amount",amount);
@@ -339,7 +397,7 @@ public class GDCommonFunc {
         return shareList;
     }
 
-    public static List<Map> gdConstructShareListWithRegMap(String address, double amount, int shareProperty,Map regMap,List<Map> list){
+    public static List<Map> gdConstructShareListWithRegMap(String address, long amount, int shareProperty,Map regMap,List<Map> list){
         List<Map> shareList = new ArrayList<>();
         for(int i = 0 ; i < list.size() ; i++) {
             shareList.add(list.get(i));
@@ -375,7 +433,7 @@ public class GDCommonFunc {
 //        return shareList;
 //    }
 
-//    public static List<Map> gdConstructShareList2(String address, double amount, int shareProperty){
+//    public static List<Map> gdConstructShareList2(String address, long amount, int shareProperty){
 //        String regObjId = "5" + mapAccAddr.get(address) + Random(6);
 //        GDBeforeCondition gdbf = new GDBeforeCondition();
 //        Map tempReg = gdbf.init05RegInfo();
@@ -407,7 +465,7 @@ public class GDCommonFunc {
 //        return shareList;
 //    }
 //
-//    public static List<Map> gdConstructShareList2(String address, double amount, int shareProperty,List<Map> list){
+//    public static List<Map> gdConstructShareList2(String address, long amount, int shareProperty,List<Map> list){
 //        String regObjId = "5" + mapAccAddr.get(address) + Random(6);
 //        GDBeforeCondition gdbf = new GDBeforeCondition();
 //        Map tempReg = gdbf.init05RegInfo();
@@ -442,7 +500,7 @@ public class GDCommonFunc {
 //        return shareList;
 //    }
 
-    public static List<Map> gdConstructShareListN(String address, double amount, int shareProperty){
+    public static List<Map> gdConstructShareListN(String address, long amount, int shareProperty){
         GDBeforeConditionN gdbf = new GDBeforeConditionN();
         Map tempReg = gdbf.init05RegInfo();
         tempReg.remove("register_registration_object_id");
@@ -459,7 +517,7 @@ public class GDCommonFunc {
         return shareList;
     }
 
-    public static List<Map> gdConstructShareListN(String address, double amount, int shareProperty,List<Map> list){
+    public static List<Map> gdConstructShareListN(String address, long amount, int shareProperty,List<Map> list){
         GDBeforeConditionN gdbf = new GDBeforeConditionN();
         Map tempReg = gdbf.init05RegInfo();
         tempReg.remove("register_registration_object_id");
@@ -488,8 +546,8 @@ public class GDCommonFunc {
             if (dataShareList.get(i).toString().contains(zeroAccount))
                 continue;
             else {
-                double amount = JSONObject.fromObject(dataShareList.get(i)).getDouble("amount");
-                double lockAmount = JSONObject.fromObject(dataShareList.get(i)).getDouble("lockAmount");
+                long amount = JSONObject.fromObject(dataShareList.get(i)).getLong("amount");
+                long lockAmount = JSONObject.fromObject(dataShareList.get(i)).getLong("lockAmount");
                 String address = JSONObject.fromObject(dataShareList.get(i)).getString("address");
                 int shareProperty = JSONObject.fromObject(dataShareList.get(i)).getInt("shareProperty");
                 String sharePropertyCN = JSONObject.fromObject(dataShareList.get(i)).getString("sharePropertyCN");
@@ -499,7 +557,7 @@ public class GDCommonFunc {
         return getShareList;
     }
 
-    public static List<Map> gdConstructQueryShareList(String address, double amount, int shareProperty,double lockAmount,String sharePropertyCN, List<Map> list){
+    public static List<Map> gdConstructQueryShareList(String address, long amount, int shareProperty,double lockAmount,String sharePropertyCN, List<Map> list){
         //处理登记
         GDBeforeCondition gdbf = new GDBeforeCondition();
         Map tempReg = gdbf.init05RegInfo();
@@ -527,7 +585,7 @@ public class GDCommonFunc {
         return shareList;
     }
 
-    public static List<Map> gdConstructQueryShareListNoTxReport(String address, double amount, int shareProperty,
+    public static List<Map> gdConstructQueryShareListNoTxReport(String address, long amount, int shareProperty,
                                                                 double lockAmount,String sharePropertyCN, List<Map> list){
         //处理登记
         GDBeforeCondition gdbf = new GDBeforeCondition();

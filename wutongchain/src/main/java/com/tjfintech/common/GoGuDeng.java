@@ -192,6 +192,36 @@ public  class GoGuDeng implements GuDeng {
     }
 
     /***
+     * 股份分红 报送登记 不报送产品及交易报告数据 增加主体数据
+     * @param platformKeyId
+     * @param equityCode
+     * @param shareList
+     * @param reason
+     * @return
+     */
+    public String GDShareIncreaseNoProduct(String platformKeyId, String equityCode, List<Map> shareList, String reason){
+        Map<String, Object> map = new HashMap<>();
+        map.put("platformKeyId", platformKeyId);
+        map.put("equityCode", equityCode);
+        map.put("shareList", shareList);
+        map.put("reason", reason);
+        map.put("subjectObjectId", gdCompanyID);
+        map.put("subjectUpdateTime",ts1);
+
+        if(bUseUUID) {
+            //20210319 新增业务唯一标识
+            tempUUID = Random(26);
+            if (!busUUID.isEmpty()) tempUUID = busUUID;
+            map.put("uniqueId", tempUUID);
+        }
+
+        String result = PostTest.postMethod(SDKADD + "/equity/share/increase", map);
+        log.info(result);
+        return result;
+    }
+
+
+    /***
      * 股份增发
      * @param platformKeyId
      * @param equityCode
@@ -209,6 +239,7 @@ public  class GoGuDeng implements GuDeng {
         map.put("equityProductInfo", equityProductInfo);
         map.put("productUpdateTime",ts3);
         map.put("txCreateTime",ts4);
+        map.put("subjectObjectId", gdCompanyID);
 
         if(bUseUUID) {
             //20210319 新增业务唯一标识
@@ -242,6 +273,7 @@ public  class GoGuDeng implements GuDeng {
         map.put("productUpdateTime",ts3);
         map.put("txCreateTime",ts4);
         map.put("subjectUpdateTime",ts1);
+        map.put("subjectObjectId", gdCompanyID);
 
         if(bUseUUID) {
             //20210319 新增业务唯一标识
