@@ -93,18 +93,13 @@ contract platform {
 		Authority[] auths
         auths = json_to_obj<array(Authority)>(json)
 		int i = len(auths)
-        print(i)
+
         Authority auth
 		for(int j=0;j<i;j++){
             auth = auths[j]
             string key = auth.Key
 			string securityKey = auth.SecurityKey
             print(auth)
-            // print(key)
-			// print(securityKey)
-            // auth = auths[j]
-			// key = auth.Key
-			// securityKey = auth.SecurityKey
 			print(key)
 			print(securityKey)
 			db_set(key,securityKey)

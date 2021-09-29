@@ -19,7 +19,10 @@ import org.junit.runners.Suite;
         GDV2_AllFlowTest_Equity_URIStoreTxDetail.class,
         GDV2_AllFlowTest_Equity_WVMTxDetail.class,
 
-        GDV2_JGFormat_Part7_RepairData_Test.class,
+        GDV2_JGFormat_Part8_IncreaseNoProductTx_Test.class,
+        GDV2_JGFormat_Part9_RegObjAllowUpdate_Test.class,
+
+//        GDV2_JGFormat_Part7_RepairData_Test.class,
 
         GDV2_JGFormat_Part6_TransferNotSendData_Test.class,
 
@@ -55,7 +58,7 @@ import org.junit.runners.Suite;
         GDV2_ShareUnlock_UniqueId_Test.class,
         GDV2_ShareIncrease_UniqueId_Test.class,
         GDV2_ShareRecycle_UniqueId_Test.class,
-//        GDV2_ShareChangeBoard_UniqueId_Test.class,
+        GDV2_ShareChangeBoard_UniqueId_Test.class,
 
         GDV2_SceneTest_01.class,
         GDV2_SceneTest_02.class,

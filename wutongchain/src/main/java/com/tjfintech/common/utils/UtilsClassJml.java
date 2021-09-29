@@ -20,8 +20,8 @@ public class UtilsClassJml {
     public static String fileHash = "sdds1c7a6305fa3b2a979bf81d760aec3fca866";
     public static String endTime = "2022-07-23 23:59:59";
     public static String requestId = "4a60b99d-fd0d-4dd9-a4c6-821eb14fa3bb";
-    public static String personId = "321027197508106015";
-    public static String personName = "尹平";
+    public static String personId = "";
+    public static String personName = "";
     public static String purpose = "放款审查";
 
 
@@ -86,6 +86,26 @@ public class UtilsClassJml {
         amountMap.put("product", product);
 
         return amountMap;
+    }
+
+    public static String itemsId(String response2) {
+        Map<String, Object> parse = JSON.parseObject(response2, Map.class);
+        Object data = parse.get("items");
+        Map<String, Object> dataMap = JSON.parseObject(data.toString(), Map.class);
+        dataMap.put("\"totalItems\":9","\"errItems\":0");
+        Object items = dataMap.get("identity");
+        Map<String, Object> itemNameMap = JSON.parseObject(items.toString(), Map.class);
+        itemNameMap.put("网格数据","itemValue");
+        itemNameMap.put("户籍信息","itemValue");
+        itemNameMap.put("婚姻登记","itemValue");
+        itemNameMap.put("用气信息","itemValue");
+        itemNameMap.put("用水信息","itemValue");
+        itemNameMap.put("车辆登记信息","itemValue");
+        itemNameMap.put("社保缴纳","itemValue");
+        itemNameMap.put("房屋权属","itemValue");
+        itemNameMap.put("严重失信","itemValue");
+
+        return items.toString();
     }
 
 }

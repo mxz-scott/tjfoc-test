@@ -41,12 +41,12 @@ public class StoreTest {
         String storeHash = jsonObject.getString("data");
         JSONObject.fromObject(response).getInt("state");
         JSONObject.fromObject(response).getString("message");
-
-        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SHORTMEOUT);
-
         assertThat(response, containsString("200"));
         assertThat(response, containsString("success"));
+        commonFunc.sdkCheckTxOrSleep(storeHash,utilsClass.sdkGetTxDetailType,SHORTMEOUT);
 
+        String response2= store.GetTxDetail(storeHash);
+        assertThat(response2, containsString("200"));
     }
 
 

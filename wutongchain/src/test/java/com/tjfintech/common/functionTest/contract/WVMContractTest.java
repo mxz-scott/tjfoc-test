@@ -1051,4 +1051,17 @@ public class WVMContractTest {
     }
 
 
+    public String ScfwvmInstallTest(String wvmfile,String Prikey) throws Exception {
+        if(wvmfile == "") return contract.ScfInstallWVM("",category,Prikey);
+
+        String filePath = testDataPath + "wvm/" + wvmfile;
+        log.info("filepath "+ filePath);
+        String file = utilsClass.readInput(filePath).toString().trim();
+        String data = utilsClass.encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码
+        log.info("base64 data: " + data);
+        String response=contract.ScfInstallWVM(data,category,Prikey);
+        return response;
+    }
+
+
 }

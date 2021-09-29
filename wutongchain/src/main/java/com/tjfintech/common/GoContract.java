@@ -44,6 +44,7 @@ public class GoContract implements Contract {
         return result ;
     }
 
+
     /**安装docker智能合约
      *
      * @param name  合约名
@@ -255,6 +256,25 @@ public class GoContract implements Contract {
         String result = GetTest.doGet2(SDKADD + "/v2/tx/sc/search/getsmartcontractlist?" + SetURLExtParams(""));
         log.info(result);
         return result;
+    }
+
+
+    /**
+     * 安装Scfwvm合约
+     * @param file wvm合约文件名
+     * @param prikey 合约所有人的私钥，用于升级合约时的验证。仅wvm
+     * @return
+     * @throws Exception
+     */
+    public String ScfInstallWVM(String file,String category,String prikey) throws Exception{
+        Map<String,Object>map = new HashMap<>();
+        map.put("category","wvm");
+        if(!wvmVersion.isEmpty())       map.put("Version",wvmVersion);
+        map.put("file",file);
+
+        String result = PostTest.postMethod(SDKADD + "/scf/func/sc/install?" + SetURLExtParams(""),map);
+        log.info(result);
+        return result ;
     }
 
 

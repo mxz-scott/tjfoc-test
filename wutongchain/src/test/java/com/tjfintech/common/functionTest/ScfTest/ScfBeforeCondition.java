@@ -84,7 +84,7 @@ public class ScfBeforeCondition {
     public void B002_createCoreCompanyAccount() throws  Exception {
 
         //安装平台方合约
-        String response1 = wvm.wvmInstallTest("platform.wlang","use sdk prikey");
+        String response1 = wvm.ScfwvmInstallTest("platform.wlang","use sdk prikey");
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
         utilsClassScf.PlatformAddress = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
@@ -125,7 +125,7 @@ public class ScfBeforeCondition {
         fileOper.replace(tempWVMDir + wvmFile + ".wlang", "PlatformPubkey", platformPubkeyPem);
         fileOper.replace(tempWVMDir + wvmFile + "_temp.wlang", "CoreEnterprisePubkey", coreCompanyPubkeyPem);
 
-        String response1 = wvm.wvmInstallTest(wvmFile + "_temp_temp.wlang","use sdk prikey");
+        String response1 = wvm.ScfwvmInstallTest(wvmFile + "_temp_temp.wlang","use sdk prikey");
         String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
         utilsClassScf.AccountAddress = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
@@ -137,7 +137,7 @@ public class ScfBeforeCondition {
 
 
         //安装清分机构合约
-        response1 = wvm.wvmInstallTest("QFJG.wlang","use sdk prikey");
+        response1 = wvm.ScfwvmInstallTest("QFJG.wlang","use sdk prikey");
         txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
         utilsClassScf.QFJGAddress = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
@@ -147,7 +147,7 @@ public class ScfBeforeCondition {
         wvm.chkTxDetailRsp("200",txHash1);
 
         //安装资金方合约
-        response1 = wvm.wvmInstallTest("ZJF.wlang","use sdk prikey");
+        response1 = wvm.ScfwvmInstallTest("ZJF.wlang","use sdk prikey");
         txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
         utilsClassScf.ZJFAddress = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
 
@@ -203,20 +203,20 @@ public class ScfBeforeCondition {
         supplyID3 = JSONObject.fromObject(response3).getString("keyID");
         supplierMsg3 = JSONObject.fromObject(response3).getString("TxId");
     }
-    /***
-     * 获取comments
-     *
-     *
-     */
-    public void Getcomments() throws  Exception {
-
-        List<Map> list = new ArrayList<>(10);
-        log.info("$$$$$$$$$$$$$$$$$$$$"+platformPubkey);
-        List<Map> list1 = UtilsClassScf.Sendmsg("1", platformPubkey, list);
-        String comments0 = scf.SendMsg("finance","abc", platformKeyID,list1,"","","123");
-        comments = JSONObject.fromObject(comments0).getString("data");
-
-    }
+//    /***
+//     * 获取comments
+//     *
+//     *
+//     */
+//    public void Getcomments() throws  Exception {
+//
+//        List<Map> list = new ArrayList<>(10);
+//        log.info("$$$$$$$$$$$$$$$$$$$$"+platformPubkey);
+//        List<Map> list1 = UtilsClassScf.Sendmsg("1", platformPubkey, list);
+//        String comments0 = scf.SendMsg("finance","abc", platformKeyID,list1,"","","123");
+//        comments = JSONObject.fromObject(comments0).getString("data");
+//
+//    }
 
     /***
      * 获取commentsV2
@@ -224,8 +224,8 @@ public class ScfBeforeCondition {
     public void GetcommentsV2() throws  Exception {
         List<Map> list = new ArrayList<>(10);
         log.info("$$$$$$$$$$$$$$$$$$$$"+platformPubkey);
-        List<Map> list1 = UtilsClassScf.Sendmsg("sztj", platformPubkey, list);
-        String comments0 = scf.SendMsgV2("aaa","sztj",platformKeyID,list,"123");
+        List<Map> list1 = UtilsClassScf.SendMsgV2("sztj", platformPubkey, list);
+        String comments0 = scf.SendMsgV2("aaa","sztj",list,"123");
         comments = JSONObject.fromObject(comments0).getString("data");
     }
 

@@ -1,7 +1,8 @@
 contract QFJGContract{
      public string PutFeedback(string ID,string Data,string Msg){
-     print(ID)
-     print(Data)
+        print("清分机构反馈被调用")
+        print(ID)
+        print(Data)
         db_set(ID,Data)
         event("payFeedback",Msg)
         return "success"
@@ -9,7 +10,9 @@ contract QFJGContract{
 
     public string GetProofInfo(string ID){
         print("清分机构证明被调用")
+        print(ID)
         string tmp = db_get<string>(ID)
+        print(tmp)
         return tmp
     }
 }

@@ -44,7 +44,7 @@ public class ScfMultiInvalidTest {
     public static void beforeConfig() throws Exception {
         ScfBeforeCondition bf = new ScfBeforeCondition();
         bf.B001_createPlatformAccount();
-        bf.Getcomments();
+//        bf.Getcomments();
         bf.B002_createCoreCompanyAccount();
         bf.B003_installContracts();
 
@@ -65,7 +65,7 @@ public class ScfMultiInvalidTest {
         String UID2 = "b"+UtilsClass.Random(4);
 
         //资产开立申请
-        String response1 = scf.IssuingApply( UID, AccountAddress, companyID2, coreCompanyKeyID, PIN, tokentype, levelLimit, expireDate, supplyAddress1, "10");
+        String response1 = scf.IssuingApply( UID, AccountAddress, coreCompanyKeyID, PIN, tokentype, levelLimit, expireDate, supplyAddress1, "10");
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
@@ -94,7 +94,7 @@ public class ScfMultiInvalidTest {
         assertThat(checking, containsString("200"));
         assertThat(checking, containsString("success"));
         //资产开立申请
-        String response4 = scf.IssuingApply(UID2, AccountAddress, companyID2, coreCompanyKeyID, PIN, tokentype, levelLimit, expireDate, supplyAddress1, "10");
+        String response4 = scf.IssuingApply(UID2, AccountAddress, coreCompanyKeyID, PIN, tokentype, levelLimit, expireDate, supplyAddress1, "10");
         assertThat(response4, containsString("200"));
         //assertThat(response4, containsString("400"));
 //        assertThat(response4, containsString("error"));
@@ -116,7 +116,7 @@ public class ScfMultiInvalidTest {
         String UID2 = "c"+UtilsClass.Random(4);
         //资产开立申请
         //资产开立申请
-        String response1 = scf.IssuingApply(UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
+        String response1 = scf.IssuingApply(UID, AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
@@ -174,7 +174,7 @@ public class ScfMultiInvalidTest {
         String UID1 = "b"+UtilsClass.Random(4);
         String UID2 = ""+UtilsClass.Random(4);
         //资产开立申请
-        String response1 = scf.IssuingApply(UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
+        String response1 = scf.IssuingApply(UID, AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
@@ -232,7 +232,7 @@ public class ScfMultiInvalidTest {
         String UID1 = "b"+UtilsClass.Random(4);
         String UID2 = ""+UtilsClass.Random(4);
         //资产开立申请
-        String response1 = scf.IssuingApply(UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
+        String response1 = scf.IssuingApply(UID, AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
@@ -265,7 +265,7 @@ public class ScfMultiInvalidTest {
         String rzamount = "10";
         String proof = "123456";
         String subType = "0";
-        String response4 = scf.FinacingApply(supplyAddress1, supplyID1, PIN, proof, tokenType, rzamount, subType, newFromSubType,newToSubType, supplyAddress2);
+        String response4 = scf.FinacingApply(supplyAddress1, supplyID1, companyID2, PIN, proof, tokenType, rzamount, subType, newFromSubType,newToSubType, supplyAddress2);
         assertThat(response4, containsString("200"));
         assertThat(response4, containsString("success"));
         assertThat(response4, containsString("data"));
@@ -299,13 +299,13 @@ public class ScfMultiInvalidTest {
         String UID1 = "b"+UtilsClass.Random(4);
         String UID2 = "c"+UtilsClass.Random(4);
         //资产开立申请
-        String response1 = scf.IssuingApply(UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
+        String response1 = scf.IssuingApply(UID, AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
         assertThat(response1, containsString("data"));
         Thread.sleep(5000);
 
-        String response11= scf.IssuingApply(UID, AccountAddress, companyID1, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
+        String response11= scf.IssuingApply(UID, AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10");
         assertThat(response11, containsString("200"));
         assertThat(response11, containsString("success"));
         assertThat(response11, containsString("data"));

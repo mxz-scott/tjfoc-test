@@ -8,7 +8,7 @@ import java.util.Map;
 public interface Scf {
 
     String AccountCreate(String PlatformAddress,String platformKeyID, String PIN, String pubkey, String comments);
-    String IssuingApply( String UID, String AccountAddress, String companyID1, String coreCompanyKeyID, String PIN, String tokenType, int levelLimit, BigDecimal expireDate, String supplyAddress1, String amount);
+    String IssuingApply( String UID, String AccountAddress, String coreCompanyKeyID, String PIN, String tokenType, int levelLimit, BigDecimal expireDate, String supplyAddress1, String amount);
     String IssuingApprove(String UID,String platformKeyID, String tokenType, String platformPIN);
     String IssuingCancel(String tokenType, String keyID, String PIN);
     String IssuingConfirm(String UID,String PlatformAddress, String coreCompanyKeyID, String tokenType, String PIN, String comments);
@@ -16,18 +16,21 @@ public interface Scf {
     String AssignmentApply(String supplyAddress1, String supplyID1, String PIN, String proof, String tokenType, List<Map> list1,String newSubType, String supplyAddress2);
     String AssignmentConfirm(String UID,String PlatformAddress, String supplyID1, String PIN, String challenge, String tokenType, String comments);
     String AssignmentReject(String UID, String challenge, String tokenType);
-    String FinacingApply(String supplyAddress1, String supplyID1, String PIN, String rzproof, String tokenType, String rzamount, String subType, String newFromSubType, String newToSubType, String supplyAddress2);
+    String FinacingApply(String supplyAddress1, String supplyID1, String companyID1,String PIN, String rzproof, String tokenType, String rzamount, String subType, String newFromSubType, String newToSubType, String supplyAddress2);
     String FinacingTest(String ZJFAddress, String rzamount, String timeLimit);
     String FinacingFeedback(String ZJFAddress, String applyNo, String state, String comments, String msg);
     String FinacingConfirm(String UID,String PlatformAddress, String applyNo, String ZJFAddress, String supplyID1, String companyID1, String PIN, String tokenType, String supplyAddress2, String rzchallenge, String comments);
     String FinacingCancel(String UID,String challenge,String tokenType );
-    String PayingApply(String tokenType, String companyID1,String comments);
+    String PayingApply(String tokenType, String comments);
     String PayingNotify(String AccountAddress, String message);
     String PayingFeedback(String QFJGAddress, String tokenType, String state,String comments);
+    //融资后兑付确认
     String PayingConfirm(String UID,String PlatformAddress, String QFJGAddress, String companyID1, List<Map> list2, String platformKeyID, String platformPIN, String tokenType, String comments);
+    //非融资兑付确认
+    String PayingConfirmV2(String UID,String PlatformAddress, String QFJGAddress, List<Map> list2, String platformKeyID, String platformPIN, String tokenType, String comments);
 
 
-    String SendMsg(String msgcode, String sender, String platformKeyID, List<Map> list, String mode, String reftx, String msgdata);
+//    String SendMsg(String msgcode, String sender, String platformKeyID, List<Map> list, String mode, String reftx, String msgdata);
     String CreditAdjust(String AccountAddress, String companyID2, String amount);
     String FuncGetoutputinfo(String supplyAddress1, String tokenType, String subtype);
     String FinacingBack(String UID,String PlartformAddress, String  platformKeyID, String PIN, String KeyID, String txID, String comments);
@@ -42,7 +45,7 @@ public interface Scf {
     String FunBalanceunused(String AccountAddress);
 
     //供应链金融0526新增电信接口
-    String SendMsgV2(String msgcode, String sender, String platformKeyID, List<Map> list, String msgdata);
+    String SendMsgV2(String msgcode, String sender, List<Map> list, String msgdata);
     String AssignmentApplyV2(String supplyAddress1, String proof, String tokenType, List<Map> list1,String newSubType, String supplyAddress2);
     String FinacingApplyV2(String supplyAddress1, String rzproof, String tokenType, String rzamount, String subType, String newFromSubType, String newToSubType, String supplyAddress2);
     String PayingApplyV2(String tokenType, String comments);

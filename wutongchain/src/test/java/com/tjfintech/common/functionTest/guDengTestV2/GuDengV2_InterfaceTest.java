@@ -270,9 +270,10 @@ public class GuDengV2_InterfaceTest {
         assertEquals(true,response.contains("无效的参数"));
 
         //产品数据为空
+        shareList = gdConstructShareList(gdAccount1,1000,0);
         response= gd.GDShareIncrease(gdPlatfromKeyID,eqCode,shareList,reason, null);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("产品信息中产品对象标识[product_object_id]不可以为空"));
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,response.contains("产品信息中产品对象标识[product_object_id]不可以为空"));
 
         response= gd.GDShareIncrease("","",null,"", null);
         assertEquals("400",JSONObject.fromObject(response).getString("state"));

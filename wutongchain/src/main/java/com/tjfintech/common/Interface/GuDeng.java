@@ -20,6 +20,7 @@ public interface GuDeng {
 
     String GDShareIncrease(String platformKeyId, String equityCode, List<Map> shareList, String reason,Map equityProductInfo);
     String GDShareIncrease(String platformKeyId, String equityCode, List<Map> shareList, String reason,Map equityProductInfo,Map txInfo);
+    String GDShareIncreaseNoProduct(String platformKeyId, String equityCode, List<Map> shareList, String reason);
 
     String GDShareLock(String bizNo, String address, String equityCode, long amount, int shareProperty, String reason,
                        String cutoffDate,Map registerInformation);
