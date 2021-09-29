@@ -156,7 +156,7 @@ public class UtilsClassScf {
      */
     public static String strToHex(String s) {
         byte[] decoded = Base64.getDecoder().decode(s);
-        return String.format("%040x", new BigInteger(1, decoded));
+        return String.format("%064x", new BigInteger(1, decoded));
     }
 
     /**
