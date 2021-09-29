@@ -608,4 +608,31 @@ public class smtMultiTest {
 
     }
 
+    /**
+     *  双花验证
+     */
+    @Test
+    public void TC011_doubleSpendVerify() throws Exception {
+
+        //发行
+        tokenType = stc.beforeConfigIssueNewToken("200");
+
+        //转账
+        String transferData = " 双花验证 " + tokenType;
+        List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", "30.5", null);
+        List<Map> collList = stc.smartConstructTokenList(MULITADD4, "test", "30.5", null);
+        String transferResp1 = stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
+        String transferResp2 = stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
+
+        assertEquals("200", JSONObject.fromObject(transferResp1).getString("state"));
+        assertEquals("200", JSONObject.fromObject(transferResp2).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
+                utilsClass.sdkGetTxDetailType, SLEEPTIME);
+
+        log.info("查询 ADDRESS1 和 MULITADD4 余额，判断转账是否成功");
+        stc.verifyAddressHasBalance(ADDRESS1, tokenType, "169.5");
+        stc.verifyAddressHasBalance(MULITADD4, tokenType, "30.5");
+
+    }
+
 }

@@ -703,7 +703,7 @@ public class WVMContractTest {
         mgToolCmd.contractFuncPermit(PEER1IP,PEER1RPCPort,subLedger,ctHash,"","initAccount",permitStr);
         sleepAndSaveInfo(SLEEPTIME/2);
 
-        //跨合约调用合约内的正确的方法 initAccount方法 合约无调用权限故交易失败不会上链
+        //跨合约调用合约内的正确的方法 initAccount方法 合约有调用权限，交易会上链
         String response3 = invokeNew(ctHash2,"CrossInitAccount",
                 ctHash,"initAccount","\"[\"C\",123]\"");//初始化账户A 账户余额50
         String txHash3 = JSONObject.fromObject(response3).getJSONObject("data").getString("txId");
@@ -711,7 +711,7 @@ public class WVMContractTest {
         commonFunc.sdkCheckTxOrSleep(txHash3,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
         chkTxDetailRsp("200",txHash3);
 
-        //原合约SDK调用合约内的交易
+        //SDK调用合约方法，无权限，交易不会上链
         String response4 = invokeNew(ctHash,"initAccount",accountA,amountA);//初始化账户A 账户余额50
         assertEquals("500", JSONObject.fromObject(response4).getString("state"));
         assertEquals(true, JSONObject.fromObject(response4).getString("message").contains("You don't have permission to call this method"));

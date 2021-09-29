@@ -155,7 +155,7 @@ public class StableAutoTest {
         }
 
         int i = 0;
-        int loop = 1000; // 循环次数
+        int loop = 10000; // 循环次数
         int[] total = new int[ids.length];
 
         commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
@@ -170,6 +170,7 @@ public class StableAutoTest {
                 if ( bigStoreTest(ids[j]) == 200 ){
                     total[j]++;
                 }
+                Thread.sleep(500);
             }
             i++;
         }
@@ -239,7 +240,7 @@ public class StableAutoTest {
         }
 
         int i = 0;
-        int loop = 10000; // 循环次数
+        int loop = 1000; // 循环次数
         int[] total = new int[ids.length];
 
         while (i < loop) {
@@ -251,7 +252,7 @@ public class StableAutoTest {
             }
             i++;
 
-            Thread.sleep(250);
+            Thread.sleep(SHORTMEOUT); // 3秒
             if ( i % 10 == 0) {
                 utilsClass.setAndRestartPeer(PEER4IP);
             }
