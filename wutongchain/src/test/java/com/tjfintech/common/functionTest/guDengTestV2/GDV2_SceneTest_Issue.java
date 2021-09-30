@@ -111,6 +111,58 @@ public class GDV2_SceneTest_Issue {
 
     }
 
+    /***
+     * 超出wvm overflow uint64
+     * 发行数量超过 140000000000000L
+     */
+
+    @Test
+    public void issueBigAmountOverFlow()throws Exception{
+
+        List<Map> shareList = gdConstructShareList(gdAccount1,140000000000000L,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,9000000,0, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+
+        String response = uf.shareIssue(gdEquityCode,shareList4,false);
+        assertEquals(true,response.contains("Err:wvm invoke err"));
+    }
+
+    /***
+     * 较大值
+     * 发行数量 1400000000000L
+     */
+
+    @Test
+    public void issueBigAmount2()throws Exception{
+
+        List<Map> shareList = gdConstructShareList(gdAccount1,1400000000000L,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,9000000,0, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,1000,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,1000,0, shareList3);
+
+        String response = uf.shareIssue(gdEquityCode,shareList4,true);
+
+        //实际应该持股情况信息
+        List<Map> respShareList = new ArrayList<>();
+        respShareList = gdConstructQueryShareList(gdAccount1,1400000000000L,0,0,mapShareENCN().get("0"),respShareList);
+        List<Map> respShareList2 = gdConstructQueryShareList(gdAccount2,9000000,0,0,mapShareENCN().get("0"), respShareList);
+        List<Map> respShareList3 = gdConstructQueryShareList(gdAccount3,1000,0,0,mapShareENCN().get("0"), respShareList2);
+        List<Map> respShareList4 = gdConstructQueryShareList(gdAccount4,1000,0,0,mapShareENCN().get("0"), respShareList3);
+
+        String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
+//        assertEquals("200",JSONObject.fromObject(query).getString("state"));
+
+        JSONArray dataShareList = JSONObject.fromObject(query).getJSONArray("data");
+        //检查存在余额的股东列表
+        assertEquals(respShareList4.size(),dataShareList.size());
+
+        List<Map> getShareList = getShareListFromQueryNoZeroAcc(dataShareList);
+
+        assertEquals(respShareList4.size(),getShareList.size());
+        assertEquals(true,respShareList4.containsAll(getShareList) && getShareList.containsAll(respShareList4));
+    }
+
 
     /***
      * 多次发行登记对象标识使用同一个
@@ -659,7 +711,7 @@ public class GDV2_SceneTest_Issue {
      * 报送登记：一次1
      * @throws Exception
      */
-    @Test
+//    @Test
     public void issueStep200_Total20002()throws Exception{
 //        issueStepTotal(100,200);
         issueStepTimes(100,200,1);
