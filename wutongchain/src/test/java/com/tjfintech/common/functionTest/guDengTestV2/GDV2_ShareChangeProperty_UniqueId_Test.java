@@ -751,6 +751,7 @@ public class GDV2_ShareChangeProperty_UniqueId_Test {
         assertEquals(false, query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
     }
 
+    //20210930 登记对象允许update
     @Test
     public void shareChangeProperty_SameUniqueIdSameRequest() throws Exception {
 
@@ -835,12 +836,12 @@ public class GDV2_ShareChangeProperty_UniqueId_Test {
 
         //重复执行 使用上次的uuid
         response= gd.GDShareChangeProperty(gdPlatfromKeyID,address,eqCode,changeAmount,oldProperty,newProperty,regListInfo);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,JSONObject.fromObject(response).getString("message").contains("请检查此对象标识是否已经存在"));
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,JSONObject.fromObject(response).getString("message").contains("请检查此对象标识是否已经存在"));
 
         sleepAndSaveInfo(3000);
         int afterBlockHeight2 = JSONObject.fromObject(store.GetHeight()).getInt("data");
-        assertEquals("区块高度无增加，无存证上链",afterBlockHeight,afterBlockHeight2);
+        assertEquals("区块高度增加，无存证上链",afterBlockHeight + 1,afterBlockHeight2);
     }
 
     @Test

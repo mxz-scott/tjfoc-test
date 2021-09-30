@@ -1214,6 +1214,7 @@ public class GDV2_ShareRecycle_UniqueId_Test {
 //        assertEquals(totalShares.subtract(new BigDecimal("400")),totalShares2);
     }
 
+    //20210930 登记对象允许update
     @Test
     public void shareRecycle_SameUniqueIdSameRequest()throws Exception{
 
@@ -1317,12 +1318,12 @@ public class GDV2_ShareRecycle_UniqueId_Test {
         busUUID = tempUUID;
 
         response = gd.GDShareRecycle(gdPlatfromKeyID,eqCode,shareList4,remark);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,JSONObject.fromObject(response).getString("message").contains("请检查此对象标识是否已经存在"));
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,JSONObject.fromObject(response).getString("message").contains("请检查此对象标识是否已经存在"));
 
         sleepAndSaveInfo(3000);
         int afterBlockHeight2 = JSONObject.fromObject(store.GetHeight()).getInt("data");
-        assertEquals("区块高度无增加，无存证上链",afterBlockHeight,afterBlockHeight2);
+        assertEquals("区块高度增加，无存证上链",afterBlockHeight + 1,afterBlockHeight2);
 
         //查询股东持股情况 无当前股权代码信息
         query = gd.GDGetShareHolderInfo(gdContractAddress,gdAccClientNo1);

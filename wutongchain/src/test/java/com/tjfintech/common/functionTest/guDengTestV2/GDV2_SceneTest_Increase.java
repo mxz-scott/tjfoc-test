@@ -268,6 +268,7 @@ public class GDV2_SceneTest_Increase {
 
     /***
      * 连续两次增发 2021/01/05 因接口全部修改为同步接口 而且存在登记对象标识唯一的限制
+     * 20210929 登记对象标识允许update
      */
 
     @Test
@@ -280,7 +281,7 @@ public class GDV2_SceneTest_Increase {
         String response1 = uf.shareIncrease(gdEquityCode,shareListIn4,false);
         String response2 = uf.shareIncrease(gdEquityCode,shareListIn4,false);
         String txId1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
-        assertEquals("400",JSONObject.fromObject(response2).getString("state"));
+        assertEquals("200",JSONObject.fromObject(response2).getString("state"));
 //        String txId2 = JSONObject.fromObject(response2).getJSONObject("data").getString("txId");
 
         sleepAndSaveInfo(SLEEPTIME);
@@ -292,7 +293,7 @@ public class GDV2_SceneTest_Increase {
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         JSONArray jsonArrayGet = JSONObject.fromObject(query).getJSONArray("data");
 
-        assertEquals("8000",getTotalAmountFromShareList(jsonArrayGet));//报送数据验证失败 但合约交易会执行
+        assertEquals("12000",getTotalAmountFromShareList(jsonArrayGet));//报送数据验证失败 但合约交易会执行
     }
 
 
