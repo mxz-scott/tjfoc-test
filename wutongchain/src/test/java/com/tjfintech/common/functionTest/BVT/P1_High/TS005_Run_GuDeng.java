@@ -22,8 +22,9 @@ import org.junit.runners.Suite;
         GDV2_JGFormat_Part8_IncreaseNoProductTx_Test.class,
         GDV2_JGFormat_Part9_RegObjAllowUpdate_Test.class,
 
-//        GDV2_JGFormat_Part7_RepairData_Test.class,
-
+        GDV2_JGFormat_Part7_RepairData_Test.class,
+        GDV2_JGFormat_Part7_AllFlow_RollReg_Test.class,
+        
         GDV2_JGFormat_Part6_TransferNotSendData_Test.class,
 
         GDV2_JGFormat_Part5_Superviseinfo_Delete_Update_Test01.class,
