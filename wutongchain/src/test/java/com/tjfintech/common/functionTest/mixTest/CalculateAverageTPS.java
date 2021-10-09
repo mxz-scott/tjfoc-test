@@ -123,7 +123,7 @@ public class CalculateAverageTPS {
 
     @Test
     public void calTPSFromTestLog()throws Exception {
-        String procFile = "TPS2.txt"; //性能测试节点日志文件 需要下载到本地 默认从...\src\github.com\tjfoc\tjfoc-test\wutongchain目录下获取
+        String procFile = "TPS\\TPS2.txt"; //性能测试节点日志文件 需要下载到本地 默认从...\src\github.com\tjfoc\tjfoc-test\wutongchain目录下获取
         makeupTPSToExcel(procFile);  //将从日志文件解析的数据存入excel  仅计算单个区块TPS 整体TPS 需另外计算
     }
 
@@ -149,7 +149,7 @@ public class CalculateAverageTPS {
         String line = null;
 
 
-        String tpsCal = "tpsCal.txt";
+        String tpsCal = "TPS\\tpsCal.txt";
         FileOperation fo = new FileOperation();
         fo.appendToFile("区块起始时间\t\t\t\t起始时间戳\t\t\t区块结束时间\t\t\t\t结束时间戳\t\t\t区块高度\t区块交易数\t\t" +
                 "区块内交易处理时间\t\tIETPS\t\t\t出块时间\t\t单个区块TPS", tpsCal);
@@ -216,7 +216,7 @@ public class CalculateAverageTPS {
         String line = null;
 
 
-        String tpsCal = "tpsCal.xls";
+        String tpsCal = "TPS\\tpsCal.xls";
         createExcel(tpsCal);
         String[] title = new String[]{"区块起始时间","起始时间戳","区块结束时间","结束时间戳","区块高度","区块交易数",
                 "区块内交易处理时间","IETPS","出块时间","单个区块TPS"};

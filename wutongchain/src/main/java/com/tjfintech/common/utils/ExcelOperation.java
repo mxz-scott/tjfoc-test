@@ -117,7 +117,7 @@ public class ExcelOperation {
                 for (int k = 0; k < columnNumCount; k++) {
                     // 在一行内循环
                     Cell cell = row.createCell(k);
-                    System.out.print(Data[k] + "\n");
+//                    System.out.print(Data[k] + "\n");
                     cell.setCellValue(Data[k]);
                 }
 
