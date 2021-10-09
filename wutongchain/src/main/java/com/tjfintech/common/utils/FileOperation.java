@@ -2,6 +2,8 @@ package com.tjfintech.common.utils;
 
 
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,7 @@ import com.jcraft.jsch.*;
 import com.sun.org.apache.bcel.internal.classfile.ConstantString;
 import org.hamcrest.core.AnyOf;
 import org.hamcrest.core.StringContains;
+import sun.rmi.transport.Connection;
 
 public class FileOperation {
 
@@ -253,6 +256,38 @@ public class FileOperation {
             System.out.print(e.getMessage());
         }
     }
+
+    public static void downloadFileFromDestDirByssh(String remoteDir,String remoteFile, String remoteIP, String remoteUser, String remotePwd,String localPath) {
+        try {
+            Session session = null;
+            JSch jsch = new JSch();
+            session = jsch.getSession(remoteUser, remoteIP, Integer.parseInt(globalSSHPort));
+
+            session.setPassword(remotePwd);        //修改服务器/etc/ssh/sshd_config 中 GSSAPIAuthentication的值yes为no，解决用户不能远程登录
+            session.setConfig("userauth.gssapi-with-mic", "no");    //为session对象设置properties,第一次访问服务器时不用输入yes
+            session.setConfig("StrictHostKeyChecking", "no");
+            session.connect();
+            ChannelSftp channelSftp = (ChannelSftp) session.openChannel("sftp");
+            channelSftp.connect();
+            assertEquals(true, channelSftp.isConnected());
+
+
+            FileOutputStream fileoutput = null;
+            File file = new File(localPath);
+            fileoutput = new FileOutputStream(file);
+            channelSftp.get(remoteDir + remoteFile, fileoutput);
+
+            if(null != fileoutput){
+                fileoutput.close();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.print(e.getMessage());
+        }
+
+    }
+
 
     public static int getUTXOLockTime() {
         UtilsClass utilsClass = new UtilsClass();
