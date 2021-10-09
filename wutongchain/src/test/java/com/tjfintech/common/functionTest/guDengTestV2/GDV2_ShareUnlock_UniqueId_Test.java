@@ -690,7 +690,7 @@ public class GDV2_ShareUnlock_UniqueId_Test {
 
     }
 
-
+    //20210930 登记对象允许update
     @Test
     public void shareUnLockSameUniqueIdSameRequest() throws Exception {
         //解冻
@@ -759,13 +759,12 @@ public class GDV2_ShareUnlock_UniqueId_Test {
 
         busUUID = tempUUID;
         response= gd.GDShareUnlock(bizNo,eqCode,amount,regInfo);
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals("400",JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,JSONObject.fromObject(response).getString("message").contains("请检查此对象标识是否已经存在"));
+        assertEquals("200",JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true,JSONObject.fromObject(response).getString("message").contains("请检查此对象标识是否已经存在"));
 
         sleepAndSaveInfo(3000);
         int afterBlockHeight2 = JSONObject.fromObject(store.GetHeight()).getInt("data");
-        assertEquals("区块高度无增加，无存证上链",afterBlockHeight,afterBlockHeight2);
+        assertEquals("区块高度增加，无存证上链",afterBlockHeight + 1,afterBlockHeight2);
     }
 
     @Test

@@ -596,7 +596,7 @@ public class GDV2_ShareLock_UniqueId_Test {
         assertEquals(false,query.contains("\"equityCode\": \"" + gdEquityCode + "\""));
     }
 
-
+    //20210930 登记对象允许update
     @Test
     public void shareLock_SameUniqueIdSameRequest()throws Exception{
         String bizNo = bizNoTest;
@@ -647,12 +647,12 @@ public class GDV2_ShareLock_UniqueId_Test {
         busUUID = tempUUID;
         bizNo = Random(12);
         response = gd.GDShareLock(bizNo,address,eqCode,lockAmount,shareProperty,reason,cutoffDate,regInfo);
-        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
         sleepAndSaveInfo(3000);
 
         afterBlockHeight = JSONObject.fromObject(store.GetHeight()).getInt("data");
-        assertEquals("区块高度无增加，无存证上链",beforeBlockHeight + 2,afterBlockHeight);
+        assertEquals("区块高度增加，存证上链",beforeBlockHeight + 3,afterBlockHeight);
 
 
 

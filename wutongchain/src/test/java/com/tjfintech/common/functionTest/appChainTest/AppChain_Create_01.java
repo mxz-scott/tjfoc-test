@@ -36,7 +36,7 @@ public class AppChain_Create_01 {
         log.info(getStrByReg(mgToolCmd.getAppChain(PEER1IP,PEER1RPCPort," -c qgnuxg7eej"),"\"id\":\\s+\"(\\w{10})\""));
     }
 
-//    @BeforeClass
+    @BeforeClass
     public static void clearPeerDB()throws Exception{
         UtilsClass utilsClass = new UtilsClass();
         //设置节点 清空db数据 并重启
