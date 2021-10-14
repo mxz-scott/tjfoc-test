@@ -134,9 +134,9 @@ public class ScfInterfaceTest {
 
         log.info("开立额度不足");
         String response14= scf.IssuingApply(UID,AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "10000000");
-        assertThat(response14, containsString("503"));
+        assertThat(response14, containsString("400"));
         assertThat(response14, containsString("error"));
-        assertThat(response14, containsString("rpcWait err: timeout!"));
+        assertThat(response14, containsString("Failed! Err:合约配额已经耗尽"));
 
         log.info("数值超过小数点后6位");
         String response15= scf.IssuingApply(UID, AccountAddress, coreCompanyKeyID, PIN, tokenType, levelLimit, expireDate, supplyAddress1, "100.123456789");
@@ -275,11 +275,11 @@ public class ScfInterfaceTest {
         assertThat(responseuid, containsString("error"));
         assertThat(responseuid, containsString("Key: 'UID' Error:Field validation for 'UID' failed on the 'required' tag"));
 
-        log.info("开单签收的平台合约地址为空");
-        String response3 = scf.IssuingConfirm(UID1, "",coreCompanyKeyID, tokenType, PIN, comments);
-        assertThat(response3, containsString("400"));
-        assertThat(response3, containsString("error"));
-        assertThat(response3, containsString("Key: 'PlatFormAddress' Error:Field validation for 'PlatFormAddress' failed on the 'len' tag"));
+//        log.info("开单签收的平台合约地址为空");
+//        String response3 = scf.IssuingConfirm(UID1, "",coreCompanyKeyID, tokenType, PIN, comments);
+//        assertThat(response3, containsString("400"));
+//        assertThat(response3, containsString("error"));
+//        assertThat(response3, containsString("Key: 'PlatFormAddress' Error:Field validation for 'PlatFormAddress' failed on the 'len' tag"));
 
         log.info("开单签收的核心企业地址为空");
         String response5 = scf.IssuingConfirm(UID1, PlatformAddress, "", tokenType, PIN, comments);
@@ -444,9 +444,9 @@ public class ScfInterfaceTest {
         //输入错误供应商账户地址
         log.info("供应商账户地址不匹配开立申请地址");
         String response5 = scf.AssignmentApply("SnwNAEuLDPUZRqkuDbVmbNugisspXgdx4wfBgoiL6F1ArAWVhEn", supplyID1, PIN, proof, tokenType, list1, newSubType, supplyAddress2);
-        assertThat(response5, containsString("503"));
+        assertThat(response5, containsString("400"));
         assertThat(response5, containsString("error"));
-        assertThat(response5, containsString("rpcWait err: timeout!"));
+        assertThat(response5, containsString("Failed! Err:wvm invoke err"));
 
 
         log.info("tokenty为空");
@@ -540,9 +540,9 @@ public class ScfInterfaceTest {
         log.info("转让额度大于开立额度");
         List<Map> list2= UtilsClassScf.Assignment("1000", "0", list);
         response4 = scf.AssignmentApply(supplyAddress1, supplyID1, PIN, proof, tokenType, list2, newSubType, supplyAddress2);
-        assertThat(response4, containsString("503"));
+        assertThat(response4, containsString("400"));
         assertThat(response4, containsString("error"));
-        assertThat(response4, containsString("rpcWait err: timeout!"));
+        assertThat(response4, containsString("Failed! Err:wvm invoke err"));
 
         log.info("转让额度为0");
         List<Map> list3 = UtilsClassScf.Assignment("0", "0", list);
@@ -620,12 +620,14 @@ public class ScfInterfaceTest {
 //        assertThat(response5, containsString("400"));
 //        assertThat(response5, containsString("error"));
 //        assertThat(response5, containsString("empty stack"));
+
         //输入空平台方合约地址
-        log.info("平台方合约地址为空");
-        String response6 = scf.AssignmentConfirm(UID2, "",supplyID1, PIN, challenge, tokenType, comments);
-        assertThat(response6, containsString("400"));
-        assertThat(response6, containsString("error"));
-        assertThat(response6, containsString("Key: 'PlatFormAddress' Error:Field validation for 'PlatFormAddress' failed on the 'len' tag"));
+//        log.info("平台方合约地址为空");
+//        String response6 = scf.AssignmentConfirm(UID2, "",supplyID1, PIN, challenge, tokenType, comments);
+//        assertThat(response6, containsString("400"));
+//        assertThat(response6, containsString("error"));
+//        assertThat(response6, containsString("Key: 'PlatFormAddress' Error:Field validation for 'PlatFormAddress' failed on the 'len' tag"));
+
         log.info("供应商id不存在系统中，不匹配转让申请的中受让方地址/");
         String response7 = scf.AssignmentConfirm(UID2,PlatformAddress, "c02jbhjsnk7pq9fsojvg", PIN, challenge, tokenType, comments);
         assertThat(response7, containsString("400"));
@@ -722,9 +724,9 @@ public class ScfInterfaceTest {
         //输入错误challenge
         log.info("challenge不匹配proof");
         String response6 = scf.AssignmentReject(UID2,"123aaa", tokenType);
-        assertThat(response6, containsString("503"));
+        assertThat(response6, containsString("400"));
         assertThat(response6, containsString("error"));
-        assertThat(response6, containsString("rpcWait err: timeout!"));
+        assertThat(response6, containsString("Failed! Err:wvm invoke err"));
         log.info("challenge为空");
         String response7 = scf.AssignmentReject(UID2, "", tokenType);
         assertThat(response7, containsString("400"));
@@ -732,10 +734,11 @@ public class ScfInterfaceTest {
         assertThat(response7, containsString("Key: 'Challenge' Error:Field validation for 'Challenge' failed on the 'min' tag"));
         log.info("token type未发行");
         String response8 = scf.AssignmentReject(UID2, challenge, "2161651");
-        assertEquals("400", JSONObject.fromObject(response8).getString("state"));
-        assertEquals(true, response8.contains("无法根据tokentype查询到账户合约地址"));
+        assertThat(response8,containsString("400"));
+        assertThat(response8,containsString("error"));
+        assertThat(response8,containsString("判断UID["+UID2+"]是否已经成功上链失败，err:无法根据tokentype查询到账户合约地址"));
 
-        log.info("tokenty为空");
+        log.info("tokentype为空");
         String response9 = scf.AssignmentReject(UID2, challenge, "");
         assertThat(response9, containsString("400"));
         assertThat(response9, containsString("error"));
@@ -795,9 +798,9 @@ public class ScfInterfaceTest {
          assertThat(response4, containsString("Key: 'FromAddress' Error:Field validation for 'FromAddress' failed on the 'min' tag"));
          log.info("错误的供应商地址");
          String response5 = scf.FinacingApply("SnwNAEuLDPUZRqkuDbVmbNugisspXgdx4wfBgoiL6F1ArAWVhEn", supplyID1,companyID1, PIN, proof, tokenType, rzamount, subType, newFromSubType, newToSubType, supplyAddress2);
-         assertThat(response5, containsString("503"));
+         assertThat(response5, containsString("400"));
          assertThat(response5, containsString("error"));
-         assertThat(response5, containsString("rpcWait err: timeout!"));
+         assertThat(response5, containsString("Failed! Err:wvm invoke err"));
 
 
          log.info("错误的tokentype");
@@ -827,9 +830,9 @@ public class ScfInterfaceTest {
          assertThat(response14, containsString("invalid parameter,error:aomunt must be more than 0"));
          log.info("融资金额超过资产总金额");
          String response15 = scf.FinacingApply(supplyAddress1, supplyID1,companyID1, PIN, proof, tokenType, "1000000", subType, newFromSubType, newToSubType, supplyAddress2);
-         assertThat(response15, containsString("503"));
+         assertThat(response15, containsString("400"));
          assertThat(response15, containsString("error"));
-         assertThat(response15, containsString("rpcWait err: timeout!"));
+         assertThat(response15, containsString("Failed! Err:wvm invoke err"));
          log.info("受让方地址不存在/错误");
          String response16 = scf.FinacingApply(supplyAddress1, supplyID1, companyID1,PIN, proof, tokenType, rzamount, subType, newFromSubType, newToSubType, "SoV1KWJqSr4TWXZd1kpnLG19WU95LbjMMQv7Dygph9nkHvRCNvE");
          assertThat(response16, containsString("200"));
@@ -1047,16 +1050,18 @@ public class ScfInterfaceTest {
 //         assertThat(response7, containsString("400"));
 //         assertThat(response7, containsString("error"));
 //         assertThat(response7, containsString("Failed! Err:empty stack"));
-         log.info("平台合约地址为空");
-         String response8 = scf.FinacingConfirm(UID2, "", applyNo, ZJFAddress, supplyID1, companyID1, PIN, tokenType, supplyAddress2, challenge, comments);
-         assertThat(response8, containsString("400"));
-         assertThat(response8, containsString("error"));
-         assertThat(response8, containsString("Key: 'PlatFormAddress' Error:Field validation for 'PlatFormAddress' failed on the 'required' tag"));
+
+//         log.info("平台合约地址为空");
+//         String response8 = scf.FinacingConfirm(UID2, "", applyNo, ZJFAddress, supplyID1, companyID1, PIN, tokenType, supplyAddress2, challenge, comments);
+//         assertThat(response8, containsString("400"));
+//         assertThat(response8, containsString("error"));
+//         assertThat(response8, containsString("Key: 'PlatFormAddress' Error:Field validation for 'PlatFormAddress' failed on the 'required' tag"));
+
          log.info("错误的融资编号");
          String response9 = scf.FinacingConfirm(UID2, PlatformAddress, "1516151", ZJFAddress, supplyID1, companyID1, PIN, tokenType, supplyAddress2, challenge, comments);
-         assertThat(response9, containsString("503"));
+         assertThat(response9, containsString("400"));
          assertThat(response9, containsString("error"));
-         assertThat(response9, containsString("rpcWait err: timeout!"));
+         assertThat(response9, containsString("Failed! Err:error"));
          log.info("融资编号为空");
          String response10 = scf.FinacingConfirm(UID2, PlatformAddress, "", ZJFAddress, supplyID1, companyID1, PIN, tokenType, supplyAddress2, challenge, comments);
          assertThat(response10, containsString("400"));
@@ -1201,9 +1206,9 @@ public class ScfInterfaceTest {
         //融资取消
         log.info("challenge不匹配");
         String response7 = scf.FinacingCancel(UID2,"123sss", tokenType);
-        assertThat(response7, containsString("503"));
+        assertThat(response7, containsString("400"));
         assertThat(response7, containsString("error"));
-        assertThat(response7, containsString("rpcWait err: timeout!"));
+        assertThat(response7, containsString("Failed! Err:wvm invoke err"));
         log.info("challenge为空");
         String response8 = scf.FinacingCancel(UID2, "", tokenType);
         assertThat(response8, containsString("400"));
@@ -1262,9 +1267,9 @@ public class ScfInterfaceTest {
         //兑付申请
         log.info("tokentype不匹配");
         String response4 = scf.PayingApply("123ccasd", comments);
-        assertThat(response4, containsString("503"));
+        assertThat(response4, containsString("400"));
         assertThat(response4, containsString("error"));
-        assertThat(response4, containsString("rpcWait err: timeout!"));
+        assertThat(response4, containsString("Failed! Err:wvm invoke err"));
         log.info("tokentype为空");
         String response5 = scf.PayingApply("", comments);
         assertThat(response5, containsString("400"));
@@ -1440,12 +1445,12 @@ public class ScfInterfaceTest {
         String response9 = scf.PayingConfirm(UID2, "asdacascasfcdgsagasfgaca", QFJGAddress, companyID1, list1, platformKeyID, platformPIN, tokenType, comments);
         assertThat(response9, containsString("400"));
         assertThat(response9, containsString("error"));
-        assertThat(response9, containsString("PlatFormAddress' Error:Field validation for 'PlatFormAddress' failed on the 'len' tag"));
-        //输入空平台方合约地址
-        String response10 = scf.PayingConfirm(UID2, "", QFJGAddress, companyID1, list1, platformKeyID, platformPIN, tokenType, comments);
-        assertThat(response10, containsString("400"));
-        assertThat(response10, containsString("error"));
-        assertThat(response10, containsString("Key: 'PlatFormAddress' Error:Field validation for 'PlatFormAddress' failed on the 'len' tag"));
+        assertThat(response9, containsString("Failed! Err:empty stack"));
+//        //输入空平台方合约地址
+//        String response10 = scf.PayingConfirm(UID2, "", QFJGAddress, companyID1, list1, platformKeyID, platformPIN, tokenType, comments);
+//        assertThat(response10, containsString("400"));
+//        assertThat(response10, containsString("error"));
+//        assertThat(response10, containsString("Failed! Err:empty stack"));
         //输入错误清分机构地址
         String response11 = scf.PayingConfirm(UID2, PlatformAddress, "aicbnasjnfpiancpajinpa", companyID1, list1, platformKeyID, platformPIN, tokenType, comments);
         assertThat(response11, containsString("400"));
@@ -1825,10 +1830,10 @@ public class ScfInterfaceTest {
         assertEquals("400", JSONObject.fromObject(response10).getString("state"));
         assertEquals(true, response10.contains("'TxId' Error:Field validation for 'TxId' failed on the 'required' tag"));
 
-        log.info("PlatformAddress为空");
-        response10 = scf.FinacingBack(UID,"", platformKeyID, PIN, supplyID2, "dPvql1mJ/ubwpTsPiP6fUzSjSIg6KmasC8htnpSIlrQ=", comments);
-        assertEquals("400", JSONObject.fromObject(response10).getString("state"));
-        assertEquals(true, response10.contains("'PlatFormAddress' Error:Field validation for 'PlatFormAddress' failed on the 'len' tag"));
+//        log.info("PlatformAddress为空");
+//        response10 = scf.FinacingBack(UID,"", platformKeyID, PIN, supplyID2, "dPvql1mJ/ubwpTsPiP6fUzSjSIg6KmasC8htnpSIlrQ=", comments);
+//        assertEquals("400", JSONObject.fromObject(response10).getString("state"));
+//        assertEquals(true, response10.contains("'PlatFormAddress' Error:Field validation for 'PlatFormAddress' failed on the 'len' tag"));
 
         log.info("PlatformkeyID为空");
         response10 = scf.FinacingBack(UID,PlatformAddress, "", PIN, supplyID2, "aaaaa", comments);

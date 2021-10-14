@@ -6,6 +6,7 @@ contract AccountAPI {
     string CoreEnterprise = "CoreEnterprisePubkey"
 
    string ucres = "tx was on chain:"
+   uint64 zero64 = 0
     //发行地址信息
     struct Account {
         int MinNum          // 最小签名数
@@ -50,13 +51,13 @@ contract AccountAPI {
         accountKey = hash(tmp)
         string accountJson = db_get<string>(accountKey)
         if(accountJson!=""){
+
             print("账户已存在")
             return "success"
         }
         string res = initfund(accountKey)
-        print("init success")
 
-        return "success"
+        return res
     }
 
     // 初始化资金方信息
@@ -83,7 +84,6 @@ contract AccountAPI {
         account.MinNum = 2
         account.Quota = f3.Quota+f2.Quota+f1.Quota
         account.TQuota = f3.Quota+f2.Quota+f1.Quota
-        print(account)
         account.UsedQuota= 0
         account.Recycle = true
         string[]memberList = {""}
@@ -99,12 +99,21 @@ contract AccountAPI {
         accountKey = hash(tmp)
         string accountJson = db_get<string>(accountKey)
         if(accountJson!=""){
+            Account acc =  json_to_obj<Account>(accountJson)
+            uint64 tq = acc.TQuota
+            print(tq)
+            if (tq == zero64){
+                print(true)
+                acc.TQuota = acc.Quota
+                string json = obj_to_json(acc)
+                db_set(accountKey,json)
+                print(acc)
+            }
             print("账户已存在")
             return "success"
         }
 
         string res = initfund(accountKey)
-        print(res)
         return res
     }
 
@@ -181,6 +190,7 @@ contract AccountAPI {
                 print("The first signature shall be initiated by the CoreEnterprise")
                 return "error"
             }else{
+                print(acc)
                 uint64 balance = acc.TQuota - acc.UsedQuota
                 if(balance<tk.Amount){
                     print("可用额度不足")
@@ -414,20 +424,16 @@ contract AccountAPI {
                 Output out = outlist[j]
                 string ToAddress = out.Address
                 if(ToAddress=="osEoy933LkHyyBcgjE7vCivfsX"){
-                    uint64 amount = out.Value
-                    string cid = arg.CompanyID
-                    if (cid !=""){
-                        string key = "f_"+cid
+                    if (arg.CompanyID!=""){
+                        uint64 amount = out.Value
+                        print(amount)
+                        string key = "f_"+arg.CompanyID
                         Fund f = db_get<Fund>(key)
-                        uint64 fud = f.UsedQuota
-                        if (fud < amount){
-                            print("Err:兑付额度小于授信额度")
-                            return "兑付额度小于授信额度"
-                        }
-                        f.UsedQuota = fud - amount
+                        f.UsedQuota = f.UsedQuota - amount
                         db_set(key,f)
+                        acc.Quota = acc.Quota + amount
                     }
-                    acc.Quota = acc.Quota + amount
+
                 }
             }
             string uid = arg.UID
@@ -455,8 +461,8 @@ contract AccountAPI {
             acc.TQuota = acc.TQuota + quota
         }else{
             f = db_get<Fund>(key)
-           acc.Quota = acc.Quota - f.Quota + quota
-           acc.TQuota = acc.TQuota - f.Quota + quota
+            acc.Quota = acc.Quota + quota - f.Quota
+            acc.TQuota = acc.TQuota + quota - f.Quota
         }
 
         f.Quota = quota
@@ -682,3 +688,4 @@ contract AccountAPI {
         return suc
     }
 }
+
