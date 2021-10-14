@@ -50,6 +50,8 @@ public class UtilsClass {
             case "4":  SetTestEnv_hff envSet04 = new SetTestEnv_hff(); envSet04.setEnvParam(); break;
             case "5":  SetTestEnv_zllauto envSet05 = new SetTestEnv_zllauto(); envSet05.setEnvParam(); break;
             case "6":  SetTestEnv_zllManual envSet06 = new SetTestEnv_zllManual(); envSet06.setEnvParam(); break;
+            case "7":  SetTestEnv_xlh envSet07 = new SetTestEnv_xlh(); envSet07.setEnvParam(); break;
+
             default: log.info("使用初始化默认参数");
         }
     }
