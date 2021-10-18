@@ -109,9 +109,8 @@ public class JmlTest {
     @Test
     public void Test003_JmlAddQueryRecord() throws Exception {
         //新增授权用户
-
-        String[] names = {"曾嵩", "张琪", "陈海波", "裴志河"};
-        String[] ids = {"360202198807090038", "321088198905290028", "320925197409095416", "321027196902016013"};
+        String[] names = {"曾嵩", "王春勇", "张琪", "陈海波", "裴志河"};
+        String[] ids = {"360202198807090038", "321022195706281518", "321088198905290028", "320925197409095416", "321027196902016013"};
         for (int a = 0; a < names.length; a++) {
             Map subject = UtilsClassJml.subject(ids[a], names[a]);
             String response = jml.AuthorizeAdd(subjectType, bankId, endTime, fileHash, subject);
@@ -119,7 +118,6 @@ public class JmlTest {
             assertThat(response, containsString("success"));
             assertThat(response, containsString("data"));
             String txId = gettxId(response);
-//            System.out.println("txId = " + txId);
             //获取新增授权用户上链信息
             commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailType, SLEEPTIME);
             String checking = store.GetTxDetail(txId);
@@ -127,19 +125,26 @@ public class JmlTest {
             assertThat(checking, containsString("success"));
             //获取authid
             String authId = getValueByKey(response);
-//            System.out.println("authId = " + authId);
             String response1 = jml.CreditdataQuery(requestId, authId, ids[a], names[a], purpose);
             assertThat(response1, containsString("200"));
             assertThat(response1, containsString("success"));
             assertThat(response1, containsString("data"));
+            JSONObject.fromObject(response1).getJSONObject("data").getString("subjectType");
+            JSONObject.fromObject(response1).getJSONObject("data").getString("subjectId");
+            JSONObject.fromObject(response1).getJSONObject("data").getString("totalItems");
+            //验证errItems字段
             JSONObject jsonObject = JSONObject.fromObject(response1);
+            Object object = jsonObject.getJSONObject("data").get("errItems");
+            System.out.println("object = " + object);
+            if (object == null) {
+                System.out.println("error");
+                return;
+            }
+
             JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONObject("identity").getJSONArray("items");
-            JSONArray jsonArray1 = jsonObject.getJSONObject("data").getJSONObject("asset").getJSONArray("items");
-
-            //第一次查询
-
             //初始化参数
             String itemValue = null;
+            String itemValue1 = "";
             String cert_num_man = "";
             String cert_num_woman = "";
             String folk_man = "";
@@ -158,6 +163,7 @@ public class JmlTest {
             String present_address = "";
             String residence_address = "";
             String marriage = "";
+            String itemName = "";
 
 
             for (int b = 0; b < jsonArray.size(); b++) {
@@ -170,17 +176,17 @@ public class JmlTest {
                         break;
                     case "婚姻登记":
                         marriage = jsonObject1.getJSONArray("itemValue").toString();
-//                    cert_num_man = jsonObject3.getJSONObject("itemValue").getString("cert_num_man");
+                        cert_num_man = jsonObject1.getJSONArray("itemValue").toString();
                         log.info("bb===============================" + marriage);
-//                    cert_num_woman = jsonObject3.getJSONObject("itemValue").getString("cert_num_woman");
-//                    folk_man = jsonObject3.getJSONObject("itemValue").getString("folk_man");
-//                    folk_woman = jsonObject3.getJSONObject("itemValue").getString("folk_woman");
-//                    name_man = jsonObject3.getJSONObject("itemValue").getString("name_man");
-//                    name_woman = jsonObject3.getJSONObject("itemValue").getString("name_woman");
-//                    nation_man = jsonObject3.getJSONObject("itemValue").getString("nation_man");
-//                    nation_woman = jsonObject3.getJSONObject("itemValue").getString("nation_woman");
-//                    op_date = jsonObject3.getJSONObject("itemValue").getString("op_date");
-//                    op_type = jsonObject3.getJSONObject("itemValue").getString("op_type");
+                        cert_num_woman = jsonObject1.getJSONArray("itemValue").toString();
+                        folk_man = jsonObject1.getJSONArray("itemValue").toString();
+                        folk_woman = jsonObject1.getJSONArray("itemValue").toString();
+                        name_man = jsonObject1.getJSONArray("itemValue").toString();
+                        name_woman = jsonObject1.getJSONArray("itemValue").toString();
+                        nation_man = jsonObject1.getJSONArray("itemValue").toString();
+                        nation_woman = jsonObject1.getJSONArray("itemValue").toString();
+                        op_date = jsonObject1.getJSONArray("itemValue").toString();
+                        op_type = jsonObject1.getJSONArray("itemValue").toString();
                         break;
                     case "户籍信息":
                         birthday = jsonObject1.getJSONObject("itemValue").getString("birthday");
@@ -192,36 +198,42 @@ public class JmlTest {
                         present_address = jsonObject1.getJSONObject("itemValue").getString("present_address");
                         residence_address = jsonObject1.getJSONObject("itemValue").getString("residence_address");
                         break;
+
                     default:
                 }
             }
 
-//            String itemValue1 = "";
-//            String address = "";
-//            String householder = "";
-//            String id_no1 = "";
-//            String usage = "";
+            String agency = "";
+            String continuous_total_month = "";
+            String latest_pay_date = "";
+            String latest_pay_month = "";
+            String name1 = "";
 
-//            JSONArray jsonArray1 = jsonObject.getJSONObject("data").getJSONObject("asset").getJSONArray("items");
-//            for (int c = 0; c < jsonArray1.size(); c++) {
-//                JSONObject jsonObject2 = JSONObject.fromObject(jsonArray1.get(c).toString());
-//                log.info("ee===============================" + jsonObject2);
-//                switch (jsonObject2.getString("itemName")) {
-//                    case "用气信息":
-//                        itemValue1 = jsonObject2.getString("itemValue");
-//                        log.info("dd===============================" + itemValue1);
-//                        break;
-//                    case "用水信息":
-//                        address = jsonObject2.getJSONObject("itemValue").getString("address");
-//                        householder = jsonObject2.getJSONObject("itemValue").getString("householder");
-//                        id_no1 = jsonObject2.getJSONObject("itemValue").getString("id_no");
-//                        usage = jsonObject4.getString("usage");
-//                        log.info("ee===============================" + usage);
-//                        break;
-//                    default:
-//
-//                }
-//            }
+            JSONArray jsonArray1 = jsonObject.getJSONObject("data").getJSONObject("asset").getJSONArray("items");
+            for (int c = 0; c < jsonArray1.size(); c++) {
+                JSONObject jsonObject2 = JSONObject.fromObject(jsonArray1.get(c).toString());
+                log.info("ee===============================" + jsonObject2);
+                switch (jsonObject2.getString("itemName")) {
+                    case "用气信息":
+                        log.info("dd===============================" + itemValue);
+                        break;
+                    case "用水信息":
+                        log.info("ee===============================" + itemValue);
+                        break;
+                    case "社保缴纳":
+                        itemValue1 = jsonObject2.getString("itemValue");
+                        agency = jsonObject2.getJSONObject("itemValue").getString("agency");
+                        continuous_total_month = jsonObject2.getJSONObject("itemValue").getString("continuous_total_month");
+                        latest_pay_date = jsonObject2.getJSONObject("itemValue").getString("latest_pay_date");
+                        latest_pay_month = jsonObject2.getJSONObject("itemValue").getString("latest_pay_month");
+                        name1 = jsonObject2.getJSONObject("itemValue").getString("name");
+
+                    case "房屋权属":
+                        log.info("ff===============================" + itemValue);
+                    default:
+
+                }
+            }
 
                 //查询数据接口，循环查询与第一次查询做对比
                 for (int i = 0; i < 1; i++) {
@@ -236,22 +248,20 @@ public class JmlTest {
 
                         switch (jsonObject2.getString("itemName")) {
                             case "网格数据":
-//                                    System.out.println(jsonObject2.getJSONObject("itemValue"));
-                                assertEquals(jsonObject2.getString("itemValue"), itemValue);
+//                                assertEquals(jsonObject2.getString("itemValue"), itemValue);
                                 break;
                             case "婚姻登记":
                                 assertEquals(jsonObject2.getJSONArray("itemValue").toString(), marriage);
-//                                    System.out.println(jsonObject2.getJSONObject("itemValue"));
-//                                    assertEquals(jsonObject2.getJSONObject("itemValue").getString("cert_num_man"), cert_num_man);
-//                                    assertEquals(jsonObject2.getJSONObject("itemValue").getString("cert_num_woman"), cert_num_woman);
-//                                    assertEquals(jsonObject2.getJSONObject("itemValue").getString("folk_man"), folk_man);
-//                                    assertEquals(jsonObject2.getJSONObject("itemValue").getString("folk_woman"), folk_woman);
-//                                    assertEquals(jsonObject2.getJSONObject("itemValue").getString("name_man"), name_man);
-//                                    assertEquals(jsonObject2.getJSONObject("itemValue").getString("name_woman"), name_woman);
-//                                    assertEquals(jsonObject2.getJSONObject("itemValue").getString("nation_man"), nation_man);
-//                                    assertEquals(jsonObject2.getJSONObject("itemValue").getString("nation_woman"), nation_woman);
-//                                    assertEquals(jsonObject2.getJSONObject("itemValue").getString("op_date"), op_date);
-//                                    assertEquals(jsonObject2.getJSONObject("itemValue").getString("op_type"), op_type);
+                                assertEquals(jsonObject2.getJSONArray("itemValue").toString(), cert_num_man);
+                                assertEquals(jsonObject2.getJSONArray("itemValue").toString(), cert_num_woman);
+                                assertEquals(jsonObject2.getJSONArray("itemValue").toString(), folk_man);
+                                assertEquals(jsonObject2.getJSONArray("itemValue").toString(), folk_woman);
+                                assertEquals(jsonObject2.getJSONArray("itemValue").toString(), name_man);
+                                assertEquals(jsonObject2.getJSONArray("itemValue").toString(), name_woman);
+                                assertEquals(jsonObject2.getJSONArray("itemValue").toString(), nation_man);
+                                assertEquals(jsonObject2.getJSONArray("itemValue").toString(), nation_woman);
+                                assertEquals(jsonObject2.getJSONArray("itemValue").toString(), op_date);
+                                assertEquals(jsonObject2.getJSONArray("itemValue").toString(), op_type);
                                 break;
                             case "户籍信息":
                                 System.out.println(jsonObject2.getJSONObject("itemValue"));
@@ -263,68 +273,56 @@ public class JmlTest {
                                 assertEquals(jsonObject2.getJSONObject("itemValue").getString("present_address"), present_address);
                                 assertEquals(jsonObject2.getJSONObject("itemValue").getString("residence_address"), residence_address);
                                 break;
+
                             default:
                         }
 
-//                            JSONArray jsonArray3 = jsonObject.getJSONObject("data").getJSONObject("asset").getJSONArray("items");
-//                            for (int i1 = 0; i1 < jsonArray3.size(); i1++) {
-//                                JSONObject jsonObject3 = JSONObject.fromObject(jsonArray3.get(i1).toString());
-//                                switch (jsonObject3.getString("itemName")) {
-//
-//                                    case "用气信息":
+                            JSONArray jsonArray3 = jsonObject.getJSONObject("data").getJSONObject("asset").getJSONArray("items");
+                            for (int i1 = 0; i1 < jsonArray3.size(); i1++) {
+                                JSONObject jsonObject3 = JSONObject.fromObject(jsonArray3.get(i1).toString());
+                                switch (jsonObject3.getString("itemName")) {
+
+                                    case "用气信息":
+//                                        assertEquals(jsonObject3.getJSONObject("itemValue"), itemValue1);
+                                        break;
+
+                                    case "用水信息":
 //                                        assertEquals(jsonObject3.getString("itemValue"), itemValue1);
-//                                        break;
+                                        break;
+                                    case "车辆登记信息":
+                                        System.out.println("ddddddddddddddddddddddddddd");
+//                                        assertEquals(jsonObject3.getString("itemValue"), itemValue1);
+                                        break;
+
+                                    case "社保缴纳":
+                                        assertEquals(jsonObject3.getJSONObject("itemValue").getString("agency"), agency);
+                                        assertEquals(jsonObject3.getJSONObject("itemValue").getString("continuous_total_month"), continuous_total_month);
+                                        assertEquals(jsonObject3.getJSONObject("itemValue").getString("latest_pay_date"), latest_pay_date);
+                                        assertEquals(jsonObject3.getJSONObject("itemValue").getString("latest_pay_month"), latest_pay_month);
+                                        assertEquals(jsonObject3.getJSONObject("itemValue").getString("name"), name1);
+                                        System.out.println(jsonObject3);
+                                        break;
+
+                                    case "房屋权属":
+                                        System.out.println(jsonObject3);
 //
-//                                    case "用水信息":
-//                                        assertEquals(jsonObject3.getJSONObject("itemValue").getString("address"), address);
-//                                        assertEquals(jsonObject3.getJSONObject("itemValue").getString("householder"), householder);
-//                                        assertEquals(jsonObject3.getJSONObject("itemValue").getString("id_no"), id_no1);
-//                                        assertEquals(jsonObject2.getString("itemValue"), usage);
-//                                        break;
-//                                    case "车辆登记信息":
-//                                        System.out.println("ddddddddddddddddddddddddddd");
-//                                        break;
-//
-//                                    case "社保缴纳":
-//                                        assertEquals(jsonObject3.getJSONObject("itemValue").getString("agency"), agency);
-//                                        assertEquals(jsonObject3.getJSONObject("itemValue").getInt("continuous_total_month"), continuous_total_month);
-//                                        assertEquals(jsonObject3.getJSONObject("itemValue").getString("latest_pay_date"), latest_pay_date);
-//                                        assertEquals(jsonObject3.getJSONObject("itemValue").getString("latest_pay_month"), latest_pay_month);
-//                                        assertEquals(jsonObject3.getJSONObject("itemValue").getString("name"), name1);
-//                                        System.out.println(jsonObject3);
-//                                        break;
+                                    default:
+                                }
+                                JSONArray jsonArray4 = jsonObject.getJSONObject("data").getJSONObject("asset").getJSONArray("items");
+                                for (int i2 = 0; i2 < jsonArray3.size(); i2++) {
+                                    JSONObject jsonObject4 = JSONObject.fromObject(jsonArray4.get(i2).toString());
+                                    switch (jsonObject4.getString("itemName")) {
+                                        case "严重失信":
+                                            System.out.println("jsonObject4");
 
-//                                    case "房屋权属":
-//                                        assertEquals(jsonObject3.getJSONArray("itemValue").getJSONObject(0).getString("area"), area);
-//                            assertEquals(jsonObject3.getJSONArray("itemValue").getJSONObject(0).getString("holders"), 2);
-//                            assertEquals(jsonObject3.getJSONArray("itemValue").getJSONObject(0).getString("is_sealup"), false);
-//                                        assertEquals(jsonObject3.getJSONArray("itemValue").getJSONObject(0).getString("location"), location);
-//                            assertEquals(jsonObject3.getJSONArray("itemValue").getJSONObject(0).getString("mortgage_list"), 0);
-//                            assertEquals(jsonObject3.getJSONArray("itemValue").getJSONObject(0).getString("seq"), 1);
-//                                        assertEquals(jsonObject3.getJSONArray("itemValue").getJSONObject(0).getString("status"), status);
-//                                        assertEquals(jsonObject3.getJSONArray("itemValue").getJSONObject(0).getString("type"), type);
-//                                        assertEquals(jsonObject3.getJSONArray("itemValue").getJSONObject(0).getString("usage"), usage);
-//                                        System.out.println(jsonObject3);
-
-//                                    default:
-//                                }
-//                                JSONArray jsonArray4 = jsonObject.getJSONObject("data").getJSONObject("asset").getJSONArray("items");
-//                                for (int i2 = 0; i2 < jsonArray3.size(); i2++) {
-//                                    JSONObject jsonObject4 = JSONObject.fromObject(jsonArray4.get(i2).toString());
-//                                    switch (jsonObject4.getString("itemName")) {
-//                                        case "严重失信":
-//                                            System.out.println("jsonObject4");
-
-//                                    }
-//                                }
+                                        }
+                                   }
 
                             }
                     }
                 }
-//            }
-//        }
-
             }
         }
-//    }
-//}
+}
+
+
