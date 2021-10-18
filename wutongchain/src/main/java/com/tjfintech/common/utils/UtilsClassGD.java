@@ -17,6 +17,8 @@ public class UtilsClassGD {
     public static String gdContractAddress = "018a976954474678a3a100d33200b7f9fd1b34a60118c4cb13cfd79f6f324b5d";
     public static String gdPlatfromKeyID = "c3lp9ut2uehckgv67ht0";
 
+	public static int blockHeight = 30595;
+
     //外网对接
 //    public static String gdContractAddress = "48cb62af2f6363a5088264ce41193a362455b27fedb1d72eb512a7bfeb339523";
 //    public static String gdPlatfromKeyID = "bv6t8lphdkebd3874vv0";
@@ -67,7 +69,7 @@ public class UtilsClassGD {
     public static long end = 0;
     public static int beginHeigh = 0;
     public static int endHeight = 0;
-	public static int blockHeight = 5903;
+
     public static long timeStamp = (new Date()).getTime();
     public static String testCurMethodName = "";
 
