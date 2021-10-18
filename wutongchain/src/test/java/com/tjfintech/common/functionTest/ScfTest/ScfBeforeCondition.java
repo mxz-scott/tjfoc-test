@@ -191,17 +191,17 @@ public class ScfBeforeCondition {
         String response1 = scf.AccountCreate(PlatformAddress, platformKeyID, PIN, "",comments);
         supplyAddress1 = JSONObject.fromObject(response1).getString("data");
         supplyID1 = JSONObject.fromObject(response1).getString("keyID");
-        supplierMsg1 = JSONObject.fromObject(response1).getString("TxId");
+        supplierMsg1 = JSONObject.fromObject(response1).getString("txId");
 
         String response2 = scf.AccountCreate(PlatformAddress, platformKeyID, PIN, "",comments);
         supplyAddress2 = JSONObject.fromObject(response2).getString("data");
         supplyID2 = JSONObject.fromObject(response2).getString("keyID");
-        supplierMsg2 = JSONObject.fromObject(response2).getString("TxId");
+        supplierMsg2 = JSONObject.fromObject(response2).getString("txId");
 
         String response3 = scf.AccountCreate(PlatformAddress,platformKeyID, PIN, "",comments);
         supplyAddress3 = JSONObject.fromObject(response3).getString("data");
         supplyID3 = JSONObject.fromObject(response3).getString("keyID");
-        supplierMsg3 = JSONObject.fromObject(response3).getString("TxId");
+        supplierMsg3 = JSONObject.fromObject(response3).getString("txId");
     }
 //    /***
 //     * 获取comments

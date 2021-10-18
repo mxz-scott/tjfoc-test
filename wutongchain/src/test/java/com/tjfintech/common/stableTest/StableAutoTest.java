@@ -59,7 +59,7 @@ public class StableAutoTest {
 
 
     /**
-     *  系统稳定性测试
+     *  系统稳定性测试，是否丢交易测试
      */
     @Test
     public void SystemStableTest() throws Exception {
@@ -77,7 +77,7 @@ public class StableAutoTest {
 
         int i = 0;
         int number = 6;  // 单链单次循环发送的交易数
-        int loop = 1000; // 循环次数
+        int loop = 100000; // 循环次数
         int total = loop * number; // 循环次数
 
         commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
@@ -96,12 +96,17 @@ public class StableAutoTest {
                 priStoreTest(ids[j]);
             }
 
+            Thread.sleep(100);
             for (int j = 0; j < ledgerNumber; j++) {
                 smartTokenTest(ids[j]);
             }
 
             i++;
 
+            log.info("i ===================== " + i);
+            if ( i % (loop / 10) == 0) {
+                utilsClass.setAndRestartPeer(PEER4IP);
+            }
         }
 
         commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
@@ -142,10 +147,10 @@ public class StableAutoTest {
 
 
     /**
-     * 是否丢交易测试，节点内存是否溢出测试
+     *  节点内存是否溢出测试
      */
     @Test
-    public void TxLost_OutOfMemoryTest() throws Exception {
+    public void OutOfMemoryTest() throws Exception {
         String[] ids = getLedgerIDs();
         int ledgerNumber = ids.length;
 
@@ -166,7 +171,6 @@ public class StableAutoTest {
         while (i < loop) {
 
             for (int j = 0; j < ledgerNumber; j++) {
-//                if ( storeTest(ids[j]) == 200 ){
                 if ( bigStoreTest(ids[j]) == 200 ){
                     total[j]++;
                 }
@@ -211,22 +215,6 @@ public class StableAutoTest {
     }
 
 
-
-    /**
-     *  节点内存是否溢出测试
-     */
-    @Test
-    public void tmp() throws Exception {
-
-        int i = 0;
-        int loop = 10000; // 循环次数
-
-        while (i < loop) {
-            bigStoreTest("") ;
-            i++;
-        }
-    }
-
     /**
      * 事件稳定性测试
      */
@@ -253,6 +241,7 @@ public class StableAutoTest {
             i++;
 
             Thread.sleep(SHORTMEOUT); // 3秒
+            log.info("i ===================== " + i);
             if ( i % 10 == 0) {
                 utilsClass.setAndRestartPeer(PEER4IP);
             }
@@ -265,6 +254,7 @@ public class StableAutoTest {
         assertEquals("事件不稳定", storeTest(ids[0]), 200);
 
     }
+
 
     /**
      * token api稳定性测试

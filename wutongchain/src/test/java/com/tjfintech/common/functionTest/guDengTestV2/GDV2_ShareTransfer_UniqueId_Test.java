@@ -1038,7 +1038,7 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         register_transaction_ref = txRpObjId;//登记引用的是交易报告的对象标识
         //登记数据
         tempObjIdFrom = "reg" + mapAccAddr.get(gdAccount1).toString() + Random(4);
-        tempObjIdTo = "reg" + mapAccAddr.get(gdAccount5).toString() + Random(4);
+        tempObjIdTo = "reg" + mapAccAddr.get(gdAccount6).toString() + Random(4);
         fromNow = gdBF.init05RegInfo();
         toNow = gdBF.init05RegInfo();
         fromNow.put("register_registration_object_id",tempObjIdFrom);
@@ -1046,8 +1046,9 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         fromNow.put("register_subject_account_ref","SH" + gdAccClientNo1);}
         toNow.put("register_registration_object_id",tempObjIdTo);
         if(regObjType == 1){
-        toNow.put("register_subject_account_ref","SH" + gdAccClientNo5);}
+        toNow.put("register_subject_account_ref","SH" + gdAccClientNo6);}
 
+        toAddr = gdAccount6;
         response = gd.GDShareTransfer(keyId,fromAddr,transferAmount,toAddr,shareProperty,eqCode,txInfo,fromNow,toNow);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
@@ -1063,7 +1064,7 @@ public class GDV2_ShareTransfer_UniqueId_Test {
         assertEquals(true,getTXDetails.contains(tempObjIdFrom));
         assertEquals(true,getTXDetails.contains(tempObjIdTo));
         assertEquals(true,getTXDetails.contains(txRpObjId));
-        assertEquals(true,getTXDetails.contains(gdCompanyID));
+        assertEquals(false,getTXDetails.contains(gdCompanyID));
 
     }
 

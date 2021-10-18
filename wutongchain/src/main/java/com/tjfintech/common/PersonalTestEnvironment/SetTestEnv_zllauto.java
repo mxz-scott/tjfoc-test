@@ -33,7 +33,7 @@ public class SetTestEnv_zllauto {
       PeerPATH = PTPATH + "peer/";
       ToolPATH = PTPATH + "toolkit/";
       TokenApiPATH = PTPATH + "wtfinservice/";
-      PeerTPName = "wtchain302";
+      PeerTPName = "wtchain303";
       SDKTPName = "wtsdk_gd";
       ToolTPName = "Autokit";
       TokenTPName = "Autot";
