@@ -1087,6 +1087,16 @@ public class GDV2_JGFormat_Part3_SubjectChangeTxSend_Test {
     public void shareUnlock_Type7_SubmitTxReport() throws Exception {
         shareUnlockWithType(7);
     }
+
+    /***
+     * 解除冻结还款解质押方式 255 需带交易报告 不会报送交易报告
+     * @throws Exception
+     */
+    @Test
+    public void shareUnlock_Type255_SubmitTxReport() throws Exception {
+        shareUnlockWithType(255);
+    }
+
     public void shareUnlockWithType(int type) throws Exception {
         bizNoTest = "unlockReport" + Random(13);
         String bizNo = bizNoTest;
