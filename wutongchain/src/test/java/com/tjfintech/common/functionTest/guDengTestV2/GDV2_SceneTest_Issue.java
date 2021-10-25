@@ -27,6 +27,9 @@ import static org.junit.Assert.assertNotEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/***
+ * 初始股份登记异常场景测试用例
+ */
 public class GDV2_SceneTest_Issue {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

@@ -26,6 +26,10 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+
+/**
+ * 数据一致性校验测试用例 当非必填字段不填写时 接口是否报错 数据是否报送
+ * */
 public class GDV2_JGData_RefObjParamExceptionScene {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

@@ -25,6 +25,11 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+
+/**
+ * 主要针对更新主体 账户 产品接口的场景测试用例
+ * */
+
 public class GDV2_JGData_Update_SubAccProd_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

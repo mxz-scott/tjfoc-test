@@ -23,6 +23,12 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+
+/**
+ * 多角色场景用例补充
+ * 主体既可以挂牌登记 又可以开户
+ * 本测试类测试 机构挂牌后进行开户 之后进行初始股份登记
+ */
 public class GDV2_JGFormat_Part4_DoubleRoles_FlowTest01_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
@@ -55,16 +61,6 @@ public class GDV2_JGFormat_Part4_DoubleRoles_FlowTest01_Test {
 
     @Rule
     public TestName tm = new TestName();
-    /***
-     * 测试说明
-     * 转让 会转给新的账户 因此转让会使得总股东数增加
-     * 股权性质变更 变更部分
-     * 增发 增发给发行时的所有账户  增发不会增加总股东数
-     * 冻结/解除冻结  部分冻结 解除全部冻结
-     * 回收 没有一个账户为回收全部  回收不会减少总股东数
-     * 场内转板
-     * @throws Exception
-     */
 
     @BeforeClass
     public static void Before()throws Exception{

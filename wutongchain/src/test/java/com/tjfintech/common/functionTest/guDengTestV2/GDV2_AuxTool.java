@@ -18,6 +18,9 @@ import static com.tjfintech.common.utils.UtilsClass.*;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/***
+ * 跨链对接 区块及交易校验工具
+ */
 public class GDV2_AuxTool {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

@@ -24,6 +24,9 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/**
+ * 检查交易报告数据对象是否报送 场景测试用例 遵循数据模型中交易报告库中的类型规定
+ */
 public class GDV2_JGFormat_Part3_SubjectChangeTxSend_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
@@ -50,13 +53,6 @@ public class GDV2_JGFormat_Part3_SubjectChangeTxSend_Test {
 
     @Rule
     public TestName tm = new TestName();
-    /***
-     * 测试说明
-     * 增发新增股东数
-     * 场内转板
-     * @throws Exception
-     */
-
     @BeforeClass
     public static void Before()throws Exception{
         GDBeforeCondition gdBefore = new GDBeforeCondition();

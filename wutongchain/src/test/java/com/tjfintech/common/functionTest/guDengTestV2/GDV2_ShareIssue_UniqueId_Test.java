@@ -26,6 +26,10 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+
+/***
+ * 事务一致性异常场景测试用例 初始股份登记
+ */
 public class GDV2_ShareIssue_UniqueId_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

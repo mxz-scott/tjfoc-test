@@ -23,6 +23,9 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/***
+ * 股份性质变更异常场景测试用例
+ */
 public class GDV2_SceneTest_ChangeProperty {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

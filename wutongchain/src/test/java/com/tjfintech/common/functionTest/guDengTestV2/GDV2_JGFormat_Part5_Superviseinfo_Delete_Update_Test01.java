@@ -28,6 +28,11 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/**
+ * 监管数据删除及更新接口 测试接口用例补充
+ * 删除后更新
+ * 删除个人主体 账户 机构主体 产品信息后再更新
+ */
 public class GDV2_JGFormat_Part5_Superviseinfo_Delete_Update_Test01 {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
@@ -133,7 +138,7 @@ public class GDV2_JGFormat_Part5_Superviseinfo_Delete_Update_Test01 {
 
 
         //=========================================================================================
-        //删除信披对象
+        //删除主体 账户对象
         gd.GDEquitySuperviseInfoDelete(cltNo,0,subjectType);
         gd.GDEquitySuperviseInfoDelete(fundNo,0,accType);
         gd.GDEquitySuperviseInfoDelete(shareHolderNo,0,accType);
@@ -228,114 +233,6 @@ public class GDV2_JGFormat_Part5_Superviseinfo_Delete_Update_Test01 {
 
     }
 
-
-
-//    @Test
-    public void TCN15_9Types_infodisclosurePublishAndGet() throws Exception {
-        infodisclosurePublishAndGetByType(1);
-    }
-
-    public void infodisclosurePublishAndGetByType(int type) throws Exception {
-        disclosureType = type;
-        disclosureInfo = gdBF.init07PublishInfo();
-        String response= gd.GDInfoPublish(disclosureInfo);
-        net.sf.json.JSONObject jsonObject= net.sf.json.JSONObject.fromObject(response);
-        String txId = jsonObject.getString("data");
-
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
-        //检查uri存证交易详情
-        response = store.GetTxDetail(txId);
-        net.sf.json.JSONObject jsonObject1 = net.sf.json.JSONObject.fromObject(response).getJSONObject("data");
-        assertEquals("0",jsonObject1.getJSONObject("header").getString("version"));
-        assertEquals("0",jsonObject1.getJSONObject("header").getString("type"));
-        assertEquals("0",jsonObject1.getJSONObject("header").getString("subType"));
-        assertEquals(1, StringUtils.countOccurrencesOf(response,"data_type"));
-
-        String responseGet = gd.GDInfoPublishGet(txId);
-        assertEquals("200", net.sf.json.JSONObject.fromObject(responseGet).getString("state"));
-        assertEquals(false,responseGet.contains("\"data\":null"));
-
-
-
-
-        log.info("检查信批存证格式化及信息内容与传入一致");
-//        Map tempPub = gdCF.contructPublishInfo(txId);
-//        log.info(tempPub.toString().replaceAll("\"",""));
-//
-//        log.info(disclosureInfo.toString());
-//        disclosureInfo.put("letter_disclosure_object_id",tempPub.get("letter_disclosure_object_id"));
-//        assertEquals(disclosureInfo.toString(), tempPub.toString().replaceAll("\"",""));
-
-        String txDetail = store.GetTxDetail(txId);
-        assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
-
-        //检查各个查询对象返回信息中不包含敏感词
-        assertEquals("不包含敏感词",true,gdCF.chkSensitiveWord(txDetail,infoType));
-
-        //设置各个主体版本变量
-        String objPrefix = "letter_";
-
-        //获取（从交易详情中）链上mini url的存证信息并检查是否包含uri信息 通过前缀信息获取信披对象id
-        String storeData = JSONObject.parseObject(txDetail).getJSONObject(
-                "data").getJSONObject("store").getString("storeData").toString();
-        log.info(storeData);
-        JSONObject objURI = JSONObject.parseObject(
-                JSONObject.parseArray(storeData).get(0).toString());
-        String chkObjURI = objPrefix;
-        assertEquals(true,storeData.contains(chkObjURI));
-        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字
-
-        String objVerTemp =  objURI.getString("uri").trim();
-
-        String newDisObjId = "";
-        newDisObjId = objVerTemp.substring(0,objVerTemp.lastIndexOf("/"));
-
-
-        //=========================================================================================
-        //删除信披对象
-        gd.GDEquitySuperviseInfoDelete(newDisObjId,0,infoType);
-
-        //检查头信息
-        gdCF.checkHeaderContentInfo(newDisObjId,0,infoType,"delete");
-
-        //更新信披对象
-        disclosureInfo.put("letter_disclosure_object_id",newDisObjId);
-        gd.GDEquitySuperviseInfoUpdate(newDisObjId,infoType,ts7,disclosureInfo);
-        //=========================================================================================
-
-        //有一次更新
-        String newDisObjIdVer = objVerTemp.substring(objVerTemp.lastIndexOf("/") + 2);//gdCF.getObjectLatestVer(newDisObjId);
-        log.info(objVerTemp + " " + newDisObjIdVer);
-
-//        assertEquals(objVerTemp.substring(objVerTemp.lastIndexOf("_") + 1),newDisObjIdVer);//确认uri中的版本号和实际最新版本号一致
-
-//        String disDSRefVer = gdCF.getObjectLatestVer(disclosure_subject_ref);
-//        String disDRSRefVer = gdCF.getObjectLatestVer(disclosure_referer_subject_ref);
-//        String disDDPRefVer = gdCF.getObjectLatestVer(disclosure_display_platform_ref);
-//        String disDIRefVer = gdCF.getObjectLatestVer(disclosure_identifier_ref);
-//        String disDARefVer = gdCF.getObjectLatestVer(disclosure_auditor_ref);
-
-        String objfileName = conJGFileName(newDisObjId,newDisObjIdVer);
-
-        //比较query的和minio上的是数据是否一致
-        MinIOOperation minio = new MinIOOperation();
-        String getStr = minio.getFileFromMinIO(minIOEP,jgBucket,objfileName,"");
-        assertEquals("检查查询与minio上数据是否一致",true,responseGet.contains(getStr));
-
-
-        //直接从minio上通过对象标识+版本号的方式获取指定对象文件
-        Map getDisclosureInfo = gdCF.constructJGDataFromStr(objfileName,infoType,"");
-
-        //填充header content字段
-        disclosureInfo.put("content",gdCF.constructContentTreeMap(infoType,newDisObjId,newDisObjIdVer,"create",String.valueOf(ts7)));
-
-
-        log.info("检查主体存证信息内容与传入一致\n" + getDisclosureInfo.toString() + "\n" + getDisclosureInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(disclosureInfo,infoType)),replaceCertain(getDisclosureInfo.toString()));
-
-    }
 
 //    @Test
     public void TCN16_balanceCount() throws Exception {
@@ -531,74 +428,6 @@ public class GDV2_JGFormat_Part5_Superviseinfo_Delete_Update_Test01 {
         }
     }
 
-
-    public void comSettleLetterTest(String type) throws Exception {
-
-        Map mapObjParam = null;
-        String objPrefix = "";
-        String timeStamp = "";
-
-        String response = "";
-        switch (type){
-            case "settlement":
-                objPrefix = "fund_";
-                timeStamp = String.valueOf(ts6);
-                mapObjParam = gdBF.init06SettleInfo();
-                response= gd.GDCapitalSettlement(mapObjParam);
-                break;
-            case "infodisclosure":
-                objPrefix = "letter_";
-                timeStamp = String.valueOf(ts7);
-                mapObjParam = gdBF.init07PublishInfo();
-                response= gd.GDInfoPublish(mapObjParam);
-                break;
-            default: log.info("不支持的数据类型");
-        }
-
-
-        net.sf.json.JSONObject jsonObject= net.sf.json.JSONObject.fromObject(response);
-        String txId = jsonObject.getJSONObject("data").getString("txId");
-
-        commonFunc.sdkCheckTxOrSleep(txId,utilsClass.sdkGetTxDetailTypeV2,SLEEPTIME);
-        String txDetail = store.GetTxDetail(txId);
-        assertEquals("200", net.sf.json.JSONObject.fromObject(store.GetTxDetail(txId)).getString("state"));
-
-
-        //设置各个主体版本变量
-
-
-        //获取（从交易详情中）链上mini url的存证信息并检查是否包含uri信息 通过前缀信息获取信披对象id
-        String storeData = JSONObject.parseObject(txDetail).getJSONObject(
-                "data").getJSONObject("store").getString("storeData").toString();
-        log.info(storeData);
-        JSONObject objURI = JSONObject.parseObject(
-                JSONObject.parseArray(storeData).get(0).toString());
-        String chkObjURI = objPrefix;
-        assertEquals(true,storeData.contains(chkObjURI));
-        assertEquals(true,gdCF.bContainJGFlag(storeData));//确认meta信息包含监管关键字
-
-        String objVerTemp =  objURI.getString("uri").trim();
-
-        String newObjId = "";
-        newObjId = objVerTemp.substring(0,objVerTemp.lastIndexOf("/"));
-
-        String newObjIdVer = objVerTemp.substring(objVerTemp.lastIndexOf("_") + 1);//gdCF.getObjectLatestVer(newDisObjId);
-        log.info(objVerTemp + " " + newObjIdVer);
-
-        String objfileName = conJGFileName(newObjId,newObjIdVer);
-
-
-        //直接从minio上通过对象标识+版本号的方式获取指定对象文件
-        Map getSettleInfo = gdCF.constructJGDataFromStr(objfileName,type,"");
-
-        //填充header content字段
-        settleInfo.put("content",gdCF.constructContentTreeMap(type,newObjId,newObjIdVer,"create",timeStamp));
-
-
-        log.info("检查主体存证信息内容与传入一致\n" + mapObjParam.toString() + "\n" + getSettleInfo.toString());
-        assertEquals(replaceCertain(gdCF.matchRefMapCertVer2(mapObjParam,type)),replaceCertain(getSettleInfo.toString()));
-
-    }
 
 
 }

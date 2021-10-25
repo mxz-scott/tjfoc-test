@@ -26,6 +26,10 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+
+/***
+ * 异步模式下 挂牌登记、开户、信披等接口小并发测试用例
+ */
 public class GDV2_JGFormat_Async2Interface_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

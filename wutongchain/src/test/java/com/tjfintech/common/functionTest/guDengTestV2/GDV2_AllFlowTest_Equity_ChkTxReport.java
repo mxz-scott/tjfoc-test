@@ -24,6 +24,10 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+
+/***
+ * 测试交易报告库数据正确性
+ */
 public class GDV2_AllFlowTest_Equity_ChkTxReport {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

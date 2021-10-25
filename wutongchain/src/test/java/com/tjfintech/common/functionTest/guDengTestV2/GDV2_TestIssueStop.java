@@ -23,6 +23,11 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+
+/***
+ * 发行后重启节点及sdk后是否可以正常执行utxo交易
+ * 测试节点utxo数据缓存异常问题
+ */
 public class GDV2_TestIssueStop {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

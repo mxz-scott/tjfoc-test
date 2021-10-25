@@ -27,6 +27,10 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+
+/***
+ * 测试监管数据模型中非必填字段不填写 时7中数据模型报送执行情况
+ */
 public class GDV2_JGData_NonEssentialParamTest {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

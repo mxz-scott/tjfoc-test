@@ -26,6 +26,12 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+
+/**
+ * 多角色场景用例补充
+ * 主体既可以挂牌登记 又可以开户
+ * 即支持个人主体挂牌登记
+ */
 public class GDV2_JGFormat_Part4_DoubleRoles_EnterpriseRegisterThenAccCreate {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

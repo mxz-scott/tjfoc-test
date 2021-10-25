@@ -19,6 +19,10 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+
+/***
+ * 监管数据模型中 必填字段不填写时的测试用例
+ */
 public class GDV2_JGDataNecessary_SubProd_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

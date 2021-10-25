@@ -22,6 +22,9 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/***
+ * 测试每个接口执行的合约交易交易详情 合约交易在存证交易的前一个区块中
+ */
 public class GDV2_AllFlowTest_Equity_WVMTxDetail {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

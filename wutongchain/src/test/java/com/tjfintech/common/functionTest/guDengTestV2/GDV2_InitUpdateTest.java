@@ -15,6 +15,9 @@ import static com.tjfintech.common.utils.UtilsClassGD.*;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/***
+ * 测试初始化带参数时不更新合约pubkey
+ */
 public class GDV2_InitUpdateTest {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
