@@ -754,7 +754,7 @@ public class GDV2_JGFormat_Part5_Superviseinfo_Delete_Update_Test02 {
     }
 
 
-    @Test
+    //@Test
     public void TCN16_balanceCount() throws Exception {
         settlement_product_ref = gdEquityCode;
 //        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();

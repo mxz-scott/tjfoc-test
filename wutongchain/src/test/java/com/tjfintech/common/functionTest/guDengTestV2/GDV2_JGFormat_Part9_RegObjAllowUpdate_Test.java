@@ -1704,7 +1704,7 @@ public class GDV2_JGFormat_Part9_RegObjAllowUpdate_Test {
     }
 
 
-    @Test
+   // @Test
     public void TCN16_balanceCount() throws Exception {
         settlement_product_ref = gdEquityCode;
 //        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();

@@ -1419,7 +1419,7 @@ public class GDBeforeCondition {
         mapTemp.put("settlement_serial_number", "CH1ktvx01x2e04");
         mapTemp.put("settlement_time", time1);
         mapTemp.put("settlement_product_ref", gdEquityCode);
-//        mapTemp.put("settlement_transaction_ref", settlement_transaction_ref);
+        mapTemp.put("settlement_transaction_ref", settlement_transaction_ref); //解除注释
         mapTemp.put("settlement_currency", "156");
         mapTemp.put("settlement_value", 600000);
         mapTemp.put("settlement_note", "textemu4AW4U57");
