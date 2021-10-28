@@ -685,6 +685,7 @@ public class GDV2_JGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Test {
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
         assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
+        assertEquals(true,getSubInfo.toString().contains("qualification_information"));
 
         if(!type.equals("4")) {
             log.info("检查产品存证信息内容与传入一致\n" + prodInfo.toString() + "\n" + getProInfo.toString());
