@@ -1,14 +1,11 @@
 package com.tjfintech.common;
 
-import com.tjfintech.common.Interface.Credit;
 import com.tjfintech.common.Interface.Tap;
 import com.tjfintech.common.utils.GetTest;
 import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.SDKADD;
@@ -126,7 +123,7 @@ public class GoTap implements Tap {
      * 获取投标信息列表
      * @return
      */
-    public String tapTenderRecord(String projectId, String recordId, boolean detail, String sign) {
+    public String tapTenderRecord(String projectId, String recordId, Boolean detail, String sign) {
 
         Map<String, Object> map = new HashMap<>();
         map.put("projectId", projectId);

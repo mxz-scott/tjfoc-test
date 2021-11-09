@@ -1,7 +1,5 @@
 package com.tjfintech.common.Interface;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public interface Tap {
@@ -20,7 +18,7 @@ public interface Tap {
 
     String tapProjectList();
 
-    String tapTenderRecord(String projectId, String recordId, boolean detail, String sign);
+    String tapTenderRecord(String projectId, String recordId, Boolean detail, String sign);
 
     String tapTenderOpen(String projectId, String sign);
 

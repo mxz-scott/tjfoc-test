@@ -24,8 +24,8 @@ public class UtilsClassTap {
 
 
     public static String projectId = "";
-    public static long expireDate = System.currentTimeMillis() / 1000 + 100;
-    public static long openDate = System.currentTimeMillis() / 1000 + 200;
+    public static long expireDate = System.currentTimeMillis() / 1000 + 10;
+    public static long openDate = System.currentTimeMillis() / 1000 + 20;
     public static String publicKey = "";
     public static String sign = "";
     public static String identity = "ZBF" + UtilsClass.Random(8);
@@ -43,6 +43,7 @@ public class UtilsClassTap {
 
     public static String recordIdA = "tenderA" + UtilsClass.Random(8);
     public static String recordIdB = "tenderB" + UtilsClass.Random(8);
+    public static String recordIdC = "tenderB" + UtilsClass.Random(8);
 
     public static String fileHead = "fileHead" + UtilsClass.Random(8);
     public static String path = "top/sub1/sub2/sub3";

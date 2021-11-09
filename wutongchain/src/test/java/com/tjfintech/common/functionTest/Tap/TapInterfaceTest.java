@@ -36,10 +36,14 @@ public class TapInterfaceTest {
     TapCommonFunc tapCommonFunc = new TapCommonFunc();
     WVMContractTest wvm = new WVMContractTest();
 
+    String sdkIP = SDKADD.substring(SDKADD.lastIndexOf("/") + 1, SDKADD.lastIndexOf(":"));
 
 
     @BeforeClass
     public static void init() throws Exception {
+
+        BeforeCondition bf = new BeforeCondition();
+        bf.updatePubPriKey();
         TapCommonFunc tapCommonFunc = new TapCommonFunc();
         tapCommonFunc.init();
 
@@ -83,6 +87,26 @@ public class TapInterfaceTest {
         response = tap.tapProjectInit(expireDate, openDate, publicKey, identity, filesize, name, null);
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'MetaData' failed on the 'required"));
+
+        //招标截止时间小于当前时间
+        response = tap.tapProjectInit(expireDate - 200, openDate, publicKey, identity, filesize, name, metaData);
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("openDate or ExpireDate should not before now"));
+
+        //开标时间小于当前时间
+        response = tap.tapProjectInit(expireDate, openDate - 200, publicKey, identity, filesize, name, metaData);
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("openDate or ExpireDate should not before now"));
+
+        //开标时间小于招标截止时间
+        response = tap.tapProjectInit(expireDate + 100, openDate, publicKey, identity, filesize, name, metaData);
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("openDate should not before expireDate"));
+
+        //公钥格式不正确
+        response = tap.tapProjectInit(expireDate, openDate, PUBKEY1, identity, filesize, name, metaData);
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("public verify err:encoding/hex"));
     }
 
     @Test
@@ -98,6 +122,33 @@ public class TapInterfaceTest {
         response = tap.tapProjectUpdate(projectId, expireDate, openDate, metaData, name, stateNormal, filesize, "");
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'Sign' failed on the 'required"));
+
+        //项目标识projectId为不存在的数据
+        response = tap.tapProjectUpdate("123456789", expireDate, openDate, metaData, name, stateNormal, filesize, sign);
+        assertEquals("404", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("project info not found"));
+
+        //签名sign为错误的签名数据
+        response = tap.tapProjectUpdate(projectId, expireDate, openDate, metaData, name, stateNormal, filesize, "123");
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("wvm invoke err"));
+
+    }
+
+    @Test
+    //招标信息查询接口必输字段校验
+    public void tapProjectDetailInterfaceTest() throws Exception {
+
+        //项目标识projectId为空
+        String response = tap.tapProjectDetail("");
+//        assertEquals("404", JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true, response.contains("Field validation for 'ProjectId' failed on the 'required"));
+
+        //项目标识projectId为不存在的数据
+        response = tap.tapProjectDetail("123456789");
+        assertEquals("404", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("project info not found"));
+
     }
 
     @Test
@@ -113,6 +164,11 @@ public class TapInterfaceTest {
         response = tap.tapTenderVerify("123", "");
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'Sender' failed on the 'required"));
+
+        //发送方sender为错误数据
+        response = tap.tapTenderVerify("123", "abc");
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("Field validation for 'Sender' failed on the 'oneof' tag"));
     }
 
     @Test
@@ -138,6 +194,12 @@ public class TapInterfaceTest {
         response = tap.tapTenderUpload(projectId, recordIdA, fileHead, "");
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'Path' failed on the 'required"));
+
+        //项目标识projectId为不存在的数据
+        response = tap.tapTenderUpload("123456", recordIdA, fileHead, path);
+        assertEquals("404", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("project info not found"));
+
     }
 
     @Test
@@ -153,6 +215,11 @@ public class TapInterfaceTest {
         response = tap.tapTenderRevoke(metaData.toString(), "");
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'ProjectId' failed on the 'required"));
+
+        //项目标识projectId为不存在的数据
+        response = tap.tapTenderRevoke(metaData.toString(), "123456");
+        assertEquals("404", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("project info not found"));
     }
 
     @Test
@@ -168,6 +235,17 @@ public class TapInterfaceTest {
         response = tap.tapTenderRecord(projectId, recordIdA, false, "");
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'Sign' failed on the 'required"));
+
+        //项目标识projectId为不存在的数据
+        response = tap.tapTenderRecord("123456", recordIdA, false, sign);
+        assertEquals("404", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("project info not found"));
+
+        //签名sign为错误的签名数据
+        response = tap.tapTenderRecord(projectId, recordIdA, false, "123456");
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("verify failed"));
+
     }
 
     @Test
@@ -179,10 +257,21 @@ public class TapInterfaceTest {
         assertEquals("404", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("project info not found"));
 
-        //招标方签名sign空
+        //招标方签名sign为空
         response = tap.tapTenderOpen(projectId, "");
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("sign cannot empty"));
+
+        //项目标识projectId为不存在的数据
+        response = tap.tapTenderOpen("123456", sign);
+        assertEquals("404", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("project info not found"));
+
+        //签名sign为错误的签名数据
+        sleepAndSaveInfo(200 * 1000);
+        response = tap.tapTenderOpen(projectId, "123456");
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("wvm invoke err"));
     }
 
 }
