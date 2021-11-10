@@ -43,6 +43,8 @@ public class TapCommonFunc {
 
     public void init() throws Exception {
 
+        expireDate = System.currentTimeMillis() / 1000 + 20;
+        openDate = System.currentTimeMillis() / 1000 + 20;
         String sdkIP = SDKADD.substring(SDKADD.lastIndexOf("/") + 1, SDKADD.lastIndexOf(":"));
         publicKey = certTool.tapPubToHex(sdkIP, PRIKEY1, "", "", "");
         log.info(publicKey);
@@ -56,7 +58,7 @@ public class TapCommonFunc {
 
     public String initProject() throws Exception {
 
-        expireDate = System.currentTimeMillis() / 1000 + 10;
+        expireDate = System.currentTimeMillis() / 1000 + 20;
         openDate = System.currentTimeMillis() / 1000 + 20;
         String sdkIP = SDKADD.substring(SDKADD.lastIndexOf("/") + 1, SDKADD.lastIndexOf(":"));
         publicKey = certTool.tapPubToHex(sdkIP, PRIKEY1, "", "", "");

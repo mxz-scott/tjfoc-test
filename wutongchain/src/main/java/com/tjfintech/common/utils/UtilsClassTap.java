@@ -24,7 +24,7 @@ public class UtilsClassTap {
 
 
     public static String projectId = "";
-    public static long expireDate = System.currentTimeMillis() / 1000 + 10;
+    public static long expireDate = System.currentTimeMillis() / 1000 + 20;
     public static long openDate = System.currentTimeMillis() / 1000 + 20;
     public static String publicKey = "";
     public static String sign = "";

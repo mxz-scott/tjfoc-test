@@ -268,7 +268,7 @@ public class TapInterfaceTest {
         assertEquals(true, response.contains("project info not found"));
 
         //签名sign为错误的签名数据
-        sleepAndSaveInfo(200 * 1000);
+        sleepAndSaveInfo(30 * 1000);
         response = tap.tapTenderOpen(projectId, "123456");
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("wvm invoke err"));
