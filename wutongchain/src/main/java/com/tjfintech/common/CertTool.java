@@ -102,7 +102,7 @@ public class CertTool {
         if (!pwd.isEmpty()) pwdParam = " -p " + pwd;
 
         //将key保存至文件key.pem 解密SecretKey
-        shellExeCmd(peerIP, "echo " + prikey + " > " + destShellScriptDir + "key.pem");
+//        shellExeCmd(peerIP, "echo " + prikey + " > " + destShellScriptDir + "key.pem");
         String SignStr = shExeAndReturn(peerIP, wtcliExePath + "crypt sm2 -k key.pem  -s -f projectId=" + data);
         SignStr = SignStr.trim().replaceAll("\r", "").replaceAll("\n", "").
                 replaceAll("Signed successfully", "").trim();
@@ -116,13 +116,28 @@ public class CertTool {
         String pwdParam = "";
         if (!pwd.isEmpty()) pwdParam = " -p " + pwd;
 
-        //将key保存至文件key.pem 解密SecretKey
+//        将key保存至文件key.pem 解密SecretKey
 //        shellExeCmd(peerIP, "echo " + prikey + " > " + destShellScriptDir + "key.pem");
         String pubStr = shExeAndReturn(peerIP, wtcliExePath + " id sdkid -i pub.pem");
         pubStr = pubStr.trim().replaceAll("\r", "").replaceAll("\n", "").
                 replaceAll("sdkid is", "").trim();
 
         return pubStr;
+    }
+
+    //投标防偷窥项目--filePath数据解密
+    public String tapDecryptFilePath(String peerIP, String prikey, String pwd, String filePath, String keySecret) throws Exception {
+
+        String pwdParam = "";
+        if (!pwd.isEmpty()) pwdParam = " -p " + pwd;
+
+//        //将key保存至文件key.pem 解密SecretKey
+//        shellExeCmd(peerIP, "echo " + prikey + " > " + destShellScriptDir + "key.pem");
+        String SignStr = shExeAndReturn(peerIP, wtcliExePath + "util tap dec -f " + filePath + " -s " + keySecret + " -k key.pem");
+        SignStr = SignStr.trim().replaceAll("\r", "").replaceAll("\n", "").
+                replaceAll("Signed successfully", "").trim();
+
+        return SignStr;
     }
 
 }

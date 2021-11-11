@@ -17,12 +17,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.tjfintech.common.utils.FileOperation.getSDKConfigValueByShell;
+import static com.tjfintech.common.utils.UtilsClass.SDKADD;
 import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 
 @Slf4j
 public class UtilsClassTap {
 
-
+    public static String sdkIP = SDKADD.substring(SDKADD.lastIndexOf("/") + 1, SDKADD.lastIndexOf(":"));
     public static String projectId = "";
     public static long expireDate = System.currentTimeMillis() / 1000 + 20;
     public static long openDate = System.currentTimeMillis() / 1000 + 20;

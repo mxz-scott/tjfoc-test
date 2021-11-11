@@ -45,10 +45,10 @@ public class TapCommonFunc {
 
         expireDate = System.currentTimeMillis() / 1000 + 20;
         openDate = System.currentTimeMillis() / 1000 + 20;
-        String sdkIP = SDKADD.substring(SDKADD.lastIndexOf("/") + 1, SDKADD.lastIndexOf(":"));
         publicKey = certTool.tapPubToHex(sdkIP, PRIKEY1, "", "", "");
         log.info(publicKey);
         String response = tap.tapProjectInit(expireDate, openDate, publicKey, identity, filesize, name, metaData);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
         projectId = JSONObject.fromObject(response).getJSONObject("data").getString("projectId");
         log.info(projectId);
         sign = certTool.tapSign(sdkIP, PRIKEY1, "", projectId, "");
@@ -60,25 +60,68 @@ public class TapCommonFunc {
 
         expireDate = System.currentTimeMillis() / 1000 + 20;
         openDate = System.currentTimeMillis() / 1000 + 20;
-        String sdkIP = SDKADD.substring(SDKADD.lastIndexOf("/") + 1, SDKADD.lastIndexOf(":"));
         publicKey = certTool.tapPubToHex(sdkIP, PRIKEY1, "", "", "");
         log.info(publicKey);
         String response = tap.tapProjectInit(expireDate, openDate, publicKey, identity, filesize, name, metaData);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         String txid = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         String projectid = JSONObject.fromObject(response).getJSONObject("data").getString("projectId");
+        sign = certTool.tapSign(sdkIP, PRIKEY1, "", projectid, "");
         commonFunc.verifyTxDetailField(txid, "", "2", "3", "42");
         return projectid;
 
-
     }
 
 
-    public void pubTest() throws Exception {
-        String publicKeyHex = certTool.tapPubToHex("10.1.3.153", PRIKEY1, "", "", "");
-        log.info(publicKeyHex);
+    //循环初始化项目并且上传投标文件，获取项目标识和签名数据，批量开标
+    @Test
+    public void tapTenderOpenBatchTest() throws Exception {
+
+        List<Map> listmap = tapProjectInitBatchTest();
+        sleepAndSaveInfo(20*1000);
+        for (Map<String, String> map : listmap) {
+            String projectid = "";
+            String sign = "";
+            for (String k : map.keySet()) {
+                Object ob = map.get(k);
+                System.out.println(k + ":" + ob);
+                if (k == "sign") {
+                    sign = map.get(k);
+                } else
+                    projectid = map.get(k);
+            }
+            String response = tap.tapTenderOpen(projectid, sign);
+            assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        }
 
     }
+
+    public List<Map> tapProjectInitBatchTest() throws Exception {
+
+        List<Map> listmap = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Map map = new HashMap();
+            String projectid = initProject();
+            sign = certTool.tapSign(sdkIP, PRIKEY1, "", projectid, "");
+            map.put("projectId", projectid);
+            map.put("sign", sign);
+            listmap.add(map);
+
+            for (int k = 0; k < 20; k++) {
+                String recordId = "tender" + UtilsClass.Random(8);
+                String response = tap.tapTenderUpload(projectid, recordId, fileHead, path);
+                assertEquals("200", JSONObject.fromObject(response).getString("state"));
+                commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
+                        utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+            }
+
+        }
+        log.info(listmap.toString());
+        return listmap;
+
+    }
+
 
 }

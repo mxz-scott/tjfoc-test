@@ -60,14 +60,14 @@ public class TapProcessTest {
     public void tapProcessTest() throws Exception {
 
         //招标信息初始化
-        publicKey = certTool.tapPubToHex(sdkIP, PRIKEY1, "", "", "");
+        expireDate = System.currentTimeMillis() / 1000 + 20;
+        openDate = System.currentTimeMillis() / 1000 + 20;
         String response = tap.tapProjectInit(expireDate, openDate, publicKey, identity, filesize, name, metaData);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         String txid = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         String projectid = JSONObject.fromObject(response).getJSONObject("data").getString("projectId");
-        ;
         commonFunc.verifyTxDetailField(txid, "", "2", "3", "42");
 
         //招标信息查询比对
@@ -138,7 +138,12 @@ public class TapProcessTest {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains(projectid));
 
-        //获取投标信息列表
+        //获取投标信息列表,获取投标列表接口请求时间大于开标时间
+        assertThat(System.currentTimeMillis() / 1000,lessThan(openDate+20));
+        response = tap.tapTenderRecord(projectid, recordIdA, true, sign);
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true,response.contains("OpenDate is later"));
+        sleepAndSaveInfo(20 * 1000);
         response = tap.tapTenderRecord(projectid, recordIdA, true, sign);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(recordIdA, com.alibaba.fastjson.JSONObject.parseObject(
@@ -146,7 +151,6 @@ public class TapProcessTest {
                         "data").getString("RecordInfos")).get(0).toString()).getString("recordId"));
 
         //开标
-        sleepAndSaveInfo(30 * 1000);
         response = tap.tapTenderOpen(projectid, sign);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         sleepAndSaveInfo(5 * 1000);//在招标平台获取到token的时候，才会变更招标状态
@@ -288,15 +292,16 @@ public class TapProcessTest {
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
         //使用projectid1查询
+        sleepAndSaveInfo(20*1000);
         response = tap.tapTenderRecord(projectid1, recordIdB, true, sign1);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains(recordIdB));
-        assertThat(response,allOf(containsString("filePath"),containsString("keySecret")));
+        assertThat(response, allOf(containsString("filePath"), containsString("keySecret")));
 
         response = tap.tapTenderRecord(projectid1, "", false, sign1);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains(recordIdB));
-        assertThat(response,allOf(not(containsString("filePath")),not(containsString("keySecret"))));
+        assertThat(response, allOf(not(containsString("filePath")), not(containsString("keySecret"))));
 
         //recordId数据不存在
         response = tap.tapTenderRecord(projectid, "123456", true, sign);
@@ -308,42 +313,72 @@ public class TapProcessTest {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains(recordIdA));
         assertEquals(false, response.contains(recordIdB));
-        assertThat(response,allOf(containsString("filePath"),containsString("keySecret")));
+        assertThat(response, allOf(containsString("filePath"), containsString("keySecret")));
 
         //recordId传值存在的数据recordIdB、detail传值false
         response = tap.tapTenderRecord(projectid, recordIdB, false, sign);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(false, response.contains(recordIdA));
         assertEquals(true, response.contains(recordIdB));
-        assertThat(response,allOf(not(containsString("filePath")),not(containsString("keySecret"))));
+        assertThat(response, allOf(not(containsString("filePath")), not(containsString("keySecret"))));
 
         //recordId传值存在的数据recordIdB、detail传值null
         response = tap.tapTenderRecord(projectid, recordIdB, null, sign);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(false, response.contains(recordIdA));
         assertEquals(true, response.contains(recordIdB));
-        assertThat(response,allOf(not(containsString("filePath")),not(containsString("keySecret"))));
+        assertThat(response, allOf(not(containsString("filePath")), not(containsString("keySecret"))));
 
         //recordI为空、detail传值true
         response = tap.tapTenderRecord(projectid, "", true, sign);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains(recordIdA));
         assertEquals(true, response.contains(recordIdB));
-        assertThat(response,allOf(containsString("filePath"),containsString("keySecret")));
+        assertThat(response, allOf(containsString("filePath"), containsString("keySecret")));
 
         //recordI为空、detail传值false
         response = tap.tapTenderRecord(projectid, "", false, sign);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains(recordIdA));
         assertEquals(true, response.contains(recordIdB));
-        assertThat(response,allOf(not(containsString("filePath")),not(containsString("keySecret"))));
+        assertThat(response, allOf(not(containsString("filePath")), not(containsString("keySecret"))));
 
         //recordI为空、detail为空
         response = tap.tapTenderRecord(projectid, "", null, sign);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains(recordIdA));
         assertEquals(true, response.contains(recordIdB));
-        assertThat(response,allOf(not(containsString("filePath")),not(containsString("keySecret"))));
+        assertThat(response, allOf(not(containsString("filePath")), not(containsString("keySecret"))));
+
+    }
+
+    /**
+     * 获取投标信息列表接口
+     * 解密filePath数据
+     */
+    @Test
+    public void tapDecryptPathTest() throws Exception {
+
+        String projectid = tapCommonFunc.initProject();
+        //投标文件上传
+        String response = tap.tapTenderUpload(projectid, recordIdA, fileHead, path);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+
+        //使用projectId查询
+        sleepAndSaveInfo(20*1000);
+        response = tap.tapTenderRecord(projectid, recordIdA, true, sign);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+
+        String RecordInfos = com.alibaba.fastjson.JSONObject.parseObject(response).getJSONObject("data").getString("RecordInfos");
+        Object RecordInfo= com.alibaba.fastjson.JSONObject.parseArray(RecordInfos).get(0);
+        String filePath= JSONObject.fromObject(RecordInfo).getString("filePath");
+        String keySecret= JSONObject.fromObject(RecordInfo).getString("keySecret");
+        assertEquals(recordIdA, JSONObject.fromObject(RecordInfo).getString("recordId"));
+
+        String decryptFilePath = certTool.tapDecryptFilePath(sdkIP,"","",filePath,keySecret);
+        assertEquals(true,decryptFilePath.contains(path));
 
     }
 
