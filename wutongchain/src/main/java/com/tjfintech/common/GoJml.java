@@ -41,7 +41,7 @@ public class GoJml implements Jml {
 
         String param="";
 //        if(subLedger!="") param = param +"ledger="+subLedger;
-        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(syncFlag)  param = param + "?sync=true&timeout=" + syncTimeout;
 
         String result = PostTest.postMethod(JMLADD + "/jml/v1/authorize/add" + param, map);
         log.info(result);
@@ -61,7 +61,7 @@ public class GoJml implements Jml {
 
         String param="";
 //        if(subLedger!="") param = param +"ledger="+subLedger;
-        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(syncFlag)  param = param + "?sync=true&timeout=" + syncTimeout;
 
         String result = PostTest.postMethod(JMLADD + "/jml/v1/creditdata/query" + param, map);
         log.info(result);
@@ -79,7 +79,7 @@ public class GoJml implements Jml {
 
         String param="";
 //        if(subLedger!="") param = param +"ledger="+subLedger;
-        if(syncFlag)  param = param + "&sync=true&timeout=" + syncTimeout;
+        if(syncFlag)  param = param + "?sync=true&timeout=" + syncTimeout;
 
         String result = PostTest.postMethod(JMLADD + "/jml/v1/creditloan/feedback" + param, map);
         log.info(result);
