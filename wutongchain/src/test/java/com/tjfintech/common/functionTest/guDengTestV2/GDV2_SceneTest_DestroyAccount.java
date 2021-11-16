@@ -21,6 +21,9 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/***
+ * 销户异常场景测试用例
+ */
 public class GDV2_SceneTest_DestroyAccount {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

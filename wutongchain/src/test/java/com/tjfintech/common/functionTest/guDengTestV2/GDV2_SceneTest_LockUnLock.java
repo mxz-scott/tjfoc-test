@@ -21,6 +21,9 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/***
+ * 冻结 解除冻结 异常场景测试用例
+ */
 public class GDV2_SceneTest_LockUnLock {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

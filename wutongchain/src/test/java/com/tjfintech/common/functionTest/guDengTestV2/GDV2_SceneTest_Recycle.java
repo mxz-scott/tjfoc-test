@@ -25,6 +25,9 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/***
+ * 回收异常场景测试用例
+ */
 public class GDV2_SceneTest_Recycle {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

@@ -24,6 +24,9 @@ import static org.junit.Assert.assertNotEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/**
+ * 登记对象标识允许使用已有对象标识 即允许登记对象更新
+ */
 public class GDV2_JGFormat_Part9_RegObjAllowUpdate_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
@@ -60,16 +63,6 @@ public class GDV2_JGFormat_Part9_RegObjAllowUpdate_Test {
 
     @Rule
     public TestName tm = new TestName();
-    /***
-     * 测试说明
-     * 转让 会转给新的账户 因此转让会使得总股东数增加
-     * 股权性质变更 变更部分
-     * 增发 增发给发行时的所有账户  增发不会增加总股东数
-     * 冻结/解除冻结  部分冻结 解除全部冻结
-     * 回收 没有一个账户为回收全部  回收不会减少总股东数
-     * 场内转板
-     * @throws Exception
-     */
 
     @BeforeClass
     public static void Before()throws Exception{
@@ -1711,7 +1704,7 @@ public class GDV2_JGFormat_Part9_RegObjAllowUpdate_Test {
     }
 
 
-    @Test
+   // @Test
     public void TCN16_balanceCount() throws Exception {
         settlement_product_ref = gdEquityCode;
 //        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();

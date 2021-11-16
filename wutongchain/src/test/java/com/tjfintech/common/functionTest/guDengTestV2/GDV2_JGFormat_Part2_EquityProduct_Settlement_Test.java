@@ -23,6 +23,10 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/**
+ * 初始股份登记 股份性质变更 转让 冻结 解除冻结 回收 转板接口 报送监管数据信息检查
+ * 检查信息格式 检查信息是否与传入一致 检查报送
+ */
 public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
@@ -1691,7 +1695,7 @@ public class GDV2_JGFormat_Part2_EquityProduct_Settlement_Test {
 
         //填充header content字段
         testSettleInfo.put("content",gdCF.constructContentTreeMap(settleType,newSettleObjId,newDisObjIdVer,"create",String.valueOf(ts6)));
-        testSettleInfo.put("settlement_transaction_ref","null");//默认没有携带交易报告对象引用信息
+//        testSettleInfo.put("settlement_transaction_ref","null");//默认没有携带交易报告对象引用信息
         settlement_in_account_object_ref = "SH" + gdAccClientNo1;
         settlement_out_account_object_ref = "SH" + gdAccClientNo5;
         log.info("检查主体存证信息内容与传入一致\n" + testSettleInfo.toString() + "\n" + getSettleInfo.toString());

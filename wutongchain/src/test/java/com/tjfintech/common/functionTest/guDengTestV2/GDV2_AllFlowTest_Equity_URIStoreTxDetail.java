@@ -22,6 +22,10 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/***
+ * 测试每个接口执行返回交易hash的类型 当前默认是存证类型
+ */
+
 public class GDV2_AllFlowTest_Equity_URIStoreTxDetail {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

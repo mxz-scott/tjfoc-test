@@ -24,6 +24,10 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/**
+ * 挂牌登记 开户 信披接口 报送监管数据信息检查
+ * 检查信息格式 检查信息是否与传入一致 检查报送
+ */
 public class GDV2_JGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
@@ -681,6 +685,7 @@ public class GDV2_JGFormat_Part1_EnterpriseRegister_AccCreate_Publish_Test {
 
         log.info("检查主体存证信息内容与传入一致\n" + enSubInfo.toString() + "\n" + getSubInfo.toString());
         assertEquals(replaceCertain(gdCF.matchRefMapCertVer(enSubInfo,subjectType,verForSub)),replaceCertain(getSubInfo.toString()));
+        assertEquals(true,getSubInfo.toString().contains("qualification_information"));
 
         if(!type.equals("4")) {
             log.info("检查产品存证信息内容与传入一致\n" + prodInfo.toString() + "\n" + getProInfo.toString());

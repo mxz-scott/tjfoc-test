@@ -23,6 +23,10 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+
+/***
+ * 场内转板异常场景测试用例
+ */
 public class GDV2_SceneTest_ChangeBoard {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

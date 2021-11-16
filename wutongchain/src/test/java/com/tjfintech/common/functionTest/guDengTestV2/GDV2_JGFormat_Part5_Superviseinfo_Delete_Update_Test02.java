@@ -23,6 +23,12 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/**
+ * 监管数据删除及更新接口 测试接口用例补充
+ * 删除后更新
+ * 删除交易报告 登记 资金结算信息后再更新
+ */
+
 public class GDV2_JGFormat_Part5_Superviseinfo_Delete_Update_Test02 {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
@@ -748,7 +754,7 @@ public class GDV2_JGFormat_Part5_Superviseinfo_Delete_Update_Test02 {
     }
 
 
-    @Test
+    //@Test
     public void TCN16_balanceCount() throws Exception {
         settlement_product_ref = gdEquityCode;
 //        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();

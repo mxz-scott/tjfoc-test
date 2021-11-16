@@ -24,6 +24,9 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/***
+ * 基金类型产品全流程测试
+ */
 public class GDV2_FlowTest_Prod_Fund {
     TestBuilder testBuilder= TestBuilder.getInstance();
     GuDeng gd =testBuilder.getGuDeng();

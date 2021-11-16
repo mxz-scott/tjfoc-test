@@ -24,6 +24,9 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/***
+ * 场内转板事务一致性异常场景测试用例
+ */
 public class GDV2_ShareChangeBoard_UniqueId_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

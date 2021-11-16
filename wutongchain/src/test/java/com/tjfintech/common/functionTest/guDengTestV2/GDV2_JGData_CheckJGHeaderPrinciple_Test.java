@@ -25,7 +25,9 @@ import static org.junit.Assert.assertEquals;
 @Slf4j
 
 /***
- * 2021/1/7 确认异步场景下需要确认交易上链后才能正确判断预期 连续执行时不会报错 此部分考虑由业务端控制
+ * 校验报送数据header数据中 operation以及version是否符合监管规则
+ * 如 create类型则version必须是0
+ * update 对象version大于0
  */
 public class GDV2_JGData_CheckJGHeaderPrinciple_Test {
 

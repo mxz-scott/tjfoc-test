@@ -23,6 +23,10 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+
+/**
+ * 增发接口 允许不传入产品对象信息 --- 股份分红场景下 不报送产品、交易报告、对象 报送资金结算信息
+ */
 public class GDV2_JGFormat_Part8_IncreaseNoProductTx_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
@@ -51,16 +55,6 @@ public class GDV2_JGFormat_Part8_IncreaseNoProductTx_Test {
 
     @Rule
     public TestName tm = new TestName();
-    /***
-     * 测试说明
-     * 转让 会转给新的账户 因此转让会使得总股东数增加
-     * 股权性质变更 变更部分
-     * 增发 增发给发行时的所有账户  增发不会增加总股东数
-     * 冻结/解除冻结  部分冻结 解除全部冻结
-     * 回收 没有一个账户为回收全部  回收不会减少总股东数
-     * 场内转板
-     * @throws Exception
-     */
 
     @BeforeClass
     public static void Before()throws Exception{
@@ -1624,7 +1618,7 @@ public class GDV2_JGFormat_Part8_IncreaseNoProductTx_Test {
     }
 
 
-    @Test
+    //@Test
     public void TCN16_balanceCount() throws Exception {
         settlement_product_ref = gdEquityCode;
 //        Map enSubInfo = gdBF.init01EnterpriseSubjectInfo();

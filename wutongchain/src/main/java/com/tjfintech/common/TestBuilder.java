@@ -14,6 +14,7 @@ public class TestBuilder {
     private Jml jml;
     private Credit credit;
     private SYGT sygt;
+    private Tap tap;
     TestBuilder() {
         setGoTest();
     // SetJavaTest();
@@ -48,6 +49,7 @@ public class TestBuilder {
         scf = new GoScf();
         sygt = new GoSYGT();
         jml = new GoJml();
+        tap = new GoTap();
     }
 
 //    public void SetJavaTest() {
@@ -81,5 +83,8 @@ public class TestBuilder {
     }
     public SYGT getSygt() {
         return sygt;
+    }
+    public Tap getTap() {
+        return tap;
     }
 }

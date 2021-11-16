@@ -20,6 +20,10 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/***
+ * 测试接口文档中各个接口是否必填 以及非法参数场景
+ */
+
 public class GuDengV2_InterfaceTest {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

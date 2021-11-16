@@ -23,6 +23,9 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/***
+ * 增发异常场景测试用例
+ */
 public class GDV2_SceneTest_Increase {
 
     TestBuilder testBuilder= TestBuilder.getInstance();

@@ -22,6 +22,11 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+/**
+ * 多角色场景用例补充
+ * 主体既可以挂牌登记 又可以开户 挂牌开户后 进行主体 账户 产品更新
+ */
+
 public class GDV2_JGFormat_Part4_DoubleRoles_Update_SubAccProd_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
@@ -91,14 +96,18 @@ public class GDV2_JGFormat_Part4_DoubleRoles_Update_SubAccProd_Test {
         Map mapQAI = new HashMap();
         Map mapISI = new HashMap();
 
+        Map mapQI = new HashMap();
+
         //主体基本信息 主体资质信息 资质信息
-        mapSQI.put("subject_qualification_category", 1);
-        mapSQI.put("subject_market_roles_type", 1);
+        mapQI.put("subject_qualification_category", 1);
+        mapQI.put("subject_market_roles_type", 1);
         List<Integer> type = new ArrayList<>();
-        type.add(0);
-        type.add(1);
-        mapSQI.put("subject_intermediary_qualification", type);
-        mapSQI.put("subject_financial_qualification_type", 1);
+        type.add(10);
+        type.add(11);
+        mapQI.put("subject_intermediary_qualification", type);
+        mapQI.put("subject_financial_qualification_type", 1);
+
+        mapSQI.put("qualification_information", mapQI);
 
 
         //主体基本信息 主体资质信息 资质认证信息
@@ -306,14 +315,18 @@ public class GDV2_JGFormat_Part4_DoubleRoles_Update_SubAccProd_Test {
         Map mapQAI = new HashMap();
         Map mapISI = new HashMap();
 
-        //主体信息 主体基本信息 主体资质信息 资质信息
-        mapSQI.put("subject_qualification_category", 2);
-        mapSQI.put("subject_market_roles_type", 2);
+        Map mapQI = new HashMap();
+
+        //主体基本信息 主体资质信息 资质信息
+        mapQI.put("subject_qualification_category", 2);
+        mapQI.put("subject_market_roles_type", 2);
         List<Integer> type = new ArrayList<>();
-        type.add(2);
-        type.add(3);
-        mapSQI.put("subject_intermediary_qualification", type);
-        mapSQI.put("subject_financial_qualification_type", 2);
+        type.add(12);
+        type.add(20);
+        mapQI.put("subject_intermediary_qualification", type);
+        mapQI.put("subject_financial_qualification_type", 2);
+
+        mapSQI.put("qualification_information", mapQI);
 
         //主体信息 主体基本信息 主体资质信息 资质认证信息
         mapQAI.put("subject_qualification_code", "资质代码2");

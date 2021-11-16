@@ -26,6 +26,10 @@ import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
+
+/***
+ * 事务一致性异常场景测试用例 初始股份登记
+ */
 public class GDV2_ShareIssue_UniqueId_Test {
 
     TestBuilder testBuilder= TestBuilder.getInstance();
@@ -906,6 +910,54 @@ public class GDV2_ShareIssue_UniqueId_Test {
 
         String query = gd.GDGetEnterpriseShareInfo(gdEquityCode);
         assertEquals("400",JSONObject.fromObject(query).getString("state"));
+
+    }
+
+    @Test
+    public void shareIssueSameUniqueIdDiffRequestTempStoreTrue() throws Exception {
+        log.info(registerInfo.toString());
+        mapAddrRegObjId.clear(); //先清空map 这样后面map中拿到的就是此次发行的登记对象标识
+
+        int beforeBlockHeight = JSONObject.fromObject(store.GetHeight()).getInt("data");
+
+        List<Map> shareList = gdConstructShareList(gdAccount1,issueAmount,0);
+        List<Map> shareList2 = gdConstructShareList(gdAccount2,issueAmount,0, shareList);
+        List<Map> shareList3 = gdConstructShareList(gdAccount3,issueAmount,0, shareList2);
+        List<Map> shareList4 = gdConstructShareList(gdAccount4,issueAmount,0,shareList3);
+
+        String response = uf.shareIssue(gdEquityCode,shareList4,false);
+        JSONObject jsonObject = JSONObject.fromObject(response);
+        String txId = jsonObject.getJSONObject("data").getString("txId");
+        commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        String txDetail = store.GetTxDetail(txId);
+        assertEquals("200", net.sf.json.JSONObject.fromObject(txDetail).getString("state"));
+
+        sleepAndSaveInfo(3000);
+        int afterBlockHeight = JSONObject.fromObject(store.GetHeight()).getInt("data");
+        assertEquals("区块高度仅增加4，存证上链",beforeBlockHeight + 4,afterBlockHeight);//登记+发行
+
+
+
+        busUUID = tempUUID;
+        mapAddrRegObjId.clear(); //先清空map 这样后面map中拿到的就是此次发行的登记对象标识
+        bSaveBuff = true;
+        gdEquityCode = "prodEq" + Random(12);
+        gdCompanyID = "P1Re" + Random(8);
+        register_product_ref = gdEquityCode;
+        roll_register_product_ref = gdEquityCode;
+
+        List<Map> shareList11 = gdConstructShareList(gdAccount1,issueAmount,0);
+        List<Map> shareList12 = gdConstructShareList(gdAccount2,issueAmount,0, shareList11);
+        List<Map> shareList13 = gdConstructShareList(gdAccount3,issueAmount,0, shareList12);
+        List<Map> shareList14 = gdConstructShareList(gdAccount4,issueAmount,0,shareList13);
+
+        response = uf.shareIssue(gdEquityCode,shareList14,false);
+
+        //合约未执行 但是uri存证上报了
+        sleepAndSaveInfo(3000);
+
+        int afterBlockHeight2 = JSONObject.fromObject(store.GetHeight()).getInt("data");
+        assertEquals("区块高度增加2，存证不上链，合约不执行",afterBlockHeight + 2,afterBlockHeight2);//包含登记*2 + 发行存证*1
 
     }
 
