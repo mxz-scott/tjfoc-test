@@ -51,12 +51,16 @@ public class Temp_Test {
     public void SyncTest() throws Exception {
         syncFlag = true;
         int i = 0;
-        int loop = 100000; // 循环次数
+        int loop = 5000; // 循环次数
 
         while (i < loop) {
 
             StoreAndQuery(subLedger);
             i++;
+
+            if (i % 100 == 0) {
+                log.info("========运行次数： " + i);
+            }
         }
 
     }
@@ -65,7 +69,7 @@ public class Temp_Test {
     public void StoreAndQuery(String id) throws Exception {
         String Data = "test11234567" + UtilsClass.Random(4);
         String response = store.CreateStore(Data);
-        assertThat(response, containsString("200"));
+//        assertThat(response, containsString("200"));
         JSONObject jsonObject = JSONObject.fromObject(response);
         String storeHash = jsonObject.getString("data");
 

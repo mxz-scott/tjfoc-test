@@ -88,8 +88,8 @@ public class WVMContractWithVersionInvalidTest {
         } else{
             assertThat("wrong state", containsString("500 or 400, both ok"));
         }
-        assertEquals("rpc error: code = InvalidArgument desc = This method does not exist in this contract",
-                JSONObject.fromObject(response2).getString("message"));
+        assertThat(JSONObject.fromObject(response2).getString("message"),
+                containsString("rpc error: code = InvalidArgument desc = This method does not exist in this contract" ));
 
     }
 

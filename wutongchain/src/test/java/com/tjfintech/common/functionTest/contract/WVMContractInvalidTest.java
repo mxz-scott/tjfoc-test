@@ -88,14 +88,14 @@ public class WVMContractInvalidTest {
         } else{
             assertThat("wrong state", containsString("500 or 400, both ok"));
         }
-        assertEquals("rpc error: code = InvalidArgument desc = This method does not exist in this contract",
-                JSONObject.fromObject(response2).getString("message"));
+        assertThat(JSONObject.fromObject(response2).getString("message"),
+                containsString("rpc error: code = InvalidArgument desc = This method does not exist in this contract" ));
 
     }
 
 
     @Test
-    public void TC1819_InvalidNameTest()throws Exception{
+    public void TC1819_InvalidNameTest() throws Exception{
         ArrayList<String> ctNameList = new ArrayList<>();
         ArrayList<String> txHashList = new ArrayList<>();
 
