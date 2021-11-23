@@ -96,14 +96,14 @@ public class CertTool {
     }
 
     //投标防偷窥项目--项目标识签名
-    public String tapSign(String peerIP, String prikey, String pwd, String data, String outFormat) throws Exception {
+    public String tapSign(String peerIP, String key, String pwd, String data, String outFormat) throws Exception {
 
         String pwdParam = "";
         if (!pwd.isEmpty()) pwdParam = " -p " + pwd;
 
         //将key保存至文件key.pem 解密SecretKey
 //        shellExeCmd(peerIP, "echo " + prikey + " > " + destShellScriptDir + "key.pem");
-        String SignStr = shExeAndReturn(peerIP, wtcliExePath + "crypt sm2 -k key.pem  -s -f projectId=" + data);
+        String SignStr = shExeAndReturn(peerIP, wtcliExePath + "crypt sm2 -k key.pem  -s -f " + key + "=" + data);
         SignStr = SignStr.trim().replaceAll("\r", "").replaceAll("\n", "").
                 replaceAll("Signed successfully", "").trim();
 

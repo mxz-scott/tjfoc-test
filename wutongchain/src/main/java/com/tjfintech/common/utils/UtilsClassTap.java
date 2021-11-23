@@ -24,20 +24,27 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 public class UtilsClassTap {
 
     public static String sdkIP = SDKADD.substring(SDKADD.lastIndexOf("/") + 1, SDKADD.lastIndexOf(":"));
-    public static String projectId = "";
-    public static long expireDate = System.currentTimeMillis() / 1000 + 20;
-    public static long openDate = System.currentTimeMillis() / 1000 + 20;
-    public static String publicKey = "";
-    public static String sign = "";
-    public static String identity = "ZBF" + UtilsClass.Random(8);
-    public static String name = "Project" + UtilsClass.Random(8);
-    public static Map metaDataNew = constructMetaDataMap("update");
-    public static Map metaData = constructMetaDataMap("old");
-    public static int filesize = 512;
-    public static int filesizeNew = 1024;
-    public static int stateNormal = 0;
-    public static int stateSuspend = 1;
-    public static int stateAbortivebid = 2;
+    public static String ORDERNO = "";
+
+    public static String BID_DOC_REFER_END_TIME = constructTime(20000);
+    public static String KAIBIAODATE = constructTime(20000);
+
+    public static String ZBRPULICKEY = "";
+    public static String ORDERNOSIGN = "";
+    public static String orderNoSIGN = "";
+
+    public static String TENDER_PROJECT_CODE = "PC" + UtilsClass.Random(8);
+    public static String TENDER_PROJECT_NAME = "项目" + UtilsClass.Random(8);
+
+    public static String BID_SECTION_CODE = "SC" + UtilsClass.Random(8);
+    public static String BID_SECTION_NAME = "标段" + UtilsClass.Random(8);
+    public static String BID_SECTION_CODE_EX = "SC_EX" + UtilsClass.Random(8);
+
+    public static Map EXTRANew = constructMetaDataMap("update");
+    public static Map EXTRA = constructMetaDataMap("old");
+    public static int TBALLOWFILESIZE = 512000;
+    public static int TBALLOWFILESIZENew = 1024000;
+    public static String TBFILE_ALLOWLIST = "jstf";
 
     public static String senderBidPlatform = "bidplatform";
     public static String senderFilePlatform = "fileplatform";
@@ -58,6 +65,13 @@ public class UtilsClassTap {
         metaDataMap.put("C", data);
 
         return metaDataMap;
+    }
+
+    public static String constructTime(int data) {
+
+        String date = new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis() + data);
+
+        return date;
     }
 
 }

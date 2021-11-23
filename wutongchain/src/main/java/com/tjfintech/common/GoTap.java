@@ -16,16 +16,25 @@ public class GoTap implements Tap {
     /***
      * 招标信息初始化
      */
-    public String tapProjectInit(long expireDate, long openDate, String publicKey, String identity, int filesize, String name, Map metaData) {
+    public String tapProjectInit(String TENDER_PROJECT_CODE, String TENDER_PROJECT_NAME, String BID_SECTION_NAME, String BID_SECTION_CODE, String KAIBIAODATE,
+                                 String BID_DOC_REFER_END_TIME, String BID_SECTION_STATUS, String TBFILE_ALLOWLIST, int TBALLOWFILESIZE,
+                                 String TBTOOL_ALLOWVERSION, String TBFILEVERSION, String ZBRPULICKEY, String BID_SECTION_CODE_EX, Map EXTRA) {
 
         Map<String, Object> map = new HashMap<>();
-        map.put("expireDate", expireDate);
-        map.put("openDate", openDate);
-        map.put("publicKey", publicKey);
-        map.put("identity", identity);
-        map.put("filesize", filesize);
-        map.put("name", name);
-        map.put("metaData", metaData);
+        map.put("TENDER_PROJECT_CODE", TENDER_PROJECT_CODE);
+        map.put("TENDER_PROJECT_NAME", TENDER_PROJECT_NAME);
+        map.put("BID_SECTION_NAME", BID_SECTION_NAME);
+        map.put("BID_SECTION_CODE", BID_SECTION_CODE);
+        map.put("KAIBIAODATE", KAIBIAODATE);
+        map.put("BID_DOC_REFER_END_TIME", BID_DOC_REFER_END_TIME);
+        map.put("BID_SECTION_STATUS", BID_SECTION_STATUS);
+        map.put("TBFILE_ALLOWLIST", TBFILE_ALLOWLIST);
+        map.put("TBALLOWFILESIZE", TBALLOWFILESIZE);
+        map.put("TBTOOL_ALLOWVERSION", TBTOOL_ALLOWVERSION);
+        map.put("TBFILEVERSION", TBFILEVERSION);
+        map.put("ZBRPULICKEY", ZBRPULICKEY);
+        map.put("BID_SECTION_CODE_EX", BID_SECTION_CODE_EX);
+        map.put("EXTRA", EXTRA);
 
         String result = PostTest.postMethod(SDKADD + "/tap/v1/project/init", map);
         log.info(result);
@@ -35,17 +44,26 @@ public class GoTap implements Tap {
     /***
      * 招标信息更新
      */
-    public String tapProjectUpdate(String projectId, long expireDate, long openDate, Map metaData, String name, int state, int filesize, String sign) {
+    public String tapProjectUpdate(String ORDERNO, String TENDER_PROJECT_CODE, String TENDER_PROJECT_NAME, String BID_SECTION_NAME, String BID_SECTION_CODE,
+                                   String KAIBIAODATE, String BID_DOC_REFER_END_TIME, String BID_SECTION_STATUS, String TBFILE_ALLOWLIST, int TBALLOWFILESIZE,
+                                   String TBTOOL_ALLOWVERSION, String TBFILEVERSION, String BID_SECTION_CODE_EX, Map EXTRA, String SIGN) {
 
         Map<String, Object> map = new HashMap<>();
-        map.put("projectId", projectId);
-        map.put("expireDate", expireDate);
-        map.put("openDate", openDate);
-        map.put("metaData", metaData);
-        map.put("name", name);
-        map.put("state", state);
-        map.put("filesize", filesize);
-        map.put("sign", sign);
+        map.put("ORDERNO", ORDERNO);
+        map.put("TENDER_PROJECT_CODE", TENDER_PROJECT_CODE);
+        map.put("TENDER_PROJECT_NAME", TENDER_PROJECT_NAME);
+        map.put("BID_SECTION_NAME", BID_SECTION_NAME);
+        map.put("BID_SECTION_CODE", BID_SECTION_CODE);
+        map.put("KAIBIAODATE", KAIBIAODATE);
+        map.put("BID_DOC_REFER_END_TIME", BID_DOC_REFER_END_TIME);
+        map.put("BID_SECTION_STATUS", BID_SECTION_STATUS);
+        map.put("TBFILE_ALLOWLIST", TBFILE_ALLOWLIST);
+        map.put("TBALLOWFILESIZE", TBALLOWFILESIZE);
+        map.put("TBTOOL_ALLOWVERSION", TBTOOL_ALLOWVERSION);
+        map.put("TBFILEVERSION", TBFILEVERSION);
+        map.put("BID_SECTION_CODE_EX", BID_SECTION_CODE_EX);
+        map.put("EXTRA", EXTRA);
+        map.put("SIGN", SIGN);
 
         String result = PostTest.postMethod(SDKADD + "/tap/v1/project/update", map);
         log.info(result);
@@ -56,9 +74,9 @@ public class GoTap implements Tap {
      * 招标信息查询
      * @return
      */
-    public String tapProjectDetail(String projectId) {
+    public String tapProjectDetail(String ORDERNO) {
 
-        String result = GetTest.doGet2(SDKADD + "/tap/v1/project/detail/" + projectId);
+        String result = GetTest.doGet2(SDKADD + "/tap/v1/project/detail/" + ORDERNO);
         log.info(result);
         return result;
     }
@@ -81,10 +99,10 @@ public class GoTap implements Tap {
      * 投标文件上传
      * @return
      */
-    public String tapTenderUpload(String projectId, String recordId, String fileHead, String path) {
+    public String tapTenderUpload(String orderNo, String recordId, String fileHead, String path) {
 
         Map<String, Object> map = new HashMap<>();
-        map.put("projectId", projectId);
+        map.put("orderNo", orderNo);
         map.put("recordId", recordId);
         map.put("fileHead", fileHead);
         map.put("path", path);
@@ -98,10 +116,10 @@ public class GoTap implements Tap {
      * 撤销投标接口
      * @return
      */
-    public String tapTenderRevoke(String data, String projectId) {
+    public String tapTenderRevoke(String data, String orderNo) {
         Map<String, Object> map = new HashMap<>();
         map.put("data", data);
-        map.put("projectId", projectId);
+        map.put("orderNo", orderNo);
 
         String result = PostTest.postMethod(SDKADD + "/tap/v1/tender/revoke", map);
         log.info(result);
@@ -123,10 +141,10 @@ public class GoTap implements Tap {
      * 获取投标信息列表
      * @return
      */
-    public String tapTenderRecord(String projectId, String recordId, Boolean detail, String sign) {
+    public String tapTenderRecord(String orderNo, String recordId, Boolean detail, String sign) {
 
         Map<String, Object> map = new HashMap<>();
-        map.put("projectId", projectId);
+        map.put("orderNo", orderNo);
         map.put("recordId", recordId);
         map.put("detail", detail);
         map.put("sign", sign);
@@ -140,9 +158,9 @@ public class GoTap implements Tap {
      * 开标
      * @return
      */
-    public String tapTenderOpen(String projectId, String sign) {
+    public String tapTenderOpen(String orderNo, String sign) {
 
-        String result = GetTest.doGet2(SDKADD + "/tap/v1/tender/open" + "?projectId=" + projectId + "&sign=" + sign);
+        String result = GetTest.doGet2(SDKADD + "/tap/v1/tender/open" + "?orderNo=" + orderNo + "&sign=" + sign);
         log.info(result);
         return result;
     }

@@ -20,6 +20,7 @@ import java.util.*;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
 import static com.tjfintech.common.utils.UtilsClassTap.*;
+import static com.tjfintech.common.utils.UtilsClassTap.ORDERNO;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -43,34 +44,38 @@ public class TapCommonFunc {
 
     public void init() throws Exception {
 
-        expireDate = System.currentTimeMillis() / 1000 + 20;
-        openDate = System.currentTimeMillis() / 1000 + 20;
-        publicKey = certTool.tapPubToHex(sdkIP, PRIKEY1, "", "", "");
-        log.info(publicKey);
-        String response = tap.tapProjectInit(expireDate, openDate, publicKey, identity, filesize, name, metaData);
+        BID_DOC_REFER_END_TIME = constructTime(20000);
+        KAIBIAODATE = constructTime(20000);
+        ZBRPULICKEY = certTool.tapPubToHex(sdkIP, PRIKEY1, "", "", "");
+        log.info(ZBRPULICKEY);
+        String response = tap.tapProjectInit(TENDER_PROJECT_CODE, TENDER_PROJECT_NAME, BID_SECTION_NAME, BID_SECTION_CODE, KAIBIAODATE,
+                BID_DOC_REFER_END_TIME, "1", "jstf", TBALLOWFILESIZE, "1.0",
+                "1.0", ZBRPULICKEY, BID_SECTION_CODE_EX, EXTRA);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        projectId = JSONObject.fromObject(response).getJSONObject("data").getString("projectId");
-        log.info(projectId);
-        sign = certTool.tapSign(sdkIP, PRIKEY1, "", projectId, "");
-        log.info(sign);
+        ORDERNO = JSONObject.fromObject(response).getJSONObject("data").getString("ORDERNO");
+        ORDERNOSIGN = certTool.tapSign(sdkIP, "ORDERNO", "", ORDERNO, "");
+        orderNoSIGN = certTool.tapSign(sdkIP, "orderNo", "", ORDERNO, "");
 
     }
 
     public String initProject() throws Exception {
 
-        expireDate = System.currentTimeMillis() / 1000 + 20;
-        openDate = System.currentTimeMillis() / 1000 + 20;
-        publicKey = certTool.tapPubToHex(sdkIP, PRIKEY1, "", "", "");
-        log.info(publicKey);
-        String response = tap.tapProjectInit(expireDate, openDate, publicKey, identity, filesize, name, metaData);
+        BID_DOC_REFER_END_TIME = constructTime(20000);
+        KAIBIAODATE = constructTime(20000);
+        ZBRPULICKEY = certTool.tapPubToHex(sdkIP, PRIKEY1, "", "", "");
+        log.info(ZBRPULICKEY);
+        String response = tap.tapProjectInit(TENDER_PROJECT_CODE, TENDER_PROJECT_NAME, BID_SECTION_NAME, BID_SECTION_CODE, KAIBIAODATE,
+                BID_DOC_REFER_END_TIME, "1", "jstf", TBALLOWFILESIZE, "1.0",
+                "1.0", ZBRPULICKEY, BID_SECTION_CODE_EX, EXTRA);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         String txid = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
-        String projectid = JSONObject.fromObject(response).getJSONObject("data").getString("projectId");
-        sign = certTool.tapSign(sdkIP, PRIKEY1, "", projectid, "");
+        String ORDERNO = JSONObject.fromObject(response).getJSONObject("data").getString("ORDERNO");
+        ORDERNOSIGN = certTool.tapSign(sdkIP, "ORDERNO", "", ORDERNO, "");//更新接口请求字段为ORDERNO=
+        orderNoSIGN = certTool.tapSign(sdkIP, "orderNo", "", ORDERNO, "");//开标、获取投标信息列表接口请求字段为orderNo=
         commonFunc.verifyTxDetailField(txid, "", "2", "3", "42");
-        return projectid;
+        return ORDERNO;
 
     }
 
@@ -103,18 +108,17 @@ public class TapCommonFunc {
         List<Map> listmap = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             Map map = new HashMap();
-            String projectid = initProject();
-            sign = certTool.tapSign(sdkIP, PRIKEY1, "", projectid, "");
-            map.put("projectId", projectid);
-            map.put("sign", sign);
+            String ORDERNO = initProject();
+            ORDERNOSIGN = certTool.tapSign(sdkIP, "ORDERNO", "", ORDERNO, "");
+            orderNoSIGN = certTool.tapSign(sdkIP, "orderNo", "", ORDERNO, "");
+            map.put("orderNo", ORDERNO);
+            map.put("sign", orderNoSIGN);
             listmap.add(map);
 
             for (int k = 0; k < 20; k++) {
                 String recordId = "tender" + UtilsClass.Random(8);
-                String response = tap.tapTenderUpload(projectid, recordId, fileHead, path);
+                String response = tap.tapTenderUpload(ORDERNO, recordId, fileHead, path);
                 assertEquals("200", JSONObject.fromObject(response).getString("state"));
-                commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                        utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
             }
 
         }

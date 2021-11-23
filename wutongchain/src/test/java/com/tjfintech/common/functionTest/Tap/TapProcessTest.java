@@ -60,49 +60,71 @@ public class TapProcessTest {
     public void tapProcessTest() throws Exception {
 
         //招标信息初始化
-        expireDate = System.currentTimeMillis() / 1000 + 20;
-        openDate = System.currentTimeMillis() / 1000 + 20;
-        String response = tap.tapProjectInit(expireDate, openDate, publicKey, identity, filesize, name, metaData);
+        BID_DOC_REFER_END_TIME = constructTime(20000);
+        KAIBIAODATE = constructTime(20000);
+        String response = tap.tapProjectInit(TENDER_PROJECT_CODE, TENDER_PROJECT_NAME, BID_SECTION_NAME, BID_SECTION_CODE, KAIBIAODATE,
+                BID_DOC_REFER_END_TIME, "1", TBFILE_ALLOWLIST, TBALLOWFILESIZE, "1.0",
+                "1.0", ZBRPULICKEY, BID_SECTION_CODE_EX, EXTRA);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         String txid = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-        String projectid = JSONObject.fromObject(response).getJSONObject("data").getString("projectId");
+        String orderNo = JSONObject.fromObject(response).getJSONObject("data").getString("ORDERNO");
         commonFunc.verifyTxDetailField(txid, "", "2", "3", "42");
 
         //招标信息查询比对
-        response = tap.tapProjectDetail(projectid);
+        response = tap.tapProjectDetail(orderNo);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        assertEquals(expireDate, JSONObject.fromObject(response).getJSONObject("data").getLong("expireDate"));
-        assertEquals(openDate, JSONObject.fromObject(response).getJSONObject("data").getLong("openDate"));
-        assertEquals(identity, JSONObject.fromObject(response).getJSONObject("data").getString("identity"));
-        assertEquals(filesize, JSONObject.fromObject(response).getJSONObject("data").getInt("filesize"));
-        assertEquals(name, JSONObject.fromObject(response).getJSONObject("data").getString("name"));
-        assertEquals(true, JSONObject.fromObject(response).getJSONObject("data").getString("metaData").contains("old"));
-        assertEquals(0, JSONObject.fromObject(response).getJSONObject("data").getInt("state"));
+        assertEquals(TENDER_PROJECT_CODE, JSONObject.fromObject(response).getJSONObject("data").getString("TENDER_PROJECT_CODE"));
+        assertEquals(TENDER_PROJECT_NAME, JSONObject.fromObject(response).getJSONObject("data").getString("TENDER_PROJECT_NAME"));
+        assertEquals(BID_SECTION_NAME, JSONObject.fromObject(response).getJSONObject("data").getString("BID_SECTION_NAME"));
+        assertEquals(BID_SECTION_CODE, JSONObject.fromObject(response).getJSONObject("data").getString("BID_SECTION_CODE"));
+        assertEquals(BID_DOC_REFER_END_TIME, JSONObject.fromObject(response).getJSONObject("data").getString("BID_DOC_REFER_END_TIME"));
+        assertEquals(KAIBIAODATE, JSONObject.fromObject(response).getJSONObject("data").getString("KAIBIAODATE"));
+        assertEquals("1", JSONObject.fromObject(response).getJSONObject("data").getString("BID_SECTION_STATUS"));
+        assertEquals(TBFILE_ALLOWLIST, JSONObject.fromObject(response).getJSONObject("data").getString("TBFILE_ALLOWLIST"));
+        assertEquals(TBALLOWFILESIZE, JSONObject.fromObject(response).getJSONObject("data").getInt("TBALLOWFILESIZE"));
+        assertEquals("1.0", JSONObject.fromObject(response).getJSONObject("data").getString("TBTOOL_ALLOWVERSION"));
+        assertEquals("1.0", JSONObject.fromObject(response).getJSONObject("data").getString("TBFILEVERSION"));
+        assertEquals(BID_SECTION_CODE_EX, JSONObject.fromObject(response).getJSONObject("data").getString("BID_SECTION_CODE_EX"));
+        assertEquals(true, JSONObject.fromObject(response).getJSONObject("data").getString("EXTRA").contains("old"));
+        assertEquals(true, JSONObject.fromObject(response).getJSONObject("data").toString().contains("INIT_DATE"));
 
         //招标信息更新，比对更新后的信息
-        sign = certTool.tapSign(sdkIP, PRIKEY1, "", projectid, "");
-        response = tap.tapProjectUpdate
-                (projectid, expireDate + 10, openDate + 20, metaDataNew, name + "update", stateSuspend, filesizeNew, sign);
+        ORDERNOSIGN = certTool.tapSign(sdkIP, "ORDERNO", "", orderNo, "");
+        orderNoSIGN = certTool.tapSign(sdkIP, "orderNo", "", orderNo, "");
+        BID_DOC_REFER_END_TIME = constructTime(15000);
+        KAIBIAODATE = constructTime(15000);
+        response = tap.tapProjectUpdate(orderNo, TENDER_PROJECT_CODE + "NEW", TENDER_PROJECT_NAME + "NEW",
+                BID_SECTION_NAME + "NEW", BID_SECTION_CODE + "NEW", KAIBIAODATE, BID_DOC_REFER_END_TIME,
+                "0", TBFILE_ALLOWLIST + "NEW", TBALLOWFILESIZENew, "2.0",
+                "2.0", BID_SECTION_CODE_EX + "NEW", EXTRANew, ORDERNOSIGN);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         txid = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         commonFunc.verifyTxDetailField(txid, "", "2", "3", "42");
-        response = tap.tapProjectDetail(projectid);
+        response = tap.tapProjectDetail(orderNo);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        assertEquals(expireDate + 10, JSONObject.fromObject(response).getJSONObject("data").getLong("expireDate"));
-        assertEquals(openDate + 20, JSONObject.fromObject(response).getJSONObject("data").getLong("openDate"));
-        assertEquals(filesizeNew, JSONObject.fromObject(response).getJSONObject("data").getInt("filesize"));
-        assertEquals(name + "update", JSONObject.fromObject(response).getJSONObject("data").getString("name"));
-        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getString("metaData").contains("old"));
-        assertEquals(true, JSONObject.fromObject(response).getJSONObject("data").getString("metaData").contains("update"));
-        assertEquals(stateSuspend, JSONObject.fromObject(response).getJSONObject("data").getInt("state"));
+        assertEquals(TENDER_PROJECT_CODE + "NEW", JSONObject.fromObject(response).getJSONObject("data").getString("TENDER_PROJECT_CODE"));
+        assertEquals(TENDER_PROJECT_NAME + "NEW", JSONObject.fromObject(response).getJSONObject("data").getString("TENDER_PROJECT_NAME"));
+        assertEquals(BID_SECTION_NAME + "NEW", JSONObject.fromObject(response).getJSONObject("data").getString("BID_SECTION_NAME"));
+        assertEquals(BID_SECTION_CODE + "NEW", JSONObject.fromObject(response).getJSONObject("data").getString("BID_SECTION_CODE"));
+        assertEquals(BID_DOC_REFER_END_TIME, JSONObject.fromObject(response).getJSONObject("data").getString("BID_DOC_REFER_END_TIME"));
+        assertEquals(KAIBIAODATE, JSONObject.fromObject(response).getJSONObject("data").getString("KAIBIAODATE"));
+        assertEquals("0", JSONObject.fromObject(response).getJSONObject("data").getString("BID_SECTION_STATUS"));
+        assertEquals(TBFILE_ALLOWLIST + "NEW", JSONObject.fromObject(response).getJSONObject("data").getString("TBFILE_ALLOWLIST"));
+        assertEquals(TBALLOWFILESIZENew, JSONObject.fromObject(response).getJSONObject("data").getInt("TBALLOWFILESIZE"));
+        assertEquals("2.0", JSONObject.fromObject(response).getJSONObject("data").getString("TBTOOL_ALLOWVERSION"));
+        assertEquals("2.0", JSONObject.fromObject(response).getJSONObject("data").getString("TBFILEVERSION"));
+        assertEquals(BID_SECTION_CODE_EX + "NEW", JSONObject.fromObject(response).getJSONObject("data").getString("BID_SECTION_CODE_EX"));
+        assertEquals(true, JSONObject.fromObject(response).getJSONObject("data").getString("EXTRA").contains("update"));
 
         //该项目更新为正常状态
-        response = tap.tapProjectUpdate
-                (projectid, expireDate + 20, openDate + 20, metaDataNew, name + "update", stateNormal, filesizeNew, sign);
+        response = tap.tapProjectUpdate(orderNo, "", "",
+                "", "", "", "",
+                "1", "", 0, "",
+                "", "", null, ORDERNOSIGN);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
         //投标文件合规性校验
@@ -120,15 +142,15 @@ public class TapProcessTest {
         assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("pass"));
 
         //投标文件上传
-        response = tap.tapTenderUpload(projectid, recordIdA, fileHead, path);
+        response = tap.tapTenderUpload(orderNo, recordIdA, fileHead, path);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        response = tap.tapTenderUpload(projectid, recordIdB, fileHead, path);
+        response = tap.tapTenderUpload(orderNo, recordIdB, fileHead, path);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
         //撤销投标接口
-        response = tap.tapTenderRevoke(metaData.toString(), projectid);
+        response = tap.tapTenderRevoke(EXTRA.toString(), orderNo);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
@@ -136,138 +158,150 @@ public class TapProcessTest {
         //获取招标信息列表
         response = tap.tapProjectList();
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        assertEquals(true, response.contains(projectid));
+        assertEquals(true, response.contains(orderNo));
 
         //获取投标信息列表,获取投标列表接口请求时间大于开标时间
-        assertThat(System.currentTimeMillis() / 1000,lessThan(openDate+20));
-        response = tap.tapTenderRecord(projectid, recordIdA, true, sign);
+        assertThat((Long.parseLong(constructTime(0))), lessThan(Long.parseLong(KAIBIAODATE)));
+        response = tap.tapTenderRecord(orderNo, recordIdA, true, orderNoSIGN);
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
-        assertEquals(true,response.contains("OpenDate is later"));
+        assertEquals(true, response.contains("KAIBIAODATE is later"));
         sleepAndSaveInfo(20 * 1000);
-        response = tap.tapTenderRecord(projectid, recordIdA, true, sign);
+        response = tap.tapTenderRecord(orderNo, recordIdA, true, orderNoSIGN);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(recordIdA, com.alibaba.fastjson.JSONObject.parseObject(
                 com.alibaba.fastjson.JSONObject.parseArray(com.alibaba.fastjson.JSONObject.parseObject(response).getJSONObject(
                         "data").getString("RecordInfos")).get(0).toString()).getString("recordId"));
+        assertEquals("1", com.alibaba.fastjson.JSONObject.parseObject(
+                com.alibaba.fastjson.JSONObject.parseArray(com.alibaba.fastjson.JSONObject.parseObject(response).getJSONObject(
+                        "data").getString("RecordInfos")).get(0).toString()).getInteger("version").toString());
 
-        //开标
-        response = tap.tapTenderOpen(projectid, sign);
+        //开标,再次调更新接口，更新状态为5
+        response = tap.tapTenderOpen(orderNo, orderNoSIGN);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         sleepAndSaveInfo(5 * 1000);//在招标平台获取到token的时候，才会变更招标状态
-        response = tap.tapProjectDetail(projectid);
+        response = tap.tapProjectDetail(orderNo);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        assertEquals(3, JSONObject.fromObject(response).getJSONObject("data").getInt("state"));
+        assertEquals("1", JSONObject.fromObject(response).getJSONObject("data").getString("BID_SECTION_STATUS"));
+
+        response = tap.tapProjectUpdate(orderNo, "", "",
+                "", "", "", "",
+                "5", "", 0, "",
+                "", "", null, ORDERNOSIGN);
+
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        response = tap.tapProjectDetail(orderNo);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals("5", JSONObject.fromObject(response).getJSONObject("data").getString("BID_SECTION_STATUS"));
     }
 
     /**
      * 异常流程测试-投标文件上传接口
-     * 项目标识为1-暂停、2-流标、3-已结束的项目，不可以再上传投标文件
+     * 项目标识为0-异常、5-开标的项目，不可以再上传投标文件
      */
     @Test
     public void tapTenderUploadInvalidTest() throws Exception {
 
-        String projectid = tapCommonFunc.initProject();
+        String orderNo = tapCommonFunc.initProject();
 
-        //项目标识projectId为1-暂停的项目
-        sign = certTool.tapSign(sdkIP, PRIKEY1, "", projectid, "");
-        String response = tap.tapProjectUpdate(projectid, expireDate, openDate, metaData, name, stateSuspend, filesize, sign);
+        //项目标识orderNo为0-异常的项目
+        String response = tap.tapProjectUpdate(orderNo, "", "",
+                "", "", "", "",
+                "0", "", 0, "",
+                "", "", null, ORDERNOSIGN);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
-        response = tap.tapTenderUpload(projectid, recordIdA, fileHead, path);
+        response = tap.tapTenderUpload(orderNo, recordIdA, fileHead, path);
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
-        assertEquals(true, response.contains("bid state is abnormal"));
+        assertEquals(true, response.contains("BID_SECTION_STATUS is abnormal"));
 
-        //项目标识projectId为2-流标的项目
-        response = tap.tapProjectUpdate(projectid, expireDate, openDate, metaData, name, stateAbortivebid, filesize, sign);
+        //项目标识orderNo为5-开标的项目
+        response = tap.tapProjectUpdate(orderNo, "", "",
+                "", "", "", "",
+                "5", "", 0, "",
+                "", "", null, ORDERNOSIGN);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
-        response = tap.tapTenderUpload(projectid, recordIdA, fileHead, path);
+        response = tap.tapTenderUpload(orderNo, recordIdA, fileHead, path);
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
-        assertEquals(true, response.contains("bid state is abnormal"));
-
-        //项目标识projectId为3-开标已结束的项目
-        response = tap.tapProjectUpdate(projectid, expireDate, openDate, metaData, name, stateNormal, filesize, sign);
-        assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-        sleepAndSaveInfo(30 * 1000);
-        response = tap.tapTenderOpen(projectid, sign);
-        assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-        sleepAndSaveInfo(5 * 1000);//在招标平台获取到token的时候，才会变更招标状态
-        response = tap.tapTenderUpload(projectid, recordIdA, fileHead, path);
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
-        assertEquals(true, response.contains("bid state is abnormal"));
+        assertEquals(true, response.contains("BID_SECTION_STATUS is abnormal"));
     }
 
     /**
      * 异常流程测试-招标信息更新接口
-     * 项目标识3-已结束的项目，不可以再更新招标信息
+     * 状态不可以更新为除0和1其他值
+     * 项目标识5-已开标的项目，不可以再更新招标信息
      */
     @Test
     public void tapProjectUpdateInvalidTest() throws Exception {
 
-        String projectid = tapCommonFunc.initProject();
+        String orderNo = tapCommonFunc.initProject();
 
-        //项目标识projectId为3-开标已结束的项目
-        sign = certTool.tapSign(sdkIP, PRIKEY1, "", projectid, "");
-        sleepAndSaveInfo(30 * 1000);
-        String response = tap.tapTenderOpen(projectid, sign);
+        //更新状态为3，接口返回错误
+        String response = tap.tapProjectUpdate(orderNo, "", "",
+                "", "", "", "",
+                "3", "", 0, "",
+                "", "", null, ORDERNOSIGN);
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("Illegal BID_SECTION_STATUS"));
+
+        //更新状态为5-开标已结束的项目，再更新项目信息报错
+        response = tap.tapProjectUpdate(orderNo, "", "",
+                "", "", "", "",
+                "5", "", 0, "",
+                "", "", null, ORDERNOSIGN);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-        sleepAndSaveInfo(5 * 1000);//在招标平台获取到token的时候，才会变更招标状态
-        response = tap.tapProjectUpdate
-                (projectid, expireDate + 50, openDate + 100, metaDataNew, name + "update", stateSuspend, filesizeNew, sign);
+
+        response = tap.tapProjectUpdate(orderNo, TENDER_PROJECT_CODE + "NEW", TENDER_PROJECT_NAME + "NEW",
+                BID_SECTION_NAME + "NEW", BID_SECTION_CODE + "NEW", KAIBIAODATE, BID_DOC_REFER_END_TIME,
+                "0", TBFILE_ALLOWLIST + "NEW", TBALLOWFILESIZENew, "2.0",
+                "2.0", BID_SECTION_CODE_EX + "NEW", EXTRANew, ORDERNOSIGN);
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("can not modify finished bid"));
     }
 
     /**
-     * 获取招标信息接口
-     * 只返回状态为0-正常的招标项目信息
-     * 不返回1-暂停；2-流标；3-已结束的招标项目信息
+     * 正常流程测试-获取招标信息接口
+     * 只返回状态为1-正常的招标项目信息
+     * 不返回0-异常；5-开标的招标项目信息
      */
     @Test
     public void tapProjectListTest() throws Exception {
 
-        String projectid = tapCommonFunc.initProject();
-        String projectid1 = tapCommonFunc.initProject();
-        String projectid2 = tapCommonFunc.initProject();
-        String projectid3 = tapCommonFunc.initProject();
+        String orderNo0 = tapCommonFunc.initProject();
+        String orderNo1 = tapCommonFunc.initProject();
+        String orderNo5 = tapCommonFunc.initProject();
 
-        //变更项目状态projectid1（1-暂停）、projectid2（2-流标）、projectid3（3-已结束）
-        sign = certTool.tapSign(sdkIP, PRIKEY1, "", projectid, "");
-        String sign1 = certTool.tapSign(sdkIP, PRIKEY1, "", projectid1, "");
-        String sign2 = certTool.tapSign(sdkIP, PRIKEY1, "", projectid2, "");
-        String sign3 = certTool.tapSign(sdkIP, PRIKEY1, "", projectid3, "");
+        //变更项目状态orderNoSIGN0（0-异常）、orderNoSIGN1（1-正常）、orderNoSIGN5（5-已开标）
+        String ORDERNOSIGN0 = certTool.tapSign(sdkIP, "ORDERNO", "", orderNo0, "");
+        String ORDERNOSIGN1 = certTool.tapSign(sdkIP, "ORDERNO", "", orderNo1, "");
+        String ORDERNOSIGN5 = certTool.tapSign(sdkIP, "ORDERNO", "", orderNo5, "");
 
-        String response = tap.tapProjectUpdate(projectid1, 0, 0, metaData, name, stateSuspend, filesize, sign1);
-        assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        response = tap.tapProjectUpdate(projectid2, 0, 0, metaData, name, stateAbortivebid, filesize, sign2);
+        String response = tap.tapProjectUpdate(orderNo0, "", "",
+                "", "", "", "",
+                "0", "", 0, "",
+                "", "", null, ORDERNOSIGN0);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
-        sleepAndSaveInfo(30 * 1000);
-        response = tap.tapTenderOpen(projectid3, sign3);
+        response = tap.tapProjectUpdate(orderNo5, "", "",
+                "", "", "", "",
+                "5", "", 0, "",
+                "", "", null, ORDERNOSIGN5);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
-                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
-        sleepAndSaveInfo(5 * 1000);//在招标平台获取到token的时候，才会变更招标状态
+
         response = tap.tapProjectList();
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        assertEquals(true, response.contains(projectid));
-        assertEquals(false, response.contains(projectid1));
-        assertEquals(false, response.contains(projectid2));
-        assertEquals(false, response.contains(projectid3));
+        assertEquals(true, response.contains(orderNo1));
+        assertEquals(false, response.contains(orderNo0));
+        assertEquals(false, response.contains(orderNo5));
+
     }
 
     /**
-     * 获取投标信息列表接口
+     * 正常流程测试-获取投标信息列表接口
      * 同一个投标标识可以多次上传标书，查询接口正常
      * detail不传或者传值false返回指定信息，传值true返回详细信息
      * recordId传值返回指定投标信息，不传返回所有投标信息
@@ -275,76 +309,76 @@ public class TapProcessTest {
     @Test
     public void tapTenderRecordTest() throws Exception {
 
-        String projectid = tapCommonFunc.initProject();
-        String projectid1 = tapCommonFunc.initProject();
-        sign = certTool.tapSign(sdkIP, PRIKEY1, "", projectid, "");
-        String sign1 = certTool.tapSign(sdkIP, PRIKEY1, "", projectid1, "");
+        String orderNo = tapCommonFunc.initProject();
+        String orderNo1 = tapCommonFunc.initProject();
+        orderNoSIGN = certTool.tapSign(sdkIP, "orderNo", "", orderNo, "");
+        String orderNoSIGN1 = certTool.tapSign(sdkIP, "orderNo", "", orderNo1, "");
 
         //投标文件上传
-        String response = tap.tapTenderUpload(projectid, recordIdA, fileHead, path);
+        String response = tap.tapTenderUpload(orderNo, recordIdA, fileHead, path);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        response = tap.tapTenderUpload(projectid, recordIdB, fileHead, path);
+        response = tap.tapTenderUpload(orderNo, recordIdB, fileHead, path);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
-        response = tap.tapTenderUpload(projectid1, recordIdB, fileHead, path);
+        response = tap.tapTenderUpload(orderNo1, recordIdB, fileHead, path);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
-        //使用projectid1查询
-        sleepAndSaveInfo(20*1000);
-        response = tap.tapTenderRecord(projectid1, recordIdB, true, sign1);
+        //使用orderNo1查询
+        sleepAndSaveInfo(20 * 1000);
+        response = tap.tapTenderRecord(orderNo1, recordIdB, true, orderNoSIGN1);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains(recordIdB));
         assertThat(response, allOf(containsString("filePath"), containsString("keySecret")));
 
-        response = tap.tapTenderRecord(projectid1, "", false, sign1);
+        response = tap.tapTenderRecord(orderNo1, "", false, orderNoSIGN1);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains(recordIdB));
         assertThat(response, allOf(not(containsString("filePath")), not(containsString("keySecret"))));
 
         //recordId数据不存在
-        response = tap.tapTenderRecord(projectid, "123456", true, sign);
+        response = tap.tapTenderRecord(orderNo, "123456", true, orderNoSIGN);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(false, response.contains("123456"));
 
         //recordId传值存在的数据recordIdA、detail传值true
-        response = tap.tapTenderRecord(projectid, recordIdA, true, sign);
+        response = tap.tapTenderRecord(orderNo, recordIdA, true, orderNoSIGN);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains(recordIdA));
         assertEquals(false, response.contains(recordIdB));
         assertThat(response, allOf(containsString("filePath"), containsString("keySecret")));
 
         //recordId传值存在的数据recordIdB、detail传值false
-        response = tap.tapTenderRecord(projectid, recordIdB, false, sign);
+        response = tap.tapTenderRecord(orderNo, recordIdB, false, orderNoSIGN);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(false, response.contains(recordIdA));
         assertEquals(true, response.contains(recordIdB));
         assertThat(response, allOf(not(containsString("filePath")), not(containsString("keySecret"))));
 
         //recordId传值存在的数据recordIdB、detail传值null
-        response = tap.tapTenderRecord(projectid, recordIdB, null, sign);
+        response = tap.tapTenderRecord(orderNo, recordIdB, null, orderNoSIGN);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(false, response.contains(recordIdA));
         assertEquals(true, response.contains(recordIdB));
         assertThat(response, allOf(not(containsString("filePath")), not(containsString("keySecret"))));
 
         //recordI为空、detail传值true
-        response = tap.tapTenderRecord(projectid, "", true, sign);
+        response = tap.tapTenderRecord(orderNo, "", true, orderNoSIGN);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains(recordIdA));
         assertEquals(true, response.contains(recordIdB));
         assertThat(response, allOf(containsString("filePath"), containsString("keySecret")));
 
         //recordI为空、detail传值false
-        response = tap.tapTenderRecord(projectid, "", false, sign);
+        response = tap.tapTenderRecord(orderNo, "", false, orderNoSIGN);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains(recordIdA));
         assertEquals(true, response.contains(recordIdB));
         assertThat(response, allOf(not(containsString("filePath")), not(containsString("keySecret"))));
 
         //recordI为空、detail为空
-        response = tap.tapTenderRecord(projectid, "", null, sign);
+        response = tap.tapTenderRecord(orderNo, "", null, orderNoSIGN);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains(recordIdA));
         assertEquals(true, response.contains(recordIdB));
@@ -353,33 +387,78 @@ public class TapProcessTest {
     }
 
     /**
-     * 获取投标信息列表接口
-     * 解密filePath数据
+     * 正常流程测试-获取投标信息列表接口
+     * 同一个recordId和orderNo再次上传投标文件，获取列表的版本version+1
+     * 解密filePath数据,数据为最后更新的path数据
      */
     @Test
     public void tapDecryptPathTest() throws Exception {
 
-        String projectid = tapCommonFunc.initProject();
+        String orderNo = tapCommonFunc.initProject();
         //投标文件上传
-        String response = tap.tapTenderUpload(projectid, recordIdA, fileHead, path);
+        String response = tap.tapTenderUpload(orderNo, recordIdA, fileHead, path);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
-        //使用projectId查询
-        sleepAndSaveInfo(20*1000);
-        response = tap.tapTenderRecord(projectid, recordIdA, true, sign);
+         response = tap.tapTenderUpload(orderNo, recordIdA, fileHead, "top/sub11/sub22/sub33");
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+
+        response = tap.tapTenderUpload(orderNo, recordIdA, fileHead, "top/sub111/sub222/sub333");
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+
+        //使用orderNo查询
+        sleepAndSaveInfo(20 * 1000);
+        response = tap.tapTenderRecord(orderNo, recordIdA, true, orderNoSIGN);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
         String RecordInfos = com.alibaba.fastjson.JSONObject.parseObject(response).getJSONObject("data").getString("RecordInfos");
-        Object RecordInfo= com.alibaba.fastjson.JSONObject.parseArray(RecordInfos).get(0);
-        String filePath= JSONObject.fromObject(RecordInfo).getString("filePath");
-        String keySecret= JSONObject.fromObject(RecordInfo).getString("keySecret");
+        Object RecordInfo = com.alibaba.fastjson.JSONObject.parseArray(RecordInfos).get(0);
+        String filePath = JSONObject.fromObject(RecordInfo).getString("filePath");
+        String keySecret = JSONObject.fromObject(RecordInfo).getString("keySecret");
         assertEquals(recordIdA, JSONObject.fromObject(RecordInfo).getString("recordId"));
+        assertEquals(3, JSONObject.fromObject(RecordInfo).getInt("version"));
 
-        String decryptFilePath = certTool.tapDecryptFilePath(sdkIP,"","",filePath,keySecret);
-        assertEquals(true,decryptFilePath.contains(path));
+        String decryptFilePath = certTool.tapDecryptFilePath(sdkIP, "", "", filePath, keySecret);
+        assertEquals(false, decryptFilePath.contains(path));
+        assertEquals(true, decryptFilePath.contains("top/sub111/sub222/sub333"));
 
+    }
+
+    /**
+     * 异常流程测试-开标接口
+     * 状态为5和0的项目不可以调开标接口
+     */
+    @Test
+    public void tapTenderOpenInvalidTest() throws Exception {
+
+        String orderNo = tapCommonFunc.initProject();
+
+        //项目标识projectId为5-开标的项目
+        String response = tap.tapProjectUpdate(orderNo, "", "",
+                "", "", "", "",
+                "0", "", 0, "",
+                "", "", null, ORDERNOSIGN);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        sleepAndSaveInfo(20 * 1000);
+        response = tap.tapTenderOpen(orderNo, orderNoSIGN);
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("BID_SECTION_STATUS is abnormal"));
+
+        response = tap.tapProjectUpdate(orderNo, "", "",
+                "", "", "", "",
+                "5", "", 0, "",
+                "", "", null, ORDERNOSIGN);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        response = tap.tapTenderOpen(orderNo, orderNoSIGN);
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("BID_SECTION_STATUS is abnormal"));
     }
 
 
