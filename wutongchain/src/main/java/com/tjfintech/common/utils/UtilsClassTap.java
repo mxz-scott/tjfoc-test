@@ -33,26 +33,22 @@ public class UtilsClassTap {
     public static String ORDERNOSIGN = "";
     public static String orderNoSIGN = "";
 
-    public static String TENDER_PROJECT_CODE = "PC" + UtilsClass.Random(8);
-    public static String TENDER_PROJECT_NAME = "项目" + UtilsClass.Random(8);
-
-    public static String BID_SECTION_CODE = "SC" + UtilsClass.Random(8);
-    public static String BID_SECTION_NAME = "标段" + UtilsClass.Random(8);
-    public static String BID_SECTION_CODE_EX = "SC_EX" + UtilsClass.Random(8);
+    public static String TENDER_PROJECT_CODE = constructData("PC");
+    public static String TENDER_PROJECT_NAME = constructData("项目");
+    public static String BID_SECTION_CODE = constructData("SC");
+    public static String BID_SECTION_NAME = constructData("标段");
+    public static String BID_SECTION_CODE_EX = constructData("SC_EX");
 
     public static Map EXTRANew = constructMetaDataMap("update");
     public static Map EXTRA = constructMetaDataMap("old");
     public static int TBALLOWFILESIZE = 512000;
     public static int TBALLOWFILESIZENew = 1024000;
     public static String TBFILE_ALLOWLIST = "jstf";
-
     public static String senderBidPlatform = "bidplatform";
     public static String senderFilePlatform = "fileplatform";
-
     public static String recordIdA = "tenderA" + UtilsClass.Random(8);
     public static String recordIdB = "tenderB" + UtilsClass.Random(8);
-    public static String recordIdC = "tenderB" + UtilsClass.Random(8);
-
+    public static String recordIdC = "tenderC" + UtilsClass.Random(8);
     public static String fileHead = "fileHead" + UtilsClass.Random(8);
     public static String path = "top/sub1/sub2/sub3";
 
@@ -72,6 +68,13 @@ public class UtilsClassTap {
         String date = new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis() + data);
 
         return date;
+    }
+
+    public static String constructData(String data) {
+
+        String constructData = data + UtilsClass.Random(8);
+
+        return constructData;
     }
 
 }

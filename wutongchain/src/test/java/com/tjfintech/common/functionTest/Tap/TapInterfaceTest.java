@@ -164,7 +164,7 @@ public class TapInterfaceTest {
         assertEquals(true, response.contains("Illegal Time"));
 
         //公钥格式不正确
-        response = tap.tapProjectInit(TENDER_PROJECT_CODE, TENDER_PROJECT_NAME, BID_SECTION_NAME, BID_SECTION_CODE, KAIBIAODATE,
+        response = tap.tapProjectInit(TENDER_PROJECT_CODE, TENDER_PROJECT_NAME, BID_SECTION_NAME, constructData("SC"), KAIBIAODATE,
                 BID_DOC_REFER_END_TIME, "1", "jstf", TBALLOWFILESIZE, "1.0",
                 "1.0", PUBKEY1, BID_SECTION_CODE_EX, EXTRA);
         assertEquals("500", JSONObject.fromObject(response).getString("state"));

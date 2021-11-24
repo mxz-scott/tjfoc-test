@@ -62,6 +62,11 @@ public class TapCommonFunc {
 
         BID_DOC_REFER_END_TIME = constructTime(20000);
         KAIBIAODATE = constructTime(20000);
+        TENDER_PROJECT_CODE = constructData("PC");
+        TENDER_PROJECT_NAME = constructData("项目");
+        BID_SECTION_CODE = constructData("SC");
+        BID_SECTION_NAME = constructData("标段");
+        BID_SECTION_CODE_EX = constructData("SC_EX");
         ZBRPULICKEY = certTool.tapPubToHex(sdkIP, PRIKEY1, "", "", "");
         log.info(ZBRPULICKEY);
         String response = tap.tapProjectInit(TENDER_PROJECT_CODE, TENDER_PROJECT_NAME, BID_SECTION_NAME, BID_SECTION_CODE, KAIBIAODATE,
@@ -85,7 +90,7 @@ public class TapCommonFunc {
     public void tapTenderOpenBatchTest() throws Exception {
 
         List<Map> listmap = tapProjectInitBatchTest();
-        sleepAndSaveInfo(20*1000);
+        sleepAndSaveInfo(20 * 1000);
         for (Map<String, String> map : listmap) {
             String projectid = "";
             String sign = "";

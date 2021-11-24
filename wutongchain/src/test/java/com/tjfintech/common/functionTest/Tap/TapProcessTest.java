@@ -45,9 +45,9 @@ public class TapProcessTest {
     public static void init() throws Exception {
         BeforeCondition bf = new BeforeCondition();
         bf.updatePubPriKey();
-
         TapCommonFunc tapCommonFunc = new TapCommonFunc();
         tapCommonFunc.init();
+
     }
 
     /**
@@ -62,6 +62,7 @@ public class TapProcessTest {
         //招标信息初始化
         BID_DOC_REFER_END_TIME = constructTime(20000);
         KAIBIAODATE = constructTime(20000);
+        BID_SECTION_CODE = constructData("SC");
         String response = tap.tapProjectInit(TENDER_PROJECT_CODE, TENDER_PROJECT_NAME, BID_SECTION_NAME, BID_SECTION_CODE, KAIBIAODATE,
                 BID_DOC_REFER_END_TIME, "1", TBFILE_ALLOWLIST, TBALLOWFILESIZE, "1.0",
                 "1.0", ZBRPULICKEY, BID_SECTION_CODE_EX, EXTRA);
@@ -401,7 +402,7 @@ public class TapProcessTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
-         response = tap.tapTenderUpload(orderNo, recordIdA, fileHead, "top/sub11/sub22/sub33");
+        response = tap.tapTenderUpload(orderNo, recordIdA, fileHead, "top/sub11/sub22/sub33");
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
@@ -459,6 +460,37 @@ public class TapProcessTest {
         response = tap.tapTenderOpen(orderNo, orderNoSIGN);
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("BID_SECTION_STATUS is abnormal"));
+    }
+
+    /**
+     * 正常流程测试-初始化接口
+     * 相同的项目不同的标段初始化生成两个项目标识
+     * 相同的标段编号重复初始化，返回历史链上的项目标识和交易哈希
+     */
+    @Test
+    public void tapProjectInitTest() throws Exception {
+
+        String orderNo = tapCommonFunc.initProject();
+
+        String BID_SECTION_CODE2 = "SC2" + UtilsClass.Random(8);
+        String BID_SECTION_NAME2 = "标段2" + UtilsClass.Random(8);
+        String response2 = tap.tapProjectInit(TENDER_PROJECT_CODE, TENDER_PROJECT_NAME, BID_SECTION_NAME2, BID_SECTION_CODE2, KAIBIAODATE,
+                BID_DOC_REFER_END_TIME, "1", "jstf", TBALLOWFILESIZE, "1.0",
+                "1.0", ZBRPULICKEY, BID_SECTION_CODE_EX, EXTRA);
+        assertEquals("200", JSONObject.fromObject(response2).getString("state"));
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        String orderNo2 = JSONObject.fromObject(response2).getJSONObject("data").getString("ORDERNO");
+        String response = tap.tapProjectList();
+        assertEquals("200", JSONObject.fromObject(response2).getString("state"));
+        assertThat(response,allOf(containsString(orderNo),containsString(orderNo2),containsString(BID_SECTION_CODE),containsString(BID_SECTION_CODE2),
+                containsString(TENDER_PROJECT_CODE)));
+
+        response = tap.tapProjectInit("code123456789", TENDER_PROJECT_NAME, BID_SECTION_NAME2, BID_SECTION_CODE2, KAIBIAODATE,
+                BID_DOC_REFER_END_TIME, "1", "jstf", TBALLOWFILESIZE, "1.0",
+                "1.0", ZBRPULICKEY, BID_SECTION_CODE_EX, EXTRA);
+        assertEquals(response2,response);
+        assertEquals(false,response.contains("code123456789"));
     }
 
 
