@@ -1,0 +1,401 @@
+contract SystemContract_SmartToken {
+
+    uint64 zero = 0
+    //账号信息
+    struct Account {
+        int MinNum          //最小签名数h
+        uint64 Quota        //受信额度z
+        uint64 TQuota       // 总额度
+        uint64 UsedQuota    // 已用配额h
+        bool Recycle        //是否可以循环受信z
+        int64 EffectiveDate //生效日期时间戳h
+        int64 ExpiryDate    //授信有效期时间戳z
+        string Remark       //备注信息h
+        bool Cancel         //授信是否被取消z
+        string[] MemberList //发行参与方名称h
+    }
+
+    //数字资产
+    struct Token {
+        string Type     //类型/编号
+        string Status   //状态：Normal、Frozen
+        int64 ActiveDate//激活日期
+        int64 ExpireDate//有效日期
+        int Level       //可流转层级
+        uint64 Amount   //数字资产金额
+        bool CanAdd     //是否可增发
+    }
+
+    //发送事件
+    public string SendEvent(string topic,string msg){
+        event(topic,msg)
+        return "success"
+    }
+
+    public string IssueToken(string ownerSC,string tokenJson,string msg,string pub,string sign,string argsJson) {
+        
+        string accountJson = invoke(ownerSC,"GetAccountInfo","")    //获取账号信息
+        if(accountJson==""){
+            print("账号合约不存在")
+            return "账号合约不存在"
+        }
+
+        string outputHash = hash(msg)
+        if(verify("sm2",pub,outputHash,sign)!=true){
+            print("签名不正确")
+            return "签名不正确"
+        }
+
+        Account acc = json_to_obj<Account>(accountJson)             //解析账户合约信息
+        Token tk = json_to_obj<Token>(tokenJson)                    //验证数字资产是否已经存在
+        
+        string tkType = tk.Type
+        string tktmpJson = db_get<string>("tk_"+tkType)
+        //不存在则绑定账户合约/存在则验证是否可以增发
+        if(tktmpJson!=""){
+            //验证是否由这个账户合约签发
+            string tmpsc = db_get<string>("sc_"+tkType)
+            if(tmpsc!=ownerSC){
+                print("这个数字凭证不是由这个账户合约发行的")
+                return "这个数字凭证不是由这个账户合约发行的"
+            }
+            Token tktmp = json_to_obj<Token>(tktmpJson)
+            if(tktmp.Status=="Frozen"){
+                print("这个数字资产已经被冻结，不可操作")
+                return "这个数字资产已经被冻结，不可操作"
+            }
+            if(tktmp.CanAdd==false){  
+                print("这个数字凭证不可增发")
+                return "这个数字凭证不可增发"
+            }else{
+                Token tktmp = json_to_obj<Token>(tktmpJson)
+                tk.Amount = tk.Amount + tktmp.Amount
+            }
+        }
+
+        //验证是否已经正在签发
+        string msgTmp = db_get<string>("msg_"+tkType)
+        if(msgTmp!=""&&msg != msgTmp){
+            print("这个数字资产正在发行中")
+            return "这个数字资产正在发行中"
+        }
+
+        //验证合约配额使用情况
+        uint64 tmp = acc.UsedQuota+tk.Amount
+        if(tmp>acc.TQuota&&acc.TQuota>zero){
+            print(tmp)
+            print(acc.TQuota)
+            print("合约配额已经耗尽")
+            return "合约配额已经耗尽"
+        }
+        acc.UsedQuota = tmp
+        print(acc.UsedQuota)
+        //验证授信生效日期和有效日期，以区块时间作为过滤条件
+        int64 timeNow = getBlockTime()
+        print(timeNow)
+        print(tk.ExpireDate)
+        print(tk.ActiveDate)
+        if(timeNow>tk.ExpireDate&&tk.ExpireDate>0){
+            print("这个数字资产不在有效期内！")
+            return "这个数字资产不在有效期内！"
+        }
+        
+        string tokenJsonTmp = quote(tokenJson)
+        argsJson = quote(argsJson)
+        // pub = replace(pub,"\n","\\\n",-1)
+        pub = quote(pub)
+        string args = "["+pub+","+tokenJsonTmp+","+argsJson+"]"
+        string res = invoke(ownerSC,"beforIssue",args)
+        //若签名数不够或者非核心企业方发起，返回提示信息
+        //若签名数达成要求，将数字资产信息录入合约，返回签名原文和所有签名
+        string totalSig
+        if (res == "continue"){
+            //记录tokentype的发行请求
+            db_set("msg_"+tkType,msg)
+            totalSig = db_get<string>(outputHash)
+            if(totalSig==""){
+                totalSig = sign
+            }else{
+                totalSig = totalSig+","+sign
+            }
+            db_set(outputHash,totalSig)
+            return "continue"
+        }else if(res != "success"){
+            print("账号合约验证失败")
+            return res
+        }
+        totalSig = db_get<string>(outputHash)
+        totalSig = totalSig+","+sign
+        totalSig = totalSig+","+msg
+        db_set("tk_"+tkType,tokenJson)
+        db_set("sc_"+tkType,ownerSC)
+         
+        accountJson = obj_to_json(acc)
+        accountJson = quote(accountJson)
+        print(accountJson)
+        //减少账户合约的配额
+        string argAcc = "["+accountJson+"]"
+        print(argAcc)
+        invoke(ownerSC,"SetAccountInfo",argAcc)
+        //调用afterIssue()
+        invoke(ownerSC,"afterIssue",args)
+        return totalSig
+    }
+
+    //取消签发
+    public string UnissueToken(string tokenType,string sig,string pub){
+        db_set("msg_"+tokenType,"")
+        return "success"
+    }
+    public string GetTokenTypeMsg(string tokenType){
+        string msg = db_get<string>("msg_"+tokenType)
+        return msg
+    }
+
+    public uint64 GetTokenTypeAmount(string TokenType){
+        string tokenjson = db_get<string>("tk_"+TokenType)
+        Token tk = json_to_obj<Token>(tokenjson)
+        return tk.Amount
+    }
+
+    //根据地址和tokentype获取余额
+    public uint64 GetBalance(string addr,string tokenType){
+        uint64 balance = getAddressBalance(addr,tokenType,"")
+        return balance
+    }
+
+
+    //转账
+    public string TransferToken(string argsJson) {
+        Input[] inlist = inputs_var
+        Output[] outlist = outputs_var
+        int loop = len(inlist)
+        map<string,string> tokenSC //token和其合约的对应关系
+        map<string,string> tokenSCTmp //token和其合约的对应关系
+        string fromAddr
+        string tkType
+        string ownerSC 
+        int64 timeNow = block.Timestamp
+        print("当前时间")
+        print(timeNow)
+        for(int i = 0;i<loop;i++){
+            Input in = inlist[i]
+            fromAddr = in.Address
+            //1.验证地址是否已经冻结，冻结直接返回。
+            string status = db_get<string>(fromAddr)
+            if(status=="Frozen"){
+                print("转出地址被冻结")
+                return "error"
+            }
+
+            tkType = in.TokenType
+            
+            ownerSC = db_get<string>("sc_"+tkType)
+            tokenSC={tkType:ownerSC}
+            tokenSCTmp={tkType:ownerSC}
+            string tokenJson = db_get<string>("tk_"+tkType)
+            Token tk = json_to_obj<Token>(tokenJson)
+            print("资产激活时间和截止时间")
+            print(tk.ActiveDate)
+            print(tk.ExpireDate)
+            if((timeNow>tk.ExpireDate||timeNow<tk.ActiveDate)&&tk.ActiveDate>0){
+                print("这个数字资产不在有效期内！")
+                return "error"
+            }
+            if(tk.Status=="Frozen"){
+                print("这个数字资产已经被冻结，不可操作")
+                return "error"
+            }
+        }
+        loop = len(outlist)
+        int level
+        for(int j = 0;j<loop;j++){
+            Output out = outlist[j]
+            level = out.Level
+            tkType = out.TokenType
+            string tokenJson = db_get<string>("tk_"+tkType)
+            Token tk = json_to_obj<Token>(tokenJson)
+            if(tk.Level>0&&tk.Level<level){
+                print("这个数字资产流转层级超出限制！")
+                return "error"
+            }
+        }
+
+        string k
+        string v
+        argsJson = quote(argsJson)
+        while(range(tokenSC,k,v)==true){
+            string tokenJson = db_get<string>("tk_"+k)
+            string tokenJsonTmp = quote(tokenJson)
+            string args = "["+tokenJsonTmp+","+argsJson+"]"
+            string res = invoke(v,"beforTransfer",args)
+            if(res != "success"){
+                return res
+
+            }
+        }
+
+         while(range(tokenSC,k,v)==true){
+            string tokenJson = db_get<string>("tk_"+k)
+            string tokenJsonTmp = quote(tokenJson)
+            string args = "["+tokenJsonTmp+","+argsJson+"]"
+            string res = invoke(v,"afterTransfer",args)
+            if(res != "success"){
+                return res
+
+            }
+
+            
+        }
+        return "success"
+    }
+
+    //兑换
+    public string Exchange(string argsJson) {
+        Input[] inlist = inputs_var
+        Output[] outlist = outputs_var
+        Input in = inlist[0]
+        Output out = outlist[0]
+        int loop = len(inlist)
+        string fromAddr
+        string fromToken = in.TokenType
+        string toToken = out.TokenType
+        for(int i = 0;i<loop;i++){
+            Input in = inlist[i]
+            fromAddr = in.Address
+            //1.验证地址是否已经冻结，冻结直接返回。
+            string status = db_get<string>(fromAddr)
+            if(status=="Frozen"){
+                return "error"
+            }
+        }
+
+        //token信息变更
+        string ownerSC = db_get<string>("sc_"+fromToken)
+        string tokenJson = db_get<string>("tk_"+fromToken)
+        Token tk = json_to_obj<Token>(tokenJson)
+        //验证数字凭证生效日期和有效日期，以区块时间作为过滤条件
+        int64 timeNow = getBlockTime()
+        if((timeNow>tk.ExpireDate||timeNow<tk.ActiveDate)&&tk.ActiveDate>0){
+            print("这个数字资产不在有效期内！")
+            return "error"
+        }
+        if(tk.Status=="Frozen"){
+            print("这个数字资产已经被冻结，不可操作")
+            return "error"
+        }
+        argsJson = quote(argsJson)
+        string tokenJsonTmp = quote(tokenJson)
+        string args = "["+tokenJsonTmp+","+argsJson+"]"
+
+        //调用账户合约的beforTransfer()
+        string res = invoke(ownerSC,"beforExchange",args)
+        if(res != "success"){
+            return res
+
+        }
+
+        tk.Type = toToken
+        tokenJson = obj_to_json(tk)
+        db_set("tk_"+toToken,tokenJson)
+        db_set("sc_"+toToken,ownerSC)
+        db_set("sc_"+fromToken,"")
+
+        //调用账户合约的afterTransfer()
+        res = invoke(ownerSC,"afterExchange",args)
+        if(res != "success"){
+            return res
+        }
+        return "success"
+    }
+    
+    //回收
+    public string Recycle(string argsJson) {
+        Output[] outlist = outputs_var
+        string tkType
+        int loop = len(outlist)
+        string ToAddress
+        string ownerSC
+        uint64 amount
+        string k
+        string v
+        map<string,string> tokenSC //token和其合约的对应关系
+        map<string,string> tokenSCTmp //token和其合约的对应关系
+        argsJson = quote(argsJson)
+
+        for(int j = 0;j<loop;j++){
+            Output out = outlist[j]
+            ToAddress = out.Address
+            if(ToAddress=="osEoy933LkHyyBcgjE7vCivfsX"){
+                tkType = out.TokenType
+                ownerSC = db_get<string>("sc_"+tkType)
+                tokenSC={tkType:ownerSC}
+                tokenSCTmp = {tkType:ownerSC}
+
+                //验证这个账号合约是否可以循环授信
+                string accountJson = invoke(ownerSC,"GetAccountInfo","")    //获取账号信息
+                if(accountJson==""){
+                    print("账号合约不存在")
+                    return "error"
+                }
+                Account acc = json_to_obj<Account>(accountJson)
+                amount = out.Value
+                if(acc.Recycle==true){
+                    acc.UsedQuota = acc.UsedQuota - amount
+                    accountJson = obj_to_json(acc)
+                    accountJson = quote(accountJson)
+                    //恢复账户合约的配额
+                    string arg = "["+accountJson+"]"
+                    invoke(ownerSC,"SetAccountInfo",arg)
+                }
+            }
+        }
+
+        while(range(tokenSC,k,v)==true){
+            string tokenJson = db_get<string>("tk_"+k)
+            string tokenJsonTmp = quote(tokenJson)
+            string args = "["+tokenJsonTmp+","+argsJson+"]"
+            string res = invoke(v,"beforRecycle",args)
+            if(res != "success"){
+                return res
+            }
+        }
+
+        while(range(tokenSCTmp,k,v)==true){
+            string tokenJson = db_get<string>("tk_"+k)
+            string tokenJsonTmp = quote(tokenJson)
+            string args = "["+tokenJsonTmp+","+argsJson+"]"
+            //调用账户合约的afterTransfer()
+            string res = invoke(v,"afterRecycle",args)
+            if(res != "success"){
+                return res
+            }
+        }
+
+        return "success"
+    }
+
+    //冻结/解冻tokenType
+    public string ChangeTokenTypeStatus(string tokenType,string Status,string comments){
+        string tokenjson = db_get<string>("tk_"+tokenType)
+        if(tokenjson==""){
+            print("数字资产类型不存在")
+            return "error"
+        }
+        Token tk = json_to_obj<Token>(tokenjson)
+        tk.Status = Status
+        tokenjson = obj_to_json(tk)
+        db_set("tk_"+tokenType,tokenjson)
+        if(comments!=""){
+            event("topic",comments)
+        }
+        return "success"
+    }
+
+    //获取TokenType绑定的合约
+    public string GetOwnerSC(string tokenType){
+        string ownerSC = db_get<string>("sc_"+tokenType)
+        return ownerSC
+    }
+    
+}
