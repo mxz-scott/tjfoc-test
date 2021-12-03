@@ -31,23 +31,13 @@ import static org.junit.Assert.assertEquals;
 public class StableAutoTest_V302 {
     TestBuilder testBuilder = TestBuilder.getInstance();
     Store store = testBuilder.getStore();
-    MultiSign multiSign = testBuilder.getMultiSign();
-    SoloSign soloSign = testBuilder.getSoloSign();
-    Token tokenModule = testBuilder.getToken();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
-    VerifyTests vt = new VerifyTests();
-    SmartTokenCommon stc = new SmartTokenCommon();
-
-    private static String tokenType;
-    List<String>listurl = new ArrayList();
 
     @BeforeClass
     public static void beforeConfig() throws Exception {
 
     }
-
-
 
 
     /**

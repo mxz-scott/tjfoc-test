@@ -32,12 +32,8 @@ public class CalculateAverageTPS {
 
         int blockHeight = Integer.parseInt(JSONObject.fromObject(store.GetHeight()).getString("data"));
 
-        int startBlockHeight;
-//        startBlockHeight = 23047;
-
-        // 计算中间20个区块的TPS
-        startBlockHeight = blockHeight - 25;
-        int endBlockHeight = blockHeight - 5;   //不计算最后5个区块，交易可能不满
+        int startBlockHeight = 1;
+        int endBlockHeight = 6070;
 
         int diff = endBlockHeight - startBlockHeight + 1;
         int count = 0, total = 0;

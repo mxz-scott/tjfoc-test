@@ -13,7 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -26,35 +28,22 @@ import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Slf4j
 public class StableAutoTest {
     TestBuilder testBuilder = TestBuilder.getInstance();
     Store store = testBuilder.getStore();
-    MultiSign multiSign = testBuilder.getMultiSign();
-    SoloSign soloSign = testBuilder.getSoloSign();
-    Token tokenModule = testBuilder.getToken();
     UtilsClass utilsClass = new UtilsClass();
     CommonFunc commonFunc = new CommonFunc();
-    VerifyTests vt = new VerifyTests();
-    SmartTokenCommon stc = new SmartTokenCommon();
-
-    private static String tokenType;
-    List<String>listurl = new ArrayList();
 
     @BeforeClass
     public static void beforeConfig() throws Exception {
-//        if (MULITADD2.isEmpty()) {
+
             BeforeCondition bf = new BeforeCondition();
             bf.updatePubPriKey();
 //            bf.createSTAddresses();
 //            bf.installSmartAccountContract("account_simple.wlang");
-//        }
-//        if(tokenAccount1.isEmpty()) {
-//            BeforeCondition beforeCondition = new BeforeCondition();
-//            beforeCondition.createTokenAccount();
-//            Thread.sleep(SLEEPTIME);
-//        }
+
     }
 
 
@@ -62,7 +51,7 @@ public class StableAutoTest {
      *  系统稳定性测试，是否丢交易测试
      */
     @Test
-    public void SystemStableTest() throws Exception {
+    public void TC01_SystemStableTest() throws Exception {
 
         String[] ids = getLedgerIDs();
         int ledgerNumber = ids.length;
@@ -70,14 +59,14 @@ public class StableAutoTest {
         for (int j = 0; j < ledgerNumber; j++) {
             subLedger = ids[j];
             storeTest(ids[j]);
-            BeforeCondition bf = new BeforeCondition();
-            bf.createSTAddresses();
-            bf.installSmartAccountContract("account_simple.wlang");
+//            BeforeCondition bf = new BeforeCondition();
+//            bf.createSTAddresses();
+//            bf.installSmartAccountContract("account_simple.wlang");
         }
 
         int i = 0;
-        int number = 6;  // 单链单次循环发送的交易数
-        int loop = 100000; // 循环次数
+        int number = 2;  // 单链单次循环发送的交易数
+        int loop = 10000; // 循环次数
         int total = loop * number; // 循环次数
 
         commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
@@ -96,17 +85,17 @@ public class StableAutoTest {
                 priStoreTest(ids[j]);
             }
 
-            Thread.sleep(100);
-            for (int j = 0; j < ledgerNumber; j++) {
-                smartTokenTest(ids[j]);
-            }
+//            Thread.sleep(100);
+//            for (int j = 0; j < ledgerNumber; j++) {
+//                smartTokenTest(ids[j]);
+//            }
 
             i++;
-
             log.info("i ===================== " + i);
-            if ( i % (loop / 10) == 0) {
-                utilsClass.setAndRestartPeer(PEER4IP);
+            if ( i % 100 == 0) {
+                utilsClass.setAndRestartPeer(PEER3IP); //10.1.5.161
             }
+
         }
 
         commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
@@ -145,12 +134,74 @@ public class StableAutoTest {
 
     }
 
+    /**
+     * 事件稳定性测试
+     */
+    @Test
+    public void TC02_EventStableTest() throws Exception {
+        String[] ids = getLedgerIDs();
+        int ledgerNumber = ids.length;
+
+        for (int j = 0; j < ledgerNumber; j++) {
+            subLedger = ids[j];
+        }
+
+        int i = 0;
+        int loop = 1000; // 循环次数
+        int[] total = new int[ids.length];
+
+        while (i < loop) {
+
+            for (int j = 0; j < ledgerNumber; j++) {
+                if ( storeTest(ids[j]) == 200 ){
+                    total[j]++;
+                };
+            }
+            i++;
+
+            Thread.sleep(SHORTMEOUT); // 3秒
+            log.info("i ===================== " + i);
+            if ( i % 10 == 0) {
+                utilsClass.setAndRestartPeer(PEER4IP); //10.1.3.164
+            }
+        }
+
+        commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
+        Thread.sleep(SLEEPTIME);
+
+        syncFlag = true;
+        assertEquals("事件不稳定", storeTest(ids[0]), 200);
+        syncFlag = false;
+    }
+
+    /**
+     * 测试同步接口返回结果后立即查询数据
+     */
+    @Test
+    public void TC03_SyncTest() throws Exception {
+        syncFlag = true;
+        int i = 0;
+        int loop = 1000; // 循环次数
+
+        while (i < loop) {
+
+            StoreAndQuery(subLedger);
+            i++;
+
+            if (i % 100 == 0) {
+                log.info("========运行次数： " + i);
+            }
+        }
+        syncFlag = false;
+    }
 
     /**
      *  节点内存是否溢出测试
+     *
+     *  大数据存证稳定性测试
      */
     @Test
-    public void OutOfMemoryTest() throws Exception {
+    public void TC04_OutOfMemoryTest() throws Exception {
         String[] ids = getLedgerIDs();
         int ledgerNumber = ids.length;
 
@@ -160,7 +211,7 @@ public class StableAutoTest {
         }
 
         int i = 0;
-        int loop = 10000; // 循环次数
+        int loop = 500; // 循环次数
         int[] total = new int[ids.length];
 
         commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
@@ -171,9 +222,10 @@ public class StableAutoTest {
         while (i < loop) {
 
             for (int j = 0; j < ledgerNumber; j++) {
-                if ( bigStoreTest(ids[j]) == 200 ){
-                    total[j]++;
-                }
+//                if ( bigStoreTest(ids[j]) == 200 ){
+                bigStoreTest(ids[j]);
+                total[j]++;
+//                }
                 Thread.sleep(500);
             }
             i++;
@@ -214,127 +266,18 @@ public class StableAutoTest {
 
     }
 
+    //----------------------------------------------------------------------------------------------------------------
 
-    /**
-     * 事件稳定性测试
-     */
-    @Test
-    public void EventStableTest() throws Exception {
-        String[] ids = getLedgerIDs();
-        int ledgerNumber = ids.length;
+    // 同步接口发送普通存证并查询
+    public void StoreAndQuery(String id) throws Exception {
+        String Data = "test11234567" + UtilsClass.Random(4);
+        String response = store.CreateStore(Data);
+//        assertThat(response, containsString("200"));
+        JSONObject jsonObject = JSONObject.fromObject(response);
+        String storeHash = jsonObject.getString("data");
 
-        for (int j = 0; j < ledgerNumber; j++) {
-            subLedger = ids[j];
-        }
-
-        int i = 0;
-        int loop = 1000; // 循环次数
-        int[] total = new int[ids.length];
-
-        while (i < loop) {
-
-            for (int j = 0; j < ledgerNumber; j++) {
-                if ( storeTest(ids[j]) == 200 ){
-                    total[j]++;
-                };
-            }
-            i++;
-
-            Thread.sleep(SHORTMEOUT); // 3秒
-            log.info("i ===================== " + i);
-            if ( i % 10 == 0) {
-                utilsClass.setAndRestartPeer(PEER4IP);
-            }
-        }
-
-        commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
-        Thread.sleep(SLEEPTIME);
-
-        syncFlag = true;
-        assertEquals("事件不稳定", storeTest(ids[0]), 200);
-
-    }
-
-
-    /**
-     * token api稳定性测试
-     */
-    @Test
-    public void tokenStableTest() throws Exception {
-
-        if (tokenAccount1.isEmpty()) {
-            BeforeCondition beforeCondition = new BeforeCondition();
-            beforeCondition.createTokenAccount();
-            Thread.sleep(SLEEPTIME);
-        }
-
-        String[] ids = getLedgerIDs();
-        int ledgerNumber = ids.length;
-
-        for (int j = 0; j < ledgerNumber; j++) {
-            subLedger = ids[j];
-            BeforeCondition bf = new BeforeCondition();
-            bf.updatePubPriKey();
-            bf.tokenAddIssueCollAddr();
-        }
-
-        int i = 0;
-        int number = 1;  // 单链单次循环发送的交易数
-        int loop = 500; // 循环次数
-        int total = loop * number; // 循环次数
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
-                utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
-
-        long[] startTimestamps = getTimestamps(ids);
-        int[] startHeights = getHeights(ids);
-
-        while (i < loop) {
-
-            for (int j = 0; j < ledgerNumber; j++) {
-                tokenIssueTest(ids[j]);
-            }
-
-            commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
-                    utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
-
-            i++;
-
-        }
-
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.tokenApiGetTxHashType),
-                utilsClass.tokenApiGetTxDetailTType, SLEEPTIME);
-
-        long[] endTimestamps = getTimestamps(ids);
-        int[] endHeights = getHeights(ids);
-
-        int count = 0;
-
-        for (int k = 0; k < ids.length; k++) {
-            log.info("*****************************************************************");
-            int totalOnChain = commonFunc.CalculatetotalTxs(ids[k], startHeights[k], endHeights[k]);  // 上链交易数
-            log.info("应用链ID：" + ids[k]);
-            long timeDiff = (endTimestamps[k] - startTimestamps[k]) / 1000 / 60;   // 按分钟计时
-            log.info("测试时长：" + timeDiff + "分钟");
-            log.info("开始区块高度：" + startHeights[k]);
-            log.info("结束区块高度：" + endHeights[k]);
-            log.info("区块数：" + (endHeights[k] - startHeights[k]));
-            log.info("发送交易总数：" + total);
-            log.info("上链交易总数：" + totalOnChain);
-            if (total != totalOnChain) {
-                count++;
-                log.error("交易丢了!");
-                for (int M = 0; M < listurl.size(); M++){
-                    String response = GetTest.doGet2(SDKADD + "/v1/gettxdetail" + "?" + listurl.get(M));
-                    if ((JSONObject.fromObject(response).getString("state").equals("400"))){
-                        log.error("#################交易丢了"+listurl.get(M));
-                    }
-                }
-            }
-            log.info("*****************************************************************");
-        }
-
-        assertEquals("交易丢了", 0, count);
+        String response2= store.GetTxDetail(storeHash);
+        assertThat(response2, containsString("200"));
 
     }
 
@@ -390,60 +333,7 @@ public class StableAutoTest {
 
     }
 
-    /**
-     * 多签正常流程-发行：签名：查询：转账：查询:回收：查询
-     */
-    public void smartTokenTest(String id) throws Exception {
-        subLedger = id;
-        //发行
-        tokenType = stc.beforeConfigIssueNewToken("1000.25");
-
-        //转让
-        String transferData = "ADDRESS1 向 MULITADD4 转账10个" + tokenType;
-        List<Map> payList = stc.smartConstructTokenList(ADDRESS1, "test", "10", null);
-        List<Map> collList = stc.smartConstructTokenList(MULITADD4, "test", "10", null);
-        String transferResp = stc.smartTransfer(tokenType, payList, collList, "", "", transferData);
-
-        assertEquals("200", JSONObject.fromObject(transferResp).getString("state"));
-        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType00),
-                utilsClass.sdkGetTxDetailType, SLEEPTIME);
-
-        //回收
-        String destroyData1 = "销毁 ADDRESS1 中的" + tokenType;
-        String destroyData2 = "销毁 MULITADD4 中的" + tokenType;
-        List<Map> payList1 = stc.smartConstructTokenList(ADDRESS1, "test", "990.25", null);
-        List<Map> payList2 = stc.smartConstructTokenList(MULITADD4, "test", "10", null);
-
-        String destroyResp1 = stc.smartDestroy(tokenType, payList1, "", destroyData1);
-        String destroyResp2 = stc.smartDestroy(tokenType, payList2, "", destroyData2);
-
-        assertEquals("200", JSONObject.fromObject(destroyResp1).getString("state"));
-        assertEquals("200", JSONObject.fromObject(destroyResp2).getString("state"));
-
-    }
-
-    // token发行
-    public void tokenIssueTest(String id) throws Exception {
-
-        subLedger = id;
-        tokenType = "tokenErr_" + UtilsClass.Random(8);
-        //发行失败交易
-        String issueResponse = tokenModule.tokenIssue(tokenAccount7, tokenAccount7, tokenType, "1000", "");
-        assertEquals("200", JSONObject.fromObject(issueResponse).getString("state"));
-
-        //发行成功交易
-        tokenType = "tokenSoMU_" + UtilsClass.Random(8);
-        issueResponse = tokenModule.tokenIssue(tokenAccount1, tokenAccount1, tokenType, "1000", "");
-        assertEquals("200", JSONObject.fromObject(issueResponse).getString("state"));
-        String issueHash = JSONObject.fromObject(issueResponse).getString("data");
-        String issueHashUrl = URLEncoder.encode(issueHash);
-        String url = "hash="+issueHashUrl +"&ledger="+subLedger;
-        listurl.add(url);
-        System.out.println(listurl);
-    }
-
-
-    //获取应用链ID数组
+      //获取应用链ID数组
     public String[] getLedgerIDs() throws Exception {
 
         JSONObject ledgers = JSONObject.fromObject(store.GetLedger());

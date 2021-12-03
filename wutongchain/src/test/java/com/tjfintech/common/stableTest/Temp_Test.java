@@ -44,38 +44,8 @@ public class Temp_Test {
     }
 
 
-    /**
-     * 测试同步接口返回结果后立即查询数据
-     */
-    @Test
-    public void SyncTest() throws Exception {
-        syncFlag = true;
-        int i = 0;
-        int loop = 5000; // 循环次数
 
-        while (i < loop) {
 
-            StoreAndQuery(subLedger);
-            i++;
 
-            if (i % 100 == 0) {
-                log.info("========运行次数： " + i);
-            }
-        }
-
-    }
-
-    // 同步接口发送普通存证并查询
-    public void StoreAndQuery(String id) throws Exception {
-        String Data = "test11234567" + UtilsClass.Random(4);
-        String response = store.CreateStore(Data);
-//        assertThat(response, containsString("200"));
-        JSONObject jsonObject = JSONObject.fromObject(response);
-        String storeHash = jsonObject.getString("data");
-
-        String response2= store.GetTxDetail(storeHash);
-        assertThat(response2, containsString("200"));
-
-    }
 
 }
