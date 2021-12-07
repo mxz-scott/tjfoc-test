@@ -51,7 +51,7 @@ public class StableAutoTest {
      *  系统稳定性测试，是否丢交易测试
      */
     @Test
-    public void TC01_SystemStableTest() throws Exception {
+    public void SystemStableTest() throws Exception {
 
         String[] ids = getLedgerIDs();
         int ledgerNumber = ids.length;
@@ -134,54 +134,16 @@ public class StableAutoTest {
 
     }
 
-    /**
-     * 事件稳定性测试
-     */
-    @Test
-    public void TC02_EventStableTest() throws Exception {
-        String[] ids = getLedgerIDs();
-        int ledgerNumber = ids.length;
 
-        for (int j = 0; j < ledgerNumber; j++) {
-            subLedger = ids[j];
-        }
-
-        int i = 0;
-        int loop = 1000; // 循环次数
-        int[] total = new int[ids.length];
-
-        while (i < loop) {
-
-            for (int j = 0; j < ledgerNumber; j++) {
-                if ( storeTest(ids[j]) == 200 ){
-                    total[j]++;
-                };
-            }
-            i++;
-
-            Thread.sleep(SHORTMEOUT); // 3秒
-            log.info("i ===================== " + i);
-            if ( i % 10 == 0) {
-                utilsClass.setAndRestartPeer(PEER4IP); //10.1.3.164
-            }
-        }
-
-        commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
-        Thread.sleep(SLEEPTIME);
-
-        syncFlag = true;
-        assertEquals("事件不稳定", storeTest(ids[0]), 200);
-        syncFlag = false;
-    }
 
     /**
      * 测试同步接口返回结果后立即查询数据
      */
     @Test
-    public void TC03_SyncTest() throws Exception {
+    public void SyncTest() throws Exception {
         syncFlag = true;
         int i = 0;
-        int loop = 1000; // 循环次数
+        int loop = 500; // 循环次数
 
         while (i < loop) {
 
@@ -201,7 +163,7 @@ public class StableAutoTest {
      *  大数据存证稳定性测试
      */
     @Test
-    public void TC04_OutOfMemoryTest() throws Exception {
+    public void OutOfMemoryTest() throws Exception {
         String[] ids = getLedgerIDs();
         int ledgerNumber = ids.length;
 
@@ -211,7 +173,7 @@ public class StableAutoTest {
         }
 
         int i = 0;
-        int loop = 500; // 循环次数
+        int loop = 300; // 循环次数
         int[] total = new int[ids.length];
 
         commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
@@ -266,18 +228,64 @@ public class StableAutoTest {
 
     }
 
+    /**
+     * 事件稳定性测试
+     */
+    @Test
+    public void EventStableTest() throws Exception {
+        String[] ids = getLedgerIDs();
+        int ledgerNumber = ids.length;
+
+        for (int j = 0; j < ledgerNumber; j++) {
+            subLedger = ids[j];
+        }
+
+        int i = 0;
+        int loop = 500; // 循环次数
+        int[] total = new int[ids.length];
+
+        while (i < loop) {
+
+            for (int j = 0; j < ledgerNumber; j++) {
+                if ( storeTest(ids[j]) == 200 ){
+                    total[j]++;
+                };
+            }
+            i++;
+
+            Thread.sleep(100);
+            log.info("i ===================== " + i);
+            if ( i % 10 == 0) {
+                utilsClass.setAndRestartPeer(PEER4IP); //10.1.3.164
+            }
+        }
+
+        commonFunc.sdkCheckTxOrSleep(storeHash, utilsClass.sdkGetTxDetailType, SLEEPTIME);
+        Thread.sleep(SLEEPTIME);
+
+        syncFlag = true;
+        assertEquals("事件不稳定", storeTest(ids[0]), 200);
+        syncFlag = false;
+    }
+
     //----------------------------------------------------------------------------------------------------------------
 
-    // 同步接口发送普通存证并查询
+    // 同步接口发送隐私存证并查询
     public void StoreAndQuery(String id) throws Exception {
-        String Data = "test11234567" + UtilsClass.Random(4);
-        String response = store.CreateStore(Data);
-//        assertThat(response, containsString("200"));
-        JSONObject jsonObject = JSONObject.fromObject(response);
-        String storeHash = jsonObject.getString("data");
+//        String Data = "test11234567" + UtilsClass.Random(4);
+//        String response = store.CreateStore(Data);
 
-        String response2= store.GetTxDetail(storeHash);
-        assertThat(response2, containsString("200"));
+//        String storeHash = JSONObject.fromObject(response).getString("data");
+//        String response2= store.GetTxDetail(storeHash);
+//        assertThat(response2, containsString("200"));
+
+        String Data = "test" + UtilsClass.Random(4);
+        Map<String,Object>map=new HashMap<>();
+        map.put("pubKey1",PUBKEY1);
+        String response= store.CreatePrivateStore(Data,map);
+
+        String hash = JSONObject.fromObject(response).getString("data");
+        assertThat(store.GetStorePost(hash,PRIKEY1),containsString("200"));
 
     }
 

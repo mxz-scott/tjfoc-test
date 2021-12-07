@@ -139,7 +139,8 @@ public class WVMContractWithVersionTest_UpgradeTestOnly {
         String response5 = wvmDestroyTest(ctHash1);//销毁
     }
 
-    @Test
+    //暂时注释掉，4.0开启
+    //@Test
     public void upgradeWVMContractWithVersion02()throws Exception{
         //20210311 与开发确认 带版本的合约 如果升级后 则不允许使用非最新版本的合约 进行任何上链和非上链操作
         wvmVersion = "2.1";
@@ -208,9 +209,10 @@ public class WVMContractWithVersionTest_UpgradeTestOnly {
     /***
      * //20210311 与开发确认 带版本的合约 如果升级后 则不允许使用非最新版本的合约 进行任何上链和非上链操作
      * 不允许多版本并发
+     * 暂时注释掉，4.0开启
      * @throws Exception
      */
-    @Test
+    //@Test
     public void ConcurrentTransferWithDiffVersion() throws Exception{
         wvmVersion = "3.1";
         String ctName = "K_" + sdf.format(dt)+ RandomUtils.nextInt(100000);
