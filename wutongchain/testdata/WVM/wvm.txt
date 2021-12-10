@@ -1,4 +1,12 @@
 //合约示例
+//contract
+//aa_contract_bb
+//--------
+//!@#@$%^^&*()*()_+OP{}|KLP::"
+//contract_cc
+//{}
+//
+//contract TestExample {
 contract TestExample {
 
 public string init(){
