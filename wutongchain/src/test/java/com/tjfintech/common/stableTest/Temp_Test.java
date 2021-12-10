@@ -49,7 +49,8 @@ public class Temp_Test {
     @Test
     public void priStoreQuery() throws Exception {
 
-        int length = 5000;
+        int sleep = 100;
+        int length = 50;
         int[] times = new int[length];
 
         for (int j = 0; j < length; j++) {
@@ -70,17 +71,17 @@ public class Temp_Test {
                 code = JSONObject.fromObject(response2).getInt("state");
                 i++;
                 if ( code == 200 ) break;
-//                Thread.sleep(sleep);
+                Thread.sleep(sleep);
             }while (code != 200);
 
-            times[j] = i ;
+            times[j] = i * sleep;
 
         }
 
         int i = 0;
         for (int t : times) {
-            if (t > 1 ){
-                log.info("查询到结果耗时 " + t * 500 + " 毫秒");
+            if (t > sleep ){
+                log.info("查询到结果耗时 " + (500 + t) + " 毫秒");
                 i++;
             }
         }

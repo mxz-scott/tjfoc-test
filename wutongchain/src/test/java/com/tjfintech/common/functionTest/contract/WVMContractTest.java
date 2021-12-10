@@ -26,6 +26,7 @@ import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 //import static com.tjfintech.common.functionTest.store.StoreTest.SLEEPTIME;
 
@@ -1063,5 +1064,30 @@ public class WVMContractTest {
         return response;
     }
 
+    //安装合约接口返回的合约地址与交易详情中获取的合约地址进行比较，判断是否一致。
+    @Test
+    public void testContractName() throws Exception {
+
+        String ctName = "contract_" + sdf.format(dt) + RandomUtils.nextInt(100000);
+
+        // 替换原wvm合约文件中的合约名称，防止合约重复导致的问题
+        // 替换后会重新生成新的文件名多出"_temp"的文件作为后面合约安装使用的文件
+        fileOper.replace(tempWVMDir + wvmFile + ".txt", orgName, ctName);
+
+        //安装合约后会得到合约hash：由Prikey和ctName进行运算得到
+        String response1 = wvmInstallTest(wvmFile + "_temp.txt", "");
+        String txHash1 = JSONObject.fromObject(response1).getJSONObject("data").getString("txId");
+        String contractNameReturn = JSONObject.fromObject(response1).getJSONObject("data").getString("name");
+
+        commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
+                utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        sleepAndSaveInfo(worldStateUpdTime, "等待worldstate更新");
+
+        String response2 = store.GetTxDetail(txHash1);
+
+        String contractNameInTx = JSONObject.fromObject(response2).getJSONObject("data").getJSONObject("wvm").getJSONObject("wvmContractTx").getString("name");
+
+        assertEquals(contractNameReturn,contractNameInTx);
+    }
 
 }
