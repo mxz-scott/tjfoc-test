@@ -27,17 +27,26 @@ public class UtilsClassTap {
     public static String ORDERNO = "";
 
     public static String BID_DOC_REFER_END_TIME = constructTime(20000);
-    public static String KAIBIAODATE = constructTime(20000);
+    public static String KAIBIAODATE = constructTime(30000);
 
-    public static String ZBRPULICKEY = "";
-    public static String ORDERNOSIGN = "";
-    public static String orderNoSIGN = "";
+    public static String ZBRPULICKEY = "MIIBiDCCAS+gAwIBAgIRAJQFtggQsKI+STPwDmHyQVowCgYIKoEcz1UBg3UwRTEL\n" +
+            "MAkGA1UEChMCdGoxGDAWBgNVBAMTD3d1dG9uZ2NoYWluLmNvbTEPMA0GA1UEKhMG\n" +
+            "R29waGVyMQswCQYDVQQGEwJOTDAeFw0yMTExMjEwODIwMTNaFw0zNjEyMDExNTU5\n" +
+            "NTlaMDIxCTAHBgNVBAYTADELMAkGA1UEChMCdGoxGDAWBgNVBAMTD3d1dG9uZ2No\n" +
+            "YWluLmNvbTBZMBMGByqGSM49AgEGCCqBHM9VAYItA0IABKBdWzEew67pCjSsaGco\n" +
+            "T2rKUkuvMt8VLtx2Au75eUJMfV+e6OQmip20RAdPaUyrpUUQ60jW/l1l5LE0gFxR\n" +
+            "wpijEzARMA8GA1UdIwQIMAaABAECAwQwCgYIKoEcz1UBg3UDRwAwRAIgQobo0RU4\n" +
+            "VHBgIatSkshG6vqj1IAx4tdKs+bAp+KuVI0CIGFVxRsDiH992EAsSEKkDG5bE34t\n" +
+            "qKzq7Rwgjq4cViJ/";
+
+    public static String ZBRPRIKEY = "MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQgBKjyJ9LNeEufZiS6dj2mLBIs7IgoNCAnVOqWCn6aD2WgCgYIKoEcz1UBgi2hRANCAASgXVsxHsOu6Qo0rGhnKE9qylJLrzLfFS7cdgLu+XlCTH1fnujkJoqdtEQHT2lMq6VFEOtI1v5dZeSxNIBcUcKY";
 
     public static String TENDER_PROJECT_CODE = constructData("PC");
     public static String TENDER_PROJECT_NAME = constructData("项目");
     public static String BID_SECTION_CODE = constructData("SC");
     public static String BID_SECTION_NAME = constructData("标段");
-    public static String BID_SECTION_CODE_EX = constructData("SC_EX");
+    public static String BID_SECTION_CODE_EX = constructData("SC_EX/+==");
+    public static String UID = constructData("UID");
 
     public static Map EXTRANew = constructMetaDataMap("update");
     public static Map EXTRA = constructMetaDataMap("old");
@@ -66,6 +75,14 @@ public class UtilsClassTap {
     public static String constructTime(int data) {
 
         String date = new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis() + data);
+
+        return date;
+    }
+
+    public static int constructUnixTime(int data) {
+
+        Long time = System.currentTimeMillis() /1000 + data;
+        int date = time.intValue();
 
         return date;
     }

@@ -95,45 +95,15 @@ public class CertTool {
         return hash;
     }
 
-    //投标防偷窥项目--项目标识签名
-    public String tapSign(String peerIP, String key, String pwd, String data, String outFormat) throws Exception {
-
-        String pwdParam = "";
-        if (!pwd.isEmpty()) pwdParam = " -p " + pwd;
-
-        //将key保存至文件key.pem 解密SecretKey
-//        shellExeCmd(peerIP, "echo " + prikey + " > " + destShellScriptDir + "key.pem");
-        String SignStr = shExeAndReturn(peerIP, wtcliExePath + "crypt sm2 -k key.pem  -s -f " + key + "=" + data);
-        SignStr = SignStr.trim().replaceAll("\r", "").replaceAll("\n", "").
-                replaceAll("Signed successfully", "").trim();
-
-        return SignStr;
-    }
-
-    //投标防偷窥项目--公钥大数的16进制编码
-    public String tapPubToHex(String peerIP, String prikey, String pwd, String data, String outFormat) throws Exception {
-
-        String pwdParam = "";
-        if (!pwd.isEmpty()) pwdParam = " -p " + pwd;
-
-//        将key保存至文件key.pem 解密SecretKey
-//        shellExeCmd(peerIP, "echo " + prikey + " > " + destShellScriptDir + "key.pem");
-        String pubStr = shExeAndReturn(peerIP, wtcliExePath + " id sdkid -i pub.pem");
-        pubStr = pubStr.trim().replaceAll("\r", "").replaceAll("\n", "").
-                replaceAll("sdkid is", "").trim();
-
-        return pubStr;
-    }
-
     //投标防偷窥项目--filePath数据解密
     public String tapDecryptFilePath(String peerIP, String prikey, String pwd, String filePath, String keySecret) throws Exception {
 
         String pwdParam = "";
         if (!pwd.isEmpty()) pwdParam = " -p " + pwd;
 
-//        //将key保存至文件key.pem 解密SecretKey
-//        shellExeCmd(peerIP, "echo " + prikey + " > " + destShellScriptDir + "key.pem");
-        String SignStr = shExeAndReturn(peerIP, wtcliExePath + "util tap dec -f " + filePath + " -s " + keySecret + " -k key.pem");
+        //将key保存至文件key.pem 解密SecretKey
+//        shellExeCmd(peerIP, "echo " + ZBRPRIKEY + " > " + destShellScriptDir + "prikey.pem");
+        String SignStr = shExeAndReturn(peerIP, wtcliExePath + "util tap dec -f " + filePath + " -s " + keySecret + " -k prikey.pem");
         SignStr = SignStr.trim().replaceAll("\r", "").replaceAll("\n", "").
                 replaceAll("Signed successfully", "").trim();
 

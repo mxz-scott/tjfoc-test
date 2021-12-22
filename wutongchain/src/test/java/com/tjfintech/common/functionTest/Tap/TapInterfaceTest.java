@@ -168,7 +168,7 @@ public class TapInterfaceTest {
                 BID_DOC_REFER_END_TIME, "1", "jstf", TBALLOWFILESIZE, "1.0",
                 "1.0", PUBKEY1, BID_SECTION_CODE_EX, EXTRA);
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
-        assertEquals(true, response.contains("ZBRPULICKEY verify err:encoding/hex"));
+        assertEquals(true, response.contains("ZBRPULICKEY verify err"));
     }
 
     @Test
@@ -178,30 +178,16 @@ public class TapInterfaceTest {
         //项目标识ORDERNO为空
         String response = tap.tapProjectUpdate("", TENDER_PROJECT_CODE, TENDER_PROJECT_NAME, BID_SECTION_NAME, BID_SECTION_CODE, KAIBIAODATE,
                 BID_DOC_REFER_END_TIME, "1", "jstf", TBALLOWFILESIZE, "1.0",
-                "1.0", BID_SECTION_CODE_EX, EXTRA, ORDERNOSIGN);
+                "1.0", BID_SECTION_CODE_EX, EXTRA);
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'ORDERNO' failed on the 'required"));
-
-        //签名SIGN为空
-        response = tap.tapProjectUpdate(ORDERNO, TENDER_PROJECT_CODE, TENDER_PROJECT_NAME, BID_SECTION_NAME, BID_SECTION_CODE, KAIBIAODATE,
-                BID_DOC_REFER_END_TIME, "1", "jstf", TBALLOWFILESIZE, "1.0",
-                "1.0", BID_SECTION_CODE_EX, EXTRA, "");
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
-        assertEquals(true, response.contains("Field validation for 'SIGN' failed on the 'required"));
 
         //项目标识ORDERNO为不存在的数据
         response = tap.tapProjectUpdate("123456", TENDER_PROJECT_CODE, TENDER_PROJECT_NAME, BID_SECTION_NAME, BID_SECTION_CODE, KAIBIAODATE,
                 BID_DOC_REFER_END_TIME, "1", "jstf", TBALLOWFILESIZE, "1.0",
-                "1.0", BID_SECTION_CODE_EX, EXTRA, ORDERNOSIGN);
+                "1.0", BID_SECTION_CODE_EX, EXTRA);
         assertEquals("404", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("orderNo[123456] not found"));
-
-        //签名SIGN为错误的签名数据
-        response = tap.tapProjectUpdate(ORDERNO, TENDER_PROJECT_CODE, TENDER_PROJECT_NAME, BID_SECTION_NAME, BID_SECTION_CODE, KAIBIAODATE,
-                BID_DOC_REFER_END_TIME, "1", "jstf", TBALLOWFILESIZE, "1.0",
-                "1.0", BID_SECTION_CODE_EX, EXTRA, "12345");
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
-        assertEquals(true, response.contains("wvm invoke err"));
 
     }
 
@@ -225,20 +211,65 @@ public class TapInterfaceTest {
     //投标文件合规性校验接口必输字段校验
     public void tapTenderVerifyInterfaceTest() throws Exception {
 
-        //哈希hashvalue为空
-        String response = tap.tapTenderVerify("", senderBidPlatform);
+        //项目标识orderNo为空
+        String response = tap.tapTenderVerify("", "unitName", "1", "1", "127", "",
+                "", "", "useZBFileGuid", "", senderBidPlatform);
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
-        assertEquals(true, response.contains("Field validation for 'Hashvalue' failed on the 'required"));
+        assertEquals(true, response.contains("Field validation for 'OrderNo' failed on the 'required"));
+
+        //unitName为空
+        response = tap.tapTenderVerify(ORDERNO, "", "1", "1", "234", "UserIdentifier_B",
+                "", "", "useZBFileGuid", "", senderBidPlatform);
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("Field validation for 'UnitName' failed on the 'required"));
+
+        //isDownLoad为空
+        response = tap.tapTenderVerify(ORDERNO, recordIdA, "", "1", "234", "UserIdentifier_B",
+                "", "", "useZBFileGuid", "", senderBidPlatform);
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("Field validation for 'IsDownLoad' failed on the 'required"));
+
+        //isZhiFu为空
+        response = tap.tapTenderVerify(ORDERNO, recordIdA, "1", "", "234", "UserIdentifier_B",
+                "", "", "useZBFileGuid", "", senderBidPlatform);
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("Field validation for 'IsZhiFu' failed on the 'required"));
+
+        //useZBFileGuid为空
+        response = tap.tapTenderVerify(ORDERNO, recordIdA, "1", "1", "234", "UserIdentifier_B",
+                "", "", "", "", senderBidPlatform);
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("Field validation for 'UseZBFileGuid' failed on the 'required"));
 
         //发送方sender为空
-        response = tap.tapTenderVerify("123", "");
+        response = tap.tapTenderVerify(ORDERNO, "unitName", "1", "1", "234", "UserIdentifier_B",
+                "", "", "useZBFileGuid", "", "");
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'Sender' failed on the 'required"));
 
         //发送方sender为错误数据
-        response = tap.tapTenderVerify("123", "abc");
+        response = tap.tapTenderVerify(ORDERNO, "unitName", "1", "1", "127", "",
+                "", "", "useZBFileGuid", "", "abc");
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'Sender' failed on the 'oneof' tag"));
+
+        //招标平台调用，userIdentifier_B和userIdentifier_C同时为空
+        response = tap.tapTenderVerify(ORDERNO, recordIdA, "1", "1", "234", "",
+                "", "", "useZBFileGuid", "", senderBidPlatform);
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("UserIdentifier_B and UserIdentifier_C cannot be null at the same time"));
+
+        //文件平台调用，caType为空
+        response = tap.tapTenderVerify(ORDERNO, recordIdA, "1", "1", "", "",
+                "", "", "useZBFileGuid", "", senderFilePlatform);
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("CaType cannot be null"));
+
+        //userIdentifier为空,（发送方为文件上传平台时，必传）
+        response = tap.tapTenderVerify(ORDERNO, recordIdA, "1", "1", "234", "UserIdentifier_B",
+                "", "", "useZBFileGuid", "", senderFilePlatform);
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("UserIdentifier cannot be null"));
     }
 
     @Test
@@ -246,27 +277,37 @@ public class TapInterfaceTest {
     public void tapTenderUploadInterfaceTest() throws Exception {
 
         //项目标识orderNo为空
-        String response = tap.tapTenderUpload("", recordIdA, fileHead, path);
+        String response = tap.tapTenderUpload("", UID, recordIdA, fileHead, path,constructUnixTime(0));
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'OrderNo' failed on the 'required"));
 
+        //文件上传唯一标识uid为空
+        response = tap.tapTenderUpload(ORDERNO, "", recordIdA, fileHead, path,constructUnixTime(0));
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("Field validation for 'Uid' failed on the 'required"));
+
         //投标标识recordId为空
-        response = tap.tapTenderUpload(ORDERNO, "", fileHead, path);
+        response = tap.tapTenderUpload(ORDERNO, UID, "", fileHead, path,constructUnixTime(0));
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'RecordId' failed on the 'required"));
 
         //文件头fileHead为空
-        response = tap.tapTenderUpload(ORDERNO, recordIdA, "", path);
+        response = tap.tapTenderUpload(ORDERNO, UID, recordIdA, "", path,constructUnixTime(0));
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'FileHead' failed on the 'required"));
 
         //路径path为空
-        response = tap.tapTenderUpload(ORDERNO, recordIdA, fileHead, "");
+        response = tap.tapTenderUpload(ORDERNO, UID, recordIdA, fileHead, "",constructUnixTime(0));
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'Path' failed on the 'required"));
 
+        //文件上传时间uploadTime为空
+        response = tap.tapTenderUpload(ORDERNO, UID, recordIdA, fileHead, path,0);
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("Field validation for 'UploadTime' failed on the 'required"));
+
         //项目标识orderNo为不存在的数据
-        response = tap.tapTenderUpload("123456", recordIdA, fileHead, path);
+        response = tap.tapTenderUpload("123456", UID, recordIdA, fileHead, path, constructUnixTime(0));
         assertEquals("404", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("orderNo[123456] not found"));
 
@@ -282,14 +323,30 @@ public class TapInterfaceTest {
         assertEquals(true, response.contains("Field validation for 'Data' failed on the 'required"));
 
         //项目标识orderNo为空
-        response = tap.tapTenderRevoke(EXTRA.toString(), "");
+        response = tap.tapTenderRevoke("{\"unitname\":\"T02\",\"revoketime\":\"20211209162920\"}", "");
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'OrderNo' failed on the 'required"));
 
         //项目标识orderNo为不存在的数据
-        response = tap.tapTenderRevoke(EXTRA.toString(), "123456");
+        response = tap.tapTenderRevoke("{\"unitname\":\"T02\",\"revoketime\":\"20211209162920\"}", "123456");
         assertEquals("404", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("orderNo[123456] not found"));
+    }
+
+    @Test
+    //获取投标记录接口必输字段校验
+    public void tapTenderBackInterfaceTest() throws Exception {
+
+        //文件上传唯一标识uid为空
+        String response = tap.tapTenderBack("");
+//        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true, response.contains("Field validation for 'OrderNo' failed on the 'required"));
+
+        //文件上传唯一标识uid为不存在的数据
+        response = tap.tapTenderBack("1234");
+        assertEquals("404", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("back info not found!"));
+
     }
 
     @Test
@@ -297,25 +354,14 @@ public class TapInterfaceTest {
     public void tapTenderRecordInterfaceTest() throws Exception {
 
         //项目标识orderNo为空
-        String response = tap.tapTenderRecord("", recordIdA, false, orderNoSIGN);
+        String response = tap.tapTenderRecord("", recordIdA, false);
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'OrderNo' failed on the 'required"));
 
-        //招标方签名sign空
-        response = tap.tapTenderRecord(ORDERNO, recordIdA, false, "");
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
-        assertEquals(true, response.contains("Field validation for 'Sign' failed on the 'required"));
-
         //项目标识orderNo为不存在的数据
-        response = tap.tapTenderRecord("123456", recordIdA, false, orderNoSIGN);
+        response = tap.tapTenderRecord("123456", recordIdA, false);
         assertEquals("404", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("orderNo[123456] not found"));
-
-        //签名sign为错误的签名数据
-        sleepAndSaveInfo(30 * 1000);
-        response = tap.tapTenderRecord(ORDERNO, recordIdA, false, "123456");
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
-        assertEquals(true, response.contains("verify failed"));
 
     }
 
@@ -324,25 +370,15 @@ public class TapInterfaceTest {
     public void tapTenderOpenInterfaceTest() throws Exception {
 
         //项目标识orderNo为空
-        String response = tap.tapTenderOpen("", orderNoSIGN);
-        assertEquals("400", JSONObject.fromObject(response).getString("state"));
-        assertEquals(true, response.contains("orderNo cannot empty"));
-
-        //招标方签名sign为空
-        response = tap.tapTenderOpen(ORDERNO, "");
-        assertEquals("400", JSONObject.fromObject(response).getString("state"));
-        assertEquals(true, response.contains("sign cannot empty"));
+        String response = tap.tapTenderOpen("");
+        assertEquals("404", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("orderNo[] not found"));
 
         //项目标识orderNo为不存在的数据
-        response = tap.tapTenderOpen("123456", orderNoSIGN);
+        response = tap.tapTenderOpen("123456");
         assertEquals("404", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("orderNo[123456] not found"));
 
-        //签名sign为错误的签名数据
-        sleepAndSaveInfo(30 * 1000);
-        response = tap.tapTenderOpen(ORDERNO, "123456");
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
-        assertEquals(true, response.contains("wvm invoke err"));
     }
 
 }

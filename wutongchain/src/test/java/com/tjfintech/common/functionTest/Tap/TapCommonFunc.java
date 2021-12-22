@@ -46,29 +46,25 @@ public class TapCommonFunc {
 
         BID_DOC_REFER_END_TIME = constructTime(20000);
         KAIBIAODATE = constructTime(20000);
-        ZBRPULICKEY = certTool.tapPubToHex(sdkIP, PRIKEY1, "", "", "");
         log.info(ZBRPULICKEY);
         String response = tap.tapProjectInit(TENDER_PROJECT_CODE, TENDER_PROJECT_NAME, BID_SECTION_NAME, BID_SECTION_CODE, KAIBIAODATE,
                 BID_DOC_REFER_END_TIME, "1", "jstf", TBALLOWFILESIZE, "1.0",
                 "1.0", ZBRPULICKEY, BID_SECTION_CODE_EX, EXTRA);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         ORDERNO = JSONObject.fromObject(response).getJSONObject("data").getString("ORDERNO");
-        ORDERNOSIGN = certTool.tapSign(sdkIP, "ORDERNO", "", ORDERNO, "");
-        orderNoSIGN = certTool.tapSign(sdkIP, "orderNo", "", ORDERNO, "");
 
     }
 
     public String initProject() throws Exception {
 
         BID_DOC_REFER_END_TIME = constructTime(20000);
-        KAIBIAODATE = constructTime(20000);
+        KAIBIAODATE = constructTime(30000);
         TENDER_PROJECT_CODE = constructData("PC");
         TENDER_PROJECT_NAME = constructData("项目");
         BID_SECTION_CODE = constructData("SC");
         BID_SECTION_NAME = constructData("标段");
-        BID_SECTION_CODE_EX = constructData("SC_EX");
-        ZBRPULICKEY = certTool.tapPubToHex(sdkIP, PRIKEY1, "", "", "");
-        log.info(ZBRPULICKEY);
+        BID_SECTION_CODE_EX = constructData("SC_EX/+==");
+        UID = constructData("UID");
         String response = tap.tapProjectInit(TENDER_PROJECT_CODE, TENDER_PROJECT_NAME, BID_SECTION_NAME, BID_SECTION_CODE, KAIBIAODATE,
                 BID_DOC_REFER_END_TIME, "1", "jstf", TBALLOWFILESIZE, "1.0",
                 "1.0", ZBRPULICKEY, BID_SECTION_CODE_EX, EXTRA);
@@ -77,8 +73,6 @@ public class TapCommonFunc {
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         String txid = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         String ORDERNO = JSONObject.fromObject(response).getJSONObject("data").getString("ORDERNO");
-        ORDERNOSIGN = certTool.tapSign(sdkIP, "ORDERNO", "", ORDERNO, "");//更新接口请求字段为ORDERNO=
-        orderNoSIGN = certTool.tapSign(sdkIP, "orderNo", "", ORDERNO, "");//开标、获取投标信息列表接口请求字段为orderNo=
         commonFunc.verifyTxDetailField(txid, "", "2", "3", "42");
         return ORDERNO;
 
@@ -90,19 +84,15 @@ public class TapCommonFunc {
     public void tapTenderOpenBatchTest() throws Exception {
 
         List<Map> listmap = tapProjectInitBatchTest();
-        sleepAndSaveInfo(20 * 1000);
+        sleepAndSaveInfo(10 * 1000);
         for (Map<String, String> map : listmap) {
             String projectid = "";
-            String sign = "";
             for (String k : map.keySet()) {
                 Object ob = map.get(k);
                 System.out.println(k + ":" + ob);
-                if (k == "sign") {
-                    sign = map.get(k);
-                } else
-                    projectid = map.get(k);
+                projectid = map.get(k);
             }
-            String response = tap.tapTenderOpen(projectid, sign);
+            String response = tap.tapTenderOpen(projectid);
             assertEquals("200", JSONObject.fromObject(response).getString("state"));
         }
 
@@ -114,18 +104,21 @@ public class TapCommonFunc {
         for (int i = 0; i < 5; i++) {
             Map map = new HashMap();
             String ORDERNO = initProject();
-            ORDERNOSIGN = certTool.tapSign(sdkIP, "ORDERNO", "", ORDERNO, "");
-            orderNoSIGN = certTool.tapSign(sdkIP, "orderNo", "", ORDERNO, "");
+            tap.tapProjectUpdate(ORDERNO, "", "",
+                    "", "", constructTime(40000), constructTime(40000),
+                    "", "", 0, "",
+                    "", "", null);
             map.put("orderNo", ORDERNO);
-            map.put("sign", orderNoSIGN);
             listmap.add(map);
 
             for (int k = 0; k < 20; k++) {
+                UID = constructData("UID");
                 String recordId = "tender" + UtilsClass.Random(8);
-                String response = tap.tapTenderUpload(ORDERNO, recordId, fileHead, path);
+                String response = tap.tapTenderUpload(ORDERNO, UID, recordId, fileHead, path, constructUnixTime(0));
                 assertEquals("200", JSONObject.fromObject(response).getString("state"));
+                log.info("------------upload"+(k+1)+"success--------------");
             }
-
+            log.info("------------init"+(i+1)+"success--------------");
         }
         log.info(listmap.toString());
         return listmap;
