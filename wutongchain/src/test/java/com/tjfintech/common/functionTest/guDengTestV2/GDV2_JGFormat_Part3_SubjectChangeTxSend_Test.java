@@ -1014,6 +1014,9 @@ public class GDV2_JGFormat_Part3_SubjectChangeTxSend_Test {
 
         log.info("================================检查存证数据格式化《开始》================================");
 
+        Map uriInfo = gdCF.getJGURIStoreHash(txId, "supervision", 1);
+        JSONArray jsonArray = JSONArray.fromObject(uriInfo.get("storeData"));
+
         register_product_ref = gdEquityCode;
         transaction_custody_product_ref = gdEquityCode;
         register_subject_account_ref = "SH" + mapAccAddr.get(address);
@@ -1048,6 +1051,8 @@ public class GDV2_JGFormat_Part3_SubjectChangeTxSend_Test {
             mapChkKeys.put("updateMap",json);
 
             assertEquals("检查数据-交易报告", true, gdCF.bCheckJGParams(mapChkKeys));
+            assertEquals(conJGFileName(txObjId,"0"),JSONObject.fromObject(jsonArray.get(0)).getString("uri"));
+            assertEquals(conJGFileName(tempObjId,"0"),JSONObject.fromObject(jsonArray.get(1)).getString("uri"));
         }else {
             assertEquals("不包含交易报告数据",false,uriStoreData.contains(txObjId));
         }
@@ -1167,6 +1172,9 @@ public class GDV2_JGFormat_Part3_SubjectChangeTxSend_Test {
 
         log.info("================================检查存证数据格式化《开始》================================");
 
+        Map uriInfo = gdCF.getJGURIStoreHash(txId, "supervision", 1);
+        JSONArray jsonArray = JSONArray.fromObject(uriInfo.get("storeData"));
+
         Map mapChkKeys = new HashMap();
         mapChkKeys.put("address","");
         mapChkKeys.put("txId",txId);
@@ -1199,6 +1207,8 @@ public class GDV2_JGFormat_Part3_SubjectChangeTxSend_Test {
             mapChkKeys.put("updateMap",json);
 
             assertEquals("检查数据-交易报告", true, gdCF.bCheckJGParams(mapChkKeys));
+            assertEquals(conJGFileName(txObjIdUnlock,"0"),JSONObject.fromObject(jsonArray.get(0)).getString("uri"));
+            assertEquals(conJGFileName(tempObjIdUnlock,"0"),JSONObject.fromObject(jsonArray.get(1)).getString("uri"));
         }else {
             assertEquals("不包含交易报告数据",false,uriStoreData.contains(txObjIdUnlock));
         }
