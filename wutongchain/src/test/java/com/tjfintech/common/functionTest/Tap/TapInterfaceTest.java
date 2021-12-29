@@ -277,32 +277,32 @@ public class TapInterfaceTest {
     public void tapTenderUploadInterfaceTest() throws Exception {
 
         //项目标识orderNo为空
-        String response = tap.tapTenderUpload("", UID, recordIdA, fileHead, path,constructUnixTime(0));
+        String response = tap.tapTenderUpload("", UID, recordIdA, fileHead, path, constructUnixTime(0));
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'OrderNo' failed on the 'required"));
 
         //文件上传唯一标识uid为空
-        response = tap.tapTenderUpload(ORDERNO, "", recordIdA, fileHead, path,constructUnixTime(0));
+        response = tap.tapTenderUpload(ORDERNO, "", recordIdA, fileHead, path, constructUnixTime(0));
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'Uid' failed on the 'required"));
 
         //投标标识recordId为空
-        response = tap.tapTenderUpload(ORDERNO, UID, "", fileHead, path,constructUnixTime(0));
+        response = tap.tapTenderUpload(ORDERNO, UID, "", fileHead, path, constructUnixTime(0));
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'RecordId' failed on the 'required"));
 
         //文件头fileHead为空
-        response = tap.tapTenderUpload(ORDERNO, UID, recordIdA, "", path,constructUnixTime(0));
+        response = tap.tapTenderUpload(ORDERNO, UID, recordIdA, "", path, constructUnixTime(0));
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'FileHead' failed on the 'required"));
 
         //路径path为空
-        response = tap.tapTenderUpload(ORDERNO, UID, recordIdA, fileHead, "",constructUnixTime(0));
+        response = tap.tapTenderUpload(ORDERNO, UID, recordIdA, fileHead, "", constructUnixTime(0));
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'Path' failed on the 'required"));
 
         //文件上传时间uploadTime为空
-        response = tap.tapTenderUpload(ORDERNO, UID, recordIdA, fileHead, path,0);
+        response = tap.tapTenderUpload(ORDERNO, UID, recordIdA, fileHead, path, 0);
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Field validation for 'UploadTime' failed on the 'required"));
 

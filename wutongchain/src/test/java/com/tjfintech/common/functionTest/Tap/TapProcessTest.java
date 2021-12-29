@@ -61,6 +61,7 @@ public class TapProcessTest {
         BID_DOC_REFER_END_TIME = constructTime(20000);
         KAIBIAODATE = constructTime(20000);
         BID_SECTION_CODE = constructData("SC");
+        BID_SECTION_CODE_EX = constructData("SC_EX/+==");
         String response = tap.tapProjectInit(TENDER_PROJECT_CODE, TENDER_PROJECT_NAME, BID_SECTION_NAME, BID_SECTION_CODE, KAIBIAODATE,
                 BID_DOC_REFER_END_TIME, "1", TBFILE_ALLOWLIST, TBALLOWFILESIZE, "1.0",
                 "1.0", ZBRPULICKEY, BID_SECTION_CODE_EX, EXTRA);
@@ -132,6 +133,8 @@ public class TapProcessTest {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        commonFunc.verifyTxDetailField(JSONObject.fromObject(response).getJSONObject("data").getString("txId"),
+                "", "2", "3", "42");
 
         response = tap.tapTenderVerify(orderNo, recordIdA, "1", "1", "234", "",
                 "", "aaa", "useZBFileGuid", "", senderFilePlatform);
@@ -155,13 +158,23 @@ public class TapProcessTest {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        commonFunc.verifyTxDetailField(JSONObject.fromObject(response).getJSONObject("data").getString("txId"),
+                "", "2", "3", "42");
 
-        //撤销投标接口
+        //撤销投标接口,撤销A和B投标记录,撤销时间之后再次重新上传一份投标文件
         String revokeData = "{\"unitname\":\"" + recordIdA + "\",\"revoketime\":\"" + constructTime(0) + "\"}";
         response = tap.tapTenderRevoke(revokeData, orderNo);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        String revokeDataB = "{\"unitname\":\"" + recordIdB + "\",\"revoketime\":\"" + constructTime(0) + "\"}";
+        response = tap.tapTenderRevoke(revokeDataB, orderNo);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        commonFunc.verifyTxDetailField(JSONObject.fromObject(response).getJSONObject("data").getString("txId"),
+                "", "2", "3", "42");
+        String NEWUIDA = constructData("NEWUIDA");
+        response = tap.tapTenderUpload(orderNo, NEWUIDA, recordIdA, fileHead, path, constructUnixTime(0));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
         //获取招标信息列表
         response = tap.tapProjectList();
@@ -175,6 +188,8 @@ public class TapProcessTest {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         response = tap.tapTenderBack(UIDC);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        response = tap.tapTenderBack(NEWUIDA);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
         //获取投标信息列表,获取投标列表接口请求时间大于开标时间
         assertThat((Long.parseLong(constructTime(0))), lessThan(Long.parseLong(KAIBIAODATE)));
@@ -184,8 +199,8 @@ public class TapProcessTest {
         sleepAndSaveInfo(20 * 1000);
         response = tap.tapTenderRecord(orderNo, "", true);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        assertEquals(false, response.contains(recordIdA));
-        assertEquals(true, response.contains(recordIdB));
+        assertEquals(true, response.contains(recordIdA));
+        assertEquals(false, response.contains(recordIdB));
         assertEquals(true, response.contains(recordIdC));
 //        assertEquals(recordIdB, com.alibaba.fastjson.JSONObject.parseObject(
 //                com.alibaba.fastjson.JSONObject.parseArray(com.alibaba.fastjson.JSONObject.parseObject(response).getJSONObject(
@@ -197,6 +212,8 @@ public class TapProcessTest {
         //开标,再次调更新接口，更新状态为5
         response = tap.tapTenderOpen(orderNo);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        commonFunc.verifyTxDetailField(JSONObject.fromObject(response).getJSONObject("data").getString("txId"),
+                "", "2", "3", "42");
         sleepAndSaveInfo(5 * 1000);//在招标平台获取到token的时候，才会变更招标状态
         response = tap.tapProjectDetail(orderNoURL);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
@@ -428,18 +445,19 @@ public class TapProcessTest {
     public void tapDecryptPathTest() throws Exception {
 
         String orderNo = tapCommonFunc.initProject();
+
         //投标文件上传
-        String response = tap.tapTenderUpload(orderNo, UID, recordIdA, fileHead, path, constructUnixTime(0));
+        String response = tap.tapTenderUpload(orderNo, constructData("UID1"), recordIdA, fileHead, "top/sub11/sub22/sub3", constructUnixTime(0));
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
-        response = tap.tapTenderUpload(orderNo, UID, recordIdA, fileHead, "top/sub11/sub22/sub33", constructUnixTime(0));
+        response = tap.tapTenderUpload(orderNo, constructData("UID2"), recordIdA, fileHead, "top/sub11/sub22/sub33", constructUnixTime(0));
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
-        response = tap.tapTenderUpload(orderNo, UID, recordIdA, fileHead, "top/sub111/sub222/sub333", constructUnixTime(0));
+        response = tap.tapTenderUpload(orderNo, constructData("UID3"), recordIdA, fileHead, "top/sub111/sub222/sub333", constructUnixTime(0));
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
@@ -641,10 +659,28 @@ public class TapProcessTest {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("pass"));
 
-        response = tap.tapTenderVerify(orderNo+"123", recordIdA, "1", "1", "127", "",
+        response = tap.tapTenderVerify(orderNo + "123", recordIdA, "1", "1", "127", "",
                 "", "fff", "useZBFileGuid", "", senderFilePlatform);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("pass"));
+    }
+
+    /**
+     * 异常流程测试-撤销投标接口
+     * data数据非{\"unitname\":\"T02\",\"revoketime\":\"20211209162920\"}格式，请求接口失败
+     * data数据中投标人unitname不存在链上，接口请求失败
+     */
+    @Test
+    public void tapTenderRevokeTest() throws Exception {
+
+        String orderNo = tapCommonFunc.initProject();
+        String response = tap.tapTenderRevoke("123", orderNo);
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+//        assertEquals(true, response.contains("Field validation for 'OrderNo' failed on the 'required"));
+
+        response = tap.tapTenderRevoke("{\"unitname\":\""+recordIdA+"\",\"revoketime\":\"20211209162920\"}", orderNo);
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals(true, response.contains("unitname is non-exitent"));
     }
 
     //    @Test
