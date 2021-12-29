@@ -102,7 +102,8 @@ public class CertTool {
         if (!pwd.isEmpty()) pwdParam = " -p " + pwd;
 
         //将key保存至文件key.pem 解密SecretKey
-//        shellExeCmd(peerIP, "echo " + ZBRPRIKEY + " > " + destShellScriptDir + "prikey.pem");
+//        shellExeCmd(peerIP, "echo " + prikey + " > " + destShellScriptDir + "prikey.pem");
+        shellExeCmd(peerIP, "cat " + " > " + destShellScriptDir + "prikey.pem" + "<< EOF" + "\n" + prikey + "EOF");
         String SignStr = shExeAndReturn(peerIP, wtcliExePath + "util tap dec -f " + filePath + " -s " + keySecret + " -k prikey.pem");
         SignStr = SignStr.trim().replaceAll("\r", "").replaceAll("\n", "").
                 replaceAll("Signed successfully", "").trim();

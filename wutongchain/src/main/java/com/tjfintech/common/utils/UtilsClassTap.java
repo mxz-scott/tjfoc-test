@@ -39,7 +39,16 @@ public class UtilsClassTap {
             "VHBgIatSkshG6vqj1IAx4tdKs+bAp+KuVI0CIGFVxRsDiH992EAsSEKkDG5bE34t\n" +
             "qKzq7Rwgjq4cViJ/";
 
-    public static String ZBRPRIKEY = "MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQgBKjyJ9LNeEufZiS6dj2mLBIs7IgoNCAnVOqWCn6aD2WgCgYIKoEcz1UBgi2hRANCAASgXVsxHsOu6Qo0rGhnKE9qylJLrzLfFS7cdgLu+XlCTH1fnujkJoqdtEQHT2lMq6VFEOtI1v5dZeSxNIBcUcKY";
+//    public static String ZBRPRIKEY = "MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQgBKjyJ9LNeEufZiS6dj2mLBIs7IgoNCAnVOqWCn6aD2WgCgYIKoEcz1UBgi2hRANCAASgXVsxHsOu6Qo0rGhnKE9qylJLrzLfFS7cdgLu+XlCTH1fnujkJoqdtEQHT2lMq6VFEOtI1v5dZeSxNIBcUcKY";
+
+    public static String ZBRPRIKEY =
+            "-----BEGIN PRIVATE KEY-----\n" +
+            "MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQgBKjyJ9LNeEufZiS6\n" +
+            "dj2mLBIs7IgoNCAnVOqWCn6aD2WgCgYIKoEcz1UBgi2hRANCAASgXVsxHsOu6Qo0\n" +
+            "rGhnKE9qylJLrzLfFS7cdgLu+XlCTH1fnujkJoqdtEQHT2lMq6VFEOtI1v5dZeSx\n" +
+            "NIBcUcKY\n" +
+            "-----END PRIVATE KEY-----\n";
+
 
     public static String TENDER_PROJECT_CODE = constructData("PC");
     public static String TENDER_PROJECT_NAME = constructData("项目");
