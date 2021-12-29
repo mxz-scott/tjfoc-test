@@ -529,6 +529,7 @@ public class TapProcessTest {
      * 异常流程测试-投标文件合规性校验接口
      * UserIdentifier_B不为空，CAType需匹配234
      * UserIdentifier_C不为空，CAType需匹配127
+     * 文件平台调用，项目或者投标人不存在，校验失败
      */
     @Test
     public void tapTenderVerifyTest() throws Exception {
@@ -628,9 +629,20 @@ public class TapProcessTest {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
-        //数据均匹配调用成功
+        //文件平台调用userIdentifier不匹配招标平台更新后该参数值，校验失败
         response = tap.tapTenderVerify(orderNo, recordIdA, "1", "1", "127", "",
                 "", "123abc数据", "useZBFileGuid", "", senderFilePlatform);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("pass"));
+
+        //项目或者投标人不存在，校验失败
+        response = tap.tapTenderVerify(orderNo, recordIdB, "1", "1", "127", "",
+                "", "fff", "useZBFileGuid", "", senderFilePlatform);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("pass"));
+
+        response = tap.tapTenderVerify(orderNo+"123", recordIdA, "1", "1", "127", "",
+                "", "fff", "useZBFileGuid", "", senderFilePlatform);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(false, JSONObject.fromObject(response).getJSONObject("data").getBoolean("pass"));
     }
