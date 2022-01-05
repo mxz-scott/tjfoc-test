@@ -1,12 +1,14 @@
 package com.tjfintech.common.functionTest.Tap;
 
 import com.alibaba.fastjson.JSONArray;
+import com.gmsm.utils.GmUtils;
 import com.tjfintech.common.*;
 import com.tjfintech.common.Interface.Credit;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.Interface.Tap;
 import com.tjfintech.common.utils.FileOperation;
 import com.tjfintech.common.utils.UtilsClass;
+import com.tjfoc.base.Util;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.checkerframework.checker.units.qual.C;
@@ -18,6 +20,7 @@ import org.junit.runners.MethodSorters;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -447,7 +450,7 @@ public class TapProcessTest {
         String orderNo = tapCommonFunc.initProject();
 
         //投标文件上传
-        String response = tap.tapTenderUpload(orderNo, constructData("UID1"), recordIdA, fileHead, "top/sub11/sub22/sub3", constructUnixTime(0));
+        String response = tap.tapTenderUpload(orderNo, constructData("UID1"), recordIdA, fileHead, path, constructUnixTime(0));
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
@@ -474,7 +477,14 @@ public class TapProcessTest {
         assertEquals(recordIdA, JSONObject.fromObject(RecordInfo).getString("recordId"));
         assertEquals(3, JSONObject.fromObject(RecordInfo).getInt("version"));
 
-        String decryptFilePath = certTool.tapDecryptFilePath(sdkIP, ZBRPRIKEY, "", filePath, keySecret);
+//        String decryptFilePath = certTool.tapDecryptFilePath(sdkIP, ZBRPRIKEY, "", filePath, keySecret);
+        GmUtils gmUtils=new GmUtils();
+        byte[] filePathByte = filePath.getBytes();
+        String key = "abcdefgh#@&&1234";
+        byte[] keyByte = key.getBytes();
+        String keyHex = Util.byteToHex(keyByte);
+        byte[] filePathByteSm4Decrypt = gmUtils.sm4Decrypt(keyHex,filePathByte);
+        String decryptFilePath = Util.byteToString(filePathByteSm4Decrypt);
         assertEquals(false, decryptFilePath.contains(path));
         assertEquals(true, decryptFilePath.contains("top/sub111/sub222/sub333"));
 
