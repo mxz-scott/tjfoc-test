@@ -13,6 +13,7 @@ public class SetSyncFlagTrue {
    @Test
     public void test(){
         UtilsClass.syncFlag = true;
+
     }
 
 }

@@ -22,10 +22,10 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 @Slf4j
 public class UtilsClass {
 
-    public static String subLedger = "ubgcgynf1x"; // 应用链ID
+    public static String subLedger = "s4ybw13k8l"; // 应用链ID
     //public static String subLedger = "";
     public static String urlAddr = ""; // 向指定节点发请求 格式 IP:RPCPort
-    public static String SDKADD = "http://10.1.5.162:8089";//sdk/tokenapi/中间件服务地址 http://IP:Port
+    public static String SDKADD = "http://10.1.5.162:8777";//sdk/tokenapi/中间件服务地址 http://IP:Port
     public static String TOKENADD = SDKADD;
     public static String rSDKADD = SDKADD;
 
@@ -40,7 +40,7 @@ public class UtilsClass {
     public static String sReleaseLocalDir,sLatestLocalDir = "D:\\";//升级前后版本目录
     public static String destShellScriptDir = "/root/tjshell/";
 
-    public static String envNo = "1";
+    public static String envNo = "3";
     static{
         log.info("自定义环境参数");
         switch (envNo){

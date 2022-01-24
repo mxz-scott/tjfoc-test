@@ -53,12 +53,12 @@ public class JmlTest {
         assertThat(response1, containsString("data"));
     }
 
-//    @Test
+    @Test
     public void Test002_JmlAuthorizeAdd() throws Exception {
         String[] receiverPubkeys = {"LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0NCk1Ga3dFd1lIS29aSXpqMENBUVlJS29FY3oxVUJnaTBEUWdBRTk0bmxNQVVBY2ZiVE5RSXN4ZGdGQ0t2dlFpMlQNCmt5dHBNMTFIK1N0aFJnZzQ5ZXdpQ0ZnRjM5Wlg3ZG5rR0lBS2c5RFZuemprYTFPUlFoa2dvR0Z1SVE9PQ0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t"};
         System.out.println("receiverPubkeys" + receiverPubkeys[0]);
         //新增授权用户
-        Map subject = UtilsClassJml.subject("321027197508106015", "尹平");
+        Map subject = UtilsClassJml.subject("360202198807090038", "曾嵩");
         String response1 = jml.AuthorizeAdd(subjectType, bankId, endTime, fileHash, subject);
         assertThat(response1, containsString("200"));
         assertThat(response1, containsString("success"));
@@ -74,21 +74,12 @@ public class JmlTest {
         //查询数据接口
         String authId = getValueByKey(response1);
         System.out.println("authId = " + authId);
-        String response2 = jml.CreditdataQuery(requestId, authId, personId, personName, purpose);
+        String response2 = jml.CreditdataQuery(requestId, authId, "360202198807090038", "曾嵩",purpose);
         assertThat(response2, containsString("200"));
         assertThat(response2, containsString("success"));
-        assertThat(response2, containsString("\"itemName\":\"网格数据\""));
-        assertThat(response2, containsString("\"itemName\":\"婚姻数据\""));
-        assertThat(response2, containsString("\"itemName\":\"户籍信息\""));
-        assertThat(response2, containsString("\"itemName\":\"用气信息\""));
-        assertThat(response2, containsString("\"itemName\":\"用水信息\""));
-        assertThat(response2, containsString("\"itemName\":\"车辆信息\""));
-        assertThat(response2, containsString("\"itemName\":\"社保缴纳\""));
-        assertThat(response2, containsString("\"itemName\":\"房屋权属\""));
-        assertThat(response2, containsString("\"itemName\":\"严重失信\""));
 
         //上传授信额度
-        Map results = UtilsClassJml.results("03833002155", "accepted", "信用良好，授信批准", "王春勇", "321022195706281518", 30000, 36, "7.8", "xxx助农贷");
+        Map results = UtilsClassJml.results("", "accepted", "信用良好，授信批准", "曾嵩", "360202198807090038", 30000, 36, "7.8", "xxx助农贷");
         String response3 = jml.CreditloanFeedback(authId, receiverPubkeys, results);
         assertThat(response3, containsString("200"));
         assertThat(response3, containsString("success"));
@@ -110,11 +101,11 @@ public class JmlTest {
      */
     @Test
     public void Test003_JmlAddQueryRecord() throws Exception {
-        //新增授权用户
-//        String[] names = {"曾嵩", "王春勇", "张琪", "陈海波", "裴志河","林涓","盛婷婷","马晶晶"};
-//        String[] ids = {"360202198807090038", "321022195706281518", "321088198905290028", "320925197409095416", "321027196902016013","321002196010163352","320981198510213726","321011198903130342"};
-        String[] names = {"曾嵩"};
-        String[] ids = {"360202198807090038"};
+//        新增授权用户
+        String[] names = {"曾嵩", "王春勇", "张琪", "陈海波", "裴志河","林涓","盛婷婷","马晶晶","侯晓樱"};
+            String[] ids = {"360202198807090038", "321022195706281518", "321088198905290028", "320925197409095416", "321027196902016013","321002196010163352","320981198510213726","321011198903130342","321002197808252121"};
+//        String[] names = {"张琪"};
+//        String[] ids = {"321088198905290028"};
         for (int a = 0; a < names.length; a++) {
             Map subject = UtilsClassJml.subject(ids[a], names[a]);
             String response = jml.AuthorizeAdd(subjectType, bankId, endTime, fileHash, subject);
@@ -123,10 +114,10 @@ public class JmlTest {
             assertThat(response, containsString("data"));
             String txId = gettxId(response);
             //获取新增授权用户上链信息
-            commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailType, SLEEPTIME);
-            String checking = store.GetTxDetail(txId);
-            assertThat(checking, containsString("200"));
-            assertThat(checking, containsString("success"));
+//            commonFunc.sdkCheckTxOrSleep(txId, utilsClass.sdkGetTxDetailType, SLEEPTIME);
+//            String checking = store.GetTxDetail(txId);
+//            assertThat(checking, containsString("200"));
+//            assertThat(checking, containsString("success"));
             //获取authid
             String authId = getValueByKey(response);
             String response1 = jml.CreditdataQuery(requestId, authId, ids[a], names[a], purpose);
@@ -238,14 +229,14 @@ public class JmlTest {
                     case "车辆登记信息":
                         log.info("车辆登记信息" + itemValue);
                         break;
-                    case "社保缴纳":
-                        itemValue = jsonObject2.getString("itemValue");
-                        agency = jsonObject2.getJSONObject("itemValue").getString("agency");
-                        continuous_total_month = jsonObject2.getJSONObject("itemValue").getString("continuous_total_month");
-                        latest_pay_date = jsonObject2.getJSONObject("itemValue").getString("latest_pay_date");
-                        latest_pay_month = jsonObject2.getJSONObject("itemValue").getString("latest_pay_month");
-                        name1 = jsonObject2.getJSONObject("itemValue").getString("name");
-                        break;
+//                    case "社保缴纳":
+//                        itemValue = jsonObject2.getString("itemValue");
+//                        agency = jsonObject2.getJSONObject("itemValue").getString("agency");
+//                        continuous_total_month = jsonObject2.getJSONObject("itemValue").getString("continuous_total_month");
+//                        latest_pay_date = jsonObject2.getJSONObject("itemValue").getString("latest_pay_date");
+//                        latest_pay_month = jsonObject2.getJSONObject("itemValue").getString("latest_pay_month");
+//                        name1 = jsonObject2.getJSONObject("itemValue").getString("name");
+//                        break;
                     case "公积金缴纳":
                         itemValue = jsonObject2.getString("itemValue");
                         companyName = jsonObject2.getJSONObject("itemValue").getString("companyName");
@@ -271,7 +262,7 @@ public class JmlTest {
             }
 
             //查询数据接口，循环查询与第一次查询做对比
-            for (int i = 0; i < 99; i++) {
+            for (int i = 0; i < 2; i++) {
                 Thread.sleep(5000);
                 log.info("//==========循环等待5秒==========//");
                 String response2 = jml.CreditdataQuery(requestId, authId, ids[a], names[a], purpose);
@@ -330,15 +321,14 @@ public class JmlTest {
                                 System.out.println("ddddddddddddddddddddddddddd");
 //                                        assertEquals(jsonObject3.getString("itemValue"), itemValue1);
                                 break;
-
-                            case "社保缴纳":
-                                assertEquals(jsonObject3.getJSONObject("itemValue").getString("agency"), agency);
-                                assertEquals(jsonObject3.getJSONObject("itemValue").getString("continuous_total_month"), continuous_total_month);
-                                assertEquals(jsonObject3.getJSONObject("itemValue").getString("latest_pay_date"), latest_pay_date);
-                                assertEquals(jsonObject3.getJSONObject("itemValue").getString("latest_pay_month"), latest_pay_month);
-                                assertEquals(jsonObject3.getJSONObject("itemValue").getString("name"), name1);
-                                System.out.println(jsonObject3);
-                                break;
+//                            case "社保缴纳":
+//                                assertEquals(jsonObject3.getJSONObject("itemValue").getString("agency"), agency);
+//                                assertEquals(jsonObject3.getJSONObject("itemValue").getString("continuous_total_month"), continuous_total_month);
+//                                assertEquals(jsonObject3.getJSONObject("itemValue").getString("latest_pay_date"), latest_pay_date);
+//                                assertEquals(jsonObject3.getJSONObject("itemValue").getString("latest_pay_month"), latest_pay_month);
+//                                assertEquals(jsonObject3.getJSONObject("itemValue").getString("name"), name1);
+//                                System.out.println(jsonObject3);
+//                                break;
 
                             case "公积金缴纳":
                                 assertEquals(jsonObject3.getJSONObject("itemValue").getString("companyName"), companyName);

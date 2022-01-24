@@ -102,12 +102,12 @@ public class JmlInterfaceTest {
         assertThat(response3, containsString("Error:Field validation for 'AuthId' failed on the 'required' tag\""));
         //查询数据接口,authId为错误
         String response4 = jml.CreditdataQuery(requestId, "32132132121", personId, personName, purpose);
-        assertThat(response4, containsString("403"));
-        assertThat(response4, containsString("没有权限：该AuthId对应的用户还未授权"));
+        assertThat(response4, containsString("400"));
+        assertThat(response4, containsString("该AuthId对应的用户还未授权"));
         assertThat(response4, containsString("null"));
         //查询数据接口,personId为错误
         String response5 = jml.CreditdataQuery(requestId, authId, "15165115231516", personName, purpose);
-        assertThat(response5, containsString("403"));
+        assertThat(response5, containsString("400"));
         assertThat(response5, containsString("没有权限：IdHash校验出错"));
         assertThat(response5, containsString("null"));
         //查询数据接口,personId为空
