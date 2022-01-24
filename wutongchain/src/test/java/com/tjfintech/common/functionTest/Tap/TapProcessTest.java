@@ -197,7 +197,7 @@ public class TapProcessTest {
         //获取投标信息列表,获取投标列表接口请求时间大于开标时间
         assertThat((Long.parseLong(constructTime(0))), lessThan(Long.parseLong(KAIBIAODATE)));
         response = tap.tapTenderRecord(orderNo, recordIdA, true);
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("KAIBIAODATE is later"));
         sleepAndSaveInfo(20 * 1000);
         response = tap.tapTenderRecord(orderNo, "", true);
@@ -249,7 +249,7 @@ public class TapProcessTest {
                 "", "", "", "",
                 "3", "", 0, "",
                 "", "", null);
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("Illegal BID_SECTION_STATUS"));
 
         //更新状态为5-开标已结束的项目，再更新项目信息报错
@@ -263,7 +263,7 @@ public class TapProcessTest {
                 BID_SECTION_NAME + "NEW", BID_SECTION_CODE + "NEW", KAIBIAODATE, BID_DOC_REFER_END_TIME,
                 "0", TBFILE_ALLOWLIST + "NEW", TBALLOWFILESIZENew, "2.0",
                 "2.0", BID_SECTION_CODE_EX + "NEW", EXTRANew);
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("can not modify finished bid"));
     }
 
@@ -287,7 +287,7 @@ public class TapProcessTest {
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
         response = tap.tapTenderUpload(orderNo, UID, recordIdA, fileHead, path, constructUnixTime(0));
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("BID_SECTION_STATUS is abnormal"));
 
         //项目标识orderNo为5-开标的项目
@@ -300,7 +300,7 @@ public class TapProcessTest {
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
         response = tap.tapTenderUpload(orderNo, UID, recordIdA, fileHead, path, constructUnixTime(0));
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("BID_SECTION_STATUS is abnormal"));
 
         orderNo = tapCommonFunc.initProject();
@@ -312,11 +312,11 @@ public class TapProcessTest {
 
         //
         response = tap.tapTenderUpload(orderNo, UID, recordIdA, fileHead, path, constructUnixTime(250));
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("开标时间已经截止"));
 
         response = tap.tapTenderUpload(orderNo, UID, recordIdA, fileHead, path, constructUnixTime(350));
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("开标时间已经截止"));
 
     }
@@ -509,7 +509,7 @@ public class TapProcessTest {
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         sleepAndSaveInfo(30 * 1000);
         response = tap.tapTenderOpen(orderNo);
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("BID_SECTION_STATUS is abnormal"));
 
         response = tap.tapProjectUpdate(orderNo, "", "",
@@ -518,7 +518,7 @@ public class TapProcessTest {
                 "", "", null);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         response = tap.tapTenderOpen(orderNo);
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("BID_SECTION_STATUS is abnormal"));
     }
 
@@ -685,11 +685,11 @@ public class TapProcessTest {
 
         String orderNo = tapCommonFunc.initProject();
         String response = tap.tapTenderRevoke("123", orderNo);
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true, response.contains("Field validation for 'OrderNo' failed on the 'required"));
 
         response = tap.tapTenderRevoke("{\"unitname\":\""+recordIdA+"\",\"revoketime\":\"20211209162920\"}", orderNo);
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
         assertEquals(true, response.contains("unitname is non-exitent"));
     }
 

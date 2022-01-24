@@ -16,7 +16,7 @@ public class SetTestEnv_lilu {
         SDKADD = "http://10.1.5.225:8088";
         rSDKADD = "http://10.1.5.225:8088";
         TOKENADD = "http://10.1.5.225:8088";
-
+        subLedger = ""; // 应用链ID
         //设置测试环境使用的节点端口及部署目录信息
         PEER1IP = "10.1.5.225";
         PEER2IP = "10.1.5.226";
@@ -36,13 +36,13 @@ public class SetTestEnv_lilu {
         PeerPATH = PTPATH + "zxchain/";
         ToolPATH = PTPATH + "wttool/";
         TokenApiPATH = PTPATH + "wtfinservice/";
-        PeerTPName = "wtchain";
-        SDKTPName = "wtsdk";
+        PeerTPName = "zxchain";
+        SDKTPName = "zxsdk";
         ToolTPName = "wttool";
         TokenTPName = "wtfinservice";
-        tmuxSessionTokenApi = "tmux send -t zx-sdk ";
-        tmuxSessionPeer = "tmux send -t zx-chain ";
-        tmuxSessionSDK = "tmux send -t zx-sdk ";
+        tmuxSessionTokenApi = "tmux send -t zxsdk ";
+        tmuxSessionPeer = "tmux send -t zxchain ";
+        tmuxSessionSDK = "tmux send -t zxsdk ";
         sReleaseLocalDir = "E:\\gopath\\src\\github.com\\tjfoc\\wtsys-release\\release\\梧桐链已发布版本\\2.3\\";
         sLatestLocalDir = "E:\\test\\2.4.2\\";
 
