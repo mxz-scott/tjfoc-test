@@ -131,12 +131,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.wtchain</groupId>
-			<artifactId>did</artifactId>
-			<version>v220112-1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>3.17</version>
