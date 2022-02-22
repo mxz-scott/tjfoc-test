@@ -22,8 +22,8 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 @Slf4j
 public class UtilsClass {
 
-    public static String subLedger = "s4ybw13k8l"; // 应用链ID
-    //public static String subLedger = "";
+//    public static String subLedger = "s4ybw13k8l"; // 应用链ID
+    public static String subLedger = "w4ndmq24fx";
     public static String urlAddr = ""; // 向指定节点发请求 格式 IP:RPCPort
     public static String SDKADD = "http://10.1.5.162:8777";//sdk/tokenapi/中间件服务地址 http://IP:Port
     public static String TOKENADD = SDKADD;

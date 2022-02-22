@@ -10,9 +10,13 @@ public class SetTestEnv_dyy {
 
    @Test
     public void setEnvParam(){
-      SDKADD = "http://dev-env.wutongchain.com:48090";
-      rSDKADD = "http://dev-env.wutongchain.com:48090";
-      TOKENADD = "http://dev-env.wutongchain.com:48090";
+      SDKADD = "http://36.156.139.97:59092";
+      rSDKADD = "http://36.156.139.97:59092";
+      TOKENADD = "http://36.156.139.97:59092";
+//      SDKADD = "http://dev-env.wutongchain.com:48090";
+//      rSDKADD = "http://dev-env.wutongchain.com:48090";
+//      TOKENADD = "http://dev-env.wutongchain.com:48090";
+
 //      SDKADD = "http://10.1.5.162:8777";
 //      rSDKADD = "http://10.1.5.162:8777";
 //      TOKENADD = "http://10.1.5.162:8777";

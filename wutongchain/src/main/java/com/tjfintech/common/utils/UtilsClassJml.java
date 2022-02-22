@@ -61,7 +61,6 @@ public class UtilsClassJml {
         Object data = parse.get("data");
         Map<String, Object> dataMap = JSON.parseObject(data.toString(), Map.class);
         Object authId = dataMap.get("txId");
-
         return authId.toString();
     }
 
