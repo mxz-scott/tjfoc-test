@@ -1,6 +1,7 @@
 package com.tjfintech.common;
 
 import com.tjfintech.common.Interface.Shca;
+import com.tjfintech.common.utils.DelTest;
 import com.tjfintech.common.utils.GetTest;
 import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,7 @@ public class GoShca implements Shca{
      * 根据ID删除DID文档
      */
     public String DIDdelete() {
-        String result = GetTest.doDel(SHCAADD + "/ca/v1/did/delete/" + id);
+        String result = DelTest.doDel(SHCAADD + "/ca/v1/did/delete/" + id);
         log.info(result);
         return result;
     }
@@ -108,7 +109,49 @@ public class GoShca implements Shca{
      * 根据ID删除VC
      */
     public String VCdelete() {
-        String result = GetTest.doDel(SHCAADD + "/ca/v1/vc/delete/" + id);
+        String result = DelTest.doDel(SHCAADD + "/ca/v1/vc/delete/" + id);
+        log.info(result);
+        return result;
+    }
+
+    /*
+    DID初始化
+     */
+    public String DIDinit(String password, String pubKey, String publicKeyId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("password", password);
+        map.put("pubKey", pubKey);
+        map.put("publicKeyId", publicKeyId);
+        String param="";
+//        if(subLedger!="") param = param +"ledger="+subLedger;
+        if(syncFlag)  param = param + "?sync=true&timeout=" + syncTimeout;
+
+        String result = PostTest.postMethod(SHCAADD2 + "/did/init" + param, map);
+        log.info(result);
+        return result;
+    }
+
+    /*
+    DID创建
+     */
+    public String DID(String publicKeyId, String pubKey) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("publicKeyId", publicKeyId);
+        map.put("pubKey", pubKey);
+        String param="";
+//        if(subLedger!="") param = param +"ledger="+subLedger;
+        if(syncFlag)  param = param + "?sync=true&timeout=" + syncTimeout;
+
+        String result = PostTest.postMethod(SHCAADD2 + "/did" + param, map);
+        log.info(result);
+        return result;
+    }
+
+    /*
+    DID解析
+    */
+    public String DIDid() {
+        String result = GetTest.doGet2(SHCAADD2 + "/did/" + didid);
         log.info(result);
         return result;
     }

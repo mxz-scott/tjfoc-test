@@ -125,5 +125,36 @@ public class ShcaTest {
         assertThat(response1, containsString("data"));
     }
 
+    /*
+    DID初始化
+     */
+    @Test
+    public void Test009_DIDinit() {
+        String response1 = shca.DIDinit(password, pubKey, publicKeyId);
+        assertThat(response1, containsString("200"));
+        assertThat(response1, containsString("success"));
+        assertThat(response1, containsString("data"));
+    }
 
+    /*
+    DID创建
+     */
+    @Test
+    public void Test0010_DID() {
+        String response1 = shca.DID(publicKeyId, pubKey);
+        assertThat(response1, containsString("200"));
+        assertThat(response1, containsString("success"));
+        assertThat(response1, containsString("data"));
+    }
+
+    /*
+    DID解析
+     */
+    @Test
+    public void Test0011_DIDid() {
+        String response1 = shca.DIDid();
+        assertThat(response1, containsString("200"));
+        assertThat(response1, containsString("success"));
+        assertThat(response1, containsString("data"));
+    }
 }

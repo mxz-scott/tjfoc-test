@@ -14,11 +14,11 @@ public interface Shca {
     String VCdelete ();
     String VC (String applicantDid, String vcType, Map vcSubject);
 
-//    //DID-SERVER
-//    String DIDinit (String password, String pubKey);
-//    String DID (String publicKeyId, String pubKey);
-//    String DIDid ();
-//    //同步VC信息
+    //DID-SERVER
+    String DIDinit (String password, String pubKey, String publicKeyId);
+    String DID (String publicKeyId, String pubKey);
+    String DIDid ();
+    //同步VC信息
 
 //    String DIDvcsyn ();
 

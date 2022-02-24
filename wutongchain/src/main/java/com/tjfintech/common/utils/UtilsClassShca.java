@@ -23,6 +23,12 @@ public class UtilsClassShca {
     public static String applicantDid = "did:sheca-uat:2hRjHswx7GCMzQncf33hyregc2Db";
     public static String vcType = "Test_type";
     public static String name = "dyyid-001";
+    public static String password = "Pass@7899";
+    public static String pubKey = "3059301306072a8648ce3d020106082a8648ce3d03010703420004b4a148a7ab9c0c03abe581e014cb9f18659ef29ca63146e1fbd1941d2b747ec4548428710163de42f88299b14b27828423bcf5f70bb1ed5f41252eed8e11b545";
+    public static String publicKeyId = "123456";
+    public static String didid = "did:sheca-uat:5m2rkcTeWcz1FCX3jyW7vdRceqn";
+
+
 
 
     /*
