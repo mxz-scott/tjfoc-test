@@ -678,7 +678,8 @@ public class TapProcessTest {
     /**
      * 异常流程测试-撤销投标接口
      * data数据非{\"unitname\":\"T02\",\"revoketime\":\"20211209162920\"}格式，请求接口失败
-     * data数据中投标人unitname不存在链上，接口请求失败
+     * data数据中投标人unitname为空，接口请求成功，存证上链
+     * data数据中投标人unitname不存在链上，接口请求成功，存证上链
      */
     @Test
     public void tapTenderRevokeTest() throws Exception {
@@ -688,9 +689,23 @@ public class TapProcessTest {
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true, response.contains("Field validation for 'OrderNo' failed on the 'required"));
 
+        response = tap.tapTenderRevoke("{\"revoketime\":\"20211209162920\"}",orderNo);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        String txid = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        sleepAndSaveInfo(2000);
+        response = store.GetTxDetail(txid);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(0,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getInt("type"));
+        assertEquals(0,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getInt("subType"));
+
         response = tap.tapTenderRevoke("{\"unitname\":\""+recordIdA+"\",\"revoketime\":\"20211209162920\"}", orderNo);
-        assertEquals("400", JSONObject.fromObject(response).getString("state"));
-        assertEquals(true, response.contains("unitname is non-exitent"));
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        txid = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        sleepAndSaveInfo(2000);
+        response = store.GetTxDetail(txid);
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        assertEquals(0,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getInt("type"));
+        assertEquals(0,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getInt("subType"));
     }
 
     //    @Test
