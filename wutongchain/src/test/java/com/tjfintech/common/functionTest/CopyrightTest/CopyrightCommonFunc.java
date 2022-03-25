@@ -257,6 +257,7 @@ public class CopyrightCommonFunc {
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
+        sleepAndSaveInfo(2000);
         response = copyright.crArtworkQuery(YSPBH, "");
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         assertEquals(ShuLiang, JSONObject.fromObject(response).getJSONObject("data").getInt("quantity"));

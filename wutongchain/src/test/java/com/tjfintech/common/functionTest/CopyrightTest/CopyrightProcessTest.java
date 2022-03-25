@@ -72,7 +72,7 @@ public class CopyrightProcessTest {
 
         //艺术品发行接口,detail为空
         response = copyright.crArtworkIssue(USERKEYID1, PIN1, null);
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //艺术品发行接口,账户KeyID为不存在的数据
         response = copyright.crArtworkIssue("123", PIN1, artDetailInfo);
@@ -94,11 +94,11 @@ public class CopyrightProcessTest {
 
         //艺术品流转接口,keyId为空
         response = copyright.crArtworkTransfer("", PIN1, fromAddress, toAddress, orderDetailInfo);
-        assertEquals("404", JSONObject.fromObject(response).getString("state"));
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
 
         //艺术品流转接口,keyId为不存在的数据
         response = copyright.crArtworkTransfer("123", PIN1, fromAddress, toAddress, orderDetailInfo);
-        assertEquals("404", JSONObject.fromObject(response).getString("state"));
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
 
         //艺术品流转接口,pin为空
 //        response = copyright.crArtworkTransfer(BROKERKEYID1, "", fromAddress, toAddress, orderDetailInfo);
@@ -106,19 +106,19 @@ public class CopyrightProcessTest {
 
         //艺术品流转接口,fromAddress为空
         response = copyright.crArtworkTransfer(BROKERKEYID1, PIN1, "", toAddress, orderDetailInfo);
-        assertEquals("404", JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //艺术品流转接口,fromAddress为不存在的数据
         response = copyright.crArtworkTransfer(BROKERKEYID1, PIN1, AddrNotInDB, toAddress, orderDetailInfo);
-        assertEquals("404", JSONObject.fromObject(response).getString("state"));
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
 
         //艺术品流转接口,fromAddress和keyid不匹配
         response = copyright.crArtworkTransfer(BROKERKEYID2, PIN1, fromAddress, toAddress, orderDetailInfo);
-        assertEquals("404", JSONObject.fromObject(response).getString("state"));
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
 
         //艺术品流转接口,toAddress为空
         response = copyright.crArtworkTransfer(BROKERKEYID1, PIN1, fromAddress, "", orderDetailInfo);
-        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //艺术品流转接口,toAddress为不存在的数据
         response = copyright.crArtworkTransfer(BROKERKEYID1, PIN1, fromAddress, AddrNotInDB, orderDetailInfo);
@@ -133,7 +133,7 @@ public class CopyrightProcessTest {
         YSPBH = constructData("YSPBH_", 8);
         log.info("未发行艺术品编码：" + YSPBH);
         orderDetailInfo = copyrightCommonFunc.initOrderDetailInfo();
-        response = copyright.crArtworkTransfer(BROKERKEYID1, PIN1, fromAddress, fromAddress, orderDetailInfo);
+        response = copyright.crArtworkTransfer(BROKERKEYID1, PIN1, fromAddress, toAddress, orderDetailInfo);
         assertEquals("500", JSONObject.fromObject(response).getString("state"));
 
         YSPBH = temp;
@@ -141,8 +141,12 @@ public class CopyrightProcessTest {
         orderDetailInfo = copyrightCommonFunc.initOrderDetailInfo();
 
         //艺术品流转接口,detail为空
-//        response = copyright.crArtworkTransfer(BROKERKEYID1, PIN1, fromAddress, toAddress, null);
-//        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        response = copyright.crArtworkTransfer(BROKERKEYID1, PIN1, fromAddress, toAddress, null);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //艺术品流转接口,detail为异常格式数据
+        response = copyright.crArtworkTransfer(BROKERKEYID1, PIN1, fromAddress, toAddress, "123");
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
 
         //查询艺术品信息接口，bianhao为空
         response = copyright.crArtworkQuery("", "");
@@ -163,8 +167,8 @@ public class CopyrightProcessTest {
         //账户注册接口，type为空
         response = kms.createKey("sm2", "PIN1");
         String keyid = JSONObject.fromObject(response).getJSONObject("data").getString("keyId");
-        response = copyright.crAcountRegister(keyid, "", userDetailInfo);
-        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+//        response = copyright.crAcountRegister(keyid, "", userDetailInfo);
+//        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //账户注册接口，detail为空
 //        response = copyright.crAcountRegister(keyid, "user", null);
@@ -179,8 +183,8 @@ public class CopyrightProcessTest {
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //账户艺术品查询接口，addr为不存在的数据
-//        response = copyright.crAccountQuery(AddrNotInDB);
-//        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        response = copyright.crAccountQuery(AddrNotInDB);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
     }
 
@@ -207,12 +211,16 @@ public class CopyrightProcessTest {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        String storeHash = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        commonFunc.verifyTxDetailField(storeHash, "store", "0", "0", "0");
 
         //艺术品发行上链
         response = copyright.crArtworkIssue(BROKERKEYID1, PIN1, artDetailInfo);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        storeHash = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        commonFunc.verifyTxDetailField(storeHash, "wvm_invoke", "2", "3", "42");
 
         //查询经纪商1账户艺术品,返回正确数据
         copyrightCommonFunc.verifyAccountQuery(brokerAddress1, YSPBH, 100, true);
@@ -226,6 +234,8 @@ public class CopyrightProcessTest {
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
+        storeHash = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        commonFunc.verifyTxDetailField(storeHash, "wvm_invoke", "2", "3", "42");
 
         copyrightCommonFunc.verifyAccountQuery(brokerAddress1, YSPBH, 99, true);
         copyrightCommonFunc.verifyAccountQuery(userAddress1, YSPBH, 1, true);
@@ -253,20 +263,20 @@ public class CopyrightProcessTest {
         log.info("艺术品编号2：" + bianhao2);
         copyrightCommonFunc.initArtIssue(BROKERKEYID1, bianhao2, 100);
 
-        //艺术品发行上链YSPBH3数量50
+        //艺术品发行上链YSPBH3数量1
         String bianhao3 = constructData("YSPBH3_", 8);
         log.info("艺术品编号3：" + bianhao3);
-        copyrightCommonFunc.initArtIssue(BROKERKEYID1, bianhao3, 50);
+        copyrightCommonFunc.initArtIssue(BROKERKEYID1, bianhao3, 1);
 
         //查询经纪商1账户艺术品,返回正确数据
         copyrightCommonFunc.verifyAccountQuery(brokerAddress1, bianhao1, 200, true);
         copyrightCommonFunc.verifyAccountQuery(brokerAddress1, bianhao2, 100, true);
-        copyrightCommonFunc.verifyAccountQuery(brokerAddress1, bianhao3, 50, true);
+        copyrightCommonFunc.verifyAccountQuery(brokerAddress1, bianhao3, 1, true);
 
         //查询艺术品信息接口，num为空，返回艺术品发行的数据
         copyrightCommonFunc.verifyArtworkQuery(brokerAddress1, bianhao1, "", 200, true, false);
         copyrightCommonFunc.verifyArtworkQuery(brokerAddress1, bianhao2, "", 100, true, false);
-        copyrightCommonFunc.verifyArtworkQuery(brokerAddress1, bianhao3, "", 50, true, false);
+        copyrightCommonFunc.verifyArtworkQuery(brokerAddress1, bianhao3, "", 1, true, false);
 
         //艺术品流转
         YSPBH = bianhao1;
@@ -289,7 +299,7 @@ public class CopyrightProcessTest {
         copyrightCommonFunc.verifyAccountQuery(userAddress1, bianhao1, 1, true);
         copyrightCommonFunc.verifyAccountQuery(brokerAddress1, bianhao2, 99, true);
         copyrightCommonFunc.verifyAccountQuery(userAddress1, bianhao2, 1, true);
-        copyrightCommonFunc.verifyAccountQuery(brokerAddress1, bianhao3, 49, true);
+        copyrightCommonFunc.verifyAccountQuery(brokerAddress1, bianhao3, 0, true);
         copyrightCommonFunc.verifyAccountQuery(userAddress1, bianhao3, 1, true);
 
         copyrightCommonFunc.verifyArtworkQuery(userAddress1, bianhao1, "1", 1, false, false);
@@ -299,7 +309,8 @@ public class CopyrightProcessTest {
 
     /**
      * 异常流程测试-艺术品流转接口
-     * 经纪商1发行艺术品1数量为3，转给用户1成功，转给用户2成功，转给用户3失败
+     * 经纪商1发行艺术品1数量为2，转给用户1成功，转给用户2成功，转给用户3失败
+     * 查询艺术品信息，num参数分别为空、1、2
      */
     @Test
     public void crArtworkTransferInvalidTest() throws Exception {
@@ -324,7 +335,7 @@ public class CopyrightProcessTest {
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
 
         response = copyright.crArtworkTransfer(BROKERKEYID1, PIN1, brokerAddress1, userAddress3, orderDetailInfo);
-//        assertEquals("500", JSONObject.fromObject(response).getString("state"));
+        assertEquals("500", JSONObject.fromObject(response).getString("state"));
 
         //账户艺术品查询，经纪商1无，普通用户1、2有，普通用户3无
         copyrightCommonFunc.verifyAccountQuery(brokerAddress1, bianhao, 0, false);
