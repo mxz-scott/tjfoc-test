@@ -24,6 +24,7 @@ public class UtilsClassCopyright {
     public static String userDetailInfo, brokerDetailInfo, artDetailInfo, artReviewDetailInfo, orderDetailInfo;
 
     public static String AddrNotInDB = "4AEeTzUkL8g2GN2kcK3GXWdv7nPyNjKR4hxJ5J96nFqxAGAHnB";
+    public static String OPENID = "oTTwx448IcNzDkV-NjWc8LqhfOUw";
 
     public static Map constructMetaDataMap(String data) {
 

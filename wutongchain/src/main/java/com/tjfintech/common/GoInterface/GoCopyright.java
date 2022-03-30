@@ -88,12 +88,12 @@ public class GoCopyright implements Copyright {
     /***
      * 艺术品审核信息存储
      */
-    public String crOrderStore(String bianHao, String yiShuPingBianHao, String shenHeJiGou, String shenHeZhangHao, String shenHeTime,
+    public String crOrderStore(String bianHao, String yiShuPinBianHao, String shenHeJiGou, String shenHeZhangHao, String shenHeTime,
                                String shenHeJieGuo, String shenHeShuoMing, String shenHeLeiXing, String chuShouFangShi, int baoZhengJin, int diJia) {
 
         Map<String, Object> map = new HashMap<>();
         map.put("bianHao", bianHao);
-        map.put("yiShuPingBianHao", yiShuPingBianHao);
+        map.put("yiShuPinBianHao", yiShuPinBianHao);
         map.put("shenHeJiGou", shenHeJiGou);
         map.put("shenHeZhangHao", shenHeZhangHao);
         map.put("shenHeTime", shenHeTime);
@@ -112,8 +112,8 @@ public class GoCopyright implements Copyright {
     /***
      * 订单预支付
      */
-    public String crPayPrepartion(String outTradeNo, String desc, String openId, String total, String notifyUrl, String goodsTag,
-                                  boolean share, String clientIp, String deviceId, String expireTime,String attach) {
+    public String crPayPrepartion(String outTradeNo, String desc, String openId, int total, String notifyUrl, String goodsTag,
+                                  boolean share, String clientIp, String deviceId, int expireTime,String attach) {
 
         Map<String, Object> map = new HashMap<>();
         map.put("outTradeNo", outTradeNo);
@@ -129,6 +129,21 @@ public class GoCopyright implements Copyright {
         map.put("attach", attach);
 
         String result = PostTest.postMethod(SDKADD + "/cr/v1/pay/prepartion", map);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 取消订单
+     */
+    public String crOrderClose (String outTradeNo, String detail) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("outTradeNo", outTradeNo);
+        map.put("detail", detail);
+
+
+        String result = PostTest.postMethod(SDKADD + "/cr/v1/order/close", map);
         log.info(result);
         return result;
     }

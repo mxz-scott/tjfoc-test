@@ -167,16 +167,12 @@ public class CopyrightProcessTest {
         //账户注册接口，type为空
         response = kms.createKey("sm2", "PIN1");
         String keyid = JSONObject.fromObject(response).getJSONObject("data").getString("keyId");
-//        response = copyright.crAcountRegister(keyid, "", userDetailInfo);
-//        assertEquals("400", JSONObject.fromObject(response).getString("state"));
-
-        //账户注册接口，detail为空
-//        response = copyright.crAcountRegister(keyid, "user", null);
-//        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        response = copyright.crAcountRegister(keyid, "", userDetailInfo);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //账户注册接口，type字段传入platform/broker/user之外的参数
-//        response = copyright.crAcountRegister(keyid, "123", null);
-//        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+        response = copyright.crAcountRegister(keyid, "123", null);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
         //账户艺术品查询接口，addr为空
         response = copyright.crAccountQuery("");
@@ -184,6 +180,45 @@ public class CopyrightProcessTest {
 
         //账户艺术品查询接口，addr为不存在的数据
         response = copyright.crAccountQuery(AddrNotInDB);
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //订单预支付接口,商户内部订单号outTradeNo为空
+        response = copyright.crPayPrepartion("", "数字藏品", OPENID, 1, "", "",
+                false, "", "", constructUnixTime(100), "");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //订单预支付接口,商品描述desc为空
+        response = copyright.crPayPrepartion(String.valueOf(constructUnixTime(0)), "", OPENID, 1, "", "",
+                false, "", "", constructUnixTime(100), "");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //订单预支付接口,小程序的唯一标识openId为空
+        response = copyright.crPayPrepartion
+                (String.valueOf(constructUnixTime(0)), "数字藏品", "", 1, "", "",
+                        false, "", "", constructUnixTime(100), "");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //订单预支付接口,订单总金额total为空
+        response = copyright.crPayPrepartion
+                (String.valueOf(constructUnixTime(0)), "数字藏品", OPENID, 0, "", "",
+                        false, "", "", constructUnixTime(100), "");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //订单预支付接口,小程序的唯一标识openId为错误不存在数据
+        response = copyright.crPayPrepartion
+                (String.valueOf(constructUnixTime(0)), "数字藏品", "123", 1, "", "",
+                        false, "", "", constructUnixTime(100), "");
+        assertEquals("400", JSONObject.fromObject(response).getString("state"));
+
+        //订单预支付接口,商户内部订单号重复下单
+        String outTradeNo = String.valueOf(constructUnixTime(0));
+        response = copyright.crPayPrepartion
+                (outTradeNo, "数字藏品", OPENID, 1, "", "",
+                        false, "", "", constructUnixTime(100), "");
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+
+        //订单取消接口,商户内部订单号outTradeNo为空
+        response = copyright.crOrderClose("", "取消支付");
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 
     }
@@ -242,6 +277,20 @@ public class CopyrightProcessTest {
 
         copyrightCommonFunc.verifyArtworkQuery(userAddress1, YSPBH, "1", 1, false, false);
         copyrightCommonFunc.verifyArtworkQuery(brokerAddress1, YSPBH, "2", 1, false, false);
+
+        //订单预支付接口
+        String outTradeNo = String.valueOf(constructUnixTime(0));
+        response = copyright.crPayPrepartion
+                (outTradeNo, "数字藏品", OPENID, 1, "", "",
+                        false, "", "", constructUnixTime(100), "");
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+
+        //取消订单接口
+        response = copyright.crOrderClose(outTradeNo, "取消支付");
+        assertEquals("200", JSONObject.fromObject(response).getString("state"));
+        storeHash = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
+        commonFunc.verifyTxDetailField(storeHash, "store", "0", "0", "0");
+
     }
 
     /**

@@ -14,10 +14,11 @@ public interface Copyright {
 
     String crAccountQuery(String addr);
 
-    String crOrderStore(String BianHao, String YiShuPingBianHao, String ShenHeJiGou, String ShenHeZhangHao, String ShenHeTime,
+    String crOrderStore(String BianHao, String YiShuPinBianHao, String ShenHeJiGou, String ShenHeZhangHao, String ShenHeTime,
                         String ShenHeJieGuo, String ShenHeShuoMing, String ShenHeLeiXing, String ChuShouFangShi, int BaoZhengJin,int DiJia);
 
-    String crPayPrepartion(String outTradeNo, String desc, String openId, String total, String notifyUrl, String goodsTag,
-                           boolean share, String clientIp, String deviceId, String expireTime,String attach);
+    String crPayPrepartion(String outTradeNo, String desc, String openId, int total, String notifyUrl, String goodsTag,
+                           boolean share, String clientIp, String deviceId, int expireTime,String attach);
 
+    String crOrderClose (String outTradeNo, String detail);
 }
