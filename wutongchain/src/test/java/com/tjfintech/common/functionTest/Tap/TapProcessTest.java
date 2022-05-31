@@ -478,12 +478,12 @@ public class TapProcessTest {
         assertEquals(3, JSONObject.fromObject(RecordInfo).getInt("version"));
 
 //        String decryptFilePath = certTool.tapDecryptFilePath(sdkIP, ZBRPRIKEY, "", filePath, keySecret);
-        GmUtils gmUtils=new GmUtils();
+        GmUtils gmUtils = new GmUtils();
         byte[] filePathByte = filePath.getBytes();
         String key = "abcdefgh#@&&1234";
         byte[] keyByte = key.getBytes();
         String keyHex = Util.byteToHex(keyByte);
-        byte[] filePathByteSm4Decrypt = gmUtils.sm4Decrypt(keyHex,filePathByte);
+        byte[] filePathByteSm4Decrypt = gmUtils.sm4Decrypt(keyHex, filePathByte);
         String decryptFilePath = Util.byteToString(filePathByteSm4Decrypt);
         assertEquals(false, decryptFilePath.contains(path));
         assertEquals(true, decryptFilePath.contains("top/sub111/sub222/sub333"));
@@ -689,26 +689,29 @@ public class TapProcessTest {
         assertEquals("400", JSONObject.fromObject(response).getString("state"));
 //        assertEquals(true, response.contains("Field validation for 'OrderNo' failed on the 'required"));
 
-        response = tap.tapTenderRevoke("{\"revoketime\":\"20211209162920\"}",orderNo);
+        response = tap.tapTenderRevoke("{\"revoketime\":\"20211209162920\"}", orderNo);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         String txid = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         sleepAndSaveInfo(2000);
         response = store.GetTxDetail(txid);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        assertEquals(0,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getInt("type"));
-        assertEquals(0,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getInt("subType"));
+        assertEquals(0, JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getInt("type"));
+        assertEquals(0, JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getInt("subType"));
 
-        response = tap.tapTenderRevoke("{\"unitname\":\""+recordIdA+"\",\"revoketime\":\"20211209162920\"}", orderNo);
+        response = tap.tapTenderRevoke("{\"unitname\":\"" + recordIdA + "\",\"revoketime\":\"20211209162920\"}", orderNo);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         txid = JSONObject.fromObject(response).getJSONObject("data").getString("txId");
         sleepAndSaveInfo(2000);
         response = store.GetTxDetail(txid);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
-        assertEquals(0,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getInt("type"));
-        assertEquals(0,JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getInt("subType"));
+        assertEquals(0, JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getInt("type"));
+        assertEquals(0, JSONObject.fromObject(response).getJSONObject("data").getJSONObject("header").getInt("subType"));
     }
 
-    //    @Test
+    /**
+     * 造测试数据所用（根据需要自行修改，修改内容不要上传git）
+     */
+    @Test
     public void InitTest() throws Exception {
 
         String orderNo = tapCommonFunc.initProject();

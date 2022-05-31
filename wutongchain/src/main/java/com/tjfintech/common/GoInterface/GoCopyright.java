@@ -295,6 +295,70 @@ public class GoCopyright implements Copyright {
     }
 
     /***
+     * 订单预支付（支付宝PC）
+     */
+    public String crPayAliPage(String outTradeNo, String desc, int total, String notifyUrl, int expireTime, String attach){
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("outTradeNo", outTradeNo);
+        map.put("desc", desc);
+        map.put("total", total);
+        map.put("notifyUrl", notifyUrl);
+        map.put("expireTime", expireTime);
+        map.put("attach", attach);
+
+        String result = PostTest.postMethod(SDKADD + "/cr/v1/pay/ali/page", map);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 订单预支付（支付宝Wap）
+     */
+    public String crPayAliWap(String outTradeNo, String desc, int total, String quitUrl, String notifyUrl, int expireTime, String attach) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("outTradeNo", outTradeNo);
+        map.put("desc", desc);
+        map.put("total", total);
+        map.put("quitUrl", quitUrl);
+        map.put("notifyUrl", notifyUrl);
+        map.put("expireTime", expireTime);
+        map.put("attach", attach);
+
+        String result = PostTest.postMethod(SDKADD + "/cr/v1/pay/ali/wap", map);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 取消订单（支付宝）
+     */
+    public String crOrderCloseAli(String outTradeNo, String detail) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("outTradeNo", outTradeNo);
+        map.put("detail", detail);
+
+
+        String result = PostTest.postMethod(SDKADD + "/cr/v1/order/close/ali", map);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 订单查询（支付宝）
+     */
+    public String crOrderQueryAli(String no, String qt) {
+
+        Map<String, Object> map = new HashMap<>();
+
+        String result = GetTest.doGet2(SDKADD + "/cr/v1/order/query/ali?" + "no=" + no + "&qt=" + qt);
+        log.info(result);
+        return result;
+    }
+
+    /***
      * 生成艺术品证书
      */
     public String crArtworkCertPicture(String certId, String name, String artworkName, String address, int time, String artHash, String authHash) {

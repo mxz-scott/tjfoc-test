@@ -4,7 +4,7 @@ import java.util.Map;
 
 public interface Copyright {
 
-    String crArtworkIssue(String keyId, String scAddress,  String artworkId, String artHash);
+    String crArtworkIssue(String keyId, String scAddress, String artworkId, String artHash);
 
     String crArtworkTransfer(String keyId, String pin, String fromAddress, String toAddress, String ORDERDETAILINFO);
 
@@ -45,5 +45,11 @@ public interface Copyright {
 
     String crArtworkCertPicture(String certId, String name, String artworkName, String address, int time, String artHash, String authHash);
 
+    String crPayAliPage(String outTradeNo, String desc, int total, String notifyUrl, int expireTime, String attach);
 
+    String crPayAliWap(String outTradeNo, String desc, int total, String quitUrl, String notifyUrl, int expireTime, String attach);
+
+    String crOrderCloseAli(String outTradeNo, String detail);
+
+    String crOrderQueryAli(String no, String qt);
 }
