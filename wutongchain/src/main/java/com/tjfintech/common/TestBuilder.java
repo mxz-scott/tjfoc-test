@@ -1,6 +1,6 @@
 package com.tjfintech.common;
 
-import com.tjfintech.common.GoInterface.GoCopyright;
+import com.tjfintech.common.GoInterface.GoIpcr;
 import com.tjfintech.common.Interface.*;
 
 public class TestBuilder {
@@ -17,7 +17,7 @@ public class TestBuilder {
     private SYGT sygt;
     private Tap tap;
     private Shca shca;
-    private Copyright copyright;
+    private Ipcr ipcr;
     TestBuilder() {
         setGoTest();
     // SetJavaTest();
@@ -54,7 +54,7 @@ public class TestBuilder {
         jml = new GoJml();
         tap = new GoTap();
         shca = new GoShca();
-        copyright = new GoCopyright();
+        ipcr = new GoIpcr();
     }
 
 //    public void SetJavaTest() {
@@ -93,5 +93,5 @@ public class TestBuilder {
         return tap;
     }
     public Shca getShca() {return shca;}
-    public Copyright getCopyright() {return copyright;}
+    public Ipcr getIpcr() {return ipcr;}
 }

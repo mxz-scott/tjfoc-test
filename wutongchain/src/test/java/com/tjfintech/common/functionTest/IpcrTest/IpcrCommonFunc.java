@@ -1,8 +1,8 @@
-package com.tjfintech.common.functionTest.CopyrightTest;
+package com.tjfintech.common.functionTest.IpcrTest;
 
 import com.tjfintech.common.CertTool;
 import com.tjfintech.common.CommonFunc;
-import com.tjfintech.common.Interface.Copyright;
+import com.tjfintech.common.Interface.Ipcr;
 import com.tjfintech.common.Interface.Kms;
 import com.tjfintech.common.Interface.Store;
 import com.tjfintech.common.TestBuilder;
@@ -10,24 +10,21 @@ import com.tjfintech.common.utils.UtilsClass;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.*;
-import static com.tjfintech.common.utils.UtilsClassCopyright.*;
+import static com.tjfintech.common.utils.UtilsClassIpcr.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 
 @Slf4j
-public class CopyrightCommonFunc {
+public class IpcrCommonFunc {
     TestBuilder testBuilder = TestBuilder.getInstance();
     Store store = testBuilder.getStore();
-    Copyright copyright = testBuilder.getCopyright();
+    Ipcr ipcr = testBuilder.getIpcr();
     Kms kms = testBuilder.getKms();
     CertTool certTool = new CertTool();
     CommonFunc commonFunc = new CommonFunc();
@@ -208,37 +205,37 @@ public class CopyrightCommonFunc {
 
         String response = kms.createKey("sm2", "PIN1");
         USERKEYID1 = JSONObject.fromObject(response).getJSONObject("data").getString("keyId");
-        response = copyright.crAcountRegister(USERKEYID1, "user");
+        response = ipcr.crAcountRegister(USERKEYID1, "user");
         USERADDRESS1 = JSONObject.fromObject(response).getJSONObject("data").getString("address");
         log.info("普通用户1：" + USERKEYID1 + "地址：" + USERADDRESS1);
 
         response = kms.createKey("sm2", "PIN1");
         USERKEYID2 = JSONObject.fromObject(response).getJSONObject("data").getString("keyId");
-        response = copyright.crAcountRegister(USERKEYID2, "user");
+        response = ipcr.crAcountRegister(USERKEYID2, "user");
         USERADDRESS2 = JSONObject.fromObject(response).getJSONObject("data").getString("address");
         log.info("普通用户2：" + USERKEYID2 + "地址：" + USERADDRESS2);
 
         response = kms.createKey("sm2", "PIN1");
         USERKEYID3 = JSONObject.fromObject(response).getJSONObject("data").getString("keyId");
-        response = copyright.crAcountRegister(USERKEYID3, "user");
+        response = ipcr.crAcountRegister(USERKEYID3, "user");
         USERADDRESS3 = JSONObject.fromObject(response).getJSONObject("data").getString("address");
         log.info("普通用户3：" + USERKEYID3 + "地址：" + USERADDRESS3);
 
         response = kms.createKey("sm2", "PIN1");
         BROKERKEYID1 = JSONObject.fromObject(response).getJSONObject("data").getString("keyId");
-        response = copyright.crAcountRegister(BROKERKEYID1, "broker");
+        response = ipcr.crAcountRegister(BROKERKEYID1, "broker");
         BROKERADDRESS1 = JSONObject.fromObject(response).getJSONObject("data").getString("address");
         log.info("经纪商1：" + BROKERKEYID1 + "地址：" + BROKERADDRESS1);
 
         response = kms.createKey("sm2", "PIN1");
         BROKERKEYID2 = JSONObject.fromObject(response).getJSONObject("data").getString("keyId");
-        response = copyright.crAcountRegister(BROKERKEYID2, "broker");
+        response = ipcr.crAcountRegister(BROKERKEYID2, "broker");
         BROKERADDRESS2 = JSONObject.fromObject(response).getJSONObject("data").getString("address");
         log.info("经纪商2：" + BROKERKEYID2 + "地址：" + BROKERADDRESS2);
 
         response = kms.createKey("sm2", "PIN1");
         BROKERKEYID3 = JSONObject.fromObject(response).getJSONObject("data").getString("keyId");
-        response = copyright.crAcountRegister(BROKERKEYID3, "broker");
+        response = ipcr.crAcountRegister(BROKERKEYID3, "broker");
         BROKERADDRESS3 = JSONObject.fromObject(response).getJSONObject("data").getString("address");
         log.info("经纪商3：" + BROKERKEYID3 + "地址：" + BROKERADDRESS3);
 
@@ -250,14 +247,14 @@ public class CopyrightCommonFunc {
     public void initArtSmartContract() throws Exception {
 
         //艺术品系列初始化
-        String response = copyright.crArtworkScinit(SYMBOL, MAX, BROKERADDRESS1, TYPENO, BASEURL);
+        String response = ipcr.crArtworkScinit(SYMBOL, MAX, BROKERADDRESS1, TYPENO, BASEURL);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         commonFunc.sdkCheckTxOrSleep(commonFunc.getTxHash(globalResponse, utilsClass.sdkGetTxHashType20),
                 utilsClass.sdkGetTxDetailTypeV2, SLEEPTIME);
         SCADDRESS1 = JSONObject.fromObject(response).getJSONObject("data").getString("name");
 
         //艺术品状态更新
-        response = copyright.crArtworkScupdate(SCADDRESS1, ARTWORKID, constructUnixTime(0), true);
+        response = ipcr.crArtworkScupdate(SCADDRESS1, ARTWORKID, constructUnixTime(0), true);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
 
@@ -268,7 +265,7 @@ public class CopyrightCommonFunc {
      */
     public void verifyAccountQuery(String address, String scAddress, String artworkId, String symbol, boolean flag) throws Exception {
 
-        String response = copyright.crAccountQuery(address, scAddress);
+        String response = ipcr.crAccountQuery(address, scAddress);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
         if (flag == false) {
             JSONObject.fromObject(response).getJSONObject("data").getString("collection").equals("null");
@@ -291,7 +288,7 @@ public class CopyrightCommonFunc {
      */
     public void verifyArtworkHistory(String artworkId, String to, String txid) throws Exception {
 
-        String response = copyright.crArtworkHistory(artworkId);
+        String response = ipcr.crArtworkHistory(artworkId);
         assertEquals("200", JSONObject.fromObject(response).getString("state"));
 
         JSONArray jsonArray = JSONObject.fromObject(response).getJSONObject("data").getJSONArray("hisList");

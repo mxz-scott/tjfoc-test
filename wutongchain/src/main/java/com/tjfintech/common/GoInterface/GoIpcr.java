@@ -1,23 +1,26 @@
 package com.tjfintech.common.GoInterface;
 
-import com.tjfintech.common.Interface.Copyright;
+import com.tjfintech.common.Interface.Ipcr;
 import com.tjfintech.common.utils.GetTest;
 import com.tjfintech.common.utils.PostTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.tjfintech.common.utils.UtilsClass.SDKADD;
+import static com.tjfintech.common.utils.UtilsClass.mongoDBAddr;
+import static com.tjfintech.common.utils.UtilsClassIpcr.MALLURL;
 
 @Slf4j
-public class GoCopyright implements Copyright {
+public class GoIpcr implements Ipcr {
 
     /***
      * 艺术品发行
      */
-    public String crArtworkIssue(String keyId, String scAddress,  String artworkId, String artHash) {
+    public String crArtworkIssue(String keyId, String scAddress, String artworkId, String artHash) {
 
         Map<String, Object> map = new HashMap<>();
         map.put("keyId", keyId);
@@ -26,35 +29,6 @@ public class GoCopyright implements Copyright {
         map.put("artHash", artHash);
 
         String result = PostTest.postMethod(SDKADD + "/cr/v1/artwork/issue", map);
-        log.info(result);
-        return result;
-    }
-
-    /***
-     * 艺术品流转（废弃）
-     */
-    public String crArtworkTransfer(String keyId, String pin, String fromAddress, String toAddress, String ORDERDETAILINFO) {
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("keyId", keyId);
-        map.put("pin", pin);
-        map.put("fromAddress", fromAddress);
-        map.put("toAddress", toAddress);
-        map.put("detail", ORDERDETAILINFO);
-
-        String result = PostTest.postMethod(SDKADD + "/cr/v1/artwork/transfer", map);
-        log.info(result);
-        return result;
-    }
-
-    /***
-     * 查询艺术品信息（废弃）
-     */
-    public String crArtworkQuery(String artworkId, String num) {
-
-        Map<String, Object> map = new HashMap<>();
-
-        String result = GetTest.doGet2(SDKADD + "/cr/v1/artwork/query?" + "artworkId=" + artworkId + "&num=" + num);
         log.info(result);
         return result;
     }
@@ -220,7 +194,7 @@ public class GoCopyright implements Copyright {
      * 订单预支付（微信H5）
      */
     public String crPayPrepartionH5(String outTradeNo, String desc, String type, int total, String notifyUrl, String goodsTag,
-                                  boolean share, String clientIp, String deviceId, int expireTime, String attach) {
+                                    boolean share, String clientIp, String deviceId, int expireTime, String attach) {
 
         Map<String, Object> map = new HashMap<>();
         map.put("outTradeNo", outTradeNo);
@@ -297,7 +271,7 @@ public class GoCopyright implements Copyright {
     /***
      * 订单预支付（支付宝PC）
      */
-    public String crPayAliPage(String outTradeNo, String desc, int total, String notifyUrl, int expireTime, String attach){
+    public String crPayAliPage(String outTradeNo, String desc, int total, String notifyUrl, int expireTime, String attach) {
 
         Map<String, Object> map = new HashMap<>();
         map.put("outTradeNo", outTradeNo);
@@ -373,6 +347,287 @@ public class GoCopyright implements Copyright {
         map.put("authHash", authHash);
 
         String result = PostTest.postMethod(SDKADD + "/cr/v1/artwork/cert/picture", map);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-经纪商详情
+     */
+    public String ipcrMallBroker(String brokerNo) {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/broker/" + brokerNo);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-艺术品库存
+     */
+    public String ipcrMallArtworkStock(String artworkNo) {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/artwork/stock/" + artworkNo);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-系列下的艺术品列表
+     */
+    public String ipcrMallArtworkSeries(String seriesId) {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/artwork/series/" + seriesId);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-艺术品详情
+     */
+    public String ipcrMallArtwork(String artworkNo) {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/artwork/" + artworkNo);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-用户购买的系列下的艺术品列表
+     */
+    public String ipcrMallArtworkSeriesUser(String seriesId) {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/artwork/series/user?seriesId=" + seriesId);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-获取展示的轮播图路径
+     */
+    public String ipcrMallCarouselUrls() {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/carousel/urls");
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-系列的详情
+     */
+    public String ipcrMallSeriesUp(String seriesId) {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/series/up/" + seriesId);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-用户已经购买的系列列表
+     */
+    public String ipcrMallSeriesUser(int page, int size) {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/series/user?page=" + page + "&page=" + size);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-系列分页列表
+     */
+    public String ipcrMallSeriesPage(int page, int size, String keyword, int isTest) {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/series/page/" + page + "?size=" + size + "&keyword=" + keyword + "&isTest=" + isTest);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-获取文件上传TOKEN
+     */
+    public String ipcrMallFileGetToken() {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/file/getToken");
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-获取文件地址
+     */
+    public String ipcrMallFile(int id) {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/file/getToken");
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-用户信息
+     */
+    public String ipcrMallUserInfo() {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/user/info");
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-邀请码有效性验证
+     */
+    public String ipcrMallSpreadValidate(String code) {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/spread/validate/" + code);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-获取用户邀请成功数
+     */
+    public String ipcrMallSpreadInviteNum() {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/spread/invite/num");
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-邀请码获取
+     */
+    public String ipcrMallSpreadInvite() {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/spread/invite");
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-积分余额
+     */
+    public String ipcrMallPointBalance() {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/point/balance");
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-积分记录列表
+     */
+    public String ipcrMallPointRecords(String[] codes, int page, int size) {
+
+        String param = "";
+        String params = "";
+        for (int i = 0; i < codes.length; i++) {
+            param = "&code=" + codes[i];
+            params = params + param;
+        }
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/point/records?page=" + page + "&size=" + size + params);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-文章详情
+     */
+    public String ipcrMallUserPenInfo(int id) {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/userPen/info/" + id);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-文章列表
+     */
+    public String ipcrMallUserPenList() {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/userPen/list/");
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-订单创建
+     */
+    public String ipcrMallOrder(String artworkNo, int num) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("artworkNo", artworkNo);
+        map.put("num", num);
+
+        String result = PostTest.postMethodIpcrMall(MALLURL + "/order", map);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-订单取消
+     */
+    public String ipcrMallOrderCancel(String orderNo) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("orderNo", orderNo);
+
+        String result = PostTest.postMethodIpcrMall(MALLURL + "/order/cancel/" + orderNo, null);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-订单支付
+     */
+    public String ipcrMallOrderPay(String orderNo) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("orderNo", orderNo);
+
+        String result = PostTest.postMethodIpcrMall(MALLURL + "/order/pay/" + orderNo, null);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-订单详情
+     */
+    public String ipcrMallOrder(String orderNo) {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/order/" + orderNo);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-用户的订单列表
+     */
+    public String ipcrMallOrderUser(int page, int size, int status) {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/order/user?page=" + page + "&size=" + size + "&status=" + status);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-订单状态
+     */
+    public String ipcrMallOrderStatus(String orderNo) {
+
+        String result = GetTest.doGetIpcrMall(MALLURL + "/order/status/" + orderNo);
+        log.info(result);
+        return result;
+    }
+
+    /***
+     * 灵鲸商城-实名认证
+     */
+    public String ipcrMallRealName(String realName,String idCard) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("realName", realName);
+        map.put("idCard", idCard);
+
+        String result = PostTest.postMethodIpcrMall(MALLURL + "/realname" ,map);
         log.info(result);
         return result;
     }

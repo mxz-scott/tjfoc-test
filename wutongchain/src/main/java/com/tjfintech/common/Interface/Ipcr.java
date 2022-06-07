@@ -2,13 +2,9 @@ package com.tjfintech.common.Interface;
 
 import java.util.Map;
 
-public interface Copyright {
+public interface Ipcr {
 
     String crArtworkIssue(String keyId, String scAddress, String artworkId, String artHash);
-
-    String crArtworkTransfer(String keyId, String pin, String fromAddress, String toAddress, String ORDERDETAILINFO);
-
-    String crArtworkQuery(String artworkId, String num);
 
     String crArtworkHistory(String artworkId);
 
@@ -52,4 +48,58 @@ public interface Copyright {
     String crOrderCloseAli(String outTradeNo, String detail);
 
     String crOrderQueryAli(String no, String qt);
+
+    String ipcrMallBroker(String brokerNo);
+
+    String ipcrMallArtworkStock(String artworkNo);
+
+    String ipcrMallArtworkSeries(String seriesId);
+
+    String ipcrMallArtwork(String artworkNo);
+
+    String ipcrMallArtworkSeriesUser(String seriesId);
+
+    String ipcrMallCarouselUrls();
+
+    String ipcrMallSeriesUp(String seriesId);
+
+    String ipcrMallSeriesUser(int page, int size);
+
+    String ipcrMallSeriesPage(int page, int size, String keyword, int isTest);
+
+    String ipcrMallFileGetToken();
+
+    String ipcrMallFile(int id);
+
+    String ipcrMallUserInfo();
+
+    String ipcrMallSpreadValidate(String code);
+
+    String ipcrMallSpreadInviteNum();
+
+    String ipcrMallSpreadInvite ();
+
+    String ipcrMallPointBalance ();
+
+    String ipcrMallPointRecords(String[] codes, int page, int size);
+
+    String ipcrMallUserPenInfo(int id);
+
+    String ipcrMallUserPenList();
+
+    String ipcrMallOrder(String artworkNo, int num);
+
+    String ipcrMallOrderCancel(String orderNo);
+
+    String ipcrMallOrderPay(String orderNo);
+
+    String ipcrMallOrder(String orderNo);
+
+    String ipcrMallOrderUser(int page, int size, int status);
+
+    String ipcrMallOrderStatus(String orderNo);
+
+    String ipcrMallRealName(String realName,String idCard);
+
+
 }
