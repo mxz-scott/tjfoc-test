@@ -1064,6 +1064,25 @@ public class WVMContractTest {
         return response;
     }
 
+    /**
+     * 安装灵鲸账户合约
+     * @param wvmfile
+     * @param Prikey
+     * @return
+     * @throws Exception
+     */
+    public String IpcrwvmInstallTest(String wvmfile,String Prikey) throws Exception {
+        if(wvmfile == "") return contract.ScfInstallWVM("",category,Prikey);
+
+        String filePath = testDataPath + "wvm/" + wvmfile;
+        log.info("filepath "+ filePath);
+        String file = utilsClass.readInput(filePath).toString().trim();
+        String data = utilsClass.encryptBASE64(file.getBytes()).replaceAll("\r\n", "");//BASE64编码
+        log.info("base64 data: " + data);
+        String response=contract.InstallWVM(data,category,Prikey);
+        return response;
+    }
+
     //安装合约接口返回的合约地址与交易详情中获取的合约地址进行比较，判断是否一致。
     @Test
     public void testContractName() throws Exception {

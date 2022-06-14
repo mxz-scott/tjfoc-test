@@ -22,15 +22,17 @@ import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 @Slf4j
 public class UtilsClass {
 
-//    public static String subLedger = "s4ybw13k8l"; // 应用链ID
-    public static String subLedger = "w4ndmq24fx";
+//    public static String subLedger = "w4ndmq24fx"; // 应用链ID
+    public static String subLedger = "unpwj5v6k1";
+//    public static String subLedger = "kffyrw4nxu";
+//    public static String subLedger = "7jcg0bsoh5";
     public static String urlAddr = ""; // 向指定节点发请求 格式 IP:RPCPort
-    public static String SDKADD = "http://10.1.5.162:8777";//sdk/tokenapi/中间件服务地址 http://IP:Port
+    public static String SDKADD = "http://222.93.105.78:52080";//sdk/tokenapi/中间件服务地址 http://IP:Port
     public static String TOKENADD = SDKADD;
     public static String rSDKADD = SDKADD;
 
     //设置测试环境使用的节点端口及部署目录信息
-    public static String PEER1IP,PEER2IP,PEER3IP,PEER4IP = "10.1.5.162"; //各个节点服务器IP地址
+    public static String PEER1IP,PEER2IP,PEER3IP,PEER4IP = "10.1.0.163"; //各个节点服务器IP地址
     public static String PEER1RPCPort,PEER2RPCPort,PEER3RPCPort,PEER4RPCPort = "9009";//各个节点服务器RPC端口号
     public static String PEER1TCPPort,PEER2TCPPort,PEER3TCPPort,PEER4TCPPort = "60009";//各个节点服务器TCP端口号
     //节点、SDK、Toolkit对等目录放置于PTPATH目录下
@@ -228,6 +230,8 @@ public class UtilsClass {
     public static String  NoPermErrCode = "500";
 
     public static String smartAccoutContractAddress = "";
+
+    public static String IpAccountAddress = "";
 
 
 

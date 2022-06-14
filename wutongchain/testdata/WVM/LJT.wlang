@@ -1,0 +1,140 @@
+contract LJT{
+
+    //mint 积分增加值
+    string mintValueKey = "mint_key"
+
+    //transfer 积分消耗值
+    string transferValueKey = "transfer_key"
+
+    string admin = "QmUuFfSi5ufd5itgRaVUsi5h7KvsFWMhm4FPEAxjaZfiLP"
+
+    string accountPrefix = "account_token_"
+
+    string zeroAddress = "osEoy933LkHyyBcgjE7vCivfsX"
+
+
+       struct Event_msg{
+        string from
+        string to //账号
+        uint64 num //积分变更数值
+        string id //接口名
+        uint64 balance
+        string ext
+    }
+
+
+
+    public string init() {
+        uint64 mk = 10
+        uint64 tk = 20
+        //初始化 积分阈值
+        db_set(mintValueKey,mk)
+        db_set(transferValueKey,tk)
+        return "success"
+    }
+
+    //设置积分阈值
+    public string SetValue(uint64 value,string typ) {
+        if (typ == "mint") {
+            db_set(mintValueKey,value)
+        }else if(typ == "transfer") {
+            db_set(transferValueKey,value)
+        }
+        return "success"
+    }
+
+
+
+    //nft mint 调用
+    public string MintAddToken(string owner,uint64 num,string ext) {
+        uint64 sv = db_get<uint64>(mintValueKey)
+        uint64 balance = db_get<uint64>(accountPrefix + owner)
+        uint64 total = sv * num
+        //积分更新
+        db_set(accountPrefix + owner,total)
+        sendMsg(zeroAddress,owner,total,"mint",total,ext)
+        return "success"
+    }
+
+    //nft transfer 调用
+    public string TransferReduceToken(string owner,string ext) {
+
+        //获取积分阈值
+        uint64 sv = db_get<uint64>(transferValueKey)
+        uint64 balance = db_get<uint64>(accountPrefix + owner)
+        if (balance < sv) {
+            return "insufficient balance"
+        }
+
+        db_set(accountPrefix + owner,balance - sv)
+        transferZero(sv)
+        sendMsg(owner,zeroAddress,sv,"transfer",balance-sv,ext)
+        return "success"
+    }
+
+    //积分消耗 进入0地址
+    private string transferZero(uint64 amt) {
+        uint64 bal0 = db_get<uint64>(zeroAddress)
+        db_set(accountPrefix + zeroAddress,bal0 + amt)
+        return "success"
+    }
+
+
+    //积分发行 value 为自定义数值,由积分系统调用
+    public string Issue (string owner,uint64 value,string ext) {
+          if (checkOwner() == false) {
+            return "no permission"
+        }
+
+        uint64 balance = db_get<uint64>(accountPrefix + owner)
+        uint64 total = balance + value
+        db_set(accountPrefix + owner,total)
+        sendMsg(zeroAddress,owner,value,"issue",total,ext)
+        return "success"
+    }
+
+    //积分消耗 value 为自定义数值,由积分系统调用
+    public string Burning(string owner,uint64 value,string ext){
+          if (checkOwner() == false) {
+            return "no permission"
+        }
+
+        uint64 balance = db_get<uint64>(accountPrefix + owner)
+        if (balance < value) {
+            return "insufficient balance"
+        }
+        db_set(accountPrefix + owner,balance - value)
+        transferZero(value)
+        sendMsg(owner,zeroAddress,value,"burning",balance - value,ext)
+        return "success"
+    }
+
+
+    
+
+    public uint64 BalanceOf(string owner) {
+        return db_get<uint64>(accountPrefix + owner)
+    }
+
+    public bool checkOwner() {
+        string sender = getTxSender()
+        if (sender == admin) {
+            return true
+        }
+        return false
+    }
+
+    private string sendMsg(string from,string to,uint64 value,string id,uint64 balance,string ext) {
+        Event_msg msg
+        msg.from = from
+        msg.to = to
+        msg.num = value
+        msg.id = id
+        msg.balance = balance
+        msg.ext = ext
+        string m = obj_to_json(msg)
+        event("ljt_token",m)
+        return "success"
+    }
+
+}

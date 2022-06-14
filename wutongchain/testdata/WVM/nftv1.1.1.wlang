@@ -1,0 +1,374 @@
+contract WVM1155_djQoIZxW{
+    //合约版本xyz
+    string scVersion = "111"
+    //name
+    string name = "元太数字"
+    //mint权限控制
+    // owner 地址
+    string admin = "4gMXYXRJz8ptFHnagihJ3qX4nAs4KUSpWgFntArYMi6geMDdRq"
+    // 平台地址
+    string subAdmin = "31T29cMiSNpnLEHTsF5YVhP9PLHJR4VuTs6LQbYSeQCgojfbFV"
+    // 产品类别最大数量
+    // 系列最大数量
+    uint64 maxQuantity = 99999999999999
+    // 每个系列最大供应量
+    uint64 totalSupply = 999999
+
+    string currentSupplyKey = "cur_supply"
+
+    string freezePrefix = "freeze_"
+    //base url
+    string baseURL = "https://192.168.0.238/artwork/metadata/"
+    //单个数量
+    string tokenNumPrefix = "num_"
+    //种类数量
+    string totalNum= "total_num"
+
+    string singleTotalNumPrefix = "single_total_num_"
+
+    string seriesNOPrefix = "series_"
+
+    string tokenStorePrefix = "ts_"
+
+    string noPrefix = "out_trade_no_"
+
+    string tokenInfoPrefix = "token_info_"
+
+    string ownerTokenNumPrefix= "owner_token_num_"
+
+    string saleInfoPrefix = "sale_info_"
+
+    // string ownerOfPrefix = "owner_of_"
+
+    struct NFT_Token {
+        string id //资产id
+        string custom //自定义信息 目前存放的是url信息
+        string ext //拓展信息
+        string symbol
+    }
+
+    struct Sale {
+        int64 time //允许mint的开始时间
+        bool onSale //允许mint开关
+    }
+
+
+
+    struct Event_Mint{
+        string from
+        string to
+        string id
+        int64 num
+    }
+
+    struct ExtDetail {
+        string detail
+        string outTradeNo
+    }
+
+
+     //铸币
+    //id 为资产唯一标识
+    //to 归属账户
+    // num 数量
+    //url URL
+    public string Mint(string id,string to, int64 num, string custom,string ext) {
+        if (checkOwner() == false) {
+            return "no permission"
+        }
+        ExtDetail ed = json_to_obj<ExtDetail>(ext)
+        string outNo = ed.outTradeNo
+        string ord = QueryNo(outNo)
+        if (ord != ""){
+            return "success"
+        }
+        //开售时间检测
+        Sale sl = getSaleInfo(id)
+        int64 ti = time() //取当前时间
+        if (sl.onSale == false || sl.time > ti) {
+            return "sale has not yet been"
+        } 
+		if (custom==""){
+			custom = URL(id)
+		}
+        //获取历史数量
+        int64 hn = getTotalSupply()
+        //获取类别数目
+        int64 hnt = getCategoryNum()
+        //获取token 已经发行数量
+        int64 shn = getSingleNum(id)
+
+        //第一次mint 设置token 信息
+       if (shn == 0){
+            setCategoryNum(hnt+1)
+            NFT_Token tk
+            tk.id = id
+			tk.symbol = "symbol"
+            tk.custom = custom
+            tk.ext = ext
+            string st = obj_to_json(tk)
+            db_set(tokenInfoPrefix + id,st) //持久化新增token信息
+       }
+
+        //设置单类token总量
+       int64 shn_total = getSingleTotalNum(id)
+    //    if (shn_total == 0) {
+    //        SetSingleTotalNum(id,total)
+    //        shn_total = total
+    //    }
+
+        //超出单类总量
+       if (shn + num > shn_total ){
+           return "exceeds the total amount" + " ("+ itoa(shn_total) + ")"
+       }
+
+        //超出最大供应量
+    //    if (hn + num > totalSupply ) {
+    //        return "maximum supply is " + itoa(totalSupply)
+    //    }
+    
+        //超出最大种类
+       if (hnt >= maxQuantity) {
+            return "maximum number of species is "+ itoa(maxQuantity)
+       }
+
+       for(int i = 0;i < num; i++) {
+           int64 nc = i + shn +1
+           string token_id = combine(id,nc,6)
+           db_set(tokenStorePrefix + token_id,to)
+           db_set(ownerTokenNumPrefix + to + token_id,"exist")
+       }
+
+        //更新单类总量
+       setSingleNum(id,num + shn)
+       // 更新总数量
+       setTotalSupply(num + hn)
+          //发送事件
+        sendMintEvent(to,id,num)
+       storeNo(ext)
+       return "success"
+
+      
+    }
+
+    private int64 getSingleTotalNum(string id) {
+        return db_get<int64>(singleTotalNumPrefix + id)
+    }
+
+    private string SetSingleTotalNum(string id ,int64 num) {
+        db_set(singleTotalNumPrefix + id,num)
+        return "success"
+    }
+
+
+    private string storeNo( string ext){
+        if (ext == "") {
+            return "empty ext"
+        }
+        ExtDetail ed = json_to_obj<ExtDetail>(ext)
+        string outNo = ed.outTradeNo
+        string key = noPrefix + outNo
+        string txId = getTxID()
+        db_set(key,txId)
+        return "success"
+    }
+    public string QueryNo(string no){
+        string key = noPrefix + no
+        string result = db_get<string>(key)
+        return result
+    }
+
+    public string setBaseURL(string url,string seriesNo) {
+        db_set(seriesNOPrefix + seriesNo ,url)
+        return "success"
+    }
+
+    public uint64 GetTotalSupply() {
+        return totalSupply
+    }
+
+    public uint64 currentSupply() {
+        return getTotalSupply()
+    }
+
+    public string freezeURL(string id,string hash) {
+        db_set(freezePrefix + id,hash)
+        return "success"
+    }
+
+    private string getHash(string id) {
+       string hash = db_get<string>(freezePrefix + id)
+       return hash
+    }
+
+    public string BalanceOfAll(string owner,string prefix) {
+        map<string,string> tokens
+        db_search(ownerTokenNumPrefix + owner + prefix,filter,tokens)
+        string k
+        string val
+        string[] tls
+        while(range(tokens,k,val) == true) {
+            if (val == "exist") {
+                string subs = ownerTokenNumPrefix + owner
+                string ids =removeStr(k,subs)
+                add(tls,ids)
+            }
+        }
+
+        return obj_to_json(tls)
+    }
+
+    public string GetName() {
+        return name
+    }
+
+    public bool checkOwner() {
+        string sender = getTxSender()
+        if (sender == admin || sender == subAdmin) {
+            return true
+        }
+        return false
+    }
+    public string ownerOf(string id) {
+        string owner = db_get<string>(tokenStorePrefix + id)
+        return owner
+    }
+
+
+
+    //设置 或者 更新mint开始时间和开关
+    // id 前缀
+    public string SetSale(string id,int64 time,bool of,int64 total) {
+
+        if (checkOwner() == false) {
+            return "no permission"
+        }
+        
+        Sale sl
+        sl.time = time 
+        sl.onSale = of
+        db_set(saleInfoPrefix + id,sl)
+        SetSingleTotalNum(id,total)
+        return "success"
+    }
+
+    //id 前缀
+    public Sale getSaleInfo(string id) {
+        Sale sl 
+        sl = db_get<Sale>(saleInfoPrefix + id)
+        return sl
+    }
+
+
+    public string URL(string id) {
+	    bool n = db_exist(saleInfoPrefix + id)
+		if (n==false){
+			return id + " has not been in the sale"
+		}
+
+        string hash = getHash(id)
+        if (hash == "") {
+            return baseURL+"/"+ id
+        }
+
+        return baseURL+"/"+id + "?hash=" + hash + "&algo=sha256"
+
+    }
+
+    public string BaseURL() {
+        return baseURL
+    }
+
+
+
+    //获取种类数量
+    private int64 getCategoryNum() {
+       return db_get<int64>(totalNum)
+    }
+
+    //设置种类数量
+    private string setCategoryNum(int64 num) {
+        db_set(totalNum,num)
+        return "success"
+    }
+
+    private int64 getTotalSupply()  {
+        return db_get<int64>(currentSupplyKey)
+    }
+
+    private string setTotalSupply(int64 num) {
+            db_set(currentSupplyKey,num)
+            return "success"
+    }
+
+    // //获取单类数量
+    private int64 getSingleNum(string id) {
+        return db_get<int64>(tokenNumPrefix + id)
+    }
+
+    private string setSingleNum(string id,int64 num) {
+        db_set(tokenNumPrefix + itoa(id),num)
+        return "success"
+    }
+
+    private int64 getOwnerTokenNum(uint64 id,string owner) {
+        return db_get<int64>(ownerTokenNumPrefix + owner + itoa(id))
+    }
+
+          // 过滤器
+	private bool filter(string val){
+		return true
+	}
+
+    public string GetToken(string id) {
+         string ts = db_get<string>(tokenInfoPrefix + id)
+        return ts 
+    }
+	
+	private NFT_Token getTokenS(string id){
+		string ts = db_get<string>(tokenInfoPrefix + id)
+         NFT_Token tk1
+         if (ts == "") {
+             return tk1
+         }
+         tk1 = json_to_obj<NFT_Token>(ts)
+		 return tk1
+	}
+	
+	public string BalanceOfAllDetail(string owner) {
+        map<string,string> tokens
+        db_search(ownerTokenNumPrefix + owner,filter,tokens)
+        string k
+        int64 val
+        NFT_Token[] tls
+        while(range(tokens,k,val) == true) {
+            if (val > 0) {
+                NFT_Token tl
+                string subs = ownerTokenNumPrefix + owner
+                string ids =removeStr(k,subs)
+                uint64 idnum = atoi(ids)
+                tl = getTokenS(idnum)
+                add(tls,tl)
+            }
+        }
+
+        return obj_to_json(tls)
+    }
+
+    private string sendMintEvent(string to,string id,int64 num) {
+        Event_Mint em 
+        em.from = "osEoy933LkHyyBcgjE7vCivfsX"
+        em.to = to 
+        em.id = id 
+        em.num = num 
+        string strem = obj_to_json(em)
+        event("nft_mint",strem)
+        return "success"
+    }
+
+
+    public string GetVersion(){
+        return scVersion
+    }
+
+}

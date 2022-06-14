@@ -1,0 +1,46 @@
+contract account {
+    string account_prefix = "account_"
+    string order_prefix = "out_trade_no_"
+
+    struct Account {
+        string  id 
+        string ext //拓展信息
+        string symbol
+    }
+    public string register(string id ,string ext) {
+        
+        Account acc
+        acc.id = id
+        acc.ext = ext 
+        
+        string jsonArg = obj_to_json(acc)
+        string key = account_prefix + id 
+        bool ok = db_exist(key)
+        if (ok == true){
+            return "account has been registered"
+        }
+        db_set(key,jsonArg)
+        return "success"
+    }
+
+    public string GetAccount(string id){
+        string key = account_prefix + id
+        string res = db_get<string>(key)
+        if (res == ""){
+            return id + " no regist"
+        }  
+        return res
+    }
+
+    public string issueStore(string no,string data){
+        string key = order_prefix + no
+        db_set(key,data)
+        return "success"
+    }
+
+    public string getissueData(string no){
+        string key = order_prefix + no
+        string res = db_get<string>(key)
+        return res
+    }
+}
